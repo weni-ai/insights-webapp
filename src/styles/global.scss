@@ -1,0 +1,38 @@
+@import 'reset';
+@import 'utils';
+
+* {
+  box-sizing: border-box;
+  outline-color: $unnnic-color-weni-600;
+}
+
+html,
+input,
+textarea {
+  font-family: $unnnic-font-family-secondary, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: $unnnic-font-weight-regular;
+}

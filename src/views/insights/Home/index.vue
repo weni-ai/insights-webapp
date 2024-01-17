@@ -2,15 +2,13 @@
   <insights-layout ref="insights-layout">
     <h1 class="insights__title">Insights</h1>
     <div class="buttons">
-      <button>
-        <img src="/src/assets/images/icons/bar_chart_4_bars.png" alt="" />
-        Dashboards
-      </button>
-      <button>
-        <img src="/src/assets/images/icons/calendar_month.png" alt="" />
-        Hoje
-        <img src="/src/assets/images/icons/expand_more.png" alt="" />
-      </button>
+      <unnnic-button
+        text="Dashboards"
+        icon-left="bar_chart_4_bars"
+        type="tertiary"
+        size="small"
+      />
+      <!-- <unnnic-input-date-picker size="sm"></unnnic-input-date-picker> -->
     </div>
     <div class="cards">
       <div class="card">

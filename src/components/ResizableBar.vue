@@ -110,9 +110,9 @@ export default {
     return {
       isResizing: false,
       startY: 0,
-      startBottom: -200,
-      sidebarBottom: -200,
-      minHeight: -200,
+      startBottom: -214,
+      sidebarBottom: -214,
+      minHeight: -214,
       maxHeight: 300,
       sidebarHeight: 230,
       visibleGeneral: false,
@@ -145,7 +145,7 @@ export default {
       if (this.sidebarBottom != 300) {
         this.sidebarBottom = 300;
       } else {
-        this.sidebarBottom = -200;
+        this.sidebarBottom = -214;
       }
     },
     showInsights() {
@@ -205,6 +205,11 @@ export default {
     place-content: center;
     gap: 2rem;
 
+    @media screen and (max-width: 900px) {
+      overflow-y: scroll;
+      overflow-x: hidden;
+    }
+
     .content-doris {
       text-align: center;
       margin-bottom: 2rem;
@@ -223,6 +228,10 @@ export default {
       min-height: 164px;
       padding: 0 8rem;
       margin-bottom: 2.5rem;
+
+      @media screen and (max-width: 900px) {
+        padding: unset;
+      }
 
       .cards {
         display: grid;
@@ -245,6 +254,10 @@ export default {
       flex-direction: column;
       padding: 0 8rem;
 
+      @media screen and (max-width: 900px) {
+        padding: unset;
+      }
+
       p {
         font-size: 13px;
         font-weight: 700;
@@ -261,12 +274,19 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        @media screen and (max-width: 900px) {
+          max-height: 300px;
+          flex-direction: column;
+        }
 
         .insights-list {
           ul {
             display: flex;
             flex-direction: column;
             gap: $unnnic-spacing-nano;
+            @media screen and (max-width: 900px) {
+              margin-bottom: 2rem;
+            }
             li {
               font-size: 14px;
               padding: $unnnic-spacing-nano;
@@ -301,6 +321,10 @@ export default {
     position: relative;
     margin-top: 2rem;
 
+    @media screen and (max-width: 900px) {
+      padding: unset;
+    }
+
     input {
       width: 100%;
       height: 62px;
@@ -321,6 +345,10 @@ export default {
       right: 8.5rem;
       top: 0.6rem;
       cursor: pointer;
+
+      @media screen and (max-width: 900px) {
+        right: 0;
+      }
     }
   }
   .prompt-card {

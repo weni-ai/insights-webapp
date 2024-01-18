@@ -31,7 +31,7 @@ export default {
   overflow: hidden;
 
   & > * {
-    padding: 0 16px 0 16px;
+    padding: 0 $unnnic-spacing-sm;
   }
 }
 

@@ -14,39 +14,90 @@
       <hr :class="{ 'green-color': isResizing }" />
     </div>
     <div class="resizable-bar__content">
-      <div class="content-doris">
-        <img src="../assets/images/doris.png" alt="Dóris" />
-        <h1>Como posso te ajudar hoje?</h1>
-      </div>
-      <div class="content-text">
-        <div class="cards">
-          <div class="prompt-card">
-            <p class="prompt-card-title">
-              Quais foram os principais erros no meu chatbot?
-            </p>
-            <p class="prompt-card-description">Nos últimos 30 dias</p>
+      <div v-if="visibleInsights" class="insights">
+        <div>
+          <p>InsightsGPT:</p>
+          <h2>Aqui estão algumas sugestões para você:</h2>
+        </div>
+        <div class="insights-content">
+          <div class="insights-list">
+            <ul>
+              <li>Recentes</li>
+              <li>Segmentos</li>
+              <li>Varejo</li>
+              <li>Weni plataforma</li>
+              <li class="selected">Atendimento humano</li>
+            </ul>
           </div>
-          <div class="prompt-card">
-            <p class="prompt-card-title">
-              Quais foram os principais erros no meu chatbot?
-            </p>
-            <p class="prompt-card-description">Nos últimos 30 dias</p>
-          </div>
-          <div class="prompt-card">
-            <p class="prompt-card-title">
-              Quais foram os principais erros no meu chatbot?
-            </p>
-            <p class="prompt-card-description">Nos últimos 30 dias</p>
-          </div>
-          <div class="prompt-card more-prompts-card">
-            <p>Visualizar mais prompts prontos</p>
+          <div class="insights-cards">
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
           </div>
         </div>
       </div>
-      <div class="content-input">
-        <input type="text" placeholder="Peça insights ao InsightsGPT..." />
-        <button><img src="../assets/images/icons/send.png" alt="" /></button>
+      <div v-else class="general-content">
+        <div class="content-doris">
+          <img src="../assets/images/doris.png" alt="Dóris" />
+          <h1>Como posso te ajudar hoje?</h1>
+        </div>
+        <div class="content-text">
+          <div class="cards">
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div class="prompt-card">
+              <p class="prompt-card-title">
+                Quais foram os principais erros no meu chatbot?
+              </p>
+              <p class="prompt-card-description">Nos últimos 30 dias</p>
+            </div>
+            <div @click="showInsights" class="prompt-card more-prompts-card">
+              <p>Visualizar mais prompts prontos</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="content-input">
+      <input type="text" placeholder="Peça insights ao InsightsGPT..." />
+      <button><img src="../assets/images/icons/send.png" alt="" /></button>
     </div>
   </div>
 </template>
@@ -64,6 +115,8 @@ export default {
       minHeight: -200,
       maxHeight: 300,
       sidebarHeight: 230,
+      visibleGeneral: false,
+      visibleInsights: false,
     };
   },
   methods: {
@@ -94,6 +147,9 @@ export default {
       } else {
         this.sidebarBottom = -200;
       }
+    },
+    showInsights() {
+      this.visibleInsights = !this.visibleInsights && !this.visibleGeneral;
     },
   },
 };
@@ -166,6 +222,7 @@ export default {
       max-height: 164px;
       min-height: 164px;
       padding: 0 8rem;
+      margin-bottom: 2.5rem;
 
       .cards {
         display: grid;
@@ -173,27 +230,7 @@ export default {
         grid-template-rows: repeat(2, 2fr);
         grid-column-gap: $unnnic-spacing-sm;
         grid-row-gap: $unnnic-spacing-sm;
-        .prompt-card {
-          background-color: $unnnic-color-neutral-lightest;
-          padding: $unnnic-spacing-sm;
-          border-radius: 4px;
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          justify-content: center;
-          cursor: pointer;
 
-          .prompt-card-title {
-            color: $unnnic-color-neutral-darkest;
-            font-weight: 700;
-            font-size: 14px;
-          }
-
-          .prompt-card-description {
-            color: $unnnic-color-neutral-dark;
-            font-size: 12px;
-          }
-        }
         .more-prompts-card {
           background-color: $unnnic-color-neutral-soft;
           color: $unnnic-color-neutral-darkest;
@@ -203,36 +240,108 @@ export default {
       }
     }
 
-    .content-input {
-      margin-top: auto;
-      width: 100%;
-      padding: 0 8rem;
+    .insights {
       display: flex;
-      flex-direction: row;
-      position: relative;
-      margin-bottom: 1rem;
+      flex-direction: column;
+      padding: 0 8rem;
 
-      input {
-        width: 100%;
-        height: 62px;
-        padding: $unnnic-spacing-xs;
-        border: none;
-        border-radius: $unnnic-spacing-nano;
-        background-color: $unnnic-color-neutral-lightest;
-        color: $unnnic-color-neutral-cloudy;
+      p {
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
       }
 
-      button {
-        position: absolute;
-        height: 46px;
-        width: 46px;
-        border: 2px $unnnic-color-neutral-cleanest solid;
-        border-radius: $unnnic-border-radius-sm;
-        background-color: $unnnic-color-neutral-white;
-        right: 8.5rem;
-        top: 0.6rem;
-        cursor: pointer;
+      h2 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 3rem;
       }
+
+      .insights-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+
+        .insights-list {
+          ul {
+            display: flex;
+            flex-direction: column;
+            gap: $unnnic-spacing-nano;
+            li {
+              font-size: 14px;
+              padding: $unnnic-spacing-nano;
+              cursor: pointer;
+              width: 200px;
+
+              &.selected {
+                font-weight: 700;
+                background-color: $unnnic-color-neutral-light;
+                padding: 8px 8px 8px 8px;
+              }
+            }
+          }
+        }
+
+        .insights-cards {
+          display: grid;
+          grid-template-columns: repeat(2, 2fr);
+          grid-template-rows: repeat(2, 2fr);
+          grid-column-gap: 16px;
+          grid-row-gap: 16px;
+        }
+      }
+    }
+  }
+  .content-input {
+    margin-top: auto;
+    width: 100%;
+    padding: 0 8rem;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    margin-top: 2rem;
+
+    input {
+      width: 100%;
+      height: 62px;
+      padding: $unnnic-spacing-xs;
+      border: none;
+      border-radius: $unnnic-spacing-nano;
+      background-color: $unnnic-color-neutral-lightest;
+      color: $unnnic-color-neutral-cloudy;
+    }
+
+    button {
+      position: absolute;
+      height: 46px;
+      width: 46px;
+      border: 2px $unnnic-color-neutral-cleanest solid;
+      border-radius: $unnnic-border-radius-sm;
+      background-color: $unnnic-color-neutral-white;
+      right: 8.5rem;
+      top: 0.6rem;
+      cursor: pointer;
+    }
+  }
+  .prompt-card {
+    background-color: $unnnic-color-neutral-lightest;
+    padding: $unnnic-spacing-sm;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+    cursor: pointer;
+
+    .prompt-card-title {
+      color: $unnnic-color-neutral-darkest;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .prompt-card-description {
+      color: $unnnic-color-neutral-dark;
+      font-size: 12px;
     }
   }
 }

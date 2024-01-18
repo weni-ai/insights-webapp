@@ -169,7 +169,7 @@ export default {
     flex-direction: row;
     place-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: $unnnic-spacing-lg;
     cursor: ns-resize;
     position: relative;
 

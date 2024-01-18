@@ -243,7 +243,7 @@ export default {
         .more-prompts-card {
           background-color: $unnnic-color-neutral-soft;
           color: $unnnic-color-neutral-darkest;
-          font-size: 20px;
+          font-size: $unnnic-font-size-title-sm;
           font-weight: 700;
         }
       }

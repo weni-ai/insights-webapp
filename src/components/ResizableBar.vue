@@ -12,7 +12,12 @@
         class="resizable-bar__separator"
       />
       <button @click="resizeBar" class="resizable-bar__circle-up">
-        <img src="../assets/images/icons/expand_circle_up.png" alt="Seta" />
+       <unnnic-icon
+         icon="expand_circle_up"
+         size="md"
+         scheme="neutral-cleanest"
+         clickable
+       />
       </button>
       <hr
         :class="{ 'green-color': isResizing }"

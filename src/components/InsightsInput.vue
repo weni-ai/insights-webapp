@@ -5,9 +5,12 @@
       type="text"
       placeholder="Peça insights ao InsightsGPT..."
     />
-    <button class="insights-input__button">
-      <img src="../assets/images/icons/send.png" alt="" />
-    </button>
+    <unnnic-button
+      class="insights-input__button"
+      type="secondary"
+      size="large"
+      iconCenter="send"
+    />
   </div>
 </template>
 

@@ -3,12 +3,16 @@
     <main>
       <slot />
     </main>
+    <ResizableBar />
   </section>
 </template>
 
 <script>
+import ResizableBar from '@/components/ResizableBar.vue';
+
 export default {
   name: 'InsightsLayout',
+  components: { ResizableBar },
 };
 </script>
 
@@ -27,7 +31,7 @@ export default {
   overflow: hidden;
 
   & > * {
-    padding: $unnnic-spacing-sm;
+    padding: 0 $unnnic-spacing-sm;
   }
 }
 

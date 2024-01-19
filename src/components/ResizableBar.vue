@@ -1,120 +1,131 @@
 <template>
-  <div
+  <aside
     class="resizable-bar"
     :style="{
       bottom: sidebarBottom + 'px',
       height: `${Math.min(sidebarHeight, maxHeight)}px`,
     }"
   >
-    <div class="resizable-bar__header" @mousedown="startResizing">
-      <hr :class="{ 'green-color': isResizing }" />
-      <button @click="resizeBar">
+    <header class="resizable-bar__header" @mousedown="startResizing">
+      <hr
+        :class="{ 'green-color': isResizing }"
+        class="resizable-bar__separator"
+      />
+      <button @click="resizeBar" class="resizable-bar__circle-up">
         <img src="../assets/images/icons/expand_circle_up.png" alt="Seta" />
       </button>
-      <hr :class="{ 'green-color': isResizing }" />
-    </div>
+      <hr
+        :class="{ 'green-color': isResizing }"
+        class="resizable-bar__separator"
+      />
+    </header>
     <div class="resizable-bar__content">
-      <div v-if="visibleInsights" class="insights">
-        <div>
-          <p>InsightsGPT:</p>
-          <h2>Aqui estão algumas sugestões para você:</h2>
-        </div>
-        <div class="insights-content">
-          <div class="insights-list">
-            <ul>
-              <li>Recentes</li>
-              <li>Segmentos</li>
-              <li>Varejo</li>
-              <li>Weni plataforma</li>
-              <li class="selected">Atendimento humano</li>
+      <div v-if="visibleInsights" class="resizable-bar__insights">
+        <header class="resizable-bar__insights-header">
+          <p
+            class="resizable-bar__insights-description unnnic-font body-md bold"
+          >
+            InsightsGPT:
+          </p>
+          <h2 class="resizable-bar__insights-title unnnic-font title-sm bold">
+            Aqui estão algumas sugestões para você:
+          </h2>
+        </header>
+        <div class="resizable-bar__insights-content">
+          <nav class="resizable-bar__insights-nav">
+            <ul class="resizable-bar__insights-list">
+              <li class="list-item">Recentes</li>
+              <li class="list-item">Segmentos</li>
+              <li class="list-item">Varejo</li>
+              <li class="list-item">Weni plataforma</li>
+              <li class="list-item selected">Atendimento humano</li>
             </ul>
-          </div>
-          <div class="insights-cards">
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
+          </nav>
+          <div class="resizable-bar__insights-cards">
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
           </div>
         </div>
       </div>
-      <div v-else class="general-content">
-        <div class="content-doris">
-          <img src="../assets/images/doris.png" alt="Dóris" />
-          <h1>Como posso te ajudar hoje?</h1>
+      <div v-else class="resizable-bar__general-content">
+        <div class="resizable-bar__content-doris">
+          <img
+            class="resizable-bar__doris-image"
+            src="../assets/images/doris.png"
+            alt="Dóris"
+          />
+          <h1 class="unnnic-font title-lg resizable-bar__doris-title">
+            Como posso te ajudar hoje?
+          </h1>
         </div>
-        <div class="content-text">
-          <div class="cards">
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div class="prompt-card">
-              <p class="prompt-card-title">
-                Quais foram os principais erros no meu chatbot?
-              </p>
-              <p class="prompt-card-description">Nos últimos 30 dias</p>
-            </div>
-            <div @click="showInsights" class="prompt-card more-prompts-card">
-              <p>Visualizar mais prompts prontos</p>
-            </div>
+        <div class="resizable-bar__content-text">
+          <div class="resizable-bar__cards">
+            <InsightsCard>
+              <template v-slot:title>Titulo</template>
+              <template v-slot:description>Descrição</template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title>Titulo</template>
+              <template v-slot:description>Descrição</template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title>Titulo</template>
+              <template v-slot:description>Descrição</template>
+            </InsightsCard>
+            <InsightsMainCard @click="showInsights">
+              <template v-slot:description>
+                Visualizar mais prompts prontos</template
+              >
+            </InsightsMainCard>
           </div>
         </div>
       </div>
     </div>
-    <div class="content-input">
-      <input type="text" placeholder="Peça insights ao InsightsGPT..." />
-      <button><img src="../assets/images/icons/send.png" alt="" /></button>
-    </div>
-  </div>
+    <InsightsInput />
+  </aside>
 </template>
 
 <script>
+import InsightsMainCard from '@/components/InsightsMainCard.vue';
+import InsightsCard from '@/components/InsightsCard.vue';
+import InsightsInput from '@/components/InsightsInput.vue';
+
 export default {
   name: 'ResizableBar',
+
+  components: {
+    InsightsMainCard,
+    InsightsCard,
+    InsightsInput,
+  },
 
   data() {
     return {
       isResizing: false,
       startY: 0,
       startBottom: -214,
-      sidebarBottom: -214,
-      minHeight: -214,
-      maxHeight: 300,
-      sidebarHeight: 230,
+      sidebarBottom: -320,
+      minHeight: -320,
+      maxHeight: 350,
+      sidebarHeight: 350,
       visibleGeneral: false,
       visibleInsights: false,
     };
@@ -142,10 +153,10 @@ export default {
       window.removeEventListener('mouseup', this.stopResizing);
     },
     resizeBar() {
-      if (this.sidebarBottom != 300) {
-        this.sidebarBottom = 300;
+      if (this.sidebarBottom != 350) {
+        this.sidebarBottom = 350;
       } else {
-        this.sidebarBottom = -214;
+        this.sidebarBottom = -320;
       }
     },
     showInsights() {
@@ -159,7 +170,6 @@ export default {
 .resizable-bar {
   z-index: 1;
   position: fixed;
-  right: 0;
   background-color: $unnnic-color-neutral-white;
   width: 100%;
   height: 210px;
@@ -169,33 +179,35 @@ export default {
     flex-direction: row;
     place-content: space-between;
     align-items: center;
-    margin-bottom: $unnnic-spacing-lg;
+    margin-bottom: 6rem;
     cursor: ns-resize;
     position: relative;
+  }
 
-    button {
-      border-radius: 50%;
-      background-color: white;
-      border: none;
-      cursor: pointer;
-      position: absolute;
-      right: 49.1%;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-    }
+  &__separator {
+    border: 1px solid $unnnic-color-neutral-clean;
+    border-radius: $unnnic-spacing-nano;
+    height: 1px;
+    width: 50%;
+  }
 
-    hr {
-      border: 1px solid $unnnic-color-neutral-clean;
-      border-radius: 5px;
-      height: 1px;
-      width: 50%;
-    }
+  .green-color {
+    border: 2px solid $unnnic-color-brand-weni;
+  }
 
-    .green-color {
-      border: 2px solid $unnnic-color-brand-weni !important;
-    }
+  &__circle-up {
+    border-radius: $unnnic-spacing-nano;
+    background-color: $unnnic-color-neutral-white;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
 
   &__content {
@@ -209,168 +221,99 @@ export default {
       overflow-y: scroll;
       overflow-x: hidden;
     }
-
-    .content-doris {
-      text-align: center;
-      margin-bottom: 2rem;
-      h1 {
-        font-weight: 700;
-        font-size: 24px;
-      }
-      img {
-        height: 8rem;
-        width: 8rem;
-      }
-    }
-
-    .content-text {
-      max-height: 164px;
-      min-height: 164px;
-      padding: 0 8rem;
-      margin-bottom: 2.5rem;
-
-      @media screen and (max-width: 900px) {
-        padding: unset;
-      }
-
-      .cards {
-        display: grid;
-        grid-template-columns: repeat(2, 2fr);
-        grid-template-rows: repeat(2, 2fr);
-        grid-column-gap: $unnnic-spacing-sm;
-        grid-row-gap: $unnnic-spacing-sm;
-
-        .more-prompts-card {
-          background-color: $unnnic-color-neutral-soft;
-          color: $unnnic-color-neutral-darkest;
-          font-size: $unnnic-font-size-title-sm;
-          font-weight: 700;
-        }
-      }
-    }
-
-    .insights {
-      display: flex;
-      flex-direction: column;
-      padding: 0 8rem;
-
-      @media screen and (max-width: 900px) {
-        padding: unset;
-      }
-
-      p {
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-      }
-
-      h2 {
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 3rem;
-      }
-
-      .insights-content {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        @media screen and (max-width: 900px) {
-          max-height: 300px;
-          flex-direction: column;
-        }
-
-        .insights-list {
-          ul {
-            display: flex;
-            flex-direction: column;
-            gap: $unnnic-spacing-nano;
-            @media screen and (max-width: 900px) {
-              margin-bottom: 2rem;
-            }
-            li {
-              font-size: 14px;
-              padding: $unnnic-spacing-nano;
-              cursor: pointer;
-              width: 200px;
-
-              &.selected {
-                font-weight: 700;
-                background-color: $unnnic-color-neutral-light;
-                padding: 8px 8px 8px 8px;
-              }
-            }
-          }
-        }
-
-        .insights-cards {
-          display: grid;
-          grid-template-columns: repeat(2, 2fr);
-          grid-template-rows: repeat(2, 2fr);
-          grid-column-gap: 16px;
-          grid-row-gap: 16px;
-        }
-      }
-    }
   }
-  .content-input {
-    margin-top: auto;
-    width: 100%;
-    padding: 0 8rem;
+
+  &__content-doris {
+    margin-bottom: 3rem;
     display: flex;
-    flex-direction: row;
-    position: relative;
-    margin-top: 2rem;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__doris-image {
+    height: 8rem;
+    width: 8rem;
+  }
+
+  &__doris-title {
+    font-weight: $unnnic-font-weight-bold;
+  }
+
+  &__content-text {
+    max-height: 164px;
+    min-height: 164px;
+    padding: 0 8rem;
+    margin-bottom: 2.5rem;
 
     @media screen and (max-width: 900px) {
       padding: unset;
     }
+  }
 
-    input {
-      width: 100%;
-      height: 62px;
-      padding: $unnnic-spacing-xs;
-      border: none;
-      border-radius: $unnnic-spacing-nano;
-      background-color: $unnnic-color-neutral-lightest;
-      color: $unnnic-color-neutral-cloudy;
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    grid-template-rows: repeat(2, 2fr);
+    grid-column-gap: $unnnic-spacing-sm;
+    grid-row-gap: $unnnic-spacing-sm;
+  }
+
+  &__insights {
+    display: flex;
+    flex-direction: column;
+    padding: 0 8rem;
+    margin-bottom: 3rem;
+
+    @media screen and (max-width: 900px) {
+      padding: unset;
     }
+  }
 
-    button {
-      position: absolute;
-      height: 46px;
-      width: 46px;
-      border: 2px $unnnic-color-neutral-cleanest solid;
-      border-radius: $unnnic-border-radius-sm;
-      background-color: $unnnic-color-neutral-white;
-      right: 8.5rem;
-      top: 0.6rem;
+  &__insights-description {
+    margin-bottom: $unnnic-spacing-xs;
+  }
+
+  &__insights-title {
+    margin-bottom: $unnnic-spacing-lg;
+  }
+
+  &__insights-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    @media screen and (max-width: 900px) {
+      max-height: 300px;
+      flex-direction: column;
+    }
+  }
+
+  &__insights-list {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-nano;
+    @media screen and (max-width: 900px) {
+      margin-bottom: $unnnic-spacing-lg;
+    }
+    .list-item {
+      font-size: $unnnic-font-size-body-lg;
       cursor: pointer;
+      width: 200px;
+      padding: $unnnic-spacing-xs;
 
-      @media screen and (max-width: 900px) {
-        right: 0;
+      &.selected {
+        font-weight: $unnnic-font-weight-bold;
+        background-color: $unnnic-color-neutral-light;
+        padding: $unnnic-spacing-xs;
       }
     }
   }
-  .prompt-card {
-    background-color: $unnnic-color-neutral-lightest;
-    padding: $unnnic-spacing-sm;
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    justify-content: center;
-    cursor: pointer;
 
-    .prompt-card-title {
-      color: $unnnic-color-neutral-darkest;
-      font-weight: 700;
-      font-size: 14px;
-    }
-
-    .prompt-card-description {
-      color: $unnnic-color-neutral-dark;
-      font-size: 12px;
-    }
+  &__insights-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 2fr);
+    grid-template-rows: repeat(2, 2fr);
+    grid-column-gap: $unnnic-spacing-sm;
+    grid-row-gap: $unnnic-spacing-sm;
   }
 }
 </style>

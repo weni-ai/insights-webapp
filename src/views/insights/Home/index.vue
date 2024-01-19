@@ -8,7 +8,6 @@
         type="tertiary"
         size="small"
       />
-      
     </div>
     <div class="cards">
       <div class="card">
@@ -80,7 +79,6 @@ export default {
     background-color: $unnnic-color-neutral-lightest;
   }
 }
-
 .cards {
   margin-top: 2rem;
   display: grid;
@@ -95,7 +93,6 @@ export default {
     gap: $unnnic-spacing-sm;
     text-align: right;
     padding: $unnnic-spacing-md;
-
     &__title {
       color: $unnnic-color-neutral-darkest;
       font-size: 40px;

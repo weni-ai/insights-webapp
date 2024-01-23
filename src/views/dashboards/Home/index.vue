@@ -4,7 +4,7 @@
       <unnnic-breadcrumb
         :crumbs="breadcrumb"
         @crumbClick="handleCrumbClick"
-      ></unnnic-breadcrumb>
+      />
       <div class="dashboards__subheader">
         <unnnic-icon
           icon="arrow_back"

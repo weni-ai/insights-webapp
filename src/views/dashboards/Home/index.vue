@@ -5,19 +5,19 @@
         :crumbs="breadcrumb"
         @crumbClick="handleCrumbClick"
       ></unnnic-breadcrumb>
-      <div class="dashboards__subheader">
+      <section class="dashboards__subheader">
         <unnnic-icon
           icon="arrow_back"
           size="lg"
           scheme="neutral-black"
           clickable
         />
-        <div class="dashboards__subheader-description">
+        <section class="dashboards__subheader-description">
           <h1 class="dashboards__title">Nome do projeto</h1>
           <p class="dashboards__description">Dashboards do projeto</p>
-        </div>
+        </section>
         <unnnic-icon icon="close" size="md" scheme="neutral-black" clickable />
-      </div>
+      </section>
     </header>
     <hr class="dashboards__separator" />
     <section>

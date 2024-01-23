@@ -7,15 +7,16 @@
       ></unnnic-breadcrumb>
       <div class="dashboards__subheader">
         <unnnic-icon
-          icon="arrow-left-1-1"
-          size="md"
+          icon="arrow_back"
+          size="lg"
           scheme="neutral-black"
           clickable
         />
-        <div>
+        <div class="dashboards__subheader-description">
           <h1 class="dashboards__title">Nome do projeto</h1>
           <p class="dashboards__description">Dashboards do projeto</p>
         </div>
+        <unnnic-icon icon="close" size="md" scheme="neutral-black" clickable />
       </div>
     </header>
     <hr class="dashboards__separator" />
@@ -59,9 +60,18 @@ export default {
   }
   &__subheader {
     display: flex;
-    align-items: top;
-    gap: $unnnic-spacing-sm;
+    align-items: flex-start;
+    align-self: stretch;
+    gap: $unnnic-spacing-ant;
     margin-bottom: $unnnic-spacing-lg;
+  }
+  &__subheader-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: $unnnic-spacing-nano;
+    width: 100%;
   }
   &__title {
     font-size: $unnnic-font-size-title-lg;

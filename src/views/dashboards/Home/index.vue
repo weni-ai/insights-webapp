@@ -1,10 +1,7 @@
 <template>
   <insights-layout ref="insights-layout">
     <header class="dashboards__header">
-      <unnnic-breadcrumb
-        :crumbs="breadcrumb"
-        @crumbClick="handleCrumbClick"
-      ></unnnic-breadcrumb>
+      <unnnic-breadcrumb :crumbs="breadcrumb" @crumbClick="handleCrumbClick" />
       <section class="dashboards__subheader">
         <unnnic-icon
           icon="arrow_back"

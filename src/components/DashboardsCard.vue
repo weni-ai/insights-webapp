@@ -31,6 +31,9 @@
     background-color: $unnnic-color-weni-50;
     width: 374.67px;
   }
+  &__title {
+    color: $unnnic-color-neutral-dark;
+  }
   &__button {
     width: 100%;
   }

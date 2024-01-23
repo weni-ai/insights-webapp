@@ -5,7 +5,7 @@
         :crumbs="breadcrumb"
         @crumbClick="handleCrumbClick"
       />
-      <div class="dashboards__subheader">
+      <section class="dashboards__subheader">
         <unnnic-icon
           icon="arrow_back"
           size="lg"

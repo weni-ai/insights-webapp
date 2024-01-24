@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/insights/Home/index.vue';
+import Dashboards from '@/views/dashboards/Home/index.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -16,6 +17,11 @@ const router = createRouter({
       path: '/insights',
       name: 'home',
       component: Home,
+    },
+    {
+      path: '/dashboards',
+      name: 'dashboards',
+      component: Dashboards,
     },
   ],
 });

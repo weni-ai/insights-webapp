@@ -7,6 +7,7 @@
         icon-left="bar_chart_4_bars"
         type="tertiary"
         size="small"
+        @click="goToDashboards"
       />
     </div>
     <div class="cards">
@@ -46,6 +47,12 @@ export default {
 
   components: {
     InsightsLayout,
+  },
+
+  methods: {
+    goToDashboards() {
+      this.$router.replace({ name: 'dashboards' });
+    },
   },
 };
 </script>

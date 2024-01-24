@@ -1,7 +1,7 @@
 <template>
   <button class="dashboards-card">
     <div class="dashboards-card__background"></div>
-    <p class="dashboards-card__title unnnic-font body-lg bold">
+    <p class="dashboards-card__title">
       <slot name="title"></slot>
     </p>
     <unnnic-button
@@ -29,10 +29,12 @@
     border-radius: $unnnic-border-radius-sm;
     height: 100px;
     background-color: $unnnic-color-weni-50;
-    width: 374.67px;
+    width: 100%;
   }
   &__title {
     color: $unnnic-color-neutral-dark;
+    font-size: $unnnic-font-size-body-lg;
+    font-weight: $unnnic-font-weight-bold;
   }
   &__button {
     width: 100%;

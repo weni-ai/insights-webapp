@@ -1,41 +1,27 @@
 <template>
-  <section class="agent-chats">
-    <header class="agent-chats__header">
-      <unnnic-avatar-icon icon="chat" scheme="brand-weni" />
-      <h1>Chats por agente</h1>
-    </header>
-    <unnnic-table
-      v-bind="$props"
-      :items="table.items"
-      :style="{ maxHeight: '280px', maxWidth: '380px' }"
-    >
-      <template v-slot:header>
-        <unnnic-table-row :headers="table.headers" />
-      </template>
+  <section class="table-agents">
+    <p class="table-agents__title">
+      <unnnic-avatar-icon icon="forum" size="xs" scheme="feedback-green" />
+      <span> Chats por agente </span>
+    </p>
 
-      <template v-slot:item="{ item }">
-        <unnnic-table-row :headers="table.headers">
-          <template v-slot:checkarea>
-            <unnnic-checkbox
-              v-model="item.selected"
-              :style="{ margin: '4px' }"
-            />
-          </template>
+    <section class="table-agents__table">
+      <header class="headers table-row">
+        <span class="header table-col"> Agente </span>
+        <span class="header table-col"> Chats </span>
+      </header>
 
-          <template v-slot:agent>
-            <div :title="item.agent" class="break-text">
-              {{ item.agent }}
-            </div>
-          </template>
-
-          <template v-slot:chats>
-            <div :title="item.chats" class="break-text">
-              {{ item.chats }}
-            </div>
-          </template>
-        </unnnic-table-row>
-      </template>
-    </unnnic-table>
+      <section class="items">
+        <section class="item table-row">
+          <span class="table-col agent">
+            <p>Fabricio Correia</p>
+          </span>
+          <span class="table-col" style="text-align: center">
+            <p>3</p>
+          </span>
+        </section>
+      </section>
+    </section>
   </section>
 </template>
 
@@ -43,52 +29,81 @@
 export default {
   name: 'AgentChats',
 
-  data: () => ({
-    table: {
-      headers: [
-        {
-          id: 'agent',
-          text: 'Agente',
-          flex: 2,
-        },
-        {
-          id: 'chats',
-          text: 'Chats',
-          flex: 1,
-        },
-      ],
-      items: [
-        {
-          selected: false,
-          agent: 'Fabricio Correia',
-          chats: '3',
-        },
-        {
-          selected: false,
-          agent: 'John Doe',
-          chats: '2',
-        },
-        {
-          selected: false,
-          agent: 'Daniela Maciel',
-          chats: '4',
-        },
-      ],
-    },
-  }),
+  data: () => ({}),
 };
 </script>
 
 <style lang="scss" scoped>
-.agent-chats {
-  display: flex;
-  flex-direction: column;
-  gap: $unnnic-spacing-ant;
-  &__header {
+.table-agents {
+  background: $unnnic-color-background-snow;
+  padding: $unnnic-spacing-inset-sm;
+  border-radius: $unnnic-border-radius-sm;
+
+  &__title {
     display: flex;
-    flex-direction: row;
     align-items: center;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-spacing-stack-xs;
+    font-size: $unnnic-font-size-title-sm;
+    color: $unnnic-color-neutral-darkest;
+    margin-bottom: $unnnic-spacing-inline-sm;
+  }
+
+  &__table {
+    color: $unnnic-color-neutral-cloudy;
+    font-size: $unnnic-font-size-body-gt;
+
+    .table-row {
+      display: flex;
+
+      .table-col {
+        flex: 1 1;
+
+        &:last-of-type {
+          flex: 0 1 40%;
+          text-align: center;
+        }
+      }
+    }
+
+    .headers {
+      background: $unnnic-color-background-carpet;
+      padding: $unnnic-spacing-inset-xs $unnnic-spacing-inset-sm;
+      border-radius: $unnnic-border-radius-sm;
+    }
+
+    .items {
+      .item {
+        padding: $unnnic-spacing-inset-md $unnnic-spacing-inset-sm;
+
+        .table-col {
+          &.agent {
+            display: flex;
+            align-items: center;
+            gap: $unnnic-spacing-inline-nano;
+            overflow: hidden;
+
+            p {
+              overflow: hidden;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              border-bottom: 1px solid transparent;
+            }
+          }
+        }
+
+        &:hover {
+          background: $unnnic-color-background-carpet;
+          text-decoration: underline;
+          text-underline-position: under;
+
+          cursor: pointer;
+
+          .agent > p {
+            border-bottom: 1px solid $unnnic-color-neutral-cloudy;
+          }
+        }
+      }
+    }
   }
 }
 </style>

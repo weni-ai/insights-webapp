@@ -16,25 +16,21 @@
         <unnnic-icon icon="close" size="md" scheme="neutral-black" clickable />
       </section>
       <section class="dashboard__buttons">
-        <section>
-          <unnnic-input-date-picker
-            v-model="filterDate"
-            position="left"
-            size="md"
-          />
-          <unnnic-button
-            text="Filtros"
-            icon-left="filter_alt"
-            type="tertiary"
-            size="large"
-          />
+        <section class="dashboard__buttons-one">
+          <button class="dashboard__button">
+            <unnnic-icon icon="calendar_month" size="md" clickable />
+            <span class="dashboard__button-title">Hoje</span>
+            <unnnic-icon icon="expand_more" size="md" clickable />
+          </button>
+          <button class="dashboard__button">
+            <unnnic-icon icon="filter_alt" size="md" clickable />
+            <span class="dashboard__button-title">Filtros</span>
+          </button>
         </section>
-        <unnnic-select-smart
-          v-model="filterValue"
-          :options="filterOptions"
-          placeholder="Exportar"
-          type="tertiary"
-        />
+        <button class="dashboard__button">
+          <span class="dashboard__button-title">Exportar</span>
+          <unnnic-icon icon="expand_more" size="md" clickable />
+        </button>
       </section>
     </header>
   </insights-layout>
@@ -51,25 +47,6 @@ export default {
   },
 
   data: () => ({
-    filterDate: {
-      start: null,
-      end: null,
-    },
-    filterValue: [],
-    filterOptions: [
-      {
-        value: '',
-        label: 'Exportar',
-      },
-      {
-        value: '1',
-        label: 'Exportar em CSV',
-      },
-      {
-        value: '2',
-        label: 'Exportar em PDF',
-      },
-    ],
     breadcrumb: [
       {
         name: 'Insights',
@@ -97,7 +74,6 @@ export default {
     align-items: flex-start;
     align-self: stretch;
     gap: $unnnic-spacing-ant;
-    margin-bottom: $unnnic-spacing-lg;
   }
   &__subheader-description {
     display: flex;
@@ -126,6 +102,24 @@ export default {
     align-items: center;
     gap: $unnnic-spacing-xs;
     place-content: space-between;
+  }
+  &__buttons-one {
+    display: flex;
+    flex-direction: row;
+    gap: $unnnic-spacing-xs;
+  }
+  &__button {
+    background-color: $unnnic-color-neutral-lightest;
+    border: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: $unnnic-spacing-xs;
+    padding: $unnnic-spacing-xs;
+    cursor: pointer;
+  }
+  &__button-title {
+    font-size: $unnnic-font-size-body-lg;
   }
 }
 </style>

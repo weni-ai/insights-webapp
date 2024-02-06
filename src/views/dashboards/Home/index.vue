@@ -22,17 +22,21 @@
         Templates de Dashboards
       </h1>
     </section>
+    <TableChats :data="chatsData" />
   </insights-layout>
 </template>
 
 <script>
 import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
+import TableChats from '@/components/TableChats.vue';
+import ChatsData from '@/mocks/chats.json';
 
 export default {
   name: 'DashboardsView',
 
   components: {
     InsightsLayout,
+    TableChats,
   },
 
   data: () => ({
@@ -44,6 +48,7 @@ export default {
         name: 'Dashboards',
       },
     ],
+    chatsData: ChatsData,
   }),
 };
 </script>

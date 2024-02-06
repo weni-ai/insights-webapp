@@ -1,10 +1,13 @@
 <template>
   <div class="table-pagination">
     <section class="table-pagination__pages">
-      <p class="table-pagination__pages__count">1 - 10 de 30</p>
+      <p class="table-pagination__pages__count">
+        {{ tablePagination.from }} - {{ tablePagination.to }} de
+        {{ tablePagination.total }}
+      </p>
       <unnnic-pagination
         :value="value"
-        @input="$emit('input', $event)"
+        @input="goToPage"
         :max="countPages"
         :show="limit"
       />
@@ -32,6 +35,23 @@ export default {
     limit: {
       type: Number,
       required: true,
+    },
+  },
+
+  computed: {
+    tablePagination() {
+      const { value, limit, count } = this;
+      return {
+        from: count === 0 ? 0 : (value - 1) * limit + 1,
+        to: Math.min(value * limit, count),
+        total: count,
+      };
+    },
+  },
+
+  methods: {
+    goToPage(page) {
+      this.$emit('updatePage', page);
     },
   },
 };

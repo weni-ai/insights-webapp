@@ -19,7 +19,7 @@
       </thead>
       <tbody class="table-chats__table-body">
         <tr
-          v-for="(row, rowIndex) in data[activeTab]"
+          v-for="(row, rowIndex) in tableData"
           :key="rowIndex"
           class="table-chats__table-row"
         >
@@ -31,9 +31,13 @@
     <footer class="table-chats__bottom">
       <TablePagination
         v-model="chatsCurrentPage"
+        :value="chatsCurrentPage"
         :count="chatsCount"
-        :countPages="chatsCountPages"
+        :countPages="
+          getTotalPages(Object.keys(this.data.chats.status)[this.activeTab])
+        "
         :limit="chatsLimit"
+        @updatePage="updatePage"
       />
     </footer>
   </section>
@@ -49,58 +53,80 @@ export default {
     TablePagination,
   },
 
-  data: () => ({
-    activeTab: 0,
-    page: 1,
-    tabs: ['Aguardando', 'Em andamento', 'Encerrados'],
-    headers: ['Contato', 'Agente', 'Horário de início', 'Tempo de interação'],
-    data: [
-      [
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
-        ['Fernanda da Silva Santos', 'Tamara', '12:59', '01:16'],
+  data() {
+    return {
+      tableData: [],
+      tabData: [],
+      activeTab: 0,
+      chatsCurrentPage: 1,
+      chatsCount: 0,
+      chatsCountPages: 0,
+      chatsLimit: 10,
+    };
+  },
+
+  props: {
+    tabs: {
+      type: Array,
+      default: () => ['Aguardando', 'Em progresso', 'Encerrado'],
+    },
+    headers: {
+      type: Array,
+      default: () => [
+        'Contato',
+        'Agente',
+        'Horário de início',
+        'Tempo de interação',
       ],
-      [
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-        ['Monica Cristina', 'Vitória', '12:59', '01:16'],
-      ],
-      [
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-        ['Claudio Leal', 'Larissa', '12:59', '01:16'],
-      ],
-    ],
-    chatsCurrentPage: 1,
-    chatsCount: 10,
-    chatsCountPages: 3,
-    chatsLimit: 10,
-  }),
+    },
+    data: {
+      type: Object,
+      required: true,
+    },
+  },
 
   methods: {
     changeTab(index) {
       this.activeTab = index;
+      this.chatsCurrentPage = 1;
+    },
+
+    updateTableData(tabs) {
+      const tabData = this.data.chats.status[tabs];
+      const startIndex = (this.chatsCurrentPage - 1) * this.chatsLimit;
+      const endIndex = startIndex + this.chatsLimit;
+
+      this.chatsCount = tabData.length;
+      this.tableData = tabData.slice(startIndex, endIndex).map((item) => ({
+        contact: item.contact,
+        agent: item.agent,
+        start_time: item.start_time,
+        interaction_time: item.interaction_time,
+      }));
+    },
+
+    getTotalPages(tabs) {
+      const tabData = this.data.chats.status[tabs];
+      if (tabData && tabData.length) {
+        return Math.ceil(tabData.length / this.chatsLimit);
+      } else {
+        return 1;
+      }
+    },
+
+    updatePage(page) {
+      this.chatsCurrentPage = page;
+      this.updateTableData(Object.keys(this.data.chats.status)[this.activeTab]);
+    },
+  },
+
+  mounted() {
+    this.updateTableData(Object.keys(this.data.chats.status)[this.activeTab]);
+  },
+
+  watch: {
+    activeTab(newValue) {
+      this.updateTableData(Object.keys(this.data.chats.status)[newValue]);
     },
   },
 };

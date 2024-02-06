@@ -1,0 +1,292 @@
+{
+  "chats": {
+    "status": {
+      "waiting": [
+        {
+          "id": 1,
+          "contact": "Fernanda da Silva Santos",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 2,
+          "contact": "Monica Cristina",
+          "agent": "Vitória",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 3,
+          "contact": "Claudio Leal",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 4,
+          "contact": "Diego Luis",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 5,
+          "contact": "Paula Castro",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 6,
+          "contact": "Andriana Martins",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 7,
+          "contact": "Thiago Oliveira",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 8,
+          "contact": "Denise Fonseca",
+          "agent": "Laisa",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 9,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 10,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 11,
+          "contact": "Fernanda da Silva Santos - Pag 2",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 12,
+          "contact": "Monica Cristina",
+          "agent": "Vitória",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 13,
+          "contact": "Claudio Leal",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 14,
+          "contact": "Diego Luis",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 15,
+          "contact": "Paula Castro",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 16,
+          "contact": "Andriana Martins",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 17,
+          "contact": "Thiago Oliveira",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 18,
+          "contact": "Denise Fonseca",
+          "agent": "Laisa",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 19,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 20,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        }
+      ],
+      "in_progress": [
+        {
+          "id": 1,
+          "contact": "Monica Cristina",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 2,
+          "contact": "Fernanda da Silva Santos",
+          "agent": "Vitória",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 3,
+          "contact": "Claudio Leal",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 4,
+          "contact": "Diego Luis",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 5,
+          "contact": "Paula Castro",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 6,
+          "contact": "Andriana Martins",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 7,
+          "contact": "Thiago Oliveira",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 8,
+          "contact": "Denise Fonseca",
+          "agent": "Laisa",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 9,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 10,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        }
+      ],
+      "closed": [
+        {
+          "id": 1,
+          "contact": "Claudio Leal",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 2,
+          "contact": "Monica Cristina",
+          "agent": "Vitória",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 3,
+          "contact": "Fernanda da Silva Santos",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 4,
+          "contact": "Diego Luis",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 5,
+          "contact": "Paula Castro",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 6,
+          "contact": "Andriana Martins",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 7,
+          "contact": "Thiago Oliveira",
+          "agent": "Tamara",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 8,
+          "contact": "Denise Fonseca",
+          "agent": "Laisa",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 9,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        },
+        {
+          "id": 10,
+          "contact": "Ana Dias",
+          "agent": "Jessica",
+          "start_time": "12:59",
+          "interaction_time": "01:16"
+        }
+      ]
+    }
+  }
+}

@@ -12,8 +12,10 @@
   },
   "dependencies": {
     "@weni/unnnic-system": "^2.0.0-beta.0",
+    "apexcharts": "^3.45.2",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
+    "vue3-apexcharts": "^1.4.4",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

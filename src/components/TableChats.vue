@@ -108,25 +108,32 @@ export default {
     getTotalPages(tabs) {
       const tabData = this.data.chats.status[tabs];
       if (tabData && tabData.length) {
-        return Math.ceil(tabData.length / this.chatsLimit);
+        const totalPagesPerItems = Math.ceil(tabData.length / this.chatsLimit);
+        return totalPagesPerItems;
       } else {
         return 1;
       }
     },
 
+    updateTab(value) {
+      const statusKey = Object.keys(this.data.chats.status);
+      const status = statusKey?.[value];
+      return this.updateTableData(status);
+    },
+
     updatePage(page) {
       this.chatsCurrentPage = page;
-      this.updateTableData(Object.keys(this.data.chats.status)[this.activeTab]);
+      this.updateTab(this.activeTab);
     },
   },
 
   mounted() {
-    this.updateTableData(Object.keys(this.data.chats.status)[this.activeTab]);
+    this.updateTab(this.activeTab);
   },
 
   watch: {
     activeTab(newValue) {
-      this.updateTableData(Object.keys(this.data.chats.status)[newValue]);
+      this.updateTab(newValue);
     },
   },
 };
@@ -145,7 +152,7 @@ export default {
 
   &__tab-button {
     width: 100%;
-    font-size: 16px;
+    font-size: $unnnic-font-size-body-lg;
     border: 1px solid $unnnic-color-neutral-cleanest;
     background-color: $unnnic-color-neutral-lightest;
     cursor: pointer;
@@ -169,7 +176,7 @@ export default {
     font-size: $unnnic-font-size-body-gt;
   }
   &__table-head {
-    margin-bottom: 1rem;
+    margin-bottom: $unnnic-spacing-sm;
   }
   &__table-row {
     height: $unnnic-spacing-lg;

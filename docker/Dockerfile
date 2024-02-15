@@ -21,10 +21,10 @@ RUN yarn build
 FROM nginxinc/nginx-unprivileged:1.25-alpine
 
 COPY --chown=nginx:nginx docker/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/chats/
+COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/insights/
 COPY docker-entrypoint.sh /
-RUN mv /usr/share/nginx/html/chats/index.html /usr/share/nginx/html/chats/index.html.tmpl \
-    && cd /usr/share/nginx/html/chats/ \
+RUN mv /usr/share/nginx/html/insights/index.html /usr/share/nginx/html/insights/index.html.tmpl \
+    && cd /usr/share/nginx/html/insights/ \
     && ln -s /tmp/index.html
 
 EXPOSE 8080

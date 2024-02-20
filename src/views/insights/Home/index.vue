@@ -62,9 +62,6 @@ export default {
     goToDashboards() {
       this.$router.replace({ name: 'dashboards' });
     },
-    getTime(date) {
-      return moment(date).format('HH:mm');
-    },
   },
 };
 </script>

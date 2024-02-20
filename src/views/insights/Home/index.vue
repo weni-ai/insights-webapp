@@ -9,6 +9,7 @@
         size="small"
         @click="goToDashboards"
       />
+      <unnnic-input-date-picker v-model="filterDate" size="sm" />
     </div>
     <div class="cards">
       <div class="card">
@@ -40,6 +41,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
 
 export default {
@@ -48,6 +50,13 @@ export default {
   components: {
     InsightsLayout,
   },
+
+  data: () => ({
+    filterDate: {
+      start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+      end: moment().format('YYYY-MM-DD'),
+    },
+  }),
 
   methods: {
     goToDashboards() {

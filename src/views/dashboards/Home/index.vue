@@ -8,12 +8,19 @@
           size="lg"
           scheme="neutral-black"
           clickable
+          @click="goToInsights"
         />
         <section class="dashboards__subheader-description">
           <h1 class="dashboards__title">Nome do projeto</h1>
           <p class="dashboards__description">Dashboards do projeto</p>
         </section>
-        <unnnic-icon icon="close" size="md" scheme="neutral-black" clickable />
+        <unnnic-icon
+          icon="close"
+          size="md"
+          scheme="neutral-black"
+          clickable
+          @click="goToInsights"
+        />
       </section>
     </header>
     <hr class="dashboards__separator" />
@@ -45,6 +52,12 @@ export default {
       },
     ],
   }),
+
+  methods: {
+    goToInsights() {
+      this.$router.push({ name: 'home' });
+    },
+  },
 };
 </script>
 

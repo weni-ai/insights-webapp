@@ -50,15 +50,23 @@ export default {
     breadcrumb: [
       {
         name: 'Insights',
+        path: '/insights',
       },
       {
         name: 'Dashboards',
+        path: '/dashboards',
       },
       {
         name: 'Atendimento Humano',
+        path: 'dashboard',
       },
     ],
   }),
+  methods: {
+    handleCrumbClick(crumb) {
+      this.$router.push(crumb.path);
+    },
+  },
 };
 </script>
 

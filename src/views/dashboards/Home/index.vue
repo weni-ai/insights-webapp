@@ -46,9 +46,11 @@ export default {
     breadcrumb: [
       {
         name: 'Insights',
+        path: '/insights',
       },
       {
         name: 'Dashboards',
+        path: '/dashboards',
       },
     ],
   }),
@@ -56,6 +58,9 @@ export default {
   methods: {
     goToInsights() {
       this.$router.push({ name: 'home' });
+    },
+    handleCrumbClick(crumb) {
+      this.$router.push(crumb.path);
     },
   },
 };

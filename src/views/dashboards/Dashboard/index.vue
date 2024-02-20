@@ -58,7 +58,7 @@ export default {
       },
       {
         name: 'Atendimento Humano',
-        path: 'dashboard',
+        path: '/dashboard',
       },
     ],
   }),

@@ -6,6 +6,7 @@
 
 <script>
 import { RouterView } from 'vue-router';
+import './assets/scss/unnnic.scss';
 </script>
 
 <style lang="scss" scoped>

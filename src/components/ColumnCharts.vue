@@ -13,13 +13,13 @@ export default {
   },
   data: () => ({
     options: {
-      colors: ['#9CACCC'],
+      colors: ['var(--unnnic-color-neutral-clean)'],
       chart: {
         id: 'column-chart',
         toolbar: {
           show: false,
         },
-        fontFamily: 'Lato, sans-serif;',
+        fontFamily: '$unnnic-font-family-secondary',
       },
       grid: {
         show: false,

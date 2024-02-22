@@ -14,27 +14,27 @@
     <div class="cards">
       <div class="card">
         <p class="card__title">2150</p>
-        <p>Mensagens trocadas via bot</p>
+        <p class="card__description">Mensagens trocadas via bot</p>
       </div>
       <div class="card">
         <p class="card__title">503</p>
-        <p>Atendimentos no Weni Chats</p>
+        <p class="card__description">Atendimentos no Weni Chats</p>
       </div>
       <div class="card">
         <p class="card__title">4.3</p>
-        <p>NPS</p>
+        <p class="card__description">NPS</p>
       </div>
       <div class="card">
         <p class="card__title">7000</p>
-        <p>Runs de fluxos</p>
+        <p class="card__description">Runs de fluxos</p>
       </div>
       <div class="card">
         <p class="card__title">1500</p>
-        <p>Contatos ativos</p>
+        <p class="card__description">Contatos ativos</p>
       </div>
       <div class="card">
         <p class="card__title">129</p>
-        <p>Erros</p>
+        <p class="card__description">Erros</p>
       </div>
     </div>
   </insights-layout>
@@ -73,9 +73,10 @@ export default {
   gap: $unnnic-spacing-stack-xl;
 
   &__title {
-    font-size: $unnnic-font-size-title-lg;
-    font-weight: $unnnic-font-weight-bold;
     color: $unnnic-color-neutral-darkest;
+    font-size: $unnnic-font-size-title-md;
+    font-weight: $unnnic-font-weight-bold;
+    font-family: $unnnic-font-family-primary;
   }
 }
 
@@ -110,10 +111,14 @@ export default {
     text-align: right;
     padding: $unnnic-spacing-md;
     &__title {
-      color: $unnnic-color-neutral-darkest;
       font-size: 40px;
       font-size: 700;
       font-weight: 700;
+      font-family: $unnnic-font-family-primary;
+      color: $unnnic-color-neutral-darkest;
+    }
+    &__description {
+      color: $unnnic-color-neutral-darkest;
     }
   }
 }

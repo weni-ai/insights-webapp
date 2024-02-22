@@ -1,5 +1,5 @@
 <template>
-  <button class="dashboards-card">
+  <article class="dashboards-card">
     <div class="dashboards-card__background"></div>
     <p class="dashboards-card__title">
       <slot name="title"></slot>
@@ -9,9 +9,26 @@
       type="secondary"
       size="large"
       class="dashboards-card__button"
+      @click="redirectToPage"
     />
-  </button>
+  </article>
 </template>
+
+<script>
+export default {
+  props: {
+    route: {
+      type: String,
+      required: true,
+    },
+  },
+  methods: {
+    redirectToPage() {
+      this.$router.push(this.route);
+    },
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 .dashboards-card {

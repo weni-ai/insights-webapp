@@ -20,6 +20,22 @@
             <p>3</p>
           </span>
         </section>
+        <section class="item table-row">
+          <span class="table-col agent">
+            <p>Fabricio Correia</p>
+          </span>
+          <span class="table-col" style="text-align: center">
+            <p>3</p>
+          </span>
+        </section>
+        <section class="item table-row">
+          <span class="table-col agent">
+            <p>Fabricio Correia</p>
+          </span>
+          <span class="table-col" style="text-align: center">
+            <p>3</p>
+          </span>
+        </section>
       </section>
     </section>
   </section>

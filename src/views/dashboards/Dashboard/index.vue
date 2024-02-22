@@ -41,7 +41,7 @@
       </section>
     </header>
     <section class="dashboard__widgets" v-if="firstSection">
-      <div class="dashboard__widgets-cards">
+      <section class="dashboard__widgets-cards">
         <article
           class="dashboard__widgets-card"
           v-for="(card, index) in cards"
@@ -52,11 +52,11 @@
             {{ card.description }}
           </p>
         </article>
-      </div>
-      <div>
+      </section>
+      <section>
         <ColumnCharts :chartData="chartData" />
         <AgentChats />
-      </div>
+      </section>
     </section>
     <section v-else class="dashboard__table">
       <TableChats :data="chatsData" />

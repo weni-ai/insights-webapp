@@ -6,17 +6,33 @@
     </p>
 
     <section class="table-agents__table">
-      <header class="headers table-row">
-        <span class="header table-col"> Agente </span>
-        <span class="header table-col"> Chats </span>
+      <header class="table-agents__headers table-agents__table-row">
+        <span class="table-agents__table-col-headers"> Agente </span>
+        <span class="table-agents__table-col-headers"> Chats </span>
       </header>
 
-      <section class="items">
-        <section class="item table-row">
-          <span class="table-col agent">
+      <section class="table-agents__items">
+        <section class="table-agents__item table-agents__table-row">
+          <span class="table-agents__agent">
+            <p class="table-agents__agent-name">Fabricio Correia</p>
+          </span>
+          <span class="table-agents__table-col-chats">
+            <p>3</p>
+          </span>
+        </section>
+        <section class="table-agents__item table-agents__table-row">
+          <span class="table-agents__agent-name">
             <p>Fabricio Correia</p>
           </span>
-          <span class="table-col" style="text-align: center">
+          <span class="table-agents__table-col-chats">
+            <p class="table-agents__table-col-chats">3</p>
+          </span>
+        </section>
+        <section class="table-agents__item table-agents__table-row">
+          <span class="table-agents__agent-name">
+            <p>Fabricio Correia</p>
+          </span>
+          <span class="table-agents__table-col-chats">
             <p>3</p>
           </span>
         </section>
@@ -51,59 +67,56 @@ export default {
   &__table {
     color: $unnnic-color-neutral-cloudy;
     font-size: $unnnic-font-size-body-gt;
+  }
 
-    .table-row {
-      display: flex;
+  &__headers {
+    background: $unnnic-color-background-carpet;
+    padding: $unnnic-spacing-inset-xs $unnnic-spacing-inset-sm;
+    border-radius: $unnnic-border-radius-sm;
+    font-size: $unnnic-font-size-body-gt;
+  }
 
-      .table-col {
-        flex: 1 1;
+  &__table-row {
+    display: flex;
+  }
 
-        &:last-of-type {
-          flex: 0 1 40%;
-          text-align: center;
-        }
-      }
+  &__table-col-headers {
+    flex: 1 1;
+
+    &:last-of-type {
+      flex: 0 1 40%;
+      text-align: right;
     }
+  }
 
-    .headers {
+  &__item {
+    padding: $unnnic-spacing-inset-md $unnnic-spacing-inset-sm;
+    justify-content: space-between;
+
+    &:hover {
       background: $unnnic-color-background-carpet;
-      padding: $unnnic-spacing-inset-xs $unnnic-spacing-inset-sm;
-      border-radius: $unnnic-border-radius-sm;
+      text-decoration: underline;
+      text-underline-position: under;
+      cursor: pointer;
     }
+  }
 
-    .items {
-      .item {
-        padding: $unnnic-spacing-inset-md $unnnic-spacing-inset-sm;
+  &__agent {
+    display: flex;
+    align-items: center;
+    gap: $unnnic-spacing-inline-nano;
+    overflow: hidden;
+  }
 
-        .table-col {
-          &.agent {
-            display: flex;
-            align-items: center;
-            gap: $unnnic-spacing-inline-nano;
-            overflow: hidden;
+  &__agent-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    border-bottom: 1px solid transparent;
+  }
 
-            p {
-              overflow: hidden;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              border-bottom: 1px solid transparent;
-            }
-          }
-        }
-
-        &:hover {
-          background: $unnnic-color-background-carpet;
-          text-decoration: underline;
-          text-underline-position: under;
-
-          cursor: pointer;
-
-          .agent > p {
-            border-bottom: 1px solid $unnnic-color-neutral-cloudy;
-          }
-        }
-      }
-    }
+  &__table-col-chats {
+    font-weight: $unnnic-font-weight-bold;
   }
 }
 </style>

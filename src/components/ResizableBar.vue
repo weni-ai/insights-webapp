@@ -12,12 +12,12 @@
         class="resizable-bar__separator"
       />
       <button @click="resizeBar" class="resizable-bar__circle-up">
-       <unnnic-icon
-         icon="expand_circle_up"
-         size="md"
-         scheme="neutral-cleanest"
-         clickable
-       />
+        <unnnic-icon
+          icon="expand_circle_up"
+          size="md"
+          scheme="neutral-cleanest"
+          clickable
+        />
       </button>
       <hr
         :class="{ 'green-color': isResizing }"
@@ -221,6 +221,7 @@ export default {
     flex-direction: column;
     place-content: center;
     gap: 2rem;
+    padding-bottom: 6rem;
 
     @media screen and (max-width: 900px) {
       overflow-y: scroll;

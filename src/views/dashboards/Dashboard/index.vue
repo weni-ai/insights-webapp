@@ -53,7 +53,7 @@
           </p>
         </article>
       </section>
-      <section>
+      <section class="dashboard__widgets-chats-data">
         <ColumnCharts :chartData="chartData" />
         <AgentChats />
       </section>
@@ -182,6 +182,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: $unnnic-spacing-md;
     margin-top: $unnnic-spacing-sm;
   }
   &__widgets-cards {
@@ -192,13 +193,15 @@ export default {
     grid-gap: $unnnic-spacing-sm;
   }
   &__widgets-card {
-    background-color: $unnnic-color-neutral-lightest;
+    height: -webkit-fill-available;
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
     text-align: right;
+    justify-content: center;
+    background-color: $unnnic-color-neutral-lightest;
+    gap: $unnnic-spacing-sm;
     padding: $unnnic-spacing-md;
-    height: 147px;
+    border-radius: $unnnic-border-radius-sm;
   }
   &__widgets-card-title {
     color: $unnnic-color-neutral-darkest;

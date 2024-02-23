@@ -28,7 +28,6 @@ export default {
   display: flex;
   flex-direction: row;
   position: relative;
-  margin-top: 6rem;
 
   @media screen and (max-width: 900px) {
     padding: unset;
@@ -51,7 +50,7 @@ export default {
     border: 1px $unnnic-color-neutral-cleanest solid;
     border-radius: $unnnic-border-radius-sm;
     background-color: $unnnic-color-neutral-white;
-    right: 8.5rem;
+    right: 4rem;
     top: 0.6rem;
     cursor: pointer;
 

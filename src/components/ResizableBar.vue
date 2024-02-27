@@ -11,9 +11,25 @@
         :class="{ 'green-color': isResizing }"
         class="resizable-bar__separator"
       />
-      <button @click="resizeBar" class="resizable-bar__circle-up">
+      <button
+        @click="resizeBar"
+        class="resizable-bar__circle-up"
+        v-if="sidebarBottom"
+      >
         <unnnic-icon
           icon="expand_circle_up"
+          size="md"
+          scheme="neutral-cleanest"
+          clickable
+        />
+      </button>
+      <button
+        @click="resizeBar"
+        class="resizable-bar__circle-up"
+        v-if="sidebarBottom > (134 || -320)"
+      >
+        <unnnic-icon
+          icon="expand_circle_down"
           size="md"
           scheme="neutral-cleanest"
           clickable
@@ -24,8 +40,8 @@
         class="resizable-bar__separator"
       />
     </header>
-    <div class="resizable-bar__content">
-      <div v-if="visibleInsights" class="resizable-bar__insights">
+    <section class="resizable-bar__content">
+      <section v-if="visibleInsights" class="resizable-bar__insights">
         <header class="resizable-bar__insights-header">
           <p
             class="resizable-bar__insights-description unnnic-font body-md bold"
@@ -69,9 +85,9 @@
             </InsightsCard>
           </div>
         </div>
-      </div>
-      <div v-else class="resizable-bar__general-content">
-        <div class="resizable-bar__content-doris">
+      </section>
+      <section v-else class="resizable-bar__general-content">
+        <div class="resizable-bar__content-doris" v-if="showContent">
           <img
             class="resizable-bar__doris-image"
             src="../assets/images/doris.png"
@@ -83,17 +99,19 @@
         </div>
         <div class="resizable-bar__content-text">
           <div class="resizable-bar__cards">
-            <InsightsCard>
+            <InsightsCard v-if="showContent">
+              <template v-slot:title>Titulo</template>
+              <template v-slot:description>Descrição</template>
+            </InsightsCard>
+            <InsightsCard v-if="showContent">
               <template v-slot:title>Titulo</template>
               <template v-slot:description>Descrição</template>
             </InsightsCard>
             <InsightsCard>
-              <template v-slot:title>Titulo</template>
-              <template v-slot:description>Descrição</template>
-            </InsightsCard>
-            <InsightsCard>
-              <template v-slot:title>Titulo</template>
-              <template v-slot:description>Descrição</template>
+              <template v-slot:title
+                >Quais foram os principais erros no meu chatbot?</template
+              >
+              <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsMainCard @click="showInsights">
               <template v-slot:description>
@@ -102,8 +120,8 @@
             </InsightsMainCard>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </section>
     <InsightsInput />
   </aside>
 </template>
@@ -124,18 +142,41 @@ export default {
 
   data() {
     return {
-      isResizing: false,
       startY: 0,
       startBottom: -214,
-      sidebarBottom: -320,
       minHeight: -320,
       maxHeight: 350,
       sidebarHeight: 350,
+      initialContentHeight: 134,
+      sidebarBottom: this.getInitialBarHeight(),
+      isResizing: false,
       visibleGeneral: false,
       visibleInsights: false,
+      showContent: false,
     };
   },
   methods: {
+    getInitialBarHeight() {
+      if (this.$route.path === '/insights') {
+        this.showContent = false;
+        return 134;
+      } else {
+        return -320;
+      }
+    },
+    updateContentVisibility() {
+      if (this.sidebarBottom == this.initialContentHeight) {
+        this.showContent = true;
+      } else {
+        this.showContent = true;
+      }
+    },
+    showSomeContent() {
+      if (this.sidebarBottom > 134) {
+        this.showContent = true;
+        console.log(this.showContent);
+      }
+    },
     startResizing(event) {
       this.isResizing = true;
       this.startY = event.clientY;
@@ -150,6 +191,8 @@ export default {
           Math.min(this.startBottom - offsetY, this.maxHeight),
           this.minHeight,
         );
+
+        this.updateContentVisibility();
       }
     },
     stopResizing() {
@@ -163,6 +206,8 @@ export default {
       } else {
         this.sidebarBottom = -320;
       }
+
+      this.updateContentVisibility();
     },
     showInsights() {
       this.visibleInsights = !this.visibleInsights && !this.visibleGeneral;
@@ -317,7 +362,6 @@ export default {
   &__insights-cards {
     display: grid;
     grid-template-columns: repeat(2, 2fr);
-    grid-template-rows: repeat(2, 2fr);
     grid-column-gap: $unnnic-spacing-sm;
     grid-row-gap: $unnnic-spacing-sm;
   }

@@ -172,11 +172,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$insightsContainerPadding: $unnnic-spacing-ant * 2;
+
 .resizable-bar {
   z-index: 1;
-  position: fixed;
+  position: absolute;
   background-color: $unnnic-color-neutral-white;
-  width: 100%;
+  width: calc(100% - $insightsContainerPadding);
   height: 210px;
 
   &__header {

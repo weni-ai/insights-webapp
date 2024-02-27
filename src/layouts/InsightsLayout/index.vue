@@ -50,7 +50,11 @@ export default {
   }
 
   &__insights {
+    position: relative;
+
     grid-area: insights;
+    display: flex;
+    flex-direction: column;
 
     padding: $unnnic-spacing-ant;
 

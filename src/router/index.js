@@ -25,9 +25,9 @@ const router = createRouter({
       component: Dashboards,
     },
     {
-      path: '/dashboards/dashboard',
-      name: 'dashboard',
+      path: '/dashboards/dashboard/:id',
       component: Dashboard,
+      props: true,
     },
   ],
 });

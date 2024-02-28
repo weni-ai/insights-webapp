@@ -9,26 +9,9 @@
       type="secondary"
       size="large"
       class="dashboards-card__button"
-      @click="redirectToPage"
     />
   </article>
 </template>
-
-<script>
-export default {
-  props: {
-    route: {
-      type: String,
-      required: true,
-    },
-  },
-  methods: {
-    redirectToPage() {
-      this.$router.push(this.route);
-    },
-  },
-};
-</script>
 
 <style lang="scss" scoped>
 .dashboards-card {

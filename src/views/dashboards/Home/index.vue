@@ -31,7 +31,7 @@
       <DashboardCard
         v-for="(card, index) in cards"
         :key="index"
-        :route="card.route"
+        @click="goToCardDetails(card.id, card.title)"
       >
         <template #title>
           {{ card.title }}
@@ -74,6 +74,13 @@ export default {
     },
     handleCrumbClick(crumb) {
       this.$router.push(crumb.path);
+    },
+    goToCardDetails(cardId, cardTitle) {
+      this.$router.push({
+        name: 'dashboard',
+        params: { id: cardId },
+        query: { title: cardTitle },
+      });
     },
   },
 };

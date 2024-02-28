@@ -11,7 +11,7 @@
           @click="goToDashboards"
         />
         <section class="dashboard__subheader-description">
-          <h1 class="dashboard__title">Atendimento Humano</h1>
+          <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
           <p class="dashboard__description">Nome do projeto</p>
         </section>
         <unnnic-icon
@@ -86,6 +86,7 @@ export default {
   },
 
   data: () => ({
+    dashboardTitle: '',
     cards: dashboardData,
     chartData: chartData,
     chatsData: ChatsData,
@@ -100,8 +101,8 @@ export default {
         path: '/dashboards',
       },
       {
-        name: 'Atendimento Humano',
-        path: '/dashboard',
+        name: '',
+        path: '',
       },
     ],
   }),
@@ -115,6 +116,18 @@ export default {
     showTable() {
       this.firstSection = !this.firstSection;
     },
+    handleCrumbClick(crumb) {
+      this.$router.push(crumb.path);
+    },
+  },
+  mounted() {
+    const cardTitle = this.$route.query.title;
+    const cardId = this.$route.params.id;
+    const cardPath = `/dashboards/${cardId}`;
+    this.dashboardTitle = cardTitle;
+
+    this.breadcrumb[2].name = cardTitle;
+    this.breadcrumb[2].path = cardPath;
   },
 };
 </script>

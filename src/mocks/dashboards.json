@@ -1,5 +1,5 @@
 [
-  { "title": "Atendimento humano", "route": "/dashboards/dashboard" },
-  { "title": "Atendimento humano", "route": "/dashboards/dashboard" },
-  { "title": "Atendimento humano", "route": "/dashboards/dashboard" }
+  { "id": 1, "title": "Atendimento humano" },
+  { "id": 2, "title": "Chatbot" },
+  { "id": 3, "title": "Disparo de fluxos" }
 ]

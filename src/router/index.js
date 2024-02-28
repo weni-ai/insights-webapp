@@ -25,9 +25,12 @@ const router = createRouter({
       component: Dashboards,
     },
     {
-      path: '/dashboards/dashboard/:id',
+      path: '/dashboards/:id',
       component: Dashboard,
-      props: true,
+      name: 'dashboard',
+      props: (route) => ({
+        dashboardId: route.params.dashboardId,
+      }),
     },
   ],
 });

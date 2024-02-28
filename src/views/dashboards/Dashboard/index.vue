@@ -123,7 +123,7 @@ export default {
   mounted() {
     const cardTitle = this.$route.query.title;
     const cardId = this.$route.params.id;
-    const cardPath = `/dashboards/dashboard/${cardId}`;
+    const cardPath = `/dashboards/${cardId}`;
     this.dashboardTitle = cardTitle;
 
     this.breadcrumb[2].name = cardTitle;

@@ -22,7 +22,7 @@
         </section>
         <section class="table-agents__item table-agents__table-row">
           <span class="table-agents__agent-name">
-            <p>Fabricio Correia</p>
+            <p>Daniela Maciel</p>
           </span>
           <span class="table-agents__table-col-chats">
             <p class="table-agents__table-col-chats">3</p>
@@ -30,10 +30,10 @@
         </section>
         <section class="table-agents__item table-agents__table-row">
           <span class="table-agents__agent-name">
-            <p>Fabricio Correia</p>
+            <p>Daniela Maciel</p>
           </span>
           <span class="table-agents__table-col-chats">
-            <p>3</p>
+            <p>4</p>
           </span>
         </section>
       </section>
@@ -52,7 +52,6 @@ export default {
 <style lang="scss" scoped>
 .table-agents {
   background: $unnnic-color-background-snow;
-  padding: $unnnic-spacing-inset-sm;
   border-radius: $unnnic-border-radius-sm;
 
   &__title {

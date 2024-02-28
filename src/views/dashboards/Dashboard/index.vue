@@ -53,8 +53,14 @@
           </p>
         </article>
       </section>
-      <section class="dashboard__widgets-chats-data">
-        <ColumnCharts :chartData="chartData" />
+      <section class="dashboard__widgets-chart">
+        <ColumnCharts
+          :chartData="chartData"
+          :height="chartHeight"
+          :width="chartWidth"
+        />
+      </section>
+      <section class="dashboard__widgets-agent">
         <AgentChats />
       </section>
     </section>
@@ -91,6 +97,8 @@ export default {
     chartData: chartData,
     chatsData: ChatsData,
     firstSection: true,
+    chartHeight: '100%',
+    chartWidth: '100%',
     breadcrumb: [
       {
         name: 'Insights',
@@ -192,21 +200,33 @@ export default {
     font-size: $unnnic-font-size-body-lg;
   }
   &__widgets {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: $unnnic-spacing-md;
     margin-top: $unnnic-spacing-sm;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-template-rows: repeat(3, auto);
+    gap: $unnnic-spacing-md;
+    grid-template-areas:
+      'cards cards graph'
+      'cards cards agents'
+      'cards cards agents';
   }
   &__widgets-cards {
-    width: 100%;
+    grid-area: cards;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: $unnnic-spacing-sm;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: $unnnic-spacing-sm;
+    grid-column: span 2;
+  }
+  &__widgets-chart {
+    height: 115px;
+    grid-area: graph;
+  }
+  &__widgets-agent {
+    grid-area: agents;
   }
   &__widgets-card {
-    height: -webkit-fill-available;
+    height: 128px;
     display: flex;
     flex-direction: column;
     text-align: right;

@@ -127,7 +127,7 @@ export default {
       isResizing: false,
       startY: 0,
       startBottom: -214,
-      sidebarBottom: -320,
+      sidebarBottom: -339,
       minHeight: -320,
       maxHeight: 350,
       sidebarHeight: 350,

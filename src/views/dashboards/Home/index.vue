@@ -76,9 +76,9 @@ export default {
       this.$router.push(crumb.path);
     },
     goToCardDetails(cardId, cardTitle) {
-      const path = `/dashboards/${cardId}`;
       this.$router.push({
-        path: path,
+        name: 'dashboard',
+        params: { id: cardId },
         query: { title: cardTitle },
       });
     },

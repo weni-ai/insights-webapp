@@ -29,7 +29,7 @@ const router = createRouter({
       component: Dashboard,
       name: 'dashboard',
       props: (route) => ({
-        dashboardId: route.params.dashboardId,
+        cardId: route.params.cardId,
       }),
     },
   ],

@@ -66,8 +66,6 @@ export default {
 
       height: 100%;
 
-      grid-column: 2;
-
       background-color: $unnnic-color-neutral-white;
     }
   }

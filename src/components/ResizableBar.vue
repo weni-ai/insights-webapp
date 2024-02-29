@@ -127,7 +127,7 @@ export default {
       isResizing: false,
       startY: 0,
       startBottom: -214,
-      sidebarBottom: -320,
+      sidebarBottom: -339,
       minHeight: -320,
       maxHeight: 350,
       sidebarHeight: 350,
@@ -176,7 +176,7 @@ $insightsContainerPadding: $unnnic-spacing-ant * 2;
 
 .resizable-bar {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   background-color: $unnnic-color-neutral-white;
   width: calc(100% - $insightsContainerPadding);
   height: 210px;

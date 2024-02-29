@@ -50,16 +50,19 @@ export default {
   }
 
   &__insights {
+    height: calc(100vh - 88px);
+
     position: relative;
 
     grid-area: insights;
     display: flex;
     flex-direction: column;
 
-    padding: $unnnic-spacing-ant;
+    padding: $unnnic-spacing-sm;
 
     .insights__main {
-      grid-column: 2;
+      display: flex;
+      flex-direction: column;
 
       height: 100%;
 

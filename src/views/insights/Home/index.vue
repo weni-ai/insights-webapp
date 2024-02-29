@@ -81,7 +81,7 @@ export default {
 }
 
 .buttons {
-  margin-top: 2rem;
+  margin-top: $unnnic-spacing-sm;
   display: flex;
   flex-direction: row;
   gap: 2rem;
@@ -97,7 +97,7 @@ export default {
   }
 }
 .cards {
-  margin-top: 2rem;
+  margin-top: $unnnic-spacing-sm;
   display: grid;
   grid-template-columns: repeat(3, 3fr);
   grid-template-rows: repeat(2, 3fr);

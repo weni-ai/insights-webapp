@@ -176,7 +176,7 @@ $insightsContainerPadding: $unnnic-spacing-ant * 2;
 
 .resizable-bar {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   background-color: $unnnic-color-neutral-white;
   width: calc(100% - $insightsContainerPadding);
   height: 210px;

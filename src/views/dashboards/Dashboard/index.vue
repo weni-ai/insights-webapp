@@ -29,7 +29,7 @@
             <span class="dashboard__button-title">Hoje</span>
             <unnnic-icon icon="expand_more" size="md" clickable />
           </button>
-          <button class="dashboard__button" @click="showTable">
+          <button class="dashboard__button">
             <unnnic-icon icon="filter_alt" size="md" clickable />
             <span class="dashboard__button-title">Filtros</span>
           </button>
@@ -44,6 +44,7 @@
       <section class="dashboard__widgets-cards">
         <article
           class="dashboard__widgets-card"
+          @click="showTable"
           v-for="(card, index) in cards"
           :key="index"
         >
@@ -200,10 +201,12 @@ export default {
     font-size: $unnnic-font-size-body-lg;
   }
   &__widgets {
+    height: 100%;
+
     margin-top: $unnnic-spacing-sm;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: repeat(3, 1fr);
     gap: $unnnic-spacing-md;
     grid-template-areas:
       'cards cards graph'
@@ -214,19 +217,20 @@ export default {
     grid-area: cards;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, auto);
+    grid-template-rows: repeat(3, 1fr);
     gap: $unnnic-spacing-sm;
     grid-column: span 2;
   }
   &__widgets-chart {
-    height: 115px;
+    height: 18vh;
     grid-area: graph;
   }
+
   &__widgets-agent {
     grid-area: agents;
   }
   &__widgets-card {
-    height: 128px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     text-align: right;
@@ -235,7 +239,9 @@ export default {
     gap: $unnnic-spacing-sm;
     padding: $unnnic-spacing-md;
     border-radius: $unnnic-border-radius-sm;
+    cursor: pointer;
   }
+
   &__widgets-card-title {
     color: $unnnic-color-neutral-darkest;
     font-size: $unnnic-font-size-h4;

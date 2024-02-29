@@ -50,6 +50,8 @@ export default {
   }
 
   &__insights {
+    height: calc(100vh - 88px);
+
     position: relative;
 
     grid-area: insights;
@@ -59,9 +61,12 @@ export default {
     padding: $unnnic-spacing-sm;
 
     .insights__main {
-      grid-column: 2;
+      display: flex;
+      flex-direction: column;
 
       height: 100%;
+
+      grid-column: 2;
 
       background-color: $unnnic-color-neutral-white;
     }

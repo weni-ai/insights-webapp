@@ -27,7 +27,9 @@ export default {
   padding: 0 8rem;
   display: flex;
   flex-direction: row;
-  position: relative;
+  position: fixed;
+
+  background-color: $unnnic-color-neutral-white;
 
   @media screen and (max-width: 900px) {
     padding: unset;

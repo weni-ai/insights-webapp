@@ -11,6 +11,13 @@
       />
       <unnnic-input-date-picker v-model="filterDate" size="sm" />
     </div>
+    <section>
+      <ColumnCharts
+        :chartData="chartData"
+        :height="chartHeight"
+        :width="chartWidth"
+      />
+    </section>
     <div class="cards">
       <div class="card">
         <p class="card__title">2150</p>
@@ -43,12 +50,15 @@
 <script>
 import moment from 'moment';
 import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
+import ColumnCharts from '@/components/ColumnCharts.vue';
+import chartData from '@/mocks/chartData.json';
 
 export default {
   name: 'HomeView',
 
   components: {
     InsightsLayout,
+    ColumnCharts,
   },
 
   data: () => ({
@@ -56,6 +66,9 @@ export default {
       start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
       end: moment().format('YYYY-MM-DD'),
     },
+    chartData: chartData,
+    chartHeight: '100%',
+    chartWidth: '100%',
   }),
 
   methods: {

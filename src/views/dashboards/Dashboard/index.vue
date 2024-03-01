@@ -34,10 +34,25 @@
             <span class="dashboard__button-title">Filtros</span>
           </button>
         </section>
-        <button class="dashboard__button">
-          <span class="dashboard__button-title">Exportar</span>
-          <unnnic-icon icon="expand_more" size="md" clickable />
-        </button>
+        <unnnic-dropdown>
+          <template #trigger>
+            <button class="dashboard__button">
+              <span class="dashboard__button-title">Exportar</span>
+              <unnnic-icon icon="expand_more" size="md" clickable />
+            </button>
+          </template>
+
+          <unnnic-dropdown-item>
+            <span @click="downloadCSV">
+              <p class="dashboard__dropdown-item">Exportar em CSV</p>
+            </span>
+          </unnnic-dropdown-item>
+          <unnnic-dropdown-item>
+            <span @click="downloadPDF">
+              <p class="dashboard__dropdown-item">Exportar em PDF</p>
+            </span>
+          </unnnic-dropdown-item>
+        </unnnic-dropdown>
       </section>
     </header>
     <section class="dashboard__widgets" v-if="firstSection">
@@ -128,6 +143,18 @@ export default {
     handleCrumbClick(crumb) {
       this.$router.push(crumb.path);
     },
+    downloadCSV() {
+      const link = document.createElement('a');
+      link.href = '/src/files/arquivo_teste.csv';
+      link.setAttribute('download', 'arquivo_teste.csv');
+      link.click();
+    },
+    downloadPDF() {
+      const link = document.createElement('a');
+      link.href = '/src/files/arquivo_teste.pdf';
+      link.setAttribute('download', 'arquivo_teste.pdf');
+      link.click();
+    },
   },
   mounted() {
     const cardTitle = this.$route.query.title;
@@ -200,6 +227,9 @@ export default {
   &__button-title {
     font-size: $unnnic-font-size-body-lg;
   }
+  &__dropdown-item {
+    width: max-content;
+  }
   &__widgets {
     height: 100%;
 
@@ -253,6 +283,8 @@ export default {
     font-size: $unnnic-font-size-body-lg;
   }
   &__table {
+    height: 100%;
+
     margin-top: $unnnic-spacing-sm;
   }
 }

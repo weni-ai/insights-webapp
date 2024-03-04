@@ -26,6 +26,7 @@ export default {
   justify-content: center;
   cursor: pointer;
   border: none;
+  text-align: left;
 
   &__title {
     color: $unnnic-color-neutral-darkest;

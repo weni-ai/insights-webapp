@@ -11,6 +11,14 @@
       />
       <unnnic-input-date-picker v-model="filterDate" size="sm" />
     </div>
+    <section>
+      <ColumnCharts
+        :chartData="chartData"
+        :height="chartHeight"
+        :width="chartWidth"
+        v-if="isChartVisible"
+      />
+    </section>
     <div class="cards">
       <div class="card">
         <p class="card__title">2150</p>
@@ -41,14 +49,18 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 import moment from 'moment';
 import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
+import ColumnCharts from '@/components/ColumnCharts.vue';
+import chartData from '@/mocks/chartData.json';
 
 export default {
   name: 'HomeView',
 
   components: {
     InsightsLayout,
+    ColumnCharts,
   },
 
   data: () => ({
@@ -56,8 +68,16 @@ export default {
       start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
       end: moment().format('YYYY-MM-DD'),
     },
+    chartData: chartData,
+    chartHeight: '100%',
+    chartWidth: '100%',
   }),
 
+  computed: {
+    ...mapState('sidebar', {
+      isChartVisible: (state) => state.chartVisible,
+    }),
+  },
   methods: {
     goToDashboards() {
       this.$router.replace({ name: 'dashboards' });
@@ -73,6 +93,9 @@ export default {
         },
       });
     },
+    ...mapActions({
+      updateChartVisibility: 'updateChartVisibility',
+    }),
   },
 };
 </script>
@@ -139,3 +162,4 @@ export default {
   }
 }
 </style>
+import { useStore } from 'vuex';

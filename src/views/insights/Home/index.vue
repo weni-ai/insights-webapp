@@ -16,7 +16,7 @@
         <p class="card__title">2150</p>
         <p class="card__description">Mensagens trocadas via bot</p>
       </div>
-      <div class="card">
+      <div class="card card--cursor" @click="goToHumanService">
         <p class="card__title">503</p>
         <p class="card__description">Atendimentos no Weni Chats</p>
       </div>
@@ -61,6 +61,17 @@ export default {
   methods: {
     goToDashboards() {
       this.$router.replace({ name: 'dashboards' });
+    },
+    goToHumanService() {
+      this.$router.push({
+        name: 'dashboard',
+        params: {
+          id: 1,
+        },
+        query: {
+          title: 'Atendimento humano',
+        },
+      });
     },
   },
 };
@@ -110,6 +121,7 @@ export default {
     gap: $unnnic-spacing-sm;
     text-align: right;
     padding: $unnnic-spacing-md;
+
     &__title {
       font-size: 40px;
       font-size: 700;
@@ -120,6 +132,10 @@ export default {
     &__description {
       color: $unnnic-color-neutral-darkest;
     }
+  }
+
+  .card--cursor {
+    cursor: pointer;
   }
 }
 </style>

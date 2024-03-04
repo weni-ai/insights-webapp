@@ -1,130 +1,129 @@
 <template>
   <aside
     class="resizable-bar"
+    :class="{ 'relative-class': isRelative }"
     :style="{
-      bottom: sidebarBottom + 'px',
-      height: `${Math.min(sidebarHeight, maxHeight)}px`,
+      bottom: sidebarBottom + '%',
+      height: `${Math.min(sidebarHeight, maxHeight)}%`,
     }"
   >
-    <section>
-      <header class="resizable-bar__header" @mousedown="startResizing">
-        <hr
-          :class="{ 'green-color': isResizing }"
-          class="resizable-bar__separator"
+    <header class="resizable-bar__header">
+      <hr
+        :class="{ 'green-color': isResizing }"
+        class="resizable-bar__separator"
+      />
+      <button
+        @click="resizeBar"
+        class="resizable-bar__circle-up"
+        v-if="sidebarBottom"
+      >
+        <unnnic-icon
+          icon="expand_circle_up"
+          size="md"
+          scheme="neutral-cleanest"
+          clickable
         />
-        <button
-          @click="resizeBar"
-          class="resizable-bar__circle-up"
-          v-if="sidebarBottom"
-        >
-          <unnnic-icon
-            icon="expand_circle_up"
-            size="md"
-            scheme="neutral-cleanest"
-            clickable
-          />
-        </button>
-        <button
-          @click="resizeBar"
-          class="resizable-bar__circle-up"
-          v-if="sidebarBottom > (134 || -320)"
-        >
-          <unnnic-icon
-            icon="expand_circle_down"
-            size="md"
-            scheme="neutral-cleanest"
-            clickable
-          />
-        </button>
-        <hr
-          :class="{ 'green-color': isResizing }"
-          class="resizable-bar__separator"
+      </button>
+      <button
+        @click="resizeBar"
+        class="resizable-bar__circle-up"
+        v-if="sidebarBottom > (-83 || -163)"
+      >
+        <unnnic-icon
+          icon="expand_circle_down"
+          size="md"
+          scheme="neutral-cleanest"
+          clickable
         />
-      </header>
-      <section class="resizable-bar__content">
-        <section v-if="visibleInsights" class="resizable-bar__insights">
-          <header class="resizable-bar__insights-header">
-            <p
-              class="resizable-bar__insights-description unnnic-font body-md bold"
-            >
-              InsightsGPT:
-            </p>
-            <h2 class="resizable-bar__insights-title unnnic-font title-sm bold">
-              Aqui estão algumas sugestões para você:
-            </h2>
-          </header>
-          <div class="resizable-bar__insights-content">
-            <nav class="resizable-bar__insights-nav">
-              <ul class="resizable-bar__insights-list">
-                <li class="list-item">Recentes</li>
-                <li class="list-item">Segmentos</li>
-                <li class="list-item">Varejo</li>
-                <li class="list-item">Weni plataforma</li>
-                <li class="list-item selected">Atendimento humano</li>
-              </ul>
-            </nav>
-            <div class="resizable-bar__insights-cards">
-              <InsightsCard>
-                <template v-slot:title> Titulo </template>
-                <template v-slot:description> Descrição </template>
-              </InsightsCard>
-              <InsightsCard>
-                <template v-slot:title> Titulo </template>
-                <template v-slot:description> Descrição </template>
-              </InsightsCard>
-              <InsightsCard>
-                <template v-slot:title> Titulo </template>
-                <template v-slot:description> Descrição </template>
-              </InsightsCard>
-              <InsightsCard>
-                <template v-slot:title> Titulo </template>
-                <template v-slot:description> Descrição </template>
-              </InsightsCard>
-              <InsightsCard>
-                <template v-slot:title> Titulo </template>
-                <template v-slot:description> Descrição </template>
-              </InsightsCard>
-            </div>
+      </button>
+      <hr
+        :class="{ 'green-color': isResizing }"
+        class="resizable-bar__separator"
+      />
+    </header>
+    <section class="resizable-bar__content">
+      <section v-if="visibleInsights" class="resizable-bar__insights">
+        <header class="resizable-bar__insights-header">
+          <p
+            class="resizable-bar__insights-description unnnic-font body-md bold"
+          >
+            InsightsGPT:
+          </p>
+          <h2 class="resizable-bar__insights-title unnnic-font title-sm bold">
+            Aqui estão algumas sugestões para você:
+          </h2>
+        </header>
+        <div class="resizable-bar__insights-content">
+          <nav class="resizable-bar__insights-nav">
+            <ul class="resizable-bar__insights-list">
+              <li class="list-item">Recentes</li>
+              <li class="list-item">Segmentos</li>
+              <li class="list-item">Varejo</li>
+              <li class="list-item">Weni plataforma</li>
+              <li class="list-item selected">Atendimento humano</li>
+            </ul>
+          </nav>
+          <div class="resizable-bar__insights-cards">
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title> Titulo </template>
+              <template v-slot:description> Descrição </template>
+            </InsightsCard>
           </div>
-        </section>
-        <section v-else class="resizable-bar__general-content">
-          <div class="resizable-bar__content-doris" v-if="showContent">
-            <img
-              class="resizable-bar__doris-image"
-              src="../assets/images/doris.png"
-              alt="Dóris"
-            />
-            <h1 class="unnnic-font title-lg resizable-bar__doris-title">
-              Como posso te ajudar hoje?
-            </h1>
-          </div>
-          <div class="resizable-bar__content-text">
-            <div class="resizable-bar__cards">
-              <InsightsCard v-if="showContent">
-                <template v-slot:title>Titulo</template>
-                <template v-slot:description>Descrição</template>
-              </InsightsCard>
-              <InsightsCard v-if="showContent">
-                <template v-slot:title>Titulo</template>
-                <template v-slot:description>Descrição</template>
-              </InsightsCard>
-              <InsightsCard>
-                <template v-slot:title
-                  >Quais foram os principais erros no meu chatbot?</template
-                >
-                <template v-slot:description>Nos últimos 30 dias</template>
-              </InsightsCard>
-              <InsightsMainCard @click="showInsights">
-                <template v-slot:description>
-                  Visualizar mais prompts prontos</template
-                >
-              </InsightsMainCard>
-            </div>
-          </div>
-        </section>
+        </div>
       </section>
-      <InsightsInput />
+      <section v-else class="resizable-bar__general-content">
+        <div class="resizable-bar__content-doris" v-if="showContent">
+          <img
+            class="resizable-bar__doris-image"
+            src="../assets/images/doris.png"
+            alt="Dóris"
+          />
+          <h1 class="unnnic-font title-lg resizable-bar__doris-title">
+            Como posso te ajudar hoje?
+          </h1>
+        </div>
+        <div class="resizable-bar__content-text">
+          <div class="resizable-bar__cards">
+            <InsightsCard v-if="showContent">
+              <template v-slot:title>Titulo</template>
+              <template v-slot:description>Descrição</template>
+            </InsightsCard>
+            <InsightsCard v-if="showContent">
+              <template v-slot:title>Titulo</template>
+              <template v-slot:description>Descrição</template>
+            </InsightsCard>
+            <InsightsCard>
+              <template v-slot:title
+                >Quais foram os principais erros no meu chatbot?</template
+              >
+              <template v-slot:description>Nos últimos 30 dias</template>
+            </InsightsCard>
+            <InsightsMainCard @click="showInsights">
+              <template v-slot:description>
+                Visualizar mais prompts prontos</template
+              >
+            </InsightsMainCard>
+          </div>
+        </div>
+      </section>
     </section>
+    <InsightsInput />
   </aside>
 </template>
 
@@ -145,25 +144,29 @@ export default {
   data() {
     return {
       startY: 0,
-      startBottom: -214,
+      startBottom: -163,
       minHeight: -320,
-      maxHeight: 350,
-      sidebarHeight: 350,
+      maxHeight: 165,
+      sidebarHeight: 165,
       initialContentHeight: -126,
       sidebarBottom: this.getInitialBarHeight(),
+      sidebarLimit: 203,
       isResizing: false,
       visibleGeneral: false,
       visibleInsights: false,
       showContent: false,
+      isRelative: false,
     };
   },
+
   methods: {
     getInitialBarHeight() {
       if (this.$route.path === '/insights') {
         this.showContent = false;
+        this.isRelative = true;
         return -126;
       } else {
-        return -340;
+        return -163;
       }
     },
     updateContentVisibility() {
@@ -176,7 +179,6 @@ export default {
     showSomeContent() {
       if (this.sidebarBottom > 134) {
         this.showContent = true;
-        console.log(this.showContent);
       }
     },
     startResizing(event) {
@@ -203,18 +205,25 @@ export default {
       window.removeEventListener('mouseup', this.stopResizing);
     },
     resizeBar() {
-      if (this.sidebarBottom != 100) {
-        this.sidebarBottom = 100;
+      if (this.sidebarBottom != -82) {
+        this.sidebarBottom = -82;
+        this.$store.commit('sidebar/setChartVisibility', false);
       } else {
-        this.sidebarBottom = -340;
+        this.sidebarBottom = -163;
+        this.$store.commit('sidebar/setChartVisibility', true);
       }
 
       this.updateContentVisibility();
     },
+
+    showChart() {
+      this.showChart = true;
+    },
+
     showInsights() {
       this.visibleInsights = !this.visibleInsights && !this.visibleGeneral;
-      if (this.sidebarBottom != 100) {
-        this.sidebarBottom = 100;
+      if (this.sidebarBottom != -80) {
+        this.sidebarBottom = -80;
       }
     },
   },
@@ -234,7 +243,6 @@ export default {
     flex-direction: row;
     place-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
     cursor: ns-resize;
     position: relative;
   }
@@ -271,7 +279,7 @@ export default {
     flex-direction: column;
     place-content: center;
     gap: 2rem;
-    padding-bottom: 6rem;
+    margin: 1rem 0;
 
     @media screen and (max-width: 900px) {
       overflow-y: scroll;
@@ -280,7 +288,7 @@ export default {
   }
 
   &__content-doris {
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -296,10 +304,7 @@ export default {
   }
 
   &__content-text {
-    max-height: 164px;
-    min-height: 164px;
     padding: 0 8rem;
-    margin-bottom: 2.5rem;
 
     @media screen and (max-width: 900px) {
       padding: unset;
@@ -308,8 +313,8 @@ export default {
 
   &__cards {
     display: grid;
-    grid-template-columns: repeat(2, 2fr);
-    grid-template-rows: repeat(2, 2fr);
+    grid-template-columns: repeat(2, auto);
+    grid-template-rows: repeat(2, auto);
     grid-column-gap: $unnnic-spacing-sm;
     grid-row-gap: $unnnic-spacing-sm;
   }

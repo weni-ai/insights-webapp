@@ -21,7 +21,7 @@ export default {
 .insights-input {
   margin-top: auto;
   width: 100%;
-  padding: 0 8rem;
+  padding: 0 8rem 2rem 8rem;
   display: flex;
   flex-direction: row;
   position: relative;

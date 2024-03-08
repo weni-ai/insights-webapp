@@ -1,13 +1,13 @@
 <template>
   <aside
     class="resizable-bar"
-    :class="{ 'relative-class': isRelative }"
+    :class="{ 'resizable-bar--position' : isRelative }"
     :style="{
-      bottom: sidebarBottom + '%',
-      height: `${Math.min(sidebarHeight, maxHeight)}%`,
+      bottom: sidebarBottom + 'px',
+      height: `${Math.min(sidebarHeight, maxHeight)}px`,
     }"
   >
-    <header class="resizable-bar__header">
+    <header class="resizable-bar__header" @mousedown="startResizing">
       <hr
         :class="{ 'green-color': isResizing }"
         class="resizable-bar__separator"
@@ -27,7 +27,7 @@
       <button
         @click="resizeBar"
         class="resizable-bar__circle-up"
-        v-if="sidebarBottom > (-83 || -163)"
+        v-if="sidebarBottom > 100"
       >
         <unnnic-icon
           icon="expand_circle_down"
@@ -42,7 +42,7 @@
       />
     </header>
     <section class="resizable-bar__content">
-      <section v-if="visibleInsights" class="resizable-bar__insights">
+      <div v-if="visibleInsights" class="resizable-bar__insights">
         <header class="resizable-bar__insights-header">
           <p
             class="resizable-bar__insights-description unnnic-font body-md bold"
@@ -64,30 +64,30 @@
             </ul>
           </nav>
           <div class="resizable-bar__insights-cards">
-            <InsightsCard>
-              <template v-slot:title> Titulo </template>
-              <template v-slot:description> Descrição </template>
-            </InsightsCard>
-            <InsightsCard>
-              <template v-slot:title> Titulo </template>
-              <template v-slot:description> Descrição </template>
-            </InsightsCard>
-            <InsightsCard>
-              <template v-slot:title> Titulo </template>
-              <template v-slot:description> Descrição </template>
-            </InsightsCard>
-            <InsightsCard>
-              <template v-slot:title> Titulo </template>
-              <template v-slot:description> Descrição </template>
-            </InsightsCard>
-            <InsightsCard>
-              <template v-slot:title> Titulo </template>
-              <template v-slot:description> Descrição </template>
-            </InsightsCard>
+            <SugestionCard>
+              <template v-slot:title>Análise de Desempenho do Atendente</template>
+              <template v-slot:description>Nos últimos 30 dias</template>
+            </SugestionCard>
+            <SugestionCard>
+              <template v-slot:title>Satisfação do Cliente</template>
+              <template v-slot:description>Combine os dados de atendimento com feedbacks de satisfação do cliente para avaliar a eficácia dos diferentes setores e atendentes.</template>
+            </SugestionCard>
+            <SugestionCard>
+              <template v-slot:title>Relatório de Distribuição de Atendimentos</template>
+              <template v-slot:description>Gere um relatório mostrando a distribuição de atendimentos por setor e fila ao longo do tempo, identificando picos de demanda.</template>
+            </SugestionCard>
+            <SugestionCard>
+              <template v-slot:title>Tendências de Contato</template>
+              <template v-slot:description>Analise a frequência de contatos de cada cliente e identifique padrões ou tendências em suas solicitações de atendimento.</template>
+            </SugestionCard>
+            <SugestionCard>
+              <template v-slot:title>Avaliação de Tags de Encerramento</template>
+              <template v-slot:description>Examine as tags de encerramento do atendimento e determine as categorias mais comuns de problemas ou solicitações dos clientes.</template>
+            </SugestionCard>
           </div>
         </div>
-      </section>
-      <section v-else class="resizable-bar__general-content">
+      </div>
+      <div v-else class="resizable-bar__general-content">
         <div class="resizable-bar__content-doris" v-if="showContent">
           <img
             class="resizable-bar__doris-image"
@@ -101,17 +101,15 @@
         <div class="resizable-bar__content-text">
           <div class="resizable-bar__cards">
             <InsightsCard v-if="showContent">
-              <template v-slot:title>Titulo</template>
-              <template v-slot:description>Descrição</template>
+              <template v-slot:title>Quais foram os principais erros no meu chatbot?</template>
+              <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsCard v-if="showContent">
-              <template v-slot:title>Titulo</template>
-              <template v-slot:description>Descrição</template>
+              <template v-slot:title>Quais foram os principais erros no meu chatbot?</template>
+              <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsCard>
-              <template v-slot:title
-                >Quais foram os principais erros no meu chatbot?</template
-              >
+              <template v-slot:title>Quais foram os principais erros no meu chatbot?</template>
               <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsMainCard @click="showInsights">
@@ -121,7 +119,7 @@
             </InsightsMainCard>
           </div>
         </div>
-      </section>
+      </div>
     </section>
     <InsightsInput />
   </aside>
@@ -130,6 +128,7 @@
 <script>
 import InsightsMainCard from '@/components/InsightsMainCard.vue';
 import InsightsCard from '@/components/InsightsCard.vue';
+import SugestionCard from '@/components/SugestionCard.vue';
 import InsightsInput from '@/components/InsightsInput.vue';
 
 export default {
@@ -138,37 +137,45 @@ export default {
   components: {
     InsightsMainCard,
     InsightsCard,
+    SugestionCard,
     InsightsInput,
   },
 
   data() {
     return {
       startY: 0,
-      startBottom: -163,
-      minHeight: -320,
-      maxHeight: 165,
-      sidebarHeight: 165,
-      initialContentHeight: -126,
+      startBottom: -214,
+      minHeight: -270,
+      maxHeight: 288,
+      sidebarHeight: 288,
       sidebarBottom: this.getInitialBarHeight(),
-      sidebarLimit: 203,
       isResizing: false,
       visibleGeneral: false,
       visibleInsights: false,
       showContent: false,
-      isRelative: false,
+      isRelative: this.changePosition(),
     };
   },
 
   methods: {
     getInitialBarHeight() {
       if (this.$route.path === '/insights') {
-        this.showContent = false;
-        this.isRelative = true;
-        return -126;
+        this.showContent = true;
+        return 1;
       } else {
-        return -163;
+        this.isRelative = false;
+        return -270;
       }
     },
+
+    changePosition() {
+      if(this.$route.path !== '/insights') {
+        return this.isRelative = false;
+      } else {
+        return this.isRelative = true;
+      }
+    },
+
     updateContentVisibility() {
       if (this.sidebarBottom == this.initialContentHeight) {
         this.showContent = true;
@@ -176,11 +183,7 @@ export default {
         this.showContent = true;
       }
     },
-    showSomeContent() {
-      if (this.sidebarBottom > 134) {
-        this.showContent = true;
-      }
-    },
+
     startResizing(event) {
       this.isResizing = true;
       this.startY = event.clientY;
@@ -188,42 +191,48 @@ export default {
       window.addEventListener('mousemove', this.handleResizing);
       window.addEventListener('mouseup', this.stopResizing);
     },
+
     handleResizing(event) {
       if (this.isResizing) {
+        this.isRelative = false;
+        this.$store.commit('sidebar/setChartVisibility', false);
+        this.updateContentVisibility();
         const offsetY = event.clientY - this.startY;
         this.sidebarBottom = Math.max(
           Math.min(this.startBottom - offsetY, this.maxHeight),
           this.minHeight,
         );
+      }
 
-        this.updateContentVisibility();
+      if(this.isResizing && this.sidebarBottom < -200) {
+        this.$store.commit('sidebar/setChartVisibility', true);
       }
     },
+
     stopResizing() {
       this.isResizing = false;
       window.removeEventListener('mousemove', this.handleResizing);
       window.removeEventListener('mouseup', this.stopResizing);
     },
+
     resizeBar() {
-      if (this.sidebarBottom != -82) {
-        this.sidebarBottom = -82;
+      if (this.sidebarBottom != 288) {
+        this.sidebarBottom = 288;
+        this.isRelative = false;
         this.$store.commit('sidebar/setChartVisibility', false);
       } else {
-        this.sidebarBottom = -163;
+        this.sidebarBottom = -270;
         this.$store.commit('sidebar/setChartVisibility', true);
       }
 
       this.updateContentVisibility();
     },
 
-    showChart() {
-      this.showChart = true;
-    },
-
     showInsights() {
       this.visibleInsights = !this.visibleInsights && !this.visibleGeneral;
-      if (this.sidebarBottom != -80) {
-        this.sidebarBottom = -80;
+      if (this.sidebarBottom != 288) {
+        this.sidebarBottom = 288;
+        this.isRelative = false;
       }
     },
   },
@@ -231,18 +240,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$insightsContainerPadding: $unnnic-spacing-ant * 2;
+
 .resizable-bar {
   z-index: 1;
   position: absolute;
   background-color: $unnnic-color-neutral-white;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - $insightsContainerPadding);
+  height: 210px;
 
   &__header {
     display: flex;
     flex-direction: row;
     place-content: space-between;
     align-items: center;
+    margin-bottom: $unnnic-spacing-lg;
     cursor: ns-resize;
     position: relative;
   }
@@ -279,7 +291,6 @@ export default {
     flex-direction: column;
     place-content: center;
     gap: 2rem;
-    margin: 1rem 0;
 
     @media screen and (max-width: 900px) {
       overflow-y: scroll;
@@ -287,8 +298,12 @@ export default {
     }
   }
 
-  &__content-doris {
+  &__general-content {
     margin-bottom: 2rem;
+  }
+
+  &__content-doris {
+    margin: 3rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -313,17 +328,16 @@ export default {
 
   &__cards {
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, 2fr);
     grid-template-rows: repeat(2, auto);
-    grid-column-gap: $unnnic-spacing-sm;
-    grid-row-gap: $unnnic-spacing-sm;
+    grid-column-gap: $unnnic-spacing-xs;
+    grid-row-gap: $unnnic-spacing-xs;
   }
 
   &__insights {
     display: flex;
     flex-direction: column;
-    padding: 0 8rem;
-    margin-bottom: 3rem;
+    padding: 6rem 8rem 1rem 8rem;
 
     @media screen and (max-width: 900px) {
       padding: unset;
@@ -342,6 +356,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    gap: $unnnic-spacing-xs;
     @media screen and (max-width: 900px) {
       max-height: 300px;
       flex-direction: column;
@@ -372,8 +387,14 @@ export default {
   &__insights-cards {
     display: grid;
     grid-template-columns: repeat(2, 2fr);
+    grid-template-rows: repeat(2, auto);
     grid-column-gap: $unnnic-spacing-sm;
     grid-row-gap: $unnnic-spacing-sm;
   }
+}
+
+.resizable-bar--position {
+  position: inherit;
+  width: 100%;
 }
 </style>

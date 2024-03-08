@@ -137,6 +137,7 @@ export default {
   grid-template-rows: repeat(2, 3fr);
   grid-column-gap: $unnnic-spacing-sm;
   grid-row-gap: $unnnic-spacing-sm;
+  height: 100%;
   .card {
     background-color: $unnnic-color-neutral-lightest;
     display: flex;
@@ -144,6 +145,7 @@ export default {
     gap: $unnnic-spacing-sm;
     text-align: right;
     padding: $unnnic-spacing-md;
+    justify-content: center;
 
     &__title {
       font-size: 40px;

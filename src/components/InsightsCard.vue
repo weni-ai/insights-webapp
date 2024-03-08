@@ -1,12 +1,12 @@
 <template>
-  <button class="insights-card">
-    <p class="insights-card__title unnnic-font body-lg bold">
+  <article class="insights-card">
+    <p class="insights-card__title">
       <slot name="title"></slot>
     </p>
-    <p class="insights-card__description unnnic-font body-gt">
+    <p class="insights-card__description">
       <slot name="description"></slot>
     </p>
-  </button>
+  </article>
 </template>
 
 <script>
@@ -30,10 +30,15 @@ export default {
 
   &__title {
     color: $unnnic-color-neutral-darkest;
+    font-size: $unnnic-font-size-body-lg;
+    font-weight: $unnnic-font-weight-bold;
   }
 
   &__description {
     color: $unnnic-color-neutral-dark;
+    font-size: $unnnic-font-size-body-gt;
+    font-family: $unnnic-font-family-secondary;
+    text-overflow: ellipsis;
   }
 }
 </style>

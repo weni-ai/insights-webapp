@@ -1,17 +1,18 @@
 <template>
-  <div class="insights-input">
+  <section class="insights-input">
     <input
       class="insights-input__input"
       type="text"
       placeholder="Peça insights ao InsightsGPT..."
     />
-    <unnnic-button
-      class="insights-input__button"
-      type="secondary"
-      size="large"
-      iconCenter="send"
-    />
-  </div>
+    <div class="insights-input__button">
+      <unnnic-button
+        type="secondary"
+        size="large"
+        iconCenter="send"
+      />
+    </div>
+  </section>
 </template>
 
 <script>
@@ -24,10 +25,12 @@ export default {
 .insights-input {
   margin-top: auto;
   width: 100%;
-  padding: 0 8rem;
+  padding: 0 8rem 2rem 8rem;
   display: flex;
   flex-direction: row;
   position: relative;
+
+  background-color: $unnnic-color-neutral-white;
 
   @media screen and (max-width: 900px) {
     padding: unset;
@@ -50,7 +53,7 @@ export default {
     border: 1px $unnnic-color-neutral-cleanest solid;
     border-radius: $unnnic-border-radius-sm;
     background-color: $unnnic-color-neutral-white;
-    right: 4rem;
+    right: 9rem;
     top: 0.6rem;
     cursor: pointer;
 

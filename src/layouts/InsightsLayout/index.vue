@@ -24,6 +24,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$topbarHeight: 88px;
+
 .insights-layout {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -50,6 +52,8 @@ export default {
   }
 
   &__insights {
+    height: calc(100vh - $topbarHeight);
+
     position: relative;
 
     grid-area: insights;
@@ -59,7 +63,8 @@ export default {
     padding: $unnnic-spacing-sm;
 
     .insights__main {
-      grid-column: 2;
+      display: flex;
+      flex-direction: column;
 
       height: 100%;
 

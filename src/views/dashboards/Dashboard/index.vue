@@ -29,7 +29,7 @@
             <span class="dashboard__button-title">Hoje</span>
             <unnnic-icon icon="expand_more" size="md" clickable />
           </button>
-          <button class="dashboard__button" @click="showTable">
+          <button class="dashboard__button">
             <unnnic-icon icon="filter_alt" size="md" clickable />
             <span class="dashboard__button-title">Filtros</span>
           </button>
@@ -44,6 +44,7 @@
       <section class="dashboard__widgets-cards">
         <article
           class="dashboard__widgets-card"
+          @click="showTable"
           v-for="(card, index) in cards"
           :key="index"
         >
@@ -53,8 +54,14 @@
           </p>
         </article>
       </section>
-      <section class="dashboard__widgets-chats-data">
-        <ColumnCharts :chartData="chartData" />
+      <section class="dashboard__widgets-chart">
+        <ColumnCharts
+          :chartData="chartData"
+          :height="chartHeight"
+          :width="chartWidth"
+        />
+      </section>
+      <section class="dashboard__widgets-agent">
         <AgentChats />
       </section>
     </section>
@@ -91,6 +98,8 @@ export default {
     chartData: chartData,
     chatsData: ChatsData,
     firstSection: true,
+    chartHeight: '100%',
+    chartWidth: '100%',
     breadcrumb: [
       {
         name: 'Insights',
@@ -192,21 +201,36 @@ export default {
     font-size: $unnnic-font-size-body-lg;
   }
   &__widgets {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: $unnnic-spacing-md;
+    height: 100%;
+
     margin-top: $unnnic-spacing-sm;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    grid-template-rows: repeat(3, 1fr);
+    gap: $unnnic-spacing-md;
+    grid-template-areas:
+      'cards cards graph'
+      'cards cards agents'
+      'cards cards agents';
   }
   &__widgets-cards {
-    width: 100%;
+    grid-area: cards;
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: $unnnic-spacing-sm;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: $unnnic-spacing-sm;
+    grid-column: span 2;
+  }
+  &__widgets-chart {
+    height: 18vh;
+    grid-area: graph;
+  }
+
+  &__widgets-agent {
+    grid-area: agents;
   }
   &__widgets-card {
-    height: -webkit-fill-available;
+    height: 100%;
     display: flex;
     flex-direction: column;
     text-align: right;
@@ -215,7 +239,9 @@ export default {
     gap: $unnnic-spacing-sm;
     padding: $unnnic-spacing-md;
     border-radius: $unnnic-border-radius-sm;
+    cursor: pointer;
   }
+
   &__widgets-card-title {
     color: $unnnic-color-neutral-darkest;
     font-size: $unnnic-font-size-h4;

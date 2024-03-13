@@ -1,5 +1,5 @@
 <template>
-  <button class="dashboards-card">
+  <article class="dashboards-card">
     <div class="dashboards-card__background"></div>
     <p class="dashboards-card__title">
       <slot name="title"></slot>
@@ -10,7 +10,7 @@
       size="large"
       class="dashboards-card__button"
     />
-  </button>
+  </article>
 </template>
 
 <style lang="scss" scoped>

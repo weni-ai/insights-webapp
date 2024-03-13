@@ -12,12 +12,12 @@
         class="resizable-bar__separator"
       />
       <button @click="resizeBar" class="resizable-bar__circle-up">
-       <unnnic-icon
-         icon="expand_circle_up"
-         size="md"
-         scheme="neutral-cleanest"
-         clickable
-       />
+        <unnnic-icon
+          icon="expand_circle_up"
+          size="md"
+          scheme="neutral-cleanest"
+          clickable
+        />
       </button>
       <hr
         :class="{ 'green-color': isResizing }"
@@ -127,7 +127,7 @@ export default {
       isResizing: false,
       startY: 0,
       startBottom: -214,
-      sidebarBottom: -320,
+      sidebarBottom: -339,
       minHeight: -320,
       maxHeight: 350,
       sidebarHeight: 350,
@@ -172,11 +172,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$insightsContainerPadding: $unnnic-spacing-ant * 2;
+
 .resizable-bar {
   z-index: 1;
   position: fixed;
   background-color: $unnnic-color-neutral-white;
-  width: 100%;
+  width: calc(100% - $insightsContainerPadding);
   height: 210px;
 
   &__header {
@@ -221,6 +223,7 @@ export default {
     flex-direction: column;
     place-content: center;
     gap: 2rem;
+    padding-bottom: 6rem;
 
     @media screen and (max-width: 900px) {
       overflow-y: scroll;

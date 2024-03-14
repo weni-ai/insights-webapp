@@ -6,13 +6,19 @@
       height: `${Math.min(sidebarHeight, maxHeight)}px`,
     }"
   >
-    <header class="resizable-bar__header" @mousedown="startResizing">
+    <header
+      class="resizable-bar__header"
+      @mousedown="startResizing"
+    >
       <hr
         :class="{ 'green-color': isResizing }"
         class="resizable-bar__separator"
       />
-      <button @click="resizeBar" class="resizable-bar__circle-up">
-        <unnnic-icon
+      <button
+        @click="resizeBar"
+        class="resizable-bar__circle-up"
+      >
+        <UnnnicIcon
           icon="expand_circle_up"
           size="md"
           scheme="neutral-cleanest"
@@ -25,7 +31,10 @@
       />
     </header>
     <div class="resizable-bar__content">
-      <div v-if="visibleInsights" class="resizable-bar__insights">
+      <div
+        v-if="visibleInsights"
+        class="resizable-bar__insights"
+      >
         <header class="resizable-bar__insights-header">
           <p
             class="resizable-bar__insights-description unnnic-font body-md bold"
@@ -70,7 +79,10 @@
           </div>
         </div>
       </div>
-      <div v-else class="resizable-bar__general-content">
+      <div
+        v-else
+        class="resizable-bar__general-content"
+      >
         <div class="resizable-bar__content-doris">
           <img
             class="resizable-bar__doris-image"

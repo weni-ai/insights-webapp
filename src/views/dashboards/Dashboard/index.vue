@@ -1,9 +1,12 @@
 <template>
-  <insights-layout ref="insights-layout">
+  <InsightsLayout ref="insights-layout">
     <header class="dashboard__header">
-      <unnnic-breadcrumb :crumbs="breadcrumb" @crumbClick="handleCrumbClick" />
+      <UnnnicBreadcrumb
+        :crumbs="breadcrumb"
+        @crumbClick="handleCrumbClick"
+      />
       <section class="dashboard__subheader">
-        <unnnic-icon
+        <UnnnicIcon
           icon="arrow_back"
           size="lg"
           scheme="neutral-black"
@@ -14,7 +17,7 @@
           <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
           <p class="dashboard__description">Nome do projeto</p>
         </section>
-        <unnnic-icon
+        <UnnnicIcon
           icon="close"
           size="md"
           scheme="neutral-black"
@@ -25,22 +28,41 @@
       <section class="dashboard__buttons">
         <section class="dashboard__buttons-one">
           <button class="dashboard__button">
-            <unnnic-icon icon="calendar_month" size="md" clickable />
+            <UnnnicIcon
+              icon="calendar_month"
+              size="md"
+              clickable
+            />
             <span class="dashboard__button-title">Hoje</span>
-            <unnnic-icon icon="expand_more" size="md" clickable />
+            <UnnnicIcon
+              icon="expand_more"
+              size="md"
+              clickable
+            />
           </button>
           <button class="dashboard__button">
-            <unnnic-icon icon="filter_alt" size="md" clickable />
+            <UnnnicIcon
+              icon="filter_alt"
+              size="md"
+              clickable
+            />
             <span class="dashboard__button-title">Filtros</span>
           </button>
         </section>
         <button class="dashboard__button">
           <span class="dashboard__button-title">Exportar</span>
-          <unnnic-icon icon="expand_more" size="md" clickable />
+          <UnnnicIcon
+            icon="expand_more"
+            size="md"
+            clickable
+          />
         </button>
       </section>
     </header>
-    <section class="dashboard__widgets" v-if="firstSection">
+    <section
+      class="dashboard__widgets"
+      v-if="firstSection"
+    >
       <section class="dashboard__widgets-cards">
         <article
           class="dashboard__widgets-card"
@@ -65,15 +87,17 @@
         <AgentChats />
       </section>
     </section>
-    <section v-else class="dashboard__table">
+    <section
+      v-else
+      class="dashboard__table"
+    >
       <TableChats :data="chatsData" />
     </section>
-  </insights-layout>
+  </InsightsLayout>
 </template>
 
 <script>
 import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
-import InsightsCard from '@/components/InsightsCard.vue';
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import AgentChats from '@/components/AgentChats.vue';
 import TableChats from '@/components/TableChats.vue';
@@ -86,7 +110,6 @@ export default {
 
   components: {
     InsightsLayout,
-    InsightsCard,
     ColumnCharts,
     AgentChats,
     TableChats,
@@ -124,9 +147,6 @@ export default {
     },
     showTable() {
       this.firstSection = !this.firstSection;
-    },
-    handleCrumbClick(crumb) {
-      this.$router.push(crumb.path);
     },
   },
   mounted() {

@@ -1,13 +1,13 @@
 <template>
   <!-- Copied from weni-webapp. Temporary component, so corrections (good practices) here are not necessary -->
-  <unnnic-sidebar-primary
+  <UnnnicSidebarPrimary
     class="connect-sidebar"
     :languages="['pt-br', 'en', 'es']"
     language="pt-br"
-    :hide-expand-button="true"
+    :hideExpandButton="true"
     :expanded="open"
     @toggle-expanded="open = $event"
-    :hide-text="open ? 'Encolher' : 'Expandir'"
+    :hideText="open ? 'Encolher' : 'Expandir'"
     :items="categories"
   >
     <template v-slot:header>
@@ -15,7 +15,7 @@
         <img src="../../assets/images/Logo-Weni.svg" />
       </div>
     </template>
-  </unnnic-sidebar-primary>
+  </UnnnicSidebarPrimary>
 </template>
 
 <script>

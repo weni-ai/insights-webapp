@@ -1,13 +1,16 @@
 <template>
   <aside
     class="resizable-bar"
-    :class="{ 'resizable-bar--position' : isRelative }"
+    :class="{ 'resizable-bar--position': isRelative }"
     :style="{
       bottom: sidebarBottom + 'px',
       height: `${Math.min(sidebarHeight, maxHeight)}px`,
     }"
   >
-    <header class="resizable-bar__header" @mousedown="startResizing">
+    <header
+      class="resizable-bar__header"
+      @mousedown="startResizing"
+    >
       <hr
         :class="{ 'green-color': isResizing }"
         class="resizable-bar__separator"
@@ -17,10 +20,10 @@
         class="resizable-bar__circle-up"
         v-if="sidebarBottom"
       >
-        <unnnic-icon
+        <UnnnicIcon
           icon="expand_circle_up"
           size="md"
-          scheme="neutral-cleanest"
+          scheme="neutral-clean"
           clickable
         />
       </button>
@@ -29,10 +32,10 @@
         class="resizable-bar__circle-up"
         v-if="sidebarBottom > 100"
       >
-        <unnnic-icon
+        <UnnnicIcon
           icon="expand_circle_down"
           size="md"
-          scheme="neutral-cleanest"
+          scheme="neutral-clean"
           clickable
         />
       </button>
@@ -42,7 +45,10 @@
       />
     </header>
     <section class="resizable-bar__content">
-      <div v-if="visibleInsights" class="resizable-bar__insights">
+      <div
+        v-if="visibleInsights"
+        class="resizable-bar__insights"
+      >
         <header class="resizable-bar__insights-header">
           <p
             class="resizable-bar__insights-description unnnic-font body-md bold"
@@ -65,30 +71,58 @@
           </nav>
           <div class="resizable-bar__insights-cards">
             <SugestionCard>
-              <template v-slot:title>Análise de Desempenho do Atendente</template>
+              <template v-slot:title
+                >Análise de Desempenho do Atendente</template
+              >
               <template v-slot:description>Nos últimos 30 dias</template>
             </SugestionCard>
             <SugestionCard>
               <template v-slot:title>Satisfação do Cliente</template>
-              <template v-slot:description>Combine os dados de atendimento com feedbacks de satisfação do cliente para avaliar a eficácia dos diferentes setores e atendentes.</template>
+              <template v-slot:description
+                >Combine os dados de atendimento com feedbacks de satisfação do
+                cliente para avaliar a eficácia dos diferentes setores e
+                atendentes.</template
+              >
             </SugestionCard>
             <SugestionCard>
-              <template v-slot:title>Relatório de Distribuição de Atendimentos</template>
-              <template v-slot:description>Gere um relatório mostrando a distribuição de atendimentos por setor e fila ao longo do tempo, identificando picos de demanda.</template>
+              <template v-slot:title
+                >Relatório de Distribuição de Atendimentos</template
+              >
+              <template v-slot:description
+                >Gere um relatório mostrando a distribuição de atendimentos por
+                setor e fila ao longo do tempo, identificando picos de
+                demanda.</template
+              >
             </SugestionCard>
             <SugestionCard>
               <template v-slot:title>Tendências de Contato</template>
-              <template v-slot:description>Analise a frequência de contatos de cada cliente e identifique padrões ou tendências em suas solicitações de atendimento.</template>
+              <template v-slot:description
+                >Analise a frequência de contatos de cada cliente e identifique
+                padrões ou tendências em suas solicitações de
+                atendimento.</template
+              >
             </SugestionCard>
             <SugestionCard>
-              <template v-slot:title>Avaliação de Tags de Encerramento</template>
-              <template v-slot:description>Examine as tags de encerramento do atendimento e determine as categorias mais comuns de problemas ou solicitações dos clientes.</template>
+              <template v-slot:title
+                >Avaliação de Tags de Encerramento</template
+              >
+              <template v-slot:description
+                >Examine as tags de encerramento do atendimento e determine as
+                categorias mais comuns de problemas ou solicitações dos
+                clientes.</template
+              >
             </SugestionCard>
           </div>
         </div>
       </div>
-      <div v-else class="resizable-bar__general-content">
-        <div class="resizable-bar__content-doris" v-if="showContent">
+      <div
+        v-else
+        class="resizable-bar__general-content"
+      >
+        <div
+          class="resizable-bar__content-doris"
+          v-if="showContent"
+        >
           <img
             class="resizable-bar__doris-image"
             src="../assets/images/doris.png"
@@ -101,15 +135,21 @@
         <div class="resizable-bar__content-text">
           <div class="resizable-bar__cards">
             <InsightsCard v-if="showContent">
-              <template v-slot:title>Quais foram os principais erros no meu chatbot?</template>
+              <template v-slot:title
+                >Quais foram os principais erros no meu chatbot?</template
+              >
               <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsCard v-if="showContent">
-              <template v-slot:title>Quais foram os principais erros no meu chatbot?</template>
+              <template v-slot:title
+                >Quais foram os principais erros no meu chatbot?</template
+              >
               <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsCard>
-              <template v-slot:title>Quais foram os principais erros no meu chatbot?</template>
+              <template v-slot:title
+                >Quais foram os principais erros no meu chatbot?</template
+              >
               <template v-slot:description>Nos últimos 30 dias</template>
             </InsightsCard>
             <InsightsMainCard @click="showInsights">
@@ -169,10 +209,10 @@ export default {
     },
 
     changePosition() {
-      if(this.$route.name !== 'home') {
-        return this.isRelative = false;
+      if (this.$route.name !== 'home') {
+        return (this.isRelative = false);
       } else {
-        return this.isRelative = true;
+        return (this.isRelative = true);
       }
     },
 
@@ -204,7 +244,7 @@ export default {
         );
       }
 
-      if(this.isResizing && this.sidebarBottom < -200) {
+      if (this.isResizing && this.sidebarBottom < -200) {
         this.$store.commit('sidebar/setChartVisibility', true);
       }
     },
@@ -267,11 +307,11 @@ $insightsContainerPadding: $unnnic-spacing-ant * 2;
   }
 
   .green-color {
-    border: 2px solid $unnnic-color-brand-weni;
+    border: 2px solid $unnnic-color-neutral-dark;
   }
 
   &__circle-up {
-    border-radius: $unnnic-spacing-nano;
+    border-radius: 50%;
     background-color: $unnnic-color-neutral-white;
     border: none;
     cursor: pointer;

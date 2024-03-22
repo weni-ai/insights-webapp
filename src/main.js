@@ -6,7 +6,7 @@ import store from './store';
 
 import VueApexCharts from 'vue3-apexcharts';
 
-import Unnnic from '@weni/unnnic-system';
+import Unnnic from './utils/plugins/UnnnicSystem';
 import '@weni/unnnic-system/dist/style.css';
 
 import './styles/global.scss';

@@ -6,7 +6,11 @@
       placeholder="Peça insights ao InsightsGPT..."
     />
     <div class="insights-input__button">
-      <unnnic-button type="secondary" size="large" iconCenter="send" />
+      <UnnnicButton
+        type="secondary"
+        size="large"
+        iconCenter="send"
+      />
     </div>
   </section>
 </template>

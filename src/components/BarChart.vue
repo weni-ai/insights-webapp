@@ -1,5 +1,6 @@
+<!-- eslint-disable vue/component-name-in-template-casing -->
 <template>
-  <Apexchart
+  <apexchart
     type="bar"
     :options="options"
     :series="series"

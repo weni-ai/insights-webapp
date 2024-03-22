@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/insights/Home/index.vue';
 import Dashboards from '@/views/dashboards/Home/index.vue';
 import Dashboard from '@/views/dashboards/Dashboard/index.vue';
+import FlowTrigger from '@/views/dashboards/Dashboard/FlowTrigger.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,6 +32,11 @@ const router = createRouter({
       props: (route) => ({
         cardId: route.params.cardId,
       }),
+    },
+    {
+      path: '/dashboards/flow-trigger',
+      name: 'flow',
+      component: FlowTrigger,
     },
   ],
 });

@@ -14,33 +14,33 @@
     </div>
 
     <div :style="{ display: 'flex', alignItems: 'center' }">
-      <unnnic-select-smart
+      <UnnnicSelectSmart
         v-model="org"
         class="connect-topbar__select"
         disabled
         size="sm"
       />
 
-      <unnnic-select-smart
+      <UnnnicSelectSmart
         v-model="project"
         class="connect-topbar__select"
         disabled
         size="sm"
       />
 
-      <unnnic-icon-svg
+      <UnnnicIconSvg
         icon="school"
         scheme="neutral-dark"
         class="connect-topbar__item"
       />
 
-      <unnnic-icon-svg
+      <UnnnicIconSvg
         icon="help"
         scheme="neutral-dark"
         class="connect-topbar__item"
       />
 
-      <unnnic-icon-svg
+      <UnnnicIconSvg
         icon="notifications"
         scheme="neutral-dark"
         class="connect-topbar__item"

@@ -13,11 +13,16 @@
   </article>
 </template>
 
+<script>
+export default {
+  name: 'DashboardsCard',
+};
+</script>
+
 <style lang="scss" scoped>
 .dashboards-card {
   background-color: $unnnic-color-neutral-white;
   padding: $unnnic-spacing-sm;
-  border-radius: $unnnic-spacing-nano;
   display: flex;
   flex-direction: column;
   gap: $unnnic-spacing-xs;

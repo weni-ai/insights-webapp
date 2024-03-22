@@ -1,11 +1,10 @@
 <template>
-  <main id="app">
-    <router-view />
-  </main>
+  <div id="app">
+    <RouterView />
+  </div>
 </template>
 
 <script>
-import { RouterView } from 'vue-router';
 import './assets/scss/unnnic.scss';
 </script>
 

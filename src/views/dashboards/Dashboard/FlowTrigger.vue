@@ -22,7 +22,7 @@
           size="md"
           scheme="neutral-black"
           clickable
-          @click="goToDashboards"
+          @click="goToInsights"
         />
       </section>
       <section class="dashboard__buttons">
@@ -74,70 +74,79 @@
         </UnnnicDropdown>
       </section>
     </header>
-    <section
-      class="dashboard__widgets"
-      v-if="firstSection"
-    >
-      <section class="dashboard__widgets-cards">
-        <article
-          class="dashboard__widgets-card"
-          @click="showTable"
-          v-for="(card, index) in cards"
-          :key="index"
-        >
-          <h4 class="dashboard__widgets-card-title">{{ card.title }}</h4>
-          <p class="dashboard__widgets-card-description">
-            {{ card.description }}
-          </p>
-        </article>
-      </section>
+    <section class="dashboard__widgets">
       <section class="dashboard__widgets-chart">
-        <ColumnCharts
+        <h1 class="dashboard__widgets-chart-title">Fluxos</h1>
+        <BarChart
           :chartData="chartData"
           :height="chartHeight"
           :width="chartWidth"
         />
       </section>
-      <section class="dashboard__widgets-agent">
-        <AgentChats />
+      <section>
+        <article class="dashboard__widgets-insight">
+          <div class="dashboard__widgets-insight-title">
+            <UnnnicAvatarIcon
+              icon="emoji_objects"
+              scheme="neutral-dark"
+            />
+            <p>Insight</p>
+          </div>
+          <div class="dashboard__widgets-insight-description">
+            <p>
+              Você sabia que seus fluxos com o tom de voz mais amigável possuem
+              uma taxa de 50% a mais de respostas? Confira aqui quais são eles
+            </p>
+          </div>
+        </article>
       </section>
-    </section>
-    <section
-      v-else
-      class="dashboard__table"
-    >
-      <TableChats :data="chatsData" />
+      <section>
+        <article class="dashboard__widgets-card">
+          <h4 class="dashboard__widgets-card-title">500</h4>
+          <p class="dashboard__widgets-card-description">Arquivados</p>
+        </article>
+      </section>
+      <section>
+        <article class="dashboard__widgets-card">
+          <h4 class="dashboard__widgets-card-title">5000</h4>
+          <p class="dashboard__widgets-card-description">Fluxos disparados</p>
+        </article>
+      </section>
+      <section>
+        <article class="dashboard__widgets-card">
+          <h4 class="dashboard__widgets-card-title">2100</h4>
+          <p class="dashboard__widgets-card-description">
+            Disparos pelo Weni Chats
+          </p>
+        </article>
+      </section>
+      <section>
+        <article class="dashboard__widgets-card">
+          <h4 class="dashboard__widgets-card-title">20</h4>
+          <p class="dashboard__widgets-card-description">Falhas</p>
+        </article>
+      </section>
     </section>
   </InsightsLayout>
 </template>
 
 <script>
 import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
-import ColumnCharts from '@/components/ColumnCharts.vue';
-import AgentChats from '@/components/AgentChats.vue';
-import TableChats from '@/components/TableChats.vue';
-import dashboardData from '@/mocks/dashboardData.json';
-import chartData from '@/mocks/chartData.json';
+import BarChart from '@/components/BarChart.vue';
+import chartData from '@/mocks/barChartData.json';
 import ChatsData from '@/mocks/chats.json';
-
 export default {
-  name: 'DashboardView',
-
+  name: 'FlowTriggerView',
   components: {
     InsightsLayout,
-    ColumnCharts,
-    AgentChats,
-    TableChats,
+    BarChart,
   },
-
   data: () => ({
-    dashboardTitle: '',
-    cards: dashboardData,
+    dashboardTitle: 'Disparo de fluxos',
     chartData: chartData,
     chatsData: ChatsData,
-    firstSection: true,
-    chartHeight: '100%',
     chartWidth: '100%',
+    chartHeight: '100%',
     breadcrumb: [
       {
         name: 'Insights',
@@ -148,14 +157,17 @@ export default {
         path: '/dashboards',
       },
       {
-        name: '',
-        path: '',
+        name: 'Disparo de fluxos',
+        path: '/disparo-fluxos',
       },
     ],
   }),
   methods: {
     goToDashboards() {
       this.$router.push({ name: 'dashboards' });
+    },
+    goToInsights() {
+      this.$router.push({ name: 'home' });
     },
     handleCrumbClick(crumb) {
       this.$router.push(crumb.path);
@@ -175,15 +187,6 @@ export default {
       link.setAttribute('download', 'arquivo_teste.pdf');
       link.click();
     },
-  },
-  mounted() {
-    const cardTitle = this.$route.query.title;
-    const cardId = this.$route.params.id;
-    const cardPath = `/dashboards/${cardId}`;
-    this.dashboardTitle = cardTitle;
-
-    this.breadcrumb[2].name = cardTitle;
-    this.breadcrumb[2].path = cardPath;
   },
 };
 </script>
@@ -252,32 +255,51 @@ export default {
   }
   &__widgets {
     height: 100%;
-
-    margin-top: $unnnic-spacing-sm;
+    width: 100%;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     grid-template-rows: repeat(3, 1fr);
-    gap: $unnnic-spacing-md;
-    grid-template-areas:
-      'cards cards graph'
-      'cards cards agents'
-      'cards cards agents';
-  }
-  &__widgets-cards {
-    grid-area: cards;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: $unnnic-spacing-sm;
-    grid-column: span 2;
+    padding: $unnnic-spacing-sm;
+    margin-top: $unnnic-spacing-sm;
+    background-color: $unnnic-color-neutral-lightest;
   }
   &__widgets-chart {
-    height: 18vh;
-    grid-area: graph;
+    height: 100%;
+    grid-area: 1 / 1 / 3 / 3;
+    padding: $unnnic-spacing-xs;
+    background-color: $unnnic-color-neutral-white;
   }
-
-  &__widgets-agent {
-    grid-area: agents;
+  &__widgets-chart-title {
+    font-size: $unnnic-font-size-title-sm;
+    font-weight: $unnnic-font-weight-bold;
+    color: $unnnic-color-neutral-darkest;
+  }
+  &__widgets-insight {
+    height: 100%;
+    grid-area: 1/3/2/4;
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    justify-content: center;
+    background-color: $unnnic-color-neutral-white;
+    gap: $unnnic-spacing-sm;
+    padding: $unnnic-spacing-md;
+    border-radius: $unnnic-border-radius-sm;
+  }
+  &__widgets-insight-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: $unnnic-color-neutral-darkest;
+    font-size: $unnnic-font-size-title-md;
+    font-weight: 700;
+    font-family: $unnnic-font-family-primary;
+  }
+  &__widgets-insight-description {
+    color: $unnnic-color-neutral-darkest;
+    font-size: $unnnic-font-size-body-lg;
+    text-align: start;
   }
   &__widgets-card {
     height: 100%;
@@ -285,13 +307,12 @@ export default {
     flex-direction: column;
     text-align: right;
     justify-content: center;
-    background-color: $unnnic-color-neutral-lightest;
+    background-color: $unnnic-color-neutral-white;
     gap: $unnnic-spacing-sm;
     padding: $unnnic-spacing-md;
     border-radius: $unnnic-border-radius-sm;
     cursor: pointer;
   }
-
   &__widgets-card-title {
     color: $unnnic-color-neutral-darkest;
     font-size: $unnnic-font-size-h4;
@@ -301,11 +322,6 @@ export default {
   &__widgets-card-description {
     color: $unnnic-color-neutral-darkest;
     font-size: $unnnic-font-size-body-lg;
-  }
-  &__table {
-    height: 100%;
-
-    margin-top: $unnnic-spacing-sm;
   }
 }
 </style>

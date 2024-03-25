@@ -6,7 +6,7 @@
       placeholder="Peça insights ao InsightsGPT..."
     />
     <div class="insights-input__button">
-      <unnnic-button
+      <UnnnicButton
         type="secondary"
         size="large"
         iconCenter="send"

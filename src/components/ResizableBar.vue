@@ -39,6 +39,18 @@
           clickable
         />
       </button>
+      <button
+        @click="resizeBar"
+        class="resizable-bar__circle-up"
+        v-if="sidebarBottom > 100"
+      >
+        <UnnnicIcon
+          icon="expand_circle_down"
+          size="md"
+          scheme="neutral-cleanest"
+          clickable
+        />
+      </button>
       <hr
         :class="{ 'green-color': isResizing }"
         class="resizable-bar__separator"

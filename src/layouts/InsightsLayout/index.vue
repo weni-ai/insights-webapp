@@ -4,9 +4,9 @@
     <ConnectTopbar class="insights-layout__topbar" />
 
     <section class="insights-layout__insights">
-      <main class="insights__main">
+      <section class="insights__main">
         <slot />
-      </main>
+      </section>
       <ResizableBar />
     </section>
   </section>

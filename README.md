@@ -1,35 +1,29 @@
-# insights-webapp
+<div align="center">
 
-This template should help get you started developing with Vue 3 in Vite.
+<img src="https://github.com/Ilhasoft/weni-platform/raw/main/images/logos/png/weni-396x129-color.png" width="100px" />
 
-## Recommended IDE Setup
+<br/>
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+# Insights
 
-## Customize configuration
+</div>
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+# Set up
 
-## Project Setup
+1. Open the terminal and clone the repository
 
-```sh
-yarn
+```
+  git clone https://github.com/weni-ai/insights-webapp.git
 ```
 
-### Compile and Hot-Reload for Development
+2. Enter the created directory
 
-```sh
-yarn dev
+```
+  cd insights-webapp
 ```
 
-### Compile and Minify for Production
+3. Install the dependencies:
 
-```sh
-yarn build
 ```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-yarn lint
+  yarn
 ```

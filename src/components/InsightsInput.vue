@@ -25,7 +25,7 @@ export default {
 .insights-input {
   margin-top: auto;
   width: 100%;
-  padding: 0 8rem 2rem 8rem;
+  padding: 0 calc($unnnic-spacing-awesome + $unnnic-spacing-giant) $unnnic-spacing-lg;
   display: flex;
   flex-direction: row;
   position: relative;

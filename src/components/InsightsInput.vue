@@ -6,7 +6,7 @@
       placeholder="Peça insights ao InsightsGPT..."
     />
     <div class="insights-input__button">
-      <unnnic-button
+      <UnnnicButton
         type="secondary"
         size="large"
         iconCenter="send"
@@ -25,7 +25,8 @@ export default {
 .insights-input {
   margin-top: auto;
   width: 100%;
-  padding: 0 calc($unnnic-spacing-awesome + $unnnic-spacing-giant) $unnnic-spacing-lg;
+  padding: 0 calc($unnnic-spacing-awesome + $unnnic-spacing-giant)
+    $unnnic-spacing-lg;
   display: flex;
   flex-direction: row;
   position: relative;

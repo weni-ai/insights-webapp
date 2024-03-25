@@ -1,7 +1,11 @@
 <template>
   <section class="table-agents">
     <p class="table-agents__title">
-      <unnnic-avatar-icon icon="forum" size="xs" scheme="feedback-green" />
+      <UnnnicAvatarIcon
+        icon="forum"
+        size="xs"
+        scheme="feedback-green"
+      />
       <span> Chats por agente </span>
     </p>
 

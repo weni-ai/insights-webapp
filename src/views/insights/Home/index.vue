@@ -1,15 +1,18 @@
 <template>
-  <insights-layout ref="insights-layout">
+  <InsightsLayout ref="insights-layout">
     <h1 class="insights__title">Insights</h1>
     <div class="buttons">
-      <unnnic-button
+      <UnnnicButton
         text="Dashboards"
-        icon-left="bar_chart_4_bars"
+        iconLeft="bar_chart_4_bars"
         type="tertiary"
         size="small"
         @click="goToDashboards"
       />
-      <unnnic-input-date-picker v-model="filterDate" size="sm" />
+      <UnnnicInputDatePicker
+        v-model="filterDate"
+        size="sm"
+      />
     </div>
     <section>
       <ColumnCharts
@@ -24,7 +27,10 @@
         <p class="card__title">2150</p>
         <p class="card__description">Mensagens trocadas via bot</p>
       </div>
-      <div class="card card--cursor" @click="goToHumanService">
+      <div
+        class="card card--cursor"
+        @click="goToHumanService"
+      >
         <p class="card__title">503</p>
         <p class="card__description">Atendimentos no Weni Chats</p>
       </div>
@@ -45,7 +51,7 @@
         <p class="card__description">Erros</p>
       </div>
     </div>
-  </insights-layout>
+  </InsightsLayout>
 </template>
 
 <script>

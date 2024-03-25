@@ -2,10 +2,12 @@
   <section class="insights-input">
     <input
       class="insights-input__input"
+      v-model="prompt"
       type="text"
       placeholder="Peça insights ao InsightsGPT..."
+      @keydown.enter="sendGPTPrompt"
     />
-    <unnnic-button
+    <UnnnicButton
       type="secondary"
       size="large"
       iconCenter="send"
@@ -15,8 +17,28 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'InsightsInput',
+
+  data() {
+    return {
+      prompt: '',
+    };
+  },
+
+  methods: {
+    ...mapActions({
+      getInsights: 'gpt/getInsights',
+    }),
+    sendGPTPrompt() {
+      const { prompt, getInsights } = this;
+
+      getInsights({ prompt });
+      this.prompt = '';
+    },
+  },
 };
 </script>
 
@@ -38,7 +60,6 @@ export default {
   background-color: $unnnic-color-neutral-lightest;
 
   &__input {
-    
     outline: none;
     border: none;
     background: transparent;

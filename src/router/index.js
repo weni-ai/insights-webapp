@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store';
 import Home from '@/views/insights/Home/index.vue';
 import Dashboards from '@/views/dashboards/Home/index.vue';
 import Dashboard from '@/views/dashboards/Dashboard/index.vue';
@@ -42,3 +43,10 @@ const router = createRouter({
 });
 
 export default router;
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'home') {
+    store.dispatch('sidebar/updateChartVisibility', false);
+  }
+  next();
+});

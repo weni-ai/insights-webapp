@@ -69,6 +69,9 @@ $topbarHeight: 88px;
       height: 100%;
 
       background-color: $unnnic-color-neutral-white;
+
+      overflow-y: auto;
+      overflow-x: hidden;
     }
   }
 }

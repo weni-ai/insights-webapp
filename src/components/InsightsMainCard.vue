@@ -6,6 +6,12 @@
   </button>
 </template>
 
+<script>
+export default {
+  name: 'InsightsMainCard',
+};
+</script>
+
 <style scoped lang="scss">
 .insights-main-card {
   background-color: $unnnic-color-neutral-soft;

@@ -172,6 +172,7 @@
           </div>
         </div>
       </div>
+      <PromptsHistory />
     </section>
     <InsightsInput />
   </aside>
@@ -182,6 +183,7 @@ import InsightsMainCard from '@/components/InsightsMainCard.vue';
 import InsightsCard from '@/components/InsightsCard.vue';
 import SugestionCard from '@/components/SugestionCard.vue';
 import InsightsInput from '@/components/InsightsInput.vue';
+import PromptsHistory from '@/components/insights/PromptsHistory/index.vue';
 
 export default {
   name: 'ResizableBar',
@@ -191,6 +193,7 @@ export default {
     InsightsCard,
     SugestionCard,
     InsightsInput,
+    PromptsHistory,
   },
 
   data() {

@@ -5,13 +5,12 @@
       type="text"
       placeholder="Peça insights ao InsightsGPT..."
     />
-    <div class="insights-input__button">
-      <unnnic-button
-        type="secondary"
-        size="large"
-        iconCenter="send"
-      />
-    </div>
+    <unnnic-button
+      type="secondary"
+      size="large"
+      iconCenter="send"
+      iconFilled
+    />
   </section>
 </template>
 
@@ -23,43 +22,30 @@ export default {
 
 <style lang="scss" scoped>
 .insights-input {
-  margin-top: auto;
   width: 100%;
-  padding: 0 calc($unnnic-spacing-awesome + $unnnic-spacing-giant) $unnnic-spacing-lg;
+
+  margin-top: auto;
+
+  border-radius: $unnnic-spacing-nano;
+
+  padding: $unnnic-spacing-xs;
+
   display: flex;
-  flex-direction: row;
-  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  gap: $unnnic-spacing-xs;
 
-  background-color: $unnnic-color-neutral-white;
-
-  @media screen and (max-width: 900px) {
-    padding: unset;
-  }
+  background-color: $unnnic-color-neutral-lightest;
 
   &__input {
-    width: 100%;
-    height: 62px;
-    padding: $unnnic-spacing-xs;
+    
+    outline: none;
     border: none;
-    border-radius: $unnnic-spacing-nano;
-    background-color: $unnnic-color-neutral-lightest;
+    background: transparent;
+
+    width: 100%;
+
     color: $unnnic-color-neutral-cloudy;
-  }
-
-  &__button {
-    position: absolute;
-    height: 46px;
-    width: 46px;
-    border: 1px $unnnic-color-neutral-cleanest solid;
-    border-radius: $unnnic-border-radius-sm;
-    background-color: $unnnic-color-neutral-white;
-    right: 9rem;
-    top: 0.6rem;
-    cursor: pointer;
-
-    @media screen and (max-width: 900px) {
-      right: 0;
-    }
   }
 }
 </style>

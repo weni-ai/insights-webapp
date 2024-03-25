@@ -33,7 +33,7 @@
               size="md"
               clickable
             />
-            <span class="dashboard__button-title">Hoje</span>
+            <p class="dashboard__button-title">Hoje</p>
             <UnnnicIcon
               icon="expand_more"
               size="md"
@@ -46,13 +46,13 @@
               size="md"
               clickable
             />
-            <span class="dashboard__button-title">Filtros</span>
+            <p class="dashboard__button-title">Filtros</p>
           </button>
         </section>
         <UnnnicDropdown>
           <template #trigger>
             <button class="dashboard__button">
-              <span class="dashboard__button-title">Exportar</span>
+              <p class="dashboard__button-title">Exportar</p>
               <UnnnicIcon
                 icon="expand_more"
                 size="md"
@@ -62,14 +62,10 @@
           </template>
 
           <UnnnicDropdownItem>
-            <span @click="downloadCSV">
-              <p class="dashboard__dropdown-item">Exportar em CSV</p>
-            </span>
+            <p @click="downloadCSV" class="dashboard__dropdown-item">Exportar em CSV</p>
           </UnnnicDropdownItem>
           <UnnnicDropdownItem>
-            <span @click="downloadPDF">
-              <p class="dashboard__dropdown-item">Exportar em PDF</p>
-            </span>
+            <p @click="downloadPDF" class="dashboard__dropdown-item">Exportar em PDF</p>
           </UnnnicDropdownItem>
         </UnnnicDropdown>
       </section>
@@ -85,19 +81,17 @@
       </section>
       <section>
         <article class="dashboard__widgets-insight">
-          <div class="dashboard__widgets-insight-title">
+          <h2 class="dashboard__widgets-insight-title">
             <UnnnicAvatarIcon
               icon="emoji_objects"
               scheme="neutral-dark"
             />
-            <p>Insight</p>
-          </div>
-          <div class="dashboard__widgets-insight-description">
-            <p>
-              Você sabia que seus fluxos com o tom de voz mais amigável possuem
-              uma taxa de 50% a mais de respostas? Confira aqui quais são eles
-            </p>
-          </div>
+            Insight
+          </h2>
+          <p class="dashboard__widgets-insight-description">
+            Você sabia que seus fluxos com o tom de voz mais amigável possuem
+            uma taxa de 50% a mais de respostas? Confira aqui quais são eles
+          </p>
         </article>
       </section>
       <section>
@@ -291,6 +285,7 @@ export default {
     display: flex;
     flex-direction: row;
     align-items: center;
+    gap: $unnnic-spacing-ant;
     color: $unnnic-color-neutral-darkest;
     font-size: $unnnic-font-size-title-md;
     font-weight: 700;

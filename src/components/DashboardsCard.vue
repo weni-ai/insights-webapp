@@ -4,7 +4,7 @@
     <p class="dashboards-card__title">
       <slot name="title"></slot>
     </p>
-    <unnnic-button
+    <UnnnicButton
       text="Ver"
       type="secondary"
       size="large"

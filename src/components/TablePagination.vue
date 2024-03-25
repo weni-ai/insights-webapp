@@ -5,7 +5,7 @@
         {{ tablePagination.from }} - {{ tablePagination.to }} de
         {{ tablePagination.total }}
       </p>
-      <unnnic-pagination
+      <UnnnicPagination
         :value="value"
         @input="goToPage"
         :max="countPages"

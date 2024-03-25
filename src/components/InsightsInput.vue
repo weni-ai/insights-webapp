@@ -12,6 +12,7 @@
       size="large"
       iconCenter="send"
       iconFilled
+      @click="sendGPTPrompt"
     />
   </section>
 </template>
@@ -35,8 +36,10 @@ export default {
     sendGPTPrompt() {
       const { prompt, getInsights } = this;
 
-      getInsights({ prompt });
-      this.prompt = '';
+      if (prompt) {
+        getInsights({ prompt });
+        this.prompt = '';
+      }
     },
   },
 };

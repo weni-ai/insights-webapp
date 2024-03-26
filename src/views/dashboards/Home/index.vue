@@ -40,6 +40,9 @@
           {{ card.title }}
         </template>
       </DashboardCard>
+      <DashboardCard @click="goToFlowTrigger">
+        <template #title> Disparo de fluxos </template>
+      </DashboardCard>
     </section>
   </InsightsLayout>
 </template>
@@ -84,6 +87,9 @@ export default {
         params: { id: cardId },
         query: { title: cardTitle },
       });
+    },
+    goToFlowTrigger() {
+      this.$router.push({ name: 'flow' });
     },
   },
 };

@@ -9,8 +9,6 @@ const http = axios.create({
 
 export default {
   async getInsights(prompt) {
-    console.log('VITE_GPT_AUTH:', env('VITE_GPT_AUTH'));
-    console.log('VITE_GPT_URL:', env('VITE_GPT_URL'));
     const response = await http.post(env('VITE_GPT_URL'), {
       input: {
         prompt: `<s>[INST] ${prompt} [/INST]`,

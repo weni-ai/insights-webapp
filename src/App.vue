@@ -6,6 +6,8 @@
 
 <script>
 import './assets/scss/unnnic.scss';
+import env from './utils/env';
+console.log('env:', env('VITE_TEST'));
 </script>
 
 <style lang="scss" scoped>

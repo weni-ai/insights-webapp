@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import ResizableBar from '@/components/ResizableBar.vue';
+import ResizableBar from '@/components/ResizableBarNext.vue';
 import ConnectSidebar from '@/components/connect/ConnectSidebar.vue';
 import ConnectTopbar from '@/components/connect/ConnectTopbar.vue';
 

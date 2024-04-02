@@ -1,109 +1,106 @@
 <template>
-  <div class="resizable-bar__general-content__container">
-    <div
-      v-if="visibleInsights"
-      class="resizable-bar__insights"
-    >
-      <header class="resizable-bar__insights-header">
-        <p class="resizable-bar__insights-description unnnic-font body-md bold">
-          InsightsGPT:
-        </p>
-        <h2 class="resizable-bar__insights-title unnnic-font title-sm bold">
-          Aqui estão algumas sugestões para você:
-        </h2>
-      </header>
-      <div class="resizable-bar__insights-content">
-        <nav class="resizable-bar__insights-nav">
-          <ul class="resizable-bar__insights-list">
-            <li class="list-item">Recentes</li>
-            <li class="list-item">Segmentos</li>
-            <li class="list-item">Varejo</li>
-            <li class="list-item">Weni plataforma</li>
-            <li class="list-item selected">Atendimento humano</li>
-          </ul>
-        </nav>
-        <div class="resizable-bar__insights-cards">
-          <SugestionCard>
-            <template v-slot:title>Análise de Desempenho do Atendente</template>
-            <template v-slot:description>Nos últimos 30 dias</template>
-          </SugestionCard>
-          <SugestionCard>
-            <template v-slot:title>Satisfação do Cliente</template>
-            <template v-slot:description
-              >Combine os dados de atendimento com feedbacks de satisfação do
-              cliente para avaliar a eficácia dos diferentes setores e
-              atendentes.</template
-            >
-          </SugestionCard>
-          <SugestionCard>
-            <template v-slot:title
-              >Relatório de Distribuição de Atendimentos</template
-            >
-            <template v-slot:description
-              >Gere um relatório mostrando a distribuição de atendimentos por
-              setor e fila ao longo do tempo, identificando picos de
-              demanda.</template
-            >
-          </SugestionCard>
-          <SugestionCard>
-            <template v-slot:title>Tendências de Contato</template>
-            <template v-slot:description
-              >Analise a frequência de contatos de cada cliente e identifique
-              padrões ou tendências em suas solicitações de
-              atendimento.</template
-            >
-          </SugestionCard>
-          <SugestionCard>
-            <template v-slot:title>Avaliação de Tags de Encerramento</template>
-            <template v-slot:description
-              >Examine as tags de encerramento do atendimento e determine as
-              categorias mais comuns de problemas ou solicitações dos
-              clientes.</template
-            >
-          </SugestionCard>
-        </div>
+  <div
+    v-if="visibleInsights"
+    class="resizable-bar__insights"
+  >
+    <header class="resizable-bar__insights-header">
+      <p class="resizable-bar__insights-description unnnic-font body-md bold">
+        InsightsGPT:
+      </p>
+      <h2 class="resizable-bar__insights-title unnnic-font title-sm bold">
+        Aqui estão algumas sugestões para você:
+      </h2>
+    </header>
+    <div class="resizable-bar__insights-content">
+      <nav class="resizable-bar__insights-nav">
+        <ul class="resizable-bar__insights-list">
+          <li class="list-item">Recentes</li>
+          <li class="list-item">Segmentos</li>
+          <li class="list-item">Varejo</li>
+          <li class="list-item">Weni plataforma</li>
+          <li class="list-item selected">Atendimento humano</li>
+        </ul>
+      </nav>
+      <div class="resizable-bar__insights-cards">
+        <SugestionCard>
+          <template v-slot:title>Análise de Desempenho do Atendente</template>
+          <template v-slot:description>Nos últimos 30 dias</template>
+        </SugestionCard>
+        <SugestionCard>
+          <template v-slot:title>Satisfação do Cliente</template>
+          <template v-slot:description
+            >Combine os dados de atendimento com feedbacks de satisfação do
+            cliente para avaliar a eficácia dos diferentes setores e
+            atendentes.</template
+          >
+        </SugestionCard>
+        <SugestionCard>
+          <template v-slot:title
+            >Relatório de Distribuição de Atendimentos</template
+          >
+          <template v-slot:description
+            >Gere um relatório mostrando a distribuição de atendimentos por
+            setor e fila ao longo do tempo, identificando picos de
+            demanda.</template
+          >
+        </SugestionCard>
+        <SugestionCard>
+          <template v-slot:title>Tendências de Contato</template>
+          <template v-slot:description
+            >Analise a frequência de contatos de cada cliente e identifique
+            padrões ou tendências em suas solicitações de atendimento.</template
+          >
+        </SugestionCard>
+        <SugestionCard>
+          <template v-slot:title>Avaliação de Tags de Encerramento</template>
+          <template v-slot:description
+            >Examine as tags de encerramento do atendimento e determine as
+            categorias mais comuns de problemas ou solicitações dos
+            clientes.</template
+          >
+        </SugestionCard>
       </div>
     </div>
-    <div
-      v-else
-      class="resizable-bar__general-content"
-    >
-      <div class="resizable-bar__content-doris">
-        <img
-          class="resizable-bar__doris-image"
-          src="@/assets/images/doris.png"
-          alt="Dóris"
-        />
-        <h1 class="unnnic-font title-lg resizable-bar__doris-title">
-          Como posso te ajudar hoje?
-        </h1>
-      </div>
-      <div class="resizable-bar__content-text">
-        <div class="resizable-bar__cards">
-          <InsightsCard>
-            <template v-slot:title
-              >Quais foram os principais erros no meu chatbot?</template
-            >
-            <template v-slot:description>Nos últimos 30 dias</template>
-          </InsightsCard>
-          <InsightsCard>
-            <template v-slot:title
-              >Quais foram os principais erros no meu chatbot?</template
-            >
-            <template v-slot:description>Nos últimos 30 dias</template>
-          </InsightsCard>
-          <InsightsCard>
-            <template v-slot:title
-              >Quais foram os principais erros no meu chatbot?</template
-            >
-            <template v-slot:description>Nos últimos 30 dias</template>
-          </InsightsCard>
-          <InsightsMainCard @click="showInsights">
-            <template v-slot:description>
-              Visualizar mais prompts prontos</template
-            >
-          </InsightsMainCard>
-        </div>
+  </div>
+  <div
+    v-else
+    class="resizable-bar__general-content"
+  >
+    <div class="resizable-bar__content-doris">
+      <img
+        class="resizable-bar__doris-image"
+        src="@/assets/images/doris.png"
+        alt="Dóris"
+      />
+      <h1 class="unnnic-font title-lg resizable-bar__doris-title">
+        Como posso te ajudar hoje?
+      </h1>
+    </div>
+    <div class="resizable-bar__content-text">
+      <div class="resizable-bar__cards">
+        <InsightsCard>
+          <template v-slot:title
+            >Quais foram os principais erros no meu chatbot?</template
+          >
+          <template v-slot:description>Nos últimos 30 dias</template>
+        </InsightsCard>
+        <InsightsCard>
+          <template v-slot:title
+            >Quais foram os principais erros no meu chatbot?</template
+          >
+          <template v-slot:description>Nos últimos 30 dias</template>
+        </InsightsCard>
+        <InsightsCard>
+          <template v-slot:title
+            >Quais foram os principais erros no meu chatbot?</template
+          >
+          <template v-slot:description>Nos últimos 30 dias</template>
+        </InsightsCard>
+        <InsightsMainCard @click="showInsights">
+          <template v-slot:description>
+            Visualizar mais prompts prontos</template
+          >
+        </InsightsMainCard>
       </div>
     </div>
   </div>
@@ -135,10 +132,6 @@ export default {
 
 <style lang="scss" scoped>
 .resizable-bar {
-  &__general-content__container {
-    overflow: hidden;
-  }
-
   &__general-content {
     width: 100%;
     height: 100%;

@@ -9,6 +9,12 @@ const http = axios.create({
 
 export default {
   async getInsights(prompt) {
+    if (!env('VITE_GPT_URL')) {
+      throw new Error(
+        `The VITE_GPT_URL environment variable is empty: ${env('VITE_GPT_URL')}`,
+      );
+    }
+
     const response = await http.post(env('VITE_GPT_URL'), {
       input: {
         prompt: `<s>[INST] ${prompt} [/INST]`,

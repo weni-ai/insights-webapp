@@ -3,17 +3,18 @@ import env from '@/utils/env';
 
 const http = axios.create({
   headers: {
-    Authorization: env('VITE_GPT_AUTH'),
+    Authorization: env('VUE_APP_GPT_AUTH'),
   },
 });
 
 export default {
   async getInsights(prompt) {
-    console.log(import.meta.env);
-    const URL = import.meta.env.VITE_GPT_URL;
+    const URL = env('VUE_APP_GPT_URL');
 
     if (!URL) {
-      throw new Error(`The VITE_GPT_URL environment variable is empty: ${URL}`);
+      throw new Error(
+        `The VUE_APP_GPT_URL environment variable is empty: ${URL}`,
+      );
     }
 
     const response = await http.post(URL, {

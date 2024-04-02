@@ -1,7 +1,8 @@
 export default function env(name) {
   return (
-    import.meta.env?.[name] ||
     window?.configs?.[name] ||
-    window?.configs?.[`VITE_${name}`]
+    process.env[name] ||
+    window?.configs?.[`VUE_APP_${name}`] ||
+    process.env[`VUE_APP_${name}`]
   );
 }

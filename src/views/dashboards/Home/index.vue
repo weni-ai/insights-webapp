@@ -1,9 +1,12 @@
 <template>
-  <insights-layout ref="insights-layout">
+  <InsightsLayout ref="insights-layout">
     <header class="dashboards__header">
-      <unnnic-breadcrumb :crumbs="breadcrumb" @crumbClick="handleCrumbClick" />
+      <UnnnicBreadcrumb
+        :crumbs="breadcrumb"
+        @crumbClick="handleCrumbClick"
+      />
       <section class="dashboards__subheader">
-        <unnnic-icon
+        <UnnnicIcon
           icon="arrow_back"
           size="lg"
           scheme="neutral-black"
@@ -14,7 +17,7 @@
           <h1 class="dashboards__title">Nome do projeto</h1>
           <p class="dashboards__description">Dashboards do projeto</p>
         </section>
-        <unnnic-icon
+        <UnnnicIcon
           icon="close"
           size="md"
           scheme="neutral-black"
@@ -37,8 +40,11 @@
           {{ card.title }}
         </template>
       </DashboardCard>
+      <DashboardCard @click="goToFlowTrigger">
+        <template #title> Disparo de fluxos </template>
+      </DashboardCard>
     </section>
-  </insights-layout>
+  </InsightsLayout>
 </template>
 
 <script>
@@ -81,6 +87,9 @@ export default {
         params: { id: cardId },
         query: { title: cardTitle },
       });
+    },
+    goToFlowTrigger() {
+      this.$router.push({ name: 'flow' });
     },
   },
 };

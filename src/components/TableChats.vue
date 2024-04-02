@@ -14,7 +14,12 @@
     <table class="table-chats__table">
       <thead class="table-chats__table-head">
         <tr>
-          <th v-for="header in headers" :key="header">{{ header }}</th>
+          <th
+            v-for="header in headers"
+            :key="header"
+          >
+            {{ header }}
+          </th>
         </tr>
       </thead>
       <tbody class="table-chats__table-body">
@@ -23,7 +28,12 @@
           :key="rowIndex"
           class="table-chats__table-row"
         >
-          <td v-for="(value, colIndex) in row" :key="colIndex">{{ value }}</td>
+          <td
+            v-for="(value, colIndex) in row"
+            :key="colIndex"
+          >
+            {{ value }}
+          </td>
         </tr>
       </tbody>
     </table>

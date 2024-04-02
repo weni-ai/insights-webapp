@@ -47,10 +47,6 @@ export default {
 
 <style lang="scss" scoped>
 .insights-input {
-  width: 100%;
-
-  margin-top: auto;
-
   border-radius: $unnnic-spacing-nano;
 
   padding: $unnnic-spacing-xs;
@@ -68,6 +64,7 @@ export default {
     background: transparent;
 
     width: 100%;
+    height: 100%;
 
     color: $unnnic-color-neutral-cloudy;
   }

@@ -26,12 +26,19 @@
         height: `${contentHeight}vh`,
         transition: resizeTransition,
       }"
-    ></section>
+    >
+      <ResizableBarCards />
+      <InsightsInput />
+    </section>
   </aside>
 </template>
 
 <script>
+import InsightsInput from '@/components/InsightsInput.vue';
+import ResizableBarCards from './ResizableBarCards.vue';
+
 export default {
+  components: { InsightsInput, ResizableBarCards },
   name: 'ResizableBar',
 
   data() {
@@ -143,7 +150,23 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
   }
 
   &__content {
+    overflow: hidden;
+
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: $unnnic-spacing-sm;
+
     background-color: $unnnic-color-background-white;
+
+    padding-bottom: $unnnic-spacing-sm;
+
+    > * {
+      margin: 0 $unnnic-spacing-awesome;
+
+      &:first-child {
+        margin-top: $unnnic-spacing-sm;
+      }
+    }
   }
 }
 </style>

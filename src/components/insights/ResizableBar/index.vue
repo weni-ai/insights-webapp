@@ -20,25 +20,29 @@
       </button>
       <hr class="handler__separator" />
     </section>
-    <section
+    <main
       class="resizable-bar__content"
       :style="{
         height: `${contentHeight}vh`,
         transition: resizeTransition,
       }"
     >
-      <ResizableBarCards />
+      <section class="content__section">
+        <ResizableBarCards />
+        <PromptsHistory />
+      </section>
       <InsightsInput />
-    </section>
+    </main>
   </aside>
 </template>
 
 <script>
 import InsightsInput from '@/components/InsightsInput.vue';
 import ResizableBarCards from './ResizableBarCards.vue';
+import PromptsHistory from '@/components/insights/PromptsHistory/index.vue';
 
 export default {
-  components: { InsightsInput, ResizableBarCards },
+  components: { ResizableBarCards, PromptsHistory, InsightsInput },
   name: 'ResizableBar',
 
   data() {
@@ -150,8 +154,6 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
   }
 
   &__content {
-    overflow: hidden;
-
     display: grid;
     grid-template-rows: 1fr auto;
     gap: $unnnic-spacing-sm;
@@ -159,6 +161,13 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
     background-color: $unnnic-color-background-white;
 
     padding-bottom: $unnnic-spacing-sm;
+
+    .content__section {
+      overflow: auto;
+
+      display: grid;
+      gap: $unnnic-spacing-xl;
+    }
 
     > * {
       margin: 0 $unnnic-spacing-awesome;

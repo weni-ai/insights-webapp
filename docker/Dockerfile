@@ -7,12 +7,6 @@ FROM node:${NODE_VERSION}-${BASE_VERSION} as builder
 
 WORKDIR /app
 
-ARG VITE_GPT_URL
-ARG VITE_GPT_AUTH
-
-ENV VITE_GPT_URL $VITE_GPT_URL
-ENV VITE_GPT_AUTH $VITE_GPT_AUTH
-
 RUN apk --no-cache add git
 
 COPY package.json yarn.lock ./

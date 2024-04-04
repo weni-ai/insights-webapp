@@ -30,5 +30,4 @@ RUN mv /usr/share/nginx/html/insights/index.html /usr/share/nginx/html/insights/
     && ln -s /tmp/index.html
 
 EXPOSE 8080
-ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]

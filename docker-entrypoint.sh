@@ -1,6 +1,5 @@
-
 #!/bin/sh
-JSON_STRING='window.configs = { \
+export JSON_STRING='window.configs = { \
   "VITE_GPT_URL":"'${VITE_GPT_URL}'", \
   "VITE_GPT_AUTH":"'${VITE_GPT_AUTH}'", \
 }'

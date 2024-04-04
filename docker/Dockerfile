@@ -7,20 +7,17 @@ FROM node:${NODE_VERSION}-${BASE_VERSION} as builder
 
 WORKDIR /app
 
-# RUN apk --no-cache add git
-
 COPY package.json yarn.lock ./
-
-# RUN --mount=type=cache,target=/root/.yarn \
-#     YARN_CACHE_FOLDER=/root/.yarn yarn install
 
 RUN yarn install
 
-COPY . ./
+COPY . .
 
 RUN yarn build
 
 FROM nginx:alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/insights/

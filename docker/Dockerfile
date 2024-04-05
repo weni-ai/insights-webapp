@@ -19,11 +19,11 @@ FROM nginx:alpine
 
 COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY --chown=nginx:nginx nginx.conf /etc/nginx/nginx.conf
-COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/smart-descriptions/
+COPY --chown=nginx:nginx docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/insights/
 COPY docker-entrypoint.sh /
-RUN mv /usr/share/nginx/html/smart-descriptions/index.html /usr/share/nginx/html/smart-descriptions/index.html.tmpl \
-    && cd /usr/share/nginx/html/smart-descriptions/ \
+RUN mv /usr/share/nginx/html/insights/index.html /usr/share/nginx/html/insights/index.html.tmpl \
+    && cd /usr/share/nginx/html/insights/ \
     && ln -s /tmp/index.html
 
 

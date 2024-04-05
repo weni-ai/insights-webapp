@@ -1,5 +1,8 @@
 <template>
-  <section class="prompts-history">
+  <section
+    class="prompts-history"
+    v-if="insights.length"
+  >
     <section
       v-for="(insight, index) in insights"
       class="prompts-history__conversation"

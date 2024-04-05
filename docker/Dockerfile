@@ -18,7 +18,7 @@ COPY . .
 
 RUN yarn build
 
-FROM nginxinc/nginx-unprivileged:3.19-alpine
+FROM nginxinc/nginx-unprivileged:1.25-alpine
 
 COPY --chown=nginx:nginx docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/insights/

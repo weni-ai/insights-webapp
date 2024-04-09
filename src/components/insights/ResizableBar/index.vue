@@ -3,9 +3,7 @@
     <section class="resizable-bar__gradient" />
     <section
       class="resizable-bar__handler"
-      @mousedown="startResizing"
-      @mousemove="handleResizing"
-      @mouseup="stopResizing"
+      @mousedown.prevent.stop="startResizing"
     >
       <hr class="handler__separator" />
       <button
@@ -98,6 +96,18 @@ export default {
 
     stopResizing() {
       this.isResizing = false;
+    },
+  },
+
+  watch: {
+    isResizing(newIsResizing) {
+      if (newIsResizing) {
+        window.addEventListener('mousemove', this.handleResizing);
+        window.addEventListener('mouseup', this.stopResizing);
+      } else {
+        window.removeEventListener('mousemove', this.handleResizing);
+        window.removeEventListener('mouseup', this.stopResizing);
+      }
     },
   },
 };

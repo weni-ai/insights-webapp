@@ -108,9 +108,11 @@ export default {
   watch: {
     isResizing(newIsResizing) {
       if (newIsResizing) {
+        document.body.style.cursor = 'ns-resize';
         window.addEventListener('mousemove', this.handleResizing);
         window.addEventListener('mouseup', this.stopResizing);
       } else {
+        document.body.style.cursor = 'default';
         window.removeEventListener('mousemove', this.handleResizing);
         window.removeEventListener('mouseup', this.stopResizing);
       }
@@ -147,13 +149,15 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
 
     background: $unnnic-color-background-white;
 
+    cursor: ns-resize;
+
     .handler__separator {
       width: 100%;
 
+      margin: $unnnic-spacing-xs 0;
+
       border: $unnnic-border-width-thinner solid $unnnic-color-neutral-clean;
       border-radius: $unnnic-border-radius-pill;
-
-      cursor: ns-resize;
     }
 
     .handler__button {

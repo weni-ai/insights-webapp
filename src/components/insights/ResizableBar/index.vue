@@ -53,6 +53,12 @@ export default {
     };
   },
 
+  mounted() {
+    const { resizableBarContentScroll } = this.$refs;
+    resizableBarContentScroll.scrollTop =
+      resizableBarContentScroll.scrollHeight;
+  },
+
   computed: {
     handlerIcon() {
       return this.contentHeight === this.maxContentHeight

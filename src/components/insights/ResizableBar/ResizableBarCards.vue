@@ -84,18 +84,6 @@
           >
           <template v-slot:description>Nos últimos 30 dias</template>
         </InsightsCard>
-        <InsightsCard>
-          <template v-slot:title
-            >Quais foram os principais erros no meu chatbot?</template
-          >
-          <template v-slot:description>Nos últimos 30 dias</template>
-        </InsightsCard>
-        <InsightsCard>
-          <template v-slot:title
-            >Quais foram os principais erros no meu chatbot?</template
-          >
-          <template v-slot:description>Nos últimos 30 dias</template>
-        </InsightsCard>
         <InsightsMainCard @click="showInsights">
           <template v-slot:description>
             Visualizar mais prompts prontos</template

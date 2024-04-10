@@ -1,11 +1,13 @@
 <template>
   <aside class="resizable-bar">
-    <section class="resizable-bar__gradient" />
+    <section
+      class="resizable-bar__gradient"
+      :class="{ show: contentHeight > contentHeightToClose }"
+    />
     <section
       class="resizable-bar__handler"
-      @mousedown="startResizing"
-      @mousemove="handleResizing"
-      @mouseup="stopResizing"
+      ref="resizableBarHandler"
+      @mousedown.prevent.stop="startResizing"
     >
       <hr class="handler__separator" />
       <button
@@ -22,16 +24,27 @@
     </section>
     <main
       class="resizable-bar__content"
+      ref="resizableBarContent"
       :style="{
         height: `${contentHeight}vh`,
         transition: resizeTransition,
       }"
     >
-      <section class="content__section">
-        <ResizableBarCards />
+      <section
+        class="content__section"
+        ref="resizableBarContentScroll"
+      >
+        <!-- This element has flex-direction as column-reverse, to resize with correct behavior -->
         <PromptsHistory />
+        <ResizableBarCards
+          ref="resizableBarCards"
+          v-show="!showMorePromptsSuggestions"
+          @show-more-prompts-suggestions="showMorePromptsSuggestions = true"
+        />
+        <ResizableBarDoris v-show="!showMorePromptsSuggestions" />
+        <ResizableBarPromptsSuggestions v-show="showMorePromptsSuggestions" />
       </section>
-      <InsightsInput />
+      <InsightsInput ref="insightsInput" />
     </main>
   </aside>
 </template>
@@ -39,65 +52,152 @@
 <script>
 import InsightsInput from '@/components/InsightsInput.vue';
 import ResizableBarCards from './ResizableBarCards.vue';
+import ResizableBarDoris from './ResizableBarDoris.vue';
+import ResizableBarPromptsSuggestions from './ResizableBarPromptsSuggestions.vue';
 import PromptsHistory from '@/components/insights/PromptsHistory/index.vue';
 
 export default {
-  components: { ResizableBarCards, PromptsHistory, InsightsInput },
+  components: {
+    ResizableBarCards,
+    ResizableBarDoris,
+    ResizableBarPromptsSuggestions,
+    PromptsHistory,
+    InsightsInput,
+  },
   name: 'ResizableBar',
 
   data() {
     return {
-      startY: 0,
-      maxContentHeight: 60,
-      contentHeight: 24,
       isResizing: false,
       resizeTransition: 'none',
+
+      startHandlerY: null,
+      startContentHeight: null,
+
+      contentHeightMax: 60,
+      contentHeight: 24,
+      contentHeightToClose: null,
+
+      showMorePromptsSuggestions: false,
     };
+  },
+
+  mounted() {
+    this.scrollContentToBottom();
+    this.calculateDefaultContentHeight();
   },
 
   computed: {
     handlerIcon() {
-      return this.contentHeight === this.maxContentHeight
+      return this.contentHeight === this.contentHeightMax
         ? 'expand_circle_down'
         : 'expand_circle_up';
     },
   },
 
   methods: {
+    getPropertyValueAsNumber(styles, property) {
+      return parseFloat(styles.getPropertyValue(property)) || 0;
+    },
+
+    pxToVh(px) {
+      const vh = window.innerHeight;
+      const pxAsVh = (px / vh) * 100;
+      return pxAsVh;
+    },
+
+    calculateDefaultContentHeight() {
+      const resizableBarHandler = this.$refs.resizableBarCards.$el;
+      const resizableBarContent = this.$refs.resizableBarContent;
+
+      const resizableBarContentStyles =
+        window.getComputedStyle(resizableBarContent);
+
+      const resizableBarContentGap = this.getPropertyValueAsNumber(
+        resizableBarContentStyles,
+        'gap',
+      );
+      const resizableBarContentPadding = this.getPropertyValueAsNumber(
+        resizableBarContentStyles,
+        'padding-bottom',
+      );
+
+      const insightsInputHeight = this.$refs.insightsInput.$el.clientHeight;
+      const resizableBarHandlerHeight = resizableBarHandler.clientHeight;
+      this.contentHeight = this.pxToVh(
+        resizableBarContentPadding * 2 +
+          resizableBarHandlerHeight +
+          resizableBarContentGap +
+          insightsInputHeight,
+      );
+      this.contentHeightToClose = this.contentHeight;
+    },
+
     handleResizeClick() {
-      this.resizeTransition = 'height ease-in-out 0.3s';
+      const { contentHeight, contentHeightMax } = this;
+
       if (
-        (this.contentHeight > 0 &&
-          this.contentHeight !== this.maxContentHeight) ||
-        this.contentHeight === 0
+        (contentHeight > 0 && contentHeight !== contentHeightMax) ||
+        contentHeight === 0
       ) {
-        this.contentHeight = this.maxContentHeight;
+        this.resizeHeightWithTransition(contentHeightMax);
       } else {
-        this.contentHeight = 0;
+        this.resizeHeightWithTransition(0);
       }
     },
 
     startResizing(event) {
       this.isResizing = true;
-      this.startY = event.clientY;
+      this.startHandlerY = event.clientY;
+      this.startContentHeight = this.contentHeight;
       this.resizeTransition = 'none';
     },
 
     handleResizing(event) {
       if (this.isResizing) {
-        const relativeVHFromClick = (event.clientY * 100) / window.innerHeight;
-        const remainingRelativeVHFromClick = 100 - relativeVHFromClick;
-        const adjustedcontentHeight = Math.min(
-          remainingRelativeVHFromClick,
-          this.maxContentHeight,
+        const deltaY = -(event.clientY - this.startHandlerY);
+        const remainingContentHeight =
+          this.startContentHeight + this.pxToVh(deltaY);
+        const adjustedContentHeight = Math.min(
+          remainingContentHeight,
+          this.contentHeightMax,
         );
 
-        this.contentHeight = adjustedcontentHeight;
+        this.contentHeight = adjustedContentHeight;
       }
     },
 
     stopResizing() {
       this.isResizing = false;
+
+      if (this.contentHeight < this.contentHeightToClose) {
+        this.resizeHeightWithTransition(0);
+      }
+    },
+
+    resizeHeightWithTransition(height) {
+      this.resizeTransition = 'height ease-in-out 0.3s';
+      this.contentHeight = height;
+    },
+
+    scrollContentToBottom() {
+      const { resizableBarContentScroll } = this.$refs;
+      resizableBarContentScroll.scrollTop =
+        resizableBarContentScroll.scrollHeight;
+    },
+  },
+
+  watch: {
+    isResizing(newIsResizing) {
+      if (newIsResizing) {
+        document.body.style.cursor = 'ns-resize';
+        window.addEventListener('mousemove', this.handleResizing);
+        window.addEventListener('mouseup', this.stopResizing);
+      } else {
+        document.body.style.cursor = 'default';
+        window.removeEventListener('mousemove', this.handleResizing);
+        window.removeEventListener('mouseup', this.stopResizing);
+      }
     },
   },
 };
@@ -121,9 +221,37 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
       #ffffff00 2%,
       $unnnic-color-background-white 98%
     );
+
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    animation-name: disappear;
+
+    &.show {
+      animation-name: appear;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes disappear {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
   }
 
   &__handler {
+    padding: $unnnic-spacing-nano 0;
+
     display: flex;
     align-items: center;
 
@@ -131,13 +259,15 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
 
     background: $unnnic-color-background-white;
 
+    cursor: ns-resize;
+
     .handler__separator {
       width: 100%;
 
+      margin: $unnnic-spacing-xs 0;
+
       border: $unnnic-border-width-thinner solid $unnnic-color-neutral-clean;
       border-radius: $unnnic-border-radius-pill;
-
-      cursor: ns-resize;
     }
 
     .handler__button {
@@ -165,7 +295,8 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
     .content__section {
       overflow: auto;
 
-      display: grid;
+      display: flex;
+      flex-direction: column-reverse;
       gap: $unnnic-spacing-xl;
     }
 

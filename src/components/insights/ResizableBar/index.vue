@@ -45,11 +45,14 @@ export default {
 
   data() {
     return {
-      startY: 0,
-      maxContentHeight: 60,
-      contentHeight: 24,
       isResizing: false,
       resizeTransition: 'none',
+
+      startHandlerY: null,
+      startContentHeight: null,
+
+      contentHeightMax: 60,
+      contentHeight: 24,
     };
   },
 
@@ -61,47 +64,60 @@ export default {
 
   computed: {
     handlerIcon() {
-      return this.contentHeight === this.maxContentHeight
+      return this.contentHeight === this.contentHeightMax
         ? 'expand_circle_down'
         : 'expand_circle_up';
     },
   },
 
   methods: {
+    pxToVh(px) {
+      const vh = window.innerHeight;
+      const pxAsVh = (px / vh) * 100;
+      return pxAsVh;
+    },
+
     handleResizeClick() {
-      this.resizeTransition = 'height ease-in-out 0.3s';
+      const { contentHeight, contentHeightMax } = this;
+
       if (
-        (this.contentHeight > 0 &&
-          this.contentHeight !== this.maxContentHeight) ||
-        this.contentHeight === 0
+        (contentHeight > 0 && contentHeight !== contentHeightMax) ||
+        contentHeight === 0
       ) {
-        this.contentHeight = this.maxContentHeight;
+        this.resizeHeightWithTransition(contentHeightMax);
       } else {
-        this.contentHeight = 0;
+        this.resizeHeightWithTransition(0);
       }
     },
 
     startResizing(event) {
       this.isResizing = true;
-      this.startY = event.clientY;
+      this.startHandlerY = event.clientY;
+      this.startContentHeight = this.contentHeight;
       this.resizeTransition = 'none';
     },
 
     handleResizing(event) {
       if (this.isResizing) {
-        const relativeVHFromClick = (event.clientY * 100) / window.innerHeight;
-        const remainingRelativeVHFromClick = 100 - relativeVHFromClick;
-        const adjustedcontentHeight = Math.min(
-          remainingRelativeVHFromClick,
-          this.maxContentHeight,
+        const deltaY = -(event.clientY - this.startHandlerY);
+        const remainingContentHeight =
+          this.startContentHeight + this.pxToVh(deltaY);
+        const adjustedContentHeight = Math.min(
+          remainingContentHeight,
+          this.contentHeightMax,
         );
 
-        this.contentHeight = adjustedcontentHeight;
+        this.contentHeight = adjustedContentHeight;
       }
     },
 
     stopResizing() {
       this.isResizing = false;
+    },
+
+    resizeHeightWithTransition(height) {
+      this.resizeTransition = 'height ease-in-out 0.3s';
+      this.contentHeight = height;
     },
   },
 

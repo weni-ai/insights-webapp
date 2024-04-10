@@ -1,8 +1,12 @@
 <template>
   <aside class="resizable-bar">
-    <section class="resizable-bar__gradient" />
+    <section
+      class="resizable-bar__gradient"
+      :class="{ show: contentHeight > contentHeightToClose }"
+    />
     <section
       class="resizable-bar__handler"
+      ref="resizableBarHandler"
       @mousedown.prevent.stop="startResizing"
     >
       <hr class="handler__separator" />
@@ -20,17 +24,27 @@
     </section>
     <main
       class="resizable-bar__content"
+      ref="resizableBarContent"
       :style="{
         height: `${contentHeight}vh`,
         transition: resizeTransition,
       }"
     >
-      <section class="content__section">
+      <section
+        class="content__section"
+        ref="resizableBarContentScroll"
+      >
         <!-- This element has flex-direction as column-reverse, to resize with correct behavior -->
         <PromptsHistory />
-        <ResizableBarCards />
+        <ResizableBarCards
+          ref="resizableBarCards"
+          v-show="!showMorePromptsSuggestions"
+          @show-more-prompts-suggestions="showMorePromptsSuggestions = true"
+        />
+        <ResizableBarDoris v-show="!showMorePromptsSuggestions" />
+        <ResizableBarPromptsSuggestions v-show="showMorePromptsSuggestions" />
       </section>
-      <InsightsInput />
+      <InsightsInput ref="insightsInput" />
     </main>
   </aside>
 </template>
@@ -38,10 +52,18 @@
 <script>
 import InsightsInput from '@/components/InsightsInput.vue';
 import ResizableBarCards from './ResizableBarCards.vue';
+import ResizableBarDoris from './ResizableBarDoris.vue';
+import ResizableBarPromptsSuggestions from './ResizableBarPromptsSuggestions.vue';
 import PromptsHistory from '@/components/insights/PromptsHistory/index.vue';
 
 export default {
-  components: { ResizableBarCards, PromptsHistory, InsightsInput },
+  components: {
+    ResizableBarCards,
+    ResizableBarDoris,
+    ResizableBarPromptsSuggestions,
+    PromptsHistory,
+    InsightsInput,
+  },
   name: 'ResizableBar',
 
   data() {
@@ -54,13 +76,15 @@ export default {
 
       contentHeightMax: 60,
       contentHeight: 24,
+      contentHeightToClose: null,
+
+      showMorePromptsSuggestions: false,
     };
   },
 
   mounted() {
-    const { resizableBarContentScroll } = this.$refs;
-    resizableBarContentScroll.scrollTop =
-      resizableBarContentScroll.scrollHeight;
+    this.scrollContentToBottom();
+    this.calculateDefaultContentHeight();
   },
 
   computed: {
@@ -72,10 +96,41 @@ export default {
   },
 
   methods: {
+    getPropertyValueAsNumber(styles, property) {
+      return parseFloat(styles.getPropertyValue(property)) || 0;
+    },
+
     pxToVh(px) {
       const vh = window.innerHeight;
       const pxAsVh = (px / vh) * 100;
       return pxAsVh;
+    },
+
+    calculateDefaultContentHeight() {
+      const resizableBarHandler = this.$refs.resizableBarCards.$el;
+      const resizableBarContent = this.$refs.resizableBarContent;
+
+      const resizableBarContentStyles =
+        window.getComputedStyle(resizableBarContent);
+
+      const resizableBarContentGap = this.getPropertyValueAsNumber(
+        resizableBarContentStyles,
+        'gap',
+      );
+      const resizableBarContentPadding = this.getPropertyValueAsNumber(
+        resizableBarContentStyles,
+        'padding-bottom',
+      );
+
+      const insightsInputHeight = this.$refs.insightsInput.$el.clientHeight;
+      const resizableBarHandlerHeight = resizableBarHandler.clientHeight;
+      this.contentHeight = this.pxToVh(
+        resizableBarContentPadding * 2 +
+          resizableBarHandlerHeight +
+          resizableBarContentGap +
+          insightsInputHeight,
+      );
+      this.contentHeightToClose = this.contentHeight;
     },
 
     handleResizeClick() {
@@ -114,11 +169,21 @@ export default {
 
     stopResizing() {
       this.isResizing = false;
+
+      if (this.contentHeight < this.contentHeightToClose) {
+        this.resizeHeightWithTransition(0);
+      }
     },
 
     resizeHeightWithTransition(height) {
       this.resizeTransition = 'height ease-in-out 0.3s';
       this.contentHeight = height;
+    },
+
+    scrollContentToBottom() {
+      const { resizableBarContentScroll } = this.$refs;
+      resizableBarContentScroll.scrollTop =
+        resizableBarContentScroll.scrollHeight;
     },
   },
 
@@ -156,9 +221,37 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
       #ffffff00 2%,
       $unnnic-color-background-white 98%
     );
+
+    animation-duration: 0.3s;
+    animation-fill-mode: forwards;
+    animation-name: disappear;
+
+    &.show {
+      animation-name: appear;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes disappear {
+      from {
+        opacity: 1;
+      }
+      to {
+        opacity: 0;
+      }
+    }
   }
 
   &__handler {
+    padding: $unnnic-spacing-nano 0;
+
     display: flex;
     align-items: center;
 

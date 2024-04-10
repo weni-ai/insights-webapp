@@ -12,6 +12,7 @@
       size="large"
       iconCenter="send"
       iconFilled
+      next
       @click="sendGPTPrompt"
     />
   </section>

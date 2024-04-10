@@ -8,7 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "lint --fix"
+    "format": "yarn lint --fix"
   },
   "dependencies": {
     "@weni/unnnic-system": "2.0.0-beta.4",

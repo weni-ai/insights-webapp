@@ -11,7 +11,7 @@
     "format": "yarn lint --fix"
   },
   "dependencies": {
-    "@weni/unnnic-system": "^2.0.0-beta.0",
+    "@weni/unnnic-system": "2.0.0-beta.4",
     "apexcharts": "^3.45.2",
     "axios": "^1.6.8",
     "vue": "^3.3.11",

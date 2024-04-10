@@ -26,8 +26,9 @@
       }"
     >
       <section class="content__section">
-        <ResizableBarCards />
+        <!-- This element has flex-direction as column-reverse, to resize with correct behavior -->
         <PromptsHistory />
+        <ResizableBarCards />
       </section>
       <InsightsInput />
     </main>
@@ -201,7 +202,8 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
     .content__section {
       overflow: auto;
 
-      display: grid;
+      display: flex;
+      flex-direction: column-reverse;
       gap: $unnnic-spacing-xl;
     }
 

@@ -1,54 +1,51 @@
 <template>
-  <InsightsLayout ref="insights-layout">
-    <header class="dashboards__header">
-      <UnnnicBreadcrumb
-        :crumbs="breadcrumb"
-        @crumbClick="handleCrumbClick"
+  <header class="dashboards__header">
+    <UnnnicBreadcrumb
+      :crumbs="breadcrumb"
+      @crumbClick="handleCrumbClick"
+    />
+    <section class="dashboards__subheader">
+      <UnnnicIcon
+        icon="arrow_back"
+        size="lg"
+        scheme="neutral-black"
+        clickable
+        @click="goToInsights"
       />
-      <section class="dashboards__subheader">
-        <UnnnicIcon
-          icon="arrow_back"
-          size="lg"
-          scheme="neutral-black"
-          clickable
-          @click="goToInsights"
-        />
-        <section class="dashboards__subheader-description">
-          <h1 class="dashboards__title">Nome do projeto</h1>
-          <p class="dashboards__description">Dashboards do projeto</p>
-        </section>
-        <UnnnicIcon
-          icon="close"
-          size="md"
-          scheme="neutral-black"
-          clickable
-          @click="goToInsights"
-        />
+      <section class="dashboards__subheader-description">
+        <h1 class="dashboards__title">Nome do projeto</h1>
+        <p class="dashboards__description">Dashboards do projeto</p>
       </section>
-    </header>
-    <hr class="dashboards__separator" />
-    <section>
-      <h1 class="dashboards__templates-title">Templates de Dashboards</h1>
+      <UnnnicIcon
+        icon="close"
+        size="md"
+        scheme="neutral-black"
+        clickable
+        @click="goToInsights"
+      />
     </section>
-    <section class="dashboards__cards">
-      <DashboardCard
-        v-for="(card, index) in cards"
-        :key="index"
-        @click="goToCardDetails(card.id, card.title)"
-      >
-        <template #title>
-          {{ card.title }}
-        </template>
-      </DashboardCard>
-      <DashboardCard @click="goToFlowTrigger">
-        <template #title> Disparo de fluxos </template>
-      </DashboardCard>
-    </section>
-  </InsightsLayout>
+  </header>
+  <hr class="dashboards__separator" />
+  <section>
+    <h1 class="dashboards__templates-title">Templates de Dashboards</h1>
+  </section>
+  <section class="dashboards__cards">
+    <DashboardCard
+      v-for="(card, index) in cards"
+      :key="index"
+      @click="goToCardDetails(card.id, card.title)"
+    >
+      <template #title>
+        {{ card.title }}
+      </template>
+    </DashboardCard>
+    <DashboardCard @click="goToFlowTrigger">
+      <template #title> Disparo de fluxos </template>
+    </DashboardCard>
+  </section>
 </template>
 
 <script>
-import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
 import DashboardCard from '@/components/DashboardsCard.vue';
 import cardsData from '@/mocks/dashboards.json';
 
@@ -56,7 +53,6 @@ export default {
   name: 'DashboardsView',
 
   components: {
-    InsightsLayout,
     DashboardCard,
   },
 

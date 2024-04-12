@@ -1,63 +1,60 @@
 <template>
-  <InsightsLayout ref="insights-layout">
-    <h1 class="insights__title">Insights</h1>
-    <div class="buttons">
-      <UnnnicButton
-        text="Dashboards"
-        iconLeft="bar_chart_4_bars"
-        type="tertiary"
-        size="small"
-        @click="goToDashboards"
-      />
-      <UnnnicInputDatePicker
-        v-model="filterDate"
-        size="sm"
-      />
+  <h1 class="insights__title">Insights</h1>
+  <div class="buttons">
+    <UnnnicButton
+      text="Dashboards"
+      iconLeft="bar_chart_4_bars"
+      type="tertiary"
+      size="small"
+      @click="goToDashboards"
+    />
+    <UnnnicInputDatePicker
+      v-model="filterDate"
+      size="sm"
+    />
+  </div>
+  <section>
+    <ColumnCharts
+      :chartData="chartData"
+      :height="chartHeight"
+      :width="chartWidth"
+      v-if="isChartVisible"
+    />
+  </section>
+  <div class="cards">
+    <div class="card">
+      <p class="card__title">2150</p>
+      <p class="card__description">Mensagens trocadas via bot</p>
     </div>
-    <section>
-      <ColumnCharts
-        :chartData="chartData"
-        :height="chartHeight"
-        :width="chartWidth"
-        v-if="isChartVisible"
-      />
-    </section>
-    <div class="cards">
-      <div class="card">
-        <p class="card__title">2150</p>
-        <p class="card__description">Mensagens trocadas via bot</p>
-      </div>
-      <div
-        class="card card--cursor"
-        @click="goToHumanService"
-      >
-        <p class="card__title">503</p>
-        <p class="card__description">Atendimentos no Weni Chats</p>
-      </div>
-      <div class="card">
-        <p class="card__title">4.3</p>
-        <p class="card__description">NPS</p>
-      </div>
-      <div class="card">
-        <p class="card__title">7000</p>
-        <p class="card__description">Runs de fluxos</p>
-      </div>
-      <div class="card">
-        <p class="card__title">1500</p>
-        <p class="card__description">Contatos ativos</p>
-      </div>
-      <div class="card">
-        <p class="card__title">129</p>
-        <p class="card__description">Erros</p>
-      </div>
+    <div
+      class="card card--cursor"
+      @click="goToHumanService"
+    >
+      <p class="card__title">503</p>
+      <p class="card__description">Atendimentos no Weni Chats</p>
     </div>
-  </InsightsLayout>
+    <div class="card">
+      <p class="card__title">4.3</p>
+      <p class="card__description">NPS</p>
+    </div>
+    <div class="card">
+      <p class="card__title">7000</p>
+      <p class="card__description">Runs de fluxos</p>
+    </div>
+    <div class="card">
+      <p class="card__title">1500</p>
+      <p class="card__description">Contatos ativos</p>
+    </div>
+    <div class="card">
+      <p class="card__title">129</p>
+      <p class="card__description">Erros</p>
+    </div>
+  </div>
 </template>
 
 <script>
 import { mapState, mapActions } from 'vuex';
 import moment from 'moment';
-import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import chartData from '@/mocks/chartData.json';
 
@@ -65,7 +62,6 @@ export default {
   name: 'HomeView',
 
   components: {
-    InsightsLayout,
     ColumnCharts,
   },
 

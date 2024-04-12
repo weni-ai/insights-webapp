@@ -1,103 +1,100 @@
 <template>
-  <InsightsLayout ref="insights-layout">
-    <header class="dashboard__header">
-      <UnnnicBreadcrumb
-        :crumbs="breadcrumb"
-        @crumbClick="handleCrumbClick"
+  <header class="dashboard__header">
+    <UnnnicBreadcrumb
+      :crumbs="breadcrumb"
+      @crumbClick="handleCrumbClick"
+    />
+    <section class="dashboard__subheader">
+      <UnnnicIcon
+        icon="arrow_back"
+        size="lg"
+        scheme="neutral-black"
+        clickable
+        @click="goToDashboards"
       />
-      <section class="dashboard__subheader">
-        <UnnnicIcon
-          icon="arrow_back"
-          size="lg"
-          scheme="neutral-black"
-          clickable
-          @click="goToDashboards"
-        />
-        <section class="dashboard__subheader-description">
-          <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
-          <p class="dashboard__description">Nome do projeto</p>
-        </section>
-        <UnnnicIcon
-          icon="close"
-          size="md"
-          scheme="neutral-black"
-          clickable
-          @click="goToDashboards"
-        />
+      <section class="dashboard__subheader-description">
+        <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
+        <p class="dashboard__description">Nome do projeto</p>
       </section>
-      <section class="dashboard__buttons">
-        <section class="dashboard__buttons-one">
-          <button class="dashboard__button">
-            <UnnnicIcon
-              icon="calendar_month"
-              size="md"
-              clickable
-            />
-            <span class="dashboard__button-title">Hoje</span>
-            <UnnnicIcon
-              icon="expand_more"
-              size="md"
-              clickable
-            />
-          </button>
-          <button class="dashboard__button">
-            <UnnnicIcon
-              icon="filter_alt"
-              size="md"
-              clickable
-            />
-            <span class="dashboard__button-title">Filtros</span>
-          </button>
-        </section>
+      <UnnnicIcon
+        icon="close"
+        size="md"
+        scheme="neutral-black"
+        clickable
+        @click="goToDashboards"
+      />
+    </section>
+    <section class="dashboard__buttons">
+      <section class="dashboard__buttons-one">
         <button class="dashboard__button">
-          <span class="dashboard__button-title">Exportar</span>
+          <UnnnicIcon
+            icon="calendar_month"
+            size="md"
+            clickable
+          />
+          <span class="dashboard__button-title">Hoje</span>
           <UnnnicIcon
             icon="expand_more"
             size="md"
             clickable
           />
         </button>
+        <button class="dashboard__button">
+          <UnnnicIcon
+            icon="filter_alt"
+            size="md"
+            clickable
+          />
+          <span class="dashboard__button-title">Filtros</span>
+        </button>
       </section>
-    </header>
-    <section
-      class="dashboard__widgets"
-      v-if="firstSection"
-    >
-      <section class="dashboard__widgets-cards">
-        <article
-          class="dashboard__widgets-card"
-          @click="showTable"
-          v-for="(card, index) in cards"
-          :key="index"
-        >
-          <h4 class="dashboard__widgets-card-title">{{ card.title }}</h4>
-          <p class="dashboard__widgets-card-description">
-            {{ card.description }}
-          </p>
-        </article>
-      </section>
-      <section class="dashboard__widgets-chart">
-        <ColumnCharts
-          :chartData="chartData"
-          :height="chartHeight"
-          :width="chartWidth"
+      <button class="dashboard__button">
+        <span class="dashboard__button-title">Exportar</span>
+        <UnnnicIcon
+          icon="expand_more"
+          size="md"
+          clickable
         />
-      </section>
-      <section class="dashboard__widgets-agent">
-        <AgentChats />
-      </section>
+      </button>
     </section>
-    <section
-      v-else
-      class="dashboard__table"
-    >
-      <TableChats :data="chatsData" />
+  </header>
+  <section
+    class="dashboard__widgets"
+    v-if="firstSection"
+  >
+    <section class="dashboard__widgets-cards">
+      <article
+        class="dashboard__widgets-card"
+        @click="showTable"
+        v-for="(card, index) in cards"
+        :key="index"
+      >
+        <h4 class="dashboard__widgets-card-title">{{ card.title }}</h4>
+        <p class="dashboard__widgets-card-description">
+          {{ card.description }}
+        </p>
+      </article>
     </section>
-  </InsightsLayout>
+    <section class="dashboard__widgets-chart">
+      <ColumnCharts
+        :chartData="chartData"
+        :height="chartHeight"
+        :width="chartWidth"
+      />
+    </section>
+    <section class="dashboard__widgets-agent">
+      <AgentChats />
+    </section>
+  </section>
+  <section
+    v-else
+    class="dashboard__table"
+  >
+    <TableChats :data="chatsData" />
+  </section>
 </template>
 
 <script>
-import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import AgentChats from '@/components/AgentChats.vue';
 import TableChats from '@/components/TableChats.vue';
@@ -109,7 +106,6 @@ export default {
   name: 'DashboardView',
 
   components: {
-    InsightsLayout,
     ColumnCharts,
     AgentChats,
     TableChats,

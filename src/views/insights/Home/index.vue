@@ -1,68 +1,55 @@
 <template>
-  <h1 class="insights__title">Insights</h1>
-  <div class="buttons">
-    <UnnnicButton
-      text="Dashboards"
-      iconLeft="bar_chart_4_bars"
-      type="tertiary"
-      size="small"
-      @click="goToDashboards"
-    />
-    <UnnnicInputDatePicker
-      v-model="filterDate"
-      size="sm"
-    />
-  </div>
-  <section>
-    <ColumnCharts
-      :chartData="chartData"
-      :height="chartHeight"
-      :width="chartWidth"
-      v-if="isChartVisible"
-    />
+  <section class="home">
+    <header class="home__header">
+      <h1 class="header__title">Insights</h1>
+      <section class="header__handlers">
+        <UnnnicButton
+          text="Dashboards"
+          iconLeft="bar_chart_4_bars"
+          type="tertiary"
+          size="small"
+          @click="goToDashboards"
+        />
+        <UnnnicInputDatePicker
+          v-model="filterDate"
+          size="sm"
+        />
+      </section>
+    </header>
+    <section>
+      <ColumnCharts
+        v-if="contentHeight === 0"
+        :chartData="chartData"
+        :height="chartHeight"
+        :width="chartWidth"
+      />
+    </section>
+    <section class="home__cards">
+      <InsightsCard
+        v-for="{ title, subtitle, click } of cards"
+        :key="subtitle"
+        :title="title"
+        :subtitle="subtitle"
+        @click="click"
+        configured
+      />
+    </section>
   </section>
-  <div class="cards">
-    <div class="card">
-      <p class="card__title">2150</p>
-      <p class="card__description">Mensagens trocadas via bot</p>
-    </div>
-    <div
-      class="card card--cursor"
-      @click="goToHumanService"
-    >
-      <p class="card__title">503</p>
-      <p class="card__description">Atendimentos no Weni Chats</p>
-    </div>
-    <div class="card">
-      <p class="card__title">4.3</p>
-      <p class="card__description">NPS</p>
-    </div>
-    <div class="card">
-      <p class="card__title">7000</p>
-      <p class="card__description">Runs de fluxos</p>
-    </div>
-    <div class="card">
-      <p class="card__title">1500</p>
-      <p class="card__description">Contatos ativos</p>
-    </div>
-    <div class="card">
-      <p class="card__title">129</p>
-      <p class="card__description">Erros</p>
-    </div>
-  </div>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState } from 'vuex';
 import moment from 'moment';
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import chartData from '@/mocks/chartData.json';
+import InsightsCard from '@/components/Card.vue';
 
 export default {
   name: 'HomeView',
 
   components: {
     ColumnCharts,
+    InsightsCard,
   },
 
   data: () => ({
@@ -73,13 +60,46 @@ export default {
     chartData: chartData,
     chartHeight: '100%',
     chartWidth: '100%',
+    cards: [],
   }),
+
+  created() {
+    this.cards = [
+      {
+        title: '2150',
+        subtitle: 'Mensagens trocadas via bot',
+      },
+      {
+        title: '503',
+        subtitle: 'Atendimentos no Weni Chats',
+        click: () => this.goToHumanService(),
+      },
+      {
+        title: '264',
+        subtitle: 'Fluxos disparados',
+      },
+      {
+        title: '7000',
+        subtitle: 'Execuções de fluxos',
+      },
+      {
+        title: '1500',
+        subtitle: 'Contatos ativos',
+      },
+      {
+        title: '129',
+        subtitle: 'Erros de IA',
+      },
+    ];
+  },
 
   computed: {
     ...mapState('sidebar', {
       isChartVisible: (state) => state.chartVisible,
+      contentHeight: (state) => state.resizableBar?.contentHeight,
     }),
   },
+
   methods: {
     goToDashboards() {
       this.$router.replace({ name: 'dashboards' });
@@ -95,74 +115,46 @@ export default {
         },
       });
     },
-    ...mapActions({
-      updateChartVisibility: 'updateChartVisibility',
-    }),
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.insights {
-  display: flex;
-  flex-direction: column;
-  gap: $unnnic-spacing-stack-xl;
-
-  &__title {
-    color: $unnnic-color-neutral-darkest;
-    font-size: $unnnic-font-size-title-md;
-    font-weight: $unnnic-font-weight-bold;
-    font-family: $unnnic-font-family-primary;
-  }
-}
-
-.buttons {
-  margin-top: $unnnic-spacing-sm;
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  button {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: none;
-    gap: $unnnic-spacing-xs;
-    font-size: 16px;
-    padding: $unnnic-spacing-xs;
-    background-color: $unnnic-color-neutral-lightest;
-  }
-}
-.cards {
-  margin-top: $unnnic-spacing-sm;
+.home {
   display: grid;
-  grid-template-columns: repeat(3, 3fr);
-  grid-template-rows: repeat(2, 3fr);
-  grid-column-gap: $unnnic-spacing-sm;
-  grid-row-gap: $unnnic-spacing-sm;
-  height: 100%;
-  .card {
-    background-color: $unnnic-color-neutral-lightest;
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-sm;
-    text-align: right;
-    padding: $unnnic-spacing-md;
-    justify-content: center;
+  gap: $unnnic-spacing-sm;
 
-    &__title {
-      font-size: 40px;
-      font-size: 700;
-      font-weight: 700;
+  &__header {
+    display: grid;
+    gap: $unnnic-spacing-sm;
+
+    .header__title {
+      color: $unnnic-color-neutral-darkest;
+      font-size: $unnnic-font-size-title-md;
+      font-weight: $unnnic-font-weight-bold;
       font-family: $unnnic-font-family-primary;
-      color: $unnnic-color-neutral-darkest;
+      line-height: $unnnic-line-height-large * 2;
     }
-    &__description {
-      color: $unnnic-color-neutral-darkest;
+    .header__handlers {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border: none;
+        gap: $unnnic-spacing-xs;
+        font-size: 16px;
+        padding: $unnnic-spacing-xs;
+        background-color: $unnnic-color-neutral-lightest;
+      }
     }
   }
-
-  .card--cursor {
-    cursor: pointer;
+  &__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $unnnic-spacing-sm;
   }
 }
 </style>

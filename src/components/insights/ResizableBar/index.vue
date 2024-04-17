@@ -50,6 +50,10 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
+import { pxToVh } from '@/utils/css';
+
 import InsightsInput from '@/components/InsightsInput.vue';
 import ResizableBarCards from './ResizableBarCards.vue';
 import ResizableBarDoris from './ResizableBarDoris.vue';
@@ -74,8 +78,6 @@ export default {
       startHandlerY: null,
       startContentHeight: null,
 
-      contentHeightMax: 60,
-      contentHeight: 24,
       contentHeightToClose: null,
 
       showMorePromptsSuggestions: false,
@@ -83,11 +85,16 @@ export default {
   },
 
   mounted() {
+    this.setContentHeight(24);
     this.scrollContentToBottom();
     this.calculateDefaultContentHeight();
   },
 
   computed: {
+    ...mapState({
+      contentHeight: (state) => state.resizableBar.contentHeight,
+      contentHeightMax: (state) => state.resizableBar.contentHeightMax,
+    }),
     handlerIcon() {
       return this.contentHeight === this.contentHeightMax
         ? 'expand_circle_down'
@@ -96,14 +103,11 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      setContentHeight: 'resizableBar/setContentHeight',
+    }),
     getPropertyValueAsNumber(styles, property) {
       return parseFloat(styles.getPropertyValue(property)) || 0;
-    },
-
-    pxToVh(px) {
-      const vh = window.innerHeight;
-      const pxAsVh = (px / vh) * 100;
-      return pxAsVh;
     },
 
     calculateDefaultContentHeight() {
@@ -124,11 +128,13 @@ export default {
 
       const insightsInputHeight = this.$refs.insightsInput.$el.clientHeight;
       const resizableBarHandlerHeight = resizableBarHandler.clientHeight;
-      this.contentHeight = this.pxToVh(
-        resizableBarContentPadding * 2 +
-          resizableBarHandlerHeight +
-          resizableBarContentGap +
-          insightsInputHeight,
+      this.setContentHeight(
+        pxToVh(
+          resizableBarContentPadding * 2 +
+            resizableBarHandlerHeight +
+            resizableBarContentGap +
+            insightsInputHeight,
+        ),
       );
       this.contentHeightToClose = this.contentHeight;
     },
@@ -156,14 +162,13 @@ export default {
     handleResizing(event) {
       if (this.isResizing) {
         const deltaY = -(event.clientY - this.startHandlerY);
-        const remainingContentHeight =
-          this.startContentHeight + this.pxToVh(deltaY);
+        const remainingContentHeight = this.startContentHeight + pxToVh(deltaY);
         const adjustedContentHeight = Math.min(
           remainingContentHeight,
           this.contentHeightMax,
         );
 
-        this.contentHeight = adjustedContentHeight;
+        this.setContentHeight(adjustedContentHeight);
       }
     },
 
@@ -177,7 +182,7 @@ export default {
 
     resizeHeightWithTransition(height) {
       this.resizeTransition = 'height ease-in-out 0.3s';
-      this.contentHeight = height;
+      this.setContentHeight(height);
     },
 
     scrollContentToBottom() {
@@ -210,7 +215,10 @@ $insightsLayoutPadding: ($unnnic-spacing-sm * 2);
   position: absolute;
   bottom: 0;
 
+  justify-self: center;
+
   width: calc(100% - $insightsLayoutPadding);
+  max-height: 100%;
 
   &__gradient {
     width: 100%;

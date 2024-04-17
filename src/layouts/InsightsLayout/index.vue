@@ -3,8 +3,16 @@
     <ConnectSidebar class="insights-layout__sidebar" />
     <ConnectTopbar class="insights-layout__topbar" />
 
-    <section class="insights-layout__insights">
-      <main class="insights__main">
+    <section
+      class="insights-layout__insights"
+      ref="insightsContent"
+    >
+      <main
+        class="insights__main"
+        :style="{
+          height: `${mainHeight}vh`,
+        }"
+      >
         <slot />
       </main>
       <ResizableBar />
@@ -13,13 +21,29 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
+import { pxToVh } from '@/utils/css';
+
 import ResizableBar from '@/components/insights/ResizableBar/index.vue';
 import ConnectSidebar from '@/components/connect/ConnectSidebar.vue';
 import ConnectTopbar from '@/components/connect/ConnectTopbar.vue';
 
 export default {
   name: 'InsightsLayout',
+
   components: { ResizableBar, ConnectSidebar, ConnectTopbar },
+
+  computed: {
+    ...mapState({
+      contentHeight: (state) => state.resizableBar.contentHeight,
+    }),
+    mainHeight() {
+      return (
+        pxToVh(this.$refs.insightsContent?.clientHeight) - this.contentHeight
+      );
+    },
+  },
 };
 </script>
 
@@ -57,8 +81,9 @@ $topbarHeight: 88px;
     position: relative;
 
     grid-area: insights;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: minmax(4fr, 6fr) auto;
+    grid-template-columns: auto;
 
     padding: $unnnic-spacing-sm;
 
@@ -66,12 +91,12 @@ $topbarHeight: 88px;
       display: flex;
       flex-direction: column;
 
-      height: 100%;
-
       background-color: $unnnic-color-neutral-white;
 
       overflow-y: auto;
       overflow-x: hidden;
+
+      transition: height ease-in-out 0.3s;
     }
   }
 }

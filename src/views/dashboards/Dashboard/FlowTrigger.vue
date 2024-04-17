@@ -1,138 +1,144 @@
 <template>
-  <InsightsLayout ref="insights-layout">
-    <header class="dashboard__header">
-      <UnnnicBreadcrumb
-        :crumbs="breadcrumb"
-        @crumbClick="handleCrumbClick"
+  <header class="dashboard__header">
+    <UnnnicBreadcrumb
+      :crumbs="breadcrumb"
+      @crumbClick="handleCrumbClick"
+    />
+    <section class="dashboard__subheader">
+      <UnnnicIcon
+        icon="arrow_back"
+        size="lg"
+        scheme="neutral-black"
+        clickable
+        @click="goToDashboards"
       />
-      <section class="dashboard__subheader">
-        <UnnnicIcon
-          icon="arrow_back"
-          size="lg"
-          scheme="neutral-black"
-          clickable
-          @click="goToDashboards"
-        />
-        <section class="dashboard__subheader-description">
-          <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
-          <p class="dashboard__description">Nome do projeto</p>
-        </section>
-        <UnnnicIcon
-          icon="close"
-          size="md"
-          scheme="neutral-black"
-          clickable
-          @click="goToInsights"
-        />
+      <section class="dashboard__subheader-description">
+        <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
+        <p class="dashboard__description">Nome do projeto</p>
       </section>
-      <section class="dashboard__buttons">
-        <section class="dashboard__buttons-one">
+      <UnnnicIcon
+        icon="close"
+        size="md"
+        scheme="neutral-black"
+        clickable
+        @click="goToInsights"
+      />
+    </section>
+    <section class="dashboard__buttons">
+      <section class="dashboard__buttons-one">
+        <button class="dashboard__button">
+          <UnnnicIcon
+            icon="calendar_month"
+            size="md"
+            clickable
+          />
+          <p class="dashboard__button-title">Hoje</p>
+          <UnnnicIcon
+            icon="expand_more"
+            size="md"
+            clickable
+          />
+        </button>
+        <button class="dashboard__button">
+          <UnnnicIcon
+            icon="filter_alt"
+            size="md"
+            clickable
+          />
+          <p class="dashboard__button-title">Filtros</p>
+        </button>
+      </section>
+      <UnnnicDropdown>
+        <template #trigger>
           <button class="dashboard__button">
-            <UnnnicIcon
-              icon="calendar_month"
-              size="md"
-              clickable
-            />
-            <p class="dashboard__button-title">Hoje</p>
+            <p class="dashboard__button-title">Exportar</p>
             <UnnnicIcon
               icon="expand_more"
               size="md"
               clickable
             />
           </button>
-          <button class="dashboard__button">
-            <UnnnicIcon
-              icon="filter_alt"
-              size="md"
-              clickable
-            />
-            <p class="dashboard__button-title">Filtros</p>
-          </button>
-        </section>
-        <UnnnicDropdown>
-          <template #trigger>
-            <button class="dashboard__button">
-              <p class="dashboard__button-title">Exportar</p>
-              <UnnnicIcon
-                icon="expand_more"
-                size="md"
-                clickable
-              />
-            </button>
-          </template>
+        </template>
 
-          <UnnnicDropdownItem>
-            <p @click="downloadCSV" class="dashboard__dropdown-item">Exportar em CSV</p>
-          </UnnnicDropdownItem>
-          <UnnnicDropdownItem>
-            <p @click="downloadPDF" class="dashboard__dropdown-item">Exportar em PDF</p>
-          </UnnnicDropdownItem>
-        </UnnnicDropdown>
-      </section>
-    </header>
-    <section class="dashboard__widgets">
-      <section class="dashboard__widgets-chart">
-        <h1 class="dashboard__widgets-chart-title">Fluxos</h1>
-        <BarChart
-          :chartData="chartData"
-          :height="chartHeight"
-          :width="chartWidth"
-        />
-      </section>
-      <section>
-        <article class="dashboard__widgets-insight">
-          <h2 class="dashboard__widgets-insight-title">
-            <UnnnicAvatarIcon
-              icon="emoji_objects"
-              scheme="neutral-dark"
-            />
-            Insight
-          </h2>
-          <p class="dashboard__widgets-insight-description">
-            Você sabia que seus fluxos com o tom de voz mais amigável possuem
-            uma taxa de 50% a mais de respostas? Confira aqui quais são eles
+        <UnnnicDropdownItem>
+          <p
+            @click="downloadCSV"
+            class="dashboard__dropdown-item"
+          >
+            Exportar em CSV
           </p>
-        </article>
-      </section>
-      <section>
-        <article class="dashboard__widgets-card">
-          <h4 class="dashboard__widgets-card-title">500</h4>
-          <p class="dashboard__widgets-card-description">Arquivados</p>
-        </article>
-      </section>
-      <section>
-        <article class="dashboard__widgets-card">
-          <h4 class="dashboard__widgets-card-title">5000</h4>
-          <p class="dashboard__widgets-card-description">Fluxos disparados</p>
-        </article>
-      </section>
-      <section>
-        <article class="dashboard__widgets-card">
-          <h4 class="dashboard__widgets-card-title">2100</h4>
-          <p class="dashboard__widgets-card-description">
-            Disparos pelo Weni Chats
+        </UnnnicDropdownItem>
+        <UnnnicDropdownItem>
+          <p
+            @click="downloadPDF"
+            class="dashboard__dropdown-item"
+          >
+            Exportar em PDF
           </p>
-        </article>
-      </section>
-      <section>
-        <article class="dashboard__widgets-card">
-          <h4 class="dashboard__widgets-card-title">20</h4>
-          <p class="dashboard__widgets-card-description">Falhas</p>
-        </article>
-      </section>
+        </UnnnicDropdownItem>
+      </UnnnicDropdown>
     </section>
-  </InsightsLayout>
+  </header>
+  <section class="dashboard__widgets">
+    <section class="dashboard__widgets-chart">
+      <h1 class="dashboard__widgets-chart-title">Fluxos</h1>
+      <BarChart
+        :chartData="chartData"
+        :height="chartHeight"
+        :width="chartWidth"
+      />
+    </section>
+    <section>
+      <article class="dashboard__widgets-insight">
+        <h2 class="dashboard__widgets-insight-title">
+          <UnnnicAvatarIcon
+            icon="emoji_objects"
+            scheme="neutral-dark"
+          />
+          Insight
+        </h2>
+        <p class="dashboard__widgets-insight-description">
+          Você sabia que seus fluxos com o tom de voz mais amigável possuem uma
+          taxa de 50% a mais de respostas? Confira aqui quais são eles
+        </p>
+      </article>
+    </section>
+    <section>
+      <article class="dashboard__widgets-card">
+        <h4 class="dashboard__widgets-card-title">500</h4>
+        <p class="dashboard__widgets-card-description">Arquivados</p>
+      </article>
+    </section>
+    <section>
+      <article class="dashboard__widgets-card">
+        <h4 class="dashboard__widgets-card-title">5000</h4>
+        <p class="dashboard__widgets-card-description">Fluxos disparados</p>
+      </article>
+    </section>
+    <section>
+      <article class="dashboard__widgets-card">
+        <h4 class="dashboard__widgets-card-title">2100</h4>
+        <p class="dashboard__widgets-card-description">
+          Disparos pelo Weni Chats
+        </p>
+      </article>
+    </section>
+    <section>
+      <article class="dashboard__widgets-card">
+        <h4 class="dashboard__widgets-card-title">20</h4>
+        <p class="dashboard__widgets-card-description">Falhas</p>
+      </article>
+    </section>
+  </section>
 </template>
 
 <script>
-import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
 import BarChart from '@/components/BarChart.vue';
 import chartData from '@/mocks/barChartData.json';
 import ChatsData from '@/mocks/chats.json';
 export default {
   name: 'FlowTriggerView',
   components: {
-    InsightsLayout,
     BarChart,
   },
   data: () => ({

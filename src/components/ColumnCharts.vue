@@ -1,5 +1,7 @@
 <template>
-  <Apexchart
+  <!-- Use "Apexchart" (with PascalCase) brake the component -->
+  <!-- eslint-disable-next-line -->
+  <apexchart
     width="500"
     type="bar"
     :options="options"

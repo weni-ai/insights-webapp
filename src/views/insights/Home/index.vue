@@ -94,9 +94,9 @@ export default {
   },
 
   computed: {
-    ...mapState('sidebar', {
-      isChartVisible: (state) => state.chartVisible,
-      contentHeight: (state) => state.resizableBar?.contentHeight,
+    ...mapState({
+      isChartVisible: (state) => state.sidebar.chartVisible,
+      contentHeight: (state) => state.resizableBar.contentHeight,
     }),
   },
 

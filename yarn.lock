@@ -821,10 +821,10 @@
   resolved "https://registry.yarnpkg.com/@weni/eslint-config/-/eslint-config-1.0.2.tgz#fc8d16449130888eabfca0a2e6a506043d8018fb"
   integrity sha512-q4iLOGP29a8rk9Sprs4mpFAn0fRnsK+lGOY1NeUMYzbJ1REFit0p8baz4aJCiJTO55ZlGym3HzcwL/jYm7u/7g==
 
-"@weni/unnnic-system@2.0.0-beta.8":
-  version "2.0.0-beta.8"
-  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.0.0-beta.8.tgz#a5e8920825dc6324caa76b6cce8a3a2f2b7a72bd"
-  integrity sha512-DJu+cSJBE3Oq5ESl7BbShnWAMWhtBVL+owZdsu7IGbpe7qFiEOO0mwBqf0IpJpN6i8totIjbb5rLA58A0tVuPw==
+"@weni/unnnic-system@2.0.0-beta.12":
+  version "2.0.0-beta.12"
+  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.0.0-beta.12.tgz#1825f5e1ce88cd287b7ea4fc37b34dc625c47415"
+  integrity sha512-jDMMhk5kYazQ+Y/MKk+M7881odoffZ/L/D+de0xNYCua6zbswkgX0eaTywkMO7vLoksa6H1sMxvtQwbZbatdfg==
   dependencies:
     "@vueuse/components" "^10.4.1"
     lodash "^4.17.21"

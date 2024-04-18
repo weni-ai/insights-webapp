@@ -16,14 +16,14 @@
         />
       </section>
     </header>
-    <section>
-      <ColumnCharts
-        v-if="contentHeight === 0"
-        :chartData="chartData"
-        :height="chartHeight"
-        :width="chartWidth"
-      />
-    </section>
+
+    <ColumnCharts
+      v-if="contentHeight === 0"
+      title="Mensagens trocadas via bot"
+      seeMore
+      :chartData="chartData"
+    />
+
     <section class="home__cards">
       <InsightsCard
         v-for="{ title, subtitle, click } of cards"
@@ -58,8 +58,6 @@ export default {
       end: moment().format('YYYY-MM-DD'),
     },
     chartData: chartData,
-    chartHeight: '100%',
-    chartWidth: '100%',
     cards: [],
   }),
 

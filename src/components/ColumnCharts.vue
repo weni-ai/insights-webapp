@@ -1,18 +1,35 @@
 <template>
-  <!-- Use "Apexchart" (with PascalCase) brake the component -->
-  <!-- eslint-disable-next-line -->
+  <section class="column-charts">
+    <header class="column-charts__header">
+      <h1 class="header__title">{{ title }}</h1>
+      <a
+        class="header__see-more"
+        v-if="seeMore"
+        href="#"
+        >Ver mais</a
+      >
+    </header>
+    <!-- Use "Apexchart" (with PascalCase) brake the component -->
+    <!-- eslint-disable-next-line -->
   <apexchart
-    width="500"
-    type="bar"
-    :options="options"
-    :series="series"
-  />
+      width="100%"
+      height="100%"
+      type="bar"
+      :options="options"
+      :series="series"
+    />
+  </section>
 </template>
 
 <script>
 export default {
   name: 'ColumnChart',
   props: {
+    title: {
+      type: String,
+      default: '',
+    },
+    seeMore: Boolean,
     chartData: {
       type: Object,
       required: true,
@@ -20,47 +37,24 @@ export default {
   },
   data: () => ({
     options: {
-      colors: ['var(--unnnic-color-neutral-clean)'],
       chart: {
         id: 'column-chart',
-        toolbar: {
-          show: false,
-        },
-        fontFamily: '$unnnic-font-family-secondary',
-      },
-      grid: {
-        show: false,
-        xaxis: {
-          lines: {
-            show: false,
-          },
-        },
-        yaxis: {
-          lines: {
-            show: false,
-          },
+        plotPadding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
         },
       },
       xaxis: {
         categories: [],
-        axisBorder: {
-          show: false,
+        labels: {
+          offsetY: -5,
         },
-        axisTicks: {
-          show: false,
-        },
-      },
-      yaxis: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-        enabledOnSeries: false,
       },
     },
     series: [
       {
-        name: 'Atendimentos',
         data: [],
       },
     ],
@@ -76,3 +70,38 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.column-charts {
+  position: relative;
+  margin: $unnnic-spacing-xs 0 $unnnic-spacing-md;
+
+  &__header {
+    position: absolute;
+    top: $unnnic-spacing-sm;
+    z-index: 1000;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+
+    .header__title {
+      font-family: $unnnic-font-family-primary;
+      font-weight: $unnnic-font-weight-bold;
+    }
+
+    .header__see-more {
+      font-family: Lato;
+      font-weight: $unnnic-font-weight-bold;
+      text-decoration-line: underline;
+    }
+
+    .header__title,
+    .header__see-more {
+      font-size: $unnnic-font-size-body-gt;
+      color: $unnnic-color-neutral-dark;
+    }
+  }
+}
+</style>

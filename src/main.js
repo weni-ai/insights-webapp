@@ -3,8 +3,7 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 
-import VueApexCharts from 'vue3-apexcharts';
-
+import ApexCharts from './utils/plugins/ApexCharts';
 import Unnnic from './utils/plugins/UnnnicSystem';
 import '@weni/unnnic-system/dist/style.css';
 
@@ -15,6 +14,6 @@ const app = createApp(App);
 app.use(router);
 app.use(store);
 app.use(Unnnic);
-app.use(VueApexCharts);
+app.use(ApexCharts);
 
 app.mount('#app');

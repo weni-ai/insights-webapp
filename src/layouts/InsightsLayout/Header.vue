@@ -42,7 +42,12 @@ export default {
 
   created() {
     this.dashboards = [
-      { value: 'dashboards', label: 'Dashboards', crumbAlias: 'Início' },
+      {
+        value: 'dashboards',
+        label: 'Dashboards',
+        crumbPath: '/',
+        crumbName: 'Início',
+      },
       { value: 'human-service', label: 'Atendimento Humano' },
     ];
   },
@@ -53,9 +58,9 @@ export default {
     },
 
     breadcrumbs() {
-      return this.dashboards.map(({ value, label, crumbAlias }) => ({
-        path: `/${value}`,
-        name: crumbAlias || label,
+      return this.dashboards.map(({ value, label, crumbPath, crumbName }) => ({
+        path: crumbPath || `/${value}`,
+        name: crumbName || label,
       }));
     },
 
@@ -74,13 +79,26 @@ export default {
   },
 
   watch: {
-    selectedDashboard() {
-      this.handlePath(`/${this.selectedDashboardValue}`);
+    selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
+      if (oldSelectedDashboard[0]?.value) {
+        this.handlePath(`/${this.selectedDashboardValue}`);
+      }
     },
     $route(newRoute) {
-      this.selectedDashboard[0] = this.dashboards.find(
-        (dashboard) => dashboard.value === newRoute.path.replace('/', ''),
+      const { path } = newRoute;
+
+      const dashboardRelativeToPath = this.dashboards.find(
+        ({ value, crumbPath }) => {
+          const isHomePath = path === '/' && [value, crumbPath].includes('/');
+          const isValidPath = [value, crumbPath].includes(
+            path.replace('/', ''),
+          );
+
+          return isHomePath || isValidPath;
+        },
       );
+
+      this.selectedDashboard[0] = dashboardRelativeToPath;
     },
   },
 };

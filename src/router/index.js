@@ -10,9 +10,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'root',
-      beforeEnter: (from, to, next) => {
-        if (to.path === '/') next({ name: 'home', replace: true });
-        else next(to.path);
+      beforeEnter: (to, from, next) => {
+        if (to.path === '/') {
+          next({ name: 'home', replace: true });
+        } else {
+          next();
+        }
       },
     },
     {
@@ -22,7 +25,7 @@ const router = createRouter({
     },
     {
       path: '/dashboards',
-      component: Home,
+      redirect: '/',
     },
     {
       path: '/human-service',
@@ -33,6 +36,10 @@ const router = createRouter({
       path: '/dashboards/flow-trigger',
       name: 'flow',
       component: FlowTrigger,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: '/',
     },
   ],
 });

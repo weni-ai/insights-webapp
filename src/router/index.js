@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import store from '@/store';
 import Home from '@/views/insights/Home/index.vue';
-import Dashboards from '@/views/dashboards/Home/index.vue';
-import Dashboard from '@/views/dashboards/Dashboard/index.vue';
+import DashboardHumanService from '@/views/dashboards/HumanService.vue';
 import FlowTrigger from '@/views/dashboards/Dashboard/FlowTrigger.vue';
 
 const router = createRouter({
@@ -17,22 +16,18 @@ const router = createRouter({
       },
     },
     {
-      path: '/insights',
+      path: '/',
       name: 'home',
       component: Home,
     },
     {
       path: '/dashboards',
-      name: 'dashboards',
-      component: Dashboards,
+      component: Home,
     },
     {
-      path: '/dashboards/:id',
-      component: Dashboard,
-      name: 'dashboard',
-      props: (route) => ({
-        cardId: route.params.cardId,
-      }),
+      path: '/human-service',
+      component: DashboardHumanService,
+      name: 'human-service',
     },
     {
       path: '/dashboards/flow-trigger',

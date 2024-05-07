@@ -3,18 +3,21 @@
     <ConnectSidebar class="insights-layout__sidebar" />
     <ConnectTopbar class="insights-layout__topbar" />
 
-    <section
-      class="insights-layout__insights"
-      ref="insightsContent"
-    >
-      <main
-        class="insights__main"
-        :style="{
-          height: `${mainHeight}vh`,
-        }"
+    <section class="insights-layout__container">
+      <InsightsLayoutHeader />
+      <section
+        class="insights-layout__insights"
+        ref="insightsContent"
       >
-        <slot />
-      </main>
+        <main
+          class="insights__main"
+          :style="{
+            height: `${mainHeight}vh`,
+          }"
+        >
+          <slot />
+        </main>
+      </section>
       <ResizableBar />
     </section>
   </section>
@@ -29,10 +32,17 @@ import ResizableBar from '@/components/insights/ResizableBar/index.vue';
 import ConnectSidebar from '@/components/connect/ConnectSidebar.vue';
 import ConnectTopbar from '@/components/connect/ConnectTopbar.vue';
 
+import InsightsLayoutHeader from './Header.vue';
+
 export default {
   name: 'InsightsLayout',
 
-  components: { ResizableBar, ConnectSidebar, ConnectTopbar },
+  components: {
+    InsightsLayoutHeader,
+    ResizableBar,
+    ConnectSidebar,
+    ConnectTopbar,
+  },
 
   computed: {
     ...mapState({
@@ -73,6 +83,14 @@ $topbarHeight: 88px;
 
   &__topbar {
     grid-area: topbar;
+  }
+
+  &__container {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: $unnnic-spacing-sm;
   }
 
   &__insights {

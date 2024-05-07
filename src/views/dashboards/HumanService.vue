@@ -1,63 +1,4 @@
 <template>
-  <header class="dashboard__header">
-    <UnnnicBreadcrumb
-      :crumbs="breadcrumb"
-      @crumbClick="handleCrumbClick"
-    />
-    <section class="dashboard__subheader">
-      <UnnnicIcon
-        icon="arrow_back"
-        size="lg"
-        scheme="neutral-black"
-        clickable
-        @click="goToDashboards"
-      />
-      <section class="dashboard__subheader-description">
-        <h1 class="dashboard__title">{{ dashboardTitle }}</h1>
-        <p class="dashboard__description">Nome do projeto</p>
-      </section>
-      <UnnnicIcon
-        icon="close"
-        size="md"
-        scheme="neutral-black"
-        clickable
-        @click="goToDashboards"
-      />
-    </section>
-    <section class="dashboard__buttons">
-      <section class="dashboard__buttons-one">
-        <button class="dashboard__button">
-          <UnnnicIcon
-            icon="calendar_month"
-            size="md"
-            clickable
-          />
-          <span class="dashboard__button-title">Hoje</span>
-          <UnnnicIcon
-            icon="expand_more"
-            size="md"
-            clickable
-          />
-        </button>
-        <button class="dashboard__button">
-          <UnnnicIcon
-            icon="filter_alt"
-            size="md"
-            clickable
-          />
-          <span class="dashboard__button-title">Filtros</span>
-        </button>
-      </section>
-      <button class="dashboard__button">
-        <span class="dashboard__button-title">Exportar</span>
-        <UnnnicIcon
-          icon="expand_more"
-          size="md"
-          clickable
-        />
-      </button>
-    </section>
-  </header>
   <section
     class="dashboard__widgets"
     v-if="firstSection"
@@ -103,7 +44,7 @@ import chartData from '@/mocks/chartData.json';
 import ChatsData from '@/mocks/chats.json';
 
 export default {
-  name: 'DashboardView',
+  name: 'DashboardHumanService',
 
   components: {
     ColumnCharts,

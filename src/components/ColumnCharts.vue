@@ -79,7 +79,7 @@ export default {
   &__header {
     position: absolute;
     top: $unnnic-spacing-sm;
-    z-index: 1000;
+    z-index: 1;
 
     width: 100%;
 

@@ -1,22 +1,5 @@
 <template>
   <section class="home">
-    <header class="home__header">
-      <h1 class="header__title">Insights</h1>
-      <section class="header__handlers">
-        <UnnnicButton
-          text="Dashboards"
-          iconLeft="bar_chart_4_bars"
-          type="tertiary"
-          size="small"
-          @click="goToDashboards"
-        />
-        <UnnnicInputDatePicker
-          v-model="filterDate"
-          size="sm"
-        />
-      </section>
-    </header>
-
     <ColumnCharts
       v-if="contentHeight === 0"
       title="Mensagens trocadas via bot"
@@ -39,7 +22,7 @@
 
 <script>
 import { mapState } from 'vuex';
-import moment from 'moment';
+
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import chartData from '@/mocks/chartData.json';
 import InsightsCard from '@/components/Card.vue';
@@ -53,10 +36,6 @@ export default {
   },
 
   data: () => ({
-    filterDate: {
-      start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
-      end: moment().format('YYYY-MM-DD'),
-    },
     chartData: chartData,
     cards: [],
   }),
@@ -104,13 +83,7 @@ export default {
     },
     goToHumanService() {
       this.$router.push({
-        name: 'dashboard',
-        params: {
-          id: 1,
-        },
-        query: {
-          title: 'Atendimento humano',
-        },
+        name: 'human-service',
       });
     },
   },
@@ -122,33 +95,6 @@ export default {
   display: grid;
   gap: $unnnic-spacing-sm;
 
-  &__header {
-    display: grid;
-    gap: $unnnic-spacing-sm;
-
-    .header__title {
-      color: $unnnic-color-neutral-darkest;
-      font-size: $unnnic-font-size-title-md;
-      font-weight: $unnnic-font-weight-bold;
-      font-family: $unnnic-font-family-primary;
-      line-height: $unnnic-line-height-large * 2;
-    }
-    .header__handlers {
-      display: flex;
-      flex-direction: row;
-      gap: 2rem;
-      button {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        border: none;
-        gap: $unnnic-spacing-xs;
-        font-size: 16px;
-        padding: $unnnic-spacing-xs;
-        background-color: $unnnic-color-neutral-lightest;
-      }
-    }
-  }
   &__cards {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

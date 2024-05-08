@@ -22,6 +22,10 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: Home,
+      props: (route) => ({
+        startDate: route.query.startDate,
+        endDate: route.query.endDate,
+      }),
     },
     {
       path: '/dashboards',

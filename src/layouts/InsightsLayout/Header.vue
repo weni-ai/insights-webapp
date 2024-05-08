@@ -18,6 +18,7 @@
         class="filters__date-picker"
         v-model="filterDate"
         size="sm"
+        inputFormat="DD/MM/YYYY"
       />
     </section>
   </header>
@@ -99,6 +100,12 @@ export default {
       );
 
       this.selectedDashboard[0] = dashboardRelativeToPath;
+    },
+    filterDate(newDate) {
+      this.$router.replace({
+        name: this.$route.name,
+        query: { startDate: newDate.start, endDate: newDate.end },
+      });
     },
   },
 };

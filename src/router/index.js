@@ -7,17 +7,17 @@ import FlowTrigger from '@/views/dashboards/Dashboard/FlowTrigger.vue';
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/',
-      name: 'root',
-      beforeEnter: (to, from, next) => {
-        if (to.path === '/') {
-          next({ name: 'home', replace: true });
-        } else {
-          next();
-        }
-      },
-    },
+    // {
+    //   path: '/',
+    //   name: 'root',
+    //   beforeEnter: (to, from, next) => {
+    //     if (to.path === '/') {
+    //       next({ name: 'home', replace: true });
+    //     } else {
+    //       next();
+    //     }
+    //   },
+    // },
     {
       path: '/',
       name: 'home',
@@ -30,11 +30,19 @@ const router = createRouter({
     {
       path: '/dashboards',
       redirect: '/',
+      props: (route) => ({
+        startDate: route.query.startDate,
+        endDate: route.query.endDate,
+      }),
     },
     {
       path: '/human-service',
       component: DashboardHumanService,
       name: 'human-service',
+      props: (route) => ({
+        startDate: route.query.startDate,
+        endDate: route.query.endDate,
+      }),
     },
     {
       path: '/dashboards/flow-trigger',

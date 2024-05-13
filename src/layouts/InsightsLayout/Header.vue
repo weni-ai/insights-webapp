@@ -3,7 +3,7 @@
     <UnnnicBreadcrumb
       v-if="!isInHome"
       :crumbs="breadcrumbs"
-      @crumbClick="handlePath($event.path)"
+      @crumbClick="$router.push($event.path)"
     />
     <h1 class="header__title">
       {{ isInHome ? 'Insights' : selectedDashboardLabel }}
@@ -32,7 +32,15 @@ export default {
 
   data() {
     return {
-      dashboards: [],
+      dashboards: [
+        {
+          value: 'dashboards',
+          label: 'Dashboards',
+          crumbPath: '/',
+          crumbName: 'Início',
+        },
+        { value: 'human-service', label: 'Atendimento Humano' },
+      ],
       selectedDashboard: [],
       filterDate: {
         start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
@@ -41,21 +49,16 @@ export default {
     };
   },
 
-  created() {
-    this.dashboards = [
-      {
-        value: 'dashboards',
-        label: 'Dashboards',
-        crumbPath: '/',
-        crumbName: 'Início',
-      },
-      { value: 'human-service', label: 'Atendimento Humano' },
-    ];
-  },
-
   computed: {
+    selectedDashboardValue() {
+      return this.selectedDashboard[0]?.value;
+    },
+    selectedDashboardLabel() {
+      return this.selectedDashboard[0]?.label;
+    },
+
     isInHome() {
-      return this.selectedDashboard[0]?.value === 'dashboards';
+      return this.selectedDashboardValue === 'dashboards';
     },
 
     breadcrumbs() {
@@ -64,29 +67,11 @@ export default {
         name: crumbName || label,
       }));
     },
-
-    selectedDashboardValue() {
-      return this.selectedDashboard[0]?.value;
-    },
-    selectedDashboardLabel() {
-      return this.selectedDashboard[0]?.label;
-    },
   },
 
   methods: {
-    handlePath(path) {
-      this.$router.push(path);
-    },
-  },
-
-  watch: {
-    selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
-      if (oldSelectedDashboard[0]?.value) {
-        this.handlePath(`/${this.selectedDashboardValue}`);
-      }
-    },
-    $route(newRoute) {
-      const { path } = newRoute;
+    routeUpdateSelectedDashboard() {
+      const { path } = this.$route;
 
       const dashboardRelativeToPath = this.dashboards.find(
         ({ value, crumbPath }) => {
@@ -100,6 +85,40 @@ export default {
       );
 
       this.selectedDashboard[0] = dashboardRelativeToPath;
+    },
+
+    routeUpdateFilterDate() {
+      const { query } = this.$route;
+
+      if (query.startDate && query.endDate) {
+        this.filterDate = {
+          start: query.startDate,
+          end: query.endDate,
+        };
+      }
+    },
+
+    retainRouteQueries(newRoute, oldRoute) {
+      const oldQueryKeys = Object.keys(oldRoute?.query);
+
+      if (oldQueryKeys.length) {
+        this.$router.replace({ name: newRoute.name, query: oldRoute.query });
+      }
+    },
+  },
+
+  watch: {
+    selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
+      if (oldSelectedDashboard[0]?.value) {
+        this.$router.push(`/${this.selectedDashboardValue}`);
+      }
+    },
+    $route(newRoute, oldRoute) {
+      if (newRoute.name !== oldRoute.name) {
+        this.retainRouteQueries(newRoute, oldRoute);
+        this.routeUpdateSelectedDashboard();
+        this.routeUpdateFilterDate();
+      }
     },
     filterDate(newDate) {
       this.$router.replace({

@@ -1,15 +1,18 @@
 <template>
   <UnnnicModal
-    v-if="showModal"
+    :showModal="showModal"
     @close="close"
     class="filters-modal-human-service"
     text="Filtros"
   >
-    <form class="filters-modal-human-service__form">
+    <form
+      @submit.prevent
+      class="filters-modal-human-service__form"
+    >
       <section>
         <UnnnicLabel label="Pesquisa por contato" />
         <UnnnicInput
-          v-model="filters.contact"
+          v-model="filtersClone.contact"
           iconRight="search"
           placeholder="Nome ou URN do contato"
         />
@@ -18,7 +21,7 @@
         <UnnnicLabel label="Data" />
         <UnnnicInputDatePicker
           class="form__date-picker"
-          v-model="filters.date"
+          v-model="filtersClone.date"
           position="right"
           inputFormat="DD/MM/YYYY"
         />
@@ -26,7 +29,7 @@
       <section>
         <UnnnicLabel label="Setor" />
         <UnnnicSelectSmart
-          v-model="filters.sector"
+          v-model="filtersClone.sector"
           :options="selects.sectors"
           autocomplete
           autocompleteIconLeft
@@ -36,7 +39,7 @@
       <section>
         <UnnnicLabel label="Fila" />
         <UnnnicSelectSmart
-          v-model="filters.queue"
+          v-model="filtersClone.queue"
           :disabled="hasSectorFiltered || selects.queues.length < 2"
           :options="selects.queues"
           autocomplete
@@ -47,7 +50,7 @@
       <section>
         <UnnnicLabel label="Agente" />
         <UnnnicSelectSmart
-          v-model="filters.agent"
+          v-model="filtersClone.agent"
           :disabled="hasSectorFiltered || selects.agents.length < 2"
           :options="selects.agents"
           autocomplete
@@ -58,7 +61,7 @@
       <section>
         <UnnnicLabel label="Tags" />
         <UnnnicSelectSmart
-          v-model="filters.tag"
+          v-model="filtersClone.tags"
           :disabled="hasSectorFiltered || selects.tags.length < 2"
           :options="selects.tags"
           autocomplete
@@ -91,11 +94,15 @@ export default {
       type: Boolean,
       required: true,
     },
+    filters: {
+      type: Object,
+      required: true,
+    },
   },
 
   data() {
     return {
-      filters: {},
+      filtersClone: {},
 
       selects: {
         sectors: [
@@ -124,25 +131,69 @@ export default {
         sector: [{ value: 'all', label: 'Todos' }],
         queue: [{ value: '', label: 'Selecione fila' }],
         agent: [{ value: '', label: 'Selecione agente' }],
-        tag: [{ value: '', label: 'Selecione tags' }],
+        tags: [{ value: '', label: 'Selecione tags' }],
       };
     },
 
     hasSectorFiltered() {
-      return this.filters.sector[0]?.value === '';
+      return this.filtersClone.sector[0]?.value === '';
+    },
+
+    areFiltersPropAndCloneEqual() {
+      return JSON.stringify(this.filters) === JSON.stringify(this.filtersClone);
     },
   },
 
   methods: {
     clearFilters() {
-      this.filters = { ...this.defaultFilters };
+      this.filtersClone = { ...this.defaultFilters };
     },
     emitFilters() {
-      this.$emit('emitFilters', this.filters);
+      this.$emit('update:filters', this.filtersClone);
       this.close();
     },
     close() {
       this.$emit('close');
+    },
+    syncFiltersClone() {
+      if (!this.areFiltersPropAndCloneEqual) {
+        const { filters, selects } = this;
+
+        const filterHandlers = {
+          default: (filterName, filterValue) => {
+            this.filtersClone[filterName] = filterValue;
+          },
+          select: (filterName) => {
+            const filterEquivalent = this.filtersClone?.filter(
+              (mappedFilter) => mappedFilter.value === filterName,
+            );
+            this.filtersClone[filterName] = filterEquivalent;
+          },
+          date: (filterValue) => {
+            this.filtersClone.date = {
+              start: filterValue.dateStart,
+              end: filterValue.dateEnd,
+            };
+          },
+        };
+
+        Object.keys(filters)?.forEach((filterName) => {
+          const filterValue = filters[filterName];
+
+          const handler = selects[filterName]
+            ? filterHandlers.select
+            : filterValue.dateStart && filterValue.dateEnd
+              ? filterHandlers.date
+              : filterHandlers.default;
+          handler(filterName, filterValue);
+        });
+      }
+    },
+  },
+
+  watch: {
+    filters() {
+      this.syncFiltersClone();
     },
   },
 };
@@ -157,8 +208,8 @@ export default {
 
     text-align: left;
 
-    :nth-child(1),
-    :nth-child(2) {
+    > :nth-child(1),
+    > :nth-child(2) {
       grid-column-start: 1;
       grid-column-end: 3;
     }

@@ -10,13 +10,14 @@
     <UnnnicInputDatePicker
       v-else
       class="filters__date-picker"
-      v-model="filterDate"
+      v-model="filters.date"
       size="sm"
       inputFormat="DD/MM/YYYY"
     />
 
     <FiltersModalHumanService
       :showModal="filterModalOpened === 'human-service'"
+      v-model:filters="filters"
       @close="filterModalOpened = ''"
     />
   </section>
@@ -34,28 +35,38 @@ export default {
 
   data() {
     return {
-      filterDate: {
-        start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
-        end: moment().format('YYYY-MM-DD'),
+      filters: {
+        date: {
+          start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+          end: moment().format('YYYY-MM-DD'),
+        },
       },
       filterModalOpened: '',
     };
   },
 
   computed: {
+    humanServiceFilters() {
+      if (this.$route.name === 'human-service') {
+        return ['contact', 'sector', 'queue', 'agent', 'tags'];
+      }
+      return undefined;
+    },
     hasManyFilters() {
-      return this.$route.name === 'human-service';
+      return !!this.humanServiceFilters;
     },
   },
 
   methods: {
-    routeUpdateFilterDate() {
+    routeUpdateFilters() {
       const { query } = this.$route;
 
-      if (query.startDate && query.endDate) {
-        this.filterDate = {
-          start: query.startDate,
-          end: query.endDate,
+      this.filters = { ...this.filters, ...query };
+
+      if (query.dateStart && query.dateEnd) {
+        this.filters.date = {
+          start: query.dateStart,
+          end: query.dateEnd,
         };
       }
     },
@@ -71,20 +82,41 @@ export default {
     openFiltersModal() {
       this.filterModalOpened = this.$route.name;
     },
+
+    updateRouterByFilters(filters) {
+      const queryParams = {
+        name: this.$route.name,
+        query: {
+          dateStart: filters.date?.start,
+          dateEnd: filters.date?.end,
+        },
+      };
+
+      this.humanServiceFilters?.forEach((filter) => {
+        const filterValue = Array.isArray(filters[filter])
+          ? filters[filter][0]?.value
+          : filters[filter];
+        if (filterValue) {
+          queryParams.query[filter] = filterValue;
+        }
+      });
+
+      this.$router.replace(queryParams);
+    },
   },
 
   watch: {
     $route(newRoute, oldRoute) {
       if (newRoute.name !== oldRoute.name) {
         this.retainRouteQueries(newRoute, oldRoute);
-        this.routeUpdateFilterDate();
+        this.routeUpdateFilters();
       }
     },
-    filterDate(newDate) {
-      this.$router.replace({
-        name: this.$route.name,
-        query: { startDate: newDate.start, endDate: newDate.end },
-      });
+    filters: {
+      deep: true,
+      handler(newFilters) {
+        this.updateRouterByFilters(newFilters);
+      },
     },
   },
 };

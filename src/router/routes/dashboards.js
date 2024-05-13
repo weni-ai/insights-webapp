@@ -6,8 +6,8 @@ export default [
     path: '/dashboards',
     redirect: '/',
     props: (route) => ({
-      startDate: route.query.startDate,
-      endDate: route.query.endDate,
+      dateStart: route.query.dateStart,
+      dateEnd: route.query.dateEnd,
     }),
   },
   {
@@ -15,8 +15,13 @@ export default [
     component: DashboardHumanService,
     name: 'human-service',
     props: (route) => ({
-      startDate: route.query.startDate,
-      endDate: route.query.endDate,
+      dateStart: route.query.dateStart,
+      dateEnd: route.query.dateEnd,
+      contact: route.query.contact,
+      sector: route.query.sector,
+      queue: route.query.queue,
+      agent: route.query.agent,
+      tags: route.query.tags,
     }),
   },
   {

@@ -15,7 +15,10 @@
       inputFormat="DD/MM/YYYY"
     />
 
-    <FiltersModalHumanService />
+    <FiltersModalHumanService
+      :showModal="filterModalOpened === 'human-service'"
+      @close="filterModalOpened = ''"
+    />
   </section>
 </template>
 

@@ -4,7 +4,7 @@
     v-if="firstSection"
   >
     <section class="dashboard__widgets-cards">
-      <article
+      <!-- <article
         class="dashboard__widgets-card"
         @click="showTable"
         v-for="(card, index) in cards"
@@ -14,7 +14,15 @@
         <p class="dashboard__widgets-card-description">
           {{ card.description }}
         </p>
-      </article>
+      </article> -->
+      <DashboardCard
+        v-for="{ title, subtitle, click } of cards"
+        :key="subtitle"
+        :title="title"
+        :subtitle="subtitle"
+        @click="click"
+        configured
+      />
     </section>
     <section class="dashboard__widgets-chart">
       <ColumnCharts
@@ -36,10 +44,11 @@
 </template>
 
 <script>
+import DashboardCard from '@/components/DashboardCard.vue';
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import AgentChats from '@/components/AgentChats.vue';
 import TableChats from '@/components/TableChats.vue';
-import dashboardData from '@/mocks/dashboardData.json';
+import humanServiceData from '@/mocks/humanServiceData';
 import chartData from '@/mocks/chartData.json';
 import ChatsData from '@/mocks/chats.json';
 
@@ -47,6 +56,7 @@ export default {
   name: 'DashboardHumanService',
 
   components: {
+    DashboardCard,
     ColumnCharts,
     AgentChats,
     TableChats,
@@ -54,7 +64,7 @@ export default {
 
   data: () => ({
     dashboardTitle: '',
-    cards: dashboardData,
+    cards: humanServiceData,
     chartData: chartData,
     chatsData: ChatsData,
     firstSection: true,

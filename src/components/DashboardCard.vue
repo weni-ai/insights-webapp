@@ -1,6 +1,6 @@
 <template>
   <section
-    class="card"
+    class="dashboard-card"
     :class="{ 'not-configured': !configured }"
   >
     <section class="card__content">
@@ -31,7 +31,7 @@
 
 <script>
 export default {
-  name: 'InsightsCard',
+  name: 'DashboardCard',
 
   props: {
     title: String,
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.card {
+.dashboard-card {
   background-color: $unnnic-color-neutral-white;
   box-shadow: $unnnic-shadow-level-far;
   border-radius: $unnnic-border-radius-sm;

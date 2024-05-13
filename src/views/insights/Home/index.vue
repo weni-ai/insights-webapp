@@ -8,7 +8,7 @@
     />
 
     <section class="home__cards">
-      <InsightsCard
+      <DashboardCard
         v-for="{ title, subtitle, click } of cards"
         :key="subtitle"
         :title="title"
@@ -25,14 +25,14 @@ import { mapState } from 'vuex';
 
 import ColumnCharts from '@/components/ColumnCharts.vue';
 import chartData from '@/mocks/chartData.json';
-import InsightsCard from '@/components/Card.vue';
+import DashboardCard from '@/components/DashboardCard.vue';
 
 export default {
   name: 'HomeView',
 
   components: {
     ColumnCharts,
-    InsightsCard,
+    DashboardCard,
   },
 
   data: () => ({

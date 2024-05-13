@@ -1,19 +1,33 @@
 <template>
   <section class="insights-layout-header-filters">
+    <UnnnicButton
+      v-if="hasManyFilters"
+      type="secondary"
+      iconLeft="filter_list"
+      text="Filtros"
+      @click.stop="openFiltersModal"
+    />
     <UnnnicInputDatePicker
+      v-else
       class="filters__date-picker"
       v-model="filterDate"
       size="sm"
       inputFormat="DD/MM/YYYY"
     />
+
+    <FiltersModalHumanService />
   </section>
 </template>
 
 <script>
 import moment from 'moment';
 
+import FiltersModalHumanService from './FiltersModalHumanService.vue';
+
 export default {
   name: 'InsightsLayoutHeaderFilters',
+
+  components: { FiltersModalHumanService },
 
   data() {
     return {
@@ -21,7 +35,14 @@ export default {
         start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
         end: moment().format('YYYY-MM-DD'),
       },
+      filterModalOpened: '',
     };
+  },
+
+  computed: {
+    hasManyFilters() {
+      return this.$route.name === 'human-service';
+    },
   },
 
   methods: {
@@ -42,6 +63,10 @@ export default {
       if (oldQueryKeys.length) {
         this.$router.replace({ name: newRoute.name, query: oldRoute.query });
       }
+    },
+
+    openFiltersModal() {
+      this.filterModalOpened = this.$route.name;
     },
   },
 

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import InsightsLayoutHeaderFilters from './HeaderFilters.vue';
+import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 
 export default {
   name: 'InsightsLayoutHeader',

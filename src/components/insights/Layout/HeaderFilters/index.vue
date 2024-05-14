@@ -1,12 +1,20 @@
 <template>
   <section class="insights-layout-header-filters">
-    <UnnnicButton
-      v-if="hasManyFilters"
-      type="secondary"
-      iconLeft="filter_list"
-      text="Filtros"
-      @click.stop="openFiltersModal"
-    />
+    <template v-if="hasManyFilters">
+      <UnnnicButton
+        type="secondary"
+        iconLeft="filter_list"
+        :text="titleButtonManyFilters"
+        @click.stop="openFiltersModal"
+      />
+      <UnnnicButton
+        v-if="filtersLength > 0"
+        type="tertiary"
+        iconLeft="close"
+        text="Limpar"
+        @click.stop="clearFilters"
+      />
+    </template>
     <UnnnicInputDatePicker
       v-else
       class="filters__date-picker"
@@ -56,9 +64,33 @@ export default {
     hasManyFilters() {
       return !!this.humanServiceFilters;
     },
+    filtersLength() {
+      const { query } = this.$route;
+
+      const queryValues = Object.values(query).filter((value) => value);
+      let filtersLength = queryValues.length;
+
+      if (query.dateStart && query.dateEnd) {
+        filtersLength--;
+      }
+      return filtersLength;
+    },
+    titleButtonManyFilters() {
+      const { filtersLength } = this;
+      return filtersLength ? `Filtros (${filtersLength})` : 'Filtros';
+    },
   },
 
   methods: {
+    clearFilters() {
+      this.filters = {
+        date: {
+          start: '',
+          end: '',
+        },
+      };
+    },
+
     routeUpdateFilters() {
       const { query } = this.$route;
 

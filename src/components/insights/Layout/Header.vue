@@ -1,65 +1,86 @@
 <template>
   <header class="insights-layout-header">
     <UnnnicBreadcrumb
-      v-if="!isInHome"
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
-    <h1 class="header__title">
-      {{ isInHome ? 'Insights' : selectedDashboardLabel }}
-    </h1>
     <section class="header__content">
-      <UnnnicSelectSmart
+      <HeaderSelectDashboard
+        v-if="selectedDashboard"
         v-model="selectedDashboard"
         :options="dashboards"
-        orderedByIndex
       />
 
-      <InsightsLayoutHeaderFilters />
+      <section class="content__actions">
+        <HeaderTagLive v-if="showTagLive" />
+        <InsightsLayoutHeaderFilters />
+        <UnnnicButton
+          class="clickable"
+          iconCenter="ios_share"
+          type="secondary"
+        />
+      </section>
     </section>
   </header>
 </template>
 
 <script>
+import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
+import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 
 export default {
   name: 'InsightsLayoutHeader',
 
-  components: { InsightsLayoutHeaderFilters },
+  components: {
+    HeaderSelectDashboard,
+    HeaderTagLive,
+    InsightsLayoutHeaderFilters,
+  },
 
   data() {
     return {
       dashboards: [
         {
           value: 'dashboards',
-          label: 'Dashboards',
+          label: 'Insights',
           crumbPath: '/',
-          crumbName: 'Início',
+          crumbName: 'Insights',
         },
-        { value: 'human-service', label: 'Atendimento Humano' },
+        { value: 'human-service', label: 'Atendimento humano' },
+        { value: 'triggered-flows', label: 'Fluxos disparados' },
       ],
-      selectedDashboard: [],
+      selectedDashboard: null,
     };
   },
 
   computed: {
-    selectedDashboardValue() {
-      return this.selectedDashboard[0]?.value;
-    },
-    selectedDashboardLabel() {
-      return this.selectedDashboard[0]?.label;
-    },
-
-    isInHome() {
-      return this.selectedDashboardValue === 'dashboards';
-    },
-
     breadcrumbs() {
-      return this.dashboards.map(({ value, label, crumbPath, crumbName }) => ({
-        path: crumbPath || `/${value}`,
-        name: crumbName || label,
-      }));
+      const { dashboards } = this;
+
+      const crumbBase = [
+        { path: dashboards[0].crumbPath, name: dashboards[0].crumbName },
+      ];
+
+      const routeCrumbs = this.$route.matched.map((crumb) => {
+        const dashboardLabel = dashboards.find(
+          (dash) => dash.value === crumb.name,
+        )?.label;
+
+        return {
+          name: dashboardLabel,
+          path: crumb.path,
+        };
+      });
+
+      return this.$route.name === 'home'
+        ? crumbBase
+        : crumbBase.concat(routeCrumbs);
+    },
+
+    showTagLive() {
+      const { query } = this.$route;
+      return !query.dateStart && !query.dateStart;
     },
   },
 
@@ -78,14 +99,14 @@ export default {
         },
       );
 
-      this.selectedDashboard[0] = dashboardRelativeToPath;
+      this.selectedDashboard = dashboardRelativeToPath;
     },
   },
 
   watch: {
     selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
-      if (oldSelectedDashboard[0]?.value) {
-        this.$router.push(`/${this.selectedDashboardValue}`);
+      if (oldSelectedDashboard?.value) {
+        this.$router.push(`/${this.selectedDashboard.value}`);
       }
     },
     $route(newRoute, oldRoute) {
@@ -102,22 +123,15 @@ export default {
   display: grid;
   gap: $unnnic-spacing-sm;
 
-  .header__title {
-    color: $unnnic-color-neutral-darkest;
-    font-size: $unnnic-font-size-title-md;
-    font-weight: $unnnic-font-weight-bold;
-    font-family: $unnnic-font-family-primary;
-    line-height: $unnnic-line-height-large * 2;
-  }
   .header__content {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: $unnnic-spacing-xs;
 
-    :deep(.unnnic-select-smart) {
-      .dropdown-data {
-        z-index: 2;
-      }
+    .content__actions {
+      display: flex;
+      gap: $unnnic-spacing-ant;
     }
   }
 }

@@ -32,7 +32,7 @@ import ResizableBar from '@/components/insights/ResizableBar/index.vue';
 import ConnectSidebar from '@/components/connect/ConnectSidebar.vue';
 import ConnectTopbar from '@/components/connect/ConnectTopbar.vue';
 
-import InsightsLayoutHeader from './Header.vue';
+import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 
 export default {
   name: 'InsightsLayout',

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
+import InsightsLayout from '@/layouts/InsightsLayout.vue';
 
 export default {
   components: { InsightsLayout },

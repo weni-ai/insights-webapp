@@ -25,8 +25,8 @@ export default [
     }),
   },
   {
-    path: '/dashboards/flow-trigger',
-    name: 'flow',
+    path: '/triggered-flows',
+    name: 'triggered-flows',
     component: FlowTrigger,
   },
 ];

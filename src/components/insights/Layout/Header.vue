@@ -5,10 +5,10 @@
       @crumbClick="$router.push($event.path)"
     />
     <section class="header__content">
-      <UnnnicSelectSmart
+      <HeaderSelectDashboard
+        v-if="selectedDashboard"
         v-model="selectedDashboard"
         :options="dashboards"
-        orderedByIndex
       />
 
       <InsightsLayoutHeaderFilters />
@@ -17,12 +17,13 @@
 </template>
 
 <script>
+import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 
 export default {
   name: 'InsightsLayoutHeader',
 
-  components: { InsightsLayoutHeaderFilters },
+  components: { HeaderSelectDashboard, InsightsLayoutHeaderFilters },
 
   data() {
     return {
@@ -33,32 +34,35 @@ export default {
           crumbPath: '/',
           crumbName: 'Insights',
         },
-        { value: 'human-service', label: 'Atendimento Humano' },
+        { value: 'human-service', label: 'Atendimento humano' },
+        { value: 'triggered-flows', label: 'Fluxos disparados' },
       ],
-      selectedDashboard: [],
+      selectedDashboard: null,
     };
   },
 
   computed: {
-    selectedDashboardValue() {
-      return this.selectedDashboard[0]?.value;
-    },
-    selectedDashboardLabel() {
-      return this.selectedDashboard[0]?.label;
-    },
-
     breadcrumbs() {
       const { dashboards } = this;
-      if (this.$route.name === 'home') {
-        return [
-          { path: dashboards[0].crumbPath, name: dashboards[0].crumbName },
-        ];
-      }
 
-      return dashboards.map(({ value, label, crumbPath, crumbName }) => ({
-        path: crumbPath || `/${value}`,
-        name: crumbName || label,
-      }));
+      const crumbBase = [
+        { path: dashboards[0].crumbPath, name: dashboards[0].crumbName },
+      ];
+
+      const routeCrumbs = this.$route.matched.map((crumb) => {
+        const dashboardLabel = dashboards.find(
+          (dash) => dash.value === crumb.name,
+        )?.label;
+
+        return {
+          name: dashboardLabel,
+          path: crumb.path,
+        };
+      });
+
+      return this.$route.name === 'home'
+        ? crumbBase
+        : crumbBase.concat(routeCrumbs);
     },
   },
 
@@ -77,14 +81,14 @@ export default {
         },
       );
 
-      this.selectedDashboard[0] = dashboardRelativeToPath;
+      this.selectedDashboard = dashboardRelativeToPath;
     },
   },
 
   watch: {
     selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
-      if (oldSelectedDashboard[0]?.value) {
-        this.$router.push(`/${this.selectedDashboardValue}`);
+      if (oldSelectedDashboard?.value) {
+        this.$router.push(`/${this.selectedDashboard.value}`);
       }
     },
     $route(newRoute, oldRoute) {
@@ -104,6 +108,7 @@ export default {
   .header__content {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     gap: $unnnic-spacing-xs;
 
     :deep(.unnnic-select-smart) {

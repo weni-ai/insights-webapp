@@ -1,11 +1,17 @@
 <template>
   <div id="app">
-    <RouterView />
+    <InsightsLayout ref="insights-layout">
+      <RouterView />
+    </InsightsLayout>
   </div>
 </template>
 
 <script>
-import './assets/scss/unnnic.scss';
+import InsightsLayout from '@/layouts/InsightsLayout/index.vue';
+
+export default {
+  components: { InsightsLayout },
+};
 </script>
 
 <style lang="scss" scoped>

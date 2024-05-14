@@ -52,6 +52,17 @@ export default {
           offsetY: -5,
         },
       },
+      dataLabels: {
+        enabled: true,
+      },
+      states: {
+        hover: {
+          filter: {
+            type: 'lighten',
+            value: 0,
+          },
+        },
+      },
     },
     series: [
       {
@@ -74,7 +85,7 @@ export default {
 <style lang="scss">
 .column-charts {
   position: relative;
-  margin: $unnnic-spacing-xs 0 $unnnic-spacing-md;
+  margin-bottom: -$unnnic-spacing-ant;
 
   &__header {
     position: absolute;

@@ -1,13 +1,9 @@
 <template>
   <header class="insights-layout-header">
     <UnnnicBreadcrumb
-      v-if="!isInHome"
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
-    <h1 class="header__title">
-      {{ isInHome ? 'Insights' : selectedDashboardLabel }}
-    </h1>
     <section class="header__content">
       <UnnnicSelectSmart
         v-model="selectedDashboard"
@@ -33,9 +29,9 @@ export default {
       dashboards: [
         {
           value: 'dashboards',
-          label: 'Dashboards',
+          label: 'Insights',
           crumbPath: '/',
-          crumbName: 'Início',
+          crumbName: 'Insights',
         },
         { value: 'human-service', label: 'Atendimento Humano' },
       ],
@@ -51,12 +47,15 @@ export default {
       return this.selectedDashboard[0]?.label;
     },
 
-    isInHome() {
-      return this.selectedDashboardValue === 'dashboards';
-    },
-
     breadcrumbs() {
-      return this.dashboards.map(({ value, label, crumbPath, crumbName }) => ({
+      const { dashboards } = this;
+      if (this.$route.name === 'home') {
+        return [
+          { path: dashboards[0].crumbPath, name: dashboards[0].crumbName },
+        ];
+      }
+
+      return dashboards.map(({ value, label, crumbPath, crumbName }) => ({
         path: crumbPath || `/${value}`,
         name: crumbName || label,
       }));
@@ -102,13 +101,6 @@ export default {
   display: grid;
   gap: $unnnic-spacing-sm;
 
-  .header__title {
-    color: $unnnic-color-neutral-darkest;
-    font-size: $unnnic-font-size-title-md;
-    font-weight: $unnnic-font-weight-bold;
-    font-family: $unnnic-font-family-primary;
-    line-height: $unnnic-line-height-large * 2;
-  }
   .header__content {
     display: flex;
     flex-direction: row;

@@ -11,19 +11,32 @@
         :options="dashboards"
       />
 
-      <InsightsLayoutHeaderFilters />
+      <section class="content__actions">
+        <HeaderTagLive v-if="showTagLive" />
+        <InsightsLayoutHeaderFilters />
+        <UnnnicButton
+          class="clickable"
+          iconCenter="ios_share"
+          type="secondary"
+        />
+      </section>
     </section>
   </header>
 </template>
 
 <script>
 import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
+import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 
 export default {
   name: 'InsightsLayoutHeader',
 
-  components: { HeaderSelectDashboard, InsightsLayoutHeaderFilters },
+  components: {
+    HeaderSelectDashboard,
+    HeaderTagLive,
+    InsightsLayoutHeaderFilters,
+  },
 
   data() {
     return {
@@ -63,6 +76,11 @@ export default {
       return this.$route.name === 'home'
         ? crumbBase
         : crumbBase.concat(routeCrumbs);
+    },
+
+    showTagLive() {
+      const { query } = this.$route;
+      return !query.dateStart && !query.dateStart;
     },
   },
 
@@ -111,10 +129,9 @@ export default {
     justify-content: space-between;
     gap: $unnnic-spacing-xs;
 
-    :deep(.unnnic-select-smart) {
-      .dropdown-data {
-        z-index: 2;
-      }
+    .content__actions {
+      display: flex;
+      gap: $unnnic-spacing-ant;
     }
   }
 }

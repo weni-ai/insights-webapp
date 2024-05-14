@@ -13,6 +13,7 @@
       v-model="filters.date"
       size="sm"
       inputFormat="DD/MM/YYYY"
+      position="right"
     />
 
     <FiltersModalHumanService

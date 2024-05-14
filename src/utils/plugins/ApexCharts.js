@@ -54,7 +54,7 @@ window.Apex = {
     },
   },
   dataLabels: {
-    enabled: false,
+    enabled: true,
     enabledOnSeries: false,
     style: {
       fontFamily: 'Lato, sans-serif',
@@ -63,9 +63,16 @@ window.Apex = {
   plotOptions: {
     bar: {
       borderRadius: 4,
-      columnWidth: '90%',
+      columnWidth: '85%',
       colors: {
         backgroundBarOpacity: 1,
+      },
+    },
+  },
+  states: {
+    active: {
+      filter: {
+        type: 'none',
       },
     },
   },

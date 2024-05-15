@@ -65,6 +65,9 @@ export default {
 
 <style lang="scss">
 .bar-chart {
+  height: 100%;
+  width: 100%;
+
   display: grid;
   gap: $unnnic-spacing-sm;
 

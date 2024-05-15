@@ -17,7 +17,7 @@
       </article>
     </section>
     <section class="dashboard__widgets-chart">
-      <ColumnCharts
+      <BarChart
         :chartData="chartData"
         :height="chartHeight"
         :width="chartWidth"
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import ColumnCharts from '@/components/ColumnCharts.vue';
+import BarChart from '@/components/insights/charts/BarChart.vue';
 import AgentChats from '@/components/AgentChats.vue';
 import TableChats from '@/components/TableChats.vue';
 import dashboardData from '@/mocks/dashboardData.json';
@@ -47,7 +47,7 @@ export default {
   name: 'DashboardHumanService',
 
   components: {
-    ColumnCharts,
+    BarChart,
     AgentChats,
     TableChats,
   },

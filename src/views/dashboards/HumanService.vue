@@ -82,7 +82,10 @@ export default {
     }
     .widgets__chart {
       grid-area: graph;
+
       padding: $unnnic-spacing-ant;
+
+      box-shadow: $unnnic-shadow-level-far;
     }
 
     .widgets__agents {

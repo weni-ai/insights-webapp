@@ -86,6 +86,7 @@ export default {
       font-family: Lato;
       font-weight: $unnnic-font-weight-bold;
       text-decoration-line: underline;
+      text-underline-position: under;
     }
 
     .header__title,

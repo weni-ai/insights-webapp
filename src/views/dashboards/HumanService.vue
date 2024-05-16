@@ -20,7 +20,7 @@
       />
     </section>
     <section class="widgets__agents">
-      <AgentChats />
+      <OnlineAgents />
     </section>
   </section>
   <section
@@ -34,7 +34,7 @@
 <script>
 import DashboardCard from '@/components/DashboardCard.vue';
 import BarChart from '@/components/insights/charts/BarChart.vue';
-import AgentChats from '@/components/AgentChats.vue';
+import OnlineAgents from '@/components/insights/widgets/OnlineAgents.vue';
 import TableChats from '@/components/TableChats.vue';
 import humanServiceData from '@/mocks/humanServiceData';
 import chartData from '@/mocks/chartDataHumanService.json';
@@ -46,7 +46,7 @@ export default {
   components: {
     DashboardCard,
     BarChart,
-    AgentChats,
+    OnlineAgents,
     TableChats,
   },
 

@@ -9,7 +9,15 @@
       <h1 class="header__title">Agentes online</h1>
     </header>
 
-    <table class="widget-online-agents__table">
+    <IconLoading
+      v-if="isLoading"
+      class="widget-online-agents__loading-icon"
+    />
+
+    <table
+      v-else
+      class="widget-online-agents__table"
+    >
       <tr class="table__header">
         <th class="header__col main">Agente</th>
         <th class="header__col">Em andamento</th>
@@ -41,8 +49,18 @@
 
 <script>
 import onlineAgentsData from '@/mocks/widgetOnlineAgentsData.json';
+import IconLoading from '@/components/IconLoading.vue';
+
 export default {
   name: 'WidgetOnlineAgents',
+
+  components: {
+    IconLoading,
+  },
+
+  props: {
+    isLoading: Boolean,
+  },
 
   data() {
     return {
@@ -79,12 +97,15 @@ export default {
 
 <style lang="scss" scoped>
 .widget-online-agents {
+  padding: $unnnic-spacing-sm;
+
   height: 100%;
 
   background-color: $unnnic-color-background-snow;
   border-radius: $unnnic-border-radius-sm;
 
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: $unnnic-spacing-sm;
 
   &__header {
@@ -97,6 +118,10 @@ export default {
       font-size: $unnnic-font-size-title-sm;
       color: $unnnic-color-neutral-darkest;
     }
+  }
+
+  &__loading-icon {
+    margin: auto;
   }
 
   &__table {

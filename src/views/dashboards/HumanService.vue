@@ -8,6 +8,7 @@
       title="Picos de atendimentos abertos"
       seeMore
       :chartData="chartData"
+      :isLoading="isLoading"
     />
     <section class="widgets__cards">
       <DashboardCard
@@ -20,7 +21,7 @@
       />
     </section>
     <section class="widgets__agents">
-      <OnlineAgents />
+      <OnlineAgents :isLoading="isLoading" />
     </section>
   </section>
   <section
@@ -55,7 +56,16 @@ export default {
     chartData: chartData,
     chatsData: ChatsData,
     firstSection: true,
+    isLoading: false,
   }),
+
+  created() {
+    // Temporary code, to simulate a promise
+    this.isLoading = true;
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1500);
+  },
 };
 </script>
 
@@ -90,6 +100,10 @@ export default {
 
     .widgets__agents {
       grid-area: agents;
+
+      box-shadow: $unnnic-shadow-level-far;
+
+      border-radius: $unnnic-border-radius-sm;
     }
   }
 

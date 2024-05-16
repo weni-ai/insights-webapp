@@ -5,6 +5,7 @@
       <a
         class="header__see-more"
         v-if="seeMore"
+        @click="$emit('seeMore')"
         href="#"
         >Ver mais</a
       >

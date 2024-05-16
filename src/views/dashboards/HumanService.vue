@@ -1,16 +1,26 @@
 <template>
   <section
     class="dashboard-human-service__widgets"
+    :class="{
+      'dashboard-human-service__widgets--show-peak-chats': showPeakChats,
+    }"
     v-if="firstSection"
   >
-    <BarChart
-      class="widgets__chart"
-      title="Picos de atendimentos abertos"
-      seeMore
-      :chartData="chartData"
-      :isLoading="isLoading"
-    />
-    <section class="widgets__cards">
+    <section class="widgets__chart">
+      <div v-if="invalidChartFilters">disclaimer</div>
+      <BarChart
+        v-else
+        title="Picos de atendimentos abertos"
+        seeMore
+        @seeMore="$router.push({ name: 'peak-chats' })"
+        :chartData="chartData"
+        :isLoading="isLoading"
+      />
+    </section>
+    <section
+      class="widgets__cards"
+      v-show="!showPeakChats"
+    >
       <DashboardCard
         v-for="{ title, subtitle, click } of cards"
         :key="subtitle"
@@ -20,7 +30,10 @@
         configured
       />
     </section>
-    <section class="widgets__agents">
+    <section
+      class="widgets__agents"
+      v-show="!showPeakChats"
+    >
       <OnlineAgents :isLoading="isLoading" />
     </section>
   </section>
@@ -33,6 +46,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import DashboardCard from '@/components/DashboardCard.vue';
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import OnlineAgents from '@/components/insights/widgets/OnlineAgents.vue';
@@ -66,6 +80,21 @@ export default {
       this.isLoading = false;
     }, 1500);
   },
+
+  computed: {
+    showPeakChats() {
+      return this.$route.name === 'peak-chats';
+    },
+
+    invalidChartFilters() {
+      const { query } = this.$route;
+      const dateStart = moment(query?.dateStart);
+      const dateEnd = moment(query?.dateEnd);
+      const dateDiff = dateEnd.diff(dateStart, 'days');
+
+      return dateDiff > 1;
+    },
+  },
 };
 </script>
 
@@ -83,6 +112,10 @@ export default {
       'cards agents'
       'cards agents';
 
+    &--show-peak-chats {
+      display: flex;
+    }
+
     .widgets__cards {
       grid-area: cards;
       display: grid;
@@ -91,6 +124,8 @@ export default {
       grid-template-rows: repeat(2, min-content);
     }
     .widgets__chart {
+      overflow: hidden;
+
       grid-area: graph;
 
       padding: $unnnic-spacing-ant;

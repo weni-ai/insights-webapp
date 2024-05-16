@@ -1,10 +1,12 @@
 <template>
-  <section class="home">
+  <section
+    class="home"
+    :class="{ 'home--with-chart': contentHeight === 0 }"
+  >
     <BarChart
       v-if="contentHeight === 0"
       class="home__chart"
       title="Mensagens trocadas via bot"
-      seeMore
       :chartData="chartData"
     />
 
@@ -93,15 +95,17 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  display: grid;
-  grid-template-rows: repeat(3, 1fr);
-  gap: $unnnic-spacing-sm;
-  grid-template-areas:
-    'chart'
-    'cards'
-    'cards';
-
   overflow: hidden;
+
+  &--with-chart {
+    display: grid;
+    gap: $unnnic-spacing-sm;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+      'chart'
+      'cards'
+      'cards';
+  }
 
   &__chart {
     grid-area: chart;

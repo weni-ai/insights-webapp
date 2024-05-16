@@ -65,6 +65,7 @@ export default {
 
 <style lang="scss">
 .bar-chart {
+  overflow: hidden;
   height: 100%;
   width: 100%;
 
@@ -93,6 +94,16 @@ export default {
     .header__see-more {
       font-size: $unnnic-font-size-body-gt;
       color: $unnnic-color-neutral-dark;
+    }
+  }
+
+  &__chart {
+    display: flex;
+
+    overflow: hidden;
+
+    .chart__loading {
+      margin: auto;
     }
   }
 }

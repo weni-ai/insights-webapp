@@ -2,6 +2,7 @@
   <section class="home">
     <BarChart
       v-if="contentHeight === 0"
+      class="home__chart"
       title="Mensagens trocadas via bot"
       seeMore
       :chartData="chartData"
@@ -93,9 +94,21 @@ export default {
 <style lang="scss" scoped>
 .home {
   display: grid;
+  grid-template-rows: repeat(3, 1fr);
   gap: $unnnic-spacing-sm;
+  grid-template-areas:
+    'chart'
+    'cards'
+    'cards';
+
+  overflow: hidden;
+
+  &__chart {
+    grid-area: chart;
+  }
 
   &__cards {
+    grid-area: cards;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: $unnnic-spacing-sm;

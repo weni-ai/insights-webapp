@@ -1,14 +1,17 @@
 <template>
-  <section class="home">
-    <ColumnCharts
+  <section
+    class="home"
+    :class="{ 'home--with-chart': contentHeight === 0 }"
+  >
+    <BarChart
       v-if="contentHeight === 0"
+      class="home__chart"
       title="Mensagens trocadas via bot"
-      seeMore
       :chartData="chartData"
     />
 
     <section class="home__cards">
-      <InsightsCard
+      <DashboardCard
         v-for="{ title, subtitle, click } of cards"
         :key="subtitle"
         :title="title"
@@ -23,16 +26,16 @@
 <script>
 import { mapState } from 'vuex';
 
-import ColumnCharts from '@/components/ColumnCharts.vue';
+import BarChart from '@/components/insights/charts/BarChart.vue';
 import chartData from '@/mocks/chartData.json';
-import InsightsCard from '@/components/Card.vue';
+import DashboardCard from '@/components/DashboardCard.vue';
 
 export default {
   name: 'HomeView',
 
   components: {
-    ColumnCharts,
-    InsightsCard,
+    BarChart,
+    DashboardCard,
   },
 
   data: () => ({
@@ -92,10 +95,24 @@ export default {
 
 <style lang="scss" scoped>
 .home {
-  display: grid;
-  gap: $unnnic-spacing-sm;
+  overflow: hidden;
+
+  &--with-chart {
+    display: grid;
+    gap: $unnnic-spacing-sm;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-areas:
+      'chart'
+      'cards'
+      'cards';
+  }
+
+  &__chart {
+    grid-area: chart;
+  }
 
   &__cards {
+    grid-area: cards;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: $unnnic-spacing-sm;

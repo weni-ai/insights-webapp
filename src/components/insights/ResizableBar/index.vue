@@ -86,6 +86,7 @@ export default {
 
   mounted() {
     this.setContentHeight(24);
+    this.setBarHandlerHeight(this.$refs.resizableBarHandler.clientHeight);
     this.scrollContentToBottom();
     this.calculateDefaultContentHeight();
   },
@@ -105,6 +106,7 @@ export default {
   methods: {
     ...mapActions({
       setContentHeight: 'resizableBar/setContentHeight',
+      setBarHandlerHeight: 'resizableBar/setBarHandlerHeight',
     }),
     getPropertyValueAsNumber(styles, property) {
       return parseFloat(styles.getPropertyValue(property)) || 0;

@@ -47,7 +47,11 @@ export default {
           crumbPath: '/',
           crumbName: 'Insights',
         },
-        { value: 'human-service', label: 'Atendimento humano' },
+        {
+          value: 'human-service',
+          label: 'Atendimento humano',
+          crumbChildrens: [{ value: 'peak-chats', label: 'Picos de chats' }],
+        },
         { value: 'triggered-flows', label: 'Fluxos disparados' },
       ],
       selectedDashboard: null,
@@ -99,7 +103,9 @@ export default {
         },
       );
 
-      this.selectedDashboard = dashboardRelativeToPath;
+      if (dashboardRelativeToPath) {
+        this.selectedDashboard = dashboardRelativeToPath;
+      }
     },
   },
 

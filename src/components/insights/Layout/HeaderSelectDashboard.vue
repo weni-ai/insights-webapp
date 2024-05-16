@@ -60,6 +60,8 @@ export default {
 $dropdownFixedWidth: 314px;
 
 .header-select-dashboard {
+  display: flex;
+
   .dropdown__trigger {
     display: flex;
     align-items: center;
@@ -72,7 +74,7 @@ $dropdownFixedWidth: 314px;
 
       color: $unnnic-color-neutral-darkest;
       font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-md;
+      font-size: $unnnic-font-size-title-sm;
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-line-height-large * 2;
     }

@@ -1,6 +1,6 @@
 <template>
-  <section
-    class="dashboard-card"
+  <CardBase
+    class="card-dashboard"
     :class="{ 'not-configured': !configured }"
   >
     <section class="card__content">
@@ -23,10 +23,11 @@
       :text="configured ? '' : 'Definir métrica'"
       @click.stop="emitHandleConfig"
     />
-  </section>
+  </CardBase>
 </template>
 
 <script>
+import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
 export default {
@@ -40,6 +41,7 @@ export default {
   },
 
   components: {
+    CardBase,
     IconLoading,
   },
 
@@ -66,12 +68,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.dashboard-card {
-  background-color: $unnnic-color-neutral-white;
-  box-shadow: $unnnic-shadow-level-far;
-  border: 1px solid $unnnic-color-neutral-soft;
-  border-radius: $unnnic-border-radius-sm;
-
+.card-dashboard {
   display: grid;
   grid-template-columns: 1fr auto;
 

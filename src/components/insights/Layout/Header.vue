@@ -52,7 +52,7 @@ export default {
           label: 'Atendimento humano',
           crumbChildrens: [{ value: 'peak-chats', label: 'Picos de chats' }],
         },
-        { value: 'triggered-flows', label: 'Fluxos disparados' },
+        { value: 'flow-results', label: 'Resultado de fluxos' },
       ],
       selectedDashboard: null,
     };

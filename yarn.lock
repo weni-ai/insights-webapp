@@ -636,11 +636,6 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@types/chroma-js@^2.4.4":
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/@types/chroma-js/-/chroma-js-2.4.4.tgz#254dddff54568ff8e5d0dcdb071871a458fdfd31"
-  integrity sha512-/DTccpHTaKomqussrn+ciEvfW4k6NAHzNzs/sts1TCqg333qNxOhy8TNIoQCmbGG3Tl8KdEhkGAssb1n3mTXiQ==
-
 "@types/debug@^4.0.0":
   version "4.1.12"
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.12.tgz#a155f21690871953410df4b6b6f53187f0500917"
@@ -860,10 +855,10 @@
   resolved "https://registry.yarnpkg.com/@weni/eslint-config/-/eslint-config-1.0.2.tgz#fc8d16449130888eabfca0a2e6a506043d8018fb"
   integrity sha512-q4iLOGP29a8rk9Sprs4mpFAn0fRnsK+lGOY1NeUMYzbJ1REFit0p8baz4aJCiJTO55ZlGym3HzcwL/jYm7u/7g==
 
-"@weni/unnnic-system@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.0.3.tgz#551924d420ec4cbb0c06547a843a3a0b889d44d3"
-  integrity sha512-cgFGSGfEFb6MtJgalKPGp5nJ3M5lJcnURlL6e0rVTcxMZjvI/eJf0BPvlr0Rn5KFhjevkrdR9iQ9fd6DHxRHyw==
+"@weni/unnnic-system@^2.0.7":
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.0.7.tgz#a638827a628a9eef0e6dff91fdef9ed8fb839247"
+  integrity sha512-zVQfA8O819Dx7jyUwZ9f7Xb2aLyCRSmCxtXLsE1Wd2ltaOMDuWawGK4HUbtaA5c3aJ1KqLFi3bKhG90zLNZl/A==
   dependencies:
     "@emoji-mart/data" "^1.1.2"
     "@vueuse/components" "^10.4.1"
@@ -1183,14 +1178,6 @@ chart.js@^4.4.2:
   dependencies:
     "@kurkle/color" "^0.3.0"
 
-chartjs-chart-funnel@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/chartjs-chart-funnel/-/chartjs-chart-funnel-4.2.0.tgz#6737dda7bf53235991c370c0b079ef886a41b83e"
-  integrity sha512-eBFCzcRvGkqZ5SlZUkwABbgo/jeAt4ndAqviaUcy5NHlkCjVuGtyWQynk7VFhpSobHqd1WrAyhC6rO1TE95bvw==
-  dependencies:
-    "@types/chroma-js" "^2.4.4"
-    chroma-js "^2.4.2"
-
 chartjs-plugin-datalabels@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/chartjs-plugin-datalabels/-/chartjs-plugin-datalabels-2.2.0.tgz#369578e131d743c2e34b5fbe2d3f9335f6639b8f"
@@ -1215,11 +1202,6 @@ chownr@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/chownr/-/chownr-2.0.0.tgz#15bfbe53d2eab4cf70f18a8cd68ebe5b3cb1dece"
   integrity sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ==
-
-chroma-js@^2.4.2:
-  version "2.4.2"
-  resolved "https://registry.yarnpkg.com/chroma-js/-/chroma-js-2.4.2.tgz#dffc214ed0c11fa8eefca2c36651d8e57cbfb2b0"
-  integrity sha512-U9eDw6+wt7V8z5NncY2jJfZa+hUH8XEj8FQHgFJTrUFnJfXYf4Ml4adI2vXZOjqRDpFWtYVWypDfZwnJ+HIR4A==
 
 clean-stack@^2.0.0:
   version "2.2.0"

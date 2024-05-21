@@ -20,7 +20,6 @@ import {
   LineController,
   BarController,
 } from 'chart.js';
-import { FunnelController, TrapezoidElement } from 'chartjs-chart-funnel';
 
 import { deepMerge } from '@/utils/object';
 
@@ -36,8 +35,6 @@ const defaultPlugins = [
   RadialLinearScale,
   LineController,
   BarController,
-  FunnelController,
-  TrapezoidElement,
 ];
 
 export default {

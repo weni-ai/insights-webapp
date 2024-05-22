@@ -1,4 +1,4 @@
-import GPT from '@/services/api/resources/GPT';
+import { GPT } from '@/services/api';
 
 const mutations = {
   ADD_INSIGHT: 'ADD_INSIGHT',

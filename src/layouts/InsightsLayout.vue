@@ -3,10 +3,7 @@
     <ConnectSidebar class="insights-layout__sidebar" />
     <ConnectTopbar class="insights-layout__topbar" />
 
-    <section
-      class="insights-layout__container"
-      v-if="showInsights"
-    >
+    <section class="insights-layout__container">
       <InsightsLayoutHeader />
       <section
         class="insights-layout__insights"
@@ -51,7 +48,6 @@ export default {
     ...mapState({
       contentHeight: (state) => state.resizableBar.contentHeight,
       barHandlerHeight: (state) => state.resizableBar.barHandlerHeight,
-      dashboards: (state) => state.dashboards.dashboards,
     }),
 
     mainHeight() {
@@ -60,10 +56,6 @@ export default {
           this.contentHeight -
           pxToVh(this.barHandlerHeight) || 0
       );
-    },
-
-    showInsights() {
-      return !!this.dashboards.length;
     },
   },
 };

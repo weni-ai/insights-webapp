@@ -93,28 +93,37 @@ export default {
   },
 
   methods: {
+    navigateToDashboard(uuid) {
+      this.$router.replace({
+        name: 'dashboard',
+        params: { dashboardUuid: uuid },
+      });
+    },
+
+    goToDefaultDashboard() {
+      const { uuid } = this.dashboardDefault;
+      this.navigateToDashboard(uuid);
+    },
+
     routeUpdateSelectedDashboard() {
-      const { path } = this.$route;
+      const { dashboardUuid } = this.$route.params;
 
       const dashboardRelativeToPath = this.dashboards.find(
-        ({ value, is_default }) => {
-          const isHomePath = path === '/' && is_default;
-          const isValidPath = [value].includes(path.replace('/', ''));
-
-          return isHomePath || isValidPath;
-        },
+        ({ uuid }) => dashboardUuid === uuid,
       );
 
-      if (dashboardRelativeToPath) {
-        this.selectedDashboard = dashboardRelativeToPath;
+      if (!dashboardRelativeToPath) {
+        this.goToDefaultDashboard();
       }
+
+      this.selectedDashboard = dashboardRelativeToPath || this.dashboardDefault;
     },
   },
 
   watch: {
     selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
-      if (oldSelectedDashboard?.value) {
-        this.$router.push(`/${this.selectedDashboard.value}`);
+      if (oldSelectedDashboard?.uuid) {
+        this.navigateToDashboard(this.selectedDashboard.uuid);
       }
     },
     $route(newRoute, oldRoute) {

@@ -1,13 +1,16 @@
 <template>
   <div id="app">
-    <InsightsLayout ref="insights-layout">
+    <InsightsLayout
+      ref="insights-layout"
+      v-if="dashboards.length"
+    >
       <RouterView />
     </InsightsLayout>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import { Dashboards } from '@/services/api';
@@ -17,6 +20,12 @@ export default {
 
   async created() {
     await this.getDashboards();
+  },
+
+  computed: {
+    ...mapState({
+      dashboards: (state) => state.dashboards.dashboards,
+    }),
   },
 
   methods: {

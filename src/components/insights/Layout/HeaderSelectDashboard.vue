@@ -5,7 +5,7 @@
   >
     <template #trigger>
       <UnnnicAvatarIcon
-        v-if="modelValue.crumbPath === '/'"
+        v-if="isSelectedDefaultDashboard"
         icon="monitoring"
         scheme="aux-purple-500"
         @click.stop
@@ -18,22 +18,24 @@
       />
       <section class="dropdown__trigger">
         <h1 class="trigger__title">
-          {{ modelValue.label || options[0].label }}
+          {{ modelValue.name || dashboardDefault.name || dashboards[0].name }}
         </h1>
         <UnnnicIcon icon="expand_more" />
       </section>
     </template>
     <UnnnicDropdownItem
-      v-for="option of options"
-      :key="option"
-      @click="selectOption(option)"
+      v-for="dashboard of dashboards"
+      :key="dashboard"
+      @click="selectDashboard(dashboard)"
     >
-      {{ option.label }}
+      {{ dashboard.name }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 export default {
   name: 'HeaderSelectDashboard',
 
@@ -42,15 +44,24 @@ export default {
       type: Object,
       required: true,
     },
-    options: {
-      type: Array,
-      required: true,
+  },
+
+  computed: {
+    ...mapState({
+      dashboards: (state) => state.dashboards.dashboards,
+    }),
+    ...mapGetters({
+      dashboardDefault: 'dashboards/dashboardDefault',
+    }),
+
+    isSelectedDefaultDashboard() {
+      return this.modelValue.uuid === this.dashboardDefault.uuid;
     },
   },
 
   methods: {
-    selectOption(option) {
-      this.$emit('update:modelValue', option);
+    selectDashboard(dashboard) {
+      this.$emit('update:modelValue', dashboard);
     },
   },
 };

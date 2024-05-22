@@ -1,12 +1,14 @@
 <template>
-  <header class="insights-layout-header">
+  <header
+    class="insights-layout-header"
+    v-if="selectedDashboard"
+  >
     <UnnnicBreadcrumb
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
     <section class="header__content">
       <HeaderSelectDashboard
-        v-if="selectedDashboard"
         v-model="selectedDashboard"
         :options="dashboards"
       />
@@ -25,6 +27,8 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
@@ -40,46 +44,46 @@ export default {
 
   data() {
     return {
-      dashboards: [
-        {
-          value: 'dashboards',
-          label: 'Insights',
-          crumbPath: '/',
-          crumbName: 'Insights',
-        },
-        {
-          value: 'human-service',
-          label: 'Atendimento humano',
-          crumbChildrens: [{ value: 'peak-chats', label: 'Picos de chats' }],
-        },
-        { value: 'flow-results', label: 'Resultado de fluxos' },
-      ],
       selectedDashboard: null,
     };
   },
 
+  created() {
+    this.routeUpdateSelectedDashboard();
+  },
+
   computed: {
+    ...mapState({
+      dashboards: (state) => state.dashboards.dashboards,
+    }),
+    ...mapGetters({
+      dashboardDefault: 'dashboards/dashboardDefault',
+    }),
+
     breadcrumbs() {
-      const { dashboards } = this;
+      const { dashboards, dashboardDefault } = this;
 
-      const crumbBase = [
-        { path: dashboards[0].crumbPath, name: dashboards[0].crumbName },
-      ];
+      if (dashboards.length) {
+        const crumbBase = [
+          { path: dashboardDefault.value, name: dashboardDefault.name },
+        ];
 
-      const routeCrumbs = this.$route.matched.map((crumb) => {
-        const dashboardLabel = dashboards.find(
-          (dash) => dash.value === crumb.name,
-        )?.label;
+        const routeCrumbs = this.$route.matched.map((crumb) => {
+          const dashboardLabel = dashboards.find(
+            (dash) => dash.value === crumb.name,
+          )?.label;
 
-        return {
-          name: dashboardLabel,
-          path: crumb.path,
-        };
-      });
+          return {
+            name: dashboardLabel,
+            path: crumb.path,
+          };
+        });
 
-      return this.$route.name === 'home'
-        ? crumbBase
-        : crumbBase.concat(routeCrumbs);
+        return this.$route.name === 'home'
+          ? crumbBase
+          : crumbBase.concat(routeCrumbs);
+      }
+      return null;
     },
 
     showTagLive() {
@@ -93,11 +97,9 @@ export default {
       const { path } = this.$route;
 
       const dashboardRelativeToPath = this.dashboards.find(
-        ({ value, crumbPath }) => {
-          const isHomePath = path === '/' && [value, crumbPath].includes('/');
-          const isValidPath = [value, crumbPath].includes(
-            path.replace('/', ''),
-          );
+        ({ value, is_default }) => {
+          const isHomePath = path === '/' && is_default;
+          const isValidPath = [value].includes(path.replace('/', ''));
 
           return isHomePath || isValidPath;
         },

@@ -61,29 +61,23 @@ export default {
     }),
 
     breadcrumbs() {
-      const { dashboards, dashboardDefault } = this;
+      const { selectedDashboard, dashboardDefault } = this;
+      const { dashboardUuid } = this.$route.params;
 
-      if (dashboards.length) {
-        const crumbBase = [
-          { path: dashboardDefault.value, name: dashboardDefault.name },
-        ];
+      const crumbBase = [
+        { path: dashboardDefault.uuid, name: dashboardDefault.name },
+      ];
 
-        const routeCrumbs = this.$route.matched.map((crumb) => {
-          const dashboardLabel = dashboards.find(
-            (dash) => dash.value === crumb.name,
-          )?.label;
+      const routeCrumbs = [
+        {
+          path: selectedDashboard.uuid,
+          name: selectedDashboard.name,
+        },
+      ];
 
-          return {
-            name: dashboardLabel,
-            path: crumb.path,
-          };
-        });
-
-        return this.$route.name === 'home'
-          ? crumbBase
-          : crumbBase.concat(routeCrumbs);
-      }
-      return null;
+      return dashboardUuid === dashboardDefault.uuid
+        ? crumbBase
+        : crumbBase.concat(routeCrumbs);
     },
 
     showTagLive() {
@@ -127,7 +121,10 @@ export default {
       }
     },
     $route(newRoute, oldRoute) {
-      if (newRoute.name !== oldRoute.name) {
+      const { dashboardUuid: newUuid } = newRoute.params;
+      const { dashboardUuid: oldUuid } = oldRoute.params;
+
+      if (newUuid !== oldUuid) {
         this.routeUpdateSelectedDashboard();
       }
     },

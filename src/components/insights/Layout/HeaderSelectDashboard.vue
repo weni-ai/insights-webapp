@@ -18,7 +18,9 @@
       />
       <section class="dropdown__trigger">
         <h1 class="trigger__title">
-          {{ modelValue.name || dashboardDefault.name || dashboards[0].name }}
+          {{
+            currentDashboard.name || dashboardDefault.name || dashboards[0].name
+          }}
         </h1>
         <UnnnicIcon icon="expand_more" />
       </section>
@@ -26,7 +28,7 @@
     <UnnnicDropdownItem
       v-for="dashboard of dashboards"
       :key="dashboard"
-      @click="selectDashboard(dashboard)"
+      @click="setCurrentDashboard(dashboard)"
     >
       {{ dashboard.name }}
     </UnnnicDropdownItem>
@@ -34,35 +36,29 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'HeaderSelectDashboard',
 
-  props: {
-    modelValue: {
-      type: Object,
-      required: true,
-    },
-  },
-
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
+      currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
 
     isSelectedDefaultDashboard() {
-      return this.modelValue.uuid === this.dashboardDefault.uuid;
+      return this.currentDashboard.uuid === this.dashboardDefault.uuid;
     },
   },
 
   methods: {
-    selectDashboard(dashboard) {
-      this.$emit('update:modelValue', dashboard);
-    },
+    ...mapActions({
+      setCurrentDashboard: 'dashboards/setCurrentDashboard',
+    }),
   },
 };
 </script>

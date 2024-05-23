@@ -1,17 +1,14 @@
 <template>
   <header
     class="insights-layout-header"
-    v-if="selectedDashboard"
+    v-if="currentDashboard"
   >
     <UnnnicBreadcrumb
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
     <section class="header__content">
-      <HeaderSelectDashboard
-        v-model="selectedDashboard"
-        :options="dashboards"
-      />
+      <HeaderSelectDashboard />
 
       <section class="content__actions">
         <HeaderTagLive v-if="showTagLive" />
@@ -27,7 +24,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState } from 'vuex';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
@@ -42,26 +39,21 @@ export default {
     InsightsLayoutHeaderFilters,
   },
 
-  data() {
-    return {
-      selectedDashboard: null,
-    };
-  },
-
   created() {
-    this.routeUpdateSelectedDashboard();
+    this.routeUpdateCurrentDashboard();
   },
 
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
+      currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
 
     breadcrumbs() {
-      const { selectedDashboard, dashboardDefault } = this;
+      const { currentDashboard, dashboardDefault } = this;
       const { dashboardUuid } = this.$route.params;
 
       const crumbBase = [
@@ -70,8 +62,8 @@ export default {
 
       const routeCrumbs = [
         {
-          path: selectedDashboard.uuid,
-          name: selectedDashboard.name,
+          path: currentDashboard.uuid,
+          name: currentDashboard.name,
         },
       ];
 
@@ -87,6 +79,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      setCurrentDashboard: 'dashboards/setCurrentDashboard',
+    }),
+
     navigateToDashboard(uuid) {
       this.$router.replace({
         name: 'dashboard',
@@ -99,7 +95,7 @@ export default {
       this.navigateToDashboard(uuid);
     },
 
-    routeUpdateSelectedDashboard() {
+    routeUpdateCurrentDashboard() {
       const { dashboardUuid } = this.$route.params;
 
       const dashboardRelativeToPath = this.dashboards.find(
@@ -110,14 +106,16 @@ export default {
         this.goToDefaultDashboard();
       }
 
-      this.selectedDashboard = dashboardRelativeToPath || this.dashboardDefault;
+      this.setCurrentDashboard(
+        dashboardRelativeToPath || this.dashboardDefault,
+      );
     },
   },
 
   watch: {
-    selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
-      if (oldSelectedDashboard?.uuid) {
-        this.navigateToDashboard(this.selectedDashboard.uuid);
+    currentDashboard(newCurrentDashboard, oldCurrentDashboard) {
+      if (oldCurrentDashboard?.uuid) {
+        this.navigateToDashboard(this.currentDashboard.uuid);
       }
     },
     $route(newRoute, oldRoute) {
@@ -125,7 +123,7 @@ export default {
       const { dashboardUuid: oldUuid } = oldRoute.params;
 
       if (newUuid !== oldUuid) {
-        this.routeUpdateSelectedDashboard();
+        this.routeUpdateCurrentDashboard();
       }
     },
   },

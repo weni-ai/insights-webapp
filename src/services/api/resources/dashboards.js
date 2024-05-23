@@ -12,7 +12,12 @@ export default {
 
     const dashboards = response.results.map(
       (dashboard) =>
-        new Dashboard(dashboard.uuid, dashboard.name, dashboard.is_default),
+        new Dashboard(
+          dashboard.uuid,
+          dashboard.name,
+          { columns: dashboard.grid[0], rows: dashboard.grid[1] },
+          dashboard.is_default,
+        ),
     );
 
     return dashboards;

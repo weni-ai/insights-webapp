@@ -1,7 +1,7 @@
 <template>
   <section
     class="dashboard"
-    ref="refDashboard"
+    :style="dashboardGridStyle"
   >
     oi
   </section>
@@ -23,14 +23,26 @@ export default {
     }),
   },
 
-  methods: {
-    setDashboardStyleGrid() {
+    dashboardGridStyle() {
       const { grid } = this.currentDashboard || {};
       const { refDashboard } = this.$refs;
 
       if (grid) {
-        refDashboard.style.grid = `${grid.rows}fr / ${grid.columns}fr`;
+        return {
+          gridTemplateColumns: `repeat(${grid.columns}, 1fr)`,
+          gridTemplateRows: `repeat(${grid.rows}, 1fr)`,
+        };
       }
+      return {};
+    },
+  },
+
+  methods: {
+    getWidgetStyle(gridPosition) {
+      return {
+        gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
+        gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
+      };
     },
   },
 };

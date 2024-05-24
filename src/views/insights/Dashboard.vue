@@ -3,30 +3,39 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
-    oi
+    <template
+      v-for="widget of currentDashboardWidgets"
+      :key="widget.uuid"
+    >
+      <DynamicWidget
+        :style="getWidgetStyle(widget.grid_position)"
+        :widget="widget"
+      />
+    </template>
   </section>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
+import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
+
 export default {
   name: 'DashboardView',
 
-  mounted() {
-    this.setDashboardStyleGrid();
+  components: {
+    DynamicWidget,
   },
 
   computed: {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      currentDashboardWidgets: (state) =>
+        state.dashboards.currentDashboardWidgets,
     }),
-  },
 
     dashboardGridStyle() {
       const { grid } = this.currentDashboard || {};
-      const { refDashboard } = this.$refs;
-
       if (grid) {
         return {
           gridTemplateColumns: `repeat(${grid.columns}, 1fr)`,

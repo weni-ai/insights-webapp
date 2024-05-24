@@ -51,4 +51,18 @@ export default {
 
     return widgets;
   },
+
+  async getDashboardWidgetData({ dashboardUuid, widgetUuid }) {
+    if (!dashboardUuid || !widgetUuid) {
+      throw new Error(
+        'Please provide valids UUIDs parameters to request data of widget.',
+      );
+    }
+
+    const widgetData = await http.get(
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data`,
+    );
+
+    return widgetData;
+  },
 };

@@ -33,6 +33,7 @@ export default {
     ...mapActions({
       setDashboards: 'dashboards/setDashboards',
       setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
+      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
     }),
 
     async getDashboards() {
@@ -41,10 +42,22 @@ export default {
     },
 
     async getCurrentDashboardWidgets() {
-      const response = await Dashboards.getDashboardWidgets(
+      const widgets = await Dashboards.getDashboardWidgets(
         this.currentDashboard.uuid,
       );
-      this.setCurrentDashboardWidgets(response);
+      this.setCurrentDashboardWidgets(widgets);
+      Promise.all(
+        widgets.map(async (widget) => {
+          const responseData = await Dashboards.getDashboardWidgetData({
+            dashboardUuid: this.currentDashboard.uuid,
+            widgetUuid: widget.uuid,
+          });
+          this.setCurrentDashboardWidgetData({
+            uuid: widget.uuid,
+            data: responseData,
+          });
+        }),
+      );
     },
   },
 

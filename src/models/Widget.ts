@@ -1,36 +1,22 @@
-interface WidgetGridPosition {
-  column_start: number;
-  column_end: number;
-  row_start: number;
-  row_end: number;
-}
+import { WidgetType, WidgetConfig, GridPosition } from './types/WidgetTypes';
 
-type WidgetType =
-  | 'time_colum_graph'
-  | 'bar_graph'
-  | 'funnel'
-  | 'dynamic_by_filter_table'
-  | 'tablegroup'
-  | 'card'
-  | 'insight';
-
-interface WidgetParams {
+type WidgetParams = {
   uuid: string;
   name: string;
   type: WidgetType;
-  config: any; // TODO
-  grid_position: WidgetGridPosition;
-  report: any; // TODO
+  config: WidgetConfig;
+  grid_position: GridPosition;
+  report: string;
   source: string;
-}
+};
 
 class Widget {
   uuid: string;
   name: string;
   type: WidgetType;
-  config: any; // TODO
-  grid_position: WidgetGridPosition;
-  report: any; // TODO
+  config: WidgetConfig;
+  grid_position: GridPosition;
+  report: string;
   source: string;
 
   constructor(params: WidgetParams) {

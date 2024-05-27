@@ -46,18 +46,28 @@ export default {
         this.currentDashboard.uuid,
       );
       this.setCurrentDashboardWidgets(widgets);
+      this.getCurrentDashboardWidgetsDatas(widgets);
+    },
+
+    async getCurrentDashboardWidgetsDatas(widgets) {
       Promise.all(
-        widgets.map(async (widget) => {
-          const responseData = await Dashboards.getDashboardWidgetData({
-            dashboardUuid: this.currentDashboard.uuid,
-            widgetUuid: widget.uuid,
-          });
-          this.setCurrentDashboardWidgetData({
-            uuid: widget.uuid,
-            data: responseData,
-          });
+        widgets.map(async ({ uuid }) => {
+          this.setCurrentDashboardWidgetData(await this.fetchWidgetData(uuid));
         }),
       );
+    },
+
+    async fetchWidgetData(uuid) {
+      try {
+        const responseData = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: this.currentDashboard.uuid,
+          widgetUuid: uuid,
+        });
+        return { uuid, data: responseData };
+      } catch (error) {
+        console.error(error);
+        return { uuid, data: null };
+      }
     },
   },
 

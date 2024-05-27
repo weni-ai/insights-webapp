@@ -19,6 +19,7 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    isLoading: Boolean,
   },
 
   components: {
@@ -41,11 +42,12 @@ export default {
     },
 
     treatedWidgetProps() {
-      const { data, type } = this.widget;
+      const { isLoading } = this;
+      const { name, data, type } = this.widget;
       const mappingProps = {
         card: {
-          title: data?.value,
-          subtitle: data?.title,
+          metric: data?.value || data,
+          description: name,
           configured: true,
         },
       };

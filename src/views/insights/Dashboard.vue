@@ -10,6 +10,7 @@
       <DynamicWidget
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
+        :isLoading="getWidgetLoadingStatus(widget)"
       />
     </template>
   </section>
@@ -52,6 +53,10 @@ export default {
         gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
         gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
       };
+    },
+
+    getWidgetLoadingStatus(widget) {
+      return !Object.keys(widget).includes('data');
     },
   },
 };

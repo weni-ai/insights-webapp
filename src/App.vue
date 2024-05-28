@@ -51,8 +51,12 @@ export default {
 
     async getCurrentDashboardWidgetsDatas(widgets) {
       Promise.all(
-        widgets.map(async ({ uuid }) => {
-          this.setCurrentDashboardWidgetData(await this.fetchWidgetData(uuid));
+        widgets.map(async ({ uuid, name, config }) => {
+          if (name && Object.keys(config).length) {
+            this.setCurrentDashboardWidgetData(
+              await this.fetchWidgetData(uuid),
+            );
+          }
         }),
       );
     },
@@ -73,6 +77,7 @@ export default {
 
   watch: {
     'currentDashboard.uuid'() {
+      this.setCurrentDashboardWidgets([]);
       this.getCurrentDashboardWidgets();
     },
   },

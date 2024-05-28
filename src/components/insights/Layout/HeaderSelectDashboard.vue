@@ -5,16 +5,8 @@
   >
     <template #trigger>
       <UnnnicAvatarIcon
-        v-if="isSelectedDefaultDashboard"
         icon="monitoring"
         scheme="aux-purple-500"
-        @click.stop
-      />
-      <UnnnicIcon
-        v-else
-        class="clickable"
-        icon="arrow_back"
-        @click.stop="$router.back"
       />
       <section class="dropdown__trigger">
         <h1 class="trigger__title">
@@ -30,6 +22,14 @@
       :key="dashboard"
       @click="setCurrentDashboard(dashboard)"
     >
+      <UnnnicIcon
+        icon="star_rate"
+        :scheme="
+          getIsDefaultDashboard(dashboard) ? 'weni-600' : 'neutral-clean'
+        "
+        :filled="getIsDefaultDashboard(dashboard)"
+        @click.stop
+      />
       {{ dashboard.name }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
@@ -49,16 +49,16 @@ export default {
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
-
-    isSelectedDefaultDashboard() {
-      return this.currentDashboard.uuid === this.dashboardDefault.uuid;
-    },
   },
 
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
     }),
+
+    getIsDefaultDashboard(dashboard) {
+      return this.dashboardDefault.uuid === dashboard.uuid;
+    },
   },
 };
 </script>
@@ -103,12 +103,18 @@ $dropdownFixedWidth: 314px;
       gap: $unnnic-spacing-nano;
 
       .unnnic-dropdown-item {
+        border-radius: $unnnic-border-radius-sm;
+
+        padding: $unnnic-spacing-xs;
+
+        display: flex;
+        align-items: center;
+        gap: $unnnic-spacing-nano;
+
         color: $unnnic-color-neutral-darkest;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-gt;
         font-weight: $unnnic-font-weight-bold;
-        padding: $unnnic-spacing-xs;
-        border-radius: $unnnic-border-radius-sm;
 
         &:hover {
           background-color: $unnnic-color-neutral-lightest;

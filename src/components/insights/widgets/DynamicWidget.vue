@@ -59,9 +59,35 @@ export default {
           items: data?.results,
           isLoading,
         },
+        graph_column: {
+          title: name,
+          chartData: this.treatedWidgetGraphData,
+          isLoading,
+        },
       };
 
       return mappingProps[type];
+    },
+
+    treatedWidgetGraphData() {
+      if (!this.widget.type.includes('graph') || !this.widget.data) {
+        return;
+      }
+
+      const { data } = this.widget.data;
+      const times = data.map((item) => item.time);
+      const values = data.map((item) => item.value);
+
+      const newData = {
+        labels: times,
+        datasets: [
+          {
+            data: values,
+          },
+        ],
+      };
+
+      return newData;
     },
   },
 };

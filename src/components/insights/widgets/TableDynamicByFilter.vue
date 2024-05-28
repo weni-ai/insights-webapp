@@ -45,10 +45,10 @@
               size="sm"
               :scheme="getStatusIconScheme(item.status)"
             />
-            <p>{{ item[this.fields[0].value] }}</p>
+            <p>{{ item[fields[0].value] }}</p>
           </td>
-          <td class="item__col">{{ item[this.fields[1].value] }}</td>
-          <td class="item__col">{{ item[this.fields[2].value] }}</td>
+          <td class="item__col">{{ item[fields[1].value] }}</td>
+          <td class="item__col">{{ item[fields[2].value] }}</td>
         </tr>
       </section>
     </table>

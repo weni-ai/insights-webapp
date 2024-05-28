@@ -9,7 +9,7 @@
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
-import OnlineAgents from '@/components/insights/widgets/OnlineAgents.vue';
+import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 
 export default {
   name: 'DynamicWidget',
@@ -29,11 +29,11 @@ export default {
   computed: {
     currentComponent() {
       const componentMap = {
-        time_colum_graph: BarChart,
-        bar_graph: null, // TODO: Create BarGraph component
-        funnel: CardFunnel,
-        dynamic_by_filter_table: OnlineAgents,
-        tablegroup: null, // TODO: Create TableGroup component
+        graph_column: BarChart,
+        graph_bar: null, // TODO: Create BarGraph component
+        graph_funnel: CardFunnel,
+        table_dynamic_by_filter: TableDynamicByFilter,
+        table_group: null, // TODO: Create TableGroup component
         card: CardDashboard,
         insight: null, // TODO: Create Insight component
       };
@@ -43,12 +43,21 @@ export default {
 
     treatedWidgetProps() {
       const { isLoading } = this;
-      const { name, data, type } = this.widget;
+      const { name, data, type, config } = this.widget;
       const mappingProps = {
         card: {
           metric: data?.value || data,
           description: name,
           configured: true,
+          isLoading,
+        },
+        table_dynamic_by_filter: {
+          headerIcon: config.icon?.name,
+          headerIconColor: config.icon?.scheme,
+          headerTitle: config.name_overwrite || name,
+          fields: config.fields,
+          items: data?.results,
+          isLoading,
         },
       };
 

@@ -1,46 +1,54 @@
 <template>
-  <section class="widget-online-agents">
-    <header class="widget-online-agents__header">
+  <section class="widget-table-dynamic-by-filter">
+    <header
+      class="widget-table-dynamic-by-filter__header"
+      v-if="headerIcon && headerIconColor && headerTitle"
+    >
       <UnnnicAvatarIcon
-        icon="forum"
+        :icon="headerIcon"
         size="xs"
-        scheme="color-weni-600"
+        :scheme="headerIconColor"
       />
-      <h1 class="header__title">Agentes online</h1>
+      <h1 class="header__title">{{ headerTitle }}</h1>
     </header>
 
     <IconLoading
       v-if="isLoading"
-      class="widget-online-agents__loading-icon"
+      class="widget-table-dynamic-by-filter__loading-icon"
     />
 
     <table
       v-else
-      class="widget-online-agents__table"
+      class="widget-table-dynamic-by-filter__table"
     >
       <tr class="table__header">
-        <th class="header__col main">Agente</th>
-        <th class="header__col">Em andamento</th>
-        <th class="header__col">Encerrados</th>
+        <th
+          v-for="(field, index) of shownFields"
+          :key="field.value"
+          class="header__col"
+          :class="{ main: index === 0 }"
+        >
+          {{ field.name }}
+        </th>
       </tr>
 
-      <section class="table__agents">
+      <section class="table__items">
         <tr
-          class="table__agent-row"
-          v-for="agent of orderedAgents"
-          :key="agent.name"
+          class="table__item-row"
+          v-for="item of orderedItems"
+          :key="item.name"
         >
-          <td class="agent__col main">
+          <td class="item__col main">
             <UnnnicIcon
               class="col__status-icon"
               icon="indicator"
               size="sm"
-              :scheme="getStatusIconScheme(agent.agent_status)"
+              :scheme="getStatusIconScheme(item.status)"
             />
-            <p>{{ agent.first_name }} {{ agent.last_name }}</p>
+            <p>{{ item[this.fields[0].value] }}</p>
           </td>
-          <td class="agent__col">{{ agent.rooms_in_progress }}</td>
-          <td class="agent__col">{{ agent.rooms_closed }}</td>
+          <td class="item__col">{{ item[this.fields[1].value] }}</td>
+          <td class="item__col">{{ item[this.fields[2].value] }}</td>
         </tr>
       </section>
     </table>
@@ -48,11 +56,10 @@
 </template>
 
 <script>
-import onlineAgentsData from '@/mocks/widgetOnlineAgentsData.json';
 import IconLoading from '@/components/IconLoading.vue';
 
 export default {
-  name: 'WidgetOnlineAgents',
+  name: 'WidgetTableDynamicByFilter',
 
   components: {
     IconLoading,
@@ -60,43 +67,59 @@ export default {
 
   props: {
     isLoading: Boolean,
-  },
-
-  data() {
-    return {
-      onlineAgentsData,
-    };
+    headerIcon: {
+      type: String,
+      default: '',
+    },
+    headerIconColor: {
+      type: String,
+      default: '',
+    },
+    headerTitle: {
+      type: String,
+      default: '',
+    },
+    fields: {
+      type: Array,
+      default: () => [],
+    },
+    items: {
+      type: Array,
+      default: () => [],
+    },
   },
 
   computed: {
-    orderedAgents() {
-      const agents = onlineAgentsData;
-      const onlineAgents = agents.filter(
-        (agent) => agent.agent_status.toLowerCase() === 'online',
+    shownFields() {
+      return this.fields.filter((field) => field.display && !field.hidden_name);
+    },
+    orderedItems() {
+      const greenStatus = this.items.filter(
+        (item) => item.status.toLowerCase() === 'green',
       );
-      const offlineAgents = agents.filter(
-        (agent) => agent.agent_status.toLowerCase() === 'offline',
+      const grayStatus = this.items.filter(
+        (item) => item.status.toLowerCase() === 'gray',
       );
 
-      onlineAgents.sort((a, b) => a.first_name.localeCompare(b.first_name));
-      offlineAgents.sort((a, b) => a.first_name.localeCompare(b.first_name));
+      const sortKey = this.fields[0].value;
 
-      return onlineAgents.concat(offlineAgents);
+      greenStatus.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
+      grayStatus.sort((a, b) => a[sortKey].localeCompare(b[sortKey]));
+
+      return greenStatus.concat(grayStatus);
     },
   },
 
   methods: {
     getStatusIconScheme(status) {
-      return `feedback-${
-        status?.toLowerCase() === 'online' ? 'green' : 'grey'
-      }`;
+      return `feedback-${status?.toLowerCase() === 'green' ? 'green' : 'grey'}`;
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.widget-online-agents {
+.widget-table-dynamic-by-filter {
   padding: $unnnic-spacing-sm;
 
   height: 100%;
@@ -132,7 +155,7 @@ export default {
     overflow: hidden;
 
     .table__header,
-    .table__agent-row {
+    .table__item-row {
       display: grid;
       grid-template-columns: 2fr repeat(2, 1fr);
       justify-items: center;
@@ -140,7 +163,7 @@ export default {
       gap: $unnnic-spacing-xs;
 
       .header__col,
-      .agent__col {
+      .item__col {
         color: $unnnic-color-neutral-cloudy;
         font-family: Lato;
         font-size: $unnnic-font-size-body-gt;
@@ -161,13 +184,13 @@ export default {
       border-radius: $unnnic-border-radius-sm;
     }
 
-    .table__agents {
+    .table__items {
       height: 100%;
       overflow: auto;
     }
 
-    .table__agent-row {
-      .agent__col {
+    .table__item-row {
+      .item__col {
         padding: $unnnic-spacing-ant 0;
 
         &.main {
@@ -186,7 +209,7 @@ export default {
       &:hover {
         background-color: $unnnic-color-weni-50;
 
-        .agent__col.main {
+        .item__col.main {
           font-weight: $unnnic-font-weight-bold;
           text-decoration-line: underline;
           text-underline-position: under;

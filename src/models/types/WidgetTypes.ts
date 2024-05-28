@@ -1,7 +1,3 @@
-type FilterConfig = {
-  filter: object;
-};
-
 export type GridPosition = {
   column_start: number;
   column_end: number;
@@ -13,11 +9,11 @@ type GraphColumnConfig = {
   start_time: string;
   end_time: string;
   interval: string;
-} & FilterConfig;
+};
 
-type GraphBarConfig = FilterConfig;
+type GraphBarConfig = object;
 
-type GraphFunnelConfig = FilterConfig;
+type GraphFunnelConfig = object;
 
 type TableFieldConfig = {
   name: string;
@@ -28,23 +24,25 @@ type TableFieldConfig = {
 
 type TableConfig = {
   name_overwrite: string;
-  icon: {
-    name: string;
-    scheme: string;
-  };
+  icon:
+    | {
+        name: string;
+        scheme: string;
+      }
+    | `${string}:${string}`;
   fields: TableFieldConfig[];
-} & FilterConfig;
-
-type TableDynamicByFilterConfig = {
-  default: TableConfig;
-  created_on: TableConfig;
 };
 
-type TableGroupConfig = FilterConfig;
+type TableDynamicByFilterConfig = {
+  default?: TableConfig;
+  created_on?: TableConfig;
+};
 
-type CardConfig = FilterConfig;
+type TableGroupConfig = object;
 
-type InsightConfig = FilterConfig;
+type CardConfig = object;
+
+type InsightConfig = object;
 
 export type WidgetConfig =
   | GraphColumnConfig

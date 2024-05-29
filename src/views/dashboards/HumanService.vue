@@ -21,7 +21,7 @@
       class="widgets__cards"
       v-show="!showPeakChats"
     >
-      <DashboardCard
+      <CardDashboard
         v-for="{ title, subtitle, click } of cards"
         :key="subtitle"
         :title="title"
@@ -47,7 +47,7 @@
 
 <script>
 import moment from 'moment';
-import DashboardCard from '@/components/DashboardCard.vue';
+import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import OnlineAgents from '@/components/insights/widgets/OnlineAgents.vue';
 import TableChats from '@/components/TableChats.vue';
@@ -59,7 +59,7 @@ export default {
   name: 'DashboardHumanService',
 
   components: {
-    DashboardCard,
+    CardDashboard,
     BarChart,
     OnlineAgents,
     TableChats,

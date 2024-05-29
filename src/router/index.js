@@ -20,6 +20,11 @@ const router = createRouter({
       }),
     },
     {
+      path: '/:dashboardUuid/widget/:widgetUuid/report/:reportUuid',
+      name: 'report',
+      component: Dashboard,
+    },
+    {
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },

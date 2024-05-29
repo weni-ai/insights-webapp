@@ -1,7 +1,11 @@
 <template>
   <CardBase
     class="card-dashboard"
-    :class="{ 'not-configured': !configured }"
+    :class="{
+      loading: isLoading,
+      'not-configured': !configured,
+      clickable,
+    }"
   >
     <section class="card__content">
       <template v-if="showMetricError">
@@ -27,7 +31,7 @@
       </p>
     </section>
     <UnnnicButton
-      v-if="configurable"
+      v-if="configurable || !configured"
       type="secondary"
       :iconCenter="configured ? 'tune' : ''"
       :iconLeft="configured ? '' : 'tune'"
@@ -49,6 +53,7 @@ export default {
   props: {
     metric: String,
     description: String,
+    clickable: Boolean,
     configured: Boolean,
     configurable: Boolean,
     isLoading: Boolean,
@@ -83,10 +88,10 @@ export default {
 
   max-height: min-content;
 
-  cursor: pointer;
-
-  &:not(.loading):hover {
+  &.clickable:not(.loading):hover {
     background-color: $unnnic-color-weni-50;
+
+    cursor: pointer;
   }
 
   &.not-configured {

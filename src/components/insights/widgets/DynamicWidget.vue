@@ -1,7 +1,8 @@
 <template>
   <component
     :is="currentComponent"
-    v-bind="treatedWidgetProps"
+    v-bind="widgetProps"
+    v-on="widgetEvents"
   />
 </template>
 
@@ -41,27 +42,28 @@ export default {
       return componentMap[this.widget.type] || null;
     },
 
-    treatedWidgetProps() {
+    widgetProps() {
       const { isLoading } = this;
-      const { name, data, type, config } = this.widget;
+      const { name, data, type, config, report } = this.widget;
       const mappingProps = {
         card: {
           metric: data?.value || data,
           description: name,
-          configured: true,
+          configured: config && Object.keys(config).length,
+          clickable: !!report,
           isLoading,
         },
         table_dynamic_by_filter: {
-          headerIcon: config.icon?.name,
-          headerIconColor: config.icon?.scheme,
-          headerTitle: config.name_overwrite || name,
-          fields: config.fields,
+          headerIcon: config?.icon?.name,
+          headerIconColor: config?.icon?.scheme,
+          headerTitle: config?.name_overwrite || name,
+          fields: config?.fields,
           items: data?.results,
           isLoading,
         },
         graph_column: {
           title: name,
-          chartData: this.treatedWidgetGraphData,
+          chartData: this.widgetGraphData,
           isLoading,
         },
       };
@@ -69,7 +71,7 @@ export default {
       return mappingProps[type];
     },
 
-    treatedWidgetGraphData() {
+    widgetGraphData() {
       if (!this.widget.type.includes('graph') || !this.widget.data) {
         return;
       }
@@ -88,6 +90,31 @@ export default {
       };
 
       return newData;
+    },
+
+    widgetEvents() {
+      const { type } = this.widget;
+      const mappingEvents = {
+        card: {
+          click: () => this.redirectToReport(),
+        },
+      };
+
+      return mappingEvents[type];
+    },
+  },
+
+  methods: {
+    redirectToReport() {
+      const { uuid, report } = this.widget;
+      if (!report) {
+        return;
+      }
+
+      this.$router.push({
+        name: 'report',
+        params: { widgetUuid: uuid, reportUuid: report },
+      });
     },
   },
 };

@@ -56,7 +56,7 @@ export default {
     },
 
     getWidgetLoadingStatus(widget) {
-      return !Object.keys(widget).includes('data');
+      return widget.config ? !Object.keys(widget).includes('data') : false;
     },
   },
 };

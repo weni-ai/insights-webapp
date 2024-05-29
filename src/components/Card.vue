@@ -66,6 +66,7 @@ export default {
 .card {
   background-color: $unnnic-color-neutral-white;
   box-shadow: $unnnic-shadow-level-far;
+  border: 1px solid $unnnic-color-neutral-soft;
   border-radius: $unnnic-border-radius-sm;
 
   display: grid;
@@ -92,7 +93,7 @@ export default {
   .card__content {
     color: $unnnic-color-neutral-darkest;
     display: grid;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-spacing-nano;
 
     .content-title-loading {
       font-size: $unnnic-font-size-body-lg * 3;
@@ -100,7 +101,7 @@ export default {
     }
     .content-title {
       font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-h4;
+      font-size: $unnnic-font-size-title-lg;
       line-height: $unnnic-line-height-large * 3;
       font-weight: $unnnic-font-weight-bold;
     }

@@ -1,5 +1,5 @@
 import DashboardHumanService from '@/views/dashboards/HumanService.vue';
-import FlowTrigger from '@/views/dashboards/Dashboard/FlowTrigger.vue';
+import DashboardFlowResults from '@/views/dashboards/FlowResults.vue';
 
 export default [
   {
@@ -32,8 +32,8 @@ export default [
     ],
   },
   {
-    path: '/triggered-flows',
-    name: 'triggered-flows',
-    component: FlowTrigger,
+    path: '/flow-results',
+    name: 'flow-results',
+    component: DashboardFlowResults,
   },
 ];

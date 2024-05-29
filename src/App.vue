@@ -76,7 +76,6 @@ export default {
     },
 
     async getCurrentDashboardFilters() {
-      console.log('uuid', this.currentDashboard);
       const filters = await Dashboards.getDashboardFilters(
         this.currentDashboard.uuid,
       );

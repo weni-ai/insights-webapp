@@ -14,10 +14,6 @@ const router = createRouter({
       path: '/:dashboardUuid',
       name: 'dashboard',
       component: Dashboard,
-      props: (route) => ({
-        startDate: route.query.startDate,
-        endDate: route.query.endDate,
-      }),
     },
     {
       path: '/:dashboardUuid/widget/:widgetUuid/report/:reportUuid',

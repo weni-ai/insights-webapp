@@ -15,54 +15,46 @@
         @click.stop="clearFilters"
       />
     </template>
-    <UnnnicInputDatePicker
-      v-else
-      class="insights-layout-header-filters__date-picker"
-      v-model="filters.date"
-      size="sm"
-      inputFormat="DD/MM/YYYY"
-      position="right"
+    <DynamicFilter
+      v-else-if="filters[0]"
+      :filter="filters[0]"
+      :modelValue="filters[0].name"
+      @update:modelValue="updateFilter(filters[0].name, $event)"
     />
 
-    <FiltersModalHumanService
-      :showModal="filterModalOpened === 'human-service'"
+    <ModalFilters
+      :showModal="filterModalOpened"
       v-model:filters="filters"
-      @close="filterModalOpened = ''"
+      @close="filterModalOpened = false"
     />
   </section>
 </template>
 
 <script>
-import moment from 'moment';
+import { mapState } from 'vuex';
 
-import FiltersModalHumanService from './FiltersModalHumanService.vue';
+import DynamicFilter from './DynamicFilter.vue';
+import ModalFilters from './ModalFilters.vue';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
 
-  components: { FiltersModalHumanService },
+  components: { DynamicFilter, ModalFilters },
 
   data() {
     return {
-      filters: {
-        date: {
-          start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
-          end: moment().format('YYYY-MM-DD'),
-        },
-      },
-      filterModalOpened: '',
+      filters: {},
+      filterModalOpened: false,
     };
   },
 
   computed: {
-    humanServiceFilters() {
-      if (this.$route.name === 'human-service') {
-        return ['contact', 'sector', 'queue', 'agent', 'tags'];
-      }
-      return undefined;
-    },
+    ...mapState({
+      currentDashboardFilters: (state) =>
+        state.dashboards.currentDashboardFilters,
+    }),
     hasManyFilters() {
-      return !!this.humanServiceFilters;
+      return this.currentDashboardFilters?.length > 1;
     },
     filtersLength() {
       const { query } = this.$route;
@@ -91,6 +83,10 @@ export default {
       };
     },
 
+    updateFilter(filterName, value) {
+      this.filters[filterName] = value;
+    },
+
     routeUpdateFilters() {
       const { query } = this.$route;
 
@@ -113,7 +109,7 @@ export default {
     },
 
     openFiltersModal() {
-      this.filterModalOpened = this.$route.name;
+      this.filterModalOpened = true;
     },
 
     updateRouterByFilters(filters) {
@@ -125,7 +121,8 @@ export default {
         },
       };
 
-      this.humanServiceFilters?.forEach((filter) => {
+      Object.keys(filters)?.forEach((key) => {
+        const filter = filters[key];
         const filterValue = Array.isArray(filters[filter])
           ? filters[filter][0]?.value
           : filters[filter];
@@ -160,23 +157,5 @@ export default {
   display: flex;
   flex-direction: row;
   gap: $unnnic-spacing-xs;
-
-  &__date-picker {
-    display: grid;
-
-    :deep(.unnnic-form-input) {
-      height: 100%;
-
-      .unnnic-icon {
-        // It was necessary to follow bad practices here (px) because
-        // of how the component was initially implemented.
-        top: $unnnic-spacing-sm - 1px;
-      }
-
-      .input {
-        font-size: $unnnic-font-size-body-gt;
-      }
-    }
-  }
 }
 </style>

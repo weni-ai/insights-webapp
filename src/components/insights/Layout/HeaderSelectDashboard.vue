@@ -20,14 +20,22 @@
     <UnnnicDropdownItem
       v-for="dashboard of dashboards"
       :key="dashboard"
+      class="header-select-dashboard__item"
       @click="setCurrentDashboard(dashboard)"
+      @mouseenter="setDashboardHovered(dashboard.uuid)"
+      @mouseleave="setDashboardHovered('')"
     >
       <UnnnicIcon
+        class="item__star-icon"
+        :class="{
+          'item__star-icon--selected': getIsDefaultDashboard(dashboard.uuid),
+        }"
         icon="star_rate"
-        :scheme="
-          getIsDefaultDashboard(dashboard) ? 'weni-600' : 'neutral-clean'
+        scheme="neutral-clean"
+        :filled="
+          getIsDefaultDashboard(dashboard.uuid) ||
+          dashboardHovered === dashboard.uuid
         "
-        :filled="getIsDefaultDashboard(dashboard)"
         @click.stop
       />
       {{ dashboard.name }}
@@ -40,6 +48,12 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 
 export default {
   name: 'HeaderSelectDashboard',
+
+  data() {
+    return {
+      dashboardHovered: '',
+    };
+  },
 
   computed: {
     ...mapState({
@@ -56,8 +70,11 @@ export default {
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
     }),
 
-    getIsDefaultDashboard(dashboard) {
-      return this.dashboardDefault.uuid === dashboard.uuid;
+    getIsDefaultDashboard(uuid) {
+      return this.dashboardDefault.uuid === uuid;
+    },
+    setDashboardHovered(uuid) {
+      this.dashboardHovered = uuid;
     },
   },
 };
@@ -118,10 +135,18 @@ $dropdownFixedWidth: 314px;
 
         &:hover {
           background-color: $unnnic-color-neutral-lightest;
+
+          .item__star-icon:not(.item__star-icon--selected) {
+            color: $unnnic-color-weni-500;
+          }
         }
 
         &::before {
           content: none;
+        }
+
+        .item__star-icon--selected {
+          color: $unnnic-color-weni-600;
         }
       }
     }

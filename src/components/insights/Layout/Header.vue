@@ -5,10 +5,10 @@
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
-    <h1 class="header__title">
+    <h1 class="insights-layout-header__title">
       {{ isInHome ? 'Insights' : selectedDashboardLabel }}
     </h1>
-    <section class="header__content">
+    <section class="insights-layout-header__content">
       <UnnnicSelectSmart
         v-model="selectedDashboard"
         :options="dashboards"
@@ -102,14 +102,14 @@ export default {
   display: grid;
   gap: $unnnic-spacing-sm;
 
-  .header__title {
+  &__title {
     color: $unnnic-color-neutral-darkest;
     font-size: $unnnic-font-size-title-md;
     font-weight: $unnnic-font-weight-bold;
     font-family: $unnnic-font-family-primary;
     line-height: $unnnic-line-height-large * 2;
   }
-  .header__content {
+  &__content {
     display: flex;
     flex-direction: row;
     gap: $unnnic-spacing-xs;

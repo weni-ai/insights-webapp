@@ -53,23 +53,14 @@ export default {
     }),
 
     breadcrumbs() {
-      const { currentDashboard, dashboardDefault } = this;
+      const { currentDashboard } = this;
       const { dashboardUuid } = this.$route.params;
 
       const crumbBase = [
-        { path: dashboardDefault.uuid, name: dashboardDefault.name },
+        { path: currentDashboard.uuid, name: currentDashboard.name },
       ];
 
-      const routeCrumbs = [
-        {
-          path: currentDashboard.uuid,
-          name: currentDashboard.name,
-        },
-      ];
-
-      return dashboardUuid === dashboardDefault.uuid
-        ? crumbBase
-        : crumbBase.concat(routeCrumbs);
+      return dashboardUuid === currentDashboard.uuid ? crumbBase : [];
     },
 
     showTagLive() {

@@ -5,16 +5,8 @@
   >
     <template #trigger>
       <UnnnicAvatarIcon
-        v-if="isSelectedDefaultDashboard"
         icon="monitoring"
         scheme="aux-purple-500"
-        @click.stop
-      />
-      <UnnnicIcon
-        v-else
-        class="clickable"
-        icon="arrow_back"
-        @click.stop="$router.back"
       />
       <section class="dropdown__trigger">
         <h1 class="trigger__title">
@@ -28,8 +20,24 @@
     <UnnnicDropdownItem
       v-for="dashboard of dashboards"
       :key="dashboard"
+      class="header-select-dashboard__item"
       @click="setCurrentDashboard(dashboard)"
+      @mouseenter="setDashboardHovered(dashboard.uuid)"
+      @mouseleave="setDashboardHovered('')"
     >
+      <UnnnicIcon
+        class="item__star-icon"
+        :class="{
+          'item__star-icon--selected': getIsDefaultDashboard(dashboard.uuid),
+        }"
+        icon="star_rate"
+        scheme="neutral-clean"
+        :filled="
+          getIsDefaultDashboard(dashboard.uuid) ||
+          dashboardHovered === dashboard.uuid
+        "
+        @click.stop
+      />
       {{ dashboard.name }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
@@ -41,6 +49,12 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 export default {
   name: 'HeaderSelectDashboard',
 
+  data() {
+    return {
+      dashboardHovered: '',
+    };
+  },
+
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -49,16 +63,19 @@ export default {
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
-
-    isSelectedDefaultDashboard() {
-      return this.currentDashboard.uuid === this.dashboardDefault.uuid;
-    },
   },
 
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
     }),
+
+    getIsDefaultDashboard(uuid) {
+      return this.dashboardDefault.uuid === uuid;
+    },
+    setDashboardHovered(uuid) {
+      this.dashboardHovered = uuid;
+    },
   },
 };
 </script>
@@ -103,19 +120,33 @@ $dropdownFixedWidth: 314px;
       gap: $unnnic-spacing-nano;
 
       .unnnic-dropdown-item {
+        border-radius: $unnnic-border-radius-sm;
+
+        padding: $unnnic-spacing-xs;
+
+        display: flex;
+        align-items: center;
+        gap: $unnnic-spacing-nano;
+
         color: $unnnic-color-neutral-darkest;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-gt;
         font-weight: $unnnic-font-weight-bold;
-        padding: $unnnic-spacing-xs;
-        border-radius: $unnnic-border-radius-sm;
 
         &:hover {
           background-color: $unnnic-color-neutral-lightest;
+
+          .item__star-icon:not(.item__star-icon--selected) {
+            color: $unnnic-color-weni-500;
+          }
         }
 
         &::before {
           content: none;
+        }
+
+        .item__star-icon--selected {
+          color: $unnnic-color-weni-600;
         }
       }
     }

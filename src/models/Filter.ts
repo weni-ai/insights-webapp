@@ -1,6 +1,9 @@
 import { FilterType, FilterSource } from './types/FilterTypes';
 
 type FilterParams = {
+  name: string;
+  label: string;
+  placeholder: string;
   type: FilterType;
   source?: FilterSource;
   depends_on?: {
@@ -10,6 +13,9 @@ type FilterParams = {
 };
 
 class Filter {
+  name: string;
+  label: string;
+  placeholder: string;
   type: FilterType;
   source?: FilterSource;
   depends_on?: {
@@ -18,6 +24,9 @@ class Filter {
   };
 
   constructor(params: FilterParams) {
+    this.name = params.name;
+    this.label = params.label;
+    this.placeholder = params.placeholder;
     this.type = params.type;
     this.source = params.source;
     this.depends_on = params.depends_on;

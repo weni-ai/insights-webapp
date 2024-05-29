@@ -1,25 +1,20 @@
 <template>
   <section class="insights-layout">
-    <ConnectSidebar class="insights-layout__sidebar" />
-    <ConnectTopbar class="insights-layout__topbar" />
-
-    <section class="insights-layout__container">
-      <InsightsLayoutHeader />
-      <section
-        class="insights-layout__insights"
-        ref="insightsContent"
+    <InsightsLayoutHeader />
+    <section
+      class="insights-layout__insights"
+      ref="insightsContent"
+    >
+      <main
+        class="insights__main"
+        :style="{
+          height: `${mainHeight}vh`,
+        }"
       >
-        <main
-          class="insights__main"
-          :style="{
-            height: `${mainHeight}vh`,
-          }"
-        >
-          <slot />
-        </main>
-      </section>
-      <ResizableBar />
+        <slot />
+      </main>
     </section>
+    <ResizableBar />
   </section>
 </template>
 
@@ -29,8 +24,6 @@ import { mapState } from 'vuex';
 import { pxToVh } from '@/utils/css';
 
 import ResizableBar from '@/components/insights/ResizableBar/index.vue';
-import ConnectSidebar from '@/components/connect/ConnectSidebar.vue';
-import ConnectTopbar from '@/components/connect/ConnectTopbar.vue';
 
 import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 
@@ -40,8 +33,6 @@ export default {
   components: {
     InsightsLayoutHeader,
     ResizableBar,
-    ConnectSidebar,
-    ConnectTopbar,
   },
 
   computed: {
@@ -65,13 +56,8 @@ export default {
 $topbarHeight: 88px;
 
 .insights-layout {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    'sidebar topbar'
-    'sidebar insights';
-
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   max-height: 100vh;
   width: 100vw;
@@ -79,7 +65,10 @@ $topbarHeight: 88px;
 
   overflow: hidden;
 
-  padding: 0;
+  padding: $unnnic-spacing-sm;
+
+  gap: $unnnic-spacing-sm;
+  position: relative;
 
   &__sidebar {
     grid-area: sidebar;
@@ -87,18 +76,6 @@ $topbarHeight: 88px;
 
   &__topbar {
     grid-area: topbar;
-  }
-
-  &__container {
-    position: relative;
-
-    overflow: hidden;
-
-    padding: $unnnic-spacing-sm;
-
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-sm;
   }
 
   &__insights {

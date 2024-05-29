@@ -25,17 +25,60 @@ export default {
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
+      currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
   },
 
   methods: {
     ...mapActions({
       setDashboards: 'dashboards/setDashboards',
+      setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
+      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
     }),
 
     async getDashboards() {
       const response = await Dashboards.getAll();
       this.setDashboards(response);
+    },
+
+    async getCurrentDashboardWidgets() {
+      const widgets = await Dashboards.getDashboardWidgets(
+        this.currentDashboard.uuid,
+      );
+      this.setCurrentDashboardWidgets(widgets);
+      this.getCurrentDashboardWidgetsDatas(widgets);
+    },
+
+    async getCurrentDashboardWidgetsDatas(widgets) {
+      Promise.all(
+        widgets.map(async ({ uuid, name, config }) => {
+          if (name && Object.keys(config).length) {
+            this.setCurrentDashboardWidgetData(
+              await this.fetchWidgetData(uuid),
+            );
+          }
+        }),
+      );
+    },
+
+    async fetchWidgetData(uuid) {
+      try {
+        const responseData = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: this.currentDashboard.uuid,
+          widgetUuid: uuid,
+        });
+        return { uuid, data: responseData };
+      } catch (error) {
+        console.error(error);
+        return { uuid, data: null };
+      }
+    },
+  },
+
+  watch: {
+    'currentDashboard.uuid'() {
+      this.setCurrentDashboardWidgets([]);
+      this.getCurrentDashboardWidgets();
     },
   },
 };

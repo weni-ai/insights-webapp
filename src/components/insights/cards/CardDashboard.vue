@@ -1,22 +1,37 @@
 <template>
   <CardBase
     class="card-dashboard"
-    :class="{ 'not-configured': !configured }"
+    :class="{
+      loading: isLoading,
+      'not-configured': !configured,
+      clickable,
+    }"
   >
     <section class="card__content">
-      <IconLoading v-if="isLoading" />
+      <template v-if="showMetricError">
+        <CardTitleError />
+        <p class="content__error">
+          Configure novamente o fluxo de origem para obter dados válidos
+        </p>
+      </template>
+
+      <IconLoading v-else-if="isLoading" />
+
       <h1
         v-else
-        class="content-title"
+        class="content-metric"
       >
-        {{ configured ? title : '0' }}
+        {{ configured ? metric : '0' }}
       </h1>
-      <p class="content-subtitle">
-        {{ configured ? subtitle : 'Métrica vazia' }}
+      <p
+        class="content-description"
+        v-if="!showMetricError"
+      >
+        {{ configured ? description : 'Métrica vazia' }}
       </p>
     </section>
     <UnnnicButton
-      v-if="configurable"
+      v-if="configurable || !configured"
       type="secondary"
       :iconCenter="configured ? 'tune' : ''"
       :iconLeft="configured ? '' : 'tune'"
@@ -27,36 +42,33 @@
 </template>
 
 <script>
-import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
+
+import CardBase from './CardBase.vue';
+import CardTitleError from './CardTitleError.vue';
 
 export default {
   name: 'DashboardCard',
 
   props: {
-    title: String,
-    subtitle: String,
+    metric: String,
+    description: String,
+    clickable: Boolean,
     configured: Boolean,
     configurable: Boolean,
+    isLoading: Boolean,
   },
 
   components: {
     CardBase,
     IconLoading,
+    CardTitleError,
   },
 
-  data() {
-    return {
-      isLoading: false,
-    };
-  },
-
-  created() {
-    // Temporary code, to simulate a promise
-    this.isLoading = true;
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 1500);
+  computed: {
+    showMetricError() {
+      return this.metric === null;
+    },
   },
 
   methods: {
@@ -76,10 +88,10 @@ export default {
 
   max-height: min-content;
 
-  cursor: pointer;
-
-  &:not(.loading):hover {
+  &.clickable:not(.loading):hover {
     background-color: $unnnic-color-weni-50;
+
+    cursor: pointer;
   }
 
   &.not-configured {
@@ -95,13 +107,17 @@ export default {
     display: grid;
     gap: $unnnic-spacing-nano;
 
-    .content-title {
+    .content-error {
+      font-size: $unnnic-font-size-body-gt;
+      line-height: $unnnic-line-height-medium * 3;
+    }
+    .content-metric {
       font-family: $unnnic-font-family-primary;
       font-size: $unnnic-font-size-title-lg;
       line-height: $unnnic-line-height-large * 3;
       font-weight: $unnnic-font-weight-bold;
     }
-    .content-subtitle {
+    .content-description {
       font-size: $unnnic-font-size-body-lg;
       line-height: $unnnic-line-height-medium * 3;
     }

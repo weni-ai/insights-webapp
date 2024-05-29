@@ -1,4 +1,4 @@
-import { Dashboard } from '@/models';
+import { Dashboard, Widget } from '@/models';
 import http from '@/services/api/http';
 import Config from '@/store/modules/config';
 
@@ -21,5 +21,48 @@ export default {
     );
 
     return dashboards;
+  },
+
+  async getDashboardWidgets(uuid) {
+    if (!uuid) {
+      throw new Error(
+        'Please provide a valid UUID parameter to request widgets from this dashboard.',
+      );
+    }
+
+    const response = await http.get(`/dashboards/${uuid}/widgets`);
+
+    const widgets = response.results.map((widget) => {
+      return new Widget({
+        uuid: widget.uuid,
+        name: widget.name,
+        type: widget.w_type,
+        config: widget.config,
+        grid_position: {
+          column_start: widget.position.columns[0],
+          column_end: widget.position.columns[1],
+          row_start: widget.position.rows[0],
+          row_end: widget.position.rows[1],
+        },
+        report: widget.report,
+        source: widget.source,
+      });
+    });
+
+    return widgets;
+  },
+
+  async getDashboardWidgetData({ dashboardUuid, widgetUuid }) {
+    if (!dashboardUuid || !widgetUuid) {
+      throw new Error(
+        'Please provide valids UUIDs parameters to request data of widget.',
+      );
+    }
+
+    const widgetData = await http.get(
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data`,
+    );
+
+    return widgetData;
   },
 };

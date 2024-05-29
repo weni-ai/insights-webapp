@@ -7,7 +7,7 @@
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
-    <section class="header__content">
+    <section class="insights-layout-header__content">
       <HeaderSelectDashboard
         v-model="selectedDashboard"
         :options="dashboards"
@@ -137,7 +137,7 @@ export default {
   display: grid;
   gap: $unnnic-spacing-sm;
 
-  .header__content {
+  &__content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;

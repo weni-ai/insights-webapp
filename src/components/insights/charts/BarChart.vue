@@ -5,12 +5,18 @@
       <a
         class="header__see-more"
         v-if="seeMore"
+        @click="$emit('seeMore')"
         href="#"
         >Ver mais</a
       >
     </header>
-    <section>
+    <section class="bar-chart__chart">
+      <IconLoading
+        v-if="isLoading"
+        class="chart__loading"
+      />
       <BaseChart
+        v-else
         type="bar"
         :data="chartData"
         :options="chartOptions"
@@ -21,12 +27,15 @@
 </template>
 
 <script>
+import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 export default {
   name: 'BarChart',
-  components: { BaseChart },
+
+  components: { IconLoading, BaseChart },
+
   props: {
     title: {
       type: String,
@@ -37,7 +46,9 @@ export default {
       type: Object,
       required: true,
     },
+    isLoading: Boolean,
   },
+
   computed: {
     chartOptions() {
       return {
@@ -65,6 +76,10 @@ export default {
 
 <style lang="scss">
 .bar-chart {
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+
   display: grid;
   gap: $unnnic-spacing-sm;
 
@@ -83,12 +98,23 @@ export default {
       font-family: Lato;
       font-weight: $unnnic-font-weight-bold;
       text-decoration-line: underline;
+      text-underline-position: under;
     }
 
     .header__title,
     .header__see-more {
       font-size: $unnnic-font-size-body-gt;
       color: $unnnic-color-neutral-dark;
+    }
+  }
+
+  &__chart {
+    display: flex;
+
+    overflow: hidden;
+
+    .chart__loading {
+      margin: auto;
     }
   }
 }

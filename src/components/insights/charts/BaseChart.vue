@@ -146,10 +146,7 @@ export default {
       return deepMerge(defaultOptions, this.options);
     },
     chartStyles() {
-      const defaultStyles = {
-        height: '100%',
-        width: '100%',
-      };
+      const defaultStyles = {};
       return deepMerge(defaultStyles, this.style);
     },
     chartComponent() {

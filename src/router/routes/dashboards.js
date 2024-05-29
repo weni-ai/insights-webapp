@@ -23,6 +23,13 @@ export default [
       agent: route.query.agent,
       tags: route.query.tags,
     }),
+    children: [
+      {
+        path: 'peak-chats',
+        name: 'peak-chats',
+        component: DashboardHumanService,
+      },
+    ],
   },
   {
     path: '/triggered-flows',

@@ -1,13 +1,10 @@
 <template>
   <section
-    class="card"
+    class="dashboard-card"
     :class="{ 'not-configured': !configured }"
   >
     <section class="card__content">
-      <UnnnicIconLoading
-        v-if="isLoading"
-        class="content-title-loading"
-      />
+      <IconLoading v-if="isLoading" />
       <h1
         v-else
         class="content-title"
@@ -30,14 +27,20 @@
 </template>
 
 <script>
+import IconLoading from '@/components/IconLoading.vue';
+
 export default {
-  name: 'InsightsCard',
+  name: 'DashboardCard',
 
   props: {
     title: String,
     subtitle: String,
     configured: Boolean,
     configurable: Boolean,
+  },
+
+  components: {
+    IconLoading,
   },
 
   data() {
@@ -63,7 +66,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.card {
+.dashboard-card {
   background-color: $unnnic-color-neutral-white;
   box-shadow: $unnnic-shadow-level-far;
   border: 1px solid $unnnic-color-neutral-soft;
@@ -95,10 +98,6 @@ export default {
     display: grid;
     gap: $unnnic-spacing-nano;
 
-    .content-title-loading {
-      font-size: $unnnic-font-size-body-lg * 3;
-      color: $unnnic-color-neutral-clean;
-    }
     .content-title {
       font-family: $unnnic-font-family-primary;
       font-size: $unnnic-font-size-title-lg;

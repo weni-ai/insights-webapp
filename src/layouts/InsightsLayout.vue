@@ -49,11 +49,12 @@ export default {
       contentHeight: (state) => state.resizableBar.contentHeight,
       barHandlerHeight: (state) => state.resizableBar.barHandlerHeight,
     }),
+
     mainHeight() {
       return (
         pxToVh(this.$refs.insightsContent?.clientHeight) -
-        this.contentHeight -
-        pxToVh(this.barHandlerHeight)
+          this.contentHeight -
+          pxToVh(this.barHandlerHeight) || 0
       );
     },
   },

@@ -1,12 +1,14 @@
 <template>
-  <header class="insights-layout-header">
+  <header
+    class="insights-layout-header"
+    v-if="selectedDashboard"
+  >
     <UnnnicBreadcrumb
       :crumbs="breadcrumbs"
       @crumbClick="$router.push($event.path)"
     />
     <section class="insights-layout-header__content">
       <HeaderSelectDashboard
-        v-if="selectedDashboard"
         v-model="selectedDashboard"
         :options="dashboards"
       />
@@ -25,6 +27,8 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex';
+
 import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
@@ -40,44 +44,38 @@ export default {
 
   data() {
     return {
-      dashboards: [
-        {
-          value: 'dashboards',
-          label: 'Insights',
-          crumbPath: '/',
-          crumbName: 'Insights',
-        },
-        {
-          value: 'human-service',
-          label: 'Atendimento humano',
-          crumbChildrens: [{ value: 'peak-chats', label: 'Picos de chats' }],
-        },
-        { value: 'flow-results', label: 'Resultado de fluxos' },
-      ],
       selectedDashboard: null,
     };
   },
 
+  created() {
+    this.routeUpdateSelectedDashboard();
+  },
+
   computed: {
+    ...mapState({
+      dashboards: (state) => state.dashboards.dashboards,
+    }),
+    ...mapGetters({
+      dashboardDefault: 'dashboards/dashboardDefault',
+    }),
+
     breadcrumbs() {
-      const { dashboards } = this;
+      const { selectedDashboard, dashboardDefault } = this;
+      const { dashboardUuid } = this.$route.params;
 
       const crumbBase = [
-        { path: dashboards[0].crumbPath, name: dashboards[0].crumbName },
+        { path: dashboardDefault.uuid, name: dashboardDefault.name },
       ];
 
-      const routeCrumbs = this.$route.matched.map((crumb) => {
-        const dashboardLabel = dashboards.find(
-          (dash) => dash.value === crumb.name,
-        )?.label;
+      const routeCrumbs = [
+        {
+          path: selectedDashboard.uuid,
+          name: selectedDashboard.name,
+        },
+      ];
 
-        return {
-          name: dashboardLabel,
-          path: crumb.path,
-        };
-      });
-
-      return this.$route.name === 'home'
+      return dashboardUuid === dashboardDefault.uuid
         ? crumbBase
         : crumbBase.concat(routeCrumbs);
     },
@@ -89,34 +87,44 @@ export default {
   },
 
   methods: {
+    navigateToDashboard(uuid) {
+      this.$router.replace({
+        name: 'dashboard',
+        params: { dashboardUuid: uuid },
+      });
+    },
+
+    goToDefaultDashboard() {
+      const { uuid } = this.dashboardDefault;
+      this.navigateToDashboard(uuid);
+    },
+
     routeUpdateSelectedDashboard() {
-      const { path } = this.$route;
+      const { dashboardUuid } = this.$route.params;
 
       const dashboardRelativeToPath = this.dashboards.find(
-        ({ value, crumbPath }) => {
-          const isHomePath = path === '/' && [value, crumbPath].includes('/');
-          const isValidPath = [value, crumbPath].includes(
-            path.replace('/', ''),
-          );
-
-          return isHomePath || isValidPath;
-        },
+        ({ uuid }) => dashboardUuid === uuid,
       );
 
-      if (dashboardRelativeToPath) {
-        this.selectedDashboard = dashboardRelativeToPath;
+      if (!dashboardRelativeToPath) {
+        this.goToDefaultDashboard();
       }
+
+      this.selectedDashboard = dashboardRelativeToPath || this.dashboardDefault;
     },
   },
 
   watch: {
     selectedDashboard(newSelectedDashboard, oldSelectedDashboard) {
-      if (oldSelectedDashboard?.value) {
-        this.$router.push(`/${this.selectedDashboard.value}`);
+      if (oldSelectedDashboard?.uuid) {
+        this.navigateToDashboard(this.selectedDashboard.uuid);
       }
     },
     $route(newRoute, oldRoute) {
-      if (newRoute.name !== oldRoute.name) {
+      const { dashboardUuid: newUuid } = newRoute.params;
+      const { dashboardUuid: oldUuid } = oldRoute.params;
+
+      if (newUuid !== oldUuid) {
         this.routeUpdateSelectedDashboard();
       }
     },

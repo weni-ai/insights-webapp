@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/views/insights/Home/index.vue';
+import Dashboard from '@/views/insights/Home/index.vue';
 import routes from './routes';
 
 const router = createRouter({
@@ -8,7 +8,12 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: Home,
+      component: Dashboard,
+    },
+    {
+      path: '/:dashboardUuid',
+      name: 'dashboard',
+      component: Dashboard,
       props: (route) => ({
         startDate: route.query.startDate,
         endDate: route.query.endDate,

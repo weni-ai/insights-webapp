@@ -17,7 +17,7 @@
     </template>
     <UnnnicInputDatePicker
       v-else
-      class="filters__date-picker"
+      class="insights-layout-header-filters__date-picker"
       v-model="filters.date"
       size="sm"
       inputFormat="DD/MM/YYYY"
@@ -161,7 +161,7 @@ export default {
   flex-direction: row;
   gap: $unnnic-spacing-xs;
 
-  .filters__date-picker {
+  &__date-picker {
     display: grid;
 
     :deep(.unnnic-form-input) {

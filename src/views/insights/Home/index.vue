@@ -1,6 +1,6 @@
 <template>
   <section class="home">
-    <ColumnCharts
+    <BarChart
       v-if="contentHeight === 0"
       title="Mensagens trocadas via bot"
       seeMore
@@ -23,7 +23,7 @@
 <script>
 import { mapState } from 'vuex';
 
-import ColumnCharts from '@/components/ColumnCharts.vue';
+import BarChart from '@/components/insights/charts/BarChart.vue';
 import chartData from '@/mocks/chartData.json';
 import InsightsCard from '@/components/Card.vue';
 
@@ -31,7 +31,7 @@ export default {
   name: 'HomeView',
 
   components: {
-    ColumnCharts,
+    BarChart,
     InsightsCard,
   },
 

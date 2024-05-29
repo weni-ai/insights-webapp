@@ -133,7 +133,7 @@
 </template>
 
 <script>
-import BarChart from '@/components/BarChart.vue';
+import BarChart from '@/components/insights/charts/BarChart.vue';
 import chartData from '@/mocks/barChartData.json';
 import ChatsData from '@/mocks/chats.json';
 export default {

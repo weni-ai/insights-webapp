@@ -18,7 +18,7 @@
       <BaseChart
         v-else
         type="bar"
-        :data="chartData"
+        :data="mergedData"
         :options="chartOptions"
         :plugins="chartPlugins"
       />
@@ -30,6 +30,8 @@
 import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+import { deepMerge } from '@/utils/object';
 
 export default {
   name: 'BarChart',
@@ -50,8 +52,18 @@ export default {
   },
 
   computed: {
+    mergedData() {
+      return deepMerge(
+        {
+          datasets: [{ borderSkipped: false }],
+        },
+        this.chartData,
+      );
+    },
     chartOptions() {
       return {
+        backgroundColor: '#00A49F',
+        hoverBackgroundColor: '#00DED2',
         plugins: {
           datalabels: {
             color: function (context) {

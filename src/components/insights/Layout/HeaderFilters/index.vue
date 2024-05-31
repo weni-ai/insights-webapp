@@ -16,11 +16,11 @@
       />
     </template>
     <DynamicFilter
-      v-else-if="appliedFilters?.[0]"
-      :filter="appliedFilters[0]"
-      :modelValue="appliedFilters[0].name"
+      v-else-if="currentDashboardFilters[0]"
+      :filter="currentDashboardFilters[0]"
+      :modelValue="currentDashboardFilters[0].name"
       @update:modelValue="
-        setAppliedFilters({ [appliedFilters[0].name]: $event })
+        setAppliedFilters({ [currentDashboardFilters[0].name]: $event })
       "
     />
 

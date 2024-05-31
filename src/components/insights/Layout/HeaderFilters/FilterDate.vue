@@ -25,6 +25,7 @@ export default {
 // .dropdown class comes from the unnnic component and is used here to override its style
 .filter-date.dropdown {
   display: grid;
+  height: 100%;
 
   :deep(.unnnic-form-input) {
     height: 100%;

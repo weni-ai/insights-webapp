@@ -42,6 +42,8 @@ export default {
         type: filter.f_type,
         source: filter.source,
         depends_on: filter.depends_on,
+        start_sufix: filter.start_sufix,
+        end_sufix: filter.end_sufix,
       });
     });
 

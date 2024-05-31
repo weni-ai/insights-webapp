@@ -10,6 +10,8 @@ type FilterParams = {
     filter: string;
     search_param: string | null;
   };
+  start_sufix?: string;
+  end_sufix?: string;
 };
 
 class Filter {
@@ -22,6 +24,8 @@ class Filter {
     filter: string;
     search_param: string | null;
   };
+  start_sufix?: string;
+  end_sufix?: string;
 
   constructor(params: FilterParams) {
     this.name = params.name;
@@ -30,6 +34,8 @@ class Filter {
     this.type = params.type;
     this.source = params.source;
     this.depends_on = params.depends_on;
+    this.start_sufix = params.start_sufix;
+    this.end_sufix = params.end_sufix;
   }
 }
 

@@ -24,7 +24,6 @@
 
     <ModalFilters
       :showModal="filterModalOpened"
-      v-model:filters="filters"
       @close="filterModalOpened = false"
     />
   </section>

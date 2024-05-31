@@ -3,6 +3,7 @@ const mutations = {
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
+  SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
 };
 
 export default {
@@ -11,6 +12,7 @@ export default {
     dashboards: [],
     currentDashboard: null,
     currentDashboardWidgets: null,
+    currentDashboardFilters: null,
   },
   mutations: {
     [mutations.SET_DASHBOARDS](state, dashboards) {
@@ -35,6 +37,9 @@ export default {
         };
       }
     },
+    [mutations.SET_CURRENT_DASHBOARD_FILTERS](state, filters) {
+      state.currentDashboardFilters = filters;
+    },
   },
   actions: {
     async setDashboards({ commit }, dashboards) {
@@ -48,6 +53,9 @@ export default {
     },
     async setCurrentDashboardWidgetData({ commit }, { uuid, data }) {
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, { uuid, data });
+    },
+    async setCurrentDashboardFilters({ commit }, filters) {
+      commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
     },
   },
   getters: {

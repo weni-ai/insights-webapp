@@ -94,8 +94,8 @@ export default {
     updateModelValue(value) {
       const modelValuesMap = {
         date_range: {
-          [this.filter.start_sufix]: value.start,
-          [this.filter.end_sufix]: value.end,
+          [this.filter.start_sufix]: value?.start,
+          [this.filter.end_sufix]: value?.end,
         },
         select: value[0]?.value,
       };

@@ -13,10 +13,10 @@ export default {
   namespaced: true,
   state: {
     dashboards: [],
-    currentDashboard: null,
-    currentDashboardWidgets: null,
-    currentDashboardFilters: null,
-    appliedFilters: null,
+    currentDashboard: {},
+    currentDashboardWidgets: [],
+    currentDashboardFilters: [],
+    appliedFilters: {},
   },
   mutations: {
     [mutations.SET_DASHBOARDS](state, dashboards) {

@@ -71,12 +71,6 @@ export default {
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
 
-    defaultFilters() {
-      return {
-        // TODO
-      };
-    },
-
     areStoreFiltersAndInternalEqual() {
       return (
         JSON.stringify(this.appliedFilters) ===
@@ -90,7 +84,7 @@ export default {
       setAppliedFilters: 'dashboards/setAppliedFilters',
     }),
     clearFilters() {
-      this.filtersInternal = { ...this.defaultFilters };
+      this.filtersInternal = {};
     },
     updateFilter(filterName, value) {
       this.filtersInternal[filterName] = value;

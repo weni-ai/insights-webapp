@@ -1,15 +1,24 @@
 <template>
-  <component
-    :is="currentComponent"
-    v-bind="filterProps"
-    v-on="filterEvents"
-    @update:modelValue="$emit('update:modelValue', $event)"
-  />
+  <section class="dynamic-filter">
+    <UnnnicLabel
+      v-if="filter.label"
+      :label="filter.label"
+    />
+    <component
+      :is="currentComponent"
+      v-bind="filterProps"
+      v-on="filterEvents"
+      @update:modelValue="updateModelValue"
+    />
+  </section>
 </template>
 
 <script>
 import moment from 'moment';
+
 import FilterDate from './FilterDate.vue';
+import FilterInputText from './FilterInputText.vue';
+import FilterSelect from './FilterSelect.vue';
 
 export default {
   name: 'DynamicFilter',
@@ -30,32 +39,71 @@ export default {
     currentComponent() {
       const componentMap = {
         date_range: FilterDate,
-        select: null, // TODO: Create FilterSelect component
-        input_text: null, // TODO: Create FilterInputText component
+        input_text: FilterInputText,
+        select: FilterSelect,
       };
 
       return componentMap[this.filter.type] || null;
     },
 
     filterProps() {
-      const { type } = this.filter;
+      const { type, placeholder, source } = this.filter;
+
+      const defaultProps = {
+        placeholder,
+        modelValue: this.treatedModelValue,
+      };
+
       const mappingProps = {
         date_range: {
-          modelValue: this.modelValue || {
+          modelValue: this.treatedModelValue || {
             start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
             end: moment().format('YYYY-MM-DD'),
           },
         },
+        input_text: {},
+        select: {
+          source,
+        },
       };
 
-      return mappingProps[type];
+      return { ...defaultProps, ...mappingProps[type] };
     },
 
     filterEvents() {
       const { type } = this.filter;
       const mappingEvents = {};
 
-      return mappingEvents[type];
+      return mappingEvents[type] || {};
+    },
+
+    treatedModelValue() {
+      const { modelValue, filter } = this;
+      const modelValuesMap = {
+        date_range: {
+          start: modelValue?.[filter.start_sufix],
+          end: modelValue?.[filter.end_sufix],
+        },
+      };
+
+      return modelValuesMap[filter.type] || modelValue;
+    },
+  },
+
+  methods: {
+    updateModelValue(value) {
+      const modelValuesMap = {
+        date_range: {
+          [this.filter.start_sufix]: value.start,
+          [this.filter.end_sufix]: value.end,
+        },
+        select: value[0]?.value,
+      };
+
+      this.$emit(
+        'update:modelValue',
+        modelValuesMap[this.filter.type] || value,
+      );
     },
   },
 };

@@ -8,7 +8,7 @@
         @click.stop="openFiltersModal"
       />
       <UnnnicButton
-        v-if="filtersLength > 0"
+        v-if="appliedFiltersLength > 0"
         type="tertiary"
         iconLeft="close"
         text="Limpar"
@@ -24,7 +24,6 @@
 
     <ModalFilters
       :showModal="filterModalOpened"
-      v-model:filters="filters"
       @close="filterModalOpened = false"
     />
   </section>
@@ -52,24 +51,20 @@ export default {
     ...mapState({
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
+      appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
     hasManyFilters() {
       return this.currentDashboardFilters?.length > 1;
     },
-    filtersLength() {
-      const { query } = this.$route;
-
-      const queryValues = Object.values(query).filter((value) => value);
-      let filtersLength = queryValues.length;
-
-      if (query.dateStart && query.dateEnd) {
-        filtersLength--;
-      }
-      return filtersLength;
+    appliedFiltersLength() {
+      const { appliedFilters } = this;
+      return appliedFilters ? Object.keys(appliedFilters).length : 0;
     },
     titleButtonManyFilters() {
-      const { filtersLength } = this;
-      return filtersLength ? `Filtros (${filtersLength})` : 'Filtros';
+      const { appliedFiltersLength } = this;
+      return appliedFiltersLength
+        ? `Filtros (${appliedFiltersLength})`
+        : 'Filtros';
     },
   },
 

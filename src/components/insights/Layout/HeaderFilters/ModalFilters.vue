@@ -29,14 +29,14 @@
       <UnnnicButton
         text="Filtrar"
         type="primary"
-        @click="emitFilters"
+        @click="setFilters"
       />
     </template>
   </UnnnicModal>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import DynamicFilter from './DynamicFilter.vue';
 
@@ -50,10 +50,6 @@ export default {
   props: {
     showModal: {
       type: Boolean,
-      required: true,
-    },
-    filters: {
-      type: Object,
       required: true,
     },
   },
@@ -72,6 +68,7 @@ export default {
     ...mapState({
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
+      appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
 
     defaultFilters() {
@@ -80,36 +77,40 @@ export default {
       };
     },
 
-    areFiltersPropAndInternalEqual() {
+    areStoreFiltersAndInternalEqual() {
       return (
-        JSON.stringify(this.filters) === JSON.stringify(this.filtersInternal)
+        JSON.stringify(this.appliedFilters) ===
+        JSON.stringify(this.filtersInternal)
       );
     },
   },
 
   methods: {
+    ...mapActions({
+      setAppliedFilters: 'dashboards/setAppliedFilters',
+    }),
     clearFilters() {
       this.filtersInternal = { ...this.defaultFilters };
     },
     updateFilter(filterName, value) {
       this.filtersInternal[filterName] = value;
     },
-    emitFilters() {
-      this.$emit('update:filters', this.filtersInternal);
+    setFilters() {
+      this.setAppliedFilters(this.filtersInternal);
       this.close();
+    },
+    syncFiltersInternal() {
+      if (!this.areStoreFiltersAndInternalEqual) {
+        this.filtersInternal = this.appliedFilters;
+      }
     },
     close() {
       this.$emit('close');
     },
-    syncFiltersInternal() {
-      if (!this.areFiltersPropAndInternalEqual) {
-        this.filtersInternal = this.filters;
-      }
-    },
   },
 
   watch: {
-    filters() {
+    appliedFilters() {
       this.syncFiltersInternal();
     },
   },

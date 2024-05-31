@@ -1,9 +1,12 @@
+import Router from '@/router';
+
 const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
+  SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
 };
 
 export default {
@@ -13,6 +16,7 @@ export default {
     currentDashboard: null,
     currentDashboardWidgets: null,
     currentDashboardFilters: null,
+    appliedFilters: null,
   },
   mutations: {
     [mutations.SET_DASHBOARDS](state, dashboards) {
@@ -40,6 +44,9 @@ export default {
     [mutations.SET_CURRENT_DASHBOARD_FILTERS](state, filters) {
       state.currentDashboardFilters = filters;
     },
+    [mutations.SET_APPLIED_FILTERS](state, filters) {
+      state.appliedFilters = filters;
+    },
   },
   actions: {
     async setDashboards({ commit }, dashboards) {
@@ -56,6 +63,30 @@ export default {
     },
     async setCurrentDashboardFilters({ commit }, filters) {
       commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
+    },
+    async setAppliedFilters({ commit }, filters) {
+      commit(mutations.SET_APPLIED_FILTERS, filters);
+
+      const newFilters = [];
+      Object.entries(filters).forEach(([filterKey, filterValue]) => {
+        if (typeof filterValue === 'object') {
+          Object.entries(filterValue).forEach(
+            ([subFilterKey, subFilterValue]) => {
+              newFilters.push({ [subFilterKey]: subFilterValue });
+            },
+          );
+          return;
+        }
+
+        newFilters.push({ [filterKey]: filterValue });
+      });
+
+      const query = Object.assign({}, ...newFilters);
+
+      Router.replace({
+        name: Router.currentRoute._value.name,
+        query,
+      });
     },
   },
   getters: {

@@ -39,7 +39,7 @@ export default {
         name: key,
         label: filter.label,
         placeholder: filter.placeholder,
-        type: filter.f_type,
+        type: filter.type,
         source: filter.source,
         depends_on: filter.depends_on,
         start_sufix: filter.start_sufix,
@@ -63,7 +63,7 @@ export default {
       return new Widget({
         uuid: widget.uuid,
         name: widget.name,
-        type: widget.w_type,
+        type: widget.type,
         config: widget.config,
         grid_position: {
           column_start: widget.position.columns[0],

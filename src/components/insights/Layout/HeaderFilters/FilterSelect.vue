@@ -1,7 +1,7 @@
 <template>
   <UnnnicSelectSmart
     :modelValue="treatedModelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
+    @update:modelValue="$emit('update:modelValue', $event[0].value)"
     :options="options"
     autocomplete
     autocompleteIconLeft

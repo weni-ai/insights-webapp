@@ -1,6 +1,6 @@
 <template>
   <UnnnicModal
-    :showModal="showModal"
+    v-show="showModal"
     @close="close"
     class="modal-filters"
     text="Filtros"
@@ -17,6 +17,9 @@
           :filter="filter"
           :modelValue="filtersInternal[filter.name]"
           @update:modelValue="updateFilter(filter.name, $event)"
+          :disabled="
+            filter.depends_on && !filtersInternal[filter.depends_on?.filter]
+          "
         />
       </template>
     </form>
@@ -87,7 +90,16 @@ export default {
       this.filtersInternal = {};
     },
     updateFilter(filterName, value) {
-      this.filtersInternal[filterName] = value;
+      const hasNonNullValues =
+        typeof value === 'object' && value
+          ? Object.values(value).some((val) => val)
+          : value;
+
+      if (hasNonNullValues) {
+        this.filtersInternal[filterName] = value;
+      } else {
+        delete this.filtersInternal[filterName];
+      }
     },
     setFilters() {
       this.setAppliedFilters(this.filtersInternal);
@@ -116,7 +128,7 @@ export default {
   &__form {
     display: grid;
     gap: $unnnic-spacing-xs $unnnic-spacing-sm;
-    grid-auto-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
     text-align: left;
 
@@ -125,15 +137,6 @@ export default {
       grid-column-start: 1;
       grid-column-end: 3;
     }
-
-    .form__date-picker {
-      display: grid;
-    }
-  }
-
-  :deep(.unnnic-label__label),
-  :deep(.unnnic-form__label) {
-    margin: 0 0 $unnnic-spacing-nano;
   }
 
   :deep(.unnnic-modal-container) {
@@ -158,6 +161,9 @@ export default {
         }
       }
 
+      &-body {
+        border-radius: $unnnic-border-radius-sm $unnnic-border-radius-sm 0 0;
+      }
       &-body-description-container {
         padding-bottom: 0;
       }

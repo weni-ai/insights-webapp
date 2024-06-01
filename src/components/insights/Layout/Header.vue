@@ -47,6 +47,8 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      currentDashboardFilters: (state) =>
+        state.dashboards.currentDashboardFilters,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -64,8 +66,12 @@ export default {
     },
 
     showTagLive() {
+      const dateFilter = this.currentDashboardFilters.find(
+        (filter) => filter.type === 'date_range',
+      );
+
       const { query } = this.$route;
-      return !query.dateStart && !query.dateStart;
+      return !query[dateFilter?.name];
     },
   },
 

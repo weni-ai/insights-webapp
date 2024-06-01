@@ -17,7 +17,7 @@ export default {
 
 <style lang="scss">
 .header-tag-live {
-  padding: $unnnic-spacing-ant $unnnic-spacing-xs;
+  padding: 0 $unnnic-spacing-xs;
 
   display: inline-flex;
   align-items: center;

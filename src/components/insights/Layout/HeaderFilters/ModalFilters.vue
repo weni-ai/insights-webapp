@@ -17,6 +17,9 @@
           :filter="filter"
           :modelValue="filtersInternal[filter.name]"
           @update:modelValue="updateFilter(filter.name, $event)"
+          :disabled="
+            filter.depends_on && !filtersInternal[filter.depends_on?.filter]
+          "
         />
       </template>
     </form>

@@ -29,6 +29,10 @@ export default {
     modelValue: {
       default: null,
     },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   components: {},
@@ -45,16 +49,18 @@ export default {
     },
 
     filterProps() {
+      const { disabled, treatedModelValue } = this;
       const { type, placeholder, source } = this.filter;
 
       const defaultProps = {
         placeholder,
-        modelValue: this.treatedModelValue,
+        modelValue: treatedModelValue,
+        disabled,
       };
 
       const mappingProps = {
         date_range: {
-          modelValue: this.treatedModelValue,
+          modelValue: treatedModelValue,
         },
         input_text: {},
         select: {

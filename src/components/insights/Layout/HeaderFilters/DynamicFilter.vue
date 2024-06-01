@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import moment from 'moment';
-
 import FilterDate from './FilterDate.vue';
 import FilterInputText from './FilterInputText.vue';
 import FilterSelect from './FilterSelect.vue';
@@ -56,10 +54,7 @@ export default {
 
       const mappingProps = {
         date_range: {
-          modelValue: this.treatedModelValue || {
-            start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
-            end: moment().format('YYYY-MM-DD'),
-          },
+          modelValue: this.treatedModelValue,
         },
         input_text: {},
         select: {
@@ -113,5 +108,10 @@ export default {
 .dynamic-filter {
   display: flex;
   flex-direction: column;
+
+  :deep(.unnnic-label__label),
+  :deep(.unnnic-form__label) {
+    margin: 0 0 $unnnic-spacing-nano;
+  }
 }
 </style>

@@ -125,15 +125,6 @@ export default {
       grid-column-start: 1;
       grid-column-end: 3;
     }
-
-    .form__date-picker {
-      display: grid;
-    }
-  }
-
-  :deep(.unnnic-label__label),
-  :deep(.unnnic-form__label) {
-    margin: 0 0 $unnnic-spacing-nano;
   }
 
   :deep(.unnnic-modal-container) {

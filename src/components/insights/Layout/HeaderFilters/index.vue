@@ -18,7 +18,7 @@
     <DynamicFilter
       v-else-if="currentDashboardFilters[0]"
       :filter="currentDashboardFilters[0]"
-      :modelValue="currentDashboardFilters[0].name"
+      :modelValue="appliedFilters[currentDashboardFilters[0].name]"
       @update:modelValue="
         setAppliedFilters({ [currentDashboardFilters[0].name]: $event })
       "
@@ -83,7 +83,10 @@ export default {
       const oldQueryKeys = Object.keys(oldRoute?.query);
 
       if (oldQueryKeys.length) {
-        this.$router.replace({ name: newRoute.name, query: oldRoute.query });
+        this.$router.replace({
+          name: newRoute.name,
+          query: oldRoute.query,
+        });
       }
     },
 
@@ -94,11 +97,15 @@ export default {
 
   watch: {
     $route: {
+      immediate: true,
       deep: true,
       handler(newRoute, oldRoute) {
-        if (newRoute.path !== oldRoute.path) {
+        if (oldRoute && newRoute.path !== oldRoute.path) {
           this.retainRouteQueries(newRoute, oldRoute);
+          return;
         }
+
+        this.setAppliedFilters(newRoute.query);
       },
     },
   },

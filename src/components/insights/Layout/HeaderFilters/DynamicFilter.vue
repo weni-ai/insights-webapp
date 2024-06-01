@@ -94,10 +94,10 @@ export default {
     updateModelValue(value) {
       const modelValuesMap = {
         date_range: {
-          [this.filter.start_sufix]: value.start,
-          [this.filter.end_sufix]: value.end,
+          [this.filter.start_sufix]: value?.start,
+          [this.filter.end_sufix]: value?.end,
         },
-        select: value[0]?.value,
+        select: value?.[0]?.value,
       };
 
       this.$emit(
@@ -108,3 +108,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.dynamic-filter {
+  display: flex;
+  flex-direction: column;
+}
+</style>

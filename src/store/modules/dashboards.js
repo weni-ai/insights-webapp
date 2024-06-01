@@ -1,4 +1,12 @@
 import Router from '@/router';
+import { parseValue, stringifyValue } from '@/utils/object';
+
+function treatFilters(filters, valueHandler) {
+  return Object.entries(filters).reduce((acc, [key, value]) => {
+    acc[key] = valueHandler(value);
+    return acc;
+  }, {});
+}
 
 const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
@@ -13,10 +21,10 @@ export default {
   namespaced: true,
   state: {
     dashboards: [],
-    currentDashboard: null,
-    currentDashboardWidgets: null,
-    currentDashboardFilters: null,
-    appliedFilters: null,
+    currentDashboard: {},
+    currentDashboardWidgets: [],
+    currentDashboardFilters: [],
+    appliedFilters: {},
   },
   mutations: {
     [mutations.SET_DASHBOARDS](state, dashboards) {
@@ -45,7 +53,7 @@ export default {
       state.currentDashboardFilters = filters;
     },
     [mutations.SET_APPLIED_FILTERS](state, filters) {
-      state.appliedFilters = filters;
+      state.appliedFilters = treatFilters(filters, parseValue);
     },
   },
   actions: {
@@ -67,25 +75,9 @@ export default {
     async setAppliedFilters({ commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);
 
-      const newFilters = [];
-      Object.entries(filters).forEach(([filterKey, filterValue]) => {
-        if (typeof filterValue === 'object') {
-          Object.entries(filterValue).forEach(
-            ([subFilterKey, subFilterValue]) => {
-              newFilters.push({ [subFilterKey]: subFilterValue });
-            },
-          );
-          return;
-        }
-
-        newFilters.push({ [filterKey]: filterValue });
-      });
-
-      const query = Object.assign({}, ...newFilters);
-
       Router.replace({
-        name: Router.currentRoute._value.name,
-        query,
+        name: Router.currentRoute.value.name,
+        query: treatFilters(filters, stringifyValue),
       });
     },
   },

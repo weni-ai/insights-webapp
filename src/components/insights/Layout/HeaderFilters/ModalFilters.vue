@@ -61,7 +61,7 @@ export default {
   },
 
   created() {
-    this.clearFilters();
+    this.syncFiltersInternal();
   },
 
   computed: {
@@ -70,12 +70,6 @@ export default {
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
-
-    defaultFilters() {
-      return {
-        // TODO
-      };
-    },
 
     areStoreFiltersAndInternalEqual() {
       return (
@@ -90,7 +84,7 @@ export default {
       setAppliedFilters: 'dashboards/setAppliedFilters',
     }),
     clearFilters() {
-      this.filtersInternal = { ...this.defaultFilters };
+      this.filtersInternal = {};
     },
     updateFilter(filterName, value) {
       this.filtersInternal[filterName] = value;

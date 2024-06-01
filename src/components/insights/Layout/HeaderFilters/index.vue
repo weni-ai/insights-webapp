@@ -16,10 +16,12 @@
       />
     </template>
     <DynamicFilter
-      v-else-if="filters[0]"
-      :filter="filters[0]"
-      :modelValue="filters[0].name"
-      @update:modelValue="updateFilter(filters[0].name, $event)"
+      v-else-if="currentDashboardFilters[0]"
+      :filter="currentDashboardFilters[0]"
+      :modelValue="appliedFilters[currentDashboardFilters[0].name]"
+      @update:modelValue="
+        setAppliedFilters({ [currentDashboardFilters[0].name]: $event })
+      "
     />
 
     <ModalFilters
@@ -30,7 +32,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
@@ -42,7 +44,6 @@ export default {
 
   data() {
     return {
-      filters: {},
       filterModalOpened: false,
     };
   },
@@ -53,6 +54,7 @@ export default {
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
+
     hasManyFilters() {
       return this.currentDashboardFilters?.length > 1;
     },
@@ -69,78 +71,41 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      setAppliedFilters: 'dashboards/setAppliedFilters',
+    }),
+
     clearFilters() {
-      this.filters = {
-        date: {
-          start: '',
-          end: '',
-        },
-      };
-    },
-
-    updateFilter(filterName, value) {
-      this.filters[filterName] = value;
-    },
-
-    routeUpdateFilters() {
-      const { query } = this.$route;
-
-      this.filters = { ...this.filters, ...query };
-
-      if (query.dateStart && query.dateEnd) {
-        this.filters.date = {
-          start: query.dateStart,
-          end: query.dateEnd,
-        };
-      }
+      this.setAppliedFilters({});
     },
 
     retainRouteQueries(newRoute, oldRoute) {
       const oldQueryKeys = Object.keys(oldRoute?.query);
 
       if (oldQueryKeys.length) {
-        this.$router.replace({ name: newRoute.name, query: oldRoute.query });
+        this.$router.replace({
+          name: newRoute.name,
+          query: oldRoute.query,
+        });
       }
     },
 
     openFiltersModal() {
       this.filterModalOpened = true;
     },
-
-    updateRouterByFilters(filters) {
-      const queryParams = {
-        name: this.$route.name,
-        query: {
-          dateStart: filters.date?.start,
-          dateEnd: filters.date?.end,
-        },
-      };
-
-      Object.keys(filters)?.forEach((key) => {
-        const filter = filters[key];
-        const filterValue = Array.isArray(filters[filter])
-          ? filters[filter][0]?.value
-          : filters[filter];
-        if (filterValue) {
-          queryParams.query[filter] = filterValue;
-        }
-      });
-
-      this.$router.replace(queryParams);
-    },
   },
 
   watch: {
-    $route(newRoute, oldRoute) {
-      if (newRoute.name !== oldRoute.name) {
-        this.retainRouteQueries(newRoute, oldRoute);
-        this.routeUpdateFilters();
-      }
-    },
-    filters: {
+    $route: {
+      immediate: true,
       deep: true,
-      handler(newFilters) {
-        this.updateRouterByFilters(newFilters);
+      handler(newRoute, oldRoute) {
+        if (oldRoute && newRoute.path !== oldRoute.path) {
+          this.retainRouteQueries(newRoute, oldRoute);
+          return;
+        }
+
+        this.setAppliedFilters(newRoute.query);
       },
     },
   },

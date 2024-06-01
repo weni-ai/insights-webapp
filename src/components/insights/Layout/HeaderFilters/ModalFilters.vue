@@ -128,7 +128,7 @@ export default {
   &__form {
     display: grid;
     gap: $unnnic-spacing-xs $unnnic-spacing-sm;
-    grid-auto-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
     text-align: left;
 
@@ -161,6 +161,9 @@ export default {
         }
       }
 
+      &-body {
+        border-radius: $unnnic-border-radius-sm $unnnic-border-radius-sm 0 0;
+      }
       &-body-description-container {
         padding-bottom: 0;
       }

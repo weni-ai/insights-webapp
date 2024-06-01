@@ -1,6 +1,6 @@
 <template>
   <UnnnicModal
-    :showModal="showModal"
+    v-show="showModal"
     @close="close"
     class="modal-filters"
     text="Filtros"
@@ -87,7 +87,16 @@ export default {
       this.filtersInternal = {};
     },
     updateFilter(filterName, value) {
-      this.filtersInternal[filterName] = value;
+      const hasNonNullValues =
+        typeof value === 'object' && value
+          ? Object.values(value).some((val) => val)
+          : value;
+
+      if (hasNonNullValues) {
+        this.filtersInternal[filterName] = value;
+      } else {
+        delete this.filtersInternal[filterName];
+      }
     },
     setFilters() {
       this.setAppliedFilters(this.filtersInternal);

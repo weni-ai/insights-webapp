@@ -1,4 +1,9 @@
-import { WidgetType, WidgetConfig, GridPosition } from './types/WidgetTypes';
+import {
+  WidgetType,
+  WidgetConfig,
+  GridPosition,
+  WidgetReport,
+} from './types/WidgetTypes';
 
 type WidgetParams = {
   uuid: string;
@@ -6,7 +11,7 @@ type WidgetParams = {
   type: WidgetType;
   config: WidgetConfig;
   grid_position: GridPosition;
-  report: string;
+  report: WidgetReport;
   source: string;
 };
 
@@ -16,7 +21,7 @@ class Widget {
   type: WidgetType;
   config: WidgetConfig;
   grid_position: GridPosition;
-  report: string;
+  report: WidgetReport;
   source: string;
 
   private _treatTableDynamicConfig(config: WidgetConfig): WidgetConfig {

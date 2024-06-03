@@ -35,8 +35,6 @@ export default {
     },
   },
 
-  components: {},
-
   computed: {
     currentComponent() {
       const componentMap = {

@@ -92,4 +92,36 @@ export default {
 
     return widgetData;
   },
+
+  async getDashboardWidgetReport({ dashboardUuid, widgetUuid }) {
+    if (!dashboardUuid || !widgetUuid) {
+      throw new Error(
+        'Please provide valids UUIDs parameters to request report of widget.',
+      );
+    }
+
+    const widgetData = await http.get(
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report`,
+    );
+
+    return widgetData;
+  },
+
+  async getDashboardWidgetReportData({
+    dashboardUuid,
+    widgetUuid,
+    reportUuid,
+  }) {
+    if (!dashboardUuid || !widgetUuid || !reportUuid) {
+      throw new Error(
+        'Please provide valids UUIDs parameters to request report data of widget.',
+      );
+    }
+
+    const widgetData = await http.get(
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/${reportUuid}/data`,
+    );
+
+    return widgetData;
+  },
 };

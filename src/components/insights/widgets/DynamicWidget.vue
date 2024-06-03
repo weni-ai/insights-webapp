@@ -49,7 +49,7 @@ export default {
         card: {
           metric: data?.value || data,
           description: name,
-          configured: config && Object.keys(config).length,
+          configured: config && !!Object.keys(config).length,
           clickable: !!report,
           isLoading,
         },
@@ -100,7 +100,7 @@ export default {
         },
       };
 
-      return mappingEvents[type];
+      return mappingEvents[type] || {};
     },
   },
 

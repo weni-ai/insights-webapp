@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '@/views/insights/Dashboard.vue';
-import routes from './routes';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,10 +13,6 @@ const router = createRouter({
       path: '/:dashboardUuid',
       name: 'dashboard',
       component: Dashboard,
-      props: (route) => ({
-        startDate: route.query.startDate,
-        endDate: route.query.endDate,
-      }),
     },
     {
       path: '/:dashboardUuid/widget/:widgetUuid/report/:reportUuid',
@@ -28,7 +23,6 @@ const router = createRouter({
       path: '/:pathMatch(.*)*',
       redirect: '/',
     },
-    ...routes,
   ],
 });
 

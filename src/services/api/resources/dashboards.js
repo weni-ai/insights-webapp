@@ -1,4 +1,4 @@
-import { Dashboard, Widget } from '@/models';
+import { Dashboard, Filter, Widget } from '@/models';
 import http from '@/services/api/http';
 import Config from '@/store/modules/config';
 
@@ -23,6 +23,33 @@ export default {
     return dashboards;
   },
 
+  async getDashboardFilters(uuid) {
+    if (!uuid) {
+      throw new Error(
+        'Please provide a valid UUID to request dashboard filters.',
+      );
+    }
+
+    const response = await http.get(`/dashboards/${uuid}/filters`);
+    const responseArray = Object.keys(response);
+
+    const dashboardFilters = responseArray.map((key) => {
+      const filter = response[key];
+      return new Filter({
+        name: key,
+        label: filter.label,
+        placeholder: filter.placeholder,
+        type: filter.type,
+        source: filter.source,
+        depends_on: filter.depends_on,
+        start_sufix: filter.start_sufix,
+        end_sufix: filter.end_sufix,
+      });
+    });
+
+    return dashboardFilters;
+  },
+
   async getDashboardWidgets(uuid) {
     if (!uuid) {
       throw new Error(
@@ -36,7 +63,7 @@ export default {
       return new Widget({
         uuid: widget.uuid,
         name: widget.name,
-        type: widget.w_type,
+        type: widget.type,
         config: widget.config,
         grid_position: {
           column_start: widget.position.columns[0],

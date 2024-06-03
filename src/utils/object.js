@@ -7,3 +7,17 @@ export function deepMerge(target, source) {
   Object.assign(target || {}, source);
   return target;
 }
+
+export function parseValue(value) {
+  try {
+    return JSON.parse(value);
+  } catch {
+    return value;
+  }
+}
+export function stringifyValue(value) {
+  if (typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+  return value;
+}

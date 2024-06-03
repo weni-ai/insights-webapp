@@ -34,6 +34,7 @@ export default {
       setDashboards: 'dashboards/setDashboards',
       setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
       setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
+      setCurrentDashboardFilters: 'dashboards/setCurrentDashboardFilters',
     }),
 
     async getDashboards() {
@@ -73,12 +74,22 @@ export default {
         return { uuid, data: null };
       }
     },
+
+    async getCurrentDashboardFilters() {
+      const filters = await Dashboards.getDashboardFilters(
+        this.currentDashboard.uuid,
+      );
+      this.setCurrentDashboardFilters(filters);
+    },
   },
 
   watch: {
-    'currentDashboard.uuid'() {
-      this.setCurrentDashboardWidgets([]);
-      this.getCurrentDashboardWidgets();
+    'currentDashboard.uuid'(newCurrentDashboardUuid) {
+      if (newCurrentDashboardUuid) {
+        this.setCurrentDashboardWidgets([]);
+        this.getCurrentDashboardWidgets();
+        this.getCurrentDashboardFilters();
+      }
     },
   },
 };

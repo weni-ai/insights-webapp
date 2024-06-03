@@ -107,7 +107,9 @@ export default {
     },
 
     getWidgetLoadingStatus(widget) {
-      return widget.config ? !Object.keys(widget).includes('data') : false;
+      const config = widget.config;
+      const isConfigured = config && Object.keys(config).length !== 0;
+      return isConfigured ? !Object.keys(widget).includes('data') : false;
     },
   },
 };

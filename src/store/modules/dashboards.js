@@ -1,16 +1,30 @@
+import Router from '@/router';
+import { parseValue, stringifyValue } from '@/utils/object';
+
+function treatFilters(filters, valueHandler) {
+  return Object.entries(filters).reduce((acc, [key, value]) => {
+    acc[key] = valueHandler(value);
+    return acc;
+  }, {});
+}
+
 const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
+  SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
+  SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
 };
 
 export default {
   namespaced: true,
   state: {
     dashboards: [],
-    currentDashboard: null,
-    currentDashboardWidgets: null,
+    currentDashboard: {},
+    currentDashboardWidgets: [],
+    currentDashboardFilters: [],
+    appliedFilters: {},
   },
   mutations: {
     [mutations.SET_DASHBOARDS](state, dashboards) {
@@ -35,6 +49,12 @@ export default {
         };
       }
     },
+    [mutations.SET_CURRENT_DASHBOARD_FILTERS](state, filters) {
+      state.currentDashboardFilters = filters;
+    },
+    [mutations.SET_APPLIED_FILTERS](state, filters) {
+      state.appliedFilters = treatFilters(filters, parseValue);
+    },
   },
   actions: {
     async setDashboards({ commit }, dashboards) {
@@ -48,6 +68,17 @@ export default {
     },
     async setCurrentDashboardWidgetData({ commit }, { uuid, data }) {
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, { uuid, data });
+    },
+    async setCurrentDashboardFilters({ commit }, filters) {
+      commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
+    },
+    async setAppliedFilters({ commit }, filters) {
+      commit(mutations.SET_APPLIED_FILTERS, filters);
+
+      Router.replace({
+        name: Router.currentRoute.value.name,
+        query: treatFilters(filters, stringifyValue),
+      });
     },
   },
   getters: {

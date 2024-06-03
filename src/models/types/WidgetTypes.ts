@@ -61,3 +61,8 @@ export type WidgetType =
   | 'table_group'
   | 'card'
   | 'insight';
+
+export type WidgetReport = {
+  type: 'internal' | 'external';
+  url: string;
+};

@@ -7,6 +7,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
@@ -23,11 +25,11 @@ export default {
     isLoading: Boolean,
   },
 
-  components: {
-    BarChart,
-  },
-
   computed: {
+    ...mapState({
+      currentDashboard: (state) => state.dashboards.currentDashboard,
+    }),
+
     currentComponent() {
       const componentMap = {
         graph_column: BarChart,
@@ -63,7 +65,8 @@ export default {
         },
         graph_column: {
           title: name,
-          chartData: this.widgetGraphData,
+          chartData: this.widgetGraphData || {},
+          seeMore: !!report,
           isLoading,
         },
       };
@@ -98,6 +101,9 @@ export default {
         card: {
           click: () => this.redirectToReport(),
         },
+        graph_column: {
+          seeMore: () => this.redirectToReport(),
+        },
       };
 
       return mappingEvents[type] || {};
@@ -111,10 +117,24 @@ export default {
         return;
       }
 
-      this.$router.push({
-        name: 'report',
-        params: { widgetUuid: uuid, reportUuid: report },
-      });
+      switch (report.type) {
+        case 'internal':
+          this.$router.push({
+            name: 'report',
+            params: {
+              dashboardUuid: this.currentDashboard.uuid,
+              widgetUuid: uuid,
+            },
+          });
+          break;
+
+        case 'external':
+          window.open(report.url, '_blank');
+          break;
+
+        default:
+          break;
+      }
     },
   },
 };

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Dashboard from '@/views/insights/Dashboard.vue';
+import Report from '@/views/insights/Report.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -15,9 +16,9 @@ const router = createRouter({
       component: Dashboard,
     },
     {
-      path: '/:dashboardUuid/widget/:widgetUuid/report/:reportUuid',
+      path: '/:dashboardUuid/widget/:widgetUuid/report',
       name: 'report',
-      component: Dashboard,
+      component: Report,
     },
     {
       path: '/:pathMatch(.*)*',

@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <InsightsLayout
-      ref="insights-layout"
       v-if="dashboards.length"
+      ref="insights-layout"
     >
       <RouterView />
     </InsightsLayout>
@@ -18,10 +18,6 @@ import { Dashboards } from '@/services/api';
 export default {
   components: { InsightsLayout },
 
-  async created() {
-    await this.getDashboards();
-  },
-
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -29,11 +25,21 @@ export default {
     }),
   },
 
+  watch: {
+    'currentDashboard.uuid'(newCurrentDashboardUuid) {
+      if (newCurrentDashboardUuid) {
+        this.getCurrentDashboardFilters();
+      }
+    },
+  },
+
+  async created() {
+    await this.getDashboards();
+  },
+
   methods: {
     ...mapActions({
       setDashboards: 'dashboards/setDashboards',
-      setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
-      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
       setCurrentDashboardFilters: 'dashboards/setCurrentDashboardFilters',
     }),
 
@@ -42,54 +48,11 @@ export default {
       this.setDashboards(response);
     },
 
-    async getCurrentDashboardWidgets() {
-      const widgets = await Dashboards.getDashboardWidgets(
-        this.currentDashboard.uuid,
-      );
-      this.setCurrentDashboardWidgets(widgets);
-      this.getCurrentDashboardWidgetsDatas(widgets);
-    },
-
-    async getCurrentDashboardWidgetsDatas(widgets) {
-      Promise.all(
-        widgets.map(async ({ uuid, name, config }) => {
-          if (name && Object.keys(config).length) {
-            this.setCurrentDashboardWidgetData(
-              await this.fetchWidgetData(uuid),
-            );
-          }
-        }),
-      );
-    },
-
-    async fetchWidgetData(uuid) {
-      try {
-        const responseData = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: this.currentDashboard.uuid,
-          widgetUuid: uuid,
-        });
-        return { uuid, data: responseData };
-      } catch (error) {
-        console.error(error);
-        return { uuid, data: null };
-      }
-    },
-
     async getCurrentDashboardFilters() {
       const filters = await Dashboards.getDashboardFilters(
         this.currentDashboard.uuid,
       );
       this.setCurrentDashboardFilters(filters);
-    },
-  },
-
-  watch: {
-    'currentDashboard.uuid'(newCurrentDashboardUuid) {
-      if (newCurrentDashboardUuid) {
-        this.setCurrentDashboardWidgets([]);
-        this.getCurrentDashboardWidgets();
-        this.getCurrentDashboardFilters();
-      }
     },
   },
 };

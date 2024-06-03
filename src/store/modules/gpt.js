@@ -23,7 +23,7 @@ export default {
 
       commit(mutations.ADD_INSIGHT, {
         request: prompt,
-        received: response.output.text?.[0] || '',
+        received: response || '',
       });
     },
   },

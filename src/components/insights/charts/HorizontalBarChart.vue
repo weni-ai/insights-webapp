@@ -76,7 +76,10 @@ export default {
           },
           y: {
             display: true,
-            ticks: { padding: 0 },
+            ticks: {
+              padding: 0,
+              font: { lineHeight: 1.66, size: 12, weight: 400 },
+            },
             grid: {
               display: false,
             },
@@ -96,7 +99,7 @@ export default {
             font: {
               size: '12',
               weight: '700',
-              lineHeight: '20',
+              lineHeight: 1.66,
             },
           },
         },
@@ -112,7 +115,7 @@ export default {
 <style lang="scss">
 .bar-chart {
   overflow: hidden;
-  height: 100%;
+  height: fit-content;
   width: 100%;
 
   display: grid;

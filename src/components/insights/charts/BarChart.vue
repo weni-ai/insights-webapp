@@ -3,10 +3,10 @@
     <header class="bar-chart__header">
       <h1 class="header__title">{{ title }}</h1>
       <a
-        class="header__see-more"
         v-if="seeMore"
-        @click="$emit('seeMore')"
+        class="header__see-more"
         href="#"
+        @click="$emit('seeMore')"
         >Ver mais</a
       >
     </header>
@@ -86,7 +86,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .bar-chart {
   overflow: hidden;
   height: 100%;

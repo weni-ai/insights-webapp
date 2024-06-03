@@ -112,7 +112,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .bar-chart {
   overflow: hidden;
   height: fit-content;

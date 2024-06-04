@@ -84,7 +84,7 @@ export default {
         this.setDefaultDashboard(dashboard.uuid).then(() => {
           unnnic.unnnicCallAlert({
             props: {
-              text: `"${dashboard.name}" definido como favorito`,
+              text: `Agora o Dashboard ${dashboard.name} é sua página inicial`,
               type: 'success',
             },
             seconds: 5,
@@ -94,7 +94,7 @@ export default {
         console.log(error);
         unnnic.unnnicCallAlert({
           props: {
-            text: `Falha ao definir o dashboard "${dashboard.name}" como favorito`,
+            text: `Falha ao definir o Dashboard "${dashboard.name}" como página inicial`,
             type: 'error',
           },
           seconds: 5,

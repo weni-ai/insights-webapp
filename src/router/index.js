@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Dashboard from '@/views/insights/Dashboard.vue';
 import store from '@/store';
+import Dashboard from '@/views/insights/Dashboard.vue';
 import Report from '@/views/insights/Report.vue';
 
 const router = createRouter({

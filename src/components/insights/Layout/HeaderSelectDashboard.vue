@@ -25,6 +25,7 @@
       @mouseenter="setDashboardHovered(dashboard.uuid)"
       @mouseleave="setDashboardHovered('')"
     >
+      {{ dashboard.name }}
       <UnnnicIcon
         class="item__star-icon"
         :class="{
@@ -36,15 +37,15 @@
           getIsDefaultDashboard(dashboard.uuid) ||
           dashboardHovered === dashboard.uuid
         "
-        @click.stop
+        @click.stop="handleSetDefaultDashboard(dashboard)"
       />
-      {{ dashboard.name }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
+import unnnic from '@weni/unnnic-system';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -68,13 +69,37 @@ export default {
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
+      setDefaultDashboard: 'dashboards/setDefaultDashboard',
     }),
 
     getIsDefaultDashboard(uuid) {
-      return this.dashboardDefault.uuid === uuid;
+      return this.dashboardDefault?.uuid === uuid;
     },
     setDashboardHovered(uuid) {
       this.dashboardHovered = uuid;
+    },
+    handleSetDefaultDashboard(dashboard) {
+      if (dashboard.uuid === this.dashboardDefault.uuid) return;
+      try {
+        this.setDefaultDashboard(dashboard.uuid).then(() => {
+          unnnic.unnnicCallAlert({
+            props: {
+              text: `Agora o Dashboard ${dashboard.name} é sua página inicial`,
+              type: 'success',
+            },
+            seconds: 5,
+          });
+        });
+      } catch (error) {
+        console.log(error);
+        unnnic.unnnicCallAlert({
+          props: {
+            text: `Falha ao definir o Dashboard "${dashboard.name}" como página inicial`,
+            type: 'error',
+          },
+          seconds: 5,
+        });
+      }
     },
   },
 };
@@ -102,6 +127,10 @@ $dropdownFixedWidth: 314px;
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-line-height-large * 2;
     }
+  }
+
+  &__item {
+    justify-content: space-between;
   }
 
   :deep(.unnnic-dropdown__trigger) {

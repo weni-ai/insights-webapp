@@ -85,5 +85,6 @@ export default {
     dashboardDefault(state) {
       return state.dashboards.find((dashboard) => dashboard.is_default);
     },
+    appliedFilters: (state) => state.appliedFilters,
   },
 };

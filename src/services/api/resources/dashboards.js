@@ -1,6 +1,9 @@
 import { Dashboard, Filter, Widget } from '@/models';
 import http from '@/services/api/http';
 import Config from '@/store/modules/config';
+import DashboardState from '@/store/modules/dashboards';
+
+import { createRequestQuery } from '@/utils/request';
 
 const { project } = Config.state;
 
@@ -86,8 +89,10 @@ export default {
       );
     }
 
+    const params = createRequestQuery(DashboardState.state.appliedFilters);
     const widgetData = await http.get(
       `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data`,
+      { params },
     );
 
     return widgetData;

@@ -88,22 +88,19 @@ export default {
     },
     async setDefaultDashboard({ getters, commit }, uuid) {
       const oldDefaultDashboardUuid = getters.dashboardDefault.uuid;
-      await Dashboards.setDefaultDashboard({
-        dashboardUuid: oldDefaultDashboardUuid,
-        isDefault: false,
-      });
-      await Dashboards.setDefaultDashboard({
-        dashboardUuid: uuid,
-        isDefault: true,
-      });
-      commit(mutations.SET_DEFAULT_DASHBOARD, {
-        uuid: uuid,
-        isDefault: true,
-      });
-      commit(mutations.SET_DEFAULT_DASHBOARD, {
-        uuid: oldDefaultDashboardUuid,
-        isDefault: false,
-      });
+      const updateDefaultDashboard = async (dashboardUuid, isDefault) => {
+        await Dashboards.setDefaultDashboard({
+          dashboardUuid,
+          isDefault,
+        });
+        commit(mutations.SET_DEFAULT_DASHBOARD, {
+          uuid: dashboardUuid,
+          isDefault,
+        });
+      };
+
+      await updateDefaultDashboard(oldDefaultDashboardUuid, false);
+      await updateDefaultDashboard(uuid, true);
     },
   },
   getters: {

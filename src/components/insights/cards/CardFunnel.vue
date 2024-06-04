@@ -10,7 +10,7 @@
         size="small"
         type="secondary"
         iconCenter="tune"
-        @click.stop=""
+        @click.stop="$emit('open-config')"
       />
     </header>
     <section class="card-funnel__content">
@@ -30,7 +30,7 @@
         <UnnnicButton
           text="Selecionar fluxos"
           type="primary"
-          @click="showConfigFunnel = true"
+          @click="$emit('open-config')"
         />
       </section>
       <FunnelChart
@@ -39,41 +39,27 @@
         :isLoading="isLoading"
       />
     </section>
-
-    <DrawerConfigFunnel
-      :modelValue="showConfigFunnel"
-      @close="showConfigFunnel = false"
-      @update-config="$emit('update-config', $event)"
-      :isLoadingUpdateConfig="isLoadingUpdateConfig"
-    />
   </CardBase>
 </template>
 
 <script>
-import DrawerConfigFunnel from '@/components/insights/drawers/DrawerConfigFunnel.vue';
-
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
 
 export default {
   name: 'CardFunnel',
 
-  components: { CardBase, FunnelChart, DrawerConfigFunnel },
+  emits: ['open-config'],
+
+  components: { CardBase, FunnelChart },
 
   props: {
     isLoading: Boolean,
-    isLoadingUpdateConfig: Boolean,
     configured: Boolean,
     chartData: {
       type: Object,
       required: true,
     },
-  },
-
-  data() {
-    return {
-      showConfigFunnel: false,
-    };
   },
 };
 </script>

@@ -7,8 +7,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import unnnic from '@weni/unnnic-system';
+import { mapState } from 'vuex';
 
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
@@ -25,12 +24,6 @@ export default {
       default: () => ({}),
     },
     isLoading: Boolean,
-  },
-
-  data() {
-    return {
-      isLoadingUpdateConfig: false,
-    };
   },
 
   computed: {
@@ -53,12 +46,11 @@ export default {
     },
 
     widgetProps() {
-      const { isLoading, isLoadingUpdateConfig } = this;
+      const { isLoading } = this;
       const { name, data, type, config, report } = this.widget;
 
       const defaultProps = {
         isLoading,
-        isLoadingUpdateConfig,
       };
 
       const mappingProps = {
@@ -116,12 +108,13 @@ export default {
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
+          openConfig: () => this.$emit('open-config'),
         },
         graph_column: {
           seeMore: () => this.redirectToReport(),
         },
         graph_funnel: {
-          updateConfig: (config) => this.updateWidgetConfig(config),
+          openConfig: () => this.$emit('open-config'),
         },
       };
 
@@ -130,10 +123,6 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateWidget: 'dashboards/updateWidget',
-    }),
-
     redirectToReport() {
       const { uuid, report } = this.widget;
       if (!report) {
@@ -158,35 +147,6 @@ export default {
         default:
           break;
       }
-    },
-
-    async updateWidgetConfig(config) {
-      this.isLoadingUpdateConfig = true;
-
-      const newWidget = { ...this.widget };
-      newWidget.config = config;
-
-      try {
-        await this.updateWidget(newWidget);
-
-        unnnic.unnnicCallAlert({
-          props: {
-            text: `Métrica salva com sucesso`,
-            type: 'success',
-          },
-          seconds: 5,
-        });
-      } catch (error) {
-        unnnic.unnnicCallAlert({
-          props: {
-            text: `Erro ao salvar, tente novamente`,
-            type: 'error',
-          },
-          seconds: 5,
-        });
-      }
-
-      this.isLoadingUpdateConfig = false;
     },
   },
 };

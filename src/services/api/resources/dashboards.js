@@ -124,4 +124,19 @@ export default {
 
     return widgetData;
   },
+
+  async setDefaultDashboard({ dashboardUuid, isDefault }) {
+    const queryParams = {
+      project: project.uuid,
+    };
+    const response = await http.patch(
+      `/dashboards/${dashboardUuid}/is_default`,
+      { is_default: isDefault },
+      {
+        params: queryParams,
+      },
+    );
+
+    return response;
+  },
 };

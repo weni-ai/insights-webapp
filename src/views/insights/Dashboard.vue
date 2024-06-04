@@ -18,7 +18,7 @@
       v-show="!!widgetConfigurating"
       :modelValue="showDrawerConfigWidget"
       :widget="widgetConfigurating"
-      @close="showDrawerConfigWidget = false"
+      @close="closeDrawerConfigWidget"
     />
   </section>
 </template>
@@ -131,6 +131,11 @@ export default {
     openDrawerConfigWidget(widget) {
       this.widgetConfigurating = widget;
       this.showDrawerConfigWidget = true;
+    },
+
+    closeDrawerConfigWidget() {
+      this.widgetConfigurating = null;
+      this.showDrawerConfigWidget = false;
     },
   },
 };

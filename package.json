@@ -11,7 +11,7 @@
     "format": "yarn lint --fix"
   },
   "dependencies": {
-    "@weni/unnnic-system": "^2.0.7",
+    "@weni/unnnic-system": "2.0.12",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "chartjs-plugin-datalabels": "^2.2.0",

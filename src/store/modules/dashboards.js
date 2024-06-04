@@ -1,5 +1,6 @@
 import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
+import { Dashboards } from '@/services/api';
 
 function treatFilters(filters, valueHandler) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -15,6 +16,7 @@ const mutations = {
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
+  SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
 };
 
 export default {
@@ -55,6 +57,10 @@ export default {
     [mutations.SET_APPLIED_FILTERS](state, filters) {
       state.appliedFilters = treatFilters(filters, parseValue);
     },
+    [mutations.SET_DEFAULT_DASHBOARD](state, { uuid, isDefault }) {
+      state.dashboards.find((dash) => dash.uuid === uuid).is_default =
+        isDefault;
+    },
   },
   actions: {
     async setDashboards({ commit }, dashboards) {
@@ -78,6 +84,25 @@ export default {
       Router.replace({
         name: Router.currentRoute.value.name,
         query: treatFilters(filters, stringifyValue),
+      });
+    },
+    async setDefaultDashboard({ getters, commit }, uuid) {
+      const oldDefaultDashboardUuid = getters.dashboardDefault.uuid;
+      await Dashboards.setDefaultDashboard({
+        dashboardUuid: oldDefaultDashboardUuid,
+        isDefault: false,
+      });
+      await Dashboards.setDefaultDashboard({
+        dashboardUuid: uuid,
+        isDefault: true,
+      });
+      commit(mutations.SET_DEFAULT_DASHBOARD, {
+        uuid: uuid,
+        isDefault: true,
+      });
+      commit(mutations.SET_DEFAULT_DASHBOARD, {
+        uuid: oldDefaultDashboardUuid,
+        isDefault: false,
       });
     },
   },

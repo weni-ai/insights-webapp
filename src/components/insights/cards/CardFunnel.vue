@@ -30,7 +30,7 @@
         <UnnnicButton
           text="Selecionar fluxos"
           type="primary"
-          @click.stop=""
+          @click="showConfigFunnel = true"
         />
       </section>
       <FunnelChart
@@ -39,14 +39,25 @@
         :isLoading="isLoading"
       />
     </section>
+
+    <DrawerConfigFunnel
+      :modelValue="showConfigFunnel"
+      @close="showConfigFunnel = false"
+    />
   </CardBase>
 </template>
 
 <script>
+import DrawerConfigFunnel from '@/components/insights/drawers/DrawerConfigFunnel.vue';
+
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
 
 export default {
+  name: 'CardFunnel',
+
+  components: { CardBase, FunnelChart, DrawerConfigFunnel },
+
   props: {
     isLoading: Boolean,
     configured: Boolean,
@@ -56,7 +67,11 @@ export default {
     },
   },
 
-  components: { CardBase, FunnelChart },
+  data() {
+    return {
+      showConfigFunnel: false,
+    };
+  },
 };
 </script>
 

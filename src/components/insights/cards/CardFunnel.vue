@@ -43,6 +43,8 @@
     <DrawerConfigFunnel
       :modelValue="showConfigFunnel"
       @close="showConfigFunnel = false"
+      @update-config="$emit('update-config', $event)"
+      :isLoadingUpdateConfig="isLoadingUpdateConfig"
     />
   </CardBase>
 </template>
@@ -60,6 +62,7 @@ export default {
 
   props: {
     isLoading: Boolean,
+    isLoadingUpdateConfig: Boolean,
     configured: Boolean,
     chartData: {
       type: Object,

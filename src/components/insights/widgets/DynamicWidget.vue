@@ -7,7 +7,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
+import unnnic from '@weni/unnnic-system';
 
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
@@ -24,6 +25,12 @@ export default {
       default: () => ({}),
     },
     isLoading: Boolean,
+  },
+
+  data() {
+    return {
+      isLoadingUpdateConfig: false,
+    };
   },
 
   computed: {
@@ -46,8 +53,13 @@ export default {
     },
 
     widgetProps() {
-      const { isLoading } = this;
+      const { isLoading, isLoadingUpdateConfig } = this;
       const { name, data, type, config, report } = this.widget;
+
+      const defaultProps = {
+        isLoading,
+        isLoadingUpdateConfig,
+      };
 
       const mappingProps = {
         card: {
@@ -55,7 +67,6 @@ export default {
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,
-          isLoading,
         },
         table_dynamic_by_filter: {
           headerIcon: config?.icon?.name,
@@ -63,23 +74,20 @@ export default {
           headerTitle: config?.name_overwrite || name,
           fields: config?.fields,
           items: data?.results,
-          isLoading,
         },
         graph_column: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
         },
         graph_bar: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
         },
       };
 
-      return mappingProps[type];
+      return { ...defaultProps, ...mappingProps[type] };
     },
 
     widgetGraphData() {
@@ -112,6 +120,9 @@ export default {
         graph_column: {
           seeMore: () => this.redirectToReport(),
         },
+        graph_funnel: {
+          updateConfig: (config) => this.updateWidgetConfig(config),
+        },
       };
 
       return mappingEvents[type] || {};
@@ -119,6 +130,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      updateWidget: 'dashboards/updateWidget',
+    }),
+
     redirectToReport() {
       const { uuid, report } = this.widget;
       if (!report) {
@@ -143,6 +158,35 @@ export default {
         default:
           break;
       }
+    },
+
+    async updateWidgetConfig(config) {
+      this.isLoadingUpdateConfig = true;
+
+      const newWidget = { ...this.widget };
+      newWidget.config = config;
+
+      try {
+        await this.updateWidget(newWidget);
+
+        unnnic.unnnicCallAlert({
+          props: {
+            text: `Métrica salva com sucesso`,
+            type: 'success',
+          },
+          seconds: 5,
+        });
+      } catch (error) {
+        unnnic.unnnicCallAlert({
+          props: {
+            text: `Erro ao salvar, tente novamente`,
+            type: 'error',
+          },
+          seconds: 5,
+        });
+      }
+
+      this.isLoadingUpdateConfig = false;
     },
   },
 };

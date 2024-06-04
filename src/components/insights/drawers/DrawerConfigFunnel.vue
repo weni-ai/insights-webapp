@@ -6,8 +6,10 @@
     title="Definir métricas do gráfico"
     description="Selecione pelo menos três fluxos para obter a visualização em gráfico de funil "
     primaryButtonText="Salvar"
-    :disabledPrimaryButton="validMetricsLength < 3"
     secondaryButtonText="Cancelar"
+    :disabledPrimaryButton="validMetricsLength < 3"
+    :loadingPrimaryButton="isLoadingUpdateConfig"
+    @primary-button-click="$emit('update-config', metrics)"
     @secondary-button-click="internalClose"
     @close="$emit('close')"
   >
@@ -44,6 +46,8 @@ import MetricAccordion from '@/components/MetricAccordion.vue';
 export default {
   name: 'DrawerConfigFunnel',
 
+  emits: ['close', 'update-config'],
+
   components: {
     MetricAccordion,
   },
@@ -53,9 +57,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    isLoadingUpdateConfig: {
+      type: Boolean,
+      default: false,
+    },
   },
-
-  emits: ['close'],
 
   data() {
     return {
@@ -110,6 +116,14 @@ export default {
 
     internalClose() {
       this.$refs.unnnicDrawer.close();
+    },
+  },
+
+  watch: {
+    isLoadingUpdateConfig(newIsLoadingUpdateConfig) {
+      if (!newIsLoadingUpdateConfig) {
+        this.internalClose();
+      }
     },
   },
 };

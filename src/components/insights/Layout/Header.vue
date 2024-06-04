@@ -1,11 +1,11 @@
 <template>
   <header
-    class="insights-layout-header"
     v-if="currentDashboard"
+    class="insights-layout-header"
   >
     <UnnnicBreadcrumb
       :crumbs="breadcrumbs"
-      @crumbClick="$router.push($event.path)"
+      @crumb-click="$router.push($event.path)"
     />
     <section class="insights-layout-header__content">
       <HeaderSelectDashboard />
@@ -13,11 +13,11 @@
       <section class="content__actions">
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
-        <UnnnicButton
+        <!-- <UnnnicButton
           class="clickable"
           iconCenter="ios_share"
           type="secondary"
-        />
+        /> -->
       </section>
     </section>
   </header>
@@ -47,6 +47,8 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      currentDashboardFilters: (state) =>
+        state.dashboards.currentDashboardFilters,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -64,8 +66,12 @@ export default {
     },
 
     showTagLive() {
+      const dateFilter = this.currentDashboardFilters.find(
+        (filter) => filter.type === 'date_range',
+      );
+
       const { query } = this.$route;
-      return !query.dateStart && !query.dateStart;
+      return !query[dateFilter?.name];
     },
   },
 

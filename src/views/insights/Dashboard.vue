@@ -17,9 +17,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
+import { Dashboards } from '@/services/api';
 
 export default {
   name: 'DashboardView',
@@ -47,7 +48,57 @@ export default {
     },
   },
 
+  watch: {
+    'currentDashboard.uuid': {
+      immediate: true,
+      handler(newCurrentDashboardUuid) {
+        if (newCurrentDashboardUuid) {
+          this.setCurrentDashboardWidgets([]);
+          this.getCurrentDashboardWidgets();
+        }
+      },
+    },
+  },
+
   methods: {
+    ...mapActions({
+      setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
+      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
+    }),
+
+    async getCurrentDashboardWidgets() {
+      const widgets = await Dashboards.getDashboardWidgets(
+        this.currentDashboard.uuid,
+      );
+      this.setCurrentDashboardWidgets(widgets);
+      this.getCurrentDashboardWidgetsDatas(widgets);
+    },
+
+    async getCurrentDashboardWidgetsDatas(widgets) {
+      Promise.all(
+        widgets.map(async ({ uuid, name, config }) => {
+          if (name && Object.keys(config).length) {
+            this.setCurrentDashboardWidgetData(
+              await this.fetchWidgetData(uuid),
+            );
+          }
+        }),
+      );
+    },
+
+    async fetchWidgetData(uuid) {
+      try {
+        const responseData = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: this.currentDashboard.uuid,
+          widgetUuid: uuid,
+        });
+        return { uuid, data: responseData };
+      } catch (error) {
+        console.error(error);
+        return { uuid, data: null };
+      }
+    },
+
     getWidgetStyle(gridPosition) {
       return {
         gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
@@ -56,7 +107,9 @@ export default {
     },
 
     getWidgetLoadingStatus(widget) {
-      return widget.config ? !Object.keys(widget).includes('data') : false;
+      const config = widget.config;
+      const isConfigured = config && Object.keys(config).length !== 0;
+      return isConfigured ? !Object.keys(widget).includes('data') : false;
     },
   },
 };

@@ -7,8 +7,9 @@
         class="header__see-more"
         href="#"
         @click="$emit('seeMore')"
-        >Ver mais</a
       >
+        Ver mais
+      </a>
     </header>
     <section class="bar-chart__chart">
       <IconLoading
@@ -34,7 +35,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { deepMerge } from '@/utils/object';
 
 export default {
-  name: 'BarChart',
+  name: 'HorizontalBarChart',
 
   components: { IconLoading, BaseChart },
 
@@ -48,32 +49,57 @@ export default {
       type: Object,
       required: true,
     },
+    datalabelsTemplate: {
+      type: String,
+      default: '{{value}}',
+    },
     isLoading: Boolean,
   },
+
+  emits: ['seeMore'],
 
   computed: {
     mergedData() {
       return deepMerge(
         {
-          datasets: [{ borderSkipped: false }],
+          datasets: [{ axis: 'y', borderSkipped: false }],
         },
         this.chartData,
       );
     },
     chartOptions() {
       return {
+        indexAxis: 'y',
+        scales: {
+          x: {
+            display: false,
+          },
+          y: {
+            display: true,
+            ticks: {
+              padding: 0,
+              font: { lineHeight: 1.66, size: 12, weight: 400 },
+            },
+            grid: {
+              display: false,
+            },
+          },
+        },
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
           datalabels: {
-            color: function (context) {
-              return context.active ? '#003234' : '#fff';
+            formatter: (value) => {
+              return this.datalabelsTemplate.replace('{{value}}', value);
             },
+            color: '#fff',
             anchor: 'end',
             align: 'start',
+            textStrokeColor: '#fff',
             font: {
-              size: '16',
+              size: '12',
               weight: '700',
+              lineHeight: 1.66,
             },
           },
         },
@@ -89,7 +115,7 @@ export default {
 <style lang="scss" scoped>
 .bar-chart {
   overflow: hidden;
-  height: 100%;
+  height: fit-content;
   width: 100%;
 
   display: grid;
@@ -102,20 +128,18 @@ export default {
     justify-content: space-between;
 
     .header__title {
+      font-size: $unnnic-font-size-title-sm;
       font-family: $unnnic-font-family-primary;
       font-weight: $unnnic-font-weight-bold;
+      color: $unnnic-color-neutral-dark;
     }
 
     .header__see-more {
+      font-size: $unnnic-font-size-body-gt;
       font-family: Lato;
       font-weight: $unnnic-font-weight-bold;
       text-decoration-line: underline;
       text-underline-position: under;
-    }
-
-    .header__title,
-    .header__see-more {
-      font-size: $unnnic-font-size-body-gt;
       color: $unnnic-color-neutral-dark;
     }
   }

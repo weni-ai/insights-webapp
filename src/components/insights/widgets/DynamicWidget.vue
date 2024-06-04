@@ -7,7 +7,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import BarChart from '@/components/insights/charts/BarChart.vue';
+import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
@@ -23,15 +26,15 @@ export default {
     isLoading: Boolean,
   },
 
-  components: {
-    BarChart,
-  },
-
   computed: {
+    ...mapState({
+      currentDashboard: (state) => state.dashboards.currentDashboard,
+    }),
+
     currentComponent() {
       const componentMap = {
         graph_column: BarChart,
-        graph_bar: null, // TODO: Create BarGraph component
+        graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
         table_dynamic_by_filter: TableDynamicByFilter,
         table_group: null, // TODO: Create TableGroup component
@@ -45,11 +48,12 @@ export default {
     widgetProps() {
       const { isLoading } = this;
       const { name, data, type, config, report } = this.widget;
+
       const mappingProps = {
         card: {
           metric: data?.value || data,
           description: name,
-          configured: config && Object.keys(config).length,
+          configured: config && !!Object.keys(config).length,
           clickable: !!report,
           isLoading,
         },
@@ -63,7 +67,14 @@ export default {
         },
         graph_column: {
           title: name,
-          chartData: this.widgetGraphData,
+          chartData: this.widgetGraphData || {},
+          seeMore: !!report,
+          isLoading,
+        },
+        graph_bar: {
+          title: name,
+          chartData: this.widgetGraphData || {},
+          seeMore: !!report,
           isLoading,
         },
       };
@@ -77,11 +88,11 @@ export default {
       }
 
       const { data } = this.widget.data;
-      const times = data.map((item) => item.time);
+      const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);
 
       const newData = {
-        labels: times,
+        labels,
         datasets: [
           {
             data: values,
@@ -98,9 +109,12 @@ export default {
         card: {
           click: () => this.redirectToReport(),
         },
+        graph_column: {
+          seeMore: () => this.redirectToReport(),
+        },
       };
 
-      return mappingEvents[type];
+      return mappingEvents[type] || {};
     },
   },
 
@@ -111,10 +125,24 @@ export default {
         return;
       }
 
-      this.$router.push({
-        name: 'report',
-        params: { widgetUuid: uuid, reportUuid: report },
-      });
+      switch (report.type) {
+        case 'internal':
+          this.$router.push({
+            name: 'report',
+            params: {
+              dashboardUuid: this.currentDashboard.uuid,
+              widgetUuid: uuid,
+            },
+          });
+          break;
+
+        case 'external':
+          window.open(report.url, '_blank');
+          break;
+
+        default:
+          break;
+      }
     },
   },
 };

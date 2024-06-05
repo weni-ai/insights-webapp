@@ -1,3 +1,6 @@
+import * as jwt from '@/utils/jwt';
+import { verifyIfWeniEmail } from '@/utils/user';
+
 const mutations = {
   SET_PROJECT: 'SET_PROJECT',
   SET_TOKEN: 'SET_TOKEN',
@@ -25,6 +28,12 @@ export default {
     },
     setToken({ commit }, token) {
       commit(mutations.SET_TOKEN, token);
+    },
+  },
+  getters: {
+    enableSystem(state) {
+      const userEmail = jwt.decode(state.token).email;
+      return verifyIfWeniEmail(userEmail);
     },
   },
 };

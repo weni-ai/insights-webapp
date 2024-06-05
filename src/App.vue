@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <InsightsLayout
-      v-if="dashboards.length"
+      v-if="dashboards.length && enableSystem"
       ref="insights-layout"
     >
       <RouterView />
@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 
@@ -21,6 +21,9 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+    }),
+    ...mapGetters({
+      enableSystem: 'config/enableSystem',
     }),
   },
 

@@ -10,7 +10,7 @@
         size="small"
         type="secondary"
         iconCenter="tune"
-        @click.stop=""
+        @click.stop="$emit('open-config')"
       />
     </header>
     <section class="card-funnel__content">
@@ -30,7 +30,7 @@
         <UnnnicButton
           text="Selecionar fluxos"
           type="primary"
-          @click.stop=""
+          @click="$emit('open-config')"
         />
       </section>
       <FunnelChart
@@ -47,6 +47,12 @@ import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
 
 export default {
+  name: 'CardFunnel',
+
+  emits: ['open-config'],
+
+  components: { CardBase, FunnelChart },
+
   props: {
     isLoading: Boolean,
     configured: Boolean,
@@ -55,8 +61,6 @@ export default {
       required: true,
     },
   },
-
-  components: { CardBase, FunnelChart },
 };
 </script>
 

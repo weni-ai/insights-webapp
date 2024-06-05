@@ -34,6 +34,7 @@ import unnnic from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
 
 import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
+import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 
 export default {
   name: 'DrawerConfigWidgetDynamic',
@@ -42,6 +43,7 @@ export default {
 
   components: {
     DrawerConfigContentFunnel,
+    DrawerConfigContentCard,
   },
 
   props: {
@@ -87,7 +89,7 @@ export default {
     content() {
       const componentMap = {
         graph_funnel: DrawerConfigContentFunnel,
-        card: null,
+        card: DrawerConfigContentCard,
       };
 
       return componentMap[this.widget?.type] || {};
@@ -105,15 +107,15 @@ export default {
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
     },
     contentEvents() {
-      const mappingEvents = {
-        graph_funnel: {
-          updateDisablePrimaryButton: (boolean) =>
-            (this.disablePrimaryButton = boolean),
-        },
-        card: {},
+      const defaultEvents = {
+        'update:model-value': (config) => (this.config = config),
+        updateDisablePrimaryButton: (boolean) =>
+          (this.disablePrimaryButton = boolean),
       };
 
-      return mappingEvents[this.widget?.type] || {};
+      const mappingEvents = {};
+
+      return { ...defaultEvents, ...mappingEvents[this.widget?.type] };
     },
   },
 
@@ -179,6 +181,11 @@ export default {
   &__content {
     display: grid;
     gap: $unnnic-spacing-sm;
+  }
+
+  :deep(.unnnic-label__label),
+  :deep(.unnnic-form__label) {
+    margin: 0 0 $unnnic-spacing-nano;
   }
 }
 </style>

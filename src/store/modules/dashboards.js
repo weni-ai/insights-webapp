@@ -13,6 +13,7 @@ const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
+  RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
@@ -38,6 +39,9 @@ export default {
     },
     [mutations.SET_CURRENT_DASHBOARD_WIDGETS](state, widgets) {
       state.currentDashboardWidgets = widgets;
+    },
+    [mutations.RESET_CURRENT_DASHBOARD_WIDGETS](state) {
+      state.currentDashboardWidgets = [];
     },
     [mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA](state, { uuid, data }) {
       const widgetIndex = state.currentDashboardWidgets.findIndex(

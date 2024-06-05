@@ -27,7 +27,9 @@ export default {
   },
 
   created() {
-    if (this.isConfigured) {
+    if (this.$route.name === 'report') {
+      this.getWidgetReportData();
+    } else if (this.isConfigured) {
       this.getCurrentDashboardWidgetData(this.widget.uuid);
     }
   },
@@ -145,6 +147,7 @@ export default {
   methods: {
     ...mapActions({
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+      getWidgetReportData: 'reports/getWidgetReportData',
     }),
 
     redirectToReport() {

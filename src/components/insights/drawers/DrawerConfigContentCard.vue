@@ -20,19 +20,19 @@
     <UnnnicLabel label="Tipo de resultado" />
     <section class="drawer-config-content-card__result-types">
       <template
-        v-for="result_type in result_types"
-        :key="result_type.value"
+        v-for="resultType in resultTypes"
+        :key="resultType.value"
       >
         <UnnnicRadio
-          v-model="config.result_type"
-          :value="result_type.value"
+          v-model="config.resultType"
+          :value="resultType.value"
         >
-          {{ result_type.label }}
+          {{ resultType.label }}
         </UnnnicRadio>
       </template>
     </section>
   </section>
-  <template v-if="config.result_type === 'results'">
+  <template v-if="config.resultType === 'results'">
     <section>
       <UnnnicLabel label="Resultado do fluxo" />
       <UnnnicInput
@@ -81,13 +81,13 @@ export default {
       config: {
         name: '',
         flow: [],
-        result_type: 'executions',
+        resultType: 'executions',
         result: {
           name: '',
           operation: 'count',
         },
       },
-      result_types: [
+      resultTypes: [
         { value: 'executions', label: 'Execuções' },
         { value: 'results', label: 'Resultado de fluxo' },
       ],
@@ -105,12 +105,12 @@ export default {
     isConfigValid() {
       const { config } = this;
 
-      if (!config.name || !config.flow.length || !config.result_type) {
+      if (!config.name || !config.flow.length || !config.resultType) {
         return false;
       }
 
       if (
-        config.result_type === 'results' &&
+        config.resultType === 'results' &&
         (!config.result.name || !config.result.operation)
       ) {
         return false;

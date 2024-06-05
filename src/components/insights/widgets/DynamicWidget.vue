@@ -113,7 +113,7 @@ export default {
 
       let { data, results } = this.widget.data;
 
-      if (this.widget.type === 'graph_bar') {
+      if (this.widget.type === 'graph_column') {
         data = sortByKey(data, 'label');
       }
 

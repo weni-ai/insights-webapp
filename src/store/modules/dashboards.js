@@ -1,5 +1,6 @@
 import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
+import { Dashboards, Widgets } from '@/services/api';
 
 function treatFilters(filters, valueHandler) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -13,8 +14,10 @@ const mutations = {
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
+  UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
+  SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
 };
 
 export default {
@@ -49,11 +52,22 @@ export default {
         };
       }
     },
+    [mutations.UPDATE_CURRENT_DASHBOARD_WIDGET](state, widget) {
+      const widgetIndex = state.currentDashboardWidgets.findIndex(
+        (mappedWidget) => mappedWidget.uuid === widget.uuid,
+      );
+
+      state.currentDashboardWidgets[widgetIndex] = widget;
+    },
     [mutations.SET_CURRENT_DASHBOARD_FILTERS](state, filters) {
       state.currentDashboardFilters = filters;
     },
     [mutations.SET_APPLIED_FILTERS](state, filters) {
       state.appliedFilters = treatFilters(filters, parseValue);
+    },
+    [mutations.SET_DEFAULT_DASHBOARD](state, { uuid, isDefault }) {
+      state.dashboards.find((dash) => dash.uuid === uuid).is_default =
+        isDefault;
     },
   },
   actions: {
@@ -79,6 +93,28 @@ export default {
         name: Router.currentRoute.value.name,
         query: treatFilters(filters, stringifyValue),
       });
+    },
+    async setDefaultDashboard({ getters, commit }, uuid) {
+      const oldDefaultDashboardUuid = getters.dashboardDefault.uuid;
+      const updateDefaultDashboard = async (dashboardUuid, isDefault) => {
+        await Dashboards.setDefaultDashboard({
+          dashboardUuid,
+          isDefault,
+        });
+        commit(mutations.SET_DEFAULT_DASHBOARD, {
+          uuid: dashboardUuid,
+          isDefault,
+        });
+      };
+
+      await updateDefaultDashboard(oldDefaultDashboardUuid, false);
+      await updateDefaultDashboard(uuid, true);
+    },
+    async updateWidget({ commit }, widget) {
+      await Widgets.updateWidget({
+        widget,
+      });
+      commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
     },
   },
   getters: {

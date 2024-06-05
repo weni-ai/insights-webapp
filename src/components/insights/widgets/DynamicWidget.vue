@@ -10,6 +10,7 @@
 import { mapState } from 'vuex';
 
 import BarChart from '@/components/insights/charts/BarChart.vue';
+import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
@@ -33,7 +34,7 @@ export default {
     currentComponent() {
       const componentMap = {
         graph_column: BarChart,
-        graph_bar: null, // TODO: Create BarGraph component
+        graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
         table_dynamic_by_filter: TableDynamicByFilter,
         table_group: null, // TODO: Create TableGroup component
@@ -47,13 +48,17 @@ export default {
     widgetProps() {
       const { isLoading } = this;
       const { name, data, type, config, report } = this.widget;
+
+      const defaultProps = {
+        isLoading,
+      };
+
       const mappingProps = {
         card: {
           metric: data?.value || data,
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,
-          isLoading,
         },
         table_dynamic_by_filter: {
           headerIcon: config?.icon?.name,
@@ -61,17 +66,20 @@ export default {
           headerTitle: config?.name_overwrite || name,
           fields: config?.fields,
           items: data?.results,
-          isLoading,
         },
         graph_column: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
+        },
+        graph_bar: {
+          title: name,
+          chartData: this.widgetGraphData || {},
+          seeMore: !!report,
         },
       };
 
-      return mappingProps[type];
+      return { ...defaultProps, ...mappingProps[type] };
     },
 
     widgetGraphData() {
@@ -80,11 +88,11 @@ export default {
       }
 
       const { data } = this.widget.data;
-      const times = data.map((item) => item.time);
+      const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);
 
       const newData = {
-        labels: times,
+        labels,
         datasets: [
           {
             data: values,
@@ -100,9 +108,13 @@ export default {
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
+          openConfig: () => this.$emit('open-config'),
         },
         graph_column: {
           seeMore: () => this.redirectToReport(),
+        },
+        graph_funnel: {
+          openConfig: () => this.$emit('open-config'),
         },
       };
 

@@ -1,11 +1,11 @@
 <template>
   <header
-    class="insights-layout-header"
     v-if="currentDashboard"
+    class="insights-layout-header"
   >
     <UnnnicBreadcrumb
       :crumbs="breadcrumbs"
-      @crumbClick="$router.push($event.path)"
+      @crumb-click="$router.push($event.path)"
     />
     <section class="insights-layout-header__content">
       <HeaderSelectDashboard />
@@ -13,11 +13,11 @@
       <section class="content__actions">
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
-        <UnnnicButton
+        <!-- <UnnnicButton
           class="clickable"
           iconCenter="ios_share"
           type="secondary"
-        />
+        /> -->
       </section>
     </section>
   </header>

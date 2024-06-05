@@ -14,6 +14,7 @@ import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
+import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
 export default {
   name: 'DynamicWidget',
@@ -37,7 +38,7 @@ export default {
         graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
         table_dynamic_by_filter: TableDynamicByFilter,
-        table_group: null, // TODO: Create TableGroup component
+        table_group: TableGroup,
         card: CardDashboard,
         insight: null, // TODO: Create Insight component
       };
@@ -67,6 +68,11 @@ export default {
           fields: config?.fields,
           items: data?.results,
         },
+        table_group: {
+          tabs: config,
+          data: data?.results,
+          paginationTotal: data?.count,
+        },
         graph_column: {
           title: name,
           chartData: this.widgetGraphData || {},
@@ -87,9 +93,9 @@ export default {
         return;
       }
 
-      const { data } = this.widget.data;
-      const labels = data.map((item) => item.label);
-      const values = data.map((item) => item.value);
+      const { data, results } = this.widget.data;
+      const labels = (data || results).map((item) => item.label);
+      const values = (data || results).map((item) => item.value);
 
       const newData = {
         labels,

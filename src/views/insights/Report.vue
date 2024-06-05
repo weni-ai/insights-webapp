@@ -58,14 +58,14 @@ export default {
     },
 
     async getWidgetReportData() {
-      const { results } = await Dashboards.getDashboardWidgetReportData({
+      const response = await Dashboards.getDashboardWidgetReportData({
         dashboardUuid: this.currentDashboard.uuid,
         widgetUuid: this.report.widget,
         reportUuid: this.report.uuid,
       });
 
-      if (results) {
-        this.report.data = { data: results };
+      if (response) {
+        this.report.data = response;
       }
     },
   },

@@ -11,7 +11,7 @@
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
         :isLoading="getWidgetLoadingStatus(widget)"
-        @open-update-config="openDrawerConfigWidget(widget)"
+        @open-config="openDrawerConfigWidget(widget)"
       />
     </template>
     <DrawerConfigWidgetDynamic

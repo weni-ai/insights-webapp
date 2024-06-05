@@ -3,8 +3,8 @@
     ref="unnnicDrawer"
     class="drawer-config-widget-dynamic"
     :modelValue="modelValue"
-    :title="drawerProps.title"
-    :description="drawerProps.description"
+    :title="drawerProps?.title"
+    :description="drawerProps?.description"
     primaryButtonText="Salvar"
     secondaryButtonText="Cancelar"
     :disabledPrimaryButton="disablePrimaryButton"
@@ -14,18 +14,22 @@
     @close="$emit('close')"
   >
     <template #content>
-      <section class="drawer-config-widget-dynamic__content">
+      <form
+        class="drawer-config-widget-dynamic__content"
+        @submit.prevent
+      >
         <component
           :is="content"
           v-bind="contentProps"
           v-on="contentEvents"
         />
-      </section>
+      </form>
     </template>
   </UnnnicDrawer>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
 import unnnic from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
 
@@ -67,7 +71,6 @@ export default {
 
   computed: {
     drawerProps() {
-      const { type } = this.widget;
       const configMap = {
         graph_funnel: {
           title: 'Definir métricas do gráfico',
@@ -79,20 +82,18 @@ export default {
         },
       };
 
-      return configMap[type] || null;
+      return configMap[this.widget?.type] || {};
     },
     content() {
-      const { type } = this.widget;
       const componentMap = {
         graph_funnel: DrawerConfigContentFunnel,
         card: null,
       };
 
-      return componentMap[type] || null;
+      return componentMap[this.widget?.type] || {};
     },
     contentProps() {
       const { flowsOptions, config } = this;
-      const { type } = this.widget;
 
       const defaultProps = {
         flowsOptions,
@@ -101,10 +102,9 @@ export default {
 
       const mappingProps = {};
 
-      return { ...defaultProps, ...mappingProps[type] };
+      return { ...defaultProps, ...mappingProps[this.widget?.type] };
     },
     contentEvents() {
-      const { type } = this.widget;
       const mappingEvents = {
         graph_funnel: {
           updateDisablePrimaryButton: (boolean) =>
@@ -113,11 +113,15 @@ export default {
         card: {},
       };
 
-      return mappingEvents[type] || {};
+      return mappingEvents[this.widget?.type] || {};
     },
   },
 
   methods: {
+    ...mapActions({
+      updateWidget: 'dashboards/updateWidget',
+    }),
+
     async fetchFlowsSource() {
       const response = await Projects.getProjectSource('flows');
       response?.forEach((source) => {

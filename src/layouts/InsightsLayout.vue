@@ -8,7 +8,7 @@
       <main
         class="insights__main"
         :style="{
-          height: `${mainHeight}vh`,
+          height: '100%' || `${mainHeight}vh`,
         }"
       >
         <slot />
@@ -55,11 +55,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$topbarHeight: 88px;
-
 .insights-layout {
   display: flex;
   flex-direction: column;
+
   height: 100vh;
   max-height: 100vh;
   width: 100vw;
@@ -72,23 +71,12 @@ $topbarHeight: 88px;
   gap: $unnnic-spacing-sm;
   position: relative;
 
-  &__sidebar {
-    grid-area: sidebar;
-  }
-
-  &__topbar {
-    grid-area: topbar;
-  }
-
   &__insights {
-    height: calc(100vh - $topbarHeight);
+    overflow: hidden;
+
+    height: 100%;
 
     position: relative;
-
-    grid-area: insights;
-    display: grid;
-    grid-template-rows: minmax(4fr, 6fr) auto;
-    grid-template-columns: auto;
 
     .insights__main {
       display: flex;

@@ -13,6 +13,7 @@ const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
+  RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
@@ -38,6 +39,9 @@ export default {
     },
     [mutations.SET_CURRENT_DASHBOARD_WIDGETS](state, widgets) {
       state.currentDashboardWidgets = widgets;
+    },
+    [mutations.RESET_CURRENT_DASHBOARD_WIDGETS](state) {
+      state.currentDashboardWidgets = [];
     },
     [mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA](state, { uuid, data }) {
       const widgetIndex = state.currentDashboardWidgets.findIndex(
@@ -71,19 +75,23 @@ export default {
     },
   },
   actions: {
-    async setDashboards({ commit }, dashboards) {
-      commit(mutations.SET_DASHBOARDS, dashboards);
+    async getDashboards({ commit }) {
+      const dashboard = await Dashboards.getAll();
+      commit(mutations.SET_DASHBOARDS, dashboard);
     },
     async setCurrentDashboard({ commit }, dashboard) {
       commit(mutations.SET_CURRENT_DASHBOARD, dashboard);
     },
-    async setCurrentDashboardWidgets({ commit }, widgets) {
+    async getCurrentDashboardWidgets({ state, commit }) {
+      const widgets = await Dashboards.getDashboardWidgets(
+        state.currentDashboard.uuid,
+      );
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGETS, widgets);
     },
-    async setCurrentDashboardWidgetData({ commit }, { uuid, data }) {
-      commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, { uuid, data });
-    },
-    async setCurrentDashboardFilters({ commit }, filters) {
+    async getCurrentDashboardFilters({ commit, state }) {
+      const filters = await Dashboards.getDashboardFilters(
+        state.currentDashboard.uuid,
+      );
       commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
     },
     async setAppliedFilters({ commit }, filters) {
@@ -109,6 +117,33 @@ export default {
 
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
+    },
+    async fetchWidgetData({ state, commit }, widgetUuid) {
+      try {
+        const data = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: state.currentDashboard.uuid,
+          widgetUuid: widgetUuid,
+        });
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid: widgetUuid,
+          data,
+        });
+      } catch (error) {
+        console.error(error);
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid: widgetUuid,
+          data: null,
+        });
+      }
+    },
+    async getCurrentDashboardWidgetsDatas({ state, dispatch }) {
+      Promise.all(
+        state.currentDashboardWidgets.map(async ({ uuid, name, config }) => {
+          if (name && Object.keys(config).length) {
+            dispatch('fetchWidgetData', uuid);
+          }
+        }),
+      );
     },
     async updateWidget({ commit }, widget) {
       await Widgets.updateWidget({

@@ -1,6 +1,6 @@
 import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
-import { Dashboards } from '@/services/api';
+import { Dashboards, Widgets } from '@/services/api';
 
 function treatFilters(filters, valueHandler) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -14,6 +14,7 @@ const mutations = {
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
+  UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
   SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
@@ -50,6 +51,13 @@ export default {
           data,
         };
       }
+    },
+    [mutations.UPDATE_CURRENT_DASHBOARD_WIDGET](state, widget) {
+      const widgetIndex = state.currentDashboardWidgets.findIndex(
+        (mappedWidget) => mappedWidget.uuid === widget.uuid,
+      );
+
+      state.currentDashboardWidgets[widgetIndex] = widget;
     },
     [mutations.SET_CURRENT_DASHBOARD_FILTERS](state, filters) {
       state.currentDashboardFilters = filters;
@@ -132,6 +140,12 @@ export default {
           }
         }),
       );
+    },
+    async updateWidget({ commit }, widget) {
+      await Widgets.updateWidget({
+        widget,
+      });
+      commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
     },
   },
   getters: {

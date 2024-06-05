@@ -11,8 +11,15 @@
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
         :isLoading="getWidgetLoadingStatus(widget)"
+        @open-config="openDrawerConfigWidget(widget)"
       />
     </template>
+    <DrawerConfigWidgetDynamic
+      v-show="!!widgetConfigurating"
+      :modelValue="showDrawerConfigWidget"
+      :widget="widgetConfigurating"
+      @close="closeDrawerConfigWidget"
+    />
   </section>
 </template>
 
@@ -20,12 +27,21 @@
 import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
+import DrawerConfigWidgetDynamic from '@/components/insights/drawers/DrawerConfigWidgetDynamic.vue';
 
 export default {
   name: 'DashboardView',
 
   components: {
     DynamicWidget,
+    DrawerConfigWidgetDynamic,
+  },
+
+  data() {
+    return {
+      showDrawerConfigWidget: false,
+      widgetConfigurating: null,
+    };
   },
 
   computed: {
@@ -86,6 +102,16 @@ export default {
       const config = widget.config;
       const isConfigured = config && Object.keys(config).length !== 0;
       return isConfigured ? !Object.keys(widget).includes('data') : false;
+    },
+
+    openDrawerConfigWidget(widget) {
+      this.widgetConfigurating = widget;
+      this.showDrawerConfigWidget = true;
+    },
+
+    closeDrawerConfigWidget() {
+      this.widgetConfigurating = null;
+      this.showDrawerConfigWidget = false;
     },
   },
 };

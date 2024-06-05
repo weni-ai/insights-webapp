@@ -49,13 +49,16 @@ export default {
       const { isLoading } = this;
       const { name, data, type, config, report } = this.widget;
 
+      const defaultProps = {
+        isLoading,
+      };
+
       const mappingProps = {
         card: {
           metric: data?.value || data,
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,
-          isLoading,
         },
         table_dynamic_by_filter: {
           headerIcon: config?.icon?.name,
@@ -63,23 +66,20 @@ export default {
           headerTitle: config?.name_overwrite || name,
           fields: config?.fields,
           items: data?.results,
-          isLoading,
         },
         graph_column: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
         },
         graph_bar: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
         },
       };
 
-      return mappingProps[type];
+      return { ...defaultProps, ...mappingProps[type] };
     },
 
     widgetGraphData() {
@@ -108,9 +108,13 @@ export default {
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
+          openConfig: () => this.$emit('open-config'),
         },
         graph_column: {
           seeMore: () => this.redirectToReport(),
+        },
+        graph_funnel: {
+          openConfig: () => this.$emit('open-config'),
         },
       };
 

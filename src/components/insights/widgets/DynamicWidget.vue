@@ -14,6 +14,7 @@ import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
+import { sortByKey } from '@/utils/array';
 
 export default {
   name: 'DynamicWidget',
@@ -87,7 +88,12 @@ export default {
         return;
       }
 
-      const { data } = this.widget.data;
+      let { data } = this.widget.data;
+
+      if (this.widget.type === 'graph_bar') {
+        data = sortByKey(data, 'label');
+      }
+
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);
 

@@ -17,10 +17,9 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
-import { Dashboards } from '@/services/api';
 
 export default {
   name: 'DashboardView',
@@ -53,8 +52,8 @@ export default {
       immediate: true,
       handler(newCurrentDashboardUuid) {
         if (newCurrentDashboardUuid) {
-          this.setCurrentDashboardWidgets([]);
-          this.getCurrentDashboardWidgets();
+          this.resetCurrentDashboardWidgets([]);
+          this.handlingGetCurrentDashboardWidgets();
         }
       },
     },
@@ -62,41 +61,18 @@ export default {
 
   methods: {
     ...mapActions({
-      setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
-      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
+      getCurrentDashboardWidgets: 'dashboards/getCurrentDashboardWidgets',
+      fetchWidgetData: 'dashboards/fetchWidgetData',
+      getCurrentDashboardWidgetsDatas:
+        'dashboards/getCurrentDashboardWidgetsDatas',
+    }),
+    ...mapMutations({
+      resetCurrentDashboardWidgets: 'dashboards/SET_CURRENT_DASHBOARD_WIDGETS',
     }),
 
-    async getCurrentDashboardWidgets() {
-      const widgets = await Dashboards.getDashboardWidgets(
-        this.currentDashboard.uuid,
-      );
-      this.setCurrentDashboardWidgets(widgets);
-      this.getCurrentDashboardWidgetsDatas(widgets);
-    },
-
-    async getCurrentDashboardWidgetsDatas(widgets) {
-      Promise.all(
-        widgets.map(async ({ uuid, name, config }) => {
-          if (name && Object.keys(config).length) {
-            this.setCurrentDashboardWidgetData(
-              await this.fetchWidgetData(uuid),
-            );
-          }
-        }),
-      );
-    },
-
-    async fetchWidgetData(uuid) {
-      try {
-        const responseData = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: this.currentDashboard.uuid,
-          widgetUuid: uuid,
-        });
-        return { uuid, data: responseData };
-      } catch (error) {
-        console.error(error);
-        return { uuid, data: null };
-      }
+    async handlingGetCurrentDashboardWidgets() {
+      await this.getCurrentDashboardWidgets();
+      await this.getCurrentDashboardWidgetsDatas();
     },
 
     getWidgetStyle(gridPosition) {

@@ -63,19 +63,23 @@ export default {
     },
   },
   actions: {
-    async setDashboards({ commit }, dashboards) {
-      commit(mutations.SET_DASHBOARDS, dashboards);
+    async getDashboards({ commit }) {
+      const dashboard = await Dashboards.getAll();
+      commit(mutations.SET_DASHBOARDS, dashboard);
     },
     async setCurrentDashboard({ commit }, dashboard) {
       commit(mutations.SET_CURRENT_DASHBOARD, dashboard);
     },
-    async setCurrentDashboardWidgets({ commit }, widgets) {
+    async getCurrentDashboardWidgets({ state, commit }) {
+      const widgets = await Dashboards.getDashboardWidgets(
+        state.currentDashboard.uuid,
+      );
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGETS, widgets);
     },
-    async setCurrentDashboardWidgetData({ commit }, { uuid, data }) {
-      commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, { uuid, data });
-    },
-    async setCurrentDashboardFilters({ commit }, filters) {
+    async getCurrentDashboardFilters({ commit, state }) {
+      const filters = await Dashboards.getDashboardFilters(
+        state.currentDashboard.uuid,
+      );
       commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
     },
     async setAppliedFilters({ commit }, filters) {
@@ -102,11 +106,37 @@ export default {
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
     },
+    async fetchWidgetData({ state, commit }, widgetUuid) {
+      try {
+        const data = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: state.currentDashboard.uuid,
+          widgetUuid: widgetUuid,
+        });
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid: widgetUuid,
+          data,
+        });
+      } catch (error) {
+        console.error(error);
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid: widgetUuid,
+          data: null,
+        });
+      }
+    },
+    async getCurrentDashboardWidgetsDatas({ state, dispatch }) {
+      Promise.all(
+        state.currentDashboardWidgets.map(async ({ uuid, name, config }) => {
+          if (name && Object.keys(config).length) {
+            dispatch('fetchWidgetData', uuid);
+          }
+        }),
+      );
+    },
   },
   getters: {
     dashboardDefault(state) {
       return state.dashboards.find((dashboard) => dashboard.is_default);
     },
-    appliedFilters: (state) => state.appliedFilters,
   },
 };

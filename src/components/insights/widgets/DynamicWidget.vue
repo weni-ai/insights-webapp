@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
@@ -24,13 +24,27 @@ export default {
       type: Object,
       default: () => ({}),
     },
-    isLoading: Boolean,
+  },
+
+  created() {
+    if (this.isConfigured) {
+      this.getCurrentDashboardWidgetData(this.widget.uuid);
+    }
   },
 
   computed: {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
+
+    isConfigured() {
+      const { config } = this.widget;
+      return config && Object.keys(config).length > 0;
+    },
+
+    isLoading() {
+      return this.isConfigured && !('data' in this.widget);
+    },
 
     currentComponent() {
       const componentMap = {
@@ -129,6 +143,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+    }),
+
     redirectToReport() {
       const { uuid, report } = this.widget;
       if (!report) {

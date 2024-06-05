@@ -118,7 +118,7 @@ export default {
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
     },
-    async fetchWidgetData({ state, commit }, widgetUuid) {
+    async getCurrentDashboardWidgetData({ state, commit }, widgetUuid) {
       try {
         const data = await Dashboards.getDashboardWidgetData({
           dashboardUuid: state.currentDashboard.uuid,
@@ -135,15 +135,6 @@ export default {
           data: null,
         });
       }
-    },
-    async getCurrentDashboardWidgetsDatas({ state, dispatch }) {
-      Promise.all(
-        state.currentDashboardWidgets.map(async ({ uuid, name, config }) => {
-          if (name && Object.keys(config).length) {
-            dispatch('fetchWidgetData', uuid);
-          }
-        }),
-      );
     },
     async updateWidget({ commit }, widget) {
       await Widgets.updateWidget({

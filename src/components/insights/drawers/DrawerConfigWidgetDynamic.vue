@@ -180,5 +180,10 @@ export default {
     display: grid;
     gap: $unnnic-spacing-sm;
   }
+
+  :deep(.unnnic-label__label),
+  :deep(.unnnic-form__label) {
+    margin: 0 0 $unnnic-spacing-nano;
+  }
 }
 </style>

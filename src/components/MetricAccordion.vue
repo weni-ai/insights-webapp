@@ -87,7 +87,10 @@ export default {
   }
   :deep(.unnnic-collapse__body) {
     margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
-    padding: 0 $unnnic-spacing-ant $unnnic-spacing-ant;
+    padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
+
+    display: grid;
+    gap: $unnnic-spacing-nano;
   }
 
   &__header {

@@ -40,7 +40,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-
+import { Dashboards } from '@/services/api';
 import DynamicFilter from './DynamicFilter.vue';
 
 export default {
@@ -72,6 +72,8 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
+      widgets: (state) => state.dashboards.currentDashboardWidgets,
+      currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
 
     areStoreFiltersAndInternalEqual() {
@@ -85,6 +87,8 @@ export default {
   methods: {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
+      getDashboardWidgetData: 'dashboards/getDashboardWidgetData',
+      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
     }),
     clearFilters() {
       this.filtersInternal = {};
@@ -103,7 +107,28 @@ export default {
     },
     setFilters() {
       this.setAppliedFilters(this.filtersInternal);
+      Promise.all(
+        this.widgets.map(async ({ uuid, name, config }) => {
+          if (name && Object.keys(config).length) {
+            this.setCurrentDashboardWidgetData(
+              await this.fetchWidgetData(uuid),
+            );
+          }
+        }),
+      );
       this.close();
+    },
+    async fetchWidgetData(uuid) {
+      try {
+        const responseData = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: this.currentDashboard.uuid,
+          widgetUuid: uuid,
+        });
+        return { uuid, data: responseData };
+      } catch (error) {
+        console.error(error);
+        return { uuid, data: null };
+      }
     },
     syncFiltersInternal() {
       if (!this.areStoreFiltersAndInternalEqual) {

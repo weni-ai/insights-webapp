@@ -33,10 +33,14 @@
         }"
         icon="star_rate"
         scheme="neutral-clean"
+        clickable
+        @mouseenter="setStarHovered(dashboard.uuid)"
+        @mouseleave="setStarHovered('')"
         :filled="
           getIsDefaultDashboard(dashboard.uuid) ||
-          dashboardHovered === dashboard.uuid
+          starHovered === dashboard.uuid
         "
+        clickable
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>
@@ -53,6 +57,7 @@ export default {
   data() {
     return {
       dashboardHovered: '',
+      starHovered: '',
     };
   },
 
@@ -77,6 +82,9 @@ export default {
     },
     setDashboardHovered(uuid) {
       this.dashboardHovered = uuid;
+    },
+    setStarHovered(dashboardUuid) {
+      this.starHovered = dashboardUuid;
     },
     handleSetDefaultDashboard(dashboard) {
       if (dashboard.uuid === this.dashboardDefault.uuid) return;
@@ -164,10 +172,10 @@ $dropdownFixedWidth: 314px;
 
         &:hover {
           background-color: $unnnic-color-neutral-lightest;
+        }
 
-          .item__star-icon:not(.item__star-icon--selected) {
-            color: $unnnic-color-weni-500;
-          }
+        .item__star-icon:not(.item__star-icon--selected):hover {
+          color: $unnnic-color-weni-500;
         }
 
         &::before {

@@ -16,6 +16,8 @@ import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
+import { sortByKey } from '@/utils/array';
+
 export default {
   name: 'DynamicWidget',
 
@@ -109,7 +111,12 @@ export default {
         return;
       }
 
-      const { data, results } = this.widget.data;
+      let { data, results } = this.widget.data;
+
+      if (this.widget.type === 'graph_column') {
+        data = sortByKey(data, 'label');
+      }
+
       const labels = (data || results).map((item) => item.label);
       const values = (data || results).map((item) => item.value);
 

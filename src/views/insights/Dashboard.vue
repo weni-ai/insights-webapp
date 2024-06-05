@@ -68,7 +68,7 @@ export default {
       immediate: true,
       handler(newCurrentDashboardUuid) {
         if (newCurrentDashboardUuid) {
-          this.resetCurrentDashboardWidgets([]);
+          this.resetCurrentDashboardWidgets();
           this.handlingGetCurrentDashboardWidgets();
         }
       },
@@ -83,7 +83,8 @@ export default {
         'dashboards/getCurrentDashboardWidgetsDatas',
     }),
     ...mapMutations({
-      resetCurrentDashboardWidgets: 'dashboards/SET_CURRENT_DASHBOARD_WIDGETS',
+      resetCurrentDashboardWidgets:
+        'dashboards/RESET_CURRENT_DASHBOARD_WIDGETS',
     }),
 
     async handlingGetCurrentDashboardWidgets() {

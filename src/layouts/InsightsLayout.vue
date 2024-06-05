@@ -14,16 +14,16 @@
         <slot />
       </main>
     </section>
-    <ResizableBar />
+    <!-- <ResizableBar /> -->
   </section>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
-import { pxToVh } from '@/utils/css';
+// import { pxToVh } from '@/utils/css';
 
-import ResizableBar from '@/components/insights/ResizableBar/index.vue';
+// import ResizableBar from '@/components/insights/ResizableBar/index.vue';
 
 import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 
@@ -32,7 +32,7 @@ export default {
 
   components: {
     InsightsLayoutHeader,
-    ResizableBar,
+    // ResizableBar,
   },
 
   computed: {
@@ -42,11 +42,13 @@ export default {
     }),
 
     mainHeight() {
-      return (
-        pxToVh(this.$refs.insightsContent?.clientHeight) -
-          this.contentHeight -
-          pxToVh(this.barHandlerHeight) || 0
-      );
+      // 81 is the default value when the resizable bar is minimized.
+      return 81;
+      // return (
+      //   pxToVh(this.$refs.insightsContent?.clientHeight) -
+      //     this.contentHeight -
+      //     pxToVh(this.barHandlerHeight) || 0
+      // );
     },
   },
 };

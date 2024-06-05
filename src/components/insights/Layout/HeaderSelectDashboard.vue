@@ -37,6 +37,7 @@
           getIsDefaultDashboard(dashboard.uuid) ||
           dashboardHovered === dashboard.uuid
         "
+        clickable
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>

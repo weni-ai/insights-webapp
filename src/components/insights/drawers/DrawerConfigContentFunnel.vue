@@ -25,7 +25,7 @@ import MetricAccordion from '@/components/MetricAccordion.vue';
 export default {
   name: 'DrawerConfigContentFunnel',
 
-  emits: ['update-disable-primary-button'],
+  emits: ['update:model-value', 'update-disable-primary-button'],
 
   components: {
     MetricAccordion,
@@ -83,6 +83,13 @@ export default {
   },
 
   watch: {
+    metrics: {
+      deep: true,
+      handler(newMetrics) {
+        this.$emit('update:model-value', newMetrics);
+      },
+    },
+
     validMetricsLength: {
       immediate: true,
       handler(newValidMetricsLength) {

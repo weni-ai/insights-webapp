@@ -71,8 +71,9 @@ export default {
       return this.tabs?.map((mappedConfig) => mappedConfig.name);
     },
     activeTab() {
-      return this.tabs.find(
-        (tab) => tab.name === this.activeTabName || tab.is_default,
+      return (
+        this.tabs.find((tab) => tab.name === this.activeTabName) ||
+        this.tabs.find((tab) => tab.is_default)
       );
     },
     activeTable() {
@@ -113,6 +114,21 @@ export default {
         this.activeTabName = newActiveTab.name;
       }
     },
+    activeTabName() {
+      this.$router.replace({
+        ...this.$route,
+        query: { slug: this.activeTab.slug },
+      });
+    },
+  },
+
+  unmounted() {
+    const newQuery = this.$route.query;
+    delete newQuery.slug;
+    this.$router.replace({
+      ...this.$route,
+      query: newQuery,
+    });
   },
 };
 </script>

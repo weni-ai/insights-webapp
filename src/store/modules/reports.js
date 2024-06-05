@@ -32,13 +32,14 @@ export default {
       }
     },
 
-    async getWidgetReportData({ state, commit }) {
+    async getWidgetReportData({ commit }) {
       const { dashboardUuid, widgetUuid } = Router.currentRoute.value.params;
+      const { slug } = Router.currentRoute.value.query;
       try {
         const data = await Dashboards.getDashboardWidgetReportData({
           dashboardUuid: dashboardUuid,
           widgetUuid: widgetUuid,
-          reportUuid: state.report.uuid,
+          slug,
         });
         commit(mutations.SET_REPORT_DATA, data);
       } catch (error) {

@@ -176,5 +176,13 @@ export default {
       }
     },
   },
+
+  watch: {
+    '$route.query'() {
+      if (this.$route.name === 'report') {
+        this.getWidgetReportData();
+      }
+    },
+  },
 };
 </script>

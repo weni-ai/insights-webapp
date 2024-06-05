@@ -112,22 +112,23 @@ export default {
     return widgetData;
   },
 
-  async getDashboardWidgetReportData({
-    dashboardUuid,
-    widgetUuid,
-    reportUuid,
-  }) {
-    if (!dashboardUuid || !widgetUuid || !reportUuid) {
+  async getDashboardWidgetReportData({ dashboardUuid, widgetUuid, slug }) {
+    if (!dashboardUuid || !widgetUuid) {
       throw new Error(
         'Please provide valids UUIDs parameters to request report data of widget.',
       );
     }
 
-    const widgetData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/${reportUuid}/data`,
+    const queryParams = {
+      slug,
+    };
+
+    const reportData = await http.get(
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data`,
+      { params: queryParams },
     );
 
-    return widgetData;
+    return reportData;
   },
 
   async setDefaultDashboard({ dashboardUuid, isDefault }) {

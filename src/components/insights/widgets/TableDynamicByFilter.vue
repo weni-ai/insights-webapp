@@ -38,7 +38,7 @@
           :key="item.name"
           class="table__item-row"
           :class="{ 'table__item-row--clickable': item.link }"
-          @click="redirectItem(item.link)"
+          @click="redirectItem(item)"
         >
           <td class="item__col main">
             <UnnnicIcon
@@ -118,7 +118,7 @@ export default {
     },
 
     redirectItem(item) {
-      if (!item.link) {
+      if (!item?.link) {
         return;
       }
 
@@ -140,8 +140,8 @@ export default {
       };
 
       const redirectMap = {
-        internal: internalRedirect,
-        external: externalRedirect,
+        internal: internalRedirect(),
+        external: externalRedirect(),
       };
 
       const redirectAction = redirectMap[item.link.type];

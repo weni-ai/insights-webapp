@@ -31,6 +31,7 @@ const router = createRouter({
         const { projectUuid = '' } = to.query;
         await store.dispatch('config/setToken', token);
         await store.dispatch('config/setProject', { uuid: projectUuid });
+        await store.dispatch('dashboards/getDashboards');
         next({ name: 'dashboard' });
       },
     },

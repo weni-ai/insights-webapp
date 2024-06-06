@@ -2,14 +2,13 @@
   <MetricAccordion
     v-for="(metric, index) of metrics"
     :key="metric.title"
-    :active="activeMetric === index"
-    @update:active="updateActiveMetric(index, $event)"
     v-model:name="metric.name"
     v-model:flow="metric.flow"
+    :active="activeMetric === index"
     :title="metric.title"
     :flowsOptions="flowsOptions"
+    @update:active="updateActiveMetric(index, $event)"
   />
-
   <UnnnicButton
     text="Adicionar métrica"
     iconLeft="add"
@@ -24,8 +23,6 @@ import MetricAccordion from '@/components/MetricAccordion.vue';
 
 export default {
   name: 'DrawerConfigContentFunnel',
-
-  emits: ['update:model-value', 'update-disable-primary-button'],
 
   components: {
     MetricAccordion,
@@ -42,6 +39,8 @@ export default {
     },
   },
 
+  emits: ['update:model-value', 'update-disable-primary-button'],
+
   data() {
     return {
       metrics: [
@@ -49,7 +48,7 @@ export default {
         { title: 'Segunda métrica', name: '', flow: [], active: false },
         { title: 'Terceira métrica', name: '', flow: [], active: false },
       ],
-      activeMetric: 0,
+      activeMetric: null,
     };
   },
 
@@ -58,6 +57,28 @@ export default {
       return this.metrics.filter((metric) => metric.name && metric.flow.length)
         .length;
     },
+  },
+
+  watch: {
+    metrics: {
+      deep: true,
+      handler(newMetrics) {
+        this.$emit('update:model-value', newMetrics);
+      },
+    },
+
+    validMetricsLength: {
+      immediate: true,
+      handler(newValidMetricsLength) {
+        this.$emit('update-disable-primary-button', newValidMetricsLength < 3);
+      },
+    },
+  },
+
+  mounted() {
+    this.$nextTick().then(() => {
+      this.activeMetric = 0;
+    });
   },
 
   methods: {
@@ -79,22 +100,6 @@ export default {
       if (this.metrics.length < 5) {
         this.metrics.push(newMetric);
       }
-    },
-  },
-
-  watch: {
-    metrics: {
-      deep: true,
-      handler(newMetrics) {
-        this.$emit('update:model-value', newMetrics);
-      },
-    },
-
-    validMetricsLength: {
-      immediate: true,
-      handler(newValidMetricsLength) {
-        this.$emit('update-disable-primary-button', newValidMetricsLength < 3);
-      },
     },
   },
 };

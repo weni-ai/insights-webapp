@@ -22,10 +22,6 @@ const router = createRouter({
       component: Report,
     },
     {
-      path: '/:pathMatch(.*)*',
-      redirect: '/',
-    },
-    {
       path: '/loginexternal/:token',
       name: 'external.login',
       component: null,

@@ -7,7 +7,7 @@ export default {
   namespaced: true,
   state: {
     project: {
-      uuid: 'b24ee4dd-d8d8-430d-990a-794586f4ceb4', // Temporary mock uuid
+      uuid: '',
     },
     token: '',
   },

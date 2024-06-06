@@ -7,12 +7,16 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import BarChart from '@/components/insights/charts/BarChart.vue';
+import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
+import TableGroup from '@/components/insights/widgets/TableGroup.vue';
+
+import { sortByKey } from '@/utils/array';
 
 export default {
   name: 'DynamicWidget',
@@ -22,7 +26,14 @@ export default {
       type: Object,
       default: () => ({}),
     },
-    isLoading: Boolean,
+  },
+
+  created() {
+    if (this.$route.name === 'report') {
+      this.getWidgetReportData();
+    } else if (this.isConfigured) {
+      this.getCurrentDashboardWidgetData(this.widget.uuid);
+    }
   },
 
   computed: {
@@ -30,13 +41,22 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
 
+    isConfigured() {
+      const { config } = this.widget;
+      return config && Object.keys(config).length > 0;
+    },
+
+    isLoading() {
+      return this.isConfigured && !('data' in this.widget);
+    },
+
     currentComponent() {
       const componentMap = {
         graph_column: BarChart,
-        graph_bar: null, // TODO: Create BarGraph component
+        graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
         table_dynamic_by_filter: TableDynamicByFilter,
-        table_group: null, // TODO: Create TableGroup component
+        table_group: TableGroup,
         card: CardDashboard,
         insight: null, // TODO: Create Insight component
       };
@@ -47,13 +67,17 @@ export default {
     widgetProps() {
       const { isLoading } = this;
       const { name, data, type, config, report } = this.widget;
+
+      const defaultProps = {
+        isLoading,
+      };
+
       const mappingProps = {
         card: {
           metric: data?.value || data,
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,
-          isLoading,
         },
         table_dynamic_by_filter: {
           headerIcon: config?.icon?.name,
@@ -61,17 +85,25 @@ export default {
           headerTitle: config?.name_overwrite || name,
           fields: config?.fields,
           items: data?.results,
-          isLoading,
+        },
+        table_group: {
+          tabs: config,
+          data: data?.results,
+          paginationTotal: data?.count,
         },
         graph_column: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
+        },
+        graph_bar: {
+          title: name,
+          chartData: this.widgetGraphData || {},
+          seeMore: !!report,
         },
       };
 
-      return mappingProps[type];
+      return { ...defaultProps, ...mappingProps[type] };
     },
 
     widgetGraphData() {
@@ -79,12 +111,17 @@ export default {
         return;
       }
 
-      const { data } = this.widget.data;
-      const times = data.map((item) => item.time);
-      const values = data.map((item) => item.value);
+      let { data, results } = this.widget.data;
+
+      if (this.widget.type === 'graph_column') {
+        data = sortByKey(data, 'label');
+      }
+
+      const labels = (data || results).map((item) => item.label);
+      const values = (data || results).map((item) => item.value);
 
       const newData = {
-        labels: times,
+        labels,
         datasets: [
           {
             data: values,
@@ -100,9 +137,13 @@ export default {
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
+          openConfig: () => this.$emit('open-config'),
         },
         graph_column: {
           seeMore: () => this.redirectToReport(),
+        },
+        graph_funnel: {
+          openConfig: () => this.$emit('open-config'),
         },
       };
 
@@ -111,6 +152,11 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+      getWidgetReportData: 'reports/getWidgetReportData',
+    }),
+
     redirectToReport() {
       const { uuid, report } = this.widget;
       if (!report) {
@@ -134,6 +180,14 @@ export default {
 
         default:
           break;
+      }
+    },
+  },
+
+  watch: {
+    '$route.query'() {
+      if (this.$route.name === 'report') {
+        this.getWidgetReportData();
       }
     },
   },

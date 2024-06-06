@@ -36,7 +36,7 @@
       :iconCenter="configured ? 'tune' : ''"
       :iconLeft="configured ? '' : 'tune'"
       :text="configured ? '' : 'Definir métrica'"
-      @click.stop="emitHandleConfig"
+      @click.stop="$emit('open-config')"
     />
   </CardBase>
 </template>
@@ -68,12 +68,6 @@ export default {
   computed: {
     showMetricError() {
       return this.metric === null;
-    },
-  },
-
-  methods: {
-    emitHandleConfig() {
-      this.$emit('handle-config');
     },
   },
 };

@@ -4,6 +4,7 @@ import gpt from './modules/gpt';
 import resizableBar from './modules/resizableBar';
 import config from './modules/config';
 import dashboards from './modules/dashboards';
+import reports from './modules/reports';
 
 const store = createStore({
   modules: {
@@ -12,6 +13,7 @@ const store = createStore({
     resizableBar,
     config,
     dashboards,
+    reports,
   },
 });
 

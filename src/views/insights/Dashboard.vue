@@ -10,23 +10,37 @@
       <DynamicWidget
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
-        :isLoading="getWidgetLoadingStatus(widget)"
+        @open-config="openDrawerConfigWidget(widget)"
       />
     </template>
+    <DrawerConfigWidgetDynamic
+      v-show="!!widgetConfigurating"
+      :modelValue="showDrawerConfigWidget"
+      :widget="widgetConfigurating"
+      @close="closeDrawerConfigWidget"
+    />
   </section>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
-import { Dashboards } from '@/services/api';
+import DrawerConfigWidgetDynamic from '@/components/insights/drawers/DrawerConfigWidgetDynamic.vue';
 
 export default {
   name: 'DashboardView',
 
   components: {
     DynamicWidget,
+    DrawerConfigWidgetDynamic,
+  },
+
+  data() {
+    return {
+      showDrawerConfigWidget: false,
+      widgetConfigurating: null,
+    };
   },
 
   computed: {
@@ -53,7 +67,7 @@ export default {
       immediate: true,
       handler(newCurrentDashboardUuid) {
         if (newCurrentDashboardUuid) {
-          this.setCurrentDashboardWidgets([]);
+          this.resetCurrentDashboardWidgets();
           this.getCurrentDashboardWidgets();
         }
       },
@@ -62,42 +76,13 @@ export default {
 
   methods: {
     ...mapActions({
-      setCurrentDashboardWidgets: 'dashboards/setCurrentDashboardWidgets',
-      setCurrentDashboardWidgetData: 'dashboards/setCurrentDashboardWidgetData',
+      getCurrentDashboardWidgets: 'dashboards/getCurrentDashboardWidgets',
+      fetchWidgetData: 'dashboards/fetchWidgetData',
     }),
-
-    async getCurrentDashboardWidgets() {
-      const widgets = await Dashboards.getDashboardWidgets(
-        this.currentDashboard.uuid,
-      );
-      this.setCurrentDashboardWidgets(widgets);
-      this.getCurrentDashboardWidgetsDatas(widgets);
-    },
-
-    async getCurrentDashboardWidgetsDatas(widgets) {
-      Promise.all(
-        widgets.map(async ({ uuid, name, config }) => {
-          if (name && Object.keys(config).length) {
-            this.setCurrentDashboardWidgetData(
-              await this.fetchWidgetData(uuid),
-            );
-          }
-        }),
-      );
-    },
-
-    async fetchWidgetData(uuid) {
-      try {
-        const responseData = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: this.currentDashboard.uuid,
-          widgetUuid: uuid,
-        });
-        return { uuid, data: responseData };
-      } catch (error) {
-        console.error(error);
-        return { uuid, data: null };
-      }
-    },
+    ...mapMutations({
+      resetCurrentDashboardWidgets:
+        'dashboards/RESET_CURRENT_DASHBOARD_WIDGETS',
+    }),
 
     getWidgetStyle(gridPosition) {
       return {
@@ -106,10 +91,14 @@ export default {
       };
     },
 
-    getWidgetLoadingStatus(widget) {
-      const config = widget.config;
-      const isConfigured = config && Object.keys(config).length !== 0;
-      return isConfigured ? !Object.keys(widget).includes('data') : false;
+    openDrawerConfigWidget(widget) {
+      this.widgetConfigurating = widget;
+      this.showDrawerConfigWidget = true;
+    },
+
+    closeDrawerConfigWidget() {
+      this.widgetConfigurating = null;
+      this.showDrawerConfigWidget = false;
     },
   },
 };

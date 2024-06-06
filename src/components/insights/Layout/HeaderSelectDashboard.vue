@@ -5,8 +5,17 @@
   >
     <template #trigger>
       <UnnnicAvatarIcon
+        v-if="$route.name === 'dashboard'"
         icon="monitoring"
         scheme="aux-purple-500"
+      />
+      <UnnnicIcon
+        v-else
+        class="header-select-dashboard__arrow-back"
+        icon="arrow_back"
+        scheme="neutral-darkest"
+        clickable
+        @click.stop="$router.back"
       />
       <section class="dropdown__trigger">
         <h1 class="trigger__title">
@@ -34,12 +43,12 @@
         icon="star_rate"
         scheme="neutral-clean"
         clickable
-        @mouseenter="setStarHovered(dashboard.uuid)"
-        @mouseleave="setStarHovered('')"
         :filled="
           getIsDefaultDashboard(dashboard.uuid) ||
           starHovered === dashboard.uuid
         "
+        @mouseenter="setStarHovered(dashboard.uuid)"
+        @mouseleave="setStarHovered('')"
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>
@@ -138,6 +147,10 @@ $dropdownFixedWidth: 314px;
 
   &__item {
     justify-content: space-between;
+  }
+
+  &__arrow-back {
+    margin: $unnnic-spacing-xs;
   }
 
   :deep(.unnnic-dropdown__trigger) {

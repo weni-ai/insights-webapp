@@ -1,6 +1,7 @@
 import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards, Widgets } from '@/services/api';
+import { sortByKey } from '@/utils/array';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -83,7 +84,10 @@ export default {
   actions: {
     async getDashboards({ commit }) {
       const dashboard = await Dashboards.getAll();
-      commit(mutations.SET_DASHBOARDS, dashboard);
+      commit(
+        mutations.SET_DASHBOARDS,
+        sortByKey(dashboard, 'is_default', 'desc'),
+      );
     },
     async setCurrentDashboard({ commit }, dashboard) {
       commit(mutations.SET_CURRENT_DASHBOARD, dashboard);

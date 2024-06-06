@@ -1,13 +1,13 @@
 <template>
   <UnnnicModal
     v-show="showModal"
-    @close="close"
     class="modal-filters"
     text="Filtros"
+    @close="close"
   >
     <form
-      @submit.prevent
       class="modal-filters__form"
+      @submit.prevent
     >
       <template
         v-for="filter of currentDashboardFilters"
@@ -16,10 +16,10 @@
         <DynamicFilter
           :filter="filter"
           :modelValue="filtersInternal[filter.name]"
-          @update:modelValue="updateFilter(filter.name, $event)"
           :disabled="
             filter.depends_on && !filtersInternal[filter.depends_on?.filter]
           "
+          @update:model-value="updateFilter(filter.name, $event)"
         />
       </template>
     </form>
@@ -56,14 +56,12 @@ export default {
     },
   },
 
+  emits: ['close'],
+
   data() {
     return {
       filtersInternal: {},
     };
-  },
-
-  created() {
-    this.syncFiltersInternal();
   },
 
   computed: {
@@ -83,9 +81,20 @@ export default {
     },
   },
 
+  watch: {
+    appliedFilters() {
+      this.syncFiltersInternal();
+    },
+  },
+
+  created() {
+    this.syncFiltersInternal();
+  },
+
   methods: {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
+      resetAppliedFilters: 'dashboards/resetAppliedFilters',
       getCurrentDashboardWidgetsDatas:
         'dashboards/getCurrentDashboardWidgetsDatas',
     }),
@@ -105,7 +114,11 @@ export default {
       }
     },
     setFilters() {
-      this.setAppliedFilters(this.filtersInternal);
+      if (Object.keys(this.filtersInternal).length) {
+        this.setAppliedFilters(this.filtersInternal);
+      } else {
+        this.resetAppliedFilters();
+      }
       this.getCurrentDashboardWidgetsDatas();
       this.close();
     },
@@ -116,12 +129,6 @@ export default {
     },
     close() {
       this.$emit('close');
-    },
-  },
-
-  watch: {
-    appliedFilters() {
-      this.syncFiltersInternal();
     },
   },
 };

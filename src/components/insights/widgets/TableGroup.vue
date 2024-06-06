@@ -7,12 +7,12 @@
     >
       <template
         v-for="tab in tabs"
-        v-slot:[`tab-head-${tab.name}`]
+        #[`tab-head-${tab.name}`]
         :key="`tab-head-${tab.name}`"
       />
       <template
         v-for="tab in tabs"
-        v-slot:[`tab-panel-${tab.name}`]
+        #[`tab-panel-${tab.name}`]
         :key="`tab-panel-${tab.name}`"
       >
         <UnnnicTableNext
@@ -115,9 +115,13 @@ export default {
       }
     },
     activeTabName() {
+      const { $route } = this;
       this.$router.replace({
-        ...this.$route,
-        query: { slug: this.activeTab.slug },
+        ...$route,
+        query: {
+          ...$route.query,
+          ...{ slug: this.activeTab.slug },
+        },
       });
     },
   },

@@ -28,13 +28,7 @@ export default {
     },
   },
 
-  created() {
-    if (this.$route.name === 'report') {
-      this.getWidgetReportData();
-    } else if (this.isConfigured) {
-      this.getCurrentDashboardWidgetData(this.widget.uuid);
-    }
-  },
+  emits: ['open-config'],
 
   computed: {
     ...mapState({
@@ -152,6 +146,19 @@ export default {
     },
   },
 
+  watch: {
+    '$route.query': {
+      handler() {
+        if (this.$route.name === 'report') {
+          this.getWidgetReportData();
+        } else if (this.isConfigured) {
+          this.getCurrentDashboardWidgetData(this.widget.uuid);
+        }
+      },
+      immediate: true,
+    },
+  },
+
   methods: {
     ...mapActions({
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
@@ -172,6 +179,9 @@ export default {
               dashboardUuid: this.currentDashboard.uuid,
               widgetUuid: uuid,
             },
+            query: {
+              ...this.$route.query,
+            },
           });
           break;
 
@@ -181,14 +191,6 @@ export default {
 
         default:
           break;
-      }
-    },
-  },
-
-  watch: {
-    '$route.query'() {
-      if (this.$route.name === 'report') {
-        this.getWidgetReportData();
       }
     },
   },

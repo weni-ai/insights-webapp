@@ -6,9 +6,10 @@
         v-if="seeMore"
         class="header__see-more"
         href="#"
-        @click="$emit('seeMore')"
-        >Ver mais</a
+        @click.prevent="$emit('seeMore')"
       >
+        Ver mais
+      </a>
     </header>
     <section class="bar-chart__chart">
       <IconLoading
@@ -50,6 +51,7 @@ export default {
     },
     isLoading: Boolean,
   },
+  emits: ['seeMore'],
 
   computed: {
     mergedData() {

@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 
@@ -25,11 +25,16 @@ export default {
     }),
   },
 
-  created() {
+  mounted() {
+    this.resetCurrentDashboardWidgets();
     this.getWidgetReport();
   },
 
   methods: {
+    ...mapMutations({
+      resetCurrentDashboardWidgets:
+        'dashboards/RESET_CURRENT_DASHBOARD_WIDGETS',
+    }),
     ...mapActions({
       getWidgetReport: 'reports/getWidgetReport',
     }),

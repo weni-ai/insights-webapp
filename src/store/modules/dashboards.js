@@ -83,10 +83,10 @@ export default {
   },
   actions: {
     async getDashboards({ commit }) {
-      const dashboard = await Dashboards.getAll();
+      const dashboards = await Dashboards.getAll();
       commit(
         mutations.SET_DASHBOARDS,
-        sortByKey(dashboard, 'is_default', 'desc'),
+        sortByKey(dashboards, 'is_default', 'desc'),
       );
     },
     async setCurrentDashboard({ commit }, dashboard) {
@@ -120,7 +120,7 @@ export default {
         },
       });
     },
-    async setDefaultDashboard({ getters, commit }, uuid) {
+    async setDefaultDashboard({ getters, commit, state }, uuid) {
       const oldDefaultDashboardUuid = getters.dashboardDefault.uuid;
       const updateDefaultDashboard = async (dashboardUuid, isDefault) => {
         await Dashboards.setDefaultDashboard({
@@ -135,6 +135,10 @@ export default {
 
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
+      commit(
+        mutations.SET_DASHBOARDS,
+        sortByKey(state.dashboards, 'is_default', 'desc'),
+      );
     },
     async getCurrentDashboardWidgetData({ state, commit }, widgetUuid) {
       try {

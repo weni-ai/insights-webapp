@@ -1,8 +1,8 @@
 <template>
   <section class="widget-table-dynamic-by-filter">
     <header
-      class="widget-table-dynamic-by-filter__header"
       v-if="headerIcon && headerIconColor && headerTitle"
+      class="widget-table-dynamic-by-filter__header"
     >
       <UnnnicAvatarIcon
         :icon="headerIcon"
@@ -34,9 +34,11 @@
 
       <section class="table__items">
         <tr
-          class="table__item-row"
           v-for="item of orderedItems"
           :key="item.name"
+          class="table__item-row"
+          :class="{ 'table__item-row--clickable': item.link }"
+          @click="redirectItem(item.link)"
         >
           <td class="item__col main">
             <UnnnicIcon
@@ -114,6 +116,37 @@ export default {
     getStatusIconScheme(status) {
       return `feedback-${status?.toLowerCase() === 'green' ? 'green' : 'grey'}`;
     },
+
+    redirectItem(item) {
+      if (!item.link) {
+        return;
+      }
+
+      const isAnotherModule = /^(chats:|integrations:|connect:|academy:)/;
+
+      const internalRedirect = () => {
+        if (isAnotherModule.test(item.link.url)) {
+          window.parent.postMessage(
+            { event: 'redirect', path: item.link.url },
+            '*',
+          );
+        } else {
+          this.$router.push(item.link.url);
+        }
+      };
+
+      const externalRedirect = () => {
+        window.open(item.link.url, '_blank');
+      };
+
+      const redirectMap = {
+        internal: internalRedirect,
+        external: externalRedirect,
+      };
+
+      const redirectAction = redirectMap[item.link.type];
+      if (redirectAction) redirectAction();
+    },
   },
 };
 </script>
@@ -164,6 +197,12 @@ export default {
       align-items: center;
       gap: $unnnic-spacing-xs;
 
+      cursor: default;
+
+      &--clickable {
+        cursor: pointer;
+      }
+
       .header__col,
       .item__col {
         color: $unnnic-color-neutral-cloudy;
@@ -205,7 +244,7 @@ export default {
           }
         }
 
-        cursor: default;
+        cursor: inherit;
       }
 
       &:hover {

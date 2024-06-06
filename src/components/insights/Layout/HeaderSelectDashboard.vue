@@ -30,6 +30,10 @@
       v-for="dashboard of dashboards"
       :key="dashboard"
       class="header-select-dashboard__item"
+      :class="{
+        'header-select-dashboard__item--active':
+          currentDashboard.uuid === dashboard.uuid,
+      }"
       @click="setCurrentDashboard(dashboard)"
       @mouseenter="setDashboardHovered(dashboard.uuid)"
       @mouseleave="setDashboardHovered('')"
@@ -147,6 +151,11 @@ $dropdownFixedWidth: 314px;
 
   &__item {
     justify-content: space-between;
+
+    &--active {
+      background-color: $unnnic-color-neutral-lightest;
+      font-weight: $unnnic-font-weight-bold;
+    }
   }
 
   &__arrow-back {
@@ -180,11 +189,6 @@ $dropdownFixedWidth: 314px;
         color: $unnnic-color-neutral-darkest;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-gt;
-        font-weight: $unnnic-font-weight-bold;
-
-        &:hover {
-          background-color: $unnnic-color-neutral-lightest;
-        }
 
         .item__star-icon:not(.item__star-icon--selected):hover {
           color: $unnnic-color-weni-500;

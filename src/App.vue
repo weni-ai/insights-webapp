@@ -32,10 +32,6 @@ export default {
     },
   },
 
-  async created() {
-    await this.getDashboards();
-  },
-
   methods: {
     ...mapActions({
       getDashboards: 'dashboards/getDashboards',

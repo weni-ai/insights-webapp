@@ -2,10 +2,9 @@ import http from '@/services/api/http';
 import Config from '@/store/modules/config';
 import Source from '@/models/Source';
 
-const { project } = Config.state;
-
 export default {
   async getProjectSource(slug) {
+    const { project } = Config.state;
     if (!slug) {
       throw new Error('Please provide a valid id to request data of source.');
     }

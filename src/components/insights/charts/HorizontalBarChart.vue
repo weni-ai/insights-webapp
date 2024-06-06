@@ -6,7 +6,7 @@
         v-if="seeMore"
         class="header__see-more"
         href="#"
-        @click="$emit('seeMore')"
+        @click.prevent="$emit('seeMore')"
       >
         Ver mais
       </a>

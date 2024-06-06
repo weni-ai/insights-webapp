@@ -119,9 +119,12 @@ export default {
       );
     }
 
-    const queryParams = {
-      slug,
-    };
+    const queryParams = createRequestQuery(
+      DashboardState.state.appliedFilters,
+      {
+        slug,
+      },
+    );
 
     const reportData = await http.get(
       `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data`,

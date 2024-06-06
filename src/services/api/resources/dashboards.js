@@ -1,14 +1,13 @@
 import { Dashboard, Filter, Widget } from '@/models';
 import http from '@/services/api/http';
 import Config from '@/store/modules/config';
-import DashboardState from '@/store/modules/dashboards';
+import DashboardStore from '@/store/modules/dashboards';
 
 import { createRequestQuery } from '@/utils/request';
 
-const { project } = Config.state;
-
 export default {
   async getAll() {
+    const { project } = Config.state;
     const response = await http.get('/dashboards', {
       params: { project: project.uuid },
     });
@@ -83,13 +82,14 @@ export default {
   },
 
   async getDashboardWidgetData({ dashboardUuid, widgetUuid }) {
+    const { appliedFilters } = DashboardStore.state;
     if (!dashboardUuid || !widgetUuid) {
       throw new Error(
         'Please provide valids UUIDs parameters to request data of widget.',
       );
     }
 
-    const params = createRequestQuery(DashboardState.state.appliedFilters);
+    const params = createRequestQuery(appliedFilters);
     const widgetData = await http.get(
       `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data`,
       { params },
@@ -113,18 +113,16 @@ export default {
   },
 
   async getDashboardWidgetReportData({ dashboardUuid, widgetUuid, slug }) {
+    const { appliedFilters } = DashboardStore.state;
     if (!dashboardUuid || !widgetUuid) {
       throw new Error(
         'Please provide valids UUIDs parameters to request report data of widget.',
       );
     }
 
-    const queryParams = createRequestQuery(
-      DashboardState.state.appliedFilters,
-      {
-        slug,
-      },
-    );
+    const queryParams = createRequestQuery(appliedFilters, {
+      slug,
+    });
 
     const reportData = await http.get(
       `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data`,
@@ -135,6 +133,7 @@ export default {
   },
 
   async setDefaultDashboard({ dashboardUuid, isDefault }) {
+    const { project } = Config.state;
     const queryParams = {
       project: project.uuid,
     };

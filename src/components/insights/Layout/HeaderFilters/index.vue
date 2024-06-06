@@ -19,7 +19,7 @@
       v-else-if="currentDashboardFilters[0]"
       :filter="currentDashboardFilters[0]"
       :modelValue="appliedFilters[currentDashboardFilters[0].name]"
-      @update:modelValue="
+      @update:model-value="
         setAppliedFilters({ [currentDashboardFilters[0].name]: $event })
       "
     />
@@ -73,10 +73,11 @@ export default {
   methods: {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
+      resetAppliedFilters: 'dashboards/resetAppliedFilters',
     }),
 
     clearFilters() {
-      this.setAppliedFilters({});
+      this.resetAppliedFilters();
     },
 
     retainRouteQueries(newRoute, oldRoute) {

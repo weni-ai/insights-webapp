@@ -107,17 +107,41 @@ export default {
     async setAppliedFilters({ state, commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);
 
-      const newQuery = Router.currentRoute.value.query;
+      const currentRoute = Router.currentRoute.value;
+
       Router.replace({
-        ...Router.currentRoute.value,
+        ...currentRoute,
         query: {
-          ...newQuery,
+          ...currentRoute.query,
           ...treatFilters(
             filters,
             stringifyValue,
             state.currentDashboardFilters,
           ),
         },
+      });
+    },
+    async resetAppliedFilters({ state, commit }) {
+      commit(mutations.SET_APPLIED_FILTERS, {});
+
+      const currentRoute = Router.currentRoute.value;
+      const appliedFilterKeys = state.currentDashboardFilters.map(
+        (filter) => filter.name,
+      );
+
+      const newQuery = Object.entries(currentRoute.query).reduce(
+        (acc, [key, value]) => {
+          if (!appliedFilterKeys.includes(key)) {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {},
+      );
+
+      Router.replace({
+        ...currentRoute,
+        query: newQuery,
       });
     },
     async setDefaultDashboard({ getters, commit }, uuid) {

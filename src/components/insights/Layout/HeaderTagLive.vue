@@ -5,7 +5,7 @@
       icon="indicator"
       scheme="aux-green-300"
     />
-    <p class="header-tag-live__text">Ao vivo</p>
+    <p class="header-tag-live__text">Hoje</p>
   </section>
 </template>
 

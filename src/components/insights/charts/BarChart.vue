@@ -88,12 +88,17 @@ export default {
 
 <style lang="scss" scoped>
 .bar-chart {
-  overflow: hidden;
+  box-shadow: $unnnic-shadow-level-far;
+
+  padding: $unnnic-spacing-ant;
+
   height: 100%;
   width: 100%;
 
+  overflow: hidden;
+
   display: grid;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-spacing-ant;
 
   &__header {
     width: 100%;

@@ -111,14 +111,15 @@ export default {
         return;
       }
 
-      let { data, results } = this.widget.data;
+      const widgetData = this.widget.data;
+      let data = widgetData.data || widgetData.results;
 
       if (this.widget.type === 'graph_column') {
         data = sortByKey(data, 'label');
       }
 
-      const labels = (data || results).map((item) => item.label);
-      const values = (data || results).map((item) => item.value);
+      const labels = data.map((item) => item.label);
+      const values = data.map((item) => item.value);
 
       const newData = {
         labels,

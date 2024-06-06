@@ -45,5 +45,14 @@ export default {
 
   display: grid;
   gap: $unnnic-spacing-sm;
+
+  & > [class*='chart'] {
+    border-radius: $unnnic-spacing-nano;
+    border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+
+    :deep([class*='title']) {
+      font-size: $unnnic-font-size-body-lg;
+    }
+  }
 }
 </style>

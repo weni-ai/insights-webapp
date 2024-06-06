@@ -24,14 +24,15 @@
         {{ configured ? metric : '0' }}
       </h1>
       <p
-        class="content-description"
         v-if="!showMetricError"
+        class="content-description"
       >
         {{ configured ? description : 'Métrica vazia' }}
       </p>
     </section>
     <UnnnicButton
       v-if="configurable || !configured"
+      class="card-dashboard__button-config"
       type="secondary"
       :iconCenter="configured ? 'tune' : ''"
       :iconLeft="configured ? '' : 'tune'"
@@ -50,20 +51,28 @@ import CardTitleError from './CardTitleError.vue';
 export default {
   name: 'DashboardCard',
 
+  components: {
+    CardBase,
+    IconLoading,
+    CardTitleError,
+  },
+
   props: {
-    metric: String,
-    description: String,
+    metric: {
+      type: String,
+      default: '',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
     clickable: Boolean,
     configured: Boolean,
     configurable: Boolean,
     isLoading: Boolean,
   },
 
-  components: {
-    CardBase,
-    IconLoading,
-    CardTitleError,
-  },
+  emits: ['open-config'],
 
   computed: {
     showMetricError() {
@@ -75,10 +84,12 @@ export default {
 
 <style scoped lang="scss">
 .card-dashboard {
-  display: grid;
-  grid-template-columns: 1fr auto;
-
   padding: $unnnic-spacing-md;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $unnnic-spacing-xs;
 
   max-height: min-content;
 
@@ -89,10 +100,12 @@ export default {
   }
 
   &.not-configured {
-    align-items: center;
-
     .card__content {
       color: $unnnic-color-neutral-cloudy;
+    }
+
+    .card-dashboard__button-config {
+      align-self: center;
     }
   }
 
@@ -115,6 +128,10 @@ export default {
       font-size: $unnnic-font-size-body-lg;
       line-height: $unnnic-line-height-medium * 3;
     }
+  }
+
+  &__button-config {
+    align-self: start;
   }
 }
 </style>

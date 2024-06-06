@@ -119,7 +119,6 @@ export default {
       } else {
         this.resetAppliedFilters();
       }
-      this.getCurrentDashboardWidgetsDatas();
       this.close();
     },
     syncFiltersInternal() {

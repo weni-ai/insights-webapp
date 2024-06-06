@@ -2,8 +2,9 @@
   <section class="insights-layout">
     <InsightsLayoutHeader />
     <section
-      class="insights-layout__insights"
+      v-if="currentDashboardFilters.length"
       ref="insightsContent"
+      class="insights-layout__insights"
     >
       <main
         class="insights__main"
@@ -39,6 +40,8 @@ export default {
     ...mapState({
       contentHeight: (state) => state.resizableBar.contentHeight,
       barHandlerHeight: (state) => state.resizableBar.barHandlerHeight,
+      currentDashboardFilters: (state) =>
+        state.dashboards.currentDashboardFilters,
     }),
 
     mainHeight() {

@@ -156,7 +156,6 @@ export default {
         }
       },
       immediate: true,
-      deep: true,
     },
   },
 
@@ -179,6 +178,9 @@ export default {
             params: {
               dashboardUuid: this.currentDashboard.uuid,
               widgetUuid: uuid,
+            },
+            query: {
+              ...this.$route.query,
             },
           });
           break;

@@ -120,6 +120,8 @@ export default {
 
 <style lang="scss" scoped>
 .widget-table-dynamic-by-filter {
+  box-shadow: $unnnic-shadow-level-far;
+
   padding: $unnnic-spacing-sm;
 
   height: 100%;

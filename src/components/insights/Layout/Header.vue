@@ -40,11 +40,6 @@ export default {
     HeaderTagLive,
     InsightsLayoutHeaderFilters,
   },
-
-  created() {
-    this.routeUpdateCurrentDashboard();
-  },
-
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -89,6 +84,26 @@ export default {
     },
   },
 
+  watch: {
+    currentDashboard(newCurrentDashboard, oldCurrentDashboard) {
+      if (oldCurrentDashboard?.uuid) {
+        this.navigateToDashboard(this.currentDashboard.uuid);
+      }
+    },
+    $route(newRoute, oldRoute) {
+      const { dashboardUuid: newUuid } = newRoute.params;
+      const { dashboardUuid: oldUuid } = oldRoute.params;
+
+      if (newUuid !== oldUuid) {
+        this.routeUpdateCurrentDashboard();
+      }
+    },
+  },
+
+  mounted() {
+    this.routeUpdateCurrentDashboard();
+  },
+
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
@@ -120,22 +135,6 @@ export default {
       this.setCurrentDashboard(
         dashboardRelativeToPath || this.dashboardDefault,
       );
-    },
-  },
-
-  watch: {
-    currentDashboard(newCurrentDashboard, oldCurrentDashboard) {
-      if (oldCurrentDashboard?.uuid) {
-        this.navigateToDashboard(this.currentDashboard.uuid);
-      }
-    },
-    $route(newRoute, oldRoute) {
-      const { dashboardUuid: newUuid } = newRoute.params;
-      const { dashboardUuid: oldUuid } = oldRoute.params;
-
-      if (newUuid !== oldUuid) {
-        this.routeUpdateCurrentDashboard();
-      }
     },
   },
 };

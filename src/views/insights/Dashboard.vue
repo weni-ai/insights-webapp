@@ -10,7 +10,6 @@
       <DynamicWidget
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
-        :isLoading="getWidgetLoadingStatus(widget)"
         @open-config="openDrawerConfigWidget(widget)"
       />
     </template>
@@ -69,7 +68,7 @@ export default {
       handler(newCurrentDashboardUuid) {
         if (newCurrentDashboardUuid) {
           this.resetCurrentDashboardWidgets();
-          this.handlingGetCurrentDashboardWidgets();
+          this.getCurrentDashboardWidgets();
         }
       },
     },
@@ -79,30 +78,17 @@ export default {
     ...mapActions({
       getCurrentDashboardWidgets: 'dashboards/getCurrentDashboardWidgets',
       fetchWidgetData: 'dashboards/fetchWidgetData',
-      getCurrentDashboardWidgetsDatas:
-        'dashboards/getCurrentDashboardWidgetsDatas',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets:
         'dashboards/RESET_CURRENT_DASHBOARD_WIDGETS',
     }),
 
-    async handlingGetCurrentDashboardWidgets() {
-      await this.getCurrentDashboardWidgets();
-      await this.getCurrentDashboardWidgetsDatas();
-    },
-
     getWidgetStyle(gridPosition) {
       return {
         gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
         gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
       };
-    },
-
-    getWidgetLoadingStatus(widget) {
-      const config = widget.config;
-      const isConfigured = config && Object.keys(config).length !== 0;
-      return isConfigured ? !Object.keys(widget).includes('data') : false;
     },
 
     openDrawerConfigWidget(widget) {

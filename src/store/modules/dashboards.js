@@ -2,9 +2,11 @@ import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards, Widgets } from '@/services/api';
 
-function treatFilters(filters, valueHandler) {
+function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
-    acc[key] = valueHandler(value);
+    if (currentDashboardFilters.some((filter) => filter.name === key)) {
+      acc[key] = valueHandler(value);
+    }
     return acc;
   }, {});
 }
@@ -67,7 +69,11 @@ export default {
       state.currentDashboardFilters = filters;
     },
     [mutations.SET_APPLIED_FILTERS](state, filters) {
-      state.appliedFilters = treatFilters(filters, parseValue);
+      state.appliedFilters = treatFilters(
+        filters,
+        parseValue,
+        state.currentDashboardFilters,
+      );
     },
     [mutations.SET_DEFAULT_DASHBOARD](state, { uuid, isDefault }) {
       state.dashboards.find((dash) => dash.uuid === uuid).is_default =
@@ -94,12 +100,20 @@ export default {
       );
       commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
     },
-    async setAppliedFilters({ commit }, filters) {
+    async setAppliedFilters({ state, commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);
 
+      const newQuery = Router.currentRoute.value.query;
       Router.replace({
-        name: Router.currentRoute.value.name,
-        query: treatFilters(filters, stringifyValue),
+        ...Router.currentRoute.value,
+        query: {
+          ...newQuery,
+          ...treatFilters(
+            filters,
+            stringifyValue,
+            state.currentDashboardFilters,
+          ),
+        },
       });
     },
     async setDefaultDashboard({ getters, commit }, uuid) {
@@ -118,7 +132,7 @@ export default {
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
     },
-    async fetchWidgetData({ state, commit }, widgetUuid) {
+    async getCurrentDashboardWidgetData({ state, commit }, widgetUuid) {
       try {
         const data = await Dashboards.getDashboardWidgetData({
           dashboardUuid: state.currentDashboard.uuid,
@@ -140,7 +154,7 @@ export default {
       Promise.all(
         state.currentDashboardWidgets.map(async ({ uuid, name, config }) => {
           if (name && Object.keys(config).length) {
-            dispatch('fetchWidgetData', uuid);
+            dispatch('getCurrentDashboardWidgetData', uuid);
           }
         }),
       );

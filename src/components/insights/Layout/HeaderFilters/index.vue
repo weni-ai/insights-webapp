@@ -108,6 +108,9 @@ export default {
         this.setAppliedFilters(newRoute.query);
       },
     },
+    currentDashboardFilters() {
+      this.setAppliedFilters(this.$route.query);
+    },
   },
 };
 </script>

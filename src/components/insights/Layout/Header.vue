@@ -1,11 +1,13 @@
 <template>
   <header
-    class="insights-layout-header"
     v-if="currentDashboard"
+    class="insights-layout-header"
   >
     <UnnnicBreadcrumb
       :crumbs="breadcrumbs"
-      @crumbClick="$router.push($event.path)"
+      @crumb-click="
+        $router.push({ name: $event.routeName, path: $event.routePath })
+      "
     />
     <section class="insights-layout-header__content">
       <HeaderSelectDashboard />
@@ -13,11 +15,11 @@
       <section class="content__actions">
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
-        <UnnnicButton
+        <!-- <UnnnicButton
           class="clickable"
           iconCenter="ios_share"
           type="secondary"
-        />
+        /> -->
       </section>
     </section>
   </header>
@@ -58,11 +60,23 @@ export default {
       const { currentDashboard } = this;
       const { dashboardUuid } = this.$route.params;
 
-      const crumbBase = [
-        { path: currentDashboard.uuid, name: currentDashboard.name },
+      const crumbs = [
+        {
+          path: currentDashboard.uuid,
+          routeName: 'dashboard',
+          name: `Insights ${currentDashboard.name}`,
+        },
       ];
 
-      return dashboardUuid === currentDashboard.uuid ? crumbBase : [];
+      if (this.$route.name === 'report') {
+        crumbs[1] = {
+          path: this.$route.path,
+          routePath: 'report',
+          name: `Relatório ${currentDashboard.name}`,
+        };
+      }
+
+      return dashboardUuid === currentDashboard.uuid ? crumbs : [];
     },
 
     showTagLive() {

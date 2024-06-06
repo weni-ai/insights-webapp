@@ -25,6 +25,7 @@
       @mouseenter="setDashboardHovered(dashboard.uuid)"
       @mouseleave="setDashboardHovered('')"
     >
+      {{ dashboard.name }}
       <UnnnicIcon
         class="item__star-icon"
         :class="{
@@ -32,19 +33,22 @@
         }"
         icon="star_rate"
         scheme="neutral-clean"
+        clickable
+        @mouseenter="setStarHovered(dashboard.uuid)"
+        @mouseleave="setStarHovered('')"
         :filled="
           getIsDefaultDashboard(dashboard.uuid) ||
-          dashboardHovered === dashboard.uuid
+          starHovered === dashboard.uuid
         "
-        @click.stop
+        @click.stop="handleSetDefaultDashboard(dashboard)"
       />
-      {{ dashboard.name }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
+import unnnic from '@weni/unnnic-system';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -52,6 +56,7 @@ export default {
   data() {
     return {
       dashboardHovered: '',
+      starHovered: '',
     };
   },
 
@@ -68,13 +73,40 @@ export default {
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
+      setDefaultDashboard: 'dashboards/setDefaultDashboard',
     }),
 
     getIsDefaultDashboard(uuid) {
-      return this.dashboardDefault.uuid === uuid;
+      return this.dashboardDefault?.uuid === uuid;
     },
     setDashboardHovered(uuid) {
       this.dashboardHovered = uuid;
+    },
+    setStarHovered(dashboardUuid) {
+      this.starHovered = dashboardUuid;
+    },
+    handleSetDefaultDashboard(dashboard) {
+      if (dashboard.uuid === this.dashboardDefault.uuid) return;
+      try {
+        this.setDefaultDashboard(dashboard.uuid).then(() => {
+          unnnic.unnnicCallAlert({
+            props: {
+              text: `Agora o Dashboard ${dashboard.name} é sua página inicial`,
+              type: 'success',
+            },
+            seconds: 5,
+          });
+        });
+      } catch (error) {
+        console.log(error);
+        unnnic.unnnicCallAlert({
+          props: {
+            text: `Falha ao definir o Dashboard "${dashboard.name}" como página inicial`,
+            type: 'error',
+          },
+          seconds: 5,
+        });
+      }
     },
   },
 };
@@ -102,6 +134,10 @@ $dropdownFixedWidth: 314px;
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-line-height-large * 2;
     }
+  }
+
+  &__item {
+    justify-content: space-between;
   }
 
   :deep(.unnnic-dropdown__trigger) {
@@ -135,10 +171,10 @@ $dropdownFixedWidth: 314px;
 
         &:hover {
           background-color: $unnnic-color-neutral-lightest;
+        }
 
-          .item__star-icon:not(.item__star-icon--selected) {
-            color: $unnnic-color-weni-500;
-          }
+        .item__star-icon:not(.item__star-icon--selected):hover {
+          color: $unnnic-color-weni-500;
         }
 
         &::before {

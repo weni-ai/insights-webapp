@@ -8,22 +8,22 @@
       <main
         class="insights__main"
         :style="{
-          height: `${mainHeight}vh`,
+          height: '100%' || `${mainHeight}vh`,
         }"
       >
         <slot />
       </main>
     </section>
-    <ResizableBar />
+    <!-- <ResizableBar /> -->
   </section>
 </template>
 
 <script>
 import { mapState } from 'vuex';
 
-import { pxToVh } from '@/utils/css';
+// import { pxToVh } from '@/utils/css';
 
-import ResizableBar from '@/components/insights/ResizableBar/index.vue';
+// import ResizableBar from '@/components/insights/ResizableBar/index.vue';
 
 import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 
@@ -32,7 +32,7 @@ export default {
 
   components: {
     InsightsLayoutHeader,
-    ResizableBar,
+    // ResizableBar,
   },
 
   computed: {
@@ -42,22 +42,23 @@ export default {
     }),
 
     mainHeight() {
-      return (
-        pxToVh(this.$refs.insightsContent?.clientHeight) -
-          this.contentHeight -
-          pxToVh(this.barHandlerHeight) || 0
-      );
+      // 81 is the default value when the resizable bar is minimized.
+      return 81;
+      // return (
+      //   pxToVh(this.$refs.insightsContent?.clientHeight) -
+      //     this.contentHeight -
+      //     pxToVh(this.barHandlerHeight) || 0
+      // );
     },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-$topbarHeight: 88px;
-
 .insights-layout {
   display: flex;
   flex-direction: column;
+
   height: 100vh;
   max-height: 100vh;
   width: 100vw;
@@ -70,23 +71,12 @@ $topbarHeight: 88px;
   gap: $unnnic-spacing-sm;
   position: relative;
 
-  &__sidebar {
-    grid-area: sidebar;
-  }
-
-  &__topbar {
-    grid-area: topbar;
-  }
-
   &__insights {
-    height: calc(100vh - $topbarHeight);
+    overflow: hidden;
+
+    height: 100%;
 
     position: relative;
-
-    grid-area: insights;
-    display: grid;
-    grid-template-rows: minmax(4fr, 6fr) auto;
-    grid-template-columns: auto;
 
     .insights__main {
       display: flex;

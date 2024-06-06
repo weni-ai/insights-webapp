@@ -40,7 +40,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-
 import DynamicFilter from './DynamicFilter.vue';
 
 export default {
@@ -72,6 +71,8 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
+      widgets: (state) => state.dashboards.currentDashboardWidgets,
+      currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
 
     areStoreFiltersAndInternalEqual() {
@@ -85,6 +86,8 @@ export default {
   methods: {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
+      getCurrentDashboardWidgetsDatas:
+        'dashboards/getCurrentDashboardWidgetsDatas',
     }),
     clearFilters() {
       this.filtersInternal = {};
@@ -103,6 +106,7 @@ export default {
     },
     setFilters() {
       this.setAppliedFilters(this.filtersInternal);
+      this.getCurrentDashboardWidgetsDatas();
       this.close();
     },
     syncFiltersInternal() {

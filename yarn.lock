@@ -917,15 +917,15 @@
   dependencies:
     vue-demi ">=0.14.7"
 
-"@weni/eslint-config@^1.0.1":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@weni/eslint-config/-/eslint-config-1.0.2.tgz#fc8d16449130888eabfca0a2e6a506043d8018fb"
-  integrity sha512-q4iLOGP29a8rk9Sprs4mpFAn0fRnsK+lGOY1NeUMYzbJ1REFit0p8baz4aJCiJTO55ZlGym3HzcwL/jYm7u/7g==
+"@weni/eslint-config@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@weni/eslint-config/-/eslint-config-1.0.3.tgz#ddd6420b3215218107ca26e3795251849a3c80be"
+  integrity sha512-Te4vJZpwlR6cgwbkIKAKuUKhfcDuwgXPAZCoTu+/Tkhy2lo4/neo4j1fljv0yDAxvgLdHL6JvfGGaalUEJB38g==
 
-"@weni/unnnic-system@^2.0.7":
-  version "2.0.7"
-  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.0.7.tgz#a638827a628a9eef0e6dff91fdef9ed8fb839247"
-  integrity sha512-zVQfA8O819Dx7jyUwZ9f7Xb2aLyCRSmCxtXLsE1Wd2ltaOMDuWawGK4HUbtaA5c3aJ1KqLFi3bKhG90zLNZl/A==
+"@weni/unnnic-system@^2.0.15":
+  version "2.0.15"
+  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.0.15.tgz#14709bb28b4a1a6b361ca9aaf19b2ac417ec5ab7"
+  integrity sha512-n2dA74yrnXKLmFw7K9hFwyX2+Gd8j0eAekhI3gNlJb5ZqIqkObwtu7CPYCOVXF6T0+GeQsX6LhKujSDoq4uDmQ==
   dependencies:
     "@emoji-mart/data" "^1.1.2"
     "@vueuse/components" "^10.4.1"

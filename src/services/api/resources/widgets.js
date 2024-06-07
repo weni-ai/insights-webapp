@@ -6,7 +6,7 @@ export default {
       throw new Error('Please provide a valid uuid to request update widget.');
     }
 
-    const response = await http.patch(`/widgets/${widget.uuid}`, widget);
+    const response = await http.patch(`/widgets/${widget.uuid}/`, widget);
 
     return response;
   },

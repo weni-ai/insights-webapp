@@ -11,7 +11,7 @@ export default {
       project: Config.state.project.uuid,
     });
 
-    const response = await http.get('/dashboards', {
+    const response = await http.get('/dashboards/', {
       params: queryParams,
     });
 
@@ -39,7 +39,7 @@ export default {
       project: Config.state.project.uuid,
     });
 
-    const response = await http.get(`/dashboards/${uuid}/filters`, {
+    const response = await http.get(`/dashboards/${uuid}/filters/`, {
       params: queryParams,
     });
     const responseArray = Object.keys(response);
@@ -72,7 +72,7 @@ export default {
       project: Config.state.project.uuid,
     });
 
-    const response = await http.get(`/dashboards/${uuid}/list_widgets`, {
+    const response = await http.get(`/dashboards/${uuid}/list_widgets/`, {
       params: queryParams,
     });
 
@@ -108,7 +108,7 @@ export default {
       project: Config.state.project.uuid,
     });
     const widgetData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data`,
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data/`,
       { params },
     );
 
@@ -127,7 +127,7 @@ export default {
     });
 
     const widgetData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report`,
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/`,
       { params: queryParams },
     );
 
@@ -148,7 +148,7 @@ export default {
     });
 
     const reportData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data`,
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data/`,
       { params: queryParams },
     );
 
@@ -160,7 +160,7 @@ export default {
       project: Config.state.project.uuid,
     });
     const response = await http.patch(
-      `/dashboards/${dashboardUuid}/is_default`,
+      `/dashboards/${dashboardUuid}/is_default/`,
       { is_default: isDefault },
       {
         params: queryParams,

@@ -7,9 +7,12 @@ import { createRequestQuery } from '@/utils/request';
 
 export default {
   async getAll() {
-    const { project } = Config.state;
-    const response = await http.get('/dashboards', {
-      params: { project: project.uuid },
+    const queryParams = createRequestQuery({
+      project: Config.state.project.uuid,
+    });
+
+    const response = await http.get('/dashboards/', {
+      params: queryParams,
     });
 
     const dashboards = response.results.map(
@@ -32,7 +35,13 @@ export default {
       );
     }
 
-    const response = await http.get(`/dashboards/${uuid}/filters`);
+    const queryParams = createRequestQuery({
+      project: Config.state.project.uuid,
+    });
+
+    const response = await http.get(`/dashboards/${uuid}/filters/`, {
+      params: queryParams,
+    });
     const responseArray = Object.keys(response);
 
     const dashboardFilters = responseArray.map((key) => {
@@ -59,7 +68,13 @@ export default {
       );
     }
 
-    const response = await http.get(`/dashboards/${uuid}/widgets`);
+    const queryParams = createRequestQuery({
+      project: Config.state.project.uuid,
+    });
+
+    const response = await http.get(`/dashboards/${uuid}/list_widgets/`, {
+      params: queryParams,
+    });
 
     const widgets = response.results.map((widget) => {
       return new Widget({
@@ -89,9 +104,11 @@ export default {
       );
     }
 
-    const params = createRequestQuery(appliedFilters);
+    const params = createRequestQuery(appliedFilters, {
+      project: Config.state.project.uuid,
+    });
     const widgetData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data`,
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data/`,
       { params },
     );
 
@@ -105,8 +122,13 @@ export default {
       );
     }
 
+    const queryParams = createRequestQuery({
+      project: Config.state.project.uuid,
+    });
+
     const widgetData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report`,
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/`,
+      { params: queryParams },
     );
 
     return widgetData;
@@ -122,10 +144,11 @@ export default {
 
     const queryParams = createRequestQuery(appliedFilters, {
       slug,
+      project: Config.state.project.uuid,
     });
 
     const reportData = await http.get(
-      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data`,
+      `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/report/data/`,
       { params: queryParams },
     );
 
@@ -133,12 +156,11 @@ export default {
   },
 
   async setDefaultDashboard({ dashboardUuid, isDefault }) {
-    const { project } = Config.state;
-    const queryParams = {
-      project: project.uuid,
-    };
+    const queryParams = createRequestQuery({
+      project: Config.state.project.uuid,
+    });
     const response = await http.patch(
-      `/dashboards/${dashboardUuid}/is_default`,
+      `/dashboards/${dashboardUuid}/is_default/`,
       { is_default: isDefault },
       {
         params: queryParams,

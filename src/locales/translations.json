@@ -1,4 +1,11 @@
 {
+  "common": {
+    "view_more": {
+      "pt-br": "Ver mais",
+      "en": "View more",
+      "es": "Ver más"
+    }
+  },
   "widgets": {
     "metric_error": {
       "pt-br": "Erro ao buscar métrica",

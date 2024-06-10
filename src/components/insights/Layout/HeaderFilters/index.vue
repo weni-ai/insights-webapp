@@ -65,8 +65,8 @@ export default {
     titleButtonManyFilters() {
       const { appliedFiltersLength } = this;
       return appliedFiltersLength
-        ? `Filtros (${appliedFiltersLength})`
-        : 'Filtros';
+        ? `${this.$t('insights_header.filters')} (${appliedFiltersLength})`
+        : this.$t('insights_header.filters');
     },
   },
 

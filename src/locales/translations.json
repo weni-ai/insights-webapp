@@ -49,6 +49,16 @@
     "en": "Save",
     "es": "Salvar"
   },
+  "today": {
+    "pt-br": "Hoje",
+    "en": "Today",
+    "es": "Hoy"
+  },
+  "date_format": {
+    "pt-br": "DD/MM/YYYY",
+    "en": "MM/DD/YYYY",
+    "es": "DD/MM/YYYY"
+  },
   "save_error": {
     "pt-br": "Erro ao salvar, tente novamente",
     "en": "Error saving, please try again",
@@ -249,6 +259,23 @@
       "pt-br": "@:select @.lower:flow de origem",
       "en": "@:select origin @.lower:flow",
       "es": "@:select @.lower:flow de origen"
+    }
+  },
+  "insights_header": {
+    "filters": {
+      "pt-br": "Filtros",
+      "en": "Filters",
+      "es": "Filtros"
+    },
+    "filtrate": {
+      "pt-br": "Filtrar",
+      "en": "Filtrate",
+      "es": "Filtrar"
+    },
+    "clear_filters": {
+      "pt-br": "Limpar filtros",
+      "en": "Clear filters",
+      "es": "Limpiar filtros"
     }
   }
 }

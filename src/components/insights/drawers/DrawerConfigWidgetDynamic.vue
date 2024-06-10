@@ -5,8 +5,8 @@
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
-    primaryButtonText="Salvar"
-    secondaryButtonText="Cancelar"
+    :primaryButtonText="$t('save')"
+    :secondaryButtonText="$t('cancel')"
     :disabledPrimaryButton="disablePrimaryButton"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     @primary-button-click="updateWidgetConfig"
@@ -148,7 +148,7 @@ export default {
 
         unnnic.unnnicCallAlert({
           props: {
-            text: `Métrica salva com sucesso`,
+            text: this.$t('drawers.metric_saved'),
             type: 'success',
           },
           seconds: 5,
@@ -156,7 +156,7 @@ export default {
       } catch (error) {
         unnnic.unnnicCallAlert({
           props: {
-            text: `Erro ao salvar, tente novamente`,
+            text: this.$t('save_error'),
             type: 'error',
           },
           seconds: 5,

@@ -1,13 +1,13 @@
 <template>
   <section>
-    <UnnnicLabel label="Nomear card" />
+    <UnnnicLabel :label="$t('drawers.config_card.name_card.label')" />
     <UnnnicInput
       v-model="config.name"
-      placeholder="Ex: fluxos do projeto"
+      :placeholder="$t('drawers.config_card.name_card.placeholder')"
     />
   </section>
   <section>
-    <UnnnicLabel label="Selecionar fluxo de origem" />
+    <UnnnicLabel :label="$t('drawers.config_card.select_origin_flow')" />
     <UnnnicSelectSmart
       v-model="config.flow"
       :options="flowsOptions"
@@ -17,7 +17,7 @@
     />
   </section>
   <section>
-    <UnnnicLabel label="Tipo de resultado" />
+    <UnnnicLabel :label="$t('drawers.config_card.result_type')" />
     <section class="drawer-config-content-card__result-types">
       <template
         v-for="resultType in resultTypes"
@@ -34,14 +34,14 @@
   </section>
   <template v-if="config.resultType === 'results'">
     <section>
-      <UnnnicLabel label="Resultado do fluxo" />
+      <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
       <UnnnicInput
         v-model="config.result.name"
-        placeholder="Ex: @results.wenigpt"
+        :placeholder="$t('drawers.config_card.flow_result.placeholder')"
       />
     </section>
     <section>
-      <UnnnicLabel label="Operação" />
+      <UnnnicLabel :label="$t('drawers.config_card.operation')" />
       <section class="drawer-config-content-card__operations">
         <template
           v-for="operation in operations"
@@ -63,8 +63,6 @@
 export default {
   name: 'DrawerConfigContentCard',
 
-  emits: ['update:model-value', 'update-disable-primary-button'],
-
   props: {
     modelValue: {
       type: {},
@@ -75,6 +73,8 @@ export default {
       default: () => [],
     },
   },
+
+  emits: ['update:model-value', 'update-disable-primary-button'],
 
   data() {
     return {
@@ -88,15 +88,36 @@ export default {
         },
       },
       resultTypes: [
-        { value: 'executions', label: 'Execuções' },
-        { value: 'results', label: 'Resultado de fluxo' },
+        {
+          value: 'executions',
+          label: this.$t('drawers.config_card.radios.executions'),
+        },
+        {
+          value: 'results',
+          label: this.$t('drawers.config_card.radios.results'),
+        },
       ],
       operations: [
-        { value: 'count', label: 'Total' },
-        { value: 'max', label: 'Maior valor' },
-        { value: 'avg', label: 'Média' },
-        { value: 'min', label: 'Menor valor' },
-        { value: 'recurrence', label: 'Recorrência' },
+        {
+          value: 'count',
+          label: this.$t('drawers.config_card.radios.total'),
+        },
+        {
+          value: 'max',
+          label: this.$t('drawers.config_card.radios.max'),
+        },
+        {
+          value: 'avg',
+          label: this.$t('drawers.config_card.radios.avg'),
+        },
+        {
+          value: 'min',
+          label: this.$t('drawers.config_card.radios.min'),
+        },
+        {
+          value: 'recurrence',
+          label: this.$t('drawers.config_card.radios.recurrence'),
+        },
       ],
     };
   },

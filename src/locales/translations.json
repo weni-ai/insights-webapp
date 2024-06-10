@@ -34,6 +34,26 @@
     "en": "View more",
     "es": "Ver más"
   },
+  "ex": {
+    "pt-br": "Ex:",
+    "en": "Ex:",
+    "es": "Ej:"
+  },
+  "cancel": {
+    "pt-br": "Cancelar",
+    "en": "Cancel",
+    "es": "Cancelar"
+  },
+  "save": {
+    "pt-br": "Salvar",
+    "en": "Save",
+    "es": "Salvar"
+  },
+  "save_error": {
+    "pt-br": "Erro ao salvar, tente novamente",
+    "en": "Error saving, please try again",
+    "es": "Error al guardar, por favor inténtalo de nuevo"
+  },
   "widgets": {
     "metric_error": {
       "pt-br": "Erro ao buscar @.lower:metric",
@@ -76,11 +96,92 @@
     }
   },
   "drawers": {
+    "metric_saved": {
+      "pt-br": "@:metric salva com sucesso",
+      "en": "@:metric saved successfully",
+      "es": "@:metric guardada correctamente"
+    },
     "config_card": {
       "title": {
         "pt-br": "Definir @.lower:metric para o card",
         "en": "Define @.lower:metric for the card",
         "es": "Definir @.lower:metric para la tarjeta"
+      },
+      "name_card": {
+        "label": {
+          "pt-br": "Nomear card",
+          "en": "Name card",
+          "es": "Nombre de tarjeta"
+        },
+        "placeholder": {
+          "pt-br": "@:ex @.lower:flows do projeto",
+          "en": "@:ex Project @.lower:flows",
+          "es": "@:ex @.lower:flows del proyecto"
+        }
+      },
+      "select_origin_flow": {
+        "pt-br": "@:select @.lower:flow de origem",
+        "en": "@:select origin @.lower:flow",
+        "es": "@:select @.lower:flow de origen"
+      },
+      "result_type": {
+        "pt-br": "Tipo de resultado",
+        "en": "Type of result",
+        "es": "Tipo de resultado"
+      },
+      "flow_result": {
+        "label": {
+          "pt-br": "Resultado do @.lower:flow",
+          "en": "@:flow result",
+          "es": "Resultado de @.lower:flow"
+        },
+        "placeholder": {
+          "pt-br": "@:ex @results.wenigpt",
+          "en": "@:ex @results.wenigpt",
+          "es": "@:ex @results.wenigpt"
+        }
+      },
+      "operation": {
+        "pt-br": "Operação",
+        "en": "Operation",
+        "es": "Operación"
+      },
+      "radios": {
+        "executions": {
+          "pt-br": "Execuções",
+          "en": "Execution",
+          "es": "Ejecución"
+        },
+        "results": {
+          "pt-br": "Resultado de fluxo",
+          "en": "Flow result",
+          "es": "Resultado de flujo"
+        },
+        "total": {
+          "pt-br": "Total",
+          "en": "Total",
+          "es": "Total"
+        },
+        "max": {
+          "pt-br": "Maior valor",
+          "en": "Highest value",
+          "es": "Valor más alto"
+        },
+        "avg": {
+          "pt-br": "Média",
+          "en": "Average",
+          "es": "Promedio"
+        },
+        "min": {
+          "pt-br": "Menor valor",
+          "en": "Lower value",
+          "es": "Bajo valor"
+        },
+        "recurrence": {
+          "pt-br": "Recorrência",
+          "en": "Recurrence",
+          "es": "Reaparición"
+        }
       }
     },
     "config_funnel": {
@@ -136,12 +237,12 @@
       "label": {
         "pt-br": "Nomear @.lower:metric",
         "en": "Name @.lower:metric",
-        "es": "@:metric de designación"
+        "es": "Nombre @.lower:metric"
       },
       "placeholder": {
-        "pt-br": "Ex: @.lower:flows do projeto",
-        "en": "Ex: Project @.lower:flows",
-        "es": "Ej: @.flows del proyecto"
+        "pt-br": "@:ex @.lower:flows do projeto",
+        "en": "@:ex Project @.lower:flows",
+        "es": "@:ex @.flows del proyecto"
       }
     },
     "select_origin_flow": {

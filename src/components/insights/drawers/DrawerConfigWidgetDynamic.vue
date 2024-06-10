@@ -39,8 +39,6 @@ import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 export default {
   name: 'DrawerConfigWidgetDynamic',
 
-  emits: ['close'],
-
   components: {
     DrawerConfigContentFunnel,
     DrawerConfigContentCard,
@@ -57,30 +55,29 @@ export default {
     },
   },
 
+  emits: ['close'],
+
   data() {
     return {
       config: {},
-      flowsOptions: [{ value: '', label: 'Selecionar fluxo' }],
+      flowsOptions: [
+        { value: '', label: this.$t('drawers.config_funnel.select_flow') },
+      ],
 
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
     };
   },
 
-  created() {
-    this.fetchFlowsSource();
-  },
-
   computed: {
     drawerProps() {
       const configMap = {
         graph_funnel: {
-          title: 'Definir métricas do gráfico',
-          description:
-            'Selecione pelo menos três fluxos para obter a visualização em gráfico de funil',
+          title: this.$t('drawers.config_funnel.title'),
+          description: this.$t('drawers.config_funnel.description'),
         },
         card: {
-          title: 'Definir métrica para o card',
+          title: this.$t('drawers.config_card.title'),
         },
       };
 
@@ -117,6 +114,10 @@ export default {
 
       return { ...defaultEvents, ...mappingEvents[this.widget?.type] };
     },
+  },
+
+  created() {
+    this.fetchFlowsSource();
   },
 
   methods: {

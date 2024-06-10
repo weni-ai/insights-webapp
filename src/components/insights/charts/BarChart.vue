@@ -8,7 +8,7 @@
         href="#"
         @click.prevent="$emit('seeMore')"
       >
-        {{ $t('common.view_more') }}
+        {{ $t('view_more') }}
       </a>
     </header>
     <section class="bar-chart__chart">

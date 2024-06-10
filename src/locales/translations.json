@@ -1,32 +1,60 @@
 {
-  "common": {
-    "view_more": {
-      "pt-br": "Ver mais",
-      "en": "View more",
-      "es": "Ver más"
-    }
+  "metric": {
+    "pt-br": "Métrica",
+    "en": "Metric",
+    "es": "Métrica"
+  },
+  "metrics": {
+    "pt-br": "Métricas",
+    "en": "Metrics",
+    "es": "Métricas"
+  },
+  "flow": {
+    "pt-br": "Fluxo",
+    "en": "Flow",
+    "es": "Flujo"
+  },
+  "flows": {
+    "pt-br": "Fluxos",
+    "en": "Flows",
+    "es": "Flujo"
+  },
+  "select": {
+    "pt-br": "Selecionar",
+    "en": "Select",
+    "es": "Seleccionar"
+  },
+  "add": {
+    "pt-br": "Adicionar",
+    "en": "Add",
+    "es": "Agregar"
+  },
+  "view_more": {
+    "pt-br": "Ver mais",
+    "en": "View more",
+    "es": "Ver más"
   },
   "widgets": {
     "metric_error": {
-      "pt-br": "Erro ao buscar métrica",
-      "en": "Error when seeking metric",
-      "es": "Error al buscar métrica"
+      "pt-br": "Erro ao buscar @.lower:metric",
+      "en": "Error when seeking @.lower:metric",
+      "es": "Error al buscar @.lower:metric"
     },
     "card": {
       "error_description": {
-        "pt-br": "Configure novamente o fluxo de origem para obter dados válidos",
-        "en": "Configure the origin flow again to obtain valid data",
-        "es": "Configurar el flujo de origen nuevamente para obtener datos válidos"
+        "pt-br": "Configure novamente o @.lower:flow de origem para obter dados válidos",
+        "en": "Configure the origin @.lower:flow again to obtain valid data",
+        "es": "Configurar el @.lower:flow de origen nuevamente para obtener datos válidos"
       },
       "metric_empty": {
-        "pt-br": "Métrica vazia",
-        "en": "Empty metric",
-        "es": "Métrica vacía"
+        "pt-br": "@:metric vazia",
+        "en": "Empty @.lower:metric",
+        "es": "@:metric vacía"
       },
       "metric_set": {
-        "pt-br": "Definir métrica",
-        "en": "Set metric",
-        "es": "Establecer métrica"
+        "pt-br": "Definir @.lower:metric",
+        "en": "Set @.lower:metric",
+        "es": "Establecer @.lower:metric"
       }
     },
     "graph_funnel": {
@@ -36,15 +64,90 @@
         "es": "Embudo"
       },
       "not_configured_description": {
-        "pt-br": "Selecione os fluxos que deseja mapear para montar a visualização em funil do seu projeto!",
-        "en": "Select the flows you want to map to assemble your project's funnel view!",
-        "es": "¡Seleccione los flujos que desea asignar para ensamblar la vista de embudo de su proyecto!"
+        "pt-br": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
+        "en": "Select the @.lower:flows you want to map to assemble your project's funnel view!",
+        "es": "¡Seleccione los @.lower:flows que desea asignar para ensamblar la vista de embudo de su proyecto!"
       },
       "select_flows": {
-        "pt-br": "Selecionar fluxos",
-        "en": "Select flows",
-        "es": "Seleccionar flujos"
+        "pt-br": "@:select @.lower:flows",
+        "en": "@:select @.lower:flows",
+        "es": "@:select @.lower:flows"
       }
+    }
+  },
+  "drawers": {
+    "config_card": {
+      "title": {
+        "pt-br": "Definir @.lower:metric para o card",
+        "en": "Define @.lower:metric for the card",
+        "es": "Definir @.lower:metric para la tarjeta"
+      }
+    },
+    "config_funnel": {
+      "title": {
+        "pt-br": "Definir @.lower:metrics do gráfico",
+        "en": "Define chart @.lower:metrics",
+        "es": "Definir @.lower:metrics de gráficos"
+      },
+      "description": {
+        "pt-br": "Selecione pelo menos três @.lower:flows para obter a visualização em gráfico de funil",
+        "en": "Select at least three @.lower:flows to get the funnel chart visualization",
+        "es": "Seleccione al menos tres @.lower:flows para obtener la visualización del gráfico de embudo"
+      },
+      "add_metric": {
+        "pt-br": "@:add @.lower:metric",
+        "en": "@:add @.lower:metric",
+        "es": "@:add @.lower:metric"
+      },
+      "first_metric": {
+        "pt-br": "Primeira @.lower:metric",
+        "en": "First @.lower:metric",
+        "es": "Primera @.lower:metric"
+      },
+      "second_metric": {
+        "pt-br": "Segunda @.lower:metric",
+        "en": "Second @.lower:metric",
+        "es": "Segunda @.lower:metric"
+      },
+      "third_metric": {
+        "pt-br": "Terceira @.lower:metric",
+        "en": "Third @.lower:metric",
+        "es": "Tercera @.lower:metric"
+      },
+      "fourth_metric": {
+        "pt-br": "Quarta @.lower:metric",
+        "en": "Fourth @.lower:metric",
+        "es": "Cuarta @.lower:metric"
+      },
+      "fifth_metric": {
+        "pt-br": "Quinta @.lower:metric",
+        "en": "Fifth @.lower:metric",
+        "es": "Quinta @.lower:metric"
+      },
+      "select_flow": {
+        "pt-br": "@:select @.lower:flow",
+        "en": "@:select @.lower:flow",
+        "es": "@:select @.lower:flow"
+      }
+    }
+  },
+  "metric_accordion": {
+    "name_metric": {
+      "label": {
+        "pt-br": "Nomear @.lower:metric",
+        "en": "Name @.lower:metric",
+        "es": "@:metric de designación"
+      },
+      "placeholder": {
+        "pt-br": "Ex: @.lower:flows do projeto",
+        "en": "Ex: Project @.lower:flows",
+        "es": "Ej: @.flows del proyecto"
+      }
+    },
+    "select_origin_flow": {
+      "pt-br": "@:select @.lower:flow de origem",
+      "en": "@:select origin @.lower:flow",
+      "es": "@:select @.lower:flow de origen"
     }
   }
 }

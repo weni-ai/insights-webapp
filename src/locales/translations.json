@@ -1,2 +1,43 @@
 {
+  "widgets": {
+    "metric_error": {
+      "pt-br": "Erro ao buscar métrica",
+      "en": "Error when seeking metric",
+      "es": "Error al buscar métrica"
+    },
+    "card": {
+      "error_description": {
+        "pt-br": "Configure novamente o fluxo de origem para obter dados válidos",
+        "en": "Configure the origin flow again to obtain valid data",
+        "es": "Configurar el flujo de origen nuevamente para obtener datos válidos"
+      },
+      "metric_empty": {
+        "pt-br": "Métrica vazia",
+        "en": "Empty metric",
+        "es": "Métrica vacía"
+      },
+      "metric_set": {
+        "pt-br": "Definir métrica",
+        "en": "Set metric",
+        "es": "Establecer métrica"
+      }
+    },
+    "graph_funnel": {
+      "title": {
+        "pt-br": "Funil",
+        "en": "Funnel",
+        "es": "Embudo"
+      },
+      "not_configured_description": {
+        "pt-br": "Selecione os fluxos que deseja mapear para montar a visualização em funil do seu projeto!",
+        "en": "Select the flows you want to map to assemble your project's funnel view!",
+        "es": "¡Seleccione los flujos que desea asignar para ensamblar la vista de embudo de su proyecto!"
+      },
+      "select_flows": {
+        "pt-br": "Selecionar fluxos",
+        "en": "Select flows",
+        "es": "Seleccionar flujos"
+      }
+    }
+  }
 }

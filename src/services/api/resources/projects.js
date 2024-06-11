@@ -10,7 +10,7 @@ export default {
     }
 
     const response = await http.get(
-      `/projects/${project.uuid}/sources/${slug}/search`,
+      `/projects/${project.uuid}/sources/${slug}/search/`,
     );
 
     const sources = response.results.map((source) => {

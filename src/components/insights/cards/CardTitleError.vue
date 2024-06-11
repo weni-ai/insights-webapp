@@ -6,7 +6,9 @@
       size="avatar-nano"
       filled
     />
-    <strong class="card-title-error__title">Erro ao buscar métrica</strong>
+    <strong class="card-title-error__title">{{
+      $t('widgets.metric_error')
+    }}</strong>
   </section>
 </template>
 

@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
+    "dev": "yarn translations:build && vite",
+    "build": "yarn translations:build && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "yarn lint --fix"
+    "format": "yarn lint --fix",
+    "translations:build": "unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json",
+    "translations:suggest-from-pt-br": "unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode build --suggest \"pt-br:pt>en:en\" && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode reverse && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode build --suggest \"pt-br:pt>es\" && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode reverse"
   },
   "dependencies": {
     "@weni/unnnic-system": "^2.0.15",
@@ -36,6 +38,7 @@
     "sass": "^1.69.7",
     "sass-loader": "^13.3.3",
     "typescript": "^5.4.5",
+    "unified-translations": "^1.1.1",
     "vite": "^5.0.10",
     "vue-eslint-parser": "^9.4.2"
   }

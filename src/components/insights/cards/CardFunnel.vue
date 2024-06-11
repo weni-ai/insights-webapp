@@ -4,7 +4,7 @@
     :class="{ 'card-funnel--not-configured': !configured }"
   >
     <header class="card-funnel__header">
-      <h1 class="header__title">Funil</h1>
+      <h1 class="header__title">{{ $t('widgets.graph_funnel.title') }}</h1>
       <UnnnicButton
         v-if="configured"
         size="small"
@@ -24,11 +24,10 @@
           scheme="neutral-cloudy"
         />
         <p class="not-configured__text">
-          Selecione os fluxos que deseja mapear para montar a visualização em
-          funil do seu projeto!
+          {{ $t('widgets.graph_funnel.not_configured_description') }}
         </p>
         <UnnnicButton
-          text="Selecionar fluxos"
+          :text="$t('widgets.graph_funnel.select_flows')"
           type="primary"
           @click="$emit('open-config')"
         />
@@ -49,8 +48,6 @@ import FunnelChart from '../charts/FunnelChart.vue';
 export default {
   name: 'CardFunnel',
 
-  emits: ['open-config'],
-
   components: { CardBase, FunnelChart },
 
   props: {
@@ -61,6 +58,8 @@ export default {
       required: true,
     },
   },
+
+  emits: ['open-config'],
 };
 </script>
 

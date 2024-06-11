@@ -2,10 +2,10 @@
   <UnnnicInputDatePicker
     class="filter-date"
     :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
     size="sm"
-    inputFormat="DD/MM/YYYY"
+    :inputFormat="$t('date_format')"
     position="right"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
 

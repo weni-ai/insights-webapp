@@ -32,11 +32,29 @@ export default {
     },
   },
 
+  created() {
+    this.listenConnectLocale();
+  },
+
   methods: {
     ...mapActions({
       getDashboards: 'dashboards/getDashboards',
       getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
     }),
+
+    listenConnectLocale() {
+      window.parent.postMessage({ event: 'getLanguage' }, '*');
+
+      window.addEventListener('message', (ev) => {
+        const message = ev.data;
+        const isLocaleChangeMessage = message?.event === 'setLanguage';
+        if (!isLocaleChangeMessage) return;
+
+        const locale = message?.language; // 'en', 'pt-br', 'es'
+
+        this.$i18n.locale = locale;
+      });
+    },
   },
 };
 </script>

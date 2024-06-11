@@ -10,7 +10,7 @@
     @update:active="updateActiveMetric(index, $event)"
   />
   <UnnnicButton
-    text="Adicionar métrica"
+    :text="$t('drawers.config_funnel.add_metric')"
     iconLeft="add"
     type="tertiary"
     :disabled="metrics.length >= 5"
@@ -44,9 +44,24 @@ export default {
   data() {
     return {
       metrics: [
-        { title: 'Primeira métrica', name: '', flow: [], active: true },
-        { title: 'Segunda métrica', name: '', flow: [], active: false },
-        { title: 'Terceira métrica', name: '', flow: [], active: false },
+        {
+          title: this.$t('drawers.config_funnel.first_metric'),
+          name: '',
+          flow: [],
+          active: true,
+        },
+        {
+          title: this.$t('drawers.config_funnel.second_metric'),
+          name: '',
+          flow: [],
+          active: false,
+        },
+        {
+          title: this.$t('drawers.config_funnel.third_metric'),
+          name: '',
+          flow: [],
+          active: false,
+        },
       ],
       activeMetric: null,
     };
@@ -91,7 +106,10 @@ export default {
 
     addMetric() {
       const newMetric = {
-        title: this.metrics.length === 3 ? 'Quarta métrica' : 'Quinta métrica',
+        title:
+          this.metrics.length === 3
+            ? this.$t('drawers.config_funnel.fourth_metric')
+            : this.$t('drawers.config_funnel.fifth_metric'),
         name: '',
         flow: [],
         active: false,

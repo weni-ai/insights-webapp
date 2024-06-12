@@ -62,6 +62,8 @@ export default {
     },
   },
 
+  emits: ['request-data'],
+
   data() {
     return { pagination: 1, activeTabName: '' };
   },
@@ -115,6 +117,8 @@ export default {
       }
     },
     activeTabName() {
+      this.pagination = 1;
+
       const { $route } = this;
       this.$router.replace({
         ...$route,
@@ -123,6 +127,11 @@ export default {
           ...{ slug: this.activeTab.slug },
         },
       });
+    },
+    pagination(newPage) {
+      const limit = 5;
+      const offset = newPage * limit;
+      this.$emit('request-data', { offset, limit });
     },
   },
 

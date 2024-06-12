@@ -30,6 +30,12 @@ export default {
 
   emits: ['open-config'],
 
+  data() {
+    return {
+      isRequestingData: false,
+    };
+  },
+
   computed: {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
@@ -41,7 +47,9 @@ export default {
     },
 
     isLoading() {
-      return this.isConfigured && !('data' in this.widget);
+      return (
+        this.isConfigured && (!('data' in this.widget) || this.isRequestingData)
+      );
     },
 
     currentComponent() {
@@ -140,6 +148,10 @@ export default {
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
         },
+        table_group: {
+          requestData: ({ offset, limit }) =>
+            this.requestWidgetData({ offset, limit }),
+        },
       };
 
       return mappingEvents[type] || {};
@@ -149,11 +161,7 @@ export default {
   watch: {
     '$route.query': {
       handler() {
-        if (this.$route.name === 'report') {
-          this.getWidgetReportData();
-        } else if (this.isConfigured) {
-          this.getCurrentDashboardWidgetData(this.widget.uuid);
-        }
+        this.requestWidgetData();
       },
       immediate: true,
     },
@@ -164,6 +172,18 @@ export default {
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
       getWidgetReportData: 'reports/getWidgetReportData',
     }),
+
+    async requestWidgetData({ offset, limit, next } = {}) {
+      this.isRequestingData = true;
+
+      if (this.$route.name === 'report') {
+        await this.getWidgetReportData({ offset, limit, next });
+      } else if (this.isConfigured) {
+        await this.getCurrentDashboardWidgetData(this.widget.uuid);
+      }
+
+      this.isRequestingData = false;
+    },
 
     redirectToReport() {
       const { uuid, report } = this.widget;

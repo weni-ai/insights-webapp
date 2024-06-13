@@ -5,8 +5,8 @@
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
-    primaryButtonText="Salvar"
-    secondaryButtonText="Cancelar"
+    :primaryButtonText="$t('save')"
+    :secondaryButtonText="$t('cancel')"
     :disabledPrimaryButton="disablePrimaryButton"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     @primary-button-click="updateWidgetConfig"
@@ -39,8 +39,6 @@ import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 export default {
   name: 'DrawerConfigWidgetDynamic',
 
-  emits: ['close'],
-
   components: {
     DrawerConfigContentFunnel,
     DrawerConfigContentCard,
@@ -57,30 +55,29 @@ export default {
     },
   },
 
+  emits: ['close'],
+
   data() {
     return {
       config: {},
-      flowsOptions: [{ value: '', label: 'Selecionar fluxo' }],
+      flowsOptions: [
+        { value: '', label: this.$t('drawers.config_funnel.select_flow') },
+      ],
 
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
     };
   },
 
-  created() {
-    this.fetchFlowsSource();
-  },
-
   computed: {
     drawerProps() {
       const configMap = {
         graph_funnel: {
-          title: 'Definir métricas do gráfico',
-          description:
-            'Selecione pelo menos três fluxos para obter a visualização em gráfico de funil',
+          title: this.$t('drawers.config_funnel.title'),
+          description: this.$t('drawers.config_funnel.description'),
         },
         card: {
-          title: 'Definir métrica para o card',
+          title: this.$t('drawers.config_card.title'),
         },
       };
 
@@ -119,6 +116,10 @@ export default {
     },
   },
 
+  created() {
+    this.fetchFlowsSource();
+  },
+
   methods: {
     ...mapActions({
       updateWidget: 'dashboards/updateWidget',
@@ -147,7 +148,7 @@ export default {
 
         unnnic.unnnicCallAlert({
           props: {
-            text: `Métrica salva com sucesso`,
+            text: this.$t('drawers.metric_saved'),
             type: 'success',
           },
           seconds: 5,
@@ -155,7 +156,7 @@ export default {
       } catch (error) {
         unnnic.unnnicCallAlert({
           props: {
-            text: `Erro ao salvar, tente novamente`,
+            text: this.$t('save_error'),
             type: 'error',
           },
           seconds: 5,

@@ -70,9 +70,7 @@ export default {
         const newValues = Object.values(newDependsOnValue);
         const oldValues = Object.values(oldDependsOnValue);
         if (!compareEquals(newValues, oldValues)) {
-          const filledDependsOnValue = Object.values(newDependsOnValue).every(
-            (value) => value,
-          );
+          const filledDependsOnValue = newValues.every((value) => value);
           if (filledDependsOnValue) this.fetchSource();
         }
       },

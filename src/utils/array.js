@@ -5,3 +5,8 @@ export function sortByKey(arr, key, order = 'asc') {
     : arr.toSorted((a, b) => a[key] - b[key]);
   return order === 'desc' ? ordenedArr.reverse() : ordenedArr;
 }
+
+export function compareEquals(arrBase, ...arr) {
+  const arrBaseStringfy = JSON.stringify(arrBase);
+  return arr.every((arrCheck) => arrBaseStringfy === JSON.stringify(arrCheck));
+}

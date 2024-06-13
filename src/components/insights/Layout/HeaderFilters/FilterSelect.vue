@@ -11,6 +11,7 @@
 
 <script>
 import Projects from '@/services/api/resources/projects';
+import { compareEquals } from '@/utils/array';
 
 export default {
   name: 'FilterSelect',
@@ -65,10 +66,16 @@ export default {
 
   watch: {
     dependsOnValue: {
-      handler() {
-        this.fetchSource();
+      handler(newDependsOnValue, oldDependsOnValue) {
+        const newValues = Object.values(newDependsOnValue);
+        const oldValues = Object.values(oldDependsOnValue);
+        if (!compareEquals(newValues, oldValues)) {
+          const filledDependsOnValue = Object.values(newDependsOnValue).every(
+            (value) => value,
+          );
+          if (filledDependsOnValue) this.fetchSource();
+        }
       },
-      deep: true,
     },
   },
 

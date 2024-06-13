@@ -8,7 +8,7 @@
       :is="currentComponent"
       v-bind="filterProps"
       v-on="filterEvents"
-      @update:modelValue="updateModelValue"
+      @update:model-value="updateModelValue"
     />
   </section>
 </template>
@@ -29,6 +29,10 @@ export default {
     modelValue: {
       default: null,
     },
+    dependsOnValue: {
+      type: Object,
+      default: () => ({}),
+    },
     disabled: {
       type: Boolean,
       default: false,
@@ -48,12 +52,14 @@ export default {
 
     filterProps() {
       const { disabled, treatedModelValue } = this;
-      const { type, placeholder, source } = this.filter;
+      const { type, placeholder, source, depends_on } = this.filter;
 
       const defaultProps = {
         placeholder,
         modelValue: treatedModelValue,
         disabled,
+        dependsOn: depends_on,
+        dependsOnValue: this.dependsOnValue,
       };
 
       const mappingProps = {

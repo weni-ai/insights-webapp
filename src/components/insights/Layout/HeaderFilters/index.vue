@@ -105,13 +105,13 @@ export default {
           this.retainRouteQueries(newRoute, oldRoute);
           return;
         }
-
-        this.setAppliedFilters(newRoute.query);
+        // comment to prevent override default filters
+        // this.setAppliedFilters(newRoute.query);
       },
     },
-    currentDashboardFilters() {
-      this.setAppliedFilters(this.$route.query);
-    },
+    // currentDashboardFilters() {
+    //   this.setAppliedFilters(this.$route.query);
+    // },
   },
 };
 </script>

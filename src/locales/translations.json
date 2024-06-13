@@ -1,0 +1,281 @@
+{
+  "metric": {
+    "pt-br": "Métrica",
+    "en": "Metric",
+    "es": "Métrica"
+  },
+  "metrics": {
+    "pt-br": "Métricas",
+    "en": "Metrics",
+    "es": "Métricas"
+  },
+  "flow": {
+    "pt-br": "Fluxo",
+    "en": "Flow",
+    "es": "Flujo"
+  },
+  "flows": {
+    "pt-br": "Fluxos",
+    "en": "Flows",
+    "es": "Flujo"
+  },
+  "select": {
+    "pt-br": "Selecionar",
+    "en": "Select",
+    "es": "Seleccionar"
+  },
+  "add": {
+    "pt-br": "Adicionar",
+    "en": "Add",
+    "es": "Agregar"
+  },
+  "view_more": {
+    "pt-br": "Ver mais",
+    "en": "View more",
+    "es": "Ver más"
+  },
+  "ex": {
+    "pt-br": "Ex:",
+    "en": "Ex:",
+    "es": "Ej:"
+  },
+  "cancel": {
+    "pt-br": "Cancelar",
+    "en": "Cancel",
+    "es": "Cancelar"
+  },
+  "save": {
+    "pt-br": "Salvar",
+    "en": "Save",
+    "es": "Salvar"
+  },
+  "today": {
+    "pt-br": "Hoje",
+    "en": "Today",
+    "es": "Hoy"
+  },
+  "date_format": {
+    "pt-br": "DD/MM/YYYY",
+    "en": "MM/DD/YYYY",
+    "es": "DD/MM/YYYY"
+  },
+  "save_error": {
+    "pt-br": "Erro ao salvar, tente novamente",
+    "en": "Error saving, please try again",
+    "es": "Error al guardar, por favor inténtalo de nuevo"
+  },
+  "widgets": {
+    "metric_error": {
+      "pt-br": "Erro ao buscar @.lower:metric",
+      "en": "Error when seeking @.lower:metric",
+      "es": "Error al buscar @.lower:metric"
+    },
+    "card": {
+      "error_description": {
+        "pt-br": "Configure novamente o @.lower:flow de origem para obter dados válidos",
+        "en": "Configure the origin @.lower:flow again to obtain valid data",
+        "es": "Configurar el @.lower:flow de origen nuevamente para obtener datos válidos"
+      },
+      "metric_empty": {
+        "pt-br": "@:metric vazia",
+        "en": "Empty @.lower:metric",
+        "es": "@:metric vacía"
+      },
+      "metric_set": {
+        "pt-br": "Definir @.lower:metric",
+        "en": "Set @.lower:metric",
+        "es": "Establecer @.lower:metric"
+      }
+    },
+    "graph_funnel": {
+      "title": {
+        "pt-br": "Funil",
+        "en": "Funnel",
+        "es": "Embudo"
+      },
+      "not_configured_description": {
+        "pt-br": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
+        "en": "Select the @.lower:flows you want to map to assemble your project's funnel view!",
+        "es": "¡Seleccione los @.lower:flows que desea asignar para ensamblar la vista de embudo de su proyecto!"
+      },
+      "select_flows": {
+        "pt-br": "@:select @.lower:flows",
+        "en": "@:select @.lower:flows",
+        "es": "@:select @.lower:flows"
+      }
+    }
+  },
+  "drawers": {
+    "metric_saved": {
+      "pt-br": "@:metric salva com sucesso",
+      "en": "@:metric saved successfully",
+      "es": "@:metric guardada correctamente"
+    },
+    "config_card": {
+      "title": {
+        "pt-br": "Definir @.lower:metric para o card",
+        "en": "Define @.lower:metric for the card",
+        "es": "Definir @.lower:metric para la tarjeta"
+      },
+      "name_card": {
+        "label": {
+          "pt-br": "Nomear card",
+          "en": "Name card",
+          "es": "Nombre de tarjeta"
+        },
+        "placeholder": {
+          "pt-br": "@:ex @.lower:flows do projeto",
+          "en": "@:ex Project @.lower:flows",
+          "es": "@:ex @.lower:flows del proyecto"
+        }
+      },
+      "select_origin_flow": {
+        "pt-br": "@:select @.lower:flow de origem",
+        "en": "@:select origin @.lower:flow",
+        "es": "@:select @.lower:flow de origen"
+      },
+      "result_type": {
+        "pt-br": "Tipo de resultado",
+        "en": "Type of result",
+        "es": "Tipo de resultado"
+      },
+      "flow_result": {
+        "label": {
+          "pt-br": "Resultado do @.lower:flow",
+          "en": "@:flow result",
+          "es": "Resultado de @.lower:flow"
+        },
+        "placeholder": {
+          "pt-br": "@:ex @results.wenigpt",
+          "en": "@:ex @results.wenigpt",
+          "es": "@:ex @results.wenigpt"
+        }
+      },
+      "operation": {
+        "pt-br": "Operação",
+        "en": "Operation",
+        "es": "Operación"
+      },
+      "radios": {
+        "executions": {
+          "pt-br": "Execuções",
+          "en": "Execution",
+          "es": "Ejecución"
+        },
+        "results": {
+          "pt-br": "Resultado de fluxo",
+          "en": "Flow result",
+          "es": "Resultado de flujo"
+        },
+        "total": {
+          "pt-br": "Total",
+          "en": "Total",
+          "es": "Total"
+        },
+        "max": {
+          "pt-br": "Maior valor",
+          "en": "Highest value",
+          "es": "Valor más alto"
+        },
+        "avg": {
+          "pt-br": "Média",
+          "en": "Average",
+          "es": "Promedio"
+        },
+        "min": {
+          "pt-br": "Menor valor",
+          "en": "Lower value",
+          "es": "Bajo valor"
+        },
+        "recurrence": {
+          "pt-br": "Recorrência",
+          "en": "Recurrence",
+          "es": "Reaparición"
+        }
+      }
+    },
+    "config_funnel": {
+      "title": {
+        "pt-br": "Definir @.lower:metrics do gráfico",
+        "en": "Define chart @.lower:metrics",
+        "es": "Definir @.lower:metrics de gráficos"
+      },
+      "description": {
+        "pt-br": "Selecione pelo menos três @.lower:flows para obter a visualização em gráfico de funil",
+        "en": "Select at least three @.lower:flows to get the funnel chart visualization",
+        "es": "Seleccione al menos tres @.lower:flows para obtener la visualización del gráfico de embudo"
+      },
+      "add_metric": {
+        "pt-br": "@:add @.lower:metric",
+        "en": "@:add @.lower:metric",
+        "es": "@:add @.lower:metric"
+      },
+      "first_metric": {
+        "pt-br": "Primeira @.lower:metric",
+        "en": "First @.lower:metric",
+        "es": "Primera @.lower:metric"
+      },
+      "second_metric": {
+        "pt-br": "Segunda @.lower:metric",
+        "en": "Second @.lower:metric",
+        "es": "Segunda @.lower:metric"
+      },
+      "third_metric": {
+        "pt-br": "Terceira @.lower:metric",
+        "en": "Third @.lower:metric",
+        "es": "Tercera @.lower:metric"
+      },
+      "fourth_metric": {
+        "pt-br": "Quarta @.lower:metric",
+        "en": "Fourth @.lower:metric",
+        "es": "Cuarta @.lower:metric"
+      },
+      "fifth_metric": {
+        "pt-br": "Quinta @.lower:metric",
+        "en": "Fifth @.lower:metric",
+        "es": "Quinta @.lower:metric"
+      },
+      "select_flow": {
+        "pt-br": "@:select @.lower:flow",
+        "en": "@:select @.lower:flow",
+        "es": "@:select @.lower:flow"
+      }
+    }
+  },
+  "metric_accordion": {
+    "name_metric": {
+      "label": {
+        "pt-br": "Nomear @.lower:metric",
+        "en": "Name @.lower:metric",
+        "es": "Nombre @.lower:metric"
+      },
+      "placeholder": {
+        "pt-br": "@:ex @.lower:flows do projeto",
+        "en": "@:ex Project @.lower:flows",
+        "es": "@:ex @.flows del proyecto"
+      }
+    },
+    "select_origin_flow": {
+      "pt-br": "@:select @.lower:flow de origem",
+      "en": "@:select origin @.lower:flow",
+      "es": "@:select @.lower:flow de origen"
+    }
+  },
+  "insights_header": {
+    "filters": {
+      "pt-br": "Filtros",
+      "en": "Filters",
+      "es": "Filtros"
+    },
+    "filtrate": {
+      "pt-br": "Filtrar",
+      "en": "Filtrate",
+      "es": "Filtrar"
+    },
+    "clear_filters": {
+      "pt-br": "Limpar filtros",
+      "en": "Clear filters",
+      "es": "Limpiar filtros"
+    }
+  }
+}

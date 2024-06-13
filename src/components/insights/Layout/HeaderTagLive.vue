@@ -5,7 +5,7 @@
       icon="indicator"
       scheme="aux-green-300"
     />
-    <p class="header-tag-live__text">Hoje</p>
+    <p class="header-tag-live__text">{{ $t('today') }}</p>
   </section>
 </template>
 

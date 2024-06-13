@@ -2,7 +2,7 @@
   <UnnnicModal
     v-show="showModal"
     class="modal-filters"
-    text="Filtros"
+    :text="$t('insights_header.filters')"
     @close="close"
   >
     <form
@@ -26,12 +26,12 @@
     </form>
     <template #options>
       <UnnnicButton
-        text="Limpar filtros"
+        :text="$t('insights_header.clear_filters')"
         type="tertiary"
         @click="clearFilters"
       />
       <UnnnicButton
-        text="Filtrar"
+        :text="$t('insights_header.filtrate')"
         type="primary"
         @click="setFilters"
       />

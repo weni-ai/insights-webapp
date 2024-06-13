@@ -18,15 +18,15 @@
     </template>
 
     <section>
-      <UnnnicLabel label="Nomear métrica" />
+      <UnnnicLabel :label="$t('metric_accordion.name_metric.label')" />
       <UnnnicInput
         :modelValue="name"
-        placeholder="Ex: fluxos do projeto"
+        :placeholder="$t('metric_accordion.name_metric.placeholder')"
         @update:model-value="$emit('update:name', $event)"
       />
     </section>
     <section>
-      <UnnnicLabel label="Selecionar fluxo de origem" />
+      <UnnnicLabel :label="$t('metric_accordion.select_origin_flow')" />
       <UnnnicSelectSmart
         :modelValue="flow"
         :options="flowsOptions"

@@ -11,7 +11,7 @@
       <template v-if="showMetricError">
         <CardTitleError />
         <p class="content__error">
-          Configure novamente o fluxo de origem para obter dados válidos
+          {{ $t('widgets.card.error_description') }}
         </p>
       </template>
 
@@ -27,7 +27,7 @@
         v-if="!showMetricError"
         class="content-description"
       >
-        {{ configured ? description : 'Métrica vazia' }}
+        {{ configured ? description : $t('widgets.card.metric_empty') }}
       </p>
     </section>
     <UnnnicButton
@@ -36,7 +36,7 @@
       type="secondary"
       :iconCenter="configured ? 'tune' : ''"
       :iconLeft="configured ? '' : 'tune'"
-      :text="configured ? '' : 'Definir métrica'"
+      :text="configured ? '' : $t('widgets.card.metric_set')"
       @click.stop="$emit('open-config')"
     />
   </CardBase>

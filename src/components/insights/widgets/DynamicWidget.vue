@@ -76,7 +76,7 @@ export default {
 
       const mappingProps = {
         card: {
-          metric: data?.value || data,
+          metric: JSON.stringify(data?.value) || data,
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,

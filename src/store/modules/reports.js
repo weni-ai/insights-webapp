@@ -32,7 +32,7 @@ export default {
       }
     },
 
-    async getWidgetReportData({ commit }) {
+    async getWidgetReportData({ commit }, { offset, limit, next }) {
       const { dashboardUuid, widgetUuid } = Router.currentRoute.value.params;
       const { slug } = Router.currentRoute.value.query;
       try {
@@ -40,6 +40,9 @@ export default {
           dashboardUuid: dashboardUuid,
           widgetUuid: widgetUuid,
           slug,
+          offset,
+          limit,
+          next,
         });
         commit(mutations.SET_REPORT_DATA, data);
       } catch (error) {

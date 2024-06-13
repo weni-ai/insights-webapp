@@ -17,11 +17,12 @@
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
-          v-model:pagination="pagination"
+          :pagination="page === 0 ? 1 : page"
           :headers="activeTable.headers"
           :rows="activeTable.rows"
           :paginationTotal="paginationTotal"
           :isLoading="isLoading"
+          @update:pagination="page = $event"
         />
       </template>
     </UnnnicTab>
@@ -65,7 +66,7 @@ export default {
   emits: ['request-data'],
 
   data() {
-    return { pagination: 1, activeTabName: '' };
+    return { page: 1, activeTabName: '' };
   },
 
   computed: {
@@ -116,6 +117,13 @@ export default {
         rows: dynamicRows,
       };
     },
+    paginationConfig() {
+      const limit = 5;
+      return {
+        limit,
+        offset: this.page * limit,
+      };
+    },
   },
 
   watch: {
@@ -124,22 +132,24 @@ export default {
         this.activeTabName = newActiveTab.name;
       }
     },
-    activeTabName() {
-      this.pagination = 1;
-
+    async activeTabName() {
       const { $route } = this;
-      this.$router.replace({
+      this.page = 0;
+
+      await this.$router.replace({
         ...$route,
         query: {
           ...$route.query,
           ...{ slug: this.activeTab.key },
         },
       });
+
+      this.page = 1;
     },
-    pagination(newPage) {
-      const limit = 5;
-      const offset = newPage * limit;
-      this.$emit('request-data', { offset, limit });
+    page(newPage) {
+      if (newPage !== 0) {
+        this.emitRequestData();
+      }
     },
   },
 
@@ -150,6 +160,13 @@ export default {
       ...this.$route,
       query: newQuery,
     });
+  },
+
+  methods: {
+    emitRequestData() {
+      const { offset, limit } = this.paginationConfig;
+      this.$emit('request-data', { offset, limit });
+    },
   },
 };
 </script>

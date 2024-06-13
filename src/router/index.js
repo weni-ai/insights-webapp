@@ -32,7 +32,10 @@ const router = createRouter({
         await store.dispatch('config/setToken', token);
         await store.dispatch('config/setProject', { uuid: projectUuid });
         await store.dispatch('dashboards/getDashboards');
-        next({ name: 'dashboard' });
+        next({
+          path: '/:dashboardUuid',
+          query: { ...to.query, projectUuid: undefined },
+        });
       },
     },
   ],

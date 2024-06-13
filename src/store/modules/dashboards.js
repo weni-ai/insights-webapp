@@ -2,6 +2,7 @@ import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards, Widgets } from '@/services/api';
 import { sortByKey } from '@/utils/array';
+import moment from 'moment';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -98,11 +99,35 @@ export default {
       );
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGETS, widgets);
     },
-    async getCurrentDashboardFilters({ commit, state }) {
+    async getCurrentDashboardFilters({ commit, state, dispatch }) {
       const filters = await Dashboards.getDashboardFilters(
         state.currentDashboard.uuid,
       );
-      commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
+
+      const router = Router.currentRoute.value;
+
+      await commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
+
+      const dateRangeFilters = filters.filter(
+        (filter) => filter.type === 'date_range',
+      );
+
+      if (dateRangeFilters.length) {
+        const formattedDateRangeFilters = dateRangeFilters.reduce((ac, cv) => {
+          if (router.query[cv.name]) {
+            return { ...ac, [cv.name]: parseValue(router.query[cv.name]) };
+          }
+          return {
+            ...ac,
+            [cv.name]: {
+              [cv.start_sufix]: moment().utc().format('YYYY-MM-DD'),
+              [cv.end_sufix]: moment().utc().format('YYYY-MM-DD'),
+            },
+          };
+        }, {});
+
+        await dispatch('setAppliedFilters', formattedDateRangeFilters);
+      }
     },
     async setAppliedFilters({ state, commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);

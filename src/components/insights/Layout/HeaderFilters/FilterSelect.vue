@@ -1,16 +1,17 @@
 <template>
   <UnnnicSelectSmart
     :modelValue="treatedModelValue"
-    @update:modelValue="$emit('update:modelValue', $event[0].value)"
     :options="options"
     autocomplete
     autocompleteIconLeft
     autocompleteClearOnFocus
+    @update:model-value="$emit('update:modelValue', $event[0].value)"
   />
 </template>
 
 <script>
 import Projects from '@/services/api/resources/projects';
+import { compareEquals } from '@/utils/array';
 
 export default {
   name: 'FilterSelect',
@@ -27,6 +28,14 @@ export default {
       type: String,
       default: '',
     },
+    dependsOn: {
+      type: Object || undefined,
+      default: undefined,
+    },
+    dependsOnValue: {
+      type: Object,
+      default: null,
+    },
   },
 
   data() {
@@ -38,10 +47,6 @@ export default {
         },
       ],
     };
-  },
-
-  created() {
-    this.fetchSource();
   },
 
   computed: {
@@ -59,9 +64,29 @@ export default {
     },
   },
 
+  watch: {
+    dependsOnValue: {
+      handler(newDependsOnValue, oldDependsOnValue) {
+        const newValues = Object.values(newDependsOnValue);
+        const oldValues = Object.values(oldDependsOnValue);
+        if (!compareEquals(newValues, oldValues)) {
+          const filledDependsOnValue = newValues.every((value) => value);
+          if (filledDependsOnValue) this.fetchSource();
+        }
+      },
+    },
+  },
+
+  mounted() {
+    if (!this.dependsOn?.search_param) this.fetchSource();
+  },
+
   methods: {
     async fetchSource() {
-      const response = await Projects.getProjectSource(this.source);
+      const response = await Projects.getProjectSource(
+        this.source,
+        this.dependsOnValue || {},
+      );
       response?.forEach((source) => {
         this.options.push({ value: source.uuid, label: source.name });
       });

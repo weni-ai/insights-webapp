@@ -35,9 +35,9 @@ export default {
   props: {
     isLoading: Boolean,
     tabs: {
-      type: Array,
-      default: () => [
-        {
+      type: Object,
+      default: () => ({
+        key: {
           fields: [
             {
               display: false,
@@ -50,7 +50,7 @@ export default {
           is_default: false,
           name: '',
         },
-      ],
+      }),
     },
     data: {
       type: Array,
@@ -70,13 +70,21 @@ export default {
 
   computed: {
     tabsName() {
-      return this.tabs?.map((mappedConfig) => mappedConfig.name);
+      const tabsValues = Object.values(this.tabs);
+      return tabsValues?.map((mappedConfig) => mappedConfig.name);
     },
     activeTab() {
-      return (
-        this.tabs.find((tab) => tab.name === this.activeTabName) ||
-        this.tabs.find((tab) => tab.is_default)
-      );
+      const tabsEntries = Object.entries(this.tabs);
+      const activeTab =
+        tabsEntries.find(([_key, tab]) => tab.name === this.activeTabName) ||
+        tabsEntries.find(([_key, tab]) => tab.is_default);
+
+      if (activeTab) {
+        const [key, tab] = activeTab;
+        return { key, ...tab };
+      }
+
+      return null;
     },
     activeTable() {
       if (!this.activeTab || !this.activeTab.fields || !this.data) {
@@ -124,7 +132,7 @@ export default {
         ...$route,
         query: {
           ...$route.query,
-          ...{ slug: this.activeTab.slug },
+          ...{ slug: this.activeTab.key },
         },
       });
     },

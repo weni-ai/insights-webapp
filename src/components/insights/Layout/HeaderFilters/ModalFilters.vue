@@ -14,11 +14,12 @@
         :key="filter.name"
       >
         <DynamicFilter
-          :filter="filter"
           :modelValue="filtersInternal[filter.name]"
+          :filter="filter"
           :disabled="
             filter.depends_on && !filtersInternal[filter.depends_on?.filter]
           "
+          :dependsOnValue="getDynamicFiltersDependsOnValues(filter)"
           @update:model-value="updateFilter(filter.name, $event)"
         />
       </template>
@@ -98,6 +99,14 @@ export default {
       getCurrentDashboardWidgetsDatas:
         'dashboards/getCurrentDashboardWidgetsDatas',
     }),
+    getDynamicFiltersDependsOnValues(filter) {
+      if (!filter.depends_on?.search_param) return null;
+
+      const { search_param, filter: filterName } = filter.depends_on;
+      return {
+        [search_param]: this.filtersInternal[filterName],
+      };
+    },
     clearFilters() {
       this.filtersInternal = {};
     },

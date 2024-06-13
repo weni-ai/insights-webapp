@@ -161,7 +161,9 @@ export default {
   watch: {
     '$route.query': {
       handler() {
-        this.requestWidgetData();
+        if (this.widget.type !== 'table_group') {
+          this.requestWidgetData();
+        }
       },
       immediate: true,
     },

@@ -17,11 +17,12 @@
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
-          v-model:pagination="pagination"
+          :pagination="page === 0 ? 1 : page"
           :headers="activeTable.headers"
           :rows="activeTable.rows"
           :paginationTotal="paginationTotal"
           :isLoading="isLoading"
+          @update:pagination="page = $event"
         />
       </template>
     </UnnnicTab>
@@ -35,9 +36,9 @@ export default {
   props: {
     isLoading: Boolean,
     tabs: {
-      type: Array,
-      default: () => [
-        {
+      type: Object,
+      default: () => ({
+        key: {
           fields: [
             {
               display: false,
@@ -50,7 +51,7 @@ export default {
           is_default: false,
           name: '',
         },
-      ],
+      }),
     },
     data: {
       type: Array,
@@ -65,18 +66,26 @@ export default {
   emits: ['request-data'],
 
   data() {
-    return { pagination: 1, activeTabName: '' };
+    return { page: 1, activeTabName: '' };
   },
 
   computed: {
     tabsName() {
-      return this.tabs?.map((mappedConfig) => mappedConfig.name);
+      const tabsValues = Object.values(this.tabs);
+      return tabsValues?.map((mappedConfig) => mappedConfig.name);
     },
     activeTab() {
-      return (
-        this.tabs.find((tab) => tab.name === this.activeTabName) ||
-        this.tabs.find((tab) => tab.is_default)
-      );
+      const tabsEntries = Object.entries(this.tabs);
+      const activeTab =
+        tabsEntries.find(([_key, tab]) => tab.name === this.activeTabName) ||
+        tabsEntries.find(([_key, tab]) => tab.is_default);
+
+      if (activeTab) {
+        const [key, tab] = activeTab;
+        return { key, ...tab };
+      }
+
+      return null;
     },
     activeTable() {
       if (!this.activeTab || !this.activeTab.fields || !this.data) {
@@ -108,6 +117,13 @@ export default {
         rows: dynamicRows,
       };
     },
+    paginationConfig() {
+      const limit = 5;
+      return {
+        limit,
+        offset: this.page * limit,
+      };
+    },
   },
 
   watch: {
@@ -116,22 +132,24 @@ export default {
         this.activeTabName = newActiveTab.name;
       }
     },
-    activeTabName() {
-      this.pagination = 1;
-
+    async activeTabName() {
       const { $route } = this;
-      this.$router.replace({
+      this.page = 0;
+
+      await this.$router.replace({
         ...$route,
         query: {
           ...$route.query,
-          ...{ slug: this.activeTab.slug },
+          ...{ slug: this.activeTab.key },
         },
       });
+
+      this.page = 1;
     },
-    pagination(newPage) {
-      const limit = 5;
-      const offset = newPage * limit;
-      this.$emit('request-data', { offset, limit });
+    page(newPage) {
+      if (newPage !== 0) {
+        this.emitRequestData();
+      }
     },
   },
 
@@ -142,6 +160,13 @@ export default {
       ...this.$route,
       query: newQuery,
     });
+  },
+
+  methods: {
+    emitRequestData() {
+      const { offset, limit } = this.paginationConfig;
+      this.$emit('request-data', { offset, limit });
+    },
   },
 };
 </script>

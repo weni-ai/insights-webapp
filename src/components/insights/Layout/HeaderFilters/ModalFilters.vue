@@ -148,6 +148,7 @@ export default {
     display: grid;
     gap: $unnnic-spacing-xs $unnnic-spacing-sm;
     grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
 
     text-align: left;
 

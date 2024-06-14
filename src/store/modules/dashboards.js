@@ -113,18 +113,26 @@ export default {
       );
 
       if (dateRangeFilters.length) {
-        const formattedDateRangeFilters = dateRangeFilters.reduce((ac, cv) => {
-          if (router.query[cv.name]) {
-            return { ...ac, [cv.name]: parseValue(router.query[cv.name]) };
-          }
-          return {
-            ...ac,
-            [cv.name]: {
-              [cv.start_sufix]: moment().utc().format('YYYY-MM-DD'),
-              [cv.end_sufix]: moment().utc().format('YYYY-MM-DD'),
-            },
-          };
-        }, {});
+        const formattedDateRangeFilters = dateRangeFilters.reduce(
+          (accumulator, currentValue) => {
+            if (router.query[currentValue.name]) {
+              return {
+                ...accumulator,
+                [currentValue.name]: parseValue(
+                  router.query[currentValue.name],
+                ),
+              };
+            }
+            return {
+              ...accumulator,
+              [currentValue.name]: {
+                [currentValue.start_sufix]: moment().format('YYYY-MM-DD'),
+                [currentValue.end_sufix]: moment().format('YYYY-MM-DD'),
+              },
+            };
+          },
+          {},
+        );
 
         await dispatch('setAppliedFilters', formattedDateRangeFilters);
       }

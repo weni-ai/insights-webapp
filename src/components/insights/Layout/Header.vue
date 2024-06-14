@@ -86,7 +86,7 @@ export default {
       const today = moment().format('YYYY-MM-DD');
 
       const filteringDateValues = Object.values(
-        this.appliedFilters[dateFilter.name] || {},
+        this.appliedFilters[dateFilter?.name] || {},
       );
 
       const isFilteringToday = filteringDateValues.every(

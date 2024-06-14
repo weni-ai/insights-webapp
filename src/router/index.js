@@ -41,11 +41,14 @@ const router = createRouter({
   ],
 });
 
-router.afterEach(() => {
+router.afterEach((router) => {
+  delete router.query.next;
+  delete router.query.projectUuid;
   window.parent.postMessage(
     {
       event: 'changePathname',
       pathname: window.location.pathname,
+      query: router.query,
     },
     '*',
   );

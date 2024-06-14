@@ -28,6 +28,7 @@
       <UnnnicButton
         :text="$t('insights_header.clear_filters')"
         type="tertiary"
+        :disabled="!hasFiltersInternal"
         @click="clearFilters"
       />
       <UnnnicButton
@@ -73,6 +74,10 @@ export default {
       widgets: (state) => state.dashboards.currentDashboardWidgets,
       currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
+
+    hasFiltersInternal() {
+      return Object.keys(this.filtersInternal).length;
+    },
 
     areStoreFiltersAndInternalEqual() {
       return (

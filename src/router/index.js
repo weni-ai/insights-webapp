@@ -45,7 +45,7 @@ router.afterEach(() => {
   window.parent.postMessage(
     {
       event: 'changePathname',
-      pathname: window.location.pathname + window.location.search,
+      pathname: window.location.pathname,
     },
     '*',
   );

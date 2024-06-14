@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 import TagGroup from '@/components/TagGroup.vue';
 
 export default {
@@ -99,29 +101,37 @@ export default {
         };
       }
 
+      const formatRowValue = (value) => {
+        const isDateValid = (date) => !isNaN(new Date(date));
+
+        if (Array.isArray(value)) {
+          return {
+            component: TagGroup,
+            props: {
+              tags: value,
+              flex: false,
+            },
+            events: {},
+          };
+        }
+
+        if (isDateValid(value)) {
+          const formattedDate = moment(value).format(this.$t('date_format'));
+          const formattedTime = moment(value).format('HH:mm');
+          return `${formattedTime} | ${formattedDate}`;
+        }
+
+        return value;
+      };
+
       const dynamicHeaders = activeTab?.fields
         ?.filter((field) => field.display && !field.hidden_name)
         .map((field) => ({ content: field.name, value: field.value }));
 
       const dynamicRows = data.map((row) => {
-        const content = dynamicHeaders.map((header) => {
-          const value = row[header.value];
-          if (Array.isArray(value)) {
-            return {
-              component: TagGroup,
-              props: {
-                tags: value.map(({ value, label }) => ({
-                  uuid: value,
-                  name: label,
-                })),
-                flex: false,
-              },
-              events: {},
-            };
-          }
-          return value;
-        });
-
+        const content = dynamicHeaders.map((header) =>
+          formatRowValue(row[header.value]),
+        );
         return { content };
       });
 

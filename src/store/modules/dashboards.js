@@ -126,8 +126,8 @@ export default {
             return {
               ...accumulator,
               [currentValue.name]: {
-                [currentValue.start_sufix]: moment().utc().format('YYYY-MM-DD'),
-                [currentValue.end_sufix]: moment().utc().format('YYYY-MM-DD'),
+                [currentValue.start_sufix]: moment().format('YYYY-MM-DD'),
+                [currentValue.end_sufix]: moment().format('YYYY-MM-DD'),
               },
             };
           },

@@ -150,6 +150,13 @@ export default {
   },
 
   watch: {
+    '$route.query': {
+      handler({ slug: newSlug }, { slug: oldSlug }) {
+        if (newSlug !== oldSlug) return;
+        this.page = 0;
+        this.emitRequestData();
+      },
+    },
     activeTab(newActiveTab) {
       if (this.activeTabName !== newActiveTab.name) {
         this.activeTabName = newActiveTab.name;

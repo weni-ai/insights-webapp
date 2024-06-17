@@ -32,6 +32,8 @@ import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 
+import moment from 'moment';
+
 export default {
   name: 'InsightsLayoutHeader',
 
@@ -46,6 +48,7 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
+      appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -80,7 +83,17 @@ export default {
       );
 
       const { query } = this.$route;
-      return !query[dateFilter?.name];
+      const today = moment().format('YYYY-MM-DD');
+
+      const filteringDateValues = Object.values(
+        this.appliedFilters[dateFilter?.name] || {},
+      );
+
+      const isFilteringToday = filteringDateValues.every(
+        (filterDate) => filterDate === today,
+      );
+
+      return !query[dateFilter?.name] || isFilteringToday;
     },
   },
 

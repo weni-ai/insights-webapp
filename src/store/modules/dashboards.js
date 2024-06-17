@@ -112,8 +112,10 @@ export default {
         (filter) => filter.type === 'date_range',
       );
 
+      let formattedDateRangeFilters = {};
+
       if (dateRangeFilters.length) {
-        const formattedDateRangeFilters = dateRangeFilters.reduce(
+        formattedDateRangeFilters = dateRangeFilters.reduce(
           (accumulator, currentValue) => {
             if (router.query[currentValue.name]) {
               return {
@@ -133,9 +135,13 @@ export default {
           },
           {},
         );
-
-        await dispatch('setAppliedFilters', formattedDateRangeFilters);
       }
+      const filtersValues = {
+        ...formattedDateRangeFilters,
+        ...(router.query || {}),
+      };
+
+      await dispatch('setAppliedFilters', filtersValues);
     },
     async setAppliedFilters({ state, commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);

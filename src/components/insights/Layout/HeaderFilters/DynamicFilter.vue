@@ -22,12 +22,13 @@ export default {
   name: 'DynamicFilter',
 
   props: {
+    modelValue: {
+      type: [Object, String],
+      default: null,
+    },
     filter: {
       type: Object,
       default: () => ({}),
-    },
-    modelValue: {
-      default: null,
     },
     dependsOnValue: {
       type: Object,
@@ -38,6 +39,8 @@ export default {
       default: false,
     },
   },
+
+  emits: ['update:model-value'],
 
   computed: {
     currentComponent() {
@@ -52,7 +55,8 @@ export default {
 
     filterProps() {
       const { disabled, treatedModelValue } = this;
-      const { type, placeholder, source, depends_on } = this.filter;
+      const { type, placeholder, source, depends_on, key_value_field } =
+        this.filter;
 
       const defaultProps = {
         placeholder,
@@ -69,6 +73,7 @@ export default {
         input_text: {},
         select: {
           source,
+          keyValueField: key_value_field,
         },
       };
 
@@ -106,7 +111,7 @@ export default {
       };
 
       this.$emit(
-        'update:modelValue',
+        'update:model-value',
         modelValuesMap[this.filter.type] || value,
       );
     },

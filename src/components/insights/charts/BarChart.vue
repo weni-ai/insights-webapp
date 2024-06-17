@@ -77,6 +77,7 @@ export default {
               size: '16',
               weight: '700',
             },
+            formatter: (val) => (val > 0 ? val : ''),
           },
         },
       };

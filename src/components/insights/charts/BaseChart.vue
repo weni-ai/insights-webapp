@@ -74,20 +74,6 @@ export default {
     },
   },
 
-  created() {
-    const pluginsToRegister = [...defaultPlugins, ...this.plugins];
-    ChartJS.defaults.font.family = 'Lato, sans-serif';
-    ChartJS.register(...pluginsToRegister);
-  },
-
-  mounted() {
-    new ChartJS(this.$refs.baseChartCanvas, {
-      type: this.type,
-      data: this.data,
-      options: this.mergedOptions,
-    });
-  },
-
   computed: {
     mergedOptions() {
       const defaultOptions = {
@@ -128,6 +114,20 @@ export default {
       const defaultStyles = {};
       return deepMerge(defaultStyles, this.style);
     },
+  },
+
+  created() {
+    const pluginsToRegister = [...defaultPlugins, ...this.plugins];
+    ChartJS.defaults.font.family = 'Lato, sans-serif';
+    ChartJS.register(...pluginsToRegister);
+  },
+
+  mounted() {
+    new ChartJS(this.$refs.baseChartCanvas, {
+      type: this.type,
+      data: this.data,
+      options: this.mergedOptions,
+    });
   },
 };
 </script>

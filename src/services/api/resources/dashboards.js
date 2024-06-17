@@ -55,6 +55,7 @@ export default {
         depends_on: filter.depends_on,
         start_sufix: filter.start_sufix,
         end_sufix: filter.end_sufix,
+        key_value_field: filter.field,
       });
     });
 

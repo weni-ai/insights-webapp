@@ -30,6 +30,10 @@
 </template>
 
 <script>
+import moment from 'moment';
+
+import TagGroup from '@/components/TagGroup.vue';
+
 export default {
   name: 'TableGroup',
 
@@ -88,27 +92,46 @@ export default {
       return null;
     },
     activeTable() {
-      if (!this.activeTab || !this.activeTab.fields || !this.data) {
+      const { activeTab, data } = this;
+
+      if (!activeTab || !activeTab.fields || !data) {
         return {
           headers: [{ content: '' }],
           rows: [],
         };
       }
 
-      const dynamicHeaders = this.activeTab?.fields
+      const formatRowValue = (value) => {
+        const isDateValid = (date) => !isNaN(new Date(date));
+
+        if (Array.isArray(value)) {
+          return {
+            component: TagGroup,
+            props: {
+              tags: value,
+              flex: false,
+            },
+            events: {},
+          };
+        }
+
+        if (isDateValid(value)) {
+          const formattedDate = moment(value).format(this.$t('date_format'));
+          const formattedTime = moment(value).format('HH:mm');
+          return `${formattedTime} | ${formattedDate}`;
+        }
+
+        return value;
+      };
+
+      const dynamicHeaders = activeTab?.fields
         ?.filter((field) => field.display && !field.hidden_name)
         .map((field) => ({ content: field.name, value: field.value }));
 
-      const dynamicRows = this.data.map((row) => {
-        const content = new Array(dynamicHeaders.length).fill(null);
-        Object.entries(row).forEach(([key, value]) => {
-          const index = dynamicHeaders.findIndex(
-            (header) => header.value === key,
-          );
-          if (index !== -1) {
-            content[index] = value;
-          }
-        });
+      const dynamicRows = data.map((row) => {
+        const content = dynamicHeaders.map((header) =>
+          formatRowValue(row[header.value]),
+        );
         return { content };
       });
 

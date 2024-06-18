@@ -57,7 +57,7 @@ export default {
     mergedData() {
       return deepMerge(
         {
-          datasets: [{ borderSkipped: false }],
+          datasets: [{ borderSkipped: false, minBarLength: 35 }],
         },
         this.chartData,
       );
@@ -77,7 +77,6 @@ export default {
               size: '16',
               weight: '700',
             },
-            formatter: (val) => (val > 0 ? val : ''),
           },
         },
       };

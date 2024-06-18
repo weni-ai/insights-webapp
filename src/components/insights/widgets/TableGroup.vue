@@ -17,12 +17,13 @@
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
-          :pagination="page === 0 ? 1 : page"
+          :pagination="page + 1"
           :headers="activeTable.headers"
           :rows="activeTable.rows"
           :paginationTotal="paginationTotal"
+          :paginationInterval="paginationInterval"
           :isLoading="isLoading"
-          @update:pagination="page = $event"
+          @update:pagination="page = $event - 1"
         />
       </template>
     </UnnnicTab>
@@ -70,7 +71,7 @@ export default {
   emits: ['request-data'],
 
   data() {
-    return { page: 1, activeTabName: '' };
+    return { page: 0, paginationInterval: 5, activeTabName: '' };
   },
 
   computed: {
@@ -141,7 +142,7 @@ export default {
       };
     },
     paginationConfig() {
-      const limit = 5;
+      const limit = this.paginationInterval;
       return {
         limit,
         offset: this.page * limit,
@@ -150,12 +151,9 @@ export default {
   },
 
   watch: {
-    '$route.query': {
-      handler({ slug: newSlug }, { slug: oldSlug }) {
-        if (newSlug !== oldSlug) return;
-        this.page = 0;
-        this.emitRequestData();
-      },
+    ['$route.query']() {
+      this.page = 0;
+      this.emitRequestData();
     },
     activeTab(newActiveTab) {
       if (this.activeTabName !== newActiveTab.name) {
@@ -164,7 +162,6 @@ export default {
     },
     async activeTabName() {
       const { $route } = this;
-      this.page = 0;
 
       await this.$router.replace({
         ...$route,
@@ -174,12 +171,13 @@ export default {
         },
       });
 
-      this.page = 1;
+      this.page = 0;
     },
-    page(newPage) {
-      if (newPage !== 0) {
+    page: {
+      immediate: true,
+      handler() {
         this.emitRequestData();
-      }
+      },
     },
   },
 

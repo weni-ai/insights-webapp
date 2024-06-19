@@ -77,7 +77,11 @@ export default {
         const oldValues = Object.values(oldDependsOnValue);
         if (!compareEquals(newValues, oldValues)) {
           const filledDependsOnValue = newValues.every((value) => value);
-          if (filledDependsOnValue) this.fetchSource();
+
+          if (filledDependsOnValue) {
+            this.clearOptions();
+            this.fetchSource();
+          }
         }
       },
     },
@@ -99,6 +103,10 @@ export default {
           label: source.name,
         });
       });
+    },
+    clearOptions() {
+      const optionsPlaceholder = this.options[0];
+      this.options = [optionsPlaceholder];
     },
   },
 };

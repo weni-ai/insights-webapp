@@ -116,26 +116,56 @@ export default {
     },
 
     treatedWidget() {
-      const { widget, config } = this;
+      const { widget } = this;
 
       const defaultConfigs = {
         ...widget,
         source: 'flowruns',
       };
 
-      const treatedWidgetMap = {
-        card: {
-          name: config.name,
-          report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${config?.flow[0].label}`,
-          config: {
-            operation: config.result?.operation,
-            filter: { flow: config?.flow[0].value },
-            op_field: config.result?.name,
-          },
+      let newWidget = {};
+
+      switch (widget.type) {
+        case 'graph_funnel':
+          newWidget = this.createGraphFunnelWidget;
+          break;
+        case 'card':
+          newWidget = this.createCardWidget;
+          break;
+      }
+
+      return { ...defaultConfigs, ...newWidget };
+    },
+
+    createGraphFunnelWidget() {
+      let metricsObj = {};
+      this.config.forEach((metric, index) => {
+        metricsObj[`metric_${index + 1}`] = {
+          name: metric.name,
+          operation: 'count',
+          filter: { flow: metric.flow?.[0].value },
+        };
+      });
+
+      return {
+        name: this.$t('widgets.graph_funnel.title'),
+        config: metricsObj,
+      };
+    },
+
+    createCardWidget() {
+      const { config } = this;
+      const configuredFlow = config?.flow?.[0];
+
+      return {
+        name: config.name,
+        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
+        config: {
+          operation: config.result?.operation,
+          filter: { flow: configuredFlow?.value },
+          op_field: config.result?.name,
         },
       };
-
-      return { ...defaultConfigs, ...treatedWidgetMap[widget?.type] } || {};
     },
   },
 

@@ -145,7 +145,6 @@ export default {
     config: {
       deep: true,
       handler(newConfig) {
-        console.log('newConfig', newConfig);
         this.$emit('update:model-value', newConfig);
       },
     },
@@ -155,6 +154,28 @@ export default {
       handler(newIsConfigValid) {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
+    },
+  },
+  mounted() {
+    this.handleWidgetFields();
+  },
+  methods: {
+    handleWidgetFields() {
+      const selectedFlow =
+        this.flowsOptions.find(
+          (flow) => flow.value === this.modelValue.config.filter?.flow,
+        ) || {};
+
+      this.config = {
+        ...this.config,
+        name: this.modelValue.name,
+        flow: [selectedFlow],
+        resultType: this.modelValue.config.op_field ? 'results' : 'executions',
+        result: {
+          name: this.modelValue.config.op_field,
+          operation: this.modelValue.config.operation,
+        },
+      };
     },
   },
 };

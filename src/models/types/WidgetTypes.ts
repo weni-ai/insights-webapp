@@ -25,11 +25,11 @@ type TableFieldConfig = {
 type TableConfig = {
   name_overwrite: string;
   icon:
-    | {
-        name: string;
-        scheme: string;
-      }
-    | `${string}:${string}`;
+  | {
+    name: string;
+    scheme: string;
+  }
+  | `${string}:${string}`;
   fields: TableFieldConfig[];
 };
 

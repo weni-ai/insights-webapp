@@ -15,6 +15,7 @@
   >
     <template #content>
       <form
+        v-if="flowsOptions.length > 1"
         class="drawer-config-widget-dynamic__content"
         @submit.prevent
       >
@@ -68,7 +69,6 @@ export default {
       isLoadingUpdateConfig: false,
     };
   },
-
   computed: {
     drawerProps() {
       const configMap = {
@@ -92,11 +92,11 @@ export default {
       return componentMap[this.widget?.type] || {};
     },
     contentProps() {
-      const { flowsOptions, config } = this;
+      const { flowsOptions, widget } = this;
 
       const defaultProps = {
         flowsOptions,
-        modelValue: config,
+        modelValue: widget,
       };
 
       const mappingProps = {};
@@ -116,8 +116,16 @@ export default {
     },
   },
 
-  created() {
-    this.fetchFlowsSource();
+  watch: {
+    isLoadingUpdateConfig(newIsLoadingUpdateConfig) {
+      if (!newIsLoadingUpdateConfig) {
+        this.internalClose();
+      }
+    },
+  },
+
+  async created() {
+    await this.fetchFlowsSource();
   },
 
   methods: {
@@ -164,14 +172,6 @@ export default {
       }
 
       this.isLoadingUpdateConfig = false;
-    },
-  },
-
-  watch: {
-    isLoadingUpdateConfig(newIsLoadingUpdateConfig) {
-      if (!newIsLoadingUpdateConfig) {
-        this.internalClose();
-      }
     },
   },
 };

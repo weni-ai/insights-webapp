@@ -91,6 +91,7 @@ export default {
         },
         report: widget.report,
         source: widget.source,
+        is_configurable: widget.is_configurable,
       });
     });
 

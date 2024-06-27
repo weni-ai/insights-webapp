@@ -105,8 +105,8 @@ export default {
       });
     },
     clearOptions() {
-      const { options } = this;
-      this.options = [options[0]];
+      const optionsPlaceholder = this.options[0];
+      this.options = [optionsPlaceholder];
     },
   },
 };

@@ -114,6 +114,29 @@ export default {
 
       return { ...defaultEvents, ...mappingEvents[this.widget?.type] };
     },
+
+    treatedWidget() {
+      const { widget, config } = this;
+
+      const defaultConfigs = {
+        ...widget,
+        source: 'flowruns',
+      };
+
+      const treatedWidgetMap = {
+        card: {
+          name: config.name,
+          report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${config?.flow[0].label}`,
+          config: {
+            operation: config.result?.operation,
+            filter: { flow: config?.flow[0].value },
+            op_field: config.result?.name,
+          },
+        },
+      };
+
+      return { ...defaultConfigs, ...treatedWidgetMap[widget?.type] } || {};
+    },
   },
 
   watch: {
@@ -131,6 +154,7 @@ export default {
   methods: {
     ...mapActions({
       updateWidget: 'dashboards/updateWidget',
+      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
     }),
 
     async fetchFlowsSource() {
@@ -145,23 +169,12 @@ export default {
     },
 
     async updateWidgetConfig() {
-      const { config } = this;
       this.isLoadingUpdateConfig = true;
 
-      const configuredFlow = config.flow?.[0];
-      const newWidget = {
-        name: config.name,
-        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow.label}`,
-        config: {
-          operation: config.result?.operation,
-          filter: { flow: configuredFlow.value },
-          op_field: config.result?.name,
-        },
-        source: 'flowruns',
-      };
-
       try {
-        await this.updateWidget(newWidget);
+        await this.updateWidget(this.treatedWidget);
+
+        await this.getCurrentDashboardWidgetData(this.widget.uuid);
 
         unnnic.unnnicCallAlert({
           props: {

@@ -33,13 +33,21 @@ export default {
   },
 
   created() {
+    this.setToken(localStorage.getItem('token'));
+    this.setProject({ uuid: localStorage.getItem('projectUuid') });
+  },
+
+  mounted() {
     this.listenConnectLocale();
+    this.getDashboards();
   },
 
   methods: {
     ...mapActions({
       getDashboards: 'dashboards/getDashboards',
       getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
+      setToken: 'config/setToken',
+      setProject: 'config/setProject',
     }),
 
     listenConnectLocale() {

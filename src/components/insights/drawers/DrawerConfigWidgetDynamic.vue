@@ -148,8 +148,17 @@ export default {
       const { config } = this;
       this.isLoadingUpdateConfig = true;
 
-      const newWidget = { ...this.widget };
-      newWidget.config = config;
+      const configuredFlow = config.flow?.[0];
+      const newWidget = {
+        name: config.name,
+        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow.label}`,
+        config: {
+          operation: config.result?.operation,
+          filter: { flow: configuredFlow.value },
+          op_field: config.result?.name,
+        },
+        source: 'flowruns',
+      };
 
       try {
         await this.updateWidget(newWidget);

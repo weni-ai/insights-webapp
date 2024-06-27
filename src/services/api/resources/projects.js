@@ -1,6 +1,5 @@
 import http from '@/services/api/http';
 import Config from '@/store/modules/config';
-import Source from '@/models/Source';
 import { createRequestQuery } from '@/utils/request';
 
 export default {
@@ -18,10 +17,11 @@ export default {
     );
 
     const sources = response.results.map((source) => {
-      return new Source({
+      return {
         uuid: source.uuid,
         name: source.name,
-      });
+        ...source,
+      };
     });
 
     return sources;

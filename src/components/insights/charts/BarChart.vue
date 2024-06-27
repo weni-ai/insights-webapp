@@ -57,7 +57,7 @@ export default {
     mergedData() {
       return deepMerge(
         {
-          datasets: [{ borderSkipped: false }],
+          datasets: [{ borderSkipped: false, minBarLength: 35 }],
         },
         this.chartData,
       );

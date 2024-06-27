@@ -99,49 +99,11 @@ export default {
       );
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGETS, widgets);
     },
-    async getCurrentDashboardFilters({ commit, state, dispatch }) {
+    async getCurrentDashboardFilters({ commit, state }) {
       const filters = await Dashboards.getDashboardFilters(
         state.currentDashboard.uuid,
       );
-
-      const router = Router.currentRoute.value;
-
-      await commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
-
-      const dateRangeFilters = filters.filter(
-        (filter) => filter.type === 'date_range',
-      );
-
-      let formattedDateRangeFilters = {};
-
-      if (dateRangeFilters.length) {
-        formattedDateRangeFilters = dateRangeFilters.reduce(
-          (accumulator, currentValue) => {
-            if (router.query[currentValue.name]) {
-              return {
-                ...accumulator,
-                [currentValue.name]: parseValue(
-                  router.query[currentValue.name],
-                ),
-              };
-            }
-            return {
-              ...accumulator,
-              [currentValue.name]: {
-                [currentValue.start_sufix]: moment().format('YYYY-MM-DD'),
-                [currentValue.end_sufix]: moment().format('YYYY-MM-DD'),
-              },
-            };
-          },
-          {},
-        );
-      }
-      const filtersValues = {
-        ...formattedDateRangeFilters,
-        ...(router.query || {}),
-      };
-
-      await dispatch('setAppliedFilters', filtersValues);
+      commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
     },
     async setAppliedFilters({ state, commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);

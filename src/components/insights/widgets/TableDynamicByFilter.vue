@@ -140,8 +140,8 @@ export default {
       };
 
       const redirectMap = {
-        internal: internalRedirect(),
-        external: externalRedirect(),
+        internal: () => internalRedirect(),
+        external: () => externalRedirect(),
       };
 
       const redirectAction = redirectMap[item.link.type];

@@ -17,12 +17,13 @@
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
-          :pagination="page === 0 ? 1 : page"
+          :pagination="page + 1"
           :headers="activeTable.headers"
           :rows="activeTable.rows"
           :paginationTotal="paginationTotal"
+          :paginationInterval="paginationInterval"
           :isLoading="isLoading"
-          @update:pagination="page = $event"
+          @update:pagination="page = $event - 1"
         />
       </template>
     </UnnnicTab>
@@ -30,6 +31,10 @@
 </template>
 
 <script>
+import moment from 'moment';
+
+import TagGroup from '@/components/TagGroup.vue';
+
 export default {
   name: 'TableGroup',
 
@@ -66,7 +71,7 @@ export default {
   emits: ['request-data'],
 
   data() {
-    return { page: 1, activeTabName: '' };
+    return { page: 0, paginationInterval: 5, activeTabName: '' };
   },
 
   computed: {
@@ -88,27 +93,46 @@ export default {
       return null;
     },
     activeTable() {
-      if (!this.activeTab || !this.activeTab.fields || !this.data) {
+      const { activeTab, data } = this;
+
+      if (!activeTab || !activeTab.fields || !data) {
         return {
           headers: [{ content: '' }],
           rows: [],
         };
       }
 
-      const dynamicHeaders = this.activeTab?.fields
+      const formatRowValue = (value) => {
+        const isDateValid = (date) => !isNaN(new Date(date));
+
+        if (Array.isArray(value)) {
+          return {
+            component: TagGroup,
+            props: {
+              tags: value,
+              flex: false,
+            },
+            events: {},
+          };
+        }
+
+        if (isDateValid(value)) {
+          const formattedDate = moment(value).format(this.$t('date_format'));
+          const formattedTime = moment(value).format('HH:mm');
+          return `${formattedTime} | ${formattedDate}`;
+        }
+
+        return value;
+      };
+
+      const dynamicHeaders = activeTab?.fields
         ?.filter((field) => field.display && !field.hidden_name)
         .map((field) => ({ content: field.name, value: field.value }));
 
-      const dynamicRows = this.data.map((row) => {
-        const content = new Array(dynamicHeaders.length).fill(null);
-        Object.entries(row).forEach(([key, value]) => {
-          const index = dynamicHeaders.findIndex(
-            (header) => header.value === key,
-          );
-          if (index !== -1) {
-            content[index] = value;
-          }
-        });
+      const dynamicRows = data.map((row) => {
+        const content = dynamicHeaders.map((header) =>
+          formatRowValue(row[header.value]),
+        );
         return { content };
       });
 
@@ -118,7 +142,7 @@ export default {
       };
     },
     paginationConfig() {
-      const limit = 5;
+      const limit = this.paginationInterval;
       return {
         limit,
         offset: this.page * limit,
@@ -127,6 +151,10 @@ export default {
   },
 
   watch: {
+    ['$route.query']() {
+      this.page = 0;
+      this.emitRequestData();
+    },
     activeTab(newActiveTab) {
       if (this.activeTabName !== newActiveTab.name) {
         this.activeTabName = newActiveTab.name;
@@ -134,7 +162,6 @@ export default {
     },
     async activeTabName() {
       const { $route } = this;
-      this.page = 0;
 
       await this.$router.replace({
         ...$route,
@@ -144,12 +171,13 @@ export default {
         },
       });
 
-      this.page = 1;
+      this.page = 0;
     },
-    page(newPage) {
-      if (newPage !== 0) {
+    page: {
+      immediate: true,
+      handler() {
         this.emitRequestData();
-      }
+      },
     },
   },
 

@@ -5,7 +5,7 @@
     autocomplete
     autocompleteIconLeft
     autocompleteClearOnFocus
-    @update:model-value="$emit('update:modelValue', $event[0].value)"
+    @update:model-value="$emit('update:model-value', $event[0].value)"
   />
 </template>
 
@@ -36,7 +36,13 @@ export default {
       type: Object,
       default: null,
     },
+    keyValueField: {
+      type: String,
+      default: '',
+    },
   },
+
+  emits: ['update:model-value'],
 
   data() {
     return {
@@ -71,7 +77,11 @@ export default {
         const oldValues = Object.values(oldDependsOnValue);
         if (!compareEquals(newValues, oldValues)) {
           const filledDependsOnValue = newValues.every((value) => value);
-          if (filledDependsOnValue) this.fetchSource();
+
+          if (filledDependsOnValue) {
+            this.clearOptions();
+            this.fetchSource();
+          }
         }
       },
     },
@@ -88,8 +98,15 @@ export default {
         this.dependsOnValue || {},
       );
       response?.forEach((source) => {
-        this.options.push({ value: source.uuid, label: source.name });
+        this.options.push({
+          value: source[this.keyValueField] || source.uuid,
+          label: source.name,
+        });
       });
+    },
+    clearOptions() {
+      const optionsPlaceholder = this.options[0];
+      this.options = [optionsPlaceholder];
     },
   },
 };

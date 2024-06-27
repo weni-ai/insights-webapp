@@ -13,6 +13,7 @@ type WidgetParams = {
   grid_position: GridPosition;
   report: WidgetReport;
   source: string;
+  is_configurable: boolean;
 };
 
 class Widget {
@@ -23,6 +24,7 @@ class Widget {
   grid_position: GridPosition;
   report: WidgetReport;
   source: string;
+  is_configurable: boolean;
 
   private _treatTableDynamicConfig(config: WidgetConfig): WidgetConfig {
     let dynamicConfigKey = 'created_on' in config ? 'created_on' : 'default';
@@ -52,6 +54,7 @@ class Widget {
     this.report = params.report;
     this.source = params.source;
     this.config = this._treatConfig(params);
+    this.is_configurable = !!params.is_configurable;
   }
 }
 

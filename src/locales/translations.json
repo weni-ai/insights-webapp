@@ -146,9 +146,9 @@
           "es": "Resultado de @.lower:flow"
         },
         "placeholder": {
-          "pt-br": "@:ex @results.wenigpt",
-          "en": "@:ex @results.wenigpt",
-          "es": "@:ex @results.wenigpt"
+          "pt-br": "@:ex {'@'}results.wenigpt",
+          "en": "@:ex {'@'}results.wenigpt",
+          "es": "@:ex {'@'}results.wenigpt"
         }
       },
       "operation": {

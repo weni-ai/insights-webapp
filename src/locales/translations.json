@@ -192,6 +192,11 @@
           "en": "Recurrence",
           "es": "Reaparición"
         }
+      },
+      "total_flow_executions": {
+        "pt-br": "Total de execuções do @.lower:flow",
+        "en": "Total @.lower:flow executions",
+        "es": "Ejecuciones de @.lower:flow total"
       }
     },
     "config_funnel": {

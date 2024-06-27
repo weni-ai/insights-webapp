@@ -68,7 +68,7 @@ export default {
 
     widgetProps() {
       const { isLoading } = this;
-      const { name, data, type, config, report } = this.widget;
+      const { name, data, type, config, report, is_configurable } = this.widget;
 
       const defaultProps = {
         isLoading,
@@ -80,6 +80,7 @@ export default {
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,
+          configurable: is_configurable,
         },
         table_dynamic_by_filter: {
           headerIcon: config?.icon?.name,

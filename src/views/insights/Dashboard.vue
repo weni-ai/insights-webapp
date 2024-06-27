@@ -14,7 +14,7 @@
       />
     </template>
     <DrawerConfigWidgetDynamic
-      v-show="!!widgetConfigurating"
+      v-if="!!widgetConfigurating"
       :modelValue="showDrawerConfigWidget"
       :widget="widgetConfigurating"
       @close="closeDrawerConfigWidget"

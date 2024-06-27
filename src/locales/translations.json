@@ -146,9 +146,9 @@
           "es": "Resultado de @.lower:flow"
         },
         "placeholder": {
-          "pt-br": "@:ex @results.wenigpt",
-          "en": "@:ex @results.wenigpt",
-          "es": "@:ex @results.wenigpt"
+          "pt-br": "@:ex {'@'}results.wenigpt",
+          "en": "@:ex {'@'}results.wenigpt",
+          "es": "@:ex {'@'}results.wenigpt"
         }
       },
       "operation": {
@@ -192,11 +192,6 @@
           "en": "Recurrence",
           "es": "Reaparición"
         }
-      },
-      "total_flow_executions": {
-        "pt-br": "Total de execuções do @.lower:flow",
-        "en": "Total @.lower:flow executions",
-        "es": "Ejecuciones de @.lower:flow total"
       }
     },
     "config_funnel": {

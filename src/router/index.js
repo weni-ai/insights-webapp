@@ -29,9 +29,10 @@ const router = createRouter({
         let { token = '' } = to.params;
         token = token.replace('+', ' ').replace('Bearer ', '');
         const { projectUuid = '' } = to.query;
+        localStorage.setItem('token', token);
+        localStorage.setItem('projectUuid', projectUuid);
         await store.dispatch('config/setToken', token);
         await store.dispatch('config/setProject', { uuid: projectUuid });
-        await store.dispatch('dashboards/getDashboards');
         next({
           path: '/:dashboardUuid',
           query: { ...to.query, projectUuid: undefined },

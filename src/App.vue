@@ -20,7 +20,6 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
-      project: (state) => state.config.project,
     }),
   },
 

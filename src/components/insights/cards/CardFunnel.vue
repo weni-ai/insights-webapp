@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
@@ -68,17 +68,36 @@ export default {
 
   emits: ['open-config'],
 
+  computed: {
+    ...mapState({
+      appliedFilters: (state) => state.dashboards.appliedFilters,
+    }),
+  },
+
+  watch: {
+    appliedFilters: {
+      deep: true,
+      handler() {
+        this.requestData();
+      },
+    },
+  },
+
   created() {
-    this.getWidgetGraphFunnelData({
-      uuid: this.widget.uuid,
-      widgetFunnelConfig: this.widget.config,
-    });
+    this.requestData();
   },
 
   methods: {
     ...mapActions({
       getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
+
+    requestData() {
+      this.getWidgetGraphFunnelData({
+        uuid: this.widget.uuid,
+        widgetFunnelConfig: this.widget.config,
+      });
+    },
   },
 };
 </script>

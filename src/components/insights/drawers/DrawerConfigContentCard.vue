@@ -172,8 +172,9 @@ export default {
         flow: [selectedFlow],
         resultType: this.modelValue.config.op_field ? 'results' : 'executions',
         result: {
-          name: this.modelValue.config.op_field,
-          operation: this.modelValue.config.operation,
+          name: this.modelValue.config.op_field || this.config.result.name,
+          operation:
+            this.modelValue.config.operation || this.config.result.operation,
         },
       };
     },

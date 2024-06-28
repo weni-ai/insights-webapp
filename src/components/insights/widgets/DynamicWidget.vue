@@ -68,7 +68,8 @@ export default {
 
     widgetProps() {
       const { isLoading } = this;
-      const { name, data, type, config, report, is_configurable } = this.widget;
+      const { name, data, type, config, report, is_configurable, uuid } =
+        this.widget;
 
       const defaultProps = {
         isLoading,
@@ -104,13 +105,23 @@ export default {
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
         },
+        graph_funnel: {
+          widget: this.widget,
+          chartData: data,
+          configurable: is_configurable,
+          configured: this.isConfigured,
+        },
       };
 
       return { ...defaultProps, ...mappingProps[type] };
     },
 
     widgetGraphData() {
-      if (!this.widget.type.includes('graph') || !this.widget.data) {
+      if (
+        !this.widget.type.includes('graph') ||
+        this.widget.type === 'graph_funnel' ||
+        !this.widget.data
+      ) {
         return;
       }
 
@@ -162,9 +173,11 @@ export default {
   watch: {
     '$route.query': {
       handler() {
-        if (this.widget.type !== 'table_group') {
-          this.requestWidgetData();
+        if (['table_group', 'graph_funnel'].includes(this.widget.type)) {
+          return;
         }
+
+        this.requestWidgetData();
       },
       immediate: true,
     },

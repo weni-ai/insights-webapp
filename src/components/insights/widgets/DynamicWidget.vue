@@ -68,8 +68,7 @@ export default {
 
     widgetProps() {
       const { isLoading } = this;
-      const { name, data, type, config, report, is_configurable, uuid } =
-        this.widget;
+      const { name, data, type, config, report, is_configurable } = this.widget;
 
       const defaultProps = {
         isLoading,

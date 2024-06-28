@@ -91,12 +91,33 @@ export default {
   },
 
   mounted() {
+    this.handleWidgetFields();
+
     this.$nextTick().then(() => {
       this.activeMetric = 0;
     });
   },
 
   methods: {
+    handleWidgetFields() {
+      Object.values(this.modelValue.config).forEach((metric, index) => {
+        const selectedFlow =
+          this.flowsOptions.find(
+            (flow) => flow.value === metric.filter?.flow,
+          ) || {};
+
+        if (!this.metrics[index]) {
+          this.addMetric();
+        }
+
+        this.metrics[index] = {
+          ...this.metrics[index],
+          name: metric.name,
+          flow: [selectedFlow],
+        };
+      });
+    },
+
     updateActiveMetric(index, isActive) {
       if (isActive) {
         this.activeMetric = index;

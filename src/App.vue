@@ -11,7 +11,6 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 
 export default {
@@ -21,6 +20,7 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      project: (state) => state.config.project,
     }),
   },
 
@@ -38,7 +38,7 @@ export default {
   },
 
   mounted() {
-    this.listenConnectLocale();
+    this.listenConnect();
     this.getDashboards();
   },
 
@@ -50,18 +50,40 @@ export default {
       setProject: 'config/setProject',
     }),
 
-    listenConnectLocale() {
+    handlingSetLanguage(language) {
+      this.$i18n.locale = language; // 'en', 'pt-br', 'es'
+    },
+
+    handlingSetProject(projectUuid) {
+      localStorage.setItem('projectUuid', projectUuid);
+      this.setProject({ uuid: projectUuid });
+    },
+
+    listenConnect() {
       window.parent.postMessage({ event: 'getLanguage' }, '*');
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
-        const isLocaleChangeMessage = message?.event === 'setLanguage';
-        if (!isLocaleChangeMessage) return;
-
-        const locale = message?.language; // 'en', 'pt-br', 'es'
-
-        this.$i18n.locale = locale;
+        const { handling, dataKey } = this.getEventHandling(message?.event);
+        if (handling) handling(message?.[dataKey]);
       });
+    },
+
+    getEventHandling(eventName) {
+      const handlingFunctionMapper = {
+        setLanguage: this.handlingSetLanguage,
+        setProject: this.handlingSetProject,
+      };
+
+      const handlingParamsMapper = {
+        setLanguage: 'language',
+        setProject: 'projectUuid',
+      };
+
+      return {
+        handling: handlingFunctionMapper[eventName],
+        dataKey: handlingParamsMapper[eventName],
+      };
     },
   },
 };

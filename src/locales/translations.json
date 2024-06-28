@@ -102,6 +102,11 @@
         "pt-br": "@:select @.lower:flows",
         "en": "@:select @.lower:flows",
         "es": "@:select @.lower:flows"
+      },
+      "flow_executions": {
+        "pt-br": "Execuções do @.lower:flow",
+        "en": "@:flow executions",
+        "es": "Ejecuciones de @.lower:flow"
       }
     }
   },
@@ -192,6 +197,11 @@
           "en": "Recurrence",
           "es": "Reaparición"
         }
+      },
+      "total_flow_executions": {
+        "pt-br": "Total de execuções do @.lower:flow",
+        "en": "Total @.lower:flow executions",
+        "es": "Ejecuciones de @.lower:flow total"
       }
     },
     "config_funnel": {

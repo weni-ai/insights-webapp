@@ -6,7 +6,7 @@
     <header class="card-funnel__header">
       <h1 class="header__title">{{ $t('widgets.graph_funnel.title') }}</h1>
       <UnnnicButton
-        v-if="configured"
+        v-if="configured && configurable"
         size="small"
         type="secondary"
         iconCenter="tune"
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
 
@@ -53,6 +55,11 @@ export default {
   props: {
     isLoading: Boolean,
     configured: Boolean,
+    configurable: Boolean,
+    widget: {
+      type: Object,
+      required: true,
+    },
     chartData: {
       type: Object,
       required: true,
@@ -60,6 +67,19 @@ export default {
   },
 
   emits: ['open-config'],
+
+  created() {
+    this.getWidgetGraphFunnelData({
+      uuid: this.widget.uuid,
+      widgetFunnelConfig: this.widget.config,
+    });
+  },
+
+  methods: {
+    ...mapActions({
+      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
+    }),
+  },
 };
 </script>
 

@@ -114,6 +114,59 @@ export default {
 
       return { ...defaultEvents, ...mappingEvents[this.widget?.type] };
     },
+
+    treatedWidget() {
+      const { widget } = this;
+
+      const defaultConfigs = {
+        ...widget,
+        source: 'flowruns',
+      };
+
+      let newWidget = {};
+
+      switch (widget.type) {
+        case 'graph_funnel':
+          newWidget = this.createGraphFunnelWidget;
+          break;
+        case 'card':
+          newWidget = this.createCardWidget;
+          break;
+      }
+
+      return { ...defaultConfigs, ...newWidget };
+    },
+
+    createGraphFunnelWidget() {
+      let metricsObj = {};
+      this.config.forEach((metric, index) => {
+        metricsObj[`metric_${index + 1}`] = {
+          name: metric.name,
+          operation: 'count',
+          filter: { flow: metric.flow?.[0].value },
+        };
+      });
+
+      return {
+        name: this.$t('widgets.graph_funnel.title'),
+        config: metricsObj,
+      };
+    },
+
+    createCardWidget() {
+      const { config } = this;
+      const configuredFlow = config?.flow?.[0];
+
+      return {
+        name: config.name,
+        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
+        config: {
+          operation: config.result?.operation,
+          filter: { flow: configuredFlow?.value },
+          op_field: config.result?.name,
+        },
+      };
+    },
   },
 
   watch: {
@@ -131,6 +184,8 @@ export default {
   methods: {
     ...mapActions({
       updateWidget: 'dashboards/updateWidget',
+      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
 
     async fetchFlowsSource() {
@@ -145,14 +200,19 @@ export default {
     },
 
     async updateWidgetConfig() {
-      const { config } = this;
       this.isLoadingUpdateConfig = true;
 
-      const newWidget = { ...this.widget };
-      newWidget.config = config;
-
       try {
-        await this.updateWidget(newWidget);
+        await this.updateWidget(this.treatedWidget);
+
+        if (this.widget.type === 'graph_funnel') {
+          await this.getWidgetGraphFunnelData({
+            uuid: this.widget.uuid,
+            widgetFunnelConfig: this.treatedWidget.config,
+          });
+        } else {
+          await this.getCurrentDashboardWidgetData(this.widget.uuid);
+        }
 
         unnnic.unnnicCallAlert({
           props: {

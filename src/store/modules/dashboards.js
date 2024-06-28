@@ -2,6 +2,7 @@ import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards, Widgets } from '@/services/api';
 import { sortByKey } from '@/utils/array';
+import i18n from '@/utils/plugins/i18n';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -160,20 +161,20 @@ export default {
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
     },
-    async getCurrentDashboardWidgetData({ state, commit }, widgetUuid) {
+    async getCurrentDashboardWidgetData({ state, commit }, uuid) {
       try {
         const data = await Dashboards.getDashboardWidgetData({
           dashboardUuid: state.currentDashboard.uuid,
-          widgetUuid: widgetUuid,
+          widgetUuid: uuid,
         });
         commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid: widgetUuid,
+          uuid,
           data,
         });
       } catch (error) {
         console.error(error);
         commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid: widgetUuid,
+          uuid,
           data: null,
         });
       }
@@ -186,6 +187,31 @@ export default {
           }
         }),
       );
+    },
+    async getWidgetGraphFunnelData(
+      { state, commit },
+      { uuid, widgetFunnelConfig },
+    ) {
+      const responsePromise = await Promise.all(
+        Object.keys(widgetFunnelConfig).map(async (metric) => {
+          const response = await Dashboards.getDashboardWidgetData({
+            dashboardUuid: state.currentDashboard.uuid,
+            widgetUuid: uuid,
+            params: {
+              slug: metric,
+            },
+          });
+          return {
+            description: i18n.global.t('widgets.graph_funnel.flow_executions'),
+            title: response.value,
+          };
+        }),
+      );
+
+      commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+        uuid,
+        data: responsePromise,
+      });
     },
     async updateWidget({ commit }, widget) {
       await Widgets.updateWidget({

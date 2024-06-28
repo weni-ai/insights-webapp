@@ -98,7 +98,7 @@ export default {
     return widgets;
   },
 
-  async getDashboardWidgetData({ dashboardUuid, widgetUuid }) {
+  async getDashboardWidgetData({ dashboardUuid, widgetUuid, params }) {
     const { appliedFilters } = DashboardStore.state;
     if (!dashboardUuid || !widgetUuid) {
       throw new Error(
@@ -106,12 +106,13 @@ export default {
       );
     }
 
-    const params = createRequestQuery(appliedFilters, {
+    const treatedParams = createRequestQuery(appliedFilters, {
       project: Config.state.project.uuid,
+      ...params,
     });
     const widgetData = await http.get(
       `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data/`,
-      { params },
+      { params: treatedParams },
     );
 
     return widgetData;

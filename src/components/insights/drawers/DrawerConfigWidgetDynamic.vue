@@ -185,6 +185,7 @@ export default {
     ...mapActions({
       updateWidget: 'dashboards/updateWidget',
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
 
     async fetchFlowsSource() {
@@ -204,7 +205,14 @@ export default {
       try {
         await this.updateWidget(this.treatedWidget);
 
-        await this.getCurrentDashboardWidgetData(this.widget.uuid);
+        if (this.widget.type === 'graph_funnel') {
+          await this.getWidgetGraphFunnelData({
+            uuid: this.widget.uuid,
+            widgetFunnelConfig: this.treatedWidget.config,
+          });
+        } else {
+          await this.getCurrentDashboardWidgetData(this.widget.uuid);
+        }
 
         unnnic.unnnicCallAlert({
           props: {

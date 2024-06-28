@@ -102,6 +102,11 @@
         "pt-br": "@:select @.lower:flows",
         "en": "@:select @.lower:flows",
         "es": "@:select @.lower:flows"
+      },
+      "flow_executions": {
+        "pt-br": "Execuções do @.lower:flow",
+        "en": "@:flow executions",
+        "es": "Ejecuciones de @.lower:flow"
       }
     }
   },

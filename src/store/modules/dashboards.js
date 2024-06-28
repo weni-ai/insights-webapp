@@ -2,7 +2,6 @@ import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards, Widgets } from '@/services/api';
 import { sortByKey } from '@/utils/array';
-import moment from 'moment';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {

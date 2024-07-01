@@ -151,9 +151,9 @@
           "es": "Resultado de @.lower:flow"
         },
         "placeholder": {
-          "pt-br": "@:ex {'@'}results.wenigpt",
-          "en": "@:ex {'@'}results.wenigpt",
-          "es": "@:ex {'@'}results.wenigpt"
+          "pt-br": "Pesquise ou selecione o resultado",
+          "en": "Search or select the result",
+          "es": "Busca o selecciona el resultado"
         }
       },
       "operation": {

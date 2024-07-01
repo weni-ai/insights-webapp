@@ -202,6 +202,12 @@ export default {
       },
     },
 
+    'config.resultType'(newResultType) {
+      if (newResultType === 'executions') {
+        this.config.result.name = [];
+      }
+    },
+
     isConfigValid: {
       immediate: true,
       handler(newIsConfigValid) {

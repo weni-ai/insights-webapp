@@ -26,6 +26,7 @@
         <UnnnicRadio
           v-model="config.resultType"
           :value="resultType.value"
+          :disabled="resultType.disabled ? resultType.disabled() : false"
         >
           {{ resultType.label }}
         </UnnnicRadio>
@@ -35,9 +36,13 @@
   <template v-if="config.resultType === 'results'">
     <section>
       <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
-      <UnnnicInput
+      <UnnnicSelectSmart
         v-model="config.result.name"
-        :placeholder="$t('drawers.config_card.flow_result.placeholder')"
+        :options="flowResultsOptions"
+        autocomplete
+        autocompleteIconLeft
+        autocompleteClearOnFocus
+        selectFirst
       />
     </section>
     <section>
@@ -68,6 +73,10 @@ export default {
       type: {},
       default: () => {},
     },
+    flows: {
+      type: Array,
+      default: () => [],
+    },
     flowsOptions: {
       type: Array,
       default: () => [],
@@ -83,7 +92,7 @@ export default {
         flow: [],
         resultType: 'executions',
         result: {
-          name: '',
+          name: [],
           operation: 'count',
         },
       },
@@ -95,6 +104,7 @@ export default {
         {
           value: 'results',
           label: this.$t('drawers.config_card.radios.results'),
+          disabled: () => !this.flowResultsOptions.length,
         },
       ],
       operations: [
@@ -139,6 +149,35 @@ export default {
 
       return true;
     },
+    flowResultsOptions() {
+      const selectedFlowUuid = this.config.flow?.[0]?.value;
+
+      if (selectedFlowUuid) {
+        const selectedFlowMedatada = JSON.parse(
+          this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
+        );
+
+        if (!selectedFlowMedatada?.results) return [];
+
+        const { results } = selectedFlowMedatada;
+
+        let resultsFormatted = [];
+
+        if (results.length) {
+          resultsFormatted = [
+            {
+              label: this.$t('drawers.config_card.flow_result.placeholder'),
+              value: '',
+            },
+            ...results.map((result) => {
+              return { value: result.key, label: result.name };
+            }),
+          ];
+        }
+        return resultsFormatted;
+      }
+      return [];
+    },
   },
 
   watch: {
@@ -155,8 +194,17 @@ export default {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
     },
+    flowResultsOptions: {
+      handler(newFlowResultsOptions) {
+        // this.config.result = [{}];
+        if (!newFlowResultsOptions.length) {
+          this.config.resultType = 'executions';
+        }
+      },
+      deep: true,
+    },
   },
-  mounted() {
+  created() {
     this.handleWidgetFields();
   },
   methods: {

@@ -61,10 +61,10 @@ export default {
   data() {
     return {
       config: {},
+      flows: [],
       flowsOptions: [
         { value: '', label: this.$t('drawers.config_funnel.select_flow') },
       ],
-
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
     };
@@ -92,14 +92,16 @@ export default {
       return componentMap[this.widget?.type] || {};
     },
     contentProps() {
-      const { flowsOptions, widget } = this;
+      const { flowsOptions, widget, flows } = this;
 
       const defaultProps = {
         flowsOptions,
         modelValue: widget,
       };
 
-      const mappingProps = {};
+      const mappingProps = {
+        card: { flows },
+      };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
     },
@@ -190,6 +192,7 @@ export default {
 
     async fetchFlowsSource() {
       const response = await Projects.getProjectSource('flows');
+      this.flows = response;
       response?.forEach((source) => {
         this.flowsOptions.push({ value: source.uuid, label: source.name });
       });

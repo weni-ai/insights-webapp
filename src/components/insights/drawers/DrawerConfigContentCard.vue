@@ -188,6 +188,20 @@ export default {
       },
     },
 
+    'config.flow': {
+      deep: true,
+      handler(_newFlow, oldFlow) {
+        if (oldFlow[0]?.value) {
+          this.config.result.name = [
+            {
+              label: this.$t('drawers.config_card.flow_result.placeholder'),
+              value: '',
+            },
+          ];
+        }
+      },
+    },
+
     isConfigValid: {
       immediate: true,
       handler(newIsConfigValid) {
@@ -196,15 +210,15 @@ export default {
     },
     flowResultsOptions: {
       handler(newFlowResultsOptions) {
-        // this.config.result = [{}];
         if (!newFlowResultsOptions.length) {
+          this.config.result.name = [];
           this.config.resultType = 'executions';
         }
       },
       deep: true,
     },
   },
-  created() {
+  mounted() {
     this.handleWidgetFields();
   },
   methods: {

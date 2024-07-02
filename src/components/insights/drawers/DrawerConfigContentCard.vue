@@ -26,6 +26,7 @@
         <UnnnicRadio
           v-model="config.resultType"
           :value="resultType.value"
+          :disabled="resultType.disabled ? resultType.disabled() : false"
         >
           {{ resultType.label }}
         </UnnnicRadio>
@@ -35,9 +36,13 @@
   <template v-if="config.resultType === 'results'">
     <section>
       <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
-      <UnnnicInput
+      <UnnnicSelectSmart
         v-model="config.result.name"
-        :placeholder="$t('drawers.config_card.flow_result.placeholder')"
+        :options="flowResultsOptions"
+        autocomplete
+        autocompleteIconLeft
+        autocompleteClearOnFocus
+        selectFirst
       />
     </section>
     <section>
@@ -60,6 +65,8 @@
 </template>
 
 <script>
+import { parseValue } from '@/utils/object';
+
 export default {
   name: 'DrawerConfigContentCard',
 
@@ -67,6 +74,10 @@ export default {
     modelValue: {
       type: {},
       default: () => {},
+    },
+    flows: {
+      type: Array,
+      default: () => [],
     },
     flowsOptions: {
       type: Array,
@@ -83,7 +94,7 @@ export default {
         flow: [],
         resultType: 'executions',
         result: {
-          name: '',
+          name: [],
           operation: 'count',
         },
       },
@@ -95,6 +106,7 @@ export default {
         {
           value: 'results',
           label: this.$t('drawers.config_card.radios.results'),
+          disabled: () => !this.flowResultsOptions.length,
         },
       ],
       operations: [
@@ -139,6 +151,35 @@ export default {
 
       return true;
     },
+    flowResultsOptions() {
+      const selectedFlowUuid = this.config.flow?.[0]?.value;
+
+      if (selectedFlowUuid) {
+        const selectedFlowMedatada = parseValue(
+          this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
+        );
+
+        if (!selectedFlowMedatada?.results) return [];
+
+        const { results } = selectedFlowMedatada;
+
+        let resultsFormatted = [];
+
+        if (results.length) {
+          resultsFormatted = [
+            {
+              label: this.$t('drawers.config_card.flow_result.placeholder'),
+              value: '',
+            },
+            ...results.map((result) => {
+              return { value: result.key, label: result.name };
+            }),
+          ];
+        }
+        return resultsFormatted;
+      }
+      return [];
+    },
   },
 
   watch: {
@@ -149,11 +190,40 @@ export default {
       },
     },
 
+    'config.flow': {
+      deep: true,
+      handler(_newFlow, oldFlow) {
+        if (oldFlow[0]?.value) {
+          this.config.result.name = [
+            {
+              label: this.$t('drawers.config_card.flow_result.placeholder'),
+              value: '',
+            },
+          ];
+        }
+      },
+    },
+
+    'config.resultType'(newResultType) {
+      if (newResultType === 'executions') {
+        this.config.result.name = [];
+      }
+    },
+
     isConfigValid: {
       immediate: true,
       handler(newIsConfigValid) {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
+    },
+    flowResultsOptions: {
+      handler(newFlowResultsOptions) {
+        if (!newFlowResultsOptions.length) {
+          this.config.result.name = [];
+          this.config.resultType = 'executions';
+        }
+      },
+      deep: true,
     },
   },
   mounted() {

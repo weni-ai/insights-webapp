@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import { parseValue } from '@/utils/object';
+
 export default {
   name: 'DrawerConfigContentCard',
 
@@ -153,7 +155,7 @@ export default {
       const selectedFlowUuid = this.config.flow?.[0]?.value;
 
       if (selectedFlowUuid) {
-        const selectedFlowMedatada = JSON.parse(
+        const selectedFlowMedatada = parseValue(
           this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
         );
 
@@ -234,13 +236,18 @@ export default {
           (flow) => flow.value === this.modelValue.config.filter?.flow,
         ) || {};
 
+      this.config.flow = [selectedFlow];
+
+      const selectedFlowResults = this.flowResultsOptions.find(
+        (result) => result.value === this.modelValue.config.op_field,
+      );
+
       this.config = {
         ...this.config,
         name: this.modelValue.name,
-        flow: [selectedFlow],
         resultType: this.modelValue.config.op_field ? 'results' : 'executions',
         result: {
-          name: this.modelValue.config.op_field || this.config.result.name,
+          name: selectedFlowResults ? [selectedFlowResults] : [],
           operation:
             this.modelValue.config.operation || this.config.result.operation,
         },

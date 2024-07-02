@@ -208,7 +208,7 @@ export default {
       const totalValue = response.reduce((sum, item) => sum + item.title, 0);
       const formattedResponse = response
         .map((item) => {
-          const percentage = ((item.title / totalValue) * 100).toFixed(2);
+          const percentage = ((item.title / totalValue) * 100 || 0).toFixed(2);
           return {
             description: item.description,
             title: `${percentage}% (${item.title.toLocaleString()})`,

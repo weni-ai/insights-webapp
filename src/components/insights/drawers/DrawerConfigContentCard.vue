@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import { parseValue } from '@/utils/object';
+
 export default {
   name: 'DrawerConfigContentCard',
 
@@ -153,7 +155,7 @@ export default {
       const selectedFlowUuid = this.config.flow?.[0]?.value;
 
       if (selectedFlowUuid) {
-        const selectedFlowMedatada = JSON.parse(
+        const selectedFlowMedatada = parseValue(
           this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
         );
 

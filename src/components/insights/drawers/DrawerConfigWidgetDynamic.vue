@@ -165,7 +165,7 @@ export default {
         config: {
           operation: config.result?.operation,
           filter: { flow: configuredFlow?.value },
-          op_field: config.result?.name,
+          op_field: config.result?.name[0]?.value,
         },
       };
     },

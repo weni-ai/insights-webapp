@@ -2,7 +2,6 @@ import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards, Widgets } from '@/services/api';
 import { sortByKey } from '@/utils/array';
-import i18n from '@/utils/plugins/i18n';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -192,27 +191,39 @@ export default {
       { state, commit },
       { uuid, widgetFunnelConfig },
     ) {
-      const responsePromise = await Promise.all(
-        Object.keys(widgetFunnelConfig).map(async (metric) => {
-          const response = await Dashboards.getDashboardWidgetData({
-            dashboardUuid: state.currentDashboard.uuid,
-            widgetUuid: uuid,
-            params: {
-              slug: metric,
-            },
-          });
-          return {
-            description: i18n.global.t('widgets.graph_funnel.flow_executions'),
-            title: response.value,
-          };
-        }),
+      const fetchData = async (metric) => {
+        const { name } = widgetFunnelConfig[metric];
+        const { value } = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: state.currentDashboard.uuid,
+          widgetUuid: uuid,
+          params: { slug: metric },
+        });
+        return { description: name, title: value };
+      };
+
+      const response = await Promise.all(
+        Object.keys(widgetFunnelConfig).map(fetchData),
       );
+
+      const totalValue = response.reduce((sum, item) => sum + item.title, 0);
+      const formattedResponse = response
+        .map((item) => {
+          const percentage = ((item.title / totalValue) * 100 || 0).toFixed(2);
+          return {
+            description: item.description,
+            title: `${percentage}% (${item.title.toLocaleString()})`,
+            percentage: parseFloat(percentage), // Add percentage as a number for sorting
+          };
+        })
+        .sort((a, b) => b.percentage - a.percentage)
+        .map(({ description, title }) => ({ description, title })); // Remove the 'percentage' property
 
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
         uuid,
-        data: responsePromise,
+        data: formattedResponse,
       });
     },
+
     async updateWidget({ commit }, widget) {
       await Widgets.updateWidget({
         widget,

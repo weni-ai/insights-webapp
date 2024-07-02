@@ -236,13 +236,18 @@ export default {
           (flow) => flow.value === this.modelValue.config.filter?.flow,
         ) || {};
 
+      this.config.flow = [selectedFlow];
+
+      const selectedFlowResults = this.flowResultsOptions.find(
+        (result) => result.value === this.modelValue.config.op_field,
+      );
+
       this.config = {
         ...this.config,
         name: this.modelValue.name,
-        flow: [selectedFlow],
         resultType: this.modelValue.config.op_field ? 'results' : 'executions',
         result: {
-          name: this.modelValue.config.op_field || this.config.result.name,
+          name: selectedFlowResults ? [selectedFlowResults] : [],
           operation:
             this.modelValue.config.operation || this.config.result.operation,
         },

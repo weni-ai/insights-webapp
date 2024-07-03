@@ -111,7 +111,7 @@ export default {
       ],
       operations: [
         {
-          value: 'count',
+          value: 'sum',
           label: this.$t('drawers.config_card.radios.total'),
         },
         {

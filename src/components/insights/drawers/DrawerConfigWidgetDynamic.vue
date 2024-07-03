@@ -158,14 +158,19 @@ export default {
     createCardWidget() {
       const { config } = this;
       const configuredFlow = config?.flow?.[0];
-
+      const operationRecurrenceConfigs =
+        config.result?.operation === 'recurrence' ? { data_suffix: '%' } : {};
       return {
         name: config.name,
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
         config: {
-          operation: config.result?.operation,
+          operation:
+            config.resultType === 'executions'
+              ? 'count'
+              : config.result?.operation,
           filter: { flow: configuredFlow?.value },
           op_field: config.result?.name[0]?.value,
+          ...operationRecurrenceConfigs,
         },
       };
     },

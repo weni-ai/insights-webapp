@@ -49,9 +49,9 @@ export default {
       type: Object,
       required: true,
     },
-    datalabelsTemplate: {
+    datalabelsSuffix: {
       type: String,
-      default: '{{value}}',
+      default: '',
     },
     isLoading: Boolean,
   },
@@ -62,7 +62,13 @@ export default {
     mergedData() {
       return deepMerge(
         {
-          datasets: [{ axis: 'y', borderSkipped: false }],
+          datasets: [
+            {
+              axis: 'y',
+              borderSkipped: false,
+              minBarLength: 35,
+            },
+          ],
         },
         this.chartData,
       );
@@ -70,6 +76,10 @@ export default {
     chartOptions() {
       return {
         indexAxis: 'y',
+        barThickness: 'flex',
+        maxBarThickness: 30,
+        aspectRatio: 1,
+        categoryPercentage: 1,
         scales: {
           x: {
             display: false,
@@ -90,7 +100,7 @@ export default {
         plugins: {
           datalabels: {
             formatter: (value) => {
-              return this.datalabelsTemplate.replace('{{value}}', value);
+              return value + this.datalabelsSuffix;
             },
             color: '#fff',
             anchor: 'end',
@@ -152,7 +162,7 @@ export default {
 
   &__chart {
     display: flex;
-    height: fit-content;
+    height: 100%;
     overflow: hidden;
 
     .chart__loading {

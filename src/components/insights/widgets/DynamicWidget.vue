@@ -102,6 +102,7 @@ export default {
         graph_bar: {
           title: name,
           chartData: this.widgetGraphData || {},
+          datalabelsSuffix: config?.data_suffix,
           seeMore: !!report,
         },
         graph_funnel: {
@@ -147,7 +148,7 @@ export default {
     },
 
     widgetEvents() {
-      const { type } = this.widget;
+      const { type, uuid, config } = this.widget;
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
@@ -158,6 +159,15 @@ export default {
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
+          requestData: () => {
+            this.isRequestingData = true;
+            this.getWidgetGraphFunnelData({
+              uuid,
+              widgetFunnelConfig: config,
+            }).finally(() => {
+              this.isRequestingData = false;
+            });
+          },
         },
         table_group: {
           requestData: ({ offset, limit }) =>
@@ -175,7 +185,6 @@ export default {
         if (['table_group', 'graph_funnel'].includes(this.widget.type)) {
           return;
         }
-
         this.requestWidgetData();
       },
       immediate: true,
@@ -186,6 +195,7 @@ export default {
     ...mapActions({
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
       getWidgetReportData: 'reports/getWidgetReportData',
+      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {

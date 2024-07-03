@@ -102,6 +102,7 @@ export default {
         graph_bar: {
           title: name,
           chartData: this.widgetGraphData || {},
+          datalabelsSuffix: config?.data_suffix,
           seeMore: !!report,
         },
         graph_funnel: {

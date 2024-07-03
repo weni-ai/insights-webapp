@@ -53,7 +53,6 @@ export default {
   components: { CardBase, FunnelChart },
 
   props: {
-    isLoading: Boolean,
     configured: Boolean,
     configurable: Boolean,
     widget: {
@@ -67,6 +66,12 @@ export default {
   },
 
   emits: ['open-config'],
+
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
 
   computed: {
     ...mapState({
@@ -93,9 +98,12 @@ export default {
     }),
 
     requestData() {
+      this.isLoading = true;
       this.getWidgetGraphFunnelData({
         uuid: this.widget.uuid,
         widgetFunnelConfig: this.widget.config,
+      }).finally(() => {
+        this.isLoading = false;
       });
     },
   },

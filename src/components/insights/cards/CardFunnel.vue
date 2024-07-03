@@ -53,6 +53,7 @@ export default {
   components: { CardBase, FunnelChart },
 
   props: {
+    isLoading: Boolean,
     configured: Boolean,
     configurable: Boolean,
     widget: {
@@ -65,13 +66,7 @@ export default {
     },
   },
 
-  emits: ['open-config'],
-
-  data() {
-    return {
-      isLoading: false,
-    };
-  },
+  emits: ['open-config', 'request-data'],
 
   computed: {
     ...mapState({
@@ -83,13 +78,13 @@ export default {
     appliedFilters: {
       deep: true,
       handler() {
-        this.requestData();
+        this.emitRequestData();
       },
     },
   },
 
   created() {
-    this.requestData();
+    this.emitRequestData();
   },
 
   methods: {
@@ -97,14 +92,8 @@ export default {
       getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
 
-    requestData() {
-      this.isLoading = true;
-      this.getWidgetGraphFunnelData({
-        uuid: this.widget.uuid,
-        widgetFunnelConfig: this.widget.config,
-      }).finally(() => {
-        this.isLoading = false;
-      });
+    emitRequestData() {
+      this.$emit('request-data');
     },
   },
 };

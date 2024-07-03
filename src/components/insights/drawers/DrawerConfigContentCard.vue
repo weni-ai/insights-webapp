@@ -144,7 +144,9 @@ export default {
 
       if (
         config.resultType === 'results' &&
-        (!config.result.name[0]?.value || !config.result.operation)
+        (!config.result.name[0]?.value ||
+          !config.result.operation ||
+          config.result.operation === 'count')
       ) {
         return false;
       }

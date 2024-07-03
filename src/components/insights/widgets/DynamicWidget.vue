@@ -70,6 +70,10 @@ export default {
       const { isLoading } = this;
       const { name, data, type, config, report, is_configurable } = this.widget;
 
+      const defaultProps = {
+        isLoading,
+      };
+
       const mappingProps = {
         card: {
           metric: JSON.stringify(data?.value) || data,
@@ -77,7 +81,6 @@ export default {
           configured: config && !!Object.keys(config).length,
           clickable: !!report,
           configurable: is_configurable,
-          isLoading,
         },
         table_dynamic_by_filter: {
           headerIcon: config?.icon?.name,
@@ -85,25 +88,21 @@ export default {
           headerTitle: config?.name_overwrite || name,
           fields: config?.fields,
           items: data?.results,
-          isLoading,
         },
         table_group: {
           tabs: config,
           data: data?.results,
           paginationTotal: data?.count,
-          isLoading,
         },
         graph_column: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
         },
         graph_bar: {
           title: name,
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
-          isLoading,
         },
         graph_funnel: {
           widget: this.widget,
@@ -113,7 +112,7 @@ export default {
         },
       };
 
-      return mappingProps[type];
+      return { ...defaultProps, ...mappingProps[type] };
     },
 
     widgetGraphData() {
@@ -148,7 +147,7 @@ export default {
     },
 
     widgetEvents() {
-      const { type } = this.widget;
+      const { type, uuid, config } = this.widget;
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
@@ -159,6 +158,15 @@ export default {
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
+          requestData: () => {
+            this.isRequestingData = true;
+            this.getWidgetGraphFunnelData({
+              uuid,
+              widgetFunnelConfig: config,
+            }).finally(() => {
+              this.isRequestingData = false;
+            });
+          },
         },
         table_group: {
           requestData: ({ offset, limit }) =>
@@ -186,6 +194,7 @@ export default {
     ...mapActions({
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
       getWidgetReportData: 'reports/getWidgetReportData',
+      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {

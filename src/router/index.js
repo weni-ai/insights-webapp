@@ -25,7 +25,7 @@ const router = createRouter({
       path: '/loginexternal/:token',
       name: 'external.login',
       component: null,
-      beforeEnter: async (to, from, next) => {
+      beforeEnter: async (to) => {
         let { token = '' } = to.params;
         token = token.replace('+', ' ').replace('Bearer ', '');
         const { projectUuid = '' } = to.query;
@@ -33,10 +33,10 @@ const router = createRouter({
         localStorage.setItem('projectUuid', projectUuid);
         await store.dispatch('config/setToken', token);
         await store.dispatch('config/setProject', { uuid: projectUuid });
-        next({
-          path: '/:dashboardUuid',
-          query: { ...to.query, projectUuid: undefined },
-        });
+        const { isLoadingDashboards } = store.state.dashboards;
+        if (!isLoadingDashboards) {
+          await store.dispatch('dashboards/getDashboards');
+        }
       },
     },
   ],

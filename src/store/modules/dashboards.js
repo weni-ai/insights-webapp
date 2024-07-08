@@ -14,6 +14,7 @@ function treatFilters(filters, valueHandler, currentDashboardFilters) {
 
 const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
+  SET_LOADING_DASHBOARDS: 'SET_LOADING_DASHBOARDS',
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
@@ -28,6 +29,7 @@ export default {
   namespaced: true,
   state: {
     dashboards: [],
+    isLoadingDashboards: false,
     currentDashboard: {},
     currentDashboardWidgets: [],
     currentDashboardFilters: [],
@@ -36,6 +38,9 @@ export default {
   mutations: {
     [mutations.SET_DASHBOARDS](state, dashboards) {
       state.dashboards = dashboards;
+    },
+    [mutations.SET_LOADING_DASHBOARDS](state, loading) {
+      state.isLoadingDashboards = loading;
     },
     [mutations.SET_CURRENT_DASHBOARD](state, dashboard) {
       state.currentDashboard = dashboard;
@@ -83,11 +88,13 @@ export default {
   },
   actions: {
     async getDashboards({ commit }) {
+      commit(mutations.SET_LOADING_DASHBOARDS, true);
       const dashboards = await Dashboards.getAll();
       commit(
         mutations.SET_DASHBOARDS,
         sortByKey(dashboards, 'is_default', 'desc'),
       );
+      commit(mutations.SET_LOADING_DASHBOARDS, false);
     },
     async setCurrentDashboard({ commit }, dashboard) {
       commit(mutations.SET_CURRENT_DASHBOARD, dashboard);

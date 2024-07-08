@@ -20,6 +20,7 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      token: (state) => state.config.token,
     }),
   },
 
@@ -32,13 +33,13 @@ export default {
   },
 
   created() {
-    this.setToken(localStorage.getItem('token'));
-    this.setProject({ uuid: localStorage.getItem('projectUuid') });
+    this.listenConnect();
   },
 
   mounted() {
-    this.listenConnect();
-    this.getDashboards();
+    this.setToken(localStorage.getItem('token'));
+    this.setProject({ uuid: localStorage.getItem('projectUuid') });
+    if (this.token) this.getDashboards();
   },
 
   methods: {

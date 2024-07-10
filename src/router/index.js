@@ -25,7 +25,7 @@ const router = createRouter({
       path: '/loginexternal/:token',
       name: 'external.login',
       component: null,
-      beforeEnter: async (to) => {
+      beforeEnter: async (to, _from, next) => {
         let { token = '' } = to.params;
         token = token.replace('+', ' ').replace('Bearer ', '');
         const { projectUuid = '' } = to.query;
@@ -37,6 +37,7 @@ const router = createRouter({
         if (!isLoadingDashboards) {
           await store.dispatch('dashboards/getDashboards');
         }
+        next();
       },
     },
   ],

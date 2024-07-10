@@ -76,7 +76,8 @@ export default {
       };
 
       const mappingMetricDataTypesFormat = {
-        sec: (value) => formatSecondsToHumanString(value),
+        // use Math.roud function to prevent float number in media case
+        sec: (value) => formatSecondsToHumanString(Math.round(value)),
       };
 
       const mappingProps = {

@@ -17,6 +17,7 @@ import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFi
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
 import { sortByKey } from '@/utils/array';
+import { formatSecondsToHumanString } from '@/utils/time';
 
 export default {
   name: 'DynamicWidget',
@@ -74,9 +75,15 @@ export default {
         isLoading,
       };
 
+      const mappingMetricDataTypesFormat = {
+        sec: (value) => formatSecondsToHumanString(value),
+      };
+
       const mappingProps = {
         card: {
-          metric: JSON.stringify(data?.value) || data,
+          metric:
+            mappingMetricDataTypesFormat[config.data_type]?.(data?.value) ||
+            JSON.stringify(data?.value),
           description: name,
           configured: config && !!Object.keys(config).length,
           clickable: !!report,

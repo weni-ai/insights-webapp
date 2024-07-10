@@ -37,9 +37,13 @@ export default {
   },
 
   mounted() {
-    this.setToken(localStorage.getItem('token'));
-    this.setProject({ uuid: localStorage.getItem('projectUuid') });
-    if (this.token) this.getDashboards();
+    try {
+      this.setToken(localStorage.getItem('token'));
+      this.setProject({ uuid: localStorage.getItem('projectUuid') });
+      if (this.token) this.getDashboards();
+    } catch (error) {
+      console.log(error);
+    }
   },
 
   methods: {

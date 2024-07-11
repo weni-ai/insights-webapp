@@ -15,12 +15,15 @@
         @click.stop="clearFilters"
       />
     </template>
+
     <DynamicFilter
       v-else-if="currentDashboardFilters[0]"
       :filter="currentDashboardFilters[0]"
       :modelValue="appliedFilters[currentDashboardFilters[0].name]"
       @update:model-value="
-        setAppliedFilters({ [currentDashboardFilters[0].name]: $event })
+        setAppliedFilters({
+          [currentDashboardFilters[0].name]: $event,
+        })
       "
     />
 
@@ -76,6 +79,22 @@ export default {
       resetAppliedFilters: 'dashboards/resetAppliedFilters',
     }),
 
+    updateFilter(value) {
+      const hasNonNullValues =
+        typeof value === 'object' && value
+          ? Object.values(value).some((val) => val)
+          : value;
+      if (hasNonNullValues) {
+        this.setAppliedFilters({
+          [this.currentDashboardFilters[0].name]: value,
+        });
+      } else {
+        this.setAppliedFilters({
+          [this.currentDashboardFilters[0].name]: undefined,
+        });
+      }
+    },
+
     clearFilters() {
       this.resetAppliedFilters();
     },
@@ -109,9 +128,9 @@ export default {
         // this.setAppliedFilters(newRoute.query);
       },
     },
-    // currentDashboardFilters() {
-    //   this.setAppliedFilters(this.$route.query);
-    // },
+    currentDashboardFilters() {
+      this.setAppliedFilters(this.$route.query);
+    },
   },
 };
 </script>

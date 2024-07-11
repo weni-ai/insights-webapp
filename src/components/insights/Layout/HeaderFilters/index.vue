@@ -70,6 +70,24 @@ export default {
     },
   },
 
+  watch: {
+    $route: {
+      immediate: true,
+      deep: true,
+      handler(newRoute, oldRoute) {
+        if (oldRoute && newRoute.path !== oldRoute.path) {
+          this.retainRouteQueries(newRoute, oldRoute);
+          return;
+        }
+        // comment to prevent override default filters
+        // this.setAppliedFilters(newRoute.query);
+      },
+    },
+    currentDashboardFilters() {
+      this.setAppliedFilters(this.$route.query);
+    },
+  },
+
   methods: {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
@@ -94,24 +112,6 @@ export default {
     openFiltersModal() {
       this.filterModalOpened = true;
     },
-  },
-
-  watch: {
-    $route: {
-      immediate: true,
-      deep: true,
-      handler(newRoute, oldRoute) {
-        if (oldRoute && newRoute.path !== oldRoute.path) {
-          this.retainRouteQueries(newRoute, oldRoute);
-          return;
-        }
-        // comment to prevent override default filters
-        // this.setAppliedFilters(newRoute.query);
-      },
-    },
-    // currentDashboardFilters() {
-    //   this.setAppliedFilters(this.$route.query);
-    // },
   },
 };
 </script>

@@ -38,9 +38,28 @@ export default {
 
   mounted() {
     try {
-      this.setToken(localStorage.getItem('token'));
-      this.setProject({ uuid: localStorage.getItem('projectUuid') });
-      if (this.token) this.getDashboards();
+      const hasTokenInUrl = window.location.pathname.startsWith(
+        '/loginexternal/Bearer+',
+      );
+
+      let token = '';
+
+      if (hasTokenInUrl) {
+        token = window.location.pathname
+          .replace('/loginexternal/Bearer+', '')
+          .slice(0, -1);
+      }
+
+      const queryString = new URLSearchParams(window.location.search);
+
+      const projectUuid = queryString.get('projectUuid');
+
+      this.setToken(token || localStorage.getItem('token'));
+      this.setProject({
+        uuid: projectUuid || localStorage.getItem('projectUuid'),
+      });
+
+      this.getDashboards();
     } catch (error) {
       console.log(error);
     }

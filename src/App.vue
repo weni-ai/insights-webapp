@@ -36,7 +36,7 @@ export default {
     this.listenConnect();
   },
 
-  mounted() {
+  async mounted() {
     try {
       const hasTokenInUrl = window.location.pathname.startsWith(
         '/loginexternal/Bearer+',
@@ -59,7 +59,7 @@ export default {
         uuid: projectUuid || localStorage.getItem('projectUuid'),
       });
 
-      this.getDashboards();
+      await this.getDashboards();
     } catch (error) {
       console.log(error);
     }

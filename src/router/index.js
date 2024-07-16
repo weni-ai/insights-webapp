@@ -25,7 +25,7 @@ const router = createRouter({
       name: 'external.login',
       component: null,
       redirect: (to) => {
-        return { path: '/', query: to.query };
+        return { path: to.query.next || '/', query: to.query };
       },
     },
   ],

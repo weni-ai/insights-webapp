@@ -127,7 +127,6 @@ export default {
       Router.replace({
         ...currentRoute,
         query: {
-          ...currentRoute.query,
           ...treatFilters(
             filters,
             stringifyValue,

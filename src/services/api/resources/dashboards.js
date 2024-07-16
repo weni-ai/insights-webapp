@@ -100,6 +100,21 @@ export default {
 
   async getDashboardWidgetData({ dashboardUuid, widgetUuid, params }) {
     const { appliedFilters } = DashboardStore.state;
+    const { currentDashboardFilters } = DashboardStore.state;
+
+    const currentDashboardDateFiltersNames = currentDashboardFilters
+      .filter((filter) => filter.type === 'date_range')
+      .map((filter) => filter.name);
+
+    const appliedFilterNames = Object.keys(appliedFilters);
+
+    const isFilteringDates = currentDashboardDateFiltersNames.some(
+      (currentDashboardDateFilterName) =>
+        appliedFilterNames.some((appliedFilterName) =>
+          currentDashboardDateFilterName.includes(appliedFilterName),
+        ),
+    );
+
     if (!dashboardUuid || !widgetUuid) {
       throw new Error(
         'Please provide valids UUIDs parameters to request data of widget.',
@@ -108,6 +123,7 @@ export default {
 
     const treatedParams = createRequestQuery(appliedFilters, {
       project: Config.state.project.uuid,
+      is_live: !isFilteringDates || undefined,
       ...params,
     });
     const widgetData = await http.get(

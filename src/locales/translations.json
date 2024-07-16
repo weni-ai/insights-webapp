@@ -29,6 +29,11 @@
     "en": "Add",
     "es": "Agregar"
   },
+  "add_new": {
+    "pt-br": "Adicionar novo",
+    "en": "Add new",
+    "es": "Agregar nuevo"
+  },
   "view_more": {
     "pt-br": "Ver mais",
     "en": "View more",

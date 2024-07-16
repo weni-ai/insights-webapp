@@ -56,6 +56,10 @@
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>
+    <UnnnicDropdownItem class="header-select-dashboard__item">
+      <UnnnicIcon icon="add" />
+      {{ $t('add_new') }}
+    </UnnnicDropdownItem>
   </UnnnicDropdown>
 </template>
 
@@ -176,6 +180,13 @@ $dropdownFixedWidth: 314px;
 
       padding: $unnnic-spacing-xs;
       gap: $unnnic-spacing-nano;
+
+      a:last-child {
+        border-top: 1px solid $unnnic-color-neutral-light;
+        border-radius: 0px;
+        justify-content: center;
+        padding: $unnnic-spacing-xs;
+      }
 
       .unnnic-dropdown-item {
         border-radius: $unnnic-border-radius-sm;

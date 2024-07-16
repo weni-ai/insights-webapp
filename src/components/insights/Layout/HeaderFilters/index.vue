@@ -98,15 +98,11 @@ export default {
         typeof value === 'object' && value
           ? Object.values(value).some((val) => val)
           : value;
-      if (hasNonNullValues) {
-        this.setAppliedFilters({
-          [this.currentDashboardFilters[0].name]: value,
-        });
-      } else {
-        this.setAppliedFilters({
-          [this.currentDashboardFilters[0].name]: undefined,
-        });
-      }
+      this.setAppliedFilters({
+        [this.currentDashboardFilters[0].name]: hasNonNullValues
+          ? value
+          : undefined,
+      });
     },
 
     clearFilters() {

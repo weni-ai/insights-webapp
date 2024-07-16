@@ -38,6 +38,22 @@ export default {
 
   async mounted() {
     try {
+      this.handlingTokenAndProjectUuid();
+      await this.getDashboards();
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  methods: {
+    ...mapActions({
+      getDashboards: 'dashboards/getDashboards',
+      getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
+      setToken: 'config/setToken',
+      setProject: 'config/setProject',
+    }),
+
+    handlingTokenAndProjectUuid() {
       const hasTokenInUrl = window.location.pathname.startsWith(
         '/loginexternal/Bearer+',
       );
@@ -58,20 +74,7 @@ export default {
       this.setProject({
         uuid: projectUuid || localStorage.getItem('projectUuid'),
       });
-
-      await this.getDashboards();
-    } catch (error) {
-      console.log(error);
-    }
-  },
-
-  methods: {
-    ...mapActions({
-      getDashboards: 'dashboards/getDashboards',
-      getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
-      setToken: 'config/setToken',
-      setProject: 'config/setProject',
-    }),
+    },
 
     handlingSetLanguage(language) {
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'

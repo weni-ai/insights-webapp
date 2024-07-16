@@ -24,8 +24,8 @@ const router = createRouter({
       path: '/loginexternal/:token',
       name: 'external.login',
       component: null,
-      redirect: (_to) => {
-        return { path: '/' };
+      redirect: (to) => {
+        return { path: '/', query: to.query };
       },
     },
   ],

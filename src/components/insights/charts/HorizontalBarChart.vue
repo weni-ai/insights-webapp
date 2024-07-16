@@ -16,13 +16,21 @@
         v-if="isLoading"
         class="chart__loading"
       />
-      <BaseChart
+      <section
         v-else
-        type="bar"
-        :data="mergedData"
-        :options="chartOptions"
-        :plugins="chartPlugins"
-      />
+        class="bar-chart__chart__container"
+        :style="{
+          display: !!graphContainerHeight ? 'flex' : 'none',
+          height: `${graphContainerHeight}px`,
+        }"
+      >
+        <BaseChart
+          type="bar"
+          :data="mergedData"
+          :options="chartOptions"
+          :plugins="chartPlugins"
+        />
+      </section>
     </section>
   </section>
 </template>
@@ -76,10 +84,8 @@ export default {
     chartOptions() {
       return {
         indexAxis: 'y',
-        barThickness: 'flex',
-        maxBarThickness: 30,
-        aspectRatio: 1,
-        categoryPercentage: 1,
+        barThickness: 30,
+        maintainAspectRatio: false,
         scales: {
           x: {
             display: false,
@@ -117,6 +123,9 @@ export default {
     },
     chartPlugins() {
       return [ChartDataLabels];
+    },
+    graphContainerHeight() {
+      return this.mergedData.datasets?.[0]?.data.length * 35;
     },
   },
 };
@@ -163,7 +172,12 @@ export default {
   &__chart {
     display: flex;
     height: 100%;
-    overflow: hidden;
+    overflow: hidden auto;
+
+    &__container {
+      width: 100%;
+      // height: 350px;
+    }
 
     .chart__loading {
       margin: auto;

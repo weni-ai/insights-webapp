@@ -5,11 +5,6 @@ import { sortByKey } from '@/utils/array';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
-    if (!!value & (typeof value === 'object')) {
-      if (Object.values(value).some((val) => !val)) {
-        return acc;
-      }
-    }
     if (
       currentDashboardFilters.some((filter) => filter.name === key) &&
       value
@@ -127,7 +122,6 @@ export default {
       Router.replace({
         ...currentRoute,
         query: {
-          ...currentRoute.query,
           ...treatFilters(
             filters,
             stringifyValue,

@@ -180,6 +180,8 @@ export default {
       grid-column-end: 3;
     }
 
+    // Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow
+
     :deep(.dropdown-data) {
       left: 0;
       .unnnic-date-picker {

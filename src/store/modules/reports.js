@@ -4,6 +4,7 @@ import { Dashboards } from '@/services/api';
 const mutations = {
   SET_REPORT: 'SET_REPORT',
   SET_REPORT_DATA: 'SET_REPORT_DATA',
+  RESET_REPORT: 'RESET_REPORT',
 };
 
 export default {
@@ -17,6 +18,9 @@ export default {
     },
     [mutations.SET_REPORT_DATA](state, data) {
       state.report.data = data;
+    },
+    [mutations.RESET_REPORT](state) {
+      state.report = null;
     },
   },
   actions: {

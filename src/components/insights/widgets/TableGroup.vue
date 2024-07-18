@@ -174,7 +174,6 @@ export default {
       this.page = 0;
     },
     page: {
-      immediate: true,
       handler() {
         this.emitRequestData();
       },
@@ -192,11 +191,8 @@ export default {
 
   methods: {
     emitRequestData() {
-      const { slug } = this.$route.query;
-      if (slug) {
-        const { offset, limit } = this.paginationConfig;
-        this.$emit('request-data', { offset, limit });
-      }
+      const { offset, limit } = this.paginationConfig;
+      this.$emit('request-data', { offset, limit });
     },
   },
 };

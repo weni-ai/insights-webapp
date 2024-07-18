@@ -74,7 +74,7 @@ export default {
             {
               axis: 'y',
               borderSkipped: false,
-              minBarLength: 35,
+              minBarLength: 36,
             },
           ],
         },
@@ -84,7 +84,7 @@ export default {
     chartOptions() {
       return {
         indexAxis: 'y',
-        barThickness: 30,
+        barThickness: 32,
         maintainAspectRatio: false,
         scales: {
           x: {
@@ -92,6 +92,8 @@ export default {
           },
           y: {
             display: true,
+            autoSkip: false,
+            maxRotation: 0,
             ticks: {
               padding: 0,
               font: { lineHeight: 1.66, size: 12, weight: 400 },
@@ -125,7 +127,13 @@ export default {
       return [ChartDataLabels];
     },
     graphContainerHeight() {
-      return this.mergedData.datasets?.[0]?.data.length * 35;
+      const barSpacingY = 4;
+      const paddingY = 24;
+      const totalBars = this.mergedData.datasets?.[0]?.data.length;
+
+      return (
+        totalBars * (this.chartOptions.barThickness + barSpacingY) + paddingY
+      );
     },
   },
 };

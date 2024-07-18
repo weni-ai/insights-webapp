@@ -174,7 +174,6 @@ export default {
       this.page = 0;
     },
     page: {
-      immediate: true,
       handler() {
         this.emitRequestData();
       },

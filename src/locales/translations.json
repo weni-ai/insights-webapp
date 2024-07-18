@@ -29,10 +29,10 @@
     "en": "Add",
     "es": "Agregar"
   },
-  "add_new": {
-    "pt-br": "Adicionar novo",
-    "en": "Add new",
-    "es": "Agregar nuevo"
+  "add_new_dashboard": {
+    "pt-br": "Novo dashboard",
+    "en": "New dashboard",
+    "es": "Nuevo dashboard"
   },
   "view_more": {
     "pt-br": "Ver mais",

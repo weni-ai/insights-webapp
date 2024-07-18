@@ -58,7 +58,7 @@
     </UnnnicDropdownItem>
     <UnnnicDropdownItem class="header-select-dashboard__item">
       <UnnnicIcon icon="add" />
-      {{ $t('add_new') }}
+      {{ $t('add_new_dashboard') }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
 </template>

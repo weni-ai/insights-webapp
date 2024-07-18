@@ -9,7 +9,7 @@
     :secondaryButtonProps="secondaryButtonProps"
     @primary-button-click="setFilters"
     @secondary-button-click="clearFilters"
-    @update:model-value="close"
+    @update:model-value="!$event ? close() : {}"
   >
     <form
       class="modal-filters__form"

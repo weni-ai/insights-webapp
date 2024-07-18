@@ -62,6 +62,12 @@
       </section>
     </section>
   </template>
+  <UnnnicButton
+    :text="$t('clear_fields')"
+    type="secondary"
+    :disabled="disableClearButton"
+    @click="clearFields"
+  />
 </template>
 
 <script>
@@ -135,6 +141,9 @@ export default {
   },
 
   computed: {
+    disableClearButton() {
+      return !this.config.name && !this.config.flow[0]?.value;
+    },
     isConfigValid() {
       const { config } = this;
 
@@ -232,6 +241,17 @@ export default {
     this.handleWidgetFields();
   },
   methods: {
+    clearFields() {
+      this.config = {
+        name: '',
+        flow: [{ label: '', value: '' }],
+        resultType: '',
+        result: {
+          name: [{ label: '', value: '' }],
+          operation: '',
+        },
+      };
+    },
     handleWidgetFields() {
       const selectedFlow =
         this.flowsOptions.find(

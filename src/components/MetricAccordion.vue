@@ -36,6 +36,12 @@
         @update:model-value="$emit('update:flow', $event)"
       />
     </section>
+    <UnnnicButton
+      :text="$t('clear_fields')"
+      type="tertiary"
+      :disabled="disableClearButton"
+      @click="clearFields"
+    />
   </UnnnicCollapse>
 </template>
 
@@ -72,6 +78,15 @@ export default {
     iconScheme() {
       const { name, flow } = this;
       return name && flow[0]?.value ? 'weni-600' : 'neutral-soft';
+    },
+    disableClearButton() {
+      return this.name === '' && this.flow[0]?.value === '';
+    },
+  },
+  methods: {
+    clearFields() {
+      this.$emit('update:name', '');
+      this.$emit('update:flow', [{ label: '', value: '' }]);
     },
   },
 };

@@ -192,8 +192,11 @@ export default {
 
   methods: {
     emitRequestData() {
-      const { offset, limit } = this.paginationConfig;
-      this.$emit('request-data', { offset, limit });
+      const { slug } = this.$route.query;
+      if (slug) {
+        const { offset, limit } = this.paginationConfig;
+        this.$emit('request-data', { offset, limit });
+      }
     },
   },
 };

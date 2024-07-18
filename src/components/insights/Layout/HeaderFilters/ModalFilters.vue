@@ -9,7 +9,7 @@
     :secondaryButtonProps="secondaryButtonProps"
     @primary-button-click="setFilters"
     @secondary-button-click="clearFilters"
-    @update:model-value="close"
+    @update:model-value="!$event ? close() : {}"
   >
     <form
       class="modal-filters__form"
@@ -179,6 +179,8 @@ export default {
       grid-column-start: 1;
       grid-column-end: 3;
     }
+
+    // Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow
 
     :deep(.dropdown-data) {
       left: 0;

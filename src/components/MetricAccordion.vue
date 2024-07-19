@@ -109,7 +109,7 @@ export default {
     display: grid;
     gap: $unnnic-spacing-nano;
 
-    :last-child & .clear-button {
+    .clear-button {
       margin-top: $unnnic-spacing-nano;
     }
   }

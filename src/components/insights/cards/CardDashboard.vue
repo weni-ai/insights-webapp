@@ -20,12 +20,14 @@
       <h1
         v-else
         class="content-metric"
+        :title="configured ? metric : '0'"
       >
         {{ configured ? metric : '0' }}
       </h1>
       <p
         v-if="!showMetricError"
         class="content-description"
+        :title="configured ? description : $t('widgets.card.metric_empty')"
       >
         {{ configured ? description : $t('widgets.card.metric_empty') }}
       </p>
@@ -92,6 +94,7 @@ export default {
   gap: $unnnic-spacing-xs;
 
   max-height: min-content;
+  overflow: hidden;
 
   &.clickable:not(.loading):hover {
     background-color: $unnnic-color-weni-50;
@@ -123,15 +126,22 @@ export default {
       font-size: $unnnic-font-size-title-lg;
       line-height: $unnnic-line-height-large * 3;
       font-weight: $unnnic-font-weight-bold;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .content-description {
       font-size: $unnnic-font-size-body-lg;
       line-height: $unnnic-line-height-medium * 3;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 
-  &__button-config {
+  &__button-config.unnnic-button {
     align-self: start;
+    min-width: fit-content;
   }
 }
 </style>

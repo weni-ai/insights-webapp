@@ -36,6 +36,13 @@
         @update:model-value="$emit('update:flow', $event)"
       />
     </section>
+    <UnnnicButton
+      class="clear-button"
+      :text="$t('clear_fields')"
+      type="tertiary"
+      :disabled="disableClearButton"
+      @click="clearFields"
+    />
   </UnnnicCollapse>
 </template>
 
@@ -73,6 +80,15 @@ export default {
       const { name, flow } = this;
       return name && flow[0]?.value ? 'weni-600' : 'neutral-soft';
     },
+    disableClearButton() {
+      return this.name === '' && this.flow[0]?.value === '';
+    },
+  },
+  methods: {
+    clearFields() {
+      this.$emit('update:name', '');
+      this.$emit('update:flow', [{ label: '', value: '' }]);
+    },
   },
 };
 </script>
@@ -85,12 +101,17 @@ export default {
   :deep(.unnnic-collapse__header) {
     padding: $unnnic-spacing-ant;
   }
+
   :deep(.unnnic-collapse__body) {
     margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
     padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
 
     display: grid;
     gap: $unnnic-spacing-nano;
+
+    .clear-button {
+      margin-top: $unnnic-spacing-nano;
+    }
   }
 
   &__header {

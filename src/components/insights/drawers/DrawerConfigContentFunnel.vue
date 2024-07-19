@@ -43,6 +43,7 @@ export default {
 
   data() {
     return {
+      initialMetricsStringfy: '',
       metrics: [
         {
           title: this.$t('drawers.config_funnel.first_metric'),
@@ -72,6 +73,19 @@ export default {
       return this.metrics.filter((metric) => metric.name && metric.flow.length)
         .length;
     },
+    isValidMetrics() {
+      if (this.validMetricsLength < 3) {
+        return false;
+      }
+      const metricsToCompare = this.metrics.map((metric) => {
+        delete metric.active;
+        return metric;
+      });
+      if (this.initialMetricsStringfy === JSON.stringify(metricsToCompare)) {
+        return false;
+      }
+      return true;
+    },
   },
 
   watch: {
@@ -82,10 +96,10 @@ export default {
       },
     },
 
-    validMetricsLength: {
+    isValidMetrics: {
       immediate: true,
-      handler(newValidMetricsLength) {
-        this.$emit('update-disable-primary-button', newValidMetricsLength < 3);
+      handler() {
+        this.$emit('update-disable-primary-button', !this.isValidMetrics);
       },
     },
   },
@@ -116,6 +130,12 @@ export default {
           flow: [selectedFlow],
         };
       });
+      this.initialMetricsStringfy = JSON.stringify(
+        this.metrics.map((metric) => {
+          delete metric.active;
+          return metric;
+        }),
+      );
     },
 
     updateActiveMetric(index, isActive) {

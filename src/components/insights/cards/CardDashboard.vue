@@ -94,6 +94,7 @@ export default {
   gap: $unnnic-spacing-xs;
 
   max-height: min-content;
+  overflow: hidden;
 
   &.clickable:not(.loading):hover {
     background-color: $unnnic-color-weni-50;
@@ -138,8 +139,9 @@ export default {
     }
   }
 
-  &__button-config {
+  &__button-config.unnnic-button {
     align-self: start;
+    min-width: fit-content;
   }
 }
 </style>

@@ -37,6 +37,7 @@
       />
     </section>
     <UnnnicButton
+      class="clear-button"
       :text="$t('clear_fields')"
       type="tertiary"
       :disabled="disableClearButton"
@@ -108,7 +109,7 @@ export default {
     display: grid;
     gap: $unnnic-spacing-nano;
 
-    :last-child & button {
+    :last-child & .clear-button {
       margin-top: $unnnic-spacing-nano;
     }
   }

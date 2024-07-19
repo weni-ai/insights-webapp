@@ -100,12 +100,17 @@ export default {
   :deep(.unnnic-collapse__header) {
     padding: $unnnic-spacing-ant;
   }
+
   :deep(.unnnic-collapse__body) {
     margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
     padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
 
     display: grid;
     gap: $unnnic-spacing-nano;
+
+    :last-child & button {
+      margin-top: $unnnic-spacing-nano;
+    }
   }
 
   &__header {

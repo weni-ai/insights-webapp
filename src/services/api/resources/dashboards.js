@@ -3,6 +3,7 @@ import http from '@/services/api/http';
 import Config from '@/store/modules/config';
 import DashboardStore from '@/store/modules/dashboards';
 
+import { isFilteringDates } from '@/utils/filter';
 import { createRequestQuery } from '@/utils/request';
 
 export default {
@@ -100,6 +101,13 @@ export default {
 
   async getDashboardWidgetData({ dashboardUuid, widgetUuid, params }) {
     const { appliedFilters } = DashboardStore.state;
+    const { currentDashboardFilters } = DashboardStore.state;
+
+    const hasDateFilter = isFilteringDates({
+      currentDashboardFilters,
+      appliedFilters,
+    });
+
     if (!dashboardUuid || !widgetUuid) {
       throw new Error(
         'Please provide valids UUIDs parameters to request data of widget.',
@@ -108,6 +116,7 @@ export default {
 
     const treatedParams = createRequestQuery(appliedFilters, {
       project: Config.state.project.uuid,
+      is_live: !hasDateFilter || undefined,
       ...params,
     });
     const widgetData = await http.get(
@@ -146,6 +155,13 @@ export default {
     next,
   }) {
     const { appliedFilters } = DashboardStore.state;
+    const { currentDashboardFilters } = DashboardStore.state;
+
+    const hasDateFilter = isFilteringDates({
+      currentDashboardFilters,
+      appliedFilters,
+    });
+
     if (!dashboardUuid || !widgetUuid) {
       throw new Error(
         'Please provide valids UUIDs parameters to request report data of widget.',
@@ -158,6 +174,7 @@ export default {
       offset,
       limit,
       next,
+      is_live: !hasDateFilter || undefined,
     });
 
     const reportData = await http.get(

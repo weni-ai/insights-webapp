@@ -95,6 +95,7 @@ export default {
 
   data() {
     return {
+      initialConfigStringfy: {},
       config: {
         name: '',
         flow: [],
@@ -157,6 +158,10 @@ export default {
           !config.result.operation ||
           config.result.operation === 'count')
       ) {
+        return false;
+      }
+
+      if (this.initialConfigStringfy === JSON.stringify(this.config)) {
         return false;
       }
 
@@ -274,6 +279,7 @@ export default {
             this.modelValue.config.operation || this.config.result.operation,
         },
       };
+      this.initialConfigStringfy = JSON.stringify(this.config);
     },
   },
 };

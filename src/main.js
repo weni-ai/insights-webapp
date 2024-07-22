@@ -5,6 +5,8 @@ import store from './store';
 
 import Unnnic from './utils/plugins/UnnnicSystem';
 import i18n from './utils/plugins/i18n';
+import './utils/plugins/Hotjar.js';
+
 import '@weni/unnnic-system/dist/style.css';
 
 import './styles/global.scss';

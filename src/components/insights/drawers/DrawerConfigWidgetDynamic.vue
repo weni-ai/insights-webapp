@@ -19,14 +19,7 @@
         @submit.prevent
       >
         <component
-          :is="content.loading"
-          v-if="isLoadingFlowOptions"
-          v-bind="contentProps"
-          v-on="contentEvents"
-        />
-        <component
-          :is="content.component"
-          v-else
+          :is="isLoadingFlowOptions ? content.loading : content.component"
           v-bind="contentProps"
           v-on="contentEvents"
         />

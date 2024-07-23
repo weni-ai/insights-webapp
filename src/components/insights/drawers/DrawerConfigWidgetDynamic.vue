@@ -7,7 +7,7 @@
     :description="drawerProps?.description"
     :primaryButtonText="$t('save')"
     :secondaryButtonText="$t('cancel')"
-    :disabledPrimaryButton="disablePrimaryButton"
+    :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
@@ -15,12 +15,18 @@
   >
     <template #content>
       <form
-        v-if="flowsOptions.length > 1"
         class="drawer-config-widget-dynamic__content"
         @submit.prevent
       >
         <component
-          :is="content"
+          :is="content.loading"
+          v-if="isLoadingFlowOptions"
+          v-bind="contentProps"
+          v-on="contentEvents"
+        />
+        <component
+          :is="content.component"
+          v-else
           v-bind="contentProps"
           v-on="contentEvents"
         />
@@ -36,6 +42,8 @@ import Projects from '@/services/api/resources/projects';
 
 import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
 import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
+import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue';
+import SkeletonConfigContentFunnel from './loadings/SkeletonConfigContentFunnel.vue';
 
 export default {
   name: 'DrawerConfigWidgetDynamic',
@@ -43,6 +51,8 @@ export default {
   components: {
     DrawerConfigContentFunnel,
     DrawerConfigContentCard,
+    SkeletonConfigContentCard,
+    SkeletonConfigContentFunnel,
   },
 
   props: {
@@ -67,6 +77,7 @@ export default {
       ],
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
+      isLoadingFlowOptions: false,
     };
   },
   computed: {
@@ -85,8 +96,14 @@ export default {
     },
     content() {
       const componentMap = {
-        graph_funnel: DrawerConfigContentFunnel,
-        card: DrawerConfigContentCard,
+        graph_funnel: {
+          loading: SkeletonConfigContentFunnel,
+          component: DrawerConfigContentFunnel,
+        },
+        card: {
+          loading: SkeletonConfigContentCard,
+          component: DrawerConfigContentCard,
+        },
       };
 
       return componentMap[this.widget?.type] || {};
@@ -195,12 +212,18 @@ export default {
       getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
 
-    async fetchFlowsSource() {
-      const response = await Projects.getProjectSource('flows');
-      this.flows = response;
-      response?.forEach((source) => {
-        this.flowsOptions.push({ value: source.uuid, label: source.name });
-      });
+    fetchFlowsSource() {
+      this.isLoadingFlowOptions = true;
+      Projects.getProjectSource('flows')
+        .then((response) => {
+          this.flows = response;
+          this.flows?.forEach((source) => {
+            this.flowsOptions.push({ value: source.uuid, label: source.name });
+          });
+        })
+        .finally(() => {
+          this.isLoadingFlowOptions = false;
+        });
     },
 
     internalClose() {

@@ -22,6 +22,8 @@ const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_LOADING_CURRENT_DASHBOARD_WIDGETS:
     'SET_LOADING_CURRENT_DASHBOARD_WIDGETS',
+  SET_LOADING_CURRENT_DASHBOARD_FILTERS:
+    'SET_LOADING_CURRENT_DASHBOARD_FILTERS',
   RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
@@ -39,6 +41,7 @@ export default {
     currentDashboardWidgets: [],
     isLoadingCurrentDashboardWidgets: false,
     currentDashboardFilters: [],
+    isLoadingCurrentDashboardFilters: false,
     appliedFilters: {},
   },
   mutations: {
@@ -50,6 +53,9 @@ export default {
     },
     [mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS](state, loading) {
       state.isLoadingCurrentDashboardWidgets = loading;
+    },
+    [mutations.SET_LOADING_CURRENT_DASHBOARD_FILTERS](state, loading) {
+      state.isLoadingCurrentDashboardFilters = loading;
     },
     [mutations.SET_CURRENT_DASHBOARD](state, dashboard) {
       state.currentDashboard = dashboard;
@@ -117,10 +123,12 @@ export default {
       commit(mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS, false);
     },
     async getCurrentDashboardFilters({ commit, state }) {
+      commit(mutations.SET_LOADING_CURRENT_DASHBOARD_FILTERS, true);
       const filters = await Dashboards.getDashboardFilters(
         state.currentDashboard.uuid,
       );
       commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
+      commit(mutations.SET_LOADING_CURRENT_DASHBOARD_FILTERS, false);
     },
     async setAppliedFilters({ state, commit }, filters) {
       commit(mutations.SET_APPLIED_FILTERS, filters);

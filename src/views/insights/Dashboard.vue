@@ -3,8 +3,15 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
+    <section
+      v-if="isLoadingCurrentDashboardWidgets"
+      class="dashboard__loading"
+    >
+      <IconLoading />
+    </section>
     <template
       v-for="widget of currentDashboardWidgets"
+      v-else
       :key="widget.uuid"
     >
       <DynamicWidget
@@ -27,6 +34,7 @@ import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import DrawerConfigWidgetDynamic from '@/components/insights/drawers/DrawerConfigWidgetDynamic.vue';
+import IconLoading from '@/components/IconLoading.vue';
 
 export default {
   name: 'DashboardView',
@@ -34,6 +42,7 @@ export default {
   components: {
     DynamicWidget,
     DrawerConfigWidgetDynamic,
+    IconLoading,
   },
 
   data() {
@@ -48,6 +57,8 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
       currentDashboardWidgets: (state) =>
         state.dashboards.currentDashboardWidgets,
+      isLoadingCurrentDashboardWidgets: (state) =>
+        state.dashboards.isLoadingCurrentDashboardWidgets,
     }),
 
     dashboardGridStyle() {
@@ -112,5 +123,12 @@ export default {
 
   display: grid;
   gap: $unnnic-spacing-sm;
+  &__loading {
+    width: 100vw;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

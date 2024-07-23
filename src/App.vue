@@ -1,7 +1,13 @@
 <template>
   <div id="app">
+    <section
+      v-if="isLoadingDashboards"
+      class="loading-container"
+    >
+      <IconLoading />
+    </section>
     <InsightsLayout
-      v-if="dashboards.length"
+      v-else-if="dashboards.length"
       ref="insights-layout"
     >
       <RouterView />
@@ -12,13 +18,15 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
+import IconLoading from './components/IconLoading.vue';
 
 export default {
-  components: { InsightsLayout },
+  components: { InsightsLayout, IconLoading },
 
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
+      isLoadingDashboards: (state) => state.dashboards.isLoadingDashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
     }),
@@ -114,3 +122,13 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+</style>

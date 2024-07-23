@@ -4,7 +4,10 @@
       v-if="isLoadingDashboards"
       class="loading-container"
     >
-      <IconLoading />
+      <img
+        src="./assets/images/weni-loading.svg"
+        width="64"
+      />
     </section>
     <InsightsLayout
       v-else-if="dashboards.length"

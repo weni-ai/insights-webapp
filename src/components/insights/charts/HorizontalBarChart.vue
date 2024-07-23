@@ -11,10 +11,15 @@
         {{ $t('view_more') }}
       </a>
     </header>
-    <section class="bar-chart__chart">
+    <section
+      ref="chart"
+      class="bar-chart__chart"
+    >
       <SkeletonHorizontalBarChart
         v-if="isLoading"
         class="chart__loading"
+        :width="chartWidth"
+        :height="chartHeight"
       />
       <section
         v-else
@@ -42,6 +47,9 @@ import SkeletonHorizontalBarChart from './loadings/SkeletonHorizontalBarChart.vu
 
 import { deepMerge } from '@/utils/object';
 
+import { useElementSize } from '@vueuse/core';
+import { ref } from 'vue';
+
 export default {
   name: 'HorizontalBarChart',
 
@@ -65,6 +73,16 @@ export default {
   },
 
   emits: ['seeMore'],
+
+  setup() {
+    const chart = ref(null);
+    const { width, height } = useElementSize(chart);
+
+    return {
+      chartWidth: width,
+      chartHeight: height,
+    };
+  },
 
   computed: {
     mergedData() {
@@ -180,6 +198,7 @@ export default {
   &__chart {
     display: flex;
     height: 100%;
+    width: 100%;
     overflow: hidden auto;
 
     &__container {

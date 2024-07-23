@@ -25,8 +25,12 @@ export default {
     }),
   },
 
-  mounted() {
+  created() {
+    this.resetReport();
     this.resetCurrentDashboardWidgets();
+  },
+
+  mounted() {
     this.getWidgetReport();
   },
 
@@ -34,6 +38,7 @@ export default {
     ...mapMutations({
       resetCurrentDashboardWidgets:
         'dashboards/RESET_CURRENT_DASHBOARD_WIDGETS',
+      resetReport: 'reports/RESET_REPORT',
     }),
     ...mapActions({
       getWidgetReport: 'reports/getWidgetReport',

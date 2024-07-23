@@ -12,7 +12,7 @@
       </a>
     </header>
     <section class="bar-chart__chart">
-      <IconLoading
+      <SkeletonHorizontalBarChart
         v-if="isLoading"
         class="chart__loading"
       />
@@ -36,16 +36,16 @@
 </template>
 
 <script>
-import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import SkeletonHorizontalBarChart from './loadings/SkeletonHorizontalBarChart.vue';
 
 import { deepMerge } from '@/utils/object';
 
 export default {
   name: 'HorizontalBarChart',
 
-  components: { IconLoading, BaseChart },
+  components: { BaseChart, SkeletonHorizontalBarChart },
 
   props: {
     title: {

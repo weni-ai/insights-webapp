@@ -10,7 +10,13 @@
       v-else-if="dashboards.length"
       ref="insights-layout"
     >
-      <RouterView />
+      <section
+        v-if="isLoadingCurrentDashboardFilters"
+        class="loading-container"
+      >
+        <IconLoading />
+      </section>
+      <RouterView v-else />
     </InsightsLayout>
   </div>
 </template>
@@ -27,6 +33,8 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       isLoadingDashboards: (state) => state.dashboards.isLoadingDashboards,
+      isLoadingCurrentDashboardFilters: (state) =>
+        state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
     }),
@@ -128,7 +136,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 }
 </style>

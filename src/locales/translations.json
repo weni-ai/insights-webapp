@@ -297,5 +297,12 @@
       "en": "Clear filters",
       "es": "Limpiar filtros"
     }
+  },
+  "new_dashboard": {
+    "title": {
+      "pt-br": "Novo dashboard",
+      "en": "New dashboard",
+      "es": "Nuevo dashboard"
+    }
   }
 }

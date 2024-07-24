@@ -56,24 +56,37 @@
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>
-    <UnnnicDropdownItem class="header-select-dashboard__item">
+    <UnnnicDropdownItem
+      class="header-select-dashboard__item"
+      @click="showNewDashboardModal = true"
+    >
       <UnnnicIcon icon="add" />
       {{ $t('add_new_dashboard') }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
+  <ModalNewDashboard
+    :showModal="showNewDashboardModal"
+    @close="showNewDashboardModal = false"
+  />
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
+import ModalNewDashboard from '../dashboards/ModalNewDashboard.vue';
 
 export default {
   name: 'HeaderSelectDashboard',
+
+  components: {
+    ModalNewDashboard,
+  },
 
   data() {
     return {
       dashboardHovered: '',
       starHovered: '',
+      showNewDashboardModal: false,
     };
   },
 

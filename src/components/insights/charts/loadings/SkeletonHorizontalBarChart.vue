@@ -27,22 +27,20 @@ export default {
 </script>
 
 <script setup>
-import { computed, defineProps } from 'vue';
-import { useWindowSize } from '@vueuse/core';
+import { computed } from 'vue';
 
 const BAR_HEIGHT = 48;
 
-const { width: screenWidth, height: screenHeight } = useWindowSize();
-
-const props = defineProps(['width', 'height']);
+const props = defineProps({
+  width: { type: Number, default: 0 },
+  height: { type: Number, default: 0 },
+});
 
 const generateRandomWidth = () => {
-  return `${Math.random() * ((props.width || screenWidth.value) - 100) + 100}px`;
+  return `${Math.random() * (props.width - 150) + 100}px`;
 };
 
-const totalBars = computed(
-  () => parseInt((props.height || screenHeight.value - 220) / BAR_HEIGHT) || 14,
-);
+const totalBars = computed(() => parseInt(props.height / BAR_HEIGHT) || 14);
 </script>
 
 <style lang="scss" scoped>
@@ -52,6 +50,7 @@ const totalBars = computed(
   display: flex;
   flex-direction: column;
   gap: $unnnic-spacing-nano;
+  overflow: hidden;
   &__bar {
     display: flex;
     align-items: center;

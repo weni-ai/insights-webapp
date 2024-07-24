@@ -12,7 +12,7 @@
       </a>
     </header>
     <section
-      ref="chart"
+      ref="horizontalBarChart"
       class="bar-chart__chart"
     >
       <SkeletonHorizontalBarChart
@@ -75,10 +75,11 @@ export default {
   emits: ['seeMore'],
 
   setup() {
-    const chart = ref(null);
-    const { width, height } = useElementSize(chart);
+    const horizontalBarChart = ref(null);
+    const { width, height } = useElementSize(horizontalBarChart);
 
     return {
+      horizontalBarChart,
       chartWidth: width,
       chartHeight: height,
     };
@@ -147,7 +148,7 @@ export default {
     graphContainerHeight() {
       const barSpacingY = 4;
       const paddingY = 24;
-      const totalBars = this.mergedData.datasets?.[0]?.data.length;
+      const totalBars = this.mergedData.datasets?.[0]?.data?.length || 0;
 
       return (
         totalBars * (this.chartOptions.barThickness + barSpacingY) + paddingY

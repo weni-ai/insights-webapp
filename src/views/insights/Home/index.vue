@@ -16,8 +16,8 @@
         :key="subtitle"
         :title="title"
         :subtitle="subtitle"
-        @click="click"
         configured
+        @click="click"
       />
     </section>
   </section>
@@ -42,6 +42,13 @@ export default {
     chartData: chartData,
     cards: [],
   }),
+
+  computed: {
+    ...mapState({
+      isChartVisible: (state) => state.sidebar.chartVisible,
+      contentHeight: (state) => state.resizableBar.contentHeight,
+    }),
+  },
 
   created() {
     this.cards = [
@@ -71,13 +78,6 @@ export default {
         subtitle: 'Erros de IA',
       },
     ];
-  },
-
-  computed: {
-    ...mapState({
-      isChartVisible: (state) => state.sidebar.chartVisible,
-      contentHeight: (state) => state.resizableBar.contentHeight,
-    }),
   },
 
   methods: {

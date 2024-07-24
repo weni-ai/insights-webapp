@@ -11,10 +11,15 @@
         {{ $t('view_more') }}
       </a>
     </header>
-    <section class="bar-chart__chart">
-      <IconLoading
+    <section
+      ref="horizontalBarChart"
+      class="bar-chart__chart"
+    >
+      <SkeletonHorizontalBarChart
         v-if="isLoading"
         class="chart__loading"
+        :width="chartWidth"
+        :height="chartHeight"
       />
       <section
         v-else
@@ -36,16 +41,20 @@
 </template>
 
 <script>
-import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import SkeletonHorizontalBarChart from './loadings/SkeletonHorizontalBarChart.vue';
+
 import { Tooltip } from 'chart.js';
 import { deepMerge } from '@/utils/object';
+
+import { useElementSize } from '@vueuse/core';
+import { ref } from 'vue';
 
 export default {
   name: 'HorizontalBarChart',
 
-  components: { IconLoading, BaseChart },
+  components: { BaseChart, SkeletonHorizontalBarChart },
 
   props: {
     title: {
@@ -65,6 +74,17 @@ export default {
   },
 
   emits: ['seeMore'],
+
+  setup() {
+    const horizontalBarChart = ref(null);
+    const { width, height } = useElementSize(horizontalBarChart);
+
+    return {
+      horizontalBarChart,
+      chartWidth: width,
+      chartHeight: height,
+    };
+  },
 
   computed: {
     mergedData() {
@@ -142,7 +162,7 @@ export default {
     graphContainerHeight() {
       const barSpacingY = 4;
       const paddingY = 24;
-      const totalBars = this.mergedData.datasets?.[0]?.data.length;
+      const totalBars = this.mergedData.datasets?.[0]?.data?.length || 0;
 
       return (
         totalBars * (this.chartOptions.barThickness + barSpacingY) + paddingY
@@ -193,6 +213,7 @@ export default {
   &__chart {
     display: flex;
     height: 100%;
+    width: 100%;
     overflow: hidden auto;
 
     &__container {

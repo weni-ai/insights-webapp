@@ -1,10 +1,25 @@
 <template>
   <div id="app">
+    <section
+      v-if="isLoadingDashboards"
+      class="loading-container"
+    >
+      <img
+        src="./assets/images/weni-loading.svg"
+        width="64"
+      />
+    </section>
     <InsightsLayout
-      v-if="dashboards.length"
+      v-else-if="dashboards.length"
       ref="insights-layout"
     >
-      <RouterView />
+      <section
+        v-if="isLoadingCurrentDashboardFilters"
+        class="loading-container"
+      >
+        <IconLoading />
+      </section>
+      <RouterView v-else />
     </InsightsLayout>
   </div>
 </template>
@@ -12,13 +27,17 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
+import IconLoading from './components/IconLoading.vue';
 
 export default {
-  components: { InsightsLayout },
+  components: { InsightsLayout, IconLoading },
 
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
+      isLoadingDashboards: (state) => state.dashboards.isLoadingDashboards,
+      isLoadingCurrentDashboardFilters: (state) =>
+        state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
     }),
@@ -114,3 +133,13 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+</style>

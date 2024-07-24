@@ -13,9 +13,11 @@ export default {
   },
   mutations: {
     [mutations.SET_PROJECT](state, project) {
+      localStorage.setItem('projectUuid', project.uuid);
       state.project = project;
     },
     [mutations.SET_TOKEN](state, token) {
+      localStorage.setItem('token', token);
       state.token = token;
     },
   },

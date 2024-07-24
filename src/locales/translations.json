@@ -54,6 +54,11 @@
     "en": "Save",
     "es": "Salvar"
   },
+  "clear_fields": {
+    "pt-br": "Limpar campos",
+    "en": "Clear fields",
+    "es": "Borrar campos"
+  },
   "today": {
     "pt-br": "Hoje",
     "en": "Today",

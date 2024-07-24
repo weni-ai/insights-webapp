@@ -11,10 +11,15 @@
         {{ $t('view_more') }}
       </a>
     </header>
-    <section class="bar-chart__chart">
-      <IconLoading
+    <section
+      ref="horizontalBarChart"
+      class="bar-chart__chart"
+    >
+      <SkeletonHorizontalBarChart
         v-if="isLoading"
         class="chart__loading"
+        :width="chartWidth"
+        :height="chartHeight"
       />
       <section
         v-else
@@ -36,16 +41,20 @@
 </template>
 
 <script>
-import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import SkeletonHorizontalBarChart from './loadings/SkeletonHorizontalBarChart.vue';
 
+import { Tooltip } from 'chart.js';
 import { deepMerge } from '@/utils/object';
+
+import { useElementSize } from '@vueuse/core';
+import { ref } from 'vue';
 
 export default {
   name: 'HorizontalBarChart',
 
-  components: { IconLoading, BaseChart },
+  components: { BaseChart, SkeletonHorizontalBarChart },
 
   props: {
     title: {
@@ -66,6 +75,17 @@ export default {
 
   emits: ['seeMore'],
 
+  setup() {
+    const horizontalBarChart = ref(null);
+    const { width, height } = useElementSize(horizontalBarChart);
+
+    return {
+      horizontalBarChart,
+      chartWidth: width,
+      chartHeight: height,
+    };
+  },
+
   computed: {
     mergedData() {
       return deepMerge(
@@ -74,7 +94,7 @@ export default {
             {
               axis: 'y',
               borderSkipped: false,
-              minBarLength: 35,
+              minBarLength: 56,
             },
           ],
         },
@@ -84,7 +104,7 @@ export default {
     chartOptions() {
       return {
         indexAxis: 'y',
-        barThickness: 30,
+        barThickness: 32,
         maintainAspectRatio: false,
         scales: {
           x: {
@@ -92,7 +112,15 @@ export default {
           },
           y: {
             display: true,
+            autoSkip: false,
+            maxRotation: 0,
             ticks: {
+              callback: (value, index) => {
+                const label = String(this.chartData.labels[index]);
+                return label.length > 15
+                  ? `${label.substring(0, 15)}...`
+                  : label;
+              },
               padding: 0,
               font: { lineHeight: 1.66, size: 12, weight: 400 },
             },
@@ -104,6 +132,13 @@ export default {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            callbacks: {
+              label: () => false,
+            },
+          },
           datalabels: {
             formatter: (value) => {
               return value + this.datalabelsSuffix;
@@ -122,10 +157,16 @@ export default {
       };
     },
     chartPlugins() {
-      return [ChartDataLabels];
+      return [ChartDataLabels, Tooltip];
     },
     graphContainerHeight() {
-      return this.mergedData.datasets?.[0]?.data.length * 35;
+      const barSpacingY = 4;
+      const paddingY = 24;
+      const totalBars = this.mergedData.datasets?.[0]?.data?.length || 0;
+
+      return (
+        totalBars * (this.chartOptions.barThickness + barSpacingY) + paddingY
+      );
     },
   },
 };
@@ -172,6 +213,7 @@ export default {
   &__chart {
     display: flex;
     height: 100%;
+    width: 100%;
     overflow: hidden auto;
 
     &__container {

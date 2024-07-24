@@ -15,13 +15,12 @@
         @click.stop="clearFilters"
       />
     </template>
+
     <DynamicFilter
       v-else-if="currentDashboardFilters[0]"
       :filter="currentDashboardFilters[0]"
       :modelValue="appliedFilters[currentDashboardFilters[0].name]"
-      @update:model-value="
-        setAppliedFilters({ [currentDashboardFilters[0].name]: $event })
-      "
+      @update:model-value="updateFilter"
     />
 
     <ModalFilters
@@ -93,6 +92,18 @@ export default {
       setAppliedFilters: 'dashboards/setAppliedFilters',
       resetAppliedFilters: 'dashboards/resetAppliedFilters',
     }),
+
+    updateFilter(value) {
+      const hasNonNullValues =
+        typeof value === 'object' && value
+          ? Object.values(value).some((val) => val)
+          : value;
+      this.setAppliedFilters({
+        [this.currentDashboardFilters[0].name]: hasNonNullValues
+          ? value
+          : undefined,
+      });
+    },
 
     clearFilters() {
       this.resetAppliedFilters();

@@ -190,10 +190,9 @@ export default {
   watch: {
     '$route.query': {
       handler() {
-        if (['table_group', 'graph_funnel'].includes(this.widget.type)) {
-          return;
+        if (!['table_group', 'graph_funnel'].includes(this.widget.type)) {
+          this.requestWidgetData();
         }
-        this.requestWidgetData();
       },
       immediate: true,
     },

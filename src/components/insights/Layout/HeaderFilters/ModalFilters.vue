@@ -1,9 +1,15 @@
 <template>
-  <UnnnicModal
-    v-show="showModal"
+  <UnnnicModalDialog
+    :modelValue="showModal"
     class="modal-filters"
-    :text="$t('insights_header.filters')"
-    @close="close"
+    :title="$t('insights_header.filters')"
+    showActionsDivider
+    showCloseIcon
+    :primaryButtonProps="primaryButtonProps"
+    :secondaryButtonProps="secondaryButtonProps"
+    @primary-button-click="setFilters"
+    @secondary-button-click="clearFilters"
+    @update:model-value="!$event ? close() : {}"
   >
     <form
       class="modal-filters__form"
@@ -37,7 +43,7 @@
         @click="setFilters"
       />
     </template>
-  </UnnnicModal>
+  </UnnnicModalDialog>
 </template>
 
 <script>
@@ -84,6 +90,17 @@ export default {
         JSON.stringify(this.appliedFilters) ===
         JSON.stringify(this.filtersInternal)
       );
+    },
+    primaryButtonProps() {
+      return {
+        text: this.$t('insights_header.filtrate'),
+      };
+    },
+    secondaryButtonProps() {
+      return {
+        text: this.$t('insights_header.clear_filters'),
+        disabled: !this.hasFiltersInternal,
+      };
     },
   },
 
@@ -162,44 +179,20 @@ export default {
       grid-column-start: 1;
       grid-column-end: 3;
     }
-  }
 
-  :deep(.unnnic-modal-container) {
-    .unnnic-modal-container-background {
-      overflow: visible;
+    // Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow
 
-      &-body {
-        padding-top: $unnnic-spacing-lg;
-        padding-bottom: $unnnic-spacing-md;
-
-        display: flex;
-        flex-direction: row-reverse;
-        align-items: center;
-
-        > * {
-          padding: 0;
-        }
-
-        &-description,
-        &-description-container {
-          overflow: visible;
-        }
+    :deep(.dropdown-data) {
+      left: 0;
+      .unnnic-date-picker {
+        position: fixed;
       }
+    }
 
-      &-body {
-        border-radius: $unnnic-border-radius-sm $unnnic-border-radius-sm 0 0;
-      }
-      &-body-description-container {
-        padding-bottom: 0;
-      }
-      &-button {
-        gap: $unnnic-spacing-sm;
-        padding-bottom: $unnnic-spacing-lg;
-
-        :first-child {
-          margin: 0;
-        }
-      }
+    :deep(.unnnic-select-smart__options.active) {
+      position: fixed;
+      left: auto;
+      right: auto;
     }
   }
 }

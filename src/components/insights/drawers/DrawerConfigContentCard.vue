@@ -62,6 +62,12 @@
       </section>
     </section>
   </template>
+  <UnnnicButton
+    :text="$t('clear_fields')"
+    type="secondary"
+    :disabled="disableClearButton"
+    @click="clearFields"
+  />
 </template>
 
 <script>
@@ -89,6 +95,7 @@ export default {
 
   data() {
     return {
+      initialConfigStringfy: {},
       config: {
         name: '',
         flow: [],
@@ -135,6 +142,9 @@ export default {
   },
 
   computed: {
+    disableClearButton() {
+      return !this.config.name && !this.config.flow[0]?.value;
+    },
     isConfigValid() {
       const { config } = this;
 
@@ -148,6 +158,10 @@ export default {
           !config.result.operation ||
           config.result.operation === 'count')
       ) {
+        return false;
+      }
+
+      if (this.initialConfigStringfy === JSON.stringify(this.config)) {
         return false;
       }
 
@@ -232,6 +246,17 @@ export default {
     this.handleWidgetFields();
   },
   methods: {
+    clearFields() {
+      this.config = {
+        name: '',
+        flow: [{ label: '', value: '' }],
+        resultType: '',
+        result: {
+          name: [{ label: '', value: '' }],
+          operation: '',
+        },
+      };
+    },
     handleWidgetFields() {
       const selectedFlow =
         this.flowsOptions.find(
@@ -254,6 +279,7 @@ export default {
             this.modelValue.config.operation || this.config.result.operation,
         },
       };
+      this.initialConfigStringfy = JSON.stringify(this.config);
     },
   },
 };

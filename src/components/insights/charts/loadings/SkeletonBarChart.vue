@@ -4,7 +4,7 @@
     class="skeleton-bar-container"
   >
     <section
-      v-for="n in 36"
+      v-for="n in totalBars"
       :key="n"
       class="skeleton-bar-container__bar"
     >

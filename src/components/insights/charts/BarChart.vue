@@ -86,6 +86,7 @@ export default {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
+          tooltip: false,
           datalabels: {
             color: function (context) {
               return context.active ? '#003234' : '#fff';

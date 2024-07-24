@@ -39,7 +39,7 @@
 import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
+import { Tooltip } from 'chart.js';
 import { deepMerge } from '@/utils/object';
 
 export default {
@@ -74,7 +74,7 @@ export default {
             {
               axis: 'y',
               borderSkipped: false,
-              minBarLength: 36,
+              minBarLength: 56,
             },
           ],
         },
@@ -95,6 +95,12 @@ export default {
             autoSkip: false,
             maxRotation: 0,
             ticks: {
+              callback: (value, index) => {
+                const label = String(this.chartData.labels[index]);
+                return label.length > 15
+                  ? `${label.substring(0, 15)}...`
+                  : label;
+              },
               padding: 0,
               font: { lineHeight: 1.66, size: 12, weight: 400 },
             },
@@ -106,6 +112,13 @@ export default {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
+          tooltip: {
+            enabled: true,
+            mode: 'index',
+            callbacks: {
+              label: () => false,
+            },
+          },
           datalabels: {
             formatter: (value) => {
               return value + this.datalabelsSuffix;
@@ -124,7 +137,7 @@ export default {
       };
     },
     chartPlugins() {
-      return [ChartDataLabels];
+      return [ChartDataLabels, Tooltip];
     },
     graphContainerHeight() {
       const barSpacingY = 4;

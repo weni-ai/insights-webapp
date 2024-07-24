@@ -32,8 +32,8 @@ import { computed } from 'vue';
 const BAR_HEIGHT = 48;
 
 const props = defineProps({
-  width: { type: Number, default: 0 },
-  height: { type: Number, default: 0 },
+  width: { type: Number, required: true },
+  height: { type: Number, required: true },
 });
 
 const generateRandomWidth = () => {

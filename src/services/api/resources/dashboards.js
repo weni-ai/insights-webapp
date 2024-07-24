@@ -199,4 +199,18 @@ export default {
 
     return response;
   },
+
+  async createFlowsDashboard({ dashboardName, funnelAmount }) {
+    const reqBody = {
+      dashboard_name: dashboardName,
+      funnel_amount: funnelAmount,
+    };
+    const response = await http.post(
+      '/dashboards/create_flows_dashboard/',
+      reqBody,
+      { params: { project: Config.state.project.uuid } },
+    );
+
+    return response.data;
+  },
 };

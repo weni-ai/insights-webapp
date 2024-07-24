@@ -8,7 +8,9 @@
     :primaryButtonProps="{
       text: 'Criar Dashboard',
       disabled: !isValidConfig,
+      loading: loadingRequest,
     }"
+    @primary-button-click="createDashboard"
     @update:model-value="!$event ? $emit('close') : {}"
   >
     <form @submit.prevent>
@@ -31,6 +33,8 @@
 </template>
 
 <script>
+import { Dashboards } from '@/services/api';
+import unnnic from '@weni/unnnic-system';
 export default {
   name: 'ModalNewDashboard',
   props: {
@@ -51,6 +55,7 @@ export default {
         { label: '2', value: 2 },
         { label: '3', value: 3 },
       ],
+      loadingRequest: false,
     };
   },
   computed: {
@@ -58,6 +63,37 @@ export default {
       return (
         !!this.dashboard.name.trim() && !!this.dashboard.qtdFunnel[0].value
       );
+    },
+  },
+  methods: {
+    createDashboard() {
+      this.loadingRequest = true;
+      Dashboards.createFlowsDashboard({
+        dashboardName: this.dashboard.name,
+        funnelAmount: this.dashboard.qtdFunnel[0].value,
+      })
+        .then(() => {
+          unnnic.unnnicCallAlert({
+            props: {
+              text: 'Dashboard criado com sucesso',
+              type: 'success',
+            },
+            seconds: 10,
+          });
+        })
+        .catch((error) => {
+          unnnic.unnnicCallAlert({
+            props: {
+              text: 'Falha ao criar dashboard',
+              type: 'error',
+            },
+            seconds: 10,
+          });
+          console.log(error);
+        })
+        .finally(() => {
+          this.loadingRequest = false;
+        });
     },
   },
 };

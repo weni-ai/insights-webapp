@@ -11,10 +11,15 @@
         {{ $t('view_more') }}
       </a>
     </header>
-    <section class="bar-chart__chart">
-      <IconLoading
+    <section
+      ref="barChart"
+      class="bar-chart__chart"
+    >
+      <SkeletonBarChart
         v-if="isLoading"
         class="chart__loading"
+        :width="chartWidth"
+        :height="chartHeight"
       />
       <BaseChart
         v-else
@@ -28,16 +33,19 @@
 </template>
 
 <script>
-import IconLoading from '@/components/IconLoading.vue';
 import BaseChart from './BaseChart.vue';
+import SkeletonBarChart from './loadings/SkeletonBarChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+import { useElementSize } from '@vueuse/core';
+import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 
 export default {
   name: 'BarChart',
 
-  components: { IconLoading, BaseChart },
+  components: { BaseChart, SkeletonBarChart },
 
   props: {
     title: {
@@ -52,6 +60,17 @@ export default {
     isLoading: Boolean,
   },
   emits: ['seeMore'],
+
+  setup() {
+    const barChart = ref(null);
+    const { width, height } = useElementSize(barChart);
+
+    return {
+      barChart,
+      chartWidth: width,
+      chartHeight: height,
+    };
+  },
 
   computed: {
     mergedData() {

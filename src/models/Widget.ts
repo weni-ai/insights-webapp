@@ -27,13 +27,13 @@ class Widget {
   is_configurable: boolean;
 
   private _treatTableDynamicConfig(config: WidgetConfig): WidgetConfig {
-    let dynamicConfigKey = 'created_on' in config ? 'created_on' : 'default';
-
-    const [name, scheme] = config[dynamicConfigKey].icon.split(':');
+    Object.keys(config).forEach((key) => {
+      const [name, scheme] = config[key].icon.split(':');
+      config[key].icon = { name, scheme };
+    });
 
     return {
-      ...config[dynamicConfigKey],
-      icon: { name, scheme },
+      ...config,
     };
   }
 

@@ -40,6 +40,7 @@ export default {
   computed: {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
 
     isConfigured() {
@@ -94,7 +95,10 @@ export default {
           headerIcon: config?.icon?.name,
           headerIconColor: config?.icon?.scheme,
           headerTitle: config?.name_overwrite || name,
-          fields: config?.fields,
+          fields:
+            'created_on' in this.appliedFilters
+              ? config?.created_on?.fields
+              : config?.default?.fields,
           items: data?.results,
         },
         table_group: {

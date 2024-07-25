@@ -15,7 +15,8 @@
       <section class="content__actions">
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
-        <UnnnicDropdown>
+
+        <!-- <UnnnicDropdown>
           <template #trigger>
             <UnnnicButton
               type="secondary"
@@ -28,7 +29,7 @@
           <UnnnicDropdownItem @click="showDeleteDashboardModal = true">
             Excluir Dashboard
           </UnnnicDropdownItem>
-        </UnnnicDropdown>
+        </UnnnicDropdown> -->
 
         <!-- <UnnnicButton
           class="clickable"

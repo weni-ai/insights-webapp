@@ -139,7 +139,7 @@ export default {
       }
 
       const widgetData = this.widget.data;
-      let data = widgetData.data || widgetData.results;
+      const data = widgetData.data || widgetData.results;
 
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);

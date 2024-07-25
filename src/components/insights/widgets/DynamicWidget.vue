@@ -142,10 +142,6 @@ export default {
       const widgetData = this.widget.data;
       let data = widgetData.data || widgetData.results;
 
-      if (this.widget.type === 'graph_column') {
-        data = sortByKey(data, 'label');
-      }
-
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);
 

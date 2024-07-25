@@ -16,7 +16,6 @@ import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
-import { sortByKey } from '@/utils/array';
 import { formatSecondsToHumanString } from '@/utils/time';
 
 export default {

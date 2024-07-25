@@ -1,7 +1,8 @@
 <template>
-  <section class="report">
+  <section :class="{ report: true, 'report--loading': isLoadingReport }">
+    <IconLoading v-if="isLoadingReport" />
     <DynamicWidget
-      v-if="report"
+      v-else-if="report"
       :widget="report"
     />
   </section>
@@ -11,17 +12,20 @@
 import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
+import IconLoading from '@/components/IconLoading.vue';
 
 export default {
   name: 'ReportView',
 
   components: {
     DynamicWidget,
+    IconLoading,
   },
 
   computed: {
     ...mapState({
       report: (state) => state.reports.report,
+      isLoadingReport: (state) => state.reports.isLoadingReport,
     }),
   },
 
@@ -54,7 +58,15 @@ export default {
   height: 100%;
 
   display: grid;
+
   gap: $unnnic-spacing-sm;
+
+  &--loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
 
   & > [class*='chart'] {
     border-radius: $unnnic-spacing-nano;

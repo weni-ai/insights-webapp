@@ -81,6 +81,11 @@ export default {
         sec: (value) => formatSecondsToHumanString(Math.round(value)),
       };
 
+      const tableDynamicFilterConfig =
+        'created_on' in this.appliedFilters
+          ? config?.created_on
+          : config?.default;
+
       const mappingProps = {
         card: {
           metric:
@@ -92,13 +97,10 @@ export default {
           configurable: is_configurable,
         },
         table_dynamic_by_filter: {
-          headerIcon: config?.icon?.name,
-          headerIconColor: config?.icon?.scheme,
-          headerTitle: config?.name_overwrite || name,
-          fields:
-            'created_on' in this.appliedFilters
-              ? config?.created_on?.fields
-              : config?.default?.fields,
+          headerIcon: tableDynamicFilterConfig?.icon?.name,
+          headerIconColor: tableDynamicFilterConfig?.icon?.scheme,
+          headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
+          fields: tableDynamicFilterConfig?.fields,
           items: data?.results,
         },
         table_group: {

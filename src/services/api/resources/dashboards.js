@@ -200,10 +200,11 @@ export default {
     return response;
   },
 
-  async createFlowsDashboard({ dashboardName, funnelAmount }) {
+  async createFlowsDashboard({ dashboardName, funnelAmount, currencyType }) {
     const reqBody = {
       dashboard_name: dashboardName,
       funnel_amount: funnelAmount,
+      currency_type: currencyType,
     };
     const response = await http.post(
       '/dashboards/create_flows_dashboard/',

@@ -24,6 +24,26 @@
     "en": "Select",
     "es": "Seleccionar"
   },
+  "none": {
+    "pt-br": "Nenhum",
+    "en": "None",
+    "es": "Ninguno"
+  },
+  "currency": {
+    "pt-br": "Moeda",
+    "en": "Currency",
+    "es": "Moneda"
+  },
+  "funnel": {
+    "pt-br": "Funil",
+    "en": "Funnel",
+    "es": "Embudo"
+  },
+  "dashboard_name": {
+    "pt-br": "Nome do dashboard",
+    "en": "Dashboard name",
+    "es": "Nombre del dashboard"
+  },
   "add": {
     "pt-br": "Adicionar",
     "en": "Add",
@@ -309,20 +329,10 @@
       "en": "Create dashboard",
       "es": "Crear dashboard"
     },
-    "dashboard_name": {
-      "pt-br": "Nome do dashboard",
-      "en": "Dashboard name",
-      "es": "Nombre del dashboard"
-    },
     "dashboard_name_placeholder": {
       "pt-br": "Ex: Vendas",
       "en": "Ex: Sales",
       "es": "Ej: Ventas"
-    },
-    "funnel": {
-      "pt-br": "Funil",
-      "en": "Funnel",
-      "es": "Embudo"
     },
     "funnel_hint": {
       "pt-br": "Selecione quanto gráficos de funil deseja no seu dashboard",
@@ -340,6 +350,28 @@
         "en": "Failed to create dashboard",
         "es": "Error al crear el panel"
       }
+    }
+  },
+  "currency_options": {
+    "BRL": {
+      "pt-br": "R$ - Real",
+      "en": "R$ - Brazilian Real",
+      "es": "R$ - Real Brasileño"
+    },
+    "USD": {
+      "pt-br": "$ - Dólar",
+      "en": "$ - Dollar",
+      "es": "$ - Dólar"
+    },
+    "EUR": {
+      "pt-br": "€ - Euro",
+      "en": "€ - Euro",
+      "es": "€ - Euro"
+    },
+    "ARS": {
+      "pt-br": "$ - Peso",
+      "en": "$ - Peso",
+      "es": "$ - Peso"
     }
   }
 }

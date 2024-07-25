@@ -14,28 +14,44 @@
     @close="close"
   >
     <template #content>
-      <form @submit.prevent>
-        <UnnnicLabel :label="$t('dashboard_name')" />
-        <UnnnicInput
-          v-model="dashboardConfig.name"
-          :placeholder="$t('new_dashboard.dashboard_name_placeholder')"
+      <section class="drawer-content">
+        <form @submit.prevent>
+          <UnnnicLabel :label="$t('dashboard_name')" />
+          <UnnnicInput
+            v-model="dashboardConfig.name"
+            :placeholder="$t('new_dashboard.dashboard_name_placeholder')"
+          />
+          <UnnnicLabel :label="$t('currency')" />
+          <UnnnicSelectSmart
+            v-model="dashboardConfig.currency"
+            :options="currencyOptions"
+            :placeholder="$t('select')"
+          />
+        </form>
+        <UnnnicButton
+          class="delete-dashboard-button"
+          type="tertiary"
+          text="Deletar Dashboard"
+          @click="showDeleteDashboardModal = true"
         />
-        <UnnnicLabel :label="$t('currency')" />
-        <UnnnicSelectSmart
-          v-model="dashboardConfig.currency"
-          :options="currencyOptions"
-          :placeholder="$t('select')"
-        />
-      </form>
+      </section>
     </template>
   </UnnnicDrawer>
+  <ModalDeleteDashboard
+    v-model="showDeleteDashboardModal"
+    :dashboard="dashboard"
+  />
 </template>
 
 <script>
 import { Dashboards } from '@/services/api';
+import ModalDeleteDashboard from './ModalDeleteDashboard.vue';
 import unnnic from '@weni/unnnic-system';
 export default {
   name: 'DrawerEditDashboard',
+  components: {
+    ModalDeleteDashboard,
+  },
   props: {
     modelValue: {
       type: Boolean,
@@ -57,14 +73,15 @@ export default {
         { label: this.$t('currency_options.ARS'), value: 'ARS' },
       ],
       loadingRequest: false,
+      showDeleteDashboardModal: false,
     };
   },
   computed: {
     isValidConfig() {
       return (
-        this.dashboard.name.trim() &&
-        this.dashboard.currency.length &&
-        this.dashboard.currency[0].value
+        this.dashboardConfig.name.trim() &&
+        this.dashboardConfig.currency.length &&
+        this.dashboardConfig.currency[0].value
       );
     },
   },
@@ -112,18 +129,10 @@ export default {
 .unnnic-label__label:first-child {
   margin-top: 0;
 }
-.input-hint {
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-md;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: $unnnic-line-height-large * 1.25; // 20px
-  margin-top: $unnnic-spacing-nano;
-}
-
-// Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow
-:deep(.unnnic-select-smart__options.active) {
-  position: fixed;
-  left: auto;
-  right: auto;
+.drawer-content {
+  display: grid;
+  .delete-dashboard-button {
+    margin-top: $unnnic-spacing-sm;
+  }
 }
 </style>

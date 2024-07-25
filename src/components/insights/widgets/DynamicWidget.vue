@@ -16,7 +16,6 @@ import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
-import { sortByKey } from '@/utils/array';
 import { formatSecondsToHumanString } from '@/utils/time';
 
 export default {
@@ -40,6 +39,7 @@ export default {
   computed: {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
 
     isConfigured() {
@@ -80,6 +80,11 @@ export default {
         sec: (value) => formatSecondsToHumanString(Math.round(value)),
       };
 
+      const tableDynamicFilterConfig =
+        'created_on' in this.appliedFilters
+          ? config?.created_on
+          : config?.default;
+
       const mappingProps = {
         card: {
           metric:
@@ -91,10 +96,10 @@ export default {
           configurable: is_configurable,
         },
         table_dynamic_by_filter: {
-          headerIcon: config?.icon?.name,
-          headerIconColor: config?.icon?.scheme,
-          headerTitle: config?.name_overwrite || name,
-          fields: config?.fields,
+          headerIcon: tableDynamicFilterConfig?.icon?.name,
+          headerIconColor: tableDynamicFilterConfig?.icon?.scheme,
+          headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
+          fields: tableDynamicFilterConfig?.fields,
           items: data?.results,
         },
         table_group: {
@@ -134,11 +139,7 @@ export default {
       }
 
       const widgetData = this.widget.data;
-      let data = widgetData.data || widgetData.results;
-
-      if (this.widget.type === 'graph_column') {
-        data = sortByKey(data, 'label');
-      }
+      const data = widgetData.data || widgetData.results;
 
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);

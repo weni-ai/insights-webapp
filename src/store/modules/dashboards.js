@@ -135,9 +135,24 @@ export default {
 
       const currentRoute = Router.currentRoute.value;
 
+      const appliedFilterKeys = state.currentDashboardFilters.map(
+        (filter) => filter.name,
+      );
+
+      const queryParamsNonFilters = Object.entries(currentRoute.query).reduce(
+        (acc, [key, value]) => {
+          if (!appliedFilterKeys.includes(key)) {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {},
+      );
+
       Router.replace({
         ...currentRoute,
         query: {
+          ...queryParamsNonFilters,
           ...treatFilters(
             filters,
             stringifyValue,
@@ -150,6 +165,7 @@ export default {
       commit(mutations.SET_APPLIED_FILTERS, {});
 
       const currentRoute = Router.currentRoute.value;
+
       const appliedFilterKeys = state.currentDashboardFilters.map(
         (filter) => filter.name,
       );

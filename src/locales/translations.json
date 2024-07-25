@@ -303,6 +303,43 @@
       "pt-br": "Novo dashboard",
       "en": "New dashboard",
       "es": "Nuevo dashboard"
+    },
+    "create_dashboard": {
+      "pt-br": "Criar dashboard",
+      "en": "Create dashboard",
+      "es": "Crear dashboard"
+    },
+    "dashboard_name": {
+      "pt-br": "Nome do dashboard",
+      "en": "Dashboard name",
+      "es": "Nombre del dashboard"
+    },
+    "dashboard_name_placeholder": {
+      "pt-br": "Ex: Vendas",
+      "en": "Ex: Sales",
+      "es": "Ej: Ventas"
+    },
+    "funnel": {
+      "pt-br": "Funil",
+      "en": "Funnel",
+      "es": "Embudo"
+    },
+    "funnel_hint": {
+      "pt-br": "Selecione quanto gráficos de funil deseja no seu dashboard",
+      "en": "Select how many funnel charts you want on your dashboard",
+      "es": "Seleccione cuántos gráficos de embudo desea en su panel"
+    },
+    "alert": {
+      "success": {
+        "pt-br": "Dashboard criado com sucesso",
+        "en": "Dashboard created successfully",
+        "es": "Panel creado con éxito"
+      },
+      "error": {
+        "pt-br": "Falha ao criar dashboard",
+        "en": "Failed to create dashboard",
+        "es": "Error al crear el panel"
+      }
     }
   }
 }

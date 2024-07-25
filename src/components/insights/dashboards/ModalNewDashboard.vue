@@ -6,27 +6,27 @@
     showCloseIcon
     size="sm"
     :primaryButtonProps="{
-      text: 'Criar Dashboard',
+      text: $t('new_dashboard.create_dashboard'),
       disabled: !isValidConfig,
       loading: loadingRequest,
     }"
     @primary-button-click="createDashboard"
-    @update:model-value="!$event ? $emit('close') : {}"
+    @update:model-value="!$event ? close() : {}"
   >
     <form @submit.prevent>
-      <UnnnicLabel label="Nome do dashboard" />
+      <UnnnicLabel :label="$t('new_dashboard.dashboard_name')" />
       <UnnnicInput
         v-model="dashboard.name"
-        :placeholder="'Ex: Vendas'"
+        :placeholder="$t('new_dashboard.dashboard_name_placeholder')"
       />
-      <UnnnicLabel label="Funil" />
+      <UnnnicLabel :label="$t('new_dashboard.funnel')" />
       <UnnnicSelectSmart
         v-model="dashboard.qtdFunnel"
         :options="funnelOptions"
-        :placeholder="'Selecione'"
+        :placeholder="$t('select')"
       />
       <p class="input-hint">
-        Selecione quanto gráficos de funil deseja no seu dashboard
+        {{ $t('new_dashboard.funnel_hint') }}
       </p>
     </form>
   </UnnnicModalDialog>
@@ -66,28 +66,33 @@ export default {
     },
   },
   methods: {
+    close() {
+      this.$emit('close');
+    },
     createDashboard() {
       this.loadingRequest = true;
       Dashboards.createFlowsDashboard({
         dashboardName: this.dashboard.name,
         funnelAmount: this.dashboard.qtdFunnel[0].value,
       })
-        .then(() => {
+        .then((response) => {
           unnnic.unnnicCallAlert({
             props: {
-              text: 'Dashboard criado com sucesso',
+              text: this.$t('new_dashboard.alert.success'),
               type: 'success',
             },
-            seconds: 10,
+            seconds: 5,
           });
+          // TODO redirect
+          this.close();
         })
         .catch((error) => {
           unnnic.unnnicCallAlert({
             props: {
-              text: 'Falha ao criar dashboard',
+              text: this.$t('new_dashboard.alert.error'),
               type: 'error',
             },
-            seconds: 10,
+            seconds: 5,
           });
           console.log(error);
         })
@@ -100,12 +105,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.unnnic-label__label:first-child {
+  margin-top: 0;
+}
 .input-hint {
-  font-family: Lato;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 20px; /* 166.667% */
+  font-family: $unnnic-font-family-secondary;
+  font-size: $unnnic-font-size-body-md;
+  font-weight: $unnnic-font-weight-regular;
+  line-height: $unnnic-line-height-large * 1.25; // 20px
+  margin-top: $unnnic-spacing-nano;
 }
 
 // Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow

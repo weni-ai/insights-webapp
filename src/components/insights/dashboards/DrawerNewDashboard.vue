@@ -1,6 +1,7 @@
 <template>
   <UnnnicDrawer
     ref="unnnicDrawer"
+    :style="{ display: loadingRequest ? 'none' : 'flex' }"
     :modelValue="modelValue"
     :title="$t('new_dashboard.title')"
     :primaryButtonText="$t('save')"
@@ -38,6 +39,16 @@
       </form>
     </template>
   </UnnnicDrawer>
+  <section
+    v-if="loadingRequest"
+    class="progress-bar-container"
+  >
+    <UnnnicProgressBar
+      v-model="createDashboardProgress"
+      inline
+      title="Criando novo Dashboard"
+    />
+  </section>
 </template>
 
 <script>
@@ -73,6 +84,7 @@ export default {
         { label: this.$t('currency_options.ARS'), value: 'ARS' },
       ],
       loadingRequest: false,
+      createDashboardProgress: 0,
     };
   },
   computed: {
@@ -128,6 +140,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.progress-bar-container {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  background-color: rgba(0, 0, 0, 0.4);
+  top: 0;
+  left: 0;
+}
 .unnnic-label__label:first-child {
   margin-top: 0;
 }

@@ -214,4 +214,8 @@ export default {
 
     return response.data;
   },
+
+  async updateFlowsDashboard({ dashboardName, currencyType }) {
+    // TODO
+  },
 };

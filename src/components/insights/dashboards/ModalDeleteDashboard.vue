@@ -1,18 +1,17 @@
 <template>
   <UnnnicModalDialog
-    :modelValue="showModal"
-    :title="`Excluir Dashboard ${dashboard.name}`"
-    :primaryButtonProps="{ text: 'Excluir', disabled: !validDashboardName }"
+    :modelValue="modelValue"
+    :title="`${$t('edit_dashboard.delete_dashboard')} ${dashboard.name}`"
+    :primaryButtonProps="{ text: $t('delete'), disabled: !validDashboardName }"
     showActionsDivider
     showCloseIcon
     size="sm"
     @update:model-value="!$event ? close() : {}"
   >
-    <p>
-      Essa ação será irreversível, para confirmar a ação digite o nome do
-      dashboard
+    <p class="delete-notice">
+      {{ $t('edit_dashboard.delete_dashboard_notice') }}
     </p>
-    <UnnnicLabel :label="'Confirmação'" />
+    <UnnnicLabel :label="$t('confirmation')" />
     <UnnnicInput
       v-model="dashboardName"
       :placeholder="dashboard.name"
@@ -24,7 +23,7 @@
 export default {
   name: 'ModalDeleteDashboard',
   props: {
-    showModal: {
+    modelValue: {
       type: Boolean,
       required: true,
     },
@@ -52,4 +51,11 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.delete-notice {
+  font-family: $unnnic-font-family-secondary;
+  font-size: 14px;
+  font-weight: $unnnic-font-weight-regular;
+  line-height: $unnnic-line-height-large * 1.375;
+}
+</style>

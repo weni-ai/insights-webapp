@@ -2,7 +2,7 @@
   <UnnnicDrawer
     ref="unnnicDrawer"
     :modelValue="modelValue"
-    :title="$t('new_dashboard.title')"
+    :title="$t('edit_dashboard.title')"
     :primaryButtonText="$t('save')"
     :disabledPrimaryButton="!isValidConfig"
     :loadingPrimaryButton="loadingRequest"
@@ -19,7 +19,7 @@
           <UnnnicLabel :label="$t('dashboard_name')" />
           <UnnnicInput
             v-model="dashboardConfig.name"
-            :placeholder="$t('new_dashboard.dashboard_name_placeholder')"
+            :placeholder="dashboard.name"
           />
           <UnnnicLabel :label="$t('currency')" />
           <UnnnicSelectSmart
@@ -31,15 +31,17 @@
         <UnnnicButton
           class="delete-dashboard-button"
           type="tertiary"
-          text="Deletar Dashboard"
+          :text="$t('edit_dashboard.delete_dashboard')"
           @click="showDeleteDashboardModal = true"
         />
       </section>
     </template>
   </UnnnicDrawer>
   <ModalDeleteDashboard
+    v-if="showDeleteDashboardModal"
     v-model="showDeleteDashboardModal"
     :dashboard="dashboard"
+    @close="showDeleteDashboardModal = false"
   />
 </template>
 
@@ -85,6 +87,13 @@ export default {
       );
     },
   },
+  mounted() {
+    const currencyOption = this.currencyOptions.find(
+      (currency) => currency.value === this.dashboard.config?.currency_type,
+    );
+    this.dashboardConfig.currency = currencyOption ? [currencyOption] : [];
+    this.dashboardConfig.name = this.dashboard.name;
+  },
   methods: {
     close() {
       this.$emit('close');
@@ -92,7 +101,7 @@ export default {
     updateDashboard() {
       this.loadingRequest = true;
 
-      Dashboards.createFlowsDashboard({
+      Dashboards.updateFlowsDashboard({
         dashboardName: this.dashboardConfig.name,
         currencyType: this.dashboardConfig.currency[0].value,
       })

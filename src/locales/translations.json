@@ -74,6 +74,16 @@
     "en": "Save",
     "es": "Salvar"
   },
+  "delete": {
+    "pt-br": "Excluir",
+    "en": "Delete",
+    "es": "Borrar"
+  },
+  "confirmation": {
+    "pt-br": "Confirmação",
+    "en": "Confirmation",
+    "es": "Confirmación"
+  },
   "clear_fields": {
     "pt-br": "Limpar campos",
     "en": "Clear fields",
@@ -350,6 +360,23 @@
         "en": "Failed to create dashboard",
         "es": "Error al crear el panel"
       }
+    }
+  },
+  "edit_dashboard": {
+    "title": {
+      "pt-br": "Editar dashboard",
+      "en": "Edit dashboard",
+      "es": "Editar dashboard"
+    },
+    "delete_dashboard": {
+      "pt-br": "Deletar dashboard",
+      "en": "Delete dashboard",
+      "es": "Borrar dashboard"
+    },
+    "delete_dashboard_notice": {
+      "pt-br": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+      "en": "This action will be irreversible. To confirm the action, please type the name of the dashboard",
+      "es": "Esta acción será irreversible. Para confirmar la acción, por favor escriba el nombre del panel"
     }
   },
   "currency_options": {

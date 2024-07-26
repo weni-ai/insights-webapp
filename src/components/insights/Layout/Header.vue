@@ -16,7 +16,7 @@
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
 
-        <!-- <UnnnicDropdown>
+        <UnnnicDropdown>
           <template #trigger>
             <UnnnicButton
               type="secondary"
@@ -24,13 +24,10 @@
               iconCenter="tune"
             />
           </template>
-          <UnnnicDropdownItem> Gerenciar Permissões </UnnnicDropdownItem>
-          <UnnnicDropdownItem> Editar Dashboard </UnnnicDropdownItem>
-          <UnnnicDropdownItem @click="showDeleteDashboardModal = true">
-            Excluir Dashboard
+          <UnnnicDropdownItem @click="showEditDashboard = true">
+            {{ $t('edit_dashboard.title') }}
           </UnnnicDropdownItem>
-        </UnnnicDropdown> -->
-
+        </UnnnicDropdown>
         <!-- <UnnnicButton
           class="clickable"
           iconCenter="ios_share"
@@ -39,11 +36,11 @@
       </section>
     </section>
   </header>
-  <ModalDeleteDashboard
-    v-if="showDeleteDashboardModal"
-    :showModal="showDeleteDashboardModal"
+  <DrawerEditDashboard
+    v-if="showEditDashboard"
+    v-model="showEditDashboard"
     :dashboard="currentDashboard"
-    @close="showDeleteDashboardModal = false"
+    @close="showEditDashboard = false"
   />
 </template>
 
@@ -53,7 +50,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
-import ModalDeleteDashboard from '../dashboards/ModalDeleteDashboard.vue';
+import DrawerEditDashboard from '../dashboards/DrawerEditDashboard.vue';
 
 import moment from 'moment';
 
@@ -64,11 +61,11 @@ export default {
     HeaderSelectDashboard,
     HeaderTagLive,
     InsightsLayoutHeaderFilters,
-    ModalDeleteDashboard,
+    DrawerEditDashboard,
   },
   data() {
     return {
-      showDeleteDashboardModal: false,
+      showEditDashboard: false,
     };
   },
   computed: {

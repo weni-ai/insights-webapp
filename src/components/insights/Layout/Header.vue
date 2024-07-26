@@ -16,7 +16,7 @@
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
 
-        <UnnnicDropdown>
+        <UnnnicDropdown v-if="currentDashboard.is_editable">
           <template #trigger>
             <UnnnicButton
               type="secondary"

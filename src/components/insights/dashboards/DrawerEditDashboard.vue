@@ -29,6 +29,7 @@
           />
         </form>
         <UnnnicButton
+          v-if="dashboard.is_deletable"
           class="delete-dashboard-button"
           type="tertiary"
           :text="$t('edit_dashboard.delete_dashboard')"

@@ -23,6 +23,8 @@ export default {
           dashboard.name,
           { columns: dashboard.grid[0], rows: dashboard.grid[1] },
           dashboard.is_default,
+          dashboard.is_editable,
+          dashboard.is_deletable,
         ),
     );
 

@@ -2,6 +2,7 @@
   <UnnnicDrawer
     ref="unnnicDrawer"
     class="drawer-config-widget-dynamic"
+    wide
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"

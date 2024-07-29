@@ -90,17 +90,34 @@ export default {
   },
   computed: {
     drawerProps() {
+      const { $t } = this;
       const configMap = {
         graph_funnel: {
-          title: this.$t('drawers.config_funnel.title'),
-          description: this.$t('drawers.config_funnel.description'),
+          default: {
+            title: $t('drawers.config_funnel.title'),
+            description: $t('drawers.config_funnel.description'),
+          },
         },
         card: {
-          title: this.$t('drawers.config_card.title'),
+          default: {
+            title: $t('drawers.config_card.title'),
+          },
+          executions: {
+            title: $t(`drawers.config_gallery.options.executions.title`),
+            description: $t(
+              `drawers.config_gallery.options.executions.description`,
+            ),
+          },
+          flow_result: {
+            title: $t(`drawers.config_gallery.options.flow_result.title`),
+            description: $t(
+              `drawers.config_gallery.options.flow_result.description`,
+            ),
+          },
         },
       };
 
-      return configMap[this.widget?.type] || {};
+      return configMap[this.widget?.type][this.configType || 'default'] || {};
     },
     content() {
       const componentMap = {

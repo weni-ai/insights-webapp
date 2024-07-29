@@ -20,7 +20,7 @@
         @open-config="openDrawerConfigWidget(widget)"
       />
     </template>
-    <DrawerConfigWidgetDynamic
+    <DrawerConfigGallery
       v-if="!!widgetConfigurating"
       :modelValue="showDrawerConfigWidget"
       :widget="widgetConfigurating"
@@ -33,7 +33,7 @@
 import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
-import DrawerConfigWidgetDynamic from '@/components/insights/drawers/DrawerConfigWidgetDynamic.vue';
+import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
 export default {
@@ -41,7 +41,7 @@ export default {
 
   components: {
     DynamicWidget,
-    DrawerConfigWidgetDynamic,
+    DrawerConfigGallery,
     IconLoading,
   },
 

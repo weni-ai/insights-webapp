@@ -2,6 +2,7 @@
   <UnnnicDrawer
     ref="unnnicDrawer"
     class="drawer-config-widget-dynamic"
+    wide
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
@@ -26,6 +27,11 @@
       </form>
     </template>
   </UnnnicDrawer>
+  <ModalResetWidget
+    v-model="showModalResetWidget"
+    :widget="widget"
+    @finish-reset="$emit('close')"
+  />
 </template>
 
 <script>
@@ -38,6 +44,8 @@ import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue';
 import SkeletonConfigContentFunnel from './loadings/SkeletonConfigContentFunnel.vue';
 
+import ModalResetWidget from '@/components/ModalResetWidget.vue';
+
 export default {
   name: 'DrawerConfigWidgetDynamic',
 
@@ -46,6 +54,7 @@ export default {
     DrawerConfigContentCard,
     SkeletonConfigContentCard,
     SkeletonConfigContentFunnel,
+    ModalResetWidget,
   },
 
   props: {
@@ -56,6 +65,10 @@ export default {
     widget: {
       type: Object,
       default: () => ({}),
+    },
+    configType: {
+      type: String,
+      default: '',
     },
   },
 
@@ -71,6 +84,7 @@ export default {
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
       isLoadingFlowOptions: false,
+      showModalResetWidget: false,
     };
   },
   computed: {
@@ -110,7 +124,7 @@ export default {
       };
 
       const mappingProps = {
-        card: { flows },
+        card: { flows, type: this.configType },
       };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
@@ -118,8 +132,9 @@ export default {
     contentEvents() {
       const defaultEvents = {
         'update:model-value': (config) => (this.config = config),
-        updateDisablePrimaryButton: (boolean) =>
+        'update-disable-primary-button': (boolean) =>
           (this.disablePrimaryButton = boolean),
+        'reset-widget': () => (this.showModalResetWidget = true),
       };
 
       const mappingEvents = {};
@@ -175,7 +190,7 @@ export default {
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
         config: {
           operation:
-            config.resultType === 'executions'
+            this.configType === 'executions'
               ? 'count'
               : config.result?.operation,
           filter: { flow: configuredFlow?.value },

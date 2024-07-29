@@ -16,33 +16,21 @@
       autocompleteClearOnFocus
     />
   </section>
-  <section>
-    <UnnnicLabel :label="$t('drawers.config_card.result_type')" />
-    <section class="drawer-config-content-card__result-types">
-      <template
-        v-for="resultType in resultTypes"
-        :key="resultType.value"
-      >
-        <UnnnicRadio
-          v-model="config.resultType"
-          :value="resultType.value"
-          :disabled="resultType.disabled ? resultType.disabled() : false"
-        >
-          {{ resultType.label }}
-        </UnnnicRadio>
-      </template>
-    </section>
-  </section>
-  <template v-if="config.resultType === 'results'">
+  <template v-if="type === 'flow_result'">
     <section>
       <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
       <UnnnicSelectSmart
         v-model="config.result.name"
-        :options="flowResultsOptions"
+        :options="
+          flowResultsOptions.length
+            ? flowResultsOptions
+            : [flowResultsOptionsPlaceholder]
+        "
         autocomplete
         autocompleteIconLeft
         autocompleteClearOnFocus
         selectFirst
+        :disabled="!flowResultsOptions[1]?.value"
       />
     </section>
     <section>
@@ -63,10 +51,10 @@
     </section>
   </template>
   <UnnnicButton
-    :text="$t('clear_fields')"
-    type="secondary"
-    :disabled="disableClearButton"
-    @click="clearFields"
+    :text="$t('drawers.reset_widget')"
+    type="tertiary"
+    :disabled="isAllFieldsEmpty"
+    @click="$emit('reset-widget')"
   />
 </template>
 
@@ -89,9 +77,20 @@ export default {
       type: Array,
       default: () => [],
     },
+    type: {
+      type: String,
+      default: '',
+      validate(value) {
+        return ['executions', 'flow_result'].includes(value);
+      },
+    },
   },
 
-  emits: ['update:model-value', 'update-disable-primary-button'],
+  emits: [
+    'update:model-value',
+    'update-disable-primary-button',
+    'reset-widget',
+  ],
 
   data() {
     return {
@@ -99,23 +98,11 @@ export default {
       config: {
         name: '',
         flow: [],
-        resultType: 'executions',
         result: {
           name: [],
           operation: 'count',
         },
       },
-      resultTypes: [
-        {
-          value: 'executions',
-          label: this.$t('drawers.config_card.radios.executions'),
-        },
-        {
-          value: 'results',
-          label: this.$t('drawers.config_card.radios.results'),
-          disabled: () => !this.flowResultsOptions.length,
-        },
-      ],
       operations: [
         {
           value: 'sum',
@@ -138,26 +125,49 @@ export default {
           label: this.$t('drawers.config_card.radios.recurrence'),
         },
       ],
+
+      flowResultsOptionsPlaceholder: {
+        label: this.$t('drawers.config_card.flow_result.placeholder'),
+        value: '',
+      },
     };
   },
 
   computed: {
-    disableClearButton() {
-      return !this.config.name && !this.config.flow[0]?.value;
-    },
-    isConfigValid() {
+    baseFields() {
       const { config } = this;
+      return [config.name, config.flow[0]?.value];
+    },
 
-      if (!config.name || !config.flow.length || !config.resultType) {
+    flowResultFields() {
+      const { config } = this;
+      return [
+        config.result.name[0]?.value,
+        config.result.operation === 'count' ? '' : config.result.operation,
+      ];
+    },
+
+    isAllBaseFieldsFilled() {
+      return this.baseFields.every((field) => !!field);
+    },
+
+    isAllFlowResultFieldsFilled() {
+      return this.flowResultFields.every((field) => !!field);
+    },
+
+    isAllFieldsEmpty() {
+      const anyBaseField = this.baseFields.find((field) => !!field);
+      const anyFlowResultField = this.flowResultFields.find((field) => !!field);
+
+      return !anyBaseField && !anyFlowResultField;
+    },
+
+    isConfigValid() {
+      if (!this.isAllBaseFieldsFilled) {
         return false;
       }
 
-      if (
-        config.resultType === 'results' &&
-        (!config.result.name[0]?.value ||
-          !config.result.operation ||
-          config.result.operation === 'count')
-      ) {
+      if (this.type === 'flow_result' && !this.isAllFlowResultFieldsFilled) {
         return false;
       }
 
@@ -167,6 +177,7 @@ export default {
 
       return true;
     },
+
     flowResultsOptions() {
       const selectedFlowUuid = this.config.flow?.[0]?.value;
 
@@ -183,10 +194,7 @@ export default {
 
         if (results.length) {
           resultsFormatted = [
-            {
-              label: this.$t('drawers.config_card.flow_result.placeholder'),
-              value: '',
-            },
+            this.flowResultsOptionsPlaceholder,
             ...results.map((result) => {
               return { value: result.key, label: result.name };
             }),
@@ -206,57 +214,19 @@ export default {
       },
     },
 
-    'config.flow': {
-      deep: true,
-      handler(_newFlow, oldFlow) {
-        if (oldFlow[0]?.value) {
-          this.config.result.name = [
-            {
-              label: this.$t('drawers.config_card.flow_result.placeholder'),
-              value: '',
-            },
-          ];
-        }
-      },
-    },
-
-    'config.resultType'(newResultType) {
-      if (newResultType === 'executions') {
-        this.config.result.name = [];
-      }
-    },
-
     isConfigValid: {
       immediate: true,
       handler(newIsConfigValid) {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
     },
-    flowResultsOptions: {
-      handler(newFlowResultsOptions) {
-        if (!newFlowResultsOptions.length) {
-          this.config.result.name = [];
-          this.config.resultType = 'executions';
-        }
-      },
-      deep: true,
-    },
   },
+
   mounted() {
     this.handleWidgetFields();
   },
+
   methods: {
-    clearFields() {
-      this.config = {
-        name: '',
-        flow: [{ label: '', value: '' }],
-        resultType: '',
-        result: {
-          name: [{ label: '', value: '' }],
-          operation: '',
-        },
-      };
-    },
     handleWidgetFields() {
       const selectedFlow =
         this.flowsOptions.find(
@@ -272,9 +242,10 @@ export default {
       this.config = {
         ...this.config,
         name: this.modelValue.name,
-        resultType: this.modelValue.config.op_field ? 'results' : 'executions',
         result: {
-          name: selectedFlowResults ? [selectedFlowResults] : [],
+          name: selectedFlowResults
+            ? [selectedFlowResults]
+            : [this.flowResultsOptionsPlaceholder],
           operation:
             this.modelValue.config.operation || this.config.result.operation,
         },

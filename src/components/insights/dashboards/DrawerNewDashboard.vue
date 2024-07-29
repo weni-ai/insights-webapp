@@ -85,6 +85,7 @@ export default {
       ],
       loadingRequest: false,
       createDashboardProgress: 0,
+      createDashboardInterval: null,
     };
   },
   computed: {
@@ -99,6 +100,23 @@ export default {
     },
   },
   methods: {
+    startCreateDashboardProgress() {
+      this.createDashboardProgress = 0;
+      const interval = 50;
+      this.createDashboardInterval = setInterval(
+        this.updateDashboardProgress,
+        interval,
+      );
+    },
+    updateDashboardProgress() {
+      if (this.createDashboardProgress === 100) {
+        clearInterval(this.createDashboardInterval);
+        this.loadingRequest = false;
+        this.close();
+      } else {
+        this.createDashboardProgress += 1;
+      }
+    },
     close() {
       this.$emit('close');
     },
@@ -118,8 +136,8 @@ export default {
             },
             seconds: 5,
           });
+          this.startCreateDashboardProgress();
           // TODO redirect
-          this.close();
         })
         .catch((error) => {
           unnnic.unnnicCallAlert({
@@ -130,9 +148,7 @@ export default {
             seconds: 5,
           });
           console.log(error);
-        })
-        .finally(() => {
-          this.loadingRequest = false;
+          this.close();
         });
     },
   },

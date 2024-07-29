@@ -6,6 +6,7 @@
     :title="$t('drawers.config_gallery.title')"
     :description="$t('drawers.config_gallery.description')"
     :modelValue="modelValue"
+    closeIcon="close"
     @close="closeAllDrawers"
   >
     <template #content>
@@ -29,6 +30,7 @@
     :widget="widget"
     :configType="drawerConfigType"
     @close="closeAllDrawers"
+    @back="goToGallery"
   />
 </template>
 
@@ -95,14 +97,18 @@ export default {
 
   methods: {
     closeAllDrawers() {
+      this.goToGallery();
       this.$emit('close');
-      this.showDrawerConfigWidget = false;
-      this.drawerConfigType = '';
     },
 
     setDrawerConfigType(value) {
       this.drawerConfigType = value;
       this.showDrawerConfigWidget = true;
+    },
+
+    goToGallery() {
+      this.showDrawerConfigWidget = false;
+      this.drawerConfigType = '';
     },
   },
 };

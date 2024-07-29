@@ -10,9 +10,10 @@
     :secondaryButtonText="$t('cancel')"
     :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
     :loadingPrimaryButton="isLoadingUpdateConfig"
+    :withoutOverlay="showModalResetWidget"
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
-    @close="$emit('close')"
+    @close="configType ? $emit('back') : $emit('close')"
   >
     <template #content>
       <form
@@ -72,7 +73,7 @@ export default {
     },
   },
 
-  emits: ['close'],
+  emits: ['close', 'back'],
 
   data() {
     return {

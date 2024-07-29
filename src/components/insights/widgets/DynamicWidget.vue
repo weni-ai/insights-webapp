@@ -16,7 +16,6 @@ import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
-import { sortByKey } from '@/utils/array';
 import { formatSecondsToHumanString } from '@/utils/time';
 
 export default {
@@ -140,7 +139,7 @@ export default {
       }
 
       const widgetData = this.widget.data;
-      let data = widgetData.data || widgetData.results;
+      const data = widgetData.data || widgetData.results;
 
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);

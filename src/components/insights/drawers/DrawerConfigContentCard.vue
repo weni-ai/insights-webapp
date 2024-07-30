@@ -109,7 +109,7 @@ export default {
         result: {
           name: [],
           operation: 'count',
-          currency: true,
+          currency: false,
         },
       },
       operations: [

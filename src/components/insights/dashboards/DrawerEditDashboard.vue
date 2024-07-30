@@ -103,6 +103,7 @@ export default {
       this.loadingRequest = true;
 
       Dashboards.updateFlowsDashboard({
+        dashboardUuid: this.dashboard.uuid,
         dashboardName: this.dashboardConfig.name,
         currencyType: this.dashboardConfig.currency[0].value,
       })
@@ -114,7 +115,6 @@ export default {
             },
             seconds: 5,
           });
-          // TODO redirect
           this.close();
         })
         .catch((error) => {

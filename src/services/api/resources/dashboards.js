@@ -217,7 +217,25 @@ export default {
     return response.data;
   },
 
-  async updateFlowsDashboard({ dashboardName, currencyType }) {
-    // TODO
+  async updateFlowsDashboard({ dashboardUuid, dashboardName, currencyType }) {
+    const reqBody = {
+      dashboard_name: dashboardName,
+      currency_type: currencyType,
+    };
+    const response = await http.patch(
+      `/dashboards/${dashboardUuid}/`,
+      reqBody,
+      {
+        params: { project: Config.state.project.uuid },
+      },
+    );
+    return response.data;
+  },
+
+  async deleteDashboard(dashboardUuid) {
+    const response = await http.delete(`/dashboards/${dashboardUuid}/`, {
+      params: { project: Config.state.project.uuid },
+    });
+    return response.data;
   },
 };

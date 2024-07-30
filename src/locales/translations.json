@@ -234,6 +234,18 @@
         "en": "Operation",
         "es": "Operación"
       },
+      "format": {
+        "pt-br": "Formatar",
+        "en": "Format",
+        "es": "Formato"
+      },
+      "checkbox": {
+        "currency": {
+          "pt-br": "Moeda",
+          "en": "Currency",
+          "es": "Moneda"
+        }
+      },
       "radios": {
         "executions": {
           "pt-br": "Execuções",

@@ -49,6 +49,14 @@
         </template>
       </section>
     </section>
+    <section>
+      <UnnnicLabel :label="$t('drawers.config_card.format')" />
+      <UnnnicCheckbox
+        :modelValue="config.result.currency"
+        :textRight="$t('drawers.config_card.checkbox.currency')"
+        @change="config.result.currency = $event"
+      />
+    </section>
   </template>
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
@@ -101,6 +109,7 @@ export default {
         result: {
           name: [],
           operation: 'count',
+          currency: true,
         },
       },
       operations: [
@@ -248,8 +257,10 @@ export default {
             : [this.flowResultsOptionsPlaceholder],
           operation:
             this.modelValue.config.operation || this.config.result.operation,
+          currency: !!this.modelValue.config.currency,
         },
       };
+
       this.initialConfigStringfy = JSON.stringify(this.config);
     },
   },

@@ -286,6 +286,8 @@ export default {
           },
           seconds: 5,
         });
+      } finally {
+        this.$emit('close');
       }
 
       this.isLoadingUpdateConfig = false;

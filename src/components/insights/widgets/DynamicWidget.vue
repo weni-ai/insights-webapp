@@ -92,6 +92,8 @@ export default {
             JSON.stringify(data?.value),
           description: name,
           configured: !!name,
+          /* The "configured" field is only checking if the name is defined, since the widget may be unconfigured,
+          but still have empty fields in the "config" object. */
           clickable: !!report,
           configurable: is_configurable,
         },

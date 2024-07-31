@@ -91,7 +91,7 @@ export default {
             mappingMetricDataTypesFormat[config.data_type]?.(data?.value) ||
             JSON.stringify(data?.value),
           description: name,
-          configured: config && !!Object.keys(config).length,
+          configured: !!name,
           clickable: !!report,
           configurable: is_configurable,
         },

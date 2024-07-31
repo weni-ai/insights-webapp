@@ -21,3 +21,24 @@ export function stringifyValue(value) {
   }
   return value;
 }
+
+export function clearDeepValues(obj) {
+  function clearValue(value) {
+    const clearValuesByTypeMap = {
+      string: '',
+      number: 0,
+    };
+
+    const haveValueTypeAtMap =
+      Object.keys(clearValuesByTypeMap).includes(typeof value);
+
+    return haveValueTypeAtMap
+      ? clearValuesByTypeMap[typeof value]
+      : clearDeepValues(value) || value;
+  }
+
+  return Object.entries(obj).reduce((acc, [key, value]) => {
+    acc[key] = clearValue(value);
+    return acc;
+  }, {});
+}

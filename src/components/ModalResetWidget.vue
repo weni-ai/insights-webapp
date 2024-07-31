@@ -16,6 +16,8 @@
 import { mapActions } from 'vuex';
 import Unnnic from '@weni/unnnic-system';
 
+import { clearDeepValues } from '@/utils/object';
+
 export default {
   name: 'ModalResetWidget',
 
@@ -60,7 +62,11 @@ export default {
       this.isLoading = true;
 
       try {
-        await this.updateWidget({ ...this.widget, config: {}, name: '' });
+        await this.updateWidget({
+          ...this.widget,
+          config: clearDeepValues(this.widget.config),
+          name: '',
+        });
 
         this.callSuccessAlert();
       } catch (error) {

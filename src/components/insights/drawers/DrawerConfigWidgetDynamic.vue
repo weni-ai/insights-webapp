@@ -1,5 +1,6 @@
 <template>
   <form
+    class="drawer-config-widget-dynamic__form-container"
     @submit.prevent
     @keydown.enter.prevent
   >
@@ -301,6 +302,10 @@ export default {
 
 <style lang="scss" scoped>
 .drawer-config-widget-dynamic {
+  &__form-container {
+    position: absolute;
+  }
+
   &__content {
     display: grid;
     gap: $unnnic-spacing-sm;

@@ -104,7 +104,32 @@
     "en": "Error saving, please try again",
     "es": "Error al guardar, por favor inténtalo de nuevo"
   },
+  "reset": {
+    "pt-br": "Resetar",
+    "en": "Reset",
+    "es": "Reiniciar"
+  },
   "widgets": {
+    "reset": {
+      "pt-br": "Resetar widget",
+      "en": "Reset widget",
+      "es": "Restablecer widget"
+    },
+    "info_reset": {
+      "pt-br": "Ao resetar, os dados configurados serão perdidos.",
+      "en": "When reset, the configured data will be lost.",
+      "es": "Cuando se reinicie, los datos configurados se perderán."
+    },
+    "success_reset": {
+      "pt-br": "O widget foi resetado com sucesso",
+      "en": "The widget was successfully reset",
+      "es": "El widget se restableció con éxito"
+    },
+    "error_reset": {
+      "pt-br": "Não foi possível resetar o widget. Por favor, tente novamente",
+      "en": "It was not possible to reset the widget. Please try again",
+      "es": "No fue posible restablecer el widget. Inténtalo de nuevo"
+    },
     "metric_error": {
       "pt-br": "Erro ao buscar @.lower:metric",
       "en": "Error when seeking @.lower:metric",
@@ -155,6 +180,49 @@
       "pt-br": "@:metric salva com sucesso",
       "en": "@:metric saved successfully",
       "es": "@:metric guardada correctamente"
+    },
+    "reset_widget": {
+      "pt-br": "Resetar widget",
+      "en": "Reset widget",
+      "es": "Restablecer widget"
+    },
+    "config_gallery": {
+      "title": {
+        "pt-br": "Galeria de widgets",
+        "en": "Widget gallery",
+        "es": "Galería de widgets"
+      },
+      "description": {
+        "pt-br": "Escolha o tipo de widget que deseja configurar:",
+        "en": "Choose the type of widget you want to configure:",
+        "es": "Elija el tipo de widget que desea configurar:"
+      },
+      "options": {
+        "executions": {
+          "title": {
+            "pt-br": "Execuções",
+            "en": "Execution",
+            "es": "Ejecución"
+          },
+          "description": {
+            "pt-br": "Visualize o total de execuções de um @.lower:flow",
+            "en": "Visualize the total executions of a @.lower:flow",
+            "es": "Visualizar las ejecuciones totales de un @.lower:flow"
+          }
+        },
+        "flow_result": {
+          "title": {
+            "pt-br": "Resultado de @.lower:flow",
+            "en": "@:flow result",
+            "es": "Resultado de @.lower:flow"
+          },
+          "description": {
+            "pt-br": "Traz um resultado de @.lower:flow e permite operações básicas",
+            "en": "Brings a @.lower:flow result and allows basic operations",
+            "es": "Trae un resultado de @.lower:flow y permite operaciones básicas"
+          }
+        }
+      }
     },
     "config_card": {
       "title": {

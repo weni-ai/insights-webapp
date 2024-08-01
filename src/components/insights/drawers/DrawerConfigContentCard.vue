@@ -50,6 +50,9 @@
       </section>
     </section>
   </template>
+
+  <SelectEmojiButton />
+
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
     type="tertiary"
@@ -59,10 +62,16 @@
 </template>
 
 <script>
+import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
+
 import { parseValue } from '@/utils/object';
 
 export default {
   name: 'DrawerConfigContentCard',
+
+  components: {
+    SelectEmojiButton,
+  },
 
   props: {
     modelValue: {

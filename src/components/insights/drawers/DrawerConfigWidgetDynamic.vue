@@ -209,6 +209,7 @@ export default {
         name: config.name,
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
         config: {
+          type_result: this.configType,
           operation:
             this.configType === 'executions'
               ? 'count'

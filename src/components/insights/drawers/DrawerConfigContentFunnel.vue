@@ -82,7 +82,7 @@ export default {
         return metric;
       });
 
-      if (metricsToCompare.some((metric) => !metric.flow[0].value)) {
+      if (metricsToCompare.some((metric) => !metric.flow[0]?.value)) {
         return false;
       }
 

@@ -24,10 +24,35 @@
     "en": "Select",
     "es": "Seleccionar"
   },
+  "none": {
+    "pt-br": "Nenhum",
+    "en": "None",
+    "es": "Ninguno"
+  },
+  "currency": {
+    "pt-br": "Moeda",
+    "en": "Currency",
+    "es": "Moneda"
+  },
+  "funnel": {
+    "pt-br": "Funil",
+    "en": "Funnel",
+    "es": "Embudo"
+  },
+  "dashboard_name": {
+    "pt-br": "Nome do dashboard",
+    "en": "Dashboard name",
+    "es": "Nombre del dashboard"
+  },
   "add": {
     "pt-br": "Adicionar",
     "en": "Add",
     "es": "Agregar"
+  },
+  "add_new_dashboard": {
+    "pt-br": "Novo dashboard",
+    "en": "New dashboard",
+    "es": "Nuevo dashboard"
   },
   "view_more": {
     "pt-br": "Ver mais",
@@ -48,6 +73,16 @@
     "pt-br": "Salvar",
     "en": "Save",
     "es": "Salvar"
+  },
+  "delete": {
+    "pt-br": "Excluir",
+    "en": "Delete",
+    "es": "Borrar"
+  },
+  "confirmation": {
+    "pt-br": "Confirmação",
+    "en": "Confirmation",
+    "es": "Confirmación"
   },
   "clear_fields": {
     "pt-br": "Limpar campos",
@@ -371,6 +406,91 @@
       "pt-br": "Limpar filtros",
       "en": "Clear filters",
       "es": "Limpiar filtros"
+    }
+  },
+  "new_dashboard": {
+    "title": {
+      "pt-br": "Novo dashboard",
+      "en": "New dashboard",
+      "es": "Nuevo dashboard"
+    },
+    "create_dashboard": {
+      "pt-br": "Criar dashboard",
+      "en": "Create dashboard",
+      "es": "Crear dashboard"
+    },
+    "dashboard_name_placeholder": {
+      "pt-br": "Ex: Vendas",
+      "en": "Ex: Sales",
+      "es": "Ej: Ventas"
+    },
+    "funnel_hint": {
+      "pt-br": "Selecione quanto gráficos de funil deseja no seu dashboard",
+      "en": "Select how many funnel charts you want on your dashboard",
+      "es": "Seleccione cuántos gráficos de embudo desea en su panel"
+    },
+    "alert": {
+      "success": {
+        "pt-br": "Dashboard criado com sucesso",
+        "en": "Dashboard created successfully",
+        "es": "Panel creado con éxito"
+      },
+      "error": {
+        "pt-br": "Falha ao criar dashboard",
+        "en": "Failed to create dashboard",
+        "es": "Error al crear el panel"
+      }
+    }
+  },
+  "edit_dashboard": {
+    "title": {
+      "pt-br": "Editar dashboard",
+      "en": "Edit dashboard",
+      "es": "Editar dashboard"
+    },
+    "delete_dashboard": {
+      "pt-br": "Deletar dashboard",
+      "en": "Delete dashboard",
+      "es": "Borrar dashboard"
+    },
+    "delete_dashboard_notice": {
+      "pt-br": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+      "en": "This action will be irreversible. To confirm the action, please type the name of the dashboard",
+      "es": "Esta acción será irreversible. Para confirmar la acción, por favor escriba el nombre del panel"
+    },
+    "alert": {
+      "success": {
+        "pt-br": "Dashboard atualizado com sucesso",
+        "en": "Dashboard updated successfully",
+        "es": "Panel actualizado con éxito"
+      },
+      "error": {
+        "pt-br": "Falha ao atualizar dashboard",
+        "en": "Failed to update dashboard",
+        "es": "Error al actualizar el panel"
+      }
+    }
+  },
+  "currency_options": {
+    "BRL": {
+      "pt-br": "R$ - Real",
+      "en": "R$ - Brazilian Real",
+      "es": "R$ - Real Brasileño"
+    },
+    "USD": {
+      "pt-br": "$ - Dólar",
+      "en": "$ - Dollar",
+      "es": "$ - Dólar"
+    },
+    "EUR": {
+      "pt-br": "€ - Euro",
+      "en": "€ - Euro",
+      "es": "€ - Euro"
+    },
+    "ARS": {
+      "pt-br": "$ - Peso",
+      "en": "$ - Peso",
+      "es": "$ - Peso"
     }
   }
 }

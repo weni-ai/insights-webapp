@@ -110,7 +110,7 @@ export default {
         .then((response) => {
           unnnic.unnnicCallAlert({
             props: {
-              text: this.$t('new_dashboard.alert.success'),
+              text: this.$t('edit_dashboard.alert.success'),
               type: 'success',
             },
             seconds: 5,
@@ -120,7 +120,7 @@ export default {
         .catch((error) => {
           unnnic.unnnicCallAlert({
             props: {
-              text: this.$t('new_dashboard.alert.error'),
+              text: this.$t('edit_dashboard.alert.error'),
               type: 'error',
             },
             seconds: 5,
@@ -129,6 +129,7 @@ export default {
         })
         .finally(() => {
           this.loadingRequest = false;
+          this.close();
         });
     },
   },

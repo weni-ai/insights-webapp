@@ -112,6 +112,13 @@ export default {
       if (this.createDashboardProgress === 100) {
         clearInterval(this.createDashboardInterval);
         this.loadingRequest = false;
+        unnnic.unnnicCallAlert({
+          props: {
+            text: this.$t('new_dashboard.alert.success'),
+            type: 'success',
+          },
+          seconds: 5,
+        });
         this.close();
       } else {
         this.createDashboardProgress += 1;
@@ -129,13 +136,6 @@ export default {
         currencyType: this.dashboard.currency[0].value,
       })
         .then((response) => {
-          unnnic.unnnicCallAlert({
-            props: {
-              text: this.$t('new_dashboard.alert.success'),
-              type: 'success',
-            },
-            seconds: 5,
-          });
           this.startCreateDashboardProgress();
           // TODO redirect
         })

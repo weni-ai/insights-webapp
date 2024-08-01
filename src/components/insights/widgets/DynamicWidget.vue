@@ -214,7 +214,7 @@ export default {
       if (this.$route.name === 'report') {
         await this.getWidgetReportData({ offset, limit, next });
       } else if (this.isConfigured) {
-        await this.getCurrentDashboardWidgetData(this.widget.uuid);
+        await this.getCurrentDashboardWidgetData(this.widget);
       }
 
       this.isRequestingData = false;

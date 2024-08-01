@@ -220,6 +220,10 @@ export default {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
     },
+
+    'config.flow'() {
+      this.config.result.name = [this.flowResultsOptionsPlaceholder];
+    },
   },
 
   mounted() {

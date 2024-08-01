@@ -1,31 +1,40 @@
 <template>
-  <UnnnicDrawer
-    ref="unnnicDrawer"
-    class="drawer-config-widget-dynamic"
-    :modelValue="modelValue"
-    :title="drawerProps?.title"
-    :description="drawerProps?.description"
-    :primaryButtonText="$t('save')"
-    :secondaryButtonText="$t('cancel')"
-    :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
-    :loadingPrimaryButton="isLoadingUpdateConfig"
-    @primary-button-click="updateWidgetConfig"
-    @secondary-button-click="internalClose"
-    @close="$emit('close')"
+  <form
+    @submit.prevent
+    @keydown.enter.prevent
   >
-    <template #content>
-      <form
-        class="drawer-config-widget-dynamic__content"
-        @submit.prevent
-      >
-        <component
-          :is="isLoadingFlowOptions ? content.loading : content.component"
-          v-bind="contentProps"
-          v-on="contentEvents"
-        />
-      </form>
-    </template>
-  </UnnnicDrawer>
+    <UnnnicDrawer
+      ref="unnnicDrawer"
+      class="drawer-config-widget-dynamic"
+      wide
+      :modelValue="modelValue"
+      :title="drawerProps?.title"
+      :description="drawerProps?.description"
+      :primaryButtonText="$t('save')"
+      :secondaryButtonText="$t('cancel')"
+      :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
+      :loadingPrimaryButton="isLoadingUpdateConfig"
+      :withoutOverlay="showModalResetWidget"
+      @primary-button-click="updateWidgetConfig"
+      @secondary-button-click="internalClose"
+      @close="configType ? $emit('back') : $emit('close')"
+    >
+      <template #content>
+        <section class="drawer-config-widget-dynamic__content">
+          <component
+            :is="isLoadingFlowOptions ? content.loading : content.component"
+            v-bind="contentProps"
+            v-on="contentEvents"
+          />
+        </section>
+      </template>
+    </UnnnicDrawer>
+    <ModalResetWidget
+      v-model="showModalResetWidget"
+      :widget="widget"
+      @finish-reset="$emit('close')"
+    />
+  </form>
 </template>
 
 <script>
@@ -38,6 +47,8 @@ import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue';
 import SkeletonConfigContentFunnel from './loadings/SkeletonConfigContentFunnel.vue';
 
+import ModalResetWidget from '@/components/ModalResetWidget.vue';
+
 export default {
   name: 'DrawerConfigWidgetDynamic',
 
@@ -46,6 +57,7 @@ export default {
     DrawerConfigContentCard,
     SkeletonConfigContentCard,
     SkeletonConfigContentFunnel,
+    ModalResetWidget,
   },
 
   props: {
@@ -57,9 +69,13 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    configType: {
+      type: String,
+      default: '',
+    },
   },
 
-  emits: ['close'],
+  emits: ['close', 'back'],
 
   data() {
     return {
@@ -71,21 +87,39 @@ export default {
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
       isLoadingFlowOptions: false,
+      showModalResetWidget: false,
     };
   },
   computed: {
     drawerProps() {
+      const { $t } = this;
       const configMap = {
         graph_funnel: {
-          title: this.$t('drawers.config_funnel.title'),
-          description: this.$t('drawers.config_funnel.description'),
+          default: {
+            title: $t('drawers.config_funnel.title'),
+            description: $t('drawers.config_funnel.description'),
+          },
         },
         card: {
-          title: this.$t('drawers.config_card.title'),
+          default: {
+            title: $t('drawers.config_card.title'),
+          },
+          executions: {
+            title: $t(`drawers.config_gallery.options.executions.title`),
+            description: $t(
+              `drawers.config_gallery.options.executions.description`,
+            ),
+          },
+          flow_result: {
+            title: $t(`drawers.config_gallery.options.flow_result.title`),
+            description: $t(
+              `drawers.config_gallery.options.flow_result.description`,
+            ),
+          },
         },
       };
 
-      return configMap[this.widget?.type] || {};
+      return configMap[this.widget?.type][this.configType || 'default'] || {};
     },
     content() {
       const componentMap = {
@@ -110,7 +144,7 @@ export default {
       };
 
       const mappingProps = {
-        card: { flows },
+        card: { flows, type: this.configType },
       };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
@@ -118,8 +152,9 @@ export default {
     contentEvents() {
       const defaultEvents = {
         'update:model-value': (config) => (this.config = config),
-        updateDisablePrimaryButton: (boolean) =>
+        'update-disable-primary-button': (boolean) =>
           (this.disablePrimaryButton = boolean),
+        'reset-widget': () => (this.showModalResetWidget = true),
       };
 
       const mappingEvents = {};
@@ -175,7 +210,7 @@ export default {
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
         config: {
           operation:
-            config.resultType === 'executions'
+            this.configType === 'executions'
               ? 'count'
               : config.result?.operation,
           filter: { flow: configuredFlow?.value },
@@ -253,6 +288,8 @@ export default {
           },
           seconds: 5,
         });
+      } finally {
+        this.$emit('close');
       }
 
       this.isLoadingUpdateConfig = false;

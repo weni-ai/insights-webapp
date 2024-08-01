@@ -72,9 +72,10 @@ export default {
 
   watch: {
     dependsOnValue: {
+      immediate: true,
       handler(newDependsOnValue, oldDependsOnValue) {
-        const newValues = Object.values(newDependsOnValue);
-        const oldValues = Object.values(oldDependsOnValue);
+        const newValues = Object.values(newDependsOnValue || {});
+        const oldValues = Object.values(oldDependsOnValue || {});
         if (!compareEquals(newValues, oldValues)) {
           const filledDependsOnValue = newValues.every((value) => value);
 

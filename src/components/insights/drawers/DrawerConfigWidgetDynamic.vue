@@ -1,38 +1,40 @@
 <template>
-  <UnnnicDrawer
-    ref="unnnicDrawer"
-    class="drawer-config-widget-dynamic"
-    wide
-    :modelValue="modelValue"
-    :title="drawerProps?.title"
-    :description="drawerProps?.description"
-    :primaryButtonText="$t('save')"
-    :secondaryButtonText="$t('cancel')"
-    :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
-    :loadingPrimaryButton="isLoadingUpdateConfig"
-    :withoutOverlay="showModalResetWidget"
-    @primary-button-click="updateWidgetConfig"
-    @secondary-button-click="internalClose"
-    @close="configType ? $emit('back') : $emit('close')"
+  <form
+    @submit.prevent
+    @keydown.enter.prevent
   >
-    <template #content>
-      <form
-        class="drawer-config-widget-dynamic__content"
-        @submit.prevent
-      >
-        <component
-          :is="isLoadingFlowOptions ? content.loading : content.component"
-          v-bind="contentProps"
-          v-on="contentEvents"
-        />
-      </form>
-    </template>
-  </UnnnicDrawer>
-  <ModalResetWidget
-    v-model="showModalResetWidget"
-    :widget="widget"
-    @finish-reset="$emit('close')"
-  />
+    <UnnnicDrawer
+      ref="unnnicDrawer"
+      class="drawer-config-widget-dynamic"
+      wide
+      :modelValue="modelValue"
+      :title="drawerProps?.title"
+      :description="drawerProps?.description"
+      :primaryButtonText="$t('save')"
+      :secondaryButtonText="$t('cancel')"
+      :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
+      :loadingPrimaryButton="isLoadingUpdateConfig"
+      :withoutOverlay="showModalResetWidget"
+      @primary-button-click="updateWidgetConfig"
+      @secondary-button-click="internalClose"
+      @close="configType ? $emit('back') : $emit('close')"
+    >
+      <template #content>
+        <section class="drawer-config-widget-dynamic__content">
+          <component
+            :is="isLoadingFlowOptions ? content.loading : content.component"
+            v-bind="contentProps"
+            v-on="contentEvents"
+          />
+        </section>
+      </template>
+    </UnnnicDrawer>
+    <ModalResetWidget
+      v-model="showModalResetWidget"
+      :widget="widget"
+      @finish-reset="$emit('close')"
+    />
+  </form>
 </template>
 
 <script>

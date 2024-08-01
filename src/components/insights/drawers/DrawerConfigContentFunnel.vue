@@ -81,6 +81,11 @@ export default {
         delete metric.active;
         return metric;
       });
+
+      if (metricsToCompare.some((metric) => !metric.flow[0].value)) {
+        return false;
+      }
+
       if (this.initialMetricsStringfy === JSON.stringify(metricsToCompare)) {
         return false;
       }

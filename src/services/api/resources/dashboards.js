@@ -25,6 +25,7 @@ export default {
           dashboard.is_default,
           dashboard.is_editable,
           dashboard.is_deletable,
+          dashboard.config,
         ),
     );
 

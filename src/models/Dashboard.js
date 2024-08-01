@@ -9,6 +9,7 @@ class Dashboard {
     isDefault,
     is_editable = false,
     is_deletable = false,
+    config = {},
   ) {
     this.uuid = uuid;
     this.name = name;
@@ -16,6 +17,7 @@ class Dashboard {
     this.is_default = isDefault;
     this.is_editable = is_editable;
     this.is_deletable = is_deletable;
+    this.config = config;
   }
 }
 

@@ -56,20 +56,38 @@
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>
+    <UnnnicDropdownItem
+      class="header-select-dashboard__item"
+      @click="showNewDashboardModal = true"
+    >
+      <UnnnicIcon icon="add" />
+      {{ $t('add_new_dashboard') }}
+    </UnnnicDropdownItem>
   </UnnnicDropdown>
+  <DrawerNewDashboard
+    v-if="showNewDashboardModal"
+    v-model="showNewDashboardModal"
+    @close="showNewDashboardModal = false"
+  />
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
+import DrawerNewDashboard from '../dashboards/DrawerNewDashboard.vue';
 
 export default {
   name: 'HeaderSelectDashboard',
+
+  components: {
+    DrawerNewDashboard,
+  },
 
   data() {
     return {
       dashboardHovered: '',
       starHovered: '',
+      showNewDashboardModal: false,
     };
   },
 
@@ -176,6 +194,13 @@ $dropdownFixedWidth: 314px;
 
       padding: $unnnic-spacing-xs;
       gap: $unnnic-spacing-nano;
+
+      a:last-child {
+        border-top: 1px solid $unnnic-color-neutral-light;
+        border-radius: 0px;
+        justify-content: center;
+        padding: $unnnic-spacing-xs;
+      }
 
       .unnnic-dropdown-item {
         border-radius: $unnnic-border-radius-sm;

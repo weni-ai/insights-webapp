@@ -216,6 +216,7 @@ export default {
               ? 'count'
               : config.result?.operation,
           filter: { flow: configuredFlow?.value },
+          currency: config.currency,
           op_field: config.result?.name[0]?.value,
           ...operationRecurrenceConfigs,
         },

@@ -253,7 +253,7 @@ export default {
         return formatSecondsToHumanString(Math.round(data?.value));
       }
       if (config.currency) {
-        return `${currencySymbols[config.currency_type]} ${data?.value}`;
+        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${data?.value}`;
       }
       return JSON.stringify(data?.value);
     },

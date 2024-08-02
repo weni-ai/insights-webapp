@@ -2,7 +2,12 @@
   <UnnnicModalDialog
     :modelValue="modelValue"
     :title="`${$t('edit_dashboard.delete_dashboard')} ${dashboard.name}`"
-    :primaryButtonProps="{ text: $t('delete'), disabled: !validDashboardName }"
+    :primaryButtonProps="{
+      text: $t('delete'),
+      disabled: !validDashboardName,
+      loading: loadingRequest,
+    }"
+    :secondaryButtonProps="{ disabled: loadingRequest }"
     showActionsDivider
     showCloseIcon
     size="sm"
@@ -20,6 +25,8 @@
 </template>
 
 <script>
+import Dashboards from '@/services/api/resources/dashboards';
+import { mapGetters } from 'vuex';
 export default {
   name: 'ModalDeleteDashboard',
   props: {
@@ -36,9 +43,14 @@ export default {
   data() {
     return {
       dashboardName: '',
+      loadingRequest: false,
     };
   },
   computed: {
+    ...mapGetters({
+      dashboardDefault: 'dashboards/dashboardDefault',
+    }),
+
     validDashboardName() {
       return this.dashboardName === this.dashboard.name;
     },
@@ -46,6 +58,22 @@ export default {
   methods: {
     close() {
       this.$emit('close');
+    },
+    deleteDashboard() {
+      Dashboards.deleteDashboard(this.dashboard.uuid)
+        .then(() => {
+          this.$router.push({
+            name: 'dashboard',
+            params: { dashboardUuid: this.dashboardDefault.uuid },
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.loadingRequest = false;
+          this.close();
+        });
     },
   },
 };

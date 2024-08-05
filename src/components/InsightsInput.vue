@@ -1,8 +1,8 @@
 <template>
   <section class="insights-input">
     <input
-      class="insights-input__input"
       v-model="prompt"
+      class="insights-input__input"
       type="text"
       placeholder="Peça insights ao InsightsGPT..."
       @keydown.enter="sendGPTPrompt"

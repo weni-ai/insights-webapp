@@ -2,7 +2,6 @@
   "name": "insights-webapp",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "yarn translations:build && vite",
     "build": "yarn translations:build && vite build",
@@ -51,5 +50,8 @@
     "vite": "^5.0.10",
     "vitest": "^2.0.5",
     "vue-eslint-parser": "^9.4.2"
+  },
+  "resolutions": {
+    "strip-ansi": "6.0.1"
   }
 }

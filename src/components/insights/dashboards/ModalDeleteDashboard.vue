@@ -12,6 +12,7 @@
     showCloseIcon
     size="sm"
     @update:model-value="!$event ? close() : {}"
+    @primary-button-click="deleteDashboard"
   >
     <p class="delete-notice">
       {{ $t('edit_dashboard.delete_dashboard_notice') }}

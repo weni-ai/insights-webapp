@@ -205,7 +205,7 @@ export default {
 
   async createFlowsDashboard({ dashboardName, funnelAmount, currencyType }) {
     const reqBody = {
-      dashboard_name: dashboardName,
+      name: dashboardName,
       funnel_amount: funnelAmount,
       currency_type: currencyType,
     };
@@ -220,7 +220,7 @@ export default {
 
   async updateFlowsDashboard({ dashboardUuid, dashboardName, currencyType }) {
     const reqBody = {
-      dashboard_name: dashboardName,
+      name: dashboardName,
       currency_type: currencyType,
     };
     const response = await http.patch(

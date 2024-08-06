@@ -15,6 +15,7 @@
       <section class="content__actions">
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
+        <HeaderDashboardSettings />
         <!-- <UnnnicButton
           class="clickable"
           iconCenter="ios_share"
@@ -31,6 +32,7 @@ import { mapActions, mapGetters, mapState } from 'vuex';
 import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
+import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
 
 import moment from 'moment';
 
@@ -41,6 +43,8 @@ export default {
     HeaderSelectDashboard,
     HeaderTagLive,
     InsightsLayoutHeaderFilters,
+
+    HeaderDashboardSettings,
   },
   computed: {
     ...mapState({

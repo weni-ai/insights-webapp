@@ -7,11 +7,17 @@ class Dashboard {
       rows: 0,
     },
     isDefault,
+    is_editable = false,
+    is_deletable = false,
+    config = {},
   ) {
     this.uuid = uuid;
     this.name = name;
     this.grid = grid;
     this.is_default = isDefault;
+    this.is_editable = is_editable;
+    this.is_deletable = is_deletable;
+    this.config = config;
   }
 }
 

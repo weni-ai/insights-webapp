@@ -23,6 +23,9 @@ export default {
           dashboard.name,
           { columns: dashboard.grid[0], rows: dashboard.grid[1] },
           dashboard.is_default,
+          dashboard.is_editable,
+          dashboard.is_deletable,
+          dashboard.config,
         ),
     );
 
@@ -197,6 +200,43 @@ export default {
       },
     );
 
+    return response;
+  },
+
+  async createFlowsDashboard({ dashboardName, funnelAmount, currencyType }) {
+    const reqBody = {
+      name: dashboardName,
+      funnel_amount: funnelAmount,
+      currency_type: currencyType,
+    };
+    const response = await http.post(
+      '/dashboards/create_flows_dashboard/',
+      reqBody,
+      { params: { project: Config.state.project.uuid } },
+    );
+
+    return response;
+  },
+
+  async updateFlowsDashboard({ dashboardUuid, dashboardName, currencyType }) {
+    const reqBody = {
+      name: dashboardName,
+      config: { currency_type: currencyType },
+    };
+    const response = await http.patch(
+      `/dashboards/${dashboardUuid}/`,
+      reqBody,
+      {
+        params: { project: Config.state.project.uuid },
+      },
+    );
+    return response;
+  },
+
+  async deleteDashboard(dashboardUuid) {
+    const response = await http.delete(`/dashboards/${dashboardUuid}/`, {
+      params: { project: Config.state.project.uuid },
+    });
     return response;
   },
 };

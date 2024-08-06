@@ -54,6 +54,7 @@
 <script>
 import { Dashboards } from '@/services/api';
 import unnnic from '@weni/unnnic-system';
+import { mapState } from 'vuex';
 export default {
   name: 'DrawerNewDashboard',
   props: {
@@ -86,9 +87,11 @@ export default {
       loadingRequest: false,
       createDashboardProgress: 0,
       createDashboardInterval: null,
+      createdDashboard: {},
     };
   },
   computed: {
+    ...mapState({ dashboards: (state) => state.dashboards.dashboards }),
     isValidConfig() {
       return (
         this.dashboard.name.trim() &&
@@ -112,6 +115,13 @@ export default {
       if (this.createDashboardProgress === 100) {
         clearInterval(this.createDashboardInterval);
         this.loadingRequest = false;
+        this.dashboards.push(this.createdDashboard);
+        this.$router.push({
+          name: 'dashboard',
+          params: {
+            dashboardUuid: this.createdDashboard.uuid,
+          },
+        });
         unnnic.unnnicCallAlert({
           props: {
             text: this.$t('new_dashboard.alert.success'),
@@ -136,8 +146,8 @@ export default {
         currencyType: this.dashboard.currency[0].value,
       })
         .then((response) => {
+          this.createdDashboard = response['dashboard created'];
           this.startCreateDashboardProgress();
-          // TODO redirect
         })
         .catch((error) => {
           unnnic.unnnicCallAlert({

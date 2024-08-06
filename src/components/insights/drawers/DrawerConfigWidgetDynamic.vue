@@ -12,7 +12,7 @@
       :description="drawerProps?.description"
       :primaryButtonText="$t('save')"
       :secondaryButtonText="$t('cancel')"
-      :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
+      :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
       :loadingPrimaryButton="isLoadingUpdateConfig"
       :withoutOverlay="showModalResetWidget"
       @primary-button-click="updateWidgetConfig"
@@ -22,7 +22,7 @@
       <template #content>
         <section class="drawer-config-widget-dynamic__content">
           <component
-            :is="isLoadingFlowOptions ? content.loading : content.component"
+            :is="isLoadingProjectFlows ? content.loading : content.component"
             v-bind="contentProps"
             v-on="contentEvents"
           />
@@ -38,9 +38,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
-import Projects from '@/services/api/resources/projects';
 
 import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
 import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
@@ -81,16 +80,16 @@ export default {
     return {
       config: {},
       flows: [],
-      flowsOptions: [
-        { value: '', label: this.$t('drawers.config_funnel.select_flow') },
-      ],
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
-      isLoadingFlowOptions: false,
       showModalResetWidget: false,
     };
   },
   computed: {
+    ...mapState({
+      isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
+    }),
+
     drawerProps() {
       const { $t } = this;
       const configMap = {
@@ -136,10 +135,9 @@ export default {
       return componentMap[this.widget?.type] || {};
     },
     contentProps() {
-      const { flowsOptions, widget, flows } = this;
+      const { widget, flows } = this;
 
       const defaultProps = {
-        flowsOptions,
         modelValue: widget,
       };
 
@@ -229,30 +227,12 @@ export default {
     },
   },
 
-  async created() {
-    await this.fetchFlowsSource();
-  },
-
   methods: {
     ...mapActions({
       updateWidget: 'dashboards/updateWidget',
       getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
     }),
-
-    fetchFlowsSource() {
-      this.isLoadingFlowOptions = true;
-      Projects.getProjectSource('flows')
-        .then((response) => {
-          this.flows = response;
-          this.flows?.forEach((source) => {
-            this.flowsOptions.push({ value: source.uuid, label: source.name });
-          });
-        })
-        .finally(() => {
-          this.isLoadingFlowOptions = false;
-        });
-    },
 
     internalClose() {
       this.$refs.unnnicDrawer.close();

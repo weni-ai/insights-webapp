@@ -37,6 +37,7 @@
 <script>
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
+import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'DrawerConfigGallery',
@@ -64,6 +65,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
+    }),
+
     galleryOptions() {
       const { $t } = this;
       function createOptions(optionKeys) {
@@ -95,7 +100,17 @@ export default {
     },
   },
 
+  async created() {
+    if (!this.isLoadedProjectFlows) {
+      await this.getProjectFlows();
+    }
+  },
+
   methods: {
+    ...mapActions({
+      getProjectFlows: 'project/getProjectFlows',
+    }),
+
     closeAllDrawers() {
       this.goToGallery();
       this.$emit('close');

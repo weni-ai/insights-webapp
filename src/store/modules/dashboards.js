@@ -201,29 +201,39 @@ export default {
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
     },
-    async getCurrentDashboardWidgetData({ state, commit }, uuid) {
+    async getCurrentDashboardWidgetData({ state, commit }, widget) {
+      const { uuid, name } = widget;
+      const setWidgetData = (data) =>
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data,
+        });
+
+      if (!name) {
+        /* This only checking if the name is not defined, since the widget may be unconfigured,
+          but still have empty fields in the "config" object. */
+        setWidgetData(null);
+        return;
+      }
+
       try {
         const data = await Dashboards.getDashboardWidgetData({
           dashboardUuid: state.currentDashboard.uuid,
           widgetUuid: uuid,
         });
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data,
-        });
+        setWidgetData(data);
       } catch (error) {
         console.error(error);
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: null,
-        });
+        setWidgetData(null);
       }
     },
     async getCurrentDashboardWidgetsDatas({ state, dispatch }) {
       Promise.all(
-        state.currentDashboardWidgets.map(async ({ uuid, name, config }) => {
+        state.currentDashboardWidgets.map(async (widget) => {
+          const { name, config } = widget;
+
           if (name && Object.keys(config).length) {
-            dispatch('getCurrentDashboardWidgetData', uuid);
+            dispatch('getCurrentDashboardWidgetData', widget);
           }
         }),
       );

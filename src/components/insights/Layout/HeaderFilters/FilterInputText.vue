@@ -1,9 +1,9 @@
 <template>
   <UnnnicInput
     :modelValue="modelValue"
-    @update:modelValue="$emit('update:modelValue', $event)"
     iconRight="search"
     :placeholder="placeholder"
+    @update:model-value="$emit('update:modelValue', $event)"
   />
 </template>
 

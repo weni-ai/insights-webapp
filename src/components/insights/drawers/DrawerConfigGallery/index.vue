@@ -70,6 +70,10 @@ export default {
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
     }),
 
+    widgetConfigType() {
+      return this.widget.config?.type_result;
+    },
+
     galleryOptions() {
       const { $t } = this;
       function createOptions(optionKeys) {
@@ -94,6 +98,8 @@ export default {
     modelValue: {
       immediate: true,
       handler() {
+        this.setDrawerConfigType(this.widgetConfigType);
+
         if (!this.galleryOptions.length) {
           this.showDrawerConfigWidget = true;
         }
@@ -119,7 +125,10 @@ export default {
 
     setDrawerConfigType(value) {
       this.drawerConfigType = value;
-      this.showDrawerConfigWidget = true;
+
+      if (value) {
+        this.showDrawerConfigWidget = true;
+      }
     },
 
     goToGallery() {

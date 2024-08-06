@@ -262,6 +262,12 @@ export default {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
     },
+
+    'config.flow'(_newFlow, oldFlow) {
+      if (!oldFlow.length) return;
+
+      this.config.result.name = [this.flowResultsOptionsPlaceholder];
+    },
   },
 
   mounted() {

@@ -46,7 +46,7 @@
     <UnnnicProgressBar
       v-model="createDashboardProgress"
       inline
-      title="Criando novo Dashboard"
+      :title="$t('new_dashboard.creating_new_dashboard')"
     />
   </section>
 </template>

@@ -407,6 +407,11 @@
       "en": "Create dashboard",
       "es": "Crear dashboard"
     },
+    "creating_new_dashboard": {
+      "pt-br": "Criando novo dashboard",
+      "en": "Creating new dashboard",
+      "es": "Creando nuevo panel"
+    },
     "dashboard_name_placeholder": {
       "pt-br": "Ex: Vendas",
       "en": "Ex: Sales",

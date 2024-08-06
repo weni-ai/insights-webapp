@@ -247,7 +247,7 @@ export default {
       const { config, data } = widget;
 
       if (config.operation === 'recurrence') {
-        return data?.value + ' %';
+        return data?.value || 0 + '%';
       }
       if (config.data_type === 'sec') {
         return formatSecondsToHumanString(Math.round(data?.value));

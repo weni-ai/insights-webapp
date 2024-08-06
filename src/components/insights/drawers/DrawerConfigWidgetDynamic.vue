@@ -1,5 +1,6 @@
 <template>
   <form
+    class="drawer-config-widget-dynamic__form-container"
     @submit.prevent
     @keydown.enter.prevent
   >
@@ -209,6 +210,7 @@ export default {
         name: config.name,
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
         config: {
+          type_result: this.configType,
           operation:
             this.configType === 'executions'
               ? 'count'
@@ -270,7 +272,7 @@ export default {
             widgetFunnelConfig: this.treatedWidget.config,
           });
         } else {
-          await this.getCurrentDashboardWidgetData(this.widget.uuid);
+          await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }
 
         unnnic.unnnicCallAlert({
@@ -300,6 +302,10 @@ export default {
 
 <style lang="scss" scoped>
 .drawer-config-widget-dynamic {
+  &__form-container {
+    position: absolute;
+  }
+
   &__content {
     display: grid;
     gap: $unnnic-spacing-sm;

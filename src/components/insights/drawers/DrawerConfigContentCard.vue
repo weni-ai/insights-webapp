@@ -235,7 +235,9 @@ export default {
       },
     },
 
-    'config.flow'() {
+    'config.flow'(_newFlow, oldFlow) {
+      if (!oldFlow.length) return;
+
       this.config.result.name = [this.flowResultsOptionsPlaceholder];
     },
   },

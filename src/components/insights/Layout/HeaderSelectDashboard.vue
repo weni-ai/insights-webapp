@@ -195,13 +195,6 @@ $dropdownFixedWidth: 314px;
       padding: $unnnic-spacing-xs;
       gap: $unnnic-spacing-nano;
 
-      a:last-child {
-        border-top: 1px solid $unnnic-color-neutral-light;
-        border-radius: 0px;
-        justify-content: center;
-        padding: $unnnic-spacing-xs;
-      }
-
       .unnnic-dropdown-item {
         border-radius: $unnnic-border-radius-sm;
 
@@ -214,6 +207,13 @@ $dropdownFixedWidth: 314px;
         color: $unnnic-color-neutral-darkest;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-gt;
+
+        &:last-child {
+          border-top: 1px solid $unnnic-color-neutral-light;
+          border-radius: 0px;
+          justify-content: center;
+          padding: $unnnic-spacing-xs;
+        }
 
         .item__star-icon:not(.item__star-icon--selected):hover {
           color: $unnnic-color-weni-500;

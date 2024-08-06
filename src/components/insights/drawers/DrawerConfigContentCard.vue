@@ -54,6 +54,7 @@
       <UnnnicCheckbox
         :modelValue="config.result.currency"
         :textRight="$t('drawers.config_card.checkbox.currency')"
+        :disabled="config.result.operation === 'recurrence'"
         @change="config.result.currency = $event"
       />
     </section>
@@ -221,6 +222,10 @@ export default {
       handler(newConfig) {
         this.$emit('update:model-value', newConfig);
       },
+    },
+
+    'config.result.operation'(newOperation) {
+      if (newOperation === 'recurrence') this.config.result.currency = false;
     },
 
     isConfigValid: {

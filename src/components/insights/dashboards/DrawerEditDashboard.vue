@@ -42,7 +42,7 @@
     v-if="showDeleteDashboardModal"
     v-model="showDeleteDashboardModal"
     :dashboard="dashboard"
-    @close="showDeleteDashboardModal = false"
+    @close="$event.cascade ? close() : (showDeleteDashboardModal = false)"
   />
 </template>
 
@@ -50,6 +50,7 @@
 import { Dashboards } from '@/services/api';
 import ModalDeleteDashboard from './ModalDeleteDashboard.vue';
 import unnnic from '@weni/unnnic-system';
+import { mapMutations, mapState } from 'vuex';
 export default {
   name: 'DrawerEditDashboard',
   components: {
@@ -80,6 +81,7 @@ export default {
     };
   },
   computed: {
+    ...mapState({ dashboards: (state) => state.dashboards.dashboards }),
     isValidConfig() {
       return (
         this.dashboardConfig.name.trim() &&
@@ -96,6 +98,10 @@ export default {
     this.dashboardConfig.name = this.dashboard.name;
   },
   methods: {
+    ...mapMutations({
+      setDashboards: 'dashboards/SET_DASHBOARDS',
+      setCurrentDashboard: 'dashboards/SET_CURRENT_DASHBOARD',
+    }),
     close() {
       this.$emit('close');
     },
@@ -108,6 +114,25 @@ export default {
         currencyType: this.dashboardConfig.currency[0].value,
       })
         .then((response) => {
+          let updatedDashboard;
+          const dashboards = this.dashboards.map((dash) => {
+            if (dash.uuid === this.dashboard.uuid) {
+              updatedDashboard = {
+                ...dash,
+                name: response.name,
+                config: {
+                  ...dash.config,
+                  currency_type: response.config.currency_type,
+                },
+              };
+              return updatedDashboard;
+            }
+            return dash;
+          });
+
+          this.setDashboards(dashboards);
+          this.setCurrentDashboard(updatedDashboard);
+
           unnnic.unnnicCallAlert({
             props: {
               text: this.$t('edit_dashboard.alert.success'),
@@ -115,7 +140,6 @@ export default {
             },
             seconds: 5,
           });
-          this.close();
         })
         .catch((error) => {
           unnnic.unnnicCallAlert({

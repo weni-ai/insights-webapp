@@ -1,7 +1,7 @@
 <template>
   <UnnnicModalDialog
     :modelValue="modelValue"
-    :title="`${$t('edit_dashboard.delete_dashboard')} ${dashboard.name}`"
+    :title="`${$t('delete_dashboard.title')} ${dashboard.name}`"
     :primaryButtonProps="{
       text: $t('delete'),
       disabled: !validDashboardName,
@@ -12,9 +12,10 @@
     showCloseIcon
     size="sm"
     @update:model-value="!$event ? close() : {}"
+    @primary-button-click="deleteDashboard"
   >
     <p class="delete-notice">
-      {{ $t('edit_dashboard.delete_dashboard_notice') }}
+      {{ $t('delete_dashboard.notice') }}
     </p>
     <UnnnicLabel :label="$t('confirmation')" />
     <UnnnicInput
@@ -26,7 +27,8 @@
 
 <script>
 import Dashboards from '@/services/api/resources/dashboards';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations, mapState } from 'vuex';
+import unnnic from '@weni/unnnic-system';
 export default {
   name: 'ModalDeleteDashboard',
   props: {
@@ -47,6 +49,8 @@ export default {
     };
   },
   computed: {
+    ...mapState({ dashboards: (state) => state.dashboards.dashboards }),
+
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
@@ -56,23 +60,44 @@ export default {
     },
   },
   methods: {
-    close() {
-      this.$emit('close');
+    ...mapMutations({ setDashboards: 'dashboards/SET_DASHBOARDS' }),
+    close(cascade = false) {
+      this.$emit('close', { cascade });
     },
     deleteDashboard() {
+      this.loadingRequest = true;
       Dashboards.deleteDashboard(this.dashboard.uuid)
         .then(() => {
+          this.setDashboards(
+            this.dashboards.filter((item) => item.uuid !== this.dashboard.uuid),
+          );
+
+          unnnic.unnnicCallAlert({
+            props: {
+              text: this.$t('delete_dashboard.alert.success'),
+              type: 'success',
+            },
+            seconds: 5,
+          });
+
           this.$router.push({
             name: 'dashboard',
             params: { dashboardUuid: this.dashboardDefault.uuid },
           });
         })
         .catch((error) => {
+          unnnic.unnnicCallAlert({
+            props: {
+              text: this.$t('delete_dashboard.alert.error'),
+              type: 'error',
+            },
+            seconds: 5,
+          });
           console.log(error);
         })
         .finally(() => {
           this.loadingRequest = false;
-          this.close();
+          this.close(true);
         });
     },
   },

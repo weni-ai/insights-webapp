@@ -205,7 +205,7 @@ export default {
 
   async createFlowsDashboard({ dashboardName, funnelAmount, currencyType }) {
     const reqBody = {
-      dashboard_name: dashboardName,
+      name: dashboardName,
       funnel_amount: funnelAmount,
       currency_type: currencyType,
     };
@@ -215,13 +215,13 @@ export default {
       { params: { project: Config.state.project.uuid } },
     );
 
-    return response.data;
+    return response;
   },
 
   async updateFlowsDashboard({ dashboardUuid, dashboardName, currencyType }) {
     const reqBody = {
-      dashboard_name: dashboardName,
-      currency_type: currencyType,
+      name: dashboardName,
+      config: { currency_type: currencyType },
     };
     const response = await http.patch(
       `/dashboards/${dashboardUuid}/`,
@@ -230,13 +230,13 @@ export default {
         params: { project: Config.state.project.uuid },
       },
     );
-    return response.data;
+    return response;
   },
 
   async deleteDashboard(dashboardUuid) {
     const response = await http.delete(`/dashboards/${dashboardUuid}/`, {
       params: { project: Config.state.project.uuid },
     });
-    return response.data;
+    return response;
   },
 };

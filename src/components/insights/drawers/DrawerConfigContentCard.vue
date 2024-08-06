@@ -49,6 +49,15 @@
         </template>
       </section>
     </section>
+    <section>
+      <UnnnicLabel :label="$t('drawers.config_card.format')" />
+      <UnnnicCheckbox
+        :modelValue="config.result.currency"
+        :textRight="$t('drawers.config_card.checkbox.currency')"
+        :disabled="config.result.operation === 'recurrence'"
+        @change="config.result.currency = $event"
+      />
+    </section>
   </template>
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
@@ -101,6 +110,7 @@ export default {
         result: {
           name: [],
           operation: 'count',
+          currency: false,
         },
       },
       operations: [
@@ -214,6 +224,10 @@ export default {
       },
     },
 
+    'config.result.operation'(newOperation) {
+      if (newOperation === 'recurrence') this.config.result.currency = false;
+    },
+
     isConfigValid: {
       immediate: true,
       handler(newIsConfigValid) {
@@ -254,8 +268,10 @@ export default {
             : [this.flowResultsOptionsPlaceholder],
           operation:
             this.modelValue.config.operation || this.config.result.operation,
+          currency: !!this.modelValue.config.currency,
         },
       };
+
       this.initialConfigStringfy = JSON.stringify(this.config);
     },
   },

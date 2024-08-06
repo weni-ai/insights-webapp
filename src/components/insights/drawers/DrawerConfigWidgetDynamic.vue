@@ -200,7 +200,7 @@ export default {
 
     createCardWidget() {
       const { config } = this;
-      const configuredFlow = config?.flow?.[0];
+      const configuredFlow = config?.flow;
       const operationRecurrenceConfigs =
         config.result?.operation === 'recurrence' ? { data_suffix: '%' } : {};
       return {

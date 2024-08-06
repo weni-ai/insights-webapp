@@ -35,9 +35,10 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
-import { mapActions, mapState } from 'vuex';
 
 export default {
   name: 'DrawerConfigGallery',

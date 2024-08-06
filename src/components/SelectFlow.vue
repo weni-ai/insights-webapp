@@ -15,7 +15,7 @@ export default {
 
   props: {
     modelValue: {
-      type: Array,
+      type: [Array, String, Object],
       default: () => [],
     },
   },
@@ -29,7 +29,7 @@ export default {
         label: this.$t('drawers.config_funnel.select_flow'),
       },
       flowsOptions: [],
-      flow: this.modelValue,
+      flow: [],
     };
   },
 
@@ -47,6 +47,19 @@ export default {
 
   created() {
     this.flowsOptions = [this.flowsOptionsPlaceholder, ...this.projectFlows];
+    this.treatModelValue();
+  },
+
+  methods: {
+    treatModelValue() {
+      const { modelValue } = this;
+      const modelValueByTypeMap = {
+        string: [this.projectFlows.find((flow) => flow.value === modelValue)],
+        object: Array.isArray(modelValue) ? modelValue : [modelValue],
+      };
+
+      this.flow = modelValueByTypeMap[typeof modelValue] || [];
+    },
   },
 };
 </script>

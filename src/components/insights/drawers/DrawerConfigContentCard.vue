@@ -6,7 +6,13 @@
       :placeholder="$t('drawers.config_card.name_card.placeholder')"
     />
   </section>
-  <section>
+
+  <component
+    :is="currentFormComponent"
+    v-bind="currentFormProps"
+    v-on="currentFormEvents"
+  />
+  <!-- <section>
     <UnnnicLabel :label="$t('drawers.config_card.select_origin_flow')" />
     <UnnnicSelectSmart
       v-model="config.flow"
@@ -49,7 +55,8 @@
         </template>
       </section>
     </section>
-  </template>
+  </template> -->
+
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
     type="tertiary"
@@ -59,7 +66,10 @@
 </template>
 
 <script>
-import { parseValue } from '@/utils/object';
+import { deepMerge, parseValue } from '@/utils/object';
+
+import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
+import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
 
 export default {
   name: 'DrawerConfigContentCard',
@@ -134,6 +144,38 @@ export default {
   },
 
   computed: {
+    currentFormComponent() {
+      const componentMap = {
+        executions: FormExecutions,
+        flow_result: FormFlowResult,
+      };
+
+      return componentMap[this.type] || null;
+    },
+
+    currentFormProps() {
+      const propsMap = {
+        executions: {
+          modelValue: {
+            flow: this.modelValue.config.filter?.flow || {},
+          },
+        },
+      };
+
+      return propsMap[this.type] || null;
+    },
+
+    currentFormEvents() {
+      const eventsMap = {
+        executions: {
+          'update:model-value': (config) =>
+            (this.config = deepMerge(config, this.config)),
+        },
+      };
+
+      return eventsMap[this.type] || null;
+    },
+
     baseFields() {
       const { config } = this;
       return [config.name, config.flow[0]?.value];

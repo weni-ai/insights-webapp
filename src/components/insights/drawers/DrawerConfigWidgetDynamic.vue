@@ -273,7 +273,7 @@ export default {
             widgetFunnelConfig: this.treatedWidget.config,
           });
         } else {
-          await this.getCurrentDashboardWidgetData(this.widget.uuid);
+          await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }
 
         unnnic.unnnicCallAlert({

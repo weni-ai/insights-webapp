@@ -146,7 +146,7 @@ export default {
         currencyType: this.dashboard.currency[0].value,
       })
         .then((response) => {
-          this.createdDashboard = response['dashboard created'];
+          this.createdDashboard = response.dashboard;
           this.startCreateDashboardProgress();
         })
         .catch((error) => {

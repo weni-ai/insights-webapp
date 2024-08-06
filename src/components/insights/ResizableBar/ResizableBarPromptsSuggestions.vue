@@ -20,37 +20,35 @@
       </nav>
       <section class="resizable-bar__insights-cards">
         <SugestionCard>
-          <template v-slot:title>Análise de Desempenho do Atendente</template>
-          <template v-slot:description>Nos últimos 30 dias</template>
+          <template #title>Análise de Desempenho do Atendente</template>
+          <template #description>Nos últimos 30 dias</template>
         </SugestionCard>
         <SugestionCard>
-          <template v-slot:title>Satisfação do Cliente</template>
-          <template v-slot:description
+          <template #title>Satisfação do Cliente</template>
+          <template #description
             >Combine os dados de atendimento com feedbacks de satisfação do
             cliente para avaliar a eficácia dos diferentes setores e
             atendentes.</template
           >
         </SugestionCard>
         <SugestionCard>
-          <template v-slot:title
-            >Relatório de Distribuição de Atendimentos</template
-          >
-          <template v-slot:description
+          <template #title>Relatório de Distribuição de Atendimentos</template>
+          <template #description
             >Gere um relatório mostrando a distribuição de atendimentos por
             setor e fila ao longo do tempo, identificando picos de
             demanda.</template
           >
         </SugestionCard>
         <SugestionCard>
-          <template v-slot:title>Tendências de Contato</template>
-          <template v-slot:description
+          <template #title>Tendências de Contato</template>
+          <template #description
             >Analise a frequência de contatos de cada cliente e identifique
             padrões ou tendências em suas solicitações de atendimento.</template
           >
         </SugestionCard>
         <SugestionCard>
-          <template v-slot:title>Avaliação de Tags de Encerramento</template>
-          <template v-slot:description
+          <template #title>Avaliação de Tags de Encerramento</template>
+          <template #description
             >Examine as tags de encerramento do atendimento e determine as
             categorias mais comuns de problemas ou solicitações dos
             clientes.</template

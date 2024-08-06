@@ -459,6 +459,30 @@
       }
     }
   },
+  "delete_dashboard": {
+    "title": {
+      "pt-br": "Deletar dashboard",
+      "en": "Delete dashboard",
+      "es": "Borrar dashboard"
+    },
+    "notice": {
+      "pt-br": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+      "en": "This action will be irreversible. To confirm the action, please type the name of the dashboard",
+      "es": "Esta acción será irreversible. Para confirmar la acción, por favor escriba el nombre del panel"
+    },
+    "alert": {
+      "success": {
+        "pt-br": "Dashboard excluido com sucesso",
+        "en": "Dashboard removed successfully",
+        "es": "Panel eliminado con éxito"
+      },
+      "error": {
+        "pt-br": "Falha ao excluir dashboard",
+        "en": "Failed to delete dashboard",
+        "es": "Error al borrar el panel"
+      }
+    }
+  },
   "currency_options": {
     "BRL": {
       "pt-br": "R$ - Real",

@@ -1,13 +1,13 @@
 <template>
   <section class="resizable-bar__cards">
     <InsightsCard>
-      <template v-slot:title
+      <template #title
         >Quais foram os principais erros no meu chatbot?</template
       >
-      <template v-slot:description>Nos últimos 30 dias</template>
+      <template #description>Nos últimos 30 dias</template>
     </InsightsCard>
     <InsightsMainCard @click="emitShowMorePromptsSuggestions">
-      <template v-slot:description> Visualizar mais prompts prontos</template>
+      <template #description> Visualizar mais prompts prontos</template>
     </InsightsMainCard>
   </section>
 </template>

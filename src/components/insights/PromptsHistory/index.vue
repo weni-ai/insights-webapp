@@ -1,12 +1,12 @@
 <template>
   <section
-    class="prompts-history"
     v-if="insights.length"
+    class="prompts-history"
   >
     <section
       v-for="(insight, index) in insights"
-      class="prompts-history__conversation"
       :key="index"
+      class="prompts-history__conversation"
     >
       <PromptHistoryMessage
         title="Você:"

@@ -5,8 +5,8 @@
       :class="{ show: contentHeight > contentHeightToClose }"
     />
     <section
-      class="resizable-bar__handler"
       ref="resizableBarHandler"
+      class="resizable-bar__handler"
       @mousedown.prevent.stop="startResizing"
     >
       <hr class="handler__separator" />
@@ -23,22 +23,22 @@
       <hr class="handler__separator" />
     </section>
     <main
-      class="resizable-bar__content"
       ref="resizableBarContent"
+      class="resizable-bar__content"
       :style="{
         height: `${contentHeight}vh`,
         transition: resizeTransition,
       }"
     >
       <section
-        class="content__section"
         ref="resizableBarContentScroll"
+        class="content__section"
       >
         <!-- This element has flex-direction as column-reverse, to resize with correct behavior -->
         <PromptsHistory />
         <ResizableBarCards
-          ref="resizableBarCards"
           v-show="!showMorePromptsSuggestions"
+          ref="resizableBarCards"
           @show-more-prompts-suggestions="showMorePromptsSuggestions = true"
         />
         <ResizableBarDoris v-show="!showMorePromptsSuggestions" />
@@ -61,6 +61,7 @@ import ResizableBarPromptsSuggestions from './ResizableBarPromptsSuggestions.vue
 import PromptsHistory from '@/components/insights/PromptsHistory/index.vue';
 
 export default {
+  name: 'ResizableBar',
   components: {
     ResizableBarCards,
     ResizableBarDoris,
@@ -68,7 +69,6 @@ export default {
     PromptsHistory,
     InsightsInput,
   },
-  name: 'ResizableBar',
 
   data() {
     return {

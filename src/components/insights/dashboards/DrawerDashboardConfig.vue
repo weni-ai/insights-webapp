@@ -79,6 +79,7 @@ import ProgressBar from '@/components/ProgressBar.vue';
 import ModalDeleteDashboard from './ModalDeleteDashboard.vue';
 
 import { Dashboards } from '@/services/api';
+import { Dashboard } from '@/models';
 export default {
   name: 'DrawerDashboardConfig',
   components: { ProgressBar, ModalDeleteDashboard },
@@ -164,6 +165,7 @@ export default {
     handleCreateProgressComplete() {
       this.loadingRequest = false;
       this.dashboards.push(this.createdDashboard);
+      this.setCurrentDashboard(this.createdDashboard);
       this.$router.push({
         name: 'dashboard',
         params: {
@@ -188,7 +190,16 @@ export default {
         currencyType: this.dashboardForm.currency[0].value,
       })
         .then((response) => {
-          this.createdDashboard = response.dashboard;
+          const { dashboard } = response;
+          this.createdDashboard = new Dashboard(
+            dashboard.uuid,
+            dashboard.name,
+            { columns: dashboard.grid[0], rows: dashboard.grid[1] },
+            dashboard.is_default,
+            dashboard.is_editable,
+            dashboard.is_deletable,
+            dashboard.config,
+          );
           this.showProgressBar = true;
         })
         .catch((error) => {

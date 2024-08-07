@@ -10,7 +10,7 @@
     :secondaryButtonText="$t('cancel')"
     :disabledSecondaryButton="loadingRequest"
     wide
-    @primary-button-click="createDashboard"
+    @primary-button-click="dashboard ? updateDashboard() : createDashboard()"
     @secondary-button-click="$refs.unnnicDrawer.close()"
     @close="close"
   >

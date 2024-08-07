@@ -44,3 +44,29 @@ export function clearDeepValues(obj) {
     return acc;
   }, {});
 }
+
+export function checkDeepEmptyValues(obj) {
+  if (!obj) return true;
+
+  function checkValue(value) {
+    const clearValuesByTypeMap = {
+      string: '',
+      number: 0,
+    };
+
+    const haveValueTypeAtMap =
+      Object.keys(clearValuesByTypeMap).includes(typeof value);
+
+    if (haveValueTypeAtMap && value === clearValuesByTypeMap[typeof value]) {
+      return true;
+    }
+
+    if (!haveValueTypeAtMap) {
+      return checkDeepEmptyValues(value);
+    }
+
+    return false;
+  }
+
+  return Object.entries(obj).every(([_key, value]) => checkValue(value));
+}

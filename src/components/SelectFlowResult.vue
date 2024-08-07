@@ -67,10 +67,7 @@ export default {
     flow: 'updateFlowResultsOptions',
 
     flowResult(newResult) {
-      this.$emit(
-        'update:model-value',
-        newResult?.[0]?.value ? newResult?.[0].value : newResult?.[0],
-      );
+      this.$emit('update:model-value', newResult?.[0]?.value);
     },
   },
 

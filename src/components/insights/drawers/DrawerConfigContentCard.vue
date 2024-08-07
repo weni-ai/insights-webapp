@@ -16,12 +16,13 @@
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
     type="tertiary"
+    :disabled="disableResetWidgetButton"
     @click="$emit('reset-widget')"
   />
 </template>
 
 <script>
-import { deepMerge } from '@/utils/object';
+import { checkDeepEmptyValues, deepMerge } from '@/utils/object';
 
 import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
 import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
@@ -132,6 +133,10 @@ export default {
           ...operationRecurrenceConfigs,
         },
       };
+    },
+
+    disableResetWidgetButton() {
+      return checkDeepEmptyValues(this.config);
     },
   },
 

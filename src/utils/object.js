@@ -23,6 +23,8 @@ export function stringifyValue(value) {
 }
 
 export function clearDeepValues(obj) {
+  if (!obj) return obj;
+
   function clearValue(value) {
     const clearValuesByTypeMap = {
       string: '',

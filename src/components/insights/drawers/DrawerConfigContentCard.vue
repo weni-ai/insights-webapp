@@ -137,6 +137,7 @@ export default {
 
   watch: {
     treatedConfig: {
+      immediate: true,
       deep: true,
       handler(newConfig) {
         this.$emit('update:model-value', newConfig);
@@ -144,6 +145,10 @@ export default {
         this.initializeConfigString();
         this.updatePrimaryButtonState();
       },
+    },
+
+    isAllFieldsValid() {
+      this.updatePrimaryButtonState();
     },
   },
 

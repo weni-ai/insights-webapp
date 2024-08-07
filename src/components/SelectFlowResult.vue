@@ -2,7 +2,9 @@
   <section>
     <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
     <UnnnicSelectSmart
+      v-bind="$attrs"
       v-model="flowResult"
+      :disabled="!flowResults.length"
       :options="
         flowResultsOptions.length
           ? flowResultsOptions
@@ -60,21 +62,20 @@ export default {
   },
 
   watch: {
+    modelValue: 'treatModelValue',
+
+    flow: 'updateFlowResultsOptions',
+
     flowResult(newResult) {
       this.$emit(
         'update:model-value',
         newResult?.[0]?.value ? newResult?.[0].value : newResult?.[0],
       );
     },
-
-    modelValue: 'treatModelValue',
   },
 
   created() {
-    this.flowResultsOptions = [
-      this.flowResultsOptionsPlaceholder,
-      ...this.flowResults,
-    ];
+    this.updateFlowResultsOptions();
     this.treatModelValue();
   },
 
@@ -96,6 +97,13 @@ export default {
       };
 
       this.flowResult = modelValueByTypeMap[typeof modelValue] || selectEmpty;
+    },
+
+    updateFlowResultsOptions() {
+      this.flowResultsOptions = [
+        this.flowResultsOptionsPlaceholder,
+        ...this.flowResults,
+      ];
     },
   },
 };

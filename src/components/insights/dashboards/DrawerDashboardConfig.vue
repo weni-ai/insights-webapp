@@ -61,7 +61,7 @@
   <ProgressBar
     v-if="showProgressBar"
     :title="$t('new_dashboard.creating_new_dashboard')"
-    @progress-complete="handlingCreateProgressComplete"
+    @progress-complete="handleCreateProgressComplete"
   />
   <ModalDeleteDashboard
     v-if="showDeleteDashboardModal"
@@ -143,11 +143,7 @@ export default {
   },
   mounted() {
     if (this.dashboard) {
-      const currencyOption = this.currencyOptions.find(
-        (currency) => currency.value === this.dashboard.config?.currency_type,
-      );
-      this.dashboardForm.currency = currencyOption ? [currencyOption] : [];
-      this.dashboardForm.name = this.dashboard.name;
+      this.handleDashboardFields();
     }
   },
   methods: {
@@ -155,10 +151,17 @@ export default {
       setDashboards: 'dashboards/SET_DASHBOARDS',
       setCurrentDashboard: 'dashboards/SET_CURRENT_DASHBOARD',
     }),
+    handleDashboardFields() {
+      const currencyOption = this.currencyOptions.find(
+        (currency) => currency.value === this.dashboard.config?.currency_type,
+      );
+      this.dashboardForm.currency = currencyOption ? [currencyOption] : [];
+      this.dashboardForm.name = this.dashboard.name;
+    },
     close() {
       this.$emit('close');
     },
-    handlingCreateProgressComplete() {
+    handleCreateProgressComplete() {
       this.loadingRequest = false;
       this.dashboards.push(this.createdDashboard);
       this.$router.push({

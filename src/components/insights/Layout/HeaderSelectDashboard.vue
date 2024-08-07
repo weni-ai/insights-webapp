@@ -64,7 +64,7 @@
       {{ $t('add_new_dashboard') }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
-  <DrawerNewDashboard
+  <DrawerDashboardConfig
     v-if="showNewDashboardModal"
     v-model="showNewDashboardModal"
     @close="showNewDashboardModal = false"
@@ -74,13 +74,13 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
-import DrawerNewDashboard from '../dashboards/DrawerNewDashboard.vue';
+import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
 
 export default {
   name: 'HeaderSelectDashboard',
 
   components: {
-    DrawerNewDashboard,
+    DrawerDashboardConfig,
   },
 
   data() {

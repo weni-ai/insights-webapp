@@ -12,6 +12,16 @@
     :label="$t('drawers.config_card.operation')"
     :radios="operations"
   />
+
+  <section>
+    <UnnnicLabel :label="$t('drawers.config_card.format')" />
+    <UnnnicCheckbox
+      :modelValue="config.result.currency"
+      :textRight="$t('drawers.config_card.checkbox.currency')"
+      :disabled="config.result.operation === 'recurrence'"
+      @change="config.result.currency = $event"
+    />
+  </section>
 </template>
 
 <script>
@@ -35,6 +45,8 @@ export default {
         flow: null,
         result: {
           name: '',
+          operation: '',
+          currency: false,
         },
       }),
     },
@@ -94,6 +106,10 @@ export default {
       if (typeof oldFlow === 'object') {
         this.config.result.name = '';
       }
+    },
+
+    'config.result.operation'(newOperation) {
+      if (newOperation === 'recurrence') this.config.result.currency = false;
     },
 
     isValidForm: {

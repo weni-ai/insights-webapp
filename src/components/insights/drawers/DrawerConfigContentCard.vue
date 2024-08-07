@@ -129,6 +129,7 @@ export default {
           operation:
             this.type === 'executions' ? 'count' : config.result?.operation,
           filter: { flow: configuredFlow?.value },
+          currency: !!config.result?.currency,
           op_field: config.result?.name,
           ...operationRecurrenceConfigs,
         },

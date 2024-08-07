@@ -6,11 +6,18 @@
     :flow="config.flow?.value || config.flow"
     :disabled="!config.flow?.value || !config.flow"
   />
+
+  <RadioList
+    v-model:selected-radio="config.result.operation"
+    :label="$t('drawers.config_card.operation')"
+    :radios="operations"
+  />
 </template>
 
 <script>
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
+import RadioList from '@/components/RadioList.vue';
 
 export default {
   name: 'FormFlowResult',
@@ -18,6 +25,7 @@ export default {
   components: {
     SelectFlow,
     SelectFlowResult,
+    RadioList,
   },
 
   props: {
@@ -37,6 +45,29 @@ export default {
   data() {
     return {
       config: this.modelValue,
+
+      operations: [
+        {
+          value: 'sum',
+          label: this.$t('drawers.config_card.radios.total'),
+        },
+        {
+          value: 'max',
+          label: this.$t('drawers.config_card.radios.max'),
+        },
+        {
+          value: 'avg',
+          label: this.$t('drawers.config_card.radios.avg'),
+        },
+        {
+          value: 'min',
+          label: this.$t('drawers.config_card.radios.min'),
+        },
+        {
+          value: 'recurrence',
+          label: this.$t('drawers.config_card.radios.recurrence'),
+        },
+      ],
     };
   },
 
@@ -44,8 +75,14 @@ export default {
     config: {
       deep: true,
       handler(newConfig) {
-        this.$emit('update:model-value', { ...newConfig });
+        this.$emit('update:model-value', newConfig);
       },
+    },
+
+    'config.flow'(_newFlow, oldFlow) {
+      if (typeof oldFlow === 'object') {
+        this.config.result.name = '';
+      }
     },
   },
 };

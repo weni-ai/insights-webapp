@@ -12,50 +12,6 @@
     v-bind="currentFormProps"
     v-on="currentFormEvents"
   />
-  <!-- <section>
-    <UnnnicLabel :label="$t('drawers.config_card.select_origin_flow')" />
-    <UnnnicSelectSmart
-      v-model="config.flow"
-      :options="flowsOptions"
-      autocomplete
-      autocompleteIconLeft
-      autocompleteClearOnFocus
-    />
-  </section>
-  <template v-if="type === 'flow_result'">
-    <section>
-      <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
-      <UnnnicSelectSmart
-        v-model="config.result.name"
-        :options="
-          flowResultsOptions.length
-            ? flowResultsOptions
-            : [flowResultsOptionsPlaceholder]
-        "
-        autocomplete
-        autocompleteIconLeft
-        autocompleteClearOnFocus
-        selectFirst
-        :disabled="!flowResultsOptions[1]?.value"
-      />
-    </section>
-    <section>
-      <UnnnicLabel :label="$t('drawers.config_card.operation')" />
-      <section class="drawer-config-content-card__operations">
-        <template
-          v-for="operation in operations"
-          :key="operation.value"
-        >
-          <UnnnicRadio
-            v-model="config.result.operation"
-            :value="operation.value"
-          >
-            {{ operation.label }}
-          </UnnnicRadio>
-        </template>
-      </section>
-    </section>
-  </template> -->
 
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
@@ -65,7 +21,7 @@
 </template>
 
 <script>
-import { deepMerge, parseValue } from '@/utils/object';
+import { deepMerge } from '@/utils/object';
 
 import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
 import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
@@ -106,33 +62,6 @@ export default {
       initialConfigStringfy: {},
       widget: this.modelValue,
       config: { name: this.modelValue.name, ...this.modelValue.config },
-      operations: [
-        {
-          value: 'sum',
-          label: this.$t('drawers.config_card.radios.total'),
-        },
-        {
-          value: 'max',
-          label: this.$t('drawers.config_card.radios.max'),
-        },
-        {
-          value: 'avg',
-          label: this.$t('drawers.config_card.radios.avg'),
-        },
-        {
-          value: 'min',
-          label: this.$t('drawers.config_card.radios.min'),
-        },
-        {
-          value: 'recurrence',
-          label: this.$t('drawers.config_card.radios.recurrence'),
-        },
-      ],
-
-      flowResultsOptionsPlaceholder: {
-        label: this.$t('drawers.config_card.flow_result.placeholder'),
-        value: '',
-      },
     };
   },
 
@@ -158,7 +87,8 @@ export default {
           modelValue: {
             flow: config.filter.flow || '',
             result: {
-              name: config.result?.name?.[0]?.value || '',
+              name: config.op_field || '',
+              operation: config.operation || '',
             },
           },
         },
@@ -262,7 +192,7 @@ export default {
           operation:
             this.type === 'executions' ? 'count' : config.result?.operation,
           filter: { flow: configuredFlow?.value },
-          op_field: config.result?.name[0]?.value,
+          op_field: config.op_field,
           ...operationRecurrenceConfigs,
         },
       };
@@ -283,60 +213,6 @@ export default {
         this.$emit('update-disable-primary-button', !newIsConfigValid);
       },
     },
-
-    'config.flow'(_newFlow, oldFlow) {
-      if (!oldFlow?.length) return;
-
-      this.config.result.name = [this.flowResultsOptionsPlaceholder];
-    },
-  },
-
-  created() {
-    // this.handleWidgetFields();
-    // this.widget = this.modelValue;
-  },
-
-  methods: {
-    // handleWidgetFields() {
-    //   const selectedFlow =
-    //     this.flowsOptions.find(
-    //       (flow) => flow.value === this.modelValue.config.filter?.flow,
-    //     ) || {};
-    //   this.config.flow = [selectedFlow];
-    //   const selectedFlowResults = this.flowResultsOptions.find(
-    //     (result) => result.value === this.modelValue.config.op_field,
-    //   );
-    //   this.config = {
-    //     ...this.config,
-    //     name: this.modelValue.name,
-    //     result: {
-    //       name: selectedFlowResults
-    //         ? [selectedFlowResults]
-    //         : [this.flowResultsOptionsPlaceholder],
-    //       operation:
-    //         this.modelValue.config.operation || this.config.result.operation,
-    //     },
-    //   };
-    //   this.initialConfigStringfy = JSON.stringify(this.config);
-    // },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.drawer-config-content-card {
-  &__result-types {
-    display: grid;
-    row-gap: $unnnic-spacing-nano;
-  }
-  &__operations {
-    display: flex;
-    flex-wrap: wrap;
-    row-gap: $unnnic-spacing-nano;
-
-    > * {
-      width: 50%;
-    }
-  }
-}
-</style>

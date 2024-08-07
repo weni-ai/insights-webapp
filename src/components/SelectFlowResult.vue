@@ -66,6 +66,8 @@ export default {
         newResult?.[0]?.value ? newResult?.[0].value : newResult?.[0],
       );
     },
+
+    modelValue: 'treatModelValue',
   },
 
   created() {
@@ -79,8 +81,12 @@ export default {
   methods: {
     treatModelValue() {
       const { modelValue } = this;
+      const selectEmpty = [this.flowResultsOptionsPlaceholder];
 
-      if (!modelValue) return [];
+      if (!modelValue) {
+        this.flowResult = selectEmpty;
+        return;
+      }
 
       const modelValueByTypeMap = {
         string: [
@@ -89,7 +95,7 @@ export default {
         object: Array.isArray(modelValue) ? modelValue : [modelValue],
       };
 
-      this.flowResult = modelValueByTypeMap[typeof modelValue] || [];
+      this.flowResult = modelValueByTypeMap[typeof modelValue] || selectEmpty;
     },
   },
 };

@@ -176,7 +176,7 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
-          newWidget = this.createCardWidget;
+          newWidget = this.config;
           break;
       }
 
@@ -196,27 +196,6 @@ export default {
       return {
         name: this.$t('widgets.graph_funnel.title'),
         config: metricsObj,
-      };
-    },
-
-    createCardWidget() {
-      const { config } = this;
-      const configuredFlow = config?.flow;
-      const operationRecurrenceConfigs =
-        config.result?.operation === 'recurrence' ? { data_suffix: '%' } : {};
-      return {
-        name: config.name,
-        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
-        config: {
-          type_result: this.configType,
-          operation:
-            this.configType === 'executions'
-              ? 'count'
-              : config.result?.operation,
-          filter: { flow: configuredFlow?.value },
-          op_field: config.result?.name[0]?.value,
-          ...operationRecurrenceConfigs,
-        },
       };
     },
   },

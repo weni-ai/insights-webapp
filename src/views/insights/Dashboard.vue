@@ -55,10 +55,9 @@ export default {
   computed: {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
-      currentDashboardWidgets: (state) =>
-        state.dashboards.currentDashboardWidgets,
+      currentDashboardWidgets: (state) => state.widgets.currentDashboardWidgets,
       isLoadingCurrentDashboardWidgets: (state) =>
-        state.dashboards.isLoadingCurrentDashboardWidgets,
+        state.widgets.isLoadingCurrentDashboardWidgets,
     }),
 
     dashboardGridStyle() {
@@ -87,12 +86,11 @@ export default {
 
   methods: {
     ...mapActions({
-      getCurrentDashboardWidgets: 'dashboards/getCurrentDashboardWidgets',
+      getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
       fetchWidgetData: 'dashboards/fetchWidgetData',
     }),
     ...mapMutations({
-      resetCurrentDashboardWidgets:
-        'dashboards/RESET_CURRENT_DASHBOARD_WIDGETS',
+      resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
     }),
 
     getWidgetStyle(gridPosition) {

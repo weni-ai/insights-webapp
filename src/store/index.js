@@ -6,6 +6,7 @@ import config from './modules/config';
 import dashboards from './modules/dashboards';
 import reports from './modules/reports';
 import project from './modules/project';
+import widgets from './modules/widgets';
 
 const store = createStore({
   modules: {
@@ -16,6 +17,7 @@ const store = createStore({
     dashboards,
     reports,
     project,
+    widgets,
   },
 });
 

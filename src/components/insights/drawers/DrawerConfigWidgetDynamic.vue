@@ -210,9 +210,9 @@ export default {
 
   methods: {
     ...mapActions({
-      updateWidget: 'dashboards/updateWidget',
-      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
-      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
+      updateWidget: 'widgets/updateWidget',
+      getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
+      getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
     }),
 
     internalClose() {

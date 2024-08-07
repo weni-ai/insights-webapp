@@ -60,7 +60,6 @@
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
     type="tertiary"
-    :disabled="isAllFieldsEmpty"
     @click="$emit('reset-widget')"
   />
 </template>
@@ -105,14 +104,8 @@ export default {
   data() {
     return {
       initialConfigStringfy: {},
-      config: {
-        name: '',
-        flow: [],
-        result: {
-          name: [],
-          operation: 'count',
-        },
-      },
+      widget: this.modelValue,
+      config: { name: this.modelValue.name, ...this.modelValue.config },
       operations: [
         {
           value: 'sum',
@@ -154,10 +147,19 @@ export default {
     },
 
     currentFormProps() {
+      const { config } = this;
       const propsMap = {
         executions: {
           modelValue: {
-            flow: this.modelValue.config.filter?.flow || {},
+            flow: config.filter.flow || '',
+          },
+        },
+        flow_result: {
+          modelValue: {
+            flow: config.filter.flow || '',
+            result: {
+              name: config.result?.name?.[0]?.value || '',
+            },
           },
         },
       };
@@ -166,90 +168,109 @@ export default {
     },
 
     currentFormEvents() {
-      const eventsMap = {
-        executions: {
-          'update:model-value': (config) =>
-            (this.config = deepMerge(config, this.config)),
-        },
+      const defaultEvents = {
+        'update:model-value': (config) =>
+          (this.config = deepMerge(config, this.config)),
       };
 
-      return eventsMap[this.type] || null;
+      const mappingEvents = {};
+
+      return { ...defaultEvents, ...mappingEvents[this.type] };
     },
 
-    baseFields() {
+    // baseFields() {
+    //   const { config } = this;
+    //   return [config.name, config.flow[0]?.value];
+    // },
+
+    // flowResultFields() {
+    //   const { config } = this;
+    //   return [
+    //     config.result.name[0]?.value,
+    //     config.result.operation === 'count' ? '' : config.result.operation,
+    //   ];
+    // },
+
+    // isAllBaseFieldsFilled() {
+    //   return this.baseFields.every((field) => !!field);
+    // },
+
+    // isAllFlowResultFieldsFilled() {
+    //   return this.flowResultFields.every((field) => !!field);
+    // },
+
+    // isAllFieldsEmpty() {
+    //   const anyBaseField = this.baseFields.find((field) => !!field);
+    //   const anyFlowResultField = this.flowResultFields.find((field) => !!field);
+
+    //   return !anyBaseField && !anyFlowResultField;
+    // },
+
+    // isConfigValid() {
+    //   if (!this.isAllBaseFieldsFilled) {
+    //     return false;
+    //   }
+
+    //   if (this.type === 'flow_result' && !this.isAllFlowResultFieldsFilled) {
+    //     return false;
+    //   }
+
+    //   if (this.initialConfigStringfy === JSON.stringify(this.config)) {
+    //     return false;
+    //   }
+
+    //   return true;
+    // },
+
+    // flowResultsOptions() {
+    //   const selectedFlowUuid = this.config.flow?.[0]?.value;
+
+    //   if (selectedFlowUuid) {
+    //     const selectedFlowMedatada = parseValue(
+    //       this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
+    //     );
+
+    //     if (!selectedFlowMedatada?.results) return [];
+
+    //     const { results } = selectedFlowMedatada;
+
+    //     let resultsFormatted = [];
+
+    //     if (results.length) {
+    //       resultsFormatted = [
+    //         this.flowResultsOptionsPlaceholder,
+    //         ...results.map((result) => {
+    //           return { value: result.key, label: result.name };
+    //         }),
+    //       ];
+    //     }
+    //     return resultsFormatted;
+    //   }
+    //   return [];
+    // },
+
+    treatedConfig() {
       const { config } = this;
-      return [config.name, config.flow[0]?.value];
-    },
-
-    flowResultFields() {
-      const { config } = this;
-      return [
-        config.result.name[0]?.value,
-        config.result.operation === 'count' ? '' : config.result.operation,
-      ];
-    },
-
-    isAllBaseFieldsFilled() {
-      return this.baseFields.every((field) => !!field);
-    },
-
-    isAllFlowResultFieldsFilled() {
-      return this.flowResultFields.every((field) => !!field);
-    },
-
-    isAllFieldsEmpty() {
-      const anyBaseField = this.baseFields.find((field) => !!field);
-      const anyFlowResultField = this.flowResultFields.find((field) => !!field);
-
-      return !anyBaseField && !anyFlowResultField;
-    },
-
-    isConfigValid() {
-      if (!this.isAllBaseFieldsFilled) {
-        return false;
-      }
-
-      if (this.type === 'flow_result' && !this.isAllFlowResultFieldsFilled) {
-        return false;
-      }
-
-      if (this.initialConfigStringfy === JSON.stringify(this.config)) {
-        return false;
-      }
-
-      return true;
-    },
-
-    flowResultsOptions() {
-      const selectedFlowUuid = this.config.flow?.[0]?.value;
-
-      if (selectedFlowUuid) {
-        const selectedFlowMedatada = parseValue(
-          this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
-        );
-
-        if (!selectedFlowMedatada?.results) return [];
-
-        const { results } = selectedFlowMedatada;
-
-        let resultsFormatted = [];
-
-        if (results.length) {
-          resultsFormatted = [
-            this.flowResultsOptionsPlaceholder,
-            ...results.map((result) => {
-              return { value: result.key, label: result.name };
-            }),
-          ];
-        }
-        return resultsFormatted;
-      }
-      return [];
+      const configuredFlow = config?.flow;
+      const operationRecurrenceConfigs =
+        config.result?.operation === 'recurrence' ? { data_suffix: '%' } : {};
+      return {
+        name: config.name,
+        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
+        config: {
+          type_result: this.type,
+          operation:
+            this.type === 'executions' ? 'count' : config.result?.operation,
+          filter: { flow: configuredFlow?.value },
+          op_field: config.result?.name[0]?.value,
+          ...operationRecurrenceConfigs,
+        },
+      };
     },
   },
 
   watch: {
-    config: {
+    treatedConfig: {
       deep: true,
       handler(newConfig) {
         this.$emit('update:model-value', newConfig);
@@ -264,42 +285,40 @@ export default {
     },
 
     'config.flow'(_newFlow, oldFlow) {
-      if (!oldFlow.length) return;
+      if (!oldFlow?.length) return;
 
       this.config.result.name = [this.flowResultsOptionsPlaceholder];
     },
   },
 
-  mounted() {
-    this.handleWidgetFields();
+  created() {
+    // this.handleWidgetFields();
+    // this.widget = this.modelValue;
   },
 
   methods: {
-    handleWidgetFields() {
-      const selectedFlow =
-        this.flowsOptions.find(
-          (flow) => flow.value === this.modelValue.config.filter?.flow,
-        ) || {};
-
-      this.config.flow = [selectedFlow];
-
-      const selectedFlowResults = this.flowResultsOptions.find(
-        (result) => result.value === this.modelValue.config.op_field,
-      );
-
-      this.config = {
-        ...this.config,
-        name: this.modelValue.name,
-        result: {
-          name: selectedFlowResults
-            ? [selectedFlowResults]
-            : [this.flowResultsOptionsPlaceholder],
-          operation:
-            this.modelValue.config.operation || this.config.result.operation,
-        },
-      };
-      this.initialConfigStringfy = JSON.stringify(this.config);
-    },
+    // handleWidgetFields() {
+    //   const selectedFlow =
+    //     this.flowsOptions.find(
+    //       (flow) => flow.value === this.modelValue.config.filter?.flow,
+    //     ) || {};
+    //   this.config.flow = [selectedFlow];
+    //   const selectedFlowResults = this.flowResultsOptions.find(
+    //     (result) => result.value === this.modelValue.config.op_field,
+    //   );
+    //   this.config = {
+    //     ...this.config,
+    //     name: this.modelValue.name,
+    //     result: {
+    //       name: selectedFlowResults
+    //         ? [selectedFlowResults]
+    //         : [this.flowResultsOptionsPlaceholder],
+    //       operation:
+    //         this.modelValue.config.operation || this.config.result.operation,
+    //     },
+    //   };
+    //   this.initialConfigStringfy = JSON.stringify(this.config);
+    // },
   },
 };
 </script>

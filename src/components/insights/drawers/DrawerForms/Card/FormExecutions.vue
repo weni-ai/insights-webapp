@@ -1,8 +1,5 @@
 <template>
-  <section>
-    <UnnnicLabel :label="$t('drawers.config_card.select_origin_flow')" />
-    <SelectFlow v-model="config.flow" />
-  </section>
+  <SelectFlow v-model="config.flow" />
 </template>
 
 <script>

@@ -1,4 +1,5 @@
 import Projects from '@/services/api/resources/projects';
+import { parseValue } from '@/utils/object';
 
 const mutations = {
   SET_PROJECT_FLOWS: 'SET_PROJECT_FLOWS',
@@ -25,6 +26,10 @@ export default {
           const flows = response.map((source) => ({
             value: source.uuid,
             label: source.name,
+            results: parseValue(source.metadata)?.results.map((result) => ({
+              value: result.key,
+              label: result.name,
+            })),
           }));
 
           commit('SET_PROJECT_FLOWS', flows);

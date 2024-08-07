@@ -11,7 +11,7 @@
       {{ $t('edit_dashboard.title') }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
-  <DrawerEditDashboard
+  <DrawerDashboardConfig
     v-if="showEditDashboard"
     v-model="showEditDashboard"
     :dashboard="currentDashboard"
@@ -22,12 +22,12 @@
 <script>
 import { mapState } from 'vuex';
 
-import DrawerEditDashboard from '../dashboards/DrawerEditDashboard.vue';
+import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
 
 export default {
   name: 'HeaderDashboardSettings',
   components: {
-    DrawerEditDashboard,
+    DrawerDashboardConfig,
   },
   data() {
     return {

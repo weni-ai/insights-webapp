@@ -21,18 +21,32 @@ export default {
     },
   },
 
-  emits: ['update:model-value'],
+  emits: ['update:model-value', 'update:is-valid-form'],
 
   data() {
     return {
       config: this.modelValue,
     };
   },
+
+  computed: {
+    isValidForm() {
+      return !!this.config.flow?.value;
+    },
+  },
+
   watch: {
     config: {
       deep: true,
       handler(newConfig) {
         this.$emit('update:model-value', newConfig);
+      },
+    },
+
+    isValidForm: {
+      immediate: true,
+      handler(newIsValidForm) {
+        this.$emit('update:is-valid-form', newIsValidForm);
       },
     },
   },

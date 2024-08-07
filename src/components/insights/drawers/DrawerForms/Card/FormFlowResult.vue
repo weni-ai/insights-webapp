@@ -40,7 +40,7 @@ export default {
     },
   },
 
-  emits: ['update:model-value'],
+  emits: ['update:model-value', 'update:is-valid-form'],
 
   data() {
     return {
@@ -71,6 +71,17 @@ export default {
     };
   },
 
+  computed: {
+    isValidForm() {
+      const { config } = this;
+      const isResultValid =
+        config.result.name?.value ||
+        (typeof config.result.name === 'string' && config.result.name);
+
+      return config.flow?.value && isResultValid && config.result.operation;
+    },
+  },
+
   watch: {
     config: {
       deep: true,
@@ -83,6 +94,13 @@ export default {
       if (typeof oldFlow === 'object') {
         this.config.result.name = '';
       }
+    },
+
+    isValidForm: {
+      immediate: true,
+      handler(newIsValidForm) {
+        this.$emit('update:is-valid-form', newIsValidForm);
+      },
     },
   },
 };

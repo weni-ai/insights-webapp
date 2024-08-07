@@ -59,9 +59,10 @@ export default {
 
   data() {
     return {
-      initialConfigStringfy: {},
+      initialConfigStringfy: '',
       widget: this.modelValue,
       config: { name: this.modelValue.name, ...this.modelValue.config },
+      isCurrentFormValid: false,
     };
   },
 
@@ -101,6 +102,8 @@ export default {
       const defaultEvents = {
         'update:model-value': (config) =>
           (this.config = deepMerge(config, this.config)),
+        'update:is-valid-form': (isValid) =>
+          (this.isCurrentFormValid = isValid),
       };
 
       const mappingEvents = {};
@@ -108,76 +111,9 @@ export default {
       return { ...defaultEvents, ...mappingEvents[this.type] };
     },
 
-    // baseFields() {
-    //   const { config } = this;
-    //   return [config.name, config.flow[0]?.value];
-    // },
-
-    // flowResultFields() {
-    //   const { config } = this;
-    //   return [
-    //     config.result.name[0]?.value,
-    //     config.result.operation === 'count' ? '' : config.result.operation,
-    //   ];
-    // },
-
-    // isAllBaseFieldsFilled() {
-    //   return this.baseFields.every((field) => !!field);
-    // },
-
-    // isAllFlowResultFieldsFilled() {
-    //   return this.flowResultFields.every((field) => !!field);
-    // },
-
-    // isAllFieldsEmpty() {
-    //   const anyBaseField = this.baseFields.find((field) => !!field);
-    //   const anyFlowResultField = this.flowResultFields.find((field) => !!field);
-
-    //   return !anyBaseField && !anyFlowResultField;
-    // },
-
-    // isConfigValid() {
-    //   if (!this.isAllBaseFieldsFilled) {
-    //     return false;
-    //   }
-
-    //   if (this.type === 'flow_result' && !this.isAllFlowResultFieldsFilled) {
-    //     return false;
-    //   }
-
-    //   if (this.initialConfigStringfy === JSON.stringify(this.config)) {
-    //     return false;
-    //   }
-
-    //   return true;
-    // },
-
-    // flowResultsOptions() {
-    //   const selectedFlowUuid = this.config.flow?.[0]?.value;
-
-    //   if (selectedFlowUuid) {
-    //     const selectedFlowMedatada = parseValue(
-    //       this.flows.find((flow) => flow.uuid === selectedFlowUuid).metadata,
-    //     );
-
-    //     if (!selectedFlowMedatada?.results) return [];
-
-    //     const { results } = selectedFlowMedatada;
-
-    //     let resultsFormatted = [];
-
-    //     if (results.length) {
-    //       resultsFormatted = [
-    //         this.flowResultsOptionsPlaceholder,
-    //         ...results.map((result) => {
-    //           return { value: result.key, label: result.name };
-    //         }),
-    //       ];
-    //     }
-    //     return resultsFormatted;
-    //   }
-    //   return [];
-    // },
+    isAllFieldsValid() {
+      return this.config.name && this.isCurrentFormValid;
+    },
 
     treatedConfig() {
       const { config } = this;
@@ -192,7 +128,7 @@ export default {
           operation:
             this.type === 'executions' ? 'count' : config.result?.operation,
           filter: { flow: configuredFlow?.value },
-          op_field: config.op_field,
+          op_field: config.result?.name,
           ...operationRecurrenceConfigs,
         },
       };
@@ -204,14 +140,25 @@ export default {
       deep: true,
       handler(newConfig) {
         this.$emit('update:model-value', newConfig);
+
+        this.initializeConfigString();
+        this.updatePrimaryButtonState();
       },
     },
+  },
 
-    isConfigValid: {
-      immediate: true,
-      handler(newIsConfigValid) {
-        this.$emit('update-disable-primary-button', !newIsConfigValid);
-      },
+  methods: {
+    initializeConfigString() {
+      if (this.treatedConfig && !this.initialConfigStringfy) {
+        this.initialConfigStringfy = JSON.stringify(this.treatedConfig);
+      }
+    },
+    updatePrimaryButtonState() {
+      const disablePrimaryButton =
+        this.initialConfigStringfy === JSON.stringify(this.treatedConfig) ||
+        !this.isAllFieldsValid;
+
+      this.$emit('update-disable-primary-button', disablePrimaryButton);
     },
   },
 };

@@ -247,13 +247,13 @@ export default {
       const { config, data } = widget;
 
       if (config.operation === 'recurrence') {
-        return data?.value || 0 + '%';
+        return (data?.value || 0) + '%';
       }
       if (config.data_type === 'sec') {
         return formatSecondsToHumanString(Math.round(data?.value));
       }
       if (config.currency) {
-        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${data?.value || 0}`;
+        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value).toFixed(2) || 0}`;
       }
       return JSON.stringify(data?.value);
     },

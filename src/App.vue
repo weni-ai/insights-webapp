@@ -70,9 +70,11 @@ export default {
       getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
       setToken: 'config/setToken',
       setProject: 'config/setProject',
+      checkEnableCreateCustomDashboards:
+        'config/checkEnableCreateCustomDashboards',
     }),
 
-    handlingTokenAndProjectUuid() {
+    async handlingTokenAndProjectUuid() {
       const hasTokenInUrl = window.location.pathname.startsWith(
         '/loginexternal/Bearer+',
       );
@@ -93,6 +95,7 @@ export default {
       this.setProject({
         uuid: projectUuid || localStorage.getItem('projectUuid'),
       });
+      await this.checkEnableCreateCustomDashboards();
     },
 
     handlingSetLanguage(language) {

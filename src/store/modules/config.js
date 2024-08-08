@@ -1,6 +1,9 @@
+import Projects from '@/services/api/resources/projects';
+
 const mutations = {
   SET_PROJECT: 'SET_PROJECT',
   SET_TOKEN: 'SET_TOKEN',
+  SET_ENABLE_CREATE_CUSTOM_DASHBOARDS: 'SET_ENABLE_CREATE_CUSTOM_DASHBOARDS',
 };
 
 export default {
@@ -9,6 +12,7 @@ export default {
     project: {
       uuid: '',
     },
+    enableCreateCustomDashboards: false,
     token: '',
   },
   mutations: {
@@ -20,13 +24,23 @@ export default {
       localStorage.setItem('token', token);
       state.token = token;
     },
+    [mutations.SET_ENABLE_CREATE_CUSTOM_DASHBOARDS](
+      state,
+      enableCreateCustomDashboards,
+    ) {
+      state.enableCreateCustomDashboards = enableCreateCustomDashboards;
+    },
   },
   actions: {
-    async setProject({ commit }, project) {
+    setProject({ commit }, project) {
       commit(mutations.SET_PROJECT, project);
     },
     setToken({ commit }, token) {
       commit(mutations.SET_TOKEN, token);
+    },
+    async checkEnableCreateCustomDashboards({ commit }) {
+      const enabled = await Projects.verifyProjectIndexer();
+      commit(mutations.SET_ENABLE_CREATE_CUSTOM_DASHBOARDS, enabled);
     },
   },
 };

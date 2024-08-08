@@ -57,7 +57,8 @@
       />
     </UnnnicDropdownItem>
     <UnnnicDropdownItem
-      class="header-select-dashboard__item"
+      v-if="enableCreateCustomDashboards"
+      class="header-select-dashboard__item create-dashboard-section"
       @click="showNewDashboardModal = true"
     >
       <UnnnicIcon icon="add" />
@@ -95,6 +96,8 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      enableCreateCustomDashboards: (state) =>
+        state.config.enableCreateCustomDashboards,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -208,7 +211,7 @@ $dropdownFixedWidth: 314px;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-gt;
 
-        &:last-child {
+        &.create-dashboard-section {
           border-top: 1px solid $unnnic-color-neutral-light;
           border-radius: 0px;
           justify-content: center;

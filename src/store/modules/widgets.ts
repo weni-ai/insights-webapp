@@ -1,6 +1,8 @@
 import dashboardsStore from './dashboards';
 import { Dashboards, Widgets } from '@/services/api';
 
+import { WidgetType } from '@/models/types/WidgetTypes';
+
 const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
   SET_LOADING_CURRENT_DASHBOARD_WIDGETS:
@@ -10,6 +12,7 @@ const mutations = {
   RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
+  UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
 };
 
 export default {
@@ -17,6 +20,8 @@ export default {
   state: {
     currentDashboardWidgets: [],
     isLoadingCurrentDashboardWidgets: false,
+
+    currentWidgetEditing: null,
   },
   mutations: {
     [mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS](state, loading) {
@@ -48,6 +53,9 @@ export default {
 
       state.currentDashboardWidgets[widgetIndex] = widget;
     },
+    [mutations.UPDATE_CURRENT_WIDGET_EDITING](state, widget) {
+      state.currentWidgetEditing = widget;
+    },
   },
   actions: {
     async getCurrentDashboardWidgets({ commit }) {
@@ -77,7 +85,7 @@ export default {
         const data = await Dashboards.getDashboardWidgetData({
           dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
           widgetUuid: uuid,
-        });
+        } as any);
         setWidgetData(data);
       } catch (error) {
         console.error(error);
@@ -98,7 +106,7 @@ export default {
     async getWidgetGraphFunnelData({ commit }, { uuid, widgetFunnelConfig }) {
       const fetchData = async (metric) => {
         const { name } = widgetFunnelConfig[metric];
-        const { value } = await Dashboards.getDashboardWidgetData({
+        const { value }: any = await Dashboards.getDashboardWidgetData({
           dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
           widgetUuid: uuid,
           params: { slug: metric },
@@ -129,7 +137,18 @@ export default {
       });
     },
 
-    async updateWidget({ commit }, widget) {
+    updateCurrentWidgetEditing({ commit }, widget) {
+      commit(mutations.UPDATE_CURRENT_WIDGET_EDITING, widget);
+    },
+
+    updateCurrentWidgetEditingConfig({ state, commit }, config) {
+      commit(mutations.UPDATE_CURRENT_WIDGET_EDITING, {
+        ...state.currentWidgetEditing,
+        config,
+      });
+    },
+
+    async updateWidget({ commit }, widget: WidgetType) {
       await Widgets.updateWidget({
         widget,
       });

@@ -48,7 +48,7 @@ export default {
 
   watch: {
     flow(newFlow) {
-      this.$emit('update:model-value', newFlow?.[0]);
+      this.$emit('update:model-value', newFlow?.[0].value);
     },
   },
 

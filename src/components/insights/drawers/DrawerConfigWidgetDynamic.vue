@@ -24,6 +24,7 @@
         <section class="drawer-config-widget-dynamic__content">
           <component
             :is="isLoadingProjectFlows ? content.loading : content.component"
+            v-if="widget"
             v-bind="contentProps"
             v-on="contentEvents"
           />
@@ -65,10 +66,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    widget: {
-      type: Object,
-      default: () => ({}),
-    },
     configType: {
       type: String,
       default: '',
@@ -80,7 +77,6 @@ export default {
   data() {
     return {
       config: {},
-      flows: [],
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
       showModalResetWidget: false,
@@ -89,6 +85,7 @@ export default {
   computed: {
     ...mapState({
       isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
+      widget: (state) => state.widgets.currentWidgetEditing,
     }),
 
     drawerProps() {
@@ -136,14 +133,14 @@ export default {
       return componentMap[this.widget?.type] || {};
     },
     contentProps() {
-      const { widget, flows } = this;
+      const { widget } = this;
 
       const defaultProps = {
         modelValue: widget,
       };
 
       const mappingProps = {
-        card: { flows, type: this.configType },
+        card: { type: this.configType },
       };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
@@ -176,7 +173,7 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
-          newWidget = this.config;
+          newWidget = this.widget.config;
           break;
       }
 

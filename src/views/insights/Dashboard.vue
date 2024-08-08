@@ -17,14 +17,14 @@
       <DynamicWidget
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
-        @open-config="openDrawerConfigWidget(widget)"
+        @open-config="updateCurrentWidgetEditing(widget)"
       />
     </template>
+
     <DrawerConfigGallery
-      v-if="!!widgetConfigurating"
-      :modelValue="showDrawerConfigWidget"
-      :widget="widgetConfigurating"
-      @close="closeDrawerConfigWidget"
+      v-if="!!currentWidgetEditing"
+      :modelValue="!!currentWidgetEditing"
+      @close="updateCurrentWidgetEditing(null)"
     />
   </section>
 </template>
@@ -56,6 +56,7 @@ export default {
     ...mapState({
       currentDashboard: (state) => state.dashboards.currentDashboard,
       currentDashboardWidgets: (state) => state.widgets.currentDashboardWidgets,
+      currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
       isLoadingCurrentDashboardWidgets: (state) =>
         state.widgets.isLoadingCurrentDashboardWidgets,
     }),
@@ -88,6 +89,7 @@ export default {
     ...mapActions({
       getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
       fetchWidgetData: 'dashboards/fetchWidgetData',
+      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
@@ -98,16 +100,6 @@ export default {
         gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
         gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
       };
-    },
-
-    openDrawerConfigWidget(widget) {
-      this.widgetConfigurating = widget;
-      this.showDrawerConfigWidget = true;
-    },
-
-    closeDrawerConfigWidget() {
-      this.widgetConfigurating = null;
-      this.showDrawerConfigWidget = false;
     },
   },
 };

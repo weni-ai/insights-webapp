@@ -1,8 +1,10 @@
 <template>
-  <SelectFlow v-model="config.flow" />
+  <SelectFlow v-model="config.flow.uuid" />
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 import SelectFlow from '@/components/SelectFlow.vue';
 
 export default {
@@ -12,26 +14,21 @@ export default {
     SelectFlow,
   },
 
-  props: {
-    modelValue: {
-      type: Object,
-      default: () => ({
-        flow: null,
-      }),
-    },
-  },
-
-  emits: ['update:model-value', 'update:is-valid-form'],
+  emits: ['update:is-valid-form'],
 
   data() {
     return {
-      config: this.modelValue,
+      config: null,
     };
   },
 
   computed: {
+    ...mapState({
+      widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
+    }),
+
     isValidForm() {
-      return !!this.config.flow?.value;
+      return !!this.config?.flow?.uuid;
     },
   },
 
@@ -39,7 +36,10 @@ export default {
     config: {
       deep: true,
       handler(newConfig) {
-        this.$emit('update:model-value', newConfig);
+        this.updateCurrentWidgetEditingConfig({
+          ...this.widgetConfig,
+          ...newConfig,
+        });
       },
     },
 
@@ -49,6 +49,21 @@ export default {
         this.$emit('update:is-valid-form', newIsValidForm);
       },
     },
+  },
+
+  created() {
+    this.config = {
+      flow: {
+        uuid: this.widgetConfig.flow.uuid,
+      },
+    };
+  },
+
+  methods: {
+    ...mapActions({
+      updateCurrentWidgetEditingConfig:
+        'widgets/updateCurrentWidgetEditingConfig',
+    }),
   },
 };
 </script>

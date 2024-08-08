@@ -27,7 +27,6 @@
   <DrawerConfigWidgetDynamic
     v-if="showDrawerConfigWidget"
     :modelValue="showDrawerConfigWidget"
-    :widget="widget"
     :configType="drawerConfigType"
     @close="closeAllDrawers"
     @back="goToGallery"
@@ -53,10 +52,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    widget: {
-      type: Object,
-      default: () => ({}),
-    },
   },
 
   emits: ['close'],
@@ -68,6 +63,7 @@ export default {
   computed: {
     ...mapState({
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
+      widget: (state) => state.widgets.currentWidgetEditing,
     }),
 
     widgetConfigType() {

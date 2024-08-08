@@ -1,14 +1,14 @@
 <template>
-  <SelectFlow v-model="config.flow" />
+  <SelectFlow v-model="config.flow.uuid" />
 
   <SelectFlowResult
-    v-model="config.result.name"
-    :flow="config.flow?.value || config.flow"
-    :disabled="!config.flow?.value || !config.flow"
+    v-model="config.flow.result"
+    :flow="config.flow?.uuid"
+    :disabled="!config.flow?.uuid"
   />
 
   <RadioList
-    v-model:selected-radio="config.result.operation"
+    v-model:selected-radio="config.operation"
     :label="$t('drawers.config_card.operation')"
     :radios="operations"
   />
@@ -16,15 +16,17 @@
   <section>
     <UnnnicLabel :label="$t('drawers.config_card.format')" />
     <UnnnicCheckbox
-      :modelValue="config.result.currency"
+      :modelValue="config.currency"
       :textRight="$t('drawers.config_card.checkbox.currency')"
-      :disabled="config.result.operation === 'recurrence'"
-      @change="config.result.currency = $event"
+      :disabled="config.operation === 'recurrence'"
+      @change="config.currency = $event"
     />
   </section>
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import RadioList from '@/components/RadioList.vue';
@@ -38,25 +40,11 @@ export default {
     RadioList,
   },
 
-  props: {
-    modelValue: {
-      type: Object,
-      default: () => ({
-        flow: null,
-        result: {
-          name: '',
-          operation: '',
-          currency: false,
-        },
-      }),
-    },
-  },
-
-  emits: ['update:model-value', 'update:is-valid-form'],
+  emits: ['update:is-valid-form'],
 
   data() {
     return {
-      config: this.modelValue,
+      config: null,
 
       operations: [
         {
@@ -84,13 +72,14 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
+    }),
+
     isValidForm() {
       const { config } = this;
-      const isResultValid =
-        config.result.name?.value ||
-        (typeof config.result.name === 'string' && config.result.name);
 
-      return config.flow?.value && isResultValid && config.result.operation;
+      return config?.flow.uuid && config?.flow.result && config?.operation;
     },
   },
 
@@ -98,18 +87,21 @@ export default {
     config: {
       deep: true,
       handler(newConfig) {
-        this.$emit('update:model-value', newConfig);
+        this.updateCurrentWidgetEditingConfig({
+          ...this.widgetConfig,
+          ...newConfig,
+        });
       },
     },
 
-    'config.flow'(_newFlow, oldFlow) {
+    'config?.flow.uuid'(_newFlow, oldFlow) {
       if (typeof oldFlow === 'object') {
-        this.config.result.name = '';
+        this.config.flow.result = '';
       }
     },
 
-    'config.result.operation'(newOperation) {
-      if (newOperation === 'recurrence') this.config.result.currency = false;
+    'config?.operation'(newOperation) {
+      if (newOperation === 'recurrence') this.config.currency = false;
     },
 
     isValidForm: {
@@ -118,6 +110,24 @@ export default {
         this.$emit('update:is-valid-form', newIsValidForm);
       },
     },
+  },
+
+  created() {
+    this.config = {
+      flow: {
+        uuid: this.widgetConfig.flow.uuid || '',
+        result: this.widgetConfig.flow.result || '',
+      },
+      operation: this.widgetConfig.operation || '',
+      currency: this.widgetConfig.currency || false,
+    };
+  },
+
+  methods: {
+    ...mapActions({
+      updateCurrentWidgetEditingConfig:
+        'widgets/updateCurrentWidgetEditingConfig',
+    }),
   },
 };
 </script>

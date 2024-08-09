@@ -75,11 +75,16 @@ describe('SelectFlow.vue', () => {
     expect(wrapper.vm.flow).toEqual(modelValue);
   });
 
+  it('should clear selected flow if modelValue its cleaned', () => {
+    wrapper = createWrapper({ modelValue: '' });
+    expect(wrapper.vm.flow[0].value).toBe('');
+  });
+
   it('should update flow correctly when user selects an option', async () => {
     wrapper = createWrapper({ modelValue: '' });
     await wrapper.setData({ flow: [{ value: 'flow2', label: 'Flow 2' }] });
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.emitted()['update:model-value'][0][0]).toEqual('flow2');
+    expect(wrapper.emitted()['update:model-value'][1][0]).toEqual('flow2');
   });
 });

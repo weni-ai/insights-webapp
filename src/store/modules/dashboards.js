@@ -1,6 +1,6 @@
 import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
-import { Dashboards, Widgets } from '@/services/api';
+import { Dashboards } from '@/services/api';
 import { sortByKey } from '@/utils/array';
 
 function treatFilters(filters, valueHandler, currentDashboardFilters) {
@@ -19,14 +19,8 @@ const mutations = {
   SET_DASHBOARDS: 'SET_DASHBOARDS',
   SET_LOADING_DASHBOARDS: 'SET_LOADING_DASHBOARDS',
   SET_CURRENT_DASHBOARD: 'SET_CURRENT_DASHBOARD',
-  SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
-  SET_LOADING_CURRENT_DASHBOARD_WIDGETS:
-    'SET_LOADING_CURRENT_DASHBOARD_WIDGETS',
   SET_LOADING_CURRENT_DASHBOARD_FILTERS:
     'SET_LOADING_CURRENT_DASHBOARD_FILTERS',
-  RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
-  SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
-  UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
   SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
@@ -38,8 +32,6 @@ export default {
     dashboards: [],
     isLoadingDashboards: false,
     currentDashboard: {},
-    currentDashboardWidgets: [],
-    isLoadingCurrentDashboardWidgets: false,
     currentDashboardFilters: [],
     isLoadingCurrentDashboardFilters: false,
     appliedFilters: {},
@@ -51,40 +43,11 @@ export default {
     [mutations.SET_LOADING_DASHBOARDS](state, loading) {
       state.isLoadingDashboards = loading;
     },
-    [mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS](state, loading) {
-      state.isLoadingCurrentDashboardWidgets = loading;
-    },
     [mutations.SET_LOADING_CURRENT_DASHBOARD_FILTERS](state, loading) {
       state.isLoadingCurrentDashboardFilters = loading;
     },
     [mutations.SET_CURRENT_DASHBOARD](state, dashboard) {
       state.currentDashboard = dashboard;
-    },
-    [mutations.SET_CURRENT_DASHBOARD_WIDGETS](state, widgets) {
-      state.currentDashboardWidgets = widgets;
-    },
-    [mutations.RESET_CURRENT_DASHBOARD_WIDGETS](state) {
-      state.currentDashboardWidgets = [];
-    },
-    [mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA](state, { uuid, data }) {
-      const widgetIndex = state.currentDashboardWidgets.findIndex(
-        (widget) => widget.uuid === uuid,
-      );
-      const isValidWidgetIndex = widgetIndex !== -1;
-
-      if (isValidWidgetIndex) {
-        state.currentDashboardWidgets[widgetIndex] = {
-          ...state.currentDashboardWidgets[widgetIndex],
-          data,
-        };
-      }
-    },
-    [mutations.UPDATE_CURRENT_DASHBOARD_WIDGET](state, widget) {
-      const widgetIndex = state.currentDashboardWidgets.findIndex(
-        (mappedWidget) => mappedWidget.uuid === widget.uuid,
-      );
-
-      state.currentDashboardWidgets[widgetIndex] = widget;
     },
     [mutations.SET_CURRENT_DASHBOARD_FILTERS](state, filters) {
       state.currentDashboardFilters = filters;
@@ -113,14 +76,6 @@ export default {
     },
     async setCurrentDashboard({ commit }, dashboard) {
       commit(mutations.SET_CURRENT_DASHBOARD, dashboard);
-    },
-    async getCurrentDashboardWidgets({ state, commit }) {
-      commit(mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS, true);
-      const widgets = await Dashboards.getDashboardWidgets(
-        state.currentDashboard.uuid,
-      );
-      commit(mutations.SET_CURRENT_DASHBOARD_WIDGETS, widgets);
-      commit(mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS, false);
     },
     async getCurrentDashboardFilters({ commit, state }) {
       commit(mutations.SET_LOADING_CURRENT_DASHBOARD_FILTERS, true);
@@ -200,76 +155,6 @@ export default {
 
       await updateDefaultDashboard(oldDefaultDashboardUuid, false);
       await updateDefaultDashboard(uuid, true);
-    },
-    async getCurrentDashboardWidgetData({ state, commit }, uuid) {
-      try {
-        const data = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: state.currentDashboard.uuid,
-          widgetUuid: uuid,
-        });
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data,
-        });
-      } catch (error) {
-        console.error(error);
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: null,
-        });
-      }
-    },
-    async getCurrentDashboardWidgetsDatas({ state, dispatch }) {
-      Promise.all(
-        state.currentDashboardWidgets.map(async ({ uuid, name, config }) => {
-          if (name && Object.keys(config).length) {
-            dispatch('getCurrentDashboardWidgetData', uuid);
-          }
-        }),
-      );
-    },
-    async getWidgetGraphFunnelData(
-      { state, commit },
-      { uuid, widgetFunnelConfig },
-    ) {
-      const fetchData = async (metric) => {
-        const { name } = widgetFunnelConfig[metric];
-        const { value } = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: state.currentDashboard.uuid,
-          widgetUuid: uuid,
-          params: { slug: metric },
-        });
-        return { description: name, title: value };
-      };
-
-      const response = await Promise.all(
-        Object.keys(widgetFunnelConfig).map(fetchData),
-      );
-
-      const totalValue = response.reduce((sum, item) => sum + item.title, 0);
-      const formattedResponse = response
-        .map((item) => {
-          const percentage = ((item.title / totalValue) * 100 || 0).toFixed(2);
-          return {
-            description: item.description,
-            title: `${percentage}% (${item.title.toLocaleString()})`,
-            percentage: parseFloat(percentage), // Add percentage as a number for sorting
-          };
-        })
-        .sort((a, b) => b.percentage - a.percentage)
-        .map(({ description, title }) => ({ description, title })); // Remove the 'percentage' property
-
-      commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-        uuid,
-        data: formattedResponse,
-      });
-    },
-
-    async updateWidget({ commit }, widget) {
-      await Widgets.updateWidget({
-        widget,
-      });
-      commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
     },
   },
   getters: {

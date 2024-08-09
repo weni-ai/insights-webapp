@@ -17,6 +17,7 @@ import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFi
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
 import { formatSecondsToHumanString } from '@/utils/time';
+import { currencySymbols } from '@/utils/currency';
 
 export default {
   name: 'DynamicWidget',
@@ -75,11 +76,6 @@ export default {
         isLoading,
       };
 
-      const mappingMetricDataTypesFormat = {
-        // use Math.roud function to prevent float number in average cases
-        sec: (value) => formatSecondsToHumanString(Math.round(value)),
-      };
-
       const tableDynamicFilterConfig =
         'created_on' in this.appliedFilters
           ? config?.created_on
@@ -87,9 +83,7 @@ export default {
 
       const mappingProps = {
         card: {
-          metric:
-            mappingMetricDataTypesFormat[config.data_type]?.(data?.value) ||
-            JSON.stringify(data?.value),
+          metric: this.getWidgetFormattedData(this.widget),
           description: name,
           configured: !!name,
           /* The "configured" field is only checking if the name is defined, since the widget may be unconfigured,
@@ -203,9 +197,9 @@ export default {
 
   methods: {
     ...mapActions({
-      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+      getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetReportData: 'reports/getWidgetReportData',
-      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
+      getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {
@@ -214,7 +208,7 @@ export default {
       if (this.$route.name === 'report') {
         await this.getWidgetReportData({ offset, limit, next });
       } else if (this.isConfigured) {
-        await this.getCurrentDashboardWidgetData(this.widget.uuid);
+        await this.getCurrentDashboardWidgetData(this.widget);
       }
 
       this.isRequestingData = false;
@@ -247,6 +241,21 @@ export default {
         default:
           break;
       }
+    },
+
+    getWidgetFormattedData(widget) {
+      const { config, data } = widget;
+
+      if (config.operation === 'recurrence') {
+        return (data?.value || 0) + '%';
+      }
+      if (config.data_type === 'sec') {
+        return formatSecondsToHumanString(Math.round(data?.value));
+      }
+      if (config.currency) {
+        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value).toFixed(2) || 0}`;
+      }
+      return JSON.stringify(data?.value);
     },
   },
 };

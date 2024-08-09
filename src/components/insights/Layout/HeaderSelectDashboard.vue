@@ -56,20 +56,39 @@
         @click.stop="handleSetDefaultDashboard(dashboard)"
       />
     </UnnnicDropdownItem>
+    <UnnnicDropdownItem
+      v-if="enableCreateCustomDashboards"
+      class="header-select-dashboard__item create-dashboard-section"
+      @click="showNewDashboardModal = true"
+    >
+      <UnnnicIcon icon="add" />
+      {{ $t('add_new_dashboard') }}
+    </UnnnicDropdownItem>
   </UnnnicDropdown>
+  <DrawerDashboardConfig
+    v-if="showNewDashboardModal"
+    v-model="showNewDashboardModal"
+    @close="showNewDashboardModal = false"
+  />
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
+import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
 
 export default {
   name: 'HeaderSelectDashboard',
+
+  components: {
+    DrawerDashboardConfig,
+  },
 
   data() {
     return {
       dashboardHovered: '',
       starHovered: '',
+      showNewDashboardModal: false,
     };
   },
 
@@ -77,6 +96,8 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      enableCreateCustomDashboards: (state) =>
+        state.config.enableCreateCustomDashboards,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -189,6 +210,13 @@ $dropdownFixedWidth: 314px;
         color: $unnnic-color-neutral-darkest;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-gt;
+
+        &.create-dashboard-section {
+          border-top: 1px solid $unnnic-color-neutral-light;
+          border-radius: 0px;
+          justify-content: center;
+          padding: $unnnic-spacing-xs;
+        }
 
         .item__star-icon:not(.item__star-icon--selected):hover {
           color: $unnnic-color-weni-500;

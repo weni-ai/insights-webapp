@@ -27,7 +27,6 @@
   <DrawerConfigWidgetDynamic
     v-if="showDrawerConfigWidget"
     :modelValue="showDrawerConfigWidget"
-    :widget="widget"
     :configType="drawerConfigType"
     @close="closeAllDrawers"
     @back="goToGallery"
@@ -35,6 +34,8 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
@@ -51,10 +52,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    widget: {
-      type: Object,
-      default: () => ({}),
-    },
   },
 
   emits: ['close'],
@@ -64,6 +61,15 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
+      widget: (state) => state.widgets.currentWidgetEditing,
+    }),
+
+    widgetConfigType() {
+      return this.widget.config?.type_result;
+    },
+
     galleryOptions() {
       const { $t } = this;
       function createOptions(optionKeys) {
@@ -88,6 +94,8 @@ export default {
     modelValue: {
       immediate: true,
       handler() {
+        this.setDrawerConfigType(this.widgetConfigType);
+
         if (!this.galleryOptions.length) {
           this.showDrawerConfigWidget = true;
         }
@@ -95,7 +103,17 @@ export default {
     },
   },
 
+  async created() {
+    if (!this.isLoadedProjectFlows) {
+      await this.getProjectFlows();
+    }
+  },
+
   methods: {
+    ...mapActions({
+      getProjectFlows: 'project/getProjectFlows',
+    }),
+
     closeAllDrawers() {
       this.goToGallery();
       this.$emit('close');
@@ -103,7 +121,10 @@ export default {
 
     setDrawerConfigType(value) {
       this.drawerConfigType = value;
-      this.showDrawerConfigWidget = true;
+
+      if (value) {
+        this.showDrawerConfigWidget = true;
+      }
     },
 
     goToGallery() {

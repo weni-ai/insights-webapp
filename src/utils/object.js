@@ -23,6 +23,8 @@ export function stringifyValue(value) {
 }
 
 export function clearDeepValues(obj) {
+  if (!obj) return obj;
+
   function clearValue(value) {
     const clearValuesByTypeMap = {
       string: '',
@@ -41,4 +43,30 @@ export function clearDeepValues(obj) {
     acc[key] = clearValue(value);
     return acc;
   }, {});
+}
+
+export function checkDeepEmptyValues(obj) {
+  if (!obj) return true;
+
+  function checkValue(value) {
+    const clearValuesByTypeMap = {
+      string: '',
+      number: 0,
+    };
+
+    const haveValueTypeAtMap =
+      Object.keys(clearValuesByTypeMap).includes(typeof value);
+
+    if (haveValueTypeAtMap && value === clearValuesByTypeMap[typeof value]) {
+      return true;
+    }
+
+    if (!haveValueTypeAtMap) {
+      return checkDeepEmptyValues(value);
+    }
+
+    return false;
+  }
+
+  return Object.entries(obj).every(([_key, value]) => checkValue(value));
 }

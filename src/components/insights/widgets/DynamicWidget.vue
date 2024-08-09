@@ -197,9 +197,9 @@ export default {
 
   methods: {
     ...mapActions({
-      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
+      getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetReportData: 'reports/getWidgetReportData',
-      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
+      getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {

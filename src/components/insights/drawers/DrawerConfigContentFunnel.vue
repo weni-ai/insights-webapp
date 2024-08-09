@@ -6,7 +6,6 @@
     v-model:flow="metric.flow"
     :active="activeMetric === index"
     :title="metric.title"
-    :flowsOptions="flowsOptions"
     @update:active="updateActiveMetric(index, $event)"
   />
   <UnnnicButton
@@ -19,6 +18,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import MetricAccordion from '@/components/MetricAccordion.vue';
 
 export default {
@@ -33,10 +34,6 @@ export default {
       type: {},
       default: () => {},
     },
-    flowsOptions: {
-      type: Array,
-      default: () => [],
-    },
   },
 
   emits: ['update:model-value', 'update-disable-primary-button'],
@@ -48,19 +45,19 @@ export default {
         {
           title: this.$t('drawers.config_funnel.first_metric'),
           name: '',
-          flow: [],
+          flow: '',
           active: true,
         },
         {
           title: this.$t('drawers.config_funnel.second_metric'),
           name: '',
-          flow: [],
+          flow: '',
           active: false,
         },
         {
           title: this.$t('drawers.config_funnel.third_metric'),
           name: '',
-          flow: [],
+          flow: '',
           active: false,
         },
       ],
@@ -69,9 +66,12 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      projectFlows: (state) => state.project.flows,
+    }),
+
     validMetricsLength() {
-      return this.metrics.filter((metric) => metric.name && metric.flow.length)
-        .length;
+      return this.metrics.filter((metric) => metric.name && metric.flow).length;
     },
     isValidMetrics() {
       if (this.validMetricsLength < 3) {
@@ -82,7 +82,7 @@ export default {
         return metric;
       });
 
-      if (metricsToCompare.some((metric) => !metric.flow[0]?.value)) {
+      if (metricsToCompare.some((metric) => !metric.flow)) {
         return false;
       }
 
@@ -121,7 +121,7 @@ export default {
     handleWidgetFields() {
       Object.values(this.modelValue.config).forEach((metric, index) => {
         const selectedFlow =
-          this.flowsOptions.find(
+          this.projectFlows.find(
             (flow) => flow.value === metric.filter?.flow,
           ) || {};
 
@@ -132,7 +132,7 @@ export default {
         this.metrics[index] = {
           ...this.metrics[index],
           name: metric.name,
-          flow: [selectedFlow],
+          flow: selectedFlow?.value,
         };
       });
       this.initialMetricsStringfy = JSON.stringify(
@@ -157,7 +157,7 @@ export default {
             ? this.$t('drawers.config_funnel.fourth_metric')
             : this.$t('drawers.config_funnel.fifth_metric'),
         name: '',
-        flow: [],
+        flow: '',
         active: false,
       };
 

@@ -1,3 +1,14 @@
+export type WidgetType = {
+  uuid: string;
+  name: string;
+  type: WidgetInternalType;
+  config: WidgetConfig;
+  grid_position: GridPosition;
+  report: WidgetReport;
+  source: string;
+  is_configurable: boolean;
+};
+
 export type GridPosition = {
   column_start: number;
   column_end: number;
@@ -25,22 +36,51 @@ type TableFieldConfig = {
 type TableConfig = {
   name_overwrite: string;
   icon:
-  | {
-    name: string;
-    scheme: string;
-  }
-  | `${string}:${string}`;
+    | {
+        name: string;
+        scheme: string;
+      }
+    | `${string}:${string}`;
   fields: TableFieldConfig[];
 };
 
-type TableDynamicByFilterConfig = {
+export type TableDynamicByFilterConfig = {
   default?: TableConfig;
   created_on?: TableConfig;
 };
 
 type TableGroupConfig = object;
 
-type CardConfig = object;
+export type CardConfigTypeResults = 'executions' | 'flow_result' | '';
+
+type BaseCardConfig = {
+  name: string;
+  type_result: CardConfigTypeResults;
+  flow: {
+    uuid: string;
+  };
+};
+
+export interface ExecutionsCardConfig extends BaseCardConfig {
+  type_result: 'executions';
+}
+
+export interface FlowResultCardConfig extends BaseCardConfig {
+  type_result: 'flow_result';
+  report_name?: string;
+  flow: {
+    uuid: string;
+    result: string;
+  };
+  operation: string;
+  currency: boolean;
+  data_suffix: string;
+}
+
+export type CardConfig =
+  | ExecutionsCardConfig
+  | FlowResultCardConfig
+  | BaseCardConfig;
 
 type InsightConfig = object;
 
@@ -53,7 +93,7 @@ export type WidgetConfig =
   | CardConfig
   | InsightConfig;
 
-export type WidgetType =
+export type WidgetInternalType =
   | 'graph_column'
   | 'graph_bar'
   | 'graph_funnel'

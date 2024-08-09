@@ -51,7 +51,7 @@ export default {
 
   methods: {
     ...mapActions({
-      updateWidget: 'dashboards/updateWidget',
+      updateWidget: 'widgets/updateWidget',
     }),
 
     updateModelValue(value) {

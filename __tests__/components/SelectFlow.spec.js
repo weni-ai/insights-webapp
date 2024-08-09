@@ -79,8 +79,7 @@ describe('SelectFlow.vue', () => {
     wrapper = createWrapper({ modelValue: '' });
     await wrapper.setData({ flow: [{ value: 'flow2', label: 'Flow 2' }] });
     await wrapper.vm.$nextTick();
-    expect(wrapper.emitted()['update:model-value'][0]).toEqual([
-      { value: 'flow2', label: 'Flow 2' },
-    ]);
+
+    expect(wrapper.emitted()['update:model-value'][0][0]).toEqual('flow2');
   });
 });

@@ -113,6 +113,12 @@ export default {
               `drawers.config_gallery.options.flow_result.description`,
             ),
           },
+          data_crossing: {
+            title: $t(`drawers.config_gallery.options.data_crossing.title`),
+            description: $t(
+              `drawers.config_gallery.options.data_crossing.description`,
+            ),
+          },
         },
       };
 

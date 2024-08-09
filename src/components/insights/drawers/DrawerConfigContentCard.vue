@@ -29,6 +29,7 @@ import { checkDeepEmptyValues } from '@/utils/object';
 
 import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
 import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
+import FormDataCrossing from './DrawerForms/Card/FormDataCrossing.vue';
 import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
 
 export default {
@@ -43,7 +44,7 @@ export default {
       type: String,
       default: '',
       validate(value) {
-        return ['executions', 'flow_result'].includes(value);
+        return ['executions', 'flow_result', 'data_crossing'].includes(value);
       },
     },
   },
@@ -67,6 +68,7 @@ export default {
       const componentMap = {
         executions: FormExecutions,
         flow_result: FormFlowResult,
+        data_crossing: FormDataCrossing,
       };
 
       return componentMap[this.type] || null;

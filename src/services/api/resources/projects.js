@@ -26,4 +26,11 @@ export default {
 
     return sources;
   },
+  async verifyProjectIndexer() {
+    const { project } = Config.state;
+    const response = await http.get(
+      `/projects/${project.uuid}/verify_project_indexer/`,
+    );
+    return response;
+  },
 };

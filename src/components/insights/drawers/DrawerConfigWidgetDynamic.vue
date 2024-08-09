@@ -186,7 +186,7 @@ export default {
         metricsObj[`metric_${index + 1}`] = {
           name: metric.name,
           operation: 'count',
-          filter: { flow: metric.flow?.[0].value },
+          filter: { flow: metric.flow },
         };
       });
 

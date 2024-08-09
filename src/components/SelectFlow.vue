@@ -50,6 +50,9 @@ export default {
     flow(newFlow) {
       this.$emit('update:model-value', newFlow?.[0].value);
     },
+    modelValue() {
+      this.treatModelValue();
+    },
   },
 
   created() {

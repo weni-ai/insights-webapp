@@ -41,7 +41,37 @@ export interface OutgoingFlowResultCardConfig extends OutgoingBaseCardConfig {
   currency: boolean;
   op_field: string;
 }
+export interface OutgoingDataCrossingCardConfig extends OutgoingBaseCardConfig {
+  operator: string;
+  currency: boolean;
+  friendly_id: string;
+  subwidget_1: OutgoingDataCrossingSubwidget;
+  subwidget_2: OutgoingDataCrossingSubwidget;
+}
+
+type OutgoingDataCrossingSubwidgetExecution = {
+  operation: string;
+  filter: {
+    flow: string;
+  };
+  type_result: string;
+};
+
+type OutgoingDataCrossingSubwidgetFlowResult = {
+  filter: {
+    flow: string;
+  };
+  op_field: string;
+  op_sub_field: string;
+  operation: string;
+  type_result: string;
+};
+
+type OutgoingDataCrossingSubwidget =
+  | OutgoingDataCrossingSubwidgetExecution
+  | OutgoingDataCrossingSubwidgetFlowResult;
 
 export type OutgoingCardConfig =
   | OutgoingExecutionsCardConfig
-  | OutgoingFlowResultCardConfig;
+  | OutgoingFlowResultCardConfig
+  | OutgoingDataCrossingCardConfig;

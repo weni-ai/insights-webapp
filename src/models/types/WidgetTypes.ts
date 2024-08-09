@@ -51,7 +51,11 @@ export type TableDynamicByFilterConfig = {
 
 type TableGroupConfig = object;
 
-export type CardConfigTypeResults = 'executions' | 'flow_result' | '';
+export type CardConfigTypeResults =
+  | 'executions'
+  | 'flow_result'
+  | 'data_crossing'
+  | '';
 
 type BaseCardConfig = {
   name: string;
@@ -77,9 +81,41 @@ export interface FlowResultCardConfig extends BaseCardConfig {
   data_suffix: string;
 }
 
+export interface DataCrossingCardConfig extends BaseCardConfig {
+  operation: string;
+  friendly_id: string;
+  currency: boolean;
+
+  subwidget_1: DataCrossingSubwidget;
+  subwidget_2: DataCrossingSubwidget;
+}
+
+type DataCrossingSubwidgetExecution = {
+  result_type: string;
+  operation: string;
+  flow: {
+    uuid: string;
+  };
+};
+
+type DataCrossingSubwidgetFlowResult = {
+  flow: {
+    uuid: string;
+    result: string;
+    result_correspondence: string;
+  };
+  result_type: string;
+  operation: string;
+};
+
+type DataCrossingSubwidget =
+  | DataCrossingSubwidgetExecution
+  | DataCrossingSubwidgetFlowResult;
+
 export type CardConfig =
   | ExecutionsCardConfig
   | FlowResultCardConfig
+  | DataCrossingCardConfig
   | BaseCardConfig;
 
 type InsightConfig = object;

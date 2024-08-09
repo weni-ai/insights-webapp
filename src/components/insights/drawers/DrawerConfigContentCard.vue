@@ -68,7 +68,7 @@ export default {
     currentFormEvents() {
       const defaultEvents = {
         'update:is-valid-form': (isValid) =>
-          (this.isCurrentFormValid = isValid),
+          (this.isCurrentFormValid = !!isValid),
       };
 
       const mappingEvents = {};
@@ -81,7 +81,7 @@ export default {
     },
 
     disableResetWidgetButton() {
-      return checkDeepEmptyValues(this.config);
+      return checkDeepEmptyValues(this.widgetConfig);
     },
   },
 
@@ -93,7 +93,12 @@ export default {
           ...this.widgetConfig,
           ...newConfig,
         });
+      },
+    },
 
+    widgetConfig: {
+      deep: true,
+      handler() {
         this.updatePrimaryButtonState();
       },
     },
@@ -116,12 +121,12 @@ export default {
 
     initializeConfigString() {
       if (this.config && !this.initialConfigStringfy) {
-        this.initialConfigStringfy = JSON.stringify(this.config);
+        this.initialConfigStringfy = JSON.stringify(this.widgetConfig);
       }
     },
     updatePrimaryButtonState() {
       const disablePrimaryButton =
-        this.initialConfigStringfy === JSON.stringify(this.config) ||
+        this.initialConfigStringfy === JSON.stringify(this.widgetConfig) ||
         !this.isAllFieldsValid;
 
       this.$emit('update-disable-primary-button', disablePrimaryButton);

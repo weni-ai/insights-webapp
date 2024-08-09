@@ -6,6 +6,7 @@
     v-model:flow="metric.flow"
     :active="activeMetric === index"
     :title="metric.title"
+    highlighted
     @update:active="updateActiveMetric(index, $event)"
   />
   <UnnnicButton
@@ -144,10 +145,13 @@ export default {
     },
 
     updateActiveMetric(index, isActive) {
+      this.metrics[index].active = isActive;
       if (isActive) {
         this.activeMetric = index;
       }
-      this.metrics[index].active = isActive;
+      if (this.activeMetric === index && !isActive) {
+        this.activeMetric = null;
+      }
     },
 
     addMetric() {

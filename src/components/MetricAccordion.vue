@@ -1,7 +1,10 @@
 <template>
   <UnnnicCollapse
     class="metric-accordion"
-    :class="{ 'metric-accordion--active': active }"
+    :class="{
+      'metric-accordion--active': active,
+      highlighted: active && highlighted,
+    }"
     :active="active"
     @change="$emit('update:active', $event)"
   >
@@ -66,6 +69,10 @@ export default {
       type: String,
       default: '',
     },
+    highlighted: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   emits: ['update:name', 'update:flow', 'update:active'],
@@ -92,6 +99,11 @@ export default {
 .metric-accordion {
   border-radius: $unnnic-border-radius-sm;
   border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+
+  &--active.highlighted {
+    background-color: $unnnic-color-weni-50;
+    border: 1px solid $unnnic-color-weni-500;
+  }
 
   :deep(.unnnic-collapse__header) {
     padding: $unnnic-spacing-ant;

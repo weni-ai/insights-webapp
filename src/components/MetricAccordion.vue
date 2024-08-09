@@ -61,12 +61,6 @@ export default {
       return this.name === '' && this.flow === '';
     },
   },
-  methods: {
-    clearFields() {
-      this.$emit('update:name', '');
-      this.$emit('update:flow', '');
-    },
-  },
 };
 </script>
 

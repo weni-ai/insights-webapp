@@ -21,12 +21,12 @@
           class="clear-button"
           :text="$t('clear_fields')"
           type="tertiary"
+          :disabled="!metrics[index].flow && !metrics[index].name"
           @click="clearFields(index)"
         />
       </section>
     </template>
   </MetricAccordion>
-
   <UnnnicButton
     :text="$t('drawers.config_funnel.add_metric')"
     iconLeft="add"

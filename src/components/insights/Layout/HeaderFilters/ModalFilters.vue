@@ -77,7 +77,7 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
-      widgets: (state) => state.dashboards.currentDashboardWidgets,
+      widgets: (state) => state.widgets.currentDashboardWidgets,
       currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
 
@@ -119,7 +119,7 @@ export default {
       setAppliedFilters: 'dashboards/setAppliedFilters',
       resetAppliedFilters: 'dashboards/resetAppliedFilters',
       getCurrentDashboardWidgetsDatas:
-        'dashboards/getCurrentDashboardWidgetsDatas',
+        'widgets/getCurrentDashboardWidgetsDatas',
     }),
     getDynamicFiltersDependsOnValues(filter) {
       if (!filter.depends_on?.search_param) return null;

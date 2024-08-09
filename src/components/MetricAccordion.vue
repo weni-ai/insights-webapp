@@ -25,17 +25,10 @@
         @update:model-value="$emit('update:name', $event)"
       />
     </section>
-    <section>
-      <UnnnicLabel :label="$t('metric_accordion.select_origin_flow')" />
-      <UnnnicSelectSmart
-        :modelValue="flow"
-        :options="flowsOptions"
-        autocomplete
-        autocompleteIconLeft
-        autocompleteClearOnFocus
-        @update:model-value="$emit('update:flow', $event)"
-      />
-    </section>
+    <SelectFlow
+      :modelValue="flow"
+      @update:model-value="$emit('update:flow', $event)"
+    />
     <UnnnicButton
       class="clear-button"
       :text="$t('clear_fields')"
@@ -47,8 +40,14 @@
 </template>
 
 <script>
+import SelectFlow from '@/components/SelectFlow.vue';
+
 export default {
   name: 'MetricAccordion',
+
+  components: {
+    SelectFlow,
+  },
 
   props: {
     active: {
@@ -64,12 +63,8 @@ export default {
       default: '',
     },
     flow: {
-      type: Array,
-      default: () => [],
-    },
-    flowsOptions: {
-      type: Array,
-      default: () => [],
+      type: String,
+      default: '',
     },
   },
 
@@ -78,16 +73,16 @@ export default {
   computed: {
     iconScheme() {
       const { name, flow } = this;
-      return name && flow[0]?.value ? 'weni-600' : 'neutral-soft';
+      return name && flow ? 'weni-600' : 'neutral-soft';
     },
     disableClearButton() {
-      return this.name === '' && this.flow[0]?.value === '';
+      return this.name === '' && this.flow === '';
     },
   },
   methods: {
     clearFields() {
       this.$emit('update:name', '');
-      this.$emit('update:flow', [{ label: '', value: '' }]);
+      this.$emit('update:flow', '');
     },
   },
 };

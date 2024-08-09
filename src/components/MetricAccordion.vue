@@ -19,38 +19,13 @@
         {{ title }}
       </header>
     </template>
-
-    <section>
-      <UnnnicLabel :label="$t('metric_accordion.name_metric.label')" />
-      <UnnnicInput
-        :modelValue="name"
-        :placeholder="$t('metric_accordion.name_metric.placeholder')"
-        @update:model-value="$emit('update:name', $event)"
-      />
-    </section>
-    <SelectFlow
-      :modelValue="flow"
-      @update:model-value="$emit('update:flow', $event)"
-    />
-    <UnnnicButton
-      class="clear-button"
-      :text="$t('clear_fields')"
-      type="tertiary"
-      :disabled="disableClearButton"
-      @click="clearFields"
-    />
+    <slot name="content"></slot>
   </UnnnicCollapse>
 </template>
 
 <script>
-import SelectFlow from '@/components/SelectFlow.vue';
-
 export default {
   name: 'MetricAccordion',
-
-  components: {
-    SelectFlow,
-  },
 
   props: {
     active: {
@@ -110,15 +85,8 @@ export default {
   }
 
   :deep(.unnnic-collapse__body) {
-    margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
-    padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
-
-    display: grid;
-    gap: $unnnic-spacing-nano;
-
-    .clear-button {
-      margin-top: $unnnic-spacing-nano;
-    }
+    margin: 0;
+    padding: 0;
   }
 
   &__header {

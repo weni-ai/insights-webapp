@@ -2,13 +2,31 @@
   <MetricAccordion
     v-for="(metric, index) of metrics"
     :key="metric.title"
-    v-model:name="metric.name"
-    v-model:flow="metric.flow"
     :active="activeMetric === index"
     :title="metric.title"
     highlighted
     @update:active="updateActiveMetric(index, $event)"
-  />
+  >
+    <template #content>
+      <section class="metric-form">
+        <section>
+          <UnnnicLabel :label="$t('metric_accordion.name_metric.label')" />
+          <UnnnicInput
+            v-model="metrics[index].name"
+            :placeholder="$t('metric_accordion.name_metric.placeholder')"
+          />
+        </section>
+        <SelectFlow v-model="metrics[index].flow" />
+        <UnnnicButton
+          class="clear-button"
+          :text="$t('clear_fields')"
+          type="tertiary"
+          @click="clearFields(index)"
+        />
+      </section>
+    </template>
+  </MetricAccordion>
+
   <UnnnicButton
     :text="$t('drawers.config_funnel.add_metric')"
     iconLeft="add"
@@ -22,12 +40,14 @@
 import { mapState } from 'vuex';
 
 import MetricAccordion from '@/components/MetricAccordion.vue';
+import SelectFlow from '@/components/SelectFlow.vue';
 
 export default {
   name: 'DrawerConfigContentFunnel',
 
   components: {
     MetricAccordion,
+    SelectFlow,
   },
 
   props: {
@@ -119,6 +139,11 @@ export default {
   },
 
   methods: {
+    clearFields(index) {
+      this.metrics[index].name = '';
+      this.metrics[index].flow = '';
+    },
+
     handleWidgetFields() {
       Object.values(this.modelValue.config).forEach((metric, index) => {
         const selectedFlow =
@@ -172,3 +197,17 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.metric-form {
+  margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
+  padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
+
+  display: grid;
+  gap: $unnnic-spacing-nano;
+
+  .clear-button {
+    margin-top: $unnnic-spacing-nano;
+  }
+}
+</style>

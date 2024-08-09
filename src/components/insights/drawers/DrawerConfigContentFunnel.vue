@@ -4,6 +4,7 @@
     :key="metric.title"
     :active="activeMetric === index"
     :title="metric.title"
+    :validConfig="!!metric.flow && !!metric.name.trim()"
     highlighted
     @update:active="updateActiveMetric(index, $event)"
   >
@@ -12,16 +13,16 @@
         <section>
           <UnnnicLabel :label="$t('metric_accordion.name_metric.label')" />
           <UnnnicInput
-            v-model="metrics[index].name"
+            v-model="metric.name"
             :placeholder="$t('metric_accordion.name_metric.placeholder')"
           />
         </section>
-        <SelectFlow v-model="metrics[index].flow" />
+        <SelectFlow v-model="metric.flow" />
         <UnnnicButton
           class="clear-button"
           :text="$t('clear_fields')"
           type="tertiary"
-          :disabled="!metrics[index].flow && !metrics[index].name"
+          :disabled="!metric.flow && !metric.name"
           @click="clearFields(index)"
         />
       </section>

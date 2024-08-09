@@ -36,13 +36,9 @@ export default {
       type: String,
       default: '',
     },
-    name: {
-      type: String,
-      default: '',
-    },
-    flow: {
-      type: String,
-      default: '',
+    validConfig: {
+      type: Boolean,
+      default: false,
     },
     highlighted: {
       type: Boolean,
@@ -50,15 +46,11 @@ export default {
     },
   },
 
-  emits: ['update:name', 'update:flow', 'update:active'],
+  emits: ['update:active'],
 
   computed: {
     iconScheme() {
-      const { name, flow } = this;
-      return name && flow ? 'weni-600' : 'neutral-soft';
-    },
-    disableClearButton() {
-      return this.name === '' && this.flow === '';
+      return this.validConfig ? 'weni-600' : 'neutral-soft';
     },
   },
 };

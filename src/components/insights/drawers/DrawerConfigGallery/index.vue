@@ -67,7 +67,7 @@ export default {
     }),
 
     widgetConfigType() {
-      return this.widget.config?.type_result;
+      return this.widget.config?.type;
     },
 
     galleryOptions() {

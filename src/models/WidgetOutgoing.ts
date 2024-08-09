@@ -19,7 +19,7 @@ class OutgoingWidget {
   is_configurable: boolean;
 
   private _prepareCardConfig(config: CardConfig): OutgoingCardConfig {
-    const isFlowResult = config.type_result === 'flow_result';
+    const isFlowResult = config.type === 'flow_result';
 
     const flowResultConfig = isFlowResult
       ? {
@@ -31,7 +31,7 @@ class OutgoingWidget {
 
     return {
       filter: { flow: config.flow.uuid || '' },
-      type_result: config.type_result,
+      type_result: config.type,
       ...flowResultConfig,
     };
   }

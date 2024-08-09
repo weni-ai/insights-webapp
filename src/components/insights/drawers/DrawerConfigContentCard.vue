@@ -118,7 +118,7 @@ export default {
   },
 
   created() {
-    this.config = { ...this.widgetConfig, type_result: this.type };
+    this.config = { ...this.widgetConfig, type: this.type };
     this.initializeConfigString();
   },
 

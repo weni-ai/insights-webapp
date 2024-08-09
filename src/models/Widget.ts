@@ -56,7 +56,7 @@ class Widget {
 
     return {
       name,
-      type_result: config.type_result || '',
+      type: config.type_result || '',
       flow: {
         uuid: config.filter?.flow || '',
       },

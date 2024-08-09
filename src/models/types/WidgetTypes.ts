@@ -55,18 +55,18 @@ export type CardConfigTypeResults = 'executions' | 'flow_result' | '';
 
 type BaseCardConfig = {
   name: string;
-  type_result: CardConfigTypeResults;
+  type: CardConfigTypeResults;
   flow: {
     uuid: string;
   };
 };
 
 export interface ExecutionsCardConfig extends BaseCardConfig {
-  type_result: 'executions';
+  type: 'executions';
 }
 
 export interface FlowResultCardConfig extends BaseCardConfig {
-  type_result: 'flow_result';
+  type: 'flow_result';
   report_name?: string;
   flow: {
     uuid: string;

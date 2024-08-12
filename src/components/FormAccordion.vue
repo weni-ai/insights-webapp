@@ -74,6 +74,9 @@ export default {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+
+    margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
+    padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
   }
 
   &__header {

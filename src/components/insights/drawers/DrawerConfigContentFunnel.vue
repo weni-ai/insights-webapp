@@ -200,9 +200,6 @@ export default {
 
 <style lang="scss" scoped>
 .metric-form {
-  margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
-  padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
-
   display: grid;
   gap: $unnnic-spacing-nano;
 

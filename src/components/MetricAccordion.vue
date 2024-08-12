@@ -73,6 +73,7 @@ export default {
   :deep(.unnnic-collapse__body) {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
   }
 
   &__header {

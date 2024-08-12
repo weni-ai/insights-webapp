@@ -2,7 +2,7 @@
   <FormAccordion
     :title="title"
     :active="active"
-    :validConfig="!!configLocal.flow.uuid"
+    :validConfig="isValidConfig"
     highlighted
     @update:active="$emit('update:active', $event)"
   >
@@ -113,6 +113,17 @@ export default defineComponent({
         },
       ],
     };
+  },
+
+  computed: {
+    isValidConfig() {
+      const { configLocal } = this;
+      const mapValidations = {
+        executions: true,
+        flow_result: !!configLocal.flow.result,
+      };
+      return !!configLocal.flow.uuid && mapValidations[configLocal.result_type];
+    },
   },
 
   watch: {

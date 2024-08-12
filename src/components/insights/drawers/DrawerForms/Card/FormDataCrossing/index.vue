@@ -2,8 +2,10 @@
   <SubWidget
     v-for="(subwidget, index) of subwidgets"
     :key="subwidget.title"
-    :modelValue="subwidget"
-    @update:model-value="updateSubwidget(index + 1, $event)"
+    :title="subwidget.title"
+    :config="subwidget.config"
+    :active="activeSubwidget === index"
+    @update:config="updateSubwidget(index + 1, $event)"
     @update:active="updateActiveSubwidget(index, $event)"
   />
 
@@ -45,25 +47,27 @@ export default {
       subwidgets: [
         {
           title: this.$t('drawers.config_card.first_value'),
-          result_type: '',
-          operation: '',
-          flow: {
-            uuid: '',
-            result: '',
-            result_correspondence: '',
+          config: {
+            result_type: 'executions',
+            operation: '',
+            flow: {
+              uuid: '',
+              result: '',
+              result_correspondence: '',
+            },
           },
-          active: true,
         },
         {
           title: this.$t('drawers.config_card.second_value'),
-          result_type: '',
-          operation: '',
-          flow: {
-            uuid: '',
-            result: '',
-            result_correspondence: '',
+          config: {
+            result_type: 'executions',
+            operation: '',
+            flow: {
+              uuid: '',
+              result: '',
+              result_correspondence: '',
+            },
           },
-          active: false,
         },
       ],
       activeSubwidget: null,

@@ -1,32 +1,31 @@
 <template>
   <FormAccordion
-    :key="config.title"
+    :title="title"
     :active="active"
-    :title="config.title"
-    :validConfig="!!config.flow.uuid"
+    :validConfig="!!configLocal.flow.uuid"
     highlighted
     @update:active="$emit('update:active', $event)"
   >
     <template #content>
       <section class="subwidget-form">
-        <SelectFlow v-model="config.flow.uuid" />
+        <SelectFlow v-model="configLocal.flow.uuid" />
 
         <RadioList
-          v-model:selected-radio="config.result_type"
+          v-model:selected-radio="configLocal.result_type"
           :label="$t('drawers.config_card.result_type')"
           :radios="result_types"
           :wrap="false"
         />
 
-        <template v-if="config.result_type === 'flow_result'">
+        <template v-if="configLocal.result_type === 'flow_result'">
           <SelectFlowResult
-            v-model="config.flow.result"
-            :flow="config.flow?.uuid"
-            :disabled="!config.flow?.uuid"
+            v-model="configLocal.flow.result"
+            :flow="configLocal.flow?.uuid"
+            :disabled="!configLocal.flow?.uuid"
           />
 
           <RadioList
-            v-model:selected-radio="config.operation"
+            v-model:selected-radio="configLocal.operation"
             :radios="operations"
           />
         </template>
@@ -44,7 +43,6 @@ import RadioList from '@/components/RadioList.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 
 interface SubWidget {
-  title: string;
   result_type: string;
   operation: string;
   flow: {
@@ -52,7 +50,6 @@ interface SubWidget {
     result: string;
     result_correspondence: string;
   };
-  active: boolean;
 }
 
 export default defineComponent({
@@ -66,9 +63,14 @@ export default defineComponent({
   },
 
   props: {
-    modelValue: {
+    config: {
       type: Object as () => SubWidget,
       required: true,
+    },
+
+    title: {
+      type: String,
+      default: '',
     },
 
     active: {
@@ -77,11 +79,11 @@ export default defineComponent({
     },
   },
 
-  emits: ['update:active', 'update:model-value'],
+  emits: ['update:active', 'update:model-value', 'update:config'],
 
   data() {
     return {
-      config: this.modelValue,
+      configLocal: this.config,
       result_types: [
         {
           value: 'executions',
@@ -114,10 +116,10 @@ export default defineComponent({
   },
 
   watch: {
-    config: {
+    configLocal: {
       deep: true,
       handler(newConfig) {
-        this.$emit('update:model-value', newConfig);
+        this.$emit('update:config', newConfig);
       },
     },
   },

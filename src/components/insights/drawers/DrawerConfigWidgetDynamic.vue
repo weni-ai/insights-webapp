@@ -13,7 +13,7 @@
       :description="drawerProps?.description"
       :primaryButtonText="$t('save')"
       :secondaryButtonText="$t('cancel')"
-      :disabledPrimaryButton="disablePrimaryButton || isLoadingFlowOptions"
+      :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
       :loadingPrimaryButton="isLoadingUpdateConfig"
       :withoutOverlay="showModalResetWidget"
       @primary-button-click="updateWidgetConfig"
@@ -23,7 +23,8 @@
       <template #content>
         <section class="drawer-config-widget-dynamic__content">
           <component
-            :is="isLoadingFlowOptions ? content.loading : content.component"
+            :is="isLoadingProjectFlows ? content.loading : content.component"
+            v-if="widget"
             v-bind="contentProps"
             v-on="contentEvents"
           />
@@ -39,9 +40,8 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
-import Projects from '@/services/api/resources/projects';
 
 import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
 import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
@@ -66,10 +66,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    widget: {
-      type: Object,
-      default: () => ({}),
-    },
     configType: {
       type: String,
       default: '',
@@ -81,17 +77,17 @@ export default {
   data() {
     return {
       config: {},
-      flows: [],
-      flowsOptions: [
-        { value: '', label: this.$t('drawers.config_funnel.select_flow') },
-      ],
       disablePrimaryButton: false,
       isLoadingUpdateConfig: false,
-      isLoadingFlowOptions: false,
       showModalResetWidget: false,
     };
   },
   computed: {
+    ...mapState({
+      isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
+      widget: (state) => state.widgets.currentWidgetEditing,
+    }),
+
     drawerProps() {
       const { $t } = this;
       const configMap = {
@@ -137,15 +133,14 @@ export default {
       return componentMap[this.widget?.type] || {};
     },
     contentProps() {
-      const { flowsOptions, widget, flows } = this;
+      const { widget } = this;
 
       const defaultProps = {
-        flowsOptions,
         modelValue: widget,
       };
 
       const mappingProps = {
-        card: { flows, type: this.configType },
+        card: { type: this.configType },
       };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
@@ -178,7 +173,7 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
-          newWidget = this.createCardWidget;
+          newWidget = this.widget.config;
           break;
       }
 
@@ -191,35 +186,13 @@ export default {
         metricsObj[`metric_${index + 1}`] = {
           name: metric.name,
           operation: 'count',
-          filter: { flow: metric.flow?.[0].value },
+          filter: { flow: metric.flow },
         };
       });
 
       return {
         name: this.$t('widgets.graph_funnel.title'),
         config: metricsObj,
-      };
-    },
-
-    createCardWidget() {
-      const { config } = this;
-      const configuredFlow = config?.flow?.[0];
-      const operationRecurrenceConfigs =
-        config.result?.operation === 'recurrence' ? { data_suffix: '%' } : {};
-      return {
-        name: config.name,
-        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${configuredFlow?.label}`,
-        config: {
-          type_result: this.configType,
-          operation:
-            this.configType === 'executions'
-              ? 'count'
-              : config.result?.operation,
-          filter: { flow: configuredFlow?.value },
-          currency: !!config.result.currency,
-          op_field: config.result?.name[0]?.value,
-          ...operationRecurrenceConfigs,
-        },
       };
     },
   },
@@ -232,30 +205,12 @@ export default {
     },
   },
 
-  async created() {
-    await this.fetchFlowsSource();
-  },
-
   methods: {
     ...mapActions({
-      updateWidget: 'dashboards/updateWidget',
-      getCurrentDashboardWidgetData: 'dashboards/getCurrentDashboardWidgetData',
-      getWidgetGraphFunnelData: 'dashboards/getWidgetGraphFunnelData',
+      updateWidget: 'widgets/updateWidget',
+      getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
+      getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
     }),
-
-    fetchFlowsSource() {
-      this.isLoadingFlowOptions = true;
-      Projects.getProjectSource('flows')
-        .then((response) => {
-          this.flows = response;
-          this.flows?.forEach((source) => {
-            this.flowsOptions.push({ value: source.uuid, label: source.name });
-          });
-        })
-        .finally(() => {
-          this.isLoadingFlowOptions = false;
-        });
-    },
 
     internalClose() {
       this.$refs.unnnicDrawer.close();

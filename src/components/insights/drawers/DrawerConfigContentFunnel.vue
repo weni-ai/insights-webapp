@@ -2,13 +2,31 @@
   <MetricAccordion
     v-for="(metric, index) of metrics"
     :key="metric.title"
-    v-model:name="metric.name"
-    v-model:flow="metric.flow"
     :active="activeMetric === index"
     :title="metric.title"
-    :flowsOptions="flowsOptions"
+    :validConfig="!!metric.flow && !!metric.name.trim()"
     @update:active="updateActiveMetric(index, $event)"
-  />
+  >
+    <template #content>
+      <section class="metric-form">
+        <section>
+          <UnnnicLabel :label="$t('metric_accordion.name_metric.label')" />
+          <UnnnicInput
+            v-model="metric.name"
+            :placeholder="$t('metric_accordion.name_metric.placeholder')"
+          />
+        </section>
+        <SelectFlow v-model="metric.flow" />
+        <UnnnicButton
+          class="clear-button"
+          :text="$t('clear_fields')"
+          type="tertiary"
+          :disabled="!metric.flow && !metric.name"
+          @click="clearFields(index)"
+        />
+      </section>
+    </template>
+  </MetricAccordion>
   <UnnnicButton
     :text="$t('drawers.config_funnel.add_metric')"
     iconLeft="add"
@@ -19,23 +37,23 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 import MetricAccordion from '@/components/MetricAccordion.vue';
+import SelectFlow from '@/components/SelectFlow.vue';
 
 export default {
   name: 'DrawerConfigContentFunnel',
 
   components: {
     MetricAccordion,
+    SelectFlow,
   },
 
   props: {
     modelValue: {
       type: {},
       default: () => {},
-    },
-    flowsOptions: {
-      type: Array,
-      default: () => [],
     },
   },
 
@@ -48,19 +66,19 @@ export default {
         {
           title: this.$t('drawers.config_funnel.first_metric'),
           name: '',
-          flow: [],
+          flow: '',
           active: true,
         },
         {
           title: this.$t('drawers.config_funnel.second_metric'),
           name: '',
-          flow: [],
+          flow: '',
           active: false,
         },
         {
           title: this.$t('drawers.config_funnel.third_metric'),
           name: '',
-          flow: [],
+          flow: '',
           active: false,
         },
       ],
@@ -69,9 +87,12 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      projectFlows: (state) => state.project.flows,
+    }),
+
     validMetricsLength() {
-      return this.metrics.filter((metric) => metric.name && metric.flow.length)
-        .length;
+      return this.metrics.filter((metric) => metric.name && metric.flow).length;
     },
     isValidMetrics() {
       if (this.validMetricsLength < 3) {
@@ -82,7 +103,7 @@ export default {
         return metric;
       });
 
-      if (metricsToCompare.some((metric) => !metric.flow[0]?.value)) {
+      if (metricsToCompare.some((metric) => !metric.flow)) {
         return false;
       }
 
@@ -118,10 +139,15 @@ export default {
   },
 
   methods: {
+    clearFields(index) {
+      this.metrics[index].name = '';
+      this.metrics[index].flow = '';
+    },
+
     handleWidgetFields() {
       Object.values(this.modelValue.config).forEach((metric, index) => {
         const selectedFlow =
-          this.flowsOptions.find(
+          this.projectFlows.find(
             (flow) => flow.value === metric.filter?.flow,
           ) || {};
 
@@ -132,7 +158,7 @@ export default {
         this.metrics[index] = {
           ...this.metrics[index],
           name: metric.name,
-          flow: [selectedFlow],
+          flow: selectedFlow?.value,
         };
       });
       this.initialMetricsStringfy = JSON.stringify(
@@ -144,10 +170,13 @@ export default {
     },
 
     updateActiveMetric(index, isActive) {
+      this.metrics[index].active = isActive;
       if (isActive) {
         this.activeMetric = index;
       }
-      this.metrics[index].active = isActive;
+      if (this.activeMetric === index && !isActive) {
+        this.activeMetric = null;
+      }
     },
 
     addMetric() {
@@ -157,7 +186,7 @@ export default {
             ? this.$t('drawers.config_funnel.fourth_metric')
             : this.$t('drawers.config_funnel.fifth_metric'),
         name: '',
-        flow: [],
+        flow: '',
         active: false,
       };
 
@@ -168,3 +197,17 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.metric-form {
+  margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
+  padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
+
+  display: grid;
+  gap: $unnnic-spacing-nano;
+
+  .clear-button {
+    margin-top: $unnnic-spacing-nano;
+  }
+}
+</style>

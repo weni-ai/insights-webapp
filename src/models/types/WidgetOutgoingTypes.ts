@@ -67,7 +67,7 @@ type OutgoingDataCrossingSubwidgetFlowResult = {
   type_result: string;
 };
 
-type OutgoingDataCrossingSubwidget =
+export type OutgoingDataCrossingSubwidget =
   | OutgoingDataCrossingSubwidgetExecution
   | OutgoingDataCrossingSubwidgetFlowResult;
 

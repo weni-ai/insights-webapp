@@ -1,4 +1,6 @@
 import {
+  OutgoingCardConfig,
+  OutgoingDataCrossingSubwidget,
   OutgoingWidgetType,
   OutgoingWidgetTypeCard,
 } from './types/WidgetOutgoingTypes';
@@ -36,23 +38,57 @@ class Widget {
     config,
     report_name,
   }: OutgoingWidgetTypeCard): CardConfig {
-    const isFlowResult = config.type_result === 'flow_result';
+    const createFlowConfig = (
+      config: OutgoingCardConfig | OutgoingDataCrossingSubwidget,
+    ) => ({
+      uuid: config.filter?.flow || '',
+      result: 'op_field' in config ? config.op_field : '',
+    });
 
-    const flowResultConfig = isFlowResult
-      ? {
-          report_name: report_name || '',
-          flow: {
-            uuid: config.filter?.flow || '',
-            result: 'op_field' in config ? config.op_field : '',
-          },
-          operation: 'operation' in config ? config.operation : '',
-          currency: 'currency' in config ? config.currency : false,
-          data_suffix:
-            'operation' in config && config.operation === 'recurrence'
-              ? '%'
-              : '',
-        }
-      : {};
+    const createSubwidgetConfig = (
+      subwidgetConfig: OutgoingDataCrossingSubwidget,
+    ) => ({
+      result_type: subwidgetConfig?.type_result || '',
+      operation:
+        'operation' in subwidgetConfig ? subwidgetConfig?.operation : '',
+      flow: {
+        ...createFlowConfig(subwidgetConfig),
+        result_correspondence:
+          'op_sub_field' in subwidgetConfig
+            ? subwidgetConfig?.op_sub_field
+            : '',
+      },
+    });
+
+    const flowResultConfig = {
+      report_name: report_name || '',
+      flow: createFlowConfig(config),
+      operation: 'operation' in config ? config.operation : '',
+      currency: 'currency' in config ? config.currency : false,
+      data_suffix:
+        'operation' in config && config.operation === 'recurrence' ? '%' : '',
+    };
+
+    const dataCrossingConfig = {
+      operation: 'operator' in config ? config.operator : '',
+      currency: 'currency' in config ? config.currency : false,
+      friendly_id: 'friendly_id' in config ? config.friendly_id : '',
+      subwidget_1:
+        'subwidget_1' in config
+          ? createSubwidgetConfig(config.subwidget_1)
+          : {},
+      subwidget_2:
+        'subwidget_2' in config
+          ? createSubwidgetConfig(config.subwidget_2)
+          : {},
+    };
+
+    const additionalConfigMap = {
+      flow_result: flowResultConfig,
+      data_crossing: dataCrossingConfig,
+    };
+
+    const additionalConfig = additionalConfigMap[config.type_result] || {};
 
     return {
       name,
@@ -60,7 +96,7 @@ class Widget {
       flow: {
         uuid: config.filter?.flow || '',
       },
-      ...flowResultConfig,
+      ...additionalConfig,
     };
   }
 

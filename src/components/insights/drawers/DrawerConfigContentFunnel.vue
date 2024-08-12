@@ -5,7 +5,6 @@
     :active="activeMetric === index"
     :title="metric.title"
     :validConfig="!!metric.flow && !!metric.name.trim()"
-    highlighted
     @update:active="updateActiveMetric(index, $event)"
   >
     <template #content>

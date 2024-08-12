@@ -2,15 +2,15 @@
   <button
     :class="[
       'select-emoji-button',
-      { 'select-emoji-button--selected': emojiSelected },
+      { 'select-emoji-button--selected': !!modelValue },
     ]"
     @click.stop="handleEmojiPicker"
   >
     <section
-      v-if="emojiSelected"
+      v-if="modelValue"
       class="select-emoji-button__selected-emoji"
     >
-      {{ emojiSelected }}
+      {{ modelValue }}
     </section>
     <UnnnicIcon
       v-else
@@ -32,16 +32,17 @@ export default {
   name: 'SelectEmojiButton',
 
   props: {
-    emoji: {
+    modelValue: {
       type: String,
       default: '',
     },
   },
 
+  emits: ['update:model-value'],
+
   data() {
     return {
       isEmojiPickerOpen: false,
-      emojiSelected: this.emoji,
     };
   },
   methods: {
@@ -59,7 +60,7 @@ export default {
       }
     },
     handleInput(event) {
-      this.emojiSelected = event;
+      this.$emit('update:model-value', event);
       this.closeEmojiPicker();
     },
   },

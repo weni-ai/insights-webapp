@@ -12,7 +12,7 @@
     v-on="currentFormEvents"
   />
 
-  <SelectEmojiButton />
+  <SelectEmojiButton v-model="config.friendly_id" />
 
   <UnnnicButton
     :text="$t('drawers.reset_widget')"
@@ -29,7 +29,7 @@ import { checkDeepEmptyValues } from '@/utils/object';
 
 import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
 import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
-import FormDataCrossing from './DrawerForms/Card/FormDataCrossing.vue';
+import FormDataCrossing from './DrawerForms/Card/FormDataCrossing/index.vue';
 import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
 
 export default {
@@ -118,7 +118,11 @@ export default {
   },
 
   created() {
-    this.config = { ...this.widgetConfig, type: this.type };
+    this.config = {
+      ...this.widgetConfig,
+      type: this.type,
+      friendly_id: this.widgetConfig.friendly_id || '',
+    };
     this.initializeConfigString();
   },
 

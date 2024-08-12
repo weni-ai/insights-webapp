@@ -179,7 +179,10 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
-          newWidget = this.widget.config;
+          newWidget = {
+            name: this.widget.config.name,
+            config: this.widget.config,
+          };
           break;
       }
 

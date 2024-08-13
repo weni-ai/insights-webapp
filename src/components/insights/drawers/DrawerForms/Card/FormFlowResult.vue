@@ -53,7 +53,7 @@ export default {
         },
         {
           value: 'max',
-          label: this.$t('drawers.config_card.radios.max'),
+          label: this.$t('drawers.config_card.radios.highest_value'),
         },
         {
           value: 'avg',
@@ -61,7 +61,7 @@ export default {
         },
         {
           value: 'min',
-          label: this.$t('drawers.config_card.radios.min'),
+          label: this.$t('drawers.config_card.radios.lowest_value'),
         },
         {
           value: 'recurrence',
@@ -113,13 +113,14 @@ export default {
   },
 
   created() {
+    const { widgetConfig } = this;
     this.config = {
       flow: {
-        uuid: this.widgetConfig.flow.uuid || '',
-        result: this.widgetConfig.flow.result || '',
+        uuid: widgetConfig.flow?.uuid || '',
+        result: widgetConfig.flow?.result || '',
       },
-      operation: this.widgetConfig.operation || '',
-      currency: this.widgetConfig.currency || false,
+      operation: widgetConfig.operation || '',
+      currency: widgetConfig.currency || false,
     };
   },
 

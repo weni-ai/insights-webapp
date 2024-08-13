@@ -113,6 +113,12 @@ export default {
               `drawers.config_gallery.options.flow_result.description`,
             ),
           },
+          data_crossing: {
+            title: $t(`drawers.config_gallery.options.data_crossing.title`),
+            description: $t(
+              `drawers.config_gallery.options.data_crossing.description`,
+            ),
+          },
         },
       };
 
@@ -173,7 +179,10 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
-          newWidget = this.widget.config;
+          newWidget = {
+            name: this.widget.config.name,
+            config: this.widget.config,
+          };
           break;
       }
 

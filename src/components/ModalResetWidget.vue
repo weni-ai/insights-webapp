@@ -64,7 +64,7 @@ export default {
       try {
         await this.updateWidget({
           ...this.widget,
-          config: clearDeepValues(this.widget.config),
+          config: { ...clearDeepValues(this.widget.config), currency: false },
           name: '',
         });
 

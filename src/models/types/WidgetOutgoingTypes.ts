@@ -29,19 +29,56 @@ export interface OutgoingWidgetTypeCard extends OutgoingWidgetTypeBase {
 
 type OutgoingBaseCardConfig = {
   type_result: CardConfigTypeResults;
+  friendly_id: string;
+};
+
+export interface OutgoingExecutionsCardConfig extends OutgoingBaseCardConfig {
+  type_result: 'executions';
+  filter: {
+    flow: string;
+  };
+}
+
+export interface OutgoingFlowResultCardConfig extends OutgoingBaseCardConfig {
+  type_result: 'flow_result';
+  filter: {
+    flow: string;
+  };
+  operation: string;
+  currency: boolean;
+  op_field: string;
+}
+export interface OutgoingDataCrossingCardConfig extends OutgoingBaseCardConfig {
+  type_result: 'data_crossing';
+  operator: string;
+  currency: boolean;
+  subwidget_1: OutgoingDataCrossingSubwidget;
+  subwidget_2: OutgoingDataCrossingSubwidget;
+}
+
+type OutgoingDataCrossingSubwidgetExecution = {
+  type_result: 'executions';
+  operation: string;
   filter: {
     flow: string;
   };
 };
 
-export interface OutgoingExecutionsCardConfig extends OutgoingBaseCardConfig {}
-
-export interface OutgoingFlowResultCardConfig extends OutgoingBaseCardConfig {
-  operation: string;
-  currency: boolean;
+type OutgoingDataCrossingSubwidgetFlowResult = {
+  type_result: 'flow_result';
+  filter: {
+    flow: string;
+  };
   op_field: string;
-}
+  op_sub_field: string;
+  operation: string;
+};
+
+export type OutgoingDataCrossingSubwidget =
+  | OutgoingDataCrossingSubwidgetExecution
+  | OutgoingDataCrossingSubwidgetFlowResult;
 
 export type OutgoingCardConfig =
   | OutgoingExecutionsCardConfig
-  | OutgoingFlowResultCardConfig;
+  | OutgoingFlowResultCardConfig
+  | OutgoingDataCrossingCardConfig;

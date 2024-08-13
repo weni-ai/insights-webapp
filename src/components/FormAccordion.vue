@@ -1,15 +1,15 @@
 <template>
   <UnnnicCollapse
-    class="metric-accordion"
+    class="form-accordion"
     :class="{
-      'metric-accordion--active': active,
+      'form-accordion--active': active,
       highlighted: active && highlighted,
     }"
     :active="active"
     @change="$emit('update:active', $event)"
   >
     <template #header>
-      <header class="metric-accordion__header">
+      <header class="form-accordion__header">
         <UnnnicIcon
           icon="check_circle"
           :scheme="iconScheme"
@@ -25,7 +25,7 @@
 
 <script>
 export default {
-  name: 'MetricAccordion',
+  name: 'FormAccordion',
 
   props: {
     active: {
@@ -57,7 +57,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.metric-accordion {
+.form-accordion {
   border-radius: $unnnic-border-radius-sm;
   border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
 
@@ -73,6 +73,10 @@ export default {
   :deep(.unnnic-collapse__body) {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+
+    margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
+    padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
   }
 
   &__header {

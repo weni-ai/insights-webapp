@@ -1,5 +1,5 @@
 <template>
-  <MetricAccordion
+  <FormAccordion
     v-for="(metric, index) of metrics"
     :key="metric.title"
     :active="activeMetric === index"
@@ -26,7 +26,7 @@
         />
       </section>
     </template>
-  </MetricAccordion>
+  </FormAccordion>
   <UnnnicButton
     :text="$t('drawers.config_funnel.add_metric')"
     iconLeft="add"
@@ -39,14 +39,14 @@
 <script>
 import { mapState } from 'vuex';
 
-import MetricAccordion from '@/components/MetricAccordion.vue';
+import FormAccordion from '@/components/FormAccordion.vue';
 import SelectFlow from '@/components/SelectFlow.vue';
 
 export default {
   name: 'DrawerConfigContentFunnel',
 
   components: {
-    MetricAccordion,
+    FormAccordion,
     SelectFlow,
   },
 
@@ -200,9 +200,6 @@ export default {
 
 <style lang="scss" scoped>
 .metric-form {
-  margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
-  padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
-
   display: grid;
   gap: $unnnic-spacing-nano;
 

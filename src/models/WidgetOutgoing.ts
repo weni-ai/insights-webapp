@@ -5,6 +5,10 @@ import {
   WidgetReport,
   CardConfig,
   WidgetInternalType,
+  DataCrossingSubwidget,
+  ExecutionsCardConfig,
+  FlowResultCardConfig,
+  DataCrossingCardConfig,
 } from './types/WidgetTypes';
 import { OutgoingCardConfig } from './types/WidgetOutgoingTypes';
 
@@ -19,20 +23,65 @@ class OutgoingWidget {
   is_configurable: boolean;
 
   private _prepareCardConfig(config: CardConfig): OutgoingCardConfig {
-    const isFlowResult = config.type === 'flow_result';
+    const createFlowConfig = (
+      config:
+        | ExecutionsCardConfig
+        | FlowResultCardConfig
+        | DataCrossingSubwidget,
+    ) => ({
+      flow: config.flow.uuid || '',
+    });
 
-    const flowResultConfig = isFlowResult
-      ? {
-          op_field: 'result' in config.flow ? config.flow.result : '',
-          operation: 'operation' in config ? config.operation : '',
-          currency: 'operation' in config ? config.currency : '',
-        }
-      : {};
+    const executionsConfig = (config: ExecutionsCardConfig) => ({
+      filter: createFlowConfig(config),
+    });
+
+    const flowResultConfig = (config: FlowResultCardConfig) => ({
+      filter: createFlowConfig(config),
+      // report_name: report_name || '',
+      op_field: config.flow.result || '',
+      operation: config.operation || '',
+      currency: config.currency || false,
+      data_suffix: config.operation === 'recurrence' ? '%' : '',
+    });
+
+    const dataCrossingConfig = (config: DataCrossingCardConfig) => {
+      const createSubwidgetConfig = (
+        subwidgetConfig: DataCrossingSubwidget,
+      ) => ({
+        type_result: subwidgetConfig?.result_type || '',
+        operation:
+          'operation' in subwidgetConfig ? subwidgetConfig?.operation : '',
+        filter: createFlowConfig(subwidgetConfig),
+        ...(subwidgetConfig?.result_type === 'flow_result'
+          ? {
+              op_field: subwidgetConfig.flow.result,
+              op_sub_field: subwidgetConfig.flow.result_correspondence,
+              operation: subwidgetConfig.operation,
+            }
+          : {}),
+      });
+
+      return {
+        operator: config.operation || '',
+        currency: config.currency || false,
+        subwidget_1: createSubwidgetConfig(config.subwidget_1) || {},
+        subwidget_2: createSubwidgetConfig(config.subwidget_2) || {},
+      };
+    };
+
+    const additionalConfigMap = {
+      executions: () => executionsConfig(config as ExecutionsCardConfig),
+      flow_result: () => flowResultConfig(config as FlowResultCardConfig),
+      data_crossing: () => dataCrossingConfig(config as DataCrossingCardConfig),
+    };
+
+    const additionalConfig = additionalConfigMap[config.type]?.() || {};
 
     return {
-      filter: { flow: config.flow.uuid || '' },
       type_result: config.type,
-      ...flowResultConfig,
+      friendly_id: config.friendly_id || '',
+      ...additionalConfig,
     };
   }
 

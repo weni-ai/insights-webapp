@@ -71,7 +71,7 @@ export default {
           },
         },
       ],
-      activeSubwidget: 0,
+      activeSubwidget: null,
       isSubwidgetsValids: {
         subwidget_1: false,
         subwidget_2: false,
@@ -116,11 +116,10 @@ export default {
     isValidForm() {
       const { config } = this;
 
-      return (
-        config?.flow?.uuid &&
-        config?.flow?.result &&
-        config?.operation &&
-        Object.values(this.isSubwidgetsValids).every((subwiget) => !!subwiget)
+      return !!(
+        Object.values(this.isSubwidgetsValids).every(
+          (subwiget) => !!subwiget,
+        ) && config?.operation
       );
     },
   },
@@ -155,29 +154,13 @@ export default {
   },
 
   created() {
-    const { widgetConfig } = this;
+    this.handleConfig();
+  },
 
-    const createFlowConfig = (flowConfig) => ({
-      uuid: flowConfig?.uuid || '',
-      result: flowConfig?.result || '',
+  mounted() {
+    this.$nextTick().then(() => {
+      this.activeSubwidget = 0;
     });
-
-    const createSubwidgetConfig = (subwidgetConfig) => ({
-      result_type: subwidgetConfig?.type_result || '',
-      operation: subwidgetConfig?.operator || '',
-      flow: {
-        ...createFlowConfig(subwidgetConfig?.flow || {}),
-        result_correspondence: subwidgetConfig?.result_correspondence || '',
-      },
-    });
-
-    this.config = {
-      flow: createFlowConfig(widgetConfig.flow || {}),
-      operation: widgetConfig.operation || 'min',
-      currency: widgetConfig.currency || false,
-      subwidget_1: createSubwidgetConfig(widgetConfig.subwidget_1 || {}),
-      subwidget_2: createSubwidgetConfig(widgetConfig.subwidget_2 || {}),
-    };
   },
 
   methods: {
@@ -185,6 +168,31 @@ export default {
       updateCurrentWidgetEditingConfig:
         'widgets/updateCurrentWidgetEditingConfig',
     }),
+
+    handleConfig() {
+      const { widgetConfig } = this;
+
+      const createFlowConfig = (flowConfig) => ({
+        uuid: flowConfig?.uuid || '',
+        result: flowConfig?.result || '',
+      });
+
+      const createSubwidgetConfig = (subwidgetConfig) => ({
+        result_type: subwidgetConfig?.type_result || '',
+        operation: subwidgetConfig?.operator || '',
+        flow: {
+          ...createFlowConfig(subwidgetConfig?.flow || {}),
+          result_correspondence: subwidgetConfig?.result_correspondence || '',
+        },
+      });
+
+      this.config = {
+        subwidget_1: createSubwidgetConfig(widgetConfig.subwidget_1 || {}),
+        subwidget_2: createSubwidgetConfig(widgetConfig.subwidget_2 || {}),
+        operation: widgetConfig.operation || 'min',
+        currency: widgetConfig.currency || false,
+      };
+    },
 
     updateSubwidget(id, value) {
       this.config[`subwidget_${id}`] = value;

@@ -60,13 +60,14 @@ export type CardConfigTypeResults =
 type BaseCardConfig = {
   name: string;
   type: CardConfigTypeResults;
-  flow: {
-    uuid: string;
-  };
+  friendly_id: string;
 };
 
 export interface ExecutionsCardConfig extends BaseCardConfig {
   type: 'executions';
+  flow: {
+    uuid: string;
+  };
 }
 
 export interface FlowResultCardConfig extends BaseCardConfig {
@@ -83,32 +84,30 @@ export interface FlowResultCardConfig extends BaseCardConfig {
 
 export interface DataCrossingCardConfig extends BaseCardConfig {
   operation: string;
-  friendly_id: string;
   currency: boolean;
-
   subwidget_1: DataCrossingSubwidget;
   subwidget_2: DataCrossingSubwidget;
 }
 
 type DataCrossingSubwidgetExecution = {
-  result_type: string;
+  result_type: 'executions';
   operation: string;
   flow: {
     uuid: string;
   };
 };
 
-type DataCrossingSubwidgetFlowResult = {
+export type DataCrossingSubwidgetFlowResult = {
   flow: {
     uuid: string;
     result: string;
     result_correspondence: string;
   };
-  result_type: string;
+  result_type: 'flow_result';
   operation: string;
 };
 
-type DataCrossingSubwidget =
+export type DataCrossingSubwidget =
   | DataCrossingSubwidgetExecution
   | DataCrossingSubwidgetFlowResult;
 

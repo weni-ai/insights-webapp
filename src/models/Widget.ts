@@ -1,6 +1,8 @@
 import {
-  OutgoingCardConfig,
+  OutgoingDataCrossingCardConfig,
   OutgoingDataCrossingSubwidget,
+  OutgoingExecutionsCardConfig,
+  OutgoingFlowResultCardConfig,
   OutgoingWidgetType,
   OutgoingWidgetTypeCard,
 } from './types/WidgetOutgoingTypes';
@@ -39,63 +41,76 @@ class Widget {
     report_name,
   }: OutgoingWidgetTypeCard): CardConfig {
     const createFlowConfig = (
-      config: OutgoingCardConfig | OutgoingDataCrossingSubwidget,
+      subconfig:
+        | OutgoingExecutionsCardConfig
+        | OutgoingFlowResultCardConfig
+        | OutgoingDataCrossingSubwidget,
     ) => ({
-      uuid: config.filter?.flow || '',
-      result: 'op_field' in config ? config.op_field : '',
+      uuid: subconfig.filter.flow || '',
+      ...(subconfig.type_result === 'flow_result'
+        ? {
+            result: subconfig?.op_field || '',
+          }
+        : {}),
+      ...('op_sub_field' in config
+        ? {
+            result_correspondence: config?.op_sub_field || '',
+          }
+        : {}),
     });
 
-    const createSubwidgetConfig = (
-      subwidgetConfig: OutgoingDataCrossingSubwidget,
-    ) => ({
-      result_type: subwidgetConfig?.type_result || '',
-      operation:
-        'operation' in subwidgetConfig ? subwidgetConfig?.operation : '',
-      flow: {
-        ...createFlowConfig(subwidgetConfig),
-        result_correspondence:
-          'op_sub_field' in subwidgetConfig
-            ? subwidgetConfig?.op_sub_field
-            : '',
-      },
+    const executionsConfig = (config: OutgoingExecutionsCardConfig) => ({
+      flow: createFlowConfig(config),
     });
 
-    const flowResultConfig = {
+    const flowResultConfig = (config: OutgoingFlowResultCardConfig) => ({
       report_name: report_name || '',
       flow: createFlowConfig(config),
-      operation: 'operation' in config ? config.operation : '',
-      currency: 'currency' in config ? config.currency : false,
-      data_suffix:
-        'operation' in config && config.operation === 'recurrence' ? '%' : '',
-    };
+      operation: config.operation || '',
+      currency: config.currency || false,
+      data_suffix: config.operation === 'recurrence' ? '%' : '',
+    });
 
-    const dataCrossingConfig = {
-      operation: 'operator' in config ? config.operator : '',
-      currency: 'currency' in config ? config.currency : false,
-      friendly_id: 'friendly_id' in config ? config.friendly_id : '',
-      subwidget_1:
-        'subwidget_1' in config
-          ? createSubwidgetConfig(config.subwidget_1)
-          : {},
-      subwidget_2:
-        'subwidget_2' in config
-          ? createSubwidgetConfig(config.subwidget_2)
-          : {},
+    const dataCrossingConfig = (config: OutgoingDataCrossingCardConfig) => {
+      const createSubwidgetConfig = (
+        subwidgetConfig: OutgoingDataCrossingSubwidget,
+      ) => ({
+        result_type: subwidgetConfig?.type_result || 'executions',
+        operation: subwidgetConfig?.operation || 'avg',
+        flow: {
+          ...createFlowConfig(subwidgetConfig),
+          ...(subwidgetConfig?.type_result === 'flow_result'
+            ? {
+                result: subwidgetConfig?.op_field || '',
+                result_correspondence: subwidgetConfig?.op_sub_field || '',
+              }
+            : {}),
+        },
+      });
+
+      return {
+        operation: config.operator || 'min',
+        currency: config.currency || false,
+        subwidget_1: createSubwidgetConfig(config.subwidget_1) || {},
+        subwidget_2: createSubwidgetConfig(config.subwidget_2) || {},
+      };
     };
 
     const additionalConfigMap = {
-      flow_result: flowResultConfig,
-      data_crossing: dataCrossingConfig,
+      executions: () =>
+        executionsConfig(config as OutgoingExecutionsCardConfig),
+      flow_result: () =>
+        flowResultConfig(config as OutgoingFlowResultCardConfig),
+      data_crossing: () =>
+        dataCrossingConfig(config as OutgoingDataCrossingCardConfig),
     };
 
-    const additionalConfig = additionalConfigMap[config.type_result] || {};
+    const additionalConfig = additionalConfigMap[config.type_result]?.() || {};
 
     return {
       name,
       type: config.type_result || '',
-      flow: {
-        uuid: config.filter?.flow || '',
-      },
+      friendly_id: config.friendly_id || '',
       ...additionalConfig,
     };
   }

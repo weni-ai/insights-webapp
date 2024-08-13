@@ -139,8 +139,11 @@ export default defineComponent({
       },
     },
 
-    isValidConfig(newIsValid) {
-      this.$emit('is-valid-form', newIsValid);
+    isValidConfig: {
+      immediate: true,
+      handler(newIsValid) {
+        this.$emit('is-valid-form', newIsValid);
+      },
     },
   },
 });

@@ -45,32 +45,7 @@ export default {
     return {
       config: null,
 
-      subwidgets: [
-        {
-          title: this.$t('drawers.config_card.first_value'),
-          config: {
-            result_type: 'executions',
-            operation: 'avg',
-            flow: {
-              uuid: '',
-              result: '',
-              result_correspondence: '',
-            },
-          },
-        },
-        {
-          title: this.$t('drawers.config_card.second_value'),
-          config: {
-            result_type: 'executions',
-            operation: 'avg',
-            flow: {
-              uuid: '',
-              result: '',
-              result_correspondence: '',
-            },
-          },
-        },
-      ],
+      subwidgets: null,
       activeSubwidget: null,
       isSubwidgetsValids: {
         subwidget_1: false,
@@ -178,20 +153,31 @@ export default {
       });
 
       const createSubwidgetConfig = (subwidgetConfig) => ({
-        result_type: subwidgetConfig?.type_result || '',
-        operation: subwidgetConfig?.operator || '',
+        result_type: subwidgetConfig?.result_type || 'executions',
+        operation: subwidgetConfig?.operation || 'avg',
         flow: {
-          ...createFlowConfig(subwidgetConfig?.flow || {}),
+          ...createFlowConfig(subwidgetConfig?.flow),
           result_correspondence: subwidgetConfig?.result_correspondence || '',
         },
       });
 
       this.config = {
-        subwidget_1: createSubwidgetConfig(widgetConfig.subwidget_1 || {}),
-        subwidget_2: createSubwidgetConfig(widgetConfig.subwidget_2 || {}),
+        subwidget_1: createSubwidgetConfig(widgetConfig.subwidget_1),
+        subwidget_2: createSubwidgetConfig(widgetConfig.subwidget_2),
         operation: widgetConfig.operation || 'min',
         currency: widgetConfig.currency || false,
       };
+
+      this.subwidgets = [
+        {
+          title: this.$t('drawers.config_card.first_value'),
+          config: this.config.subwidget_1,
+        },
+        {
+          title: this.$t('drawers.config_card.second_value'),
+          config: this.config.subwidget_2,
+        },
+      ];
     },
 
     updateSubwidget(id, value) {

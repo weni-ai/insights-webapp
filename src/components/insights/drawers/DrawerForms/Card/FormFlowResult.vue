@@ -116,8 +116,8 @@ export default {
     const { widgetConfig } = this;
     this.config = {
       flow: {
-        uuid: widgetConfig.flow.uuid || '',
-        result: widgetConfig.flow.result || '',
+        uuid: widgetConfig.flow?.uuid || '',
+        result: widgetConfig.flow?.result || '',
       },
       operation: widgetConfig.operation || '',
       currency: widgetConfig.currency || false,

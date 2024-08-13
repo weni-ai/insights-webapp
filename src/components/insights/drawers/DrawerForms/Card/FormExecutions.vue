@@ -54,7 +54,7 @@ export default {
   created() {
     this.config = {
       flow: {
-        uuid: this.widgetConfig.flow.uuid,
+        uuid: this.widgetConfig.flow?.uuid || '',
       },
     };
   },

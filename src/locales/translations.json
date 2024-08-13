@@ -142,9 +142,9 @@
         "es": "Configurar el @.lower:flow de origen nuevamente para obtener datos válidos"
       },
       "metric_empty": {
-        "pt-br": "@:metric vazia",
-        "en": "Empty @.lower:metric",
-        "es": "@:metric vacía"
+        "pt-br": "Configurar",
+        "en": "Configure",
+        "es": "Configurar"
       },
       "metric_set": {
         "pt-br": "Definir @.lower:metric",

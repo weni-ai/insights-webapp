@@ -60,6 +60,7 @@ class Widget {
       flow: {
         uuid: config.filter?.flow || '',
       },
+      friendly_id: config.friendly_id,
       ...flowResultConfig,
     };
   }

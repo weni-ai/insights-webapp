@@ -90,6 +90,7 @@ export default {
           but still have empty fields in the "config" object. */
           clickable: !!report,
           configurable: is_configurable,
+          friendlyId: config.friendly_id,
         },
         table_dynamic_by_filter: {
           headerIcon: tableDynamicFilterConfig?.icon?.name,

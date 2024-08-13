@@ -34,6 +34,7 @@ class OutgoingWidget {
 
     const executionsConfig = (config: ExecutionsCardConfig) => ({
       filter: createFlowConfig(config),
+      operation: 'count',
     });
 
     const flowResultConfig = (config: FlowResultCardConfig) => ({

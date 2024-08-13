@@ -155,7 +155,8 @@ export default {
         white-space: nowrap;
       }
       &__friendly-id {
-        font-size: 24px;
+        font-size: $unnnic-font-size-title-md;
+        padding-bottom: $unnnic-spacing-nano * 1.5;
       }
       &__value {
         font-family: $unnnic-font-family-primary;

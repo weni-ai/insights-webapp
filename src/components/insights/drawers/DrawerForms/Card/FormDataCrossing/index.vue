@@ -7,6 +7,7 @@
     :active="activeSubwidget === index"
     @update:config="updateSubwidget(index + 1, $event)"
     @update:active="updateActiveSubwidget(index, $event)"
+    @is-valid-form="updateSubwigetValid(index, $event)"
   />
 
   <RadioList
@@ -49,7 +50,7 @@ export default {
           title: this.$t('drawers.config_card.first_value'),
           config: {
             result_type: 'executions',
-            operation: '',
+            operation: 'avg',
             flow: {
               uuid: '',
               result: '',
@@ -61,7 +62,7 @@ export default {
           title: this.$t('drawers.config_card.second_value'),
           config: {
             result_type: 'executions',
-            operation: '',
+            operation: 'avg',
             flow: {
               uuid: '',
               result: '',
@@ -70,7 +71,11 @@ export default {
           },
         },
       ],
-      activeSubwidget: null,
+      activeSubwidget: 0,
+      isSubwidgetsValids: {
+        subwidget_1: false,
+        subwidget_2: false,
+      },
 
       operations: [
         {
@@ -111,7 +116,12 @@ export default {
     isValidForm() {
       const { config } = this;
 
-      return config?.flow?.uuid && config?.flow?.result && config?.operation;
+      return (
+        config?.flow?.uuid &&
+        config?.flow?.result &&
+        config?.operation &&
+        Object.values(this.isSubwidgetsValids).every((subwiget) => !!subwiget)
+      );
     },
   },
 
@@ -163,7 +173,7 @@ export default {
 
     this.config = {
       flow: createFlowConfig(widgetConfig.flow || {}),
-      operation: widgetConfig.operation || '',
+      operation: widgetConfig.operation || 'min',
       currency: widgetConfig.currency || false,
       subwidget_1: createSubwidgetConfig(widgetConfig.subwidget_1 || {}),
       subwidget_2: createSubwidgetConfig(widgetConfig.subwidget_2 || {}),
@@ -181,13 +191,16 @@ export default {
     },
 
     updateActiveSubwidget(index, isActive) {
-      this.subwidgets[index].active = isActive;
       if (isActive) {
         this.activeSubwidget = index;
       }
       if (this.activeSubwidget === index && !isActive) {
         this.activeSubwidget = null;
       }
+    },
+
+    updateSubwigetValid(index, isValid) {
+      this.isSubwidgetsValids[`subwidget_${index + 1}`] = isValid;
     },
 
     updateFormatations(newFormatations) {

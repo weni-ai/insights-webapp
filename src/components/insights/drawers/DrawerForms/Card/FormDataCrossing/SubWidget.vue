@@ -79,7 +79,12 @@ export default defineComponent({
     },
   },
 
-  emits: ['update:active', 'update:model-value', 'update:config'],
+  emits: [
+    'update:active',
+    'update:model-value',
+    'update:config',
+    'is-valid-form',
+  ],
 
   data() {
     return {
@@ -120,7 +125,7 @@ export default defineComponent({
       const { configLocal } = this;
       const mapValidations = {
         executions: true,
-        flow_result: !!configLocal.flow.result,
+        flow_result: !!configLocal.flow.result && !!configLocal.operation,
       };
       return !!configLocal.flow.uuid && mapValidations[configLocal.result_type];
     },
@@ -133,6 +138,17 @@ export default defineComponent({
         this.$emit('update:config', newConfig);
       },
     },
+
+    isValidConfig(newIsValid) {
+      this.$emit('is-valid-form', newIsValid);
+    },
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.subwidget-form {
+  display: grid;
+  gap: $unnnic-spacing-xs;
+}
+</style>

@@ -76,7 +76,7 @@ class OutgoingWidget {
       data_crossing: () => dataCrossingConfig(config as DataCrossingCardConfig),
     };
 
-    const additionalConfig = additionalConfigMap[config.type]?.() || {};
+    const additionalConfig = additionalConfigMap[config.type]?.() || config;
 
     return {
       type_result: config.type,

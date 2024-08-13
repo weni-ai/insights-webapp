@@ -10,7 +10,7 @@
       v-if="modelValue"
       class="select-emoji-button__selected-emoji"
     >
-      {{ modelValue }}
+      {{ selectedEmoji }}
     </section>
     <UnnnicIcon
       v-else
@@ -21,6 +21,7 @@
 
     <UnnnicEmojiPicker
       v-show="isEmojiPickerOpen"
+      returnName
       @emoji-selected="handleInput"
       @close="closeEmojiPicker"
     />
@@ -28,6 +29,7 @@
 </template>
 
 <script>
+import { emojis } from '@emoji-mart/data';
 export default {
   name: 'SelectEmojiButton',
 
@@ -44,6 +46,13 @@ export default {
     return {
       isEmojiPickerOpen: false,
     };
+  },
+  computed: {
+    selectedEmoji() {
+      if (!this.modelValue) return '';
+      const emoji = emojis[this.modelValue]?.skins?.[0]?.native || '';
+      return emoji;
+    },
   },
   methods: {
     openEmojiPicker() {

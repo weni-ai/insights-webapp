@@ -59,6 +59,9 @@ export default {
         []
       );
     },
+    selectEmpty() {
+      return [this.flowResultsOptionsPlaceholder];
+    },
   },
 
   watch: {
@@ -79,10 +82,9 @@ export default {
   methods: {
     treatModelValue() {
       const { modelValue } = this;
-      const selectEmpty = [this.flowResultsOptionsPlaceholder];
 
       if (!modelValue) {
-        this.flowResult = selectEmpty;
+        this.flowResult = this.selectEmpty;
         return;
       }
 
@@ -93,7 +95,8 @@ export default {
         object: Array.isArray(modelValue) ? modelValue : [modelValue],
       };
 
-      this.flowResult = modelValueByTypeMap[typeof modelValue] || selectEmpty;
+      this.flowResult =
+        modelValueByTypeMap[typeof modelValue] || this.selectEmpty;
     },
 
     updateFlowResultsOptions() {
@@ -101,6 +104,7 @@ export default {
         this.flowResultsOptionsPlaceholder,
         ...this.flowResults,
       ];
+      this.flowResult = this.selectEmpty;
     },
   },
 };

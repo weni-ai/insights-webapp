@@ -19,6 +19,7 @@ class OutgoingWidget {
   config: WidgetConfig;
   grid_position: GridPosition;
   report: WidgetReport;
+  report_name: string;
   source: string;
   is_configurable: boolean;
 
@@ -39,7 +40,6 @@ class OutgoingWidget {
 
     const flowResultConfig = (config: FlowResultCardConfig) => ({
       filter: createFlowConfig(config),
-      // report_name: report_name || '',
       op_field: config.flow.result || '',
       operation: config.operation || '',
       currency: config.currency || false,
@@ -100,6 +100,7 @@ class OutgoingWidget {
     this.type = params.type;
     this.grid_position = params.grid_position;
     this.report = params.report;
+    this.report_name = params.report_name;
     this.source = params.source;
     this.config = this._prepareConfig(params);
     this.is_configurable = params.is_configurable;

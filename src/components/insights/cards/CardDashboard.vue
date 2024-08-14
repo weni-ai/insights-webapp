@@ -15,15 +15,34 @@
         </p>
       </template>
 
-      <IconLoading v-else-if="isLoading" />
-
-      <h1
+      <section
         v-else
         class="content-metric"
-        :title="configured ? metric : '0'"
       >
-        {{ configured ? metric : '0' }}
-      </h1>
+        <section class="content-metric__container">
+          <p
+            v-if="friendlyEmoji"
+            class="content-metric__friendly-id"
+          >
+            {{ friendlyEmoji }}
+          </p>
+          <IconLoading v-if="isLoading" />
+          <h1
+            v-else
+            class="content-metric__value"
+            :title="configured ? metric : '0'"
+          >
+            {{ configured ? metric : '0' }}
+          </h1>
+        </section>
+        <UnnnicButton
+          v-if="configurable || !configured"
+          class="card-dashboard__button-config"
+          type="tertiary"
+          iconCenter="tune"
+          @click.stop="$emit('open-config')"
+        />
+      </section>
       <p
         v-if="!showMetricError"
         class="content-description"
@@ -32,15 +51,6 @@
         {{ configured ? description : $t('widgets.card.metric_empty') }}
       </p>
     </section>
-    <UnnnicButton
-      v-if="configurable || !configured"
-      class="card-dashboard__button-config"
-      type="secondary"
-      :iconCenter="configured ? 'tune' : ''"
-      :iconLeft="configured ? '' : 'tune'"
-      :text="configured ? '' : $t('widgets.card.metric_set')"
-      @click.stop="$emit('open-config')"
-    />
   </CardBase>
 </template>
 
@@ -49,6 +59,8 @@ import IconLoading from '@/components/IconLoading.vue';
 
 import CardBase from './CardBase.vue';
 import CardTitleError from './CardTitleError.vue';
+
+import { emojis } from '@emoji-mart/data';
 
 export default {
   name: 'DashboardCard',
@@ -68,6 +80,10 @@ export default {
       type: String,
       default: '',
     },
+    friendlyId: {
+      type: String,
+      default: '',
+    },
     clickable: Boolean,
     configured: Boolean,
     configurable: Boolean,
@@ -79,6 +95,11 @@ export default {
   computed: {
     showMetricError() {
       return this.metric === null;
+    },
+    friendlyEmoji() {
+      if (!this.friendlyId) return '';
+      const emoji = emojis[this.friendlyId]?.skins?.[0]?.native || '';
+      return emoji;
     },
   },
 };
@@ -113,6 +134,7 @@ export default {
   }
 
   .card__content {
+    width: 100%;
     color: $unnnic-color-neutral-darkest;
     display: grid;
     gap: $unnnic-spacing-nano;
@@ -122,13 +144,29 @@ export default {
       line-height: $unnnic-line-height-medium * 3;
     }
     .content-metric {
-      font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-lg;
-      line-height: $unnnic-line-height-large * 3;
-      font-weight: $unnnic-font-weight-bold;
+      display: flex;
+      justify-content: space-between;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      &__container {
+        display: flex;
+        align-items: center;
+        gap: $unnnic-spacing-ant;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      &__friendly-id {
+        font-size: $unnnic-font-size-title-md;
+        padding-bottom: $unnnic-spacing-nano * 1.5;
+      }
+      &__value {
+        font-family: $unnnic-font-family-primary;
+        font-size: $unnnic-font-size-title-lg;
+        line-height: $unnnic-line-height-large * 3;
+        font-weight: $unnnic-font-weight-bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
     .content-description {
       font-size: $unnnic-font-size-body-lg;

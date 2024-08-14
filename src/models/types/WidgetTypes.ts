@@ -59,6 +59,7 @@ type BaseCardConfig = {
   flow: {
     uuid: string;
   };
+  friendly_id: string;
 };
 
 export interface ExecutionsCardConfig extends BaseCardConfig {

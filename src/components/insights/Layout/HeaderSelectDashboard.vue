@@ -6,11 +6,13 @@
     <template #trigger>
       <UnnnicAvatarIcon
         v-if="$route.name === 'dashboard'"
+        data-testid="dashboard-icon"
         icon="monitoring"
         scheme="aux-purple-500"
       />
       <UnnnicIcon
         v-else
+        data-testid="back-icon"
         class="header-select-dashboard__arrow-back"
         icon="arrow_back"
         scheme="neutral-darkest"

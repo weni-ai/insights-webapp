@@ -1,6 +1,12 @@
 <template>
-  <UnnnicDropdownItem class="option-create-new-dashboard">
-    <UnnnicIcon icon="add" />
+  <UnnnicDropdownItem
+    data-testid="option-new-dashboard"
+    class="option-create-new-dashboard"
+  >
+    <UnnnicIcon
+      data-testid="option-new-dashboard-icon"
+      icon="add"
+    />
     {{ $t('insights_header.add_new_dashboard') }}
   </UnnnicDropdownItem>
 </template>

@@ -20,7 +20,10 @@
         @click.stop="$router.back"
       />
       <section class="dropdown__trigger">
-        <h1 class="trigger__title">
+        <h1
+          data-testid="dashboard-title"
+          class="trigger__title"
+        >
           {{
             currentDashboard.name || dashboardDefault.name || dashboards[0].name
           }}

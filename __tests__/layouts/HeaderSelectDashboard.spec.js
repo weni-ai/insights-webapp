@@ -81,7 +81,7 @@ describe('HeaderSelectDashboard', () => {
       expect(backIcon.props('icon')).toBe('arrow_back');
     });
 
-    it.only('Should redirect to the previous page when the "arrow_back" icon is clicked', async () => {
+    it('Should redirect to the previous page when the "arrow_back" icon is clicked', async () => {
       vi.spyOn(router, 'back');
 
       router.push({
@@ -96,4 +96,29 @@ describe('HeaderSelectDashboard', () => {
       expect(router.back).toHaveBeenCalled();
     });
   });
+
+  describe('Title', () => {
+    it('Should display the name of the currentDashboard if available', () => {
+      const dashboardTitle = wrapper.find('[data-testid=dashboard-title]');
+
+      expect(dashboardTitle.exists()).toBe(true);
+      expect(dashboardTitle.text()).toBe('Current Dashboard');
+    });
+  });
+
+  describe('Dropdown behavior', () => {
+    it('Should display an "expand_more" icon', () => {});
+
+    it('Should open a dropdown when the "expand_more" icon is clicked', () => {});
+
+    it('Should have a dropdown with links matching the length of the dashboards array', () => {});
+  });
+
+  describe('Add new dashboard', () => {
+    it('Should have an option with the title "add_new_dashboard"', () => {});
+
+    it('Should open the DrawerDashboardConfig when the "add_new_dashboard" option is clicked', () => {});
+  });
+
+  it('Should match the snapshot', () => {});
 });

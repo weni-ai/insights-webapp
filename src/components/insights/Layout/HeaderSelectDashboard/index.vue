@@ -47,12 +47,14 @@
 
     <OptionCreateNewDashboard
       v-if="enableCreateCustomDashboards"
+      data-testid="add-new-dashboard-button"
       @click="showNewDashboardModal = true"
     />
   </UnnnicDropdown>
   <DrawerDashboardConfig
     v-if="showNewDashboardModal"
     v-model="showNewDashboardModal"
+    data-testid="drawer-dashboard-config"
     @close="showNewDashboardModal = false"
   />
 </template>

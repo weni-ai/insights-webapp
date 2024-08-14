@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { createStore } from 'vuex';
 import { routes } from '@/router';
 
-import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard.vue';
+import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
 
 describe('HeaderSelectDashboard', () => {
   let wrapper;
@@ -17,8 +17,11 @@ describe('HeaderSelectDashboard', () => {
       dashboards: {
         namespaced: true,
         state: {
-          dashboards: [{ name: 'Dashboard 1' }, { name: 'Dashboard 2' }],
-          currentDashboard: { name: 'Current Dashboard' },
+          dashboards: [
+            { name: 'Dashboard 1', uuid: '1' },
+            { name: 'Dashboard 2', uuid: '2' },
+          ],
+          currentDashboard: { name: 'Dashboard 1', uuid: '1' },
         },
         getters: {
           dashboardDefault: () => ({ name: 'Default Dashboard' }),
@@ -27,7 +30,7 @@ describe('HeaderSelectDashboard', () => {
       config: {
         namespaced: true,
         state: {
-          enableCreateCustomDashboards: true,
+          enableCreateCustomDashboards: false,
         },
       },
     },
@@ -41,6 +44,9 @@ describe('HeaderSelectDashboard', () => {
         stubs: {
           UnnnicAvatarIcon: true,
           UnnnicIcon: true,
+          OptionSelectDashboard: true,
+          OptionCreateNewDashboard: true,
+          DrawerDashboardConfig: true,
         },
       },
     });
@@ -102,7 +108,7 @@ describe('HeaderSelectDashboard', () => {
       const dashboardTitle = wrapper.find('[data-testid=dashboard-title]');
 
       expect(dashboardTitle.exists()).toBe(true);
-      expect(dashboardTitle.text()).toBe('Current Dashboard');
+      expect(dashboardTitle.text()).toBe('Dashboard 1');
     });
   });
 
@@ -128,10 +134,44 @@ describe('HeaderSelectDashboard', () => {
   });
 
   describe('Add new dashboard', () => {
-    it('Should have an option with the title "add_new_dashboard"', () => {});
+    let addNewDashboardButton;
 
-    it('Should open the DrawerDashboardConfig when the "add_new_dashboard" option is clicked', () => {});
+    beforeEach(async () => {
+      store.state.config.enableCreateCustomDashboards = true;
+
+      const dropdownTrigger = wrapper.find('[data-testid=dropdown-trigger]');
+      await dropdownTrigger.trigger('click');
+
+      addNewDashboardButton = wrapper.findComponent(
+        '[data-testid=add-new-dashboard-button]',
+      );
+    });
+
+    it('Should display "Create New Dashboard" option when custom dashboards are enabled in the project', async () => {
+      expect(addNewDashboardButton.exists()).toBe(true);
+
+      store.state.config.enableCreateCustomDashboards = false;
+      await wrapper.vm.$nextTick();
+      expect(addNewDashboardButton.exists()).toBe(false);
+    });
+
+    it('Should open the DrawerDashboardConfig when the "Create New Dashboard" option is clicked', async () => {
+      const drawerDashboardConfigBeforeClick = wrapper.findComponent(
+        '[data-testid=drawer-dashboard-config]',
+      );
+      expect(drawerDashboardConfigBeforeClick.exists()).toBe(false);
+
+      await addNewDashboardButton.trigger('click');
+      await wrapper.vm.$nextTick();
+
+      const drawerDashboardConfigAfterClick = wrapper.findComponent(
+        '[data-testid=drawer-dashboard-config]',
+      );
+      expect(drawerDashboardConfigAfterClick.exists()).toBe(true);
+    });
   });
 
-  it('Should match the snapshot', () => {});
+  it('Should match the snapshot', () => {
+    expect(wrapper.element).toMatchSnapshot();
+  });
 });

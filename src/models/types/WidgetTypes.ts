@@ -1,4 +1,5 @@
 export type WidgetType = {
+  report_name?: string;
   uuid: string;
   name: string;
   type: WidgetInternalType;

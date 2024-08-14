@@ -85,6 +85,7 @@ export default {
   computed: {
     ...mapState({
       isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
+      projectFlows: (state) => state.project.flows,
       widget: (state) => state.widgets.currentWidgetEditing,
     }),
 
@@ -179,10 +180,7 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
-          newWidget = {
-            name: this.widget.config.name,
-            config: this.widget.config,
-          };
+          newWidget = this.createCardWidget;
           break;
       }
 
@@ -202,6 +200,26 @@ export default {
       return {
         name: this.$t('widgets.graph_funnel.title'),
         config: metricsObj,
+      };
+    },
+
+    createCardWidget() {
+      const { widget } = this;
+      const selectedFlowLabel = this.projectFlows.find(
+        (flow) => flow.value === widget.config.flow.uuid,
+      )?.label;
+      const hasReportName =
+        this.configType === 'flow_result' &&
+        widget.config.operation === 'recurrence';
+
+      return {
+        name: widget.config.name,
+        ...(hasReportName
+          ? {
+              report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
+            }
+          : {}),
+        config: widget.config,
       };
     },
   },

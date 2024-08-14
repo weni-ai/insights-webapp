@@ -15,6 +15,7 @@
             :modelValue="checkbox.selected"
             :textRight="checkbox.label"
             :disabled="checkbox.disabled"
+            data-testid="checkbox"
             @change="updateCheckboxSelected({ selected: $event, index })"
           />
         </li>

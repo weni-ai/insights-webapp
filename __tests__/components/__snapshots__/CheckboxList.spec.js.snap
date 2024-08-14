@@ -24,12 +24,12 @@ exports[`CheckboxList > should render label and list 1`] = `
         class="unnnic-checkbox-wrapper"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-7fb32042=""
+        data-v-daa3272a=""
       >
         <svg
           class="unnnic-icon unnnic-icon__size--md unnnic-icon-scheme--neutral-clean unnnic-checkbox disabled"
-          data-v-7fb32042=""
           data-v-930380cc=""
+          data-v-daa3272a=""
           fill="none"
           height="40"
           viewBox="0 0 40 40"
@@ -48,8 +48,7 @@ exports[`CheckboxList > should render label and list 1`] = `
         </svg>
         <div
           class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-          data-testid="checkbox-text-right"
-          data-v-7fb32042=""
+          data-v-daa3272a=""
         >
           Check 1
         </div>
@@ -63,12 +62,12 @@ exports[`CheckboxList > should render label and list 1`] = `
         class="unnnic-checkbox-wrapper"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-7fb32042=""
+        data-v-daa3272a=""
       >
         <svg
           class="unnnic-icon unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--neutral-clean unnnic-checkbox"
-          data-v-7fb32042=""
           data-v-930380cc=""
+          data-v-daa3272a=""
           fill="none"
           height="40"
           viewBox="0 0 40 40"
@@ -87,8 +86,7 @@ exports[`CheckboxList > should render label and list 1`] = `
         </svg>
         <div
           class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-          data-testid="checkbox-text-right"
-          data-v-7fb32042=""
+          data-v-daa3272a=""
         >
           Check 2
         </div>
@@ -102,12 +100,12 @@ exports[`CheckboxList > should render label and list 1`] = `
         class="unnnic-checkbox-wrapper"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-7fb32042=""
+        data-v-daa3272a=""
       >
         <svg
           class="unnnic-icon unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--brand-weni unnnic-checkbox"
-          data-v-7fb32042=""
           data-v-930380cc=""
+          data-v-daa3272a=""
           fill="none"
           height="40"
           viewBox="0 0 40 40"
@@ -132,8 +130,7 @@ exports[`CheckboxList > should render label and list 1`] = `
         </svg>
         <div
           class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-          data-testid="checkbox-text-right"
-          data-v-7fb32042=""
+          data-v-daa3272a=""
         >
           Check 3
         </div>

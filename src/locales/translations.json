@@ -221,6 +221,18 @@
             "en": "Brings a @.lower:flow result and allows basic operations",
             "es": "Trae un resultado de @.lower:flow y permite operaciones básicas"
           }
+        },
+        "data_crossing": {
+          "title": {
+            "pt-br": "Cruzamento de dados",
+            "en": "Data crossing",
+            "es": "Cruce de datos"
+          },
+          "description": {
+            "pt-br": "Combine dois valores para obter uma métrica",
+            "en": "Combine two values to get a metric",
+            "es": "Combinar dos valores para obtener una métrica"
+          }
         }
       }
     },
@@ -297,7 +309,7 @@
           "en": "Total",
           "es": "Total"
         },
-        "max": {
+        "highest_value": {
           "pt-br": "Maior valor",
           "en": "Highest value",
           "es": "Valor más alto"
@@ -307,7 +319,7 @@
           "en": "Average",
           "es": "Promedio"
         },
-        "min": {
+        "lowest_value": {
           "pt-br": "Menor valor",
           "en": "Lower value",
           "es": "Bajo valor"
@@ -316,12 +328,52 @@
           "pt-br": "Recorrência",
           "en": "Recurrence",
           "es": "Reaparición"
+        },
+        "multiply": {
+          "pt-br": "Multiplicar",
+          "en": "Multiply",
+          "es": "Multiplicar"
+        },
+        "sum": {
+          "pt-br": "Soma",
+          "en": "Sum",
+          "es": "Suma"
+        },
+        "min": {
+          "pt-br": "Mínimo",
+          "en": "Minimum",
+          "es": "Mínimo"
+        },
+        "max": {
+          "pt-br": "Máximo",
+          "en": "Maximum",
+          "es": "Máximo"
+        },
+        "difference": {
+          "pt-br": "Diferença",
+          "en": "Difference",
+          "es": "Diferencia"
+        },
+        "percentage": {
+          "pt-br": "Porcentagem",
+          "en": "Percentage",
+          "es": "Porcentaje"
         }
       },
       "total_flow_executions": {
         "pt-br": "Total de execuções do @.lower:flow",
         "en": "Total @.lower:flow executions",
         "es": "Ejecuciones de @.lower:flow total"
+      },
+      "first_value": {
+        "pt-br": "Primeiro valor",
+        "en": "First value",
+        "es": "Primer valor"
+      },
+      "second_value": {
+        "pt-br": "Segundo valor",
+        "en": "Second value",
+        "es": "Segundo valor"
       }
     },
     "config_funnel": {

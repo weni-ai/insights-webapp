@@ -1,4 +1,8 @@
 import {
+  OutgoingDataCrossingCardConfig,
+  OutgoingDataCrossingSubwidget,
+  OutgoingExecutionsCardConfig,
+  OutgoingFlowResultCardConfig,
   OutgoingWidgetType,
   OutgoingWidgetTypeCard,
 } from './types/WidgetOutgoingTypes';
@@ -36,32 +40,78 @@ class Widget {
     config,
     report_name,
   }: OutgoingWidgetTypeCard): CardConfig {
-    const isFlowResult = config.type_result === 'flow_result';
+    const createFlowConfig = (
+      subconfig:
+        | OutgoingExecutionsCardConfig
+        | OutgoingFlowResultCardConfig
+        | OutgoingDataCrossingSubwidget,
+    ) => ({
+      uuid: subconfig.filter.flow || '',
+      ...(subconfig.type_result === 'flow_result'
+        ? {
+            result: subconfig?.op_field || '',
+          }
+        : {}),
+      ...('op_sub_field' in config
+        ? {
+            result_correspondence: config?.op_sub_field || '',
+          }
+        : {}),
+    });
 
-    const flowResultConfig = isFlowResult
-      ? {
-          report_name: report_name || '',
-          flow: {
-            uuid: config.filter?.flow || '',
-            result: 'op_field' in config ? config.op_field : '',
-          },
-          operation: 'operation' in config ? config.operation : '',
-          currency: 'currency' in config ? config.currency : false,
-          data_suffix:
-            'operation' in config && config.operation === 'recurrence'
-              ? '%'
-              : '',
-        }
-      : {};
+    const executionsConfig = (config: OutgoingExecutionsCardConfig) => ({
+      flow: createFlowConfig(config),
+    });
+
+    const flowResultConfig = (config: OutgoingFlowResultCardConfig) => ({
+      report_name: report_name || '',
+      flow: createFlowConfig(config),
+      operation: config.operation || '',
+      currency: config.currency || false,
+      data_suffix: config.operation === 'recurrence' ? '%' : '',
+    });
+
+    const dataCrossingConfig = (config: OutgoingDataCrossingCardConfig) => {
+      const createSubwidgetConfig = (
+        subwidgetConfig: OutgoingDataCrossingSubwidget,
+      ) => ({
+        result_type: subwidgetConfig?.type_result || 'executions',
+        operation: subwidgetConfig?.operation || 'avg',
+        flow: {
+          ...createFlowConfig(subwidgetConfig),
+          ...(subwidgetConfig?.type_result === 'flow_result'
+            ? {
+                result: subwidgetConfig?.op_field || '',
+                result_correspondence: subwidgetConfig?.op_sub_field || '',
+              }
+            : {}),
+        },
+      });
+
+      return {
+        operation: config.operator || 'min',
+        currency: config.currency || false,
+        subwidget_1: createSubwidgetConfig(config.subwidget_1) || {},
+        subwidget_2: createSubwidgetConfig(config.subwidget_2) || {},
+      };
+    };
+
+    const additionalConfigMap = {
+      executions: () =>
+        executionsConfig(config as OutgoingExecutionsCardConfig),
+      flow_result: () =>
+        flowResultConfig(config as OutgoingFlowResultCardConfig),
+      data_crossing: () =>
+        dataCrossingConfig(config as OutgoingDataCrossingCardConfig),
+    };
+
+    const additionalConfig = additionalConfigMap[config.type_result]?.() || {};
 
     return {
       name,
-      type_result: config.type_result || '',
-      flow: {
-        uuid: config.filter?.flow || '',
-      },
-      friendly_id: config.friendly_id,
-      ...flowResultConfig,
+      type: config.type_result || '',
+      friendly_id: config.friendly_id || '',
+      ...additionalConfig,
     };
   }
 

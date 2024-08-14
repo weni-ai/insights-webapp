@@ -109,6 +109,32 @@
     "en": "Reset",
     "es": "Reiniciar"
   },
+  "onboarding": {
+    "welcome_modal": {
+      "title": {
+        "pt-br": "Novidade na área, conheça o Insights",
+        "en": "New in the area, get to know Insights",
+        "es": "Novedad en el área, conoce Insights"
+      },
+      "text": {
+        "pt-br": "Estamos felizes em introduzir sua nova ferramenta para acompanhamento do sucesso da sua operação aqui na Weni 🎉",
+        "en": "We are happy to introduce your new tool for tracking the success of your operation here at Weni 🎉",
+        "es": "Estamos felices de presentar su nueva herramienta para seguir el éxito de su operación aquí en Weni 🎉"
+      },
+      "button": {
+        "go": {
+          "pt-br": "Vamos lá",
+          "en": "Let's go",
+          "es": "Vamos allá"
+        },
+        "ignore": {
+          "pt-br": "Ignorar",
+          "en": "Ignore",
+          "es": "Ignorar"
+        }
+      }
+    }
+  },
   "widgets": {
     "reset": {
       "pt-br": "Resetar widget",

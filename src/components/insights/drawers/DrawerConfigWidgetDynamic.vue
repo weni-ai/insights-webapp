@@ -206,14 +206,14 @@ export default {
     createCardWidget() {
       const { widget } = this;
       const selectedFlowLabel = this.projectFlows.find(
-        (flow) => flow.value === widget.config.flow.uuid,
+        (flow) => flow.value === widget.config?.flow?.uuid,
       )?.label;
       const hasReportName =
         this.configType === 'flow_result' &&
-        widget.config.operation === 'recurrence';
+        widget.config?.operation === 'recurrence';
 
       return {
-        name: widget.config.name,
+        name: widget.config?.name,
         ...(hasReportName
           ? {
               report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,

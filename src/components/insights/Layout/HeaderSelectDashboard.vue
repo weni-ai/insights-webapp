@@ -19,7 +19,10 @@
         clickable
         @click.stop="$router.back"
       />
-      <section class="dropdown__trigger">
+      <section
+        data-testid="dropdown-trigger"
+        class="dropdown__trigger"
+      >
         <h1
           data-testid="dashboard-title"
           class="trigger__title"
@@ -28,12 +31,16 @@
             currentDashboard.name || dashboardDefault.name || dashboards[0].name
           }}
         </h1>
-        <UnnnicIcon icon="expand_more" />
+        <UnnnicIcon
+          data-testid="expand-icon"
+          icon="expand_more"
+        />
       </section>
     </template>
     <UnnnicDropdownItem
       v-for="dashboard of dashboards"
       :key="dashboard"
+      data-testid="select-dashboard-item"
       class="header-select-dashboard__item"
       :class="{
         'header-select-dashboard__item--active':

@@ -107,11 +107,24 @@ describe('HeaderSelectDashboard', () => {
   });
 
   describe('Dropdown behavior', () => {
-    it('Should display an "expand_more" icon', () => {});
+    it('Should display an "expand_more" icon', () => {
+      const expandIcon = wrapper.findComponent('[data-testid=expand-icon]');
 
-    it('Should open a dropdown when the "expand_more" icon is clicked', () => {});
+      expect(expandIcon.exists()).toBe(true);
+      expect(expandIcon.props('icon')).toBe('expand_more');
+    });
 
-    it('Should have a dropdown with links matching the length of the dashboards array', () => {});
+    it('Should have a dropdown with links matching the length of the dashboards array', async () => {
+      const dropdownTrigger = wrapper.find('[data-testid=dropdown-trigger]');
+      await dropdownTrigger.trigger('click');
+      const selectDashboardItems = wrapper.findAll(
+        '[data-testid=select-dashboard-item]',
+      );
+
+      expect(selectDashboardItems.length).toBe(
+        store.state.dashboards.dashboards.length,
+      );
+    });
   });
 
   describe('Add new dashboard', () => {

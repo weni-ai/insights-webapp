@@ -35,7 +35,8 @@
           description:
             'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
           attachedElement:
-            onboardingRefs['select-dashboard'] || $refs['insights-layout'].$el,
+            onboardingRefs['select-dashboard'] ||
+            onboardingRefs['insights-layout'],
           popoverPosition: 'right',
         },
         {
@@ -44,7 +45,7 @@
             'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
           attachedElement:
             onboardingRefs['create-dashboard-button'] ||
-            $refs['insights-layout'].$el,
+            onboardingRefs['insights-layout'],
           popoverPosition: 'right',
         },
       ]"
@@ -96,6 +97,10 @@ export default {
     try {
       this.handlingTokenAndProjectUuid();
       await this.getDashboards();
+      this.setOnboardingRef({
+        key: 'insights-layout',
+        ref: this.$refs['insights-layout'].$el,
+      });
       this.handlingShowOnboarding();
     } catch (error) {
       console.log(error);

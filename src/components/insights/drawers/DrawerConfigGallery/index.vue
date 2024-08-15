@@ -16,6 +16,7 @@
           :key="title"
         >
           <GalleryOption
+            data-onboarding-id="widget-gallery"
             :title="title"
             :description="description"
             @click="setDrawerConfigType(value)"

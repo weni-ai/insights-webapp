@@ -70,3 +70,7 @@ export function checkDeepEmptyValues(obj) {
 
   return Object.entries(obj).every(([_key, value]) => checkValue(value));
 }
+
+export function isObjectsEquals(obj1, obj2) {
+  return stringifyValue(obj1) === stringifyValue(obj2);
+}

@@ -2,6 +2,7 @@ import dashboardsStore from './dashboards';
 import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
+import { isObjectsEquals } from '@/utils/object';
 
 const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
@@ -54,6 +55,7 @@ export default {
       state.currentDashboardWidgets[widgetIndex] = widget;
     },
     [mutations.UPDATE_CURRENT_WIDGET_EDITING](state, widget) {
+      if (isObjectsEquals(state.currentWidgetEditing, widget)) return;
       state.currentWidgetEditing = widget;
     },
   },

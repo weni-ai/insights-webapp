@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <ol>
     <UnnnicLabel
       v-if="label"
       :label="label"
@@ -10,17 +10,32 @@
         v-for="radio in radios"
         :key="radio.value"
       >
-        <UnnnicRadio
-          :data-testid="`radio-${radio.value}`"
-          :modelValue="radio.value"
-          :value="selectedRadio"
-          @update:model-value="$emit('update:selected-radio', radio.value)"
-        >
-          {{ radio.label }}
-        </UnnnicRadio>
+        <li class="radio-list__radio">
+          <UnnnicRadio
+            :data-testid="`radio-${radio.value}`"
+            :modelValue="radio.value"
+            :value="selectedRadio"
+            @update:model-value="$emit('update:selected-radio', radio.value)"
+          >
+            {{ radio.label }}
+          </UnnnicRadio>
+          <UnnnicToolTip
+            v-if="radio.tooltip"
+            :data-testid="`radio-${radio.value}-tooltip`"
+            :text="radio.tooltip"
+            side="top"
+            enabled
+          >
+            <UnnnicIcon
+              icon="info"
+              scheme="neutral-dark"
+              size="sm"
+            />
+          </UnnnicToolTip>
+        </li>
       </template>
     </section>
-  </section>
+  </ol>
 </template>
 
 <script lang="ts">
@@ -29,6 +44,7 @@ import { defineComponent } from 'vue';
 interface Radio {
   value: string;
   label: string;
+  tooltip?: string;
 }
 
 export default defineComponent({
@@ -63,12 +79,19 @@ export default defineComponent({
   flex-wrap: wrap;
   row-gap: $unnnic-spacing-nano;
 
-  .unnnic-radio-container {
+  &__radio {
     width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    .radio__tooltip {
+      display: flex;
+    }
   }
 
   &--wrap-radios {
-    .unnnic-radio-container {
+    .radio-list__radio {
       width: 50%;
     }
   }

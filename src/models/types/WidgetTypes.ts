@@ -1,4 +1,5 @@
 export type WidgetType = {
+  report_name?: string;
   uuid: string;
   name: string;
   type: WidgetInternalType;
@@ -51,22 +52,27 @@ export type TableDynamicByFilterConfig = {
 
 type TableGroupConfig = object;
 
-export type CardConfigTypeResults = 'executions' | 'flow_result' | '';
+export type CardConfigTypeResults =
+  | 'executions'
+  | 'flow_result'
+  | 'data_crossing'
+  | '';
 
 type BaseCardConfig = {
   name: string;
-  type_result: CardConfigTypeResults;
-  flow: {
-    uuid: string;
-  };
+  type: CardConfigTypeResults;
+  friendly_id: string;
 };
 
 export interface ExecutionsCardConfig extends BaseCardConfig {
-  type_result: 'executions';
+  type: 'executions';
+  flow: {
+    uuid: string;
+  };
 }
 
 export interface FlowResultCardConfig extends BaseCardConfig {
-  type_result: 'flow_result';
+  type: 'flow_result';
   report_name?: string;
   flow: {
     uuid: string;
@@ -77,9 +83,39 @@ export interface FlowResultCardConfig extends BaseCardConfig {
   data_suffix: string;
 }
 
+export interface DataCrossingCardConfig extends BaseCardConfig {
+  operation: string;
+  currency: boolean;
+  subwidget_1: DataCrossingSubwidget;
+  subwidget_2: DataCrossingSubwidget;
+}
+
+type DataCrossingSubwidgetExecution = {
+  result_type: 'executions';
+  operation: string;
+  flow: {
+    uuid: string;
+  };
+};
+
+export type DataCrossingSubwidgetFlowResult = {
+  flow: {
+    uuid: string;
+    result: string;
+    result_correspondence: string;
+  };
+  result_type: 'flow_result';
+  operation: string;
+};
+
+export type DataCrossingSubwidget =
+  | DataCrossingSubwidgetExecution
+  | DataCrossingSubwidgetFlowResult;
+
 export type CardConfig =
   | ExecutionsCardConfig
   | FlowResultCardConfig
+  | DataCrossingCardConfig
   | BaseCardConfig;
 
 type InsightConfig = object;

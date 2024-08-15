@@ -67,7 +67,7 @@ export default {
     }),
 
     widgetConfigType() {
-      return this.widget.config?.type_result;
+      return this.widget.config?.type;
     },
 
     galleryOptions() {
@@ -83,7 +83,7 @@ export default {
       }
 
       const optionsMap = {
-        card: createOptions(['executions', 'flow_result']),
+        card: createOptions(['executions', 'flow_result', 'data_crossing']),
       };
 
       return optionsMap[this.widget?.type] || [];

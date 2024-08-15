@@ -29,7 +29,7 @@
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
 
-import HeaderSelectDashboard from './HeaderSelectDashboard.vue';
+import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';

@@ -62,6 +62,7 @@ type BaseCardConfig = {
   name: string;
   type: CardConfigTypeResults;
   friendly_id: string;
+  data_type?: string;
 };
 
 export interface ExecutionsCardConfig extends BaseCardConfig {

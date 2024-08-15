@@ -111,6 +111,7 @@ class Widget {
       name,
       type: config.type_result || '',
       friendly_id: config.friendly_id || '',
+      data_type: config.data_type || '',
       ...additionalConfig,
     };
   }

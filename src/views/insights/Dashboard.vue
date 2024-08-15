@@ -211,7 +211,7 @@ export default {
     handlerWidgetOpenConfig(widget) {
       this.updateCurrentWidgetEditing(widget);
       if (this.showConfigWidgetOnboarding) {
-        this.$nextTick(() => {
+        setTimeout(() => {
           this.setOnboardingRef({
             key: 'widget-gallery',
             ref: document.querySelector(
@@ -219,7 +219,7 @@ export default {
             ),
           });
           this.onboardingRefs['widgets-onboarding-tour'].nextStep();
-        });
+        }, 250);
       }
     },
 

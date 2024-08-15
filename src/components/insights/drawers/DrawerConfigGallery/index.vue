@@ -10,13 +10,15 @@
     @close="closeAllDrawers"
   >
     <template #content>
-      <ol class="drawer-config-gallery__options">
+      <ol
+        data-onboarding-id="widget-gallery"
+        class="drawer-config-gallery__options"
+      >
         <li
           v-for="{ title, description, value } of galleryOptions"
           :key="title"
         >
           <GalleryOption
-            data-onboarding-id="widget-gallery"
             :title="title"
             :description="description"
             @click="setDrawerConfigType(value)"

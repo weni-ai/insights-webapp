@@ -19,6 +19,10 @@ export default {
 
 <style lang="scss" scoped>
 .option-create-new-dashboard {
+  &.unnnic-dropdown-item::before {
+    content: none;
+  }
+
   padding: $unnnic-spacing-xs;
 
   display: flex;

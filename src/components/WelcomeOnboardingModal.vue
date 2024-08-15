@@ -44,7 +44,8 @@ const props = defineProps({
 const emit = defineEmits(['close', 'start-onboarding']);
 
 const ignoreOnboarding = () => {
-  localStorage.setItem('hasOnboardingComplete', 'true');
+  localStorage.setItem('hasDashboardOnboardingComplete', 'true');
+  localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
   emit('close');
 };
 </script>

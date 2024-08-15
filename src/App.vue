@@ -21,34 +21,39 @@
       </section>
       <RouterView v-else />
     </InsightsLayout>
+    <WelcomeOnboardingModal
+      :showModal="showOnboardingModal"
+      @close="showOnboardingModal = false"
+      @start-onboarding="handlingStartOnboarding"
+    />
+    <UnnnicTour
+      v-if="showCreateDashboardTour"
+      ref="dashboardOnboardingTour"
+      :steps="[
+        {
+          title: 'Crie um Dashboard personalizado',
+          description:
+            'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
+          attachedElement:
+            onboardingRefs['select-dashboard'] || $refs['insights-layout'].$el,
+          popoverPosition: 'right',
+        },
+        {
+          title: 'Crie um Dashboard personalizado',
+          description:
+            'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
+          attachedElement:
+            onboardingRefs['create-dashboard-button'] ||
+            $refs['insights-layout'].$el,
+          popoverPosition: 'right',
+        },
+      ]"
+    />
   </div>
-  <WelcomeOnboardingModal
-    :showModal="showOnboardingModal"
-    @close="showOnboardingModal = false"
-    @start-onboarding="handlingStartOnboarding"
-  />
-  <UnnnicTour
-    v-if="showTour"
-    ref="tour"
-    :steps="[
-      {
-        title: '1',
-        description: 'desc',
-        attachedElement: onboardingRefs['select-dashboard'],
-        popoverPosition: 'right',
-      },
-      {
-        title: '2',
-        description: 'desc',
-        attachedElement: onboardingRefs['select-dashboard'],
-        popoverPosition: 'right',
-      },
-    ]"
-  />
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
@@ -70,6 +75,8 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
       onboardingRefs: (state) => state.refs.onboardingRefs,
+      showCreateDashboardTour: (state) =>
+        state.refs.showCreateDashboardOnboarding,
     }),
   },
 
@@ -103,6 +110,12 @@ export default {
       setProject: 'config/setProject',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
+    }),
+
+    ...mapMutations({
+      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setShowCreateDashboardOnboarding:
+        'refs/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
     }),
 
     async handlingTokenAndProjectUuid() {
@@ -166,19 +179,31 @@ export default {
     },
 
     handlingShowOnboarding() {
-      this.$nextTick().then(() => {
-        const hasOnboardingComplete =
-          JSON.parse(localStorage.getItem('hasOnboardingComplete')) || false;
-        this.showOnboardingModal = !hasOnboardingComplete;
-      });
+      const hasCustomDashboard = this.dashboards.find(
+        (dashboard) => dashboard.is_deletable,
+      );
+
+      if (hasCustomDashboard) {
+        localStorage.setItem('hasDashboardOnboardingComplete', 'true');
+        this.showOnboardingModal = false;
+        return;
+      }
+
+      const hasOnboardingComplete =
+        JSON.parse(localStorage.getItem('hasDashboardOnboardingComplete')) ||
+        false;
+      this.showOnboardingModal = !hasOnboardingComplete;
     },
 
     handlingStartOnboarding() {
-      this.showTour = true;
       this.showOnboardingModal = false;
-      this.onboardingRefs['select-dashboard'].click();
-      this.$nextTick().then(() => {
-        this.$refs.tour.start();
+      this.setShowCreateDashboardOnboarding(true);
+      this.$nextTick(() => {
+        this.setOnboardingRef({
+          key: 'dashboard-onboarding-tour',
+          ref: this.$refs.dashboardOnboardingTour,
+        });
+        this.onboardingRefs['dashboard-onboarding-tour'].start();
       });
     },
   },

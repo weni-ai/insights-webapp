@@ -1,6 +1,7 @@
 <template>
   <UnnnicDropdown
     ref="selectDashboard"
+    data-onboarding-id="select-dashboard"
     class="header-select-dashboard"
     position="bottom-right"
   >
@@ -18,7 +19,10 @@
         clickable
         @click.stop="$router.back"
       />
-      <section class="dropdown__trigger">
+      <section
+        class="dropdown__trigger"
+        @click="handlerDashboardNameClick()"
+      >
         <h1 class="trigger__title">
           {{
             currentDashboard.name || dashboardDefault.name || dashboards[0].name
@@ -59,9 +63,9 @@
     </UnnnicDropdownItem>
     <UnnnicDropdownItem
       v-if="enableCreateCustomDashboards"
-      ref="newDashboardButton"
+      data-onboarding-id="create-dashboard-button"
       class="header-select-dashboard__item create-dashboard-section"
-      @click="showNewDashboardModal = true"
+      @click="handlerCreateDashboardClick()"
     >
       <UnnnicIcon icon="add" />
       {{ $t('add_new_dashboard') }}
@@ -100,6 +104,9 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
       enableCreateCustomDashboards: (state) =>
         state.config.enableCreateCustomDashboards,
+      showCreateDashboardTour: (state) =>
+        state.refs.showCreateDashboardOnboarding,
+      onboardingRefs: (state) => state.refs.onboardingRefs,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -107,10 +114,10 @@ export default {
   },
 
   mounted() {
-    this.$nextTick().then(() => {
+    this.$nextTick(() => {
       this.setOnboardingRef({
         key: 'select-dashboard',
-        ref: this.$refs.selectDashboard.$el,
+        ref: document.querySelector('[data-onboarding-id="select-dashboard"]'),
       });
     });
   },
@@ -124,6 +131,26 @@ export default {
     ...mapMutations({
       setOnboardingRef: 'refs/SET_ONBOARDING_REF',
     }),
+
+    handlerDashboardNameClick() {
+      if (!this.showCreateDashboardTour) return;
+
+      setTimeout(() => {
+        this.setOnboardingRef({
+          key: 'create-dashboard-button',
+          ref: document.querySelector(
+            '[data-onboarding-id="create-dashboard-button"]',
+          ),
+        });
+        this.onboardingRefs['dashboard-onboarding-tour'].nextStep();
+      }, 0);
+    },
+
+    handlerCreateDashboardClick() {
+      this.showNewDashboardModal = true;
+      if (!this.showCreateDashboardTour) return;
+      this.onboardingRefs['dashboard-onboarding-tour'].end();
+    },
 
     getIsDefaultDashboard(uuid) {
       return this.dashboardDefault?.uuid === uuid;

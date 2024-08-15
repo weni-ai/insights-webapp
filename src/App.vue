@@ -22,16 +22,45 @@
       <RouterView v-else />
     </InsightsLayout>
   </div>
+  <WelcomeOnboardingModal
+    :showModal="showOnboardingModal"
+    @close="showOnboardingModal = false"
+    @start-onboarding="handlingStartOnboarding"
+  />
+  <UnnnicTour
+    v-if="showTour"
+    ref="tour"
+    :steps="[
+      {
+        title: '1',
+        description: 'desc',
+        attachedElement: onboardingRefs['select-dashboard'],
+        popoverPosition: 'right',
+      },
+      {
+        title: '2',
+        description: 'desc',
+        attachedElement: onboardingRefs['select-dashboard'],
+        popoverPosition: 'right',
+      },
+    ]"
+  />
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
+import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
 
 export default {
-  components: { InsightsLayout, IconLoading },
-
+  components: { InsightsLayout, IconLoading, WelcomeOnboardingModal },
+  data() {
+    return {
+      showOnboardingModal: false,
+      showTour: false,
+    };
+  },
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -40,6 +69,7 @@ export default {
         state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
+      onboardingRefs: (state) => state.refs.onboardingRefs,
     }),
   },
 
@@ -59,6 +89,7 @@ export default {
     try {
       this.handlingTokenAndProjectUuid();
       await this.getDashboards();
+      this.handlingShowOnboarding();
     } catch (error) {
       console.log(error);
     }
@@ -132,6 +163,23 @@ export default {
         handling: handlingFunctionMapper[eventName],
         dataKey: handlingParamsMapper[eventName],
       };
+    },
+
+    handlingShowOnboarding() {
+      this.$nextTick().then(() => {
+        const hasOnboardingComplete =
+          JSON.parse(localStorage.getItem('hasOnboardingComplete')) || false;
+        this.showOnboardingModal = !hasOnboardingComplete;
+      });
+    },
+
+    handlingStartOnboarding() {
+      this.showTour = true;
+      this.showOnboardingModal = false;
+      this.onboardingRefs['select-dashboard'].click();
+      this.$nextTick().then(() => {
+        this.$refs.tour.start();
+      });
     },
   },
 };

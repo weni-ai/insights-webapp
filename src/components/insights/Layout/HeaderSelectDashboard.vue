@@ -1,5 +1,6 @@
 <template>
   <UnnnicDropdown
+    ref="selectDashboard"
     class="header-select-dashboard"
     position="bottom-right"
   >
@@ -58,6 +59,7 @@
     </UnnnicDropdownItem>
     <UnnnicDropdownItem
       v-if="enableCreateCustomDashboards"
+      ref="newDashboardButton"
       class="header-select-dashboard__item create-dashboard-section"
       @click="showNewDashboardModal = true"
     >
@@ -73,7 +75,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 import unnnic from '@weni/unnnic-system';
 import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
 
@@ -104,10 +106,23 @@ export default {
     }),
   },
 
+  mounted() {
+    this.$nextTick().then(() => {
+      this.setOnboardingRef({
+        key: 'select-dashboard',
+        ref: this.$refs.selectDashboard.$el,
+      });
+    });
+  },
+
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
       setDefaultDashboard: 'dashboards/setDefaultDashboard',
+    }),
+
+    ...mapMutations({
+      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
     }),
 
     getIsDefaultDashboard(uuid) {

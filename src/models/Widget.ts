@@ -46,7 +46,7 @@ class Widget {
         | OutgoingFlowResultCardConfig
         | OutgoingDataCrossingSubwidget,
     ) => ({
-      uuid: subconfig.filter.flow || '',
+      uuid: subconfig.filter?.flow || '',
       ...(subconfig.type_result === 'flow_result'
         ? {
             result: subconfig?.op_field || '',

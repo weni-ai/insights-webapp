@@ -1,5 +1,6 @@
 <template>
   <UnnnicDropdownItem
+    data-testid="option-select-dashboard"
     class="option-select-dashboard"
     :class="{
       'option-select-dashboard--active':
@@ -9,6 +10,7 @@
   >
     {{ dashboard.name }}
     <UnnnicIcon
+      data-testid="star-icon"
       class="option-select-dashboard__star-icon"
       :class="{
         'option-select-dashboard__star-icon--selected': isDefaultDashboard,
@@ -68,14 +70,13 @@ export default {
       this.starHovered = boolean;
     },
 
-    handleSetDefaultDashboard() {
+    async handleSetDefaultDashboard() {
       const { dashboard } = this;
       if (dashboard.uuid === this.dashboardDefault.uuid) return;
 
       try {
-        this.setDefaultDashboard(dashboard.uuid).then(() => {
-          this.callSetDashboardAlert('success');
-        });
+        await this.setDefaultDashboard(dashboard.uuid);
+        this.callSetDashboardAlert('success');
       } catch (error) {
         console.error(error);
         this.callSetDashboardAlert('error');

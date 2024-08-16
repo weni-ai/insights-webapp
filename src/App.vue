@@ -21,17 +21,63 @@
       </section>
       <RouterView v-else />
     </InsightsLayout>
+    <WelcomeOnboardingModal
+      :showModal="showOnboardingModal"
+      @close="showOnboardingModal = false"
+      @start-onboarding="handlingStartOnboarding"
+    />
+    <CompleteOnboardingModal
+      :showModal="showCompleteOnboardingModal"
+      @finish-onboarding="handlerFinishOnboarding"
+    />
+    <UnnnicTour
+      v-if="showCreateDashboardTour"
+      ref="dashboardOnboardingTour"
+      :steps="[
+        {
+          title: 'Crie um Dashboard personalizado',
+          description:
+            'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
+          attachedElement:
+            onboardingRefs['select-dashboard'] ||
+            onboardingRefs['insights-layout'],
+          popoverPosition: 'right',
+        },
+        {
+          title: 'Crie um Dashboard personalizado',
+          description:
+            'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
+          attachedElement:
+            onboardingRefs['create-dashboard-button'] ||
+            onboardingRefs['insights-layout'],
+          popoverPosition: 'right',
+        },
+      ]"
+    />
   </div>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
+import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
+import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
 
 export default {
-  components: { InsightsLayout, IconLoading },
+  components: {
+    InsightsLayout,
+    IconLoading,
+    WelcomeOnboardingModal,
+    CompleteOnboardingModal,
+  },
+  data() {
+    return {
+      showOnboardingModal: false,
 
+      showTour: false,
+    };
+  },
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -40,6 +86,11 @@ export default {
         state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
+      onboardingRefs: (state) => state.refs.onboardingRefs,
+      showCreateDashboardTour: (state) =>
+        state.refs.showCreateDashboardOnboarding,
+      showCompleteOnboardingModal: (state) =>
+        state.refs.showCompleteOnboardingModal,
     }),
   },
 
@@ -59,6 +110,11 @@ export default {
     try {
       this.handlingTokenAndProjectUuid();
       await this.getDashboards();
+      this.setOnboardingRef({
+        key: 'insights-layout',
+        ref: this.$refs['insights-layout'].$el,
+      });
+      this.handlingShowOnboarding();
     } catch (error) {
       console.log(error);
     }
@@ -72,6 +128,13 @@ export default {
       setProject: 'config/setProject',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
+    }),
+
+    ...mapMutations({
+      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setShowCreateDashboardOnboarding:
+        'refs/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
+      setShowCompleteOnboardingModal: 'refs/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
     }),
 
     async handlingTokenAndProjectUuid() {
@@ -133,6 +196,39 @@ export default {
         dataKey: handlingParamsMapper[eventName],
       };
     },
+
+    handlingShowOnboarding() {
+      const hasCustomDashboard = this.dashboards.find(
+        (dashboard) => dashboard.is_deletable,
+      );
+
+      if (hasCustomDashboard) {
+        localStorage.setItem('hasDashboardOnboardingComplete', 'true');
+        this.showOnboardingModal = false;
+        return;
+      }
+
+      const hasOnboardingComplete =
+        JSON.parse(localStorage.getItem('hasDashboardOnboardingComplete')) ||
+        false;
+      this.showOnboardingModal = !hasOnboardingComplete;
+    },
+
+    handlerFinishOnboarding() {
+      this.setShowCompleteOnboardingModal(false);
+    },
+
+    handlingStartOnboarding() {
+      this.showOnboardingModal = false;
+      this.setShowCreateDashboardOnboarding(true);
+      this.$nextTick(() => {
+        this.setOnboardingRef({
+          key: 'dashboard-onboarding-tour',
+          ref: this.$refs.dashboardOnboardingTour,
+        });
+        this.onboardingRefs['dashboard-onboarding-tour'].start();
+      });
+    },
   },
 };
 </script>
@@ -144,5 +240,10 @@ export default {
   align-items: center;
   width: 100%;
   height: 100vh;
+}
+:deep(.unnnic-tour__popover) {
+  .unnnic-button {
+    display: none;
+  }
 }
 </style>

@@ -98,7 +98,7 @@ export default {
     return {
       dashboardForm: {
         name: '',
-        qtdFunnel: [],
+        qtdFunnel: [{ label: '1', value: '1' }],
         currency: [],
       },
       funnelOptions: [

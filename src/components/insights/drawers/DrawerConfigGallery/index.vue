@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
@@ -67,6 +67,9 @@ export default {
     ...mapState({
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
       widget: (state) => state.widgets.currentWidgetEditing,
+      onboardingRefs: (state) => state.refs.onboardingRefs,
+      showConfigWidgetOnboarding: (state) =>
+        state.refs.showConfigWidgetOnboarding,
     }),
 
     widgetConfigType() {
@@ -117,6 +120,10 @@ export default {
       getProjectFlows: 'project/getProjectFlows',
     }),
 
+    ...mapMutations({
+      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+    }),
+
     closeAllDrawers() {
       this.goToGallery();
       this.$emit('close');
@@ -127,12 +134,37 @@ export default {
 
       if (value) {
         this.showDrawerConfigWidget = true;
+
+        if (this.showConfigWidgetOnboarding) {
+          setTimeout(() => {
+            this.setOnboardingRef({
+              key: 'drawer-card-metric-config',
+              ref: document.querySelector(
+                '[data-onboarding-id="drawer-card-metric-config"]',
+              ).children[1],
+            });
+            this.onboardingRefs['widgets-onboarding-tour'].nextStep();
+          }, 500);
+        }
       }
     },
 
     goToGallery() {
       this.showDrawerConfigWidget = false;
       this.drawerConfigType = '';
+      if (this.showConfigWidgetOnboarding) {
+        setTimeout(() => {
+          this.setOnboardingRef({
+            key: 'widget-gallery',
+            ref: document.querySelector(
+              '[data-onboarding-id="widget-gallery"]',
+            ),
+          });
+          this.onboardingRefs['widgets-onboarding-tour'].handleStep(
+            this.onboardingRefs['widgets-onboarding-tour'].currentStep - 1,
+          );
+        }, 500);
+      }
     },
   },
 };

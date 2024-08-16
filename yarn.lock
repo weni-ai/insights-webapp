@@ -1211,10 +1211,10 @@
   resolved "https://registry.yarnpkg.com/@weni/eslint-config/-/eslint-config-1.0.3.tgz#ddd6420b3215218107ca26e3795251849a3c80be"
   integrity sha512-Te4vJZpwlR6cgwbkIKAKuUKhfcDuwgXPAZCoTu+/Tkhy2lo4/neo4j1fljv0yDAxvgLdHL6JvfGGaalUEJB38g==
 
-"@weni/unnnic-system@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.7.0.tgz#8806861981a96eae9c4a00aa207a9d83842268a1"
-  integrity sha512-Ne0/SZiARCDQY2WMx7m/2gmxk581T1u1hObZKgGy4wm2eFXKoE9g4+uH6yDNpfq86LvmafdTILMo7J3ER8qqSA==
+"@weni/unnnic-system@2.7.1-alpha.0":
+  version "2.7.1-alpha.0"
+  resolved "https://registry.yarnpkg.com/@weni/unnnic-system/-/unnnic-system-2.7.1-alpha.0.tgz#91b911639e7feae4a00807006c7b1065418e2179"
+  integrity sha512-sZfvBGmzDkQZG5bOeOgkrmhLCPfekciPA7RySuNKXag5oNn6XkrPYpcUUGRhp2Jlwpg/Jar/CGa2nj+vi8ucEg==
   dependencies:
     "@emoji-mart/data" "^1.1.2"
     "@vueuse/components" "^10.4.1"

@@ -120,7 +120,7 @@ export default {
           attachedElement:
             this.onboardingRefs['drawer-card-metric-config'] ||
             this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
+          popoverPosition: 'left',
         },
       ];
       const funnelSteps = [
@@ -144,7 +144,7 @@ export default {
         },
       ];
       if (this.hasCardWidget) steps.push(...cardSteps);
-      if (this.hasFunnelWidget) steps.push(...funnelSteps);
+      // if (this.hasFunnelWidget) steps.push(...funnelSteps);
       return steps;
     },
 
@@ -256,4 +256,9 @@ export default {
     align-items: center;
   }
 }
+// :deep(.unnnic-tour__popover) {
+//   .unnnic-button {
+//     display: none;
+//   }
+// }
 </style>

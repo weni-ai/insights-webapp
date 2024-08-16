@@ -26,6 +26,10 @@
       @close="showOnboardingModal = false"
       @start-onboarding="handlingStartOnboarding"
     />
+    <CompleteOnboardingModal
+      :showModal="showCompleteOnboardingModal"
+      @finish-onboarding="handlerFinishOnboarding"
+    />
     <UnnnicTour
       v-if="showCreateDashboardTour"
       ref="dashboardOnboardingTour"
@@ -58,12 +62,19 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
+import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
 
 export default {
-  components: { InsightsLayout, IconLoading, WelcomeOnboardingModal },
+  components: {
+    InsightsLayout,
+    IconLoading,
+    WelcomeOnboardingModal,
+    CompleteOnboardingModal,
+  },
   data() {
     return {
       showOnboardingModal: false,
+
       showTour: false,
     };
   },
@@ -78,6 +89,8 @@ export default {
       onboardingRefs: (state) => state.refs.onboardingRefs,
       showCreateDashboardTour: (state) =>
         state.refs.showCreateDashboardOnboarding,
+      showCompleteOnboardingModal: (state) =>
+        state.refs.showCompleteOnboardingModal,
     }),
   },
 
@@ -121,6 +134,7 @@ export default {
       setOnboardingRef: 'refs/SET_ONBOARDING_REF',
       setShowCreateDashboardOnboarding:
         'refs/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
+      setShowCompleteOnboardingModal: 'refs/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
     }),
 
     async handlingTokenAndProjectUuid() {
@@ -200,6 +214,10 @@ export default {
       this.showOnboardingModal = !hasOnboardingComplete;
     },
 
+    handlerFinishOnboarding() {
+      this.setShowCompleteOnboardingModal(false);
+    },
+
     handlingStartOnboarding() {
       this.showOnboardingModal = false;
       this.setShowCreateDashboardOnboarding(true);
@@ -222,5 +240,10 @@ export default {
   align-items: center;
   width: 100%;
   height: 100vh;
+}
+:deep(.unnnic-tour__popover) {
+  .unnnic-button {
+    display: none;
+  }
 }
 </style>

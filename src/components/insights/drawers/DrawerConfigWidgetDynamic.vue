@@ -11,7 +11,11 @@
     :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     :withoutOverlay="showModalResetWidget"
-    data-onboarding-id="drawer-card-metric-config"
+    :data-onboarding-id="
+      widget.type === 'card'
+        ? 'drawer-card-metric-config'
+        : 'drawer-graph-funnel'
+    "
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
     @close="configType ? $emit('back') : $emit('close')"
@@ -267,9 +271,16 @@ export default {
         }
 
         if (this.showConfigWidgetOnboarding) {
-          this.onboardingRefs['widgets-onboarding-tour'].end();
-          this.setShowCompleteOnboardingModal(true);
-          localStorage.setItem('hasWidgetsOnboardingComplete', true);
+          const isLastStep =
+            this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
+            this.onboardingRefs['widgets-onboarding-tour'].steps.length;
+          if (isLastStep) {
+            this.onboardingRefs['widgets-onboarding-tour'].end();
+            this.setShowCompleteOnboardingModal(true);
+            localStorage.setItem('hasWidgetsOnboardingComplete', true);
+          } else {
+            this.onboardingRefs['widgets-onboarding-tour'].nextStep();
+          }
         }
 
         unnnic.unnnicCallAlert({
@@ -288,7 +299,7 @@ export default {
           seconds: 5,
         });
       } finally {
-        this.$emit('close');
+        this.$emit('close', true);
       }
 
       this.isLoadingUpdateConfig = false;
@@ -299,15 +310,9 @@ export default {
 
 <style lang="scss" scoped>
 .drawer-config-widget-dynamic {
-  // &__form-container {
-  //   position: absolute;
-  // }
-
   &__content {
     display: grid;
-    // align-content: start;
     gap: $unnnic-spacing-sm;
-    // height: 100%;
   }
 
   :deep(.unnnic-label__label),

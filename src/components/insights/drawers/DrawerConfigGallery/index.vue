@@ -124,9 +124,15 @@ export default {
       setOnboardingRef: 'refs/SET_ONBOARDING_REF',
     }),
 
-    closeAllDrawers() {
-      this.goToGallery();
-      this.$emit('close');
+    closeAllDrawers(handlerNextStep) {
+      this.showDrawerConfigWidget = false;
+      this.drawerConfigType = '';
+      if (this.showConfigWidgetOnboarding && handlerNextStep) {
+        this.onboardingRefs['widgets-onboarding-tour'].nextStep();
+      }
+      this.$emit('close', {
+        ignoreTourStep: !this.showConfigWidgetOnboarding,
+      });
     },
 
     setDrawerConfigType(value) {

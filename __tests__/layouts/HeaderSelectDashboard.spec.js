@@ -33,6 +33,25 @@ describe('HeaderSelectDashboard', () => {
           enableCreateCustomDashboards: false,
         },
       },
+      refs: {
+        namespaced: true,
+        state: {
+          onboardingRefs: {
+            'select-dashboard': null,
+            'create-dashboard-button': null,
+            'widget-card-metric': null,
+            'widget-gallery': null,
+            'drawer-card-metric-config': null,
+            'widget-graph-funnel': null,
+            'drawer-graph-funnel': null,
+            'dashboard-onboarding-tour': null,
+            'widgets-onboarding-tour': null,
+          },
+          showCreateDashboardOnboarding: false,
+          showConfigWidgetOnboarding: false,
+          showCompleteOnboardingModal: false,
+        },
+      },
     },
   });
 

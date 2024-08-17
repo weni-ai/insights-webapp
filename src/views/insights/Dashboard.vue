@@ -25,7 +25,7 @@
     <DrawerConfigGallery
       v-if="!!currentWidgetEditing"
       :modelValue="!!currentWidgetEditing"
-      @close="updateCurrentWidgetEditing(null)"
+      @close="handlerDrawerConfigGaleryClose($event)"
     />
     <UnnnicTour
       v-if="showConfigWidgetOnboarding"
@@ -55,6 +55,11 @@ export default {
     return {
       showDrawerConfigWidget: false,
       widgetConfigurating: null,
+      initialOnboardingWidgetCompleteState: '',
+      hasWidgetFilledData: {
+        card: false,
+        funnel: false,
+      },
     };
   },
 
@@ -72,12 +77,6 @@ export default {
 
     isCustomDashboard() {
       return this.currentDashboard.is_deletable;
-    },
-
-    hasWidgetFilledData() {
-      return !!this.currentDashboardWidgets.some(
-        (widget) => !!widget.name && widget.name !== 'Funil',
-      );
     },
 
     hasFunnelWidget() {
@@ -131,7 +130,10 @@ export default {
           attachedElement:
             this.onboardingRefs['widget-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
+          popoverPosition: this.hasCardWidget ? 'left' : 'right',
+          padding: {
+            vertical: -400,
+          },
         },
         {
           title: 'Preencher métricas',
@@ -140,11 +142,16 @@ export default {
           attachedElement:
             this.onboardingRefs['drawer-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
+          popoverPosition: 'left',
         },
       ];
-      if (this.hasCardWidget) steps.push(...cardSteps);
-      // if (this.hasFunnelWidget) steps.push(...funnelSteps);
+      if (this.hasCardWidget && !this.hasWidgetFilledData.card) {
+        steps.push(...cardSteps);
+      }
+      if (this.hasFunnelWidget && !this.hasWidgetFilledData.funnel) {
+        steps.push(...funnelSteps);
+      }
+
       return steps;
     },
 
@@ -187,10 +194,17 @@ export default {
     }),
 
     handlerWidgetsOnboarding() {
-      if (this.hasWidgetFilledData) {
+      this.handleWidgetFilledData();
+      const hasWidgetsOnboardingComplete =
+        localStorage.getItem('hasWidgetsOnboardingComplete') === 'true';
+
+      if (hasWidgetsOnboardingComplete) return;
+
+      if (this.hasWidgetFilledData.card && this.hasWidgetFilledData.funnel) {
         localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
         return;
       }
+
       this.setShowConfigWidgetsOnboarding(true);
       setTimeout(() => {
         this.setOnboardingRef({
@@ -200,17 +214,35 @@ export default {
           ),
         });
         this.setOnboardingRef({
+          key: 'widget-graph-funnel',
+          ref: document.querySelector(
+            '[data-onboarding-id="widget-graph-funnel"]',
+          ),
+        });
+        this.setOnboardingRef({
           key: 'widgets-onboarding-tour',
           ref: this.$refs.widgetsOnboardingTour,
         });
 
         this.onboardingRefs['widgets-onboarding-tour'].start();
-      }, 0);
+      }, 300);
+    },
+
+    handleWidgetFilledData() {
+      this.hasWidgetFilledData = {
+        card: !!this.currentDashboardWidgets.some(
+          (widget) => !!widget.name && widget.name !== 'Funil',
+        ),
+        funnel: !!this.currentDashboardWidgets.some(
+          (widget) => widget.name === 'Funil' && !!widget.config.metric_1,
+        ),
+      };
     },
 
     handlerWidgetOpenConfig(widget) {
       this.updateCurrentWidgetEditing(widget);
       if (this.showConfigWidgetOnboarding) {
+        const timing = widget.type === 'card' ? 300 : 500;
         setTimeout(() => {
           this.setOnboardingRef({
             key: 'widget-gallery',
@@ -218,9 +250,24 @@ export default {
               '[data-onboarding-id="widget-gallery"]',
             ),
           });
+          this.setOnboardingRef({
+            key: 'drawer-graph-funnel',
+            ref: document.querySelector(
+              '[data-onboarding-id="drawer-graph-funnel"]',
+            )?.children[1],
+          });
           this.onboardingRefs['widgets-onboarding-tour'].nextStep();
-        }, 250);
+        }, timing);
       }
+    },
+
+    handlerDrawerConfigGaleryClose({ ignoreTourStep }) {
+      if (!ignoreTourStep) {
+        this.onboardingRefs['widgets-onboarding-tour'].handleStep(
+          this.onboardingRefs['widgets-onboarding-tour'].currentStep - 1,
+        );
+      }
+      this.updateCurrentWidgetEditing(null);
     },
 
     getWidgetStyle(gridPosition) {
@@ -231,10 +278,9 @@ export default {
     },
 
     getWidgetOnboardingId(widget) {
-      if (this.hasWidgetFilledData) return '';
       return widget.type === 'card'
         ? 'widget-card-metric'
-        : 'drawer-graph-funnel';
+        : 'widget-graph-funnel';
     },
   },
 };

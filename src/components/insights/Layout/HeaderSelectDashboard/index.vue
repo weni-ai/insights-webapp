@@ -23,7 +23,7 @@
       <section
         data-testid="dropdown-trigger"
         class="dropdown__trigger"
-        @click="handlerDashboardNameClick()"
+        @mouseup="callTourNextStep('dashboard-onboarding-tour')"
       >
         <h1
           data-testid="dashboard-title"
@@ -55,15 +55,15 @@
     />
   </UnnnicDropdown>
   <DrawerDashboardConfig
-    v-if="showNewDashboardModal"
-    v-model="showNewDashboardModal"
+    v-if="showDashboardConfig"
+    v-model="showDashboardConfig"
     data-testid="drawer-dashboard-config"
-    @close="showNewDashboardModal = false"
+    @close="setShowDashboardConfig(false)"
   />
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
@@ -78,12 +78,6 @@ export default {
     DrawerDashboardConfig,
   },
 
-  data() {
-    return {
-      showNewDashboardModal: false,
-    };
-  },
-
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -93,6 +87,7 @@ export default {
       showCreateDashboardTour: (state) =>
         state.refs.showCreateDashboardOnboarding,
       onboardingRefs: (state) => state.refs.onboardingRefs,
+      showDashboardConfig: (state) => state.dashboards.showDashboardConfig,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
@@ -109,24 +104,17 @@ export default {
   methods: {
     ...mapMutations({
       setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
     }),
 
-    handlerDashboardNameClick() {
-      if (!this.showCreateDashboardTour) return;
-      setTimeout(() => {
-        this.setOnboardingRef({
-          key: 'create-dashboard-button',
-          ref: document.querySelector(
-            '[data-onboarding-id="create-dashboard-button"]',
-          ),
-        });
-        this.onboardingRefs['dashboard-onboarding-tour'].nextStep();
-      }, 0);
-    },
+    ...mapActions({
+      beforeOpenDashboardList: 'refs/beforeOpenDashboardList',
+      callTourNextStep: 'refs/callTourNextStep',
+    }),
+
     handlerCreateDashboardClick() {
-      this.showNewDashboardModal = true;
-      if (!this.showCreateDashboardTour) return;
-      this.onboardingRefs['dashboard-onboarding-tour'].end();
+      this.setShowDashboardConfig(true);
+      this.callTourNextStep('dashboard-onboarding-tour');
     },
   },
 };

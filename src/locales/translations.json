@@ -609,5 +609,37 @@
       "en": "$ - Peso",
       "es": "$ - Peso"
     }
+  },
+  "dashboard_onboarding": {
+    "step": {
+      "create_dashboard": {
+        "title": {
+          "pt-br": "Crie um Dashboard personalizado",
+          "en": "Create a custom Dashboard",
+          "es": "Cree un Panel personalizado"
+        },
+        "description": {
+          "pt-br": "Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.",
+          "en": "Besides being able to monitor your operation through the Human Support Dashboard, you can have as many Dashboards as you want. Click on the indicated location to create a new Dashboard.",
+          "es": "Además de poder seguir su operación a través del Panel de Atención Humana, puede tener tantos Paneles como desee. Haga clic en el lugar indicado para crear un nuevo Panel."
+        }
+      }
+    }
+  },
+  "widgets_onboarding": {
+    "step": {
+      "create_dashboard": {
+        "title": {
+          "pt-br": "Crie um Dashboard personalizado",
+          "en": "Create a custom Dashboard",
+          "es": "Cree un Panel personalizado"
+        },
+        "description": {
+          "pt-br": "Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.",
+          "en": "Besides being able to monitor your operation through the Human Support Dashboard, you can have as many Dashboards as you want. Click on the indicated location to create a new Dashboard.",
+          "es": "Además de poder seguir su operación a través del Panel de Atención Humana, puede tener tantos Paneles como desee. Haga clic en el lugar indicado para crear un nuevo Panel."
+        }
+      }
+    }
   }
 }

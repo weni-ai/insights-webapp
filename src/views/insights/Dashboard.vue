@@ -111,6 +111,8 @@ export default {
             this.onboardingRefs['widget-gallery'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
+          beforeRender: this.beforeOpenWidgetConfig,
+          hiddenNextStepButton: true,
         },
         {
           title: 'Definindo métrica',
@@ -119,6 +121,7 @@ export default {
           attachedElement:
             this.onboardingRefs['drawer-card-metric-config'] ||
             this.onboardingRefs['insights-layout'],
+          beforeRender: this.beforeOpenWidgetMetricConfig,
           popoverPosition: 'left',
         },
       ];
@@ -143,6 +146,7 @@ export default {
             this.onboardingRefs['drawer-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
+          beforeRender: this.beforeOpenFunnelConfig,
         },
       ];
       if (this.hasCardWidget && !this.hasWidgetFilledData.card) {
@@ -186,6 +190,11 @@ export default {
       getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
       fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
+      beforeOpenWidgetConfig: 'refs/beforeOpenWidgetConfig',
+      beforeOpenFunnelConfig: 'refs/beforeOpenFunnelConfig',
+      beforeOpenWidgetMetricConfig: 'refs/beforeOpenWidgetMetricConfig',
+      callTourNextStep: 'refs/callTourNextStep',
+      callTourPreviousStep: 'refs/callTourPreviousStep',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
@@ -193,12 +202,24 @@ export default {
       setOnboardingRef: 'refs/SET_ONBOARDING_REF',
     }),
 
+    handleWidgetFilledData() {
+      this.hasWidgetFilledData = {
+        card: !!this.currentDashboardWidgets.some(
+          (widget) => !!widget.name && widget.name !== 'Funil',
+        ),
+        funnel: !!this.currentDashboardWidgets.some(
+          (widget) => widget.name === 'Funil' && !!widget.config.metric_1,
+        ),
+      };
+    },
+
     handlerWidgetsOnboarding() {
-      this.handleWidgetFilledData();
       const hasWidgetsOnboardingComplete =
         localStorage.getItem('hasWidgetsOnboardingComplete') === 'true';
 
       if (hasWidgetsOnboardingComplete) return;
+
+      this.handleWidgetFilledData();
 
       if (this.hasWidgetFilledData.card && this.hasWidgetFilledData.funnel) {
         localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
@@ -206,6 +227,7 @@ export default {
       }
 
       this.setShowConfigWidgetsOnboarding(true);
+
       setTimeout(() => {
         this.setOnboardingRef({
           key: 'widget-card-metric',
@@ -228,44 +250,16 @@ export default {
       }, 300);
     },
 
-    handleWidgetFilledData() {
-      this.hasWidgetFilledData = {
-        card: !!this.currentDashboardWidgets.some(
-          (widget) => !!widget.name && widget.name !== 'Funil',
-        ),
-        funnel: !!this.currentDashboardWidgets.some(
-          (widget) => widget.name === 'Funil' && !!widget.config.metric_1,
-        ),
-      };
-    },
-
     handlerWidgetOpenConfig(widget) {
-      this.updateCurrentWidgetEditing(widget);
-      if (this.showConfigWidgetOnboarding) {
-        const timing = widget.type === 'card' ? 300 : 500;
-        setTimeout(() => {
-          this.setOnboardingRef({
-            key: 'widget-gallery',
-            ref: document.querySelector(
-              '[data-onboarding-id="widget-gallery"]',
-            ),
-          });
-          this.setOnboardingRef({
-            key: 'drawer-graph-funnel',
-            ref: document.querySelector(
-              '[data-onboarding-id="drawer-graph-funnel"]',
-            )?.children[1],
-          });
-          this.onboardingRefs['widgets-onboarding-tour'].nextStep();
-        }, timing);
-      }
+      // TODO... Ajustar para não chamar ao disparar back da galeria
+      this.updateCurrentWidgetEditing(widget).then(() => {
+        this.callTourNextStep('widgets-onboarding-tour');
+      });
     },
 
     handlerDrawerConfigGaleryClose({ ignoreTourStep }) {
       if (!ignoreTourStep) {
-        this.onboardingRefs['widgets-onboarding-tour'].handleStep(
-          this.onboardingRefs['widgets-onboarding-tour'].currentStep - 1,
-        );
+        this.callTourPreviousStep('widgets-onboarding-tour');
       }
       this.updateCurrentWidgetEditing(null);
     },
@@ -302,9 +296,4 @@ export default {
     align-items: center;
   }
 }
-// :deep(.unnnic-tour__popover) {
-//   .unnnic-button {
-//     display: none;
-//   }
-// }
 </style>

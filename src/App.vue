@@ -33,26 +33,8 @@
     <UnnnicTour
       v-if="showCreateDashboardTour"
       ref="dashboardOnboardingTour"
-      :steps="[
-        {
-          title: 'Crie um Dashboard personalizado',
-          description:
-            'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
-          attachedElement:
-            onboardingRefs['select-dashboard'] ||
-            onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-        },
-        {
-          title: 'Crie um Dashboard personalizado',
-          description:
-            'Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.',
-          attachedElement:
-            onboardingRefs['create-dashboard-button'] ||
-            onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-        },
-      ]"
+      :steps="dashboardTourSteps"
+      @end-tour="setShowDashboardConfig(true)"
     />
   </div>
 </template>
@@ -92,6 +74,32 @@ export default {
       showCompleteOnboardingModal: (state) =>
         state.refs.showCompleteOnboardingModal,
     }),
+
+    dashboardTourSteps() {
+      return [
+        {
+          title: this.$t('dashboard_onboarding.step.create_dashboard.title'),
+          description: this.$t(
+            'dashboard_onboarding.step.create_dashboard.description',
+          ),
+          attachedElement:
+            this.onboardingRefs['select-dashboard'] ||
+            this.onboardingRefs['insights-layout'],
+          popoverPosition: 'right',
+        },
+        {
+          title: this.$t('dashboard_onboarding.step.create_dashboard.title'),
+          description: this.$t(
+            'dashboard_onboarding.step.create_dashboard.description',
+          ),
+          attachedElement:
+            this.onboardingRefs['create-dashboard-button'] ||
+            this.onboardingRefs['insights-layout'],
+          popoverPosition: 'right',
+          beforeRender: this.beforeOpenDashboardList,
+        },
+      ];
+    },
   },
 
   watch: {
@@ -128,6 +136,7 @@ export default {
       setProject: 'config/setProject',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
+      beforeOpenDashboardList: 'refs/beforeOpenDashboardList',
     }),
 
     ...mapMutations({
@@ -135,6 +144,7 @@ export default {
       setShowCreateDashboardOnboarding:
         'refs/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
       setShowCompleteOnboardingModal: 'refs/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
+      setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
     }),
 
     async handlingTokenAndProjectUuid() {
@@ -240,10 +250,5 @@ export default {
   align-items: center;
   width: 100%;
   height: 100vh;
-}
-:deep(.unnnic-tour__popover) {
-  .unnnic-button {
-    display: none;
-  }
 }
 </style>

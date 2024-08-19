@@ -1,3 +1,5 @@
+import { asyncTimeout } from '@/utils/time';
+
 const mutations = {
   SET_ONBOARDING_REF: 'SET_ONBOARDING_REF',
   SET_SHOW_CREATE_DASHBOARD_ONBOARDING: 'SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
@@ -34,6 +36,99 @@ export default {
     },
     [mutations.SET_SHOW_COMPLETE_ONBOARDING_MODAL](state, show) {
       state.showCompleteOnboardingModal = show;
+    },
+  },
+  actions: {
+    callTourNextStep({ state }, tour) {
+      const {
+        showCreateDashboardOnboarding,
+        showConfigWidgetOnboarding,
+        onboardingRefs,
+      } = state;
+
+      if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
+        onboardingRefs[tour]?.nextStep();
+      }
+    },
+
+    async callTourPreviousStep({ state }, tour) {
+      const {
+        showCreateDashboardOnboarding,
+        showConfigWidgetOnboarding,
+        onboardingRefs,
+      } = state;
+
+      if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
+        await onboardingRefs[tour]?.handleStep(
+          onboardingRefs[tour].currentStep - 1,
+        );
+      }
+    },
+
+    async beforeOpenDashboardList({ state, commit }) {
+      if (state.showCreateDashboardOnboarding) {
+        const dashboardName = document.querySelector(
+          '[data-testid="dropdown-trigger"]',
+        );
+        await dashboardName.click();
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'create-dashboard-button',
+          ref: document.querySelector(
+            '[data-onboarding-id="create-dashboard-button"]',
+          ),
+        });
+      }
+    },
+
+    async beforeOpenWidgetConfig({ commit, state }) {
+      if (!state.showConfigWidgetOnboarding) return;
+
+      const widgetGallery = document.querySelector(
+        '[data-onboarding-id="widget-gallery"]',
+      );
+
+      if (!widgetGallery) {
+        await state.onboardingRefs['widget-card-metric']
+          .querySelector('.card-dashboard__button-config')
+          .click();
+      }
+
+      await asyncTimeout(300).then(() => {
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'widget-gallery',
+          ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
+        });
+      });
+    },
+
+    async beforeOpenFunnelConfig({ commit, state }) {
+      const funnelDrawer = document.querySelector(
+        '[data-onboarding-id="drawer-graph-funnel"]',
+      );
+      if (!funnelDrawer) {
+        await state.onboardingRefs['widget-graph-funnel']
+          .querySelector('.unnnic-button')
+          .click();
+      }
+      await asyncTimeout(300).then(() => {
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'drawer-graph-funnel',
+          ref: document.querySelector(
+            '[data-onboarding-id="drawer-graph-funnel"]',
+          )?.children[1],
+        });
+      });
+    },
+
+    async beforeOpenWidgetMetricConfig({ commit }) {
+      await asyncTimeout(400).then(() => {
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'drawer-card-metric-config',
+          ref: document.querySelector(
+            '[data-onboarding-id="drawer-card-metric-config"]',
+          ).children[1],
+        });
+      });
     },
   },
 };

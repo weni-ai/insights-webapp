@@ -146,6 +146,7 @@ export default {
             this.onboardingRefs['drawer-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
+          beforeRender: this.beforeOpenFunnelConfig,
         },
       ];
       if (this.hasCardWidget && !this.hasWidgetFilledData.card) {
@@ -190,6 +191,7 @@ export default {
       fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
       beforeOpenWidgetConfig: 'refs/beforeOpenWidgetConfig',
+      beforeOpenFunnelConfig: 'refs/beforeOpenFunnelConfig',
       beforeOpenWidgetMetricConfig: 'refs/beforeOpenWidgetMetricConfig',
       callTourNextStep: 'refs/callTourNextStep',
       callTourPreviousStep: 'refs/callTourPreviousStep',

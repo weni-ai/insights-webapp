@@ -98,6 +98,19 @@ export default {
           key: 'widget-gallery',
           ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
         });
+      });
+    },
+
+    async beforeOpenFunnelConfig({ commit, state }) {
+      const funnelDrawer = document.querySelector(
+        '[data-onboarding-id="drawer-graph-funnel"]',
+      );
+      if (!funnelDrawer) {
+        await state.onboardingRefs['widget-graph-funnel']
+          .querySelector('.unnnic-button')
+          .click();
+      }
+      await asyncTimeout(300).then(() => {
         commit(mutations.SET_ONBOARDING_REF, {
           key: 'drawer-graph-funnel',
           ref: document.querySelector(

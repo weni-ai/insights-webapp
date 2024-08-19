@@ -111,9 +111,8 @@ export default {
             this.onboardingRefs['widget-gallery'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
-
-          beforeRender: () =>
-            this.beforeOpenWidgetConfig(this.currentWidgetEditing),
+          beforeRender: this.beforeOpenWidgetConfig,
+          hiddenNextStepButton: true,
         },
         {
           title: 'Definindo métrica',
@@ -122,6 +121,7 @@ export default {
           attachedElement:
             this.onboardingRefs['drawer-card-metric-config'] ||
             this.onboardingRefs['insights-layout'],
+          beforeRender: this.beforeOpenWidgetMetricConfig,
           popoverPosition: 'left',
         },
       ];
@@ -190,7 +190,9 @@ export default {
       fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
       beforeOpenWidgetConfig: 'refs/beforeOpenWidgetConfig',
+      beforeOpenWidgetMetricConfig: 'refs/beforeOpenWidgetMetricConfig',
       callTourNextStep: 'refs/callTourNextStep',
+      callTourPreviousStep: 'refs/callTourPreviousStep',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
@@ -247,18 +249,15 @@ export default {
     },
 
     handlerWidgetOpenConfig(widget) {
+      // TODO... Ajustar para não chamar ao disparar back da galeria
       this.updateCurrentWidgetEditing(widget).then(() => {
         this.callTourNextStep('widgets-onboarding-tour');
       });
-
-      // this.beforeOpenWidgetConfig(widget).then(() => {});
     },
 
     handlerDrawerConfigGaleryClose({ ignoreTourStep }) {
       if (!ignoreTourStep) {
-        this.onboardingRefs['widgets-onboarding-tour'].handleStep(
-          this.onboardingRefs['widgets-onboarding-tour'].currentStep - 1,
-        );
+        this.callTourPreviousStep('widgets-onboarding-tour');
       }
       this.updateCurrentWidgetEditing(null);
     },

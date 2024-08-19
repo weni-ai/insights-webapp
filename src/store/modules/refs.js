@@ -39,6 +39,32 @@ export default {
     },
   },
   actions: {
+    callTourNextStep({ state }, tour) {
+      const {
+        showCreateDashboardOnboarding,
+        showConfigWidgetOnboarding,
+        onboardingRefs,
+      } = state;
+
+      if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
+        onboardingRefs[tour]?.nextStep();
+      }
+    },
+
+    async callTourPreviousStep({ state }, tour) {
+      const {
+        showCreateDashboardOnboarding,
+        showConfigWidgetOnboarding,
+        onboardingRefs,
+      } = state;
+
+      if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
+        await onboardingRefs[tour]?.handleStep(
+          onboardingRefs[tour].currentStep - 1,
+        );
+      }
+    },
+
     async beforeOpenDashboardList({ state, commit }) {
       if (state.showCreateDashboardOnboarding) {
         const dashboardName = document.querySelector(
@@ -53,37 +79,43 @@ export default {
         });
       }
     },
-    // WIDGETS
-    async beforeOpenWidgetConfig({ commit, state }, widget) {
-      // using setTimeout because of the drawer opening/closing animation
-      const delay = widget?.type === 'card' ? 300 : 500;
-      await asyncTimeout(delay).then(() => {
-        if (state.showConfigWidgetOnboarding) {
-          commit(mutations.SET_ONBOARDING_REF, {
-            key: 'widget-gallery',
-            ref: document.querySelector(
-              '[data-onboarding-id="widget-gallery"]',
-            ),
-          });
-          commit(mutations.SET_ONBOARDING_REF, {
-            key: 'drawer-graph-funnel',
-            ref: document.querySelector(
-              '[data-onboarding-id="drawer-graph-funnel"]',
-            )?.children[1],
-          });
-        }
+
+    async beforeOpenWidgetConfig({ commit, state }) {
+      if (!state.showConfigWidgetOnboarding) return;
+
+      const widgetGallery = document.querySelector(
+        '[data-onboarding-id="widget-gallery"]',
+      );
+
+      if (!widgetGallery) {
+        await state.onboardingRefs['widget-card-metric']
+          .querySelector('.card-dashboard__button-config')
+          .click();
+      }
+
+      await asyncTimeout(300).then(() => {
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'widget-gallery',
+          ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
+        });
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'drawer-graph-funnel',
+          ref: document.querySelector(
+            '[data-onboarding-id="drawer-graph-funnel"]',
+          )?.children[1],
+        });
       });
     },
-    callTourNextStep({ state }, tour) {
-      const {
-        showCreateDashboardOnboarding,
-        showConfigWidgetOnboarding,
-        onboardingRefs,
-      } = state;
 
-      if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
-        onboardingRefs[tour]?.nextStep();
-      }
+    async beforeOpenWidgetMetricConfig({ commit }) {
+      await asyncTimeout(400).then(() => {
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'drawer-card-metric-config',
+          ref: document.querySelector(
+            '[data-onboarding-id="drawer-card-metric-config"]',
+          ).children[1],
+        });
+      });
     },
   },
 };

@@ -7,7 +7,7 @@
     :description="$t('drawers.config_gallery.description')"
     :modelValue="modelValue"
     closeIcon="close"
-    @close="closeAllDrawers"
+    @close="closeAllDrawers({ handlerNextStep: false })"
   >
     <template #content>
       <ol
@@ -31,7 +31,7 @@
     v-if="showDrawerConfigWidget"
     :modelValue="showDrawerConfigWidget"
     :configType="drawerConfigType"
-    @close="closeAllDrawers"
+    @close="closeAllDrawers($event)"
     @back="goToGallery"
   />
 </template>
@@ -126,15 +126,15 @@ export default {
       setOnboardingRef: 'refs/SET_ONBOARDING_REF',
     }),
 
-    closeAllDrawers(handlerNextStep) {
+    async closeAllDrawers({ handleTourNextStep } = {}) {
       this.showDrawerConfigWidget = false;
       this.drawerConfigType = '';
-      if (this.showConfigWidgetOnboarding && handlerNextStep) {
-        this.onboardingRefs['widgets-onboarding-tour'].nextStep();
-      }
-      this.$emit('close', {
-        ignoreTourStep: !this.showConfigWidgetOnboarding,
-      });
+
+      handleTourNextStep
+        ? this.callTourNextStep('widgets-onboarding-tour')
+        : this.callTourPreviousStep('widgets-onboarding-tour');
+
+      this.$emit('close');
     },
 
     setDrawerConfigType(value) {

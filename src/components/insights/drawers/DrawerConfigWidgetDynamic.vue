@@ -18,7 +18,9 @@
     "
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
-    @close="configType ? $emit('back') : $emit('close')"
+    @close="
+      configType ? $emit('back') : $emit('close', { handleTourNextStep: false })
+    "
   >
     <template #content>
       <form
@@ -40,7 +42,7 @@
   <ModalResetWidget
     v-model="showModalResetWidget"
     :widget="widget"
-    @finish-reset="$emit('close')"
+    @finish-reset="$emit('close', { handleTourNextStep: false })"
   />
 </template>
 
@@ -245,6 +247,7 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      callTourNextStep: 'refs/callTourNextStep',
     }),
 
     ...mapMutations({
@@ -271,16 +274,15 @@ export default {
         }
 
         if (this.showConfigWidgetOnboarding) {
-          const isLastStep =
+          const isLastTourStep =
             this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
             this.onboardingRefs['widgets-onboarding-tour'].steps.length;
-          if (isLastStep) {
-            this.onboardingRefs['widgets-onboarding-tour'].end();
+          if (isLastTourStep) {
+            this.callTourNextStep('widgets-onboarding-tour');
             this.setShowCompleteOnboardingModal(true);
             localStorage.setItem('hasWidgetsOnboardingComplete', true);
           }
         }
-
         unnnic.unnnicCallAlert({
           props: {
             text: this.$t('drawers.metric_saved'),
@@ -297,7 +299,7 @@ export default {
           seconds: 5,
         });
       } finally {
-        this.$emit('close', true);
+        this.$emit('close', { handleTourNextStep: true });
       }
 
       this.isLoadingUpdateConfig = false;

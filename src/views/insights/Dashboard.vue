@@ -25,7 +25,7 @@
     <DrawerConfigGallery
       v-if="!!currentWidgetEditing"
       :modelValue="!!currentWidgetEditing"
-      @close="handlerDrawerConfigGaleryClose($event)"
+      @close="updateCurrentWidgetEditing(null)"
     />
     <UnnnicTour
       v-if="showConfigWidgetOnboarding"
@@ -262,17 +262,12 @@ export default {
     },
 
     handlerWidgetOpenConfig(widget) {
-      // TODO... Ajustar para não chamar ao disparar back da galeria
-      this.updateCurrentWidgetEditing(widget).then(() => {
-        this.callTourNextStep('widgets-onboarding-tour');
-      });
-    },
-
-    handlerDrawerConfigGaleryClose({ ignoreTourStep }) {
-      if (!ignoreTourStep) {
-        this.callTourPreviousStep('widgets-onboarding-tour');
+      const isNewWidget = this.currentWidgetEditing?.uuid !== widget.uuid;
+      if (isNewWidget) {
+        this.updateCurrentWidgetEditing(widget).then(() => {
+          this.callTourNextStep('widgets-onboarding-tour');
+        });
       }
-      this.updateCurrentWidgetEditing(null);
     },
 
     getWidgetStyle(gridPosition) {

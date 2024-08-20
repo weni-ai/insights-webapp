@@ -73,8 +73,8 @@ export default {
       isLoadingCurrentDashboardWidgets: (state) =>
         state.widgets.isLoadingCurrentDashboardWidgets,
       showConfigWidgetOnboarding: (state) =>
-        state.refs.showConfigWidgetOnboarding,
-      onboardingRefs: (state) => state.refs.onboardingRefs,
+        state.onboarding.showConfigWidgetOnboarding,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
     }),
 
     isCustomDashboard() {
@@ -201,16 +201,17 @@ export default {
       getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
       fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-      beforeOpenWidgetConfig: 'refs/beforeOpenWidgetConfig',
-      beforeOpenFunnelConfig: 'refs/beforeOpenFunnelConfig',
-      beforeOpenWidgetMetricConfig: 'refs/beforeOpenWidgetMetricConfig',
-      callTourNextStep: 'refs/callTourNextStep',
-      callTourPreviousStep: 'refs/callTourPreviousStep',
+      beforeOpenWidgetConfig: 'onboarding/beforeOpenWidgetConfig',
+      beforeOpenFunnelConfig: 'onboarding/beforeOpenFunnelConfig',
+      beforeOpenWidgetMetricConfig: 'onboarding/beforeOpenWidgetMetricConfig',
+      callTourNextStep: 'onboarding/callTourNextStep',
+      callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
-      setShowConfigWidgetsOnboarding: 'refs/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setShowConfigWidgetsOnboarding:
+        'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
     }),
 
     handleWidgetFilledData() {

@@ -94,9 +94,9 @@ export default {
       isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
       projectFlows: (state) => state.project.flows,
       widget: (state) => state.widgets.currentWidgetEditing,
-      onboardingRefs: (state) => state.refs.onboardingRefs,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showConfigWidgetOnboarding: (state) =>
-        state.refs.showConfigWidgetOnboarding,
+        state.onboarding.showConfigWidgetOnboarding,
     }),
 
     drawerProps() {
@@ -247,11 +247,12 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
-      callTourNextStep: 'refs/callTourNextStep',
+      callTourNextStep: 'onboarding/callTourNextStep',
     }),
 
     ...mapMutations({
-      setShowCompleteOnboardingModal: 'refs/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
+      setShowCompleteOnboardingModal:
+        'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
     }),
 
     internalClose() {

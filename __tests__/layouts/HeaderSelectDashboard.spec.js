@@ -3,8 +3,9 @@ import { flushPromises, mount } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { createStore } from 'vuex';
 import { routes } from '@/router';
+
 import dashboardsStore from '@/store/modules/dashboards';
-import refsStore from '@/store/modules/refs';
+import onboardingStore from '@/store/modules/onboarding';
 
 import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
 
@@ -39,8 +40,8 @@ describe('HeaderSelectDashboard', () => {
           enableCreateCustomDashboards: false,
         },
       },
-      refs: {
-        ...refsStore,
+      onboarding: {
+        ...onboardingStore,
       },
     },
   });

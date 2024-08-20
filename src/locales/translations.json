@@ -128,6 +128,18 @@
           "es": "Ignorar"
         }
       }
+    },
+    "complete_modal": {
+      "title": {
+        "pt-br": "Tour completa! 🎉",
+        "en": "Complete tour! 🎉",
+        "es": "¡Recorrido completo! 🎉"
+      },
+      "text": {
+        "pt-br": "Parabéns, agora você está mais perto de melhorar sua operação com base nos dados :)",
+        "en": "Congratulations, now you are closer to improving your operation based on the data :)",
+        "es": "Felicidades, ahora estás más cerca de mejorar tu operación basada en los datos :)"
+      }
     }
   },
   "widgets": {

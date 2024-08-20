@@ -11,11 +11,10 @@
     <section class="finish-onboarding-modal__content">
       <section class="finish-onboarding-modal__content--text">
         <h1 class="finish-onboarding-modal__content--title">
-          Tour completa! 🎉
+          {{ $t('onboarding.complete_modal.title') }}
         </h1>
         <p class="finish-onboarding-modal__content--info">
-          Parabéns, agora você está mais perto de melhorar sua operação com base
-          nos dados :)
+          {{ $t('onboarding.complete_modal.text') }}
         </p>
       </section>
     </section>

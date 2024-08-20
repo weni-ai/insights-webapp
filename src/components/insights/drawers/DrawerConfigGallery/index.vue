@@ -67,9 +67,9 @@ export default {
     ...mapState({
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
       widget: (state) => state.widgets.currentWidgetEditing,
-      onboardingRefs: (state) => state.refs.onboardingRefs,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showConfigWidgetOnboarding: (state) =>
-        state.refs.showConfigWidgetOnboarding,
+        state.onboarding.showConfigWidgetOnboarding,
     }),
 
     widgetConfigType() {
@@ -118,12 +118,12 @@ export default {
   methods: {
     ...mapActions({
       getProjectFlows: 'project/getProjectFlows',
-      callTourNextStep: 'refs/callTourNextStep',
-      callTourPreviousStep: 'refs/callTourPreviousStep',
+      callTourNextStep: 'onboarding/callTourNextStep',
+      callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
 
     ...mapMutations({
-      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
     }),
 
     async closeAllDrawers({ handleTourNextStep } = {}) {

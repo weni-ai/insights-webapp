@@ -49,7 +49,11 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
       <!---->
     </div>
   </div>
-  <!--v-if-->
+  <drawer-dashboard-config-stub
+    data-testid="drawer-dashboard-config"
+    data-v-054061ac=""
+    modelvalue="true"
+  />
   
 </div>
 `;

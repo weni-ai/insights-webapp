@@ -35,6 +35,7 @@
       ref="dashboardOnboardingTour"
       :steps="dashboardTourSteps"
       @end-tour="setShowDashboardConfig(true)"
+      @close="setShowCreateDashboardOnboarding(false)"
     />
   </div>
 </template>
@@ -239,6 +240,8 @@ export default {
         this.onboardingRefs['dashboard-onboarding-tour'].start();
       });
     },
+
+    handleEndDashboardTour() {},
   },
 };
 </script>

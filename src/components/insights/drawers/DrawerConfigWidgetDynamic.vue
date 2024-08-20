@@ -278,8 +278,6 @@ export default {
             this.onboardingRefs['widgets-onboarding-tour'].end();
             this.setShowCompleteOnboardingModal(true);
             localStorage.setItem('hasWidgetsOnboardingComplete', true);
-          } else {
-            this.onboardingRefs['widgets-onboarding-tour'].nextStep();
           }
         }
 

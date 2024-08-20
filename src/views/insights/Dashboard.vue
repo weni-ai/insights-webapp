@@ -31,6 +31,8 @@
       v-if="showConfigWidgetOnboarding"
       ref="widgetsOnboardingTour"
       :steps="widgetsOnboardingSteps"
+      @end-tour="setShowConfigWidgetsOnboarding(false)"
+      @close="setShowConfigWidgetsOnboarding(false)"
     />
   </section>
 </template>
@@ -95,18 +97,22 @@ export default {
       const steps = [];
       const cardSteps = [
         {
-          title: 'Definir métrica',
-          description:
-            'Clique aqui para definir a métrica que deseja visualizar',
+          title: this.$t('widgets_onboarding.card.step.define_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.card.step.define_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['widget-card-metric'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'right',
         },
         {
-          title: 'Selecionar widget',
-          description:
-            'Selecione o tipo de métrica que deseja configurar, caso tenha dúvidas comece testando o Execuções',
+          title: this.$t(
+            'widgets_onboarding.card.step.select_widget_type.title',
+          ),
+          description: this.$t(
+            'widgets_onboarding.card.step.select_widget_type.description',
+          ),
           attachedElement:
             this.onboardingRefs['widget-gallery'] ||
             this.onboardingRefs['insights-layout'],
@@ -115,21 +121,24 @@ export default {
           hiddenNextStepButton: true,
         },
         {
-          title: 'Definindo métrica',
-          description:
-            'Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!',
+          title: this.$t('widgets_onboarding.card.step.set_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.card.step.set_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['drawer-card-metric-config'] ||
             this.onboardingRefs['insights-layout'],
           beforeRender: this.beforeOpenWidgetMetricConfig,
           popoverPosition: 'left',
+          hiddenNextStepButton: true,
         },
       ];
       const funnelSteps = [
         {
-          title: 'Definindo métricas para gráfico',
-          description:
-            'Selecione os principais fluxos da sua operação para gerar uma visualização em funil e acompanhar a jornada dos seus contatos',
+          title: this.$t('widgets_onboarding.funnel.step.define_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.funnel.step.define_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['widget-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
@@ -139,14 +148,16 @@ export default {
           },
         },
         {
-          title: 'Preencher métricas',
-          description:
-            'Informe um nome fácil para sua métrica e selecione o fluxo de onde deseja contabilizar as execuções',
+          title: this.$t('widgets_onboarding.funnel.step.fill_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.funnel.step.fill_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['drawer-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
           beforeRender: this.beforeOpenFunnelConfig,
+          hiddenNextStepButton: true,
         },
       ];
       if (this.hasCardWidget && !this.hasWidgetFilledData.card) {

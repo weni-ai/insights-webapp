@@ -35,6 +35,7 @@
       ref="dashboardOnboardingTour"
       :steps="dashboardTourSteps"
       @end-tour="setShowDashboardConfig(true)"
+      @close="setShowCreateDashboardOnboarding(false)"
     />
   </div>
 </template>
@@ -68,11 +69,11 @@ export default {
         state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
-      onboardingRefs: (state) => state.refs.onboardingRefs,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showCreateDashboardTour: (state) =>
-        state.refs.showCreateDashboardOnboarding,
+        state.onboarding.showCreateDashboardOnboarding,
       showCompleteOnboardingModal: (state) =>
-        state.refs.showCompleteOnboardingModal,
+        state.onboarding.showCompleteOnboardingModal,
     }),
 
     dashboardTourSteps() {
@@ -136,14 +137,15 @@ export default {
       setProject: 'config/setProject',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
-      beforeOpenDashboardList: 'refs/beforeOpenDashboardList',
+      beforeOpenDashboardList: 'onboarding/beforeOpenDashboardList',
     }),
 
     ...mapMutations({
-      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
       setShowCreateDashboardOnboarding:
-        'refs/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
-      setShowCompleteOnboardingModal: 'refs/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
+        'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
+      setShowCompleteOnboardingModal:
+        'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
       setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
     }),
 

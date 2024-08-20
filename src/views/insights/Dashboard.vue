@@ -25,12 +25,14 @@
     <DrawerConfigGallery
       v-if="!!currentWidgetEditing"
       :modelValue="!!currentWidgetEditing"
-      @close="handlerDrawerConfigGaleryClose($event)"
+      @close="updateCurrentWidgetEditing(null)"
     />
     <UnnnicTour
       v-if="showConfigWidgetOnboarding"
       ref="widgetsOnboardingTour"
       :steps="widgetsOnboardingSteps"
+      @end-tour="setShowConfigWidgetsOnboarding(false)"
+      @close="setShowConfigWidgetsOnboarding(false)"
     />
   </section>
 </template>
@@ -71,8 +73,8 @@ export default {
       isLoadingCurrentDashboardWidgets: (state) =>
         state.widgets.isLoadingCurrentDashboardWidgets,
       showConfigWidgetOnboarding: (state) =>
-        state.refs.showConfigWidgetOnboarding,
-      onboardingRefs: (state) => state.refs.onboardingRefs,
+        state.onboarding.showConfigWidgetOnboarding,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
     }),
 
     isCustomDashboard() {
@@ -95,18 +97,22 @@ export default {
       const steps = [];
       const cardSteps = [
         {
-          title: 'Definir métrica',
-          description:
-            'Clique aqui para definir a métrica que deseja visualizar',
+          title: this.$t('widgets_onboarding.card.step.define_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.card.step.define_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['widget-card-metric'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'right',
         },
         {
-          title: 'Selecionar widget',
-          description:
-            'Selecione o tipo de métrica que deseja configurar, caso tenha dúvidas comece testando o Execuções',
+          title: this.$t(
+            'widgets_onboarding.card.step.select_widget_type.title',
+          ),
+          description: this.$t(
+            'widgets_onboarding.card.step.select_widget_type.description',
+          ),
           attachedElement:
             this.onboardingRefs['widget-gallery'] ||
             this.onboardingRefs['insights-layout'],
@@ -115,21 +121,24 @@ export default {
           hiddenNextStepButton: true,
         },
         {
-          title: 'Definindo métrica',
-          description:
-            'Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!',
+          title: this.$t('widgets_onboarding.card.step.set_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.card.step.set_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['drawer-card-metric-config'] ||
             this.onboardingRefs['insights-layout'],
           beforeRender: this.beforeOpenWidgetMetricConfig,
           popoverPosition: 'left',
+          hiddenNextStepButton: true,
         },
       ];
       const funnelSteps = [
         {
-          title: 'Definindo métricas para gráfico',
-          description:
-            'Selecione os principais fluxos da sua operação para gerar uma visualização em funil e acompanhar a jornada dos seus contatos',
+          title: this.$t('widgets_onboarding.funnel.step.define_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.funnel.step.define_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['widget-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
@@ -139,14 +148,16 @@ export default {
           },
         },
         {
-          title: 'Preencher métricas',
-          description:
-            'Informe um nome fácil para sua métrica e selecione o fluxo de onde deseja contabilizar as execuções',
+          title: this.$t('widgets_onboarding.funnel.step.fill_metric.title'),
+          description: this.$t(
+            'widgets_onboarding.funnel.step.fill_metric.description',
+          ),
           attachedElement:
             this.onboardingRefs['drawer-graph-funnel'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
           beforeRender: this.beforeOpenFunnelConfig,
+          hiddenNextStepButton: true,
         },
       ];
       if (this.hasCardWidget && !this.hasWidgetFilledData.card) {
@@ -190,16 +201,17 @@ export default {
       getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
       fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-      beforeOpenWidgetConfig: 'refs/beforeOpenWidgetConfig',
-      beforeOpenFunnelConfig: 'refs/beforeOpenFunnelConfig',
-      beforeOpenWidgetMetricConfig: 'refs/beforeOpenWidgetMetricConfig',
-      callTourNextStep: 'refs/callTourNextStep',
-      callTourPreviousStep: 'refs/callTourPreviousStep',
+      beforeOpenWidgetConfig: 'onboarding/beforeOpenWidgetConfig',
+      beforeOpenFunnelConfig: 'onboarding/beforeOpenFunnelConfig',
+      beforeOpenWidgetMetricConfig: 'onboarding/beforeOpenWidgetMetricConfig',
+      callTourNextStep: 'onboarding/callTourNextStep',
+      callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
-      setShowConfigWidgetsOnboarding: 'refs/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setShowConfigWidgetsOnboarding:
+        'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
     }),
 
     handleWidgetFilledData() {
@@ -251,17 +263,12 @@ export default {
     },
 
     handlerWidgetOpenConfig(widget) {
-      // TODO... Ajustar para não chamar ao disparar back da galeria
-      this.updateCurrentWidgetEditing(widget).then(() => {
-        this.callTourNextStep('widgets-onboarding-tour');
-      });
-    },
-
-    handlerDrawerConfigGaleryClose({ ignoreTourStep }) {
-      if (!ignoreTourStep) {
-        this.callTourPreviousStep('widgets-onboarding-tour');
+      const isNewWidget = this.currentWidgetEditing?.uuid !== widget.uuid;
+      if (isNewWidget) {
+        this.updateCurrentWidgetEditing(widget).then(() => {
+          this.callTourNextStep('widgets-onboarding-tour');
+        });
       }
-      this.updateCurrentWidgetEditing(null);
     },
 
     getWidgetStyle(gridPosition) {

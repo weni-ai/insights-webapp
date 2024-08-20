@@ -51,7 +51,7 @@ export default {
       }
     },
 
-    async callTourPreviousStep({ state }, tour) {
+    callTourPreviousStep({ state }, tour) {
       const {
         showCreateDashboardOnboarding,
         showConfigWidgetOnboarding,
@@ -59,9 +59,7 @@ export default {
       } = state;
 
       if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
-        await onboardingRefs[tour]?.handleStep(
-          onboardingRefs[tour].currentStep - 1,
-        );
+        onboardingRefs[tour]?.handleStep(onboardingRefs[tour].currentStep - 1);
       }
     },
 

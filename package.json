@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^10.11.0",
-    "@weni/unnnic-system": "2.7.1-alpha.8",
+    "@weni/unnnic-system": "^2.8.1",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "chartjs-plugin-datalabels": "^2.2.0",

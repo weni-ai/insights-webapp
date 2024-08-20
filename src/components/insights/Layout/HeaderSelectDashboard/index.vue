@@ -85,8 +85,8 @@ export default {
       enableCreateCustomDashboards: (state) =>
         state.config.enableCreateCustomDashboards,
       showCreateDashboardTour: (state) =>
-        state.refs.showCreateDashboardOnboarding,
-      onboardingRefs: (state) => state.refs.onboardingRefs,
+        state.onboarding.showCreateDashboardOnboarding,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showDashboardConfig: (state) => state.dashboards.showDashboardConfig,
     }),
     ...mapGetters({
@@ -103,13 +103,13 @@ export default {
   },
   methods: {
     ...mapMutations({
-      setOnboardingRef: 'refs/SET_ONBOARDING_REF',
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
       setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
     }),
 
     ...mapActions({
-      beforeOpenDashboardList: 'refs/beforeOpenDashboardList',
-      callTourNextStep: 'refs/callTourNextStep',
+      beforeOpenDashboardList: 'onboarding/beforeOpenDashboardList',
+      callTourNextStep: 'onboarding/callTourNextStep',
     }),
 
     handlerCreateDashboardClick() {

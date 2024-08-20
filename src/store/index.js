@@ -7,7 +7,7 @@ import dashboards from './modules/dashboards';
 import reports from './modules/reports';
 import project from './modules/project';
 import widgets from './modules/widgets.ts';
-import refs from './modules/refs';
+import onboarding from './modules/onboarding';
 
 const store = createStore({
   modules: {
@@ -19,7 +19,7 @@ const store = createStore({
     reports,
     project,
     widgets,
-    refs,
+    onboarding,
   },
 });
 

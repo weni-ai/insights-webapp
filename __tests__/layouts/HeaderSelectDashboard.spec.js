@@ -4,6 +4,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { createStore } from 'vuex';
 import { routes } from '@/router';
 
+import dashboardsStore from '@/store/modules/dashboards';
+import onboardingStore from '@/store/modules/onboarding';
+
 import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
 
 describe('HeaderSelectDashboard', () => {
@@ -22,6 +25,10 @@ describe('HeaderSelectDashboard', () => {
             { name: 'Dashboard 2', uuid: '2' },
           ],
           currentDashboard: { name: 'Dashboard 1', uuid: '1' },
+          showDashboardConfig: false,
+        },
+        mutations: {
+          ...dashboardsStore.mutations,
         },
         getters: {
           dashboardDefault: () => ({ name: 'Default Dashboard' }),
@@ -33,24 +40,8 @@ describe('HeaderSelectDashboard', () => {
           enableCreateCustomDashboards: false,
         },
       },
-      refs: {
-        namespaced: true,
-        state: {
-          onboardingRefs: {
-            'select-dashboard': null,
-            'create-dashboard-button': null,
-            'widget-card-metric': null,
-            'widget-gallery': null,
-            'drawer-card-metric-config': null,
-            'widget-graph-funnel': null,
-            'drawer-graph-funnel': null,
-            'dashboard-onboarding-tour': null,
-            'widgets-onboarding-tour': null,
-          },
-          showCreateDashboardOnboarding: false,
-          showConfigWidgetOnboarding: false,
-          showCompleteOnboardingModal: false,
-        },
+      onboarding: {
+        ...onboardingStore,
       },
     },
   });

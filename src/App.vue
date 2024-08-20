@@ -24,7 +24,7 @@
     <WelcomeOnboardingModal
       :showModal="showOnboardingModal"
       @close="showOnboardingModal = false"
-      @start-onboarding="handlingStartOnboarding"
+      @start-onboarding="handlerStartOnboarding"
     />
     <CompleteOnboardingModal
       :showModal="showCompleteOnboardingModal"
@@ -117,13 +117,13 @@ export default {
 
   async mounted() {
     try {
-      this.handlingTokenAndProjectUuid();
+      this.handlerTokenAndProjectUuid();
       await this.getDashboards();
       this.setOnboardingRef({
         key: 'insights-layout',
         ref: this.$refs['insights-layout'].$el,
       });
-      this.handlingShowOnboarding();
+      this.handlerShowOnboarding();
     } catch (error) {
       console.log(error);
     }
@@ -149,7 +149,7 @@ export default {
       setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
     }),
 
-    async handlingTokenAndProjectUuid() {
+    async handlerTokenAndProjectUuid() {
       const hasTokenInUrl = window.location.pathname.startsWith(
         '/loginexternal/Bearer+',
       );
@@ -173,11 +173,11 @@ export default {
       await this.checkEnableCreateCustomDashboards();
     },
 
-    handlingSetLanguage(language) {
+    handlerSetLanguage(language) {
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'
     },
 
-    handlingSetProject(projectUuid) {
+    handlerSetProject(projectUuid) {
       localStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
     },
@@ -187,29 +187,29 @@ export default {
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
-        const { handling, dataKey } = this.getEventHandling(message?.event);
-        if (handling) handling(message?.[dataKey]);
+        const { handler, dataKey } = this.getEventHandler(message?.event);
+        if (handler) handler(message?.[dataKey]);
       });
     },
 
-    getEventHandling(eventName) {
-      const handlingFunctionMapper = {
-        setLanguage: this.handlingSetLanguage,
-        setProject: this.handlingSetProject,
+    getEventHandler(eventName) {
+      const handlerFunctionMapper = {
+        setLanguage: this.handlerSetLanguage,
+        setProject: this.handlerSetProject,
       };
 
-      const handlingParamsMapper = {
+      const handlerParamsMapper = {
         setLanguage: 'language',
         setProject: 'projectUuid',
       };
 
       return {
-        handling: handlingFunctionMapper[eventName],
-        dataKey: handlingParamsMapper[eventName],
+        handler: handlerFunctionMapper[eventName],
+        dataKey: handlerParamsMapper[eventName],
       };
     },
 
-    handlingShowOnboarding() {
+    handlerShowOnboarding() {
       const hasCustomDashboard = this.dashboards.find(
         (dashboard) => dashboard.is_deletable,
       );
@@ -230,7 +230,7 @@ export default {
       this.setShowCompleteOnboardingModal(false);
     },
 
-    handlingStartOnboarding() {
+    handlerStartOnboarding() {
       this.showOnboardingModal = false;
       this.setShowCreateDashboardOnboarding(true);
       this.$nextTick(() => {

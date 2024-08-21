@@ -4,7 +4,7 @@
       'select-emoji-button',
       { 'select-emoji-button--selected': !!modelValue },
     ]"
-    @click.stop="handleEmojiPicker"
+    @click.stop="handleEmoji"
   >
     <section
       v-if="modelValue"
@@ -61,12 +61,15 @@ export default {
     closeEmojiPicker() {
       this.isEmojiPickerOpen = false;
     },
-    handleEmojiPicker() {
-      if (this.isEmojiPickerOpen) {
-        this.closeEmojiPicker();
+    handleEmoji() {
+      if (this.selectedEmoji) {
+        this.$emit('update:model-value', '');
       } else {
-        this.openEmojiPicker();
+        this.toggleEmojiPicker();
       }
+    },
+    toggleEmojiPicker() {
+      this.isEmojiPickerOpen ? this.closeEmojiPicker() : this.openEmojiPicker();
     },
     handleInput(event) {
       this.$emit('update:model-value', event);

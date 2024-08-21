@@ -18,9 +18,8 @@
     "
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
-    @close="
-      configType ? $emit('back') : $emit('close', { handleTourNextStep: false })
-    "
+    @close="$emit('close', { handleTourNextStep: false })"
+    @back="$emit('back')"
   >
     <template #content>
       <form

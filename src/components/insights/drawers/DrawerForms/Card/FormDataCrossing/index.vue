@@ -84,6 +84,7 @@ export default {
           value: 'currency',
           selected: this.config?.currency,
           label: this.$t('drawers.config_card.checkbox.currency'),
+          disabled: this.config.operation === 'min',
         },
       ];
     },
@@ -107,6 +108,8 @@ export default {
           ...this.widgetConfig,
           ...newConfig,
         });
+
+        if (newConfig?.operation === 'min') this.config.currency = false;
       },
     },
 
@@ -114,10 +117,6 @@ export default {
       if (typeof oldFlow === 'object') {
         this.config.flow.result = '';
       }
-    },
-
-    'config?.operation'(newOperation) {
-      if (newOperation === 'recurrence') this.config.currency = false;
     },
 
     isValidForm: {

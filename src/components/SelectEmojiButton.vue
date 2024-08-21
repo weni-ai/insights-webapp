@@ -22,6 +22,7 @@
     <UnnnicEmojiPicker
       v-show="isEmojiPickerOpen"
       returnName
+      :position="pickerPosition"
       @emoji-selected="handleInput"
       @close="closeEmojiPicker"
     />
@@ -37,6 +38,11 @@ export default {
     modelValue: {
       type: String,
       default: '',
+    },
+    pickerPosition: {
+      type: String,
+      default: 'top',
+      validator: (position) => ['top', 'bottom'].includes(position),
     },
   },
 

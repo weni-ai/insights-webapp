@@ -12,7 +12,10 @@
     v-on="currentFormEvents"
   />
 
-  <SelectEmojiButton v-model="config.friendly_id" />
+  <SelectEmojiButton
+    v-model="config.friendly_id"
+    :pickerPosition="type === 'executions' ? 'bottom' : 'top'"
+  />
 
   <UnnnicButton
     :text="$t('drawers.reset_widget')"

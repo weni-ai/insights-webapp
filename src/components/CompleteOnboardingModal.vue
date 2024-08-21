@@ -9,14 +9,12 @@
     @primary-button-click="emit('finish-onboarding')"
   >
     <section class="finish-onboarding-modal__content">
-      <section class="finish-onboarding-modal__content--text">
-        <h1 class="finish-onboarding-modal__content--title">
-          {{ $t('onboarding.complete_modal.title') }}
-        </h1>
-        <p class="finish-onboarding-modal__content--info">
-          {{ $t('onboarding.complete_modal.text') }}
-        </p>
-      </section>
+      <h1 class="finish-onboarding-modal__content__title">
+        {{ $t('onboarding.complete_modal.title') }}
+      </h1>
+      <p class="finish-onboarding-modal__content__info">
+        {{ $t('onboarding.complete_modal.text') }}
+      </p>
     </section>
   </UnnnicModalDialog>
 </template>
@@ -45,21 +43,14 @@ const emit = defineEmits(['close', 'finish-onboarding']);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $unnnic-spacing-md;
     text-align: center;
-    &--title {
+    &__title {
       font-size: $unnnic-font-size-title-sm;
       font-weight: $unnnic-font-weight-black;
       line-height: $unnnic-line-height-large * 1.75;
       color: $unnnic-color-neutral-darkest;
-      &-version {
-        font-size: $unnnic-font-size-body-md;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: $unnnic-line-height-large * 1.25;
-        color: $unnnic-color-neutral-darkest;
-      }
     }
-    &--info {
+    &__info {
       font-size: $unnnic-font-size-body-gt;
       font-weight: $unnnic-font-weight-regular;
       line-height: $unnnic-line-height-large * 1.375;

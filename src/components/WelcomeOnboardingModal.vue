@@ -16,14 +16,12 @@
         width="120"
         src="@/assets/images/doris-pc.png"
       />
-      <section class="welcome-onboarding-modal__content--text">
-        <h1 class="welcome-onboarding-modal__content--title">
+      <section>
+        <h1 class="welcome-onboarding-modal__title">
           {{ $t('onboarding.welcome_modal.title') }}
-          <sup class="welcome-onboarding-modal__content--title-version">
-            Beta
-          </sup>
+          <sup class="welcome-onboarding-modal__version"> Beta </sup>
         </h1>
-        <p class="welcome-onboarding-modal__content--info">
+        <p class="welcome-onboarding-modal__info">
           {{ $t('onboarding.welcome_modal.text') }}
         </p>
       </section>
@@ -56,25 +54,28 @@ const ignoreOnboarding = () => {
     align-items: center;
     gap: $unnnic-spacing-md;
     text-align: center;
-    &--title {
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-black;
-      line-height: $unnnic-line-height-large * 1.75;
-      color: $unnnic-color-neutral-darkest;
-      &-version {
-        font-size: $unnnic-font-size-body-md;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: $unnnic-line-height-large * 1.25;
-        color: $unnnic-color-neutral-darkest;
-      }
-    }
-    &--info {
-      font-size: $unnnic-font-size-body-gt;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: $unnnic-line-height-large * 1.375;
-      color: $unnnic-color-neutral-cloudy;
-      margin-top: $unnnic-spacing-xs;
-    }
+  }
+
+  &__title {
+    font-size: $unnnic-font-size-title-sm;
+    font-weight: $unnnic-font-weight-black;
+    line-height: $unnnic-line-height-large * 1.75;
+    color: $unnnic-color-neutral-darkest;
+  }
+
+  &__version {
+    font-size: $unnnic-font-size-body-md;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-line-height-large * 1.25;
+    color: $unnnic-color-neutral-darkest;
+  }
+
+  &__info {
+    font-size: $unnnic-font-size-body-gt;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-line-height-large * 1.375;
+    color: $unnnic-color-neutral-cloudy;
+    margin-top: $unnnic-spacing-xs;
   }
 }
 </style>

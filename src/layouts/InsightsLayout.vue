@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 
 // import { pxToVh } from '@/utils/css';
 
@@ -53,6 +53,16 @@ export default {
       //     pxToVh(this.barHandlerHeight) || 0
       // );
     },
+  },
+
+  mounted() {
+    this.setOnboardingRef({
+      key: 'insights-layout',
+      ref: this.$el,
+    });
+  },
+  methods: {
+    ...mapMutations({ setOnboardingRef: 'onboarding/SET_ONBOARDING_REF' }),
   },
 };
 </script>

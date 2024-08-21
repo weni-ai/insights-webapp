@@ -86,7 +86,7 @@ export default {
     try {
       this.handlerTokenAndProjectUuid();
       this.getDashboards().then(() => {
-        this.handlerShowOnboarding();
+        this.handlerShowOnboardingModal();
       });
     } catch (error) {
       console.log(error);
@@ -171,7 +171,7 @@ export default {
       };
     },
 
-    handlerShowOnboarding() {
+    handlerShowOnboardingModal() {
       const hasCustomDashboard = this.dashboards.find(
         (dashboard) => dashboard.is_deletable,
       );
@@ -185,14 +185,11 @@ export default {
       const hasOnboardingComplete =
         JSON.parse(localStorage.getItem('hasDashboardOnboardingComplete')) ||
         false;
+
       this.showOnboardingModal = !hasOnboardingComplete;
     },
 
     handlerStartOnboarding() {
-      this.setOnboardingRef({
-        key: 'insights-layout',
-        ref: this.$refs['insights-layout'].$el,
-      });
       this.showOnboardingModal = false;
       this.setShowCreateDashboardOnboarding(true);
     },

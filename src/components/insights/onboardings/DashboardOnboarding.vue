@@ -44,9 +44,7 @@ export default {
     },
   },
   mounted() {
-    this.setShowCreateDashboardOnboarding(true);
-
-    this.$nextTick(async () => {
+    this.$nextTick(() => {
       this.setOnboardingRef({
         key: 'dashboard-onboarding-tour',
         ref: this.$refs.dashboardOnboardingTour,

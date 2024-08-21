@@ -3,6 +3,11 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
+    <WidgetOnboarding
+      v-if="showConfigWidgetOnboarding"
+      :showCardTour="!hasWidgetFilledData.card"
+      :showFunnelTour="!hasWidgetFilledData.funnel"
+    />
     <section
       v-if="isLoadingCurrentDashboardWidgets"
       class="dashboard__loading"
@@ -27,13 +32,6 @@
       :modelValue="!!currentWidgetEditing"
       @close="updateCurrentWidgetEditing(null)"
     />
-    <UnnnicTour
-      v-if="showConfigWidgetOnboarding"
-      ref="widgetsOnboardingTour"
-      :steps="widgetsOnboardingSteps"
-      @end-tour="setShowConfigWidgetsOnboarding(false)"
-      @close="setShowConfigWidgetsOnboarding(false)"
-    />
   </section>
 </template>
 
@@ -43,6 +41,7 @@ import { mapActions, mapState, mapMutations } from 'vuex';
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
+import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
 
 export default {
   name: 'DashboardView',
@@ -51,13 +50,13 @@ export default {
     DynamicWidget,
     DrawerConfigGallery,
     IconLoading,
+    WidgetOnboarding,
   },
 
   data() {
     return {
       showDrawerConfigWidget: false,
       widgetConfigurating: null,
-      initialOnboardingWidgetCompleteState: '',
       hasWidgetFilledData: {
         card: false,
         funnel: false,
@@ -74,100 +73,10 @@ export default {
         state.widgets.isLoadingCurrentDashboardWidgets,
       showConfigWidgetOnboarding: (state) =>
         state.onboarding.showConfigWidgetOnboarding,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
     }),
 
     isCustomDashboard() {
       return this.currentDashboard.is_deletable;
-    },
-
-    hasFunnelWidget() {
-      return !!this.currentDashboardWidgets.some(
-        (widget) => widget.type === 'graph_funnel',
-      );
-    },
-
-    hasCardWidget() {
-      return !!this.currentDashboardWidgets.some(
-        (widget) => widget.type === 'card',
-      );
-    },
-
-    widgetsOnboardingSteps() {
-      const steps = [];
-      const cardSteps = [
-        {
-          title: this.$t('widgets_onboarding.card.step.define_metric.title'),
-          description: this.$t(
-            'widgets_onboarding.card.step.define_metric.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['widget-card-metric'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-        },
-        {
-          title: this.$t(
-            'widgets_onboarding.card.step.select_widget_type.title',
-          ),
-          description: this.$t(
-            'widgets_onboarding.card.step.select_widget_type.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['widget-gallery'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'left',
-          beforeRender: this.beforeOpenWidgetConfig,
-          hiddenNextStepButton: true,
-        },
-        {
-          title: this.$t('widgets_onboarding.card.step.set_metric.title'),
-          description: this.$t(
-            'widgets_onboarding.card.step.set_metric.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['drawer-card-metric-config'] ||
-            this.onboardingRefs['insights-layout'],
-          beforeRender: this.beforeOpenWidgetMetricConfig,
-          popoverPosition: 'left',
-          hiddenNextStepButton: true,
-        },
-      ];
-      const funnelSteps = [
-        {
-          title: this.$t('widgets_onboarding.funnel.step.define_metric.title'),
-          description: this.$t(
-            'widgets_onboarding.funnel.step.define_metric.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['widget-graph-funnel'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: this.hasCardWidget ? 'left' : 'right',
-          padding: {
-            vertical: -400,
-          },
-        },
-        {
-          title: this.$t('widgets_onboarding.funnel.step.fill_metric.title'),
-          description: this.$t(
-            'widgets_onboarding.funnel.step.fill_metric.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['drawer-graph-funnel'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'left',
-          beforeRender: this.beforeOpenFunnelConfig,
-          hiddenNextStepButton: true,
-        },
-      ];
-      if (this.hasCardWidget && !this.hasWidgetFilledData.card) {
-        steps.push(...cardSteps);
-      }
-      if (this.hasFunnelWidget && !this.hasWidgetFilledData.funnel) {
-        steps.push(...funnelSteps);
-      }
-
-      return steps;
     },
 
     dashboardGridStyle() {
@@ -199,19 +108,13 @@ export default {
   methods: {
     ...mapActions({
       getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
-      fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-      beforeOpenWidgetConfig: 'onboarding/beforeOpenWidgetConfig',
-      beforeOpenFunnelConfig: 'onboarding/beforeOpenFunnelConfig',
-      beforeOpenWidgetMetricConfig: 'onboarding/beforeOpenWidgetMetricConfig',
       callTourNextStep: 'onboarding/callTourNextStep',
-      callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
       setShowConfigWidgetsOnboarding:
         'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
     }),
 
     handleWidgetFilledData() {
@@ -229,37 +132,13 @@ export default {
       const hasWidgetsOnboardingComplete =
         localStorage.getItem('hasWidgetsOnboardingComplete') === 'true';
 
-      if (hasWidgetsOnboardingComplete) return;
+      if (!hasWidgetsOnboardingComplete) {
+        this.handleWidgetFilledData();
 
-      this.handleWidgetFilledData();
-
-      if (this.hasWidgetFilledData.card && this.hasWidgetFilledData.funnel) {
-        localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
-        return;
+        if (this.hasWidgetFilledData.card && this.hasWidgetFilledData.funnel) {
+          localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
+        } else this.setShowConfigWidgetsOnboarding(true);
       }
-
-      this.setShowConfigWidgetsOnboarding(true);
-
-      setTimeout(() => {
-        this.setOnboardingRef({
-          key: 'widget-card-metric',
-          ref: document.querySelector(
-            '[data-onboarding-id="widget-card-metric"]',
-          ),
-        });
-        this.setOnboardingRef({
-          key: 'widget-graph-funnel',
-          ref: document.querySelector(
-            '[data-onboarding-id="widget-graph-funnel"]',
-          ),
-        });
-        this.setOnboardingRef({
-          key: 'widgets-onboarding-tour',
-          ref: this.$refs.widgetsOnboardingTour,
-        });
-
-        this.onboardingRefs['widgets-onboarding-tour'].start();
-      }, 300);
     },
 
     handlerWidgetOpenConfig(widget) {

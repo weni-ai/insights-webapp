@@ -4,7 +4,7 @@
       'select-emoji-button',
       { 'select-emoji-button--selected': !!modelValue },
     ]"
-    @click.stop="handleEmojiPicker"
+    @click.stop="handleEmoji"
   >
     <section
       v-if="modelValue"
@@ -22,6 +22,7 @@
     <UnnnicEmojiPicker
       v-show="isEmojiPickerOpen"
       returnName
+      :position="pickerPosition"
       @emoji-selected="handleInput"
       @close="closeEmojiPicker"
     />
@@ -37,6 +38,11 @@ export default {
     modelValue: {
       type: String,
       default: '',
+    },
+    pickerPosition: {
+      type: String,
+      default: 'top',
+      validator: (position) => ['top', 'bottom'].includes(position),
     },
   },
 
@@ -61,12 +67,15 @@ export default {
     closeEmojiPicker() {
       this.isEmojiPickerOpen = false;
     },
-    handleEmojiPicker() {
-      if (this.isEmojiPickerOpen) {
-        this.closeEmojiPicker();
+    handleEmoji() {
+      if (this.selectedEmoji) {
+        this.$emit('update:model-value', '');
       } else {
-        this.openEmojiPicker();
+        this.toggleEmojiPicker();
       }
+    },
+    toggleEmojiPicker() {
+      this.isEmojiPickerOpen ? this.closeEmojiPicker() : this.openEmojiPicker();
     },
     handleInput(event) {
       this.$emit('update:model-value', event);

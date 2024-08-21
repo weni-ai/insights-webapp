@@ -29,6 +29,7 @@ export function clearDeepValues(obj) {
     const clearValuesByTypeMap = {
       string: '',
       number: 0,
+      boolean: false,
     };
 
     const haveValueTypeAtMap =

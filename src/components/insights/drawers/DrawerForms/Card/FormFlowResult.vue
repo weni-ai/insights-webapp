@@ -91,17 +91,15 @@ export default {
           ...this.widgetConfig,
           ...newConfig,
         });
+
+        if (newConfig?.operation === 'recurrence') this.config.currency = false;
       },
     },
 
-    'config?.flow.uuid'(_newFlow, oldFlow) {
+    'config.flow?.uuid'(_newFlow, oldFlow) {
       if (typeof oldFlow === 'object') {
         this.config.flow.result = '';
       }
-    },
-
-    'config?.operation'(newOperation) {
-      if (newOperation === 'recurrence') this.config.currency = false;
     },
 
     isValidForm: {

@@ -1,6 +1,7 @@
 <template>
   <UnnnicDrawer
     v-if="galleryOptions.length && !showDrawerConfigWidget"
+    ref="unnnicDrawer"
     class="drawer-config-gallery"
     wide
     :title="$t('drawers.config_gallery.title')"
@@ -38,6 +39,8 @@ import { mapActions, mapState } from 'vuex';
 
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
+
+import { clearDeepValues } from '@/utils/object.js';
 
 export default {
   name: 'DrawerConfigGallery',
@@ -112,6 +115,7 @@ export default {
   methods: {
     ...mapActions({
       getProjectFlows: 'project/getProjectFlows',
+      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
     }),
 
     closeAllDrawers() {
@@ -119,12 +123,36 @@ export default {
       this.$emit('close');
     },
 
-    setDrawerConfigType(value) {
-      this.drawerConfigType = value;
+    setDrawerConfigType(configType) {
+      this.drawerConfigType = configType;
 
-      if (value) {
+      if (configType) {
+        this.handleShowDrawerConfigWidget();
+      }
+
+      if (configType !== this.widgetConfigType) {
+        this.cleanCurrentWidget();
+      }
+    },
+
+    handleShowDrawerConfigWidget() {
+      if (this.$refs.unnnicDrawer) {
+        this.$refs.unnnicDrawer.transitionClose(() => {
+          this.showDrawerConfigWidget = true;
+        });
+      } else {
         this.showDrawerConfigWidget = true;
       }
+    },
+
+    cleanCurrentWidget() {
+      const cleanWidget = {
+        ...this.widget,
+        name: '',
+        config: clearDeepValues(this.widget.config),
+      };
+
+      this.updateCurrentWidgetEditing(cleanWidget);
     },
 
     goToGallery() {

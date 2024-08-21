@@ -39,6 +39,8 @@ import { mapActions, mapState } from 'vuex';
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
+import { clearDeepValues } from '@/utils/object.js';
+
 export default {
   name: 'DrawerConfigGallery',
 
@@ -112,6 +114,7 @@ export default {
   methods: {
     ...mapActions({
       getProjectFlows: 'project/getProjectFlows',
+      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
     }),
 
     closeAllDrawers() {
@@ -124,6 +127,16 @@ export default {
 
       if (value) {
         this.showDrawerConfigWidget = true;
+      }
+
+      if (value !== this.widgetConfigType) {
+        const cleanWidget = {
+          ...this.widget,
+          name: '',
+          config: clearDeepValues(this.widget.config),
+        };
+
+        this.updateCurrentWidgetEditing(cleanWidget);
       }
     },
 

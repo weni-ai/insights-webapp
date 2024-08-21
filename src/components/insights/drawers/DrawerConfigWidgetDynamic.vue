@@ -3,6 +3,7 @@
     ref="unnnicDrawer"
     class="drawer-config-widget-dynamic"
     wide
+    distinctCloseBack
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
@@ -11,16 +12,10 @@
     :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     :withoutOverlay="showModalResetWidget"
-    :data-onboarding-id="
-      widget.type === 'card'
-        ? 'drawer-card-metric-config'
-        : 'drawer-graph-funnel'
-    "
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
-    @close="
-      configType ? $emit('back') : $emit('close', { handleTourNextStep: false })
-    "
+    @close="$emit('close')"
+    @back="$emit('back')"
   >
     <template #content>
       <form

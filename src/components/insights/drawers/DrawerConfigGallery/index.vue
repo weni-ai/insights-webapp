@@ -121,9 +121,9 @@ export default {
   methods: {
     ...mapActions({
       getProjectFlows: 'project/getProjectFlows',
-      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
+      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
     }),
 
     ...mapMutations({
@@ -134,9 +134,7 @@ export default {
       this.showDrawerConfigWidget = false;
       this.drawerConfigType = '';
 
-      handleTourNextStep
-        ? this.callTourNextStep('widgets-onboarding-tour')
-        : this.callTourPreviousStep('widgets-onboarding-tour');
+      if (handleTourNextStep) this.callTourNextStep('widgets-onboarding-tour');
 
       this.$emit('close');
     },
@@ -145,6 +143,7 @@ export default {
       this.drawerConfigType = configType;
 
       if (configType) {
+        this.callTourNextStep('widgets-onboarding-tour');
         this.handleShowDrawerConfigWidget();
       }
 
@@ -160,7 +159,6 @@ export default {
         });
       } else {
         this.showDrawerConfigWidget = true;
-        this.callTourNextStep('widgets-onboarding-tour');
       }
     },
 
@@ -177,7 +175,10 @@ export default {
     goToGallery() {
       this.showDrawerConfigWidget = false;
       this.drawerConfigType = '';
-      this.callTourPreviousStep('widgets-onboarding-tour');
+
+      this.callTourPreviousStep({
+        tour: 'widgets-onboarding-tour',
+      });
     },
   },
 };

@@ -4,6 +4,11 @@
     class="drawer-config-widget-dynamic"
     wide
     distinctCloseBack
+    :data-onboarding-id="
+      widget.type === 'card'
+        ? 'drawer-card-metric-config'
+        : 'drawer-graph-funnel'
+    "
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
@@ -12,14 +17,9 @@
     :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     :withoutOverlay="showModalResetWidget"
-    :data-onboarding-id="
-      widget.type === 'card'
-        ? 'drawer-card-metric-config'
-        : 'drawer-graph-funnel'
-    "
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
-    @close="$emit('close', { handleTourNextStep: false })"
+    @close="$emit('close')"
     @back="$emit('back')"
   >
     <template #content>
@@ -248,6 +248,7 @@ export default {
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
       callTourNextStep: 'onboarding/callTourNextStep',
+      callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
 
     ...mapMutations({
@@ -257,6 +258,12 @@ export default {
 
     internalClose() {
       this.$refs.unnnicDrawer.close();
+
+      this.callTourPreviousStep({
+        tour: 'widgets-onboarding-tour',
+        qtdSteps: this.widget.type === 'card' ? 2 : 1,
+        timeout: 300,
+      });
     },
 
     async updateWidgetConfig() {

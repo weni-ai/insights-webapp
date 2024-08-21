@@ -1,5 +1,15 @@
 <template>
   <div id="app">
+    <WelcomeOnboardingModal
+      :showModal="showOnboardingModal"
+      @close="showOnboardingModal = false"
+      @start-onboarding="handlerStartOnboarding"
+    />
+    <CompleteOnboardingModal
+      :showModal="showCompleteOnboardingModal"
+      @finish-onboarding="setShowCompleteOnboardingModal(false)"
+    />
+    <DashboardOnboarding v-if="showCreateDashboardTour" />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
@@ -21,22 +31,6 @@
       </section>
       <RouterView v-else />
     </InsightsLayout>
-    <WelcomeOnboardingModal
-      :showModal="showOnboardingModal"
-      @close="showOnboardingModal = false"
-      @start-onboarding="handlingStartOnboarding"
-    />
-    <CompleteOnboardingModal
-      :showModal="showCompleteOnboardingModal"
-      @finish-onboarding="handlerFinishOnboarding"
-    />
-    <UnnnicTour
-      v-if="showCreateDashboardTour"
-      ref="dashboardOnboardingTour"
-      :steps="dashboardTourSteps"
-      @end-tour="setShowDashboardConfig(true)"
-      @close="setShowCreateDashboardOnboarding(false)"
-    />
   </div>
 </template>
 
@@ -46,6 +40,7 @@ import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
+import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
 export default {
   components: {
@@ -53,12 +48,11 @@ export default {
     IconLoading,
     WelcomeOnboardingModal,
     CompleteOnboardingModal,
+    DashboardOnboarding,
   },
   data() {
     return {
       showOnboardingModal: false,
-
-      showTour: false,
     };
   },
   computed: {
@@ -69,38 +63,11 @@ export default {
         state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showCreateDashboardTour: (state) =>
         state.onboarding.showCreateDashboardOnboarding,
       showCompleteOnboardingModal: (state) =>
         state.onboarding.showCompleteOnboardingModal,
     }),
-
-    dashboardTourSteps() {
-      return [
-        {
-          title: this.$t('dashboard_onboarding.step.create_dashboard.title'),
-          description: this.$t(
-            'dashboard_onboarding.step.create_dashboard.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['select-dashboard'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-        },
-        {
-          title: this.$t('dashboard_onboarding.step.create_dashboard.title'),
-          description: this.$t(
-            'dashboard_onboarding.step.create_dashboard.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['create-dashboard-button'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-          beforeRender: this.beforeOpenDashboardList,
-        },
-      ];
-    },
   },
 
   watch: {
@@ -117,13 +84,10 @@ export default {
 
   async mounted() {
     try {
-      this.handlingTokenAndProjectUuid();
-      await this.getDashboards();
-      this.setOnboardingRef({
-        key: 'insights-layout',
-        ref: this.$refs['insights-layout'].$el,
+      this.handlerTokenAndProjectUuid();
+      this.getDashboards().then(() => {
+        this.handlerShowOnboardingModal();
       });
-      this.handlingShowOnboarding();
     } catch (error) {
       console.log(error);
     }
@@ -137,7 +101,6 @@ export default {
       setProject: 'config/setProject',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
-      beforeOpenDashboardList: 'onboarding/beforeOpenDashboardList',
     }),
 
     ...mapMutations({
@@ -146,10 +109,9 @@ export default {
         'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
       setShowCompleteOnboardingModal:
         'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
-      setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
     }),
 
-    async handlingTokenAndProjectUuid() {
+    async handlerTokenAndProjectUuid() {
       const hasTokenInUrl = window.location.pathname.startsWith(
         '/loginexternal/Bearer+',
       );
@@ -173,11 +135,11 @@ export default {
       await this.checkEnableCreateCustomDashboards();
     },
 
-    handlingSetLanguage(language) {
+    handlerSetLanguage(language) {
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'
     },
 
-    handlingSetProject(projectUuid) {
+    handlerSetProject(projectUuid) {
       localStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
     },
@@ -187,29 +149,29 @@ export default {
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
-        const { handling, dataKey } = this.getEventHandling(message?.event);
-        if (handling) handling(message?.[dataKey]);
+        const { handler, dataKey } = this.getEventHandler(message?.event);
+        if (handler) handler(message?.[dataKey]);
       });
     },
 
-    getEventHandling(eventName) {
-      const handlingFunctionMapper = {
-        setLanguage: this.handlingSetLanguage,
-        setProject: this.handlingSetProject,
+    getEventHandler(eventName) {
+      const handlerFunctionMapper = {
+        setLanguage: this.handlerSetLanguage,
+        setProject: this.handlerSetProject,
       };
 
-      const handlingParamsMapper = {
+      const handlerParamsMapper = {
         setLanguage: 'language',
         setProject: 'projectUuid',
       };
 
       return {
-        handling: handlingFunctionMapper[eventName],
-        dataKey: handlingParamsMapper[eventName],
+        handler: handlerFunctionMapper[eventName],
+        dataKey: handlerParamsMapper[eventName],
       };
     },
 
-    handlingShowOnboarding() {
+    handlerShowOnboardingModal() {
       const hasCustomDashboard = this.dashboards.find(
         (dashboard) => dashboard.is_deletable,
       );
@@ -223,23 +185,13 @@ export default {
       const hasOnboardingComplete =
         JSON.parse(localStorage.getItem('hasDashboardOnboardingComplete')) ||
         false;
+
       this.showOnboardingModal = !hasOnboardingComplete;
     },
 
-    handlerFinishOnboarding() {
-      this.setShowCompleteOnboardingModal(false);
-    },
-
-    handlingStartOnboarding() {
+    handlerStartOnboarding() {
       this.showOnboardingModal = false;
       this.setShowCreateDashboardOnboarding(true);
-      this.$nextTick(() => {
-        this.setOnboardingRef({
-          key: 'dashboard-onboarding-tour',
-          ref: this.$refs.dashboardOnboardingTour,
-        });
-        this.onboardingRefs['dashboard-onboarding-tour'].start();
-      });
     },
   },
 };

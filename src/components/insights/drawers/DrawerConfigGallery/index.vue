@@ -121,6 +121,7 @@ export default {
   methods: {
     ...mapActions({
       getProjectFlows: 'project/getProjectFlows',
+      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),

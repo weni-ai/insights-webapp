@@ -51,7 +51,7 @@ export default {
       }
     },
 
-    callTourPreviousStep({ state }, tour) {
+    async callTourPreviousStep({ state }, { tour, qtdSteps, timeout } = {}) {
       const {
         showCreateDashboardOnboarding,
         showConfigWidgetOnboarding,
@@ -59,7 +59,11 @@ export default {
       } = state;
 
       if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
-        onboardingRefs[tour]?.handleStep(onboardingRefs[tour].currentStep - 1);
+        await asyncTimeout(timeout || 0).then(() => {
+          onboardingRefs[tour]?.handleStep(
+            onboardingRefs[tour].currentStep - (qtdSteps || 1),
+          );
+        });
       }
     },
 
@@ -119,7 +123,7 @@ export default {
     },
 
     async beforeOpenWidgetMetricConfig({ commit }) {
-      await asyncTimeout(400).then(() => {
+      await asyncTimeout(600).then(() => {
         commit(mutations.SET_ONBOARDING_REF, {
           key: 'drawer-card-metric-config',
           ref: document.querySelector(

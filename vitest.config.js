@@ -12,6 +12,7 @@ export default mergeConfig(
       globals: true,
       setupFiles: './__tests__/setup.js',
       coverage: {
+        provider: 'istanbul',
         reporter: ['text', 'json', 'html'],
         reportsDirectory: './coverage',
         include: ['src/**/*.{vue,js,ts}'],

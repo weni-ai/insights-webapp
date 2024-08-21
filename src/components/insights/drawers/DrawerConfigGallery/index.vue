@@ -1,6 +1,7 @@
 <template>
   <UnnnicDrawer
     v-if="galleryOptions.length && !showDrawerConfigWidget"
+    ref="unnnicDrawer"
     class="drawer-config-gallery"
     wide
     :title="$t('drawers.config_gallery.title')"
@@ -122,22 +123,36 @@ export default {
       this.$emit('close');
     },
 
-    setDrawerConfigType(value) {
-      this.drawerConfigType = value;
+    setDrawerConfigType(configType) {
+      this.drawerConfigType = configType;
 
-      if (value) {
+      if (configType) {
+        this.handleShowDrawerConfigWidget();
+      }
+
+      if (configType !== this.widgetConfigType) {
+        this.cleanCurrentWidget();
+      }
+    },
+
+    handleShowDrawerConfigWidget() {
+      if (this.$refs.unnnicDrawer) {
+        this.$refs.unnnicDrawer.transitionClose(() => {
+          this.showDrawerConfigWidget = true;
+        });
+      } else {
         this.showDrawerConfigWidget = true;
       }
+    },
 
-      if (value !== this.widgetConfigType) {
-        const cleanWidget = {
-          ...this.widget,
-          name: '',
-          config: clearDeepValues(this.widget.config),
-        };
+    cleanCurrentWidget() {
+      const cleanWidget = {
+        ...this.widget,
+        name: '',
+        config: clearDeepValues(this.widget.config),
+      };
 
-        this.updateCurrentWidgetEditing(cleanWidget);
-      }
+      this.updateCurrentWidgetEditing(cleanWidget);
     },
 
     goToGallery() {

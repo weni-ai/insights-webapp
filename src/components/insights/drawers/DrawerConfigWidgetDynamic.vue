@@ -8,6 +8,7 @@
       ref="unnnicDrawer"
       class="drawer-config-widget-dynamic"
       wide
+      distinctCloseBack
       :modelValue="modelValue"
       :title="drawerProps?.title"
       :description="drawerProps?.description"
@@ -18,7 +19,8 @@
       :withoutOverlay="showModalResetWidget"
       @primary-button-click="updateWidgetConfig"
       @secondary-button-click="internalClose"
-      @close="configType ? $emit('back') : $emit('close')"
+      @close="$emit('close')"
+      @back="$emit('back')"
     >
       <template #content>
         <section class="drawer-config-widget-dynamic__content">

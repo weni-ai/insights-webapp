@@ -631,9 +631,9 @@
           "es": "Cree un Panel personalizado"
         },
         "description": {
-          "pt-br": "Além de poder acompanhar sua operação através do Dashboard de Atendimento humano, você pode ter quantos Dashboards quiser, clique no local indicado para criar um novo Dashboard.",
-          "en": "Besides being able to monitor your operation through the Human Support Dashboard, you can have as many Dashboards as you want. Click on the indicated location to create a new Dashboard.",
-          "es": "Además de poder seguir su operación a través del Panel de Atención Humana, puede tener tantos Paneles como desee. Haga clic en el lugar indicado para crear un nuevo Panel."
+          "pt-br": "Crie quantos Dashboards quiser. Clique em <b>Novo dashboard</b> para começar",
+          "en": "Create as many Dashboards as you want. Click on <b>New dashboard</b> to get started",
+          "es": "Crea tantos Dashboards como quieras. Haz clic en <b>Nuevo dashboard</b> para comenzar"
         }
       }
     }

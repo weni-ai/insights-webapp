@@ -98,7 +98,7 @@ export default {
     return {
       dashboardForm: {
         name: '',
-        qtdFunnel: [{ label: '1', value: '1' }],
+        qtdFunnel: [],
         currency: [],
       },
       funnelOptions: [
@@ -162,11 +162,11 @@ export default {
     close() {
       this.$emit('close');
     },
-    async handleCreateProgressComplete() {
+    handleCreateProgressComplete() {
       this.loadingRequest = false;
       this.dashboards.push(this.createdDashboard);
       this.setCurrentDashboard(this.createdDashboard);
-      await this.$router.push({
+      this.$router.push({
         name: 'dashboard',
         params: {
           dashboardUuid: this.createdDashboard.uuid,

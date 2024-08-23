@@ -22,7 +22,3 @@ export function formatSecondsToHumanString(seconds) {
 
   return formattedTime.trim();
 }
-
-export function asyncTimeout(ms) {
-  return new Promise((res) => setTimeout(res, ms));
-}

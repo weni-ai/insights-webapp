@@ -8,13 +8,10 @@
     :description="$t('drawers.config_gallery.description')"
     :modelValue="modelValue"
     closeIcon="close"
-    @close="closeAllDrawers({ handlerNextStep: false })"
+    @close="closeAllDrawers"
   >
     <template #content>
-      <ol
-        data-onboarding-id="widget-gallery"
-        class="drawer-config-gallery__options"
-      >
+      <ol class="drawer-config-gallery__options">
         <li
           v-for="{ title, description, value } of galleryOptions"
           :key="title"
@@ -32,13 +29,13 @@
     v-if="showDrawerConfigWidget"
     :modelValue="showDrawerConfigWidget"
     :configType="drawerConfigType"
-    @close="closeAllDrawers($event)"
+    @close="closeAllDrawers"
     @back="goToGallery"
   />
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex';
 
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
@@ -70,9 +67,6 @@ export default {
     ...mapState({
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
       widget: (state) => state.widgets.currentWidgetEditing,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
     }),
 
     widgetConfigType() {
@@ -121,21 +115,11 @@ export default {
   methods: {
     ...mapActions({
       getProjectFlows: 'project/getProjectFlows',
-      callTourNextStep: 'onboarding/callTourNextStep',
-      callTourPreviousStep: 'onboarding/callTourPreviousStep',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
     }),
 
-    ...mapMutations({
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-    }),
-
-    async closeAllDrawers({ handleTourNextStep } = {}) {
-      this.showDrawerConfigWidget = false;
-      this.drawerConfigType = '';
-
-      if (handleTourNextStep) this.callTourNextStep('widgets-onboarding-tour');
-
+    closeAllDrawers() {
+      this.goToGallery();
       this.$emit('close');
     },
 
@@ -143,7 +127,6 @@ export default {
       this.drawerConfigType = configType;
 
       if (configType) {
-        this.callTourNextStep('widgets-onboarding-tour');
         this.handleShowDrawerConfigWidget();
       }
 
@@ -175,10 +158,6 @@ export default {
     goToGallery() {
       this.showDrawerConfigWidget = false;
       this.drawerConfigType = '';
-
-      this.callTourPreviousStep({
-        tour: 'widgets-onboarding-tour',
-      });
     },
   },
 };

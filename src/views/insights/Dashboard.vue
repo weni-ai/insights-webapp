@@ -3,11 +3,6 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
-    <WidgetOnboarding
-      v-if="showConfigWidgetOnboarding"
-      :showCardTour="!hasWidgetFilledData.card"
-      :showFunnelTour="!hasWidgetFilledData.funnel"
-    />
     <section
       v-if="isLoadingCurrentDashboardWidgets"
       class="dashboard__loading"
@@ -22,8 +17,7 @@
       <DynamicWidget
         :style="getWidgetStyle(widget.grid_position)"
         :widget="widget"
-        :data-onboarding-id="getWidgetOnboardingId(widget)"
-        @open-config="handlerWidgetOpenConfig(widget)"
+        @open-config="updateCurrentWidgetEditing(widget)"
       />
     </template>
 
@@ -41,7 +35,6 @@ import { mapActions, mapState, mapMutations } from 'vuex';
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
-import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
 
 export default {
   name: 'DashboardView',
@@ -50,17 +43,12 @@ export default {
     DynamicWidget,
     DrawerConfigGallery,
     IconLoading,
-    WidgetOnboarding,
   },
 
   data() {
     return {
       showDrawerConfigWidget: false,
       widgetConfigurating: null,
-      hasWidgetFilledData: {
-        card: false,
-        funnel: false,
-      },
     };
   },
 
@@ -71,13 +59,7 @@ export default {
       currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
       isLoadingCurrentDashboardWidgets: (state) =>
         state.widgets.isLoadingCurrentDashboardWidgets,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
     }),
-
-    isCustomDashboard() {
-      return this.currentDashboard.is_deletable;
-    },
 
     dashboardGridStyle() {
       const { grid } = this.currentDashboard || {};
@@ -97,9 +79,7 @@ export default {
       handler(newCurrentDashboardUuid) {
         if (newCurrentDashboardUuid) {
           this.resetCurrentDashboardWidgets();
-          this.getCurrentDashboardWidgets().then(() => {
-            if (this.isCustomDashboard) this.handlerWidgetsOnboarding();
-          });
+          this.getCurrentDashboardWidgets();
         }
       },
     },
@@ -108,59 +88,18 @@ export default {
   methods: {
     ...mapActions({
       getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
+      fetchWidgetData: 'dashboards/fetchWidgetData',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-      callTourNextStep: 'onboarding/callTourNextStep',
     }),
     ...mapMutations({
       resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
-      setShowConfigWidgetsOnboarding:
-        'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
     }),
-
-    handleWidgetFilledData() {
-      this.hasWidgetFilledData = {
-        card: !!this.currentDashboardWidgets.some(
-          (widget) => !!widget.name && widget.name !== 'Funil',
-        ),
-        funnel: !!this.currentDashboardWidgets.some(
-          (widget) => widget.name === 'Funil' && !!widget.config.metric_1,
-        ),
-      };
-    },
-
-    handlerWidgetsOnboarding() {
-      const hasWidgetsOnboardingComplete =
-        localStorage.getItem('hasWidgetsOnboardingComplete') === 'true';
-
-      if (!hasWidgetsOnboardingComplete) {
-        this.handleWidgetFilledData();
-
-        if (this.hasWidgetFilledData.card && this.hasWidgetFilledData.funnel) {
-          localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
-        } else this.setShowConfigWidgetsOnboarding(true);
-      }
-    },
-
-    handlerWidgetOpenConfig(widget) {
-      const isNewWidget = this.currentWidgetEditing?.uuid !== widget.uuid;
-      if (isNewWidget) {
-        this.updateCurrentWidgetEditing(widget).then(() => {
-          this.callTourNextStep('widgets-onboarding-tour');
-        });
-      }
-    },
 
     getWidgetStyle(gridPosition) {
       return {
         gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
         gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
       };
-    },
-
-    getWidgetOnboardingId(widget) {
-      return widget.type === 'card'
-        ? 'widget-card-metric'
-        : 'widget-graph-funnel';
     },
   },
 };

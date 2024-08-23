@@ -24,7 +24,6 @@ const mutations = {
   SET_CURRENT_DASHBOARD_FILTERS: 'SET_CURRENT_DASHBOARD_FILTERS',
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
   SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
-  SET_SHOW_DASHBOARD_CONFIG: 'SET_SHOW_DASHBOARD_CONFIG',
 };
 
 export default {
@@ -36,12 +35,8 @@ export default {
     currentDashboardFilters: [],
     isLoadingCurrentDashboardFilters: false,
     appliedFilters: {},
-    showDashboardConfig: false,
   },
   mutations: {
-    [mutations.SET_SHOW_DASHBOARD_CONFIG](state, show) {
-      state.showDashboardConfig = show;
-    },
     [mutations.SET_DASHBOARDS](state, dashboards) {
       state.dashboards = dashboards;
     },

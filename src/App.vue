@@ -1,5 +1,15 @@
 <template>
   <div id="app">
+    <WelcomeOnboardingModal
+      :showModal="showOnboardingModal"
+      @close="showOnboardingModal = false"
+      @start-onboarding="handlerStartOnboarding"
+    />
+    <CompleteOnboardingModal
+      :showModal="showCompleteOnboardingModal"
+      @finish-onboarding="setShowCompleteOnboardingModal(false)"
+    />
+    <DashboardOnboarding v-if="showCreateDashboardTour" />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
@@ -25,13 +35,26 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
+import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
+import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
+import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
 export default {
-  components: { InsightsLayout, IconLoading },
-
+  components: {
+    InsightsLayout,
+    IconLoading,
+    WelcomeOnboardingModal,
+    CompleteOnboardingModal,
+    DashboardOnboarding,
+  },
+  data() {
+    return {
+      showOnboardingModal: false,
+    };
+  },
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
@@ -40,6 +63,10 @@ export default {
         state.dashboards.isLoadingCurrentDashboardFilters,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       token: (state) => state.config.token,
+      showCreateDashboardTour: (state) =>
+        state.onboarding.showCreateDashboardOnboarding,
+      showCompleteOnboardingModal: (state) =>
+        state.onboarding.showCompleteOnboardingModal,
     }),
   },
 
@@ -57,8 +84,10 @@ export default {
 
   async mounted() {
     try {
-      this.handlingTokenAndProjectUuid();
-      await this.getDashboards();
+      this.handlerTokenAndProjectUuid();
+      this.getDashboards().then(() => {
+        this.handlerShowOnboardingModal();
+      });
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +103,15 @@ export default {
         'config/checkEnableCreateCustomDashboards',
     }),
 
-    async handlingTokenAndProjectUuid() {
+    ...mapMutations({
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
+      setShowCreateDashboardOnboarding:
+        'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
+      setShowCompleteOnboardingModal:
+        'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
+    }),
+
+    async handlerTokenAndProjectUuid() {
       const hasTokenInUrl = window.location.pathname.startsWith(
         '/loginexternal/Bearer+',
       );
@@ -98,11 +135,11 @@ export default {
       await this.checkEnableCreateCustomDashboards();
     },
 
-    handlingSetLanguage(language) {
+    handlerSetLanguage(language) {
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'
     },
 
-    handlingSetProject(projectUuid) {
+    handlerSetProject(projectUuid) {
       localStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
     },
@@ -112,26 +149,49 @@ export default {
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
-        const { handling, dataKey } = this.getEventHandling(message?.event);
-        if (handling) handling(message?.[dataKey]);
+        const { handler, dataKey } = this.getEventHandler(message?.event);
+        if (handler) handler(message?.[dataKey]);
       });
     },
 
-    getEventHandling(eventName) {
-      const handlingFunctionMapper = {
-        setLanguage: this.handlingSetLanguage,
-        setProject: this.handlingSetProject,
+    getEventHandler(eventName) {
+      const handlerFunctionMapper = {
+        setLanguage: this.handlerSetLanguage,
+        setProject: this.handlerSetProject,
       };
 
-      const handlingParamsMapper = {
+      const handlerParamsMapper = {
         setLanguage: 'language',
         setProject: 'projectUuid',
       };
 
       return {
-        handling: handlingFunctionMapper[eventName],
-        dataKey: handlingParamsMapper[eventName],
+        handler: handlerFunctionMapper[eventName],
+        dataKey: handlerParamsMapper[eventName],
       };
+    },
+
+    handlerShowOnboardingModal() {
+      const hasCustomDashboard = this.dashboards.find(
+        (dashboard) => dashboard.is_deletable,
+      );
+
+      if (hasCustomDashboard) {
+        localStorage.setItem('hasDashboardOnboardingComplete', 'true');
+        this.showOnboardingModal = false;
+        return;
+      }
+
+      const hasOnboardingComplete =
+        JSON.parse(localStorage.getItem('hasDashboardOnboardingComplete')) ||
+        false;
+
+      this.showOnboardingModal = !hasOnboardingComplete;
+    },
+
+    handlerStartOnboarding() {
+      this.showOnboardingModal = false;
+      this.setShowCreateDashboardOnboarding(true);
     },
   },
 };

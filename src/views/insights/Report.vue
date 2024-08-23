@@ -40,8 +40,7 @@ export default {
 
   methods: {
     ...mapMutations({
-      resetCurrentDashboardWidgets:
-        'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
+      resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
       resetReport: 'reports/RESET_REPORT',
     }),
     ...mapActions({

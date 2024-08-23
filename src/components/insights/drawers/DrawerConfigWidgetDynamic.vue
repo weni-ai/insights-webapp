@@ -1,28 +1,33 @@
 <template>
-  <form
-    class="drawer-config-widget-dynamic__form-container"
-    @submit.prevent
-    @keydown.enter.prevent
+  <UnnnicDrawer
+    ref="unnnicDrawer"
+    class="drawer-config-widget-dynamic"
+    wide
+    distinctCloseBack
+    :data-onboarding-id="
+      widget.type === 'card'
+        ? 'drawer-card-metric-config'
+        : 'drawer-graph-funnel'
+    "
+    :modelValue="modelValue"
+    :title="drawerProps?.title"
+    :description="drawerProps?.description"
+    :primaryButtonText="$t('save')"
+    :secondaryButtonText="$t('cancel')"
+    :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
+    :loadingPrimaryButton="isLoadingUpdateConfig"
+    :withoutOverlay="showModalResetWidget"
+    @primary-button-click="updateWidgetConfig"
+    @secondary-button-click="internalClose"
+    @close="$emit('close')"
+    @back="configType ? $emit('back') : $emit('close')"
   >
-    <UnnnicDrawer
-      ref="unnnicDrawer"
-      class="drawer-config-widget-dynamic"
-      wide
-      distinctCloseBack
-      :modelValue="modelValue"
-      :title="drawerProps?.title"
-      :description="drawerProps?.description"
-      :primaryButtonText="$t('save')"
-      :secondaryButtonText="$t('cancel')"
-      :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
-      :loadingPrimaryButton="isLoadingUpdateConfig"
-      :withoutOverlay="showModalResetWidget"
-      @primary-button-click="updateWidgetConfig"
-      @secondary-button-click="internalClose"
-      @close="$emit('close')"
-      @back="configType ? $emit('back') : $emit('close')"
-    >
-      <template #content>
+    <template #content>
+      <form
+        class="drawer-config-widget-dynamic__form-container"
+        @submit.prevent
+        @keydown.enter.prevent
+      >
         <section class="drawer-config-widget-dynamic__content">
           <component
             :is="isLoadingProjectFlows ? content.loading : content.component"
@@ -31,18 +36,18 @@
             v-on="contentEvents"
           />
         </section>
-      </template>
-    </UnnnicDrawer>
-    <ModalResetWidget
-      v-model="showModalResetWidget"
-      :widget="widget"
-      @finish-reset="$emit('close')"
-    />
-  </form>
+      </form>
+    </template>
+  </UnnnicDrawer>
+  <ModalResetWidget
+    v-model="showModalResetWidget"
+    :widget="widget"
+    @finish-reset="$emit('close', { handleTourNextStep: false })"
+  />
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapMutations, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
 
 import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
@@ -89,6 +94,9 @@ export default {
       isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
       projectFlows: (state) => state.project.flows,
       widget: (state) => state.widgets.currentWidgetEditing,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
+      showConfigWidgetOnboarding: (state) =>
+        state.onboarding.showConfigWidgetOnboarding,
     }),
 
     drawerProps() {
@@ -239,10 +247,23 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      callTourNextStep: 'onboarding/callTourNextStep',
+      callTourPreviousStep: 'onboarding/callTourPreviousStep',
+    }),
+
+    ...mapMutations({
+      setShowCompleteOnboardingModal:
+        'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
     }),
 
     internalClose() {
       this.$refs.unnnicDrawer.close();
+
+      this.callTourPreviousStep({
+        tour: 'widgets-onboarding-tour',
+        qtdSteps: this.widget.type === 'card' ? 2 : 1,
+        timeout: 300,
+      });
     },
 
     async updateWidgetConfig() {
@@ -260,6 +281,16 @@ export default {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }
 
+        if (this.showConfigWidgetOnboarding) {
+          const isLastTourStep =
+            this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
+            this.onboardingRefs['widgets-onboarding-tour'].steps.length;
+          if (isLastTourStep) {
+            this.callTourNextStep('widgets-onboarding-tour');
+            this.setShowCompleteOnboardingModal(true);
+            localStorage.setItem('hasWidgetsOnboardingComplete', true);
+          }
+        }
         unnnic.unnnicCallAlert({
           props: {
             text: this.$t('drawers.metric_saved'),
@@ -276,7 +307,7 @@ export default {
           seconds: 5,
         });
       } finally {
-        this.$emit('close');
+        this.$emit('close', { handleTourNextStep: true });
       }
 
       this.isLoadingUpdateConfig = false;
@@ -287,10 +318,6 @@ export default {
 
 <style lang="scss" scoped>
 .drawer-config-widget-dynamic {
-  &__form-container {
-    position: absolute;
-  }
-
   &__content {
     display: grid;
     gap: $unnnic-spacing-sm;

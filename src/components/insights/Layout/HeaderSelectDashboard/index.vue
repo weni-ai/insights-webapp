@@ -2,6 +2,7 @@
   <UnnnicDropdown
     class="header-select-dashboard"
     position="bottom-right"
+    data-onboarding-id="select-dashboard"
   >
     <template #trigger>
       <UnnnicAvatarIcon
@@ -22,6 +23,7 @@
       <section
         data-testid="dropdown-trigger"
         class="dropdown__trigger"
+        @mouseup="callTourNextStep('dashboard-onboarding-tour')"
       >
         <h1
           data-testid="dashboard-title"
@@ -48,19 +50,20 @@
     <OptionCreateNewDashboard
       v-if="enableCreateCustomDashboards"
       data-testid="add-new-dashboard-button"
-      @click="showNewDashboardModal = true"
+      data-onboarding-id="create-dashboard-button"
+      @click="handlerCreateDashboardClick()"
     />
   </UnnnicDropdown>
   <DrawerDashboardConfig
-    v-if="showNewDashboardModal"
-    v-model="showNewDashboardModal"
+    v-if="showDashboardConfig"
+    v-model="showDashboardConfig"
     data-testid="drawer-dashboard-config"
-    @close="showNewDashboardModal = false"
+    @close="setShowDashboardConfig(false)"
   />
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
@@ -75,22 +78,44 @@ export default {
     DrawerDashboardConfig,
   },
 
-  data() {
-    return {
-      showNewDashboardModal: false,
-    };
-  },
-
   computed: {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
       enableCreateCustomDashboards: (state) =>
         state.config.enableCreateCustomDashboards,
+      showCreateDashboardTour: (state) =>
+        state.onboarding.showCreateDashboardOnboarding,
+      onboardingRefs: (state) => state.onboarding.onboardingRefs,
+      showDashboardConfig: (state) => state.dashboards.showDashboardConfig,
     }),
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.setOnboardingRef({
+        key: 'select-dashboard',
+        ref: document.querySelector('[data-onboarding-id="select-dashboard"]'),
+      });
+    });
+  },
+  methods: {
+    ...mapMutations({
+      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
+      setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
+    }),
+
+    ...mapActions({
+      beforeOpenDashboardList: 'onboarding/beforeOpenDashboardList',
+      callTourNextStep: 'onboarding/callTourNextStep',
+    }),
+
+    handlerCreateDashboardClick() {
+      this.setShowDashboardConfig(true);
+      this.callTourNextStep('dashboard-onboarding-tour');
+    },
   },
 };
 </script>

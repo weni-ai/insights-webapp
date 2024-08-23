@@ -135,7 +135,15 @@ export default defineComponent({
     configLocal: {
       deep: true,
       handler(newConfig) {
-        this.$emit('update:config', newConfig);
+        const treatedConfig = {
+          ...newConfig,
+          operation:
+            newConfig.result_type === 'executions'
+              ? 'count'
+              : newConfig.operation,
+        };
+
+        this.$emit('update:config', treatedConfig);
       },
     },
 

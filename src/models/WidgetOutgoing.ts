@@ -80,6 +80,7 @@ class OutgoingWidget {
     const additionalConfig = additionalConfigMap[config.type]?.() || config;
 
     return {
+      config_type: config.type === 'data_crossing' ? 'crossing_data' : '',
       type_result: config.type,
       friendly_id: config.friendly_id || '',
       ...additionalConfig,

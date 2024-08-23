@@ -54,19 +54,19 @@ export default {
 
       operations: [
         {
-          value: 'sum',
+          value: 'multiply',
           label: this.$t('drawers.config_card.radios.multiply'),
         },
         {
-          value: 'max',
+          value: 'sum',
           label: this.$t('drawers.config_card.radios.sum'),
         },
         {
-          value: 'avg',
+          value: 'sub',
           label: this.$t('drawers.config_card.radios.difference'),
         },
         {
-          value: 'min',
+          value: 'percentage',
           label: this.$t('drawers.config_card.radios.percentage'),
         },
       ],
@@ -84,7 +84,7 @@ export default {
           value: 'currency',
           selected: this.config?.currency,
           label: this.$t('drawers.config_card.checkbox.currency'),
-          disabled: this.config.operation === 'min',
+          disabled: this.config.operation === 'percentage',
         },
       ];
     },
@@ -109,7 +109,7 @@ export default {
           ...newConfig,
         });
 
-        if (newConfig?.operation === 'min') this.config.currency = false;
+        if (newConfig?.operation === 'percentage') this.config.currency = false;
       },
     },
 
@@ -163,7 +163,7 @@ export default {
       this.config = {
         subwidget_1: createSubwidgetConfig(widgetConfig.subwidget_1),
         subwidget_2: createSubwidgetConfig(widgetConfig.subwidget_2),
-        operation: widgetConfig.operation || 'min',
+        operation: widgetConfig.operation || 'percentage',
         currency: widgetConfig.currency || false,
       };
 

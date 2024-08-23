@@ -50,6 +50,7 @@ export interface OutgoingFlowResultCardConfig extends OutgoingBaseCardConfig {
 }
 export interface OutgoingDataCrossingCardConfig extends OutgoingBaseCardConfig {
   type_result: 'data_crossing';
+  config_type: 'crossing_data';
   operator: string;
   currency: boolean;
   subwidget_1: OutgoingDataCrossingSubwidget;

@@ -20,7 +20,7 @@
     @primary-button-click="updateWidgetConfig"
     @secondary-button-click="internalClose"
     @close="$emit('close')"
-    @back="$emit('back')"
+    @back="configType ? $emit('back') : $emit('close')"
   >
     <template #content>
       <form

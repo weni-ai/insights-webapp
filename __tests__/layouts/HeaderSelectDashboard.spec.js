@@ -4,9 +4,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { createStore } from 'vuex';
 import { routes } from '@/router';
 
-import dashboardsStore from '@/store/modules/dashboards';
-import onboardingStore from '@/store/modules/onboarding';
-
 import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
 
 describe('HeaderSelectDashboard', () => {
@@ -25,10 +22,6 @@ describe('HeaderSelectDashboard', () => {
             { name: 'Dashboard 2', uuid: '2' },
           ],
           currentDashboard: { name: 'Dashboard 1', uuid: '1' },
-          showDashboardConfig: false,
-        },
-        mutations: {
-          ...dashboardsStore.mutations,
         },
         getters: {
           dashboardDefault: () => ({ name: 'Default Dashboard' }),
@@ -39,9 +32,6 @@ describe('HeaderSelectDashboard', () => {
         state: {
           enableCreateCustomDashboards: false,
         },
-      },
-      onboarding: {
-        ...onboardingStore,
       },
     },
   });

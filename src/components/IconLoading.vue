@@ -1,5 +1,8 @@
 <template>
-  <UnnnicIconLoading class="icon-loading" />
+  <UnnnicIconLoading
+    class="icon-loading"
+    data-testid="icon-loading"
+  />
 </template>
 
 <script>

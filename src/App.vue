@@ -42,6 +42,9 @@ import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
 import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
+import initHotjar from '@/utils/plugins/Hotjar';
+import { parseJwt } from '@/utils/jwt';
+
 export default {
   components: {
     InsightsLayout,
@@ -128,10 +131,18 @@ export default {
 
       const projectUuid = queryString.get('projectUuid');
 
-      this.setToken(token || localStorage.getItem('token'));
+      const newToken = token || localStorage.getItem('token');
+      const newProjectUuid = projectUuid || localStorage.getItem('projectUuid');
+
+      this.setToken(newToken);
       this.setProject({
-        uuid: projectUuid || localStorage.getItem('projectUuid'),
+        uuid: newProjectUuid,
       });
+
+      const sessionUserEmail = parseJwt(newToken)?.email || null;
+
+      initHotjar(sessionUserEmail);
+
       await this.checkEnableCreateCustomDashboards();
     },
 

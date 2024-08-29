@@ -43,6 +43,7 @@
     "eslint-plugin-vue": "^9.22.0",
     "jsdom": "^24.1.1",
     "node-sass": "^9.0.0",
+    "nyc": "^17.0.0",
     "prettier": "^3.2.5",
     "sass": "^1.69.7",
     "sass-loader": "^13.3.3",

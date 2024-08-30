@@ -23,6 +23,7 @@
           <p
             v-if="friendlyEmoji"
             class="content-metric__friendly-id"
+            data-testid="card-dashboard-friendly-id"
           >
             {{ friendlyEmoji }}
           </p>
@@ -31,6 +32,7 @@
             v-else
             class="content-metric__value"
             :title="configured ? metric : '0'"
+            data-testid="card-dashboard-metric-value"
           >
             {{ configured ? metric : '0' }}
           </h1>
@@ -38,6 +40,7 @@
         <UnnnicButton
           v-if="configurable || !configured"
           class="card-dashboard__button-config"
+          data-testid="card-dashboard-button-config"
           type="tertiary"
           iconCenter="tune"
           @click.stop="$emit('open-config')"
@@ -46,6 +49,7 @@
       <p
         v-if="!showMetricError"
         class="content-description"
+        data-testid="card-dashboard-content-description"
         :title="configured ? description : $t('widgets.card.metric_empty')"
       >
         {{ configured ? description : $t('widgets.card.metric_empty') }}

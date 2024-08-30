@@ -37,11 +37,17 @@ describe('CardDashboard', () => {
   it('should render the loading icon when isLoading is true', async () => {
     await wrapper.setProps({ isLoading: true });
     expect(wrapper.findComponent(IconLoading).exists()).toBe(true);
+
+    const metric = wrapper.find('[data-testid="card-dashboard-metric-value"]');
+    expect(metric.exists()).toBeFalsy();
   });
 
   it('should not render the loading icon when isLoading is false', async () => {
     await wrapper.setProps({ isLoading: false });
     expect(wrapper.findComponent(IconLoading).exists()).toBe(false);
+
+    const metric = wrapper.find('[data-testid="card-dashboard-metric-value"]');
+    expect(metric.exists()).toBeTruthy();
   });
 
   it('should display the metric value correctly when configured is true', async () => {

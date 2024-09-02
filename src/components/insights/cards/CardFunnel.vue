@@ -10,6 +10,7 @@
         size="small"
         type="secondary"
         iconCenter="tune"
+        data-testid="card-funnel-config-button-configurable"
         @click.stop="$emit('open-config')"
       />
     </header>
@@ -29,6 +30,7 @@
         <UnnnicButton
           :text="$t('widgets.graph_funnel.select_flows')"
           type="primary"
+          data-testid="card-funnel-config-button-not-configured"
           @click="$emit('open-config')"
         />
       </section>

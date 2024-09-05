@@ -47,7 +47,6 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-      
         entryFileNames: 'assets/insights.js',
         chunkFileNames: 'assets/insights.js', 
         assetFileNames: (assetInfo) => {

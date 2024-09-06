@@ -57,4 +57,44 @@ describe('HorizontalBarChart', () => {
     const chart = wrapper.find('[data-testid="chart-bar"]');
     expect(chart.exists()).toBe(true);
   });
+
+  it('should shorten y-axis tick labels longer than 15 characters', async () => {
+    await wrapper.setProps({
+      chartData: {
+        labels: [
+          'Short label',
+          'This is a long label that should be truncated',
+        ],
+        datasets: [{ data: [10, 20] }],
+      },
+    });
+
+    const { chartOptions } = wrapper.vm;
+
+    const callback = chartOptions.scales.y.ticks.callback;
+
+    expect(callback(null, 0)).toBe('Short label');
+
+    expect(callback(null, 1)).toBe('This is a long ...');
+  });
+
+  it('should format datalabels with the suffix', async () => {
+    await wrapper.setProps({ datalabelsSuffix: '%' });
+
+    const { chartOptions } = wrapper.vm;
+
+    const formatter = chartOptions.plugins.datalabels.formatter;
+
+    expect(formatter(10)).toBe('10%');
+    expect(formatter(20)).toBe('20%');
+  });
+
+  it('should return false from tooltip label callback', async () => {
+    const { chartOptions } = wrapper.vm;
+
+    // Mocka o contexto de tooltip e chama o callback
+    const tooltipCallback = chartOptions.plugins.tooltip.callbacks.label;
+
+    expect(tooltipCallback()).toBe(false);
+  });
 });

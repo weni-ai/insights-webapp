@@ -37,6 +37,7 @@
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/test-utils": "^2.4.6",
     "@weni/eslint-config": "^1.0.3",
+    "canvas": "^2.11.2",
     "eslint": "^7.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.0",

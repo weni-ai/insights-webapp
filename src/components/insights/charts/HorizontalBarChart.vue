@@ -1,11 +1,17 @@
 <template>
   <section class="bar-chart">
     <header class="bar-chart__header">
-      <h1 class="header__title">{{ title }}</h1>
+      <h1
+        class="header__title"
+        data-testid="chart-title"
+      >
+        {{ title }}
+      </h1>
       <a
         v-if="seeMore"
         class="header__see-more"
         href="#"
+        data-testid="chart-see-more-link"
         @click.prevent="$emit('seeMore')"
       >
         {{ $t('view_more') }}
@@ -18,6 +24,7 @@
       <SkeletonHorizontalBarChart
         v-if="isLoading"
         class="chart__loading"
+        data-testid="chart-loading"
         :width="chartWidth"
         :height="chartHeight"
       />
@@ -31,6 +38,7 @@
       >
         <BaseChart
           type="bar"
+          data-testid="chart-bar"
           :data="mergedData"
           :options="chartOptions"
           :plugins="chartPlugins"

@@ -47,12 +47,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        // Define o nome dos arquivos sem hash
         entryFileNames: 'assets/insights.js',
-        chunkFileNames: 'assets/insights.js', // Caso tenha chunks, também aplica o nome fixo
+        chunkFileNames: 'assets/insights.js', 
         assetFileNames: (assetInfo) => {
           if (assetInfo.name.endsWith('.css')) {
-            return 'assets/insights.css'; // Define o nome do arquivo CSS sem hash
+            return 'assets/insights.css'; 
           }
           return 'assets/' + assetInfo.name;
         },

@@ -9,7 +9,7 @@
       class="prompts-history__conversation"
     >
       <PromptHistoryMessage
-        title="Você:"
+        :title="`${$t('you')}:`"
         :content="insight.request"
       />
       <PromptHistoryMessage

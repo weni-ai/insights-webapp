@@ -92,7 +92,6 @@ describe('HorizontalBarChart', () => {
   it('should return false from tooltip label callback', async () => {
     const { chartOptions } = wrapper.vm;
 
-    // Mocka o contexto de tooltip e chama o callback
     const tooltipCallback = chartOptions.plugins.tooltip.callbacks.label;
 
     expect(tooltipCallback()).toBe(false);

@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`BaseChart > Should match the snapshot 1`] = `
+<canvas
+  height="0"
+  style="display: block; box-sizing: border-box; height: 0px; width: 0px;"
+  width="0"
+/>
+`;

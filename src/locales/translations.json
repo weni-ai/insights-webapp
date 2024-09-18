@@ -506,6 +506,18 @@
       "pt-br": "Falha ao definir o Dashboard {dashboard} como página inicial",
       "en": "Failure when defining the Dashboard {dashboard} as homepage",
       "es": "Falla al definir el Tablero {dashboard} como página de inicio"
+    },
+    "generate_insight": {
+      "title": {
+        "pt-br": "Gerar insight",
+        "en": "Generate insight",
+        "es": "Generar insight"
+      },
+      "generating_insights": {
+        "pt-br": "Gerando insights",
+        "en": "Generating insights",
+        "es": "Generando insights"
+      }
     }
   },
   "new_dashboard": {

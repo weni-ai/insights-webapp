@@ -17,6 +17,13 @@ ENV VITE_HOTJAR_ID $VITE_HOTJAR_ID
 
 RUN apk --no-cache add git
 
+RUN apt-get update && apt-get install -y \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev
+
 COPY package.json yarn.lock ./
 
 RUN --mount=type=cache,target=/root/.yarn \

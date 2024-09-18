@@ -11,7 +11,7 @@
         v-if="appliedFiltersLength > 0"
         type="tertiary"
         iconLeft="close"
-        text="Limpar"
+        :text="$t('insights_header.clear_filters')"
         @click.stop="clearFilters"
       />
     </template>

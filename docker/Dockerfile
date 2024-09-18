@@ -17,18 +17,10 @@ ENV VITE_HOTJAR_ID $VITE_HOTJAR_ID
 
 RUN apk --no-cache add git
 
-RUN apk add --no-cache \
-    build-base \
-    cairo-dev \
-    pango-dev \
-    jpeg-dev \
-    giflib-dev \
-    librsvg-dev
-
 COPY package.json yarn.lock ./
 
 RUN --mount=type=cache,target=/root/.yarn \
-    YARN_CACHE_FOLDER=/root/.yarn yarn install
+    YARN_CACHE_FOLDER=/root/.yarn yarn install --prod
 
 COPY . ./
 

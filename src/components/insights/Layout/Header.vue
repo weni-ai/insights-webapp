@@ -76,7 +76,7 @@ export default {
         crumbs[1] = {
           path: this.$route.path,
           routePath: 'report',
-          name: `Relatório ${currentDashboard.name}`,
+          name: `${this.$t('report')} ${currentDashboard.name}`,
         };
       }
 

@@ -24,6 +24,16 @@
     "en": "Select",
     "es": "Seleccionar"
   },
+  "report": {
+    "pt-br": "Relatório",
+    "en": "Report",
+    "es": "Informe"
+  },
+  "you": {
+    "pt-br": "Você",
+    "en": "You",
+    "es": "Usted"
+  },
   "none": {
     "pt-br": "Nenhum",
     "en": "None",

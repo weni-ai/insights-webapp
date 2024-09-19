@@ -517,6 +517,11 @@
         "pt-br": "Gerando insights",
         "en": "Generating insights",
         "es": "Generando insights"
+      },
+      "by_ai": {
+        "pt-br": "por GPT-4",
+        "en": "by GPT-4",
+        "es": "por GPT-4"
       }
     }
   },

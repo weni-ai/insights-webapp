@@ -21,7 +21,7 @@
         iconCenter="ios_share"
         type="secondary"
         /> -->
-        <HeaderGenerateInsightsButton />
+        <HeaderGenerateInsightButton />
       </section>
     </section>
   </header>
@@ -34,7 +34,7 @@ import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
-import HeaderGenerateInsightsButton from './HeaderGenerateInsights/HeaderGenerateInsightsButton.vue';
+import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
 
 import moment from 'moment';
 
@@ -46,7 +46,7 @@ export default {
     HeaderTagLive,
     InsightsLayoutHeaderFilters,
     HeaderDashboardSettings,
-    HeaderGenerateInsightsButton,
+    HeaderGenerateInsightButton,
   },
   computed: {
     ...mapState({

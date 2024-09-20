@@ -29,9 +29,7 @@
           data-testid="dashboard-title"
           class="trigger__title"
         >
-          {{
-            currentDashboard.name || dashboardDefault.name || dashboards[0].name
-          }}
+          {{ dashboardTitle }}
         </h1>
         <UnnnicIcon
           data-testid="expand-icon"
@@ -92,6 +90,14 @@ export default {
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
+    dashboardTitle() {
+      const title =
+        this.currentDashboard.name ||
+        this.dashboardDefault.name ||
+        this.dashboards[0].name ||
+        '';
+      return this.$t(title);
+    },
   },
   mounted() {
     this.$nextTick(() => {

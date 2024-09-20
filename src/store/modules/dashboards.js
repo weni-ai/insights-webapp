@@ -43,7 +43,13 @@ export default {
       state.showDashboardConfig = show;
     },
     [mutations.SET_DASHBOARDS](state, dashboards) {
-      state.dashboards = dashboards;
+      // Temporary adjustment to translate the Atendimento humano dashboard name
+      state.dashboards = dashboards.map((dash) => {
+        if (dash.name === 'Atendimento humano') {
+          return { ...dash, name: 'human_service_dashboard.title' };
+        }
+        return dash;
+      });
     },
     [mutations.SET_LOADING_DASHBOARDS](state, loading) {
       state.isLoadingDashboards = loading;

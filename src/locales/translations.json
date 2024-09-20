@@ -37,20 +37,15 @@
     }
   },
   "table_dynamic_by_filter": {
-    "chats_in_period": {
-      "pt-br": "Chats no período",
-      "en": "Chats in the period",
-      "es": "Chats en el período"
-    },
-    "online_agents": {
-      "pt-br": "Agentes online",
-      "en": "Online agents",
-      "es": "Agentes en línea"
-    },
     "status": {
       "pt-br": "Status",
       "en": "Status",
       "es": "Status"
+    },
+    "chats_in_period": {
+      "pt-br": "Chats no período",
+      "en": "Chats in the period",
+      "es": "Chats en el período"
     }
   },
   "table_group": {
@@ -173,6 +168,16 @@
     "pt-br": "Agente",
     "en": "Agent",
     "es": "Agente"
+  },
+  "online_agents": {
+    "pt-br": "Agentes online",
+    "en": "Online agents",
+    "es": "Agentes en línea"
+  },
+  "chats_per_agents": {
+    "pt-br": "Chats por agente",
+    "en": "Chats per agent",
+    "es": "Chats por agente"
   },
   "closeds": {
     "pt-br": "Encerrados",

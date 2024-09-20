@@ -2,7 +2,7 @@
   <section class="dynamic-filter">
     <UnnnicLabel
       v-if="filter.label"
-      :label="filter.label"
+      :label="$t(filter.label)"
     />
     <component
       :is="currentComponent"
@@ -59,7 +59,7 @@ export default {
         this.filter;
 
       const defaultProps = {
-        placeholder,
+        placeholder: this.$t(placeholder),
         modelValue: treatedModelValue,
         disabled,
         dependsOn: depends_on,

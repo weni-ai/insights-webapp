@@ -1,4 +1,204 @@
 {
+  "human_service_dashboard": {
+    "peaks_in_human_service": {
+      "pt-br": "Pico de chats abertos por hora",
+      "en": "Peak of open chats per hour",
+      "es": "Pico de chats abiertos por hora"
+    },
+    "closed": {
+      "pt-br": "Encerrados",
+      "en": "Closeds",
+      "es": "Cerrados"
+    },
+    "in_progress": {
+      "pt-br": "Em andamento",
+      "en": "Ongoing",
+      "es": "En curso"
+    },
+    "response_time": {
+      "pt-br": "Tempo de resposta",
+      "en": "Response time",
+      "es": "Tiempo de respuesta"
+    },
+    "waiting_time": {
+      "pt-br": "Tempo de espera",
+      "en": "Waiting time",
+      "es": "Tiempo de espera"
+    },
+    "awaiting_service": {
+      "pt-br": "Aguardando atendimento",
+      "en": "Waiting for service",
+      "es": "Esperando atención"
+    },
+    "interaction_time": {
+      "pt-br": "Tempo de interação",
+      "en": "Interaction time",
+      "es": "Tiempo de interacción"
+    }
+  },
+  "table_dynamic_by_filter": {
+    "status": {
+      "pt-br": "Status",
+      "en": "Status",
+      "es": "Status"
+    },
+    "chats_in_period": {
+      "pt-br": "Chats no período",
+      "en": "Chats in the period",
+      "es": "Chats en el período"
+    }
+  },
+  "table_group": {
+    "contact": {
+      "pt-br": "Contato",
+      "en": "Contact",
+      "es": "Contacto"
+    },
+    "urn": {
+      "pt-br": "URN",
+      "en": "URN",
+      "es": "URN"
+    },
+    "agent": {
+      "pt-br": "Agente",
+      "en": "Agent",
+      "es": "Agente"
+    },
+    "created_on": {
+      "pt-br": "Início",
+      "en": "Start",
+      "es": "Inicio"
+    },
+    "ended_at": {
+      "pt-br": "Fim",
+      "en": "End",
+      "es": "Fin"
+    },
+    "sector": {
+      "pt-br": "Setor",
+      "en": "Sector",
+      "es": "Sector"
+    },
+    "queue": {
+      "pt-br": "Fila",
+      "en": "Queue",
+      "es": "Cola"
+    },
+    "tags": {
+      "pt-br": "Tags",
+      "en": "Tags",
+      "es": "Etiquetas"
+    }
+  },
+  "filter": {
+    "agent": {
+      "label": {
+        "pt-br": "Agente",
+        "en": "Agent",
+        "es": "Agente"
+      },
+      "placeholder": {
+        "pt-br": "Selecione agente",
+        "en": "Select agent",
+        "es": "Seleccionar agente"
+      }
+    },
+    "contact": {
+      "label": {
+        "pt-br": "Contato",
+        "en": "Contact",
+        "es": "Contacto"
+      },
+      "placeholder": {
+        "pt-br": "Nome ou URN do contato",
+        "en": "Name or URN of the contact",
+        "es": "Nombre o URN del contacto"
+      }
+    },
+    "created_on": {
+      "label": {
+        "pt-br": "Data",
+        "en": "Date",
+        "es": "Fecha"
+      },
+      "placeholder": {
+        "pt-br": "",
+        "en": "",
+        "es": ""
+      }
+    },
+    "queue": {
+      "label": {
+        "pt-br": "Fila",
+        "en": "Queue",
+        "es": "Cola"
+      },
+      "placeholder": {
+        "pt-br": "Selecione fila",
+        "en": "Select queue",
+        "es": "Seleccionar cola"
+      }
+    },
+    "sector": {
+      "label": {
+        "pt-br": "Setor",
+        "en": "Sector",
+        "es": "Sector"
+      },
+      "placeholder": {
+        "pt-br": "Selecione setor",
+        "en": "Select sector",
+        "es": "Seleccionar sector"
+      }
+    },
+    "tags": {
+      "label": {
+        "pt-br": "Tags",
+        "en": "Tags",
+        "es": "Etiquetas"
+      },
+      "placeholder": {
+        "pt-br": "Selecione tag",
+        "en": "Select tag",
+        "es": "Seleccionar tag"
+      }
+    }
+  },
+  "agent": {
+    "pt-br": "Agente",
+    "en": "Agent",
+    "es": "Agente"
+  },
+  "online_agents": {
+    "pt-br": "Agentes online",
+    "en": "Online agents",
+    "es": "Agentes en línea"
+  },
+  "chats_per_agents": {
+    "pt-br": "Chats por agente",
+    "en": "Chats per agent",
+    "es": "Chats por agente"
+  },
+  "closeds": {
+    "pt-br": "Encerrados",
+    "en": "Closeds",
+    "es": "Cerrados"
+  },
+  "in_progress": {
+    "pt-br": "Em andamento",
+    "en": "Ongoing",
+    "es": "En curso"
+  },
+  "waiting": {
+    "pt-br": "Aguardando",
+    "en": "Waiting",
+    "es": "Esperando"
+  },
+  "status": {
+    "pt-br": "Status",
+    "en": "Status",
+    "es": "Status"
+  },
   "metric": {
     "pt-br": "Métrica",
     "en": "Metric",

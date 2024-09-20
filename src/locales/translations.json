@@ -1,5 +1,10 @@
 {
   "human_service_dashboard": {
+    "title": {
+      "pt-br": "Atentimento humano",
+      "en": "Human support",
+      "es": "Atención humana"
+    },
     "peaks_in_human_service": {
       "pt-br": "Pico de chats abertos por hora",
       "en": "Peak of open chats per hour",

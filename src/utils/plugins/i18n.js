@@ -18,4 +18,5 @@ export default createI18n({
   fallbackLocale: 'en',
   messages,
   silentTranslationWarn: true,
+  silentFallbackWarn: true,
 });

@@ -118,7 +118,6 @@ export default {
   align-items: center;
   gap: $unnnic-spacing-xs;
 
-  max-height: min-content;
   overflow: hidden;
 
   &.clickable:not(.loading):hover {

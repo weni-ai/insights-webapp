@@ -1,19 +1,21 @@
 <template>
   <section class="table-group">
     <UnnnicTab
-      :tabs="tabsName"
-      :activeTab="$t(activeTab.name)"
+      :tabs="tabsKeys"
+      :activeTab="activeTabName"
       @change="changeActiveTabName"
     >
       <template
-        v-for="tab in tabs"
-        #[`tab-head-${$t(tab.name)}`]
-        :key="`tab-head-${$t(tab.name)}`"
-      />
+        v-for="[key, tab] in Object.entries(tabs)"
+        #[`tab-head-${key}`]
+        :key="`tab-head-${key}`"
+      >
+        {{ $t(tab.name) }}
+      </template>
       <template
-        v-for="tab in tabs"
-        #[`tab-panel-${$t(tab.name)}`]
-        :key="`tab-panel-${$t(tab.name)}`"
+        v-for="key in Object.keys(tabs)"
+        #[`tab-panel-${key}`]
+        :key="`tab-panel-${key}`"
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
@@ -75,17 +77,16 @@ export default {
   },
 
   computed: {
-    tabsName() {
-      const tabsValues = Object.values(this.tabs);
-      return tabsValues?.map((mappedConfig) => this.$t(mappedConfig.name));
+    tabsKeys() {
+      const tabsKeys = Object.keys(this.tabs);
+      return tabsKeys;
     },
     activeTab() {
       const tabsEntries = Object.entries(this.tabs);
 
       const activeTab =
-        tabsEntries.find(
-          ([_key, tab]) => this.$t(tab.name) === this.activeTabName,
-        ) || tabsEntries.find(([_key, tab]) => tab.is_default);
+        tabsEntries.find(([key, _tab]) => key === this.activeTabName) ||
+        tabsEntries.find(([_key, tab]) => tab.is_default);
 
       if (activeTab) {
         const [key, tab] = activeTab;

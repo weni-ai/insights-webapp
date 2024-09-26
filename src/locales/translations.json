@@ -528,6 +528,47 @@
         "en": "Generating insights",
         "es": "Generando insights"
       },
+      "input": {
+        "placeholder_positive": {
+          "pt-br": "Compartilhe sua experiência",
+          "en": "Share your experience",
+          "es": "Comparta su experiencia" 
+        },
+        "placeholder_negative": {
+          "pt-br": "Como podemos melhorar?",
+          "en": "How can we improve?",
+          "es": "¿Cómo podemos mejorar?" 
+        }
+      },
+      "feedback": {
+        "question": {
+          "pt-br": "O Insight foi útil?",
+          "en": "Was Insight useful?",
+          "es": "¿Fue útil Insight?"
+        },
+        "complete": {
+          "pt-br": "Obrigado pelo feedback!",
+          "en": "Thanks for the feedback!",
+          "es": "¡Gracias por los comentarios!"
+        }
+      },
+      "button": {
+        "yes": {
+          "pt-br": "Sim",
+          "en": "Yes",
+          "es": "Sí" 
+        },
+        "no": {
+          "pt-br": "Não",
+          "en": "No",
+          "es": "No"
+        },
+        "send": {
+          "pt-br": "Enviar",
+          "en": "Send",
+          "es": "No"
+        }
+      },
       "by_ai": {
         "pt-br": "por GPT-4",
         "en": "by GPT-4",

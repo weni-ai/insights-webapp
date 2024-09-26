@@ -25,7 +25,7 @@
       <section
         ref="content"
         class="header-generate-insight-modal__content"
-        @scroll="checkScroll"
+        @scroll="handleScroll"
       >
         <HeaderGenerateInsightText :text="generatedInsight" />
 
@@ -49,6 +49,9 @@
 
 <script>
 import HeaderGenerateInsightText from './HeaderGenerateInsightText.vue';
+import mitt from 'mitt';
+
+const emitter = mitt();
 
 export default {
   name: 'HeaderGenerateInsightModal',
@@ -96,25 +99,66 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener('resize', this.checkScroll);
+    this.cleanupObserver();
   },
 
   methods: {
     generateInsight() {
-      //TODO: Remove this mock when text generation by AI is implemented
+      // TODO: Remove this mock when text generation by AI is implemented
       setTimeout(() => {
         this.generatedInsight =
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum mauris volutpat, ornare quam vel, scelerisque est. Nulla nulla neque, scelerisque ac velit tincidunt, dapibus accumsan quam. Quisque aliquam nulla interdum arcu aliquet molestie. Curabitur lobortis maximus fringilla. Phasellus nec dolor efficitur, mattis ipsum eu, volutpat urna. In cursus, lacus nec semper sagittis, felis ante viverra ante, sit amet lacinia metus purus non diam. Vivamus quis fringilla leo. Proin mattis aliquet risus. <br/><br/> Vestibulum tincidunt, ipsum ut tempor luctus, sapien elit laoreet mi, quis ornare lacus urna quis erat. Duis et imperdiet massa. Nunc fringilla efficitur tellus, a cursus odio suscipit vel. Ut tempus metus elit, non lobortis nisi ultrices nec. Proin sem arcu, ultrices in rutrum ac, pulvinar sit amet magna. Pellentesque non lacus in lacus sollicitudin ultrices. Morbi commodo et lectus in scelerisque. Aliquam scelerisque nisi arcu, ut scelerisque tortor pulvinar vitae. Suspendisse tempor tincidunt turpis. Vestibulum vehicula ante at odio facilisis lacinia. <br/><br/> Integer ut diam feugiat, faucibus neque sit amet, pretium lectus. Quisque vel libero consequat est interdum lacinia. Proin volutpat, elit et lacinia tincidunt, est est ullamcorper neque, quis pharetra nisi lectus eu nisi. Donec diam urna, aliquam et pellentesque sed, congue sit amet ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras dictum mauris volutpat, ornare quam vel, scelerisque est. Nulla nulla neque, scelerisque ac velit tincidunt, dapibus accumsan quam. Quisque aliquam nulla interdum arcu aliquet molestie.';
         this.checkScroll();
       }, 3000);
     },
-
     checkScroll() {
+      this.$nextTick(() => {
+        const content = this.$refs.content;
+        if (!content) return;
+
+        const secondSection = content.querySelectorAll('section')[0];
+        if (!secondSection) return;
+
+        const updateScrollStatus = () => {
+          const scrollHeight = secondSection.scrollHeight;
+          const clientHeight = content.clientHeight;
+
+          this.showGradient = scrollHeight > clientHeight;
+        };
+
+        this.observer = new MutationObserver(() => {
+          updateScrollStatus();
+        });
+
+        this.observer.observe(secondSection, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        });
+
+        updateScrollStatus();
+
+        emitter.on('cleanup', () => {
+          this.cleanupObserver();
+        });
+      });
+    },
+    cleanupObserver() {
+      if (this.observer) {
+        this.observer.disconnect();
+      }
+    },
+    handleScroll() {
       const content = this.$refs.content;
+      const scrollTop = content.scrollTop;
       const scrollHeight = content.scrollHeight;
       const clientHeight = content.clientHeight;
 
-      console.log('checkScroll', content, scrollHeight, clientHeight);
-      this.showGradient = scrollHeight > clientHeight;
+      if (scrollTop + clientHeight >= scrollHeight - 1) {
+        this.showGradient = false;
+      } else {
+        this.showGradient = true;
+      }
     },
   },
 };
@@ -186,9 +230,13 @@ export default {
   }
 
   &__content {
-    overflow-y: auto;
+    overflow-y: overlay;
     padding-right: $unnnic-spacing-ant;
     margin-right: -$unnnic-spacing-ant;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
 
     .content__footer {
       .footer__description {
@@ -204,7 +252,7 @@ export default {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 9rem;
+    height: 7rem;
     background: linear-gradient(
       359deg,
       #3b414d 0.54%,

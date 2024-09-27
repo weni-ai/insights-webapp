@@ -1,6 +1,7 @@
 <template>
   <button
     class="header-generate-insight-button"
+    :disabled="isDisableBtn"
     @click="openModal"
   >
     <img src="@/assets/images/shine.svg" />
@@ -35,6 +36,9 @@ export default {
     ...mapState({
       token: (state) => state.config.token,
     }),
+    isDisableBtn() {
+      return this.$store.state.widgets.isLoadingCurrentDashboardWidgets;
+    },
   },
 
   methods: {

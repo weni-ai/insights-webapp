@@ -24,10 +24,19 @@
 
       <section
         ref="content"
-        class="header-generate-insight-modal__content"
+        :class="[
+          'header-generate-insight-modal__content',
+          {
+            'header-generate-insight-modal__content-justify-end':
+              !isRenderGenerateInsightText,
+          },
+        ]"
         @scroll="handleScroll"
       >
-        <HeaderGenerateInsightText :text="generatedInsight" />
+        <HeaderGenerateInsightText
+          v-if="isRenderGenerateInsightText"
+          :text="generatedInsight"
+        />
 
         <div
           v-if="showGradient"
@@ -48,7 +57,7 @@
             ✨{{ $t('insights_header.generate_insight.feedback.complete') }}
           </p>
           <section
-            v-else
+            v-else-if="!generateInsightError"
             class="footer__feedback"
           >
             <p class="footer__feedback__text">
@@ -81,6 +90,7 @@
               class="footer__feedback__container__area"
             >
               <textarea
+                v-model="feedbackText"
                 rows="7"
                 class="footer__feedback__textarea"
                 :placeholder="handlePlaceholderTextArea()"
@@ -89,7 +99,8 @@
                 type="tertiary"
                 :text="$t('insights_header.generate_insight.button.send')"
                 class="footer__feedback__btn_send"
-                disabled
+                :disabled="!feedbackText.trim()"
+                @click="submitReview"
               />
             </section>
           </section>
@@ -101,6 +112,7 @@
 
 <script>
 import HeaderGenerateInsightText from './HeaderGenerateInsightText.vue';
+import firebaseService from '@/services/api/resources/GPT';
 import mitt from 'mitt';
 
 const emitter = mitt();
@@ -124,13 +136,21 @@ export default {
   data() {
     return {
       generatedInsight: '',
+      generateInsightError: false,
       showGradient: false,
       isBtnYesActive: false,
       isBtnNoActive: false,
+      feedbackText: '',
       isFeedbackSent: false,
     };
   },
 
+  computed: {
+    isRenderGenerateInsightText() {
+      if (this.isBtnYesActive || this.isBtnNoActive) return false;
+      return true;
+    },
+  },
   watch: {
     show(newShow) {
       if (newShow && !this.generatedInsight) {
@@ -158,6 +178,20 @@ export default {
   },
 
   methods: {
+    async submitReview() {
+      try {
+        await firebaseService.createReview({
+          helpful: this.isBtnYesActive ? true : false,
+          comment: this.feedbackText,
+          user: this.$store.state.user.email || '',
+        });
+
+        this.isFeedbackSent = true;
+      } finally {
+        this.isBtnNoActive = false;
+        this.isBtnYesActive = false;
+      }
+    },
     handlePlaceholderTextArea() {
       if (this.isBtnYesActive)
         return this.$t(
@@ -176,13 +210,24 @@ export default {
       if (this.isBtnYesActive) this.isBtnYesActive = false;
       this.isBtnNoActive = !this.isBtnNoActive;
     },
-    generateInsight() {
-      // TODO: Remove this mock when text generation by AI is implemented
-      setTimeout(() => {
-        this.generatedInsight =
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dictum mauris volutpat, ornare quam vel, scelerisque est. Nulla nulla neque, scelerisque ac velit tincidunt, dapibus accumsan quam. Quisque aliquam nulla interdum arcu aliquet molestie. Curabitur lobortis maximus fringilla. Phasellus nec dolor efficitur, mattis ipsum eu, volutpat urna. In cursus, lacus nec semper sagittis, felis ante viverra ante, sit amet lacinia metus purus non diam. Vivamus quis fringilla leo. Proin mattis aliquet risus. <br/><br/> Vestibulum tincidunt, ipsum ut tempor luctus, sapien elit laoreet mi, quis ornare lacus urna quis erat. Duis et imperdiet massa. Nunc fringilla efficitur tellus, a cursus odio suscipit vel. Ut tempus metus elit, non lobortis nisi ultrices nec. Proin sem arcu, ultrices in rutrum ac, pulvinar sit amet magna. Pellentesque non lacus in lacus sollicitudin ultrices. Morbi commodo et lectus in scelerisque. Aliquam scelerisque nisi arcu, ut scelerisque tortor pulvinar vitae. Suspendisse tempor tincidunt turpis. Vestibulum vehicula ante at odio facilisis lacinia. <br/><br/> Integer ut diam feugiat, faucibus neque sit amet, pretium lectus. Quisque vel libero consequat est interdum lacinia. Proin volutpat, elit et lacinia tincidunt, est est ullamcorper neque, quis pharetra nisi lectus eu nisi. Donec diam urna, aliquam et pellentesque sed, congue sit amet ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Cras dictum mauris volutpat, ornare quam vel, scelerisque est. Nulla nulla neque, scelerisque ac velit tincidunt, dapibus accumsan quam. Quisque aliquam nulla interdum arcu aliquet molestie.';
+    async generateInsight() {
+      try {
+        const prompt = `Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: em andamento 200, aguardando 150, encerrados 1500,tempo de primeira resposta 2 minutos, tempo de espera 10 minutos, tempo de interação 35 minutos`;
+
+        await this.$store.dispatch('gpt/getInsights', { prompt });
+
+        const lastInsight = this.$store.state.gpt.insights.slice(-1)[0];
+
+        this.generatedInsight = lastInsight?.received.value || '';
         this.checkScroll();
-      }, 3000);
+        if (this.generateInsightError) this.generateInsightError = false;
+      } catch (error) {
+        this.generatedInsight = this.$t(
+          'insights_header.generate_insight.error',
+        );
+        this.generateInsightError = true;
+        console.error('Erro to generate insight:', error);
+      }
     },
     checkScroll() {
       this.$nextTick(() => {
@@ -303,6 +348,12 @@ export default {
   }
 
   &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &-justify-end {
+      justify-content: end;
+    }
     overflow-y: overlay;
     padding-right: $unnnic-spacing-ant;
     margin-right: -$unnnic-spacing-ant;

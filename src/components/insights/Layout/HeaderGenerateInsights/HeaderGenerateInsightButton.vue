@@ -1,14 +1,14 @@
 <template>
   <button
     class="header-generate-insight-button"
-    @click="handleGenerateInsightModal"
+    @click="openModal"
   >
     <img src="@/assets/images/shine.svg" />
     {{ $t('insights_header.generate_insight.title') }}
 
     <HeaderGenerateInsightModal
       :show="isGenerateInsightModalOpen"
-      @close="handleGenerateInsightModal"
+      @close="closeModal"
     />
   </button>
 </template>
@@ -38,8 +38,11 @@ export default {
   },
 
   methods: {
-    handleGenerateInsightModal() {
-      this.isGenerateInsightModalOpen = !this.isGenerateInsightModalOpen;
+    openModal() {
+      this.isGenerateInsightModalOpen = true;
+    },
+    closeModal() {
+      this.isGenerateInsightModalOpen = false;
     },
   },
 };

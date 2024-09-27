@@ -532,7 +532,7 @@
         "placeholder_positive": {
           "pt-br": "Compartilhe sua experiência",
           "en": "Share your experience",
-          "es": "Comparta su experiencia" 
+          "es": "Comparta su experiencia"  
         },
         "placeholder_negative": {
           "pt-br": "Como podemos melhorar?",
@@ -542,9 +542,9 @@
       },
       "feedback": {
         "question": {
-          "pt-br": "O Insight foi útil?",
-          "en": "Was Insight useful?",
-          "es": "¿Fue útil Insight?"
+          "pt-br": "O Insight fornecido foi útil?",
+          "en": "Was the Insight provided useful?",
+          "es": "¿Fue útil la información proporcionada?"
         },
         "complete": {
           "pt-br": "Obrigado pelo feedback!",
@@ -573,10 +573,15 @@
         "pt-br": "por GPT-4",
         "en": "by GPT-4",
         "es": "por GPT-4"
+      },
+      "error": {
+        "pt-br": "Lamentamos, mas infelizmente não foi possível gerar um Insight, verifique sua conexão com internet ou tente novamente mais tarde",
+        "en": "We're sorry, but unfortunately we were unable to generate an Insight, please check your internet connection or try again later",
+        "es": "Lo sentimos, pero desafortunadamente no hemos podido generar un Insight, por favor compruebe su conexión a Internet o inténtelo de nuevo más tarde."
       }
     }
   },
-  "new_dashboard": {
+  "new_dashboard": { 
     "title": {
       "pt-br": "Novo dashboard",
       "en": "New dashboard",

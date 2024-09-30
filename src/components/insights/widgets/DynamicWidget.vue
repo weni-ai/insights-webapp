@@ -105,12 +105,12 @@ export default {
           paginationTotal: data?.count,
         },
         graph_column: {
-          title: name,
+          title: this.$t(name),
           chartData: this.widgetGraphData || {},
           seeMore: !!report,
         },
         graph_bar: {
-          title: name,
+          title: this.$t(name),
           chartData: this.widgetGraphData || {},
           datalabelsSuffix: config?.data_suffix,
           seeMore: !!report,

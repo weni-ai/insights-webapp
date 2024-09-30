@@ -8,7 +8,7 @@
     }"
     @click="setCurrentDashboard(dashboard)"
   >
-    {{ dashboard.name }}
+    {{ $t(dashboard.name) }}
     <UnnnicIcon
       data-testid="star-icon"
       class="option-select-dashboard__star-icon"

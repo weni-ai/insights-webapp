@@ -68,7 +68,7 @@ export default {
         {
           path: currentDashboard.uuid,
           routeName: 'dashboard',
-          name: `Insights ${currentDashboard.name}`,
+          name: `Insights ${this.$t(currentDashboard.name || '')}`,
         },
       ];
 
@@ -76,7 +76,7 @@ export default {
         crumbs[1] = {
           path: this.$route.path,
           routePath: 'report',
-          name: `${this.$t('report')} ${currentDashboard.name}`,
+          name: `${this.$t('report')} ${this.$t(currentDashboard.name || '')}`,
         };
       }
 

@@ -38,10 +38,10 @@
           :text="generatedInsight"
         />
 
-        <div
+        <section
           v-if="showGradient"
           class="gradient-overlay"
-        ></div>
+        ></section>
 
         <footer
           v-if="generatedInsight"
@@ -114,6 +114,7 @@
 import HeaderGenerateInsightText from './HeaderGenerateInsightText.vue';
 import firebaseService from '@/services/api/resources/GPT';
 import mitt from 'mitt';
+import { formatSecondsToHumanString } from '@/utils/time';
 
 const emitter = mitt();
 
@@ -210,9 +211,28 @@ export default {
       if (this.isBtnYesActive) this.isBtnYesActive = false;
       this.isBtnNoActive = !this.isBtnNoActive;
     },
+    handleDynamicParam(widget) {
+      const { config, data } = widget;
+
+      if (config.data_type === 'sec') {
+        return `${widget.name} ${formatSecondsToHumanString(Math.round(data?.value))}`;
+      }
+
+      return `${data?.value || 0} ${widget.name}`;
+    },
     async generateInsight() {
       try {
-        const prompt = `Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: em andamento 200, aguardando 150, encerrados 1500,tempo de primeira resposta 2 minutos, tempo de espera 10 minutos, tempo de interação 35 minutos`;
+        const cards = this.$store.state.widgets.currentDashboardWidgets.filter(
+          (e) => e.type === 'card',
+        );
+
+        const dynamicParams = cards
+          .map((e) => this.handleDynamicParam(e))
+          .join(', ');
+
+        const prompt = this.$t('insights_header.generate_insight.prompt', {
+          values: dynamicParams,
+        });
 
         await this.$store.dispatch('gpt/getInsights', { prompt });
 
@@ -414,6 +434,10 @@ export default {
           border-radius: $unnnic-border-radius-sm;
           border: 1px solid $unnnic-color-neutral-dark;
           background: $unnnic-color-neutral-darkest;
+          color: $unnnic-color-neutral-clean;
+          :deep(.material-symbols-rounded.unnnic-icon-scheme--neutral-dark) {
+            color: $unnnic-color-neutral-clean;
+          }
 
           &:hover {
             border: 1px solid $unnnic-color-neutral-cloudy;

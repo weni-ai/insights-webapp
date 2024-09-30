@@ -50,9 +50,9 @@
         v-if="!showMetricError"
         class="content-description"
         data-testid="card-dashboard-content-description"
-        :title="configured ? description : $t('widgets.card.metric_empty')"
+        :title="configured ? $t(description) : $t('widgets.card.metric_empty')"
       >
-        {{ configured ? description : $t('widgets.card.metric_empty') }}
+        {{ configured ? $t(description) : $t('widgets.card.metric_empty') }}
       </p>
     </section>
   </CardBase>
@@ -118,7 +118,6 @@ export default {
   align-items: center;
   gap: $unnnic-spacing-xs;
 
-  max-height: min-content;
   overflow: hidden;
 
   &.clickable:not(.loading):hover {

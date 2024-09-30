@@ -1,19 +1,21 @@
 <template>
   <section class="table-group">
     <UnnnicTab
-      :tabs="tabsName"
-      :activeTab="activeTab.name"
-      @change="activeTabName = $event"
+      :tabs="tabsKeys"
+      :activeTab="activeTabName"
+      @change="changeActiveTabName"
     >
       <template
-        v-for="tab in tabs"
-        #[`tab-head-${tab.name}`]
-        :key="`tab-head-${tab.name}`"
-      />
+        v-for="[key, tab] in Object.entries(tabs)"
+        #[`tab-head-${key}`]
+        :key="`tab-head-${key}`"
+      >
+        {{ $t(tab.name) }}
+      </template>
       <template
-        v-for="tab in tabs"
-        #[`tab-panel-${tab.name}`]
-        :key="`tab-panel-${tab.name}`"
+        v-for="key in Object.keys(tabs)"
+        #[`tab-panel-${key}`]
+        :key="`tab-panel-${key}`"
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
@@ -75,14 +77,15 @@ export default {
   },
 
   computed: {
-    tabsName() {
-      const tabsValues = Object.values(this.tabs);
-      return tabsValues?.map((mappedConfig) => mappedConfig.name);
+    tabsKeys() {
+      const tabsKeys = Object.keys(this.tabs);
+      return tabsKeys;
     },
     activeTab() {
       const tabsEntries = Object.entries(this.tabs);
+
       const activeTab =
-        tabsEntries.find(([_key, tab]) => tab.name === this.activeTabName) ||
+        tabsEntries.find(([key, _tab]) => key === this.activeTabName) ||
         tabsEntries.find(([_key, tab]) => tab.is_default);
 
       if (activeTab) {
@@ -127,7 +130,7 @@ export default {
 
       const dynamicHeaders = activeTab?.fields
         ?.filter((field) => field.display && !field.hidden_name)
-        .map((field) => ({ content: field.name, value: field.value }));
+        .map((field) => ({ content: this.$t(field.name), value: field.value }));
 
       const dynamicRows = data.map((row) => {
         const content = dynamicHeaders.map((header) =>
@@ -151,14 +154,9 @@ export default {
   },
 
   watch: {
-    ['$route.query']() {
+    '$route.query'() {
       this.page = 0;
       this.emitRequestData();
-    },
-    activeTab(newActiveTab) {
-      if (this.activeTabName !== newActiveTab.name) {
-        this.activeTabName = newActiveTab.name;
-      }
     },
     async activeTabName() {
       const { $route } = this;
@@ -190,6 +188,9 @@ export default {
   },
 
   methods: {
+    changeActiveTabName(newActiveTabName) {
+      this.activeTabName = newActiveTabName;
+    },
     emitRequestData() {
       const { offset, limit } = this.paginationConfig;
       this.$emit('request-data', { offset, limit });

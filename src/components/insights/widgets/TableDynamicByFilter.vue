@@ -9,7 +9,7 @@
         size="xs"
         :scheme="headerIconColor"
       />
-      <h1 class="header__title">{{ headerTitle }}</h1>
+      <h1 class="header__title">{{ $t(headerTitle) }}</h1>
     </header>
 
     <IconLoading
@@ -28,7 +28,7 @@
           class="header__col"
           :class="{ main: index === 0 }"
         >
-          {{ field.name }}
+          {{ $t(field.name) }}
         </th>
       </tr>
 

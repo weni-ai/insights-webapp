@@ -15,7 +15,7 @@ exports[`OptionCreateNewDashboard > Should match the snapshot 1`] = `
   >
     add
   </span>
-   Novo dashboard
+   New dashboard
   
 </a>
 `;

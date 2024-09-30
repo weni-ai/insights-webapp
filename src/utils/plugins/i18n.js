@@ -14,7 +14,9 @@ const languages = {
 const messages = Object.assign(languages);
 
 export default createI18n({
-  locale: 'pt-br',
+  locale: 'en',
   fallbackLocale: 'en',
   messages,
+  silentTranslationWarn: true,
+  silentFallbackWarn: true,
 });

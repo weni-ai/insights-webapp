@@ -1,5 +1,5 @@
 #!/bin/sh
-ESCAPED_FIREBASE_CONFIG=$(echo "${VITE_FIREBASE_CONFIG}" | sed 's/"/\\"/g')
+ESCAPED_FIREBASE_CONFIG=$(echo "${VITE_FIREBASE_CONFIG}" | jq -R '.')
 
 export JSON_STRING='window.configs = { \
   "VITE_INSIGHTS_API_URL":"'${VITE_INSIGHTS_API_URL}'", \

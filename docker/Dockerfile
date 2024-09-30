@@ -14,8 +14,6 @@ ENV VITE_HOTJAR_ID $VITE_HOTJAR_ID
 
 RUN apk --no-cache add git
 
-RUN apk add --no-cache jq
-
 RUN apk add --no-cache \
     build-base \
     cairo-dev \

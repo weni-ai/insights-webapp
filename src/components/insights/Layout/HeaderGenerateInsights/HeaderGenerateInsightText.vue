@@ -15,13 +15,19 @@
     v-else
     class="header-generate-insight-text__generated"
   >
-    <p v-html="displayedText" />
+    <Markdown :content="displayedText" />
   </section>
 </template>
 
 <script>
+import Markdown from '@/components/Markdown.vue';
+
 export default {
   name: 'HeaderGenerateInsightText',
+
+  components: {
+    Markdown,
+  },
 
   props: {
     text: {

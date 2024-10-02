@@ -112,9 +112,10 @@ export default {
 
   &__generated {
     text-align: start;
-
     color: $unnnic-color-neutral-white;
-    font-size: $unnnic-font-size-body-gt;
+    font-size: $unnnic-font-size-body-lg;
+    font-weight: $unnnic-font-weight-light;
+    line-height: $unnnic-line-height-large * 1.4;
   }
 }
 </style>

@@ -57,6 +57,10 @@
             ✨{{ $t('insights_header.generate_insight.feedback.complete') }}
           </p>
           <section
+            v-if="isFeedbackSent"
+            ref="scrollTarget"
+          ></section>
+          <section
             v-else-if="!generateInsightError"
             class="footer__feedback"
           >
@@ -94,12 +98,14 @@
                 rows="7"
                 class="footer__feedback__textarea"
                 :placeholder="handlePlaceholderTextArea()"
+                :disabled="isSubmitFeedbackLoading"
               />
               <UnnnicButton
                 type="tertiary"
                 :text="$t('insights_header.generate_insight.button.send')"
                 class="footer__feedback__btn_send"
-                :disabled="!feedbackText.trim()"
+                :disabled="isSubmitFeedbackLoading"
+                :loading="isSubmitFeedbackLoading"
                 @click="submitReview"
               />
             </section>
@@ -143,6 +149,8 @@ export default {
       isBtnNoActive: false,
       feedbackText: '',
       isFeedbackSent: false,
+      scrollTarget: false,
+      isSubmitFeedbackLoading: false,
     };
   },
 
@@ -164,6 +172,13 @@ export default {
         });
       }
     },
+    isFeedbackSent(newValue) {
+      if (newValue) {
+        this.$nextTick(() => {
+          this.scrollToEnd();
+        });
+      }
+    },
   },
 
   mounted() {
@@ -179,11 +194,17 @@ export default {
   },
 
   methods: {
+    scrollToEnd() {
+      if (this.$refs.scrollTarget) {
+        this.$refs.scrollTarget.scrollIntoView({ behavior: 'smooth' });
+      }
+    },
     async submitReview() {
+      this.isSubmitFeedbackLoading = true;
       try {
         await firebaseService.createReview({
           helpful: this.isBtnYesActive ? true : false,
-          comment: this.feedbackText,
+          comment: this.feedbackText || '',
           user: this.$store.state.user.email || '',
         });
 
@@ -191,6 +212,7 @@ export default {
       } finally {
         this.isBtnNoActive = false;
         this.isBtnYesActive = false;
+        this.isSubmitFeedbackLoading = false;
       }
     },
     handlePlaceholderTextArea() {
@@ -386,6 +408,7 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: end;
+      max-height: 100%;
 
       .footer__description {
         color: $unnnic-color-neutral-clean;
@@ -406,8 +429,14 @@ export default {
       .footer__feedback {
         display: flex;
         flex-direction: column;
+        overflow-y: auto;
+        max-height: 100%;
         margin-top: $unnnic-spacing-sm;
         gap: $unnnic-spacing-sm;
+
+        &::-webkit-scrollbar {
+          width: 0;
+        }
 
         &__text {
           display: flex;

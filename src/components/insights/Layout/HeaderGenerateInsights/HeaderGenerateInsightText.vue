@@ -35,6 +35,7 @@ export default {
       default: '',
     },
   },
+  emits: ['typingComplete'],
 
   data() {
     return {
@@ -66,6 +67,7 @@ export default {
       }
 
       this.isTyping = false;
+      this.$emit('typingComplete');
     },
   },
 };

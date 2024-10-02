@@ -36,6 +36,7 @@
         <HeaderGenerateInsightText
           v-if="isRenderGenerateInsightText"
           :text="generatedInsight"
+          @typing-complete="handleTypingComplete"
         />
 
         <section
@@ -61,7 +62,7 @@
             ref="scrollTarget"
           ></section>
           <section
-            v-else-if="!generateInsightError"
+            v-else-if="isRenderFooterFeedback"
             class="footer__feedback"
           >
             <p class="footer__feedback__text">
@@ -151,6 +152,7 @@ export default {
       isFeedbackSent: false,
       scrollTarget: false,
       isSubmitFeedbackLoading: false,
+      isRenderFeedback: false,
     };
   },
 
@@ -158,6 +160,10 @@ export default {
     isRenderGenerateInsightText() {
       if (this.isBtnYesActive || this.isBtnNoActive) return false;
       return true;
+    },
+    isRenderFooterFeedback() {
+      if (this.generateInsightError) return false;
+      return this.isRenderFeedback;
     },
   },
   watch: {
@@ -194,6 +200,9 @@ export default {
   },
 
   methods: {
+    handleTypingComplete() {
+      this.isRenderFeedback = true;
+    },
     scrollToEnd() {
       if (this.$refs.scrollTarget) {
         this.$refs.scrollTarget.scrollIntoView({ behavior: 'smooth' });

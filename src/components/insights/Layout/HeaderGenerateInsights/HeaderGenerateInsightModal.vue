@@ -323,7 +323,7 @@ export default {
   border-radius: $unnnic-border-radius-sm;
   padding: $unnnic-spacing-md;
 
-  width: 35vw;
+  width: 32vw;
   height: 55vh;
 
   display: grid;

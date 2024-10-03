@@ -6,6 +6,19 @@ import CardFunnel from '../CardFunnel.vue';
 
 import dashboards from '@/store/modules/dashboards';
 
+vi.mock('firebase/app', () => ({
+  initializeApp: vi.fn(() => ({
+    name: 'mockApp',
+  })),
+}));
+
+vi.mock('firebase/firestore', () => ({
+  getFirestore: vi.fn(() => ({
+    collection: vi.fn(),
+    doc: vi.fn(),
+  })),
+}));
+
 const widgetMock = {
   uuid: '1',
   is_configurable: true,

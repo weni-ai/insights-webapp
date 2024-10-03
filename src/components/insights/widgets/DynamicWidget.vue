@@ -248,15 +248,19 @@ export default {
       const { config, data } = widget;
 
       if (config.operation === 'recurrence') {
-        return (data?.value || 0) + '%';
+        return (
+          (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', {
+            minimumFractionDigits: 2,
+          }) + '%'
+        );
       }
       if (config.data_type === 'sec') {
         return formatSecondsToHumanString(Math.round(data?.value));
       }
       if (config.currency) {
-        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value).toFixed(2) || 0}`;
+        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
       }
-      return JSON.stringify(data?.value);
+      return (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US');
     },
   },
 };

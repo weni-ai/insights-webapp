@@ -6,6 +6,7 @@
     <p class="footer__description">
       {{ $t('insights_header.generate_insight.by_ai') }}
     </p>
+
     <p
       v-if="isFeedbackSent"
       class="feedback_sent"
@@ -32,6 +33,7 @@
             'footer__feedback__btn',
             { 'footer__feedback__btn-active': isBtnYesActive },
           ]"
+          data-test="feedback-positive-btn"
           @click.stop="handlePositiveFeedback"
         />
         <UnnnicButton
@@ -42,6 +44,7 @@
             'footer__feedback__btn',
             { 'footer__feedback__btn-active': isBtnNoActive },
           ]"
+          data-test="feedback-negative-btn"
           @click.stop="handleNegativeFeedback"
         />
       </section>
@@ -60,6 +63,7 @@
           type="tertiary"
           :text="$t('insights_header.generate_insight.button.send')"
           class="footer__feedback__btn_send"
+          data-test="send-btn"
           :disabled="isSubmitFeedbackLoading"
           :loading="isSubmitFeedbackLoading"
           @click="submitReview"
@@ -108,12 +112,10 @@ export default {
     'submit-review',
   ],
   watch: {
-    isFeedbackSent(newValue) {
-      if (newValue) {
-        this.$nextTick(() => {
-          this.scrollToEnd();
-        });
-      }
+    isFeedbackSent() {
+      this.$nextTick(() => {
+        this.scrollToEnd();
+      });
     },
   },
   methods: {

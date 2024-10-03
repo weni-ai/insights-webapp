@@ -9,19 +9,6 @@ import onboardingStore from '@/store/modules/onboarding';
 
 import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
 
-vi.mock('firebase/app', () => ({
-  initializeApp: vi.fn(() => ({
-    name: 'mockApp',
-  })),
-}));
-
-vi.mock('firebase/firestore', () => ({
-  getFirestore: vi.fn(() => ({
-    collection: vi.fn(),
-    doc: vi.fn(),
-  })),
-}));
-
 describe('HeaderSelectDashboard', () => {
   let wrapper;
   const router = createRouter({

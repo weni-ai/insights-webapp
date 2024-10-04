@@ -257,13 +257,14 @@ export default {
   }
 }
 
-.footer__feedback__btn {
+.content__footer .footer__feedback .footer__feedback__btn {
   border-radius: $unnnic-border-radius-sm;
   border: 1px solid $unnnic-color-neutral-dark;
   background: $unnnic-color-neutral-darkest;
   color: $unnnic-color-neutral-clean;
-
+  &:active,
   &:hover {
+    background-color: inherit;
     border: 1px solid $unnnic-color-neutral-cloudy;
   }
 
@@ -276,6 +277,7 @@ export default {
   }
 
   &-active {
+    border: 1px solid $unnnic-color-neutral-cloudy;
     &:deep(.unnnic-button__label) {
       color: $unnnic-color-neutral-cleanest;
     }
@@ -284,13 +286,6 @@ export default {
       color: $unnnic-color-neutral-cleanest;
       font-family: Material Symbols Rounded Filled;
     }
-  }
-}
-
-.content__footer .footer__feedback .footer__feedback__btn {
-  &:active,
-  &:hover {
-    background-color: inherit;
   }
 }
 

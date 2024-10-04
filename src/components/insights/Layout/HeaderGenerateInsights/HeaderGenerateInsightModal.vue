@@ -251,7 +251,6 @@ export default {
       const scrollTop = content.scrollTop;
       const scrollHeight = content.scrollHeight;
       const clientHeight = content.clientHeight;
-      console.log('handleScroll', scrollTop, clientHeight, scrollHeight - 1);
       if (scrollTop + clientHeight >= scrollHeight - 1) {
         this.showGradient = false;
       } else {

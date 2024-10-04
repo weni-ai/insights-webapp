@@ -775,9 +775,9 @@
         }
       },
       "by_ai": {
-        "pt-br": "por GPT-4",
-        "en": "by GPT-4",
-        "es": "por GPT-4"
+        "pt-br": "por Meta Llama",
+        "en": "by Meta Llama",
+        "es": "por Meta Llama"
       },
       "error": {
         "pt-br": "Lamentamos, mas infelizmente não foi possível gerar um Insight, verifique sua conexão com internet ou tente novamente mais tarde",

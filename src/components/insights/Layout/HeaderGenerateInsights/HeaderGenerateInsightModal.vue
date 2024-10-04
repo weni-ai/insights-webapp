@@ -24,17 +24,10 @@
 
       <section
         ref="content"
-        :class="[
-          'header-generate-insight-modal__content',
-          {
-            'header-generate-insight-modal__content-justify-end':
-              !isRenderGenerateInsightText,
-          },
-        ]"
+        class="header-generate-insight-modal__content"
         @scroll="handleScroll"
       >
         <HeaderGenerateInsightText
-          v-if="isRenderGenerateInsightText"
           :text="generatedInsight"
           @typing-complete="handleTypingComplete"
         />
@@ -103,13 +96,15 @@ export default {
   },
 
   computed: {
-    isRenderGenerateInsightText() {
-      if (this.isBtnYesActive || this.isBtnNoActive) return false;
-      return true;
-    },
     isRenderFooterFeedback() {
       if (this.generateInsightError) return false;
       return this.isRenderFeedback;
+    },
+    currentDashboardWidgets() {
+      return this.$store.state.widgets.currentDashboardWidgets;
+    },
+    insights() {
+      return this.$store.state.gpt.insights;
     },
   },
   watch: {
@@ -187,7 +182,7 @@ export default {
     },
     async generateInsight() {
       try {
-        const cards = this.$store.state.widgets.currentDashboardWidgets.filter(
+        const cards = this.currentDashboardWidgets.filter(
           (e) => e.type === 'card',
         );
 
@@ -201,7 +196,7 @@ export default {
 
         await this.$store.dispatch('gpt/getInsights', { prompt });
 
-        const lastInsight = this.$store.state.gpt.insights.slice(-1)[0];
+        const lastInsight = this.insights.slice(-1)[0];
 
         this.generatedInsight = lastInsight?.received.value || '';
         this.checkScroll();
@@ -256,7 +251,7 @@ export default {
       const scrollTop = content.scrollTop;
       const scrollHeight = content.scrollHeight;
       const clientHeight = content.clientHeight;
-
+      console.log('handleScroll', scrollTop, clientHeight, scrollHeight - 1);
       if (scrollTop + clientHeight >= scrollHeight - 1) {
         this.showGradient = false;
       } else {
@@ -336,9 +331,6 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    &-justify-end {
-      justify-content: end;
-    }
     overflow-y: overlay;
     padding-right: $unnnic-spacing-ant;
     margin-right: -$unnnic-spacing-ant;

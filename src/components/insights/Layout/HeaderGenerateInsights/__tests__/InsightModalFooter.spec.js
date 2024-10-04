@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, flushPromises } from '@vue/test-utils';
 import InsightModalFooter from '@/components/insights/Layout/HeaderGenerateInsights/InsightModalFooter.vue';
 import { describe, it, expect, vi } from 'vitest';
 
@@ -13,11 +13,13 @@ describe('InsightModalFooter.vue', () => {
     isSubmitFeedbackLoading: false,
   };
 
-  const mountComponent = (props = {}) => {
+  const mountComponent = (props = {}, stubs = {}) => {
     return mount(InsightModalFooter, {
+      attachTo: document.body,
       global: {
         stubs: {
           UnnnicButton: true,
+          ...stubs,
         },
       },
       props: {
@@ -26,6 +28,10 @@ describe('InsightModalFooter.vue', () => {
       },
     });
   };
+
+  beforeAll(() => {
+    Element.prototype.scrollIntoView = vi.fn();
+  });
 
   it('renders footer when generatedInsight is present', () => {
     const wrapper = mountComponent();
@@ -76,6 +82,13 @@ describe('InsightModalFooter.vue', () => {
     });
     await wrapper.find('.footer__feedback__btn_send').trigger('click');
     expect(wrapper.emitted('submit-review')).toBeTruthy();
+
+    const secondWrapper = mountComponent({
+      isBtnNoActive: true,
+    });
+
+    await secondWrapper.find('.footer__feedback__btn_send').trigger('click');
+    expect(secondWrapper.emitted('submit-review')).toBeTruthy();
   });
 
   it('handles placeholder text area correctly', async () => {
@@ -116,6 +129,50 @@ describe('InsightModalFooter.vue', () => {
     });
   });
 
+  it('scrolls to the end when isBtnYesActive changes to true', async () => {
+    const wrapper = mountComponent({
+      isBtnYesActive: false,
+    });
+
+    await wrapper.setProps({ isBtnYesActive: true });
+
+    const scrollTargetElement = wrapper.find({ ref: 'scrollTarget' });
+
+    const scrollIntoViewMock = vi.fn();
+    Object.defineProperty(scrollTargetElement.element, 'scrollIntoView', {
+      value: scrollIntoViewMock,
+      writable: true,
+    });
+
+    await wrapper.vm.$nextTick();
+
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: 'smooth',
+    });
+  });
+
+  it('scrolls to the end when isBtnNoActive changes to true', async () => {
+    const wrapper = mountComponent({
+      isBtnNoActive: false,
+    });
+
+    await wrapper.setProps({ isBtnNoActive: true });
+
+    const scrollTargetElement = wrapper.find({ ref: 'scrollTarget' });
+
+    const scrollIntoViewMock = vi.fn();
+    Object.defineProperty(scrollTargetElement.element, 'scrollIntoView', {
+      value: scrollIntoViewMock,
+      writable: true,
+    });
+
+    await wrapper.vm.$nextTick();
+
+    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+      behavior: 'smooth',
+    });
+  });
+
   it('scrollToEnd calls scrollIntoView when scrollTarget exists', () => {
     const wrapper = mountComponent({
       isFeedbackSent: true,
@@ -142,10 +199,9 @@ describe('InsightModalFooter.vue', () => {
     });
 
     const scrollIntoViewMock = vi.fn();
-    Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
-      value: scrollIntoViewMock,
-      writable: true,
-    });
+
+    await wrapper.vm.$nextTick();
+
     wrapper.vm.scrollToEnd();
 
     expect(scrollIntoViewMock).not.toHaveBeenCalled();
@@ -164,9 +220,9 @@ describe('InsightModalFooter.vue', () => {
 
     await wrapper.setProps({ isFeedbackSent: true });
 
-    expect(wrapper.find({ ref: 'scrollTarget' }).exists()).toBe(true);
-
     await wrapper.vm.$nextTick();
+
+    expect(wrapper.find({ ref: 'scrollTarget' }).exists()).toBe(true);
 
     expect(scrollToEndMock).toHaveBeenCalled();
 

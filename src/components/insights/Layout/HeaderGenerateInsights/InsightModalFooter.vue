@@ -14,10 +14,6 @@
       ✨{{ $t('insights_header.generate_insight.feedback.complete') }}
     </p>
     <section
-      v-if="isFeedbackSent"
-      ref="scrollTarget"
-    ></section>
-    <section
       v-else-if="isRenderFooterFeedback"
       class="footer__feedback"
     >
@@ -70,6 +66,10 @@
         />
       </section>
     </section>
+    <section
+      v-if="isFeedbackSent || isBtnYesActive || isBtnNoActive"
+      ref="scrollTarget"
+    ></section>
   </footer>
 </template>
 
@@ -113,6 +113,16 @@ export default {
   ],
   watch: {
     isFeedbackSent() {
+      this.$nextTick(() => {
+        this.scrollToEnd();
+      });
+    },
+    isBtnYesActive() {
+      this.$nextTick(() => {
+        this.scrollToEnd();
+      });
+    },
+    isBtnNoActive() {
       this.$nextTick(() => {
         this.scrollToEnd();
       });

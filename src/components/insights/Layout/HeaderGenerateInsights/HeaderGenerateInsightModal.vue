@@ -190,9 +190,9 @@ export default {
           .map((e) => this.handleDynamicParam(e))
           .join(', ');
 
-        const prompt = this.$t('insights_header.generate_insight.prompt', {
+        const prompt = `${this.$t('insights_header.generate_insight.prompt', {
           values: dynamicParams,
-        });
+        })} ${this.$t('insights_header.generate_insight.prompt_language')}`;
 
         await this.$store.dispatch('gpt/getInsights', { prompt });
 
@@ -283,7 +283,7 @@ export default {
   padding: $unnnic-spacing-md;
 
   width: 32vw;
-  height: 55vh;
+  height: 75vh;
 
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -352,6 +352,7 @@ export default {
       rgba(59, 65, 77, 0) 91.82%
     );
     pointer-events: none;
+    border-radius: $unnnic-border-radius-sm;
   }
 }
 </style>

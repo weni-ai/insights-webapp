@@ -788,6 +788,11 @@
         "pt-br": "Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: {values}",
         "en": "Analyze the performance of a human service operation's results dashboard. The dashboard displays three main categories: calls in progress, closed and waiting. In addition, evaluate the following metrics: first response time, waiting time and interaction time. Identify efficiency patterns, possible bottlenecks in the service flow and offer suggestions for optimizing response time and team productivity. Data: {values}",
         "es": "Analice el rendimiento del cuadro de mando de resultados de una operación de servicios humanos. El cuadro de mandos muestra tres categorías principales: llamadas en curso, cerradas y en espera. Además, evalúa las siguientes métricas: tiempo de primera respuesta, tiempo de espera y tiempo de interacción. Identifique patrones de eficiencia, posibles cuellos de botella en el flujo de servicio y ofrezca sugerencias para optimizar los tiempos de respuesta y la productividad del equipo. Datos: {values}"
+      },
+      "prompt_language": {
+        "pt-br": "Retorne em Português brasileiro",
+        "en": "Return in English",
+        "es": "Regreso en español"
       }
     }
   },

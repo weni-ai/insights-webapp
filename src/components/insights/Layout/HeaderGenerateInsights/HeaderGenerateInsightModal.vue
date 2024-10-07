@@ -2,6 +2,7 @@
   <Transition>
     <section
       v-if="show"
+      ref="insightModal"
       class="header-generate-insight-modal"
       @click.stop
     >
@@ -43,8 +44,8 @@
           :isRenderFooterFeedback="isRenderFooterFeedback"
           :isBtnYesActive="isBtnYesActive"
           :isBtnNoActive="isBtnNoActive"
-          :feedbackText="feedbackText"
           :isSubmitFeedbackLoading="isSubmitFeedbackLoading"
+          @update-feedback-text="handleFeedbackText"
           @handle-positive-feedback="handlePositiveFeedback"
           @handle-negative-feedback="handleNegativeFeedback"
           @submit-review="submitReview"
@@ -60,6 +61,8 @@ import InsightModalFooter from './InsightModalFooter.vue';
 import firebaseService from '@/services/api/resources/GPT';
 import mitt from 'mitt';
 import { formatSecondsToHumanString } from '@/utils/time';
+import { onClickOutside } from '@vueuse/core';
+import { ref } from 'vue';
 
 const emitter = mitt();
 
@@ -79,6 +82,15 @@ export default {
   },
 
   emits: ['close'],
+
+  setup(_, context) {
+    const insightModal = ref(null);
+    onClickOutside(insightModal, () => context.emit('close'));
+
+    return {
+      insightModal,
+    };
+  },
 
   data() {
     return {
@@ -153,15 +165,8 @@ export default {
         this.isSubmitFeedbackLoading = false;
       }
     },
-    handlePlaceholderTextArea() {
-      if (this.isBtnYesActive)
-        return this.$t(
-          'insights_header.generate_insight.input.placeholder_positive',
-        );
-
-      return this.$t(
-        'insights_header.generate_insight.input.placeholder_negative',
-      );
+    handleFeedbackText(value) {
+      this.feedbackText = value;
     },
     handlePositiveFeedback() {
       if (this.isBtnNoActive) this.isBtnNoActive = false;
@@ -173,6 +178,8 @@ export default {
     },
     handleDynamicParam(widget) {
       const { config, data } = widget;
+
+      if (isNaN(data?.value)) return '';
 
       if (config.data_type === 'sec') {
         return `${widget.name} ${formatSecondsToHumanString(Math.round(data?.value))}`;

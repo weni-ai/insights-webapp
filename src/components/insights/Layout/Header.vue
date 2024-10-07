@@ -21,7 +21,7 @@
         iconCenter="ios_share"
         type="secondary"
         /> -->
-        <HeaderGenerateInsightButton />
+        <HeaderGenerateInsightButton v-if="isRenderInsightButton" />
       </section>
     </section>
   </header>
@@ -59,6 +59,10 @@ export default {
     ...mapGetters({
       dashboardDefault: 'dashboards/dashboardDefault',
     }),
+
+    isRenderInsightButton() {
+      return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
 
     breadcrumbs() {
       const { currentDashboard } = this;

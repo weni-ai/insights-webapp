@@ -49,7 +49,7 @@
         class="footer__feedback__container__area"
       >
         <textarea
-          :value="feedbackText"
+          v-model="feedbackText"
           rows="7"
           class="footer__feedback__textarea"
           :placeholder="handlePlaceholderTextArea()"
@@ -97,10 +97,6 @@ export default {
       type: Boolean,
       required: true,
     },
-    feedbackText: {
-      type: String,
-      required: true,
-    },
     isSubmitFeedbackLoading: {
       type: Boolean,
       required: true,
@@ -110,8 +106,17 @@ export default {
     'handle-negative-feedback',
     'handle-positive-feedback',
     'submit-review',
+    'update-feedback-text',
   ],
+  data() {
+    return {
+      feedbackText: '',
+    };
+  },
   watch: {
+    feedbackText(newValue) {
+      this.$emit('update-feedback-text', newValue);
+    },
     isFeedbackSent() {
       this.$nextTick(() => {
         this.scrollToEnd();

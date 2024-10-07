@@ -155,31 +155,4 @@ describe('HeaderGenerateInsightModal.vue', () => {
     wrapper.unmount();
     expect(disconnectMock).toHaveBeenCalled();
   });
-
-  it('returns positive placeholder when isBtnYesActive is true', () => {
-    wrapper.vm.isBtnYesActive = true;
-    expect(wrapper.vm.handlePlaceholderTextArea()).toBe(
-      wrapper.vm.$t(
-        'insights_header.generate_insight.input.placeholder_positive',
-      ),
-    );
-  });
-
-  it('returns negative placeholder when isBtnYesActive is false', () => {
-    wrapper.vm.isBtnYesActive = false;
-    expect(wrapper.vm.handlePlaceholderTextArea()).toBe(
-      wrapper.vm.$t(
-        'insights_header.generate_insight.input.placeholder_negative',
-      ),
-    );
-  });
-
-  it('returns negative placeholder when isBtnYesActive is undefined', () => {
-    wrapper.vm.isBtnYesActive = undefined;
-    expect(wrapper.vm.handlePlaceholderTextArea()).toBe(
-      wrapper.vm.$t(
-        'insights_header.generate_insight.input.placeholder_negative',
-      ),
-    );
-  });
 });

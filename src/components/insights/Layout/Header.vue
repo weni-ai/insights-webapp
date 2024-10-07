@@ -17,10 +17,11 @@
         <InsightsLayoutHeaderFilters />
         <HeaderDashboardSettings />
         <!-- <UnnnicButton
-          class="clickable"
-          iconCenter="ios_share"
-          type="secondary"
+        class="clickable"
+        iconCenter="ios_share"
+        type="secondary"
         /> -->
+        <HeaderGenerateInsightButton />
       </section>
     </section>
   </header>
@@ -33,6 +34,7 @@ import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
+import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
 
 import moment from 'moment';
 
@@ -43,8 +45,8 @@ export default {
     HeaderSelectDashboard,
     HeaderTagLive,
     InsightsLayoutHeaderFilters,
-
     HeaderDashboardSettings,
+    HeaderGenerateInsightButton,
   },
   computed: {
     ...mapState({

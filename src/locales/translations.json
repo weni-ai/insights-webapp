@@ -721,9 +721,82 @@
       "pt-br": "Falha ao definir o Dashboard {dashboard} como página inicial",
       "en": "Failure when defining the Dashboard {dashboard} as homepage",
       "es": "Falla al definir el Tablero {dashboard} como página de inicio"
+    },
+    "generate_insight": {
+      "title": {
+        "pt-br": "Gerar insight",
+        "en": "Generate insight",
+        "es": "Generar insight"
+      },
+      "generating_insights": {
+        "pt-br": "Gerando insights",
+        "en": "Generating insights",
+        "es": "Generando insights"
+      },
+      "input": {
+        "placeholder_positive": {
+          "pt-br": "Compartilhe sua experiência",
+          "en": "Share your experience",
+          "es": "Comparta su experiencia"  
+        },
+        "placeholder_negative": {
+          "pt-br": "Como podemos melhorar?",
+          "en": "How can we improve?",
+          "es": "¿Cómo podemos mejorar?" 
+        }
+      },
+      "feedback": {
+        "question": {
+          "pt-br": "O Insight fornecido foi útil?",
+          "en": "Was the Insight provided useful?",
+          "es": "¿Fue útil la información proporcionada?"
+        },
+        "complete": {
+          "pt-br": "Obrigado pelo feedback!",
+          "en": "Thanks for the feedback!",
+          "es": "¡Gracias por los comentarios!"
+        }
+      },
+      "button": {
+        "yes": {
+          "pt-br": "Sim",
+          "en": "Yes",
+          "es": "Sí" 
+        },
+        "no": {
+          "pt-br": "Não",
+          "en": "No",
+          "es": "No"
+        },
+        "send": {
+          "pt-br": "Enviar",
+          "en": "Send",
+          "es": "No"
+        }
+      },
+      "by_ai": {
+        "pt-br": "por Meta Llama",
+        "en": "by Meta Llama",
+        "es": "por Meta Llama"
+      },
+      "error": {
+        "pt-br": "Lamentamos, mas infelizmente não foi possível gerar um Insight, verifique sua conexão com internet ou tente novamente mais tarde",
+        "en": "We're sorry, but unfortunately we were unable to generate an Insight, please check your internet connection or try again later",
+        "es": "Lo sentimos, pero desafortunadamente no hemos podido generar un Insight, por favor compruebe su conexión a Internet o inténtelo de nuevo más tarde."
+      },
+      "prompt": {
+        "pt-br": "Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: {values}",
+        "en": "Analyze the performance of a human service operation's results dashboard. The dashboard displays three main categories: calls in progress, closed and waiting. In addition, evaluate the following metrics: first response time, waiting time and interaction time. Identify efficiency patterns, possible bottlenecks in the service flow and offer suggestions for optimizing response time and team productivity. Data: {values}",
+        "es": "Analice el rendimiento del cuadro de mando de resultados de una operación de servicios humanos. El cuadro de mandos muestra tres categorías principales: llamadas en curso, cerradas y en espera. Además, evalúa las siguientes métricas: tiempo de primera respuesta, tiempo de espera y tiempo de interacción. Identifique patrones de eficiencia, posibles cuellos de botella en el flujo de servicio y ofrezca sugerencias para optimizar los tiempos de respuesta y la productividad del equipo. Datos: {values}"
+      },
+      "prompt_language": {
+        "pt-br": "Retorne em Português brasileiro",
+        "en": "Return in English",
+        "es": "Regreso en español"
+      }
     }
   },
-  "new_dashboard": {
+  "new_dashboard": { 
     "title": {
       "pt-br": "Novo dashboard",
       "en": "New dashboard",

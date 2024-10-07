@@ -8,6 +8,7 @@ import reports from './modules/reports';
 import project from './modules/project';
 import widgets from './modules/widgets.ts';
 import onboarding from './modules/onboarding';
+import user from './modules/user';
 
 const store = createStore({
   modules: {
@@ -20,6 +21,7 @@ const store = createStore({
     project,
     widgets,
     onboarding,
+    user,
   },
 });
 

@@ -104,6 +104,7 @@ export default {
       setProject: 'config/setProject',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
+      setEmail: 'user/setEmail',
     }),
 
     ...mapMutations({
@@ -140,6 +141,10 @@ export default {
       });
 
       const sessionUserEmail = parseJwt(newToken)?.email || null;
+
+      if (sessionUserEmail) {
+        this.setEmail(sessionUserEmail);
+      }
 
       initHotjar(sessionUserEmail);
 

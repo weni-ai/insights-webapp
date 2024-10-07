@@ -2,6 +2,7 @@
   <Transition>
     <section
       v-if="show"
+      ref="insightModal"
       class="header-generate-insight-modal"
       @click.stop
     >
@@ -60,6 +61,8 @@ import InsightModalFooter from './InsightModalFooter.vue';
 import firebaseService from '@/services/api/resources/GPT';
 import mitt from 'mitt';
 import { formatSecondsToHumanString } from '@/utils/time';
+import { onClickOutside } from '@vueuse/core';
+import { ref } from 'vue';
 
 const emitter = mitt();
 
@@ -79,6 +82,15 @@ export default {
   },
 
   emits: ['close'],
+
+  setup(_, context) {
+    const insightModal = ref(null);
+    onClickOutside(insightModal, () => context.emit('close'));
+
+    return {
+      insightModal,
+    };
+  },
 
   data() {
     return {
@@ -166,6 +178,8 @@ export default {
     },
     handleDynamicParam(widget) {
       const { config, data } = widget;
+
+      if (isNaN(data?.value)) return '';
 
       if (config.data_type === 'sec') {
         return `${widget.name} ${formatSecondsToHumanString(Math.round(data?.value))}`;

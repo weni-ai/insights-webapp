@@ -43,8 +43,8 @@
           :isRenderFooterFeedback="isRenderFooterFeedback"
           :isBtnYesActive="isBtnYesActive"
           :isBtnNoActive="isBtnNoActive"
-          :feedbackText="feedbackText"
           :isSubmitFeedbackLoading="isSubmitFeedbackLoading"
+          @update-feedback-text="handleFeedbackText"
           @handle-positive-feedback="handlePositiveFeedback"
           @handle-negative-feedback="handleNegativeFeedback"
           @submit-review="submitReview"
@@ -153,15 +153,8 @@ export default {
         this.isSubmitFeedbackLoading = false;
       }
     },
-    handlePlaceholderTextArea() {
-      if (this.isBtnYesActive)
-        return this.$t(
-          'insights_header.generate_insight.input.placeholder_positive',
-        );
-
-      return this.$t(
-        'insights_header.generate_insight.input.placeholder_negative',
-      );
+    handleFeedbackText(value) {
+      this.feedbackText = value;
     },
     handlePositiveFeedback() {
       if (this.isBtnNoActive) this.isBtnNoActive = false;

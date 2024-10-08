@@ -55,6 +55,10 @@
           :text="$t('edit_dashboard.delete_dashboard')"
           @click="showDeleteDashboardModal = true"
         />
+        <section class="config-form__layout">
+          <UnnnicLabel :label="$t('select_layout')" />
+          <LayoutSelector />
+        </section>
       </form>
     </template>
   </UnnnicDrawer>
@@ -77,12 +81,13 @@ import unnnic from '@weni/unnnic-system';
 
 import ProgressBar from '@/components/ProgressBar.vue';
 import ModalDeleteDashboard from './ModalDeleteDashboard.vue';
+import LayoutSelector from '@/components/insights/dashboards/layout/LayoutSelector.vue';
 
 import { Dashboards } from '@/services/api';
 import { Dashboard } from '@/models';
 export default {
   name: 'DrawerDashboardConfig',
-  components: { ProgressBar, ModalDeleteDashboard },
+  components: { ProgressBar, ModalDeleteDashboard, LayoutSelector },
   props: {
     modelValue: {
       type: Boolean,
@@ -283,6 +288,12 @@ export default {
     font-weight: $unnnic-font-weight-regular;
     line-height: $unnnic-line-height-large * 1.25; // 20px
     margin-top: $unnnic-spacing-nano;
+  }
+
+  &__layout {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-xs;
   }
 }
 

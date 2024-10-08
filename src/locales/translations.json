@@ -254,6 +254,11 @@
     "en": "Funnel",
     "es": "Embudo"
   },
+  "select_layout": {
+    "pt-br": "Selecionar o layout:",
+    "en": "Select the layout:",
+    "es": "Selecciona el diseño:"
+  },
   "dashboard_name": {
     "pt-br": "Nome do dashboard",
     "en": "Dashboard name",
@@ -816,11 +821,6 @@
       "pt-br": "Ex: Vendas",
       "en": "Ex: Sales",
       "es": "Ej: Ventas"
-    },
-    "funnel_hint": {
-      "pt-br": "Selecione quanto gráficos de funil deseja no seu dashboard",
-      "en": "Select how many funnel charts you want on your dashboard",
-      "es": "Seleccione cuántos gráficos de embudo desea en su panel"
     },
     "alert": {
       "success": {

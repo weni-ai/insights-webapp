@@ -24,16 +24,20 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script setup lang="ts">
+import { ref, defineEmits } from 'vue';
 import DynamicGrid from './DynamicGrid.vue';
+
+const emit = defineEmits(['layoutSelected']);
 
 const layouts = [1, 2, 3, 0];
 
 const selectedLayout = ref(1);
 
-function selectLayout(layout) {
+function selectLayout(layout: number) {
   selectedLayout.value = layout;
+
+  emit('layoutSelected', layout);
 }
 </script>
 

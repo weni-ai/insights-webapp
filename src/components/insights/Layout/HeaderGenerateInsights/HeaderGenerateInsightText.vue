@@ -56,6 +56,11 @@ export default {
     },
   },
 
+  beforeUnmount() {
+    // If it is closed while typing, in the next iteration the text will be shown in full, which is why we emit this event for this case
+    if (this.isTyping) this.$emit('typingComplete');
+  },
+
   methods: {
     async typeWriter(text, speed) {
       this.isTyping = true;

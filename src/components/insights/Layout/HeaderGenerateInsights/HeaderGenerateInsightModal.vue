@@ -85,7 +85,10 @@ export default {
 
   setup(_, context) {
     const insightModal = ref(null);
-    onClickOutside(insightModal, () => context.emit('close'));
+
+    onClickOutside(insightModal, (event) => {
+      if (event?.pointerType === 'mouse') context.emit('close');
+    });
 
     return {
       insightModal,

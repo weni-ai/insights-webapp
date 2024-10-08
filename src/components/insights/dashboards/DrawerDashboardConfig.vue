@@ -26,20 +26,6 @@
             :placeholder="$t('new_dashboard.dashboard_name_placeholder')"
           />
         </section>
-        <section
-          v-if="!dashboard"
-          class="config-form__input"
-        >
-          <UnnnicLabel :label="$t('funnel')" />
-          <UnnnicSelectSmart
-            v-model="dashboardForm.qtdFunnel"
-            :options="funnelOptions"
-            :placeholder="$t('select')"
-          />
-          <p class="config-form__input-hint">
-            {{ $t('new_dashboard.funnel_hint') }}
-          </p>
-        </section>
         <section class="config-form__input">
           <UnnnicLabel :label="$t('currency')" />
           <UnnnicSelectSmart
@@ -55,9 +41,12 @@
           :text="$t('edit_dashboard.delete_dashboard')"
           @click="showDeleteDashboardModal = true"
         />
-        <section class="config-form__layout">
+        <section
+          v-if="!dashboard"
+          class="config-form__layout"
+        >
           <UnnnicLabel :label="$t('select_layout')" />
-          <LayoutSelector />
+          <LayoutSelector @layout-selected="handleLayoutSelected" />
         </section>
       </form>
     </template>
@@ -103,16 +92,9 @@ export default {
     return {
       dashboardForm: {
         name: '',
-        qtdFunnel: [{ label: '1', value: '1' }],
+        layout: 1,
         currency: [],
       },
-      funnelOptions: [
-        { label: this.$t('select'), value: '' },
-        { label: this.$t('none'), value: '0' },
-        { label: '1', value: '1' },
-        { label: '2', value: '2' },
-        { label: '3', value: '3' },
-      ],
       currencyOptions: [
         { label: this.$t('currency_options.BRL'), value: 'BRL' },
         { label: this.$t('currency_options.USD'), value: 'USD' },
@@ -137,11 +119,7 @@ export default {
       );
 
       if (!this.dashboard) {
-        return !!(
-          commonValidations &&
-          this.dashboardForm.qtdFunnel.length &&
-          this.dashboardForm.qtdFunnel[0].value !== ''
-        );
+        return !!commonValidations;
       }
 
       return commonValidations;
@@ -163,6 +141,9 @@ export default {
       );
       this.dashboardForm.currency = currencyOption ? [currencyOption] : [];
       this.dashboardForm.name = this.dashboard.name;
+    },
+    handleLayoutSelected(value) {
+      this.dashboardForm.layout = value;
     },
     close() {
       this.$emit('close');
@@ -188,10 +169,9 @@ export default {
     },
     createDashboard() {
       this.loadingRequest = true;
-
       Dashboards.createFlowsDashboard({
         dashboardName: this.dashboardForm.name,
-        funnelAmount: Number(this.dashboardForm.qtdFunnel[0].value),
+        funnelAmount: this.dashboardForm.layout,
         currencyType: this.dashboardForm.currency[0].value,
       })
         .then((response) => {
@@ -215,7 +195,7 @@ export default {
             },
             seconds: 5,
           });
-          console.log(error);
+          console.error('createFlowsDashboard', error);
           this.close();
         });
     },
@@ -263,7 +243,7 @@ export default {
             },
             seconds: 5,
           });
-          console.log(error);
+          console.error('updateFlowsDashboard', error);
         })
         .finally(() => {
           this.loadingRequest = false;

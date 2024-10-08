@@ -61,6 +61,8 @@ import InsightModalFooter from './InsightModalFooter.vue';
 import firebaseService from '@/services/api/resources/GPT';
 import mitt from 'mitt';
 import { formatSecondsToHumanString } from '@/utils/time';
+import { onClickOutside } from '@vueuse/core';
+import { ref } from 'vue';
 
 const emitter = mitt();
 
@@ -80,6 +82,18 @@ export default {
   },
 
   emits: ['close'],
+
+  setup(_, context) {
+    const insightModal = ref(null);
+
+    onClickOutside(insightModal, (event) => {
+      if (event?.pointerType === 'mouse') context.emit('close');
+    });
+
+    return {
+      insightModal,
+    };
+  },
 
   data() {
     return {

@@ -27,20 +27,11 @@ const gridLayoutClass = computed(() => {
   return 'grid_layout layout-' + props.numberCards;
 });
 
-const boxes = computed(() => {
-  switch (props.numberCards) {
-    case 0:
-      return new Array(9).fill(null);
-    case 1:
-      return new Array(7).fill(null);
-    case 2:
-      return new Array(5).fill(null);
-    case 3:
-      return new Array(3).fill(null);
-    default:
-      return [];
-  }
-});
+const boxes = computed(() =>
+  props.numberCards >= 0 && props.numberCards <= 3
+    ? new Array(9 - 2 * props.numberCards).fill(null)
+    : [],
+);
 
 const getBoxClass = (index: number) => {
   const defaultClass = props.active ? 'box box-active' : 'box';

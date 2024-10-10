@@ -17,6 +17,7 @@
 import FilterDate from './FilterDate.vue';
 import FilterInputText from './FilterInputText.vue';
 import FilterSelect from './FilterSelect.vue';
+import FilterSelectDate from './FilterSelectDate.vue';
 import { findMatchingDate } from '@/utils/time';
 import i18n from '@/utils/plugins/i18n';
 
@@ -47,6 +48,7 @@ export default {
   computed: {
     currentComponent() {
       const componentMap = {
+        select_date_range: FilterSelectDate,
         date_range: FilterDate,
         input_text: FilterInputText,
         select: FilterSelect,
@@ -81,8 +83,11 @@ export default {
             };
 
       const mappingProps = {
-        date_range: {
+        select_date_range: {
           modelValue: treatedModelValueWithLabel,
+        },
+        date_range: {
+          modelValue: treatedModelValue,
         },
         input_text: {},
         select: {
@@ -104,11 +109,14 @@ export default {
     treatedModelValue() {
       const { modelValue, filter } = this;
 
+      const dateModel = {
+        start: modelValue?.[filter.start_sufix],
+        end: modelValue?.[filter.end_sufix],
+      };
+
       const modelValuesMap = {
-        date_range: {
-          start: modelValue?.[filter.start_sufix],
-          end: modelValue?.[filter.end_sufix],
-        },
+        date_range: dateModel,
+        select_date_range: dateModel,
       };
 
       return modelValuesMap[filter.type] || modelValue;
@@ -117,13 +125,17 @@ export default {
 
   methods: {
     updateModelValue(value) {
+      const dateModel = {
+        [this.filter.start_sufix]: value?.start,
+        [this.filter.end_sufix]: value?.end,
+      };
+
       const modelValuesMap = {
-        date_range: {
-          [this.filter.start_sufix]: value?.start,
-          [this.filter.end_sufix]: value?.end,
-        },
+        select_date_range: dateModel,
+        date_range: dateModel,
         select: value?.[0]?.value,
       };
+
       this.$emit(
         'update:model-value',
         modelValuesMap[this.filter.type] || value,

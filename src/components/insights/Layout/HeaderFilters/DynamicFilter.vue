@@ -17,6 +17,8 @@
 import FilterDate from './FilterDate.vue';
 import FilterInputText from './FilterInputText.vue';
 import FilterSelect from './FilterSelect.vue';
+import { findMatchingDate } from '@/utils/time';
+import i18n from '@/utils/plugins/i18n';
 
 export default {
   name: 'DynamicFilter',
@@ -55,6 +57,7 @@ export default {
 
     filterProps() {
       const { disabled, treatedModelValue } = this;
+
       const { type, placeholder, source, depends_on, key_value_field } =
         this.filter;
 
@@ -66,9 +69,20 @@ export default {
         dependsOnValue: this.dependsOnValue,
       };
 
+      const treatedModelValueWithLabel =
+        treatedModelValue && treatedModelValue.start
+          ? findMatchingDate(treatedModelValue, i18n.global.t)
+          : {
+              label: '-',
+              value: {
+                start: '',
+                end: '',
+              },
+            };
+
       const mappingProps = {
         date_range: {
-          modelValue: treatedModelValue,
+          modelValue: treatedModelValueWithLabel,
         },
         input_text: {},
         select: {
@@ -89,6 +103,7 @@ export default {
 
     treatedModelValue() {
       const { modelValue, filter } = this;
+
       const modelValuesMap = {
         date_range: {
           start: modelValue?.[filter.start_sufix],
@@ -109,7 +124,6 @@ export default {
         },
         select: value?.[0]?.value,
       };
-
       this.$emit(
         'update:model-value',
         modelValuesMap[this.filter.type] || value,

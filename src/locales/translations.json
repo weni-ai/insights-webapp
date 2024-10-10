@@ -314,6 +314,23 @@
     "en": "MM/DD/YYYY",
     "es": "DD/MM/YYYY"
   },
+  "select_date": {
+    "yesterday": {
+      "pt-br": "Ontem ({date})",
+      "en": "Yesterday ({date})",
+      "es": "Ayer ({date})"
+    },
+    "last_days": {
+      "pt-br": "Últimos {value} dias ({date})",
+      "en": "Last {value} days ({date})",
+      "es": "Últimos {value} días ({date})"
+    },
+    "previous_month": {
+      "pt-br": "Mês anterior ({date})",
+      "en": "Previous month ({date})",
+      "es": "Mes anterior ({date})"
+    }
+  },
   "save_error": {
     "pt-br": "Erro ao salvar, tente novamente",
     "en": "Error saving, please try again",

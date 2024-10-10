@@ -3,6 +3,7 @@
     v-model="currentDate"
     :options="dates"
     size="md"
+    class="filter-date"
     @update:model-value="updateCurrentDate"
   />
 </template>
@@ -77,22 +78,29 @@ const updateCurrentDate = (option) => {
 </script>
 
 <style lang="scss" scoped>
-// .dropdown class comes from the unnnic component and is used here to override its style
-.filter-date.dropdown {
-  display: grid;
-  height: 100%;
+.filter-date {
+  :deep(.input) {
+    color: $unnnic-color-neutral-darkest;
 
-  :deep(.unnnic-form-input) {
-    height: 100%;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-gt;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-line-height-large * 1.375;
+  }
 
-    &.text-input > .unnnic-icon {
-      transform: translateY(-50%);
-      top: 50%;
+  :deep(.unnnic-select-smart-option--selectable) {
+    &:hover {
+      color: $unnnic-color-weni-600;
+      font-weight: $unnnic-font-weight-bold;
     }
 
-    .input {
-      font-size: $unnnic-font-size-body-gt;
-    }
+    color: $unnnic-color-neutral-darkest;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-gt;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-line-height-large * 1.375;
   }
 }
 </style>

@@ -20,7 +20,7 @@
       class="insights-layout-header-filters_dynamic_container"
     >
       <DynamicFilter
-        :filter="currentDashboardFilters[0]"
+        :filter="filter"
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
         @update:model-value="updateFilter"
       />
@@ -69,6 +69,17 @@ export default {
       return appliedFiltersLength
         ? `${this.$t('insights_header.filters')} (${appliedFiltersLength})`
         : this.$t('insights_header.filters');
+    },
+    filter() {
+      const filter = this.currentDashboardFilters[0];
+
+      if (filter.type === 'date_range')
+        return {
+          ...filter,
+          type: 'select_date_range',
+        };
+
+      return filter;
     },
   },
 

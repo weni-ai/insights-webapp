@@ -45,11 +45,13 @@ function selectLayout(layout: number) {
 .layout_selector {
   display: flex;
   gap: $unnnic-spacing-sm;
+  flex-wrap: wrap;
 }
 
 .layout_button {
-  width: 79.75px;
-  height: 49px;
+  width: 100%;
+  max-width: 118px;
+  aspect-ratio: 1.6;
   cursor: pointer;
   border-radius: $unnnic-spacing-nano;
   padding: $unnnic-spacing-nano;
@@ -58,6 +60,7 @@ function selectLayout(layout: number) {
 
   &:hover {
     border-color: $unnnic-color-neutral-soft;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
   }
 
   &_container {
@@ -71,6 +74,7 @@ function selectLayout(layout: number) {
     &-active {
       border-color: $unnnic-color-weni-600;
       background-color: $unnnic-color-weni-50;
+      box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
     }
   }
 

@@ -45,7 +45,6 @@ function selectLayout(layout: number) {
 .layout_selector {
   display: flex;
   gap: $unnnic-spacing-sm;
-  flex-wrap: wrap;
 }
 
 .layout_button {
@@ -74,13 +73,13 @@ function selectLayout(layout: number) {
     &-active {
       border-color: $unnnic-color-weni-600;
       background-color: $unnnic-color-weni-50;
-      box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
     }
   }
 
   &-active {
     background-color: $unnnic-color-weni-50;
     border-color: $unnnic-color-neutral-soft;
+    box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.1);
   }
 }
 </style>

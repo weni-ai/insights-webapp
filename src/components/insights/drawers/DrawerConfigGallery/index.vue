@@ -93,6 +93,7 @@ export default {
 
       const optionsMap = {
         card: createOptions(['executions', 'flow_result', 'data_crossing']),
+        empty_widget: createOptions(['funnel', 'vtex']),
       };
 
       return optionsMap[this.widget?.type] || [];

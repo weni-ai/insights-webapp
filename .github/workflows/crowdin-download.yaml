@@ -2,7 +2,7 @@ name: Crowdin Action
 
 on:
   schedule:
-    - cron: '0 20 * * *'
+    - cron: '0 14 * * *'
 
 permissions:
   contents: write

@@ -1,6 +1,6 @@
 {
   "human_service_dashboard": {
-    "title": "Human support",
+    "title": "Human service",
     "peaks_in_human_service": "Peak of open chats per hour",
     "closed": "Closeds",
     "in_progress": "Ongoing",

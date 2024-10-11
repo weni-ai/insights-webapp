@@ -63,7 +63,7 @@ export default {
         table_dynamic_by_filter: TableDynamicByFilter,
         table_group: TableGroup,
         card: CardDashboard,
-        empty_column: CardEmpty,
+        empty_widget: CardEmpty,
         insight: null, // TODO: Create Insight component
       };
 
@@ -123,7 +123,7 @@ export default {
           configurable: is_configurable,
           configured: this.isConfigured,
         },
-        empty_column: {
+        empty_widget: {
           widget: this.widget,
         },
       };
@@ -168,7 +168,7 @@ export default {
         graph_column: {
           seeMore: () => this.redirectToReport(),
         },
-        empty_column: {
+        empty_widget: {
           openConfig: () => this.$emit('open-config'),
         },
         graph_funnel: {

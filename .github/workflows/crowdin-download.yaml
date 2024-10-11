@@ -1,8 +1,8 @@
-name: Crowdin Action
+name: Crowdin Download
 
 on:
   schedule:
-    - cron: '0 15 * * *'
+    - cron: '* * * * *'
 
 permissions:
   contents: write

@@ -12,6 +12,7 @@ import { mapActions, mapState } from 'vuex';
 import BarChart from '@/components/insights/charts/BarChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
+import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
@@ -62,6 +63,7 @@ export default {
         table_dynamic_by_filter: TableDynamicByFilter,
         table_group: TableGroup,
         card: CardDashboard,
+        empty_column: CardEmpty,
         insight: null, // TODO: Create Insight component
       };
 
@@ -121,6 +123,9 @@ export default {
           configurable: is_configurable,
           configured: this.isConfigured,
         },
+        empty_column: {
+          widget: this.widget,
+        },
       };
 
       return { ...defaultProps, ...mappingProps[type] };
@@ -162,6 +167,9 @@ export default {
         },
         graph_column: {
           seeMore: () => this.redirectToReport(),
+        },
+        empty_column: {
+          openConfig: () => this.$emit('open-config'),
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),

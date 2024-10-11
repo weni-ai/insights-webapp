@@ -1,0 +1,291 @@
+{
+  "human_service_dashboard": {
+    "title": "Human support",
+    "peaks_in_human_service": "Peak of open chats per hour",
+    "closed": "Closeds",
+    "in_progress": "Ongoing",
+    "response_time": "Response time",
+    "waiting_time": "Waiting time",
+    "awaiting_service": "Waiting for service",
+    "interaction_time": "Interaction time"
+  },
+  "table_dynamic_by_filter": {
+    "status": "Status",
+    "chats_in_period": "Chats in the period"
+  },
+  "table_group": {
+    "contact": "Contact",
+    "urn": "URN",
+    "agent": "Agent",
+    "created_on": "Start",
+    "ended_at": "End",
+    "sector": "Sector",
+    "queue": "Queue",
+    "tags": "Tags"
+  },
+  "filter": {
+    "agent": {
+      "label": "Agent",
+      "placeholder": "Select agent"
+    },
+    "contact": {
+      "label": "Contact",
+      "placeholder": "Name or URN of the contact"
+    },
+    "created_on": {
+      "label": "Date",
+      "placeholder": ""
+    },
+    "queue": {
+      "label": "Queue",
+      "placeholder": "Select queue"
+    },
+    "sector": {
+      "label": "Sector",
+      "placeholder": "Select sector"
+    },
+    "tags": {
+      "label": "Tags",
+      "placeholder": "Select tag"
+    }
+  },
+  "agent": "Agent",
+  "online_agents": "Online agents",
+  "chats_per_agents": "Chats per agent",
+  "closeds": "Closeds",
+  "in_progress": "Ongoing",
+  "waiting": "Waiting",
+  "status": "Status",
+  "metric": "Metric",
+  "metrics": "Metrics",
+  "flow": "Flow",
+  "flows": "Flows",
+  "select": "Select",
+  "report": "Report",
+  "you": "You",
+  "none": "None",
+  "currency": "Currency",
+  "funnel": "Funnel",
+  "dashboard_name": "Dashboard name",
+  "add": "Add",
+  "view_more": "View more",
+  "ex": "Ex:",
+  "cancel": "Cancel",
+  "save": "Save",
+  "delete": "Delete",
+  "confirmation": "Confirmation",
+  "clear_fields": "Clear fields",
+  "today": "Today",
+  "date_format": "MM/DD/YYYY",
+  "save_error": "Error saving, please try again",
+  "reset": "Reset",
+  "onboarding": {
+    "welcome_modal": {
+      "title": "New in the area, get to know Insights",
+      "text": "We are happy to introduce your new tool for tracking the success of your operation here at Weni 🎉",
+      "button": {
+        "go": "Let's go",
+        "ignore": "Ignore"
+      }
+    },
+    "complete_modal": {
+      "title": "Complete tour! 🎉",
+      "text": "Congratulations, now you are closer to improving your operation based on the data :)"
+    }
+  },
+  "widgets": {
+    "reset": "Reset widget",
+    "info_reset": "When reset, the configured data will be lost.",
+    "success_reset": "The widget was successfully reset",
+    "error_reset": "It was not possible to reset the widget. Please try again",
+    "metric_error": "Error when seeking @.lower:metric",
+    "card": {
+      "error_description": "Configure the origin @.lower:flow again to obtain valid data",
+      "metric_empty": "Configure",
+      "metric_set": "Set @.lower:metric"
+    },
+    "graph_funnel": {
+      "title": "Funnel",
+      "not_configured_description": "Select the @.lower:flows you want to map to assemble your project's funnel view!",
+      "select_flows": "@:select @.lower:flows",
+      "flow_executions": "@:flow executions"
+    }
+  },
+  "drawers": {
+    "metric_saved": "@:metric saved successfully",
+    "reset_widget": "Reset widget",
+    "config_gallery": {
+      "title": "Widget gallery",
+      "description": "Choose the type of widget you want to configure:",
+      "options": {
+        "executions": {
+          "title": "Execution",
+          "description": "Visualize the total executions of a @.lower:flow"
+        },
+        "flow_result": {
+          "title": "@:flow result",
+          "description": "Brings a @.lower:flow result and allows basic operations"
+        },
+        "data_crossing": {
+          "title": "Data crossing",
+          "description": "Combine two values to get a metric"
+        }
+      }
+    },
+    "config_card": {
+      "title": "Define @.lower:metric for the card",
+      "name_card": {
+        "label": "Name card",
+        "placeholder": "@:ex Project @.lower:flows"
+      },
+      "select_origin_flow": "@:select origin @.lower:flow",
+      "result_type": "Type of result",
+      "flow_result": {
+        "label": "@:flow result",
+        "placeholder": "Search or select the result"
+      },
+      "operation": "Operation",
+      "format": "Format",
+      "checkbox": {
+        "currency": "Currency"
+      },
+      "radios": {
+        "executions": "Execution",
+        "results": "Flow result",
+        "total": "Total",
+        "highest_value": "Highest value",
+        "avg": "Average",
+        "lowest_value": "Lower value",
+        "recurrence": "Recurrence",
+        "multiply": "Multiply",
+        "sum": "Sum",
+        "min": "Minimum",
+        "max": "Maximum",
+        "difference": "Difference",
+        "percentage": "Percentage"
+      },
+      "total_flow_executions": "Total @.lower:flow executions",
+      "first_value": "First value",
+      "second_value": "Second value"
+    },
+    "config_funnel": {
+      "title": "Define chart @.lower:metrics",
+      "description": "Select at least three @.lower:flows to get the funnel chart visualization",
+      "add_metric": "@:add @.lower:metric",
+      "first_metric": "First @.lower:metric",
+      "second_metric": "Second @.lower:metric",
+      "third_metric": "Third @.lower:metric",
+      "fourth_metric": "Fourth @.lower:metric",
+      "fifth_metric": "Fifth @.lower:metric",
+      "select_flow": "@:select @.lower:flow"
+    }
+  },
+  "metric_accordion": {
+    "name_metric": {
+      "label": "Name @.lower:metric",
+      "placeholder": "@:ex Project @.lower:flows"
+    },
+    "select_origin_flow": "@:select origin @.lower:flow"
+  },
+  "insights_header": {
+    "filters": "Filters",
+    "filtrate": "Filtrate",
+    "clear_filters": "Clear filters",
+    "add_new_dashboard": "New dashboard",
+    "set_default_dashboard_success": "Now the Dashboard {dashboard} is your homepage",
+    "set_default_dashboard_error": "Failure when defining the Dashboard {dashboard} as homepage",
+    "generate_insight": {
+      "title": "Generate insight",
+      "generating_insights": "Generating insights",
+      "input": {
+        "placeholder_positive": "Share your experience",
+        "placeholder_negative": "How can we improve?"
+      },
+      "feedback": {
+        "question": "Was the Insight provided useful?",
+        "complete": "Thanks for the feedback!"
+      },
+      "button": {
+        "yes": "Yes",
+        "no": "No",
+        "send": "Send"
+      },
+      "by_ai": "by Meta Llama",
+      "error": "We're sorry, but unfortunately we were unable to generate an Insight, please check your internet connection or try again later",
+      "prompt": "Analyze the performance of a human service operation's results dashboard. The dashboard displays three main categories: calls in progress, closed and waiting. In addition, evaluate the following metrics: first response time, waiting time and interaction time. Identify efficiency patterns, possible bottlenecks in the service flow and offer suggestions for optimizing response time and team productivity. Data: {values}",
+      "prompt_language": "Return in English"
+    }
+  },
+  "new_dashboard": {
+    "title": "New dashboard",
+    "create_dashboard": "Create dashboard",
+    "creating_new_dashboard": "Creating new dashboard",
+    "dashboard_name_placeholder": "Ex: Sales",
+    "funnel_hint": "Select how many funnel charts you want on your dashboard",
+    "alert": {
+      "success": "Dashboard created successfully",
+      "error": "Failed to create dashboard"
+    }
+  },
+  "edit_dashboard": {
+    "title": "Edit dashboard",
+    "delete_dashboard": "Delete dashboard",
+    "delete_dashboard_notice": "This action will be irreversible. To confirm the action, please type the name of the dashboard",
+    "alert": {
+      "success": "Dashboard updated successfully",
+      "error": "Failed to update dashboard"
+    }
+  },
+  "delete_dashboard": {
+    "title": "Delete dashboard",
+    "notice": "This action will be irreversible. To confirm the action, please type the name of the dashboard",
+    "alert": {
+      "success": "Dashboard removed successfully",
+      "error": "Failed to delete dashboard"
+    }
+  },
+  "currency_options": {
+    "BRL": "R$ - Brazilian Real",
+    "USD": "$ - Dollar",
+    "EUR": "€ - Euro",
+    "ARS": "$ - Peso"
+  },
+  "dashboard_onboarding": {
+    "step": {
+      "create_dashboard": {
+        "title": "Create a custom Dashboard",
+        "description": "Create as many Dashboards as you want. Click on <b>New dashboard</b> to get started"
+      }
+    }
+  },
+  "widgets_onboarding": {
+    "card": {
+      "step": {
+        "define_metric": {
+          "title": "Define metric",
+          "description": "Click here to define the metric you want to view"
+        },
+        "select_widget_type": {
+          "title": "Select widget",
+          "description": "Select the type of metric you want to configure. If you have any questions, start by testing Executions"
+        },
+        "set_metric": {
+          "title": "Defining metric",
+          "description": "After selecting the type of metric, choose a flow that brings relevant values to your operation, fill in the rest, and save!"
+        }
+      }
+    },
+    "funnel": {
+      "step": {
+        "define_metric": {
+          "title": "Defining metrics for the chart",
+          "description": "Select the main flows of your operation to generate a funnel visualization and track the journey of your contacts"
+        },
+        "fill_metric": {
+          "title": "Fill metrics",
+          "description": "Provide an easy name for your metric and select the flow from which you want to count the executions"
+        }
+      }
+    }
+  }
+}

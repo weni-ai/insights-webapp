@@ -9,6 +9,7 @@
         ? 'drawer-card-metric-config'
         : 'drawer-graph-funnel'
     "
+    size="md"
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
@@ -131,6 +132,29 @@ export default {
             ),
           },
         },
+        empty_widget: {
+          default: {
+            title: $t('drawers.config_card.title'),
+          },
+          executions: {
+            title: $t(`drawers.config_gallery.options.executions.title`),
+            description: $t(
+              `drawers.config_gallery.options.executions.description`,
+            ),
+          },
+          flow_result: {
+            title: $t(`drawers.config_gallery.options.flow_result.title`),
+            description: $t(
+              `drawers.config_gallery.options.flow_result.description`,
+            ),
+          },
+          data_crossing: {
+            title: $t(`drawers.config_gallery.options.data_crossing.title`),
+            description: $t(
+              `drawers.config_gallery.options.data_crossing.description`,
+            ),
+          },
+        },
       };
 
       return configMap[this.widget?.type][this.configType || 'default'] || {};
@@ -142,6 +166,10 @@ export default {
           component: DrawerConfigContentFunnel,
         },
         card: {
+          loading: SkeletonConfigContentCard,
+          component: DrawerConfigContentCard,
+        },
+        empty_widget: {
           loading: SkeletonConfigContentCard,
           component: DrawerConfigContentCard,
         },
@@ -158,6 +186,7 @@ export default {
 
       const mappingProps = {
         card: { type: this.configType },
+        empty_widget: { type: this.configType },
       };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
@@ -190,6 +219,9 @@ export default {
           newWidget = this.createGraphFunnelWidget;
           break;
         case 'card':
+          newWidget = this.createCardWidget;
+          break;
+        case 'empty_widget':
           newWidget = this.createCardWidget;
           break;
       }

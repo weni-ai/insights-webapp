@@ -1,6 +1,9 @@
 ---
 name: Crowdin Download
 on:
+  push:
+    branches:
+      - 'feat/crowdin-stg'
   schedule:
     - cron: "* * * * *"
 permissions:

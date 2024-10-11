@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn translations:build && vite",
-    "build": "yarn translations:build && vite build",
+    "dev": "vite",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -52,7 +52,6 @@
     "sass": "^1.69.7",
     "sass-loader": "^13.3.3",
     "typescript": "^5.4.5",
-    "unified-translations": "^1.1.1",
     "vite": "^5.0.10",
     "vitest": "^2.0.5",
     "vue-eslint-parser": "^9.4.2"

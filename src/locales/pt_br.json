@@ -1,0 +1,291 @@
+{
+  "human_service_dashboard": {
+    "title": "Atendimento humano",
+    "peaks_in_human_service": "Pico de chats abertos por hora",
+    "closed": "Encerrados",
+    "in_progress": "Em andamento",
+    "response_time": "Tempo de resposta",
+    "waiting_time": "Tempo de espera",
+    "awaiting_service": "Aguardando atendimento",
+    "interaction_time": "Tempo de interação"
+  },
+  "table_dynamic_by_filter": {
+    "status": "Status",
+    "chats_in_period": "Chats no período"
+  },
+  "table_group": {
+    "contact": "Contato",
+    "urn": "URN",
+    "agent": "Agente",
+    "created_on": "Início",
+    "ended_at": "Fim",
+    "sector": "Setor",
+    "queue": "Fila",
+    "tags": "Tags"
+  },
+  "filter": {
+    "agent": {
+      "label": "Agente",
+      "placeholder": "Selecione agente"
+    },
+    "contact": {
+      "label": "Contato",
+      "placeholder": "Nome ou URN do contato"
+    },
+    "created_on": {
+      "label": "Data",
+      "placeholder": ""
+    },
+    "queue": {
+      "label": "Fila",
+      "placeholder": "Selecione fila"
+    },
+    "sector": {
+      "label": "Setor",
+      "placeholder": "Selecione setor"
+    },
+    "tags": {
+      "label": "Tags",
+      "placeholder": "Selecione tag"
+    }
+  },
+  "agent": "Agente",
+  "online_agents": "Agentes online",
+  "chats_per_agents": "Chats por agente",
+  "closeds": "Encerrados",
+  "in_progress": "Em andamento",
+  "waiting": "Aguardando",
+  "status": "Status",
+  "metric": "Métrica",
+  "metrics": "Métricas",
+  "flow": "Fluxo",
+  "flows": "Fluxos",
+  "select": "Selecionar",
+  "report": "Relatório",
+  "you": "Você",
+  "none": "Nenhum",
+  "currency": "Moeda",
+  "funnel": "Funil",
+  "dashboard_name": "Nome do dashboard",
+  "add": "Adicionar",
+  "view_more": "Ver mais",
+  "ex": "Ex:",
+  "cancel": "Cancelar",
+  "save": "Salvar",
+  "delete": "Excluir",
+  "confirmation": "Confirmação",
+  "clear_fields": "Limpar campos",
+  "today": "Hoje",
+  "date_format": "DD/MM/YYYY",
+  "save_error": "Erro ao salvar, tente novamente",
+  "reset": "Resetar",
+  "onboarding": {
+    "welcome_modal": {
+      "title": "Novidade na área, conheça o Insights",
+      "text": "Estamos felizes em introduzir sua nova ferramenta para acompanhamento do sucesso da sua operação aqui na Weni 🎉",
+      "button": {
+        "go": "Vamos lá",
+        "ignore": "Ignorar"
+      }
+    },
+    "complete_modal": {
+      "title": "Tour completa! 🎉",
+      "text": "Parabéns, agora você está mais perto de melhorar sua operação com base nos dados :)"
+    }
+  },
+  "widgets": {
+    "reset": "Resetar widget",
+    "info_reset": "Ao resetar, os dados configurados serão perdidos.",
+    "success_reset": "O widget foi resetado com sucesso",
+    "error_reset": "Não foi possível resetar o widget. Por favor, tente novamente",
+    "metric_error": "Erro ao buscar @.lower:metric",
+    "card": {
+      "error_description": "Configure novamente o @.lower:flow de origem para obter dados válidos",
+      "metric_empty": "Configurar",
+      "metric_set": "Definir @.lower:metric"
+    },
+    "graph_funnel": {
+      "title": "Funil",
+      "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
+      "select_flows": "@:select @.lower:flows",
+      "flow_executions": "Execuções do @.lower:flow"
+    }
+  },
+  "drawers": {
+    "metric_saved": "@:metric salva com sucesso",
+    "reset_widget": "Resetar widget",
+    "config_gallery": {
+      "title": "Galeria de widgets",
+      "description": "Escolha o tipo de widget que deseja configurar:",
+      "options": {
+        "executions": {
+          "title": "Execuções",
+          "description": "Visualize o total de execuções de um @.lower:flow"
+        },
+        "flow_result": {
+          "title": "Resultado de @.lower:flow",
+          "description": "Traz um resultado de @.lower:flow e permite operações básicas"
+        },
+        "data_crossing": {
+          "title": "Cruzamento de dados",
+          "description": "Combine dois valores para obter uma métrica"
+        }
+      }
+    },
+    "config_card": {
+      "title": "Definir @.lower:metric para o card",
+      "name_card": {
+        "label": "Nomear card",
+        "placeholder": "@:ex @.lower:flows do projeto"
+      },
+      "select_origin_flow": "@:select @.lower:flow de origem",
+      "result_type": "Tipo de resultado",
+      "flow_result": {
+        "label": "Resultado do @.lower:flow",
+        "placeholder": "Pesquise ou selecione o resultado"
+      },
+      "operation": "Operação",
+      "format": "Formatar",
+      "checkbox": {
+        "currency": "Moeda"
+      },
+      "radios": {
+        "executions": "Execuções",
+        "results": "Resultado de fluxo",
+        "total": "Total",
+        "highest_value": "Maior valor",
+        "avg": "Média",
+        "lowest_value": "Menor valor",
+        "recurrence": "Recorrência",
+        "multiply": "Multiplicar",
+        "sum": "Soma",
+        "min": "Mínimo",
+        "max": "Máximo",
+        "difference": "Diferença",
+        "percentage": "Porcentagem"
+      },
+      "total_flow_executions": "Total de execuções do @.lower:flow",
+      "first_value": "Primeiro valor",
+      "second_value": "Segundo valor"
+    },
+    "config_funnel": {
+      "title": "Definir @.lower:metrics do gráfico",
+      "description": "Selecione pelo menos três @.lower:flows para obter a visualização em gráfico de funil",
+      "add_metric": "@:add @.lower:metric",
+      "first_metric": "Primeira @.lower:metric",
+      "second_metric": "Segunda @.lower:metric",
+      "third_metric": "Terceira @.lower:metric",
+      "fourth_metric": "Quarta @.lower:metric",
+      "fifth_metric": "Quinta @.lower:metric",
+      "select_flow": "@:select @.lower:flow"
+    }
+  },
+  "metric_accordion": {
+    "name_metric": {
+      "label": "Nomear @.lower:metric",
+      "placeholder": "@:ex @.lower:flows do projeto"
+    },
+    "select_origin_flow": "@:select @.lower:flow de origem"
+  },
+  "insights_header": {
+    "filters": "Filtros",
+    "filtrate": "Filtrar",
+    "clear_filters": "Limpar filtros",
+    "add_new_dashboard": "Novo dashboard",
+    "set_default_dashboard_success": "Agora o Dashboard {dashboard} é sua página inicial",
+    "set_default_dashboard_error": "Falha ao definir o Dashboard {dashboard} como página inicial",
+    "generate_insight": {
+      "title": "Gerar insight",
+      "generating_insights": "Gerando insights",
+      "input": {
+        "placeholder_positive": "Compartilhe sua experiência",
+        "placeholder_negative": "Como podemos melhorar?"
+      },
+      "feedback": {
+        "question": "O Insight fornecido foi útil?",
+        "complete": "Obrigado pelo feedback!"
+      },
+      "button": {
+        "yes": "Sim",
+        "no": "Não",
+        "send": "Enviar"
+      },
+      "by_ai": "por Meta Llama",
+      "error": "Lamentamos, mas infelizmente não foi possível gerar um Insight, verifique sua conexão com internet ou tente novamente mais tarde",
+      "prompt": "Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: {values}",
+      "prompt_language": "Retorne em Português brasileiro"
+    }
+  },
+  "new_dashboard": {
+    "title": "Novo dashboard",
+    "create_dashboard": "Criar dashboard",
+    "creating_new_dashboard": "Criando novo dashboard",
+    "dashboard_name_placeholder": "Ex: Vendas",
+    "funnel_hint": "Selecione quanto gráficos de funil deseja no seu dashboard",
+    "alert": {
+      "success": "Dashboard criado com sucesso",
+      "error": "Falha ao criar dashboard"
+    }
+  },
+  "edit_dashboard": {
+    "title": "Editar dashboard",
+    "delete_dashboard": "Deletar dashboard",
+    "delete_dashboard_notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+    "alert": {
+      "success": "Dashboard atualizado com sucesso",
+      "error": "Falha ao atualizar dashboard"
+    }
+  },
+  "delete_dashboard": {
+    "title": "Deletar dashboard",
+    "notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+    "alert": {
+      "success": "Dashboard excluido com sucesso",
+      "error": "Falha ao excluir dashboard"
+    }
+  },
+  "currency_options": {
+    "BRL": "R$ - Real",
+    "USD": "$ - Dólar",
+    "EUR": "€ - Euro",
+    "ARS": "$ - Peso"
+  },
+  "dashboard_onboarding": {
+    "step": {
+      "create_dashboard": {
+        "title": "Crie um Dashboard personalizado",
+        "description": "Crie quantos Dashboards quiser. Clique em <b>Novo dashboard</b> para começar"
+      }
+    }
+  },
+  "widgets_onboarding": {
+    "card": {
+      "step": {
+        "define_metric": {
+          "title": "Definir métrica",
+          "description": "Clique aqui para definir a métrica que deseja visualizar"
+        },
+        "select_widget_type": {
+          "title": "Selecionar widget",
+          "description": "Selecione o tipo de métrica que deseja configurar, caso tenha dúvidas comece testando o Execuções"
+        },
+        "set_metric": {
+          "title": "Definindo métrica",
+          "description": "Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!"
+        }
+      }
+    },
+    "funnel": {
+      "step": {
+        "define_metric": {
+          "title": "Definindo métricas para gráfico",
+          "description": "Selecione os principais fluxos da sua operação para gerar uma visualização em funil e acompanhar a jornada dos seus contatos"
+        },
+        "fill_metric": {
+          "title": "Preencher métricas",
+          "description": "Informe um nome fácil para sua métrica e selecione o fluxo de onde deseja contabilizar as execuções"
+        }
+      }
+    }
+  }
+}

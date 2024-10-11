@@ -4,13 +4,6 @@ jobs:
   lint-test-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Check environment variables
-        run: |
-          echo "CROWDIN_PROJECT_ID=$CROWDIN_PROJECT_ID"
-          echo "CROWDIN_API_TOKEN=$CROWDIN_API_TOKEN"
-        env:
-          CROWDIN_PROJECT_ID: ${{ secrets.CROWDIN_PROJECT_ID }}
-          CROWDIN_API_TOKEN: ${{ secrets.CROWDIN_API_TOKEN }}
       - name: Checkout
         uses: actions/checkout@v2
       

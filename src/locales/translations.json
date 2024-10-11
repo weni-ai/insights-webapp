@@ -554,6 +554,30 @@
             "en": "Combine two values to get a metric",
             "es": "Combinar dos valores para obtener una métrica"
           }
+        },
+        "funnel": {
+          "title": {
+            "pt-br": "Funil",
+            "en": "Funnel",
+            "es": "Embudo"
+          },
+          "description": {
+            "pt-br": "Selecione dados para visualizar em um gráfico de funil",
+            "en": "Select data to visualize in a funnel graph",
+            "es": "Seleccionar datos para visualizarlos en un gráfico de embudo"
+          }
+        },
+        "vtex": {
+          "title": {
+            "pt-br": "VTEX",
+            "en": "VTEX",
+            "es": "VTEX"
+          },
+          "description": {
+            "pt-br": "Visualize seus dados de vendas VTEX",
+            "en": "View your VTEX sales data",
+            "es": "Visualice sus datos de ventas VTEX"
+          }
         }
       }
     },

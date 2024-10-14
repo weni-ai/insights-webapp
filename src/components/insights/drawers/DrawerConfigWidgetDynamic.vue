@@ -136,22 +136,14 @@ export default {
           default: {
             title: $t('drawers.config_card.title'),
           },
-          executions: {
-            title: $t(`drawers.config_gallery.options.executions.title`),
-            description: $t(
-              `drawers.config_gallery.options.executions.description`,
-            ),
+          funnel: {
+            title: $t('drawers.config_funnel.title'),
+            description: $t('drawers.config_funnel.description'),
           },
-          flow_result: {
+          vtex: {
             title: $t(`drawers.config_gallery.options.flow_result.title`),
             description: $t(
               `drawers.config_gallery.options.flow_result.description`,
-            ),
-          },
-          data_crossing: {
-            title: $t(`drawers.config_gallery.options.data_crossing.title`),
-            description: $t(
-              `drawers.config_gallery.options.data_crossing.description`,
             ),
           },
         },
@@ -160,6 +152,10 @@ export default {
       return configMap[this.widget?.type][this.configType || 'default'] || {};
     },
     content() {
+      const currentType = ['vtex', 'funnel'].includes(this.configType)
+        ? this.configType
+        : this.widget?.type;
+
       const componentMap = {
         graph_funnel: {
           loading: SkeletonConfigContentFunnel,
@@ -169,13 +165,17 @@ export default {
           loading: SkeletonConfigContentCard,
           component: DrawerConfigContentCard,
         },
-        empty_widget: {
+        funnel: {
+          loading: SkeletonConfigContentFunnel,
+          component: DrawerConfigContentFunnel,
+        },
+        vtex: {
           loading: SkeletonConfigContentCard,
           component: DrawerConfigContentCard,
         },
       };
 
-      return componentMap[this.widget?.type] || {};
+      return componentMap[currentType] || {};
     },
     contentProps() {
       const { widget } = this;
@@ -186,7 +186,6 @@ export default {
 
       const mappingProps = {
         card: { type: this.configType },
-        empty_widget: { type: this.configType },
       };
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
@@ -222,7 +221,9 @@ export default {
           newWidget = this.createCardWidget;
           break;
         case 'empty_widget':
-          newWidget = this.createCardWidget;
+          if (this.configType === 'funnel')
+            newWidget = this.createGraphFunnelWidget;
+          else newWidget = this.createCardWidget;
           break;
       }
 
@@ -293,7 +294,7 @@ export default {
 
       this.callTourPreviousStep({
         tour: 'widgets-onboarding-tour',
-        qtdSteps: this.widget.type === 'card' ? 2 : 1,
+        qtdSteps: ['card', 'empty_widget'].includes(this.widget.type) ? 2 : 1,
         timeout: 300,
       });
     },
@@ -304,7 +305,10 @@ export default {
       try {
         await this.updateWidget(this.treatedWidget);
 
-        if (this.widget.type === 'graph_funnel') {
+        const isFunnel =
+          this.widget.type === 'graph_funnel' || this.configType === 'funnel';
+
+        if (isFunnel) {
           await this.getWidgetGraphFunnelData({
             uuid: this.widget.uuid,
             widgetFunnelConfig: this.treatedWidget.config,

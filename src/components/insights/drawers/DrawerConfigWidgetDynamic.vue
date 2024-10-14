@@ -55,6 +55,8 @@ import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
 import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue';
 import SkeletonConfigContentFunnel from './loadings/SkeletonConfigContentFunnel.vue';
+import SkeletonConfigContentVtex from './loadings/SkeletonConfigContentVtex.vue';
+import DrawerConfigContentVtex from './DrawerConfigContentVtex.vue';
 
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
 
@@ -66,6 +68,8 @@ export default {
     DrawerConfigContentCard,
     SkeletonConfigContentCard,
     SkeletonConfigContentFunnel,
+    DrawerConfigContentVtex,
+    SkeletonConfigContentVtex,
     ModalResetWidget,
   },
 
@@ -141,10 +145,8 @@ export default {
             description: $t('drawers.config_funnel.description'),
           },
           vtex: {
-            title: $t(`drawers.config_gallery.options.flow_result.title`),
-            description: $t(
-              `drawers.config_gallery.options.flow_result.description`,
-            ),
+            title: $t(`drawers.config_gallery.options.vtex.title`),
+            description: $t(`drawers.config_gallery.options.vtex.description`),
           },
         },
       };
@@ -170,8 +172,8 @@ export default {
           component: DrawerConfigContentFunnel,
         },
         vtex: {
-          loading: SkeletonConfigContentCard,
-          component: DrawerConfigContentCard,
+          loading: SkeletonConfigContentVtex,
+          component: DrawerConfigContentVtex,
         },
       };
 
@@ -223,7 +225,10 @@ export default {
         case 'empty_widget':
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
-          else newWidget = this.createCardWidget;
+          else
+            newWidget = {
+              config: this.config,
+            };
           break;
       }
 
@@ -313,6 +318,8 @@ export default {
             uuid: this.widget.uuid,
             widgetFunnelConfig: this.treatedWidget.config,
           });
+        } else if (this.configType === 'vtex') {
+          console.log('config', this.config, this.treatedWidget);
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }

@@ -6,7 +6,7 @@
     />
     <UnnnicChartFunnel
       v-else
-      :data="chartData"
+      :data="[...chartData]"
     />
   </section>
 </template>

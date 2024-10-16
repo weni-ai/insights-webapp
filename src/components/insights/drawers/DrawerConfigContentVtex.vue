@@ -25,10 +25,26 @@ export default {
 
   emits: ['update:model-value', 'reset-widget'],
 
+  data() {
+    return {
+      defaultConfigVtex: {
+        orders: {
+          icon: 'local_activity',
+        },
+        total_value: {
+          icon: 'currency_exchange',
+        },
+        average_ticket: {
+          icon: 'sell',
+        },
+      },
+    };
+  },
+
   computed: {
     utmValue: {
       get() {
-        return this.modelValue.config?.UTM || '';
+        return this.modelValue.config?.filter?.utm || '';
       },
       set(value) {
         this.updateUtm(value);
@@ -42,7 +58,10 @@ export default {
         ...this.modelValue,
         config: {
           ...this.modelValue.config,
-          UTM: value,
+          ...this.defaultConfigVtex,
+          filter: {
+            utm: value,
+          },
         },
       });
     },

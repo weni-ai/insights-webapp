@@ -31,6 +31,7 @@ export default {
       type: Object,
       required: true,
     },
+    isLoading: Boolean,
   },
 
   emits: ['open-config'],

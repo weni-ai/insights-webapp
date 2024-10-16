@@ -56,7 +56,7 @@ export default {
   props: {
     modelValue: {
       type: Boolean,
-      default: false,
+      required: true,
     },
   },
 
@@ -76,6 +76,8 @@ export default {
     }),
 
     widgetConfigType() {
+      if (this.widget.type === 'vtex_order') return 'vtex';
+
       return this.widget.config?.type;
     },
 
@@ -114,7 +116,7 @@ export default {
   },
 
   async created() {
-    if (!this.isLoadedProjectFlows) {
+    if (!this.isLoadedProjectFlows && this.widget.type !== 'vtex_order') {
       await this.getProjectFlows();
     }
   },

@@ -220,8 +220,8 @@ export default {
         &-text {
           color: $unnnic-color-neutral-darkest;
 
-          font-family: $unnnic-font-family-primary;
-          font-size: $unnnic-font-size-title-md;
+          font-family: $unnnic-font-family-secondary;
+          font-size: $unnnic-font-size-body-lg;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
           line-height: 1.5rem;

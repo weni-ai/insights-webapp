@@ -1,5 +1,6 @@
 import dashboardsStore from './dashboards';
 import { Dashboards, Widgets } from '@/services/api';
+import { getWidgetMockData } from '@/services/api/resources/api-phatom';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
@@ -137,6 +138,27 @@ export default {
         uuid,
         data: formattedResponse,
       });
+    },
+    async getWidgetVtexOrderData({ commit }, { uuid }) {
+      try {
+        const response = await getWidgetMockData(
+          dashboardsStore.state.currentDashboard.uuid,
+          uuid,
+        );
+
+        const formattedResponse = {
+          orders: response.countSell,
+          average_ticket: response.accumulatedTotal,
+          total_value: response.accumulatedTotal,
+        };
+
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: formattedResponse,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     updateCurrentWidgetEditing({ commit }, widget) {

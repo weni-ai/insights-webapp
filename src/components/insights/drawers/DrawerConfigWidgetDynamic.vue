@@ -225,10 +225,7 @@ export default {
         case 'empty_widget':
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
-          else
-            newWidget = {
-              config: this.config,
-            };
+          else newWidget = this.createVtexWidget;
           break;
       }
 
@@ -270,6 +267,17 @@ export default {
         config: widget.config,
       };
     },
+
+    createVtexWidget() {
+      const { config } = this.config;
+
+      return {
+        name: 'vtex_orders',
+        source: 'orders',
+        type: 'vtex_order',
+        config,
+      };
+    },
   },
 
   watch: {
@@ -285,6 +293,7 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
@@ -319,6 +328,9 @@ export default {
             widgetFunnelConfig: this.treatedWidget.config,
           });
         } else if (this.configType === 'vtex') {
+          await this.getWidgetVtexOrderData({
+            uuid: this.widget.uuid,
+          });
           console.log('config', this.config, this.treatedWidget);
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);

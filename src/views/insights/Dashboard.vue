@@ -4,7 +4,7 @@
     :style="dashboardGridStyle"
   >
     <WidgetOnboarding
-      v-if="showConfigWidgetOnboarding"
+      v-if="false"
       :showCardTour="!hasWidgetFilledData.card"
       :showFunnelTour="!hasWidgetFilledData.funnel"
     />

@@ -146,7 +146,7 @@ export default {
         data: formattedResponse,
       });
     },
-    async getWidgetVtexOrderData({ commit }, { uuid }) {
+    async getWidgetVtexOrderData({ commit }, { uuid, utm_source = '' }) {
       try {
         const response: {
           countSell?: string;
@@ -155,6 +155,9 @@ export default {
         } = (await Dashboards.getDashboardWidgetData({
           dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
           widgetUuid: uuid,
+          params: {
+            utm_source,
+          },
         } as any)) as any;
 
         let formattedResponse = {};

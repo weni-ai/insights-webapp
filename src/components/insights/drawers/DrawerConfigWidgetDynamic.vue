@@ -339,6 +339,7 @@ export default {
         } else if (this.configType === 'vtex') {
           await this.getWidgetVtexOrderData({
             uuid: this.widget.uuid,
+            utm_source: this.treatedWidget.config.filter.utm,
           });
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);

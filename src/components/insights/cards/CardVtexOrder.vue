@@ -1,10 +1,10 @@
 <template>
   <CardBase
     class="card-vtex-order"
-    :class="{ 'card-vtex-order--not-data': configured }"
+    :class="{ 'card-vtex-order--not-data': isError }"
   >
     <header
-      v-if="!configured && configurable"
+      v-if="!isError"
       class="card-vtex-order__header"
     >
       <h1 class="header__title">{{ $t('widgets.vtex_order.title') }}</h1>
@@ -18,7 +18,7 @@
     </header>
     <section class="card-vtex-order__content">
       <section
-        v-if="configured"
+        v-if="isError && !isLoading"
         class="content__not-configured"
       >
         <img src="@/assets/images/icons/empty_cloud.svg" />
@@ -40,37 +40,26 @@
         v-else
         class="content__orders__container"
       >
-        <section class="content__orders">
+        <IconLoading
+          v-if="isLoading"
+          class="card-vtex-order-margin-auto"
+        />
+        <section
+          v-for="(list, index) in dataList"
+          v-show="!isLoading"
+          :key="index"
+          class="content__orders"
+        >
           <UnnnicAvatarIcon
-            icon="local_activity"
+            :icon="list.icon"
             scheme="aux-red-500"
             size="sm"
           />
           <section class="content__orders__container-item">
-            <p class="content__orders__container-item-value">30</p>
-            <p class="content__orders__container-item-text">Pedidos</p>
-          </section>
-        </section>
-        <section class="content__orders">
-          <UnnnicAvatarIcon
-            icon="local_activity"
-            scheme="aux-red-500"
-            size="sm"
-          />
-          <section class="content__orders__container-item">
-            <p class="content__orders__container-item-value">30</p>
-            <p class="content__orders__container-item-text">Pedidos</p>
-          </section>
-        </section>
-        <section class="content__orders">
-          <UnnnicAvatarIcon
-            icon="local_activity"
-            scheme="aux-red-500"
-            size="sm"
-          />
-          <section class="content__orders__container-item">
-            <p class="content__orders__container-item-value">30</p>
-            <p class="content__orders__container-item-text">Pedidos</p>
+            <p class="content__orders__container-item-value">
+              {{ list.value }}
+            </p>
+            <p class="content__orders__container-item-text">{{ list.label }}</p>
           </section>
         </section>
       </section>
@@ -79,24 +68,72 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import CardBase from './CardBase.vue';
+import IconLoading from '@/components/IconLoading.vue';
+import i18n from '@/utils/plugins/i18n';
 
 export default {
   name: 'CardVtexOrder',
 
-  components: { CardBase },
+  components: { CardBase, IconLoading },
 
   props: {
     isLoading: Boolean,
-    configured: Boolean,
-    configurable: Boolean,
+    data: {
+      type: Object,
+      required: true,
+    },
     widget: {
       type: Object,
       required: true,
     },
   },
 
-  emits: ['open-config'],
+  emits: ['open-config', 'request-data'],
+
+  computed: {
+    ...mapState({
+      appliedFilters: (state) => state.dashboards.appliedFilters,
+    }),
+    isError() {
+      const allEmpty = Object?.values(this.data || {}).every(
+        (str) => str === '',
+      );
+      return allEmpty;
+    },
+
+    dataList() {
+      if (this.isError || !this.data) return [];
+
+      const keyValues = Object.keys(this.data || {});
+
+      return keyValues.map((key) => ({
+        label: i18n.global.t(`widgets.vtex_order.${key}`),
+        icon: this.widget.config[key].icon || 'local_activity',
+        value: this.data[key] || '',
+      }));
+    },
+  },
+
+  watch: {
+    appliedFilters: {
+      deep: true,
+      handler() {
+        this.emitRequestData();
+      },
+    },
+  },
+
+  created() {
+    this.emitRequestData();
+  },
+
+  methods: {
+    emitRequestData() {
+      this.$emit('request-data');
+    },
+  },
 };
 </script>
 
@@ -124,6 +161,10 @@ export default {
     .card-vtex-order__header .header__title {
       color: $unnnic-color-neutral-cloudy;
     }
+  }
+
+  &-margin-auto {
+    margin: auto;
   }
 
   &__header {
@@ -189,8 +230,8 @@ export default {
         &-text {
           color: $unnnic-color-neutral-darkest;
 
-          font-family: $unnnic-font-family-primary;
-          font-size: $unnnic-font-size-title-md;
+          font-family: $unnnic-font-family-secondary;
+          font-size: $unnnic-font-size-body-lg;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
           line-height: 1.5rem;

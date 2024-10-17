@@ -6,8 +6,8 @@
       class="clear-button"
       :text="$t('drawers.reset_widget')"
       type="tertiary"
-      :disabled="trimmedUtmValue"
-      @click="clearUtm"
+      :disabled="isDisableResetWidget"
+      @click="resetWidget"
     />
   </section>
 </template>
@@ -23,16 +23,42 @@ export default {
     },
   },
 
-  emits: ['update:model-value', 'reset-widget'],
+  emits: [
+    'update:model-value',
+    'reset-widget',
+    'update-disable-primary-button',
+  ],
+
+  data() {
+    return {
+      defaultConfigVtex: {
+        orders: {
+          icon: 'local_activity',
+        },
+        total_value: {
+          icon: 'currency_exchange',
+        },
+        average_ticket: {
+          icon: 'sell',
+        },
+      },
+    };
+  },
 
   computed: {
     utmValue: {
       get() {
-        return this.modelValue.config?.UTM || '';
+        return this.modelValue.config?.filter?.utm || '';
       },
       set(value) {
         this.updateUtm(value);
       },
+    },
+
+    isDisableResetWidget() {
+      const isEmptyWidget = this.modelValue.type === 'empty_widget';
+
+      return isEmptyWidget;
     },
   },
 
@@ -42,14 +68,16 @@ export default {
         ...this.modelValue,
         config: {
           ...this.modelValue.config,
-          UTM: value,
+          ...this.defaultConfigVtex,
+          filter: {
+            utm: value,
+          },
         },
       });
     },
 
-    clearUtm() {
-      //this.$emit('reset-widget');
-      this.updateUtm('');
+    resetWidget() {
+      this.$emit('reset-widget');
     },
   },
 };

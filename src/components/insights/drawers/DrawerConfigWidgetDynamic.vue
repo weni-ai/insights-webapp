@@ -149,6 +149,12 @@ export default {
             description: $t(`drawers.config_gallery.options.vtex.description`),
           },
         },
+        vtex_order: {
+          vtex: {
+            title: $t(`drawers.config_gallery.options.vtex.title`),
+            description: $t(`drawers.config_gallery.options.vtex.description`),
+          },
+        },
       };
 
       return configMap[this.widget?.type][this.configType || 'default'] || {};
@@ -225,10 +231,10 @@ export default {
         case 'empty_widget':
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
-          else
-            newWidget = {
-              config: this.config,
-            };
+          else newWidget = this.createVtexWidget;
+          break;
+        case 'vtex_order':
+          newWidget = this.createVtexWidget;
           break;
       }
 
@@ -270,6 +276,17 @@ export default {
         config: widget.config,
       };
     },
+
+    createVtexWidget() {
+      const { config } = this.config;
+
+      return {
+        name: 'vtex_orders',
+        source: 'orders',
+        type: 'vtex_order',
+        config,
+      };
+    },
   },
 
   watch: {
@@ -285,6 +302,7 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
@@ -319,11 +337,14 @@ export default {
             widgetFunnelConfig: this.treatedWidget.config,
           });
         } else if (this.configType === 'vtex') {
-          console.log('config', this.config, this.treatedWidget);
+          await this.getWidgetVtexOrderData({
+            uuid: this.widget.uuid,
+            utm_source: this.treatedWidget.config.filter.utm,
+          });
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }
-
+        /* TODO: onBoarding - unused code until it is defined whether to keep or remove
         if (this.showConfigWidgetOnboarding) {
           const isLastTourStep =
             this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
@@ -333,7 +354,7 @@ export default {
             this.setShowCompleteOnboardingModal(true);
             localStorage.setItem('hasWidgetsOnboardingComplete', true);
           }
-        }
+        }*/
         unnnic.unnnicCallAlert({
           props: {
             text: this.$t('drawers.metric_saved'),

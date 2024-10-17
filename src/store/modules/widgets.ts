@@ -1,6 +1,5 @@
 import dashboardsStore from './dashboards';
 import { Dashboards, Widgets } from '@/services/api';
-import { getWidgetMockData } from '@/services/api/resources/api-phatom';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';

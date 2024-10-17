@@ -3,6 +3,7 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
+    <!-- TODO: onBoarding - unused code until it is defined whether to keep or remove -->
     <WidgetOnboarding
       v-if="false"
       :showCardTour="!hasWidgetFilledData.card"

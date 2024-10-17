@@ -275,10 +275,11 @@ export default {
     },
 
     async requestVtexOrderData() {
-      const { uuid } = this.widget;
+      const { uuid, config } = this.widget;
 
       await this.getWidgetVtexOrderData({
         uuid,
+        utm_source: config.filter.utm,
       });
     },
 

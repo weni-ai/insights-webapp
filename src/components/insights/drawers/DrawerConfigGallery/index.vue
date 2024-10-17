@@ -76,6 +76,8 @@ export default {
     }),
 
     widgetConfigType() {
+      if (this.widget.type === 'vtex_order') return 'vtex';
+
       return this.widget.config?.type;
     },
 
@@ -93,6 +95,7 @@ export default {
 
       const optionsMap = {
         card: createOptions(['executions', 'flow_result', 'data_crossing']),
+        empty_widget: createOptions(['funnel', 'vtex']),
       };
 
       return optionsMap[this.widget?.type] || [];
@@ -113,7 +116,7 @@ export default {
   },
 
   async created() {
-    if (!this.isLoadedProjectFlows) {
+    if (!this.isLoadedProjectFlows && this.widget.type !== 'vtex_order') {
       await this.getProjectFlows();
     }
   },

@@ -443,6 +443,57 @@
         "en": "@:flow executions",
         "es": "Ejecuciones de @.lower:flow"
       }
+    },
+    "empty_widget": { 
+        "title": {
+          "pt-br": "Por enquanto essa área não está configurada",
+          "en": "For the time being, this area is not configured",
+          "es": "Por el momento esta zona no está configurada"
+        },
+        "config_btn": {
+          "pt-br": "Configurar",
+          "en": "Configure",
+          "es": "Configure"
+        }
+    },
+    "vtex_order": {
+      "title": { 
+        "pt-br": "Vendas VTEX",
+        "en": "Sales VTEX",
+        "es": "Ventas VTEX"
+      },
+      "orders": {
+        "pt-br": "Pedidos",
+        "en": "Orders",
+        "es": "Pedidos"
+      },
+      "total_value": {
+        "pt-br": "Valor total",
+        "en": "Total value",
+        "es": "Valor total"
+      },
+      "average_ticket": {
+        "pt-br": "Ticket médio",
+        "en": "Average ticket",
+        "es": "Ticket medio"
+      },
+      "empty_data": {
+        "title": {
+          "pt-br": "Ops, não encontramos nenhum dado!",
+          "en": "Oops, we couldn't find any data!",
+          "es": "¡Uy, no hemos encontrado ningún dato!"
+        },
+        "sub_title": {
+          "pt-br": "Verifique se o UTM informado está correto ou aguarde novos dados",
+          "en": "Please check the provided UTM is correct or wait for new data to arrive",
+          "es": "Compruebe que la UTM introducida es correcta o espere nuevos datos"
+        },
+        "verify_btn": {
+          "pt-br": "Verificar UTM",
+          "en": "Check UTM",
+          "es": "Comprobar UTM"
+        }
+      }
     }
   },
   "drawers": {
@@ -502,6 +553,30 @@
             "pt-br": "Combine dois valores para obter uma métrica",
             "en": "Combine two values to get a metric",
             "es": "Combinar dos valores para obtener una métrica"
+          }
+        },
+        "funnel": {
+          "title": {
+            "pt-br": "Funil",
+            "en": "Funnel",
+            "es": "Embudo"
+          },
+          "description": {
+            "pt-br": "Selecione dados para visualizar em um gráfico de funil",
+            "en": "Select data to visualize in a funnel graph",
+            "es": "Seleccionar datos para visualizarlos en un gráfico de embudo"
+          }
+        },
+        "vtex": {
+          "title": {
+            "pt-br": "VTEX",
+            "en": "VTEX",
+            "es": "VTEX"
+          },
+          "description": {
+            "pt-br": "Visualize seus dados de vendas VTEX",
+            "en": "View your VTEX sales data",
+            "es": "Visualice sus datos de ventas VTEX"
           }
         }
       }

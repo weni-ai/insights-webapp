@@ -9,6 +9,7 @@
         ? 'drawer-card-metric-config'
         : 'drawer-graph-funnel'
     "
+    size="md"
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
@@ -54,6 +55,8 @@ import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
 import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue';
 import SkeletonConfigContentFunnel from './loadings/SkeletonConfigContentFunnel.vue';
+import SkeletonConfigContentVtex from './loadings/SkeletonConfigContentVtex.vue';
+import DrawerConfigContentVtex from './DrawerConfigContentVtex.vue';
 
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
 
@@ -65,6 +68,8 @@ export default {
     DrawerConfigContentCard,
     SkeletonConfigContentCard,
     SkeletonConfigContentFunnel,
+    DrawerConfigContentVtex,
+    SkeletonConfigContentVtex,
     ModalResetWidget,
   },
 
@@ -131,11 +136,34 @@ export default {
             ),
           },
         },
+        empty_widget: {
+          default: {
+            title: $t('drawers.config_card.title'),
+          },
+          funnel: {
+            title: $t('drawers.config_funnel.title'),
+            description: $t('drawers.config_funnel.description'),
+          },
+          vtex: {
+            title: $t(`drawers.config_gallery.options.vtex.title`),
+            description: $t(`drawers.config_gallery.options.vtex.description`),
+          },
+        },
+        vtex_order: {
+          vtex: {
+            title: $t(`drawers.config_gallery.options.vtex.title`),
+            description: $t(`drawers.config_gallery.options.vtex.description`),
+          },
+        },
       };
 
       return configMap[this.widget?.type][this.configType || 'default'] || {};
     },
     content() {
+      const currentType = ['vtex', 'funnel'].includes(this.configType)
+        ? this.configType
+        : this.widget?.type;
+
       const componentMap = {
         graph_funnel: {
           loading: SkeletonConfigContentFunnel,
@@ -145,9 +173,17 @@ export default {
           loading: SkeletonConfigContentCard,
           component: DrawerConfigContentCard,
         },
+        funnel: {
+          loading: SkeletonConfigContentFunnel,
+          component: DrawerConfigContentFunnel,
+        },
+        vtex: {
+          loading: SkeletonConfigContentVtex,
+          component: DrawerConfigContentVtex,
+        },
       };
 
-      return componentMap[this.widget?.type] || {};
+      return componentMap[currentType] || {};
     },
     contentProps() {
       const { widget } = this;
@@ -192,6 +228,14 @@ export default {
         case 'card':
           newWidget = this.createCardWidget;
           break;
+        case 'empty_widget':
+          if (this.configType === 'funnel')
+            newWidget = this.createGraphFunnelWidget;
+          else newWidget = this.createVtexWidget;
+          break;
+        case 'vtex_order':
+          newWidget = this.createVtexWidget;
+          break;
       }
 
       return { ...defaultConfigs, ...newWidget };
@@ -232,6 +276,17 @@ export default {
         config: widget.config,
       };
     },
+
+    createVtexWidget() {
+      const { config } = this.config;
+
+      return {
+        name: 'vtex_orders',
+        source: 'orders',
+        type: 'vtex_order',
+        config,
+      };
+    },
   },
 
   watch: {
@@ -247,6 +302,7 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
     }),
@@ -261,7 +317,7 @@ export default {
 
       this.callTourPreviousStep({
         tour: 'widgets-onboarding-tour',
-        qtdSteps: this.widget.type === 'card' ? 2 : 1,
+        qtdSteps: ['card', 'empty_widget'].includes(this.widget.type) ? 2 : 1,
         timeout: 300,
       });
     },
@@ -272,15 +328,23 @@ export default {
       try {
         await this.updateWidget(this.treatedWidget);
 
-        if (this.widget.type === 'graph_funnel') {
+        const isFunnel =
+          this.widget.type === 'graph_funnel' || this.configType === 'funnel';
+
+        if (isFunnel) {
           await this.getWidgetGraphFunnelData({
             uuid: this.widget.uuid,
             widgetFunnelConfig: this.treatedWidget.config,
           });
+        } else if (this.configType === 'vtex') {
+          await this.getWidgetVtexOrderData({
+            uuid: this.widget.uuid,
+            utm_source: this.treatedWidget.config.filter.utm,
+          });
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }
-
+        /* TODO: onBoarding - unused code until it is defined whether to keep or remove
         if (this.showConfigWidgetOnboarding) {
           const isLastTourStep =
             this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
@@ -290,7 +354,7 @@ export default {
             this.setShowCompleteOnboardingModal(true);
             localStorage.setItem('hasWidgetsOnboardingComplete', true);
           }
-        }
+        }*/
         unnnic.unnnicCallAlert({
           props: {
             text: this.$t('drawers.metric_saved'),

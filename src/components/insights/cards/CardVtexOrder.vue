@@ -18,7 +18,7 @@
     </header>
     <section class="card-vtex-order__content">
       <section
-        v-if="isError"
+        v-if="isError && !isLoading"
         class="content__not-configured"
       >
         <img src="@/assets/images/icons/empty_cloud.svg" />
@@ -40,8 +40,13 @@
         v-else
         class="content__orders__container"
       >
+        <IconLoading
+          v-if="isLoading"
+          class="card-vtex-order-margin-auto"
+        />
         <section
           v-for="(list, index) in dataList"
+          v-show="!isLoading"
           :key="index"
           class="content__orders"
         >
@@ -65,12 +70,13 @@
 <script>
 import { mapState } from 'vuex';
 import CardBase from './CardBase.vue';
+import IconLoading from '@/components/IconLoading.vue';
 import i18n from '@/utils/plugins/i18n';
 
 export default {
   name: 'CardVtexOrder',
 
-  components: { CardBase },
+  components: { CardBase, IconLoading },
 
   props: {
     isLoading: Boolean,
@@ -155,6 +161,10 @@ export default {
     .card-vtex-order__header .header__title {
       color: $unnnic-color-neutral-cloudy;
     }
+  }
+
+  &-margin-auto {
+    margin: auto;
   }
 
   &__header {

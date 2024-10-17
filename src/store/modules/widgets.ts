@@ -141,16 +141,34 @@ export default {
     },
     async getWidgetVtexOrderData({ commit }, { uuid }) {
       try {
-        const response = await getWidgetMockData(
-          dashboardsStore.state.currentDashboard.uuid,
-          uuid,
-        );
+        const response: {
+          countSell?: string;
+          accumulatedTotal?: string;
+          medium_ticket?: string;
+        } = (await Dashboards.getDashboardWidgetData({
+          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          widgetUuid: uuid,
+        } as any)) as any;
 
-        const formattedResponse = {
-          orders: response.countSell,
-          average_ticket: response.accumulatedTotal,
-          total_value: response.accumulatedTotal,
-        };
+        let formattedResponse = {};
+
+        if (
+          !response.countSell &&
+          !response.accumulatedTotal &&
+          !response.medium_ticket
+        ) {
+          formattedResponse = {
+            orders: '',
+            average_ticket: '',
+            total_value: '',
+          };
+        } else {
+          formattedResponse = {
+            orders: response.countSell,
+            average_ticket: response.medium_ticket,
+            total_value: response.accumulatedTotal,
+          };
+        }
 
         commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
           uuid,
@@ -158,6 +176,14 @@ export default {
         });
       } catch (error) {
         console.error(error);
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: {
+            orders: '',
+            average_ticket: '',
+            total_value: '',
+          },
+        });
       }
     },
 

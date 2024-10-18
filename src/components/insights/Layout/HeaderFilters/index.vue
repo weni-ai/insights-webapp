@@ -15,13 +15,16 @@
         @click.stop="clearFilters"
       />
     </template>
-
-    <DynamicFilter
+    <section
       v-else-if="currentDashboardFilters[0]"
-      :filter="currentDashboardFilters[0]"
-      :modelValue="appliedFilters[currentDashboardFilters[0].name]"
-      @update:model-value="updateFilter"
-    />
+      class="insights-layout-header-filters_dynamic_container"
+    >
+      <DynamicFilter
+        :filter="filter"
+        :modelValue="appliedFilters[currentDashboardFilters[0].name]"
+        @update:model-value="updateFilter"
+      />
+    </section>
 
     <ModalFilters
       :showModal="filterModalOpened"
@@ -32,7 +35,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
-
+import { getLastNDays } from '@/utils/time';
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
 
@@ -67,6 +70,17 @@ export default {
         ? `${this.$t('insights_header.filters')} (${appliedFiltersLength})`
         : this.$t('insights_header.filters');
     },
+    filter() {
+      const filter = this.currentDashboardFilters[0];
+
+      if (filter.type === 'date_range')
+        return {
+          ...filter,
+          type: 'select_date_range',
+        };
+
+      return filter;
+    },
   },
 
   watch: {
@@ -83,7 +97,14 @@ export default {
       },
     },
     currentDashboardFilters() {
-      this.setAppliedFilters(this.$route.query);
+      const isQueryEmpty = Object.keys(this.$route.query).length === 0;
+      if (isQueryEmpty) {
+        const { start, end } = getLastNDays(7);
+
+        this.setAppliedFilters({
+          ended_at: { __gte: start, __lte: end },
+        });
+      } else this.setAppliedFilters(this.$route.query);
     },
   },
 
@@ -132,5 +153,9 @@ export default {
   display: flex;
   flex-direction: row;
   gap: $unnnic-spacing-xs;
+
+  &_dynamic_container {
+    width: 19.75rem;
+  }
 }
 </style>

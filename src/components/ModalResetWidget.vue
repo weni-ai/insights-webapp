@@ -62,11 +62,20 @@ export default {
       this.isLoading = true;
 
       try {
-        await this.updateWidget({
-          ...this.widget,
-          config: { ...clearDeepValues(this.widget.config), currency: false },
-          name: '',
-        });
+        if (this.widget.type === 'vtex_order') {
+          await this.updateWidget({
+            ...this.widget,
+            config: {},
+            type: 'empty_widget',
+            name: '',
+          });
+        } else {
+          await this.updateWidget({
+            ...this.widget,
+            config: { ...clearDeepValues(this.widget.config), currency: false },
+            name: '',
+          });
+        }
 
         this.callSuccessAlert();
       } catch (error) {

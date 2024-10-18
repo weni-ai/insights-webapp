@@ -1,9 +1,15 @@
 export function sortByKey(arr, key, order = 'asc') {
   const compareString = arr.every((item) => typeof item[key] === 'string');
-  const ordenedArr = compareString
-    ? arr.sort((a, b) => a[key].localeCompare(b[key]))
-    : arr.toSorted((a, b) => a[key] - b[key]);
-  return order === 'desc' ? ordenedArr.reverse() : ordenedArr;
+
+  const sortedArr = [...arr].sort((a, b) => {
+    if (compareString) {
+      return a[key].localeCompare(b[key]);
+    } else {
+      return a[key] - b[key];
+    }
+  });
+
+  return order === 'desc' ? sortedArr.reverse() : sortedArr;
 }
 
 export function compareEquals(arrBase, ...arr) {

@@ -3,6 +3,7 @@ import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
+import { getWidgetMockData } from '@/services/api/resources/api-phatom';
 
 const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
@@ -139,53 +140,88 @@ export default {
       });
     },
     async getWidgetVtexOrderData({ commit }, { uuid, utm_source = '' }) {
-      try {
-        const response: {
-          countSell?: string;
-          accumulatedTotal?: string;
-          medium_ticket?: string;
-        } = (await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
-          widgetUuid: uuid,
-          params: {
-            utm_source,
-          },
-        } as any)) as any;
+      const useMockInCurrentProject = ['9996608b-0454-4252-8a7e-664847133cab'];
+      if (
+        useMockInCurrentProject.includes(
+          dashboardsStore.state.currentDashboard.uuid,
+        )
+      ) {
+        try {
+          const response = await getWidgetMockData(
+            dashboardsStore.state.currentDashboard.uuid,
+            uuid,
+          );
 
-        let formattedResponse = {};
-
-        if (
-          !response.countSell &&
-          !response.accumulatedTotal &&
-          !response.medium_ticket
-        ) {
-          formattedResponse = {
-            orders: '',
-            average_ticket: '',
-            total_value: '',
-          };
-        } else {
-          formattedResponse = {
+          const formattedResponse = {
             orders: response.countSell,
-            average_ticket: response.medium_ticket,
+            average_ticket: response.accumulatedTotal,
             total_value: response.accumulatedTotal,
           };
-        }
 
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: formattedResponse,
-        });
-      } catch (error) {
-        console.error(error);
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: {
-            orders: '',
-            average_ticket: '',
-            total_value: '',
-          },
-        });
+          commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+            uuid,
+            data: formattedResponse,
+          });
+        } catch (error) {
+          console.error(error);
+          commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+            uuid,
+            data: {
+              orders: '',
+              average_ticket: '',
+              total_value: '',
+            },
+          });
+        }
+      } else {
+        try {
+          const response: {
+            countSell?: string;
+            accumulatedTotal?: string;
+            medium_ticket?: string;
+          } = (await Dashboards.getDashboardWidgetData({
+            dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+            widgetUuid: uuid,
+            params: {
+              utm_source,
+            },
+          } as any)) as any;
+
+          let formattedResponse = {};
+
+          if (
+            !response.countSell &&
+            !response.accumulatedTotal &&
+            !response.medium_ticket
+          ) {
+            formattedResponse = {
+              orders: '',
+              average_ticket: '',
+              total_value: '',
+            };
+          } else {
+            formattedResponse = {
+              orders: response.countSell,
+              average_ticket: response.medium_ticket,
+              total_value: response.accumulatedTotal,
+            };
+          }
+
+          commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+            uuid,
+            data: formattedResponse,
+          });
+        } catch (error) {
+          console.error(error);
+          commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+            uuid,
+            data: {
+              orders: '',
+              average_ticket: '',
+              total_value: '',
+            },
+          });
+        }
       }
     },
 

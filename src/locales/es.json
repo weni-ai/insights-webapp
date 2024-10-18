@@ -1,0 +1,319 @@
+{
+  "human_service_dashboard": {
+    "title": "Atención humana",
+    "peaks_in_human_service": "Pico de chats abiertos por hora",
+    "closed": "Cerrados",
+    "in_progress": "En curso",
+    "response_time": "Tiempo de respuesta",
+    "waiting_time": "Tiempo de espera",
+    "awaiting_service": "Esperando atención",
+    "interaction_time": "Tiempo de interacción"
+  },
+  "table_dynamic_by_filter": {
+    "status": "Status",
+    "chats_in_period": "Chats en el período"
+  },
+  "table_group": {
+    "contact": "Contacto",
+    "urn": "URN",
+    "agent": "Agente",
+    "created_on": "Inicio",
+    "ended_at": "Fin",
+    "sector": "Sector",
+    "queue": "Cola",
+    "tags": "Etiquetas"
+  },
+  "filter": {
+    "agent": {
+      "label": "Agente",
+      "placeholder": "Seleccionar agente"
+    },
+    "contact": {
+      "label": "Contacto",
+      "placeholder": "Nombre o URN del contacto"
+    },
+    "created_on": {
+      "label": "Fecha",
+      "placeholder": ""
+    },
+    "queue": {
+      "label": "Cola",
+      "placeholder": "Seleccionar cola"
+    },
+    "sector": {
+      "label": "Sector",
+      "placeholder": "Seleccionar sector"
+    },
+    "tags": {
+      "label": "Etiquetas",
+      "placeholder": "Seleccionar tag"
+    }
+  },
+  "agent": "Agente",
+  "online_agents": "Agentes en línea",
+  "chats_per_agents": "Chats por agente",
+  "closeds": "Cerrados",
+  "in_progress": "En curso",
+  "waiting": "Esperando",
+  "status": "Status",
+  "metric": "Métrica",
+  "metrics": "Métricas",
+  "flow": "Flujo",
+  "flows": "Flujo",
+  "select": "Seleccionar",
+  "report": "Informe",
+  "you": "Usted",
+  "none": "Ninguno",
+  "currency": "Moneda",
+  "funnel": "Embudo",
+  "select_layout": "Selecciona el diseño:",
+  "dashboard_name": "Nombre del dashboard",
+  "add": "Agregar",
+  "view_more": "Ver más",
+  "ex": "Ej:",
+  "cancel": "Cancelar",
+  "save": "Salvar",
+  "delete": "Borrar",
+  "confirmation": "Confirmación",
+  "clear_fields": "Borrar campos",
+  "today": "Hoy",
+  "date_format": "DD/MM/YYYY",
+  "select_date": {
+    "yesterday": "Ayer ({date})",
+    "last_days": "Últimos {value} días ({date})",
+    "previous_month": "Mes anterior ({date})"
+  },
+  "save_error": "Error al guardar, por favor inténtalo de nuevo",
+  "reset": "Reiniciar",
+  "onboarding": {
+    "welcome_modal": {
+      "title": "Novedad en el área, conoce Insights",
+      "text": "Estamos felices de presentar su nueva herramienta para seguir el éxito de su operación aquí en Weni 🎉",
+      "button": {
+        "go": "Vamos allá",
+        "ignore": "Ignorar"
+      }
+    },
+    "complete_modal": {
+      "title": "¡Recorrido completo! 🎉",
+      "text": "Felicidades, ahora estás más cerca de mejorar tu operación basada en los datos :)"
+    }
+  },
+  "widgets": {
+    "reset": "Restablecer widget",
+    "info_reset": "Cuando se reinicie, los datos configurados se perderán.",
+    "success_reset": "El widget se restableció con éxito",
+    "error_reset": "No fue posible restablecer el widget. Inténtalo de nuevo",
+    "metric_error": "Error al buscar @.lower:metric",
+    "card": {
+      "error_description": "Configurar el @.lower:flow de origen nuevamente para obtener datos válidos",
+      "metric_empty": "Configurar",
+      "metric_set": "Establecer @.lower:metric"
+    },
+    "graph_funnel": {
+      "title": "Embudo",
+      "not_configured_description": "¡Seleccione los @.lower:flows que desea asignar para ensamblar la vista de embudo de su proyecto!",
+      "select_flows": "@:select @.lower:flows",
+      "flow_executions": "Ejecuciones de @.lower:flow"
+    },
+    "empty_widget": {
+      "title": "Por el momento esta zona no está configurada",
+      "config_btn": "Configure"
+    },
+    "vtex_order": {
+      "title": "Ventas VTEX",
+      "orders": "Pedidos",
+      "total_value": "Valor total",
+      "average_ticket": "Ticket medio",
+      "empty_data": {
+        "title": "¡Uy, no hemos encontrado ningún dato!",
+        "sub_title": "Compruebe que la UTM introducida es correcta o espere nuevos datos",
+        "verify_btn": "Comprobar UTM"
+      }
+    }
+  },
+  "drawers": {
+    "metric_saved": "@:metric guardada correctamente",
+    "reset_widget": "Restablecer widget",
+    "config_gallery": {
+      "title": "Galería de widgets",
+      "description": "Elija el tipo de widget que desea configurar:",
+      "options": {
+        "executions": {
+          "title": "Ejecución",
+          "description": "Visualizar las ejecuciones totales de un @.lower:flow"
+        },
+        "flow_result": {
+          "title": "Resultado de @.lower:flow",
+          "description": "Trae un resultado de @.lower:flow y permite operaciones básicas"
+        },
+        "data_crossing": {
+          "title": "Cruce de datos",
+          "description": "Combinar dos valores para obtener una métrica"
+        },
+        "funnel": {
+          "title": "Embudo",
+          "description": "Seleccionar datos para visualizarlos en un gráfico de embudo"
+        },
+        "vtex": {
+          "title": "VTEX",
+          "description": "Visualice sus datos de ventas VTEX"
+        }
+      }
+    },
+    "config_card": {
+      "title": "Definir @.lower:metric para la tarjeta",
+      "name_card": {
+        "label": "Nombre de tarjeta",
+        "placeholder": "@:ex @.lower:flows del proyecto"
+      },
+      "select_origin_flow": "@:select @.lower:flow de origen",
+      "result_type": "Tipo de resultado",
+      "flow_result": {
+        "label": "Resultado de @.lower:flow",
+        "placeholder": "Busca o selecciona el resultado"
+      },
+      "operation": "Operación",
+      "format": "Formato",
+      "checkbox": {
+        "currency": "Moneda"
+      },
+      "radios": {
+        "executions": "Ejecución",
+        "results": "Resultado de flujo",
+        "total": "Total",
+        "highest_value": "Valor más alto",
+        "avg": "Promedio",
+        "lowest_value": "Bajo valor",
+        "recurrence": "Reaparición",
+        "multiply": "Multiplicar",
+        "sum": "Suma",
+        "min": "Mínimo",
+        "max": "Máximo",
+        "difference": "Diferencia",
+        "percentage": "Porcentaje"
+      },
+      "total_flow_executions": "Ejecuciones de @.lower:flow total",
+      "first_value": "Primer valor",
+      "second_value": "Segundo valor"
+    },
+    "config_funnel": {
+      "title": "Definir @.lower:metrics de gráficos",
+      "description": "Seleccione al menos tres @.lower:flows para obtener la visualización del gráfico de embudo",
+      "add_metric": "@:add @.lower:metric",
+      "first_metric": "Primera @.lower:metric",
+      "second_metric": "Segunda @.lower:metric",
+      "third_metric": "Tercera @.lower:metric",
+      "fourth_metric": "Cuarta @.lower:metric",
+      "fifth_metric": "Quinta @.lower:metric",
+      "select_flow": "@:select @.lower:flow"
+    }
+  },
+  "metric_accordion": {
+    "name_metric": {
+      "label": "Nombre @.lower:metric",
+      "placeholder": "@:ex @.flows del proyecto"
+    },
+    "select_origin_flow": "@:select @.lower:flow de origen"
+  },
+  "insights_header": {
+    "filters": "Filtros",
+    "filtrate": "Filtrar",
+    "clear_filters": "Limpiar filtros",
+    "add_new_dashboard": "Nuevo dashboard",
+    "set_default_dashboard_success": "Ahora el Tablero {dashboard} es su página de inicio",
+    "set_default_dashboard_error": "Falla al definir el Tablero {dashboard} como página de inicio",
+    "generate_insight": {
+      "title": "Generar insight",
+      "generating_insights": "Generando insights",
+      "input": {
+        "placeholder_positive": "Comparta su experiencia",
+        "placeholder_negative": "¿Cómo podemos mejorar?"
+      },
+      "feedback": {
+        "question": "¿Fue útil la información proporcionada?",
+        "complete": "¡Gracias por los comentarios!"
+      },
+      "button": {
+        "yes": "Sí",
+        "no": "No",
+        "send": "No"
+      },
+      "by_ai": "por Meta Llama",
+      "error": "Lo sentimos, pero desafortunadamente no hemos podido generar un Insight, por favor compruebe su conexión a Internet o inténtelo de nuevo más tarde.",
+      "prompt": "Analice el rendimiento del cuadro de mando de resultados de una operación de servicios humanos. El cuadro de mandos muestra tres categorías principales: llamadas en curso, cerradas y en espera. Además, evalúa las siguientes métricas: tiempo de primera respuesta, tiempo de espera y tiempo de interacción. Identifique patrones de eficiencia, posibles cuellos de botella en el flujo de servicio y ofrezca sugerencias para optimizar los tiempos de respuesta y la productividad del equipo. Datos: {values}",
+      "prompt_language": "Regreso en español"
+    }
+  },
+  "new_dashboard": {
+    "title": "Nuevo dashboard",
+    "create_dashboard": "Crear dashboard",
+    "creating_new_dashboard": "Creando nuevo panel",
+    "dashboard_name_placeholder": "Ej: Ventas",
+    "alert": {
+      "success": "Panel creado con éxito",
+      "error": "Error al crear el panel"
+    }
+  },
+  "edit_dashboard": {
+    "title": "Editar dashboard",
+    "delete_dashboard": "Borrar dashboard",
+    "delete_dashboard_notice": "Esta acción será irreversible. Para confirmar la acción, por favor escriba el nombre del panel",
+    "alert": {
+      "success": "Panel actualizado con éxito",
+      "error": "Error al actualizar el panel"
+    }
+  },
+  "delete_dashboard": {
+    "title": "Borrar dashboard",
+    "notice": "Esta acción será irreversible. Para confirmar la acción, por favor escriba el nombre del panel",
+    "alert": {
+      "success": "Panel eliminado con éxito",
+      "error": "Error al borrar el panel"
+    }
+  },
+  "currency_options": {
+    "BRL": "R$ - Real Brasileño",
+    "USD": "$ - Dólar",
+    "EUR": "€ - Euro",
+    "ARS": "$ - Peso"
+  },
+  "dashboard_onboarding": {
+    "step": {
+      "create_dashboard": {
+        "title": "Cree un Panel personalizado",
+        "description": "Crea tantos Dashboards como quieras. Haz clic en <b>Nuevo dashboard</b> para comenzar"
+      }
+    }
+  },
+  "widgets_onboarding": {
+    "card": {
+      "step": {
+        "define_metric": {
+          "title": "Definir métrica",
+          "description": "Haga clic aquí para definir la métrica que desea visualizar"
+        },
+        "select_widget_type": {
+          "title": "Seleccionar widget",
+          "description": "Seleccione el tipo de métrica que desea configurar. Si tiene alguna duda, comience probando Ejecuciones"
+        },
+        "set_metric": {
+          "title": "Definiendo métrica",
+          "description": " Después de seleccionar el tipo de métrica, elija un flujo que traiga valores relevantes para su operación, complete el resto y guarde"
+        }
+      }
+    },
+    "funnel": {
+      "step": {
+        "define_metric": {
+          "title": "Definiendo métricas para el gráfico",
+          "description": "Seleccione los principales flujos de su operación para generar una visualización en embudo y seguir la trayectoria de sus contactos"
+        },
+        "fill_metric": {
+          "title": "Rellenar métricas",
+          "description": "Proporcione un nombre fácil para su métrica y seleccione el flujo desde el cual desea contabilizar las ejecuciones"
+        }
+      }
+    }
+  }
+}

@@ -20,9 +20,6 @@ jobs:
           npm install -g yarn
           yarn install
       
-      - name: Run build translations
-        run: yarn translations:build
-      
       - name: Run lint
         run: yarn lint
       

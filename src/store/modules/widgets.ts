@@ -16,8 +16,6 @@ const mutations = {
   UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
 };
 
-import i18n from '@/utils/plugins/i18n';
-
 export default {
   namespaced: true,
   state: {
@@ -123,22 +121,17 @@ export default {
       );
 
       const totalValue = response.reduce((sum, item) => sum + item.title, 0);
+
       const formattedResponse = response
         .map((item) => {
           const percentage = ((item.title / totalValue) * 100 || 0).toFixed(2);
           return {
             description: item.description,
-            title: `${parseFloat(percentage).toLocaleString(
-              i18n.global.locale || 'en-US',
-              {
-                minimumFractionDigits: 2,
-              },
-            )}% (${item.title.toLocaleString(i18n.global.locale || 'en-US')})`,
             percentage: parseFloat(percentage), // Add percentage as a number for sorting
+            total: item.title,
           };
         })
-        .sort((a, b) => b.percentage - a.percentage)
-        .map(({ description, title }) => ({ description, title })); // Remove the 'percentage' property
+        .sort((a, b) => b.percentage - a.percentage);
 
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
         uuid,

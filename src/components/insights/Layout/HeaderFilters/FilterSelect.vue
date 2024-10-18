@@ -94,16 +94,20 @@ export default {
 
   methods: {
     async fetchSource() {
-      const response = await Projects.getProjectSource(
-        this.source,
-        this.dependsOnValue || {},
-      );
-      response?.forEach((source) => {
-        this.options.push({
-          value: source[this.keyValueField] || source.uuid,
-          label: source.name,
+      try {
+        const response = await Projects.getProjectSource(
+          this.source,
+          this.dependsOnValue || {},
+        );
+        response?.forEach((source) => {
+          this.options.push({
+            value: source[this.keyValueField] || source.uuid,
+            label: source.name,
+          });
         });
-      });
+      } catch (e) {
+        console.error('getProjectSource error', e);
+      }
     },
     clearOptions() {
       const optionsPlaceholder = this.options[0];

@@ -189,7 +189,7 @@ describe('FilterSelect', () => {
   });
 
   it('maintains original options when fetchSource fails', async () => {
-    Projects.getProjectSource.mockRejectedValue(new Error('API Error'));
+    Projects.getProjectSource.mockRejectedValue('API Error');
     const customWrapper = createWrapper();
 
     await customWrapper.vm.$nextTick();

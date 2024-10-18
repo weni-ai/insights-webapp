@@ -13,6 +13,7 @@ import BarChart from '@/components/insights/charts/BarChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
+import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
@@ -64,6 +65,7 @@ export default {
         table_group: TableGroup,
         card: CardDashboard,
         empty_widget: CardEmpty,
+        vtex_order: CardVtexOrder,
         insight: null, // TODO: Create Insight component
       };
 
@@ -126,9 +128,36 @@ export default {
         empty_widget: {
           widget: this.widget,
         },
+        vtex_order: {
+          widget: this.widget,
+          data: this.widgetVtexData,
+        },
       };
 
       return { ...defaultProps, ...mappingProps[type] };
+    },
+
+    widgetVtexData() {
+      if (this.widget.type === 'vtex_order' && this.widget.data) {
+        const { total_value, average_ticket } = this.widget.data;
+
+        const existTotalValue = total_value !== '';
+        const existAverageTicketValue = average_ticket !== '';
+        const currentSymbol =
+          currencySymbols[this.currentDashboard.config?.currency_type];
+
+        return {
+          ...this.widget.data,
+          total_value: existTotalValue
+            ? `${currentSymbol} ${total_value}`
+            : total_value,
+          average_ticket: existAverageTicketValue
+            ? `${currentSymbol} ${average_ticket}`
+            : average_ticket,
+        };
+      }
+
+      return null;
     },
 
     widgetGraphData() {
@@ -160,6 +189,7 @@ export default {
 
     widgetEvents() {
       const { type, uuid, config } = this.widget;
+
       const mappingEvents = {
         card: {
           click: () => this.redirectToReport(),
@@ -170,6 +200,15 @@ export default {
         },
         empty_widget: {
           openConfig: () => this.$emit('open-config'),
+        },
+        vtex_order: {
+          openConfig: () => this.$emit('open-config'),
+          requestData: () => {
+            this.isRequestingData = true;
+            this.requestVtexOrderData().finally(() => {
+              this.isRequestingData = false;
+            });
+          },
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
@@ -196,7 +235,14 @@ export default {
   watch: {
     '$route.query': {
       handler() {
-        if (!['table_group', 'graph_funnel'].includes(this.widget.type)) {
+        if (
+          ![
+            'table_group',
+            'graph_funnel',
+            'empty_widget',
+            'vtex_order',
+          ].includes(this.widget.type)
+        ) {
           this.requestWidgetData();
         }
       },
@@ -209,18 +255,32 @@ export default {
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetReportData: 'reports/getWidgetReportData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {
-      this.isRequestingData = true;
+      try {
+        this.isRequestingData = true;
 
-      if (this.$route.name === 'report') {
-        await this.getWidgetReportData({ offset, limit, next });
-      } else if (this.isConfigured) {
-        await this.getCurrentDashboardWidgetData(this.widget);
+        if (this.$route.name === 'report') {
+          await this.getWidgetReportData({ offset, limit, next });
+        } else if (this.isConfigured) {
+          await this.getCurrentDashboardWidgetData(this.widget);
+        }
+      } catch (e) {
+        console.error('requestWidgetData error', e);
+      } finally {
+        this.isRequestingData = false;
       }
+    },
 
-      this.isRequestingData = false;
+    async requestVtexOrderData() {
+      const { uuid, config } = this.widget;
+
+      await this.getWidgetVtexOrderData({
+        uuid,
+        utm_source: config.filter.utm,
+      });
     },
 
     redirectToReport() {

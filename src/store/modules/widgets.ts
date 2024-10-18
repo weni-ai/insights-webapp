@@ -16,8 +16,6 @@ const mutations = {
   UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
 };
 
-import i18n from '@/utils/plugins/i18n';
-
 export default {
   namespaced: true,
   state: {
@@ -123,27 +121,72 @@ export default {
       );
 
       const totalValue = response.reduce((sum, item) => sum + item.title, 0);
+
       const formattedResponse = response
         .map((item) => {
           const percentage = ((item.title / totalValue) * 100 || 0).toFixed(2);
           return {
             description: item.description,
-            title: `${parseFloat(percentage).toLocaleString(
-              i18n.global.locale || 'en-US',
-              {
-                minimumFractionDigits: 2,
-              },
-            )}% (${item.title.toLocaleString(i18n.global.locale || 'en-US')})`,
             percentage: parseFloat(percentage), // Add percentage as a number for sorting
+            total: item.title,
           };
         })
-        .sort((a, b) => b.percentage - a.percentage)
-        .map(({ description, title }) => ({ description, title })); // Remove the 'percentage' property
+        .sort((a, b) => b.percentage - a.percentage);
 
       commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
         uuid,
         data: formattedResponse,
       });
+    },
+    async getWidgetVtexOrderData({ commit }, { uuid, utm_source = '' }) {
+      try {
+        const response: {
+          countSell?: string;
+          accumulatedTotal?: string;
+          medium_ticket?: string;
+        } = (await Dashboards.getDashboardWidgetData({
+          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          widgetUuid: uuid,
+          params: {
+            utm_source,
+          },
+        } as any)) as any;
+
+        let formattedResponse = {};
+
+        if (
+          !response.countSell &&
+          !response.accumulatedTotal &&
+          !response.medium_ticket
+        ) {
+          formattedResponse = {
+            orders: '',
+            average_ticket: '',
+            total_value: '',
+          };
+        } else {
+          formattedResponse = {
+            orders: response.countSell,
+            average_ticket: response.medium_ticket,
+            total_value: response.accumulatedTotal,
+          };
+        }
+
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: formattedResponse,
+        });
+      } catch (error) {
+        console.error(error);
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: {
+            orders: '',
+            average_ticket: '',
+            total_value: '',
+          },
+        });
+      }
     },
 
     updateCurrentWidgetEditing({ commit }, widget) {

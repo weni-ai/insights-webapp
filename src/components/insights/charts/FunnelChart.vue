@@ -6,7 +6,7 @@
     />
     <UnnnicChartFunnel
       v-else
-      :data="chartData"
+      :data="formattedChartData"
     />
   </section>
 </template>
@@ -22,8 +22,24 @@ export default {
   props: {
     isLoading: Boolean,
     chartData: {
-      type: Object,
+      type: Array,
       required: true,
+    },
+  },
+  computed: {
+    formattedChartData() {
+      if (!Array.isArray(this.chartData)) return [];
+      return this.chartData.map((item) => {
+        return {
+          description: item.description,
+          title: `${parseFloat(item.percentage).toLocaleString(
+            this.$i18n.locale || 'en-US',
+            {
+              minimumFractionDigits: 2,
+            },
+          )}% (${item.total.toLocaleString(this.$i18n.locale || 'en-US')})`,
+        };
+      });
     },
   },
 };

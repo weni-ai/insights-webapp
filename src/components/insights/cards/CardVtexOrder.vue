@@ -97,7 +97,9 @@ export default {
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
     isError() {
-      const allEmpty = Object?.values(this.data).every((str) => str === '');
+      const allEmpty = Object?.values(this.data || {}).every(
+        (str) => str === '',
+      );
       return allEmpty;
     },
 

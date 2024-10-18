@@ -29,7 +29,7 @@ export default {
       default: '',
     },
     dependsOn: {
-      type: Object,
+      type: [Object, undefined],
       default: undefined,
     },
     dependsOnValue: {

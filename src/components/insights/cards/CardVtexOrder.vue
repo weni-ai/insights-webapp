@@ -97,16 +97,14 @@ export default {
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
     isError() {
-      const allEmpty = Object?.values(this.data || {}).every(
-        (str) => str === '',
-      );
+      const allEmpty = Object?.values(this.data).every((str) => str === '');
       return allEmpty;
     },
 
     dataList() {
       if (this.isError || !this.data) return [];
 
-      const keyValues = Object.keys(this.data || {});
+      const keyValues = Object.keys(this.data);
 
       return keyValues.map((key) => ({
         label: i18n.global.t(`widgets.vtex_order.${key}`),

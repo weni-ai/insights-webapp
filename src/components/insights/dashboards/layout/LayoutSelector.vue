@@ -7,6 +7,7 @@
         'layout_button',
         { 'layout_button-active': selectedLayout === layout },
       ]"
+      :data-test-id="`layout_button-${index}`"
       @click="selectLayout(layout)"
     >
       <section

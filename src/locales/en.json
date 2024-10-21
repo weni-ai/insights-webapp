@@ -117,7 +117,7 @@
       "flow_executions": "@:flow executions"
     },
     "empty_widget": {
-      "title": "For the time being, this area is not configured",
+      "title": "Setup required, customize your widget to get started",
       "config_btn": "Configure"
     },
     "vtex_order": {

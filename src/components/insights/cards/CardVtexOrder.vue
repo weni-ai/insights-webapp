@@ -10,7 +10,7 @@
       <h1 class="header__title">{{ $t('widgets.vtex_order.title') }}</h1>
       <UnnnicButton
         size="small"
-        type="secondary"
+        type="tertiary"
         iconCenter="tune"
         data-testid="card-vtex-order-config-button-configurable"
         @click.stop="$emit('open-config')"
@@ -197,10 +197,9 @@ export default {
     .content__orders__container {
       height: 100%;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: $unnnic-spacing-awesome 0;
+      display: grid;
+      row-gap: $unnnic-spacing-awesome;
+      align-items: center;
     }
 
     .content__orders {

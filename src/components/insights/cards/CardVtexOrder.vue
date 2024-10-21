@@ -10,7 +10,7 @@
       <h1 class="header__title">{{ $t('widgets.vtex_order.title') }}</h1>
       <UnnnicButton
         size="small"
-        type="secondary"
+        type="tertiary"
         iconCenter="tune"
         data-testid="card-vtex-order-config-button-configurable"
         @click.stop="$emit('open-config')"

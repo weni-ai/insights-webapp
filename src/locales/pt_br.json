@@ -109,6 +109,21 @@
       "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
       "select_flows": "@:select @.lower:flows",
       "flow_executions": "Execuções do @.lower:flow"
+    },
+    "empty_widget": {
+      "title": "Configuração necessária, personalize seu widget para começar",
+      "config_btn": "Configurar"
+    },
+    "vtex_order": {
+      "title": "Vendas VTEX",
+      "orders": "Pedidos",
+      "total_value": "Valor total",
+      "average_ticket": "Ticket médio",
+      "empty_data": {
+        "title": "Ops, não encontramos nenhum dado!",
+        "sub_title": "Verifique se o UTM informado está correto ou aguarde novos dados",
+        "verify_btn": "Verificar UTM"
+      }
     }
   },
   "drawers": {

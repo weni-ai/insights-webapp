@@ -109,6 +109,21 @@
       "not_configured_description": "Select the @.lower:flows you want to map to assemble your project's funnel view!",
       "select_flows": "@:select @.lower:flows",
       "flow_executions": "@:flow executions"
+    },
+    "empty_widget": {
+      "title": "Setup required, customize your widget to get started",
+      "config_btn": "Configure"
+    },
+    "vtex_order": {
+      "title": "Sales VTEX",
+      "orders": "Orders",
+      "total_value": "Total value",
+      "average_ticket": "Average ticket",
+      "empty_data": {
+        "title": "Oops, we couldn't find any data!",
+        "sub_title": "Please check the provided UTM is correct or wait for new data to arrive",
+        "verify_btn": "Check UTM"
+      }
     }
   },
   "drawers": {

@@ -161,14 +161,14 @@ export default {
         ) {
           formattedResponse = {
             orders: '',
-            average_ticket: '',
             total_value: '',
+            average_ticket: '',
           };
         } else {
           formattedResponse = {
             orders: response.countSell,
-            average_ticket: response.medium_ticket,
             total_value: response.accumulatedTotal,
+            average_ticket: response.medium_ticket,
           };
         }
 
@@ -182,8 +182,8 @@ export default {
           uuid,
           data: {
             orders: '',
-            average_ticket: '',
             total_value: '',
+            average_ticket: '',
           },
         });
       }

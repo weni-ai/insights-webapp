@@ -197,10 +197,9 @@ export default {
     .content__orders__container {
       height: 100%;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: $unnnic-spacing-awesome 0;
+      display: grid;
+      row-gap: $unnnic-spacing-awesome;
+      align-items: center;
     }
 
     .content__orders {

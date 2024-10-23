@@ -4,6 +4,7 @@
     :title="$t('widgets.reset')"
     showCloseIcon
     :primaryButtonProps="primaryButtonProps"
+    :secondaryButtonProps="secondaryButtonProps"
     @primary-button-click="resetWidget"
     @secondary-button-click="updateModelValue"
     @update:model-value="updateModelValue"
@@ -45,6 +46,11 @@ export default {
       return {
         text: this.$t('reset'),
         loading: this.isLoading,
+      };
+    },
+    secondaryButtonProps() {
+      return {
+        text: this.$t('cancel'),
       };
     },
   },

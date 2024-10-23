@@ -117,7 +117,7 @@
       "flow_executions": "Ejecuciones de @.lower:flow"
     },
     "empty_widget": {
-      "title": "Por el momento esta zona no está configurada",
+      "title": "Configuración necesaria, personaliza tu widget para empezar",
       "config_btn": "Configure"
     },
     "vtex_order": {

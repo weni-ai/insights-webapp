@@ -287,5 +287,9 @@
         }
       }
     }
+  },
+  "charts": {
+    "hours": "Hours",
+    "attendances": "Attendances"
   }
 }

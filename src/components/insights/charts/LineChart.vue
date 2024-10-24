@@ -86,6 +86,9 @@ export default {
       const configData = {
         fill: true,
         borderColor: '#00A49F',
+        pointRadius: 0,
+        hoverRadius: 3,
+        pointStyle: 'circle',
         backgroundColor: function (context) {
           const chart = context.chart;
           const { ctx, chartArea } = chart;
@@ -141,19 +144,14 @@ export default {
           tooltip: {
             enabled: true,
             backgroundColor: '#272B33',
-            usePointStyle: true,
-            padding: {
-              right: 10,
-              top: 8,
-              bottom: 8,
-            },
+            displayColors: false,
             font: {
               size: '16',
               weight: '700',
             },
             callbacks: {
               title: function (tooltipItems) {
-                return `${' '.repeat(6)}${i18n.global.t('charts.hours')}: ${tooltipItems[0].label}`;
+                return `${i18n.global.t('charts.hours')}: ${tooltipItems[0].label}`;
               },
               label: function (tooltipItem) {
                 const originalValue = tooltipItem.raw;

@@ -49,6 +49,7 @@ import { useElementSize } from '@vueuse/core';
 import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
+import { Tooltip } from 'chart.js';
 
 export default {
   name: 'LineChart',
@@ -84,7 +85,6 @@ export default {
     mergedData() {
       const configData = {
         fill: true,
-        tension: 0.1,
         borderColor: '#00A49F',
         backgroundColor: function (context) {
           const chart = context.chart;
@@ -105,29 +105,7 @@ export default {
           return gradient;
         },
       };
-      /*
-      return {
-        datasets: [
-          {
-            data: [8, 8, 7, 8, 7, 8, 9, 9, 10, 9, 8, 7],
-            ...configData,
-          },
-        ],
-        labels: [
-          '0h',
-          '1h',
-          '2h',
-          '3h',
-          '4h',
-          '5h',
-          '6h',
-          '7h',
-          '8h',
-          '9h',
-          '10h',
-          '11h',
-        ],
-      };*/
+
       return deepMerge(
         {
           datasets: [{ ...configData }],
@@ -139,30 +117,45 @@ export default {
       return {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00A49F',
-        pointBackgroundColor: '#00A49F',
+        pointStyle: false,
+        layout: {
+          padding: 10,
+        },
         scales: {
           y: {
             beginAtZero: true,
             suggestedMin: 0,
+            display: true,
           },
+          x: {
+            grid: {
+              display: true,
+            },
+          },
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
         },
         plugins: {
           tooltip: {
             enabled: true,
             backgroundColor: '#272B33',
-            anchor: 'end',
-            align: 'start',
+            usePointStyle: true,
+            padding: {
+              right: 10,
+              top: 8,
+              bottom: 8,
+            },
             font: {
               size: '16',
               weight: '700',
             },
             callbacks: {
               title: function (tooltipItems) {
-                console.log('title', tooltipItems);
-                return `${i18n.global.t('charts.hours')}: ${tooltipItems[0].label}`;
+                return `${' '.repeat(6)}${i18n.global.t('charts.hours')}: ${tooltipItems[0].label}`;
               },
               label: function (tooltipItem) {
-                console.log('label', tooltipItem);
                 const originalValue = tooltipItem.raw;
                 return `${i18n.global.t('charts.attendances')}: ${originalValue}`;
               },
@@ -175,7 +168,7 @@ export default {
       };
     },
     chartPlugins() {
-      return [ChartDataLabels];
+      return [ChartDataLabels, Tooltip];
     },
   },
 };

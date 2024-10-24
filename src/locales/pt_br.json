@@ -287,5 +287,9 @@
         }
       }
     }
+  },
+  "charts": {
+    "hours": "Horário",
+    "attendances": "Atendimentos"
   }
 }

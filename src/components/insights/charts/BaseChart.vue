@@ -19,6 +19,7 @@ import {
   RadialLinearScale,
   LineController,
   BarController,
+  Filler,
 } from 'chart.js';
 
 import { deepMerge } from '@/utils/object';
@@ -35,6 +36,7 @@ const defaultPlugins = [
   RadialLinearScale,
   LineController,
   BarController,
+  Filler,
 ];
 
 export default {

@@ -56,7 +56,7 @@ export default {
     },
 
     isDisableResetWidget() {
-      const isEmptyWidget = this.modelValue.type === 'empty_widget';
+      const isEmptyWidget = this.modelValue.type === 'empty_column';
 
       return isEmptyWidget;
     },

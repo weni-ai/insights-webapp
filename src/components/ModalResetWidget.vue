@@ -72,7 +72,7 @@ export default {
           await this.updateWidget({
             ...this.widget,
             config: {},
-            type: 'empty_widget',
+            type: 'empty_column',
             name: '',
           });
         } else {

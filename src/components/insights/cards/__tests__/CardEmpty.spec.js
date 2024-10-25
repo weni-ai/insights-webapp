@@ -6,7 +6,7 @@ import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 const widgetMock = {
   uuid: '1',
   name: 'Empty Widget',
-  type: 'empty_widget',
+  type: 'empty_column',
   position: {
     rows: [1, 3],
     columns: [9, 12],

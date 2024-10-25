@@ -61,7 +61,7 @@ describe('DrawerConfigContentVtex', () => {
     expect(wrapper.vm.isDisableResetWidget).toBe(false);
 
     await wrapper.setProps({
-      modelValue: { type: 'empty_widget' },
+      modelValue: { type: 'empty_column' },
     });
 
     expect(wrapper.vm.isDisableResetWidget).toBe(true);
@@ -76,7 +76,7 @@ describe('DrawerConfigContentVtex', () => {
 
   it('UnnnicButton is disabled when isDisableResetWidget is true', async () => {
     await wrapper.setProps({
-      modelValue: { type: 'empty_widget' },
+      modelValue: { type: 'empty_column' },
     });
 
     const button = wrapper.findComponent({ name: 'UnnnicButton' });

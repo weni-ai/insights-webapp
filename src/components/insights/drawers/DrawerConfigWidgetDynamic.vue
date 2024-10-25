@@ -136,7 +136,7 @@ export default {
             ),
           },
         },
-        empty_widget: {
+        empty_column: {
           default: {
             title: $t('drawers.config_card.title'),
           },
@@ -228,7 +228,7 @@ export default {
         case 'card':
           newWidget = this.createCardWidget;
           break;
-        case 'empty_widget':
+        case 'empty_column':
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
           else newWidget = this.createVtexWidget;
@@ -317,7 +317,7 @@ export default {
 
       this.callTourPreviousStep({
         tour: 'widgets-onboarding-tour',
-        qtdSteps: ['card', 'empty_widget'].includes(this.widget.type) ? 2 : 1,
+        qtdSteps: ['card', 'empty_column'].includes(this.widget.type) ? 2 : 1,
         timeout: 300,
       });
     },

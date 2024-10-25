@@ -66,6 +66,7 @@
   "none": "Nenhum",
   "currency": "Moeda",
   "funnel": "Funil",
+  "select_layout": "Selecionar o layout:",
   "dashboard_name": "Nome do dashboard",
   "add": "Adicionar",
   "view_more": "Ver mais",
@@ -77,6 +78,11 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "date_format": "DD/MM/YYYY",
+  "select_date": {
+    "yesterday": "Ontem ({date})",
+    "last_days": "Últimos {value} dias ({date})",
+    "previous_month": "Mês anterior ({date})"
+  },
   "save_error": "Erro ao salvar, tente novamente",
   "reset": "Resetar",
   "onboarding": {
@@ -144,6 +150,14 @@
         "data_crossing": {
           "title": "Cruzamento de dados",
           "description": "Combine dois valores para obter uma métrica"
+        },
+        "funnel": {
+          "title": "Funil",
+          "description": "Selecione dados para visualizar em um gráfico de funil"
+        },
+        "vtex": {
+          "title": "VTEX",
+          "description": "Visualize seus dados de vendas VTEX"
         }
       }
     },
@@ -236,7 +250,6 @@
     "create_dashboard": "Criar dashboard",
     "creating_new_dashboard": "Criando novo dashboard",
     "dashboard_name_placeholder": "Ex: Vendas",
-    "funnel_hint": "Selecione quanto gráficos de funil deseja no seu dashboard",
     "alert": {
       "success": "Dashboard criado com sucesso",
       "error": "Falha ao criar dashboard"
@@ -255,7 +268,7 @@
     "title": "Deletar dashboard",
     "notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
     "alert": {
-      "success": "Dashboard excluído com sucesso",
+      "success": "Dashboard excluido com sucesso",
       "error": "Falha ao excluir dashboard"
     }
   },

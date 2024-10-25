@@ -66,6 +66,7 @@
   "none": "None",
   "currency": "Currency",
   "funnel": "Funnel",
+  "select_layout": "Select the layout:",
   "dashboard_name": "Dashboard name",
   "add": "Add",
   "view_more": "View more",
@@ -77,6 +78,11 @@
   "clear_fields": "Clear fields",
   "today": "Today",
   "date_format": "MM/DD/YYYY",
+  "select_date": {
+    "yesterday": "Yesterday ({date})",
+    "last_days": "Last {value} days ({date})",
+    "previous_month": "Previous month ({date})"
+  },
   "save_error": "Error saving, please try again",
   "reset": "Reset",
   "onboarding": {
@@ -144,6 +150,14 @@
         "data_crossing": {
           "title": "Data crossing",
           "description": "Combine two values to get a metric"
+        },
+        "funnel": {
+          "title": "Funnel",
+          "description": "Select data to visualize in a funnel graph"
+        },
+        "vtex": {
+          "title": "VTEX",
+          "description": "View your VTEX sales data"
         }
       }
     },
@@ -236,7 +250,6 @@
     "create_dashboard": "Create dashboard",
     "creating_new_dashboard": "Creating new dashboard",
     "dashboard_name_placeholder": "Ex: Sales",
-    "funnel_hint": "Select how many funnel charts you want on your dashboard",
     "alert": {
       "success": "Dashboard created successfully",
       "error": "Failed to create dashboard"

@@ -66,6 +66,7 @@
   "none": "Ninguno",
   "currency": "Moneda",
   "funnel": "Embudo",
+  "select_layout": "Selecciona el diseño:",
   "dashboard_name": "Nombre del dashboard",
   "add": "Agregar",
   "view_more": "Ver más",
@@ -77,6 +78,11 @@
   "clear_fields": "Borrar campos",
   "today": "Hoy",
   "date_format": "DD/MM/YYYY",
+  "select_date": {
+    "yesterday": "Ayer ({date})",
+    "last_days": "Últimos {value} días ({date})",
+    "previous_month": "Mes anterior ({date})"
+  },
   "save_error": "Error al guardar, por favor inténtalo de nuevo",
   "reset": "Reiniciar",
   "onboarding": {
@@ -144,6 +150,14 @@
         "data_crossing": {
           "title": "Cruce de datos",
           "description": "Combinar dos valores para obtener una métrica"
+        },
+        "funnel": {
+          "title": "Embudo",
+          "description": "Seleccionar datos para visualizarlos en un gráfico de embudo"
+        },
+        "vtex": {
+          "title": "VTEX",
+          "description": "Visualice sus datos de ventas VTEX"
         }
       }
     },
@@ -236,7 +250,6 @@
     "create_dashboard": "Crear dashboard",
     "creating_new_dashboard": "Creando nuevo panel",
     "dashboard_name_placeholder": "Ej: Ventas",
-    "funnel_hint": "Seleccione cuántos gráficos de embudo desea en su panel",
     "alert": {
       "success": "Panel creado con éxito",
       "error": "Error al crear el panel"

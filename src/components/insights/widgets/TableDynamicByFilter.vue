@@ -127,7 +127,11 @@ export default {
       const internalRedirect = () => {
         if (isAnotherModule.test(item.link.url)) {
           window.parent.postMessage(
-            { event: 'redirect', path: item.link.url },
+            {
+              event: 'redirect',
+              path: item.link.url,
+              query: { from: 'insights' },
+            },
             '*',
           );
         } else {

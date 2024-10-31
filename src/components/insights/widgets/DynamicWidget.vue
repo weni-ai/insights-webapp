@@ -9,7 +9,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 
-import BarChart from '@/components/insights/charts/BarChart.vue';
+import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
@@ -58,13 +58,13 @@ export default {
 
     currentComponent() {
       const componentMap = {
-        graph_column: BarChart,
+        graph_column: LineChart,
         graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
         table_dynamic_by_filter: TableDynamicByFilter,
         table_group: TableGroup,
         card: CardDashboard,
-        empty_widget: CardEmpty,
+        empty_column: CardEmpty,
         vtex_order: CardVtexOrder,
         insight: null, // TODO: Create Insight component
       };
@@ -125,7 +125,7 @@ export default {
           configurable: is_configurable,
           configured: this.isConfigured,
         },
-        empty_widget: {
+        empty_column: {
           widget: this.widget,
         },
         vtex_order: {
@@ -198,7 +198,7 @@ export default {
         graph_column: {
           seeMore: () => this.redirectToReport(),
         },
-        empty_widget: {
+        empty_column: {
           openConfig: () => this.$emit('open-config'),
         },
         vtex_order: {
@@ -239,7 +239,7 @@ export default {
           ![
             'table_group',
             'graph_funnel',
-            'empty_widget',
+            'empty_column',
             'vtex_order',
           ].includes(this.widget.type)
         ) {

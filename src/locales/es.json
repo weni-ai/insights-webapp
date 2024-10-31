@@ -315,5 +315,9 @@
         }
       }
     }
+  },
+  "charts": {
+    "hours": "Horarios",
+    "attendances": "Servicios"
   }
 }

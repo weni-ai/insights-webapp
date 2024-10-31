@@ -43,6 +43,8 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
+import Config from '@/store/modules/config';
+import env from '@/utils/env';
 import { clearDeepValues } from '@/utils/object.js';
 
 export default {
@@ -93,9 +95,31 @@ export default {
         }));
       }
 
+      const enabledProjectsProd = [
+        '521d2c65-ae66-441d-96ff-2b8471d522c1',
+        'd8d6d71d-3daf-4d2e-812b-85cc252a96d8',
+        'e6c3ce0c-2bb5-45b6-b5ee-1d17ea88941b',
+        'd646822b-07b4-4386-a242-4c9ec6bb485f',
+      ];
+
+      const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];
+
+      const enabledProjects =
+        env('VITE_ENVIROMENT') === 'STG'
+          ? enabledProjectsStg
+          : enabledProjectsProd;
+
+      const isVtexEnabledProject = enabledProjects.includes(
+        Config.state.project.uuid,
+      );
+
+      const empty_widget_options = ['funnel'];
+
+      if (isVtexEnabledProject) empty_widget_options.push('vtex');
+
       const optionsMap = {
         card: createOptions(['executions', 'flow_result', 'data_crossing']),
-        empty_widget: createOptions(['funnel', 'vtex']),
+        empty_column: createOptions(empty_widget_options),
       };
 
       return optionsMap[this.widget?.type] || [];

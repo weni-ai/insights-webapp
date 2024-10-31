@@ -268,7 +268,7 @@
     "title": "Deletar dashboard",
     "notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
     "alert": {
-      "success": "Dashboard excluido com sucesso",
+      "success": "Dashboard excluído com sucesso",
       "error": "Falha ao excluir dashboard"
     }
   },

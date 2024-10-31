@@ -21,7 +21,7 @@
       ref="barChart"
       class="line-chart__chart"
     >
-      <SkeletonBarChart
+      <SkeletonLineChart
         v-if="isLoading"
         class="chart__loading"
         data-testid="chart-loading"
@@ -42,7 +42,7 @@
 
 <script>
 import BaseChart from './BaseChart.vue';
-import SkeletonBarChart from './loadings/SkeletonBarChart.vue';
+import SkeletonLineChart from './loadings/SkeletonLineChart.vue';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import i18n from '@/utils/plugins/i18n';
 import { useElementSize } from '@vueuse/core';
@@ -54,7 +54,7 @@ import { Tooltip } from 'chart.js';
 export default {
   name: 'LineChart',
 
-  components: { BaseChart, SkeletonBarChart },
+  components: { BaseChart, SkeletonLineChart },
 
   props: {
     title: {

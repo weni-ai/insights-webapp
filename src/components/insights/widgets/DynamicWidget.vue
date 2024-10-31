@@ -9,7 +9,7 @@
 <script>
 import { mapActions, mapState } from 'vuex';
 
-import BarChart from '@/components/insights/charts/BarChart.vue';
+import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
@@ -58,7 +58,7 @@ export default {
 
     currentComponent() {
       const componentMap = {
-        graph_column: BarChart,
+        graph_column: LineChart,
         graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
         table_dynamic_by_filter: TableDynamicByFilter,

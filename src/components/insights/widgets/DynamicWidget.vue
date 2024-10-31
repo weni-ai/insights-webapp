@@ -140,19 +140,21 @@ export default {
     widgetVtexData() {
       if (this.widget.type === 'vtex_order' && this.widget.data) {
         const { total_value, average_ticket } = this.widget.data;
-
         const existTotalValue = total_value !== '';
         const existAverageTicketValue = average_ticket !== '';
         const currentSymbol =
           currencySymbols[this.currentDashboard.config?.currency_type];
 
+        const numbersNormalization = (value) =>
+          `${currentSymbol} ${Number(value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
+
         return {
           ...this.widget.data,
           total_value: existTotalValue
-            ? `${currentSymbol} ${total_value}`
+            ? numbersNormalization(total_value)
             : total_value,
           average_ticket: existAverageTicketValue
-            ? `${currentSymbol} ${average_ticket}`
+            ? numbersNormalization(average_ticket)
             : average_ticket,
         };
       }

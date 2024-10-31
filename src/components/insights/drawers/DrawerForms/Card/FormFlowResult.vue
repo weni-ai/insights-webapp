@@ -1,21 +1,30 @@
 <template>
-  <SelectFlow v-model="config.flow.uuid" />
+  <SelectFlow
+    v-model="config.flow.uuid"
+    data-test-id="select-flow"
+  />
 
   <SelectFlowResult
     v-model="config.flow.result"
+    data-test-id="select-flow-result"
     :flow="config.flow?.uuid"
     :disabled="!config.flow?.uuid"
   />
 
   <RadioList
     v-model:selected-radio="config.operation"
+    data-test-id="radio-list"
     :label="$t('drawers.config_card.operation')"
     :radios="operations"
   />
 
   <section>
-    <UnnnicLabel :label="$t('drawers.config_card.format')" />
+    <UnnnicLabel
+      :label="$t('drawers.config_card.format')"
+      data-test-id="label"
+    />
     <UnnnicCheckbox
+      data-test-id="check-box"
       :modelValue="config.currency"
       :textRight="$t('drawers.config_card.checkbox.currency')"
       :disabled="config.operation === 'recurrence'"

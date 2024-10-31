@@ -8,7 +8,7 @@
       <UnnnicButton
         v-if="configured && configurable"
         size="small"
-        type="secondary"
+        type="tertiary"
         iconCenter="tune"
         data-testid="card-funnel-config-button-configurable"
         @click.stop="$emit('open-config')"

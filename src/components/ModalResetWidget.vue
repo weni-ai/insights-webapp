@@ -4,6 +4,7 @@
     :title="$t('widgets.reset')"
     showCloseIcon
     :primaryButtonProps="primaryButtonProps"
+    :secondaryButtonProps="secondaryButtonProps"
     @primary-button-click="resetWidget"
     @secondary-button-click="updateModelValue"
     @update:model-value="updateModelValue"
@@ -47,6 +48,11 @@ export default {
         loading: this.isLoading,
       };
     },
+    secondaryButtonProps() {
+      return {
+        text: this.$t('cancel'),
+      };
+    },
   },
 
   methods: {
@@ -62,11 +68,20 @@ export default {
       this.isLoading = true;
 
       try {
-        await this.updateWidget({
-          ...this.widget,
-          config: { ...clearDeepValues(this.widget.config), currency: false },
-          name: '',
-        });
+        if (this.widget.type === 'vtex_order') {
+          await this.updateWidget({
+            ...this.widget,
+            config: {},
+            type: 'empty_column',
+            name: '',
+          });
+        } else {
+          await this.updateWidget({
+            ...this.widget,
+            config: { ...clearDeepValues(this.widget.config), currency: false },
+            name: '',
+          });
+        }
 
         this.callSuccessAlert();
       } catch (error) {

@@ -138,6 +138,56 @@ export default {
         data: formattedResponse,
       });
     },
+    async getWidgetVtexOrderData({ commit }, { uuid, utm_source = '' }) {
+      try {
+        const response: {
+          countSell?: string;
+          accumulatedTotal?: string;
+          medium_ticket?: string;
+        } = (await Dashboards.getDashboardWidgetData({
+          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          widgetUuid: uuid,
+          params: {
+            utm_source,
+          },
+        } as any)) as any;
+
+        let formattedResponse = {};
+
+        if (
+          !response.countSell &&
+          !response.accumulatedTotal &&
+          !response.medium_ticket
+        ) {
+          formattedResponse = {
+            orders: '',
+            total_value: '',
+            average_ticket: '',
+          };
+        } else {
+          formattedResponse = {
+            orders: response.countSell,
+            total_value: response.accumulatedTotal,
+            average_ticket: response.medium_ticket,
+          };
+        }
+
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: formattedResponse,
+        });
+      } catch (error) {
+        console.error(error);
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: {
+            orders: '',
+            total_value: '',
+            average_ticket: '',
+          },
+        });
+      }
+    },
 
     updateCurrentWidgetEditing({ commit }, widget) {
       commit(mutations.UPDATE_CURRENT_WIDGET_EDITING, widget);

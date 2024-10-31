@@ -18,7 +18,11 @@ export default {
 
   data() {
     return {
-      config: null,
+      config: {
+        flow: {
+          uuid: null,
+        },
+      },
     };
   },
 

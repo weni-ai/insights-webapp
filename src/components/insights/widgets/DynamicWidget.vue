@@ -139,7 +139,7 @@ export default {
 
     widgetVtexData() {
       if (this.widget.type === 'vtex_order' && this.widget.data) {
-        const { total_value, average_ticket } = this.widget.data;
+        const { total_value, average_ticket, orders } = this.widget.data;
         const existTotalValue = total_value !== '';
         const existAverageTicketValue = average_ticket !== '';
         const currentSymbol =
@@ -150,6 +150,7 @@ export default {
 
         return {
           ...this.widget.data,
+          orders: (orders || 0).toLocaleString(this.$i18n.locale || 'en-US'),
           total_value: existTotalValue
             ? numbersNormalization(total_value)
             : total_value,

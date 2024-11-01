@@ -18,7 +18,7 @@
       </a>
     </header>
     <section
-      ref="barChart"
+      ref="lineChart"
       class="line-chart__chart"
     >
       <SkeletonLineChart
@@ -71,11 +71,11 @@ export default {
   emits: ['seeMore'],
 
   setup() {
-    const barChart = ref(null);
-    const { width, height } = useElementSize(barChart);
+    const lineChart = ref(null);
+    const { width, height } = useElementSize(lineChart);
 
     return {
-      barChart,
+      lineChart,
       chartWidth: width,
       chartHeight: height,
     };

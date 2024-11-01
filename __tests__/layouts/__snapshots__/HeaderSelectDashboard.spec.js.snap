@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
+<div
+  data-v-app=""
+>
+  
+  <div
+    class="unnnic-dropdown header-select-dashboard"
+    data-onboarding-id="select-dashboard"
+    data-v-054061ac=""
+    data-v-1fb8c82b=""
+  >
+    <div
+      class="unnnic-dropdown__trigger"
+      data-v-1fb8c82b=""
+    >
+      
+      <span
+        class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md unnnic--clickable header-select-dashboard__arrow-back"
+        data-testid="back-icon"
+        data-v-054061ac=""
+        data-v-76ceda5d=""
+        translate="no"
+      >
+        arrow_back
+      </span>
+      <section
+        class="dropdown__trigger"
+        data-testid="dropdown-trigger"
+        data-v-054061ac=""
+      >
+        <h1
+          class="trigger__title"
+          data-testid="dashboard-title"
+          data-v-054061ac=""
+        >
+          Dashboard 1
+        </h1>
+        <span
+          class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md"
+          data-testid="expand-icon"
+          data-v-054061ac=""
+          data-v-76ceda5d=""
+          translate="no"
+        >
+          expand_more
+        </span>
+      </section>
+      
+      <!---->
+    </div>
+  </div>
+  <drawer-dashboard-config-stub
+    data-testid="drawer-dashboard-config"
+    data-v-054061ac=""
+    modelvalue="true"
+  />
+  
+</div>
+`;

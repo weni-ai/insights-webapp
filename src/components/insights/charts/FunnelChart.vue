@@ -7,6 +7,7 @@
     <UnnnicChartFunnel
       v-else
       :data="formattedChartData"
+      type="default"
     />
   </section>
 </template>
@@ -28,8 +29,16 @@ export default {
   },
   computed: {
     formattedChartData() {
+      const arrayColors = [
+        '#F6E05E',
+        '#F6AD55',
+        '#B794F4',
+        '#63B3ED',
+        '#68D391',
+      ];
+
       if (!Array.isArray(this.chartData)) return [];
-      return this.chartData.map((item) => {
+      return this.chartData.map((item, index) => {
         return {
           description: item.description,
           title: `${parseFloat(item.percentage).toLocaleString(
@@ -37,7 +46,9 @@ export default {
             {
               minimumFractionDigits: 2,
             },
-          )}% (${item.total.toLocaleString(this.$i18n.locale || 'en-US')})`,
+          )}%`,
+          value: `${item.total.toLocaleString(this.$i18n.locale || 'en-US')}`,
+          color: arrayColors[index],
         };
       });
     },
@@ -48,8 +59,7 @@ export default {
 <style lang="scss" scoped>
 .funnel-chart {
   height: 100%;
-
-  display: flex;
+  width: 100%;
 
   &__loading {
     margin: auto;

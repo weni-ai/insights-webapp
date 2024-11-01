@@ -12,8 +12,7 @@ exports[`OptionSelectDashboard > Should match the snapshot 1`] = `
     class="material-symbols-rounded unnnic-icon-scheme--neutral-clean unnnic-icon-size--md unnnic--clickable material-symbols-rounded--filled option-select-dashboard__star-icon option-select-dashboard__star-icon--selected"
     data-testid="star-icon"
     data-v-000aa0c0=""
-    data-v-76ceda5d=""
-    translate="no"
+    data-v-1a90efc1=""
   >
     star_rate
   </span>

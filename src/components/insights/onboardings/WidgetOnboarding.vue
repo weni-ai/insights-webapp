@@ -122,7 +122,7 @@ export default {
             'widgets_onboarding.empty_widget.step.fill_metric.description',
           ),
           attachedElement:
-            this.onboardingRefs['drawer-graph-funnel'] ||
+            this.onboardingRefs['drawer-graph-empty'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
           beforeRender: this.beforeOpenFunnelConfig,

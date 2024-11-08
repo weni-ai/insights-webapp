@@ -6,25 +6,15 @@
       ref="insightsContent"
       class="insights-layout__insights"
     >
-      <main
-        class="insights__main"
-        :style="{
-          height: '100%' || `${mainHeight}vh`,
-        }"
-      >
+      <main class="insights__main">
         <slot />
       </main>
     </section>
-    <!-- <ResizableBar /> -->
   </section>
 </template>
 
 <script>
 import { mapMutations, mapState } from 'vuex';
-
-// import { pxToVh } from '@/utils/css';
-
-// import ResizableBar from '@/components/insights/ResizableBar/index.vue';
 
 import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 
@@ -33,26 +23,13 @@ export default {
 
   components: {
     InsightsLayoutHeader,
-    // ResizableBar,
   },
 
   computed: {
     ...mapState({
-      contentHeight: (state) => state.resizableBar.contentHeight,
-      barHandlerHeight: (state) => state.resizableBar.barHandlerHeight,
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
     }),
-
-    mainHeight() {
-      // 81 is the default value when the resizable bar is minimized.
-      return 81;
-      // return (
-      //   pxToVh(this.$refs.insightsContent?.clientHeight) -
-      //     this.contentHeight -
-      //     pxToVh(this.barHandlerHeight) || 0
-      // );
-    },
   },
 
   mounted() {
@@ -92,6 +69,8 @@ export default {
     position: relative;
 
     .insights__main {
+      width: 100%;
+
       display: flex;
       flex-direction: column;
 

@@ -111,7 +111,7 @@ export default {
             this.onboardingRefs['widget-gallery'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
-          beforeRender: this.beforeOpenWidgetEmptyConfig,
+          beforeRender: this.beforeOpenGaleryEmptyConfig,
           hiddenNextStepButton: true,
         },
         {
@@ -125,7 +125,7 @@ export default {
             this.onboardingRefs['drawer-graph-empty'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
-          beforeRender: this.beforeOpenFunnelConfig,
+          beforeRender: this.beforeOpenEmptyWidgetConfig,
           hiddenNextStepButton: true,
         },
       ];
@@ -167,8 +167,8 @@ export default {
   methods: {
     ...mapActions({
       beforeOpenWidgetConfig: 'onboarding/beforeOpenWidgetConfig',
-      beforeOpenFunnelConfig: 'onboarding/beforeOpenFunnelConfig',
-      beforeOpenWidgetEmptyConfig: 'onboarding/beforeOpenWidgetEmptyConfig',
+      beforeOpenEmptyWidgetConfig: 'onboarding/beforeOpenEmptyWidgetConfig',
+      beforeOpenGaleryEmptyConfig: 'onboarding/beforeOpenGaleryEmptyConfig',
       beforeOpenWidgetMetricConfig: 'onboarding/beforeOpenWidgetMetricConfig',
     }),
     ...mapMutations({

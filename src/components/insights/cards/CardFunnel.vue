@@ -101,8 +101,9 @@ export default {
 .card-funnel {
   min-height: 310px;
   height: 100%;
+  width: 100%;
 
-  padding: $unnnic-spacing-sm;
+  padding: $unnnic-spacing-md;
 
   display: flex;
   flex-direction: column;
@@ -121,6 +122,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding-bottom: $unnnic-spacing-md;
 
     .header__title {
       padding: $unnnic-spacing-nano 0;
@@ -135,7 +137,7 @@ export default {
 
   &__content {
     overflow: hidden;
-
+    width: 100%;
     height: 100%;
 
     display: flex;

@@ -92,9 +92,6 @@ export default {
       immediate: true,
       deep: true,
       handler(newRoute, oldRoute) {
-        console.log('oldRoute', oldRoute);
-        console.log('newRoute', newRoute);
-
         if (oldRoute && newRoute.path !== oldRoute.path) {
           this.retainRouteQueries(newRoute, oldRoute);
           return;

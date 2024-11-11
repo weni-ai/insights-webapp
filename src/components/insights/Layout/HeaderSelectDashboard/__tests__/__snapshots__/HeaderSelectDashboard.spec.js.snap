@@ -9,18 +9,19 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
     class="unnnic-dropdown header-select-dashboard"
     data-onboarding-id="select-dashboard"
     data-v-054061ac=""
-    data-v-1fb8c82b=""
+    data-v-5ab1e453=""
   >
     <div
       class="unnnic-dropdown__trigger"
-      data-v-1fb8c82b=""
+      data-v-5ab1e453=""
     >
       
       <span
         class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md unnnic--clickable header-select-dashboard__arrow-back"
         data-testid="back-icon"
         data-v-054061ac=""
-        data-v-1a90efc1=""
+        data-v-76ceda5d=""
+        translate="no"
       >
         arrow_back
       </span>
@@ -40,7 +41,8 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
           class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md"
           data-testid="expand-icon"
           data-v-054061ac=""
-          data-v-1a90efc1=""
+          data-v-76ceda5d=""
+          translate="no"
         >
           expand_more
         </span>

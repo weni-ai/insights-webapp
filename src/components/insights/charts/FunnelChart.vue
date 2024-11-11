@@ -1,5 +1,12 @@
 <template>
-  <section class="funnel-chart">
+  <section
+    :class="[
+      'funnel-chart',
+      formattedChartData.length === 3
+        ? 'funnel-chart-three'
+        : 'funnel-chart-default',
+    ]"
+  >
     <IconLoading
       v-if="isLoading"
       class="funnel-chart__loading"
@@ -38,7 +45,31 @@ export default {
       ];
 
       if (!Array.isArray(this.chartData)) return [];
-      return this.chartData.map((item, index) => {
+      console.log('this.chartData', [
+        ...this.chartData,
+        {
+          description: 'Informou entregas',
+          percentage: 0.03,
+          total: 5,
+        },
+      ]);
+      return [
+        {
+          description: 'Clicou em comprar',
+          percentage: 100,
+          total: 5000,
+        },
+        {
+          description: 'Informou entrega',
+          percentage: 67,
+          total: 3500,
+        },
+        {
+          description: 'Selecionou itens',
+          percentage: 24,
+          total: 1500,
+        },
+      ].map((item, index) => {
         return {
           description: item.description,
           title: `${parseFloat(item.percentage).toLocaleString(
@@ -63,6 +94,64 @@ export default {
 
   &__loading {
     margin: auto;
+  }
+}
+
+.funnel-chart-three {
+  :deep(.unnnic-chart-funnel-base-item) {
+    .w-60 {
+      width: 60%;
+    }
+
+    .w-50 {
+      width: 47%;
+    }
+
+    .w-40 {
+      width: 34%;
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    :deep(.unnnic-chart-funnel-base-item) {
+      .w-60 {
+        width: 60%;
+      }
+
+      .w-50 {
+        width: 35%;
+      }
+
+      .w-40 {
+        width: 19%;
+      }
+    }
+  }
+}
+
+.funnel-chart-default {
+  @media screen and (max-width: 1024px) {
+    :deep(.unnnic-chart-funnel-base-item) {
+      .w-60 {
+        width: 60%;
+      }
+
+      .w-50 {
+        width: 42%;
+      }
+
+      .w-40 {
+        width: 31%;
+      }
+
+      .w-30 {
+        width: 21%;
+      }
+
+      .w-20 {
+        width: 11%;
+      }
+    }
   }
 }
 </style>

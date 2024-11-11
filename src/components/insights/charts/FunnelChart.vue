@@ -45,31 +45,8 @@ export default {
       ];
 
       if (!Array.isArray(this.chartData)) return [];
-      console.log('this.chartData', [
-        ...this.chartData,
-        {
-          description: 'Informou entregas',
-          percentage: 0.03,
-          total: 5,
-        },
-      ]);
-      return [
-        {
-          description: 'Clicou em comprar',
-          percentage: 100,
-          total: 5000,
-        },
-        {
-          description: 'Informou entrega',
-          percentage: 67,
-          total: 3500,
-        },
-        {
-          description: 'Selecionou itens',
-          percentage: 24,
-          total: 1500,
-        },
-      ].map((item, index) => {
+
+      return this.chartData.map((item, index) => {
         return {
           description: item.description,
           title: `${parseFloat(item.percentage).toLocaleString(

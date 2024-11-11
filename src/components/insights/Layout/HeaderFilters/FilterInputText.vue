@@ -1,5 +1,6 @@
 <template>
   <UnnnicInput
+    data-testid="filter-input-text"
     :modelValue="modelValue"
     iconRight="search"
     :placeholder="placeholder"
@@ -12,10 +13,6 @@ export default {
   name: 'FilterInputText',
   props: {
     modelValue: {
-      type: String,
-      default: '',
-    },
-    label: {
       type: String,
       default: '',
     },

@@ -95,9 +95,38 @@ export default {
   &__loading {
     margin: auto;
   }
+
+  :deep(.unnnic-chart-funnel-base-item) {
+    position: relative;
+    z-index: 2;
+    
+    &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 1px;
+    background-color: $unnnic-color-neutral-soft;
+    z-index: 1;
+    }
+
+    &:last-of-type::after {
+      display: none;
+    }
+  }
+
+  :deep(.overflow-hidden:after) {
+    height: 0px;
+  }
+
+  :deep(.unnnic-chart-funnel-base-item__text:after) {
+    height: 0px;
+  }
 }
 
 .funnel-chart-three {
+  height: 85%;
   :deep(.unnnic-chart-funnel-base-item) {
     .w-60 {
       width: 60%;

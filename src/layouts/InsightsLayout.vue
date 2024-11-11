@@ -69,7 +69,7 @@ export default {
     position: relative;
 
     .insights__main {
-      width: 100%;
+      height: 100%;
 
       display: flex;
       flex-direction: column;

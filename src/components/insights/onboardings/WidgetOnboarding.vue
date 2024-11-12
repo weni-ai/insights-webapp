@@ -31,12 +31,6 @@ export default {
       onboardingRefs: (state) => state.onboarding.onboardingRefs,
     }),
 
-    hasFunnelWidget() {
-      return !!this.currentDashboardWidgets.some(
-        (widget) => widget.type === 'empty_column',
-      );
-    },
-
     hasCardWidget() {
       return !!this.currentDashboardWidgets.some(
         (widget) => widget.type === 'card',
@@ -130,10 +124,10 @@ export default {
         },
       ];
 
-      if (this.hasCardWidget && this.showCardTour) {
+      if (this.showCardTour) {
         steps.push(...cardSteps);
       }
-      if (this.hasFunnelWidget && this.showWidgetTour) {
+      if (this.showWidgetTour) {
         steps.push(...emptyWidgetSteps);
       }
 

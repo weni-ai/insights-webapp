@@ -2,6 +2,7 @@
   <section class="insights-layout-header-filters">
     <template v-if="hasManyFilters">
       <UnnnicButton
+        data-testid="many-filters-button"
         type="secondary"
         iconLeft="filter_list"
         :text="titleButtonManyFilters"
@@ -9,6 +10,7 @@
       />
       <UnnnicButton
         v-if="appliedFiltersLength > 0"
+        data-testid="clear-many-filters-button"
         type="tertiary"
         iconLeft="close"
         :text="$t('insights_header.clear_filters')"
@@ -20,6 +22,7 @@
       class="insights-layout-header-filters_dynamic_container"
     >
       <DynamicFilter
+        data-testid="dynamic-filter"
         :filter="filter"
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
         @update:model-value="updateFilter"
@@ -27,6 +30,7 @@
     </section>
 
     <ModalFilters
+      data-testid="modal-filters"
       :showModal="filterModalOpened"
       @close="filterModalOpened = false"
     />

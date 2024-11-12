@@ -1,6 +1,7 @@
 <template>
   <UnnnicInputDatePicker
     class="filter-date"
+    data-testid="filter-date"
     :modelValue="modelValue"
     size="sm"
     :inputFormat="$t('date_format')"

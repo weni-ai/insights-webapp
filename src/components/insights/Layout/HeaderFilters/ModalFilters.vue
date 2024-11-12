@@ -1,5 +1,6 @@
 <template>
   <UnnnicModalDialog
+    data-testid="modal"
     :modelValue="showModal"
     class="modal-filters"
     :title="$t('insights_header.filters')"
@@ -20,6 +21,7 @@
         :key="filter.name"
       >
         <DynamicFilter
+          data-testid="dynamic-filter"
           :modelValue="filtersInternal[filter.name]"
           :filter="filter"
           :disabled="
@@ -77,8 +79,6 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
-      widgets: (state) => state.widgets.currentDashboardWidgets,
-      currentDashboard: (state) => state.dashboards.currentDashboard,
     }),
 
     hasFiltersInternal() {
@@ -118,8 +118,6 @@ export default {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
       resetAppliedFilters: 'dashboards/resetAppliedFilters',
-      getCurrentDashboardWidgetsDatas:
-        'widgets/getCurrentDashboardWidgetsDatas',
     }),
     getDynamicFiltersDependsOnValues(filter) {
       if (!filter.depends_on?.search_param) return null;

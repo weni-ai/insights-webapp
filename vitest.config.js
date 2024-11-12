@@ -10,7 +10,7 @@ export default mergeConfig(
       exclude: [...configDefaults.exclude, 'e2e/*'],
       root: fileURLToPath(new URL('./', import.meta.url)),
       globals: true,
-      setupFiles: './__tests__/setup.js',
+      setupFiles: './setupVitest.js',
       coverage: {
         provider: 'istanbul',
         reporter: ['text', 'json', 'html'],

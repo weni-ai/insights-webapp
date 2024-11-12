@@ -310,9 +310,13 @@
           "title": "Continue explorando as possibilidades", 
           "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
         },
+        "select_widget_type": {
+          "title": "Selecione o widget ideal",
+          "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
+        },
         "fill_metric": {
-          "title": "Preencher métricas",
-          "description": "Informe um nome fácil para sua métrica e selecione o fluxo de onde deseja contabilizar as execuções"
+          "title": "Configure o widget",
+          "description": "Preencha os campos para configurar seu widget e obter dados valiosos!"
         }
       }
     }

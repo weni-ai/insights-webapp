@@ -102,10 +102,10 @@ export default {
         },
         {
           title: this.$t(
-            'widgets_onboarding.card.step.select_widget_type.title',
+            'widgets_onboarding.empty_widget.step.select_widget_type.title',
           ),
           description: this.$t(
-            'widgets_onboarding.card.step.select_widget_type.general_description',
+            'widgets_onboarding.empty_widget.step.select_widget_type.description',
           ),
           attachedElement:
             this.onboardingRefs['widget-gallery'] ||

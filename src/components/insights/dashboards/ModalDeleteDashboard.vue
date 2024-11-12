@@ -93,7 +93,7 @@ export default {
             },
             seconds: 5,
           });
-          console.log(error);
+          console.error(error);
         })
         .finally(() => {
           this.loadingRequest = false;

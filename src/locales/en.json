@@ -295,7 +295,8 @@
         },
         "select_widget_type": {
           "title": "Select widget",
-          "description": "Select the type of metric you want to configure. If you have any questions, start by testing Executions"
+          "description": "Select the type of metric you want to configure. If you have any questions, start by testing Executions",
+          "general_description": "Select the type of metric you want to configure"
         },
         "set_metric": {
           "title": "Defining metric",
@@ -303,15 +304,19 @@
         }
       }
     },
-    "funnel": {
+    "empty_widget": {
       "step": {
         "define_metric": {
-          "title": "Defining metrics for the chart",
-          "description": "Select the main flows of your operation to generate a funnel visualization and track the journey of your contacts"
+          "title": "Keep exploring the possibilities",
+          "description": "See your main VTEX sales data or follow the journey of your contacts"
+        },
+        "select_widget_type": {
+          "title": "Select the ideal widget",
+          "description": "See your main VTEX sales data or follow the journey of your contacts"
         },
         "fill_metric": {
-          "title": "Fill metrics",
-          "description": "Provide an easy name for your metric and select the flow from which you want to count the executions"
+          "title": "Configure the widget",
+          "description": "Fill in the fields to configure your widget and get valuable data!"
         }
       }
     }

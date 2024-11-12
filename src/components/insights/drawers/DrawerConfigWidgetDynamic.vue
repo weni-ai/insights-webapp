@@ -7,7 +7,7 @@
     :data-onboarding-id="
       widget.type === 'card'
         ? 'drawer-card-metric-config'
-        : 'drawer-graph-funnel'
+        : 'drawer-graph-empty'
     "
     size="md"
     :modelValue="modelValue"
@@ -344,7 +344,7 @@ export default {
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);
         }
-        /* TODO: onBoarding - unused code until it is defined whether to keep or remove
+
         if (this.showConfigWidgetOnboarding) {
           const isLastTourStep =
             this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
@@ -354,7 +354,7 @@ export default {
             this.setShowCompleteOnboardingModal(true);
             localStorage.setItem('hasWidgetsOnboardingComplete', true);
           }
-        }*/
+        }
         unnnic.unnnicCallAlert({
           props: {
             text: this.$t('drawers.metric_saved'),

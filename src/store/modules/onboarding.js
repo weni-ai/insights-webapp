@@ -15,8 +15,8 @@ export default {
       'widget-card-metric': null,
       'widget-gallery': null,
       'drawer-card-metric-config': null,
-      'widget-graph-funnel': null,
-      'drawer-graph-funnel': null,
+      'widget-graph-empty': null,
+      'drawer-graph-empty': null,
       'dashboard-onboarding-tour': null,
       'widgets-onboarding-tour': null,
     },
@@ -103,20 +103,38 @@ export default {
       });
     },
 
-    async beforeOpenFunnelConfig({ commit, state }) {
-      const funnelDrawer = document.querySelector(
-        '[data-onboarding-id="drawer-graph-funnel"]',
+    async beforeOpenGaleryEmptyConfig({ commit, state }) {
+      const galeryDrawer = document.querySelector(
+        '[data-onboarding-id="drawer-graph-empty"]',
       );
-      if (!funnelDrawer) {
-        await state.onboardingRefs['widget-graph-funnel']
+      if (!galeryDrawer) {
+        await state.onboardingRefs['widget-graph-empty']
           .querySelector('.unnnic-button')
           .click();
       }
+
       await asyncTimeout(300).then(() => {
         commit(mutations.SET_ONBOARDING_REF, {
-          key: 'drawer-graph-funnel',
+          key: 'widget-gallery',
+          ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
+        });
+      });
+    },
+
+    async beforeOpenEmptyWidgetConfig({ commit, state }) {
+      const galeryDrawer = document.querySelector(
+        '[data-onboarding-id="drawer-graph-empty"]',
+      );
+      if (!galeryDrawer) {
+        await state.onboardingRefs['widget-graph-empty']
+          .querySelector('.unnnic-button')
+          .click();
+      }
+      await asyncTimeout(600).then(() => {
+        commit(mutations.SET_ONBOARDING_REF, {
+          key: 'drawer-graph-empty',
           ref: document.querySelector(
-            '[data-onboarding-id="drawer-graph-funnel"]',
+            '[data-onboarding-id="drawer-graph-empty"]',
           )?.children[1],
         });
       });

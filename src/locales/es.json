@@ -295,7 +295,8 @@
         },
         "select_widget_type": {
           "title": "Seleccionar widget",
-          "description": "Seleccione el tipo de métrica que desea configurar. Si tiene alguna duda, comience probando Ejecuciones"
+          "description": "Seleccione el tipo de métrica que desea configurar. Si tiene alguna duda, comience probando Ejecuciones",
+          "general_description": "Seleccione el tipo de métrica que desea configurar"
         },
         "set_metric": {
           "title": "Definiendo métrica",
@@ -303,15 +304,19 @@
         }
       }
     },
-    "funnel": {
+    "empty_widget": {
       "step": {
         "define_metric": {
-          "title": "Definiendo métricas para el gráfico",
-          "description": "Seleccione los principales flujos de su operación para generar una visualización en embudo y seguir la trayectoria de sus contactos"
+          "title": "Siga explorando las posibilidades",
+          "description": "Consulta tus principales datos de ventas VTEX o sigue el recorrido de tus contactos."
+        },
+        "select_widget_type": {
+          "title": "Selecciona el widget ideal",
+          "description": "Consulta tus datos clave de ventas VTEX o sigue el recorrido de tus contactos"
         },
         "fill_metric": {
-          "title": "Rellenar métricas",
-          "description": "Proporcione un nombre fácil para su métrica y seleccione el flujo desde el cual desea contabilizar las ejecuciones"
+          "title": "Configura el widget",
+          "description": "Rellena los campos para configurar tu widget y ¡obtén datos valiosos!"
         }
       }
     }

@@ -118,14 +118,28 @@ export default {
     }),
 
     handleWidgetFilledData() {
+      const hasCard = this.currentDashboardWidgets.filter(
+        (e) => e.type === 'card',
+      );
+
+      const existFunnel = this.currentDashboardWidgets.some(
+        (e) => e.type === 'graph_funnel',
+      );
+      const existVtex = this.currentDashboardWidgets.some(
+        (e) => e.type === 'vtex_order',
+      );
+
       this.showOnboarding = {
-        card: !!this.currentDashboardWidgets.some(
-          (widget) =>
-            !!widget.type && widget.type === 'card' && widget.is_configurable,
-        ),
-        empty_widget: !!this.currentDashboardWidgets.some(
-          (widget) => widget.type === 'empty_column',
-        ),
+        card:
+          hasCard.length > 0
+            ? !!hasCard.every((widget) => widget.name === '')
+            : false,
+        empty_widget:
+          !!this.currentDashboardWidgets.some(
+            (widget) => widget.type === 'empty_column',
+          ) &&
+          !existFunnel &&
+          !existVtex,
       };
     },
 
@@ -138,7 +152,11 @@ export default {
 
         if (!this.showOnboarding.card && !this.showOnboarding.empty_widget) {
           localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
-        } else this.setShowConfigWidgetsOnboarding(true);
+        }
+
+        if (this.showOnboarding.card || this.showOnboarding.empty_widget) {
+          this.setShowConfigWidgetsOnboarding(true);
+        }
       }
     },
 

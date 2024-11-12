@@ -254,6 +254,7 @@ export default {
       return {
         name: this.$t('widgets.graph_funnel.title'),
         config: metricsObj,
+        type: 'graph_funnel',
       };
     },
 

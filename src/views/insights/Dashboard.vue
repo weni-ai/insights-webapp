@@ -3,11 +3,10 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
-    <!-- TODO: onBoarding - unused code until it is defined whether to keep or remove -->
     <WidgetOnboarding
-      v-if="false"
-      :showCardTour="!hasWidgetFilledData.card"
-      :showFunnelTour="!hasWidgetFilledData.funnel"
+      v-if="showConfigWidgetOnboarding"
+      :showCardTour="showOnboarding.card"
+      :showWidgetTour="showOnboarding.empty_widget"
     />
     <section
       v-if="isLoadingCurrentDashboardWidgets"
@@ -58,9 +57,9 @@ export default {
     return {
       showDrawerConfigWidget: false,
       widgetConfigurating: null,
-      hasWidgetFilledData: {
+      showOnboarding: {
         card: false,
-        funnel: false,
+        empty_widget: false,
       },
     };
   },
@@ -119,12 +118,13 @@ export default {
     }),
 
     handleWidgetFilledData() {
-      this.hasWidgetFilledData = {
+      this.showOnboarding = {
         card: !!this.currentDashboardWidgets.some(
-          (widget) => !!widget.name && widget.name !== 'Funil',
+          (widget) =>
+            !!widget.type && widget.type === 'card' && widget.is_configurable,
         ),
-        funnel: !!this.currentDashboardWidgets.some(
-          (widget) => widget.name === 'Funil' && !!widget.config.metric_1,
+        empty_widget: !!this.currentDashboardWidgets.some(
+          (widget) => widget.type === 'empty_column',
         ),
       };
     },
@@ -136,7 +136,7 @@ export default {
       if (!hasWidgetsOnboardingComplete) {
         this.handleWidgetFilledData();
 
-        if (this.hasWidgetFilledData.card && this.hasWidgetFilledData.funnel) {
+        if (!this.showOnboarding.card && !this.showOnboarding.empty_widget) {
           localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
         } else this.setShowConfigWidgetsOnboarding(true);
       }
@@ -161,7 +161,7 @@ export default {
     getWidgetOnboardingId(widget) {
       return widget.type === 'card'
         ? 'widget-card-metric'
-        : 'widget-graph-funnel';
+        : 'widget-graph-empty';
     },
   },
 };

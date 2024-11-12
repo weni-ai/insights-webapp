@@ -17,7 +17,7 @@ export default {
       type: Boolean,
       required: true,
     },
-    showFunnelTour: {
+    showWidgetTour: {
       type: Boolean,
       required: true,
     },
@@ -33,7 +33,7 @@ export default {
 
     hasFunnelWidget() {
       return !!this.currentDashboardWidgets.some(
-        (widget) => widget.type === 'graph_funnel',
+        (widget) => widget.type === 'empty_column',
       );
     },
 
@@ -83,14 +83,17 @@ export default {
           hiddenNextStepButton: true,
         },
       ];
-      const funnelSteps = [
+
+      const emptyWidgetSteps = [
         {
-          title: this.$t('widgets_onboarding.funnel.step.define_metric.title'),
+          title: this.$t(
+            'widgets_onboarding.empty_widget.step.define_metric.title',
+          ),
           description: this.$t(
-            'widgets_onboarding.funnel.step.define_metric.description',
+            'widgets_onboarding.empty_widget.step.define_metric.description',
           ),
           attachedElement:
-            this.onboardingRefs['widget-graph-funnel'] ||
+            this.onboardingRefs['widget-graph-empty'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: this.hasCardWidget ? 'left' : 'right',
           padding: {
@@ -98,23 +101,40 @@ export default {
           },
         },
         {
-          title: this.$t('widgets_onboarding.funnel.step.fill_metric.title'),
+          title: this.$t(
+            'widgets_onboarding.empty_widget.step.select_widget_type.title',
+          ),
           description: this.$t(
-            'widgets_onboarding.funnel.step.fill_metric.description',
+            'widgets_onboarding.empty_widget.step.select_widget_type.description',
           ),
           attachedElement:
-            this.onboardingRefs['drawer-graph-funnel'] ||
+            this.onboardingRefs['widget-gallery'] ||
             this.onboardingRefs['insights-layout'],
           popoverPosition: 'left',
-          beforeRender: this.beforeOpenFunnelConfig,
+          beforeRender: this.beforeOpenGaleryEmptyConfig,
+          hiddenNextStepButton: true,
+        },
+        {
+          title: this.$t(
+            'widgets_onboarding.empty_widget.step.fill_metric.title',
+          ),
+          description: this.$t(
+            'widgets_onboarding.empty_widget.step.fill_metric.description',
+          ),
+          attachedElement:
+            this.onboardingRefs['drawer-graph-empty'] ||
+            this.onboardingRefs['insights-layout'],
+          popoverPosition: 'left',
+          beforeRender: this.beforeOpenEmptyWidgetConfig,
           hiddenNextStepButton: true,
         },
       ];
+
       if (this.hasCardWidget && this.showCardTour) {
         steps.push(...cardSteps);
       }
-      if (this.hasFunnelWidget && this.showFunnelTour) {
-        steps.push(...funnelSteps);
+      if (this.hasFunnelWidget && this.showWidgetTour) {
+        steps.push(...emptyWidgetSteps);
       }
 
       return steps;
@@ -130,9 +150,9 @@ export default {
         ),
       });
       this.setOnboardingRef({
-        key: 'widget-graph-funnel',
+        key: 'widget-graph-empty',
         ref: document.querySelector(
-          '[data-onboarding-id="widget-graph-funnel"]',
+          '[data-onboarding-id="widget-graph-empty"]',
         ),
       });
 
@@ -147,7 +167,8 @@ export default {
   methods: {
     ...mapActions({
       beforeOpenWidgetConfig: 'onboarding/beforeOpenWidgetConfig',
-      beforeOpenFunnelConfig: 'onboarding/beforeOpenFunnelConfig',
+      beforeOpenEmptyWidgetConfig: 'onboarding/beforeOpenEmptyWidgetConfig',
+      beforeOpenGaleryEmptyConfig: 'onboarding/beforeOpenGaleryEmptyConfig',
       beforeOpenWidgetMetricConfig: 'onboarding/beforeOpenWidgetMetricConfig',
     }),
     ...mapMutations({

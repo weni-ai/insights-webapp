@@ -26,7 +26,7 @@
       </section>
       <section
         v-else
-        class="content__orders__container"
+        class="content__container"
       >
         <IconLoading
           v-if="isLoading"
@@ -36,10 +36,10 @@
           v-for="(list, index) in dataList"
           v-show="!isLoading"
           :key="index"
-          class="content__orders"
+          class="content"
         >
-          <section class="content__orders__container-item">
-            <p class="content__orders__container-item-text">{{ list.label }}</p>
+          <section class="content__container-item">
+            <p class="content__container-item-text">{{ list.label }}</p>
           </section>
           <section class="progress-bar-container">
             <UnnnicProgressBar
@@ -51,8 +51,8 @@
       </section>
     </section>
     <a
+      class="card-recurrence__link"
       href=""
-      target="_blank"
       >See more</a
     >
   </CardBase>
@@ -65,7 +65,7 @@ import IconLoading from '@/components/IconLoading.vue';
 import i18n from '@/utils/plugins/i18n';
 
 export default {
-  name: 'CardVtexOrder',
+  name: 'CardRecurrenc',
 
   components: { CardBase, IconLoading },
 
@@ -101,7 +101,7 @@ export default {
         paramOneONEONEONEONOENOENONE: 90,
         paramTwo: 80,
         paramThree: 70,
-        paramFour: 60,
+        paramFour: 10,
         paramFive: 50,
         paramSix: 40,
         paramSeven: 30,
@@ -152,12 +152,19 @@ export default {
   align-items: center;
   gap: $unnnic-spacing-sm;
 
-  :deep(.unnnic-avatar-icon.aux-red-500) {
-    background: #fff3f6;
-  }
-
-  :deep(.material-symbols-rounded.unnnic-icon-scheme--aux-red-500) {
-    color: rgba(247, 25, 99, 1);
+  &__link {
+    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-gt;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-bold;
+    line-height: $unnnic-font-size-body-sm * 3;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
   }
 
   &--not-data {
@@ -196,7 +203,7 @@ export default {
     flex-direction: column;
     justify-content: center;
 
-    .content__orders__container {
+    .content__container {
       height: 100%;
       display: grid;
       align-items: center;
@@ -210,14 +217,23 @@ export default {
       }
     }
 
-    .content__orders {
+    .content {
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
 
       &__container-item {
-        max-width: 80px;
+        max-width: 150px;
+
+        @media screen and (max-width: 1440px) {
+          max-width: 100px;
+        }
+
+        @media screen and (max-width: 1024px) {
+          max-width: 80px;
+        }
+
         overflow: hidden;
 
         &-text {
@@ -227,12 +243,12 @@ export default {
           max-width: 100%;
           display: inline-block;
 
-          color: $unnnic-color-neutral-darkest;
+          color: $unnnic-color-neutral-cloudy;
           font-family: $unnnic-font-family-secondary;
           font-size: $unnnic-font-size-body-lg;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
-          line-height: 1.5rem;
+          line-height: $unnnic-font-size-body-sm * 3;
         }
       }
     }
@@ -264,6 +280,27 @@ export default {
       ) {
       min-width: 100px;
     }
+  }
+
+  :deep(
+      .unnnic-progress-bar.primary
+        .progress-bar-container
+        .progress-container
+        .bar
+    ) {
+    border-radius: 37.5rem;
+    background-color: $unnnic-color-weni-600;
+  }
+
+  :deep(
+      .unnnic-progress-bar.primary .progress-bar-container .progress-container
+    ) {
+    background-color: $unnnic-color-weni-100;
+  }
+
+  :deep(.unnnic-progress-bar.primary .progress-bar-container .percentage) {
+    font-size: $unnnic-font-size-body-lg;
+    line-height: $unnnic-font-size-body-lg * 2;
   }
 }
 </style>

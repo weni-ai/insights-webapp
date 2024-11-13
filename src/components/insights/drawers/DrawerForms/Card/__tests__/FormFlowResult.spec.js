@@ -258,7 +258,6 @@ describe('FormFlowResult', () => {
       const selectFlowResult = wrapper.findComponent(
         '[data-test-id="select-flow-result"]',
       );
-      console.log('selectFlowResult ', selectFlowResult.html());
       expect(selectFlowResult.attributes('disabled')).toBe('true');
     });
 

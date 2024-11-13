@@ -90,6 +90,10 @@ const updateCurrentDate = (option) => {
     line-height: $unnnic-line-height-large * 1.375;
   }
 
+  :deep(.dropdown) {
+    z-index: 3;
+  }
+
   :deep(.unnnic-select-smart-option--selectable) {
     &:hover {
       color: $unnnic-color-weni-600;

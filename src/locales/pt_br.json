@@ -268,7 +268,7 @@
     "title": "Deletar dashboard",
     "notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
     "alert": {
-      "success": "Dashboard excluido com sucesso",
+      "success": "Dashboard excluído com sucesso",
       "error": "Falha ao excluir dashboard"
     }
   },
@@ -295,23 +295,28 @@
         },
         "select_widget_type": {
           "title": "Selecionar widget",
-          "description": "Selecione o tipo de métrica que deseja configurar, caso tenha dúvidas comece testando o Execuções"
+          "description": "Selecione o tipo de métrica que deseja configurar, caso tenha dúvidas comece testando o Execuções",
+          "general_description": "Selecione o tipo de métrica que deseja configurar"
         },
         "set_metric": {
           "title": "Definindo métrica",
           "description": "Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!"
         }
       }
-    },
-    "funnel": {
+    }, 
+    "empty_widget": {
       "step": {
         "define_metric": {
-          "title": "Definindo métricas para gráfico",
-          "description": "Selecione os principais fluxos da sua operação para gerar uma visualização em funil e acompanhar a jornada dos seus contatos"
+          "title": "Continue explorando as possibilidades", 
+          "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
+        },
+        "select_widget_type": {
+          "title": "Selecione o widget ideal",
+          "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
         },
         "fill_metric": {
-          "title": "Preencher métricas",
-          "description": "Informe um nome fácil para sua métrica e selecione o fluxo de onde deseja contabilizar as execuções"
+          "title": "Configure o widget",
+          "description": "Preencha os campos para configurar seu widget e obter dados valiosos!"
         }
       }
     }

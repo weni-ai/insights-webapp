@@ -113,7 +113,7 @@ export default {
         Config.state.project.uuid,
       );
 
-      const empty_widget_options = ['funnel'];
+      const empty_widget_options = ['funnel', 'recurrence'];
 
       if (isVtexEnabledProject) empty_widget_options.push('vtex');
 

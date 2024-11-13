@@ -72,10 +72,6 @@ export default {
           value: 'min',
           label: this.$t('drawers.config_card.radios.lowest_value'),
         },
-        {
-          value: 'recurrence',
-          label: this.$t('drawers.config_card.radios.recurrence'),
-        },
       ],
     };
   },

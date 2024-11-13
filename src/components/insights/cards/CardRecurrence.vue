@@ -1,0 +1,269 @@
+<template>
+  <CardBase
+    class="card-recurrence"
+    :class="{ 'card-recurrence--not-data': isError }"
+  >
+    <header class="card-recurrence__header">
+      <h1 class="header__title">Customer satisfaction</h1>
+      <UnnnicButton
+        size="small"
+        type="tertiary"
+        iconCenter="tune"
+        data-testid="card-recurrence-config-button-configurable"
+        @click.stop="$emit('open-config')"
+      />
+    </header>
+    <section class="card-recurrence__content">
+      <section
+        v-if="isError && !isLoading"
+        class="content__not-configured"
+      >
+        <img src="@/assets/images/icons/empty_monitory.svg" />
+        <p class="not-configured__text">
+          No data for now, as soon as there’s activity,
+        </p>
+        <p class="not-configured__text">it’ll show up here!</p>
+      </section>
+      <section
+        v-else
+        class="content__orders__container"
+      >
+        <IconLoading
+          v-if="isLoading"
+          class="card-recurrence-margin-auto"
+        />
+        <section
+          v-for="(list, index) in dataList"
+          v-show="!isLoading"
+          :key="index"
+          class="content__orders"
+        >
+          <section class="content__orders__container-item">
+            <p class="content__orders__container-item-text">{{ list.label }}</p>
+          </section>
+          <section class="progress-bar-container">
+            <UnnnicProgressBar
+              v-model="list.value"
+              inline
+            />
+          </section>
+        </section>
+      </section>
+    </section>
+    <a
+      href=""
+      target="_blank"
+      >See more</a
+    >
+  </CardBase>
+</template>
+
+<script>
+import { mapState } from 'vuex';
+import CardBase from './CardBase.vue';
+import IconLoading from '@/components/IconLoading.vue';
+import i18n from '@/utils/plugins/i18n';
+
+export default {
+  name: 'CardVtexOrder',
+
+  components: { CardBase, IconLoading },
+
+  props: {
+    isLoading: Boolean,
+    data: {
+      type: Object,
+      required: true,
+    },
+    widget: {
+      type: Object,
+      required: true,
+    },
+  },
+
+  emits: ['open-config', 'request-data'],
+
+  computed: {
+    ...mapState({
+      appliedFilters: (state) => state.dashboards.appliedFilters,
+    }),
+    isError() {
+      const allEmpty = Object?.values(this.data || {}).every(
+        (str) => str === '',
+      );
+      return false;
+    },
+
+    dataList() {
+      //if (this.isError || !this.data) return [];
+
+      const data = {
+        paramOneONEONEONEONOENOENONE: 90,
+        paramTwo: 80,
+        paramThree: 70,
+        paramFour: 60,
+        paramFive: 50,
+        paramSix: 40,
+        paramSeven: 30,
+      };
+
+      const keyValues = Object.keys(data);
+
+      return keyValues
+        .map((key) => ({
+          label: key,
+          icon: 'local_activity',
+          value: data[key] || '',
+        }))
+        .slice(0, 5);
+    },
+  },
+
+  watch: {
+    appliedFilters: {
+      deep: true,
+      handler() {
+        this.emitRequestData();
+      },
+    },
+  },
+
+  created() {
+    this.emitRequestData();
+  },
+
+  methods: {
+    emitRequestData() {
+      this.$emit('request-data');
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.card-recurrence {
+  min-height: 310px;
+  height: 100%;
+
+  padding: $unnnic-spacing-md;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $unnnic-spacing-sm;
+
+  :deep(.unnnic-avatar-icon.aux-red-500) {
+    background: #fff3f6;
+  }
+
+  :deep(.material-symbols-rounded.unnnic-icon-scheme--aux-red-500) {
+    color: rgba(247, 25, 99, 1);
+  }
+
+  &--not-data {
+    .card-recurrence__header .header__title {
+      color: $unnnic-color-neutral-cloudy;
+    }
+  }
+
+  &-margin-auto {
+    margin: auto;
+  }
+
+  &__header {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .header__title {
+      padding: $unnnic-spacing-nano 0;
+
+      font-family: $unnnic-font-family-primary;
+      font-size: $unnnic-font-size-title-sm;
+      font-weight: $unnnic-font-weight-bold;
+      line-height: $unnnic-line-height-small * 7.5;
+    }
+  }
+
+  &__content {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .content__orders__container {
+      height: 100%;
+      display: grid;
+      align-items: center;
+      gap: 1px;
+      background-color: $unnnic-color-neutral-light;
+      border-bottom: 1px solid $unnnic-color-neutral-light;
+
+      & > * {
+        background-color: $unnnic-color-neutral-white;
+        padding: $unnnic-spacing-sm;
+      }
+    }
+
+    .content__orders {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      &__container-item {
+        max-width: 80px;
+        overflow: hidden;
+
+        &-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+          display: inline-block;
+
+          color: $unnnic-color-neutral-darkest;
+          font-family: $unnnic-font-family-secondary;
+          font-size: $unnnic-font-size-body-lg;
+          font-style: normal;
+          font-weight: $unnnic-font-weight-regular;
+          line-height: 1.5rem;
+        }
+      }
+    }
+
+    .content__not-configured {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      .not-configured__text {
+        color: $unnnic-color-neutral-cloudy;
+        font-size: $unnnic-font-size-body-lg;
+        text-align: center;
+        line-height: $unnnic-line-height-small * 6;
+      }
+    }
+  }
+}
+.progress-bar-container {
+  :deep(.unnnic-progress-bar.primary) {
+    background-color: inherit;
+    box-shadow: none;
+  }
+
+  @media screen and (max-width: 1024px) {
+    :deep(
+        .unnnic-progress-bar.primary .progress-bar-container .progress-container
+      ) {
+      min-width: 100px;
+    }
+  }
+}
+</style>

@@ -30,9 +30,16 @@
   <UnnnicButton
     :text="$t('drawers.config_funnel.add_metric')"
     iconLeft="add"
-    type="tertiary"
+    type="secondary"
     :disabled="metrics.length >= 5"
     @click="addMetric"
+  />
+  <UnnnicButton
+    class="clear-widget-btn"
+    :text="$t('drawers.reset_widget')"
+    type="tertiary"
+    :disabled="isDisableResetWidget"
+    @click="resetWidget"
   />
 </template>
 
@@ -57,7 +64,11 @@ export default {
     },
   },
 
-  emits: ['update:model-value', 'update-disable-primary-button'],
+  emits: [
+    'update:model-value',
+    'update-disable-primary-button',
+    'reset-widget',
+  ],
 
   data() {
     return {
@@ -112,6 +123,11 @@ export default {
       }
       return true;
     },
+    isDisableResetWidget() {
+      const isEmptyValue = (e) => e.name === '' && e.flow === '';
+
+      return this.metrics.every(isEmptyValue);
+    },
   },
 
   watch: {
@@ -140,6 +156,11 @@ export default {
 
   methods: {
     clearFields(index) {
+      const isCreatedMetric = [3, 4].includes(index);
+      if (isCreatedMetric) {
+        return this.metrics.splice(index, 1);
+      }
+
       this.metrics[index].name = '';
       this.metrics[index].flow = '';
     },
@@ -193,6 +214,9 @@ export default {
       if (this.metrics.length < 5) {
         this.metrics.push(newMetric);
       }
+    },
+    resetWidget() {
+      this.$emit('reset-widget');
     },
   },
 };

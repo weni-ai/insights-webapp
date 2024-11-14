@@ -1,5 +1,6 @@
 <template>
   <UnnnicModalDialog
+    data-test-id="modal-dialog"
     :modelValue="props.showModal"
     class="finish-onboarding-modal"
     :primaryButtonProps="{ text: 'Ok' }"

@@ -5,7 +5,7 @@
   >
     <header class="card-recurrence__header">
       <h1 class="header__title">
-        {{ widget?.filter?.name || 'costumer recurrence' }}
+        {{ widget?.name }}
       </h1>
       <UnnnicButton
         size="small"
@@ -37,7 +37,7 @@
           class="card-recurrence-margin-auto"
         />
         <section
-          v-for="(list, index) in dataList"
+          v-for="(list, index) in data"
           v-show="!isLoading"
           :key="index"
           class="content"
@@ -66,7 +66,6 @@
 import { mapState } from 'vuex';
 import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
-import i18n from '@/utils/plugins/i18n';
 
 export default {
   name: 'CardRecurrenc',
@@ -92,34 +91,7 @@ export default {
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
     isError() {
-      const allEmpty = Object?.values(this.data || {}).every(
-        (str) => str === '',
-      );
-      return false;
-    },
-
-    dataList() {
-      //if (this.isError || !this.data) return [];
-
-      const data = {
-        paramOneONEONEONEONOENOENONE: 90,
-        paramTwo: 80,
-        paramThree: 70,
-        paramFour: 10,
-        paramFive: 50,
-        paramSix: 40,
-        paramSeven: 30,
-      };
-
-      const keyValues = Object.keys(data);
-
-      return keyValues
-        .map((key) => ({
-          label: key,
-          icon: 'local_activity',
-          value: data[key] || '',
-        }))
-        .slice(0, 5);
+      return this.data?.length === 0;
     },
   },
 

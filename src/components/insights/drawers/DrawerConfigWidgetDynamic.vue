@@ -255,6 +255,9 @@ export default {
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
           break;
+        case 'recurrence':
+          newWidget = this.createRecurrenceWidget;
+          break;
         case 'vtex_order':
           newWidget = this.createVtexWidget;
           break;
@@ -320,7 +323,11 @@ export default {
       return {
         name: widget.config?.name,
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
-        config: widget.config,
+        config: {
+          ...widget.config,
+          operation: 'recurrence',
+          type: 'flow_result',
+        },
         type: 'recurrence',
       };
     },
@@ -339,6 +346,7 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
@@ -368,6 +376,9 @@ export default {
         const isFunnel =
           this.widget.type === 'graph_funnel' || this.configType === 'funnel';
 
+        const isRecurrence =
+          this.widget.type === 'recurrence' || this.configType === 'recurrence';
+
         if (isFunnel) {
           await this.getWidgetGraphFunnelData({
             uuid: this.widget.uuid,
@@ -377,6 +388,10 @@ export default {
           await this.getWidgetVtexOrderData({
             uuid: this.widget.uuid,
             utm_source: this.treatedWidget.config.filter.utm,
+          });
+        } else if (isRecurrence) {
+          await this.getWidgetRecurrenceData({
+            uuid: this.widget.uuid,
           });
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);

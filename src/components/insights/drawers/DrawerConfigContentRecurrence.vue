@@ -54,11 +54,11 @@ export default {
   computed: {
     ...mapState({
       widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
+      currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
     }),
 
     isValidForm() {
       const { config } = this;
-
       return config?.flow.uuid && config?.flow.result && config?.operation;
     },
 
@@ -97,6 +97,7 @@ export default {
   created() {
     const { widgetConfig } = this;
     this.config = {
+      name: this.currentWidgetEditing.name || '',
       flow: {
         uuid: widgetConfig.flow?.uuid || '',
         result: widgetConfig.flow?.result || '',

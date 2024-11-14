@@ -5,6 +5,7 @@
       v-if="currentDashboardFilters.length"
       ref="insightsContent"
       class="insights-layout__insights"
+      data-testid="content-slot"
     >
       <main class="insights__main">
         <slot />

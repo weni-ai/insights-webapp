@@ -166,6 +166,10 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
+        }, 
+        "recurrence": {
+          "title": "Recorrência",
+          "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"
         }
       }
     },
@@ -215,6 +219,9 @@
       "fourth_metric": "Quarta @.lower:metric",
       "fifth_metric": "Quinta @.lower:metric",
       "select_flow": "@:select @.lower:flow"
+    },
+    "config_recurrence": {
+      "name_metric": "Nome da métrica"
     }
   },
   "metric_accordion": {

@@ -1,7 +1,7 @@
 <template>
   <section class="content-recurrence">
     <section>
-      <UnnnicLabel :label="$t('drawers.config_card.name_card.label')" />
+      <UnnnicLabel :label="$t('drawers.config_recurrence.name_metric')" />
       <UnnnicInput
         v-model="config.name"
         :placeholder="$t('drawers.config_card.name_card.placeholder')"

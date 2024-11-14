@@ -120,6 +120,14 @@
       "title": "Configuración necesaria, personaliza tu widget para empezar",
       "config_btn": "Configure"
     },
+    "recurrence": {
+      "title": "Recurrencia",
+      "see_more": "Ver más",
+      "empty_data": {
+        "title": "Por ahora no hay datos, pero en cuanto haya actividad,",
+        "sub_title": "aparecerá aquí"
+      }
+    },
     "vtex_order": {
       "title": "Ventas VTEX",
       "orders": "Pedidos",

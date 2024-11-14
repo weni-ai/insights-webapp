@@ -4,7 +4,9 @@
     :class="{ 'card-recurrence--not-data': isError }"
   >
     <header class="card-recurrence__header">
-      <h1 class="header__title">Customer satisfaction</h1>
+      <h1 class="header__title">
+        {{ widget?.filter?.name || 'costumer recurrence' }}
+      </h1>
       <UnnnicButton
         size="small"
         type="tertiary"
@@ -20,9 +22,11 @@
       >
         <img src="@/assets/images/icons/empty_monitory.svg" />
         <p class="not-configured__text">
-          No data for now, as soon as there’s activity,
+          {{ $t('widgets.recurrence.empty_data.title') }}
         </p>
-        <p class="not-configured__text">it’ll show up here!</p>
+        <p class="not-configured__text">
+          {{ $t('widgets.recurrence.empty_data.sub_title') }}
+        </p>
       </section>
       <section
         v-else
@@ -53,7 +57,7 @@
     <a
       class="card-recurrence__link"
       href=""
-      >See more</a
+      >{{ $t('widgets.recurrence.see_more') }}</a
     >
   </CardBase>
 </template>

@@ -2,6 +2,7 @@
   <section class="progress-bar-container">
     <UnnnicProgressBar
       v-model="progress"
+      data-test-id="progress-bar"
       inline
       :title="title"
     />

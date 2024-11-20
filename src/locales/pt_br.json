@@ -303,11 +303,11 @@
           "description": "Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!"
         }
       }
-    }, 
+    },
     "empty_widget": {
       "step": {
         "define_metric": {
-          "title": "Continue explorando as possibilidades", 
+          "title": "Continue explorando as possibilidades",
           "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
         },
         "select_widget_type": {

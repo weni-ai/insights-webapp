@@ -58,8 +58,9 @@ export default {
     }),
 
     isValidForm() {
-      const { config } = this;
-      return config?.flow.uuid && config?.flow.result && config?.operation;
+      //const { config } = this;
+      //return config?.flow.uuid && config?.flow.result && config?.operation;
+      return true;
     },
 
     isDisableResetWidget() {

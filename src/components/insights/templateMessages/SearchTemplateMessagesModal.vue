@@ -75,7 +75,7 @@ export default {
 </script>
 
 <script setup>
-import { reactive, ref, watch, defineEmits } from 'vue';
+import { reactive, ref, watch } from 'vue';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -138,78 +138,33 @@ const searchTemplates = async () => {
           : tablePagination.limit * tablePagination.page,
     };
 
+    const mockTemplateResponse = {
+      name: 'Template Name',
+      category: 'Category',
+      language: 'English',
+      updated_at: '20/10/2000',
+      quality: 'high',
+    };
+
     const { results, count } = await Promise.resolve({
       count: 100,
-      results: [
-        {
-          content: [
-            'name',
-            'marketing',
-            'pt-br',
-            {
-              component: QualityTemplateMessageFlag,
-              props: { quality: 'high' },
-              events: {},
-            },
-            '21/10/2024',
-          ],
-        },
-        {
-          content: [
-            'name',
-            'marketing',
-            'pt-br',
-            {
-              component: QualityTemplateMessageFlag,
-              props: { quality: 'high' },
-              events: {},
-            },
-            '21/10/2024',
-          ],
-        },
-        {
-          content: [
-            'name',
-            'marketing',
-            'pt-br',
-            {
-              component: QualityTemplateMessageFlag,
-              props: { quality: 'medium' },
-              events: {},
-            },
-            '21/10/2024',
-          ],
-        },
-        {
-          content: [
-            'name',
-            'marketing',
-            'pt-br',
-            {
-              component: QualityTemplateMessageFlag,
-              props: { quality: 'low' },
-              events: {},
-            },
-            '21/10/2024',
-          ],
-        },
-        {
-          content: [
-            'name',
-            'marketing',
-            'pt-br',
-            {
-              component: QualityTemplateMessageFlag,
-              props: { quality: 'low' },
-              events: {},
-            },
-            '21/10/2024',
-          ],
-        },
-      ],
+      results: new Array(5).fill(mockTemplateResponse),
     });
+
     tablePagination.total = count;
-    templateMessages.value = results;
+
+    templateMessages.value = results.map((template) => ({
+      content: [
+        template.name,
+        template.category,
+        template.language,
+        {
+          component: QualityTemplateMessageFlag,
+          props: { quality: template.quality },
+        },
+        template.updated_at,
+      ],
+    }));
   } catch (error) {
     console.log(error);
   } finally {

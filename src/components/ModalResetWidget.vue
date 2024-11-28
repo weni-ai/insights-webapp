@@ -68,7 +68,7 @@ export default {
       this.isLoading = true;
 
       try {
-        if (this.widget.type === 'vtex_order') {
+        if (['vtex_order', 'graph_funnel'].includes(this.widget.type)) {
           await this.updateWidget({
             ...this.widget,
             config: {},

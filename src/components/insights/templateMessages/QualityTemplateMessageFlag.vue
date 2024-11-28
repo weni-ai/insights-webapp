@@ -19,7 +19,8 @@
       v-if="props.showInfo"
       class="info"
       enabled
-      :text="`Learn more through Meta's documentation`"
+      :text="$t('template_messages_dashboard.quality.more_info_tooltip')"
+      enableHtml
     >
       <UnnnicIcon
         icon="info"

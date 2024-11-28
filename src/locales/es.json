@@ -22,7 +22,8 @@
     "quality": {
       "high": "Alta calidad",
       "medium": "Medio calidad",
-      "low": "Baja calidad"
+      "low": "Baja calidad",
+      "more_info_tooltip": "Obtenga más información a través de la <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=es_ES' target='_blank'>documentación de Meta</a>"
     }
   },
   "table_dynamic_by_filter": {

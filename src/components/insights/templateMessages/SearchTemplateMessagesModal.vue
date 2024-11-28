@@ -61,6 +61,7 @@
         :pagination="tablePagination.page"
         :isLoading="loadingTemplateMessages"
         data-testid="template-messages-table"
+        @row-click="rowClick"
         @update:pagination="tablePagination.page = $event"
       />
     </section>
@@ -214,6 +215,10 @@ const searchTemplates = async () => {
   } finally {
     loadingTemplateMessages.value = false;
   }
+};
+
+const rowClick = (row) => {
+  // TODO
 };
 
 watch(

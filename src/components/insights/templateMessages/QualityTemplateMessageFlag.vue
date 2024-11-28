@@ -30,11 +30,7 @@
   </section>
 </template>
 
-<script lang="ts">
-export default { name: 'QualityTemplateMessageFlag' };
-</script>
-
-<script lang="ts" setup>
+<script setup>
 const props = defineProps({
   showDot: {
     type: Boolean,
@@ -47,7 +43,7 @@ const props = defineProps({
   quality: {
     type: String,
     required: true,
-    validate: (value: string) => {
+    validate: (value) => {
       return ['high', 'medium', 'low'].includes(value);
     },
   },

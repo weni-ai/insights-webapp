@@ -5,12 +5,14 @@
     size="lg"
     showCloseIcon
     class="search-template-messages-modal"
+    @update:model-value="close()"
   >
     <section class="search-template-messages-modal__filters-container">
       <FilterInputText
         v-model="filters.name"
         :placeholder="$t('search')"
         iconPosition="left"
+        data-testid="filter-name"
         @update:model-value="
           tablePagination.page === 1
             ? searchTemplates()
@@ -21,6 +23,7 @@
         v-model="filters.category"
         :placeholder="$t('category')"
         source="template-messages-categories"
+        data-testid="filter-category"
         @update:model-value="
           tablePagination.page === 1
             ? searchTemplates()
@@ -31,6 +34,7 @@
         v-model="filters.language"
         :placeholder="$t('language')"
         source="template-messages-languages"
+        data-testid="filter-language"
         @update:model-value="
           tablePagination.page === 1
             ? searchTemplates()
@@ -39,6 +43,7 @@
       />
       <FilterSelectDate
         v-model="filters.date"
+        data-testid="filter-date"
         @update:model-value="
           tablePagination.page === 1
             ? searchTemplates()
@@ -55,6 +60,7 @@
         :paginationTotal="tablePagination.total"
         :pagination="tablePagination.page"
         :isLoading="loadingTemplateMessages"
+        data-testid="template-messages-table"
         @update:pagination="tablePagination.page = $event"
       />
     </section>
@@ -68,8 +74,8 @@ export default {
 </script>
 
 <script setup>
-import { reactive, ref, watch } from 'vue';
-import { asyncTimeout } from '@/utils/time';
+import { reactive, ref, watch, defineEmits } from 'vue';
+
 import i18n from '@/utils/plugins/i18n';
 
 import FilterInputText from '../Layout/HeaderFilters/FilterInputText.vue';
@@ -77,6 +83,12 @@ import FilterSelectDate from '../Layout/HeaderFilters/FilterSelectDate.vue';
 import FilterSelect from '../Layout/HeaderFilters/FilterSelect.vue';
 
 import QualityTemplateMessageFlag from './QualityTemplateMessageFlag.vue';
+
+const emit = defineEmits(['close']);
+
+const close = () => {
+  emit('close');
+};
 
 const vmodel = defineModel({ required: true, type: Boolean });
 
@@ -124,7 +136,7 @@ const searchTemplates = async () => {
           ? 0
           : tablePagination.limit * tablePagination.page,
     };
-    await asyncTimeout(3000);
+
     const { results, count } = await Promise.resolve({
       count: 100,
       results: [

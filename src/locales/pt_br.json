@@ -9,6 +9,22 @@
     "awaiting_service": "Aguardando atendimento",
     "interaction_time": "Tempo de interação"
   },
+  "template_messages_dashboard": {
+    "templates_modal": {
+      "title": "Buscar modelo",
+      "table": {
+        "header": {
+          "name": "Nome do modelo",
+          "last_edited": "Última edição"
+        }
+      }
+    },
+    "quality": {
+      "high": "Alta qualidade",
+      "medium": "Média qualidade",
+      "low": "Baixa qualidade"
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats no período"
@@ -78,6 +94,10 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "date_format": "DD/MM/YYYY",
+  "search": "Buscar",
+  "category": "Categoria",
+  "language": "Idioma",
+  "active": "Ativo",
   "select_date": {
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",

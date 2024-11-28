@@ -9,6 +9,22 @@
     "awaiting_service": "Waiting for service",
     "interaction_time": "Interaction time"
   },
+  "template_messages_dashboard": {
+    "templates_modal": {
+      "title": "Search template",
+      "table": {
+        "header": {
+          "name": "Template name",
+          "last_edited": "Last edited"
+        }
+      }
+    },
+    "quality": {
+      "high": "High quality",
+      "medium": "Medium quality",
+      "low": "Low quality"
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats in the period"
@@ -78,6 +94,10 @@
   "clear_fields": "Clear fields",
   "today": "Today",
   "date_format": "MM/DD/YYYY",
+  "search": "Search",
+  "category": "Category",
+  "language": "Language",
+  "active": "Active",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",

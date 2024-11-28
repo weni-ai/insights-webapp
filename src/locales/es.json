@@ -9,6 +9,22 @@
     "awaiting_service": "Esperando atención",
     "interaction_time": "Tiempo de interacción"
   },
+  "template_messages_dashboard": {
+    "templates_modal": {
+      "title": "Buscar plantilla",
+      "table": {
+        "header": {
+          "name": "Nombre de la plantilla",
+          "last_edited": "Última edición"
+        }
+      }
+    },
+    "quality": {
+      "high": "Alta calidad",
+      "medium": "Medio calidad",
+      "low": "Baja calidad"
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats en el período"
@@ -78,6 +94,10 @@
   "clear_fields": "Borrar campos",
   "today": "Hoy",
   "date_format": "DD/MM/YYYY",
+  "search": "Buscar",
+  "category": "Categoría",
+  "language": "Idioma",
+  "active": "Activo",
   "select_date": {
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",

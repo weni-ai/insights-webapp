@@ -75,7 +75,7 @@ export default {
 </script>
 
 <script setup>
-import { reactive, ref, watch } from 'vue';
+import { markRaw, reactive, ref, watch } from 'vue';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -159,8 +159,9 @@ const searchTemplates = async () => {
         template.category,
         template.language,
         {
-          component: QualityTemplateMessageFlag,
+          component: markRaw(QualityTemplateMessageFlag),
           props: { quality: template.quality },
+          events: {},
         },
         template.updated_at,
       ],

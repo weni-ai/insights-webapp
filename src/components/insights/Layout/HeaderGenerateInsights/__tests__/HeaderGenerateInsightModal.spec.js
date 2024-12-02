@@ -37,6 +37,7 @@ describe('HeaderGenerateInsightModal.vue', () => {
     wrapper = mount(HeaderGenerateInsightModal, {
       global: {
         stubs: {
+          InsightModalFooter: true,
           UnnnicIcon: true,
           Transition: true,
         },
@@ -88,9 +89,20 @@ describe('HeaderGenerateInsightModal.vue', () => {
     await wrapper.vm.handlePositiveFeedback();
     expect(wrapper.vm.isBtnYesActive).toBe(true);
     expect(wrapper.vm.isBtnNoActive).toBe(false);
+    await wrapper.vm.$nextTick();
+    wrapper.vm.isBtnNoActive = true;
+    await wrapper.vm.handlePositiveFeedback();
+    expect(wrapper.vm.isBtnYesActive).toBe(false);
+    expect(wrapper.vm.isBtnNoActive).toBe(false);
   });
 
   it('handles negative feedback', async () => {
+    await wrapper.vm.handleNegativeFeedback();
+    expect(wrapper.vm.isBtnNoActive).toBe(true);
+    expect(wrapper.vm.isBtnYesActive).toBe(false);
+    await wrapper.vm.$nextTick();
+    wrapper.vm.isBtnYesActive = true;
+    wrapper.vm.isBtnNoActive = false;
     await wrapper.vm.handleNegativeFeedback();
     expect(wrapper.vm.isBtnNoActive).toBe(true);
     expect(wrapper.vm.isBtnYesActive).toBe(false);
@@ -154,5 +166,45 @@ describe('HeaderGenerateInsightModal.vue', () => {
     wrapper.vm.observer = { disconnect: disconnectMock };
     wrapper.unmount();
     expect(disconnectMock).toHaveBeenCalled();
+  });
+
+  it('updates showGradient based on scroll position', async () => {
+    const contentElement = wrapper.find('[data-testid="modal-content"]');
+
+    contentElement.element.scrollTop = 0;
+    Object.defineProperty(contentElement.element, 'scrollHeight', {
+      value: 1000,
+    });
+    Object.defineProperty(contentElement.element, 'clientHeight', {
+      value: 500,
+    });
+
+    await contentElement.trigger('scroll');
+
+    expect(wrapper.vm.showGradient).toBe(true);
+
+    contentElement.element.scrollTop = 500;
+    await contentElement.trigger('scroll');
+
+    expect(wrapper.vm.showGradient).toBe(false);
+  });
+
+  it('emits close when clicking outside with a mouse', async () => {
+    const outsideClickEvent = new MouseEvent('click', { bubbles: true });
+
+    Object.defineProperty(outsideClickEvent, 'pointerType', { value: 'mouse' });
+
+    document.body.dispatchEvent(outsideClickEvent);
+
+    expect(wrapper.emitted('close')).toBeTruthy();
+  });
+
+  it('should handle feedback text on @update-feedback-text from InsightModalFooter', async () => {
+    const footer = wrapper.findComponent(
+      '[data-testid="insight-modal-footer"]',
+    );
+    const text = 'teste';
+    await footer.vm.$emit('update-feedback-text', text);
+    expect(wrapper.vm.feedbackText).toBe(text);
   });
 });

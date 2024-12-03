@@ -46,14 +46,31 @@
           @click.stop="$emit('open-config')"
         />
       </section>
-      <p
-        v-if="!showMetricError"
-        class="content-description"
-        data-testid="card-dashboard-content-description"
-        :title="configured ? $t(description) : $t('widgets.card.metric_empty')"
-      >
-        {{ configured ? $t(description) : $t('widgets.card.metric_empty') }}
-      </p>
+      <section class="content-description">
+        <p
+          v-if="!showMetricError"
+          class="content-description__text"
+          data-testid="card-dashboard-content-description"
+          :title="
+            configured ? $t(description) : $t('widgets.card.metric_empty')
+          "
+        >
+          {{ configured ? $t(description) : $t('widgets.card.metric_empty') }}
+        </p>
+        <UnnnicToolTip
+          v-if="tooltip"
+          enabled
+          :text="tooltip"
+          side="right"
+          class="content-description__tooltip"
+          data-testid="content-desciption-tooltip"
+        >
+          <UnnnicIcon
+            icon="info"
+            size="avatar-nano"
+          />
+        </UnnnicToolTip>
+      </section>
     </section>
   </CardBase>
 </template>
@@ -92,6 +109,10 @@ export default {
     configured: Boolean,
     configurable: Boolean,
     isLoading: Boolean,
+    tooltip: {
+      type: String,
+      default: '',
+    },
   },
 
   emits: ['open-config'],
@@ -172,11 +193,21 @@ export default {
       }
     }
     .content-description {
-      font-size: $unnnic-font-size-body-lg;
-      line-height: $unnnic-line-height-medium * 3;
+      display: flex;
+      align-items: center;
+      gap: $unnnic-spacing-nano;
+      flex-wrap: wrap;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      &__text {
+        font-size: $unnnic-font-size-body-lg;
+        line-height: $unnnic-line-height-medium * 3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      &__tooltip {
+        margin-top: $unnnic-spacing-nano;
+      }
     }
   }
 

@@ -9,6 +9,15 @@
     "awaiting_service": "Aguardando atendimento",
     "interaction_time": "Tempo de interação"
   },
+  "template_messages_dashboard": {
+    "active_contacts": {
+      "title": "Contatos ativos",
+      "tooltip": "Contatos que interagiram com o modelo"
+    },
+    "blocks": {
+      "title": "Bloqueios"
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats no período"

@@ -76,16 +76,16 @@ export default {
   :deep(.unnnic-chart-funnel-base-item) {
     position: relative;
     z-index: 2;
-    
+
     &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: -1px;
-    width: 100%;
-    height: 1px;
-    background-color: $unnnic-color-neutral-soft;
-    z-index: 1;
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 100%;
+      height: 1px;
+      background-color: $unnnic-color-neutral-soft;
+      z-index: 1;
     }
 
     &:last-of-type::after {

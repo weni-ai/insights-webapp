@@ -10,6 +10,13 @@
     "interaction_time": "Tempo de interação"
   },
   "template_messages_dashboard": {
+    "active_contacts": {
+      "title": "Contatos ativos",
+      "tooltip": "Contatos que interagiram com o modelo"
+    },
+    "blocks": {
+      "title": "Bloqueios"
+    },
     "templates_modal": {
       "title": "Buscar modelo",
       "table": {
@@ -24,6 +31,12 @@
       "medium": "Média qualidade",
       "low": "Baixa qualidade",
       "more_info_tooltip": "Saiba mais através das <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=pt_BR' target='_blank'>documentações da Meta</a>"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensagens enviadas",
+      "delivered_messages": "Mensagens entregues",
+      "readed_messages": "Mensagens lidas",
+      "clicks": "Cliques"
     }
   },
   "table_dynamic_by_filter": {

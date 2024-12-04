@@ -31,6 +31,12 @@
       "medium": "Medio calidad",
       "low": "Baja calidad",
       "more_info_tooltip": "Obtenga más información a través de la <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=es_ES' target='_blank'>documentación de Meta</a>"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensajes enviados",
+      "delivered_messages": "Mensajes entregados",
+      "readed_messages": "Mensajes leídos",
+      "clicks": "Clics"
     }
   },
   "table_dynamic_by_filter": {

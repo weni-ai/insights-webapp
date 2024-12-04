@@ -12,7 +12,7 @@
             icon="indicator"
             :scheme="Object.keys(colorsMapper)[index]"
           />
-          <p>{{ $t(groupData.group) }}</p>
+          <p data-testid="data-label">{{ $t(groupData.group) }}</p>
         </section>
         <section class="multiple-line-chart__count-total">
           <p class="multiple-line-chart__count-total-value">

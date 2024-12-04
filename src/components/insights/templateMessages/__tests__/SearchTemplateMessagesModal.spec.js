@@ -37,18 +37,12 @@ describe('SearchTemplateMessagesModal', () => {
   });
 
   it('changes page correctly on pagination update and searchTemplates', async () => {
-    // const searchTemplatesSpy = vi.spyOn(wrapper.vm, 'searchTemplates');
-
     const table = wrapper.findComponent(
       '[data-testid="template-messages-table"]',
     );
 
     table.vm.$emit('update:pagination', 3);
     expect(wrapper.vm.tablePagination.page).toBe(3);
-
-    await wrapper.vm.$nextTick();
-
-    // expect(searchTemplatesSpy).toHaveBeenCalled();
   });
 
   it('should searchTemplates on update any filter value', async () => {

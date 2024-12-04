@@ -16,6 +16,12 @@
     },
     "blocks": {
       "title": "Bloqueios"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensagens enviadas",
+      "delivered_messages": "Mensagens entregues",
+      "readed_messages": "Mensagens lidas",
+      "clicks": "Cliques"
     }
   },
   "table_dynamic_by_filter": {

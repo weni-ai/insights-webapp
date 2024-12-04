@@ -16,6 +16,12 @@
     },
     "blocks": {
       "title": "Bloques"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensajes enviados",
+      "delivered_messages": "Mensajes entregados",
+      "readed_messages": "Mensajes leídos",
+      "clicks": "Clics"
     }
   },
   "table_dynamic_by_filter": {

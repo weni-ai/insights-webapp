@@ -4,8 +4,10 @@
       template-message-component
     </section>
     <section class="template-message-meta-dashboard__template-info-container">
-      <div class="line-chart">multiple-line-chart</div>
-
+      <MultipleLineChart
+        class="line-chart"
+        :data="chartDataMock"
+      />
       <CardDashboard
         class="active-contacts"
         configured
@@ -33,6 +35,62 @@ export default {
 
 <script setup>
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
+import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
+
+const chartDataMock = [
+  {
+    group: 'template_messages_dashboard.messages_graph.sent_messages',
+    data: [
+      { label: '24/11', value: 10 },
+      { label: '25/11', value: 20 },
+      { label: '26/11', value: 15 },
+      { label: '27/11', value: 9 },
+      { label: '28/11', value: 12 },
+      { label: '29/11', value: 11 },
+      { label: '30/11', value: 9 },
+    ],
+    total: 86,
+  },
+  {
+    group: 'template_messages_dashboard.messages_graph.delivered_messages',
+    data: [
+      { label: '24/11', value: 5 },
+      { label: '25/11', value: 5 },
+      { label: '26/11', value: 15 },
+      { label: '27/11', value: 9 },
+      { label: '28/11', value: 2 },
+      { label: '29/11', value: 5 },
+      { label: '30/11', value: 6 },
+    ],
+    total: 20,
+  },
+  {
+    group: 'template_messages_dashboard.messages_graph.readed_messages',
+    data: [
+      { label: '24/11', value: 1 },
+      { label: '25/11', value: 2 },
+      { label: '26/11', value: 3 },
+      { label: '27/11', value: 4 },
+      { label: '28/11', value: 5 },
+      { label: '29/11', value: 6 },
+      { label: '30/11', value: 7 },
+    ],
+    total: 10,
+  },
+  {
+    group: 'template_messages_dashboard.messages_graph.clicks',
+    data: [
+      { label: '24/11', value: 1 },
+      { label: '25/11', value: 1 },
+      { label: '26/11', value: 9 },
+      { label: '27/11', value: 9 },
+      { label: '28/11', value: 9 },
+      { label: '29/11', value: 4 },
+      { label: '30/11', value: 6 },
+    ],
+    total: 5,
+  },
+];
 </script>
 
 <style lang="scss" scoped>
@@ -54,7 +112,7 @@ import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
       overflow-y: auto;
       display: grid;
 
-      grid-template-rows: 1fr 0.5fr 0.8fr;
+      grid-template-rows: 0.5fr 0.5fr 1fr;
       grid-template-columns: 1fr 1fr;
 
       grid-template-areas:
@@ -66,7 +124,6 @@ import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 
       .line-chart {
         grid-area: line-chart;
-        background-color: green;
       }
 
       .active-contacts {

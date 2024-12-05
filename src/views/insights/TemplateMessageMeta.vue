@@ -28,13 +28,7 @@
         :pagination="1"
         :paginationInterval="10"
         :paginationTotal="10"
-        :headers="[
-          { content: 'Label' },
-          { content: 'Type' },
-          { content: 'Total' },
-          { content: 'Clicks in relation to the shot' },
-          { content: 'Click rate' },
-        ]"
+        :headers="buttonClicksTableHeaders"
         :rows="[
           { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
           { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
@@ -62,6 +56,35 @@ export default {
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
+import i18n from '@/utils/plugins/i18n';
+
+const buttonClicksTableHeaders = [
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.label',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.type',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.total',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.clicks_in_relation_to_the_shot',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.click_rate',
+    ),
+  },
+];
 
 const chartDataMock = [
   {

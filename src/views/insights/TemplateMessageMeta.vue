@@ -27,20 +27,9 @@
         hidePagination
         :pagination="1"
         :paginationInterval="10"
-        :paginationTotal="10"
+        :paginationTotal="formattedClicksTableData.length"
         :headers="buttonClicksTableHeaders"
-        :rows="[
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-        ]"
+        :rows="formattedClicksTableData"
       />
     </section>
   </section>
@@ -56,6 +45,7 @@ export default {
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
+import { formatToPercent } from '@/utils/number';
 import i18n from '@/utils/plugins/i18n';
 
 const buttonClicksTableHeaders = [
@@ -85,6 +75,68 @@ const buttonClicksTableHeaders = [
     ),
   },
 ];
+
+const buttonClicksTableData = [
+  {
+    label: 'Teste',
+    type: 'Type',
+    total: 159,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 10.5,
+  },
+  {
+    label: 'Teste 2',
+    type: 'Type',
+    total: 50,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 20,
+  },
+  {
+    label: 'Teste 3',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 4',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 5',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 6',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 7',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+];
+
+const formattedClicksTableData = buttonClicksTableData.map((row) => ({
+  content: [
+    row.label,
+    row.type,
+    row.total,
+    row.clicks_in_relation_to_the_shot || '--',
+    formatToPercent(row.click_rate),
+  ],
+}));
 
 const chartDataMock = [
   {

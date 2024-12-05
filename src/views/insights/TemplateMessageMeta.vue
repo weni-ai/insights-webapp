@@ -21,8 +21,33 @@
         :description="$t('template_messages_dashboard.blocks.title')"
         metric="0"
       />
-
-      <div class="button-clicks-table">button-clicks-table</div>
+      <SingleTable
+        class="button-clicks-table"
+        title="Button Clicks"
+        hidePagination
+        :pagination="1"
+        :paginationInterval="10"
+        :paginationTotal="10"
+        :headers="[
+          { content: 'Label' },
+          { content: 'Type' },
+          { content: 'Total' },
+          { content: 'Clicks in relation to the shot' },
+          { content: 'Click rate' },
+        ]"
+        :rows="[
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
+        ]"
+      />
     </section>
   </section>
 </template>
@@ -36,6 +61,7 @@ export default {
 <script setup>
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
+import SingleTable from '@/components/insights/widgets/SingleTable.vue';
 
 const chartDataMock = [
   {
@@ -97,23 +123,18 @@ const chartDataMock = [
 .template-message-meta-dashboard {
   display: grid;
   grid-template-columns: 3fr 9fr;
-  width: 100%;
-  height: 100%;
   gap: $unnnic-spacing-sm;
-  overflow: auto;
+
+  height: 100vh;
 
   &__template {
     &-container {
-      display: flex;
+      display: grid;
       background-color: red;
     }
 
     &-info-container {
-      overflow-y: auto;
       display: grid;
-
-      grid-template-rows: 0.5fr 0.5fr 1fr;
-      grid-template-columns: 1fr 1fr;
 
       grid-template-areas:
         'line-chart line-chart'
@@ -128,14 +149,15 @@ const chartDataMock = [
 
       .active-contacts {
         grid-area: active-contacts;
+        min-height: fit-content;
       }
 
       .blocked-contacts {
         grid-area: blocked-contacts;
+        min-height: fit-content;
       }
       .button-clicks-table {
         grid-area: button-clicks-table;
-        background-color: grey;
       }
     }
   }

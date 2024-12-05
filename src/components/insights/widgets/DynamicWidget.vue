@@ -95,6 +95,7 @@ export default {
           clickable: !!report,
           configurable: is_configurable,
           friendlyId: config?.friendly_id,
+          tooltip: config?.tooltip ? this.$t(config.tooltip) : '',
         },
         table_dynamic_by_filter: {
           headerIcon: tableDynamicFilterConfig?.icon?.name,

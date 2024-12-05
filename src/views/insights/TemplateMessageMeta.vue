@@ -21,8 +21,16 @@
         :description="$t('template_messages_dashboard.blocks.title')"
         metric="0"
       />
-
-      <div class="button-clicks-table">button-clicks-table</div>
+      <SingleTable
+        class="button-clicks-table"
+        title="Button Clicks"
+        hidePagination
+        :pagination="1"
+        :paginationInterval="10"
+        :paginationTotal="formattedClicksTableData.length"
+        :headers="buttonClicksTableHeaders"
+        :rows="formattedClicksTableData"
+      />
     </section>
   </section>
 </template>
@@ -36,6 +44,99 @@ export default {
 <script setup>
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
+import SingleTable from '@/components/insights/widgets/SingleTable.vue';
+import { formatToPercent } from '@/utils/number';
+import i18n from '@/utils/plugins/i18n';
+
+const buttonClicksTableHeaders = [
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.label',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.type',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.total',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.clicks_in_relation_to_the_shot',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.button_clicks_table.header.click_rate',
+    ),
+  },
+];
+
+const buttonClicksTableData = [
+  {
+    label: 'Teste',
+    type: 'Type',
+    total: 159,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 10.5,
+  },
+  {
+    label: 'Teste 2',
+    type: 'Type',
+    total: 50,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 20,
+  },
+  {
+    label: 'Teste 3',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 4',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 5',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 6',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 7',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+];
+
+const formattedClicksTableData = buttonClicksTableData.map((row) => ({
+  content: [
+    row.label,
+    row.type,
+    row.total,
+    row.clicks_in_relation_to_the_shot || '--',
+    formatToPercent(row.click_rate),
+  ],
+}));
 
 const chartDataMock = [
   {
@@ -97,23 +198,18 @@ const chartDataMock = [
 .template-message-meta-dashboard {
   display: grid;
   grid-template-columns: 3fr 9fr;
-  width: 100%;
-  height: 100%;
   gap: $unnnic-spacing-sm;
-  overflow: auto;
+
+  height: 100vh;
 
   &__template {
     &-container {
-      display: flex;
+      display: grid;
       background-color: red;
     }
 
     &-info-container {
-      overflow-y: auto;
       display: grid;
-
-      grid-template-rows: 0.5fr 0.5fr 1fr;
-      grid-template-columns: 1fr 1fr;
 
       grid-template-areas:
         'line-chart line-chart'
@@ -128,14 +224,15 @@ const chartDataMock = [
 
       .active-contacts {
         grid-area: active-contacts;
+        min-height: fit-content;
       }
 
       .blocked-contacts {
         grid-area: blocked-contacts;
+        min-height: fit-content;
       }
       .button-clicks-table {
         grid-area: button-clicks-table;
-        background-color: grey;
       }
     }
   }

@@ -98,7 +98,7 @@ const options = computed(() => ({
     },
     x: {
       ticks: {
-        padding: -2,
+        padding: -1,
         color: '#9CACCC',
       },
       grid: {

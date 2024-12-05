@@ -22,6 +22,15 @@
       "delivered_messages": "Delivered messages",
       "readed_messages": "Readed messages",
       "clicks": "Clicks"
+    },
+    "button_clicks_table": {
+      "header": {
+        "label": "Label",
+        "type": "Type",
+        "total": "Total",
+        "clicks_in_relation_to_the_shot": "Clicks in relation to the shot",
+        "click_rate": "Click rate"
+      }
     }
   },
   "table_dynamic_by_filter": {

@@ -22,6 +22,15 @@
       "delivered_messages": "Mensajes entregados",
       "readed_messages": "Mensajes leídos",
       "clicks": "Clics"
+    },
+    "button_clicks_table": {
+      "header": {
+        "label": "Etiqueta",
+        "type": "Tipo",
+        "total": "Total",
+        "clicks_in_relation_to_the_shot": "Clics en relación al disparo.",
+        "click_rate": "Tasa de clics"
+      }
     }
   },
   "table_dynamic_by_filter": {

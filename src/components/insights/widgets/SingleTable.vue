@@ -3,10 +3,12 @@
     <h1
       v-if="props.title"
       class="single-table__title"
+      data-testid="single-table-title"
     >
       {{ title }}
     </h1>
     <UnnnicTableNext
+      data-testid="single-table"
       class="single-table__table"
       :pagination="pagination"
       :paginationTotal="paginationTotal"
@@ -26,6 +28,7 @@ export default {
 </script>
 
 <script setup>
+import { computed } from 'vue';
 const props = defineProps({
   title: { type: String, default: '' },
   pagination: { type: Number, required: true },
@@ -33,8 +36,13 @@ const props = defineProps({
   paginationInterval: { type: Number, default: 5 },
   headers: { type: Array, required: true },
   rows: { type: Array, required: true },
+  hidePagination: { type: Boolean, default: false },
 });
 defineEmits(['changePage']);
+
+const paginationCssToken = computed(() =>
+  props.hidePagination ? 'none' : 'flex',
+);
 </script>
 
 <style scoped lang="scss">
@@ -54,7 +62,7 @@ defineEmits(['changePage']);
 
   &__table {
     :deep(.table-pagination) {
-      display: none;
+      display: v-bind(paginationCssToken);
     }
   }
 }

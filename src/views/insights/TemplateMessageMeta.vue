@@ -24,6 +24,7 @@
       <SingleTable
         class="button-clicks-table"
         title="Button Clicks"
+        hidePagination
         :pagination="1"
         :paginationInterval="10"
         :paginationTotal="10"

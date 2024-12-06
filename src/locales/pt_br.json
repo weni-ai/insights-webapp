@@ -18,6 +18,21 @@
     "blocks": {
       "title": "Bloqueios"
     },
+    "templates_modal": {
+      "title": "Buscar modelo",
+      "table": {
+        "header": {
+          "name": "Nome do modelo",
+          "last_edited": "Última edição"
+        }
+      }
+    },
+    "quality": {
+      "high": "Alta qualidade",
+      "medium": "Média qualidade",
+      "low": "Baixa qualidade",
+      "more_info_tooltip": "Saiba mais através das <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=pt_BR' target='_blank'>documentações da Meta</a>"
+    },
     "messages_graph": {
       "sent_messages": "Mensagens enviadas",
       "delivered_messages": "Mensagens entregues",
@@ -103,6 +118,10 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "date_format": "DD/MM/YYYY",
+  "search": "Buscar",
+  "category": "Categoria",
+  "language": "Idioma",
+  "active": "Ativo",
   "select_date": {
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",

@@ -5,6 +5,7 @@
     autocomplete
     autocompleteIconLeft
     autocompleteClearOnFocus
+    :placeholder="placeholder"
     @update:model-value="$emit('update:model-value', $event[0].value)"
   />
 </template>
@@ -78,7 +79,6 @@ export default {
         const oldValues = Object.values(oldDependsOnValue || {});
         if (!compareEquals(newValues, oldValues)) {
           const filledDependsOnValue = newValues.every((value) => value);
-
           if (filledDependsOnValue) {
             this.clearOptions();
             this.fetchSource();

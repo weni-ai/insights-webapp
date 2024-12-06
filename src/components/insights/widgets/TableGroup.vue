@@ -167,7 +167,7 @@ export default {
         ...$route,
         query: {
           ...$route.query,
-          ...{ slug: this.activeTab.key },
+          ...{ slug: this.activeTab?.key },
         },
       });
 

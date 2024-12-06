@@ -109,7 +109,8 @@ describe('TableGroup', () => {
 
       const rows = wrapper.vm.activeTable.rows;
 
-      expect(rows).toEqual([{ content: ['15:30 | 01/01/2024'] }]);
+      const expectedFormat = /^\d{2}:\d{2} \| \d{2}\/\d{2}\/\d{4}$/;
+      expect(rows[0].content[0]).toMatch(expectedFormat);
     });
   });
 

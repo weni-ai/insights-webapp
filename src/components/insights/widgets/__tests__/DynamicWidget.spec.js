@@ -1,6 +1,6 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import { beforeEach, describe, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, vi } from 'vitest';
 import { shallowMount, config, flushPromises } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import i18n from '@/utils/plugins/i18n';
@@ -252,6 +252,119 @@ describe('DynamicWidget', () => {
           },
         ],
       });
+    });
+  });
+
+  describe('widgetEvents computed property', () => {
+    const createWrapperAndSetSpies = (widget) => {
+      wrapper = createWrapper({ widget });
+
+      return {
+        redirectToReportSpy: vi.spyOn(wrapper.vm, 'redirectToReport'),
+        requestVtexOrderDataSpy: vi
+          .spyOn(wrapper.vm, 'requestVtexOrderData')
+          .mockImplementation(() => Promise.resolve()),
+        getWidgetGraphFunnelDataSpy: vi
+          .spyOn(wrapper.vm, 'getWidgetGraphFunnelData')
+          .mockImplementation(() => Promise.resolve()),
+        requestWidgetDataSpy: vi.spyOn(wrapper.vm, 'requestWidgetData'),
+      };
+    };
+
+    const events = () => wrapper.vm.widgetEvents;
+
+    afterEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should return card events', () => {
+      const { redirectToReportSpy } = createWrapperAndSetSpies({
+        type: 'card',
+      });
+
+      expect(events()).toHaveProperty('click');
+      expect(events()).toHaveProperty('openConfig');
+
+      events().click();
+      expect(redirectToReportSpy).toHaveBeenCalled();
+
+      events().openConfig();
+      expect(wrapper.emitted('open-config')).toBeTruthy();
+    });
+
+    it('should return graph_column events', () => {
+      const { redirectToReportSpy } = createWrapperAndSetSpies({
+        type: 'graph_column',
+      });
+
+      expect(events()).toHaveProperty('seeMore');
+
+      events().seeMore();
+      expect(redirectToReportSpy).toHaveBeenCalled();
+    });
+
+    it('should return empty_column events', () => {
+      createWrapperAndSetSpies({ type: 'empty_column' });
+
+      expect(events()).toHaveProperty('openConfig');
+
+      events().openConfig();
+      expect(wrapper.emitted('open-config')).toBeTruthy();
+    });
+
+    it('should return vtex_order events', () => {
+      const { requestVtexOrderDataSpy } = createWrapperAndSetSpies({
+        type: 'vtex_order',
+      });
+
+      expect(events()).toHaveProperty('openConfig');
+      expect(events()).toHaveProperty('requestData');
+
+      events().openConfig();
+      expect(wrapper.emitted('open-config')).toBeTruthy();
+
+      events().requestData();
+      expect(requestVtexOrderDataSpy).toHaveBeenCalled();
+    });
+
+    it('should return graph_funnel events', async () => {
+      const { getWidgetGraphFunnelDataSpy } = createWrapperAndSetSpies({
+        type: 'graph_funnel',
+        uuid: '123',
+        config: { test: 'config' },
+      });
+
+      expect(events()).toHaveProperty('openConfig');
+      expect(events()).toHaveProperty('requestData');
+
+      events().openConfig();
+      expect(wrapper.emitted('open-config')).toBeTruthy();
+
+      await events().requestData();
+      expect(getWidgetGraphFunnelDataSpy).toHaveBeenCalledWith({
+        uuid: '123',
+        widgetFunnelConfig: { test: 'config' },
+      });
+    });
+
+    it('should return table_group events', () => {
+      const { requestWidgetDataSpy } = createWrapperAndSetSpies({
+        type: 'table_group',
+      });
+
+      expect(events()).toHaveProperty('requestData');
+
+      events().requestData({ offset: 10, limit: 20 });
+      expect(requestWidgetDataSpy).toHaveBeenCalledWith({
+        offset: 10,
+        limit: 20,
+      });
+    });
+
+    it('should return an empty object for invalid type', () => {
+      createWrapperAndSetSpies({ type: 'invalid_type' });
+
+      expect(events()).toEqual({});
     });
   });
 

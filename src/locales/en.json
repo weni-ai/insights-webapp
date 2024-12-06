@@ -10,6 +10,7 @@
     "interaction_time": "Interaction time"
   },
   "template_messages_dashboard": {
+    "title": "Template messages Meta",
     "active_contacts": {
       "title": "Active contacts",
       "tooltip": "Contacts who interacted with the template"

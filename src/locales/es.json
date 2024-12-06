@@ -10,6 +10,7 @@
     "interaction_time": "Tiempo de interacción"
   },
   "template_messages_dashboard": {
+    "title": "Plantilla de mensajes Meta",
     "active_contacts": {
       "title": "Contactos activos",
       "tooltip": "Contactos que interactuaron con la plantilla"

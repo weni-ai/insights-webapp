@@ -1,6 +1,7 @@
 <template>
   <section class="table-group">
     <UnnnicTab
+      data-testid="tab"
       :tabs="tabsKeys"
       :activeTab="activeTabName"
       @change="changeActiveTabName"
@@ -19,6 +20,7 @@
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
+          data-testid="table"
           :pagination="page + 1"
           :headers="activeTable.headers"
           :rows="activeTable.rows"

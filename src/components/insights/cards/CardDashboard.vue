@@ -84,7 +84,7 @@ import CardTitleError from './CardTitleError.vue';
 import { emojis } from '@emoji-mart/data';
 
 export default {
-  name: 'DashboardCard',
+  name: 'CardDashboard',
 
   components: {
     CardBase,

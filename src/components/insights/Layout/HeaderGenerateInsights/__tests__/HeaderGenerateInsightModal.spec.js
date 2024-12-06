@@ -203,7 +203,7 @@ describe('HeaderGenerateInsightModal.vue', () => {
     const footer = wrapper.findComponent(
       '[data-testid="insight-modal-footer"]',
     );
-    const text = 'teste';
+    const text = 'test';
     await footer.vm.$emit('update-feedback-text', text);
     expect(wrapper.vm.feedbackText).toBe(text);
   });

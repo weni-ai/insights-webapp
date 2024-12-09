@@ -123,7 +123,7 @@ export default {
             autoSkip: false,
             maxRotation: 0,
             ticks: {
-              callback: (value, index) => {
+              callback: (_value, index) => {
                 const label = String(this.chartData.labels[index]);
                 return label.length > 15
                   ? `${label.substring(0, 15)}...`
@@ -140,6 +140,9 @@ export default {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
+          horizontalBackgroundColorPlugin: {
+            backgroundColor: '#C6FFF7',
+          },
           tooltip: {
             enabled: true,
             mode: 'index',
@@ -164,8 +167,38 @@ export default {
         },
       };
     },
+    horizontalBackgroundColorPlugin() {
+      return {
+        id: 'horizontalBackgroundColorPlugin',
+        beforeDatasetsDraw(chart, _args, plugins) {
+          const {
+            ctx,
+            data,
+            chartArea: { left, width },
+            scales: { y },
+          } = chart;
+
+          const barThickness = chart.getDatasetMeta(0).data[0].height;
+
+          ctx.beginPath();
+          ctx.fillStyle = plugins.backgroundColor;
+
+          data.datasets[0].data.forEach((_point, index) => {
+            ctx.roundRect(
+              left, // start position
+              y.getPixelForValue(index) - barThickness / 2, // align background to center bar
+              width - 30, // background padding right
+              barThickness,
+              4, // border radius
+            );
+          });
+
+          ctx.fill();
+        },
+      };
+    },
     chartPlugins() {
-      return [ChartDataLabels, Tooltip];
+      return [ChartDataLabels, Tooltip, this.horizontalBackgroundColorPlugin];
     },
     graphContainerHeight() {
       const barSpacingY = 4;

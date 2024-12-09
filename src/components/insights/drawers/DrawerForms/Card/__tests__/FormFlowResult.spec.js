@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { flushPromises, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import FormFlowResult from '@/components/insights/drawers/DrawerForms/Card/FormFlowResult.vue';
 
@@ -92,13 +92,12 @@ describe('FormFlowResult', () => {
 
     it('initializes with correct operations list', () => {
       const operations = wrapper.vm.operations;
-      expect(operations).toHaveLength(5);
+      expect(operations).toHaveLength(4);
       expect(operations.map((op) => op.value)).toEqual([
         'sum',
         'max',
         'avg',
         'min',
-        'recurrence',
       ]);
       operations.forEach((op) => {
         expect(op).toHaveProperty('label');

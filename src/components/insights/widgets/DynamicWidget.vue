@@ -28,7 +28,7 @@ export default {
   props: {
     widget: {
       type: Object,
-      default: () => ({}),
+      required: true,
     },
   },
 
@@ -48,7 +48,7 @@ export default {
 
     isConfigured() {
       const { config } = this.widget;
-      return config && Object.keys(config).length > 0;
+      return !!(config && Object.keys(config).length > 0);
     },
 
     isLoading() {
@@ -96,7 +96,8 @@ export default {
           but still have empty fields in the "config" object. */
           clickable: !!report,
           configurable: is_configurable,
-          friendlyId: config.friendly_id,
+          friendlyId: config?.friendly_id,
+          tooltip: config?.tooltip ? this.$t(config.tooltip) : '',
         },
         table_dynamic_by_filter: {
           headerIcon: tableDynamicFilterConfig?.icon?.name,
@@ -346,17 +347,17 @@ export default {
     getWidgetFormattedData(widget) {
       const { config, data } = widget;
 
-      if (config.operation === 'recurrence') {
+      if (config?.operation === 'recurrence') {
         return (
           (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', {
             minimumFractionDigits: 2,
           }) + '%'
         );
       }
-      if (config.data_type === 'sec') {
+      if (config?.data_type === 'sec') {
         return formatSecondsToHumanString(Math.round(data?.value));
       }
-      if (config.currency) {
+      if (config?.currency) {
         return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
       }
       return (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US');

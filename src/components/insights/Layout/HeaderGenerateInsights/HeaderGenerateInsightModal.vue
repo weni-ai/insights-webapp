@@ -26,6 +26,7 @@
       <section
         ref="content"
         class="header-generate-insight-modal__content"
+        data-testid="modal-content"
         @scroll="handleScroll"
       >
         <HeaderGenerateInsightText
@@ -45,6 +46,7 @@
           :isBtnYesActive="isBtnYesActive"
           :isBtnNoActive="isBtnNoActive"
           :isSubmitFeedbackLoading="isSubmitFeedbackLoading"
+          data-testid="insight-modal-footer"
           @update-feedback-text="handleFeedbackText"
           @handle-positive-feedback="handlePositiveFeedback"
           @handle-negative-feedback="handleNegativeFeedback"
@@ -107,6 +109,7 @@ export default {
       scrollTarget: false,
       isSubmitFeedbackLoading: false,
       isRenderFeedback: false,
+      emitter,
     };
   },
 

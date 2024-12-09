@@ -1,4 +1,4 @@
-import { mount, flushPromises } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import InsightModalFooter from '@/components/insights/Layout/HeaderGenerateInsights/InsightModalFooter.vue';
 import { describe, it, expect, vi } from 'vitest';
 
@@ -227,5 +227,13 @@ describe('InsightModalFooter.vue', () => {
     expect(scrollToEndMock).toHaveBeenCalled();
 
     expect(scrollToEndMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('should emit update-feedback-text on change feedbackText', async () => {
+    const wrapper = mountComponent({ isBtnYesActive: true });
+
+    const textarea = wrapper.find('[data-testid="feedback-textarea"]');
+    await textarea.setValue('test');
+    expect(wrapper.emitted('update-feedback-text')).toBeTruthy();
   });
 });

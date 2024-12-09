@@ -1,6 +1,7 @@
 <template>
   <UnnnicModalDialog
     :modelValue="props.showModal"
+    data-test-id="modal-dialog"
     class="welcome-onboarding-modal"
     :primaryButtonProps="{ text: $t('onboarding.welcome_modal.button.go') }"
     :secondaryButtonProps="{

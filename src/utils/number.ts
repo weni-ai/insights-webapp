@@ -10,3 +10,12 @@ export function getPercentageOf(
     maximumFractionDigits: precision,
   });
 }
+
+export function formatToPercent(val: number, precision: number = 2) {
+  const formatedPercent = val.toLocaleString(i18n.global.locale, {
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision,
+  });
+
+  return `${formatedPercent}%`;
+}

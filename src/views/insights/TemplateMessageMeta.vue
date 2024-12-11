@@ -1,7 +1,23 @@
 <template>
   <section class="template-message-meta-dashboard">
     <section class="template-message-meta-dashboard__template-container">
-      template-message-component
+      <MetaTemplateMessage
+        class="template-message-preview"
+        :template="{
+          title:
+            'VTEX adquire Weni e passa a oferecer solução de IA para transformar o atendimento pós-venda de marcas e varejistas',
+          text: 'A aquisição fortalece a jornada omnichannel da VTEX, reduz custos de suporte ao cliente e impulsionada por dados e IA aprimora a experiência pós-venda para marcas e varejistas globais.',
+          hint: `Não tem interesse? Toque em 'Parar promoções'`,
+          quality: 'high',
+          name: 'template_dev',
+          image:
+            'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',
+          buttons: [
+            { icon: 'open_in_new', label: 'Acessar notícia' },
+            { icon: 'reply', label: 'Parar de receber' },
+          ],
+        }"
+      />
     </section>
     <section class="template-message-meta-dashboard__template-info-container">
       <MultipleLineChart
@@ -27,20 +43,9 @@
         hidePagination
         :pagination="1"
         :paginationInterval="10"
-        :paginationTotal="10"
+        :paginationTotal="formattedClicksTableData.length"
         :headers="buttonClicksTableHeaders"
-        :rows="[
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-          { content: ['Teste', 'Teste', 'Teste', 'Teste', 'Teste'] },
-        ]"
+        :rows="formattedClicksTableData"
       />
     </section>
   </section>
@@ -56,6 +61,8 @@ export default {
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
+import MetaTemplateMessage from '@/components/insights/widgets/MetaTemplateMessage.vue';
+import { formatToPercent } from '@/utils/number';
 import i18n from '@/utils/plugins/i18n';
 
 const buttonClicksTableHeaders = [
@@ -63,6 +70,7 @@ const buttonClicksTableHeaders = [
     content: i18n.global.t(
       'template_messages_dashboard.button_clicks_table.header.label',
     ),
+    isSortable: true,
   },
   {
     content: i18n.global.t(
@@ -85,6 +93,68 @@ const buttonClicksTableHeaders = [
     ),
   },
 ];
+
+const buttonClicksTableData = [
+  {
+    label: 'Teste',
+    type: 'Type',
+    total: 159,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 10.5,
+  },
+  {
+    label: 'Teste 2',
+    type: 'Type',
+    total: 50,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 20,
+  },
+  {
+    label: 'Teste 3',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 4',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 5',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 6',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+  {
+    label: 'Teste 7',
+    type: 'Type',
+    total: 100,
+    clicks_in_relation_to_the_shot: 0,
+    click_rate: 50,
+  },
+];
+
+const formattedClicksTableData = buttonClicksTableData.map((row) => ({
+  content: [
+    row.label,
+    row.type,
+    row.total,
+    row.clicks_in_relation_to_the_shot || '--',
+    formatToPercent(row.click_rate),
+  ],
+}));
 
 const chartDataMock = [
   {
@@ -148,12 +218,12 @@ const chartDataMock = [
   grid-template-columns: 3fr 9fr;
   gap: $unnnic-spacing-sm;
 
-  height: 100vh;
-
   &__template {
     &-container {
-      display: grid;
-      background-color: red;
+      .template-message-preview {
+        position: sticky;
+        top: 0;
+      }
     }
 
     &-info-container {

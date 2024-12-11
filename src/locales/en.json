@@ -10,6 +10,7 @@
     "interaction_time": "Interaction time"
   },
   "template_messages_dashboard": {
+    "title": "Template messages Meta",
     "active_contacts": {
       "title": "Active contacts",
       "tooltip": "Contacts who interacted with the template"
@@ -46,6 +47,10 @@
         "clicks_in_relation_to_the_shot": "Clicks in relation to the shot",
         "click_rate": "Click rate"
       }
+    },
+    "template": {
+      "preview": "Preview",
+      "edit_template": "Edit template"
     }
   },
   "table_dynamic_by_filter": {

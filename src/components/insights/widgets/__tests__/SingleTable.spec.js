@@ -41,11 +41,6 @@ describe('SingleTable', () => {
 
   beforeEach(() => {
     wrapper = mount(SingleTable, {
-      global: {
-        // stubs: {
-        //   UnnnicTableNext: true,
-        // },
-      },
       props: {
         title: 'Test Table',
         pagination: 1,

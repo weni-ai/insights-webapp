@@ -10,6 +10,7 @@
     "interaction_time": "Tiempo de interacción"
   },
   "template_messages_dashboard": {
+    "title": "Plantilla de mensajes Meta",
     "active_contacts": {
       "title": "Contactos activos",
       "tooltip": "Contactos que interactuaron con la plantilla"
@@ -46,6 +47,10 @@
         "clicks_in_relation_to_the_shot": "Clics en relación al disparo.",
         "click_rate": "Tasa de clics"
       }
+    },
+    "template": {
+      "preview": "Avance",
+      "edit_template": "Editar plantilla"
     }
   },
   "table_dynamic_by_filter": {

@@ -54,6 +54,7 @@
           class="footer__feedback__textarea"
           :placeholder="handlePlaceholderTextArea()"
           :disabled="isSubmitFeedbackLoading"
+          data-testid="feedback-textarea"
         />
         <UnnnicButton
           type="tertiary"

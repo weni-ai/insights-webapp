@@ -109,6 +109,7 @@ defineEmits(['open-edit-template']);
       justify-content: space-between;
       gap: $unnnic-spacing-nano;
       align-items: end;
+      color: $unnnic-color-neutral-dark;
 
       font-family: $unnnic-font-family-secondary;
       font-size: 14px;

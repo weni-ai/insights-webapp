@@ -47,6 +47,10 @@
         "clicks_in_relation_to_the_shot": "Cliques em relação à disparo",
         "click_rate": "Taxa de cliques"
       }
+    },
+    "template": {
+      "preview": "Visualização",
+      "edit_template": "Editar modelo"
     }
   },
   "table_dynamic_by_filter": {

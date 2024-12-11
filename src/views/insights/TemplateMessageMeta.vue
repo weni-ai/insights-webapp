@@ -1,7 +1,23 @@
 <template>
   <section class="template-message-meta-dashboard">
     <section class="template-message-meta-dashboard__template-container">
-      template-message-component
+      <MetaTemplateMessage
+        class="template-message-preview"
+        :template="{
+          title:
+            'VTEX adquire Weni e passa a oferecer solução de IA para transformar o atendimento pós-venda de marcas e varejistas',
+          text: 'A aquisição fortalece a jornada omnichannel da VTEX, reduz custos de suporte ao cliente e impulsionada por dados e IA aprimora a experiência pós-venda para marcas e varejistas globais.',
+          hint: `Não tem interesse? Toque em 'Parar promoções'`,
+          quality: 'high',
+          name: 'template_dev',
+          image:
+            'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',
+          buttons: [
+            { icon: 'open_in_new', label: 'Acessar notícia' },
+            { icon: 'reply', label: 'Parar de receber' },
+          ],
+        }"
+      />
     </section>
     <section class="template-message-meta-dashboard__template-info-container">
       <MultipleLineChart
@@ -45,6 +61,7 @@ export default {
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
+import MetaTemplateMessage from '@/components/insights/widgets/MetaTemplateMessage.vue';
 import { formatToPercent } from '@/utils/number';
 import i18n from '@/utils/plugins/i18n';
 
@@ -53,6 +70,7 @@ const buttonClicksTableHeaders = [
     content: i18n.global.t(
       'template_messages_dashboard.button_clicks_table.header.label',
     ),
+    isSortable: true,
   },
   {
     content: i18n.global.t(
@@ -200,12 +218,12 @@ const chartDataMock = [
   grid-template-columns: 3fr 9fr;
   gap: $unnnic-spacing-sm;
 
-  height: 100vh;
-
   &__template {
     &-container {
-      display: grid;
-      background-color: red;
+      .template-message-preview {
+        position: sticky;
+        top: 0;
+      }
     }
 
     &-info-container {

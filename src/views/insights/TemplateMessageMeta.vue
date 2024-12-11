@@ -19,34 +19,36 @@
         }"
       />
     </section>
-    <section class="template-message-meta-dashboard__template-info-container">
-      <MultipleLineChart
-        class="line-chart"
-        :data="chartDataMock"
-      />
-      <CardDashboard
-        class="active-contacts"
-        configured
-        :description="$t('template_messages_dashboard.active_contacts.title')"
-        :tooltip="$t('template_messages_dashboard.active_contacts.tooltip')"
-        metric="10"
-      />
-      <CardDashboard
-        class="blocked-contacts"
-        configured
-        :description="$t('template_messages_dashboard.blocks.title')"
-        metric="0"
-      />
-      <SingleTable
-        class="button-clicks-table"
-        title="Button Clicks"
-        hidePagination
-        :pagination="1"
-        :paginationInterval="10"
-        :paginationTotal="formattedClicksTableData.length"
-        :headers="buttonClicksTableHeaders"
-        :rows="formattedClicksTableData"
-      />
+    <section class="template-message-meta-dashboard__template-info">
+      <div class="template-message-meta-dashboard__template-info-container">
+        <MultipleLineChart
+          class="line-chart"
+          :data="chartDataMock"
+        />
+        <CardDashboard
+          class="active-contacts"
+          configured
+          :description="$t('template_messages_dashboard.active_contacts.title')"
+          :tooltip="$t('template_messages_dashboard.active_contacts.tooltip')"
+          metric="10"
+        />
+        <CardDashboard
+          class="blocked-contacts"
+          configured
+          :description="$t('template_messages_dashboard.blocks.title')"
+          metric="0"
+        />
+        <SingleTable
+          class="button-clicks-table"
+          title="Button Clicks"
+          hidePagination
+          :pagination="1"
+          :paginationInterval="10"
+          :paginationTotal="formattedClicksTableData.length"
+          :headers="buttonClicksTableHeaders"
+          :rows="formattedClicksTableData"
+        />
+      </div>
     </section>
   </section>
 </template>
@@ -217,40 +219,45 @@ const chartDataMock = [
   display: grid;
   grid-template-columns: 3fr 9fr;
   gap: $unnnic-spacing-sm;
+  height: 100%;
 
   &__template {
     &-container {
-      .template-message-preview {
-        position: sticky;
-        top: 0;
-      }
+      position: sticky;
+      top: 0;
     }
 
-    &-info-container {
-      display: grid;
+    &-info {
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
 
-      grid-template-areas:
-        'line-chart line-chart'
-        'active-contacts blocked-contacts'
-        'button-clicks-table button-clicks-table';
+      &-container {
+        display: grid;
 
-      gap: $unnnic-spacing-sm;
+        grid-template-areas:
+          'line-chart line-chart'
+          'active-contacts blocked-contacts'
+          'button-clicks-table button-clicks-table';
 
-      .line-chart {
-        grid-area: line-chart;
-      }
+        gap: $unnnic-spacing-sm;
 
-      .active-contacts {
-        grid-area: active-contacts;
-        min-height: fit-content;
-      }
+        .line-chart {
+          grid-area: line-chart;
+        }
 
-      .blocked-contacts {
-        grid-area: blocked-contacts;
-        min-height: fit-content;
-      }
-      .button-clicks-table {
-        grid-area: button-clicks-table;
+        .active-contacts {
+          grid-area: active-contacts;
+          min-height: fit-content;
+        }
+
+        .blocked-contacts {
+          grid-area: blocked-contacts;
+          min-height: fit-content;
+        }
+        .button-clicks-table {
+          grid-area: button-clicks-table;
+        }
       }
     }
   }

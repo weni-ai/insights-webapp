@@ -92,7 +92,7 @@ defineEmits(['open-edit-template']);
 .meta-template-message {
   display: flex;
   flex-direction: column;
-  height: 90.4%;
+  height: 100%;
   border: 1px solid $unnnic-color-neutral-soft;
   border-radius: $unnnic-border-radius-sm;
 
@@ -149,7 +149,6 @@ defineEmits(['open-edit-template']);
       color: $unnnic-color-neutral-black;
       font-family: $unnnic-font-family-secondary;
       font-size: 10.692px;
-      font-weight: 400;
       line-height: 16.037px;
       word-break: break-word;
     }

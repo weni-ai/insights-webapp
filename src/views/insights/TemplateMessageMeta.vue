@@ -1,36 +1,54 @@
 <template>
   <section class="template-message-meta-dashboard">
     <section class="template-message-meta-dashboard__template-container">
-      template-message-component
+      <MetaTemplateMessage
+        class="template-message-preview"
+        :template="{
+          title:
+            'VTEX adquire Weni e passa a oferecer solução de IA para transformar o atendimento pós-venda de marcas e varejistas',
+          text: 'A aquisição fortalece a jornada omnichannel da VTEX, reduz custos de suporte ao cliente e impulsionada por dados e IA aprimora a experiência pós-venda para marcas e varejistas globais.',
+          hint: `Não tem interesse? Toque em 'Parar promoções'`,
+          quality: 'high',
+          name: 'template_dev',
+          image:
+            'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',
+          buttons: [
+            { icon: 'open_in_new', label: 'Acessar notícia' },
+            { icon: 'reply', label: 'Parar de receber' },
+          ],
+        }"
+      />
     </section>
-    <section class="template-message-meta-dashboard__template-info-container">
-      <MultipleLineChart
-        class="line-chart"
-        :data="chartDataMock"
-      />
-      <CardDashboard
-        class="active-contacts"
-        configured
-        :description="$t('template_messages_dashboard.active_contacts.title')"
-        :tooltip="$t('template_messages_dashboard.active_contacts.tooltip')"
-        metric="10"
-      />
-      <CardDashboard
-        class="blocked-contacts"
-        configured
-        :description="$t('template_messages_dashboard.blocks.title')"
-        metric="0"
-      />
-      <SingleTable
-        class="button-clicks-table"
-        title="Button Clicks"
-        hidePagination
-        :pagination="1"
-        :paginationInterval="10"
-        :paginationTotal="formattedClicksTableData.length"
-        :headers="buttonClicksTableHeaders"
-        :rows="formattedClicksTableData"
-      />
+    <section class="template-message-meta-dashboard__template-info">
+      <div class="template-message-meta-dashboard__template-info-container">
+        <MultipleLineChart
+          class="line-chart"
+          :data="chartDataMock"
+        />
+        <CardDashboard
+          class="active-contacts"
+          configured
+          :description="$t('template_messages_dashboard.active_contacts.title')"
+          :tooltip="$t('template_messages_dashboard.active_contacts.tooltip')"
+          metric="10"
+        />
+        <CardDashboard
+          class="blocked-contacts"
+          configured
+          :description="$t('template_messages_dashboard.blocks.title')"
+          metric="0"
+        />
+        <SingleTable
+          class="button-clicks-table"
+          title="Button Clicks"
+          hidePagination
+          :pagination="1"
+          :paginationInterval="10"
+          :paginationTotal="formattedClicksTableData.length"
+          :headers="buttonClicksTableHeaders"
+          :rows="formattedClicksTableData"
+        />
+      </div>
     </section>
   </section>
 </template>
@@ -45,6 +63,7 @@ export default {
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
+import MetaTemplateMessage from '@/components/insights/widgets/MetaTemplateMessage.vue';
 import { formatToPercent } from '@/utils/number';
 import i18n from '@/utils/plugins/i18n';
 
@@ -53,6 +72,7 @@ const buttonClicksTableHeaders = [
     content: i18n.global.t(
       'template_messages_dashboard.button_clicks_table.header.label',
     ),
+    isSortable: true,
   },
   {
     content: i18n.global.t(
@@ -199,40 +219,45 @@ const chartDataMock = [
   display: grid;
   grid-template-columns: 3fr 9fr;
   gap: $unnnic-spacing-sm;
-
-  height: 100vh;
+  height: 100%;
 
   &__template {
     &-container {
-      display: grid;
-      background-color: red;
+      position: sticky;
+      top: 0;
     }
 
-    &-info-container {
-      display: grid;
+    &-info {
+      overflow-y: auto;
+      overflow-x: hidden;
+      height: 100%;
 
-      grid-template-areas:
-        'line-chart line-chart'
-        'active-contacts blocked-contacts'
-        'button-clicks-table button-clicks-table';
+      &-container {
+        display: grid;
 
-      gap: $unnnic-spacing-sm;
+        grid-template-areas:
+          'line-chart line-chart'
+          'active-contacts blocked-contacts'
+          'button-clicks-table button-clicks-table';
 
-      .line-chart {
-        grid-area: line-chart;
-      }
+        gap: $unnnic-spacing-sm;
 
-      .active-contacts {
-        grid-area: active-contacts;
-        min-height: fit-content;
-      }
+        .line-chart {
+          grid-area: line-chart;
+        }
 
-      .blocked-contacts {
-        grid-area: blocked-contacts;
-        min-height: fit-content;
-      }
-      .button-clicks-table {
-        grid-area: button-clicks-table;
+        .active-contacts {
+          grid-area: active-contacts;
+          min-height: fit-content;
+        }
+
+        .blocked-contacts {
+          grid-area: blocked-contacts;
+          min-height: fit-content;
+        }
+        .button-clicks-table {
+          grid-area: button-clicks-table;
+        }
       }
     }
   }

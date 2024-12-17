@@ -1,17 +1,21 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <section class="meta-template-message">
-    <section class="meta-template-message__header">
+    <header class="meta-template-message__header">
       <section class="meta-template-message__container-title">
         <h2 class="meta-template-message__preview-label">
           {{ $t('template_messages_dashboard.template.preview') }}
         </h2>
 
-        <p style="margin-right: auto">
+        <p
+          class="meta-template-message__container-title__name"
+          data-testid="template-name"
+        >
           {{ props.template.name }}
         </p>
 
         <UnnnicIcon
+          data-testid="template-favorite"
           class="meta-template-message__favorite-icon"
           icon="star_rate"
           scheme="aux-yellow-500"
@@ -19,28 +23,39 @@
         />
       </section>
       <QualityTemplateMessageFlag
+        data-testid="template-quality"
         showDot
         showInfo
         :quality="props.template.quality"
       />
-    </section>
-    <section class="meta-template-message__container-content">
+    </header>
+    <main class="meta-template-message__container-content">
       <section class="meta-template-message__preview">
         <img
           v-if="props.template.image"
           class="meta-template-message__preview-image"
           :src="props.template.image"
+          data-testid="template-image"
         />
 
-        <h2 class="meta-template-message__preview-title">
+        <h2
+          class="meta-template-message__preview-title"
+          data-testid="template-title"
+        >
           {{ props.template.title }}
         </h2>
 
-        <p class="meta-template-message__preview-text">
+        <article
+          class="meta-template-message__preview-text"
+          data-testid="template-text"
+        >
           {{ props.template.text }}
-        </p>
+        </article>
 
-        <p class="meta-template-message__preview-hint">
+        <p
+          class="meta-template-message__preview-hint"
+          data-testid="template-hint"
+        >
           {{ props.template.hint }}
         </p>
 
@@ -48,6 +63,7 @@
           v-for="(button, index) in props.template.buttons"
           :key="index"
           class="meta-template-message__preview-link"
+          data-testid="template-button"
         >
           <UnnnicIcon
             :icon="button.icon"
@@ -56,16 +72,17 @@
           <p>{{ button.label }}</p>
         </section>
       </section>
-    </section>
-    <section class="meta-template-message__edit">
+    </main>
+    <footer class="meta-template-message__edit">
       <UnnnicButton
         class="meta-template-message__edit-button"
         type="secondary"
+        data-testid="template-edit-button"
         @click.stop="$emit('open-edit-template')"
       >
         {{ $t('template_messages_dashboard.template.edit_template') }}
       </UnnnicButton>
-    </section>
+    </footer>
   </section>
 </template>
 
@@ -115,6 +132,10 @@ defineEmits(['open-edit-template']);
       font-size: 14px;
       font-style: normal;
       line-height: 22px;
+
+      &__name {
+        margin-right: auto;
+      }
     }
     &-content {
       background-color: $unnnic-color-background-grass;

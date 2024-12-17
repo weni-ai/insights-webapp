@@ -207,9 +207,7 @@ describe('FormFlowResult', () => {
     it('resets flow result when flow uuid changes', async () => {
       const initialConfig = {
         flow: {
-          uuid: {
-            id: 'store-uuid',
-          },
+          uuid: 'flow-uuid',
           result: 'test-result',
         },
         operation: 'sum',
@@ -218,6 +216,10 @@ describe('FormFlowResult', () => {
 
       const storeWithConfig = createDefaultStore(initialConfig);
       const wrapperWithStore = createWrapper(storeWithConfig);
+
+      wrapperWithStore.vm.config.flow.uuid = 'changed-id';
+
+      await wrapperWithStore.vm.$nextTick();
 
       expect(wrapperWithStore.vm.config.flow.result).toBe('');
     });

@@ -1,16 +1,14 @@
 <template>
   <SelectFlow
-    :modelValue="config.flow.uuid"
+    v-model="config.flow.uuid"
     data-test-id="select-flow"
-    @update:model-value="config.flow.uuid = $event"
   />
 
   <SelectFlowResult
-    :modelValue="config.flow.result"
+    v-model="config.flow.result"
     data-test-id="select-flow-result"
     :flow="config.flow?.uuid"
     :disabled="!config.flow?.uuid"
-    @update:model-value="config.flow.result = $event"
   />
 
   <RadioList

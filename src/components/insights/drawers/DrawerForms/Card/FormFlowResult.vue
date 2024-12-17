@@ -1,14 +1,16 @@
 <template>
   <SelectFlow
-    v-model="config.flow.uuid"
+    :modelValue="config.flow.uuid"
     data-test-id="select-flow"
+    @update:model-value="config.flow.uuid = $event"
   />
 
   <SelectFlowResult
-    v-model="config.flow.result"
+    :modelValue="config.flow.result"
     data-test-id="select-flow-result"
     :flow="config.flow?.uuid"
     :disabled="!config.flow?.uuid"
+    @update:model-value="config.flow.result = $event"
   />
 
   <RadioList
@@ -105,8 +107,8 @@ export default {
       },
     },
 
-    'config.flow?.uuid'(_newFlow, oldFlow) {
-      if (typeof oldFlow === 'object') {
+    'config.flow.uuid'(newFlowUuid, oldFlowUuid) {
+      if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
         this.config.flow.result = '';
       }
     },

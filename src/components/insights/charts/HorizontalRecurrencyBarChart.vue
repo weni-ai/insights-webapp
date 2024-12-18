@@ -123,7 +123,7 @@ export default {
             autoSkip: false,
             maxRotation: 0,
             ticks: {
-              callback: (_value, index) => {
+              callback: (value, index) => {
                 const label = String(this.chartData.labels[index]);
                 return label.length > 15
                   ? `${label.substring(0, 15)}...`
@@ -140,9 +140,6 @@ export default {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
-          horizontalBackgroundColorPlugin: {
-            backgroundColor: '#C6FFF7',
-          },
           tooltip: {
             enabled: true,
             mode: 'index',
@@ -164,41 +161,35 @@ export default {
               lineHeight: 1.66,
             },
           },
-        },
-      };
-    },
-    horizontalBackgroundColorPlugin() {
-      return {
-        id: 'horizontalBackgroundColorPlugin',
-        beforeDatasetsDraw(chart, _args, plugins) {
-          const {
-            ctx,
-            data,
-            chartArea: { left, width },
-            scales: { y },
-          } = chart;
 
-          const barThickness = chart.getDatasetMeta(0).data[0].height;
+          backgroundBar: {
+            id: 'backgroundBar',
+            beforeDatasetsDraw(chart, args, pluginOptions) {
+              const {
+                data,
+                ctx,
+                chartArea: { top, bottom, left, right, width, height },
+                scales: { x, y },
+              } = chart;
 
-          ctx.beginPath();
-          ctx.fillStyle = plugins.backgroundColor;
+              ctx.save();
+              const segment = width / data.labels.length;
+              const barWidth = segment * 0.9 * 0.9;
 
-          data.datasets[0].data.forEach((_point, index) => {
-            ctx.roundRect(
-              left, // start position
-              y.getPixelForValue(index) - barThickness / 2, // align background to center bar
-              width - 30, // background padding right
-              barThickness,
-              4, // border radius
-            );
-          });
-
-          ctx.fill();
+              ctx.fillStyle = 'gray';
+              ctx.fillRect(
+                x.getPixelForValue(0) - barWidth / 2,
+                top,
+                barWidth,
+                height,
+              );
+            },
+          },
         },
       };
     },
     chartPlugins() {
-      return [ChartDataLabels, Tooltip, this.horizontalBackgroundColorPlugin];
+      return [ChartDataLabels, Tooltip];
     },
     graphContainerHeight() {
       const barSpacingY = 4;

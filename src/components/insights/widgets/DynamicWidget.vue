@@ -12,6 +12,7 @@ import { mapActions, mapState } from 'vuex';
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
+import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
@@ -66,6 +67,7 @@ export default {
         card: CardDashboard,
         empty_column: CardEmpty,
         vtex_order: CardVtexOrder,
+        recurrence: CardRecurrence,
         insight: null, // TODO: Create Insight component
       };
 
@@ -132,6 +134,10 @@ export default {
         vtex_order: {
           widget: this.widget,
           data: this.widgetVtexData,
+        },
+        recurrence: {
+          widget: this.widget,
+          data: this.widget?.data,
         },
       };
 
@@ -217,6 +223,15 @@ export default {
             });
           },
         },
+        recurrence: {
+          openConfig: () => this.$emit('open-config'),
+          requestData: () => {
+            this.isRequestingData = true;
+            this.requestRecurrenceData().finally(() => {
+              this.isRequestingData = false;
+            });
+          },
+        },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
           requestData: () => {
@@ -248,6 +263,7 @@ export default {
             'graph_funnel',
             'empty_column',
             'vtex_order',
+            'recurrence',
           ].includes(this.widget.type)
         ) {
           this.requestWidgetData();
@@ -263,6 +279,7 @@ export default {
       getWidgetReportData: 'reports/getWidgetReportData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
+      getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {
@@ -287,6 +304,14 @@ export default {
       await this.getWidgetVtexOrderData({
         uuid,
         utm_source: config.filter.utm,
+      });
+    },
+
+    async requestRecurrenceData() {
+      const { uuid } = this.widget;
+
+      await this.getWidgetRecurrenceData({
+        uuid,
       });
     },
 

@@ -9,6 +9,50 @@
     "awaiting_service": "Esperando atención",
     "interaction_time": "Tiempo de interacción"
   },
+  "template_messages_dashboard": {
+    "title": "Plantilla de mensajes Meta",
+    "active_contacts": {
+      "title": "Contactos activos",
+      "tooltip": "Contactos que interactuaron con la plantilla"
+    },
+    "blocks": {
+      "title": "Bloques"
+    },
+    "templates_modal": {
+      "title": "Buscar plantilla",
+      "table": {
+        "header": {
+          "name": "Nombre de la plantilla",
+          "last_edited": "Última edición"
+        }
+      }
+    },
+    "quality": {
+      "high": "Alta calidad",
+      "medium": "Medio calidad",
+      "low": "Baja calidad",
+      "more_info_tooltip": "Obtenga más información a través de la <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=es_ES' target='_blank'>documentación de Meta</a>"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensajes enviados",
+      "delivered_messages": "Mensajes entregados",
+      "readed_messages": "Mensajes leídos",
+      "clicks": "Clics"
+    },
+    "button_clicks_table": {
+      "header": {
+        "label": "Etiqueta",
+        "type": "Tipo",
+        "total": "Total",
+        "clicks_in_relation_to_the_shot": "Clics en relación al disparo.",
+        "click_rate": "Tasa de clics"
+      }
+    },
+    "template": {
+      "preview": "Avance",
+      "edit_template": "Editar plantilla"
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats en el período"
@@ -78,6 +122,10 @@
   "clear_fields": "Borrar campos",
   "today": "Hoy",
   "date_format": "DD/MM/YYYY",
+  "search": "Buscar",
+  "category": "Categoría",
+  "language": "Idioma",
+  "active": "Activo",
   "select_date": {
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",

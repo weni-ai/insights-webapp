@@ -1,6 +1,14 @@
 <template>
   <section class="insights-layout-header-filters">
-    <template v-if="hasManyFilters">
+    <template v-if="currentDashboard?.name === 'test-meta-templates-message'">
+      <UnnnicButton
+        type="secondary"
+        iconLeft="search"
+        :text="$t('template_messages_dashboard.templates_modal.title')"
+        @click.stop="searchTemplateMetaModal = true"
+      />
+    </template>
+    <template v-else-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
         type="secondary"
@@ -28,11 +36,14 @@
         @update:model-value="updateFilter"
       />
     </section>
-
     <ModalFilters
       data-testid="modal-filters"
       :showModal="filterModalOpened"
       @close="filterModalOpened = false"
+    />
+    <SearchTemplateMessagesModal
+      :modelValue="searchTemplateMetaModal"
+      @close="searchTemplateMetaModal = false"
     />
   </section>
 </template>
@@ -42,20 +53,23 @@ import { mapActions, mapState } from 'vuex';
 import { getLastNDays } from '@/utils/time';
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
+import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
 
-  components: { DynamicFilter, ModalFilters },
+  components: { DynamicFilter, ModalFilters, SearchTemplateMessagesModal },
 
   data() {
     return {
       filterModalOpened: false,
+      searchTemplateMetaModal: false,
     };
   },
 
   computed: {
     ...mapState({
+      currentDashboard: (state) => state.dashboards.currentDashboard,
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,

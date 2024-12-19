@@ -162,9 +162,11 @@ export default {
     gap: $unnnic-spacing-stack-xs;
 
     .header__title {
-      font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-sm;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size;
       color: $unnnic-color-neutral-darkest;
+      font-weight: $unnnic-font-weight-bold;
+      line-height: $unnnic-font-size-title-md;
     }
   }
 
@@ -174,7 +176,7 @@ export default {
 
     :hover.unnnic-table-next__body-row {
       cursor: pointer;
-      background-color: $unnnic-color-neutral-soft;
+      background-color: $unnnic-color-neutral-lightest;
       text-decoration: underline;
     }
   }

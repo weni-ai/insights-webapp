@@ -42,6 +42,13 @@ describe('HumanServiceAgentsTable', () => {
       link: { url: '/link2' },
     },
     {
+      agent: 'Marcus',
+      status: 'grey',
+      opened: 2,
+      closed: 7,
+      link: { url: '/link4' },
+    },
+    {
       agent: 'Charlie',
       status: 'green',
       opened: 8,
@@ -89,7 +96,7 @@ describe('HumanServiceAgentsTable', () => {
 
   it('formats items correctly', () => {
     const formattedItems = wrapper.vm.formattedItems;
-    expect(formattedItems).toHaveLength(3);
+    expect(formattedItems).toHaveLength(4);
     expect(formattedItems[0].content).toHaveLength(3);
   });
 
@@ -128,6 +135,14 @@ describe('HumanServiceAgentsTable', () => {
     await wrapper.setProps({ headers: [], items: [] });
     expect(wrapper.vm.formattedHeaders).toHaveLength(0);
     expect(wrapper.vm.formattedItems).toHaveLength(0);
+  });
+
+  it('calls sortItems correctly for string values', () => {
+    wrapper.setData({
+      sort: { header: 'Agent', order: 'desc' },
+    });
+    const sortedItems = wrapper.vm.sortItems(mockItems);
+    expect(sortedItems[0].opened).toBe(2);
   });
 
   it('calls sortItems correctly for non-string values', () => {

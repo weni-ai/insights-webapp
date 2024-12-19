@@ -179,6 +179,14 @@ export default {
       background-color: $unnnic-color-neutral-lightest;
       text-decoration: underline;
     }
+
+    span[data-testid='arrow-asc-icon'] {
+      color: $unnnic-color-neutral-cloudy;
+    }
+
+    span[data-testid='arrow-desc-icon'] {
+      color: $unnnic-color-neutral-cloudy;
+    }
   }
 
   :deep(.table-pagination) {

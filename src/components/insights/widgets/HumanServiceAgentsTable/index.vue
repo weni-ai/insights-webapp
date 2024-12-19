@@ -1,19 +1,25 @@
 <template>
-  <section class="widget-table-dynamic-by-filter">
+  <section class="widget-human-service-agents">
     <header
       v-if="headerTitle"
-      class="widget-table-dynamic-by-filter__header"
+      class="widget-human-service-agents__header"
     >
-      <h1 class="header__title">{{ $t(headerTitle) }}</h1>
+      <h1
+        class="header__title"
+        data-testid="widget-human-service-agent-title"
+      >
+        {{ $t(headerTitle) }}
+      </h1>
     </header>
 
     <UnnnicTableNext
-      class="widget-table-dynamic-by-filter__table"
+      class="widget-human-service-agents__table"
       :isLoading="isLoading"
       :locale="$i18n.locale"
       :headers="formattedHeaders"
       :rows="formattedItems"
-      @row-click="redirectItem"
+      data-testid="human-service-agents-table"
+      @row-click="redirectItem($event)"
       @sort="sort = $event"
     />
   </section>
@@ -23,7 +29,7 @@
 import AgentName from './AgentName.vue';
 import { markRaw } from 'vue';
 export default {
-  name: 'WidgetTableDynamicByFilter',
+  name: 'HumanServiceAgentsTable',
 
   props: {
     isLoading: Boolean,
@@ -33,11 +39,11 @@ export default {
     },
     headers: {
       type: Array,
-      default: () => [],
+      required: true,
     },
     items: {
       type: Array,
-      default: () => [],
+      required: true,
     },
   },
 
@@ -84,10 +90,6 @@ export default {
   },
 
   methods: {
-    getStatusIconScheme(status) {
-      return `feedback-${status?.toLowerCase() === 'green' ? 'green' : 'grey'}`;
-    },
-
     redirectItem(item) {
       const path = `${item.view_mode_url}/insights`;
       window.parent.postMessage(
@@ -140,7 +142,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.widget-table-dynamic-by-filter {
+.widget-human-service-agents {
   box-shadow: $unnnic-shadow-level-far;
 
   padding: $unnnic-spacing-sm;
@@ -170,7 +172,7 @@ export default {
     }
   }
 
-  :deep(.widget-table-dynamic-by-filter__table) {
+  :deep(.widget-human-service-agents__table) {
     display: flex;
     overflow: auto;
 

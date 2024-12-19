@@ -15,7 +15,6 @@ import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
-// import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 

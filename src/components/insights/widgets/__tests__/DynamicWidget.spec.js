@@ -136,7 +136,7 @@ describe('DynamicWidget', () => {
         graph_column: 'LineChart',
         graph_bar: 'HorizontalBarChart',
         graph_funnel: 'CardFunnel',
-        table_dynamic_by_filter: 'WidgetTableDynamicByFilter',
+        table_dynamic_by_filter: 'HumanServiceAgentsTable',
         table_group: 'TableGroup',
         card: 'CardDashboard',
         empty_column: 'CardEmpty',

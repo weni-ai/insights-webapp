@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { createStore } from 'vuex';
 import userModule from '@/store/modules/user';
 
-describe('User Vuex Module', () => {
+describe('User Store', () => {
   let store;
 
   beforeEach(() => {

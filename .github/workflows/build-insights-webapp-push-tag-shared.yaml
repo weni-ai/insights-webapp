@@ -67,7 +67,7 @@ jobs:
             commit=${{env.COMMIT_SHA}}
             repository=${{env.IMAGE_SOURCE_URL}}
           build-args: |
-            OLD_IMAGE=${{env.OLD_IMAGE}}  
+            OLD_IMAGE=${{env.OLD_IMAGE}}
           file: docker/Dockerfile
           push: true
           tags: |

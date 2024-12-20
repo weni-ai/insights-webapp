@@ -28,7 +28,7 @@ vi.mock('@/router', () => ({
   },
 }));
 
-describe('Reports Store Module', () => {
+describe('Reports Store', () => {
   let store;
 
   beforeEach(() => {

@@ -17,7 +17,7 @@ vi.mock('@/utils/object', async (importOriginal) => {
   };
 });
 
-describe('project module', () => {
+describe('Project store', () => {
   let store;
 
   beforeEach(() => {

@@ -9,7 +9,7 @@ vi.mock('@/services/api', () => ({
   },
 }));
 
-describe('gpt store', () => {
+describe('GPT Store', () => {
   let store;
 
   beforeEach(() => {

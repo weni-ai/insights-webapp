@@ -10,7 +10,7 @@ vi.mock('@/utils/time', () => ({
   ),
 }));
 
-describe('Onboarding Store Module', () => {
+describe('Onboarding Store', () => {
   let store;
 
   beforeEach(() => {

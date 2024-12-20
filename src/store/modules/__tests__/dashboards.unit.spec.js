@@ -30,7 +30,7 @@ vi.mock('@/router', () => ({
   },
 }));
 
-describe('dashboards store', () => {
+describe('Dashboards Store', () => {
   let store;
 
   beforeEach(() => {

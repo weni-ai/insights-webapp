@@ -12,7 +12,7 @@ const store = createStore({
   },
 });
 
-describe('Widgets Store', () => {
+describe('Widgets Store Mutations', () => {
   beforeEach(() => {
     const widgets = [
       { uuid: '1', name: 'Widget 1' },

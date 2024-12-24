@@ -6,6 +6,7 @@ import project from './modules/project';
 import widgets from './modules/widgets.ts';
 import onboarding from './modules/onboarding';
 import user from './modules/user';
+import gpt from './modules/gpt';
 
 const store = createStore({
   modules: {
@@ -16,6 +17,7 @@ const store = createStore({
     widgets,
     onboarding,
     user,
+    gpt,
   },
 });
 

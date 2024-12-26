@@ -72,6 +72,10 @@ export default {
       type: Number,
       default: 0,
     },
+    initialTab: {
+      type: String,
+      default: '',
+    },
   },
 
   emits: ['request-data'],
@@ -183,12 +187,20 @@ export default {
   },
 
   unmounted() {
-    const newQuery = this.$route.query;
-    delete newQuery.slug;
     this.$router.replace({
       ...this.$route,
-      query: newQuery,
+      slug: undefined,
     });
+  },
+
+  mounted() {
+    if (this.initialTab) this.changeActiveTabName(this.initialTab);
+    else {
+      Object.keys(this.tabs).forEach((tabKey) => {
+        if (this.tabs[tabKey].is_default) this.changeActiveTabName(tabKey);
+      });
+    }
+    if (this.$route.query.slug) this.emitRequestData();
   },
 
   methods: {

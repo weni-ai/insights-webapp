@@ -60,7 +60,9 @@ describe('TableGroup', () => {
       expect(table.props('headers')).toEqual([
         { content: 'Field 1', value: 'field1' },
       ]);
-      expect(table.props('rows')).toEqual([{ content: ['Value'] }]);
+      expect(table.props('rows')).toEqual([
+        { field1: 'Value', content: ['Value'] },
+      ]);
     });
 
     it('returns null when no activeTab is found and no default tab is available', () => {
@@ -100,7 +102,7 @@ describe('TableGroup', () => {
     it('computes dynamic rows from the provided data', () => {
       const rows = wrapper.vm.activeTable.rows;
 
-      expect(rows).toEqual([{ content: ['Value'] }]);
+      expect(rows).toEqual([{ field1: 'Value', content: ['Value'] }]);
     });
 
     it('formats row values correctly for dates, arrays, and strings', async () => {

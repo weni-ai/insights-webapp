@@ -195,6 +195,12 @@ export default {
 
   mounted() {
     if (this.initialTab) this.changeActiveTabName(this.initialTab);
+    else {
+      Object.keys(this.tabs).forEach((tabKey) => {
+        if (this.tabs[tabKey].is_default) this.changeActiveTabName(tabKey);
+      });
+    }
+    if (this.$route.query.slug) this.emitRequestData();
   },
 
   methods: {

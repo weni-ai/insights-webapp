@@ -76,13 +76,6 @@ export default {
       const { isLoading } = this;
       const { name, data, type, config, report, is_configurable } = this.widget;
 
-      let tableGroupInitialTab = '';
-      if (type === 'table_group' && config) {
-        Object.keys(config).forEach((key) => {
-          if (config[key].is_default) tableGroupInitialTab = key;
-        });
-      }
-
       const defaultProps = {
         isLoading,
       };
@@ -113,7 +106,6 @@ export default {
           tabs: config,
           data: data?.results,
           paginationTotal: data?.count,
-          initialTab: tableGroupInitialTab,
         },
         graph_column: {
           title: this.$t(name),

@@ -128,7 +128,7 @@ describe('TableGroup', () => {
       await wrapper.setData({ page: 1 });
 
       expect(wrapper.emitted('request-data')).toBeTruthy();
-      expect(wrapper.emitted('request-data')[0]).toEqual([
+      expect(wrapper.emitted('request-data')[1]).toEqual([
         { offset: 5, limit: 5 },
       ]);
     });

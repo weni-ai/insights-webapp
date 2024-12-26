@@ -161,7 +161,6 @@ describe('DashboardService', () => {
     });
 
     it('should fetch widget data with proper query parameters', async () => {
-      // Mock de resposta da API
       http.get.mockResolvedValueOnce({ data: 'mock-widget-data' });
 
       const response = await DashboardService.getDashboardWidgetData({
@@ -175,7 +174,7 @@ describe('DashboardService', () => {
         {
           params: {
             project: 'mock-project-uuid',
-            is_live: true, // Porque `isFilteringDates` retorna `false`.
+            is_live: true,
             status: 'open',
             priority: 'high',
             limit: 10,

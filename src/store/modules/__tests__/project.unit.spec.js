@@ -13,11 +13,11 @@ vi.mock('@/utils/object', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    parseValue: vi.fn(),
+    parseValue: (value) => value,
   };
 });
 
-describe('project module', () => {
+describe('Project store', () => {
   let store;
 
   beforeEach(() => {
@@ -46,19 +46,54 @@ describe('project module', () => {
   });
 
   describe('actions', () => {
-    it('should set isLoadingFlows to true when getProjectFlows is dispatched', async () => {
-      Projects.getProjectSource.mockResolvedValue([]);
+    describe('getProjectFlows', () => {
+      it('should set isLoadingFlows to true when getProjectFlows is dispatched', async () => {
+        Projects.getProjectSource.mockResolvedValue([]);
 
-      const promise = store.dispatch('project/getProjectFlows');
-      expect(store.state.project.isLoadingFlows).toBe(true);
-      await promise;
-    });
+        const promise = store.dispatch('project/getProjectFlows');
+        expect(store.state.project.isLoadingFlows).toBe(true);
+        await promise;
+      });
 
-    it('should set isLoadingFlows to false after getProjectFlows action is completed', async () => {
-      Projects.getProjectSource.mockResolvedValue([]);
-      await store.dispatch('project/getProjectFlows');
+      it('should commit formatted flows at SET_PROJECT_FLOWS when getProjectFlows is dispatched', async () => {
+        Projects.getProjectSource.mockResolvedValue([
+          {
+            uuid: '1',
+            name: 'Flow 1',
+            metadata: { results: [{ key: '1', name: 'Result 1' }] },
+          },
+        ]);
 
-      expect(store.state.project.isLoadingFlows).toBe(false);
+        await store.dispatch('project/getProjectFlows');
+
+        expect(store.state.project.flows).toEqual([
+          {
+            value: '1',
+            label: 'Flow 1',
+            results: [
+              {
+                value: '1',
+                label: 'Result 1',
+              },
+            ],
+          },
+        ]);
+      });
+
+      it('should set isLoadedFlows to true when getProjectFlows is dispatched', async () => {
+        Projects.getProjectSource.mockResolvedValue([]);
+
+        await store.dispatch('project/getProjectFlows');
+
+        expect(store.state.project.isLoadedFlows).toBe(true);
+      });
+
+      it('should set isLoadingFlows to false after getProjectFlows action is completed', async () => {
+        Projects.getProjectSource.mockResolvedValue([]);
+        await store.dispatch('project/getProjectFlows');
+
+        expect(store.state.project.isLoadingFlows).toBe(false);
+      });
     });
   });
 });

@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import http from '@/services/api/http';
 import DashboardService from '../dashboards';
+import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/utils/filter', () => ({
   isFilteringDates: vi.fn(() => false),
@@ -259,6 +260,51 @@ describe('DashboardService', () => {
           widgetUuid: 'mock-widget-uuid',
         }),
       ).rejects.toThrow('API Error');
+    });
+  });
+
+  describe('getDashboardWidgetReportData', () => {
+    it('should throw an error if dashboardUuid or widgetUuid is not provided', async () => {
+      await expect(
+        DashboardService.getDashboardWidgetReportData({
+          dashboardUuid: null,
+          widgetUuid: null,
+        }),
+      ).rejects.toThrow(
+        'Please provide valids UUIDs parameters to request report data of widget.',
+      );
+    });
+
+    it('should call http.get with the correct URL and query parameters', () => {
+      const mockResponse = { data: 'mock-widget-report-data' };
+      http.get.mockResolvedValueOnce(mockResponse);
+
+      DashboardService.getDashboardWidgetReportData({
+        dashboardUuid: 'dashboard-uuid',
+        widgetUuid: 'widget-uuid',
+        slug: 'slug',
+        offset: 0,
+        limit: 5,
+        next: null,
+      });
+
+      const params = createRequestQuery(
+        { status: 'open', priority: 'high' },
+        {
+          project: 'mock-project-uuid',
+          is_live: true,
+          slug: 'slug',
+          offset: 0,
+          limit: 5,
+          next: null,
+        },
+      );
+
+      expect(http.get).toHaveBeenCalled();
+      expect(http.get).toHaveBeenCalledWith(
+        '/dashboards/dashboard-uuid/widgets/widget-uuid/report/data/',
+        { params },
+      );
     });
   });
 

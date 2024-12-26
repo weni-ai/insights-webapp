@@ -69,7 +69,7 @@ export default {
     },
 
     formattedItems() {
-      if (!this.formattedHeaders.length || !this.items.length) return [];
+      if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
       const formattedItems = this.items.map((item) => ({
         ...item,
@@ -179,7 +179,7 @@ export default {
     :hover.unnnic-table-next__body-row {
       cursor: pointer;
       background-color: $unnnic-color-neutral-lightest;
-      text-decoration: underline;
+      font-weight: $unnnic-font-weight-bold;
     }
 
     span[data-testid='arrow-asc-icon'] {

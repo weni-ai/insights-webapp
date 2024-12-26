@@ -151,7 +151,6 @@ const plugins = computed(() => [Tooltip]);
       font-family: $unnnic-font-family-secondary;
       font-size: $unnnic-font-size-body-lg;
       color: $unnnic-color-neutral-dark;
-      font-style: normal;
       line-height: $unnnic-line-height-large + $unnnic-line-height-medium;
     }
     &-total {

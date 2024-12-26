@@ -69,7 +69,7 @@ export default {
     },
 
     formattedItems() {
-      if (!this.formattedHeaders.length || !this.items.length) return [];
+      if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
       const formattedItems = this.items.map((item) => ({
         ...item,

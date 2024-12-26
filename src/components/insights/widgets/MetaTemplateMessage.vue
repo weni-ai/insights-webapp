@@ -13,14 +13,20 @@
         >
           {{ props.template.name }}
         </p>
-
-        <UnnnicIcon
-          data-testid="template-favorite"
-          class="meta-template-message__favorite-icon"
-          icon="star_rate"
-          scheme="aux-yellow-500"
-          clickable
-        />
+        <UnnnicToolTip
+          enabled
+          :text="$t('template_messages_dashboard.add_to_favorites')"
+          class="meta-template-message__favorite-tooltip"
+          side="bottom"
+        >
+          <UnnnicIcon
+            data-testid="template-favorite"
+            class="meta-template-message__favorite-icon"
+            icon="star_rate"
+            scheme="aux-yellow-500"
+            clickable
+          />
+        </UnnnicToolTip>
       </section>
       <QualityTemplateMessageFlag
         data-testid="template-quality"
@@ -118,6 +124,10 @@ defineEmits(['open-edit-template']);
     flex-direction: column;
     gap: $unnnic-spacing-xs;
     padding: $unnnic-spacing-sm;
+  }
+
+  :deep(.unnnic-tooltip-label) {
+    isolation: isolate;
   }
 
   &__container {

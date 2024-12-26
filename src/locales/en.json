@@ -11,6 +11,7 @@
   },
   "template_messages_dashboard": {
     "title": "Template messages Meta",
+    "add_to_favorites": "Add to favorites",
     "active_contacts": {
       "title": "Active contacts",
       "tooltip": "Contacts who interacted with the template"

@@ -72,7 +72,6 @@ const buttonClicksTableHeaders = [
     content: i18n.global.t(
       'template_messages_dashboard.button_clicks_table.header.label',
     ),
-    isSortable: true,
   },
   {
     content: i18n.global.t(

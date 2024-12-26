@@ -11,7 +11,7 @@
       icon="indicator"
       :scheme="colorMapper[props.quality]"
     />
-    <p class="">
+    <p class="quality-template-message-flag__text">
       {{ $t('active') }} -
       {{ $t(`template_messages_dashboard.quality.${quality}`) }}
     </p>
@@ -59,6 +59,12 @@ const colorMapper = {
 <style lang="scss" scoped>
 .quality-template-message-flag {
   display: flex;
+  &__text {
+    font-family: $unnnic-font-family-secondary;
+    font-size: 14px;
+    font-weight: $unnnic-font-weight-bold;
+    line-height: 22px;
+  }
   .info {
     margin-top: $unnnic-spacing-nano;
     margin-left: $unnnic-spacing-nano;

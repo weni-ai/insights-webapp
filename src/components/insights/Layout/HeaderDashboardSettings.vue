@@ -5,9 +5,13 @@
         type="secondary"
         size="large"
         iconCenter="tune"
+        data-testid="options-dashboard-button"
       />
     </template>
-    <UnnnicDropdownItem @click="showEditDashboard = true">
+    <UnnnicDropdownItem
+      data-testid="edit-dashboard-button"
+      @click="showEditDashboard = true"
+    >
       {{ $t('edit_dashboard.title') }}
     </UnnnicDropdownItem>
   </UnnnicDropdown>
@@ -15,6 +19,7 @@
     v-if="showEditDashboard"
     v-model="showEditDashboard"
     :dashboard="currentDashboard"
+    data-testid="edit-dashboard-drawer"
     @close="showEditDashboard = false"
   />
 </template>

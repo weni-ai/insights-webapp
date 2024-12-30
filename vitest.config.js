@@ -10,7 +10,6 @@ export default mergeConfig(
       exclude: [
         ...configDefaults.exclude,
         'e2e/*',
-        'src/router/**',
         'src/services/api/http.js',
         'src/services/api/customError.js',
       ],
@@ -25,7 +24,6 @@ export default mergeConfig(
         exclude: [
           'src/main.js',
           '**/__tests__/**',
-          'src/router/**',
           'src/services/api/http.js',
           'src/services/api/customError.js',
         ],

@@ -16,7 +16,7 @@ import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
-import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
+import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
 import { formatSecondsToHumanString } from '@/utils/time';
@@ -62,7 +62,7 @@ export default {
         graph_column: LineChart,
         graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
-        table_dynamic_by_filter: TableDynamicByFilter,
+        table_dynamic_by_filter: HumanServiceAgentsTable,
         table_group: TableGroup,
         card: CardDashboard,
         empty_column: CardEmpty,
@@ -100,10 +100,8 @@ export default {
           tooltip: config?.tooltip ? this.$t(config.tooltip) : '',
         },
         table_dynamic_by_filter: {
-          headerIcon: tableDynamicFilterConfig?.icon?.name,
-          headerIconColor: tableDynamicFilterConfig?.icon?.scheme,
           headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
-          fields: tableDynamicFilterConfig?.fields,
+          headers: tableDynamicFilterConfig?.fields,
           items: data?.results,
         },
         table_group: {

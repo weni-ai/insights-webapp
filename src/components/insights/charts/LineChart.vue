@@ -68,6 +68,7 @@ export default {
     },
     isLoading: Boolean,
   },
+
   emits: ['seeMore'],
 
   setup() {
@@ -158,6 +159,9 @@ export default {
                 return `${i18n.global.t('charts.attendances')}: ${originalValue}`;
               },
             },
+          },
+          doubleDataLabel: {
+            display: false,
           },
           datalabels: {
             display: false,

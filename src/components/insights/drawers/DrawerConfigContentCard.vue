@@ -9,6 +9,7 @@
 
   <component
     :is="currentFormComponent"
+    :data-testid="`form-${type}`"
     v-on="currentFormEvents"
   />
 
@@ -21,6 +22,7 @@
     :text="$t('drawers.reset_widget')"
     type="tertiary"
     :disabled="disableResetWidgetButton"
+    data-testid="reset-widget-button"
     @click="$emit('reset-widget')"
   />
 </template>

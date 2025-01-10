@@ -11,16 +11,21 @@
     showActionsDivider
     showCloseIcon
     size="sm"
+    data-testid="modal-delete-dashboard"
     @update:model-value="!$event ? close() : {}"
     @primary-button-click="deleteDashboard"
   >
-    <p class="delete-notice">
+    <p
+      class="delete-notice"
+      data-testid="delete-notice"
+    >
       {{ $t('delete_dashboard.notice') }}
     </p>
     <UnnnicLabel :label="$t('confirmation')" />
     <UnnnicInput
       v-model="dashboardName"
       :placeholder="dashboard.name"
+      data-testid="input-dashboard-name"
     />
   </UnnnicModalDialog>
 </template>

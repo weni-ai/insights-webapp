@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { flushPromises, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import FormFlowResult from '@/components/insights/drawers/DrawerForms/Card/FormFlowResult.vue';
 
@@ -207,9 +207,7 @@ describe('FormFlowResult', () => {
     it('resets flow result when flow uuid changes', async () => {
       const initialConfig = {
         flow: {
-          uuid: {
-            id: 'store-uuid',
-          },
+          uuid: 'flow-uuid',
           result: 'test-result',
         },
         operation: 'sum',
@@ -218,6 +216,10 @@ describe('FormFlowResult', () => {
 
       const storeWithConfig = createDefaultStore(initialConfig);
       const wrapperWithStore = createWrapper(storeWithConfig);
+
+      wrapperWithStore.vm.config.flow.uuid = 'changed-id';
+
+      await wrapperWithStore.vm.$nextTick();
 
       expect(wrapperWithStore.vm.config.flow.result).toBe('');
     });

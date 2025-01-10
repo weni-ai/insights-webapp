@@ -4,21 +4,23 @@ ARG NODE_VERSION="18.18.0"
 ARG BASE_VERSION="alpine3.17"
 ARG OLD_IMAGE="insights-webapp:latest"
 ARG KEEP_DAYS=60
+ARG VITE_FIREBASE_CONFIG
+ARG VITE_HOTJAR_ID
 
 FROM node:${NODE_VERSION}-${BASE_VERSION} AS builder
 
 WORKDIR /app
 
-ARG KEEP_DAYS=${KEEP_DAYS}
+ARG KEEP_DAYS
 
 ARG VITE_FIREBASE_CONFIG
+ARG VITE_HOTJAR_ID
 
-ENV VITE_FIREBASE_CONFIG $VITE_FIREBASE_CONFIG
-ENV VITE_HOTJAR_ID $VITE_HOTJAR_ID
-
-RUN apk --no-cache add git
+ENV VITE_FIREBASE_CONFIG=$VITE_FIREBASE_CONFIG
+ENV VITE_HOTJAR_ID=$VITE_HOTJAR_ID
 
 RUN apk add --no-cache \
+    git \
     build-base \
     cairo-dev \
     pango-dev \
@@ -39,7 +41,7 @@ FROM ${OLD_IMAGE} AS old_css
 
 FROM nginxinc/nginx-unprivileged:1.25-alpine
 ARG OLD_IMAGE=${OLD_IMAGE}
-ARG KEEP_DAYS=${KEEP_DAYS}
+ARG KEEP_DAYS
 
 COPY --chown=nginx:nginx docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY --chown=nginx:nginx docker/nginx/headers /usr/share/nginx/html/headers

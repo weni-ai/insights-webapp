@@ -189,9 +189,9 @@ describe('DynamicWidget', () => {
           type: 'graph',
           data: {
             data: [
-              { label: 'January', value: 30 },
-              { label: 'February', value: 40 },
-              { label: 'March', value: 50 },
+              { label: 'January', value: 30, full_value: 30 },
+              { label: 'February', value: 40, full_value: 40 },
+              { label: 'March', value: 50, full_value: 50 },
             ],
           },
         },
@@ -202,6 +202,7 @@ describe('DynamicWidget', () => {
         datasets: [
           {
             data: [30, 40, 50],
+            fullValues: [30, 40, 50],
           },
         ],
       });
@@ -237,8 +238,8 @@ describe('DynamicWidget', () => {
           type: 'graph',
           data: {
             results: [
-              { label: 'A', value: 10 },
-              { label: 'B', value: 20 },
+              { label: 'A', value: 10, full_value: 10 },
+              { label: 'B', value: 20, full_value: 20 },
             ],
           },
         },
@@ -249,6 +250,7 @@ describe('DynamicWidget', () => {
         datasets: [
           {
             data: [10, 20],
+            fullValues: [10, 20],
           },
         ],
       });

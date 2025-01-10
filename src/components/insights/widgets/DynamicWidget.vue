@@ -185,12 +185,14 @@ export default {
 
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);
+      const fullValues = data.map((item) => item.full_value);
 
       const newData = {
         labels,
         datasets: [
           {
             data: values,
+            fullValues,
           },
         ],
       };

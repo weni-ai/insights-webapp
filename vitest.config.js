@@ -7,7 +7,12 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
-      exclude: [...configDefaults.exclude, 'e2e/*'],
+      exclude: [
+        ...configDefaults.exclude,
+        'e2e/*',
+        'src/services/api/http.js',
+        'src/services/api/customError.js',
+      ],
       root: fileURLToPath(new URL('./', import.meta.url)),
       globals: true,
       setupFiles: './setupVitest.js',
@@ -16,6 +21,12 @@ export default mergeConfig(
         reporter: ['text', 'json', 'html'],
         reportsDirectory: './coverage',
         include: ['src/**/*.{vue,js,ts}'],
+        exclude: [
+          'src/main.js',
+          '**/__tests__/**',
+          'src/services/api/http.js',
+          'src/services/api/customError.js',
+        ],
       },
     },
   }),

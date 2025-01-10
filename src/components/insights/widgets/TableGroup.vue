@@ -20,6 +20,7 @@
       >
         <UnnnicTableNext
           v-if="activeTable.headers"
+          :class="`table-group__table-${key}`"
           data-testid="table"
           :pagination="page + 1"
           :headers="activeTable.headers"
@@ -28,6 +29,7 @@
           :paginationInterval="paginationInterval"
           :isLoading="isLoading"
           @update:pagination="page = $event - 1"
+          @row-click="rowClick"
         />
       </template>
     </UnnnicTab>
@@ -69,6 +71,10 @@ export default {
     paginationTotal: {
       type: Number,
       default: 0,
+    },
+    initialTab: {
+      type: String,
+      default: '',
     },
   },
 
@@ -138,7 +144,7 @@ export default {
         const content = dynamicHeaders.map((header) =>
           formatRowValue(row[header.value]),
         );
-        return { content };
+        return { ...row, link: undefined, url_link: row.link?.url, content };
       });
 
       return {
@@ -181,12 +187,20 @@ export default {
   },
 
   unmounted() {
-    const newQuery = this.$route.query;
-    delete newQuery.slug;
     this.$router.replace({
       ...this.$route,
-      query: newQuery,
+      slug: undefined,
     });
+  },
+
+  mounted() {
+    if (this.initialTab) this.changeActiveTabName(this.initialTab);
+    else {
+      Object.keys(this.tabs).forEach((tabKey) => {
+        if (this.tabs[tabKey].is_default) this.changeActiveTabName(tabKey);
+      });
+    }
+    if (this.$route.query.slug) this.emitRequestData();
   },
 
   methods: {
@@ -197,6 +211,18 @@ export default {
       const { offset, limit } = this.paginationConfig;
       this.$emit('request-data', { offset, limit });
     },
+    rowClick(row) {
+      if (row.url_link) {
+        const [path, query] = row.url_link.split('?');
+        window.parent.postMessage(
+          {
+            event: 'redirect',
+            path: path + 'insights?' + query,
+          },
+          '*',
+        );
+      }
+    },
   },
 };
 </script>
@@ -204,5 +230,16 @@ export default {
 <style lang="scss" scoped>
 .table-group {
   overflow-y: auto;
+
+  :deep(.table-group__table-in_progress) {
+    display: flex;
+    overflow: auto;
+
+    :hover.unnnic-table-next__body-row {
+      cursor: pointer;
+      background-color: $unnnic-color-neutral-lightest;
+      font-weight: $unnnic-font-weight-bold;
+    }
+  }
 }
 </style>

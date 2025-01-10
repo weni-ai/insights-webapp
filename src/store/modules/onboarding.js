@@ -51,7 +51,7 @@ export default {
       }
     },
 
-    async callTourPreviousStep({ state }, { tour, qtdSteps, timeout } = {}) {
+    async callTourPreviousStep({ state }, { tour, qtdSteps, timeout }) {
       const {
         showCreateDashboardOnboarding,
         showConfigWidgetOnboarding,

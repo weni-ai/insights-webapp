@@ -179,7 +179,7 @@ export default {
     :hover.unnnic-table-next__body-row {
       cursor: pointer;
       background-color: $unnnic-color-neutral-lightest;
-      text-decoration: underline;
+      font-weight: $unnnic-font-weight-bold;
     }
 
     span[data-testid='arrow-asc-icon'] {

@@ -1,0 +1,52 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProgressBar > Matches the snapshot 1`] = `
+<section
+  class="progress-bar-container"
+  data-v-84df1bb9=""
+>
+  <div
+    class="unnnic-progress-bar primary inline"
+    data-test-id="progress-bar"
+    data-v-84df1bb9=""
+    data-v-8aafd3ca=""
+  >
+    <div
+      class="main"
+      data-v-8aafd3ca=""
+    >
+      <div
+        class="title"
+        data-v-8aafd3ca=""
+      >
+        Loading...
+      </div>
+      <div
+        class="progress-bar-container"
+        data-v-8aafd3ca=""
+      >
+        <div
+          class="progress-container"
+          data-v-8aafd3ca=""
+        >
+          <div
+            class="bar"
+            data-v-8aafd3ca=""
+            style="width: 0%;"
+          >
+            <!---->
+          </div>
+        </div>
+        <div
+          class="percentage"
+          data-v-8aafd3ca=""
+        >
+          0% 
+        </div>
+      </div>
+      <!---->
+    </div>
+    <!---->
+  </div>
+</section>
+`;

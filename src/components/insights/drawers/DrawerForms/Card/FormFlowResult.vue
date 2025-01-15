@@ -101,8 +101,8 @@ export default {
       },
     },
 
-    'config.flow?.uuid'(_newFlow, oldFlow) {
-      if (typeof oldFlow === 'object') {
+    'config.flow.uuid'(newFlowUuid, oldFlowUuid) {
+      if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
         this.config.flow.result = '';
       }
     },

@@ -1,8 +1,5 @@
 <template>
-  <section
-    v-if="totalBars"
-    class="skeleton-bar-container"
-  >
+  <section class="skeleton-bar-container">
     <section
       v-for="n in totalBars"
       :key="n"

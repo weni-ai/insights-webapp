@@ -12,10 +12,11 @@ import { mapActions, mapState } from 'vuex';
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
+import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
-import TableDynamicByFilter from '@/components/insights/widgets/TableDynamicByFilter.vue';
+import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
 import { formatSecondsToHumanString } from '@/utils/time';
@@ -27,7 +28,7 @@ export default {
   props: {
     widget: {
       type: Object,
-      default: () => ({}),
+      required: true,
     },
   },
 
@@ -47,7 +48,7 @@ export default {
 
     isConfigured() {
       const { config } = this.widget;
-      return config && Object.keys(config).length > 0;
+      return !!(config && Object.keys(config).length > 0);
     },
 
     isLoading() {
@@ -61,11 +62,12 @@ export default {
         graph_column: LineChart,
         graph_bar: HorizontalBarChart,
         graph_funnel: CardFunnel,
-        table_dynamic_by_filter: TableDynamicByFilter,
+        table_dynamic_by_filter: HumanServiceAgentsTable,
         table_group: TableGroup,
         card: CardDashboard,
         empty_column: CardEmpty,
         vtex_order: CardVtexOrder,
+        recurrence: CardRecurrence,
         insight: null, // TODO: Create Insight component
       };
 
@@ -94,13 +96,12 @@ export default {
           but still have empty fields in the "config" object. */
           clickable: !!report,
           configurable: is_configurable,
-          friendlyId: config.friendly_id,
+          friendlyId: config?.friendly_id,
+          tooltip: config?.tooltip ? this.$t(config.tooltip) : '',
         },
         table_dynamic_by_filter: {
-          headerIcon: tableDynamicFilterConfig?.icon?.name,
-          headerIconColor: tableDynamicFilterConfig?.icon?.scheme,
           headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
-          fields: tableDynamicFilterConfig?.fields,
+          headers: tableDynamicFilterConfig?.fields,
           items: data?.results,
         },
         table_group: {
@@ -131,6 +132,10 @@ export default {
         vtex_order: {
           widget: this.widget,
           data: this.widgetVtexData,
+        },
+        recurrence: {
+          widget: this.widget,
+          data: this.widget?.data,
         },
       };
 
@@ -180,12 +185,14 @@ export default {
 
       const labels = data.map((item) => item.label);
       const values = data.map((item) => item.value);
+      const fullValues = data.map((item) => item.full_value);
 
       const newData = {
         labels,
         datasets: [
           {
             data: values,
+            fullValues,
           },
         ],
       };
@@ -212,6 +219,15 @@ export default {
           requestData: () => {
             this.isRequestingData = true;
             this.requestVtexOrderData().finally(() => {
+              this.isRequestingData = false;
+            });
+          },
+        },
+        recurrence: {
+          openConfig: () => this.$emit('open-config'),
+          requestData: () => {
+            this.isRequestingData = true;
+            this.requestRecurrenceData().finally(() => {
               this.isRequestingData = false;
             });
           },
@@ -247,6 +263,7 @@ export default {
             'graph_funnel',
             'empty_column',
             'vtex_order',
+            'recurrence',
           ].includes(this.widget.type)
         ) {
           this.requestWidgetData();
@@ -262,6 +279,7 @@ export default {
       getWidgetReportData: 'reports/getWidgetReportData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
+      getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
     }),
 
     async requestWidgetData({ offset, limit, next } = {}) {
@@ -286,6 +304,14 @@ export default {
       await this.getWidgetVtexOrderData({
         uuid,
         utm_source: config.filter.utm,
+      });
+    },
+
+    async requestRecurrenceData() {
+      const { uuid } = this.widget;
+
+      await this.getWidgetRecurrenceData({
+        uuid,
       });
     },
 
@@ -321,17 +347,17 @@ export default {
     getWidgetFormattedData(widget) {
       const { config, data } = widget;
 
-      if (config.operation === 'recurrence') {
+      if (config?.operation === 'recurrence') {
         return (
           (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', {
             minimumFractionDigits: 2,
           }) + '%'
         );
       }
-      if (config.data_type === 'sec') {
+      if (config?.data_type === 'sec') {
         return formatSecondsToHumanString(Math.round(data?.value));
       }
-      if (config.currency) {
+      if (config?.currency) {
         return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
       }
       return (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US');

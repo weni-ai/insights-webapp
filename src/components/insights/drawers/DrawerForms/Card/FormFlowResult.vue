@@ -72,10 +72,6 @@ export default {
           value: 'min',
           label: this.$t('drawers.config_card.radios.lowest_value'),
         },
-        {
-          value: 'recurrence',
-          label: this.$t('drawers.config_card.radios.recurrence'),
-        },
       ],
     };
   },
@@ -105,8 +101,8 @@ export default {
       },
     },
 
-    'config.flow?.uuid'(_newFlow, oldFlow) {
-      if (typeof oldFlow === 'object') {
+    'config.flow.uuid'(newFlowUuid, oldFlowUuid) {
+      if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
         this.config.flow.result = '';
       }
     },

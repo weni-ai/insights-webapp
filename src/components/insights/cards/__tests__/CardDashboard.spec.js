@@ -129,4 +129,13 @@ describe('CardDashboard', () => {
 
     expect(wrapper.vm.friendlyEmoji).toBe('😄');
   });
+
+  it('should show the correct tooltip text if tooltip props has exists', async () => {
+    await wrapper.setProps({ tooltip: 'tooltip' });
+    const tooltip = wrapper.findComponent(
+      '[data-testid="content-desciption-tooltip"]',
+    );
+    expect(tooltip.exists()).toBe(true);
+    expect(tooltip.text()).include('tooltip');
+  });
 });

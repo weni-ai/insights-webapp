@@ -1,0 +1,36 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`CompleteOnboardingModal > Snapshot > should match the snapshot 1`] = `
+<div
+  class="finish-onboarding-modal"
+  data-test-id="modal-dialog"
+  data-v-a24dda74=""
+  hidesecondarybutton=""
+  modelvalue="true"
+  primarybuttonprops="[object Object]"
+  showactionsdivider=""
+  size="sm"
+>
+  
+  <section
+    class="finish-onboarding-modal__content"
+    data-v-a24dda74=""
+  >
+    <h1
+      class="finish-onboarding-modal__content__title"
+      data-v-a24dda74=""
+    >
+      onboarding.complete_modal.title
+    </h1>
+    <p
+      class="finish-onboarding-modal__content__info"
+      data-v-a24dda74=""
+    >
+      onboarding.complete_modal.text
+    </p>
+  </section>
+  
+  
+  
+</div>
+`;

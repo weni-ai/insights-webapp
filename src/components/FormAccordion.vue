@@ -1,6 +1,7 @@
 <template>
   <UnnnicCollapse
     class="form-accordion"
+    data-test-id="form-accordion"
     :class="{
       'form-accordion--active': active,
       highlighted: active && highlighted,
@@ -11,6 +12,7 @@
     <template #header>
       <header class="form-accordion__header">
         <UnnnicIcon
+          data-test-id="check_circle"
           icon="check_circle"
           :scheme="iconScheme"
           size="avatar-nano"

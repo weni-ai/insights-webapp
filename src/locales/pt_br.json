@@ -120,6 +120,14 @@
       "title": "Configuração necessária, personalize seu widget para começar",
       "config_btn": "Configurar"
     },
+    "recurrence": {
+      "title": "Recorrência",
+      "see_more": "Veja mais",
+      "empty_data": {
+        "title": "Nenhum dado por enquanto. Assim que houver atividade,",
+        "sub_title": "ela aparecerá aqui!"
+      }
+    },
     "vtex_order": {
       "title": "Vendas VTEX",
       "orders": "Pedidos",
@@ -158,6 +166,10 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
+        }, 
+        "recurrence": {
+          "title": "Recorrência",
+          "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"
         }
       }
     },
@@ -207,6 +219,9 @@
       "fourth_metric": "Quarta @.lower:metric",
       "fifth_metric": "Quinta @.lower:metric",
       "select_flow": "@:select @.lower:flow"
+    },
+    "config_recurrence": {
+      "name_metric": "Nome da métrica"
     }
   },
   "metric_accordion": {
@@ -303,11 +318,11 @@
           "description": "Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!"
         }
       }
-    }, 
+    },
     "empty_widget": {
       "step": {
         "define_metric": {
-          "title": "Continue explorando as possibilidades", 
+          "title": "Continue explorando as possibilidades",
           "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
         },
         "select_widget_type": {

@@ -3,7 +3,7 @@ import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards } from '@/services/api';
 import { sortByKey } from '@/utils/array';
 
-function treatFilters(filters, valueHandler, currentDashboardFilters) {
+export function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
     if (
       currentDashboardFilters.some((filter) => filter.name === key) &&

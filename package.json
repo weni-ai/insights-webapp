@@ -9,7 +9,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "yarn lint --fix",
+    "format": "npm run lint --fix",
     "translations:build": "unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json",
     "translations:suggest-from-pt-br": "unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode build --suggest \"pt-br:pt>en:en\" && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode reverse && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode build --suggest \"pt-br:pt>es\" && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode reverse"
   },

@@ -1,7 +1,7 @@
 # syntax = docker/dockerfile:1
 
-ARG NODE_VERSION="18.18.0"
-ARG BASE_VERSION="alpine3.17"
+ARG NODE_VERSION="18.19.1"
+ARG BASE_VERSION="alpine3.19"
 ARG OLD_IMAGE="insights-webapp:latest"
 ARG KEEP_DAYS=60
 ARG FIREBASE_CONFIG

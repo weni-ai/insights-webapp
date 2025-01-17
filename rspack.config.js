@@ -14,14 +14,14 @@ const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 module.exports = defineConfig({
   context: __dirname,
   devServer: {
+    port: 3001,
     historyApiFallback: true,
-    hot: true,
+    hot: false,
+    liveReload: true,
     static: {
       directory: path.join(__dirname, 'dist'),
-      publicPath: '/',
-      serveIndex: true,
-      watch: true,
     },
+    compress: true,
   },
   output: {
     path: path.resolve(__dirname, './dist'),

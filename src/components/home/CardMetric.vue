@@ -3,16 +3,16 @@
     class="metric-card"
     data-test-id="metric-card"
     :class="{
-      'left-column': leftColumn,
-      'right-column': rightColumn,
-      'middle-column': middleColumn,
-      'first-row': firstRow,
-      'last-row': lastRow,
+      'metric-card--left-column': leftColumn,
+      'metric-card--right-column': rightColumn,
+      'metric-card--middle-column': middleColumn,
+      'metric-card--first-row': firstRow,
+      'metric-card--last-row': lastRow,
     }"
   >
-    <section class="metric-header">
+    <section class="metric-card__header">
       <p
-        class="metric-title"
+        class="metric-card__title"
         data-test-id="metric-title"
       >
         {{ title }}
@@ -20,7 +20,7 @@
       <UnnnicIcon
         v-if="hasInfo"
         data-test-id="info-icon"
-        class="info-icon"
+        class="metric-card__info-icon"
         icon="info"
         size="sm"
         filled
@@ -28,21 +28,21 @@
       />
     </section>
 
-    <section class="metric-content">
+    <section class="metric-card__content">
       <section
-        class="metric-value"
+        class="metric-card__value"
         data-test-id="metric-value"
       >
-        {{ prefix }}{{ formatValue(value) }}
+        {{ prefix }}{{ formatValue(value, i18n.global.locale) }}
         <p
-          class="percentage"
+          class="metric-card__percentage"
           data-test-id="percentage"
           :class="{
-            positive: percentage > 0,
-            negative: percentage < 0,
+            'metric-card__percentage--positive': percentage > 0,
+            'metric-card__percentage--negative': percentage < 0,
           }"
         >
-          {{ formatPercentage(percentage) }}
+          {{ formatPercentage(percentage, i18n.global.locale) }}
           <UnnnicIcon
             v-if="percentage"
             data-test-id="icon-arrow"
@@ -58,6 +58,9 @@
 </template>
 
 <script setup lang="ts">
+import { formatValue, formatPercentage } from '@/utils/numbers';
+import i18n from '@/utils/plugins/i18n';
+
 defineProps({
   leftColumn: {
     type: Boolean,
@@ -101,16 +104,6 @@ defineProps({
     required: true,
   },
 });
-
-const formatValue = (value: number): string => {
-  if (value % 1 === 0) return value.toLocaleString();
-  return value.toFixed(2).replace('.', ',');
-};
-
-const formatPercentage = (value: number): string => {
-  if (value === 0) return '0%';
-  return `${Math.abs(value).toFixed(2)}%`;
-};
 </script>
 
 <style lang="scss" scoped>
@@ -125,79 +118,79 @@ const formatPercentage = (value: number): string => {
   border-left: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
   border-bottom: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
 
-  &.left-column {
-    &.first-row {
+  &--left-column {
+    &.metric-card--first-row {
       border-top-left-radius: $unnnic-border-radius-md;
     }
 
-    &.last-row {
+    &.metric-card--last-row {
       border-bottom-left-radius: $unnnic-border-radius-md;
     }
   }
 
-  &.right-column {
-    &.first-row {
+  &--right-column {
+    &.metric-card--first-row {
       border-top-right-radius: $unnnic-border-radius-md;
     }
 
-    &.last-row {
+    &.metric-card--last-row {
       border-bottom-right-radius: $unnnic-border-radius-md;
     }
   }
-}
 
-.metric-header {
-  display: flex;
-  align-items: center;
-  gap: $unnnic-spacing-xs;
-  margin-bottom: $unnnic-spacing-xs;
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $unnnic-spacing-xs;
+    margin-bottom: $unnnic-spacing-xs;
 
-  :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
+    :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
+      font-size: $unnnic-font-size-body-gt;
+    }
+  }
+
+  &__title {
+    font-family: $unnnic-font-family-secondary;
     font-size: $unnnic-font-size-body-gt;
-  }
-}
-
-.metric-title {
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-gt;
-  font-style: normal;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
-  color: $unnnic-color-neutral-dark;
-}
-
-.info-icon {
-  cursor: help;
-}
-
-.metric-value {
-  color: $unnnic-color-neutral-darkest;
-  font-family: $unnnic-font-family-primary;
-  font-size: $unnnic-font-size-title-md;
-  font-style: normal;
-  font-weight: $unnnic-font-weight-bold;
-  line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
-  display: flex;
-  align-items: baseline;
-  gap: $unnnic-spacing-xs;
-}
-
-.percentage {
-  display: flex;
-  align-items: center;
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-md;
-  font-style: normal;
-  font-weight: $unnnic-font-weight-bold;
-  line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
-  color: $unnnic-color-neutral-clean;
-
-  &.positive {
-    color: $unnnic-color-aux-green-500;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    color: $unnnic-color-neutral-dark;
   }
 
-  &.negative {
-    color: $unnnic-color-aux-red-500;
+  &__info-icon {
+    cursor: help;
+  }
+
+  &__value {
+    color: $unnnic-color-neutral-darkest;
+    font-family: $unnnic-font-family-primary;
+    font-size: $unnnic-font-size-title-md;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-bold;
+    line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
+    display: flex;
+    align-items: baseline;
+    gap: $unnnic-spacing-xs;
+  }
+
+  &__percentage {
+    display: flex;
+    align-items: center;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-md;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-bold;
+    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+    color: $unnnic-color-neutral-clean;
+
+    &--positive {
+      color: $unnnic-color-aux-green-500;
+    }
+
+    &--negative {
+      color: $unnnic-color-aux-red-500;
+    }
   }
 }
 </style>

@@ -32,6 +32,7 @@ describe('CardMetric', () => {
     hasInfo: false,
     value: 1000,
     percentage: 10,
+    prefix: '',
   };
 
   beforeEach(() => {
@@ -67,88 +68,79 @@ describe('CardMetric', () => {
       const infoIcon = wrapper.find('[data-test-id="info-icon"]');
       expect(infoIcon.exists()).toBeFalsy();
     });
+
+    it('displays prefix when provided', async () => {
+      await wrapper.setProps({ prefix: '$' });
+      const valueSection = wrapper.find('[data-test-id="metric-value"]');
+      expect(valueSection.text()).toMatch(/^\$/);
+    });
   });
 
-  describe('column classes', () => {
+  describe('layout classes', () => {
     it('applies left column class when leftColumn is true', async () => {
       await wrapper.setProps({ leftColumn: true });
-      expect(wrapper.classes()).toContain('left-column');
+      expect(wrapper.classes()).toContain('metric-card--left-column');
     });
 
     it('applies right column class when rightColumn is true', async () => {
       await wrapper.setProps({ rightColumn: true });
-      expect(wrapper.classes()).toContain('right-column');
+      expect(wrapper.classes()).toContain('metric-card--right-column');
     });
 
     it('applies middle column class when middleColumn is true', async () => {
       await wrapper.setProps({ middleColumn: true });
-      expect(wrapper.classes()).toContain('middle-column');
+      expect(wrapper.classes()).toContain('metric-card--middle-column');
     });
 
     it('applies first row class when firstRow is true', async () => {
       await wrapper.setProps({ firstRow: true });
-      expect(wrapper.classes()).toContain('first-row');
+      expect(wrapper.classes()).toContain('metric-card--first-row');
     });
 
     it('applies last row class when lastRow is true', async () => {
       await wrapper.setProps({ lastRow: true });
-      expect(wrapper.classes()).toContain('last-row');
+      expect(wrapper.classes()).toContain('metric-card--last-row');
     });
   });
 
-  describe('value formatting', () => {
-    it('formats integer values with thousand separators', async () => {
-      await wrapper.setProps({ value: 1000000, percentage: 20 });
-      const valueText = wrapper.find('[data-test-id="metric-value"]').text();
-      expect(valueText).toContain('1,000,000 20.00% arrow_drop_up');
-    });
-
-    it('formats decimal values with comma separator', async () => {
-      await wrapper.setProps({ value: 1000.55 });
-      const valueText = wrapper.find('[data-test-id="metric-value"]').text();
-      expect(valueText).toContain('1000,55');
-    });
-
-    it('displays prefix when provided', async () => {
-      await wrapper.setProps({ prefix: '$' });
-      const valueText = wrapper.find('[data-test-id="metric-value"]').text();
-      expect(valueText).toMatch(/^\$\d/);
-    });
-  });
-
-  describe('percentage formatting and styling', () => {
-    it('formats positive percentage correctly', async () => {
+  describe('percentage styling', () => {
+    it('applies positive class for positive percentage', async () => {
       await wrapper.setProps({ percentage: 15.5 });
       const percentageElement = wrapper.find('[data-test-id="percentage"]');
-      expect(percentageElement.text()).toContain('15.50%');
-      expect(percentageElement.classes()).toContain('positive');
+      expect(percentageElement.classes()).toContain(
+        'metric-card__percentage--positive',
+      );
     });
 
-    it('formats negative percentage correctly', async () => {
+    it('applies negative class for negative percentage', async () => {
       await wrapper.setProps({ percentage: -15.5 });
       const percentageElement = wrapper.find('[data-test-id="percentage"]');
-      expect(percentageElement.text()).toContain('15.50%');
-      expect(percentageElement.classes()).toContain('negative');
+      expect(percentageElement.classes()).toContain(
+        'metric-card__percentage--negative',
+      );
     });
 
-    it('formats zero percentage correctly', async () => {
+    it('applies no percentage class for zero percentage', async () => {
       await wrapper.setProps({ percentage: 0 });
       const percentageElement = wrapper.find('[data-test-id="percentage"]');
-      expect(percentageElement.text()).toContain('0%');
-      expect(percentageElement.classes()).not.toContain('positive');
-      expect(percentageElement.classes()).not.toContain('negative');
+      expect(percentageElement.classes()).not.toContain(
+        'metric-card__percentage--positive',
+      );
+      expect(percentageElement.classes()).not.toContain(
+        'metric-card__percentage--negative',
+      );
     });
   });
 
-  describe('percentage icon', () => {
-    it('shows up arrow for positive percentage', async () => {
+  describe('percentage icons', () => {
+    it('shows up arrow with green color for positive percentage', async () => {
       await wrapper.setProps({ percentage: 10 });
       const icon = wrapper.findComponent('[data-test-id="icon-arrow"]');
       expect(icon.props('icon')).toBe('arrow_drop_up');
       expect(icon.props('scheme')).toBe('aux-green-500');
     });
 
-    it('shows down arrow for negative percentage', async () => {
+    it('shows down arrow with red color for negative percentage', async () => {
       await wrapper.setProps({ percentage: -10 });
       const icon = wrapper.findComponent('[data-test-id="icon-arrow"]');
       expect(icon.props('icon')).toBe('arrow_drop_down');
@@ -157,8 +149,8 @@ describe('CardMetric', () => {
 
     it('does not show arrow when percentage is zero', async () => {
       await wrapper.setProps({ percentage: 0 });
-      const icons = wrapper.findAll('UnnnicIcon');
-      expect(icons).toHaveLength(wrapper.vm.hasInfo ? 1 : 0);
+      const icon = wrapper.find('[data-test-id="icon-arrow"]');
+      expect(icon.exists()).toBeFalsy();
     });
   });
 });

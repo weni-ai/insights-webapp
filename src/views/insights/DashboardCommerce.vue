@@ -1,11 +1,20 @@
 <template>
-  <section class="dashboard-commerce">
+  <section
+    class="dashboard-commerce"
+    data-test-id="dashboard-commerce"
+  >
     <section class="dashboard-commerce__header">
-      <section class="dashboard-commerce__header-title">
+      <section
+        class="dashboard-commerce__header-title"
+        data-test-id="dashboard-commerce__header-title"
+      >
         See what's happening in: Commerce
       </section>
-      <section class="filter-type">
-        <p>{{ $t('filter-by') }}</p>
+      <section
+        class="filter-type"
+        data-test-id="filter-type"
+      >
+        <p class="filter-type_title">{{ $t('filter-by') }}</p>
         <DropdownFilter
           :items="[
             {
@@ -29,7 +38,7 @@
         />
       </section>
     </section>
-    <div class="metrics-container">
+    <section class="metrics-container">
       <CardMetric
         v-for="(metric, index) in metrics"
         :key="metric.id"
@@ -44,7 +53,7 @@
         :firstRow="index < 3"
         :lastRow="index >= metrics.length - (metrics.length % 3 || 3)"
       />
-    </div>
+    </section>
   </section>
 </template>
 
@@ -144,7 +153,7 @@ const handleFilter = (filter: string) => {
   display: flex;
   align-items: center;
   gap: $unnnic-spacing-sm;
-  p {
+  &_title {
     color: $unnnic-color-neutral-cloudy;
     font-family: $unnnic-font-family-secondary;
     font-size: $unnnic-font-size-body-gt;

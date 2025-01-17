@@ -46,16 +46,20 @@ describe('DashboardCommerce', () => {
   describe('rendering', () => {
     it('renders the component properly', () => {
       expect(wrapper.exists()).toBeTruthy();
-      expect(wrapper.find('.dashboard-commerce').exists()).toBeTruthy();
+      expect(
+        wrapper.find('[data-test-id="dashboard-commerce"]').exists(),
+      ).toBeTruthy();
     });
 
     it('renders the header title correctly', () => {
-      const headerTitle = wrapper.find('.dashboard-commerce__header-title');
+      const headerTitle = wrapper.find(
+        '[data-test-id="dashboard-commerce__header-title"]',
+      );
       expect(headerTitle.text()).toBe("See what's happening in: Commerce");
     });
 
     it('renders the filter section', () => {
-      const filterSection = wrapper.find('.filter-type');
+      const filterSection = wrapper.find('[data-test-id="filter-type"]');
       expect(filterSection.exists()).toBeTruthy();
       expect(filterSection.text()).toContain('filter-by');
     });

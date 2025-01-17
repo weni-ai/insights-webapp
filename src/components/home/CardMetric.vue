@@ -1,6 +1,7 @@
 <template>
   <section
     class="metric-card"
+    data-test-id="metric-card"
     :class="{
       'left-column': leftColumn,
       'right-column': rightColumn,
@@ -10,9 +11,15 @@
     }"
   >
     <section class="metric-header">
-      <p class="metric-title">{{ title }}</p>
+      <p
+        class="metric-title"
+        data-test-id="metric-title"
+      >
+        {{ title }}
+      </p>
       <UnnnicIcon
         v-if="hasInfo"
+        data-test-id="info-icon"
         class="info-icon"
         icon="info"
         size="sm"
@@ -22,10 +29,14 @@
     </section>
 
     <section class="metric-content">
-      <section class="metric-value">
+      <section
+        class="metric-value"
+        data-test-id="metric-value"
+      >
         {{ prefix }}{{ formatValue(value) }}
         <p
           class="percentage"
+          data-test-id="percentage"
           :class="{
             positive: percentage > 0,
             negative: percentage < 0,
@@ -34,6 +45,7 @@
           {{ formatPercentage(percentage) }}
           <UnnnicIcon
             v-if="percentage"
+            data-test-id="icon-arrow"
             :icon="percentage > 0 ? 'arrow_drop_up' : 'arrow_drop_down'"
             size="sm"
             filled

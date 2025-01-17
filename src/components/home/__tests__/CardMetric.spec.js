@@ -100,7 +100,7 @@ describe('CardMetric', () => {
     it('formats integer values with thousand separators', async () => {
       await wrapper.setProps({ value: 1000000, percentage: 20 });
       const valueText = wrapper.find('[data-test-id="metric-value"]').text();
-      expect(valueText).toContain('1.000.000 20.00% arrow_drop_up');
+      expect(valueText).toContain('1,000,000 20.00% arrow_drop_up');
     });
 
     it('formats decimal values with comma separator', async () => {

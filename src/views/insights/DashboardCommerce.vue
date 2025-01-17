@@ -5,7 +5,7 @@
         See what's happening in: Commerce
       </section>
       <section class="filter-type">
-        <p>{{ $t('common.filter-by') }}</p>
+        <p>{{ $t('filter-by') }}</p>
         <DropdownFilter
           :items="[
             {

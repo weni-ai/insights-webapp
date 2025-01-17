@@ -32,6 +32,13 @@
           }"
         >
           {{ formatPercentage(percentage) }}
+          <UnnnicIcon
+            v-if="percentage"
+            :icon="percentage > 0 ? 'arrow_drop_up' : 'arrow_drop_down'"
+            size="sm"
+            filled
+            :scheme="percentage > 0 ? 'aux-green-500' : 'aux-red-500'"
+          />
         </p>
       </section>
     </section>
@@ -96,53 +103,55 @@ const formatPercentage = (value: number): string => {
 
 <style lang="scss" scoped>
 .metric-card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  padding: 1rem;
-  transition: all 0.2s ease;
+  background: $unnnic-color-neutral-white;
+  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+  padding: $unnnic-spacing-sm;
   border-radius: 0;
   margin: -1px 0 0 -1px;
 
-  border-right: 1px solid #e5e7eb;
-  border-left: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
+  border-right: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+  border-left: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+  border-bottom: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
 
   &.left-column {
     &.first-row {
-      border-top-left-radius: 8px;
+      border-top-left-radius: $unnnic-border-radius-md;
     }
 
     &.last-row {
-      border-bottom-left-radius: 8px;
+      border-bottom-left-radius: $unnnic-border-radius-md;
     }
   }
 
   &.right-column {
     &.first-row {
-      border-top-right-radius: 8px;
+      border-top-right-radius: $unnnic-border-radius-md;
     }
 
     &.last-row {
-      border-bottom-right-radius: 8px;
+      border-bottom-right-radius: $unnnic-border-radius-md;
     }
-  }
-
-  &:hover {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    z-index: 1;
   }
 }
 
 .metric-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: $unnnic-spacing-xs;
+  margin-bottom: $unnnic-spacing-xs;
+
+  :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
+    font-size: $unnnic-font-size-body-gt;
+  }
 }
 
 .metric-title {
-  color: #6b7280;
-  font-size: 0.875rem;
+  font-family: $unnnic-font-family-secondary;
+  font-size: $unnnic-font-size-body-gt;
+  font-style: normal;
+  font-weight: $unnnic-font-weight-regular;
+  line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  color: $unnnic-color-neutral-dark;
 }
 
 .info-icon {
@@ -150,25 +159,33 @@ const formatPercentage = (value: number): string => {
 }
 
 .metric-value {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #111827;
+  color: $unnnic-color-neutral-darkest;
+  font-family: $unnnic-font-family-primary;
+  font-size: $unnnic-font-size-title-md;
+  font-style: normal;
+  font-weight: $unnnic-font-weight-bold;
+  line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
   display: flex;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: $unnnic-spacing-xs;
 }
 
 .percentage {
-  font-size: 0.875rem;
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  font-family: $unnnic-font-family-secondary;
+  font-size: $unnnic-font-size-body-md;
+  font-style: normal;
+  font-weight: $unnnic-font-weight-bold;
+  line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
   color: $unnnic-color-neutral-clean;
 
   &.positive {
-    color: #10b981;
+    color: $unnnic-color-aux-green-500;
   }
 
   &.negative {
-    color: #ef4444;
+    color: $unnnic-color-aux-red-500;
   }
 }
 </style>

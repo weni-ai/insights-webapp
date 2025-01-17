@@ -4,7 +4,30 @@
       <section class="dashboard-commerce__header-title">
         See what's happening in: Commerce
       </section>
-      <section>Filter</section>
+      <section class="filter-type">
+        <p>{{ $t('common.filter-by') }}</p>
+        <DropdownFilter
+          :items="[
+            {
+              name: 'today',
+              action: () => handleFilter('today'),
+            },
+            {
+              name: 'Last 7 days',
+              action: () => handleFilter('Last 7 days'),
+            },
+            {
+              name: 'Last week',
+              action: () => handleFilter('Last week'),
+            },
+            {
+              name: 'Last month',
+              action: () => handleFilter('Last month'),
+            },
+          ]"
+          :defaultItem="{ name: 'Last 7 days' }"
+        />
+      </section>
     </section>
     <div class="metrics-container">
       <CardMetric
@@ -27,6 +50,7 @@
 
 <script lang="ts" setup>
 import CardMetric from '@/components/home/CardMetric.vue';
+import DropdownFilter from '@/components/home/DropdownFilter.vue';
 import { ref } from 'vue';
 
 interface Metric {
@@ -83,6 +107,10 @@ const metrics = ref<Metric[]>([
     hasInfo: true,
   },
 ]);
+
+const handleFilter = (filter: string) => {
+  console.log(filter);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -110,5 +138,18 @@ const metrics = ref<Metric[]>([
   display: grid;
   grid-template-columns: repeat(3, minmax(250px, 1fr));
   padding: $unnnic-spacing-sm 1px;
+}
+
+.filter-type {
+  display: flex;
+  align-items: center;
+  gap: $unnnic-spacing-sm;
+  p {
+    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-gt;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  }
 }
 </style>

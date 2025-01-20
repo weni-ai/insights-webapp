@@ -324,9 +324,12 @@ export default {
         name: widget.config?.name,
         report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
         config: {
+          filter: { flow: widget.config.flow.uuid },
           ...widget.config,
           operation: 'recurrence',
           type: 'flow_result',
+          op_field: widget.config.flow.result,
+          limit: 5,
         },
         type: 'recurrence',
       };

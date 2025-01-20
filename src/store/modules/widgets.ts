@@ -1,4 +1,5 @@
 import dashboardsStore from './dashboards';
+import Router from '@/router';
 import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
@@ -88,6 +89,7 @@ export default {
           dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
           widgetUuid: uuid,
         } as any);
+
         setWidgetData(data);
       } catch (error) {
         console.error(error);
@@ -104,6 +106,28 @@ export default {
           }
         }),
       );
+    },
+    async getWidgetRecurrenceData({ commit }, { uuid }) {
+      try {
+        const response: any = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          widgetUuid: uuid,
+          params: {},
+        });
+
+        const formattedResponse = response.results;
+
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: formattedResponse,
+        });
+      } catch (error) {
+        console.error(error);
+        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+          uuid,
+          data: [],
+        });
+      }
     },
     async getWidgetGraphFunnelData({ commit }, { uuid, widgetFunnelConfig }) {
       const fetchData = async (metric) => {

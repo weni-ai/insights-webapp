@@ -117,13 +117,14 @@ export default {
         scales: {
           x: {
             display: false,
+            grace: 15,
           },
           y: {
             display: true,
             autoSkip: false,
             maxRotation: 0,
             ticks: {
-              callback: (value, index) => {
+              callback: (_value, index) => {
                 const label = String(this.chartData.labels[index]);
                 return label.length > 15
                   ? `${label.substring(0, 15)}...`
@@ -140,6 +141,15 @@ export default {
         backgroundColor: '#00A49F',
         hoverBackgroundColor: '#00DED2',
         plugins: {
+          datalabels: {
+            display: false,
+          },
+          doubleDataLabel: {
+            datalabelsSuffix: this.datalabelsSuffix,
+          },
+          horizontalBackgroundColorPlugin: {
+            backgroundColor: '#C6FFF7',
+          },
           tooltip: {
             enabled: true,
             mode: 'index',
@@ -147,25 +157,95 @@ export default {
               label: () => false,
             },
           },
-          datalabels: {
-            formatter: (value) => {
-              return value + this.datalabelsSuffix;
-            },
-            color: '#fff',
-            anchor: 'end',
-            align: 'start',
-            textStrokeColor: '#fff',
-            font: {
-              size: '12',
-              weight: '700',
-              lineHeight: 1.66,
-            },
-          },
+        },
+      };
+    },
+    horizontalBackgroundColorPlugin() {
+      return {
+        id: 'horizontalBackgroundColorPlugin',
+        beforeDatasetsDraw(chart, _args, plugins) {
+          const {
+            ctx,
+            data,
+            chartArea: { left, width },
+            scales: { y },
+          } = chart;
+
+          const barThickness = chart.getDatasetMeta(0).data[0].height;
+
+          ctx.beginPath();
+          ctx.fillStyle = plugins.backgroundColor;
+
+          data.datasets[0].data.forEach((_dataPoint, index) => {
+            ctx.roundRect(
+              left, // start position
+              y.getPixelForValue(index) - barThickness / 2, // align background to center bar
+              width - 160, // background padding right
+              barThickness,
+              4, // border radius
+            );
+          });
+
+          ctx.fill();
+        },
+      };
+    },
+    doubleDataLabel() {
+      return {
+        id: 'doubleDataLabel',
+        afterDatasetsDraw(chart, _args, plugins) {
+          if (plugins.display === false) return;
+          const {
+            ctx,
+            data: { datasets },
+            chartArea: { width },
+          } = chart;
+
+          ctx.save();
+
+          chart.getDatasetMeta(0).data.forEach((dataPoint, index) => {
+            const { data, fullValues } = datasets[0];
+
+            ctx.textBaseline = 'middle';
+            ctx.font = 'bold 16px Lato';
+            ctx.fillStyle = '#4E5666';
+
+            const startTextPosition = width - 42;
+
+            ctx.fillText(
+              `${data[index]} ${plugins.datalabelsSuffix}`,
+              startTextPosition,
+              dataPoint.y,
+            );
+
+            const valueCharCount = String(data[index]).length;
+
+            const widthCompensationMap = {
+              1: 30,
+              3: 40,
+              4: 50,
+              5: 60,
+            };
+
+            ctx.font = 'normal 14px Lato';
+            ctx.fillStyle = '#67738B';
+
+            ctx.fillText(
+              `| ${fullValues[index]}`,
+              startTextPosition + widthCompensationMap[valueCharCount] || 0,
+              dataPoint.y,
+            );
+          });
         },
       };
     },
     chartPlugins() {
-      return [ChartDataLabels, Tooltip];
+      return [
+        ChartDataLabels,
+        Tooltip,
+        this.horizontalBackgroundColorPlugin,
+        this.doubleDataLabel,
+      ];
     },
     graphContainerHeight() {
       const barSpacingY = 4;

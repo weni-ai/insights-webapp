@@ -79,6 +79,7 @@ export default {
           {
             component: markRaw(AgentName),
             props: { name: item.agent, status: item.status },
+            events: {},
           },
           String(item.opened),
           String(item.closed),

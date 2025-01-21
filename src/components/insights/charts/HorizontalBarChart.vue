@@ -81,7 +81,7 @@ export default {
     isLoading: Boolean,
   },
 
-  emits: ['seeMore'],
+  emits: ['seeMore', 'clickData'],
 
   setup() {
     const horizontalBarChart = ref(null);
@@ -157,6 +157,23 @@ export default {
               label: () => false,
             },
           },
+        },
+        onHover(event, elements) {
+          event.native.target.style.cursor = elements[0]
+            ? 'pointer'
+            : 'default';
+        },
+        onClick: (event, elements) => {
+          if (!elements.length) return;
+
+          const datasetIndex = elements[0].datasetIndex;
+          const dataIndex = elements[0].index;
+          this.$emit('clickData', {
+            label: this.chartData?.labels?.[dataIndex],
+            data: this.chartData?.datasets?.[datasetIndex]?.data?.[dataIndex],
+            datasetIndex,
+            dataIndex,
+          });
         },
       };
     },

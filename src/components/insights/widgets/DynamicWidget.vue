@@ -250,6 +250,9 @@ export default {
           requestData: ({ offset, limit }) =>
             this.requestWidgetData({ offset, limit }),
         },
+        graph_bar: {
+          clickData: (eventData) => {},
+        },
       };
 
       return mappingEvents[type] || {};

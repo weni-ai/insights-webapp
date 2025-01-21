@@ -233,6 +233,7 @@ export default {
               this.isRequestingData = false;
             });
           },
+          clickData: (eventData) => {},
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),

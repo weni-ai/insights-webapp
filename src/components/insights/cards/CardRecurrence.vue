@@ -44,8 +44,15 @@
           :key="index"
           class="content"
         >
-          <section class="content__container-item">
-            <p class="content__container-item-text">{{ list.label }}</p>
+          <section
+            class="content__container-item"
+            @click.stop="
+              $emit('clickData', { label: list.label, data: list.value })
+            "
+          >
+            <p class="content__container-item-text">
+              {{ list.label }}
+            </p>
           </section>
           <section class="progress-bar-container">
             <UnnnicProgressBar
@@ -73,7 +80,7 @@ import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
 export default {
-  name: 'CardRecurrenc',
+  name: 'CardRecurrence',
 
   components: { CardBase, IconLoading },
 
@@ -93,7 +100,7 @@ export default {
     },
   },
 
-  emits: ['open-config', 'request-data', 'seeMore'],
+  emits: ['open-config', 'request-data', 'seeMore', 'clickData'],
 
   computed: {
     ...mapState({
@@ -211,6 +218,8 @@ export default {
 
       &__container-item {
         max-width: 150px;
+
+        cursor: pointer;
 
         @media screen and (max-width: 1440px) {
           max-width: 100px;

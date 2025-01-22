@@ -23,6 +23,16 @@
     "queue": "Fila",
     "tags": "Tags"
   },
+  "contact_list_modal": {
+    "title": "Lista de contatos de {label}",
+    "header": {
+      "contact_name": "Nome do contato",
+      "start": "Iniciar"
+    },
+    "message": {
+      "get_data_fail": "Falha ao buscar dados dos contatos que responderam a este fluxo."
+    }
+  },
   "filter": {
     "agent": {
       "label": "Agente",
@@ -166,7 +176,7 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
-        }, 
+        },
         "recurrence": {
           "title": "Recorrência",
           "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"

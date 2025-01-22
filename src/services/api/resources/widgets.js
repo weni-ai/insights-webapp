@@ -15,4 +15,16 @@ export default {
 
     return response;
   },
+
+  async getFlowContactResults({ flow, result, label, limit, offset }) {
+    const response = await http.get(`/contact_results/flow/${flow}/`, {
+      params: {
+        label,
+        op_field: result,
+        limit,
+        offset,
+      },
+    });
+    return response.data;
+  },
 };

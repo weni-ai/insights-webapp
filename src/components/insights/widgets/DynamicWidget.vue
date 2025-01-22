@@ -233,6 +233,7 @@ export default {
               this.isRequestingData = false;
             });
           },
+          clickData: (eventData) => {},
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
@@ -249,6 +250,9 @@ export default {
         table_group: {
           requestData: ({ offset, limit }) =>
             this.requestWidgetData({ offset, limit }),
+        },
+        graph_bar: {
+          clickData: (eventData) => {},
         },
       };
 

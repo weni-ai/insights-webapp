@@ -42,17 +42,26 @@
           v-for="(list, index) in (data || []).slice(0, 5)"
           v-show="!isLoading"
           :key="index"
-          class="content"
+          class="content__container-group"
+          @click.stop="emitClickData(list)"
         >
-          <section class="content__container-item">
-            <p class="content__container-item-text">{{ list.label }}</p>
+          <section class="content">
+            <section class="content__container-item">
+              <p class="content__container-item-text">
+                {{ list.label }}
+              </p>
+            </section>
+            <section class="progress-bar-container">
+              <UnnnicProgressBar
+                v-model="list.value"
+                inline
+              />
+            </section>
           </section>
-          <section class="progress-bar-container">
-            <UnnnicProgressBar
-              v-model="list.value"
-              inline
-            />
-          </section>
+          <section
+            v-if="index < 4"
+            class="divider"
+          />
         </section>
       </section>
     </section>
@@ -73,7 +82,7 @@ import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
 export default {
-  name: 'CardRecurrenc',
+  name: 'CardRecurrence',
 
   components: { CardBase, IconLoading },
 
@@ -93,7 +102,7 @@ export default {
     },
   },
 
-  emits: ['open-config', 'request-data', 'seeMore'],
+  emits: ['open-config', 'request-data', 'seeMore', 'clickData'],
 
   computed: {
     ...mapState({
@@ -118,6 +127,9 @@ export default {
   },
 
   methods: {
+    emitClickData(data) {
+      this.$emit('clickData', { label: data.label, data: data.value });
+    },
     emitRequestData() {
       this.$emit('request-data');
     },
@@ -126,6 +138,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.divider {
+  margin-top: $unnnic-spacing-md;
+  height: 1px;
+  background-color: $unnnic-color-neutral-light;
+  width: 100%;
+}
+
 .card-recurrence {
   min-height: 310px;
   height: 100%;
@@ -195,6 +214,10 @@ export default {
       gap: 1px;
       background-color: $unnnic-color-neutral-white;
       padding: $unnnic-spacing-sm;
+
+      &-group {
+        cursor: pointer;
+      }
 
       &-isLoading {
         display: flex;

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development rspack server",
+    "dev": "cross-env NODE_ENV=development rspack server --port 3003",
     "build": "cross-env NODE_ENV=production rspack build",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -33,9 +33,9 @@
     "marked": "^14.1.2",
     "mitt": "^3.0.1",
     "moment": "^2.30.1",
-    "vue": "^3.3.11",
-    "vue-i18n": "9",
-    "vue-router": "^4.2.5",
+    "vue": "3.5.11",
+    "vue-i18n": "^10.0.1",
+    "vue-router": "^4.4.5",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

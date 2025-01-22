@@ -5,7 +5,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 const { resolve } = require('path');
 const path = require('path');
 const dotenv = require('dotenv');
-const { dependencies } = require('./package.json');
+const pkg = require('./package.json');
 
 dotenv.config();
 
@@ -19,14 +19,10 @@ module.exports = defineConfig({
     hot: true,
     static: {
       directory: path.join(__dirname, 'dist'),
-      publicPath: '/',
-      serveIndex: true,
-      watch: true,
     },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/',
     clean: true,
     filename: 'assets/js/[name]-[contenthash].js',
     chunkFilename: 'assets/js/[name]-[contenthash].js',
@@ -111,16 +107,16 @@ module.exports = defineConfig({
       },
       remotes: {},
       shared: {
-        ...dependencies,
+        ...pkg,
         vue: {
           singleton: true,
           eager: true,
         },
         'vue-i18n': {
           singleton: true,
-          requiredVersion: dependencies['vue-i18n'],
+          requiredVersion: pkg.dependencies['vue-i18n'],
           eager: true,
-        },
+        }
       },
     }),
   ],

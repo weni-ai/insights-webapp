@@ -42,24 +42,26 @@
           v-for="(list, index) in (data || []).slice(0, 5)"
           v-show="!isLoading"
           :key="index"
-          class="content"
+          class="content__container-group"
+          @click.stop="emitClickData(list)"
         >
+          <section class="content">
+            <section class="content__container-item">
+              <p class="content__container-item-text">
+                {{ list.label }}
+              </p>
+            </section>
+            <section class="progress-bar-container">
+              <UnnnicProgressBar
+                v-model="list.value"
+                inline
+              />
+            </section>
+          </section>
           <section
-            class="content__container-item"
-            @click.stop="
-              $emit('clickData', { label: list.label, data: list.value })
-            "
-          >
-            <p class="content__container-item-text">
-              {{ list.label }}
-            </p>
-          </section>
-          <section class="progress-bar-container">
-            <UnnnicProgressBar
-              v-model="list.value"
-              inline
-            />
-          </section>
+            v-if="index < 4"
+            class="divider"
+          />
         </section>
       </section>
     </section>
@@ -125,6 +127,9 @@ export default {
   },
 
   methods: {
+    emitClickData(data) {
+      this.$emit('clickData', { label: data.label, data: data.value });
+    },
     emitRequestData() {
       this.$emit('request-data');
     },
@@ -133,6 +138,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.divider {
+  margin-top: $unnnic-spacing-md;
+  height: 1px;
+  background-color: $unnnic-color-neutral-light;
+  width: 100%;
+}
+
 .card-recurrence {
   min-height: 310px;
   height: 100%;
@@ -203,6 +215,10 @@ export default {
       background-color: $unnnic-color-neutral-white;
       padding: $unnnic-spacing-sm;
 
+      &-group {
+        cursor: pointer;
+      }
+
       &-isLoading {
         display: flex;
         justify-content: center;
@@ -218,8 +234,6 @@ export default {
 
       &__container-item {
         max-width: 150px;
-
-        cursor: pointer;
 
         @media screen and (max-width: 1440px) {
           max-width: 100px;

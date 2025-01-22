@@ -24,9 +24,9 @@
     "tags": "Tags"
   },
   "contact_list_modal": {
-    "title": "{label} Contact List",
+    "title": "{label} Contact list",
     "header": {
-      "contact_name": "Contact Name",
+      "contact_name": "Contact name",
       "start": "Start"
     },
     "message": {

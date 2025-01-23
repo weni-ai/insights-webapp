@@ -89,7 +89,7 @@ export default {
   props: {
     isLoading: Boolean,
     data: {
-      type: Object,
+      type: Array,
       required: true,
     },
     widget: {

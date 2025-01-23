@@ -1,4 +1,5 @@
 import { WidgetOutgoing } from '@/models';
+import Config from '@/store/modules/config';
 
 import http from '@/services/api/http';
 
@@ -17,12 +18,14 @@ export default {
   },
 
   async getFlowContactResults({ flow, result, label, limit, offset }) {
+     const { project } = Config.state;
     const response = await http.get(`/contact_results/flow/${flow}/`, {
       params: {
         label,
         op_field: result,
         limit,
         offset,
+        project: project?.uuid
       },
     });
     return response.data;

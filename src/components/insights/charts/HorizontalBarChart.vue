@@ -114,10 +114,16 @@ export default {
         indexAxis: 'y',
         barThickness: 32,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            right: 140,
+          },
+        },
         scales: {
           x: {
             display: false,
-            grace: 15,
+            beginAtZero: true,
+            max: 100, // 100%
           },
           y: {
             display: true,
@@ -180,7 +186,7 @@ export default {
             ctx.roundRect(
               left, // start position
               y.getPixelForValue(index) - barThickness / 2, // align background to center bar
-              width - 160, // background padding right
+              width,
               barThickness,
               4, // border radius
             );
@@ -210,7 +216,7 @@ export default {
             ctx.font = 'bold 16px Lato';
             ctx.fillStyle = '#4E5666';
 
-            const startTextPosition = width - 42;
+            const startTextPosition = width + 100;
 
             ctx.fillText(
               `${data[index]} ${plugins.datalabelsSuffix}`,

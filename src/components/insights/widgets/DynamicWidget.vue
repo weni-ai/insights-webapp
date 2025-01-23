@@ -122,7 +122,7 @@ export default {
         },
         graph_funnel: {
           widget: this.widget,
-          chartData: data,
+          chartData: data || [],
           configurable: is_configurable,
           configured: this.isConfigured,
         },
@@ -135,7 +135,7 @@ export default {
         },
         recurrence: {
           widget: this.widget,
-          data: this.widget?.data,
+          data: this.widget?.data || [],
           seeMore: !!report,
         },
       };

@@ -17,14 +17,13 @@ jobs:
       
       - name: Install dependencies
         run: |
-          npm install -g yarn
-          yarn install
+          npm install
       
       - name: Run lint
-        run: yarn lint
+        run: npm run lint
       
       - name: Run tests and coverage
-        run: yarn test:coverage
+        run: npm run test:coverage
       
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
@@ -32,4 +31,4 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
       
       - name: Build application
-        run: yarn build
+        run: npm run build

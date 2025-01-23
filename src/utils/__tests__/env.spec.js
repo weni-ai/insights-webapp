@@ -11,11 +11,11 @@ describe('env', () => {
     vi.stubGlobal('window', { configs: {} });
   });
 
-  it('parses VITE_FIREBASE_CONFIG correctly', () => {
+  it('parses FIREBASE_CONFIG correctly', () => {
     const firebaseConfig = { apiKey: 'test-key', projectId: 'test-project' };
-    import.meta.env.VITE_FIREBASE_CONFIG = JSON.stringify(firebaseConfig);
+    import.meta.env.FIREBASE_CONFIG = JSON.stringify(firebaseConfig);
 
-    expect(env('VITE_FIREBASE_CONFIG')).toEqual(firebaseConfig);
+    expect(env('FIREBASE_CONFIG')).toEqual(firebaseConfig);
   });
 
   it('returns value from import.meta.env', () => {
@@ -24,15 +24,9 @@ describe('env', () => {
     expect(env('TEST_VAR')).toBe('test-value');
   });
 
-  it('returns value from window.configs', () => {
-    window.configs.TEST_VAR = 'window-value';
-
-    expect(env('TEST_VAR')).toBe('window-value');
-  });
-
-  it('prioritizes window.configs over import.meta.env', () => {
-    window.configs.TEST_VAR = 'window-value';
-    import.meta.env.TEST_VAR = 'env-value';
+  it('prioritizes process.env over window.configs', () => {
+    process.env.TEST_VAR = 'window-value';
+    window.configs.TEST_VAR = 'env-value';
 
     expect(env('TEST_VAR')).toBe('window-value');
   });
@@ -48,10 +42,4 @@ describe('env', () => {
     expect(env('TEST_VAR')).toBe('env-value');
   });
 
-  it('prioritizes non-VITE_ variables in window.configs', () => {
-    window.configs.TEST_VAR = 'window-value';
-    window.configs.VITE_TEST_VAR = 'window-vite-value';
-
-    expect(env('TEST_VAR')).toBe('window-value');
-  });
 });

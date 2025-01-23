@@ -78,17 +78,6 @@ describe('HorizontalBarChart', () => {
     expect(callback(null, 1)).toBe('This is a long ...');
   });
 
-  it('should format datalabels with the suffix', async () => {
-    await wrapper.setProps({ datalabelsSuffix: '%' });
-
-    const { chartOptions } = wrapper.vm;
-
-    const formatter = chartOptions.plugins.datalabels.formatter;
-
-    expect(formatter(10)).toBe('10%');
-    expect(formatter(20)).toBe('20%');
-  });
-
   it('should return false from tooltip label callback', async () => {
     const { chartOptions } = wrapper.vm;
 

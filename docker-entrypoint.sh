@@ -6,7 +6,7 @@ export JSON_STRING='window.configs = { \
   "INSIGHTS_API_URL": "'${INSIGHTS_API_URL}'", \
   "FIREBASE_CONFIG": '${ESCAPED_FIREBASE_CONFIG}', \
   "HOTJAR_ID": "'${HOTJAR_ID}'" \
-  "VITE_ENVIRONMENT": "'${VITE_ENVIRONMENT}'" \
+  "ENVIRONMENT": "'${ENVIRONMENT}'" \
   "SENTRY_DSN": "'${SENTRY_DSN}'" \
 }'
 

@@ -1,11 +1,11 @@
 # syntax = docker/dockerfile:1
 
-ARG NODE_VERSION="18.18.0"
-ARG BASE_VERSION="alpine3.17"
+ARG NODE_VERSION="18.19.1"
+ARG BASE_VERSION="alpine3.19"
 ARG OLD_IMAGE="insights-webapp:latest"
 ARG KEEP_DAYS=60
-ARG VITE_FIREBASE_CONFIG
-ARG VITE_HOTJAR_ID
+ARG FIREBASE_CONFIG
+ARG HOTJAR_ID
 
 FROM node:${NODE_VERSION}-${BASE_VERSION} AS builder
 
@@ -13,11 +13,11 @@ WORKDIR /app
 
 ARG KEEP_DAYS
 
-ARG VITE_FIREBASE_CONFIG
-ARG VITE_HOTJAR_ID
+ARG FIREBASE_CONFIG
+ARG HOTJAR_ID
 
-ENV VITE_FIREBASE_CONFIG=$VITE_FIREBASE_CONFIG
-ENV VITE_HOTJAR_ID=$VITE_HOTJAR_ID
+ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
+ENV HOTJAR_ID=$HOTJAR_ID
 
 RUN apk add --no-cache \
     git \
@@ -28,14 +28,13 @@ RUN apk add --no-cache \
     giflib-dev \
     librsvg-dev
 
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
-RUN --mount=type=cache,target=/root/.yarn \
-    YARN_CACHE_FOLDER=/root/.yarn yarn install
+RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm install
 
 COPY . ./
 
-RUN yarn build
+RUN npm run build-only
 
 FROM ${OLD_IMAGE} AS old_css
 

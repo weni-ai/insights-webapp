@@ -49,6 +49,7 @@
       "placeholder": "Selecione tag"
     }
   },
+  "filter-by": "Filtrar por:",
   "agent": "Agente",
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",

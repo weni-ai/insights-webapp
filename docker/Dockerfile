@@ -18,7 +18,6 @@ ARG HOTJAR_ID
 
 ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
 ENV HOTJAR_ID=$HOTJAR_ID
-ENV FIREBASE_CONFIG='{"apiKey": "AIzaSyDDdWIACKTxASoixW9CUeEoMAfWsDNNwQs","authDomain": "engage-d5e76.firebaseapp.com","databaseURL": "https://engage-d5e76-default-rtdb.firebaseio.com","projectId": "engage-d5e76","storageBucket": "engage-d5e76.appspot.com","messagingSenderId": "242365488742","appId": "1:242365488742:web:7b12e26ff93ad2475057a7"}'
 
 RUN apk add --no-cache \
     git \

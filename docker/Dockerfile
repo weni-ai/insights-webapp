@@ -18,6 +18,8 @@ ARG HOTJAR_ID
 
 ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
 ENV HOTJAR_ID=$HOTJAR_ID
+ENV PUBLIC_PATH_URL=https://insights.stg.cloud.weni.ai/ \
+    INSIGHTS_API_URL=https://insights-engine.stg.cloud.weni.ai
 
 RUN apk add --no-cache \
     git \

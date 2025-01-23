@@ -15,14 +15,18 @@ const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 module.exports = defineConfig({
   context: __dirname,
   devServer: {
+    port: 3001,
     historyApiFallback: true,
-    hot: true,
+    hot: false,
+    liveReload: true,
     static: {
       directory: path.join(__dirname, 'dist'),
     },
+    compress: true,
   },
   output: {
     path: path.resolve(__dirname, './dist'),
+    publicPath: `${process.env.PUBLIC_PATH_URL}`,
     clean: true,
     filename: 'assets/js/[name]-[contenthash].js',
     chunkFilename: 'assets/js/[name]-[contenthash].js',
@@ -100,8 +104,8 @@ module.exports = defineConfig({
     }),
     new VueLoaderPlugin(),
     new rspack.container.ModuleFederationPlugin({
-      name: 'remote',
-      filename: 'remote.js',
+      name: 'remote_insights',
+      filename: 'remoteEntry.js',
       exposes: {
         './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
       },

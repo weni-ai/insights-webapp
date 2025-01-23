@@ -109,13 +109,13 @@ export default {
       const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];
 
       const enabledProjects =
-        env('ENVIROMENT') === 'STG' ? enabledProjectsStg : enabledProjectsProd;
+        env('ENVIROMENT') === 'staging' ? enabledProjectsStg : enabledProjectsProd;
 
       const isVtexEnabledProject = enabledProjects.includes(
         Config.state.project.uuid,
       );
 
-      const empty_widget_options = ['funnel'];
+      const empty_widget_options = ['funnel', 'recurrence'];
 
       if (isVtexEnabledProject) empty_widget_options.push('vtex');
 

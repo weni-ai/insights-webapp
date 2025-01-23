@@ -121,6 +121,14 @@
       "title": "Setup required, customize your widget to get started",
       "config_btn": "Configure"
     },
+    "recurrence": {
+      "title": "Recurrence",
+      "see_more": "See more",
+      "empty_data": {
+        "title": "No data for now, as soon as there’s activity,",
+        "sub_title": "it’ll show up here!"
+      }
+    },
     "vtex_order": {
       "title": "Sales VTEX",
       "orders": "Orders",
@@ -159,6 +167,10 @@
         "vtex": {
           "title": "VTEX",
           "description": "View your VTEX sales data"
+        },
+        "recurrence": {
+          "title": "Recurrence",
+          "description": "Visualize recurring results such as satisfaction surveys or CSAT in graphs"
         }
       }
     },
@@ -208,6 +220,9 @@
       "fourth_metric": "Fourth @.lower:metric",
       "fifth_metric": "Fifth @.lower:metric",
       "select_flow": "@:select @.lower:flow"
+    },
+    "config_recurrence": {
+      "name_metric": "Metric name"
     }
   },
   "metric_accordion": {

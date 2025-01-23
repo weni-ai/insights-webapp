@@ -106,7 +106,7 @@ module.exports = defineConfig({
     new VueLoaderPlugin(),
     new rspack.container.ModuleFederationPlugin({
       name: 'remote_insights',
-      filename: 'remoteEntry.js',
+      filename: 'remote.js',
       exposes: {
         './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
       },

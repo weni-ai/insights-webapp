@@ -1,13 +1,13 @@
 #!/bin/sh
 
-ESCAPED_FIREBASE_CONFIG=$(echo "${VITE_FIREBASE_CONFIG}" | sed 's/\//\\\//g')
+ESCAPED_FIREBASE_CONFIG=$(echo "${FIREBASE_CONFIG}" | sed 's/\//\\\//g')
 
 export JSON_STRING='window.configs = { \
-  "VITE_INSIGHTS_API_URL": "'${VITE_INSIGHTS_API_URL}'", \
-  "VITE_FIREBASE_CONFIG": '${ESCAPED_FIREBASE_CONFIG}', \
-  "VITE_HOTJAR_ID": "'${VITE_HOTJAR_ID}'" \
-  "VITE_ENVIRONMENT": "'${VITE_ENVIRONMENT}'" \
-  "SENTRY_DSN": "'${SENTRY_DSN}'" \
+  "INSIGHTS_API_URL": "'${INSIGHTS_API_URL}'", \
+  "FIREBASE_CONFIG": '${ESCAPED_FIREBASE_CONFIG}', \
+  "HOTJAR_ID": "'${HOTJAR_ID}'", \
+  "ENVIRONMENT": "'${ENVIRONMENT}'", \
+  "SENTRY_DSN": "'${SENTRY_DSN}'", \
 }'
 
 sed "s|//CONFIGURATIONS_PLACEHOLDER|${JSON_STRING}|" /usr/share/nginx/html/insights/index.html.tmpl > /tmp/index.html

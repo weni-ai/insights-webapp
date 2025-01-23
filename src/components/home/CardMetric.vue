@@ -156,6 +156,7 @@ defineProps({
     font-weight: $unnnic-font-weight-regular;
     line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
     color: $unnnic-color-neutral-dark;
+    margin: 0;
   }
 
   &__info-icon {

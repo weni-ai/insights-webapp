@@ -73,14 +73,14 @@ import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
 export default {
-  name: 'CardRecurrenc',
+  name: 'CardRecurrence',
 
   components: { CardBase, IconLoading },
 
   props: {
     isLoading: Boolean,
     data: {
-      type: Object,
+      type: Array,
       required: true,
     },
     widget: {

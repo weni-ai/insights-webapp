@@ -135,7 +135,7 @@ export default {
         },
         recurrence: {
           widget: this.widget,
-          data: this.widget?.data,
+          data: this.widget?.data || [],
           seeMore: !!report,
         },
       };

@@ -11,15 +11,10 @@ WORKDIR /app
 
 ARG KEEP_DAYS
 
-ARG FIREBASE_CONFIG
-ARG HOTJAR_ID
-ARG ENVIRONMENT
-ARG INSIGHTS_API_URL
-
 ENV FIREBASE_CONFIG='{"apiKey": "AIzaSyDDdWIACKTxASoixW9CUeEoMAfWsDNNwQs","authDomain": "engage-d5e76.firebaseapp.com","databaseURL": "https://engage-d5e76-default-rtdb.firebaseio.com","projectId": "engage-d5e76","storageBucket": "engage-d5e76.appspot.com","messagingSenderId": "242365488742","appId": "1:242365488742:web:7b12e26ff93ad2475057a7"}'
-ENV HOTJAR_ID=$HOTJAR_ID
-ENV ENVIRONMENT=$ENVIRONMENT
-ENV INSIGHTS_API_URL=$INSIGHTS_API_URL
+ENV HOTJAR_ID=5065449
+ENV ENVIRONMENT=staging
+ENV INSIGHTS_API_URL=https://insights-engine.stg.cloud.weni.ai
 
 RUN apk add --no-cache \
     git \

@@ -120,8 +120,6 @@ export default {
         },
         scales: {
           x: {
-            beginAtZero: true,
-            max: 100,
             display: false,
             beginAtZero: true,
             max: 100, // 100%

@@ -115,7 +115,7 @@ export default {
         maintainAspectRatio: false,
         layout: {
           padding: {
-            right: 180,
+            right: 140,
           },
         },
         scales: {
@@ -123,6 +123,8 @@ export default {
             beginAtZero: true,
             max: 100,
             display: false,
+            beginAtZero: true,
+            max: 100, // 100%
           },
           y: {
             display: true,
@@ -231,7 +233,7 @@ export default {
             ctx.font = 'bold 16px Lato';
             ctx.fillStyle = '#4E5666';
 
-            const startTextPosition = width + 105;
+            const startTextPosition = width + 100;
 
             ctx.fillText(
               `${data[index]} ${plugins.datalabelsSuffix}`,

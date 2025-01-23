@@ -4,8 +4,6 @@ ARG NODE_VERSION="18.19.1"
 ARG BASE_VERSION="alpine3.19"
 ARG OLD_IMAGE="insights-webapp:latest"
 ARG KEEP_DAYS=60
-ARG FIREBASE_CONFIG
-ARG HOTJAR_ID
 
 FROM node:${NODE_VERSION}-${BASE_VERSION} AS builder
 
@@ -15,10 +13,13 @@ ARG KEEP_DAYS
 
 ARG FIREBASE_CONFIG
 ARG HOTJAR_ID
+ARG ENVIRONMENT
+ARG INSIGHTS_API_URL
 
 ENV FIREBASE_CONFIG=$FIREBASE_CONFIG
 ENV HOTJAR_ID=$HOTJAR_ID
-ENV FIREBASE_CONFIG='{"apiKey": "AIzaSyDDdWIACKTxASoixW9CUeEoMAfWsDNNwQs","authDomain": "engage-d5e76.firebaseapp.com","databaseURL": "https://engage-d5e76-default-rtdb.firebaseio.com","projectId": "engage-d5e76","storageBucket": "engage-d5e76.appspot.com","messagingSenderId": "242365488742","appId": "1:242365488742:web:7b12e26ff93ad2475057a7"}'
+ENV ENVIRONMENT=$ENVIRONMENT
+ENV INSIGHTS_API_URL=$INSIGHTS_API_URL
 
 RUN apk add --no-cache \
     git \

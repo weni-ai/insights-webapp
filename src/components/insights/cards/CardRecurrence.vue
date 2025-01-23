@@ -31,13 +31,15 @@
       <section
         v-else
         class="content__container"
+        :class="{ 'content__container-isLoading': isLoading }"
       >
         <IconLoading
           v-if="isLoading"
-          class="card-recurrence-margin-auto"
+          class="content__container-icon-loading"
+          data-testid="icon-loading"
         />
         <section
-          v-for="(list, index) in data"
+          v-for="(list, index) in (data || []).slice(0, 5)"
           v-show="!isLoading"
           :key="index"
           class="content"
@@ -55,10 +57,13 @@
       </section>
     </section>
     <a
+      v-if="seeMore && !isLoading"
       class="card-recurrence__link"
       href=""
-      >{{ $t('widgets.recurrence.see_more') }}</a
+      @click.prevent.stop="$emit('seeMore')"
     >
+      {{ $t('widgets.recurrence.see_more') }}
+    </a>
   </CardBase>
 </template>
 
@@ -82,9 +87,13 @@ export default {
       type: Object,
       required: true,
     },
+    seeMore: {
+      type: Boolean,
+      default: false,
+    },
   },
 
-  emits: ['open-config', 'request-data'],
+  emits: ['open-config', 'request-data', 'seeMore'],
 
   computed: {
     ...mapState({
@@ -181,15 +190,16 @@ export default {
 
     .content__container {
       height: 100%;
-      display: grid;
       align-items: center;
+      display: grid;
       gap: 1px;
-      background-color: $unnnic-color-neutral-light;
-      border-bottom: 1px solid $unnnic-color-neutral-light;
+      background-color: $unnnic-color-neutral-white;
+      padding: $unnnic-spacing-sm;
 
-      & > * {
-        background-color: $unnnic-color-neutral-white;
-        padding: $unnnic-spacing-sm;
+      &-isLoading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
     }
 

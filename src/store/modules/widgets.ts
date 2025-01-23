@@ -110,16 +110,13 @@ export default {
     },
     async getWidgetRecurrenceData({ commit }, { uuid }) {
       try {
-        const response = await Dashboards.getDashboardWidgetReportData({
+        const response: any = await Dashboards.getDashboardWidgetData({
           dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
           widgetUuid: uuid,
-          slug: undefined,
-          offset: undefined,
-          limit: undefined,
-          next: undefined,
+          params: {},
         });
 
-        const formattedResponse = response.data.result;
+        const formattedResponse = response.results;
 
         commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
           uuid,

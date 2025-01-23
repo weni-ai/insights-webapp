@@ -136,6 +136,7 @@ export default {
         recurrence: {
           widget: this.widget,
           data: this.widget?.data,
+          seeMore: !!report,
         },
       };
 
@@ -225,6 +226,7 @@ export default {
         },
         recurrence: {
           openConfig: () => this.$emit('open-config'),
+          seeMore: () => this.redirectToReport(),
           requestData: () => {
             this.isRequestingData = true;
             this.requestRecurrenceData().finally(() => {

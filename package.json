@@ -15,6 +15,7 @@
     "translations:suggest-from-pt-br": "unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode build --suggest \"pt-br:pt>en:en\" && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode reverse && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode build --suggest \"pt-br:pt>es\" && unified-translations --translations-file ./src/locales/translations.json --languages pt-br=./src/locales/pt_br.json,en=./src/locales/en.json,es=./src/locales/es.json --mode reverse"
   },
   "dependencies": {
+    "@sentry/vue": "8.50.0",
     "@vueuse/core": "^10.11.0",
     "@weni/unnnic-system": "^2.19.0",
     "axios": "^1.7.2",

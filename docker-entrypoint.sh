@@ -6,6 +6,8 @@ export JSON_STRING='window.configs = { \
   "VITE_INSIGHTS_API_URL": "'${VITE_INSIGHTS_API_URL}'", \
   "VITE_FIREBASE_CONFIG": '${ESCAPED_FIREBASE_CONFIG}', \
   "VITE_HOTJAR_ID": "'${VITE_HOTJAR_ID}'" \
+  "VITE_ENVIRONMENT": "'${VITE_ENVIRONMENT}'" \
+  "SENTRY_DSN": "'${SENTRY_DSN}'" \
 }'
 
 sed "s|//CONFIGURATIONS_PLACEHOLDER|${JSON_STRING}|" /usr/share/nginx/html/insights/index.html.tmpl > /tmp/index.html

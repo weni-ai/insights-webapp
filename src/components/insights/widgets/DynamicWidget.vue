@@ -122,7 +122,7 @@ export default {
         },
         graph_funnel: {
           widget: this.widget,
-          chartData: data,
+          chartData: data || [],
           configurable: is_configurable,
           configured: this.isConfigured,
         },

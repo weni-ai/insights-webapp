@@ -15,6 +15,7 @@ ENV FIREBASE_CONFIG='{"apiKey": "AIzaSyDDdWIACKTxASoixW9CUeEoMAfWsDNNwQs","authD
 ENV HOTJAR_ID=5065449
 ENV ENVIRONMENT=staging
 ENV INSIGHTS_API_URL=https://insights-engine.stg.cloud.weni.ai
+ENV SENTRY_DSN=https://6ccaf6ca656b163751016134b7b85ef1@sentry.cloud.weni.ai/97
 
 RUN apk add --no-cache \
     git \

@@ -22,8 +22,6 @@ app.use(store);
 app.use(i18n);
 app.use(Unnnic);
 
-console.log(env('SENTRY_DSN'));
-
 if (env('SENTRY_DSN')) {
   Sentry.init({
     app,

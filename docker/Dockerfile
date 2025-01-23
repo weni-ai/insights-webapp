@@ -34,7 +34,7 @@ RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm install
 
 COPY . ./
 
-RUN npm run build-only
+RUN npm run build
 
 FROM ${OLD_IMAGE} AS old_css
 

@@ -605,4 +605,90 @@ describe('DynamicWidget', () => {
       });
     });
   });
+
+  describe('getHoverTooltipData method', () => {
+    beforeEach(() => {
+      wrapper = createWrapper({
+        widget: {
+          type: 'card',
+          uuid: 'test-uuid',
+          name: 'in_progress',
+        },
+      });
+
+      vi.spyOn(wrapper.vm, 'currentDashboard', 'get').mockReturnValue({
+        name: 'human_service_dashboard.title',
+      });
+
+      wrapper.vm.$t = vi.fn((key) => {
+        const translations = {
+          'human_service_dashboard.tooltips.in_progress': 'In Progress Tooltip',
+          'human_service_dashboard.tooltips.response_time':
+            'Response Time Tooltip',
+          'human_service_dashboard.tooltips.interaction_time':
+            'Interaction Time Tooltip',
+          'human_service_dashboard.tooltips.waiting_time':
+            'Waiting Time Tooltip',
+          'human_service_dashboard.tooltips.awaiting_service':
+            'Awaiting Service Tooltip',
+          'human_service_dashboard.tooltips.closeds': 'Closed Tooltip',
+        };
+        return translations[key] || key;
+      });
+    });
+
+    it('should return tooltip for human service dashboard card', () => {
+      const result = wrapper.vm.getHoverTooltipData(wrapper.vm.widget);
+
+      expect(result).toBe('In Progress Tooltip');
+    });
+
+    it('should return empty string for non-human service dashboard', () => {
+      vi.spyOn(wrapper.vm, 'currentDashboard', 'get').mockReturnValue({
+        name: 'other_dashboard',
+      });
+
+      const result = wrapper.vm.getHoverTooltipData(wrapper.vm.widget);
+
+      expect(result).toBe('');
+    });
+
+    it('should return empty string for non-card widget types', () => {
+      wrapper.vm.currentDashboard = { name: 'human_service_dashboard.title' };
+      wrapper.vm.widget.type = 'graph';
+
+      const result = wrapper.vm.getHoverTooltipData(wrapper.vm.widget);
+
+      expect(result).toBe('');
+    });
+
+    it('should return tooltip for other human service dashboard card names', () => {
+      wrapper.vm.currentDashboard = { name: 'human_service_dashboard.title' };
+      const testCases = [
+        {
+          name: 'human_service_dashboard.response_time',
+          expected: 'Response Time Tooltip',
+        },
+        {
+          name: 'human_service_dashboard.interaction_time',
+          expected: 'Interaction Time Tooltip',
+        },
+        {
+          name: 'human_service_dashboard.waiting_time',
+          expected: 'Waiting Time Tooltip',
+        },
+        {
+          name: 'human_service_dashboard.awaiting_service',
+          expected: 'Awaiting Service Tooltip',
+        },
+        { name: 'closeds', expected: 'Closed Tooltip' },
+      ];
+
+      testCases.forEach(({ name, expected }) => {
+        wrapper.vm.widget.name = name;
+        const result = wrapper.vm.getHoverTooltipData(wrapper.vm.widget);
+        expect(result).toBe(expected);
+      });
+    });
+  });
 });

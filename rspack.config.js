@@ -6,7 +6,6 @@ const { resolve } = require('path');
 const path = require('path');
 const dotenv = require('dotenv');
 const pkg = require('./package.json');
-const NonceInjector = require('html-rspack-nonce-injector');
 
 dotenv.config();
 
@@ -28,7 +27,6 @@ module.exports = defineConfig({
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: `${process.env.PUBLIC_PATH_URL}`,
-    clean: true,
     filename: 'assets/js/[name]-[contenthash].js',
     chunkFilename: 'assets/js/[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext]',
@@ -96,7 +94,6 @@ module.exports = defineConfig({
         removeAttributeQuotes: false,
       },
     }),
-    new NonceInjector('insights'),
     new rspack.DefinePlugin({
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false,

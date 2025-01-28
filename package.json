@@ -28,7 +28,6 @@
     "dotenv": "^16.4.7",
     "emoji-mart": "^5.6.0",
     "firebase": "^10.13.1",
-    "html-rspack-nonce-injector": "^1.0.0",
     "html-rspack-plugin": "^6.0.2",
     "marked": "^14.1.2",
     "mitt": "^3.0.1",

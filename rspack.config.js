@@ -88,6 +88,7 @@ module.exports = defineConfig({
   plugins: [
     new HtmlRspackPlugin({
       template: './index.html',
+      inject: 'head',
       minify: {
         removeComments: false,
         collapseWhitespace: true,

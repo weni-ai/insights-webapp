@@ -95,6 +95,7 @@ module.exports = defineConfig({
         removeAttributeQuotes: false,
       },
     }),
+    new NonceInjector('insights'),
     new rspack.DefinePlugin({
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false,
@@ -124,7 +125,6 @@ module.exports = defineConfig({
         },
       },
     }),
-    new NonceInjector('nonce-insights'),
   ],
   optimization: {
     minimizer: [

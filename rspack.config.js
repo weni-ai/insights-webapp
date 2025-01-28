@@ -6,13 +6,13 @@ const { resolve } = require('path');
 const path = require('path');
 const dotenv = require('dotenv');
 const pkg = require('./package.json');
+const NonceInjector = require('html-rspack-nonce-injector');
 
 dotenv.config();
 
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 
-console.log('PUBLIC_PATH_URL =====>', process.env);
 module.exports = defineConfig({
   context: __dirname,
   devServer: {
@@ -124,6 +124,7 @@ module.exports = defineConfig({
         },
       },
     }),
+    new NonceInjector('nonce-insights'),
   ],
   optimization: {
     minimizer: [

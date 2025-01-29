@@ -14,19 +14,15 @@ const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 module.exports = defineConfig({
   context: __dirname,
   devServer: {
-    port: 3001,
+    port: 3003,
     historyApiFallback: true,
-    hot: false,
-    liveReload: true,
-    static: {
-      directory: path.join(__dirname, 'dist'),
-    },
+    hot: true,
+    liveReload: false,
     compress: true,
   },
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/',
-    clean: true,
     filename: 'assets/js/[name]-[contenthash].js',
     chunkFilename: 'assets/js/[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext]',
@@ -114,4 +110,4 @@ module.exports = defineConfig({
   experiments: {
     css: true,
   },
-})
+});

@@ -65,7 +65,7 @@ export default {
       return shownHeaders.map((header, index) => ({
         content: this.$t(header.name),
         isSortable: true,
-        size: index === 1 ? 1 : 0.4,
+        size: index === 1 ? 1 : 0.5,
       }));
     },
 

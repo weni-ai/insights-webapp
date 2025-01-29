@@ -36,6 +36,7 @@ export default {
 
   data() {
     return {
+      interval: null,
       isRequestingData: false,
     };
   },
@@ -45,6 +46,14 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
+
+    isHumanServiceDashboard() {
+      return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
+
+    hasDateFiltering() {
+      return 'created_on' in this.appliedFilters;
+    },
 
     isConfigured() {
       const { config } = this.widget;
@@ -275,6 +284,23 @@ export default {
       },
       immediate: true,
     },
+    hasDateFiltering(hasDateFiltering) {
+      clearInterval(this.interval);
+
+      if (!hasDateFiltering && this.isHumanServiceDashboard) {
+        this.initRequestDataInterval();
+      }
+    },
+  },
+
+  mounted() {
+    if (!this.hasDateFiltering && this.isHumanServiceDashboard) {
+      this.initRequestDataInterval();
+    }
+  },
+
+  unmounted() {
+    clearInterval(this.interval);
   },
 
   methods: {
@@ -286,9 +312,19 @@ export default {
       getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
     }),
 
-    async requestWidgetData({ offset, limit, next } = {}) {
+    initRequestDataInterval() {
+      const ONE_MINUTE = 1000 * 60;
+
+      if (this.isHumanServiceDashboard && !this.hasDateFiltering) {
+        this.interval = setInterval(() => {
+          this.requestWidgetData({ silence: true });
+        }, ONE_MINUTE);
+      }
+    },
+
+    async requestWidgetData({ offset, limit, next, silence } = {}) {
       try {
-        this.isRequestingData = true;
+        if (!silence) this.isRequestingData = true;
 
         if (this.$route.name === 'report') {
           await this.getWidgetReportData({ offset, limit, next });

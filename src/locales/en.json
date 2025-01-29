@@ -7,7 +7,15 @@
     "response_time": "Response time",
     "waiting_time": "Waiting time",
     "awaiting_service": "Waiting for service",
-    "interaction_time": "Interaction time"
+    "interaction_time": "Interaction time",
+    "tooltips": {
+      "in_progress": "Total number of chats currently being handled.",
+      "response_time": "Average time the contact waits to receive a reply to each message.",
+      "interaction_time": "Average duration of completed chats. ",
+      "waiting_time": "The average time contacts spend waiting for their chats to be initiated.",
+      "awaiting_service": "The number of contacts waiting for an agent to initiate the chat.",
+      "closeds": "Total number of chats that have been completed."
+    }
   },
   "template_messages_dashboard": {
     "title": "Template messages Meta",

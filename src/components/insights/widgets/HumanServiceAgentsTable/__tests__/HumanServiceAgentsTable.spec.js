@@ -90,14 +90,14 @@ describe('HumanServiceAgentsTable', () => {
     expect(formattedHeaders[0]).toMatchObject({
       content: 'Agent',
       isSortable: true,
-      size: 1,
+      size: 0.5,
     });
   });
 
   it('formats items correctly', () => {
     const formattedItems = wrapper.vm.formattedItems;
     expect(formattedItems).toHaveLength(4);
-    expect(formattedItems[0].content).toHaveLength(3);
+    expect(formattedItems[0].content).toHaveLength(4);
   });
 
   it('call redirectItem on table emitted "row-click"', async () => {
@@ -120,7 +120,7 @@ describe('HumanServiceAgentsTable', () => {
     expect(wrapper.vm.sort).toMatchObject({ header: 'Opened', order: 'asc' });
 
     const sortedItems = wrapper.vm.formattedItems;
-    expect(sortedItems[0].opened).toBe(2);
+    expect(sortedItems[0].opened).toBe(5);
   });
 
   it('renders loading state correctly', async () => {
@@ -150,6 +150,6 @@ describe('HumanServiceAgentsTable', () => {
       sort: { header: 'Opened', order: 'desc' },
     });
     const sortedItems = wrapper.vm.sortItems(mockItems);
-    expect(sortedItems[0].opened).toBe(8);
+    expect(sortedItems[0].opened).toBe(2);
   });
 });

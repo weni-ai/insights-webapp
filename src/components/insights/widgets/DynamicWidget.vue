@@ -87,6 +87,8 @@ export default {
           ? config?.created_on
           : config?.default;
 
+      const tableDynamicHeaders = tableDynamicFilterConfig?.fields || [];
+
       const mappingProps = {
         card: {
           metric: this.getWidgetFormattedData(this.widget),
@@ -98,10 +100,20 @@ export default {
           configurable: is_configurable,
           friendlyId: config?.friendly_id,
           tooltip: config?.tooltip ? this.$t(config.tooltip) : '',
+          hoverTooltip: this.getHoverTooltipData(this.widget),
+          id: this.widget.uuid,
         },
         table_dynamic_by_filter: {
           headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
-          headers: tableDynamicFilterConfig?.fields,
+          headers: [
+            {
+              name: 'status',
+              value: 'status',
+              display: true,
+              hidden_name: false,
+            },
+            ...tableDynamicHeaders,
+          ],
           items: data?.results,
         },
         table_group: {
@@ -122,7 +134,7 @@ export default {
         },
         graph_funnel: {
           widget: this.widget,
-          chartData: data,
+          chartData: data || [],
           configurable: is_configurable,
           configured: this.isConfigured,
         },
@@ -363,6 +375,36 @@ export default {
         return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
       }
       return (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US');
+    },
+
+    getHoverTooltipData(widget) {
+      const isHumanServiceDashboard =
+        this.currentDashboard.name === 'human_service_dashboard.title';
+
+      if (isHumanServiceDashboard && widget.type === 'card') {
+        const defaultTranslations = (key) => `human_service_dashboard.${key}`;
+
+        const getTooltipTranslations = {
+          in_progress: this.$t('human_service_dashboard.tooltips.in_progress'),
+          [defaultTranslations('response_time')]: this.$t(
+            'human_service_dashboard.tooltips.response_time',
+          ),
+          [defaultTranslations('interaction_time')]: this.$t(
+            'human_service_dashboard.tooltips.interaction_time',
+          ),
+          [defaultTranslations('waiting_time')]: this.$t(
+            'human_service_dashboard.tooltips.waiting_time',
+          ),
+          [defaultTranslations('awaiting_service')]: this.$t(
+            'human_service_dashboard.tooltips.awaiting_service',
+          ),
+          closeds: this.$t('human_service_dashboard.tooltips.closeds'),
+        };
+
+        return getTooltipTranslations[widget.name] || '';
+      }
+
+      return '';
     },
   },
 };

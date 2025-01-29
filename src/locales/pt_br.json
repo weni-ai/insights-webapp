@@ -7,7 +7,15 @@
     "response_time": "Tempo de resposta",
     "waiting_time": "Tempo de espera",
     "awaiting_service": "Aguardando atendimento",
-    "interaction_time": "Tempo de interação"
+    "interaction_time": "Tempo de interação",
+    "tooltips": {
+      "in_progress": "Total de chats sendo atendidos no momento.",
+      "response_time": "Média de tempo que o contato espera para receber uma resposta para cada mensagem.",
+      "interaction_time": "Tempo médio de duração total dos atendimentos. ",
+      "waiting_time": "Média de tempo que contatos aguardam até o início do atendimento.",
+      "awaiting_service": "Número de contatos aguardando início do atendimento.",
+      "closeds": "Total de chats que já foram finalizados."
+    }
   },
   "template_messages_dashboard": {
     "title": "Mensagens template Meta",

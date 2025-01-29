@@ -331,6 +331,9 @@ export default {
           op_field: widget.config.flow.result,
           limit: 5,
         },
+        report: {
+          type: 'internal',
+        },
         type: 'recurrence',
       };
     },

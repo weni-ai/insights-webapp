@@ -9,11 +9,12 @@
     <UnnnicTableNext
       :locale="i18n.global.locale"
       :headers="tableHeaders"
-      :pagination="page + 1"
+      :pagination="page"
       :paginationInterval="limit"
       :paginationTotal="dataCount"
       :isLoading="loading"
-      @update:pagination="page = $event - 1"
+      :rows="rows"
+      @update:pagination="page = $event"
     />
   </UnnnicModalDialog>
 </template>
@@ -46,30 +47,30 @@ const tableHeaders = [
 ];
 
 const limit = 5;
-const page = ref(0);
+const page = ref(1);
 const dataCount = ref(0);
 const loading = ref(false);
 const rows = ref([]);
 
 const formatRow = (data) => {
-  return { ...data, content: [data.contact.name, data.urn, data.start] };
+  return { ...data, content: [data.contact.name, data.urn, data.start || '-'] };
 };
 
 const getData = async () => {
   try {
     loading.value = true;
 
-    const { count, results } = await Widget.getFlowContactResults({
+    const { pagination, contacts } = await Widget.getFlowContactResults({
+      page: page.value,
       limit,
-      offset: page.value * limit,
-      flow: props.flow.uuid,
       result: props.flow.result,
+      flow: props.flow.uuid,
       label: props.flowResultLabel,
     });
 
-    dataCount.value = count;
+    dataCount.value = pagination.total_items;
 
-    rows.value = results.map((item) => formatRow(item));
+    rows.value = contacts.map((item) => formatRow(item));
   } catch (error) {
     Unnnic.unnnicCallAlert({
       props: {

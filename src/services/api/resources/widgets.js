@@ -17,17 +17,18 @@ export default {
     return response;
   },
 
-  async getFlowContactResults({ flow, result, label, limit, offset }) {
-     const { project } = Config.state;
-    const response = await http.get(`/contact_results/flow/${flow}/`, {
+  async getFlowContactResults({ flow, result, label, limit, page }) {
+    const { project } = Config.state;
+    const response = await http.get(`/dashboards/get_contacts_results/`, {
       params: {
-        label,
+        page_number: page,
+        page_size: limit,
+        project_uuid: project?.uuid,
         op_field: result,
-        limit,
-        offset,
-        project: project?.uuid
+        label,
+        flow_uuid: flow,
       },
     });
-    return response.data;
+    return response;
   },
 };

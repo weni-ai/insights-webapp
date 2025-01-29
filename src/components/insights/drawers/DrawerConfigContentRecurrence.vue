@@ -43,7 +43,11 @@ export default {
     SelectFlowResult,
   },
 
-  emits: ['update:is-valid-form', 'reset-widget'],
+  emits: [
+    'update:is-valid-form',
+    'reset-widget',
+    'update-disable-primary-button',
+  ],
 
   data() {
     return {
@@ -58,8 +62,7 @@ export default {
     }),
     isValidForm() {
       const { config } = this;
-      
-      return config?.flow.uuid && config?.flow.result && config?.operation && !!config?.name.trim();
+      return config?.flow.uuid && config?.flow.result && !!config?.name.trim();
     },
     isDisableResetWidget() {
       return false;

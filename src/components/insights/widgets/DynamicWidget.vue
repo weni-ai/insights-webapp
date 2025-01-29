@@ -87,6 +87,8 @@ export default {
           ? config?.created_on
           : config?.default;
 
+      const tableDynamicHeaders = tableDynamicFilterConfig?.fields || [];
+
       const mappingProps = {
         card: {
           metric: this.getWidgetFormattedData(this.widget),
@@ -103,7 +105,15 @@ export default {
         },
         table_dynamic_by_filter: {
           headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
-          headers: tableDynamicFilterConfig?.fields,
+          headers: [
+            {
+              name: 'status',
+              value: 'status',
+              display: true,
+              hidden_name: false,
+            },
+            ...tableDynamicHeaders,
+          ],
           items: data?.results,
         },
         table_group: {

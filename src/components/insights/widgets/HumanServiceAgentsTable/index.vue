@@ -26,8 +26,9 @@
 </template>
 
 <script>
-import AgentName from './AgentName.vue';
+import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
+
 export default {
   name: 'HumanServiceAgentsTable',
 
@@ -64,7 +65,7 @@ export default {
       return shownHeaders.map((header, index) => ({
         content: this.$t(header.name),
         isSortable: true,
-        size: index === 0 ? 1 : 0.5,
+        size: index === 1 ? 1 : 0.4,
       }));
     },
 
@@ -76,10 +77,8 @@ export default {
         view_mode_url: item.link.url,
         link: undefined,
         content: [
-          {
-            component: markRaw(AgentName),
-            props: { name: item.agent, status: item.status },
-          },
+          { component: markRaw(AgentStatus), props: { status: item.status } },
+          String(item.agent),
           String(item.opened),
           String(item.closed),
         ],
@@ -106,7 +105,12 @@ export default {
         (header) => header.content === this.sort.header,
       );
 
-      const itemKeyMapper = { 0: 'agent', 1: 'opened', 2: 'closed' };
+      const itemKeyMapper = {
+        0: 'status',
+        1: 'agent',
+        2: 'opened',
+        3: 'closed',
+      };
 
       const itemKey = itemKeyMapper[headerIndex];
 

@@ -90,14 +90,14 @@ describe('HumanServiceAgentsTable', () => {
     expect(formattedHeaders[0]).toMatchObject({
       content: 'Agent',
       isSortable: true,
-      size: 1,
+      size: 0.4,
     });
   });
 
   it('formats items correctly', () => {
     const formattedItems = wrapper.vm.formattedItems;
     expect(formattedItems).toHaveLength(4);
-    expect(formattedItems[0].content).toHaveLength(3);
+    expect(formattedItems[0].content).toHaveLength(4);
   });
 
   it('call redirectItem on table emitted "row-click"', async () => {

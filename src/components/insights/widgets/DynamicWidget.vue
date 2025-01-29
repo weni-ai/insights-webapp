@@ -123,7 +123,7 @@ export default {
             },
             ...tableDynamicHeaders,
           ],
-          items: data?.results,
+          items: data?.results || [],
         },
         table_group: {
           tabs: config,

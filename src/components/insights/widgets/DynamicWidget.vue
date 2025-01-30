@@ -32,7 +32,7 @@ export default {
     },
   },
 
-  emits: ['open-config'],
+  emits: ['open-config', 'clickData'],
 
   data() {
     return {
@@ -254,7 +254,14 @@ export default {
               this.isRequestingData = false;
             });
           },
-          clickData: (eventData) => {},
+          clickData: (eventData) =>
+            this.$emit('clickData', {
+              ...eventData,
+              flow: {
+                uuid: this.widget?.config?.flow?.uuid,
+                result: this.widget?.config?.op_field,
+              },
+            }),
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
@@ -273,7 +280,16 @@ export default {
             this.requestWidgetData({ offset, limit }),
         },
         graph_bar: {
-          clickData: (eventData) => {},
+          clickData: (eventData) =>
+            this.$emit('clickData', {
+              ...eventData,
+              flow: {
+                uuid:
+                  this.widget?.config?.flow?.uuid ||
+                  this.widget.config?.filter?.flow,
+                result: this.widget?.config?.op_field,
+              },
+            }),
         },
       };
 

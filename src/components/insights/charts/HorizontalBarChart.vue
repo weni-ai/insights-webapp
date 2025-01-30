@@ -102,7 +102,6 @@ export default {
             {
               axis: 'y',
               borderSkipped: false,
-              minBarLength: 56,
             },
           ],
         },
@@ -208,7 +207,6 @@ export default {
               4, // border radius
             );
           });
-
           ctx.fill();
         },
       };

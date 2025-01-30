@@ -31,6 +31,16 @@
     "queue": "Queue",
     "tags": "Tags"
   },
+  "contact_list_modal": {
+    "title": "{label} Contact list",
+    "header": {
+      "contact_name": "Contact name",
+      "start": "Start"
+    },
+    "message": {
+      "get_data_fail": "Failed to fetch data from contacts who responded to this flow."
+    }
+  },
   "filter": {
     "agent": {
       "label": "Agent",

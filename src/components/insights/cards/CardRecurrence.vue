@@ -54,6 +54,7 @@
             <section class="progress-bar-container">
               <UnnnicProgressBar
                 v-model="list.value"
+                class="progress-bar"
                 inline
               />
             </section>
@@ -285,31 +286,32 @@ export default {
 
   @media screen and (max-width: 1024px) {
     :deep(
-        .unnnic-progress-bar.primary .progress-bar-container .progress-container
-      ) {
+      .unnnic-progress-bar.primary .progress-bar-container .progress-container
+    ) {
       min-width: 100px;
     }
   }
 
   :deep(
-      .unnnic-progress-bar.primary
-        .progress-bar-container
-        .progress-container
-        .bar
-    ) {
+    .unnnic-progress-bar.primary
+      .progress-bar-container
+      .progress-container
+      .bar
+  ) {
     border-radius: 37.5rem;
     background-color: $unnnic-color-weni-600;
   }
 
   :deep(
-      .unnnic-progress-bar.primary .progress-bar-container .progress-container
-    ) {
+    .unnnic-progress-bar.primary .progress-bar-container .progress-container
+  ) {
     background-color: $unnnic-color-weni-100;
   }
 
   :deep(.unnnic-progress-bar.primary .progress-bar-container .percentage) {
     font-size: $unnnic-font-size-body-lg;
     line-height: $unnnic-font-size-body-lg * 2;
+    min-width: $unnnic-spacing-lg;
   }
 }
 </style>

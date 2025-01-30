@@ -1,7 +1,11 @@
 import { WidgetOutgoing } from '@/models';
+
 import Config from '@/store/modules/config';
+import Dashboard from '@/store/modules/dashboards';
 
 import http from '@/services/api/http';
+
+import { createRequestQuery } from '@/utils/request';
 
 export default {
   async updateWidget({ widget }) {
@@ -19,16 +23,21 @@ export default {
 
   async getFlowContactResults({ flow, result, label, limit, page }) {
     const { project } = Config.state;
-    const response = await http.get(`/dashboards/get_contacts_results/`, {
-      params: {
-        page_number: page,
-        page_size: limit,
-        project_uuid: project?.uuid,
-        op_field: result,
-        label,
-        flow_uuid: flow,
-      },
+    const { appliedFilters } = Dashboard.state;
+
+    const params = createRequestQuery(appliedFilters, {
+      page_number: page,
+      page_size: limit,
+      project_uuid: project?.uuid,
+      op_field: result,
+      label,
+      flow_uuid: flow,
     });
+
+    const response = await http.get(`/dashboards/get_contacts_results/`, {
+      params,
+    });
+
     return response;
   },
 };

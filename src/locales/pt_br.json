@@ -174,7 +174,7 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
-        }, 
+        },
         "recurrence": {
           "title": "Recorrência",
           "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"

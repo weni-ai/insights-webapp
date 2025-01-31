@@ -243,6 +243,7 @@ export default {
 
             const widthCompensationMap = {
               1: 30,
+              2: 38,
               3: 40,
               4: 50,
               5: 60,
@@ -253,7 +254,7 @@ export default {
 
             ctx.fillText(
               `| ${fullValues[index]}`,
-              startTextPosition + widthCompensationMap[valueCharCount] || 0,
+              startTextPosition + (widthCompensationMap[valueCharCount] || 0),
               dataPoint.y,
             );
           });

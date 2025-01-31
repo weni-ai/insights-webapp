@@ -31,6 +31,16 @@
     "queue": "Cola",
     "tags": "Etiquetas"
   },
+  "contact_list_modal": {
+    "title": "Lista de contactos de {label}",
+    "header": {
+      "contact_name": "Nombre del contacto",
+      "start": "Iniciar"
+    },
+    "message": {
+      "get_data_fail": "No se pudo obtener datos de los contactos que respondieron a este flujo."
+    }
+  },
   "filter": {
     "agent": {
       "label": "Agente",

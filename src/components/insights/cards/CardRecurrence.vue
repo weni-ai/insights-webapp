@@ -43,6 +43,7 @@
           v-show="!isLoading"
           :key="index"
           class="content__container-group"
+          @click.stop="emitClickData(list)"
         >
           <section class="content">
             <section class="content__container-item">
@@ -102,7 +103,7 @@ export default {
     },
   },
 
-  emits: ['open-config', 'request-data', 'seeMore'],
+  emits: ['open-config', 'request-data', 'seeMore', 'clickData'],
 
   computed: {
     ...mapState({
@@ -127,6 +128,9 @@ export default {
   },
 
   methods: {
+    emitClickData(data) {
+      this.$emit('clickData', { label: data.label, data: data.value });
+    },
     emitRequestData() {
       this.$emit('request-data');
     },
@@ -211,6 +215,10 @@ export default {
       gap: 1px;
       background-color: $unnnic-color-neutral-white;
       padding: $unnnic-spacing-sm;
+
+      &-group {
+        cursor: pointer;
+      }
 
       &-isLoading {
         display: flex;

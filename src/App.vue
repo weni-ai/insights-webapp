@@ -44,6 +44,7 @@ import DashboardOnboarding from './components/insights/onboardings/DashboardOnbo
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
+import moment from 'moment';
 
 export default {
   components: {
@@ -153,6 +154,7 @@ export default {
 
     handlerSetLanguage(language) {
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'
+      moment.locale(language);
     },
 
     handlerSetProject(projectUuid) {

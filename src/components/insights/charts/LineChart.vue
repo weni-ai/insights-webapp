@@ -129,6 +129,7 @@ export default {
           y: {
             beginAtZero: true,
             suggestedMax: 20,
+            suggestedMin: 0,
             display: true,
           },
           x: {

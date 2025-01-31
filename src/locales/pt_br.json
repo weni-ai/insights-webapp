@@ -35,7 +35,7 @@
     "title": "Lista de contatos de {label}",
     "header": {
       "contact_name": "Nome do contato",
-      "start": "Iniciar"
+      "start": "Início"
     },
     "message": {
       "get_data_fail": "Falha ao buscar dados dos contatos que responderam a este fluxo."

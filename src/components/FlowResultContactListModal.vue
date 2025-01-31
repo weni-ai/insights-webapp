@@ -26,6 +26,7 @@ import i18n from '@/utils/plugins/i18n';
 import Unnnic from '@weni/unnnic-system';
 
 import Widget from '@/services/api/resources/widgets';
+import moment from 'moment';
 
 const props = defineProps({
   flowResultLabel: {
@@ -53,7 +54,16 @@ const loading = ref(false);
 const rows = ref([]);
 
 const formatRow = (data) => {
-  return { ...data, content: [data.contact.name, data.urn, data.start || '-'] };
+  return {
+    ...data,
+    content: [
+      data.contact.name,
+      data.urn,
+      data.start
+        ? `${moment(data.start).format('L')}  ${moment(data.start).format('HH:mm:ss')}`
+        : '-',
+    ],
+  };
 };
 
 const getData = async () => {

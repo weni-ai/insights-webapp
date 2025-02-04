@@ -7,7 +7,15 @@
     "response_time": "Tiempo de respuesta",
     "waiting_time": "Tiempo de espera",
     "awaiting_service": "Esperando atención",
-    "interaction_time": "Tiempo de interacción"
+    "interaction_time": "Tiempo de interacción",
+    "tooltips": {
+      "in_progress": "Número total de chats que se están respondiendo actualmente.",
+      "response_time": "Tiempo medio que espera el contacto para recibir una respuesta a cada mensaje.",
+      "interaction_time": "Duración media total de las llamadas.",
+      "waiting_time": "Tiempo medio que los contactos esperan a que se inicie el servicio.",
+      "awaiting_service": "Número de contactos que esperan a que se inicie el servicio.",
+      "closeds": "Número total de chats que ya han finalizado."
+    }
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -22,6 +30,16 @@
     "sector": "Sector",
     "queue": "Cola",
     "tags": "Etiquetas"
+  },
+  "contact_list_modal": {
+    "title": "Lista de contactos de {label}",
+    "header": {
+      "contact_name": "Nombre del contacto",
+      "start": "Comienzo"
+    },
+    "message": {
+      "get_data_fail": "No se pudo obtener datos de los contactos que respondieron a este flujo."
+    }
   },
   "filter": {
     "agent": {

@@ -4,6 +4,14 @@
     <DynamicWidget
       v-else-if="report"
       :widget="report"
+      @click-data="openFlowResultContactList"
+    />
+
+    <FlowResultContactListModal
+      v-if="showFlowResultsContactListModal"
+      :flowResultLabel="flowResultsContactListParams?.label"
+      :flow="flowResultsContactListParams?.flow"
+      @close="closeFlowResultContactList()"
     />
   </section>
 </template>
@@ -13,6 +21,7 @@ import { mapActions, mapState, mapMutations } from 'vuex';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import IconLoading from '@/components/IconLoading.vue';
+import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 
 export default {
   name: 'ReportView',
@@ -20,6 +29,14 @@ export default {
   components: {
     DynamicWidget,
     IconLoading,
+    FlowResultContactListModal,
+  },
+
+  data() {
+    return {
+      showFlowResultsContactListModal: false,
+      flowResultsContactListParams: null,
+    };
   },
 
   computed: {
@@ -46,6 +63,16 @@ export default {
     ...mapActions({
       getWidgetReport: 'reports/getWidgetReport',
     }),
+
+    openFlowResultContactList(data) {
+      this.flowResultsContactListParams = data;
+      this.showFlowResultsContactListModal = true;
+    },
+
+    closeFlowResultContactList() {
+      this.flowResultsContactListParams = {};
+      this.showFlowResultsContactListModal = false;
+    },
   },
 };
 </script>

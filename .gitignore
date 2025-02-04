@@ -29,6 +29,8 @@ coverage
 
 *.tsbuildinfo
 
+.env
+
 # Locales files
 # **/locales/*.json
 # !**/locales/translations.json

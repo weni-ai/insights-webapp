@@ -81,7 +81,7 @@ export default {
     isLoading: Boolean,
   },
 
-  emits: ['seeMore'],
+  emits: ['seeMore', 'clickData'],
 
   setup() {
     const horizontalBarChart = ref(null);
@@ -102,7 +102,6 @@ export default {
             {
               axis: 'y',
               borderSkipped: false,
-              minBarLength: 56,
             },
           ],
         },
@@ -114,10 +113,16 @@ export default {
         indexAxis: 'y',
         barThickness: 32,
         maintainAspectRatio: false,
+        layout: {
+          padding: {
+            right: 140,
+          },
+        },
         scales: {
           x: {
             display: false,
-            grace: 15,
+            beginAtZero: true,
+            max: 100, // 100%
           },
           y: {
             display: true,
@@ -158,6 +163,23 @@ export default {
             },
           },
         },
+        onHover(event, elements) {
+          event.native.target.style.cursor = elements[0]
+            ? 'pointer'
+            : 'default';
+        },
+        onClick: (event, elements) => {
+          if (!elements.length) return;
+
+          const datasetIndex = elements[0].datasetIndex;
+          const dataIndex = elements[0].index;
+          this.$emit('clickData', {
+            label: this.chartData?.labels?.[dataIndex],
+            data: this.chartData?.datasets?.[datasetIndex]?.data?.[dataIndex],
+            datasetIndex,
+            dataIndex,
+          });
+        },
       };
     },
     horizontalBackgroundColorPlugin() {
@@ -180,12 +202,11 @@ export default {
             ctx.roundRect(
               left, // start position
               y.getPixelForValue(index) - barThickness / 2, // align background to center bar
-              width - 160, // background padding right
+              width,
               barThickness,
               4, // border radius
             );
           });
-
           ctx.fill();
         },
       };
@@ -210,7 +231,7 @@ export default {
             ctx.font = 'bold 16px Lato';
             ctx.fillStyle = '#4E5666';
 
-            const startTextPosition = width - 42;
+            const startTextPosition = width + 100;
 
             ctx.fillText(
               `${data[index]} ${plugins.datalabelsSuffix}`,
@@ -222,6 +243,7 @@ export default {
 
             const widthCompensationMap = {
               1: 30,
+              2: 38,
               3: 40,
               4: 50,
               5: 60,
@@ -232,7 +254,7 @@ export default {
 
             ctx.fillText(
               `| ${fullValues[index]}`,
-              startTextPosition + widthCompensationMap[valueCharCount] || 0,
+              startTextPosition + (widthCompensationMap[valueCharCount] || 0),
               dataPoint.y,
             );
           });

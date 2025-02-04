@@ -44,6 +44,7 @@ import DashboardOnboarding from './components/insights/onboardings/DashboardOnbo
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
+import moment from 'moment';
 
 export default {
   components: {
@@ -153,6 +154,7 @@ export default {
 
     handlerSetLanguage(language) {
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'
+      moment.locale(language);
     },
 
     handlerSetProject(projectUuid) {
@@ -220,5 +222,12 @@ export default {
   align-items: center;
   width: 100%;
   height: 100vh;
+}
+</style>
+
+<style>
+/* This is necessary to prevent the alert from being behind some screen items such as svgs */
+.alert-container {
+  z-index: 99999999;
 }
 </style>

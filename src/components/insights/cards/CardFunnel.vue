@@ -63,7 +63,7 @@ export default {
       required: true,
     },
     chartData: {
-      type: Object,
+      type: Array,
       required: true,
     },
   },

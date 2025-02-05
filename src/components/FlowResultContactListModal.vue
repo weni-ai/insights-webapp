@@ -4,6 +4,7 @@
     :title="$t('contact_list_modal.title', { label: props.flowResultLabel })"
     showCloseIcon
     size="lg"
+    data-testid="contact-list-modal"
     @update:model-value="$emit('close')"
   >
     <UnnnicTableNext
@@ -14,13 +15,14 @@
       :paginationTotal="dataCount"
       :isLoading="loading"
       :rows="rows"
+      data-testid="contact-list-table"
       @update:pagination="page = $event"
     />
   </UnnnicModalDialog>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 
 import Unnnic from '@weni/unnnic-system';
@@ -88,12 +90,13 @@ const getData = async () => {
         type: 'error',
       },
     });
-    console.log(error);
+    console.error(error);
     emit('close');
   } finally {
     loading.value = false;
   }
 };
 
-watch(page, () => getData(), { immediate: true });
+onMounted(getData);
+watch(page, getData);
 </script>

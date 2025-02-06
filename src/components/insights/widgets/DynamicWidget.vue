@@ -124,6 +124,7 @@ export default {
             ...tableDynamicHeaders,
           ],
           items: data?.results || [],
+          isReport: this.$route.query?.widget === 'human-service-agents-table',
         },
         table_group: {
           tabs: config,
@@ -235,6 +236,9 @@ export default {
         },
         empty_column: {
           openConfig: () => this.$emit('open-config'),
+        },
+        table_dynamic_by_filter: {
+          seeMore: () => this.redirectToTableAgents(),
         },
         vtex_order: {
           openConfig: () => this.$emit('open-config'),
@@ -353,10 +357,13 @@ export default {
     },
 
     async requestWidgetData({ offset, limit, next, silence } = {}) {
+      const isAgentTableInReport =
+        this.$route.query.widget === 'human-service-agents-table';
+
       try {
         if (!silence) this.isRequestingData = true;
 
-        if (this.$route.name === 'report') {
+        if (this.$route.name === 'report' && !isAgentTableInReport) {
           await this.getWidgetReportData({ offset, limit, next });
         } else if (this.isConfigured) {
           await this.getCurrentDashboardWidgetData(this.widget);
@@ -412,6 +419,22 @@ export default {
         default:
           break;
       }
+    },
+
+    redirectToTableAgents() {
+      const { uuid } = this.widget;
+
+      this.$router.push({
+        name: 'report',
+        params: {
+          dashboardUuid: this.currentDashboard.uuid,
+          widgetUuid: uuid,
+        },
+        query: {
+          widget: 'human-service-agents-table',
+          ...this.$route.query,
+        },
+      });
     },
 
     getWidgetFormattedData(widget) {

@@ -4,12 +4,17 @@
       v-if="headerTitle"
       class="widget-human-service-agents__header"
     >
-      <h1
-        class="header__title"
-        data-testid="widget-human-service-agent-title"
-      >
-        {{ $t(headerTitle) }}
-      </h1>
+      <section>
+        <h1
+          class="header__title"
+          data-testid="widget-human-service-agent-title"
+        >
+          {{ $t(headerTitle) }}
+        </h1>
+      </section>
+      <section>
+        <UnnnicButtonIcon size="small" icon="expand_content" />
+      </section>
     </header>
 
     <UnnnicTableNext
@@ -26,6 +31,7 @@
 </template>
 
 <script>
+import { unnnicButtonIcon } from '@weni/unnnic-system';
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
 
@@ -170,6 +176,7 @@ export default {
     display: flex;
     align-items: center;
     gap: $unnnic-spacing-stack-xs;
+    justify-content: space-between;
 
     .header__title {
       font-family: $unnnic-font-family-secondary;

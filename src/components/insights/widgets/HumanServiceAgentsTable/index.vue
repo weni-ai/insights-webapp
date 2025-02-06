@@ -13,7 +13,7 @@
         </h1>
       </section>
       <section>
-        <UnnnicButtonIcon size="small" icon="expand_content" />
+      <UnnnicButtonIcon size="small" icon="expand_content" />
       </section>
     </header>
 
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import { unnnicButtonIcon } from '@weni/unnnic-system';
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
 
@@ -157,6 +156,7 @@ export default {
 
 <style lang="scss" scoped>
 .widget-human-service-agents {
+  border: 1px solid $unnnic-color-neutral-soft;
   box-shadow: $unnnic-shadow-level-far;
 
   padding: $unnnic-spacing-sm;

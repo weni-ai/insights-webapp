@@ -250,6 +250,7 @@
     "select_origin_flow": "@:select @.lower:flow de origem"
   },
   "insights_header": {
+    "refresh": "Atualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "clear_filters": "Limpar filtros",

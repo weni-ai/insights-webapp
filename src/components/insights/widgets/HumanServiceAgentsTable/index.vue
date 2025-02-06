@@ -4,7 +4,7 @@
       v-if="headerTitle"
       class="widget-human-service-agents__header"
     >
-      <section>
+      <section v-if="!isReport">
         <h1
           class="header__title"
           data-testid="widget-human-service-agent-title"
@@ -12,9 +12,15 @@
           {{ $t(headerTitle) }}
         </h1>
       </section>
-      <section>
-      <UnnnicButtonIcon size="small" icon="expand_content" />
+      <section v-if="!isReport">
+        <UnnnicButtonIcon
+          size="small"
+          icon="expand_content"
+          @click.prevent.stop="$emit('seeMore')"
+        />
       </section>
+
+      <AgentsTableHeader v-if="isReport" />
     </header>
 
     <UnnnicTableNext
@@ -31,12 +37,13 @@
 </template>
 
 <script>
+import AgentsTableHeader from './AgentsTableHeader.vue';
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
 
 export default {
   name: 'HumanServiceAgentsTable',
-
+  components: { AgentsTableHeader },
   props: {
     isLoading: Boolean,
     headerTitle: {
@@ -51,7 +58,13 @@ export default {
       type: Array,
       required: true,
     },
+    isReport: {
+      type: Boolean,
+      default: false,
+    },
   },
+
+  emits: ['seeMore'],
 
   data() {
     return {

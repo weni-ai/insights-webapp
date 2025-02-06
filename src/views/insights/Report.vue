@@ -48,30 +48,39 @@ export default {
     }),
 
     isLoading() {
-      return this.isLoadingReport;
+      const isLoading = this.isAgentsTable ? false : this.isLoadingReport;
+      return isLoading;
     },
 
     customReport() {
+      if (this.isAgentsTable) {
+        return this.currentDashboardWidgets.find(
+          (widget) => widget.type === 'table_dynamic_by_filter',
+        );
+      }
       console.log('report', this.currentDashboardWidgets);
-      return this.report
-    }
-    
+      return this.report;
+    },
   },
 
   created() {
-    const isAgentsTable = this.$route.query && this.$route.query?.widget === 'human-service-agents-table'; 
+    const isAgentsTable =
+      this.$route.query &&
+      this.$route.query?.widget === 'human-service-agents-table';
+
     this.isAgentsTable = isAgentsTable;
 
-    if(isAgentsTable) return;
+    if (isAgentsTable) {
+      this.getCurrentDashboardWidgets();
+    }
 
     this.resetReport();
     this.resetCurrentDashboardWidgets();
-    
   },
 
   mounted() {
-    if(!this.isAgentsTable) return;
-    
+    if (this.isAgentsTable) return;
+
     this.getWidgetReport();
   },
 
@@ -82,6 +91,7 @@ export default {
     }),
     ...mapActions({
       getWidgetReport: 'reports/getWidgetReport',
+      getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
     }),
 
     openFlowResultContactList(data) {

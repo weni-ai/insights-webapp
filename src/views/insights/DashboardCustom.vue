@@ -53,7 +53,7 @@ import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 
 export default {
-  name: 'DashboardView',
+  name: 'DashboardCustom',
 
   components: {
     DynamicWidget,

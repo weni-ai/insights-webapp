@@ -32,11 +32,13 @@ export default {
     },
   },
 
-  emits: ['open-config'],
+  emits: ['open-config', 'clickData'],
 
   data() {
     return {
+      interval: null,
       isRequestingData: false,
+      hasError: false,
     };
   },
 
@@ -45,6 +47,14 @@ export default {
       currentDashboard: (state) => state.dashboards.currentDashboard,
       appliedFilters: (state) => state.dashboards.appliedFilters,
     }),
+
+    isHumanServiceDashboard() {
+      return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
+
+    hasDateFiltering() {
+      return 'created_on' in this.appliedFilters;
+    },
 
     isConfigured() {
       const { config } = this.widget;
@@ -87,6 +97,8 @@ export default {
           ? config?.created_on
           : config?.default;
 
+      const tableDynamicHeaders = tableDynamicFilterConfig?.fields || [];
+
       const mappingProps = {
         card: {
           metric: this.getWidgetFormattedData(this.widget),
@@ -98,11 +110,21 @@ export default {
           configurable: is_configurable,
           friendlyId: config?.friendly_id,
           tooltip: config?.tooltip ? this.$t(config.tooltip) : '',
+          hoverTooltip: this.getHoverTooltipData(this.widget),
+          id: this.widget.uuid,
         },
         table_dynamic_by_filter: {
           headerTitle: tableDynamicFilterConfig?.name_overwrite || name,
-          headers: tableDynamicFilterConfig?.fields,
-          items: data?.results,
+          headers: [
+            {
+              name: 'status',
+              value: 'status',
+              display: true,
+              hidden_name: false,
+            },
+            ...tableDynamicHeaders,
+          ],
+          items: data?.results || [],
         },
         table_group: {
           tabs: config,
@@ -122,9 +144,11 @@ export default {
         },
         graph_funnel: {
           widget: this.widget,
-          chartData: data,
+          chartData: data || [],
           configurable: is_configurable,
           configured: this.isConfigured,
+          hasError: this.hasError,
+          isLoading: this.isRequestingData,
         },
         empty_column: {
           widget: this.widget,
@@ -135,8 +159,8 @@ export default {
         },
         recurrence: {
           widget: this.widget,
-          data: this.widget?.data,
-          seeMore: !!report,
+          data: this.widget?.data || [],
+          seeMore: !!report && this.widget?.data,
         },
       };
 
@@ -233,22 +257,47 @@ export default {
               this.isRequestingData = false;
             });
           },
+          clickData: (eventData) =>
+            this.$emit('clickData', {
+              ...eventData,
+              flow: {
+                uuid: this.widget?.config?.flow?.uuid,
+                result: this.widget?.config?.op_field,
+              },
+            }),
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
           requestData: () => {
+            this.hasError = false;
             this.isRequestingData = true;
             this.getWidgetGraphFunnelData({
               uuid,
               widgetFunnelConfig: config,
-            }).finally(() => {
-              this.isRequestingData = false;
-            });
+            })
+              .catch(() => {
+                this.hasError = true;
+              })
+              .finally(() => {
+                this.isRequestingData = false;
+              });
           },
         },
         table_group: {
           requestData: ({ offset, limit }) =>
             this.requestWidgetData({ offset, limit }),
+        },
+        graph_bar: {
+          clickData: (eventData) =>
+            this.$emit('clickData', {
+              ...eventData,
+              flow: {
+                uuid:
+                  this.widget?.config?.flow?.uuid ||
+                  this.widget.config?.filter?.flow,
+                result: this.widget?.config?.op_field,
+              },
+            }),
         },
       };
 
@@ -273,6 +322,23 @@ export default {
       },
       immediate: true,
     },
+    hasDateFiltering(hasDateFiltering) {
+      clearInterval(this.interval);
+
+      if (!hasDateFiltering && this.isHumanServiceDashboard) {
+        this.initRequestDataInterval();
+      }
+    },
+  },
+
+  mounted() {
+    if (!this.hasDateFiltering && this.isHumanServiceDashboard) {
+      this.initRequestDataInterval();
+    }
+  },
+
+  unmounted() {
+    clearInterval(this.interval);
   },
 
   methods: {
@@ -284,9 +350,19 @@ export default {
       getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
     }),
 
-    async requestWidgetData({ offset, limit, next } = {}) {
+    initRequestDataInterval() {
+      const ONE_MINUTE = 1000 * 60;
+
+      if (this.isHumanServiceDashboard && !this.hasDateFiltering) {
+        this.interval = setInterval(() => {
+          this.requestWidgetData({ silence: true });
+        }, ONE_MINUTE);
+      }
+    },
+
+    async requestWidgetData({ offset, limit, next, silence } = {}) {
       try {
-        this.isRequestingData = true;
+        if (!silence) this.isRequestingData = true;
 
         if (this.$route.name === 'report') {
           await this.getWidgetReportData({ offset, limit, next });
@@ -363,6 +439,36 @@ export default {
         return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
       }
       return (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US');
+    },
+
+    getHoverTooltipData(widget) {
+      const isHumanServiceDashboard =
+        this.currentDashboard.name === 'human_service_dashboard.title';
+
+      if (isHumanServiceDashboard && widget.type === 'card') {
+        const defaultTranslations = (key) => `human_service_dashboard.${key}`;
+
+        const getTooltipTranslations = {
+          in_progress: this.$t('human_service_dashboard.tooltips.in_progress'),
+          [defaultTranslations('response_time')]: this.$t(
+            'human_service_dashboard.tooltips.response_time',
+          ),
+          [defaultTranslations('interaction_time')]: this.$t(
+            'human_service_dashboard.tooltips.interaction_time',
+          ),
+          [defaultTranslations('waiting_time')]: this.$t(
+            'human_service_dashboard.tooltips.waiting_time',
+          ),
+          [defaultTranslations('awaiting_service')]: this.$t(
+            'human_service_dashboard.tooltips.awaiting_service',
+          ),
+          closeds: this.$t('human_service_dashboard.tooltips.closeds'),
+        };
+
+        return getTooltipTranslations[widget.name] || '';
+      }
+
+      return '';
     },
   },
 };

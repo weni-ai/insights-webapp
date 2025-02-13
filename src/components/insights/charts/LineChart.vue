@@ -128,6 +128,7 @@ export default {
         scales: {
           y: {
             beginAtZero: true,
+            suggestedMax: 20,
             suggestedMin: 0,
             display: true,
           },

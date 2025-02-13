@@ -43,7 +43,11 @@ export default {
     SelectFlowResult,
   },
 
-  emits: ['update:is-valid-form', 'reset-widget'],
+  emits: [
+    'update:is-valid-form',
+    'reset-widget',
+    'update-disable-primary-button',
+  ],
 
   data() {
     return {
@@ -56,13 +60,10 @@ export default {
       widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
       currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
     }),
-
     isValidForm() {
-      //const { config } = this;
-      //return config?.flow.uuid && config?.flow.result && config?.operation;
-      return true;
+      const { config } = this;
+      return config?.flow.uuid && config?.flow.result && !!config?.name.trim();
     },
-
     isDisableResetWidget() {
       return false;
     },
@@ -81,8 +82,8 @@ export default {
       },
     },
 
-    'config.flow?.uuid'(_newFlow, oldFlow) {
-      if (typeof oldFlow === 'object') {
+    'config.flow.uuid'(newFlowUuid, oldFlowUuid) {
+      if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
         this.config.flow.result = '';
       }
     },
@@ -90,7 +91,7 @@ export default {
     isValidForm: {
       immediate: true,
       handler(newIsValidForm) {
-        this.$emit('update:is-valid-form', newIsValidForm);
+        this.$emit('update-disable-primary-button', !newIsValidForm);
       },
     },
   },

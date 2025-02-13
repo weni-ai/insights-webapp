@@ -31,6 +31,7 @@
         :widget="widget"
         :data-onboarding-id="getWidgetOnboardingId(widget)"
         @open-config="handlerWidgetOpenConfig(widget)"
+        @click-data="openFlowResultContactList"
       />
     </template>
 
@@ -38,6 +39,13 @@
       v-if="!!currentWidgetEditing"
       :modelValue="!!currentWidgetEditing"
       @close="updateCurrentWidgetEditing(null)"
+    />
+
+    <FlowResultContactListModal
+      v-if="showFlowResultsContactListModal"
+      :flowResultLabel="flowResultsContactListParams?.label"
+      :flow="flowResultsContactListParams?.flow"
+      @close="closeFlowResultContactList()"
     />
   </section>
 </template>
@@ -50,6 +58,7 @@ import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGalle
 import IconLoading from '@/components/IconLoading.vue';
 import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
 import TemplateMessageMeta from './TemplateMessageMeta.vue';
+import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 
 export default {
   name: 'DashboardView',
@@ -60,6 +69,7 @@ export default {
     IconLoading,
     WidgetOnboarding,
     TemplateMessageMeta,
+    FlowResultContactListModal,
   },
 
   data() {
@@ -70,6 +80,8 @@ export default {
         card: false,
         empty_widget: false,
       },
+      showFlowResultsContactListModal: false,
+      flowResultsContactListParams: null,
     };
   },
 
@@ -126,6 +138,16 @@ export default {
       setShowConfigWidgetsOnboarding:
         'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
     }),
+
+    openFlowResultContactList(data) {
+      this.flowResultsContactListParams = data;
+      this.showFlowResultsContactListModal = true;
+    },
+
+    closeFlowResultContactList() {
+      this.flowResultsContactListParams = {};
+      this.showFlowResultsContactListModal = false;
+    },
 
     handleWidgetFilledData() {
       const hasCard = this.currentDashboardWidgets.filter(

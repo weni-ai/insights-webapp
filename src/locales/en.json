@@ -7,7 +7,15 @@
     "response_time": "Response time",
     "waiting_time": "Waiting time",
     "awaiting_service": "Waiting for service",
-    "interaction_time": "Interaction time"
+    "interaction_time": "Interaction time",
+    "tooltips": {
+      "in_progress": "Total number of chats currently being handled.",
+      "response_time": "Average time the contact waits to receive a reply to each message.",
+      "interaction_time": "Average duration of completed chats. ",
+      "waiting_time": "The average time contacts spend waiting for their chats to be initiated.",
+      "awaiting_service": "The number of contacts waiting for an agent to initiate the chat.",
+      "closeds": "Total number of chats that have been completed."
+    }
   },
   "template_messages_dashboard": {
     "title": "Template messages Meta",
@@ -68,6 +76,16 @@
     "queue": "Queue",
     "tags": "Tags"
   },
+  "contact_list_modal": {
+    "title": "{label} Contact list",
+    "header": {
+      "contact_name": "Contact name",
+      "start": "Start"
+    },
+    "message": {
+      "get_data_fail": "Failed to fetch data from contacts who responded to this flow."
+    }
+  },
   "filter": {
     "agent": {
       "label": "Agent",
@@ -94,6 +112,7 @@
       "placeholder": "Select tag"
     }
   },
+  "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",
   "chats_per_agents": "Chats per agent",
@@ -163,7 +182,11 @@
       "title": "Funnel",
       "not_configured_description": "Select the @.lower:flows you want to map to assemble your project's funnel view!",
       "select_flows": "@:select @.lower:flows",
-      "flow_executions": "@:flow executions"
+      "flow_executions": "@:flow executions",
+      "error": {
+        "title": "Oops, there was a problem loading the data!",
+        "description": "Please try reloading again"
+      }
     },
     "empty_widget": {
       "title": "Setup required, customize your widget to get started",

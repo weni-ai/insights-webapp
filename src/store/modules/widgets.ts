@@ -1,5 +1,4 @@
 import dashboardsStore from './dashboards';
-import Router from '@/router';
 import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
@@ -15,12 +14,14 @@ const mutations = {
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
+  SET_CURRENT_EXPANSIVE_WIDGET_DATA: 'SET_CURRENT_EXPANSIVE_WIDGET_DATA',
 };
 
 export default {
   namespaced: true,
   state: {
     currentDashboardWidgets: [],
+    currentExpansiveWidget: {},
     isLoadingCurrentDashboardWidgets: false,
 
     currentWidgetEditing: null,
@@ -58,6 +59,14 @@ export default {
     [mutations.UPDATE_CURRENT_WIDGET_EDITING](state, widget) {
       if (isObjectsEquals(state.currentWidgetEditing, widget)) return;
       state.currentWidgetEditing = widget;
+    },
+    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, { uuid }) {
+      const widget = state.currentDashboardWidgets.find(
+        (widget) => widget.uuid === uuid,
+      );
+      if (widget) {
+        state.currentExpansiveWidget = widget;
+      }
     },
   },
   actions: {

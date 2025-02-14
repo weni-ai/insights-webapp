@@ -88,6 +88,8 @@ export default {
     }),
 
     isCustomDashboard() {
+      console.log('currentDashboard', this.currentDashboard);
+      console.log('currentWidget', this.currentDashboardWidgets);
       return this.currentDashboard.is_deletable;
     },
 

@@ -1,9 +1,9 @@
 <template>
-  <section :class="{ report: true, 'report--loading': isLoadingReport }">
-    <IconLoading v-if="isLoadingReport" />
+  <section :class="{ report: true, 'report--loading': isLoading }">
+    <IconLoading v-if="isLoading" />
     <DynamicWidget
-      v-else-if="report"
-      :widget="report"
+      v-else-if="customReport"
+      :widget="customReport"
       @click-data="openFlowResultContactList"
     />
 
@@ -36,6 +36,7 @@ export default {
     return {
       showFlowResultsContactListModal: false,
       flowResultsContactListParams: null,
+      isAgentsTable: false,
     };
   },
 
@@ -43,15 +44,43 @@ export default {
     ...mapState({
       report: (state) => state.reports.report,
       isLoadingReport: (state) => state.reports.isLoadingReport,
+      currentDashboardWidgets: (state) => state.widgets.currentDashboardWidgets,
     }),
+
+    isLoading() {
+      const isLoading = this.isAgentsTable ? false : this.isLoadingReport;
+      return isLoading;
+    },
+
+    customReport() {
+      if (this.isAgentsTable) {
+        return this.currentDashboardWidgets.find(
+          (widget) => widget.type === 'table_dynamic_by_filter',
+        );
+      }
+      console.log('report', this.currentDashboardWidgets);
+      return this.report;
+    },
   },
 
   created() {
+    const isAgentsTable =
+      this.$route.query &&
+      this.$route.query?.widget === 'human-service-agents-table';
+
+    this.isAgentsTable = isAgentsTable;
+
+    if (isAgentsTable) {
+      this.getCurrentDashboardWidgets();
+    }
+
     this.resetReport();
     this.resetCurrentDashboardWidgets();
   },
 
   mounted() {
+    if (this.isAgentsTable) return;
+
     this.getWidgetReport();
   },
 
@@ -62,6 +91,7 @@ export default {
     }),
     ...mapActions({
       getWidgetReport: 'reports/getWidgetReport',
+      getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
     }),
 
     openFlowResultContactList(data) {

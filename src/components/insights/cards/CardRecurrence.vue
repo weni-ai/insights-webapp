@@ -43,6 +43,8 @@
           v-show="!isLoading"
           :key="index"
           class="content__container-group"
+          data-testid="content-container-group"
+          @click.stop="emitClickData(list)"
         >
           <section class="content">
             <section class="content__container-item">
@@ -53,6 +55,7 @@
             <section class="progress-bar-container">
               <UnnnicProgressBar
                 v-model="list.value"
+                class="progress-bar"
                 inline
               />
             </section>
@@ -68,6 +71,7 @@
       v-if="seeMore && !isLoading"
       class="card-recurrence__link"
       href=""
+      data-testid="see-more-link"
       @click.prevent.stop="$emit('seeMore')"
     >
       {{ $t('widgets.recurrence.see_more') }}
@@ -101,7 +105,7 @@ export default {
     },
   },
 
-  emits: ['open-config', 'request-data', 'seeMore'],
+  emits: ['open-config', 'request-data', 'seeMore', 'clickData'],
 
   computed: {
     ...mapState({
@@ -126,6 +130,9 @@ export default {
   },
 
   methods: {
+    emitClickData(data) {
+      this.$emit('clickData', { label: data.label, data: data.value });
+    },
     emitRequestData() {
       this.$emit('request-data');
     },
@@ -211,6 +218,10 @@ export default {
       background-color: $unnnic-color-neutral-white;
       padding: $unnnic-spacing-sm;
 
+      &-group {
+        cursor: pointer;
+      }
+
       &-isLoading {
         display: flex;
         justify-content: center;
@@ -277,31 +288,32 @@ export default {
 
   @media screen and (max-width: 1024px) {
     :deep(
-        .unnnic-progress-bar.primary .progress-bar-container .progress-container
-      ) {
+      .unnnic-progress-bar.primary .progress-bar-container .progress-container
+    ) {
       min-width: 100px;
     }
   }
 
   :deep(
-      .unnnic-progress-bar.primary
-        .progress-bar-container
-        .progress-container
-        .bar
-    ) {
+    .unnnic-progress-bar.primary
+      .progress-bar-container
+      .progress-container
+      .bar
+  ) {
     border-radius: 37.5rem;
     background-color: $unnnic-color-weni-600;
   }
 
   :deep(
-      .unnnic-progress-bar.primary .progress-bar-container .progress-container
-    ) {
+    .unnnic-progress-bar.primary .progress-bar-container .progress-container
+  ) {
     background-color: $unnnic-color-weni-100;
   }
 
   :deep(.unnnic-progress-bar.primary .progress-bar-container .percentage) {
     font-size: $unnnic-font-size-body-lg;
     line-height: $unnnic-font-size-body-lg * 2;
+    min-width: $unnnic-spacing-lg;
   }
 }
 </style>

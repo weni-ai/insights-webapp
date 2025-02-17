@@ -77,7 +77,11 @@ export default {
         view_mode_url: item.link.url,
         link: undefined,
         content: [
-          { component: markRaw(AgentStatus), props: { status: item.status } },
+          {
+            component: markRaw(AgentStatus),
+            props: { status: item.status },
+            events: {},
+          },
           String(item.agent),
           String(item.opened),
           String(item.closed),

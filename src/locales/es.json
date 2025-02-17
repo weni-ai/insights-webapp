@@ -75,6 +75,16 @@
     "queue": "Cola",
     "tags": "Etiquetas"
   },
+  "contact_list_modal": {
+    "title": "Lista de contactos de {label}",
+    "header": {
+      "contact_name": "Nombre del contacto",
+      "start": "Comienzo"
+    },
+    "message": {
+      "get_data_fail": "No se pudo obtener datos de los contactos que respondieron a este flujo."
+    }
+  },
   "filter": {
     "agent": {
       "label": "Agente",
@@ -101,6 +111,7 @@
       "placeholder": "Seleccionar tag"
     }
   },
+  "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",
   "chats_per_agents": "Chats por agente",
@@ -170,7 +181,11 @@
       "title": "Embudo",
       "not_configured_description": "¡Seleccione los @.lower:flows que desea asignar para ensamblar la vista de embudo de su proyecto!",
       "select_flows": "@:select @.lower:flows",
-      "flow_executions": "Ejecuciones de @.lower:flow"
+      "flow_executions": "Ejecuciones de @.lower:flow",
+      "error": {
+        "title": "¡Ups, hubo un problema al cargar los datos!",
+        "description": "Por favor intente recargar nuevamente"
+      }
     },
     "empty_widget": {
       "title": "Configuración necesaria, personaliza tu widget para empezar",

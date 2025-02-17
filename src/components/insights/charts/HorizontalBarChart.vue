@@ -81,7 +81,7 @@ export default {
     isLoading: Boolean,
   },
 
-  emits: ['seeMore'],
+  emits: ['seeMore', 'clickData'],
 
   setup() {
     const horizontalBarChart = ref(null);
@@ -102,7 +102,6 @@ export default {
             {
               axis: 'y',
               borderSkipped: false,
-              minBarLength: 56,
             },
           ],
         },
@@ -164,6 +163,23 @@ export default {
             },
           },
         },
+        onHover(event, elements) {
+          event.native.target.style.cursor = elements[0]
+            ? 'pointer'
+            : 'default';
+        },
+        onClick: (event, elements) => {
+          if (!elements.length) return;
+
+          const datasetIndex = elements[0].datasetIndex;
+          const dataIndex = elements[0].index;
+          this.$emit('clickData', {
+            label: this.chartData?.labels?.[dataIndex],
+            data: this.chartData?.datasets?.[datasetIndex]?.data?.[dataIndex],
+            datasetIndex,
+            dataIndex,
+          });
+        },
       };
     },
     horizontalBackgroundColorPlugin() {
@@ -191,7 +207,6 @@ export default {
               4, // border radius
             );
           });
-
           ctx.fill();
         },
       };
@@ -228,6 +243,7 @@ export default {
 
             const widthCompensationMap = {
               1: 30,
+              2: 38,
               3: 40,
               4: 50,
               5: 60,
@@ -238,7 +254,7 @@ export default {
 
             ctx.fillText(
               `| ${fullValues[index]}`,
-              startTextPosition + widthCompensationMap[valueCharCount] || 0,
+              startTextPosition + (widthCompensationMap[valueCharCount] || 0),
               dataPoint.y,
             );
           });

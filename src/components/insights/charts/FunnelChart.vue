@@ -11,6 +11,27 @@
       v-if="isLoading"
       class="funnel-chart__loading"
     />
+    <section
+      v-else-if="!isLoading && hasError"
+      class="funnel-chart__error"
+    >
+      <img src="@/assets/images/icons/empty_cloud.svg" />
+
+      <p class="funnel-chart__error-title">
+        {{ $t('widgets.graph_funnel.error.title') }}
+      </p>
+
+      <p class="funnel-chart__error-description">
+        {{ $t('widgets.graph_funnel.error.description') }}
+      </p>
+
+      <UnnnicButton
+        :text="$t('reload')"
+        type="primary"
+        size="small"
+        @click="$emit('reload')"
+      />
+    </section>
     <UnnnicChartFunnel
       v-else
       :data="formattedChartData"
@@ -29,11 +50,15 @@ export default {
 
   props: {
     isLoading: Boolean,
+    hasError: Boolean,
     chartData: {
       type: Array,
       required: true,
     },
   },
+
+  emits: ['reload'],
+
   computed: {
     formattedChartData() {
       const arrayColors = [
@@ -75,6 +100,23 @@ export default {
 
   &__loading {
     margin: auto;
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: $unnnic-color-neutral-cloudy;
+    font-size: $unnnic-font-size-body-lg;
+    text-align: center;
+    line-height: $unnnic-line-height-small * 6;
+
+    &-description {
+      font-weight: $unnnic-font-weight-bold;
+      padding-bottom: $unnnic-spacing-sm;
+    }
   }
 
   :deep(.unnnic-chart-funnel-base-item) {

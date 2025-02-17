@@ -32,12 +32,13 @@ export default {
     },
   },
 
-  emits: ['open-config'],
+  emits: ['open-config', 'clickData'],
 
   data() {
     return {
       interval: null,
       isRequestingData: false,
+      hasError: false,
     };
   },
 
@@ -123,7 +124,7 @@ export default {
             },
             ...tableDynamicHeaders,
           ],
-          items: data?.results,
+          items: data?.results || [],
         },
         table_group: {
           tabs: config,
@@ -146,6 +147,8 @@ export default {
           chartData: data || [],
           configurable: is_configurable,
           configured: this.isConfigured,
+          hasError: this.hasError,
+          isLoading: this.isRequestingData,
         },
         empty_column: {
           widget: this.widget,
@@ -157,7 +160,7 @@ export default {
         recurrence: {
           widget: this.widget,
           data: this.widget?.data || [],
-          seeMore: !!report,
+          seeMore: !!report && this.widget?.data,
         },
       };
 
@@ -254,22 +257,47 @@ export default {
               this.isRequestingData = false;
             });
           },
+          clickData: (eventData) =>
+            this.$emit('clickData', {
+              ...eventData,
+              flow: {
+                uuid: this.widget?.config?.flow?.uuid,
+                result: this.widget?.config?.op_field,
+              },
+            }),
         },
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
           requestData: () => {
+            this.hasError = false;
             this.isRequestingData = true;
             this.getWidgetGraphFunnelData({
               uuid,
               widgetFunnelConfig: config,
-            }).finally(() => {
-              this.isRequestingData = false;
-            });
+            })
+              .catch(() => {
+                this.hasError = true;
+              })
+              .finally(() => {
+                this.isRequestingData = false;
+              });
           },
         },
         table_group: {
           requestData: ({ offset, limit }) =>
             this.requestWidgetData({ offset, limit }),
+        },
+        graph_bar: {
+          clickData: (eventData) =>
+            this.$emit('clickData', {
+              ...eventData,
+              flow: {
+                uuid:
+                  this.widget?.config?.flow?.uuid ||
+                  this.widget.config?.filter?.flow,
+                result: this.widget?.config?.op_field,
+              },
+            }),
         },
       };
 

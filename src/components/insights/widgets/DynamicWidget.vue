@@ -427,7 +427,7 @@ export default {
 
       if (
         config?.operation === 'recurrence' ||
-        config.data_suffix === '%' ||
+        config?.data_suffix === '%' ||
         config?.operation === 'percentage'
       ) {
         return (

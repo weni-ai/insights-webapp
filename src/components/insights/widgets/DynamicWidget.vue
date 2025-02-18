@@ -428,7 +428,7 @@ export default {
       if (
         config?.operation === 'recurrence' ||
         config.data_suffix === '%' ||
-        config.operation === 'percentage'
+        config?.operation === 'percentage'
       ) {
         return (
           (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', {

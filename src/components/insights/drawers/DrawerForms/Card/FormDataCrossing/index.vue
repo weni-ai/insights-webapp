@@ -11,7 +11,7 @@
   />
 
   <RadioList
-    v-model:selected-radio="config.operation"
+    v-model:selectedRadio="config.operation"
     :label="$t('drawers.config_card.operation')"
     :radios="operations"
   />
@@ -84,7 +84,7 @@ export default {
           value: 'currency',
           selected: this.config?.currency,
           label: this.$t('drawers.config_card.checkbox.currency'),
-          disabled: this.config.operation === 'percentage',
+          disabled: this.config?.operation === 'percentage',
         },
       ];
     },

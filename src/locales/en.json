@@ -67,6 +67,7 @@
       "placeholder": "Select tag"
     }
   },
+  "filter-by": "Filter by:",
   "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -255,6 +256,7 @@
     "select_origin_flow": "@:select origin @.lower:flow"
   },
   "insights_header": {
+    "refresh": "Refresh",
     "filters": "Filters",
     "filtrate": "Filtrate",
     "clear_filters": "Clear filters",

@@ -67,6 +67,7 @@
       "placeholder": "Seleccionar tag"
     }
   },
+  "filter-by": "Filtrar por:",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",
@@ -255,6 +256,7 @@
     "select_origin_flow": "@:select @.lower:flow de origen"
   },
   "insights_header": {
+    "refresh": "Actualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "clear_filters": "Limpiar filtros",

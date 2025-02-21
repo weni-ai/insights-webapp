@@ -68,6 +68,7 @@
     }
   },
   "filter-by": "Filtrar por:",
+  "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
@@ -133,7 +134,11 @@
       "title": "Funil",
       "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
       "select_flows": "@:select @.lower:flows",
-      "flow_executions": "Execuções do @.lower:flow"
+      "flow_executions": "Execuções do @.lower:flow",
+      "error": {
+        "title": "Ops, ocorreu um problema ao carregar os dados!",
+        "description": "Por favor, tente recarregar novamente"
+      }
     },
     "empty_widget": {
       "title": "Configuração necessária, personalize seu widget para começar",

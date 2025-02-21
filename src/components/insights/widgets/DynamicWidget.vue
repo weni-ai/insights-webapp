@@ -38,6 +38,7 @@ export default {
     return {
       interval: null,
       isRequestingData: false,
+      hasError: false,
     };
   },
 
@@ -146,6 +147,8 @@ export default {
           chartData: data || [],
           configurable: is_configurable,
           configured: this.isConfigured,
+          hasError: this.hasError,
+          isLoading: this.isRequestingData,
         },
         empty_column: {
           widget: this.widget,
@@ -266,13 +269,18 @@ export default {
         graph_funnel: {
           openConfig: () => this.$emit('open-config'),
           requestData: () => {
+            this.hasError = false;
             this.isRequestingData = true;
             this.getWidgetGraphFunnelData({
               uuid,
               widgetFunnelConfig: config,
-            }).finally(() => {
-              this.isRequestingData = false;
-            });
+            })
+              .catch(() => {
+                this.hasError = true;
+              })
+              .finally(() => {
+                this.isRequestingData = false;
+              });
           },
         },
         table_group: {
@@ -417,7 +425,11 @@ export default {
     getWidgetFormattedData(widget) {
       const { config, data } = widget;
 
-      if (config?.operation === 'recurrence') {
+      if (
+        config?.operation === 'recurrence' ||
+        config?.data_suffix === '%' ||
+        config?.operation === 'percentage'
+      ) {
         return (
           (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', {
             minimumFractionDigits: 2,

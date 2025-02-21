@@ -71,11 +71,18 @@ export default {
     },
     deleteDashboard() {
       this.loadingRequest = true;
+
       Dashboards.deleteDashboard(this.dashboard.uuid)
         .then(() => {
+          const hasDeletedDefaultDashboard = this.dashboard.is_default;
+
           this.setDashboards(
             this.dashboards.filter((item) => item.uuid !== this.dashboard.uuid),
           );
+
+          if (hasDeletedDefaultDashboard) {
+            this.dashboardDefault.is_default = true;
+          }
 
           unnnic.unnnicCallAlert({
             props: {

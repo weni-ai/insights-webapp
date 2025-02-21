@@ -38,6 +38,8 @@
         v-else
         :chartData="chartData"
         :isLoading="isLoading"
+        :hasError="hasError"
+        @reload="$emit('request-data')"
       />
     </section>
   </CardBase>
@@ -56,6 +58,7 @@ export default {
 
   props: {
     isLoading: Boolean,
+    hasError: Boolean,
     configured: Boolean,
     configurable: Boolean,
     widget: {

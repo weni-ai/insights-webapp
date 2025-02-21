@@ -43,6 +43,7 @@
           v-show="!isLoading"
           :key="index"
           class="content__container-group"
+          data-testid="content-container-group"
           @click.stop="emitClickData(list)"
         >
           <section class="content">
@@ -70,6 +71,7 @@
       v-if="seeMore && !isLoading"
       class="card-recurrence__link"
       href=""
+      data-testid="see-more-link"
       @click.prevent.stop="$emit('seeMore')"
     >
       {{ $t('widgets.recurrence.see_more') }}

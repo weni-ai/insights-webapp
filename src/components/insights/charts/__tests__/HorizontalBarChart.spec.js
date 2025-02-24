@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, vi } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 
 import HorizontalBarChart from '../HorizontalBarChart.vue';
@@ -25,6 +25,17 @@ const createWraper = (props = {}) => {
 
 describe('HorizontalBarChart', () => {
   let wrapper;
+  const mockCtx = {
+    beginPath: vi.fn(),
+    fillStyle: '',
+    roundRect: vi.fn(),
+    fill: vi.fn(),
+    save: vi.fn(),
+    textBaseline: '',
+    font: '',
+    fillText: vi.fn(),
+    restore: vi.fn(),
+  };
   beforeEach(async () => {
     wrapper = createWraper();
     await flushPromises();
@@ -78,22 +89,130 @@ describe('HorizontalBarChart', () => {
     expect(callback(null, 1)).toBe('This is a long ...');
   });
 
-  it('should format datalabels with the suffix', async () => {
-    await wrapper.setProps({ datalabelsSuffix: '%' });
-
-    const { chartOptions } = wrapper.vm;
-
-    const formatter = chartOptions.plugins.datalabels.formatter;
-
-    expect(formatter(10)).toBe('10%');
-    expect(formatter(20)).toBe('20%');
-  });
-
   it('should return false from tooltip label callback', async () => {
     const { chartOptions } = wrapper.vm;
 
     const tooltipCallback = chartOptions.plugins.tooltip.callbacks.label;
 
     expect(tooltipCallback()).toBe(false);
+  });
+
+  it('should change cursor to pointer when hovering over a bar', async () => {
+    await wrapper.vm.$nextTick();
+
+    const canvas = wrapper.find('[data-testid="chart-bar"]');
+
+    wrapper.vm.chartOptions.onHover({ native: { target: canvas.element } }, []);
+
+    expect(canvas.element.style.cursor).toBe('default');
+
+    wrapper.vm.chartOptions.onHover({ native: { target: canvas.element } }, [
+      { datasetIndex: 0, index: 0 },
+    ]);
+    expect(canvas.element.style.cursor).toBe('pointer');
+  });
+
+  it('should emit clickData when clicking on a bar', async () => {
+    await wrapper.vm.$nextTick();
+
+    const canvas = wrapper.find('canvas');
+
+    wrapper.vm.chartOptions.onClick({ native: { target: canvas.element } }, []);
+    expect(wrapper.emitted('clickData')).toBeFalsy();
+
+    wrapper.vm.chartOptions.onClick({ native: { target: canvas.element } }, [
+      { datasetIndex: 0, index: 0 },
+    ]);
+
+    expect(wrapper.emitted('clickData')).toBeTruthy();
+    expect(wrapper.emitted('clickData')[0][0]).toEqual({
+      label: 'January',
+      data: 10,
+      datasetIndex: 0,
+      dataIndex: 0,
+    });
+  });
+
+  it('should draw labels correctly using doubleDataLabel plugin', async () => {
+    const chartData = {
+      labels: ['Item 1', 'Item 2'],
+      datasets: [
+        {
+          data: [75, 25],
+          fullValues: [75, 25],
+        },
+      ],
+    };
+
+    const wrapper = mount(HorizontalBarChart, {
+      props: { chartData, datalabelsSuffix: '%' },
+    });
+
+    const mockChart = {
+      ctx: mockCtx,
+      data: { datasets: chartData.datasets },
+      chartArea: { width: 300 },
+      getDatasetMeta: () => ({
+        data: [{ y: 50 }, { y: 100 }],
+      }),
+    };
+
+    wrapper.vm.doubleDataLabel.afterDatasetsDraw(
+      mockChart,
+      {},
+      { datalabelsSuffix: '%' },
+    );
+
+    expect(mockCtx.fillText).toHaveBeenCalledTimes(4);
+
+    expect(mockCtx.fillText).toHaveBeenCalledWith('75 %', 400, 50);
+    expect(mockCtx.fillText).toHaveBeenCalledWith('| 75', 438, 50);
+
+    expect(mockCtx.fillText).toHaveBeenCalledWith('25 %', 400, 100);
+    expect(mockCtx.fillText).toHaveBeenCalledWith('| 25', 438, 100);
+  });
+
+  it('should draw background rectangles correctly using horizontalBackgroundColorPlugin', async () => {
+    const chartData = {
+      labels: ['Item 1', 'Item 2'],
+      datasets: [
+        {
+          data: [75, 50],
+        },
+      ],
+    };
+
+    const wrapper = mount(HorizontalBarChart, {
+      props: { chartData },
+    });
+
+    const mockChart = {
+      ctx: mockCtx,
+      data: { datasets: chartData.datasets },
+      chartArea: { left: 50, width: 300 },
+      scales: {
+        y: {
+          getPixelForValue: (index) => 50 + index * 50, // bar Y position
+        },
+      },
+      getDatasetMeta: () => ({
+        data: [{ height: 32 }, { height: 32 }], // bar height
+      }),
+    };
+
+    wrapper.vm.horizontalBackgroundColorPlugin.beforeDatasetsDraw(
+      mockChart,
+      {},
+      { backgroundColor: 'red' },
+    );
+
+    expect(mockCtx.fillStyle).toBe('red');
+    expect(mockCtx.beginPath).toHaveBeenCalled();
+    expect(mockCtx.fill).toHaveBeenCalled();
+
+    expect(mockCtx.roundRect).toHaveBeenCalledTimes(2);
+
+    expect(mockCtx.roundRect).toHaveBeenCalledWith(50, 50 - 16, 300, 32, 4);
+    expect(mockCtx.roundRect).toHaveBeenCalledWith(50, 100 - 16, 300, 32, 4);
   });
 });

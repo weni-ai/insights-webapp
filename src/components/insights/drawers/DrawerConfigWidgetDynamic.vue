@@ -57,6 +57,8 @@ import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue'
 import SkeletonConfigContentFunnel from './loadings/SkeletonConfigContentFunnel.vue';
 import SkeletonConfigContentVtex from './loadings/SkeletonConfigContentVtex.vue';
 import DrawerConfigContentVtex from './DrawerConfigContentVtex.vue';
+import SkeletonConfigContentRecurrence from './loadings/SkeletonConfigContentRecurrence.vue';
+import DrawerConfigContentRecurrence from './DrawerConfigContentRecurrence.vue';
 
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
 
@@ -148,6 +150,18 @@ export default {
             title: $t(`drawers.config_gallery.options.vtex.title`),
             description: $t(`drawers.config_gallery.options.vtex.description`),
           },
+          recurrence: {
+            title: $t(`drawers.config_gallery.options.recurrence.title`),
+            description: $t(
+              `drawers.config_gallery.options.recurrence.description`,
+            ),
+          },
+        },
+        recurrence: {
+          title: $t(`drawers.config_gallery.options.recurrence.title`),
+          description: $t(
+            `drawers.config_gallery.options.recurrence.description`,
+          ),
         },
         vtex_order: {
           vtex: {
@@ -160,7 +174,9 @@ export default {
       return configMap[this.widget?.type][this.configType || 'default'] || {};
     },
     content() {
-      const currentType = ['vtex', 'funnel'].includes(this.configType)
+      const currentType = ['vtex', 'funnel', 'recurrence'].includes(
+        this.configType,
+      )
         ? this.configType
         : this.widget?.type;
 
@@ -180,6 +196,10 @@ export default {
         vtex: {
           loading: SkeletonConfigContentVtex,
           component: DrawerConfigContentVtex,
+        },
+        recurrence: {
+          loading: SkeletonConfigContentRecurrence,
+          component: DrawerConfigContentRecurrence,
         },
       };
 
@@ -229,9 +249,14 @@ export default {
           newWidget = this.createCardWidget;
           break;
         case 'empty_column':
+          if (this.configType === 'recurrence')
+            newWidget = this.createRecurrenceWidget;
+          if (this.configType === 'vtex') newWidget = this.createVtexWidget;
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
-          else newWidget = this.createVtexWidget;
+          break;
+        case 'recurrence':
+          newWidget = this.createRecurrenceWidget;
           break;
         case 'vtex_order':
           newWidget = this.createVtexWidget;
@@ -288,6 +313,30 @@ export default {
         config,
       };
     },
+
+    createRecurrenceWidget() {
+      const { widget } = this;
+      const selectedFlowLabel = this.projectFlows.find(
+        (flow) => flow.value === widget.config?.flow?.uuid,
+      )?.label;
+
+      return {
+        name: widget.config?.name,
+        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
+        config: {
+          filter: { flow: widget.config.flow.uuid },
+          ...widget.config,
+          operation: 'recurrence',
+          type: 'flow_result',
+          op_field: widget.config.flow.result,
+          limit: 5,
+        },
+        report: {
+          type: 'internal',
+        },
+        type: 'recurrence',
+      };
+    },
   },
 
   watch: {
@@ -303,6 +352,7 @@ export default {
       updateWidget: 'widgets/updateWidget',
       getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
+      getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       callTourNextStep: 'onboarding/callTourNextStep',
       callTourPreviousStep: 'onboarding/callTourPreviousStep',
@@ -332,6 +382,9 @@ export default {
         const isFunnel =
           this.widget.type === 'graph_funnel' || this.configType === 'funnel';
 
+        const isRecurrence =
+          this.widget.type === 'recurrence' || this.configType === 'recurrence';
+
         if (isFunnel) {
           await this.getWidgetGraphFunnelData({
             uuid: this.widget.uuid,
@@ -341,6 +394,10 @@ export default {
           await this.getWidgetVtexOrderData({
             uuid: this.widget.uuid,
             utm_source: this.treatedWidget.config.filter.utm,
+          });
+        } else if (isRecurrence) {
+          await this.getWidgetRecurrenceData({
+            uuid: this.widget.uuid,
           });
         } else {
           await this.getCurrentDashboardWidgetData(this.treatedWidget);

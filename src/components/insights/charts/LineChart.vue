@@ -68,6 +68,7 @@ export default {
     },
     isLoading: Boolean,
   },
+
   emits: ['seeMore'],
 
   setup() {
@@ -127,6 +128,7 @@ export default {
         scales: {
           y: {
             beginAtZero: true,
+            suggestedMax: 20,
             suggestedMin: 0,
             display: true,
           },
@@ -158,6 +160,9 @@ export default {
                 return `${i18n.global.t('charts.attendances')}: ${originalValue}`;
               },
             },
+          },
+          doubleDataLabel: {
+            display: false,
           },
           datalabels: {
             display: false,

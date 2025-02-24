@@ -1,34 +1,30 @@
 <template>
-  <SelectFlow
-    v-model="config.flow.uuid"
-    data-test-id="select-flow"
-  />
+  <section class="content-recurrence">
+    <section>
+      <UnnnicLabel :label="$t('drawers.config_recurrence.name_metric')" />
+      <UnnnicInput
+        v-model="config.name"
+        :placeholder="$t('drawers.config_card.name_card.placeholder')"
+      />
+    </section>
 
-  <SelectFlowResult
-    v-model="config.flow.result"
-    data-test-id="select-flow-result"
-    :flow="config.flow?.uuid"
-    :disabled="!config.flow?.uuid"
-  />
-
-  <RadioList
-    v-model:selected-radio="config.operation"
-    data-test-id="radio-list"
-    :label="$t('drawers.config_card.operation')"
-    :radios="operations"
-  />
-
-  <section>
-    <UnnnicLabel
-      :label="$t('drawers.config_card.format')"
-      data-test-id="label"
+    <SelectFlow
+      v-model="config.flow.uuid"
+      data-test-id="select-flow"
     />
-    <UnnnicCheckbox
-      data-test-id="check-box"
-      :modelValue="config.currency"
-      :textRight="$t('drawers.config_card.checkbox.currency')"
-      :disabled="config.operation === 'recurrence'"
-      @change="config.currency = $event"
+
+    <SelectFlowResult
+      v-model="config.flow.result"
+      data-test-id="select-flow-result"
+      :flow="config.flow?.uuid"
+      :disabled="!config.flow?.uuid"
+    />
+    <UnnnicButton
+      class="clear-button"
+      :text="$t('drawers.reset_widget')"
+      type="tertiary"
+      :disabled="isDisableResetWidget"
+      @click="resetWidget"
     />
   </section>
 </template>
@@ -38,53 +34,38 @@ import { mapActions, mapState } from 'vuex';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
-import RadioList from '@/components/RadioList.vue';
 
 export default {
-  name: 'FormFlowResult',
+  name: 'DrawerConfigContentRecurrence',
 
   components: {
     SelectFlow,
     SelectFlowResult,
-    RadioList,
   },
 
-  emits: ['update:is-valid-form'],
+  emits: [
+    'update:is-valid-form',
+    'reset-widget',
+    'update-disable-primary-button',
+  ],
 
   data() {
     return {
       config: null,
-
-      operations: [
-        {
-          value: 'sum',
-          label: this.$t('drawers.config_card.radios.total'),
-        },
-        {
-          value: 'max',
-          label: this.$t('drawers.config_card.radios.highest_value'),
-        },
-        {
-          value: 'avg',
-          label: this.$t('drawers.config_card.radios.avg'),
-        },
-        {
-          value: 'min',
-          label: this.$t('drawers.config_card.radios.lowest_value'),
-        },
-      ],
     };
   },
 
   computed: {
     ...mapState({
       widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
+      currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
     }),
-
     isValidForm() {
       const { config } = this;
-
-      return config?.flow.uuid && config?.flow.result && config?.operation;
+      return config?.flow.uuid && config?.flow.result && !!config?.name.trim();
+    },
+    isDisableResetWidget() {
+      return false;
     },
   },
 
@@ -110,7 +91,7 @@ export default {
     isValidForm: {
       immediate: true,
       handler(newIsValidForm) {
-        this.$emit('update:is-valid-form', newIsValidForm);
+        this.$emit('update-disable-primary-button', !newIsValidForm);
       },
     },
   },
@@ -118,6 +99,7 @@ export default {
   created() {
     const { widgetConfig } = this;
     this.config = {
+      name: this.currentWidgetEditing.name || '',
       flow: {
         uuid: widgetConfig.flow?.uuid || '',
         result: widgetConfig.flow?.result || '',
@@ -132,6 +114,20 @@ export default {
       updateCurrentWidgetEditingConfig:
         'widgets/updateCurrentWidgetEditingConfig',
     }),
+    resetWidget() {
+      this.$emit('reset-widget');
+    },
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.content-recurrence {
+  display: grid;
+  gap: $unnnic-spacing-nano;
+
+  .clear-button {
+    margin-top: $unnnic-spacing-nano;
+  }
+}
+</style>

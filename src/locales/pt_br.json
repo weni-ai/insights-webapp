@@ -7,7 +7,15 @@
     "response_time": "Tempo de resposta",
     "waiting_time": "Tempo de espera",
     "awaiting_service": "Aguardando atendimento",
-    "interaction_time": "Tempo de interação"
+    "interaction_time": "Tempo de interação",
+    "tooltips": {
+      "in_progress": "Total de chats sendo atendidos no momento.",
+      "response_time": "Média de tempo que o contato espera para receber uma resposta para cada mensagem.",
+      "interaction_time": "Tempo médio de duração total dos atendimentos. ",
+      "waiting_time": "Média de tempo que contatos aguardam até o início do atendimento.",
+      "awaiting_service": "Número de contatos aguardando início do atendimento.",
+      "closeds": "Total de chats que já foram finalizados."
+    }
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -22,6 +30,16 @@
     "sector": "Setor",
     "queue": "Fila",
     "tags": "Tags"
+  },
+  "contact_list_modal": {
+    "title": "Lista de contatos de {label}",
+    "header": {
+      "contact_name": "Nome do contato",
+      "start": "Início"
+    },
+    "message": {
+      "get_data_fail": "Falha ao buscar dados dos contatos que responderam a este fluxo."
+    }
   },
   "filter": {
     "agent": {
@@ -49,6 +67,7 @@
       "placeholder": "Selecione tag"
     }
   },
+  "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
@@ -114,11 +133,23 @@
       "title": "Funil",
       "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
       "select_flows": "@:select @.lower:flows",
-      "flow_executions": "Execuções do @.lower:flow"
+      "flow_executions": "Execuções do @.lower:flow",
+      "error": {
+        "title": "Ops, ocorreu um problema ao carregar os dados!",
+        "description": "Por favor, tente recarregar novamente"
+      }
     },
     "empty_widget": {
       "title": "Configuração necessária, personalize seu widget para começar",
       "config_btn": "Configurar"
+    },
+    "recurrence": {
+      "title": "Recorrência",
+      "see_more": "Veja mais",
+      "empty_data": {
+        "title": "Nenhum dado por enquanto. Assim que houver atividade,",
+        "sub_title": "ela aparecerá aqui!"
+      }
     },
     "vtex_order": {
       "title": "Vendas VTEX",
@@ -158,6 +189,10 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
+        },
+        "recurrence": {
+          "title": "Recorrência",
+          "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"
         }
       }
     },
@@ -207,6 +242,9 @@
       "fourth_metric": "Quarta @.lower:metric",
       "fifth_metric": "Quinta @.lower:metric",
       "select_flow": "@:select @.lower:flow"
+    },
+    "config_recurrence": {
+      "name_metric": "Nome da métrica"
     }
   },
   "metric_accordion": {

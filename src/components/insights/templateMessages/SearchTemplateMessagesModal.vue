@@ -10,6 +10,7 @@
     <section class="search-template-messages-modal__filters-container">
       <FilterInputText
         v-model="filters.name"
+        class="filter filter__name"
         :placeholder="$t('search')"
         iconPosition="left"
         data-testid="filter-name"
@@ -21,6 +22,7 @@
       />
       <FilterSelect
         v-model="filters.category"
+        class="filter filter__category"
         :placeholder="$t('category')"
         source="template-messages-categories"
         data-testid="filter-category"
@@ -32,18 +34,10 @@
       />
       <FilterSelect
         v-model="filters.language"
+        class="filter filter__language"
         :placeholder="$t('language')"
         source="template-messages-languages"
         data-testid="filter-language"
-        @update:model-value="
-          tablePagination.page === 1
-            ? searchTemplates()
-            : (tablePagination.page = 1)
-        "
-      />
-      <FilterSelectDate
-        v-model="filters.date"
-        data-testid="filter-date"
         @update:model-value="
           tablePagination.page === 1
             ? searchTemplates()
@@ -80,7 +74,6 @@ import { markRaw, reactive, ref, watch } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 
 import FilterInputText from '../Layout/HeaderFilters/FilterInputText.vue';
-import FilterSelectDate from '../Layout/HeaderFilters/FilterSelectDate.vue';
 import FilterSelect from '../Layout/HeaderFilters/FilterSelect.vue';
 
 import QualityTemplateMessageFlag from './QualityTemplateMessageFlag.vue';
@@ -111,12 +104,6 @@ const tableHeaders = [
   { content: i18n.global.t('category') },
   { content: i18n.global.t('language') },
   { content: i18n.global.t('status'), size: 1.5 },
-  {
-    content: i18n.global.t(
-      'template_messages_dashboard.templates_modal.table.header.last_edited',
-    ),
-    isSortable: true,
-  },
 ];
 
 const templateMessages = ref([]);
@@ -130,6 +117,7 @@ const tablePagination = reactive({
 const searchTemplates = async () => {
   try {
     loadingTemplateMessages.value = true;
+
     const params = {
       limit: tablePagination.limit,
       offset:
@@ -163,7 +151,6 @@ const searchTemplates = async () => {
           props: { quality: template.quality },
           events: {},
         },
-        template.updated_at,
       ],
     }));
   } catch (error) {
@@ -186,7 +173,7 @@ watch(
 );
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .search-template-messages-modal {
   :deep(.unnnic-modal-dialog__container) {
     width: 1000px;
@@ -194,9 +181,8 @@ watch(
   &__filters-container {
     display: flex;
     gap: $unnnic-spacing-xs;
-
-    :deep(.filter-date) {
-      width: 30%;
+    .filter {
+      width: 100%;
     }
   }
   &__table-container {

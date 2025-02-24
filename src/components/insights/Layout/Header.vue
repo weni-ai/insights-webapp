@@ -16,11 +16,6 @@
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
         <HeaderDashboardSettings />
-        <!-- <UnnnicButton
-        class="clickable"
-        iconCenter="ios_share"
-        type="secondary"
-        /> -->
         <HeaderGenerateInsightButton v-if="isRenderInsightButton" />
       </section>
     </section>

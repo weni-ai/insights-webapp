@@ -25,19 +25,6 @@
           class="line-chart"
           :data="chartDataMock"
         />
-        <CardDashboard
-          class="active-contacts"
-          configured
-          :description="$t('template_messages_dashboard.active_contacts.title')"
-          :tooltip="$t('template_messages_dashboard.active_contacts.tooltip')"
-          metric="10"
-        />
-        <CardDashboard
-          class="blocked-contacts"
-          configured
-          :description="$t('template_messages_dashboard.blocks.title')"
-          metric="0"
-        />
         <SingleTable
           class="button-clicks-table"
           title="Button Clicks"
@@ -60,7 +47,6 @@ export default {
 </script>
 
 <script setup>
-import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
 import MetaTemplateMessage from '@/components/insights/widgets/MetaTemplateMessage.vue';
@@ -236,7 +222,6 @@ const chartDataMock = [
 
         grid-template-areas:
           'line-chart line-chart'
-          'active-contacts blocked-contacts'
           'button-clicks-table button-clicks-table';
 
         gap: $unnnic-spacing-sm;
@@ -245,15 +230,6 @@ const chartDataMock = [
           grid-area: line-chart;
         }
 
-        .active-contacts {
-          grid-area: active-contacts;
-          min-height: fit-content;
-        }
-
-        .blocked-contacts {
-          grid-area: blocked-contacts;
-          min-height: fit-content;
-        }
         .button-clicks-table {
           grid-area: button-clicks-table;
         }

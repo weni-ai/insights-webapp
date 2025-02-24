@@ -363,5 +363,23 @@
   "charts": {
     "hours": "Hours",
     "attendances": "Attendances"
+  },
+  "dashboard_commerce": {
+    "titles": {
+      "send-message": "Sent messages",
+      "delivered-messages": "Delivered messages",
+      "read-messages": "Read messages",
+      "interactions": "Interactions",
+      "utm-revenue": "UTM revenue",
+      "orders-placed": "Orders placed"
+    },
+    "infos": {
+      "send-message": "send",
+      "delivered-messages": "delivered-messages",
+      "read-messages": "read-messages",
+      "interactions": "interactions",
+      "utm-revenue": "utm-revenue",
+      "orders-placed": "orders-placed"
+    }
   }
 }

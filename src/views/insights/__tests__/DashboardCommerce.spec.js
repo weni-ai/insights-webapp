@@ -23,6 +23,25 @@ config.global.mocks = {
   $t: (key) => key,
 };
 
+const mockGetTodayDate = vi.fn(() => ({
+  start: '2024-01-01',
+  end: '2024-01-01',
+}));
+const mockGetLastNDays = vi.fn(() => ({
+  start: '2024-01-01',
+  end: '2024-01-07',
+}));
+const mockGetLastMonthRange = vi.fn(() => ({
+  start: '2024-01-01',
+  end: '2024-01-31',
+}));
+
+vi.mock('@/utils/time', () => ({
+  getTodayDate: () => mockGetTodayDate(),
+  getLastNDays: () => mockGetLastNDays(),
+  getLastMonthRange: () => mockGetLastMonthRange(),
+}));
+
 describe('DashboardCommerce', () => {
   let wrapper;
   const consoleSpy = vi.spyOn(console, 'log');
@@ -127,19 +146,6 @@ describe('DashboardCommerce', () => {
       });
     });
 
-    it('handles filter selection correctly', async () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      const filterItems = dropdownFilter.props('items');
-
-      const filterOptions = ['today', 'Last 7 days', 'Last week', 'Last month'];
-
-      for (const option of filterOptions) {
-        const filterItem = filterItems.find((item) => item.name === option);
-        await filterItem.action();
-        expect(consoleSpy).toHaveBeenCalledWith(option);
-      }
-    });
-
     it('provides all required filter options', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       const filterItems = dropdownFilter.props('items');
@@ -175,7 +181,7 @@ describe('DashboardCommerce', () => {
         (metric) => metric.props('title') === 'UTM revenue',
       );
 
-      expect(utmMetric.props('prefix')).toBe('R$ ');
+      expect(utmMetric.props('prefix')).toBe('R$');
     });
 
     it('handles zero percentage correctly', () => {

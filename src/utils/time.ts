@@ -187,3 +187,21 @@ export function findMatchingDate(
 
   return null;
 }
+
+/**
+ * Gets the date for today.
+ * @returns An object containing today's date in 'yyyy-MM-dd' format,
+ *          and a formatted string representation of the date.
+ */
+export function getTodayDate(): DateRange {
+  const today = new Date();
+
+  const todayISO = format(today, 'yyyy-MM-dd');
+  const todayDM = format(today, 'dd/MM');
+
+  return {
+    start: todayISO,
+    end: todayISO,
+    dmFormat: `${todayDM}`,
+  };
+}

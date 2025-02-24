@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development rspack server --port 3003",
     "build": "cross-env NODE_ENV=production rspack build",
-    "test": "vitest",
+    "test": "vitest -u",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
@@ -18,7 +18,7 @@
     "@rspack/core": "^1.1.5",
     "@sentry/vue": "8.50.0",
     "@vueuse/core": "^10.11.0",
-    "@weni/unnnic-system": "^2.19.0",
+    "@weni/unnnic-system": "^2.22.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "chartjs-plugin-datalabels": "^2.2.0",

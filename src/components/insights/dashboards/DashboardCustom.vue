@@ -1,12 +1,5 @@
 <template>
-  <TemplateMessageMeta
-    v-if="
-      currentDashboard?.name === 'test-meta-templates-message' &&
-      userEmail.includes('@weni.ai')
-    "
-  />
   <section
-    v-else
     class="dashboard"
     :style="dashboardGridStyle"
   >
@@ -57,7 +50,6 @@ import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
 import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
-import TemplateMessageMeta from './TemplateMessageMeta.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 
 export default {
@@ -68,7 +60,6 @@ export default {
     DrawerConfigGallery,
     IconLoading,
     WidgetOnboarding,
-    TemplateMessageMeta,
     FlowResultContactListModal,
   },
 
@@ -94,7 +85,6 @@ export default {
         state.widgets.isLoadingCurrentDashboardWidgets,
       showConfigWidgetOnboarding: (state) =>
         state.onboarding.showConfigWidgetOnboarding,
-      userEmail: (state) => state.user.email,
     }),
 
     isCustomDashboard() {

@@ -39,6 +39,17 @@ export default {
       );
     }
 
+    if (uuid === '33a4ed4f-854a-436e-b591-c39e9d649e3c') {
+      return [
+        new Filter({
+          name: 'date',
+          type: 'date_range',
+          start_sufix: '_start',
+          end_sufix: '_end',
+        }),
+      ];
+    }
+
     const queryParams = createRequestQuery({
       project: Config.state.project.uuid,
     });

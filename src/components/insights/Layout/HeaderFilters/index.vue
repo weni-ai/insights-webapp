@@ -1,14 +1,6 @@
 <template>
   <section class="insights-layout-header-filters">
-    <template v-if="currentDashboard?.name === 'test-meta-templates-message'">
-      <UnnnicButton
-        type="secondary"
-        iconLeft="search"
-        :text="$t('template_messages_dashboard.templates_modal.title')"
-        @click.stop="searchTemplateMetaModal = true"
-      />
-    </template>
-    <template v-else-if="hasManyFilters">
+    <template v-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
         type="secondary"
@@ -45,12 +37,21 @@
       :modelValue="searchTemplateMetaModal"
       @close="searchTemplateMetaModal = false"
     />
+    <template v-if="currentDashboard?.name === 'test-meta-templates-message'">
+      <UnnnicButton
+        type="secondary"
+        iconLeft="search"
+        :text="$t('template_messages_dashboard.templates_modal.title')"
+        @click.stop="searchTemplateMetaModal = true"
+      />
+    </template>
   </section>
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
 import { getLastNDays } from '@/utils/time';
+
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
@@ -58,7 +59,11 @@ import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMe
 export default {
   name: 'InsightsLayoutHeaderFilters',
 
-  components: { DynamicFilter, ModalFilters, SearchTemplateMessagesModal },
+  components: {
+    DynamicFilter,
+    ModalFilters,
+    SearchTemplateMessagesModal,
+  },
 
   data() {
     return {
@@ -119,9 +124,14 @@ export default {
       if (isQueryEmpty) {
         const { start, end } = getLastNDays(7);
 
-        this.setAppliedFilters({
-          ended_at: { __gte: start, __lte: end },
-        });
+        console.log(this.currentDashboard);
+
+        const currentFilter =
+          this.currentDashboard?.name === 'test-meta-templates-message'
+            ? { date: { _start: start, _end: end } }
+            : { ended_at: { __gte: start, __lte: end } };
+
+        this.setAppliedFilters(currentFilter);
       } else this.setAppliedFilters(this.$route.query);
     },
   },

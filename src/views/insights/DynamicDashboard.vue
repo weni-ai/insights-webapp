@@ -72,7 +72,6 @@ const resetCurrentDashboardWidgets = () => {
 watch(
   currentDashboardUuid,
   async (newCurrentDashboardUuid) => {
-    console.log('newCurrentDashboardUuid', newCurrentDashboardUuid);
     if (newCurrentDashboardUuid) {
       resetCurrentDashboardWidgets();
       getCurrentDashboardWidgets();

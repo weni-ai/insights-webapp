@@ -19,7 +19,11 @@ const currentExpansiveWidget = computed(() => {
 });
 
 const dashboardType = computed(() => {
-  const type = currentExpansiveWidget.value ? 'expansive' : 'custom';
+  const type =
+    currentExpansiveWidget.value &&
+    Object.keys(currentExpansiveWidget.value).length > 0
+      ? 'expansive'
+      : 'custom';
 
   const dashboardTypes = {
     custom: 'custom_dashboard',
@@ -68,6 +72,7 @@ const resetCurrentDashboardWidgets = () => {
 watch(
   currentDashboardUuid,
   async (newCurrentDashboardUuid) => {
+    console.log('newCurrentDashboardUuid', newCurrentDashboardUuid);
     if (newCurrentDashboardUuid) {
       resetCurrentDashboardWidgets();
       getCurrentDashboardWidgets();

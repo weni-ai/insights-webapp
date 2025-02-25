@@ -84,7 +84,8 @@
         class="meta-template-message__edit-button"
         type="secondary"
         data-testid="template-edit-button"
-        @click.stop="$emit('open-edit-template')"
+        :disabled="!template.link"
+        @click.stop="redirectToIntegrations()"
       >
         {{ $t('template_messages_dashboard.template.edit_template') }}
       </UnnnicButton>
@@ -108,7 +109,16 @@ const props = defineProps({
   },
 });
 
-defineEmits(['open-edit-template']);
+const redirectToIntegrations = () => {
+  const path = props.template.link;
+  window.parent.postMessage(
+    {
+      event: 'redirect',
+      path,
+    },
+    '*',
+  );
+};
 </script>
 
 <style lang="scss" scoped>

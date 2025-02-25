@@ -48,16 +48,32 @@
 
     <section class="search-template-messages-modal__table-container">
       <UnnnicTableNext
+        class="search-template-messages-modal__table"
         :headers="tableHeaders"
         :rows="templateMessages"
-        :paginationInterval="tablePagination.limit"
-        :paginationTotal="tablePagination.total"
-        :pagination="tablePagination.page"
+        :paginationInterval="5"
+        :paginationTotal="5"
+        :pagination="1"
         :isLoading="loadingTemplateMessages"
         data-testid="template-messages-table"
         @row-click="rowClick"
-        @update:pagination="tablePagination.page = $event"
       />
+      <section class="search-template-messages-modal__table-pagination">
+        <UnnnicButton
+          type="tertiary"
+          size="small"
+          iconCenter="arrow-left-1-1"
+          :disabled="!tablePagination.previous"
+          @click="searchTemplates('previous')"
+        />
+        <UnnnicButton
+          type="tertiary"
+          size="small"
+          iconCenter="arrow-right-1-1"
+          :disabled="!tablePagination.next"
+          @click="searchTemplates('next')"
+        />
+      </section>
     </section>
   </UnnnicModalDialog>
 </template>
@@ -69,7 +85,7 @@ export default {
 </script>
 
 <script setup>
-import { markRaw, reactive, ref, watch } from 'vue';
+import { markRaw, reactive, ref, watch, onMounted } from 'vue';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -109,21 +125,17 @@ const tableHeaders = [
 const templateMessages = ref([]);
 
 const tablePagination = reactive({
-  page: 1,
-  limit: 5,
-  total: 0,
+  next: null,
+  previous: null,
 });
 
-const searchTemplates = async () => {
+const searchTemplates = async (cursorKey) => {
   try {
     loadingTemplateMessages.value = true;
 
     const params = {
-      limit: tablePagination.limit,
-      offset:
-        tablePagination.page === 1
-          ? 0
-          : tablePagination.limit * tablePagination.page,
+      limit: 5,
+      cursor: cursorKey ? tablePagination[cursorKey] : undefined,
     };
 
     const mockTemplateResponse = {
@@ -134,14 +146,18 @@ const searchTemplates = async () => {
       quality: 'high',
     };
 
-    const { results, count } = await Promise.resolve({
-      count: 100,
+    const { results, next, previous } = await Promise.resolve({
+      next: '',
+      previous: '',
       results: new Array(5).fill(mockTemplateResponse),
     });
 
-    tablePagination.total = count;
+    tablePagination.next = next;
+
+    tablePagination.previous = previous;
 
     templateMessages.value = results.map((template) => ({
+      ...template,
       content: [
         template.name,
         template.category,
@@ -161,16 +177,10 @@ const searchTemplates = async () => {
 };
 
 const rowClick = (row) => {
-  // TODO
+  console.log(row);
 };
 
-watch(
-  () => tablePagination.page,
-  () => {
-    searchTemplates();
-  },
-  { immediate: true },
-);
+onMounted(() => searchTemplates());
 </script>
 
 <style lang="scss" scoped>
@@ -187,6 +197,15 @@ watch(
   }
   &__table-container {
     margin-top: $unnnic-spacing-md;
+    :deep(.table-pagination) {
+      display: none;
+    }
+  }
+  &__table-pagination {
+    display: flex;
+    justify-content: end;
+    padding: $unnnic-spacing-xs 0;
+    gap: $unnnic-spacing-nano;
   }
 }
 </style>

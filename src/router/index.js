@@ -1,17 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Dashboard from '@/views/insights/Dashboard.vue';
 import Report from '@/views/insights/Report.vue';
+import DynamicDashboard from '@/views/insights/DynamicDashboard.vue';
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: Dashboard,
+    component: DynamicDashboard,
   },
   {
     path: '/:dashboardUuid',
     name: 'dashboard',
-    component: Dashboard,
+    component: DynamicDashboard,
   },
   {
     path: '/:dashboardUuid/widget/:widgetUuid/report',

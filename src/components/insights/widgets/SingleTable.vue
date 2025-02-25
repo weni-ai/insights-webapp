@@ -29,6 +29,7 @@ export default {
 
 <script setup>
 import { computed } from 'vue';
+
 const props = defineProps({
   title: { type: String, default: '' },
   pagination: { type: Number, required: true },
@@ -38,6 +39,7 @@ const props = defineProps({
   rows: { type: Array, required: true },
   hidePagination: { type: Boolean, default: false },
 });
+
 defineEmits(['changePage']);
 
 const paginationCssToken = computed(() =>

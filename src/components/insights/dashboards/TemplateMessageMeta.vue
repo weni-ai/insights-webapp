@@ -71,11 +71,6 @@ const buttonClicksTableHeaders = [
   },
   {
     content: i18n.global.t(
-      'template_messages_dashboard.button_clicks_table.header.clicks_in_relation_to_the_shot',
-    ),
-  },
-  {
-    content: i18n.global.t(
       'template_messages_dashboard.button_clicks_table.header.click_rate',
     ),
   },
@@ -134,13 +129,7 @@ const buttonClicksTableData = [
 ];
 
 const formattedClicksTableData = buttonClicksTableData.map((row) => ({
-  content: [
-    row.label,
-    row.type,
-    row.total,
-    row.clicks_in_relation_to_the_shot || '--',
-    formatToPercent(row.click_rate),
-  ],
+  content: [row.label, row.type, row.total, formatToPercent(row.click_rate)],
 }));
 
 const chartDataMock = [

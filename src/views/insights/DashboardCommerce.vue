@@ -1,0 +1,200 @@
+<template>
+  <section
+    class="dashboard-commerce"
+    data-test-id="dashboard-commerce"
+  >
+    <section class="dashboard-commerce__header">
+      <section
+        class="dashboard-commerce__header-title"
+        data-test-id="dashboard-commerce__header-title"
+      >
+        See what's happening in: Commerce
+      </section>
+      <section
+        class="filter-type"
+        data-test-id="filter-type"
+      >
+        <p class="filter-type_title">{{ $t('filter-by') }}</p>
+        <DropdownFilter
+          :items="[
+            {
+              name: 'today',
+              action: () => handleFilter('Today'),
+            },
+            {
+              name: 'Last 7 days',
+              action: () => handleFilter('Last 7 days'),
+            },
+            {
+              name: 'Last week',
+              action: () => handleFilter('Last 14 days'),
+            },
+            {
+              name: 'Last month',
+              action: () => handleFilter('Last month'),
+            },
+          ]"
+          :defaultItem="{ name: 'Last 7 days' }"
+        />
+      </section>
+    </section>
+    <section class="metrics-container">
+      <CardMetric
+        v-for="(metric, index) in metrics"
+        :key="metric.id"
+        :title="metricTitles[metric.id]"
+        :value="metric.value"
+        :percentage="metric.percentage"
+        :prefix="metric.prefix"
+        :hasInfo="true"
+        :leftColumn="index % 3 === 0"
+        :rightColumn="(index + 1) % 3 === 0"
+        :middleColumn="index % 3 === 1"
+        :firstRow="index < 3"
+        :lastRow="index >= metrics.length - (metrics.length % 3 || 3)"
+      />
+    </section>
+  </section>
+</template>
+
+<script lang="ts" setup>
+import {
+  getLastNDays,
+  getLastMonthRange,
+getTodayDate,
+} from '@/utils/time';
+import CardMetric from '@/components/home/CardMetric.vue';
+import DropdownFilter from '@/components/home/DropdownFilter.vue';
+import { ref } from 'vue';
+import i18n from '@/utils/plugins/i18n';
+
+interface MetricData {
+  id: string;
+  value: number;
+  percentage: number;
+  prefix?: string;
+}
+
+const infos = {
+  'send-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
+  'delivered-messages': i18n.global.t(
+    'dashboard_commerce.infos.delivered-messages',
+  ),
+  'read-messages': i18n.global.t('dashboard_commerce.infos.read-messages'),
+  interactions: i18n.global.t('dashboard_commerce.infos.interactions'),
+  'utm-revenue': i18n.global.t('dashboard_commerce.infos.utm-revenue'),
+  'orders-placed': i18n.global.t('dashboard_commerce.infos.orders-placed'),
+};
+
+const mockApiResponse = async (): Promise<MetricData[]> => {
+  return [
+    {
+      id: 'send-messages',
+      value: 1325,
+      percentage: 5.08,
+    },
+    {
+      id: 'delivered-messages',
+      value: 1259,
+      percentage: -1.12,
+    },
+    {
+      id: 'read-messages',
+      value: 956,
+      percentage: -2.08,
+    },
+    {
+      id: 'interactions',
+      value: 569,
+      percentage: 6.13,
+    },
+    {
+      id: 'utm-revenue',
+      value: 44566.0,
+      percentage: 12.2,
+      prefix: 'R$',
+    },
+    {
+      id: 'orders-placed',
+      value: 86,
+      percentage: 0,
+    },
+  ];
+};
+
+const metrics = ref<MetricData[]>([]);
+
+const metricTitles: Record<string, string> = {
+  'send-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
+  'delivered-messages': i18n.global.t(
+    'dashboard_commerce.titles.delivered-messages',
+  ),
+  'read-messages': i18n.global.t('dashboard_commerce.titles.read-messages'),
+  interactions: i18n.global.t('dashboard_commerce.titles.interactions'),
+  'utm-revenue': i18n.global.t('dashboard_commerce.titles.utm-revenue'),
+  'orders-placed': i18n.global.t('dashboard_commerce.titles.orders-placed'),
+};
+
+const fetchMetrics = async () => {
+  const data = await mockApiResponse();
+  metrics.value = data;
+};
+
+fetchMetrics();
+
+const handleFilter = (filter: string) => {
+  const type = filter.trim().replace(/\s+/g, '').toLowerCase();
+
+  console.log("type", type)
+
+  const getDateRanges = {
+  today: getTodayDate(),
+  last7days: getLastNDays(7),
+  last14days: getLastNDays(14),
+  lastmonth: getLastMonthRange(),
+}
+
+  console.log(getDateRanges[type]);
+};
+</script>
+
+<style lang="scss" scoped>
+.dashboard-commerce {
+  display: flex;
+  flex-direction: column;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    &-title {
+      color: $unnnic-color-neutral-darkest;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-lg;
+      font-style: normal;
+      font-weight: $unnnic-font-weight-black;
+      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    }
+  }
+}
+
+.metrics-container {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+  padding: $unnnic-spacing-sm 1px;
+}
+
+.filter-type {
+  display: flex;
+  align-items: center;
+  gap: $unnnic-spacing-sm;
+  &_title {
+    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-gt;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  }
+}
+</style>

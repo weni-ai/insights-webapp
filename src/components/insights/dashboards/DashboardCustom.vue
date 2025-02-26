@@ -53,7 +53,7 @@ import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 
 export default {
-  name: 'DashboardView',
+  name: 'DashboardCustom',
 
   components: {
     DynamicWidget,
@@ -106,14 +106,15 @@ export default {
   },
 
   watch: {
-    'currentDashboard.uuid': {
+    currentDashboardWidgets: {
       immediate: true,
-      handler(newCurrentDashboardUuid) {
-        if (newCurrentDashboardUuid) {
-          this.resetCurrentDashboardWidgets();
-          this.getCurrentDashboardWidgets().then(() => {
-            if (this.isCustomDashboard) this.handlerWidgetsOnboarding();
-          });
+      handler(newCurrentDashboardWidgets) {
+        if (
+          !!newCurrentDashboardWidgets &&
+          this.isCustomDashboard &&
+          !this.isLoadingCurrentDashboardWidgets
+        ) {
+          this.handlerWidgetsOnboarding();
         }
       },
     },
@@ -121,12 +122,10 @@ export default {
 
   methods: {
     ...mapActions({
-      getCurrentDashboardWidgets: 'widgets/getCurrentDashboardWidgets',
       updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
       callTourNextStep: 'onboarding/callTourNextStep',
     }),
     ...mapMutations({
-      resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
       setShowConfigWidgetsOnboarding:
         'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
     }),

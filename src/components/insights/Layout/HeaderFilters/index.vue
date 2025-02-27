@@ -1,5 +1,6 @@
 <template>
   <section class="insights-layout-header-filters">
+    <FilterFavoriteTemplateMessage />
     <template v-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
@@ -54,6 +55,7 @@ import { getLastNDays } from '@/utils/time';
 
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
+import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
 
 export default {
@@ -63,6 +65,7 @@ export default {
     DynamicFilter,
     ModalFilters,
     SearchTemplateMessagesModal,
+    FilterFavoriteTemplateMessage,
   },
 
   data() {

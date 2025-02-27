@@ -19,6 +19,7 @@
   },
   "template_messages_dashboard": {
     "title": "Mensagens template Meta",
+    "favorites": "Favoritos",
     "add_to_favorites": "Adicionar aos favoritos",
     "active_contacts": {
       "title": "Contatos ativos",

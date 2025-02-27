@@ -262,7 +262,10 @@ export default {
       color: $unnnic-color-neutral-cloudy;
     }
   }
-
+  
+  :deep(.unnnic-table-next__header-cell){
+    display: inline-block;
+  }
   :deep(.table-pagination) {
     display: none;
   }

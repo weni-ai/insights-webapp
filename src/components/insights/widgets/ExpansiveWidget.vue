@@ -31,7 +31,7 @@ const props = defineProps({
 const store = useStore();
 
 const isLoading = computed(() => {
-  return false;
+  return store.state.widgets.isLoadingCurrentExpansiveWidget;
 });
 
 const appliedFilters = computed(() => {
@@ -70,8 +70,19 @@ const widgetProps = computed(() => {
           hidden_name: false,
         },
         ...tableDynamicHeaders,
+        ...(data?.results?.[0]?.custom_status?.map(status => ({
+          name: status.status_type,
+          value: `custom_status.${status.status_type}`,
+          display: true,
+          hidden_name: false,
+        })) || []),
       ],
-      items: data?.results || [],
+      items: data?.results?.map(item => ({
+        ...item,
+        custom_status: Object.fromEntries(
+          item.custom_status.map(status => [status.status_type, status.break_time])
+        ),
+      })) || [],
     },
   };
 

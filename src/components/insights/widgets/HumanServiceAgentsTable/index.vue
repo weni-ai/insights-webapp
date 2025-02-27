@@ -4,7 +4,7 @@
       v-if="headerTitle"
       class="widget-human-service-agents__header"
     >
-      <section v-if="!isReport">
+      <section v-if="!isExpansive">
         <h1
           class="header__title"
           data-testid="widget-human-service-agent-title"
@@ -12,15 +12,14 @@
           {{ $t(headerTitle) }}
         </h1>
       </section>
-      <section v-if="!isReport">
+      <section v-if="!isExpansive">
         <UnnnicButtonIcon
           size="small"
           icon="expand_content"
           @click.prevent.stop="$emit('seeMore')"
         />
       </section>
-
-      <AgentsTableHeader v-if="isReport" />
+      <AgentsTableHeader v-if="isExpansive" />
     </header>
 
     <UnnnicTableNext
@@ -43,9 +42,10 @@ import { markRaw } from 'vue';
 
 export default {
   name: 'HumanServiceAgentsTable',
-  components: { AgentsTableHeader },
+  components: {
+    AgentsTableHeader,
+  },
   props: {
-    isLoading: Boolean,
     headerTitle: {
       type: String,
       default: '',
@@ -58,7 +58,11 @@ export default {
       type: Array,
       required: true,
     },
-    isReport: {
+    isExpansive: {
+      type: Boolean,
+      default: false,
+    },
+    isLoading: {
       type: Boolean,
       default: false,
     },

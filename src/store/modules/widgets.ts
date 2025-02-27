@@ -66,6 +66,11 @@ export default {
       state.currentWidgetEditing = widget;
     },
     [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, { uuid }) {
+      if (!uuid) {
+        state.currentExpansiveWidget = {};
+        return;
+      }
+
       const widget = state.currentDashboardWidgets.find(
         (widget) => widget.uuid === uuid,
       );
@@ -246,6 +251,7 @@ export default {
     },
 
     updateCurrentExpansiveWidgetData({ commit }, widget) {
+      console.log('updateCurrentExpansiveWidgetData', widget);
       commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA, widget);
     },
 

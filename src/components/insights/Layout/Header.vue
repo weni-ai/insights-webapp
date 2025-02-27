@@ -44,14 +44,14 @@
         size="small"
         type="tertiary"
         class="insights-layout-header__expansive-close"
-        @click="updateCurrentExpansiveWidgetData({})"
+        @click="setCurrentExpansiveWidget({})"
       />
     </section>
   </header>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
@@ -160,8 +160,9 @@ export default {
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
-      updateCurrentExpansiveWidgetData:
-        'widgets/updateCurrentExpansiveWidgetData',
+    }),
+    ...mapMutations({
+      setCurrentExpansiveWidget: 'widgets/SET_CURRENT_EXPANSIVE_WIDGET_DATA',
     }),
 
     navigateToDashboard(uuid) {

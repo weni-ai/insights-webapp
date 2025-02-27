@@ -125,7 +125,6 @@ export default {
             ...tableDynamicHeaders,
           ],
           items: data?.results || [],
-          isReport: this.$route.query?.widget === 'human-service-agents-table',
         },
         table_group: {
           tabs: config,
@@ -352,6 +351,8 @@ export default {
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
+      updateCurrentExpansiveWidgetData:
+        'widgets/updateCurrentExpansiveWidgetData',
     }),
 
     initRequestDataInterval() {
@@ -365,13 +366,10 @@ export default {
     },
 
     async requestWidgetData({ offset, limit, next, silence } = {}) {
-      const isAgentTableInReport =
-        this.$route.query.widget === 'human-service-agents-table';
-
       try {
         if (!silence) this.isRequestingData = true;
 
-        if (this.$route.name === 'report' && !isAgentTableInReport) {
+        if (this.$route.name === 'report') {
           await this.getWidgetReportData({ offset, limit, next });
         } else if (this.isConfigured) {
           await this.getCurrentDashboardWidgetData(this.widget);
@@ -430,19 +428,7 @@ export default {
     },
 
     redirectToTableAgents() {
-      const { uuid } = this.widget;
-
-      this.$router.push({
-        name: 'report',
-        params: {
-          dashboardUuid: this.currentDashboard.uuid,
-          widgetUuid: uuid,
-        },
-        query: {
-          widget: 'human-service-agents-table',
-          ...this.$route.query,
-        },
-      });
+      this.updateCurrentExpansiveWidgetData(this.widget);
     },
 
     getWidgetFormattedData(widget) {

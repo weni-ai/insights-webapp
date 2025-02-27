@@ -19,7 +19,6 @@
           @click.prevent.stop="$emit('seeMore')"
         />
       </section>
-      <AgentsTableHeader v-if="isExpansive" />
     </header>
 
     <UnnnicTableNext
@@ -36,16 +35,12 @@
 </template>
 
 <script>
-import AgentsTableHeader from './AgentsTableHeader.vue';
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
 import { intervalToDuration } from 'date-fns';
 
 export default {
   name: 'HumanServiceAgentsTable',
-  components: {
-    AgentsTableHeader,
-  },
   props: {
     headerTitle: {
       type: String,

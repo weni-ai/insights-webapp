@@ -255,22 +255,12 @@ export default {
       commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, true);
       setWidgetData(widget);
       try {
-        const data = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
-          widgetUuid: widget.uuid,
-        } as any);
-
-        setWidgetData(
-          data
-            ? {
-                ...data,
-                results: mock,
-              }
-            : null,
-        );
-        console.log(mock);
+        const data = await Dashboards.getCustomStatusData({
+          params: null,
+        });
+        setWidgetData(data);
       } catch (error) {
-        console.error(error);
+        console.error('getCustomStatusData', error);
         setWidgetData(null);
       } finally {
         commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, false);

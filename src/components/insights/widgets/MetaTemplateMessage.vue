@@ -149,9 +149,8 @@ const redirectToIntegrations = () => {
       color: $unnnic-color-neutral-dark;
 
       font-family: $unnnic-font-family-secondary;
-      font-size: 14px;
-      font-style: normal;
-      line-height: 22px;
+      font-size: $unnnic-font-size-body-gt;
+      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
 
       &__name {
         margin-right: auto;

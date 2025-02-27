@@ -3,27 +3,15 @@
     <section class="template-message-meta-dashboard__template-container">
       <MetaTemplateMessage
         class="template-message-preview"
-        :template="{
-          title:
-            'VTEX adquire Weni e passa a oferecer solução de IA para transformar o atendimento pós-venda de marcas e varejistas',
-          text: 'A aquisição fortalece a jornada omnichannel da VTEX, reduz custos de suporte ao cliente e impulsionada por dados e IA aprimora a experiência pós-venda para marcas e varejistas globais.',
-          hint: `Não tem interesse? Toque em 'Parar promoções'`,
-          quality: 'high',
-          name: 'template_dev',
-          image:
-            'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',
-          buttons: [
-            { icon: 'open_in_new', label: 'Acessar notícia' },
-            { icon: 'reply', label: 'Parar de receber' },
-          ],
-        }"
+        :template="templatePreview"
       />
     </section>
     <section class="template-message-meta-dashboard__template-info">
       <div class="template-message-meta-dashboard__template-info-container">
         <MultipleLineChart
+          v-if="!isLoadingMessagesAnalyticsData"
           class="line-chart"
-          :data="chartDataMock"
+          :data="formattedMessagesAnalyticsData"
         />
         <SingleTable
           class="button-clicks-table"
@@ -34,6 +22,7 @@
           :paginationTotal="formattedClicksTableData.length"
           :headers="buttonClicksTableHeaders"
           :rows="formattedClicksTableData"
+          :isLoading="isLoadingButtonsClicksData"
         />
       </div>
     </section>
@@ -47,11 +36,34 @@ export default {
 </script>
 
 <script setup>
+import { onMounted, ref, computed } from 'vue';
+import { formatToPercent } from '@/utils/number';
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
 import MetaTemplateMessage from '@/components/insights/widgets/MetaTemplateMessage.vue';
-import { formatToPercent } from '@/utils/number';
 import i18n from '@/utils/plugins/i18n';
+import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
+
+onMounted(() => {
+  getTemplatePreview();
+  getButtonClicksData();
+  getMessagesAnalytics();
+});
+
+const templatePreview = ref({});
+const isLoadingTemplatePreview = ref(false);
+
+const getTemplatePreview = async () => {
+  try {
+    isLoadingTemplatePreview.value = true;
+    const response = await MetaTemplateMessageService.getTemplatePreview();
+    templatePreview.value = response;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoadingTemplatePreview.value = false;
+  }
+};
 
 const buttonClicksTableHeaders = [
   {
@@ -75,122 +87,74 @@ const buttonClicksTableHeaders = [
     ),
   },
 ];
+const buttonsClicksData = ref([]);
+const isLoadingButtonsClicksData = ref(false);
 
-const buttonClicksTableData = [
-  {
-    label: 'Teste',
-    type: 'Type',
-    total: 159,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 10.5,
-  },
-  {
-    label: 'Teste 2',
-    type: 'Type',
-    total: 50,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 20,
-  },
-  {
-    label: 'Teste 3',
-    type: 'Type',
-    total: 100,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 50,
-  },
-  {
-    label: 'Teste 4',
-    type: 'Type',
-    total: 100,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 50,
-  },
-  {
-    label: 'Teste 5',
-    type: 'Type',
-    total: 100,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 50,
-  },
-  {
-    label: 'Teste 6',
-    type: 'Type',
-    total: 100,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 50,
-  },
-  {
-    label: 'Teste 7',
-    type: 'Type',
-    total: 100,
-    clicks_in_relation_to_the_shot: 0,
-    click_rate: 50,
-  },
-];
+const formattedClicksTableData = computed(() =>
+  buttonsClicksData.value.map((row) => ({
+    content: [
+      row.label,
+      row.type,
+      String(row.total),
+      formatToPercent(row.click_rate),
+    ],
+  })),
+);
 
-const formattedClicksTableData = buttonClicksTableData.map((row) => ({
-  content: [
-    row.label,
-    row.type,
-    String(row.total),
-    formatToPercent(row.click_rate),
-  ],
-}));
+const getButtonClicksData = async () => {
+  try {
+    isLoadingButtonsClicksData.value = true;
+    const response =
+      await MetaTemplateMessageService.getTemplateButtonsAnalytics();
 
-const chartDataMock = [
-  {
-    group: 'template_messages_dashboard.messages_graph.sent_messages',
-    data: [
-      { label: '24/11', value: 10 },
-      { label: '25/11', value: 20 },
-      { label: '26/11', value: 15 },
-      { label: '27/11', value: 9 },
-      { label: '28/11', value: 12 },
-      { label: '29/11', value: 11 },
-      { label: '30/11', value: 9 },
-    ],
-    total: 86,
-  },
-  {
-    group: 'template_messages_dashboard.messages_graph.delivered_messages',
-    data: [
-      { label: '24/11', value: 5 },
-      { label: '25/11', value: 5 },
-      { label: '26/11', value: 15 },
-      { label: '27/11', value: 9 },
-      { label: '28/11', value: 2 },
-      { label: '29/11', value: 5 },
-      { label: '30/11', value: 6 },
-    ],
-    total: 20,
-  },
-  {
-    group: 'template_messages_dashboard.messages_graph.readed_messages',
-    data: [
-      { label: '24/11', value: 1 },
-      { label: '25/11', value: 2 },
-      { label: '26/11', value: 3 },
-      { label: '27/11', value: 4 },
-      { label: '28/11', value: 5 },
-      { label: '29/11', value: 6 },
-      { label: '30/11', value: 7 },
-    ],
-    total: 10,
-  },
-  {
-    group: 'template_messages_dashboard.messages_graph.clicks',
-    data: [
-      { label: '24/11', value: 1 },
-      { label: '25/11', value: 1 },
-      { label: '26/11', value: 9 },
-      { label: '27/11', value: 9 },
-      { label: '28/11', value: 9 },
-      { label: '29/11', value: 4 },
-      { label: '30/11', value: 6 },
-    ],
-    total: 5,
-  },
-];
+    buttonsClicksData.value = response;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoadingButtonsClicksData.value = false;
+  }
+};
+
+const messagesAnalyticsData = ref({});
+const isLoadingMessagesAnalyticsData = ref(false);
+
+const getMessagesAnalytics = async () => {
+  try {
+    isLoadingMessagesAnalyticsData.value = true;
+
+    const response =
+      await MetaTemplateMessageService.getTemplateMessagesAnalytics();
+
+    messagesAnalyticsData.value = response;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoadingMessagesAnalyticsData.value = false;
+  }
+};
+
+const formattedMessagesAnalyticsData = computed(() => {
+  const keyMapper = {
+    sent: 'template_messages_dashboard.messages_graph.sent_messages',
+    delivered: 'template_messages_dashboard.messages_graph.delivered_messages',
+    read: 'template_messages_dashboard.messages_graph.readed_messages',
+    clicked: 'template_messages_dashboard.messages_graph.clicks',
+  };
+
+  return Object.keys(keyMapper).map((key) => {
+    const data =
+      messagesAnalyticsData.value.data_points?.map((dataPoint) => ({
+        label: dataPoint.date,
+        value: dataPoint[key],
+      })) || [];
+
+    return {
+      group: keyMapper[key],
+      data: data,
+      total: messagesAnalyticsData.value.status_count?.[key]?.value || 0,
+    };
+  });
+});
 </script>
 
 <style lang="scss" scoped>

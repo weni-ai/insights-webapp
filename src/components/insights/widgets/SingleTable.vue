@@ -16,6 +16,7 @@
       :headers="headers"
       :rows="rows"
       :locale="$i18n.locale"
+      :isLoading="isLoading"
       @update:pagination="$emit('changePage', $event)"
     />
   </section>
@@ -37,6 +38,7 @@ const props = defineProps({
   paginationInterval: { type: Number, default: 5 },
   headers: { type: Array, required: true },
   rows: { type: Array, required: true },
+  isLoading: { type: Boolean, default: false },
   hidePagination: { type: Boolean, default: false },
 });
 

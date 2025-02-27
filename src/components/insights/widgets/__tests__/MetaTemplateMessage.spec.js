@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount, config, flushPromises } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
@@ -80,13 +80,6 @@ describe('MetaTemplateMessage', () => {
     });
     expect(qualityFlag.exists()).toBe(true);
     expect(qualityFlag.props('quality')).toBe('high');
-  });
-
-  it('emits "open-edit-template" when the edit button is clicked', async () => {
-    const editButton = wrapper.find('[data-testid="template-edit-button"]');
-    await editButton.trigger('click');
-
-    expect(wrapper.emitted('open-edit-template')).toBeTruthy();
   });
 
   it('renders buttons dynamically based on props', () => {

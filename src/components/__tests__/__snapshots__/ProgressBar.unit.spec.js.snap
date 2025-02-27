@@ -9,29 +9,29 @@ exports[`ProgressBar > Matches the snapshot 1`] = `
     class="unnnic-progress-bar primary inline"
     data-test-id="progress-bar"
     data-v-84df1bb9=""
-    data-v-8aafd3ca=""
+    data-v-ac4fc1a8=""
   >
     <div
       class="main"
-      data-v-8aafd3ca=""
+      data-v-ac4fc1a8=""
     >
       <div
         class="title"
-        data-v-8aafd3ca=""
+        data-v-ac4fc1a8=""
       >
         Loading...
       </div>
       <div
         class="progress-bar-container"
-        data-v-8aafd3ca=""
+        data-v-ac4fc1a8=""
       >
         <div
           class="progress-container"
-          data-v-8aafd3ca=""
+          data-v-ac4fc1a8=""
         >
           <div
             class="bar"
-            data-v-8aafd3ca=""
+            data-v-ac4fc1a8=""
             style="width: 0%;"
           >
             <!---->
@@ -39,7 +39,7 @@ exports[`ProgressBar > Matches the snapshot 1`] = `
         </div>
         <div
           class="percentage"
-          data-v-8aafd3ca=""
+          data-v-ac4fc1a8=""
         >
           0% 
         </div>

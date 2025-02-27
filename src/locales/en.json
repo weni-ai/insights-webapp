@@ -8,6 +8,7 @@
     "waiting_time": "Waiting time",
     "awaiting_service": "Waiting for service",
     "interaction_time": "Interaction time",
+    "all_agents": "All agents now",
     "tooltips": {
       "in_progress": "Total number of chats currently being handled.",
       "response_time": "Average time the contact waits to receive a reply to each message.",

@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import IconLoading from '@/components/IconLoading.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
@@ -31,7 +31,7 @@ const props = defineProps({
 const store = useStore();
 
 const isLoading = computed(() => {
-  return false;
+  return store.state.widgets.isLoadingCurrentExpansiveWidget;
 });
 
 const appliedFilters = computed(() => {
@@ -43,14 +43,15 @@ const currentComponent = computed(() => {
     table_dynamic_by_filter: HumanServiceAgentsTable,
   };
 
-  return componentMap[props.widget.type] || null;
+  return componentMap[props.widget.value.type] || null;
 });
 
 const widgetProps = computed(() => {
-  const { name, data, type, config } = props.widget;
+  const { name, data, type, config } = props.widget.value;
 
   const defaultProps = {
-    isLoading,
+    isLoading: isLoading.value,
+    isExpansive: true,
   };
 
   const tableDynamicFilterConfig =
@@ -69,8 +70,23 @@ const widgetProps = computed(() => {
           hidden_name: false,
         },
         ...tableDynamicHeaders,
+        ...(data?.results?.[0]?.custom_status?.map((status) => ({
+          name: status.status_type,
+          value: `custom_status.${status.status_type}`,
+          display: true,
+          hidden_name: false,
+        })) || []),
       ],
-      items: data?.results || [],
+      items:
+        data?.results?.map((item) => ({
+          ...item,
+          custom_status: Object.fromEntries(
+            item.custom_status.map((status) => [
+              status.status_type,
+              status.break_time,
+            ]),
+          ),
+        })) || [],
     },
   };
 
@@ -80,6 +96,19 @@ const widgetProps = computed(() => {
 const widgetEvents = computed(() => {
   return null;
 });
+
+watch(
+  appliedFilters,
+  async () => {
+    if (props.widget.value.type === 'table_dynamic_by_filter') {
+      console.log('appliedFilters', appliedFilters.value);
+      await store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
+        ...props.widget.value,
+      });
+    }
+  },
+  { immediate: true, deep: true },
+);
 </script>
 
 <style lang="scss" scoped>

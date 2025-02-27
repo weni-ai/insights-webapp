@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import IconLoading from '@/components/IconLoading.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
@@ -70,19 +70,23 @@ const widgetProps = computed(() => {
           hidden_name: false,
         },
         ...tableDynamicHeaders,
-        ...(data?.results?.[0]?.custom_status?.map(status => ({
+        ...(data?.results?.[0]?.custom_status?.map((status) => ({
           name: status.status_type,
           value: `custom_status.${status.status_type}`,
           display: true,
           hidden_name: false,
         })) || []),
       ],
-      items: data?.results?.map(item => ({
-        ...item,
-        custom_status: Object.fromEntries(
-          item.custom_status.map(status => [status.status_type, status.break_time])
-        ),
-      })) || [],
+      items:
+        data?.results?.map((item) => ({
+          ...item,
+          custom_status: Object.fromEntries(
+            item.custom_status.map((status) => [
+              status.status_type,
+              status.break_time,
+            ]),
+          ),
+        })) || [],
     },
   };
 
@@ -92,6 +96,19 @@ const widgetProps = computed(() => {
 const widgetEvents = computed(() => {
   return null;
 });
+
+watch(
+  appliedFilters,
+  async () => {
+    if (props.widget.value.type === 'table_dynamic_by_filter') {
+      console.log('appliedFilters', appliedFilters.value);
+      await store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
+        ...props.widget.value,
+      });
+    }
+  },
+  { immediate: true, deep: true },
+);
 </script>
 
 <style lang="scss" scoped>

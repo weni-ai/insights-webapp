@@ -109,13 +109,13 @@ export default {
 
         if (this.isExpansive && item.custom_status) {
           const customStatusValues = this.headers
-            .filter(header => header.value.startsWith('custom_status.'))
-            .map(header => {
+            .filter((header) => header.value.startsWith('custom_status.'))
+            .map((header) => {
               const statusKey = header.value.split('.')[1];
               const breakTimeInSeconds = item.custom_status[statusKey] || 0;
               return this.formatSecondsToTime(breakTimeInSeconds);
             });
-          
+
           baseContent.push(...customStatusValues);
         }
 
@@ -134,10 +134,10 @@ export default {
   methods: {
     formatSecondsToTime(seconds) {
       if (!seconds) return '00:00:00';
-      
+
       const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
       const zeroPad = (num) => String(num).padStart(2, '0');
-      
+
       return `${zeroPad(duration.hours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
     },
 
@@ -166,7 +166,7 @@ export default {
 
       if (this.isExpansive) {
         this.headers
-          .filter(header => header.value.startsWith('custom_status.'))
+          .filter((header) => header.value.startsWith('custom_status.'))
           .forEach((header, index) => {
             itemKeyMapper[index + 4] = header.value;
           });
@@ -185,7 +185,7 @@ export default {
             valueB = b.custom_status[statusKey] || 0;
           }
 
-          if ((typeof valueA === 'string') && (typeof valueB === 'string')) {
+          if (typeof valueA === 'string' && typeof valueB === 'string') {
             return this.sort.order === 'asc'
               ? valueA.localeCompare(valueB)
               : valueB.localeCompare(valueA);
@@ -262,8 +262,8 @@ export default {
       color: $unnnic-color-neutral-cloudy;
     }
   }
-  
-  :deep(.unnnic-table-next__header-cell){
+
+  :deep(.unnnic-table-next__header-cell) {
     display: inline-block;
   }
   :deep(.table-pagination) {

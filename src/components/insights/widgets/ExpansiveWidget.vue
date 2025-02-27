@@ -43,14 +43,15 @@ const currentComponent = computed(() => {
     table_dynamic_by_filter: HumanServiceAgentsTable,
   };
 
-  return componentMap[props.widget.type] || null;
+  return componentMap[props.widget.value.type] || null;
 });
 
 const widgetProps = computed(() => {
-  const { name, data, type, config } = props.widget;
+  const { name, data, type, config } = props.widget.value;
 
   const defaultProps = {
-    isLoading,
+    isLoading: isLoading.value,
+    isExpansive: true,
   };
 
   const tableDynamicFilterConfig =

@@ -4,15 +4,23 @@
     class="insights-layout-header"
   >
     <UnnnicBreadcrumb
+      v-if="!isExpansiveMode"
       :crumbs="breadcrumbs"
       @crumb-click="
         $router.push({ name: $event.routeName, path: $event.routePath })
       "
     />
-    <section class="insights-layout-header__content">
-      <HeaderSelectDashboard />
+    <section
+      v-if="!isExpansiveMode"
+      class="insights-layout-header__content"
+    >
+      <section v-if="isExpansiveMode"><h1>hi</h1></section>
+      <HeaderSelectDashboard v-if="!isExpansiveMode" />
 
-      <section class="content__actions">
+      <section
+        v-if="!isExpansiveMode"
+        class="content__actions"
+      >
         <HeaderTagLive v-if="showTagLive" />
         <InsightsLayoutHeaderFilters />
         <HeaderDashboardSettings />
@@ -23,6 +31,21 @@
         /> -->
         <HeaderGenerateInsightButton v-if="isRenderInsightButton" />
       </section>
+    </section>
+    <section
+      v-if="isExpansiveMode"
+      class="insights-layout-header__expansive"
+    >
+      <p class="insights-layout-header__expansive-title">
+        {{ $t('human_service_dashboard.all_agents') }}
+      </p>
+      <UnnnicButtonIcon
+        icon="close"
+        size="small"
+        type="tertiary"
+        class="insights-layout-header__expansive-close"
+        @click="updateCurrentExpansiveWidgetData({})"
+      />
     </section>
   </header>
 </template>
@@ -52,6 +75,13 @@ export default {
     ...mapState({
       dashboards: (state) => state.dashboards.dashboards,
       currentDashboard: (state) => state.dashboards.currentDashboard,
+      isExpansiveMode: (state) => {
+        const currentExpansiveWidget = state.widgets.currentExpansiveWidget;
+        return (
+          currentExpansiveWidget &&
+          Object.keys(currentExpansiveWidget).length > 0
+        );
+      },
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
@@ -130,6 +160,8 @@ export default {
   methods: {
     ...mapActions({
       setCurrentDashboard: 'dashboards/setCurrentDashboard',
+      updateCurrentExpansiveWidgetData:
+        'widgets/updateCurrentExpansiveWidgetData',
     }),
 
     navigateToDashboard(uuid) {
@@ -177,6 +209,27 @@ export default {
     .content__actions {
       display: flex;
       gap: $unnnic-spacing-ant;
+    }
+  }
+  &__expansive {
+    border-radius: 0.5rem 0.5rem 0rem 0rem;
+    background: $unnnic-color-neutral-white;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: $unnnic-spacing-xs $unnnic-spacing-md;
+
+    &-title {
+      font-size: $unnnic-font-size-title-sm;
+      font-weight: $unnnic-font-weight-black;
+      color: $unnnic-color-neutral-darkest;
+      font-family: $unnnic-font-family-primary;
+      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+    }
+
+    &-close {
+      background-color: $unnnic-color-neutral-white;
     }
   }
 }

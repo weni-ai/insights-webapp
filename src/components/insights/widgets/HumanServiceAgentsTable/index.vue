@@ -39,6 +39,7 @@
 import AgentsTableHeader from './AgentsTableHeader.vue';
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
+import { intervalToDuration } from 'date-fns';
 
 export default {
   name: 'HumanServiceAgentsTable',
@@ -109,7 +110,11 @@ export default {
         if (this.isExpansive && item.custom_status) {
           const customStatusValues = this.headers
             .filter(header => header.value.startsWith('custom_status.'))
-            .map(header => String(item.custom_status[header.value.split('.')[1]] || '0'));
+            .map(header => {
+              const statusKey = header.value.split('.')[1];
+              const breakTimeInSeconds = item.custom_status[statusKey] || 0;
+              return this.formatSecondsToTime(breakTimeInSeconds);
+            });
           
           baseContent.push(...customStatusValues);
         }
@@ -127,6 +132,15 @@ export default {
   },
 
   methods: {
+    formatSecondsToTime(seconds) {
+      if (!seconds) return '00:00:00';
+      
+      const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
+      const zeroPad = (num) => String(num).padStart(2, '0');
+      
+      return `${zeroPad(duration.hours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
+    },
+
     redirectItem(item) {
       const path = `${item.view_mode_url}/insights`;
       window.parent.postMessage(

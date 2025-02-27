@@ -11,11 +11,43 @@ export const mock = [
     custom_status: [
       {
         status_type: 'almoco',
-        break_time: 0,
+        break_time: 15000000,
       },
       {
         status_type: 'janta',
-        break_time: 0,
+        break_time: 2574928759,
+      },
+      {
+        status_type: 'banheiro',
+        break_time: 15000000,
+      },
+      {
+        status_type: 'cafe',
+        break_time: 2574928759,
+      },
+      {
+        status_type: 'descanso',
+        break_time: 15000000,
+      },
+      {
+        status_type: 'outras coisas',
+        break_time: 2574928759,
+      },
+      {
+        status_type: 'reunioes',
+        break_time: 15000000,
+      },
+      {
+        status_type: 'saida externa',
+        break_time: 2574928759,
+      },
+      {
+        status_type: 'saida interna',
+        break_time: 2574928759,
+      },
+      {
+        status_type: 'saida calculada',
+        break_time: 2574928759,
       },
     ],
   },
@@ -31,11 +63,11 @@ export const mock = [
     custom_status: [
       {
         status_type: 'almoco',
-        break_time: 0,
+        break_time: 560006,
       },
       {
         status_type: 'janta',
-        break_time: 0,
+        break_time: 539535,
       },
     ],
   },

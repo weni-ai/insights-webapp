@@ -3,6 +3,7 @@ import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
+import { mock } from './mock';
 
 const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
@@ -65,18 +66,13 @@ export default {
       if (isObjectsEquals(state.currentWidgetEditing, widget)) return;
       state.currentWidgetEditing = widget;
     },
-    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, { uuid }) {
-      if (!uuid) {
+    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, widget) {
+      console.log('widget', widget);
+      if (!widget) {
         state.currentExpansiveWidget = {};
         return;
       }
-
-      const widget = state.currentDashboardWidgets.find(
-        (widget) => widget.uuid === uuid,
-      );
-      if (widget) {
-        state.currentExpansiveWidget = widget;
-      }
+      state.currentExpansiveWidget = widget;
     },
   },
   actions: {
@@ -249,10 +245,36 @@ export default {
       });
       commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
     },
+    async updateCurrentExpansiveWidgetData({ commit }, widget) {
+      const setWidgetData = (data) =>
+        commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA, {
+          ...widget,
+          data,
+        });
 
-    updateCurrentExpansiveWidgetData({ commit }, widget) {
-      console.log('updateCurrentExpansiveWidgetData', widget);
-      commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA, widget);
+      commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, true);
+      setWidgetData(widget);
+      try {
+        const data = await Dashboards.getDashboardWidgetData({
+          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          widgetUuid: widget.uuid,
+        } as any);
+
+        setWidgetData(
+          data
+            ? {
+                ...data,
+                results: mock,
+              }
+            : null,
+        );
+        console.log(mock);
+      } catch (error) {
+        console.error(error);
+        setWidgetData(null);
+      } finally {
+        commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, false);
+      }
     },
 
     updateCurrentExpansiveWidgetLoading({ commit }, loading) {

@@ -94,11 +94,8 @@ export default {
     formattedItems() {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
-      const formattedItems = this.items.map((item) => ({
-        ...item,
-        view_mode_url: item.link.url,
-        link: undefined,
-        content: [
+      const formattedItems = this.items.map((item) => {
+        const baseContent = [
           {
             component: markRaw(AgentStatus),
             props: { status: item.status },
@@ -107,8 +104,23 @@ export default {
           String(item.agent),
           String(item.opened),
           String(item.closed),
-        ],
-      }));
+        ];
+
+        if (this.isExpansive && item.custom_status) {
+          const customStatusValues = this.headers
+            .filter(header => header.value.startsWith('custom_status.'))
+            .map(header => String(item.custom_status[header.value.split('.')[1]] || '0'));
+          
+          baseContent.push(...customStatusValues);
+        }
+
+        return {
+          ...item,
+          view_mode_url: item.link.url,
+          link: undefined,
+          content: baseContent,
+        };
+      });
 
       return this.sortItems(formattedItems);
     },
@@ -138,14 +150,28 @@ export default {
         3: 'closed',
       };
 
+      if (this.isExpansive) {
+        this.headers
+          .filter(header => header.value.startsWith('custom_status.'))
+          .forEach((header, index) => {
+            itemKeyMapper[index + 4] = header.value;
+          });
+      }
+
       const itemKey = itemKeyMapper[headerIndex];
 
       return items.sort((a, b) => {
         if (headerIndex !== -1) {
-          const valueA = a[itemKey];
-          const valueB = b[itemKey];
+          let valueA = a[itemKey];
+          let valueB = b[itemKey];
 
-          if ((typeof valueA === 'string') & (typeof valueB === 'string')) {
+          if (itemKey?.startsWith('custom_status.')) {
+            const statusKey = itemKey.split('.')[1];
+            valueA = a.custom_status[statusKey] || 0;
+            valueB = b.custom_status[statusKey] || 0;
+          }
+
+          if ((typeof valueA === 'string') && (typeof valueB === 'string')) {
             return this.sort.order === 'asc'
               ? valueA.localeCompare(valueB)
               : valueB.localeCompare(valueA);

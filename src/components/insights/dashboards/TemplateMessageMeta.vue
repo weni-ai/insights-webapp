@@ -129,7 +129,12 @@ const buttonClicksTableData = [
 ];
 
 const formattedClicksTableData = buttonClicksTableData.map((row) => ({
-  content: [row.label, row.type, row.total, formatToPercent(row.click_rate)],
+  content: [
+    row.label,
+    row.type,
+    String(row.total),
+    formatToPercent(row.click_rate),
+  ],
 }));
 
 const chartDataMock = [

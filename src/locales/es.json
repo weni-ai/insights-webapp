@@ -365,21 +365,28 @@
     "attendances": "Servicios"
   },
   "dashboard_commerce": {
+    "title": "Vea lo que está pasando en: Carro abandonado",
     "titles": {
-      "send-message": "Sent messages",
-      "delivered-messages": "Delivered messages",
-      "read-messages": "Read messages",
-      "interactions": "Interactions",
-      "utm-revenue": "UTM revenue",
-      "orders-placed": "Orders placed"
+      "send-message": "Mensajes enviados",
+      "delivered-messages": "Mensajes entregados",
+      "read-messages": "Mensajes leídos",
+      "interactions": "Interacciones",
+      "utm-revenue": "Ingresos UTM",
+      "orders-placed": "Pedidos realizados"
+    },
+    "filters": {
+      "today": "Hoy",
+      "last7days": "Últimos 7 días",
+      "last14days": "Últimos 14 días",
+      "lastmonth": "Último mes"
     },
     "infos": {
-      "send-message": "send",
-      "delivered-messages": "delivered-messages",
-      "read-messages": "read-messages",
-      "interactions": "interactions",
-      "utm-revenue": "utm-revenue",
-      "orders-placed": "orders-placed"
+      "send-message": "Envío de mensajes en Carro abandonado",
+      "delivered-messages": "Entrega de mensajes en Carro abandonado",
+      "read-messages": "Lectura de mensajes en Carro abandonado",
+      "interactions": "Interacciones en Carro abandonado",
+      "utm-revenue": "Ingresos UTM en Carro abandonado",
+      "orders-placed": "Pedidos realizados en Carro abandonado"
     }
   }
 }

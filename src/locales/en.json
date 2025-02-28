@@ -365,6 +365,7 @@
     "attendances": "Attendances"
   },
   "dashboard_commerce": {
+    "title": "See what's happening in: Abandoned cart",
     "titles": {
       "send-message": "Sent messages",
       "delivered-messages": "Delivered messages",
@@ -373,13 +374,19 @@
       "utm-revenue": "UTM revenue",
       "orders-placed": "Orders placed"
     },
+    "filters": {
+      "today": "Today",
+      "last7days": "Last 7 days",
+      "last14days": "Last 14 days",
+      "lastmonth": "Last month"
+    },
     "infos": {
-      "send-message": "send",
-      "delivered-messages": "delivered-messages",
-      "read-messages": "read-messages",
-      "interactions": "interactions",
-      "utm-revenue": "utm-revenue",
-      "orders-placed": "orders-placed"
+      "send-message": "Sent messages in Abandoned cart",
+      "delivered-messages": "Delivered messages in Abandoned cart",
+      "read-messages": "Read messages in Abandoned cart",
+      "interactions": "Interactions in Abandoned cart",
+      "utm-revenue": "UTM revenue in Abandoned cart",
+      "orders-placed": "Orders placed in Abandoned cart"
     }
   }
 }

@@ -38,7 +38,10 @@
         />
       </section>
     </section>
-    <section class="metrics-container">
+    <section
+      v-if="!isLoading"
+      class="metrics-container"
+    >
       <CardMetric
         v-for="(metric, index) in metrics"
         :key="metric.id"
@@ -54,19 +57,23 @@
         :lastRow="index >= metrics.length - (metrics.length % 3 || 3)"
       />
     </section>
+    <section
+      v-else
+      class="dashboard-commerce__loading"
+    >
+      <IconLoading />
+    </section>
   </section>
 </template>
 
 <script lang="ts" setup>
-import {
-  getLastNDays,
-  getLastMonthRange,
-getTodayDate,
-} from '@/utils/time';
+import { getLastNDays, getLastMonthRange, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
 import { ref } from 'vue';
 import i18n from '@/utils/plugins/i18n';
+import api from '@/services/api/resources/metrics';
+import IconLoading from '@/components/IconLoading.vue';
 
 interface MetricData {
   id: string;
@@ -86,46 +93,11 @@ const infos = {
   'orders-placed': i18n.global.t('dashboard_commerce.infos.orders-placed'),
 };
 
-const mockApiResponse = async (): Promise<MetricData[]> => {
-  return [
-    {
-      id: 'send-messages',
-      value: 1325,
-      percentage: 5.08,
-    },
-    {
-      id: 'delivered-messages',
-      value: 1259,
-      percentage: -1.12,
-    },
-    {
-      id: 'read-messages',
-      value: 956,
-      percentage: -2.08,
-    },
-    {
-      id: 'interactions',
-      value: 569,
-      percentage: 6.13,
-    },
-    {
-      id: 'utm-revenue',
-      value: 44566.0,
-      percentage: 12.2,
-      prefix: 'R$',
-    },
-    {
-      id: 'orders-placed',
-      value: 86,
-      percentage: 0,
-    },
-  ];
-};
-
 const metrics = ref<MetricData[]>([]);
+const isLoading = ref(false);
 
 const metricTitles: Record<string, string> = {
-  'send-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
+  'sent-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
   'delivered-messages': i18n.global.t(
     'dashboard_commerce.titles.delivered-messages',
   ),
@@ -135,26 +107,42 @@ const metricTitles: Record<string, string> = {
   'orders-placed': i18n.global.t('dashboard_commerce.titles.orders-placed'),
 };
 
+const getMetrics = async (start: string, end: string) => {
+  isLoading.value = true;
+  try {
+    const data: any = await api.getMetrics({
+      start_date: start,
+      end_date: end,
+    });
+
+    metrics.value = { ...data };
+  } catch (error) {
+    console.log('error getMetrics', error);
+  } finally {
+    isLoading.value = false;
+  }
+};
+
 const fetchMetrics = async () => {
-  const data = await mockApiResponse();
-  metrics.value = data;
+  const { start, end } = getLastNDays(7);
+  getMetrics(start, end);
 };
 
 fetchMetrics();
 
-const handleFilter = (filter: string) => {
+const handleFilter = async (filter: string) => {
   const type = filter.trim().replace(/\s+/g, '').toLowerCase();
 
-  console.log("type", type)
-
   const getDateRanges = {
-  today: getTodayDate(),
-  last7days: getLastNDays(7),
-  last14days: getLastNDays(14),
-  lastmonth: getLastMonthRange(),
-}
+    today: getTodayDate(),
+    last7days: getLastNDays(7),
+    last14days: getLastNDays(14),
+    lastmonth: getLastMonthRange(),
+  };
 
-  console.log(getDateRanges[type]);
+  const { start, end } = getDateRanges[type];
+
+  await getMetrics(start, end);
 };
 </script>
 
@@ -176,6 +164,15 @@ const handleFilter = (filter: string) => {
       font-weight: $unnnic-font-weight-black;
       line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
     }
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    padding-top: $unnnic-spacing-md;
   }
 }
 

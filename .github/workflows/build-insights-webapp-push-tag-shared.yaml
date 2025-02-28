@@ -88,9 +88,6 @@ jobs:
           build-args: |
             ${{env.BUILD_ENV_ARGS}}
             OLD_IMAGE=${{env.OLD_IMAGE}}
-            PUBLIC_PATH_URL=${{ secrets.PUBLIC_PATH_URL }}
-            BASE_URL=${{ secrets.BASE_URL }}
-            NODE_ENV=production
           file: docker/Dockerfile
           push: true
           tags: |

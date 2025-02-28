@@ -13,6 +13,7 @@ dotenv.config();
 const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 console.log(
   'process.env =======================>',
+  process.env,
   process.env.PUBLIC_PATH_URL,
   process.env.BASE_URL,
 );

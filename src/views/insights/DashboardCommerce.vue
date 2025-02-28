@@ -8,7 +8,7 @@
         class="dashboard-commerce__header-title"
         data-test-id="dashboard-commerce__header-title"
       >
-        See what's happening in: Commerce
+        {{ $t('dashboard_commerce.title') }}
       </section>
       <section
         class="filter-type"
@@ -18,19 +18,19 @@
         <DropdownFilter
           :items="[
             {
-              name: 'today',
+              name: $t('dashboard_commerce.filters.today'),
               action: () => handleFilter('Today'),
             },
             {
-              name: 'Last 7 days',
+              name: $t('dashboard_commerce.filters.last_7_days'),
               action: () => handleFilter('Last 7 days'),
             },
             {
-              name: 'Last week',
+              name: $t('dashboard_commerce.filters.last_14_days'),
               action: () => handleFilter('Last 14 days'),
             },
             {
-              name: 'Last month',
+              name: $t('dashboard_commerce.filters.last_month'),
               action: () => handleFilter('Last month'),
             },
           ]"

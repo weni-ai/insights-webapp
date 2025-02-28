@@ -376,9 +376,9 @@
     },
     "filters": {
       "today": "Hoje",
-      "last7days": "Últimos 7 dias",
-      "last14days": "Últimos 14 dias",
-      "lastmonth": "Último mês"
+      "last_7_days": "Últimos 7 dias",
+      "last_14_days": "Últimos 14 dias",
+      "last_month": "Último mês"
     },
     "infos": {
       "send-message": "Mensagens enviadas no carrinho abandonado",

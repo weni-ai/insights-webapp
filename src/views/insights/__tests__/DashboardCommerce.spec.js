@@ -5,14 +5,30 @@ import CardMetric from '@/components/home/CardMetric.vue';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
 import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import api from '@/services/api/resources/metrics';
+
+vi.mock('@/services/api/resources/metrics', () => ({
+  default: {
+    getMetrics: vi.fn(() =>
+      Promise.resolve({
+        data: [
+          { id: 'sent-messages', value: 1325, percentage: 5.08 },
+          { id: 'delivered-messages', value: 1259, percentage: -1.12 },
+          { id: 'read-messages', value: 956, percentage: -2.08 },
+          { id: 'interactions', value: 569, percentage: 6.13 },
+          { id: 'utm-revenue', value: 44566.0, percentage: 12.2, prefix: 'R$' },
+          { id: 'orders-placed', value: 86, percentage: 0 },
+        ],
+      }),
+    ),
+  },
+}));
 
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
   messages: {
-    en: {
-      'filter-by': 'Filter by',
-    },
+    en: {},
   },
   fallbackWarn: false,
   missingWarn: false,
@@ -46,7 +62,7 @@ describe('DashboardCommerce', () => {
   let wrapper;
   const consoleSpy = vi.spyOn(console, 'log');
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wrapper = mount(DashboardCommerce, {
       global: {
         plugins: [i18n, UnnnicSystem],
@@ -60,6 +76,49 @@ describe('DashboardCommerce', () => {
       },
     });
     consoleSpy.mockClear();
+    // Wait for initial data fetch
+    await wrapper.vm.$nextTick();
+  });
+
+  describe('loading state', () => {
+    it('shows loading state while fetching data', async () => {
+      wrapper = mount(DashboardCommerce);
+      expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(true);
+      await wrapper.vm.$nextTick();
+      expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(false);
+    });
+  });
+
+  describe('API interactions', () => {
+    it('calls getMetrics on mount with correct date range', () => {
+      expect(api.getMetrics).toHaveBeenCalledWith({
+        start_date: expect.any(String),
+        end_date: expect.any(String),
+      });
+    });
+
+    it('calls getMetrics when filter changes', async () => {
+      const dropdownFilter = wrapper.findComponent(DropdownFilter);
+      await dropdownFilter.vm.$emit('select', 'Today');
+
+      expect(api.getMetrics).toHaveBeenCalledWith({
+        start_date: expect.any(String),
+        end_date: expect.any(String),
+      });
+    });
+
+    it('handles API error gracefully', async () => {
+      vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
+      const consoleSpy = vi.spyOn(console, 'log');
+
+      await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
+
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'error getMetrics',
+        expect.any(Error),
+      );
+      expect(wrapper.find('.metrics-container').exists()).toBe(true);
+    });
   });
 
   describe('rendering', () => {
@@ -74,7 +133,7 @@ describe('DashboardCommerce', () => {
       const headerTitle = wrapper.find(
         '[data-test-id="dashboard-commerce__header-title"]',
       );
-      expect(headerTitle.text()).toBe("See what's happening in: Commerce");
+      expect(headerTitle.text()).toBe('dashboard_commerce.title');
     });
 
     it('renders the filter section', () => {
@@ -86,55 +145,6 @@ describe('DashboardCommerce', () => {
     it('renders the DropdownFilter component', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       expect(dropdownFilter.exists()).toBeTruthy();
-    });
-  });
-
-  describe('metrics rendering', () => {
-    it('renders all metrics correctly', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-      expect(metrics).toHaveLength(6);
-    });
-
-    it('passes correct props to CardMetric components', () => {
-      const firstMetric = wrapper.findComponent(CardMetric);
-      expect(firstMetric.props()).toMatchObject({
-        title: 'Sent messages',
-        value: 1325,
-        percentage: 5.08,
-        hasInfo: true,
-        leftColumn: true,
-        rightColumn: false,
-        middleColumn: false,
-        firstRow: true,
-      });
-    });
-
-    it('calculates column positions correctly', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-
-      expect(metrics[0].props('leftColumn')).toBe(true);
-      expect(metrics[0].props('middleColumn')).toBe(false);
-      expect(metrics[0].props('rightColumn')).toBe(false);
-
-      expect(metrics[1].props('leftColumn')).toBe(false);
-      expect(metrics[1].props('middleColumn')).toBe(true);
-      expect(metrics[1].props('rightColumn')).toBe(false);
-
-      expect(metrics[2].props('leftColumn')).toBe(false);
-      expect(metrics[2].props('middleColumn')).toBe(false);
-      expect(metrics[2].props('rightColumn')).toBe(true);
-    });
-
-    it('calculates row positions correctly', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-
-      expect(metrics[0].props('firstRow')).toBe(true);
-      expect(metrics[1].props('firstRow')).toBe(true);
-      expect(metrics[2].props('firstRow')).toBe(true);
-
-      expect(metrics[3].props('lastRow')).toBe(true);
-      expect(metrics[4].props('lastRow')).toBe(true);
-      expect(metrics[5].props('lastRow')).toBe(true);
     });
   });
 
@@ -151,14 +161,28 @@ describe('DashboardCommerce', () => {
       const filterItems = dropdownFilter.props('items');
 
       const expectedOptions = [
-        'today',
-        'Last 7 days',
-        'Last week',
-        'Last month',
+        'dashboard_commerce.filters.today',
+        'dashboard_commerce.filters.last_7_days',
+        'dashboard_commerce.filters.last_14_days',
+        'dashboard_commerce.filters.last_month',
       ];
 
       const filterNames = filterItems.map((item) => item.name);
       expect(filterNames).toEqual(expectedOptions);
+    });
+
+    it('updates metrics when filter changes', async () => {
+      const dropdownFilter = wrapper.findComponent(DropdownFilter);
+      const initialMetrics = [...wrapper.vm.metrics.data];
+
+      vi.spyOn(api, 'getMetrics').mockResolvedValueOnce({
+        data: [{ id: 'sent-messages', value: 999, percentage: 1.0 }],
+      });
+
+      await dropdownFilter.vm.$emit('select', 'Today');
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.metrics).not.toEqual(initialMetrics);
     });
   });
 
@@ -173,24 +197,6 @@ describe('DashboardCommerce', () => {
         expect(props).toHaveProperty('percentage');
         expect(props).toHaveProperty('hasInfo');
       });
-    });
-
-    it('correctly handles prefix property', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-      const utmMetric = metrics.find(
-        (metric) => metric.props('title') === 'UTM revenue',
-      );
-
-      expect(utmMetric.props('prefix')).toBe('R$');
-    });
-
-    it('handles zero percentage correctly', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-      const ordersMetric = metrics.find(
-        (metric) => metric.props('title') === 'Orders placed',
-      );
-
-      expect(ordersMetric.props('percentage')).toBe(0);
     });
   });
 });

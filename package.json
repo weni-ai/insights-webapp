@@ -23,7 +23,7 @@
     "cross-env": "^7.0.3",
     "@sentry/vue": "8.50.0",
     "@vueuse/core": "^10.11.0",
-    "@weni/unnnic-system": "^2.23.0",
+    "@weni/unnnic-system": "^2.24.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "chartjs-plugin-datalabels": "^2.2.0",

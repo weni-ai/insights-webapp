@@ -133,7 +133,9 @@ export default {
       const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
       const zeroPad = (num) => String(num).padStart(2, '0');
 
-      return `${zeroPad(duration.hours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
+      const totalHours = duration.days * 24 + duration.hours;
+
+      return `${zeroPad(totalHours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
     },
 
     redirectItem(item) {

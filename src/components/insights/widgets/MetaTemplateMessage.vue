@@ -1,95 +1,107 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
   <section class="meta-template-message">
-    <header class="meta-template-message__header">
-      <section class="meta-template-message__container-title">
-        <h2 class="meta-template-message__preview-label">
-          {{ $t('template_messages_dashboard.template.preview') }}
-        </h2>
-
-        <p
-          class="meta-template-message__container-title__name"
-          data-testid="template-name"
-        >
-          {{ props.template.name }}
-        </p>
-        <UnnnicToolTip
-          enabled
-          :text="$t('template_messages_dashboard.add_to_favorites')"
-          class="meta-template-message__favorite-tooltip"
-          side="bottom"
-        >
-          <UnnnicIcon
-            data-testid="template-favorite"
-            class="meta-template-message__favorite-icon"
-            icon="star_rate"
-            scheme="aux-yellow-500"
-            clickable
-          />
-        </UnnnicToolTip>
-      </section>
-      <QualityTemplateMessageFlag
-        data-testid="template-quality"
-        showDot
-        showInfo
-        :quality="props.template.quality"
+    <section
+      v-if="isLoading"
+      class="meta-template-message__loading"
+    >
+      <img
+        :src="weniLoading"
+        width="50"
+        height="50"
       />
-    </header>
-    <main class="meta-template-message__container-content">
-      <section class="meta-template-message__preview">
-        <img
-          v-if="props.template.image"
-          class="meta-template-message__preview-image"
-          :src="props.template.image"
-          data-testid="template-image"
-        />
+    </section>
+    <template v-else>
+      <header class="meta-template-message__header">
+        <section class="meta-template-message__container-title">
+          <h2 class="meta-template-message__preview-label">
+            {{ $t('template_messages_dashboard.template.preview') }}
+          </h2>
 
-        <h2
-          class="meta-template-message__preview-title"
-          data-testid="template-title"
-        >
-          {{ props.template.title }}
-        </h2>
-
-        <article
-          class="meta-template-message__preview-text"
-          data-testid="template-text"
-        >
-          {{ props.template.text }}
-        </article>
-
-        <p
-          class="meta-template-message__preview-hint"
-          data-testid="template-hint"
-        >
-          {{ props.template.hint }}
-        </p>
-
-        <section
-          v-for="(button, index) in props.template.buttons"
-          :key="index"
-          class="meta-template-message__preview-link"
-          data-testid="template-button"
-        >
-          <UnnnicIcon
-            :icon="button.icon"
-            scheme="aux-blue-500"
-          />
-          <p>{{ button.label }}</p>
+          <p
+            class="meta-template-message__container-title__name"
+            data-testid="template-name"
+          >
+            {{ props.template.name }}
+          </p>
+          <UnnnicToolTip
+            enabled
+            :text="$t('template_messages_dashboard.add_to_favorites')"
+            class="meta-template-message__favorite-tooltip"
+            side="bottom"
+          >
+            <UnnnicIcon
+              data-testid="template-favorite"
+              class="meta-template-message__favorite-icon"
+              icon="star_rate"
+              scheme="aux-yellow-500"
+              clickable
+            />
+          </UnnnicToolTip>
         </section>
-      </section>
-    </main>
-    <footer class="meta-template-message__edit">
-      <UnnnicButton
-        class="meta-template-message__edit-button"
-        type="secondary"
-        data-testid="template-edit-button"
-        :disabled="!template.link"
-        @click.stop="redirectToIntegrations()"
-      >
-        {{ $t('template_messages_dashboard.template.edit_template') }}
-      </UnnnicButton>
-    </footer>
+        <QualityTemplateMessageFlag
+          data-testid="template-quality"
+          showDot
+          showInfo
+          :quality="props.template.quality"
+        />
+      </header>
+      <main class="meta-template-message__container-content">
+        <section class="meta-template-message__preview">
+          <img
+            v-if="props.template.image"
+            class="meta-template-message__preview-image"
+            :src="props.template.image"
+            data-testid="template-image"
+          />
+
+          <h2
+            class="meta-template-message__preview-title"
+            data-testid="template-title"
+          >
+            {{ props.template.title }}
+          </h2>
+
+          <article
+            class="meta-template-message__preview-text"
+            data-testid="template-text"
+          >
+            {{ props.template.text }}
+          </article>
+
+          <p
+            class="meta-template-message__preview-hint"
+            data-testid="template-hint"
+          >
+            {{ props.template.hint }}
+          </p>
+
+          <section
+            v-for="(button, index) in props.template.buttons"
+            :key="index"
+            class="meta-template-message__preview-link"
+            data-testid="template-button"
+          >
+            <UnnnicIcon
+              :icon="button.icon"
+              scheme="aux-blue-500"
+            />
+            <p>{{ button.label }}</p>
+          </section>
+        </section>
+      </main>
+      <footer class="meta-template-message__edit">
+        <UnnnicButton
+          class="meta-template-message__edit-button"
+          type="secondary"
+          data-testid="template-edit-button"
+          :disabled="!template.link"
+          @click.stop="redirectToIntegrations()"
+        >
+          {{ $t('template_messages_dashboard.template.edit_template') }}
+        </UnnnicButton>
+      </footer>
+    </template>
   </section>
 </template>
 
@@ -101,11 +113,16 @@ export default {
 
 <script setup>
 import QualityTemplateMessageFlag from '../templateMessages/QualityTemplateMessageFlag.vue';
+import weniLoading from '@/assets/images/weni-loading.svg';
 
 const props = defineProps({
   template: {
     type: Object,
     required: true,
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -128,6 +145,13 @@ const redirectToIntegrations = () => {
   height: 100%;
   border: 1px solid $unnnic-color-neutral-soft;
   border-radius: $unnnic-border-radius-sm;
+
+  &__loading {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
   &__header {
     display: flex;

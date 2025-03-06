@@ -1,40 +1,53 @@
 <template>
   <section class="multiple-line-chart">
-    <section class="multiple-line-chart__counts-container">
-      <section
-        v-for="(groupData, index) in props.data"
-        :key="groupData.group"
-        class="multiple-line-chart__count"
-      >
-        <section class="multiple-line-chart__count-label">
-          <UnnnicIcon
-            class="dot"
-            icon="indicator"
-            :scheme="Object.keys(colorsMapper)[index]"
-          />
-          <p data-testid="data-label">{{ $t(groupData.group) }}</p>
-        </section>
-        <section class="multiple-line-chart__count-total">
-          <p class="multiple-line-chart__count-total-value">
-            {{ groupData.total }}
-          </p>
-          <p
-            v-if="index !== 0"
-            class="multiple-line-chart__count-total-percentage"
-          >
-            ({{ getPercentageOf(groupData.total, totalItems) }} %)
-          </p>
-        </section>
-      </section>
-    </section>
-    <section class="multiple-line-chart__chart">
-      <BaseChart
-        type="line"
-        :data="formattedChartData"
-        :options="options"
-        :plugins="plugins"
+    <section
+      v-if="isLoading"
+      class="multiple-line-chart__loading"
+    >
+      <img
+        :src="weniLoading"
+        width="50"
+        height="50"
       />
     </section>
+
+    <template v-else>
+      <section class="multiple-line-chart__counts-container">
+        <section
+          v-for="(groupData, index) in props.data"
+          :key="groupData.group"
+          class="multiple-line-chart__count"
+        >
+          <section class="multiple-line-chart__count-label">
+            <UnnnicIcon
+              class="dot"
+              icon="indicator"
+              :scheme="Object.keys(colorsMapper)[index]"
+            />
+            <p data-testid="data-label">{{ $t(groupData.group) }}</p>
+          </section>
+          <section class="multiple-line-chart__count-total">
+            <p class="multiple-line-chart__count-total-value">
+              {{ groupData.total }}
+            </p>
+            <p
+              v-if="index !== 0"
+              class="multiple-line-chart__count-total-percentage"
+            >
+              ({{ getPercentageOf(groupData.total, totalItems) }} %)
+            </p>
+          </section>
+        </section>
+      </section>
+      <section class="multiple-line-chart__chart">
+        <BaseChart
+          type="line"
+          :data="formattedChartData"
+          :options="options"
+          :plugins="plugins"
+        />
+      </section>
+    </template>
   </section>
 </template>
 
@@ -50,6 +63,7 @@ import BaseChart from './BaseChart.vue';
 import { Tooltip } from 'chart.js';
 import { getPercentageOf } from '@/utils/number';
 import i18n from '@/utils/plugins/i18n';
+import weniLoading from '@/assets/images/weni-loading.svg';
 
 const colorsMapper = {
   'aux-purple-300': '#B794F4',
@@ -62,6 +76,10 @@ const props = defineProps({
   data: {
     type: Object,
     required: true,
+  },
+  isLoading: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -127,13 +145,21 @@ const plugins = computed(() => [Tooltip]);
 
 <style lang="scss" scoped>
 .multiple-line-chart {
-  display: grid;
+  display: flex;
   flex-direction: column;
   padding: $unnnic-spacing-md;
   border-radius: $unnnic-border-radius-sm;
   border: 1px solid $unnnic-color-neutral-soft;
   gap: $unnnic-spacing-sm;
   width: 100%;
+  min-height: 280px;
+
+  &__loading {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &__counts-container {
     display: flex;

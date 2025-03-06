@@ -4,13 +4,14 @@
       <MetaTemplateMessage
         class="template-message-preview"
         :template="templatePreview"
+        :isLoading="isLoadingTemplatePreview"
       />
     </section>
     <section class="template-message-meta-dashboard__template-info">
       <div class="template-message-meta-dashboard__template-info-container">
         <MultipleLineChart
-          v-if="!isLoadingMessagesAnalyticsData"
           class="line-chart"
+          :isLoading="isLoadingMessagesAnalyticsData"
           :data="formattedMessagesAnalyticsData"
         />
         <SingleTable

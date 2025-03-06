@@ -1,6 +1,7 @@
 import { Dashboard, Filter, Widget } from '@/models';
 import http from '@/services/api/http';
 import Config from '@/store/modules/config';
+import User from '@/store/modules/user';
 import DashboardStore from '@/store/modules/dashboards';
 
 import { isFilteringDates } from '@/utils/filter';
@@ -137,6 +138,29 @@ export default {
       `/dashboards/${dashboardUuid}/widgets/${widgetUuid}/data/`,
       { params: treatedParams },
     );
+
+    return widgetData;
+  },
+
+  async getCustomStatusData({ params }) {
+    const { appliedFilters } = DashboardStore.state;
+    const { currentDashboardFilters } = DashboardStore.state;
+    const { email } = User.state;
+
+    const hasDateFilter = isFilteringDates({
+      currentDashboardFilters,
+      appliedFilters,
+    });
+
+    const treatedParams = createRequestQuery(appliedFilters, {
+      project: Config.state.project.uuid,
+      user_request: email,
+      is_live: !hasDateFilter || undefined,
+      ...params,
+    });
+    const widgetData = await http.get(`/dashboards/get_custom_status/`, {
+      params: treatedParams,
+    });
 
     return widgetData;
   },

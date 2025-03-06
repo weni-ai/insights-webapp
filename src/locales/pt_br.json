@@ -8,6 +8,7 @@
     "waiting_time": "Tempo de espera",
     "awaiting_service": "Aguardando atendimento",
     "interaction_time": "Tempo de interação",
+    "all_agents": "Todos os agentes",
     "tooltips": {
       "in_progress": "Total de chats sendo atendidos no momento.",
       "response_time": "Média de tempo que o contato espera para receber uma resposta para cada mensagem.",
@@ -304,6 +305,7 @@
     "select_origin_flow": "@:select @.lower:flow de origem"
   },
   "insights_header": {
+    "refresh": "Atualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "clear_filters": "Limpar filtros",

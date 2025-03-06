@@ -40,6 +40,14 @@ export default {
       );
     }
 
+    const queryParams = createRequestQuery({
+      project: Config.state.project.uuid,
+    });
+
+    const response = await http.get(`/dashboards/${uuid}/filters/`, {
+      params: queryParams,
+    });
+
     if (uuid === '33a4ed4f-854a-436e-b591-c39e9d649e3c') {
       return [
         new Filter({
@@ -50,14 +58,6 @@ export default {
         }),
       ];
     }
-
-    const queryParams = createRequestQuery({
-      project: Config.state.project.uuid,
-    });
-
-    const response = await http.get(`/dashboards/${uuid}/filters/`, {
-      params: queryParams,
-    });
     const responseArray = Object.keys(response);
 
     const dashboardFilters = responseArray.map((key) => {

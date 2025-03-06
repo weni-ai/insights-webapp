@@ -20,6 +20,7 @@
   },
   "template_messages_dashboard": {
     "title": "Plantilla de mensajes Meta",
+    "favorites": "Favoritos",
     "add_to_favorites": "Añadir a favoritos",
     "active_contacts": {
       "title": "Contactos activos",

@@ -110,7 +110,6 @@ const updateWidgetData = async () => {
 
 onMounted(() => {
   pollingInterval.value = window.setInterval(() => {
-    console.log('updateWidgetData', POLLING_INTERVAL);
     updateWidgetData();
   }, POLLING_INTERVAL);
 });

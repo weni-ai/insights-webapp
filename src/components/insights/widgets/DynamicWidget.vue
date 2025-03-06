@@ -239,6 +239,9 @@ export default {
         empty_column: {
           openConfig: () => this.$emit('open-config'),
         },
+        table_dynamic_by_filter: {
+          seeMore: () => this.redirectToTableAgents(),
+        },
         vtex_order: {
           openConfig: () => this.$emit('open-config'),
           requestData: () => {
@@ -348,6 +351,8 @@ export default {
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
+      updateCurrentExpansiveWidgetData:
+        'widgets/updateCurrentExpansiveWidgetData',
     }),
 
     initRequestDataInterval() {
@@ -420,6 +425,10 @@ export default {
         default:
           break;
       }
+    },
+
+    redirectToTableAgents() {
+      this.updateCurrentExpansiveWidgetData(this.widget);
     },
 
     getWidgetFormattedData(widget) {

@@ -85,7 +85,8 @@ export default {
 </script>
 
 <script setup>
-import { markRaw, reactive, ref, watch, onMounted } from 'vue';
+import { markRaw, reactive, ref, onMounted } from 'vue';
+import { useStore } from 'vuex';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -93,6 +94,10 @@ import FilterInputText from '../Layout/HeaderFilters/FilterInputText.vue';
 import FilterSelect from '../Layout/HeaderFilters/FilterSelect.vue';
 
 import QualityTemplateMessageFlag from './QualityTemplateMessageFlag.vue';
+
+import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
+
+const store = useStore();
 
 const emit = defineEmits(['close']);
 
@@ -138,19 +143,8 @@ const searchTemplates = async (cursorKey) => {
       cursor: cursorKey ? tablePagination[cursorKey] : undefined,
     };
 
-    const mockTemplateResponse = {
-      name: 'Template Name',
-      category: 'Category',
-      language: 'English',
-      updated_at: '20/10/2000',
-      quality: 'high',
-    };
-
-    const { results, next, previous } = await Promise.resolve({
-      next: '',
-      previous: '',
-      results: new Array(5).fill(mockTemplateResponse),
-    });
+    const { results, next, previous } =
+      await MetaTemplateMessageService.listTemplates();
 
     tablePagination.next = next;
 
@@ -177,7 +171,8 @@ const searchTemplates = async (cursorKey) => {
 };
 
 const rowClick = (row) => {
-  console.log(row);
+  store.dispatch('metaTemplateMessage/setSelectedTemplateUuid', row?.id);
+  close();
 };
 
 onMounted(() => searchTemplates());
@@ -187,6 +182,13 @@ onMounted(() => searchTemplates());
 .search-template-messages-modal {
   :deep(.unnnic-modal-dialog__container) {
     width: 1000px;
+  }
+  :deep(.search-template-messages-modal__table) {
+    :hover.unnnic-table-next__body-row {
+      cursor: pointer;
+      background-color: $unnnic-color-neutral-lightest;
+      font-weight: $unnnic-font-weight-bold;
+    }
   }
   &__filters-container {
     display: flex;

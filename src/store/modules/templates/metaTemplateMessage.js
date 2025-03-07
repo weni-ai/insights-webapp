@@ -1,3 +1,5 @@
+import MetaTemplateMessage from '@/services/api/resources/template/metaTemplateMessage';
+
 const mutations = {
   SET_FAVORITES_TEMPLATES: 'SET_FAVORITES_TEMPLATES',
   SET_SELECTED_FAVORITE_TEMPLATE: 'SET_SELECTED_FAVORITE_TEMPLATE',
@@ -28,6 +30,26 @@ export default {
     },
   },
   actions: {
-    getFavoritesTemplates() {},
+    async getFavoritesTemplates({ commit }) {
+      const response = await MetaTemplateMessage.getFavoritesTemplates();
+      commit(mutations.SET_FAVORITES_TEMPLATES, response);
+    },
+
+    setSelectedTemplateUuid({ commit }, templateUuid) {
+      commit(mutations.SET_SELECTED_TEMPLATE_UUID, templateUuid);
+    },
+
+    setSelectedFavorite({ commit, dispatch, state }, template) {
+      const favorite = Array.isArray(template) ? template : [template];
+
+      commit(mutations.SET_SELECTED_FAVORITE_TEMPLATE, favorite);
+
+      if (
+        favorite[0].value &&
+        state.selectedTemplateUuid !== favorite[0].value
+      ) {
+        dispatch('setSelectedTemplateUuid', favorite[0].value);
+      }
+    },
   },
 };

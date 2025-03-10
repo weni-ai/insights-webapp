@@ -1,7 +1,39 @@
 import { asyncTimeout } from '@/utils/time';
 
 export default {
-  async listTemplates(params) {},
+  async listTemplates(params) {
+    await asyncTimeout(3000);
+    return {
+      next: null,
+      previous: null,
+      results: [
+        {
+          name: 'test_template_1',
+          language: 'sq',
+          status: 'APPROVED',
+          category: 'MARKETING',
+          id: '1',
+          waba_id: '123',
+        },
+        {
+          name: 'test_template_2',
+          language: 'sq',
+          status: 'APPROVED',
+          category: 'MARKETING',
+          id: '2',
+          waba_id: '123',
+        },
+        {
+          name: 'test_template_3',
+          language: 'sq',
+          status: 'APPROVED',
+          category: 'MARKETING',
+          id: '3',
+          waba_id: '123',
+        },
+      ],
+    };
+  },
 
   async getTemplatePreview(params) {
     await asyncTimeout(5000);
@@ -110,7 +142,10 @@ export default {
     ];
   },
 
-  async getFavoritesTemplates(params) {},
+  async getFavoritesTemplates(params) {
+    await asyncTimeout(2000);
+    return [{ name: 'template-2', id: '2' }];
+  },
 
   async favoriteTemplate(templateUuid) {},
 

@@ -16,10 +16,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import IconLoading from '@/components/IconLoading.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
+
+const POLLING_INTERVAL = 60000; // 1 minute in milliseconds
+const pollingInterval = ref<number | null>(null);
 
 const props = defineProps({
   widget: {
@@ -97,15 +100,31 @@ const widgetEvents = computed(() => {
   return null;
 });
 
+const updateWidgetData = async () => {
+  if (props.widget.value.type === 'table_dynamic_by_filter') {
+    await store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
+      ...props.widget.value,
+    });
+  }
+};
+
+onMounted(() => {
+  pollingInterval.value = window.setInterval(() => {
+    updateWidgetData();
+  }, POLLING_INTERVAL);
+});
+
+onUnmounted(() => {
+  if (pollingInterval.value) {
+    clearInterval(pollingInterval.value);
+    pollingInterval.value = null;
+  }
+});
+
 watch(
   appliedFilters,
   async () => {
-    if (props.widget.value.type === 'table_dynamic_by_filter') {
-      console.log('appliedFilters', appliedFilters.value);
-      await store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
-        ...props.widget.value,
-      });
-    }
+    await updateWidgetData();
   },
   { immediate: true, deep: true },
 );

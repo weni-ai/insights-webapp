@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development rspack server --port 3003",
     "build": "cross-env NODE_ENV=production rspack build",
-    "test": "vitest -u",
+    "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",

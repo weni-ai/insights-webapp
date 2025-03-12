@@ -57,6 +57,7 @@ import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
+import moment from 'moment';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
@@ -99,11 +100,53 @@ export default {
     filter() {
       const filter = this.currentDashboardFilters[0];
 
-      if (filter.type === 'date_range')
+      if (
+        filter.type === 'date_range' &&
+        !this.currentDashboard?.config?.is_whatsapp_integration
+      ) {
         return {
           ...filter,
           type: 'select_date_range',
         };
+      }
+
+      if (this.currentDashboard?.config?.is_whatsapp_integration) {
+        const minDate = moment().subtract(89, 'days').format('YYYY-MM-DD');
+        const shortCutOptions = [
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.last_7_days',
+            ),
+            id: 'last-7-days',
+          },
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.last_14_days',
+            ),
+            id: 'last-14-days',
+          },
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.last_30_days',
+            ),
+            id: 'last-30-days',
+          },
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.last_60_days',
+            ),
+            id: 'last-60-days',
+          },
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.last_90_days',
+            ),
+            id: 'last-90-days',
+          },
+        ];
+
+        return { ...filter, next: true, minDate, shortCutOptions };
+      }
 
       return filter;
     },
@@ -126,8 +169,6 @@ export default {
       const isQueryEmpty = Object.keys(this.$route.query).length === 0;
       if (isQueryEmpty) {
         const { start, end } = getLastNDays(7);
-
-        console.log(this.currentDashboard);
 
         const currentFilter =
           this.currentDashboard?.name === 'test-meta-templates-message'

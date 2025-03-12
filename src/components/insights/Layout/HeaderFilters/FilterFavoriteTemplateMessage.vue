@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import i18n from '@/utils/plugins/i18n';
 

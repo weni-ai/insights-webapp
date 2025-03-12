@@ -62,6 +62,15 @@
     "template": {
       "preview": "Visualização",
       "edit_template": "Editar modelo"
+    },
+    "filter": {
+      "shortcut": {
+        "last_7_days": "Últimos 7 dias",
+        "last_14_days": "Últimos 14 dias",
+        "last_30_days": "Últimos 30 dias",
+        "last_60_days": "Últimos 60 dias",
+        "last_90_days": "Últimos 90 dias"
+      }
     }
   },
   "table_dynamic_by_filter": {

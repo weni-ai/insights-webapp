@@ -5,6 +5,7 @@ const mutations = {
   SET_SELECTED_FAVORITE_TEMPLATE: 'SET_SELECTED_FAVORITE_TEMPLATE',
   SET_SELECTED_TEMPLATE_UUID: 'SET_SELECTED_TEMPLATE_UUID',
   SET_IS_LOADING_FAVORITES_TEMPLATES: 'SET_IS_LOADING_FAVORITES_TEMPLATES',
+  SET_EMPTY_TEMPLATES: 'SET_EMPTY_TEMPLATES',
 };
 
 export default {
@@ -14,6 +15,7 @@ export default {
     selectedFavoriteTemplate: [],
     selectedTemplateUuid: '',
     isLoadingFavoritesTemplates: false,
+    emptyTemplates: false,
   },
   mutations: {
     [mutations.SET_FAVORITES_TEMPLATES](state, payload) {
@@ -27,6 +29,9 @@ export default {
     },
     [mutations.SET_SELECTED_TEMPLATE_UUID](state, payload) {
       state.selectedTemplateUuid = payload;
+    },
+    [mutations.SET_EMPTY_TEMPLATES](state, payload) {
+      state.emptyTemplates = payload;
     },
   },
   actions: {
@@ -50,6 +55,10 @@ export default {
       ) {
         dispatch('setSelectedTemplateUuid', favorite[0].value);
       }
+    },
+
+    setEmptyTemplates({ commit }, payload) {
+      commit(mutations.SET_EMPTY_TEMPLATES, payload);
     },
   },
 };

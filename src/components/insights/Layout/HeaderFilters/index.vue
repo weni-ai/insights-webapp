@@ -23,6 +23,7 @@
       class="insights-layout-header-filters_dynamic_container"
     >
       <DynamicFilter
+        v-show="!isMetaTemplateDashboard || !emptyTemplates"
         data-testid="dynamic-filter"
         :filter="filter"
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
@@ -38,11 +39,12 @@
       :modelValue="searchTemplateMetaModal"
       @close="searchTemplateMetaModal = false"
     />
-    <template v-if="currentDashboard?.name === 'test-meta-templates-message'">
+    <template v-if="isMetaTemplateDashboard">
       <UnnnicButton
         type="secondary"
         iconLeft="search"
         :text="$t('template_messages_dashboard.templates_modal.title')"
+        :disabled="emptyTemplates"
         @click.stop="searchTemplateMetaModal = true"
       />
     </template>
@@ -82,7 +84,12 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
+      emptyTemplates: (state) => state.metaTemplateMessage.emptyTemplates,
     }),
+
+    isMetaTemplateDashboard() {
+      return this.currentDashboard?.config?.is_whatsapp_integration;
+    },
 
     hasManyFilters() {
       return this.currentDashboardFilters?.length > 1;
@@ -100,17 +107,14 @@ export default {
     filter() {
       const filter = this.currentDashboardFilters[0];
 
-      if (
-        filter.type === 'date_range' &&
-        !this.currentDashboard?.config?.is_whatsapp_integration
-      ) {
+      if (filter.type === 'date_range' && !this.isMetaTemplateDashboard) {
         return {
           ...filter,
           type: 'select_date_range',
         };
       }
 
-      if (this.currentDashboard?.config?.is_whatsapp_integration) {
+      if (this.isMetaTemplateDashboard) {
         const minDate = moment().subtract(89, 'days').format('YYYY-MM-DD');
         const shortCutOptions = [
           {
@@ -170,10 +174,9 @@ export default {
       if (isQueryEmpty) {
         const { start, end } = getLastNDays(7);
 
-        const currentFilter =
-          this.currentDashboard?.name === 'test-meta-templates-message'
-            ? { date: { _start: start, _end: end } }
-            : { ended_at: { __gte: start, __lte: end } };
+        const currentFilter = this.isMetaTemplateDashboard
+          ? { date: { _start: start, _end: end } }
+          : { ended_at: { __gte: start, __lte: end } };
 
         this.setAppliedFilters(currentFilter);
       } else this.setAppliedFilters(this.$route.query);

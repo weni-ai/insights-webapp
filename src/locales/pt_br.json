@@ -22,6 +22,7 @@
     "title": "Mensagens template Meta",
     "favorites": "Favoritos",
     "add_to_favorites": "Adicionar aos favoritos",
+    "empty_templates": "Nenhum dado disponível no momento. Assim que houver atividade, aparecerá aqui!",
     "active_contacts": {
       "title": "Contatos ativos",
       "tooltip": "Contatos que interagiram com o modelo"

@@ -11,6 +11,19 @@
   </section>
 
   <section
+    v-else-if="isEmptyTemplates"
+    class="template-message-meta-dashboard__empty"
+  >
+    <img
+      class="template-message-meta-dashboard__empty-image"
+      :src="emptyMonitory"
+    />
+    <p class="template-message-meta-dashboard__empty-text">
+      {{ $t('template_messages_dashboard.empty_templates') }}
+    </p>
+  </section>
+
+  <section
     v-else
     class="template-message-meta-dashboard"
   >
@@ -60,6 +73,8 @@ import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vu
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
 import MetaTemplateMessage from '@/components/insights/widgets/MetaTemplateMessage.vue';
 
+import emptyMonitory from '@/assets/images/icons/empty_monitory.svg';
+
 import i18n from '@/utils/plugins/i18n';
 
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
@@ -84,7 +99,11 @@ onMounted(async () => {
     } else {
       const { results: templates } =
         await MetaTemplateMessageService.listTemplates();
-      handlerSelectedTemplateUuid(templates[0]?.id);
+
+      if (templates.length) {
+        store.dispatch('metaTemplateMessage/setEmptyTemplates', false);
+        handlerSelectedTemplateUuid(templates[0]?.id);
+      } else store.dispatch('metaTemplateMessage/setEmptyTemplates', true);
     }
   } catch (error) {
     console.error(error);
@@ -92,6 +111,10 @@ onMounted(async () => {
     initialLoading.value = false;
   }
 });
+
+const isEmptyTemplates = computed(
+  () => store.state.metaTemplateMessage.emptyTemplates,
+);
 
 const selectedTemplateUuid = computed(
   () => store.state.metaTemplateMessage.selectedTemplateUuid,
@@ -236,6 +259,27 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   grid-template-columns: 3fr 9fr;
   gap: $unnnic-spacing-sm;
   height: 100%;
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+
+    &-image {
+      max-width: 202px;
+      max-height: 202px;
+    }
+    &-text {
+      color: $unnnic-color-neutral-cloudy;
+      text-align: center;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-lg;
+      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
+    }
+  }
 
   &__loading {
     display: flex;

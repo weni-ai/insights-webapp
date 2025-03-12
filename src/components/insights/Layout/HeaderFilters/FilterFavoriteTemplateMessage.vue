@@ -1,6 +1,6 @@
 <template>
   <section
-    v-if="currentDashboard?.config?.is_whatsapp_integration"
+    v-if="currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates"
     class="filter-favorite-template"
   >
     <p class="filter-favorite-template__label">
@@ -23,6 +23,10 @@ import { useStore } from 'vuex';
 import i18n from '@/utils/plugins/i18n';
 
 const store = useStore();
+
+const emptyTemplates = computed(
+  () => store.state.metaTemplateMessage.emptyTemplates,
+);
 
 const currentDashboard = computed(
   () => store.state.dashboards.currentDashboard,

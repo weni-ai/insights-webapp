@@ -1,9 +1,9 @@
 import dashboardsStore from './dashboards';
-import Router from '@/router';
 import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
+import { mock } from './mock';
 
 const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
@@ -11,16 +11,20 @@ const mutations = {
     'SET_LOADING_CURRENT_DASHBOARD_WIDGETS',
   SET_LOADING_CURRENT_DASHBOARD_FILTERS:
     'SET_LOADING_CURRENT_DASHBOARD_FILTERS',
+  SET_LOADING_CURRENT_EXPANSIVE_WIDGET: 'SET_LOADING_CURRENT_EXPANSIVE_WIDGET',
   RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
   SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
+  SET_CURRENT_EXPANSIVE_WIDGET_DATA: 'SET_CURRENT_EXPANSIVE_WIDGET_DATA',
 };
 
 export default {
   namespaced: true,
   state: {
     currentDashboardWidgets: [],
+    currentExpansiveWidget: {},
+    isLoadingCurrentExpansiveWidget: false,
     isLoadingCurrentDashboardWidgets: false,
 
     currentWidgetEditing: null,
@@ -28,6 +32,9 @@ export default {
   mutations: {
     [mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS](state, loading) {
       state.isLoadingCurrentDashboardWidgets = loading;
+    },
+    [mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET](state, loading) {
+      state.isLoadingCurrentExpansiveWidget = loading;
     },
     [mutations.SET_CURRENT_DASHBOARD_WIDGETS](state, widgets) {
       state.currentDashboardWidgets = widgets;
@@ -58,6 +65,14 @@ export default {
     [mutations.UPDATE_CURRENT_WIDGET_EDITING](state, widget) {
       if (isObjectsEquals(state.currentWidgetEditing, widget)) return;
       state.currentWidgetEditing = widget;
+    },
+    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, widget) {
+      console.log('widget', widget);
+      if (!widget) {
+        state.currentExpansiveWidget = {};
+        return;
+      }
+      state.currentExpansiveWidget = widget;
     },
   },
   actions: {
@@ -229,6 +244,31 @@ export default {
         widget,
       });
       commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
+    },
+    async updateCurrentExpansiveWidgetData({ commit }, widget) {
+      const setWidgetData = (data) =>
+        commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA, {
+          ...widget,
+          data,
+        });
+
+      commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, true);
+      setWidgetData(widget);
+      try {
+        const data = await Dashboards.getCustomStatusData({
+          params: null,
+        });
+        setWidgetData(data);
+      } catch (error) {
+        console.error('getCustomStatusData', error);
+        setWidgetData(null);
+      } finally {
+        commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, false);
+      }
+    },
+
+    updateCurrentExpansiveWidgetLoading({ commit }, loading) {
+      commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, loading);
     },
   },
 };

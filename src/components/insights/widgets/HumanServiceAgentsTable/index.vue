@@ -4,12 +4,21 @@
       v-if="headerTitle"
       class="widget-human-service-agents__header"
     >
-      <h1
-        class="header__title"
-        data-testid="widget-human-service-agent-title"
-      >
-        {{ $t(headerTitle) }}
-      </h1>
+      <section v-if="!isExpansive">
+        <h1
+          class="header__title"
+          data-testid="widget-human-service-agent-title"
+        >
+          {{ $t(headerTitle) }}
+        </h1>
+      </section>
+      <section v-if="!isExpansive">
+        <UnnnicButtonIcon
+          size="small"
+          icon="expand_content"
+          @click.prevent.stop="$emit('seeMore')"
+        />
+      </section>
     </header>
 
     <UnnnicTableNext
@@ -28,12 +37,11 @@
 <script>
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
+import { intervalToDuration } from 'date-fns';
 
 export default {
   name: 'HumanServiceAgentsTable',
-
   props: {
-    isLoading: Boolean,
     headerTitle: {
       type: String,
       default: '',
@@ -46,7 +54,17 @@ export default {
       type: Array,
       required: true,
     },
+    isExpansive: {
+      type: Boolean,
+      default: false,
+    },
+    isLoading: {
+      type: Boolean,
+      default: false,
+    },
   },
+
+  emits: ['seeMore'],
 
   data() {
     return {
@@ -72,11 +90,8 @@ export default {
     formattedItems() {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
-      const formattedItems = this.items.map((item) => ({
-        ...item,
-        view_mode_url: item.link.url,
-        link: undefined,
-        content: [
+      const formattedItems = this.items.map((item) => {
+        const baseContent = [
           {
             component: markRaw(AgentStatus),
             props: { status: item.status },
@@ -85,14 +100,44 @@ export default {
           String(item.agent),
           String(item.opened),
           String(item.closed),
-        ],
-      }));
+        ];
+
+        if (this.isExpansive && item.custom_status) {
+          const customStatusValues = this.headers
+            .filter((header) => header.value.startsWith('custom_status.'))
+            .map((header) => {
+              const statusKey = header.value.split('.')[1];
+              const breakTimeInSeconds = item.custom_status[statusKey] || 0;
+              return this.formatSecondsToTime(breakTimeInSeconds);
+            });
+
+          baseContent.push(...customStatusValues);
+        }
+
+        return {
+          ...item,
+          view_mode_url: item.link.url,
+          link: undefined,
+          content: baseContent,
+        };
+      });
 
       return this.sortItems(formattedItems);
     },
   },
 
   methods: {
+    formatSecondsToTime(seconds) {
+      if (!seconds) return '00:00:00';
+
+      const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
+      const zeroPad = (num) => String(num).padStart(2, '0');
+
+      const totalHours = duration.days * 24 + duration.hours;
+
+      return `${zeroPad(totalHours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
+    },
+
     redirectItem(item) {
       const path = `${item.view_mode_url}/insights`;
       window.parent.postMessage(
@@ -116,14 +161,28 @@ export default {
         3: 'closed',
       };
 
+      if (this.isExpansive) {
+        this.headers
+          .filter((header) => header.value.startsWith('custom_status.'))
+          .forEach((header, index) => {
+            itemKeyMapper[index + 4] = header.value;
+          });
+      }
+
       const itemKey = itemKeyMapper[headerIndex];
 
       return items.sort((a, b) => {
         if (headerIndex !== -1) {
-          const valueA = a[itemKey];
-          const valueB = b[itemKey];
+          let valueA = a[itemKey];
+          let valueB = b[itemKey];
 
-          if ((typeof valueA === 'string') & (typeof valueB === 'string')) {
+          if (itemKey?.startsWith('custom_status.')) {
+            const statusKey = itemKey.split('.')[1];
+            valueA = a.custom_status[statusKey] || 0;
+            valueB = b.custom_status[statusKey] || 0;
+          }
+
+          if (typeof valueA === 'string' && typeof valueB === 'string') {
             return this.sort.order === 'asc'
               ? valueA.localeCompare(valueB)
               : valueB.localeCompare(valueA);
@@ -151,6 +210,7 @@ export default {
 
 <style lang="scss" scoped>
 .widget-human-service-agents {
+  border: 1px solid $unnnic-color-neutral-soft;
   box-shadow: $unnnic-shadow-level-far;
 
   padding: $unnnic-spacing-sm;
@@ -170,6 +230,7 @@ export default {
     display: flex;
     align-items: center;
     gap: $unnnic-spacing-stack-xs;
+    justify-content: space-between;
 
     .header__title {
       font-family: $unnnic-font-family-secondary;
@@ -199,6 +260,9 @@ export default {
     }
   }
 
+  :deep(.unnnic-table-next__header-cell) {
+    display: inline-block;
+  }
   :deep(.table-pagination) {
     display: none;
   }

@@ -83,11 +83,16 @@ const resetCurrentDashboardWidgets = () => {
   return store.commit('widgets/RESET_CURRENT_DASHBOARD_WIDGETS');
 };
 
+const resetAppliedFilters = () => {
+  return store.dispatch('dashboards/resetAppliedFilters');
+};
+
 watch(
   currentDashboardUuid,
   async (newCurrentDashboardUuid) => {
     if (newCurrentDashboardUuid) {
       resetCurrentDashboardWidgets();
+      resetAppliedFilters();
       getCurrentDashboardWidgets();
     }
   },

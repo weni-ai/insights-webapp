@@ -33,7 +33,7 @@ const dashboardType = computed(() => {
       ? 'expansive'
       : 'custom';
 
-  if (currentDashboard?.value?.config.is_whatsapp_integration) {
+  if (currentDashboard?.value?.config?.is_whatsapp_integration) {
     type = 'metaTemplateMessage';
   }
 

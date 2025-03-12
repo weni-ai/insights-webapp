@@ -218,6 +218,10 @@ const getSelectedTemplateData = () => {
   getMessagesAnalytics();
 };
 
+const appliedFilters = computed(() => store.state.dashboards.appliedFilters);
+
+watch(appliedFilters, () => getSelectedTemplateData());
+
 watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   if (newUuid !== oldUuid) {
     lastOpenTemplates.value[currentDashboard.value.uuid] = newUuid;

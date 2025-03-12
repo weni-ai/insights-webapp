@@ -22,7 +22,7 @@
         class="content__actions"
       >
         <HeaderTagLive v-if="showTagLive" />
-        <InsightsLayoutHeaderFilters />
+        <InsightsLayoutHeaderFilters v-if="currentDashboardFilters.length" />
         <HeaderDashboardSettings />
         <HeaderGenerateInsightButton v-if="isRenderInsightButton" />
       </section>

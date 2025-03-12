@@ -23,7 +23,7 @@
       class="insights-layout-header-filters_dynamic_container"
     >
       <DynamicFilter
-        v-show="!isMetaTemplateDashboard || !emptyTemplates"
+        v-if="!isMetaTemplateDashboard || !emptyTemplates"
         data-testid="dynamic-filter"
         :filter="filter"
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
@@ -105,6 +105,8 @@ export default {
         : this.$t('insights_header.filters');
     },
     filter() {
+      if (!this.currentDashboardFilters.length) return null;
+
       const filter = this.currentDashboardFilters[0];
 
       if (filter.type === 'date_range' && !this.isMetaTemplateDashboard) {
@@ -169,18 +171,48 @@ export default {
         // this.setAppliedFilters(newRoute.query);
       },
     },
-    currentDashboardFilters() {
-      const isQueryEmpty = Object.keys(this.$route.query).length === 0;
-      if (isQueryEmpty) {
-        const { start, end } = getLastNDays(7);
+    currentDashboardFilters: {
+      immediate: true,
+      handler(filters) {
+        if (filters.length === 1) {
+          const { date, ended_at } = this.$route.query;
+          const { start, end } = getLastNDays(7);
 
-        const currentFilter = this.isMetaTemplateDashboard
-          ? { date: { _start: start, _end: end } }
-          : { ended_at: { __gte: start, __lte: end } };
+          const defaultFilterValue = this.isMetaTemplateDashboard
+            ? { _start: start, _end: end }
+            : { __gte: start, __lte: end };
 
-        this.setAppliedFilters(currentFilter);
-      } else this.setAppliedFilters(this.$route.query);
+          const currentFilters = {};
+
+          if (date) {
+            currentFilters.date = this.$route.query.date;
+          }
+          if (ended_at) {
+            currentFilters.ended_at = this.$route.query.ended_at;
+          }
+
+          const filterKey = this.isMetaTemplateDashboard ? 'date' : 'ended_at';
+
+          this.setAppliedFilters({
+            [filterKey]: currentFilters[filterKey] || defaultFilterValue,
+          });
+        } else {
+          this.setAppliedFilters(this.$route.query);
+        }
+      },
     },
+    // currentDashboardFilters() {
+    //   const isQueryEmpty = Object.keys(this.$route.query).length === 0;
+    //   if (isQueryEmpty) {
+    //     const { start, end } = getLastNDays(7);
+
+    //     const currentFilter = this.isMetaTemplateDashboard
+    //       ? { date: { _start: start, _end: end } }
+    //       : { ended_at: { __gte: start, __lte: end } };
+
+    //     this.setAppliedFilters(currentFilter);
+    //   } else this.setAppliedFilters(this.$route.query);
+    // },
   },
 
   methods: {

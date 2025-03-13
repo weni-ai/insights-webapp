@@ -5,6 +5,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 const { resolve } = require('path');
 const path = require('path');
 const dotenv = require('dotenv');
+const pkg = require('./package.json');
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ module.exports = defineConfig({
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: '/',
+    publicPath: `${process.env.PUBLIC_PATH_URL}`,
     filename: 'assets/js/[name]-[contenthash].js',
     chunkFilename: 'assets/js/[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext]',
@@ -82,6 +83,7 @@ module.exports = defineConfig({
   plugins: [
     new HtmlRspackPlugin({
       template: './index.html',
+      inject: 'head',
       minify: {
         removeComments: false,
         collapseWhitespace: true,
@@ -98,6 +100,26 @@ module.exports = defineConfig({
       }),
     }),
     new VueLoaderPlugin(),
+    new rspack.container.ModuleFederationPlugin({
+      name: 'remote_insights',
+      filename: 'remoteEntry.js',
+      exposes: {
+        './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
+      },
+      remotes: {},
+      shared: {
+        ...pkg,
+        vue: {
+          singleton: true,
+          eager: true,
+        },
+        'vue-i18n': {
+          singleton: true,
+          requiredVersion: pkg.dependencies['vue-i18n'],
+          eager: true,
+        },
+      },
+    }),
   ],
   optimization: {
     minimizer: [

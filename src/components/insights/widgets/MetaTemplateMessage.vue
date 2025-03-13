@@ -77,12 +77,13 @@
           </p>
 
           <section
-            v-for="(button, index) in props.template.buttons"
+            v-for="(button, index) in buttons"
             :key="index"
             class="meta-template-message__preview-link"
             data-testid="template-button"
           >
             <UnnnicIcon
+              v-if="button.icon"
               :icon="button.icon"
               scheme="aux-blue-500"
             />
@@ -112,6 +113,7 @@ export default {
 </script>
 
 <script setup>
+import { computed } from 'vue';
 import QualityTemplateMessageFlag from '../templateMessages/QualityTemplateMessageFlag.vue';
 import weniLoading from '@/assets/images/weni-loading.svg';
 
@@ -135,6 +137,29 @@ const redirectToIntegrations = () => {
     },
     '*',
   );
+};
+
+const buttons = computed(() => {
+  const templateButtons = props.template.buttons;
+
+  if (!templateButtons?.length) return [];
+
+  return templateButtons.map((button) => ({
+    ...button,
+    icon: getButtonIcon(button.type),
+  }));
+});
+
+const getButtonIcon = (buttonType) => {
+  const buttonMapper = {
+    PHONE_NUMBER: 'phone',
+    URL: 'open_in_new',
+    COPY_CODE: 'content_copy',
+    FLOW: '',
+    QUICK_REPLY: 'reply',
+  };
+
+  return buttonMapper[buttonType] || '';
 };
 </script>
 

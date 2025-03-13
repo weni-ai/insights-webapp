@@ -47,8 +47,8 @@ export default {
       image:
         'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',
       buttons: [
-        { icon: 'open_in_new', label: 'Acessar notícia' },
-        { icon: 'reply', label: 'Parar de receber' },
+        { type: 'URL', label: 'Acessar notícia' },
+        { type: 'QUICK_REPLY', label: 'Parar de receber' },
       ],
     };
   },

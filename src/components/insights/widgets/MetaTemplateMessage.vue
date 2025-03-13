@@ -41,9 +41,7 @@
         </section>
         <QualityTemplateMessageFlag
           data-testid="template-quality"
-          showDot
-          showInfo
-          :quality="props.template.quality"
+          :status="props.template.status"
         />
       </header>
       <main class="meta-template-message__container-content">

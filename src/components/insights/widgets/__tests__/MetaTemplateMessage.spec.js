@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from 'vitest';
-import { mount, config, flushPromises } from '@vue/test-utils';
+import { mount, config } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
@@ -20,7 +20,7 @@ const templateMock = {
   title: 'Template Title',
   text: 'Template Text',
   hint: `Template Hint`,
-  quality: 'high',
+  status: 'APPROVED',
   name: 'template_test',
   image: 'https://img.com/img.png',
   buttons: [
@@ -79,7 +79,7 @@ describe('MetaTemplateMessage', () => {
       name: 'QualityTemplateMessageFlag',
     });
     expect(qualityFlag.exists()).toBe(true);
-    expect(qualityFlag.props('quality')).toBe('high');
+    expect(qualityFlag.props('status')).toBe('APPROVED');
   });
 
   it('renders buttons dynamically based on props', () => {

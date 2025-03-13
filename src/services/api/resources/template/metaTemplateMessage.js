@@ -42,7 +42,7 @@ export default {
         'VTEX adquire Weni e passa a oferecer solução de IA para transformar o atendimento pós-venda de marcas e varejistas',
       text: 'A aquisição fortalece a jornada omnichannel da VTEX, reduz custos de suporte ao cliente e impulsionada por dados e IA aprimora a experiência pós-venda para marcas e varejistas globais.',
       hint: `Não tem interesse? Toque em 'Parar promoções'`,
-      quality: 'high',
+      status: 'APPROVED',
       name: 'template_dev',
       image:
         'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',

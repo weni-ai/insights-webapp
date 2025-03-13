@@ -158,7 +158,7 @@ const searchTemplates = async (cursorKey) => {
         template.language,
         {
           component: markRaw(QualityTemplateMessageFlag),
-          props: { quality: template.quality },
+          props: { status: template.status },
           events: {},
         },
       ],

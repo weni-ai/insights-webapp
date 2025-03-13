@@ -158,6 +158,8 @@
   "search": "Buscar",
   "category": "Categoria",
   "language": "Idioma",
+  "pending": "Pendente",
+  "rejected": "Rejeitado",
   "active": "Ativo",
   "select_date": {
     "yesterday": "Ontem ({date})",

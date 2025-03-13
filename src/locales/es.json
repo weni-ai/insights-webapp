@@ -158,6 +158,8 @@
   "search": "Buscar",
   "category": "Categoría",
   "language": "Idioma",
+  "pending": "Pendiente",
+  "rejected": "Rechazado",
   "active": "Activo",
   "select_date": {
     "yesterday": "Ayer ({date})",

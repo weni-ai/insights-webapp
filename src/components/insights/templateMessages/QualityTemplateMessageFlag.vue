@@ -2,57 +2,32 @@
   <section
     :class="[
       'quality-template-message-flag',
-      `quality-template-message-flag--${props.quality}`,
+      `quality-template-message-flag--${props.status.toLowerCase()}`,
     ]"
   >
-    <UnnnicIcon
-      v-if="props.showDot"
-      class="dot"
-      icon="indicator"
-      :scheme="colorMapper[props.quality]"
-    />
     <p class="quality-template-message-flag__text">
-      {{ $t('active') }} -
-      {{ $t(`template_messages_dashboard.quality.${quality}`) }}
+      {{ getStatusLabel(props.status) }}
     </p>
-    <UnnnicToolTip
-      v-if="props.showInfo"
-      class="info"
-      enabled
-      :text="$t('template_messages_dashboard.quality.more_info_tooltip')"
-      enableHtml
-    >
-      <UnnnicIcon
-        icon="info"
-        :scheme="colorMapper[props.quality]"
-        size="sm"
-      />
-    </UnnnicToolTip>
   </section>
 </template>
 
 <script setup>
+import i18n from '@/utils/plugins/i18n';
 const props = defineProps({
-  showDot: {
-    type: Boolean,
-    default: false,
-  },
-  showInfo: {
-    type: Boolean,
-    default: false,
-  },
-  quality: {
+  status: {
     type: String,
-    required: true,
-    validate: (value) => {
-      return ['high', 'medium', 'low'].includes(value);
-    },
+    default: '',
   },
 });
-const colorMapper = {
-  high: 'aux-green-500',
-  medium: 'aux-orange-500',
-  low: 'aux-red-500',
+
+const getStatusLabel = () => {
+  const statusMapper = {
+    APPROVED: i18n.global.t('active'),
+    PENDING: i18n.global.t('pending'),
+    REJECTED: i18n.global.t('rejected'),
+  };
+
+  return statusMapper[props.status] || '';
 };
 </script>
 
@@ -69,13 +44,13 @@ const colorMapper = {
     margin-top: $unnnic-spacing-nano;
     margin-left: $unnnic-spacing-nano;
   }
-  &--high {
+  &--approved {
     color: $unnnic-color-aux-green-500;
   }
-  &--medium {
+  &--pending {
     color: $unnnic-color-aux-orange-500;
   }
-  &--low {
+  &--rejected {
     color: $unnnic-color-aux-red-500;
   }
 }

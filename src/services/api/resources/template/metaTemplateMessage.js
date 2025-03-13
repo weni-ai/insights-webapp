@@ -18,7 +18,7 @@ export default {
         {
           name: 'test_template_2',
           language: 'sq',
-          status: 'APPROVED',
+          status: 'PENDING',
           category: 'MARKETING',
           id: '2',
           waba_id: '123',
@@ -26,7 +26,7 @@ export default {
         {
           name: 'test_template_3',
           language: 'sq',
-          status: 'APPROVED',
+          status: 'REJECTED',
           category: 'MARKETING',
           id: '3',
           waba_id: '123',

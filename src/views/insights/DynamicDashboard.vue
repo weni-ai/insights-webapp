@@ -9,8 +9,10 @@
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
-import DashboardCustom from '../../components/insights/dashboards/DashboardCustom.vue';
+
+import DashboardCustom from '@/components/insights/dashboards/DashboardCustom.vue';
 import ExpansiveWidget from '@/components/insights/widgets/ExpansiveWidget.vue';
+import MetaTemplateMessage from '@/components/insights/dashboards/TemplateMessageMeta.vue';
 
 const store = useStore();
 
@@ -18,16 +20,27 @@ const currentExpansiveWidget = computed(() => {
   return store.state.widgets?.currentExpansiveWidget;
 });
 
+const currentDashboard = computed(() => {
+  return store.state.dashboards?.currentDashboard;
+});
+
 const dashboardType = computed(() => {
-  const type =
+  let type;
+
+  type =
     currentExpansiveWidget.value &&
     Object.keys(currentExpansiveWidget.value).length > 0
       ? 'expansive'
       : 'custom';
 
+  if (currentDashboard?.value?.config?.is_whatsapp_integration) {
+    type = 'metaTemplateMessage';
+  }
+
   const dashboardTypes = {
     custom: 'custom_dashboard',
     expansive: 'expansive_widget',
+    metaTemplateMessage: 'meta_template_message',
   };
 
   return dashboardTypes[type] || dashboardTypes['custom'];
@@ -37,6 +50,7 @@ const currentComponent = computed(() => {
   const componentMap = {
     custom_dashboard: DashboardCustom,
     expansive_widget: ExpansiveWidget,
+    meta_template_message: MetaTemplateMessage,
     template_dashboard: null,
   };
 
@@ -50,11 +64,11 @@ const dashboardProps = computed(() => {
     },
   };
 
-  return mappingProps[dashboardType.value] || null;
+  return mappingProps[dashboardType.value] || {};
 });
 
 const dashboardEvents = computed(() => {
-  return null;
+  return {};
 });
 
 const currentDashboardUuid = computed(
@@ -69,11 +83,16 @@ const resetCurrentDashboardWidgets = () => {
   return store.commit('widgets/RESET_CURRENT_DASHBOARD_WIDGETS');
 };
 
+const resetAppliedFilters = () => {
+  return store.dispatch('dashboards/resetAppliedFilters');
+};
+
 watch(
   currentDashboardUuid,
   async (newCurrentDashboardUuid) => {
     if (newCurrentDashboardUuid) {
       resetCurrentDashboardWidgets();
+      resetAppliedFilters();
       getCurrentDashboardWidgets();
     }
   },

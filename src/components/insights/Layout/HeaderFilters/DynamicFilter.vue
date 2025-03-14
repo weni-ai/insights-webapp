@@ -20,6 +20,7 @@ import FilterSelect from './FilterSelect.vue';
 import FilterSelectDate from './FilterSelectDate.vue';
 import { findMatchingDate } from '@/utils/time';
 import i18n from '@/utils/plugins/i18n';
+import moment from 'moment';
 
 export default {
   name: 'DynamicFilter',
@@ -60,8 +61,16 @@ export default {
     filterProps() {
       const { disabled, treatedModelValue } = this;
 
-      const { type, placeholder, source, depends_on, key_value_field } =
-        this.filter;
+      const {
+        type,
+        placeholder,
+        source,
+        depends_on,
+        key_value_field,
+        next,
+        minDate,
+        shortCutOptions,
+      } = this.filter;
 
       const defaultProps = {
         placeholder: placeholder ? this.$t(placeholder) : '',
@@ -88,6 +97,10 @@ export default {
         },
         date_range: {
           modelValue: treatedModelValue,
+          maxDate: moment().format('YYYY-MM-DD'),
+          minDate,
+          next,
+          options: shortCutOptions,
         },
         input_text: {},
         select: {

@@ -47,6 +47,17 @@ export default {
     const response = await http.get(`/dashboards/${uuid}/filters/`, {
       params: queryParams,
     });
+
+    if (uuid === '33a4ed4f-854a-436e-b591-c39e9d649e3c') {
+      return [
+        new Filter({
+          name: 'date',
+          type: 'date_range',
+          start_sufix: '_start',
+          end_sufix: '_end',
+        }),
+      ];
+    }
     const responseArray = Object.keys(response);
 
     const dashboardFilters = responseArray.map((key) => {

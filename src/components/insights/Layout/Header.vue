@@ -22,13 +22,8 @@
         class="content__actions"
       >
         <HeaderTagLive v-if="showTagLive" />
-        <InsightsLayoutHeaderFilters />
+        <InsightsLayoutHeaderFilters v-if="currentDashboardFilters.length" />
         <HeaderDashboardSettings />
-        <!-- <UnnnicButton
-        class="clickable"
-        iconCenter="ios_share"
-        type="secondary"
-        /> -->
         <HeaderGenerateInsightButton v-if="isRenderInsightButton" />
       </section>
     </section>

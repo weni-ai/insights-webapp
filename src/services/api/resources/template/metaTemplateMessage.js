@@ -314,9 +314,18 @@ export default {
     return data.data;
   },
 
-  async getFavoritesTemplates(params) {
-    await asyncTimeout(2000);
-    return [{ name: 'template-2', id: '2' }];
+  async getFavoritesTemplates({ dashboard }) {
+    const url = '/metrics/meta/whatsapp-message-templates/favorites/';
+    const params = {
+      dashboard,
+      limit: 5,
+      offset: 0,
+    };
+    // const { data } = await http.get(url, { params });
+    const { data } = await asyncTimeout(2000).then(() => {
+      return { data: { results: [{ name: 'template-2', id: '2' }] } };
+    });
+    return data.results;
   },
 
   async favoriteTemplate(templateUuid) {},

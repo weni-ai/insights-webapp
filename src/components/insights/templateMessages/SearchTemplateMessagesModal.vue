@@ -24,25 +24,19 @@
         v-model="filters.category"
         class="filter filter__category"
         :placeholder="$t('category')"
-        source="template-messages-categories"
+        :fetchRequest="() => sourceRequest('categories')"
+        keyValueField="value"
         data-testid="filter-category"
-        @update:model-value="
-          tablePagination.page === 1
-            ? searchTemplates()
-            : (tablePagination.page = 1)
-        "
+        @update:model-value="$event && searchTemplates()"
       />
       <FilterSelect
         v-model="filters.language"
         class="filter filter__language"
         :placeholder="$t('language')"
-        source="template-messages-languages"
+        :fetchRequest="() => sourceRequest('languages')"
+        keyValueField="value"
         data-testid="filter-language"
-        @update:model-value="
-          tablePagination.page === 1
-            ? searchTemplates()
-            : (tablePagination.page = 1)
-        "
+        @update:model-value="$event && searchTemplates()"
       />
     </section>
 
@@ -127,12 +121,20 @@ const tableHeaders = [
   { content: i18n.global.t('status'), size: 1.5 },
 ];
 
+const sourceRequest = (source) => {
+  return MetaTemplateMessageService.listMetricsSource(source);
+};
+
 const templateMessages = ref([]);
 
 const tablePagination = reactive({
   next: null,
   previous: null,
 });
+
+const handlerSearchTemplates = (aq) => {
+  console.log(aq);
+};
 
 const searchTemplates = async (cursorKey) => {
   try {

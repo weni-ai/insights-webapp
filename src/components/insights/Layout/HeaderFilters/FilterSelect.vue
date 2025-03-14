@@ -41,6 +41,12 @@ export default {
       type: String,
       default: '',
     },
+    fetchRequest: {
+      type: Function,
+      default: (...params) => {
+        return Projects.getProjectSource(...params);
+      },
+    },
   },
 
   emits: ['update:model-value'],
@@ -95,7 +101,7 @@ export default {
   methods: {
     async fetchSource() {
       try {
-        const response = await Projects.getProjectSource(
+        const response = await this.fetchRequest(
           this.source,
           this.dependsOnValue || {},
         );

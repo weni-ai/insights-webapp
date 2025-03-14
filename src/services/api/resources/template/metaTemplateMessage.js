@@ -1,6 +1,31 @@
 import { asyncTimeout } from '@/utils/time';
+import http from '@/services/api/http';
 
 export default {
+  async listMetricsSource(source) {
+    await asyncTimeout(2000);
+
+    const url = `/metrics/meta/whatsapp-message-templates/${source}/`;
+    // const { data } = await http.get(url);
+    const { data } = await asyncTimeout(2000).then(() => {
+      return {
+        data: {
+          [source]: [
+            source === 'languages'
+              ? {
+                  name: 'Português',
+                  value: 'pt_BR',
+                }
+              : {
+                  name: 'Marketing',
+                  value: 'marketing',
+                },
+          ],
+        },
+      };
+    });
+    return data[source];
+  },
   async listTemplates(params) {
     await asyncTimeout(3000);
     return {

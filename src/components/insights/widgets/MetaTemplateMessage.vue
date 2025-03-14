@@ -85,7 +85,7 @@
               :icon="button.icon"
               scheme="aux-blue-500"
             />
-            <p>{{ button.label }}</p>
+            <p>{{ button.text }}</p>
           </section>
         </section>
       </main>

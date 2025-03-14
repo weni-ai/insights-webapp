@@ -14,29 +14,35 @@
         :placeholder="$t('search')"
         iconPosition="left"
         data-testid="filter-name"
-        @update:model-value="
-          tablePagination.page === 1
-            ? searchTemplates()
-            : (tablePagination.page = 1)
-        "
+        @update:model-value="handlerSearchTemplatesByName()"
       />
       <FilterSelect
-        v-model="filters.category"
+        :modelValue="filters.category"
         class="filter filter__category"
         :placeholder="$t('category')"
         :fetchRequest="() => sourceRequest('categories')"
         keyValueField="value"
         data-testid="filter-category"
-        @update:model-value="$event && searchTemplates()"
+        @update:model-value="
+          ($event) => {
+            filters.category = $event;
+            if ($event) searchTemplates();
+          }
+        "
       />
       <FilterSelect
-        v-model="filters.language"
+        :modelValue="filters.language"
         class="filter filter__language"
         :placeholder="$t('language')"
         :fetchRequest="() => sourceRequest('languages')"
         keyValueField="value"
         data-testid="filter-language"
-        @update:model-value="$event && searchTemplates()"
+        @update:model-value="
+          ($event) => {
+            filters.language = $event;
+            if ($event) searchTemplates();
+          }
+        "
       />
     </section>
 
@@ -79,7 +85,7 @@ export default {
 </script>
 
 <script setup>
-import { markRaw, reactive, ref, onMounted } from 'vue';
+import { markRaw, reactive, ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
 
 import i18n from '@/utils/plugins/i18n';
@@ -92,6 +98,12 @@ import QualityTemplateMessageFlag from './QualityTemplateMessageFlag.vue';
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
 
 const store = useStore();
+
+const waba_id = computed(
+  () => store.state.dashboards.currentDashboard.config?.waba_id,
+);
+
+const project_uuid = computed(() => store.state.config.project?.uuid);
 
 const emit = defineEmits(['close']);
 
@@ -107,7 +119,6 @@ const filters = reactive({
   name: '',
   category: '',
   language: '',
-  date: { start: '', end: '' },
 });
 
 const tableHeaders = [
@@ -128,25 +139,41 @@ const sourceRequest = (source) => {
 const templateMessages = ref([]);
 
 const tablePagination = reactive({
-  next: null,
-  previous: null,
+  next: undefined,
+  previous: undefined,
 });
 
-const handlerSearchTemplates = (aq) => {
-  console.log(aq);
+const timer = ref(0);
+
+const handlerSearchTemplatesByName = () => {
+  if (timer.value !== 0) clearTimeout(timer.value);
+
+  timer.value = setTimeout(async () => {
+    searchTemplates();
+  }, 500);
 };
 
 const searchTemplates = async (cursorKey) => {
+  if (loadingTemplateMessages.value) return;
   try {
     loadingTemplateMessages.value = true;
 
+    const after = cursorKey === 'next' && tablePagination.next;
+    const before = cursorKey === 'previous' && tablePagination.previous;
+
     const params = {
       limit: 5,
-      cursor: cursorKey ? tablePagination[cursorKey] : undefined,
+      after: after || undefined,
+      before: before || undefined,
+      category: filters.category || undefined,
+      language: filters.language || undefined,
+      search: filters.name || undefined,
+      waba_id: waba_id.value,
+      project_uuid: project_uuid.value,
     };
 
     const { results, next, previous } =
-      await MetaTemplateMessageService.listTemplates();
+      await MetaTemplateMessageService.listTemplates(params);
 
     tablePagination.next = next;
 

@@ -36,6 +36,7 @@
       @close="filterModalOpened = false"
     />
     <SearchTemplateMessagesModal
+      v-if="searchTemplateMetaModal"
       :modelValue="searchTemplateMetaModal"
       @close="searchTemplateMetaModal = false"
     />

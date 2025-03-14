@@ -83,6 +83,12 @@ import weniLoading from '@/assets/images/weni-loading.svg';
 
 const store = useStore();
 
+const waba_id = computed(
+  () => store.state.dashboards.currentDashboard.config?.waba_id,
+);
+
+const project_uuid = computed(() => store.state.config.project?.uuid);
+
 const lastOpenTemplates = useLocalStorage('meta-last-templates-viewed', {});
 
 const initialLoading = ref(false);
@@ -98,7 +104,7 @@ onMounted(async () => {
       handlerSelectedTemplateUuid(lastViwedTemplateUuid);
     } else {
       const { results: templates } =
-        await MetaTemplateMessageService.listTemplates();
+        await MetaTemplateMessageService.listTemplates({ limit: 1 });
 
       if (templates.length) {
         store.dispatch('metaTemplateMessage/setEmptyTemplates', false);
@@ -134,7 +140,11 @@ const isLoadingTemplatePreview = ref(false);
 const getTemplatePreview = async () => {
   try {
     isLoadingTemplatePreview.value = true;
-    const response = await MetaTemplateMessageService.getTemplatePreview();
+    const response = await MetaTemplateMessageService.getTemplatePreview({
+      project_uuid,
+      waba_id,
+      template_id: selectedTemplateUuid,
+    });
     templatePreview.value = response;
   } catch (error) {
     console.error(error);
@@ -183,8 +193,17 @@ const formattedClicksTableData = computed(() =>
 const getButtonClicksData = async () => {
   try {
     isLoadingButtonsClicksData.value = true;
+
+    const params = {
+      waba_id: waba_id.value,
+      project_uuid: project_uuid.value,
+      template_id: selectedTemplateUuid.value,
+      date_start: appliedFilters.value?.date?._start,
+      date_end: appliedFilters.value?.date?._end,
+    };
+
     const response =
-      await MetaTemplateMessageService.getTemplateButtonsAnalytics();
+      await MetaTemplateMessageService.getTemplateButtonsAnalytics(params);
 
     buttonsClicksData.value = response;
   } catch (error) {
@@ -201,8 +220,16 @@ const getMessagesAnalytics = async () => {
   try {
     isLoadingMessagesAnalyticsData.value = true;
 
+    const params = {
+      waba_id: waba_id.value,
+      project_uuid: project_uuid.value,
+      template_id: selectedTemplateUuid.value,
+      date_start: appliedFilters.value?.date?._start,
+      date_end: appliedFilters.value?.date?._end,
+    };
+
     const response =
-      await MetaTemplateMessageService.getTemplateMessagesAnalytics();
+      await MetaTemplateMessageService.getTemplateMessagesAnalytics(params);
 
     messagesAnalyticsData.value = response;
   } catch (error) {

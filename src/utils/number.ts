@@ -5,6 +5,7 @@ export function getPercentageOf(
   total: number,
   precision: number = 2,
 ) {
+  if (total === 0) return 0;
   const percentage = (val / total) * 100;
   return percentage.toLocaleString(i18n.global.locale, {
     maximumFractionDigits: precision,

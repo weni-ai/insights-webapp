@@ -70,7 +70,7 @@
 import { getLastNDays, getLastMonthRange, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
-import { ref } from 'vue';
+import { ref, defineProps, watch } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 import api from '@/services/api/resources/metrics';
 import IconLoading from '@/components/IconLoading.vue';
@@ -81,6 +81,13 @@ interface MetricData {
   percentage: number;
   prefix?: string;
 }
+
+const props = defineProps({
+  auth: {
+    type: Object as () => { token: string; uuid: string } | null,
+    default: null,
+  },
+});
 
 const infos = {
   'send-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
@@ -108,12 +115,16 @@ const metricTitles: Record<string, string> = {
 };
 
 const getMetrics = async (start: string, end: string) => {
+  if (!props.auth?.token || !props.auth?.uuid) return;
+
   isLoading.value = true;
   try {
     const data: any = await api.getMetrics({
       start_date: start,
       end_date: end,
-    });
+      project_uuid: props.auth.uuid,
+    },
+    props.auth.token);
 
     metrics.value = { ...data };
   } catch (error) {
@@ -128,7 +139,15 @@ const fetchMetrics = async () => {
   getMetrics(start, end);
 };
 
-fetchMetrics();
+watch(
+  () => props.auth?.token,
+  (newToken) => {
+    if (newToken && props.auth?.uuid) {
+      fetchMetrics();
+    }
+  },
+  { immediate: true }
+);
 
 const handleFilter = async (filter: string) => {
   const type = filter.trim().replace(/\s+/g, '').toLowerCase();

@@ -64,6 +64,9 @@ describe('DashboardCommerce', () => {
 
   beforeEach(async () => {
     wrapper = mount(DashboardCommerce, {
+      propsData: {
+        auth: { token: 'mock-token', uuid: 'mock-uuid' },
+      },
       global: {
         plugins: [i18n, UnnnicSystem],
         components: {
@@ -82,7 +85,21 @@ describe('DashboardCommerce', () => {
 
   describe('loading state', () => {
     it('shows loading state while fetching data', async () => {
-      wrapper = mount(DashboardCommerce);
+      wrapper = mount(DashboardCommerce, {
+        propsData: {
+          auth: { token: 'mock-token', uuid: 'mock-uuid' },
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          components: {
+            CardMetric,
+            DropdownFilter,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(true);
       await wrapper.vm.$nextTick();
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(false);
@@ -90,21 +107,29 @@ describe('DashboardCommerce', () => {
   });
 
   describe('API interactions', () => {
-    it('calls getMetrics on mount with correct date range', () => {
-      expect(api.getMetrics).toHaveBeenCalledWith({
-        start_date: expect.any(String),
-        end_date: expect.any(String),
-      });
+    it('calls getMetrics on mount with correct date range and auth token', () => {
+      expect(api.getMetrics).toHaveBeenCalledWith(
+        {
+          start_date: expect.any(String),
+          end_date: expect.any(String),
+          project_uuid: 'mock-uuid',
+        },
+        'mock-token',
+      );
     });
 
-    it('calls getMetrics when filter changes', async () => {
+    it('calls getMetrics when filter changes with correct auth token', async () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       await dropdownFilter.vm.$emit('select', 'Today');
 
-      expect(api.getMetrics).toHaveBeenCalledWith({
-        start_date: expect.any(String),
-        end_date: expect.any(String),
-      });
+      expect(api.getMetrics).toHaveBeenCalledWith(
+        {
+          start_date: expect.any(String),
+          end_date: expect.any(String),
+          project_uuid: 'mock-uuid',
+        },
+        'mock-token',
+      );
     });
 
     it('handles API error gracefully', async () => {
@@ -118,6 +143,29 @@ describe('DashboardCommerce', () => {
         expect.any(Error),
       );
       expect(wrapper.find('.metrics-container').exists()).toBe(true);
+    });
+
+    it('does not fetch metrics when token is not present', async () => {
+      const getMetricsSpy = vi.spyOn(api, 'getMetrics');
+
+      wrapper = mount(DashboardCommerce, {
+        propsData: {
+          auth: null,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          components: {
+            CardMetric,
+            DropdownFilter,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(getMetricsSpy).not.toHaveBeenCalled();
     });
   });
 

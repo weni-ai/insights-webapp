@@ -70,7 +70,7 @@
 import { getLastNDays, getLastMonthRange, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, computed, watch } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 import api from '@/services/api/resources/metrics';
 import IconLoading from '@/components/IconLoading.vue';
@@ -91,6 +91,8 @@ const props = defineProps({
     default: null,
   },
 });
+
+const token = computed(() => store.state.config.token);
 
 if (props.auth?.token && props.auth?.uuid) {
   store.dispatch('config/setToken', props.auth.token);
@@ -143,7 +145,15 @@ const fetchMetrics = async () => {
   getMetrics(start, end);
 };
 
-fetchMetrics();
+watch(
+  token,
+  (newToken) => {
+    if (newToken) {
+      fetchMetrics();
+    }
+  },
+  { immediate: true },
+);
 
 const handleFilter = async (filter: string) => {
   const type = filter.trim().replace(/\s+/g, '').toLowerCase();

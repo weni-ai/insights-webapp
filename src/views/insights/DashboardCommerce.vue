@@ -70,16 +70,31 @@
 import { getLastNDays, getLastMonthRange, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
-import { ref } from 'vue';
+import { ref, defineProps } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 import api from '@/services/api/resources/metrics';
 import IconLoading from '@/components/IconLoading.vue';
+import { useStore } from 'vuex';
 
 interface MetricData {
   id: string;
   value: number;
   percentage: number;
   prefix?: string;
+}
+
+const store = useStore();
+
+const props = defineProps({
+  auth: {
+    type: Object as () => { token: string; uuid: string } | null,
+    default: null,
+  },
+});
+
+if (props.auth?.token && props.auth?.uuid) {
+  store.dispatch('config/setToken', props.auth.token);
+  store.dispatch('config/setProject', { uuid: props.auth.uuid });
 }
 
 const infos = {

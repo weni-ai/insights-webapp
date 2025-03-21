@@ -161,6 +161,7 @@
   "pending": "Pendente",
   "rejected": "Rejeitado",
   "active": "Ativo",
+  "disabled": "Desabilitado",
   "select_date": {
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",

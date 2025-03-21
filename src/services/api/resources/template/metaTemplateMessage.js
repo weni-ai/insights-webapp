@@ -34,7 +34,7 @@ export default {
     const { data, paging } = await http.get(url, { params });
 
     return {
-      before: paging?.cursors?.before,
+      previous: paging?.cursors?.before,
       next: paging?.cursors?.after,
       results: data,
     };
@@ -68,7 +68,9 @@ export default {
       (element) => element.type === 'BUTTONS',
     )?.buttons;
 
-    return { title, image, text, hint, status, name, buttons };
+    const is_favorite = response.is_favorite;
+
+    return { title, image, text, hint, status, name, buttons, is_favorite };
   },
 
   async getTemplateMessagesAnalytics({
@@ -139,7 +141,23 @@ export default {
     }));
   },
 
-  async favoriteTemplate(templateUuid) {},
+  async favoriteTemplate({ templateUuid, dashboardUuid }) {
+    const url =
+      '/metrics/meta/whatsapp-message-templates/add-template-to-favorites/';
+    const body = { dashboard: dashboardUuid, template_id: templateUuid };
 
-  async unfavoriteTemplate(templateUuid) {},
+    const response = await http.post(url, body);
+
+    return response;
+  },
+
+  async unfavoriteTemplate({ templateUuid, dashboardUuid }) {
+    const url =
+      '/metrics/meta/whatsapp-message-templates/remove-template-from-favorites/';
+    const body = { dashboard: dashboardUuid, template_id: templateUuid };
+
+    const response = await http.post(url, body);
+
+    return response;
+  },
 };

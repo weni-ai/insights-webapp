@@ -161,6 +161,7 @@
   "pending": "Pending",
   "rejected": "Rejected",
   "active": "Active",
+  "disabled": "Disabled",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",

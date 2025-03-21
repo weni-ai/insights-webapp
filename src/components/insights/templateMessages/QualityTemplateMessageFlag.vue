@@ -25,6 +25,7 @@ const getStatusLabel = () => {
     APPROVED: i18n.global.t('active'),
     PENDING: i18n.global.t('pending'),
     REJECTED: i18n.global.t('rejected'),
+    DISABLED: i18n.global.t('disabled'),
   };
 
   return statusMapper[props.status] || '';
@@ -51,6 +52,9 @@ const getStatusLabel = () => {
     color: $unnnic-color-aux-orange-500;
   }
   &--rejected {
+    color: $unnnic-color-aux-red-500;
+  }
+  &--disabled {
     color: $unnnic-color-aux-red-500;
   }
 }

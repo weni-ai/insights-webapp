@@ -48,7 +48,7 @@ jobs:
         type=raw,${{ needs.setup.outputs.image_tag_latest }}
       dockerfile: "docker/Dockerfile"
       build_args: |
-        OLD_IMAGE=${{ secrets.REGISTRY_ECR }}/insights:${{ needs.setup.outputs.image_latest }}
+        OLD_IMAGE=${{ secrets.REGISTRY_ECR }}/insights:${{ needs.setup.outputs.image_tag_latest }}
       # OLD_IMAGE=${{ needs.setup.outputs.image_latest }}
       target_repository: weni-ai/kubernetes-manifests-chats
       target_repository_branch: main

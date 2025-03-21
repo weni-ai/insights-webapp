@@ -35,8 +35,10 @@ export default {
     },
   },
   actions: {
-    async getFavoritesTemplates({ commit }) {
-      const response = await MetaTemplateMessage.getFavoritesTemplates();
+    async getFavoritesTemplates({ commit }, dashboard) {
+      const response = await MetaTemplateMessage.getFavoritesTemplates({
+        dashboard,
+      });
       commit(mutations.SET_FAVORITES_TEMPLATES, response);
     },
 

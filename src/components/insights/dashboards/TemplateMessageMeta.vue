@@ -140,11 +140,13 @@ const isLoadingTemplatePreview = ref(false);
 const getTemplatePreview = async () => {
   try {
     isLoadingTemplatePreview.value = true;
-    const response = await MetaTemplateMessageService.getTemplatePreview({
-      project_uuid,
-      waba_id,
-      template_id: selectedTemplateUuid,
-    });
+    const params = {
+      project_uuid: project_uuid.value,
+      waba_id: waba_id.value,
+      template_id: selectedTemplateUuid.value,
+    };
+    const response =
+      await MetaTemplateMessageService.getTemplatePreview(params);
     templatePreview.value = response;
   } catch (error) {
     console.error(error);
@@ -224,8 +226,8 @@ const getMessagesAnalytics = async () => {
       waba_id: waba_id.value,
       project_uuid: project_uuid.value,
       template_id: selectedTemplateUuid.value,
-      date_start: appliedFilters.value?.date?._start,
-      date_end: appliedFilters.value?.date?._end,
+      start_date: appliedFilters.value?.date?._start,
+      end_date: appliedFilters.value?.date?._end,
     };
 
     const response =
@@ -262,15 +264,20 @@ const formattedMessagesAnalyticsData = computed(() => {
   });
 });
 
-const getSelectedTemplateData = () => {
-  getTemplatePreview();
+const getSelectedTemplateData = (
+  { ignorePreview } = { ignorePreview: false },
+) => {
+  if (!ignorePreview) getTemplatePreview();
   getButtonClicksData();
   getMessagesAnalytics();
 };
 
 const appliedFilters = computed(() => store.state.dashboards.appliedFilters);
 
-watch(appliedFilters, () => getSelectedTemplateData());
+watch(appliedFilters, () => {
+  if (selectedTemplateUuid.value)
+    getSelectedTemplateData({ ignorePreview: true });
+});
 
 watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   if (newUuid !== oldUuid) {
@@ -283,7 +290,7 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
 <style lang="scss" scoped>
 .template-message-meta-dashboard {
   display: grid;
-  grid-template-columns: 3fr 9fr;
+  grid-template-columns: 2.5fr 9.5fr;
   gap: $unnnic-spacing-sm;
   height: 100%;
 

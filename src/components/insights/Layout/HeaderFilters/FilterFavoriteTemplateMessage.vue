@@ -59,7 +59,10 @@ const selectFavorite = (favorite) => {
 };
 
 onMounted(async () => {
-  await store.dispatch('metaTemplateMessage/getFavoritesTemplates');
+  await store.dispatch(
+    'metaTemplateMessage/getFavoritesTemplates',
+    currentDashboard.value?.uuid,
+  );
 });
 
 watch(selectedTemplateUuid, (newUuid, oldUuid) => {

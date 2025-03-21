@@ -1,33 +1,11 @@
 import http from '@/services/api/http';
-import { getPercentageOf } from '@/utils/number';
-
-import { asyncTimeout } from '@/utils/time';
 
 export default {
   async listMetricsSource(source) {
-    await asyncTimeout(2000);
-
     const url = `/metrics/meta/whatsapp-message-templates/${source}/`;
-    // const { data } = await http.get(url);
-    const { data } = await asyncTimeout(2000).then(() => {
-      return {
-        data: {
-          [source]: [
-            source === 'languages'
-              ? {
-                  name: 'Português',
-                  value: 'pt_BR',
-                }
-              : {
-                  name: 'Marketing',
-                  value: 'marketing',
-                },
-          ],
-        },
-      };
-    });
+    const response = await http.get(url);
 
-    return data[source];
+    return response[source];
   },
 
   async listTemplates({
@@ -53,46 +31,12 @@ export default {
       waba_id,
     };
 
-    // const { data } = await http.get(url, { params });
-
-    const { data } = await asyncTimeout(3000).then(() => {
-      return {
-        data: {
-          data: [
-            {
-              name: 'test_template_1',
-              language: 'sq',
-              status: 'APPROVED',
-              category: 'MARKETING',
-              id: '1',
-              waba_id: '123',
-            },
-            {
-              name: 'test_template_2',
-              language: 'sq',
-              status: 'PENDING',
-              category: 'MARKETING',
-              id: '2',
-              waba_id: '123',
-            },
-            {
-              name: 'test_template_3',
-              language: 'sq',
-              status: 'REJECTED',
-              category: 'MARKETING',
-              id: '3',
-              waba_id: '123',
-            },
-          ],
-          paging: { cursors: { after: null, before: null } },
-        },
-      };
-    });
+    const { data, paging } = await http.get(url, { params });
 
     return {
-      before: data.paging?.cursors?.before,
-      next: data.paging?.cursors?.after,
-      results: data.data,
+      before: paging?.cursors?.before,
+      next: paging?.cursors?.after,
+      results: data,
     };
   },
 
@@ -100,75 +44,27 @@ export default {
     const url = '/metrics/meta/whatsapp-message-templates/preview/';
     const params = { waba_id, project_uuid, template_id };
 
-    // const { data } = await http.get(url, { params });
+    const response = await http.get(url, { params });
 
-    const { data } = await asyncTimeout(5000).then(() => {
-      return {
-        data: {
-          name: 'template_dev',
-          parameter_format: 'POSITIONAL',
-          components: [
-            {
-              type: 'HEADER',
-              format: 'TEXT',
-              text: 'VTEX adquire Weni e passa a oferecer solução de IA para transformar o atendimento pós-venda de marcas e varejistas',
-            },
-            {
-              type: 'HEADER',
-              format: 'IMAGE',
-              example: {
-                header_handle: [
-                  'https://vtexecommercep.wpenginepowered.com/wp-content/uploads/2024/09/Weni-Press-Website-3.png',
-                ],
-              },
-            },
-            {
-              type: 'BODY',
-              text: 'A aquisição fortalece a jornada omnichannel da VTEX, reduz custos de suporte ao cliente e impulsionada por dados e IA aprimora a experiência pós-venda para marcas e varejistas globais.',
-              example: { body_text: [['test']] },
-            },
-            {
-              type: 'BUTTONS',
-              buttons: [
-                {
-                  type: 'URL',
-                  text: 'Acessar notícia',
-                  url: 'https://example.local/',
-                },
-                {
-                  type: 'QUICK_REPLY',
-                  text: 'Parar de receber',
-                },
-              ],
-            },
-          ],
-          language: 'en_US',
-          status: 'APPROVED',
-          category: 'MARKETING',
-          id: '1234567890987654',
-        },
-      };
-    });
-
-    const title = data.components.find(
+    const title = response.components.find(
       (element) => element.type === 'HEADER' && element.format === 'TEXT',
     )?.text;
 
-    const image = data.components.find(
+    const image = response.components.find(
       (element) => element.type === 'HEADER' && element.format === 'IMAGE',
     )?.example?.header_handle?.[0];
 
-    const text = data.components.find(
+    const text = response.components.find(
       (element) => element.type === 'BODY',
     )?.text;
 
     const hint = '';
 
-    const status = data.status;
+    const status = response.status;
 
-    const name = data.name;
+    const name = response.name;
 
-    const buttons = data.components.find(
+    const buttons = response.components.find(
       (element) => element.type === 'BUTTONS',
     )?.buttons;
 
@@ -179,70 +75,32 @@ export default {
     waba_id,
     project_uuid,
     template_id,
-    date_start,
-    date_end,
+    start_date,
+    end_date,
   }) {
     const url = '/metrics/meta/whatsapp-message-templates/messages-analytics/';
-    const params = { waba_id, project_uuid, template_id, date_start, date_end };
+    const params = { waba_id, project_uuid, template_id, start_date, end_date };
 
-    // const { data } = await http.get(url, { params });
+    const { data } = await http.get(url, { params });
 
-    const { data } = await asyncTimeout(5000).then(() => {
-      return {
-        data: {
-          data: {
-            status_count: {
-              sent: 100,
-              delivered: 80,
-              read: 10,
-              clicked: 10,
-            },
-            data_points: [
-              {
-                date: '2025-01-22',
-                sent: 60,
-                delivered: 40,
-                read: 30,
-                clicked: 20,
-              },
-              {
-                date: '2025-01-23',
-                sent: 40,
-                delivered: 40,
-                read: 20,
-                clicked: 20,
-              },
-              {
-                date: '2025-01-24',
-                sent: 10,
-                delivered: 5,
-                read: 2,
-                clicked: 1,
-              },
-            ],
-          },
-        },
-      };
-    });
+    const { sent, delivered, read, clicked } = data.status_count;
 
-    const { sent, delivered, read, clicked } = data.data.status_count;
-
-    const data_points = data.data.data_points;
+    const data_points = data.data_points;
 
     return {
       status_count: {
-        sent: { value: sent },
+        sent: { value: sent.value },
         delivered: {
-          value: delivered,
-          percentage: getPercentageOf(delivered, sent),
+          value: delivered.value,
+          percentage: delivered.percentage,
         },
         read: {
-          value: read,
-          percentage: getPercentageOf(read, sent),
+          value: read.value,
+          percentage: read.percentage,
         },
         clicked: {
-          value: clicked,
-          percentage: getPercentageOf(clicked, sent),
+          value: clicked.value,
+          percentage: clicked.percentage,
         },
       },
       data_points,
@@ -259,57 +117,9 @@ export default {
     const url = '/metrics/meta/whatsapp-message-templates/buttons-analytics/';
     const params = { waba_id, project_uuid, template_id, date_start, date_end };
 
-    // const { data } = await http.get(url, { params });
-    const { data } = await asyncTimeout(5000).then(() => {
-      return {
-        data: {
-          data: [
-            {
-              label: 'Teste',
-              type: 'Type',
-              total: 159,
-              click_rate: 10.5,
-            },
-            {
-              label: 'Teste 2',
-              type: 'Type',
-              total: 50,
-              click_rate: 20,
-            },
-            {
-              label: 'Teste 3',
-              type: 'Type',
-              total: 100,
-              click_rate: 50,
-            },
-            {
-              label: 'Teste 4',
-              type: 'Type',
-              total: 100,
-              click_rate: 50,
-            },
-            {
-              label: 'Teste 5',
-              type: 'Type',
-              total: 100,
-              click_rate: 50,
-            },
-            {
-              label: 'Teste 6',
-              type: 'Type',
-              total: 100,
-              click_rate: 50,
-            },
-            {
-              label: 'Teste 7',
-              type: 'Type',
-              total: 100,
-              click_rate: 50,
-            },
-          ],
-        },
-      };
-    });
+    const { data } = await http.get(url, { params });
+
+    console.log(data);
 
     return data.data;
   },
@@ -321,11 +131,12 @@ export default {
       limit: 5,
       offset: 0,
     };
-    // const { data } = await http.get(url, { params });
-    const { data } = await asyncTimeout(2000).then(() => {
-      return { data: { results: [{ name: 'template-2', id: '2' }] } };
-    });
-    return data.results;
+    const response = await http.get(url, { params });
+
+    return response.results.map((favorite) => ({
+      name: favorite.name,
+      id: favorite.template_id,
+    }));
   },
 
   async favoriteTemplate(templateUuid) {},

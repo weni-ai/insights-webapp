@@ -48,7 +48,10 @@ export default {
       params: queryParams,
     });
 
-    if (uuid === '33a4ed4f-854a-436e-b591-c39e9d649e3c') {
+    const isMetaTemplateDashboard =
+      DashboardStore.state.currentDashboard?.config?.is_whatsapp_integration;
+
+    if (isMetaTemplateDashboard) {
       return [
         new Filter({
           name: 'date',

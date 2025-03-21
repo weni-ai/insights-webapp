@@ -37,6 +37,8 @@ jobs:
 
   call-workflow:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
+    needs:
+      - setup
     with:
       image_repository: insights
       image_tags: |

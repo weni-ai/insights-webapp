@@ -32,6 +32,8 @@
         class="template-message-preview"
         :template="templatePreview"
         :isLoading="isLoadingTemplatePreview"
+        @favorite="favoriteTemplate()"
+        @unfavorite="unfavoriteTemplate()"
       />
     </section>
     <section class="template-message-meta-dashboard__template-info">
@@ -43,7 +45,7 @@
         />
         <SingleTable
           class="button-clicks-table"
-          title="Button Clicks"
+          :title="$t('template_messages_dashboard.button_clicks_table.title')"
           hidePagination
           :pagination="1"
           :paginationInterval="10"
@@ -126,6 +128,10 @@ const isEmptyTemplates = computed(
 
 const selectedTemplateUuid = computed(
   () => store.state.metaTemplateMessage.selectedTemplateUuid,
+);
+
+const selectedFavoriteTemplate = computed(
+  () => store.state.metaTemplateMessage.selectedFavoriteTemplate,
 );
 
 const currentDashboard = computed(
@@ -287,6 +293,44 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
     getSelectedTemplateData();
   }
 });
+
+const favoriteTemplate = async () => {
+  await MetaTemplateMessageService.favoriteTemplate({
+    dashboardUuid: currentDashboard.value.uuid,
+    templateUuid: selectedTemplateUuid.value,
+  });
+
+  templatePreview.value.is_favorite = true;
+
+  const favorites = store.state.metaTemplateMessage.favoritesTemplates;
+
+  store.commit('metaTemplateMessage/SET_FAVORITES_TEMPLATES', [
+    { name: templatePreview.value.name, id: selectedTemplateUuid.value },
+    ...favorites,
+  ]);
+};
+
+const unfavoriteTemplate = async () => {
+  await MetaTemplateMessageService.unfavoriteTemplate({
+    dashboardUuid: currentDashboard.value.uuid,
+    templateUuid: selectedTemplateUuid.value,
+  });
+
+  templatePreview.value.is_favorite = false;
+
+  const favorites = store.state.metaTemplateMessage.favoritesTemplates;
+
+  if (selectedFavoriteTemplate.value[0]?.value === selectedTemplateUuid.value) {
+    store.commit('metaTemplateMessage/SET_SELECTED_FAVORITE_TEMPLATE', [
+      { value: '' },
+    ]);
+  }
+
+  store.commit(
+    'metaTemplateMessage/SET_FAVORITES_TEMPLATES',
+    favorites.filter((favorite) => favorite.id !== selectedTemplateUuid.value),
+  );
+};
 </script>
 
 <style lang="scss" scoped>

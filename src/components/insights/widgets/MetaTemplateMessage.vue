@@ -35,7 +35,13 @@
               class="meta-template-message__favorite-icon"
               icon="star_rate"
               scheme="aux-yellow-500"
+              :filled="props.template.is_favorite"
               clickable
+              @click="
+                props.template.is_favorite
+                  ? $emit('unfavorite')
+                  : $emit('favorite')
+              "
             />
           </UnnnicToolTip>
         </section>
@@ -125,6 +131,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+defineEmits(['unfavorite', 'favorite']);
 
 const redirectToIntegrations = () => {
   const path = props.template.link;

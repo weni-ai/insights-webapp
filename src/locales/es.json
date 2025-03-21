@@ -52,6 +52,7 @@
       "clicks": "Clics"
     },
     "button_clicks_table": {
+      "title": "Clics de botones",
       "header": {
         "label": "Etiqueta",
         "type": "Tipo",

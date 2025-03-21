@@ -12,7 +12,7 @@ export default {
   namespaced: true,
   state: {
     favoritesTemplates: [],
-    selectedFavoriteTemplate: [],
+    selectedFavoriteTemplate: [{ value: '' }],
     selectedTemplateUuid: '',
     isLoadingFavoritesTemplates: false,
     emptyTemplates: false,

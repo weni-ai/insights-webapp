@@ -47,6 +47,20 @@ export default {
     const response = await http.get(`/dashboards/${uuid}/filters/`, {
       params: queryParams,
     });
+
+    const isMetaTemplateDashboard =
+      DashboardStore.state.currentDashboard?.config?.is_whatsapp_integration;
+
+    if (isMetaTemplateDashboard) {
+      return [
+        new Filter({
+          name: 'date',
+          type: 'date_range',
+          start_sufix: '_start',
+          end_sufix: '_end',
+        }),
+      ];
+    }
     const responseArray = Object.keys(response);
 
     const dashboardFilters = responseArray.map((key) => {

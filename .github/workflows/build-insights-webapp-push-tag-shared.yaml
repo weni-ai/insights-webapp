@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_latest: ${{ steps.setup.outputs.image_latest }}
+      image_tag_latest: ${{ steps.setup.outputs.image_tag_latest }}
     steps:
       - name: Set outputs
         id: setup
@@ -33,7 +34,8 @@ jobs:
             echo 'Not a valid tag. Skipping...'
             exit 1
           fi
-          echo "image_latest=latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
+          echo "image_latest=${{ secrets.REGISTRY_ECR }}/insights:latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
+          echo "image_tag_latest=latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
 
   call-workflow:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
@@ -45,10 +47,10 @@ jobs:
       image_repository: insights
       image_tags: |
         type=ref,event=tag
-        type=raw,${{ needs.setup.outputs.image_latest }}
+        type=raw,${{ needs.setup.outputs.image_tag_latest }}
       dockerfile: "docker/Dockerfile"
       build_args: |
-        OLD_IMAGE=${{ env.IMAGE_LATEST }}
+        OLD_IMAGE=${{ needs.setup.outputs.image_latest }}
       target_repository: weni-ai/kubernetes-manifests-chats
       target_repository_branch: main
       target_application: insights-webapp

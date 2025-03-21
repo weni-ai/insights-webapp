@@ -41,8 +41,6 @@ jobs:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
     needs:
       - setup
-    env:
-      IMAGE_LATEST: ${{ secrets.REGISTRY_ECR }}/insights:${{ needs.setup.outputs.image_latest }}
     with:
       image_repository: insights
       image_tags: |

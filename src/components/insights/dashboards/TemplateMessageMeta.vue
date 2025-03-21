@@ -81,6 +81,8 @@ import MetaTemplateMessageService from '@/services/api/resources/template/metaTe
 
 import weniLoading from '@/assets/images/weni-loading.svg';
 
+import moment from 'moment';
+
 const store = useStore();
 
 const waba_id = computed(
@@ -252,7 +254,7 @@ const formattedMessagesAnalyticsData = computed(() => {
   return Object.keys(keyMapper).map((key) => {
     const data =
       messagesAnalyticsData.value.data_points?.map((dataPoint) => ({
-        label: dataPoint.date,
+        label: moment(dataPoint.date).format(i18n.global.t('date_format')),
         value: dataPoint[key],
       })) || [];
 

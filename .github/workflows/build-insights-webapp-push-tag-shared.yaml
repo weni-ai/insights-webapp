@@ -39,6 +39,8 @@ jobs:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
     needs:
       - setup
+    env:
+      IMAGE_LATEST: ${{ secrets.REGISTRY_ECR }}/insights:${{ needs.setup.outputs.image_latest }}
     with:
       image_repository: insights
       image_tags: |
@@ -46,7 +48,7 @@ jobs:
         type=raw,${{ needs.setup.outputs.image_latest }}
       dockerfile: "docker/Dockerfile"
       build_args: |
-        OLD_IMAGE=${{ needs.setup.outputs.image_latest }}
+        OLD_IMAGE=${{ env.IMAGE_LATEST }}
       target_repository: weni-ai/kubernetes-manifests-chats
       target_repository_branch: main
       target_application: insights-webapp

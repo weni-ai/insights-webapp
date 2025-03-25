@@ -238,7 +238,7 @@ describe('DashboardCommerce', () => {
         expect(props).toHaveProperty('title');
         expect(props).toHaveProperty('value');
         expect(props).toHaveProperty('percentage');
-        expect(props).toHaveProperty('hasInfo');
+        expect(props).toHaveProperty('tooltipInfo');
       });
     });
   });

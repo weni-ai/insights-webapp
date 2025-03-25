@@ -49,7 +49,7 @@
         :value="metric.value"
         :percentage="metric.percentage"
         :prefix="metric.prefix"
-        :hasInfo="true"
+        :tooltipInfo="infos[metric.id]"
         :leftColumn="index % 3 === 0"
         :rightColumn="(index + 1) % 3 === 0"
         :middleColumn="index % 3 === 1"
@@ -90,7 +90,7 @@ const props = defineProps({
 });
 
 const infos = {
-  'send-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
+  'sent-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
   'delivered-messages': i18n.global.t(
     'dashboard_commerce.infos.delivered-messages',
   ),

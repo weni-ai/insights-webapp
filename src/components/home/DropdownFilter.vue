@@ -1,5 +1,6 @@
 <template>
   <UnnnicDropdown
+    v-on-click-outside="handleClickOutside"
     class="filter-type__select-type"
     position="bottom-left"
     :open="!isDropdownOpen"
@@ -37,6 +38,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { vOnClickOutside } from '@vueuse/components';
 
 interface DropdownItem {
   name: string;
@@ -50,6 +52,12 @@ const props = defineProps<{
 
 const isDropdownOpen = ref(false);
 const currentItem = ref(props.defaultItem);
+
+const handleClickOutside = () => {
+  if (isDropdownOpen.value) {
+    isDropdownOpen.value = false;
+  }
+};
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -82,7 +90,7 @@ const handleItemAction = (action: () => void, name: string) => {
     }
 
     :deep(.unnnic-dropdown__content) {
-      width: 170px;
+      width: $unnnic-avatar-size-sm * 4;
     }
   }
 

@@ -119,16 +119,18 @@ const getMetrics = async (start: string, end: string) => {
 
   isLoading.value = true;
   try {
-    const data: any = await api.getMetrics({
-      start_date: start,
-      end_date: end,
-      project_uuid: props.auth.uuid,
-    },
-    props.auth.token);
+    const data: any = await api.getMetrics(
+      {
+        start_date: start,
+        end_date: end,
+        project_uuid: props.auth.uuid,
+      },
+      props.auth.token,
+    );
 
     metrics.value = { ...data };
   } catch (error) {
-    console.log('error getMetrics', error);
+    console.error('error getMetrics', error);
   } finally {
     isLoading.value = false;
   }
@@ -146,7 +148,7 @@ watch(
       fetchMetrics();
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const handleFilter = async (filter: string) => {
@@ -173,6 +175,7 @@ const handleFilter = async (filter: string) => {
   &__header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
 
     &-title {

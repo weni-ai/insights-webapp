@@ -68,7 +68,7 @@
       "placeholder": "Select tag"
     }
   },
-  "filter-by": "Filter by:",
+  "filter-by": "Period:",
   "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",

@@ -54,7 +54,7 @@
         :rightColumn="(index + 1) % 3 === 0"
         :middleColumn="index % 3 === 1"
         :firstRow="index < 3"
-        :lastRow="index >= metrics.length - (metrics.length % 3 || 3)"
+        :lastRow="index >= 3"
       />
     </section>
     <section

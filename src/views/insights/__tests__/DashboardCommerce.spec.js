@@ -43,24 +43,19 @@ const mockGetTodayDate = vi.fn(() => ({
   start: '2024-01-01',
   end: '2024-01-01',
 }));
-const mockGetLastNDays = vi.fn(() => ({
+const mockGetLastNDays = vi.fn((days) => ({
   start: '2024-01-01',
-  end: '2024-01-07',
-}));
-const mockGetLastMonthRange = vi.fn(() => ({
-  start: '2024-01-01',
-  end: '2024-01-31',
+  end: days === 30 ? '2024-01-30' : days === 14 ? '2024-01-14' : '2024-01-07',
 }));
 
 vi.mock('@/utils/time', () => ({
   getTodayDate: () => mockGetTodayDate(),
-  getLastNDays: () => mockGetLastNDays(),
-  getLastMonthRange: () => mockGetLastMonthRange(),
+  getLastNDays: (days) => mockGetLastNDays(days),
 }));
 
 describe('DashboardCommerce', () => {
   let wrapper;
-  const consoleSpy = vi.spyOn(console, 'log');
+  const consoleSpy = vi.spyOn(console, 'error');
 
   beforeEach(async () => {
     wrapper = mount(DashboardCommerce, {
@@ -134,7 +129,7 @@ describe('DashboardCommerce', () => {
 
     it('handles API error gracefully', async () => {
       vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
-      const consoleSpy = vi.spyOn(console, 'log');
+      const consoleSpy = vi.spyOn(console, 'error');
 
       await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
 
@@ -200,7 +195,7 @@ describe('DashboardCommerce', () => {
     it('initializes with correct default filter', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       expect(dropdownFilter.props('defaultItem')).toEqual({
-        name: 'Last 7 days',
+        name: 'dashboard_commerce.filters.last_7_days',
       });
     });
 
@@ -212,7 +207,7 @@ describe('DashboardCommerce', () => {
         'dashboard_commerce.filters.today',
         'dashboard_commerce.filters.last_7_days',
         'dashboard_commerce.filters.last_14_days',
-        'dashboard_commerce.filters.last_month',
+        'dashboard_commerce.filters.last_30_days',
       ];
 
       const filterNames = filterItems.map((item) => item.name);

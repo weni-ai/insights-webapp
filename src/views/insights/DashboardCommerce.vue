@@ -30,11 +30,11 @@
               action: () => handleFilter('Last 14 days'),
             },
             {
-              name: $t('dashboard_commerce.filters.last_month'),
-              action: () => handleFilter('Last month'),
+              name: $t('dashboard_commerce.filters.last_30_days'),
+              action: () => handleFilter('Last 30 days'),
             },
           ]"
-          :defaultItem="{ name: 'Last 7 days' }"
+          :defaultItem="{ name: $t('dashboard_commerce.filters.last_7_days') }"
         />
       </section>
     </section>
@@ -67,7 +67,7 @@
 </template>
 
 <script lang="ts" setup>
-import { getLastNDays, getLastMonthRange, getTodayDate } from '@/utils/time';
+import { getLastNDays, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
 import { ref, defineProps, watch } from 'vue';
@@ -158,7 +158,7 @@ const handleFilter = async (filter: string) => {
     today: getTodayDate(),
     last7days: getLastNDays(7),
     last14days: getLastNDays(14),
-    lastmonth: getLastMonthRange(),
+    last30days: getLastNDays(30),
   };
 
   const { start, end } = getDateRanges[type];

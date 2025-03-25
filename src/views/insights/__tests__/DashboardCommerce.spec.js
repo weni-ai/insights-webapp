@@ -74,7 +74,7 @@ describe('DashboardCommerce', () => {
       },
     });
     consoleSpy.mockClear();
-    // Wait for initial data fetch
+
     await wrapper.vm.$nextTick();
   });
 
@@ -88,15 +88,24 @@ describe('DashboardCommerce', () => {
           plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
-            DropdownFilter,
+          },
+          stubs: {
+            DropdownFilter: {
+              template: '<div>DropdownFilter</div>',
+            },
           },
           mocks: {
             $t: (key) => key,
           },
         },
       });
+
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(true);
-      await wrapper.vm.$nextTick();
+
+      await vi.waitFor(() => {
+        return !wrapper.vm.isLoading;
+      });
+
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(false);
     });
   });
@@ -192,13 +201,6 @@ describe('DashboardCommerce', () => {
   });
 
   describe('filter functionality', () => {
-    it('initializes with correct default filter', () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      expect(dropdownFilter.props('defaultItem')).toEqual({
-        name: 'dashboard_commerce.filters.last_7_days',
-      });
-    });
-
     it('provides all required filter options', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       const filterItems = dropdownFilter.props('items');

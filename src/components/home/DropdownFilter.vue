@@ -80,6 +80,10 @@ const handleItemAction = (action: () => void, name: string) => {
     &-dropdown:hover {
       opacity: 0.9;
     }
+
+    :deep(.unnnic-dropdown__content) {
+      width: 170px;
+    }
   }
 
   &__title {
@@ -97,6 +101,11 @@ const handleItemAction = (action: () => void, name: string) => {
     flex-direction: column;
     align-items: flex-start;
     gap: $unnnic-spacing-xs;
+    border-bottom: 1px solid $unnnic-color-background-sky;
+
+    &::before {
+      display: none;
+    }
 
     cursor: pointer;
     white-space: nowrap;
@@ -106,12 +115,17 @@ const handleItemAction = (action: () => void, name: string) => {
     font-weight: $unnnic-font-weight-regular;
     line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     &-active {
       font-weight: $unnnic-font-weight-bold;
     }
 
     &:hover {
-      font-weight: $unnnic-font-weight-bold;
+      border-radius: $unnnic-spacing-nano;
+      background-color: $unnnic-color-background-sky;
     }
   }
 }

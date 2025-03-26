@@ -108,7 +108,11 @@ onMounted(async () => {
       handlerSelectedTemplateUuid(lastViwedTemplateUuid);
     } else {
       const { results: templates } =
-        await MetaTemplateMessageService.listTemplates({ limit: 1 });
+        await MetaTemplateMessageService.listTemplates({
+          limit: 1,
+          waba_id: waba_id.value,
+          project_uuid: project_uuid.value,
+        });
 
       if (templates.length) {
         store.dispatch('metaTemplateMessage/setEmptyTemplates', false);

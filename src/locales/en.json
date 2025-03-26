@@ -23,6 +23,7 @@
     "favorites": "Favorites",
     "add_to_favorites": "Add to favorites",
     "empty_templates": "No data available for now. As soon as there’s activity, it will appear here!",
+    "favorite_limit_reached": "Favorite limit reached. Please remove a favorite and try again.",
     "active_contacts": {
       "title": "Active contacts",
       "tooltip": "Contacts who interacted with the template"

@@ -23,6 +23,7 @@
     "favorites": "Favoritos",
     "add_to_favorites": "Añadir a favoritos",
     "empty_templates": "No hay datos disponibles por ahora. Tan pronto como haya actividad, aparecerá aquí.",
+    "favorite_limit_reached": "Límite de favoritos alcanzado. Por favor, elimina algún favorito e inténtalo de nuevo.",
     "active_contacts": {
       "title": "Contactos activos",
       "tooltip": "Contactos que interactuaron con la plantilla"

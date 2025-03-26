@@ -49,7 +49,7 @@
           hidePagination
           :pagination="1"
           :paginationInterval="10"
-          :paginationTotal="formattedClicksTableData.length"
+          :paginationTotal="formattedClicksTableData?.length"
           :headers="buttonClicksTableHeaders"
           :rows="formattedClicksTableData"
           :isLoading="isLoadingButtonsClicksData"
@@ -190,7 +190,7 @@ const buttonsClicksData = ref([]);
 const isLoadingButtonsClicksData = ref(false);
 
 const formattedClicksTableData = computed(() =>
-  buttonsClicksData.value.map((row) => ({
+  buttonsClicksData.value?.map((row) => ({
     content: [
       row.label,
       row.type,

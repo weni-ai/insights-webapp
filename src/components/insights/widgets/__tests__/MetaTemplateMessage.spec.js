@@ -24,8 +24,8 @@ const templateMock = {
   name: 'template_test',
   image: 'https://img.com/img.png',
   buttons: [
-    { icon: 'open_in_new', label: 'button1' },
-    { icon: 'reply', label: 'button2' },
+    { icon: 'open_in_new', text: 'button1' },
+    { icon: 'reply', text: 'button2' },
   ],
 };
 

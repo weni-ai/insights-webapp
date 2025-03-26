@@ -121,9 +121,7 @@ export default {
 
     const { data } = await http.get(url, { params });
 
-    console.log(data);
-
-    return data.data;
+    return data;
   },
 
   async getFavoritesTemplates({ dashboard }) {

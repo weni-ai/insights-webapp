@@ -19,6 +19,10 @@
           @click.prevent.stop="$emit('seeMore')"
         />
       </section>
+      <AgentsTableHeader 
+        v-if="isExpansive" 
+        :headers="headers"
+      />
     </header>
 
     <UnnnicTableNext
@@ -38,9 +42,13 @@
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
 import { intervalToDuration } from 'date-fns';
+import AgentsTableHeader from './AgentsTableHeader.vue';
 
 export default {
   name: 'HumanServiceAgentsTable',
+  components: {
+    AgentsTableHeader,
+  },
   props: {
     headerTitle: {
       type: String,
@@ -75,13 +83,34 @@ export default {
   computed: {
     formattedHeaders() {
       const shownHeaders = this.headers?.filter(
-        (header) => header.display && !header.hidden_name,
+        (header) => header?.display && !header?.hidden_name,
       );
 
       if (!shownHeaders) return [];
 
-      return shownHeaders.map((header, index) => ({
-        content: this.$t(header.name),
+      if (!this.isExpansive) {
+        return shownHeaders.map((header, index) => ({
+          content: this.$t(header.name || ''),
+          isSortable: true,
+          size: index === 1 ? 1 : 0.5,
+        }));
+      }
+
+      const visibleColumns = this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
+
+      const staticHeaders = shownHeaders.filter(header => 
+        ['status', 'agent', 'in_progress', 'closeds'].includes(header.name)
+      );
+
+      const dynamicHeaders = shownHeaders.filter(header => 
+        visibleColumns.includes(header.name) && 
+        !['status', 'agent', 'in_progress', 'closeds'].includes(header.name)
+      );
+
+      const allHeaders = [...staticHeaders, ...dynamicHeaders];
+
+      return allHeaders.map((header, index) => ({
+        content: this.$t(header.name || ''),
         isSortable: true,
         size: index === 1 ? 1 : 0.5,
       }));
@@ -90,33 +119,52 @@ export default {
     formattedItems() {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
+      if (!this.isExpansive) {
+        return this.items.map((item) => {
+          const baseContent = [
+            {
+              component: markRaw(AgentStatus),
+              props: { status: item.status },
+              events: {},
+            },
+            String(item.agent),
+            String(item.opened),
+            String(item.closed),
+          ];
+
+          return {
+            ...item,
+            view_mode_url: item.link?.url,
+            link: undefined,
+            content: baseContent,
+          };
+        });
+      }
+
+      const visibleColumns = this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
+
       const formattedItems = this.items.map((item) => {
         const baseContent = [
-          {
-            component: markRaw(AgentStatus),
-            props: { status: item.status },
-            events: {},
-          },
-          String(item.agent),
-          String(item.opened),
-          String(item.closed),
+        {
+              component: markRaw(AgentStatus),
+              props: { status: item.status },
+              events: {},
+            },
+            String(item.agent),
+            String(item.opened),
+            String(item.closed),
         ];
-
-        if (this.isExpansive && item.custom_status) {
-          const customStatusValues = this.headers
-            .filter((header) => header.value.startsWith('custom_status.'))
-            .map((header) => {
-              const statusKey = header.value.split('.')[1];
-              const breakTimeInSeconds = item.custom_status[statusKey] || 0;
-              return this.formatSecondsToTime(breakTimeInSeconds);
-            });
-
-          baseContent.push(...customStatusValues);
-        }
+        
+        visibleColumns.forEach(columnName => {
+          if (item.custom_status && columnName in item.custom_status) {
+            const breakTimeInSeconds = item.custom_status[columnName] || 0;
+            baseContent.push(this.formatSecondsToTime(breakTimeInSeconds));
+          }
+        });
 
         return {
           ...item,
-          view_mode_url: item.link.url,
+          view_mode_url: item.link?.url,
           link: undefined,
           content: baseContent,
         };

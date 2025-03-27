@@ -5,9 +5,13 @@
     size="lg"
     showCloseIcon
     class="search-template-messages-modal"
+    data-testid="search-template-messages-modal"
     @update:model-value="close()"
   >
-    <section class="search-template-messages-modal__filters-container">
+    <section
+      class="search-template-messages-modal__filters-container"
+      data-testid="filters"
+    >
       <FilterInputText
         v-model="filters.name"
         class="filter filter__name"
@@ -64,6 +68,7 @@
           size="small"
           iconCenter="arrow-left-1-1"
           :disabled="!tablePagination.previous"
+          data-testid="previous-button"
           @click="searchTemplates('previous')"
         />
         <UnnnicButton
@@ -71,6 +76,7 @@
           size="small"
           iconCenter="arrow-right-1-1"
           :disabled="!tablePagination.next"
+          data-testid="next-button"
           @click="searchTemplates('next')"
         />
       </section>

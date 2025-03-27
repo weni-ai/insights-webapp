@@ -80,21 +80,29 @@ export default {
         this.getCurrentDashboardFilters();
       }
     },
+    token: {
+      once: true,
+      async handler() {
+        try {
+          await this.checkEnableCreateCustomDashboards();
+          this.getDashboards().then(() => {
+            this.handlerShowOnboardingModal();
+          });
+        } catch (error) {
+          console.error(error);
+        }
+      },
+    },
   },
 
   created() {
     this.listenConnect();
   },
 
-  async mounted() {
-    try {
-      this.handlerTokenAndProjectUuid();
-      this.getDashboards().then(() => {
-        this.handlerShowOnboardingModal();
-      });
-    } catch (error) {
-      console.error(error);
-    }
+  mounted() {
+    this.handlerProjectUuid();
+    const isInIframe = window.self !== window.top;
+    if (!isInIframe) this.setToken(localStorage.getItem('token'));
   },
 
   methods: {
@@ -116,40 +124,29 @@ export default {
         'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
     }),
 
-    async handlerTokenAndProjectUuid() {
-      const hasTokenInUrl = window.location.pathname.startsWith(
-        '/loginexternal/Bearer+',
-      );
-
-      let token = '';
-
-      if (hasTokenInUrl) {
-        token = window.location.pathname
-          .replace('/loginexternal/Bearer+', '')
-          .slice(0, -1);
-      }
-
+    handlerProjectUuid() {
       const queryString = new URLSearchParams(window.location.search);
 
-      const projectUuid = queryString.get('projectUuid');
+      const projectUuid =
+        queryString.get('projectUuid') || localStorage.getItem('projectUuid');
 
-      const newToken = token || localStorage.getItem('token');
-      const newProjectUuid = projectUuid || localStorage.getItem('projectUuid');
-
-      this.setToken(newToken);
       this.setProject({
-        uuid: newProjectUuid,
+        uuid: projectUuid,
       });
+    },
 
-      const sessionUserEmail = parseJwt(newToken)?.email || null;
+    async handlerUpdateToken(token) {
+      if (!token) return;
+
+      await this.setToken(token);
+
+      const sessionUserEmail = parseJwt(token)?.email || null;
 
       if (sessionUserEmail) {
         this.setEmail(sessionUserEmail);
       }
 
       initHotjar(sessionUserEmail);
-
-      await this.checkEnableCreateCustomDashboards();
     },
 
     handlerSetLanguage(language) {
@@ -164,6 +161,7 @@ export default {
 
     listenConnect() {
       window.parent.postMessage({ event: 'getLanguage' }, '*');
+      window.parent.postMessage({ event: 'getToken' }, '*');
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
@@ -176,11 +174,13 @@ export default {
       const handlerFunctionMapper = {
         setLanguage: this.handlerSetLanguage,
         setProject: this.handlerSetProject,
+        updateToken: this.handlerUpdateToken,
       };
 
       const handlerParamsMapper = {
         setLanguage: 'language',
         setProject: 'projectUuid',
+        updateToken: 'token',
       };
 
       return {

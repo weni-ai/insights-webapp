@@ -22,6 +22,7 @@
       <AgentsTableHeader 
         v-if="isExpansive" 
         :headers="headers"
+        :is-loading="isLoading"
       />
     </header>
 

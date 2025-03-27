@@ -97,6 +97,11 @@ module.exports = defineConfig({
       'process.env': JSON.stringify(process.env),
       'import.meta.env': JSON.stringify({
         BASE_URL: process.env.BASE_URL || '/',
+        INSIGHTS_API_URL: process.env.INSIGHTS_API_URL,
+        FIREBASE_CONFIG: process.env.FIREBASE_CONFIG,
+        HOTJAR_ID: process.env.HOTJAR_ID,
+        ENVIRONMENT: process.env.ENVIRONMENT,
+        SENTRY_DSN: process.env.SENTRY_DSN,
       }),
     }),
     new VueLoaderPlugin(),

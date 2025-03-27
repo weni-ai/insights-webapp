@@ -12,6 +12,7 @@
       :options="favoriteOptions"
       autocomplete
       autocompleteClearOnFocus
+      data-testid="select-favorite-template"
       @update:model-value="selectFavorite"
     />
   </section>

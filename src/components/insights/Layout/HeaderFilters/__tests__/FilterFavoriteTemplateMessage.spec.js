@@ -1,15 +1,16 @@
 import { mount, config } from '@vue/test-utils';
 import { createStore } from 'vuex';
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
 import { createI18n } from 'vue-i18n';
+
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import FilterFavoriteTemplate from '../FilterFavoriteTemplateMessage.vue';
 
 vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
   default: {
     getFavoritesTemplates: vi.fn().mockResolvedValue([
-      { name: 'Fav1', id: 1 },
-      { name: 'Fav2', id: 2 },
+      { name: 'Fav1', id: '1' },
+      { name: 'Fav2', id: '2' },
     ]),
   },
 }));
@@ -45,11 +46,14 @@ describe('FilterFavoriteTemplate.vue', () => {
             { id: '1', name: 'Favorite 1' },
             { id: '2', name: 'Favorite 2' },
           ],
-          selectedTemplateUuid: null,
+          selectedTemplateUuid: '1',
           selectedFavoriteTemplate: '',
         },
         dashboards: {
-          currentDashboard: { config: { is_whatsapp_integration: true } },
+          currentDashboard: {
+            uuid: 'abc',
+            config: { is_whatsapp_integration: true },
+          },
         },
       },
       actions: {
@@ -64,41 +68,38 @@ describe('FilterFavoriteTemplate.vue', () => {
     expect(wrapper.exists()).toBe(true);
   });
 
-  //   it('calls getFavoritesTemplates on mount', async () => {
-  //     mount(FilterFavoriteTemplate, { global: { plugins: [store] } });
-  //     await new Promise((resolve) => setTimeout(resolve, 0));
-  //     expect(store.dispatch).toHaveBeenCalledWith(
-  //       'metaTemplateMessage/getFavoritesTemplates',
-  //       expect.any(String),
-  //     );
-  //   });
+  it('calls getFavoritesTemplates on mount', async () => {
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    wrapper = createWrapper();
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      'metaTemplateMessage/getFavoritesTemplates',
+      store.state.dashboards.currentDashboard.uuid,
+    );
+  });
 
-  //   it('updates selectedFavorite when a favorite is selected', async () => {
-  //     const wrapper = mount(FilterFavoriteTemplate, {
-  //       global: { plugins: [store] },
-  //     });
+  it('updates selectedFavorite when a favorite is selected', async () => {
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
 
-  //     await wrapper
-  //       .findComponent({ name: 'UnnnicSelectSmart' })
-  //       .vm.$emit('update:model-value', '1');
+    await wrapper
+      .findComponent('[data-testid="select-favorite-template"]')
+      .vm.$emit('update:model-value', '1');
 
-  //     expect(store.dispatch).toHaveBeenCalledWith(
-  //       'metaTemplateMessage/setSelectedFavorite',
-  //       '1',
-  //     );
-  //   });
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      'metaTemplateMessage/setSelectedFavorite',
+      '1',
+    );
+  });
 
-  //   it('resets selectedFavorite when selectedTemplateUuid changes to non-favorite', async () => {
-  //     const wrapper = mount(FilterFavoriteTemplate, {
-  //       global: { plugins: [store] },
-  //     });
+  it('resets selectedFavorite when selectedTemplateUuid changes to non-favorite', async () => {
+    const dispatchSpy = vi.spyOn(store, 'dispatch');
 
-  //     store.state.metaTemplateMessage.selectedTemplateUuid = '999';
-  //     await new Promise((resolve) => setTimeout(resolve, 0));
+    store.state.metaTemplateMessage.selectedTemplateUuid = '4';
 
-  //     expect(store.dispatch).toHaveBeenCalledWith(
-  //       'metaTemplateMessage/setSelectedFavorite',
-  //       '',
-  //     );
-  //   });
+    await wrapper.vm.$nextTick();
+
+    expect(dispatchSpy).toHaveBeenCalledWith(
+      'metaTemplateMessage/setSelectedFavorite',
+      { label: 'Select', value: '' },
+    );
+  });
 });

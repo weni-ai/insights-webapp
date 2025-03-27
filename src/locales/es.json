@@ -332,6 +332,8 @@
     "refresh": "Actualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
+    "dynamic_columns": "Columnas personalizables",
+    "placeholder_dynamic_columns": "Seleccionar columnas",
     "clear_filters": "Limpiar filtros",
     "add_new_dashboard": "Nuevo dashboard",
     "set_default_dashboard_success": "Ahora el Tablero {dashboard} es su página de inicio",

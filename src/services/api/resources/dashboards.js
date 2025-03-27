@@ -47,6 +47,7 @@ export default {
     const response = await http.get(`/dashboards/${uuid}/filters/`, {
       params: queryParams,
     });
+
     const responseArray = Object.keys(response);
 
     const dashboardFilters = responseArray.map((key) => {

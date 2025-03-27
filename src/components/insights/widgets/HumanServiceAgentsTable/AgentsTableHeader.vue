@@ -65,7 +65,6 @@ onMounted(() => {
   store.dispatch('agentsColumnsFilter/initializeFromStorage');
   const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
   const availableColumns = headerOptions.value;
-
   if (storedColumns.length === 0 && availableColumns.length > 0) {
     selectedColumns.value = availableColumns;
     store.dispatch('agentsColumnsFilter/setVisibleColumns', 
@@ -104,6 +103,11 @@ const currentDashboardFilters = computed(() => {
 const appliedFilters = computed(() => store.state?.dashboards?.appliedFilters || {});
 const hasFiltersInternal = computed(
   () => Object.keys(filtersInternal.value).length > 0,
+);
+const areStoreFiltersAndInternalEqual = computed(
+  () =>
+    JSON.stringify(appliedFilters.value) ===
+    JSON.stringify(filtersInternal.value),
 );
 
 const getDynamicFiltersDependsOnValues = (filter) => {

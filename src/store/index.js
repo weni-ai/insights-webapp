@@ -7,6 +7,7 @@ import widgets from './modules/widgets.ts';
 import onboarding from './modules/onboarding';
 import user from './modules/user';
 import gpt from './modules/gpt';
+import agentsColumnsFilter from './modules/agentsColumnsFilter';
 
 const store = createStore({
   modules: {
@@ -18,6 +19,7 @@ const store = createStore({
     onboarding,
     user,
     gpt,
+    agentsColumnsFilter,
   },
 });
 

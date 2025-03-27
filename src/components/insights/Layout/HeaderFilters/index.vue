@@ -152,7 +152,13 @@ export default {
           },
         ];
 
-        return { ...filter, next: true, minDate, shortCutOptions };
+        return {
+          ...filter,
+          next: true,
+          minDate,
+          shortCutOptions,
+          disableClear: true,
+        };
       }
 
       return filter;

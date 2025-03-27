@@ -5,7 +5,6 @@
         :label="$t('insights_header.dynamic_columns')"
       />
       <UnnnicSelectSmart
-        v-if="headerOptions.length > 0"
         :modelValue="selectedColumns"
         :options="headerOptions"
         multiple
@@ -35,11 +34,12 @@
       type="secondary"
       iconLeft="refresh"
       @click="updateTableData"
+      :disabled="isLoading"
     />
     <UnnnicButton
       :text="$t('insights_header.clear_filters')"
       type="tertiary"
-      :disabled="!hasFiltersInternal"
+      :disabled="!hasFiltersInternal || isLoading"
       @click="clearFilters"
     />
   </div>
@@ -55,6 +55,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  isLoading: {
+    type: Boolean,
+    default: false
+  },
 });
 
 const store = useStore();
@@ -66,14 +70,14 @@ onMounted(() => {
   const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
   const availableColumns = headerOptions.value;
   if (storedColumns.length === 0 && availableColumns.length > 0) {
-    selectedColumns.value = availableColumns;
-    store.dispatch('agentsColumnsFilter/setVisibleColumns', 
-      availableColumns.map(opt => opt.value)
-    );
-  } else {
-    selectedColumns.value = availableColumns.filter(opt => 
+    handleVisibleColumnsUpdate(availableColumns);
+  } else if (storedColumns.length > 0 && availableColumns.length > 0) {
+    const filteredColumns = availableColumns.filter(opt => 
       storedColumns.includes(opt.value)
     );
+    handleVisibleColumnsUpdate(filteredColumns);
+  } else if (storedColumns.length  > 0) {
+    handleVisibleColumnsUpdate(storedColumns.map(opt => ({ value: opt, label: opt })));
   }
 });
 
@@ -92,6 +96,15 @@ const headerOptions = computed(() => {
       label: header.name,
     }));
 });
+
+const handleVisibleColumnsUpdate = (value) => {
+  if (!store.state?.agentsColumnsFilter?.hasInitialized || !Array.isArray(value)) return;
+  
+  const columnNames = value.map(option => option.value);
+
+  selectedColumns.value = value;
+  store.dispatch('agentsColumnsFilter/setVisibleColumns', columnNames);
+}
 
 const currentDashboardFilters = computed(() => {
   const filters = ['sectors', 'queues'];
@@ -124,14 +137,6 @@ const updateTableData = () => {
   store.dispatch('dashboards/resetAppliedFilters');
 };
 
-const handleVisibleColumnsUpdate = (value) => {
-  if (!store.state?.agentsColumnsFilter?.hasInitialized || !Array.isArray(value)) return;
-  
-  const columnNames = value.map(option => option.value);
-  selectedColumns.value = value;
-  store.dispatch('agentsColumnsFilter/setVisibleColumns', columnNames);
-};
-
 const updateFilter = (filterName, value) => {
   const hasNonNullValues =
     typeof value === 'object' && value
@@ -161,6 +166,12 @@ const syncFiltersInternal = () => {
 
 watch(appliedFilters, syncFiltersInternal, { immediate: true });
 watch(filtersInternal, setFilters, { deep: true });
+watch(headerOptions, () => {
+  const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
+  if (storedColumns.length === 0 && headerOptions.value.length > 0) {
+    handleVisibleColumnsUpdate(headerOptions.value);
+  }
+}, { once: true });
 </script>
 
 <style scoped lang="scss">

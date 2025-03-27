@@ -85,6 +85,8 @@ import weniLoading from '@/assets/images/weni-loading.svg';
 
 import moment from 'moment';
 
+import Unnnic from '@weni/unnnic-system';
+
 const store = useStore();
 
 const waba_id = computed(
@@ -108,7 +110,11 @@ onMounted(async () => {
       handlerSelectedTemplateUuid(lastViwedTemplateUuid);
     } else {
       const { results: templates } =
-        await MetaTemplateMessageService.listTemplates({ limit: 1 });
+        await MetaTemplateMessageService.listTemplates({
+          limit: 1,
+          waba_id: waba_id.value,
+          project_uuid: project_uuid.value,
+        });
 
       if (templates.length) {
         store.dispatch('metaTemplateMessage/setEmptyTemplates', false);
@@ -121,6 +127,10 @@ onMounted(async () => {
     initialLoading.value = false;
   }
 });
+
+const favoritesTemplates = computed(
+  () => store.state.metaTemplateMessage.favoritesTemplates,
+);
 
 const isEmptyTemplates = computed(
   () => store.state.metaTemplateMessage.emptyTemplates,
@@ -295,6 +305,18 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
 });
 
 const favoriteTemplate = async () => {
+  if (favoritesTemplates.value.length === 5) {
+    Unnnic.unnnicCallAlert({
+      props: {
+        text: i18n.global.t(
+          'template_messages_dashboard.favorite_limit_reached',
+        ),
+        type: 'error',
+      },
+    });
+    return;
+  }
+
   await MetaTemplateMessageService.favoriteTemplate({
     dashboardUuid: currentDashboard.value.uuid,
     templateUuid: selectedTemplateUuid.value,

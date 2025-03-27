@@ -70,6 +70,7 @@ export default {
         next,
         minDate,
         shortCutOptions,
+        disableClear,
       } = this.filter;
 
       const defaultProps = {
@@ -101,6 +102,7 @@ export default {
           minDate,
           next,
           options: shortCutOptions,
+          disableClear,
         },
         input_text: {},
         select: {

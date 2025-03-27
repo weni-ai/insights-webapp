@@ -14,6 +14,10 @@ export default {
     hasVisibleColumns: (state) => state.visibleColumns.length > 0,
     dynamicColumns: (state) => state.visibleColumns.filter(col => !STATIC_COLUMNS.includes(col)),
     allVisibleColumns: (state) => [...STATIC_COLUMNS, ...state.visibleColumns.filter(col => !STATIC_COLUMNS.includes(col))],
+    getStorageKey: (state, getters, rootState) => {
+      const projectUuid = rootState.config.project?.uuid || localStorage.getItem('projectUuid');
+      return projectUuid ? `${STORAGE_KEY}_${projectUuid}` : STORAGE_KEY;
+    },
   },
 
   mutations: {
@@ -41,12 +45,14 @@ export default {
       }
     },
 
-    INITIALIZE_FROM_STORAGE(state) {
-      const storedColumns = localStorage.getItem(STORAGE_KEY);
+    INITIALIZE_FROM_STORAGE(state, rootState) {
+      const projectUuid = rootState.config.project?.uuid || localStorage.getItem('projectUuid');
+
+      const storedColumns = localStorage.getItem(`${STORAGE_KEY}_${projectUuid}`);
+      
       if (storedColumns) {
         try {
           const parsedColumns = JSON.parse(storedColumns);
-
           state.visibleColumns = parsedColumns.filter(col => !STATIC_COLUMNS.includes(col));
         } catch (error) {
           console.error('Error parsing stored columns:', error);
@@ -66,28 +72,31 @@ export default {
   },
 
   actions: {
-    setVisibleColumns({ commit, state }, columns) {
+    setVisibleColumns({ commit, state, getters }, columns) {
       if (!Array.isArray(columns)) return;
       
       commit('SET_VISIBLE_COLUMNS', columns);
       
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.visibleColumns));
+      const storageKey = getters.getStorageKey;
+      localStorage.setItem(storageKey, JSON.stringify(state.visibleColumns));
     },
 
-    clearVisibleColumns({ commit }) {
+    clearVisibleColumns({ commit, getters }) {
       commit('CLEAR_VISIBLE_COLUMNS');
-      localStorage.removeItem(STORAGE_KEY);
+      const storageKey = getters.getStorageKey;
+      localStorage.removeItem(storageKey);
     },
 
-    toggleColumn({ commit, state }, columnName) {
+    toggleColumn({ commit, state, getters }, columnName) {
       if (typeof columnName !== 'string' || STATIC_COLUMNS.includes(columnName)) return;
       
       commit('TOGGLE_COLUMN', columnName);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.visibleColumns));
+      const storageKey = getters.getStorageKey;
+      localStorage.setItem(storageKey, JSON.stringify(state.visibleColumns));
     },
 
-    initializeFromStorage({ commit }) {
-      commit('INITIALIZE_FROM_STORAGE');
+    initializeFromStorage({ commit, rootState }) {
+      commit('INITIALIZE_FROM_STORAGE', rootState);
     },
 
     updateLastAppliedFilters({ commit }, filters) {

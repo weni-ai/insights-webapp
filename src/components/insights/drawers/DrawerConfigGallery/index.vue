@@ -104,12 +104,19 @@ export default {
         '9bdbad04-bcca-4bc7-a718-06fb7965e07f',
         'a6c8fc78-495f-43bd-a2ee-d38dfa79aea6',
         '6294ee81-e89e-437b-a3e0-f4a99611bb51',
+        '0131514a-122e-4a09-a7f3-b7241e0e641c',
+        '97265d10-d7e6-41e7-8dc7-9548069e76ed',
+        'e1390b69-d170-4a37-8b52-5b99eadfbf57',
+        'dc69866d-23ba-4e36-93f5-0ede5bdf240c',
+        'b9ed3797-36c8-4b50-bfe1-42f1b89de6cf',
       ];
 
       const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];
 
       const enabledProjects =
-        env('ENVIROMENT') === 'staging' ? enabledProjectsStg : enabledProjectsProd;
+        env('ENVIROMENT') === 'staging'
+          ? enabledProjectsStg
+          : enabledProjectsProd;
 
       const isVtexEnabledProject = enabledProjects.includes(
         Config.state.project.uuid,

@@ -239,6 +239,9 @@ export default {
         empty_column: {
           openConfig: () => this.$emit('open-config'),
         },
+        table_dynamic_by_filter: {
+          seeMore: () => this.redirectToTableAgents(),
+        },
         vtex_order: {
           openConfig: () => this.$emit('open-config'),
           requestData: () => {
@@ -348,6 +351,8 @@ export default {
       getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
       getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
       getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
+      updateCurrentExpansiveWidgetData:
+        'widgets/updateCurrentExpansiveWidgetData',
     }),
 
     initRequestDataInterval() {
@@ -422,10 +427,18 @@ export default {
       }
     },
 
+    redirectToTableAgents() {
+      this.updateCurrentExpansiveWidgetData(this.widget);
+    },
+
     getWidgetFormattedData(widget) {
       const { config, data } = widget;
 
-      if (config?.operation === 'recurrence') {
+      if (
+        config?.operation === 'recurrence' ||
+        config?.data_suffix === '%' ||
+        config?.operation === 'percentage'
+      ) {
         return (
           (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', {
             minimumFractionDigits: 2,

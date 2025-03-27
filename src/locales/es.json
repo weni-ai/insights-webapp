@@ -8,6 +8,7 @@
     "waiting_time": "Tiempo de espera",
     "awaiting_service": "Esperando atención",
     "interaction_time": "Tiempo de interacción",
+    "all_agents": "Todos los agentes",
     "tooltips": {
       "in_progress": "Número total de chats que se están respondiendo actualmente.",
       "response_time": "Tiempo medio que espera el contacto para recibir una respuesta a cada mensaje.",
@@ -111,6 +112,7 @@
       "placeholder": "Seleccionar tag"
     }
   },
+  "filter-by": "Filtrar por:",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",
@@ -303,6 +305,7 @@
     "select_origin_flow": "@:select @.lower:flow de origen"
   },
   "insights_header": {
+    "refresh": "Actualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "clear_filters": "Limpiar filtros",
@@ -410,5 +413,30 @@
   "charts": {
     "hours": "Horarios",
     "attendances": "Servicios"
+  },
+  "dashboard_commerce": {
+    "title": "Vea lo que está pasando en: Carro abandonado",
+    "titles": {
+      "send-message": "Mensajes enviados",
+      "delivered-messages": "Mensajes entregados",
+      "read-messages": "Mensajes leídos",
+      "interactions": "Interacciones",
+      "utm-revenue": "Ingresos UTM",
+      "orders-placed": "Pedidos realizados"
+    },
+    "filters": {
+      "today": "Hoy",
+      "last_7_days": "Últimos 7 días",
+      "last_14_days": "Últimos 14 días",
+      "last_month": "Último mes"
+    },
+    "infos": {
+      "send-message": "Envío de mensajes en Carro abandonado",
+      "delivered-messages": "Entrega de mensajes en Carro abandonado",
+      "read-messages": "Lectura de mensajes en Carro abandonado",
+      "interactions": "Interacciones en Carro abandonado",
+      "utm-revenue": "Ingresos UTM en Carro abandonado",
+      "orders-placed": "Pedidos realizados en Carro abandonado"
+    }
   }
 }

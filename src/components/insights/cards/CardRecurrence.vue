@@ -38,23 +38,26 @@
           class="content__container-icon-loading"
           data-testid="icon-loading"
         />
-        <template v-for="index in 5" :key="index">
+        <template
+          v-for="(item, index) in rowData"
+          :key="index"
+        >
           <section
             v-if="!isLoading"
             class="content__container-group"
             data-testid="content-container-group"
-            @click.stop="data[index - 1] && emitClickData(data[index - 1])"
+            @click.stop="item && emitClickData(item)"
           >
-            <template v-if="data[index - 1]">
+            <template v-if="item">
               <section class="content">
                 <section class="content__container-item">
                   <p class="content__container-item-text">
-                    {{ data[index - 1].label }}
+                    {{ item.label }}
                   </p>
                 </section>
                 <section class="progress-bar-container">
                   <UnnnicProgressBar
-                    v-model="data[index - 1].value"
+                    v-model="item.value"
                     class="progress-bar"
                     inline
                   />
@@ -111,6 +114,11 @@ export default {
     }),
     isError() {
       return this.data?.length === 0;
+    },
+    rowData() {
+      return Array(5)
+        .fill(null)
+        .map((_, index) => this.data[index] || null);
     },
   },
 

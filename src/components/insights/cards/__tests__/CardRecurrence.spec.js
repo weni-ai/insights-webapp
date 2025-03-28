@@ -51,21 +51,28 @@ describe('CardRecurrence.vue', () => {
     const testData = [{ label: 'Item 1', value: 70 }];
     const wrapper = createWrapper({ data: testData });
 
-    await wrapper.findAll('[data-testid="content-container-group"]')[0].trigger('click');
+    await wrapper
+      .findAll('[data-testid="content-container-group"]')[0]
+      .trigger('click');
     expect(wrapper.emitted('clickData')).toBeTruthy();
-    expect(wrapper.emitted('clickData')[0][0]).toEqual({ label: 'Item 1', data: 70 });
+    expect(wrapper.emitted('clickData')[0][0]).toEqual({
+      label: 'Item 1',
+      data: 70,
+    });
 
-    await wrapper.findAll('[data-testid="content-container-group"]')[1].trigger('click');
+    await wrapper
+      .findAll('[data-testid="content-container-group"]')[1]
+      .trigger('click');
     expect(wrapper.emitted('clickData')).toHaveLength(1);
   });
 
   it('renders content correctly for rows with data', () => {
     const testData = [
       { label: 'Item 1', value: 70 },
-      { label: 'Item 2', value: 30 }
+      { label: 'Item 2', value: 30 },
     ];
     const wrapper = createWrapper({ data: testData });
-    
+
     const contentTexts = wrapper.findAll('.content__container-item-text');
     expect(contentTexts[0].text()).toBe('Item 1');
     expect(contentTexts[1].text()).toBe('Item 2');
@@ -91,9 +98,9 @@ describe('CardRecurrence.vue', () => {
   it('applies empty state styling to rows without data', () => {
     const wrapper = createWrapper({ data: [{ label: 'Item 1', value: 70 }] });
     const groups = wrapper.findAll('[data-testid="content-container-group"]');
-    
+
     expect(groups[0].find('.content').exists()).toBe(true);
-    
+
     for (let i = 1; i < 5; i++) {
       expect(groups[i].find('.content').exists()).toBe(false);
     }

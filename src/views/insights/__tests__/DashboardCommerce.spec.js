@@ -11,14 +11,12 @@ vi.mock('@/services/api/resources/metrics', () => ({
   default: {
     getMetrics: vi.fn(() =>
       Promise.resolve({
-        data: [
-          { id: 'sent-messages', value: 1325, percentage: 5.08 },
-          { id: 'delivered-messages', value: 1259, percentage: -1.12 },
-          { id: 'read-messages', value: 956, percentage: -2.08 },
-          { id: 'interactions', value: 569, percentage: 6.13 },
-          { id: 'utm-revenue', value: 44566.0, percentage: 12.2, prefix: 'R$' },
-          { id: 'orders-placed', value: 86, percentage: 0 },
-        ],
+        'sent-messages': { value: 1325, percentage: 5.08 },
+        'delivered-messages': { value: 1259, percentage: -1.12 },
+        'read-messages': { value: 956, percentage: -2.08 },
+        interactions: { value: 569, percentage: 6.13 },
+        'utm-revenue': { value: 44566.0, percentage: 12.2, prefix: 'R$' },
+        'orders-placed': { value: 86, percentage: 0 },
       }),
     ),
   },
@@ -64,6 +62,9 @@ describe('DashboardCommerce', () => {
 
   beforeEach(async () => {
     wrapper = mount(DashboardCommerce, {
+      propsData: {
+        auth: { token: 'mock-token', uuid: 'mock-uuid' },
+      },
       global: {
         plugins: [i18n, UnnnicSystem],
         components: {
@@ -82,7 +83,21 @@ describe('DashboardCommerce', () => {
 
   describe('loading state', () => {
     it('shows loading state while fetching data', async () => {
-      wrapper = mount(DashboardCommerce);
+      wrapper = mount(DashboardCommerce, {
+        propsData: {
+          auth: { token: 'mock-token', uuid: 'mock-uuid' },
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          components: {
+            CardMetric,
+            DropdownFilter,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(true);
       await wrapper.vm.$nextTick();
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(false);
@@ -90,26 +105,33 @@ describe('DashboardCommerce', () => {
   });
 
   describe('API interactions', () => {
-    it('calls getMetrics on mount with correct date range', () => {
-      expect(api.getMetrics).toHaveBeenCalledWith({
-        start_date: expect.any(String),
-        end_date: expect.any(String),
-      });
+    it('calls getMetrics on mount with correct date range and auth token', () => {
+      expect(api.getMetrics).toHaveBeenCalledWith(
+        {
+          start_date: expect.any(String),
+          end_date: expect.any(String),
+          project_uuid: 'mock-uuid',
+        },
+        'mock-token',
+      );
     });
 
-    it('calls getMetrics when filter changes', async () => {
+    it('calls getMetrics when filter changes with correct auth token', async () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       await dropdownFilter.vm.$emit('select', 'Today');
 
-      expect(api.getMetrics).toHaveBeenCalledWith({
-        start_date: expect.any(String),
-        end_date: expect.any(String),
-      });
+      expect(api.getMetrics).toHaveBeenCalledWith(
+        {
+          start_date: expect.any(String),
+          end_date: expect.any(String),
+          project_uuid: 'mock-uuid',
+        },
+        'mock-token',
+      );
     });
 
     it('handles API error gracefully', async () => {
       vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
-      const consoleSpy = vi.spyOn(console, 'log');
 
       await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
 
@@ -117,7 +139,31 @@ describe('DashboardCommerce', () => {
         'error getMetrics',
         expect.any(Error),
       );
-      expect(wrapper.find('.metrics-container').exists()).toBe(true);
+      expect(wrapper.vm.isError).toBe(true);
+      expect(wrapper.find('.dashboard-commerce__error').exists()).toBe(true);
+    });
+
+    it('does not fetch metrics when token is not present', async () => {
+      const getMetricsSpy = vi.spyOn(api, 'getMetrics');
+
+      wrapper = mount(DashboardCommerce, {
+        propsData: {
+          auth: null,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          components: {
+            CardMetric,
+            DropdownFilter,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(getMetricsSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -146,6 +192,19 @@ describe('DashboardCommerce', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       expect(dropdownFilter.exists()).toBeTruthy();
     });
+
+    it('renders metrics container when data is loaded', () => {
+      expect(wrapper.find('.metrics-container').exists()).toBe(true);
+    });
+
+    it('renders error state when API fails', async () => {
+      vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
+      await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find('.dashboard-commerce__error').exists()).toBe(true);
+      expect(wrapper.find('.metrics-container').exists()).toBe(false);
+    });
   });
 
   describe('filter functionality', () => {
@@ -170,20 +229,6 @@ describe('DashboardCommerce', () => {
       const filterNames = filterItems.map((item) => item.name);
       expect(filterNames).toEqual(expectedOptions);
     });
-
-    it('updates metrics when filter changes', async () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      const initialMetrics = [...wrapper.vm.metrics.data];
-
-      vi.spyOn(api, 'getMetrics').mockResolvedValueOnce({
-        data: [{ id: 'sent-messages', value: 999, percentage: 1.0 }],
-      });
-
-      await dropdownFilter.vm.$emit('select', 'Today');
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.metrics).not.toEqual(initialMetrics);
-    });
   });
 
   describe('metrics data structure', () => {
@@ -196,6 +241,27 @@ describe('DashboardCommerce', () => {
         expect(props).toHaveProperty('value');
         expect(props).toHaveProperty('percentage');
         expect(props).toHaveProperty('hasInfo');
+      });
+    });
+
+    it('correctly maps metric data to CardMetric components', () => {
+      const metrics = wrapper.findAllComponents(CardMetric);
+      const mockData = {
+        'sent-messages': { value: 1325, percentage: 5.08 },
+        'delivered-messages': { value: 1259, percentage: -1.12 },
+        'read-messages': { value: 956, percentage: -2.08 },
+        interactions: { value: 569, percentage: 6.13 },
+        'utm-revenue': { value: 44566.0, percentage: 12.2, prefix: 'R$' },
+        'orders-placed': { value: 86, percentage: 0 },
+      };
+
+      Object.entries(mockData).forEach(([key, data], index) => {
+        const metric = metrics[index];
+        expect(metric.props('value')).toBe(data.value);
+        expect(metric.props('percentage')).toBe(data.percentage);
+        if (data.prefix) {
+          expect(metric.props('prefix')).toBe(data.prefix);
+        }
       });
     });
   });

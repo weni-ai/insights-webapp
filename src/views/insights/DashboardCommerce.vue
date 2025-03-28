@@ -39,7 +39,7 @@
       </section>
     </section>
     <section
-      v-if="!isLoading"
+      v-if="!isLoading && !isError"
       class="metrics-container"
     >
       <CardMetric
@@ -58,10 +58,25 @@
       />
     </section>
     <section
-      v-else
+      v-if="isLoading"
       class="dashboard-commerce__loading"
     >
       <IconLoading />
+    </section>
+    <section v-if="isError && !isLoading">
+      <section class="dashboard-commerce__error">
+        <UnnnicIcon
+          icon="cancel"
+          size="xl"
+          class="dashboard-commerce__error-icon"
+        />
+        <p class="dashboard-commerce__error-title">
+          {{ $t('dashboard_commerce.errors.title') }}
+        </p>
+        <p class="dashboard-commerce__error-description">
+          {{ $t('dashboard_commerce.errors.description') }}
+        </p>
+      </section>
     </section>
   </section>
 </template>
@@ -102,7 +117,7 @@ const infos = {
 
 const metrics = ref<MetricData[]>([]);
 const isLoading = ref(false);
-
+const isError = ref(false);
 const metricTitles: Record<string, string> = {
   'sent-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
   'delivered-messages': i18n.global.t(
@@ -127,7 +142,9 @@ const getMetrics = async (start: string, end: string) => {
     props.auth.token);
 
     metrics.value = { ...data };
+    if (isError.value) isError.value = false;
   } catch (error) {
+    isError.value = true; 
     console.log('error getMetrics', error);
   } finally {
     isLoading.value = false;
@@ -192,6 +209,41 @@ const handleFilter = async (filter: string) => {
     height: 100%;
     width: 100%;
     padding-top: $unnnic-spacing-md;
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: $unnnic-border-radius-md;
+    border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+    opacity: $unnnic-opacity-level-darkest;
+    background: $unnnic-color-neutral-white;
+    margin-top: $unnnic-spacing-sm;
+    padding: $unnnic-spacing-lg;
+
+    &-icon {
+      margin-bottom: $unnnic-spacing-sm;
+    }
+
+    &-title {
+      color: $unnnic-color-neutral-darkest;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-gt;
+      font-style: normal;
+      font-weight: $unnnic-font-weight-bold;
+      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    }
+
+    &-description {
+      color: $unnnic-color-neutral-cloudy;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-gt;
+      font-style: normal;
+      font-weight: $unnnic-font-weight-regular;
+      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    }
   }
 }
 

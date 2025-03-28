@@ -71,6 +71,7 @@ export default {
   computed: {
     ...mapState({
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
+      isCommerce: (state) => state.project.isCommerce,
       widget: (state) => state.widgets.currentWidgetEditing,
       onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showConfigWidgetOnboarding: (state) =>
@@ -124,7 +125,7 @@ export default {
 
       const empty_widget_options = ['funnel', 'recurrence'];
 
-      if (isVtexEnabledProject) empty_widget_options.push('vtex');
+      if (isVtexEnabledProject || this.isCommerce) empty_widget_options.push('vtex');
 
       const optionsMap = {
         card: createOptions(['executions', 'flow_result', 'data_crossing']),

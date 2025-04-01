@@ -17,7 +17,7 @@ export default {
       return {
         data: {
           results: [
-            { id: '116831708012828', phone_number: '+55 82 3312-5492' },
+            { id: '116831708012828', phone_number: '+55 99 9999-9999' },
           ],
         },
       };

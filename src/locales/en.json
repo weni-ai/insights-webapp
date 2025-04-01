@@ -192,6 +192,32 @@
           "title": "VTEX",
           "description": "View your VTEX sales data"
         },
+        "vtex_conversions": {
+          "title": "Template conversion",
+          "description": "Track the conversion rate between sent template messages and completed sales.",
+          "form": {
+            "define_meta_data": "Define Meta data",
+            "define_vtex_data": "Define VTEX data",
+            "input": {
+              "name": {
+                "label": "Name widget",
+                "placeholder": "Example: Sales"
+              },
+              "waba": {
+                "label": "Select account number",
+                "placeholder": "Select a phone number"
+              },
+              "template": {
+                "label": "Select template message",
+                "placeholder": "Select a template message"
+              },
+              "utm": {
+                "label": "Provide UTM",
+                "placeholder": "Copy from VTEX and paste here"
+              }
+            }
+          }
+        },
         "recurrence": {
           "title": "Recurrence",
           "description": "Visualize recurring results such as satisfaction surveys or CSAT in graphs"

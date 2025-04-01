@@ -75,9 +75,10 @@ export default {
   },
 
   watch: {
-    'currentDashboard.uuid'(newCurrentDashboardUuid) {
+    async 'currentDashboard.uuid'(newCurrentDashboardUuid) {
       if (newCurrentDashboardUuid) {
-        this.getCurrentDashboardFilters();
+        this.setCurrentDashboardFilters([]);
+        await this.getCurrentDashboardFilters();
       }
     },
   },
@@ -110,6 +111,7 @@ export default {
 
     ...mapMutations({
       setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
+      setCurrentDashboardFilters: 'dashboards/SET_CURRENT_DASHBOARD_FILTERS',
       setShowCreateDashboardOnboarding:
         'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
       setShowCompleteOnboardingModal:

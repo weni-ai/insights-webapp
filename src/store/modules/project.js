@@ -35,9 +35,6 @@ export default {
           commit('SET_PROJECT_FLOWS', flows);
           state.isLoadedFlows = true;
         })
-        .catch((error) => {
-          console.error(error);
-        })
         .finally(() => {
           state.isLoadingFlows = false;
         });

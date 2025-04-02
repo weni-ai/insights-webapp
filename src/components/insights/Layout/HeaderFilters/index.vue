@@ -36,9 +36,9 @@
       @close="filterModalOpened = false"
     />
     <SearchTemplateMessagesModal
-      v-if="searchTemplateMetaModal"
-      :modelValue="searchTemplateMetaModal"
-      @close="searchTemplateMetaModal = false"
+      v-if="showSearchTemplateMetaModal"
+      :modelValue="showSearchTemplateMetaModal"
+      @close="handlerShowSearchTemplateModal(false)"
     />
     <template v-if="isMetaTemplateDashboard">
       <UnnnicButton
@@ -46,7 +46,7 @@
         iconLeft="search"
         :text="$t('template_messages_dashboard.templates_modal.title')"
         :disabled="emptyTemplates"
-        @click.stop="searchTemplateMetaModal = true"
+        @click.stop="handlerShowSearchTemplateModal(true)"
       />
     </template>
   </section>
@@ -86,6 +86,8 @@ export default {
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
       emptyTemplates: (state) => state.metaTemplateMessage.emptyTemplates,
+      showSearchTemplateMetaModal: (state) =>
+        state.metaTemplateMessage.showSearchTemplateMetaModal,
     }),
 
     isMetaTemplateDashboard() {
@@ -226,6 +228,8 @@ export default {
     ...mapActions({
       setAppliedFilters: 'dashboards/setAppliedFilters',
       resetAppliedFilters: 'dashboards/resetAppliedFilters',
+      handlerShowSearchTemplateModal:
+        'metaTemplateMessage/handlerShowSearchTemplateModal',
     }),
 
     updateFilter(value) {

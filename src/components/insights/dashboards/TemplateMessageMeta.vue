@@ -119,6 +119,10 @@ onMounted(async () => {
       if (templates.length) {
         store.dispatch('metaTemplateMessage/setEmptyTemplates', false);
         handlerSelectedTemplateUuid(templates[0]?.id);
+        store.dispatch(
+          'metaTemplateMessage/handlerShowSearchTemplateModal',
+          true,
+        );
       } else store.dispatch('metaTemplateMessage/setEmptyTemplates', true);
     }
   } catch (error) {

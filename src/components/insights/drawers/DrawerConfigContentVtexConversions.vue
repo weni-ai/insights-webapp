@@ -132,7 +132,10 @@ watch(
   () => {
     const validConfig =
       !!widgetData.value.name &&
-      Object.values(widgetData.value.config).every((value) => !!value);
+      !!widgetData.value.config.template_name.trim().length &&
+      Object.values(widgetData.value.config.filter).every(
+        (value) => !!value?.trim().length,
+      );
     emit('update-disable-primary-button', !validConfig);
     emit('update:modelValue', widgetData.value);
   },

@@ -3,7 +3,7 @@ import Config from '@/store/modules/config';
 import { createRequestQuery } from '@/utils/request';
 
 export default {
-  async getMetrics(queryParams = {}) {
+  async getMetrics(queryParams = {}, token) {
     const { project } = Config.state;
 
     const defaultParams = {
@@ -16,7 +16,9 @@ export default {
       ...queryParams,
     });
 
-    const response = await http.get(`/metrics/skills/`, { params });
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+    const response = await http.get(`/metrics/skills/`, { params, headers });
 
     return response;
   },

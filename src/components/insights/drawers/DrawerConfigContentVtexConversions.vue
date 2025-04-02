@@ -51,6 +51,7 @@
               v-model="selectedTemplate"
               :options="templatesOptions"
               :disabled="!selectedWaba[0]?.value"
+              :isLoading="isLoadingtemplates"
               autocomplete
               autocompleteClearOnFocus
               autocompleteIconLeft
@@ -174,6 +175,7 @@ const getMetaWabas = async () => {
     ];
   }
 };
+const isLoadingtemplates = ref(false);
 const searchTextTemplate = ref('');
 const templates = ref([]);
 const templatesOptions = computed(() => {
@@ -204,20 +206,27 @@ watch(selectedTemplate, () => {
 });
 
 const searchTemplate = async () => {
-  const params = {
-    limit: 20,
-    waba_id: selectedWaba.value[0]?.value,
-    project_uuid: project_uuid.value,
-    fields: 'name,id',
-    search: searchTextTemplate.value,
-  };
+  try {
+    isLoadingtemplates.value = true;
+    const params = {
+      limit: 20,
+      waba_id: selectedWaba.value[0]?.value,
+      project_uuid: project_uuid.value,
+      fields: 'name,id',
+      search: searchTextTemplate.value,
+    };
 
-  const response = await MetaTemplateMessageService.listTemplates(params);
+    const response = await MetaTemplateMessageService.listTemplates(params);
 
-  templates.value = removeDuplicatedItems(
-    templates.value.concat(response.results),
-    'id',
-  );
+    templates.value = removeDuplicatedItems(
+      templates.value.concat(response.results),
+      'id',
+    );
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoadingtemplates.value = false;
+  }
 };
 
 const validWabaConfig = computed(() => {

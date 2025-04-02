@@ -67,13 +67,13 @@
         )
       "
       :active="activeAccordion.vtex"
-      :validConfig="!!widgetData.config.utm.trim().length"
+      :validConfig="!!widgetData.config.filter.utm_source.trim().length"
       @update:active="activeAccordion.vtex = $event"
     >
       <template #content>
         <section class="vtex-conversions-form__vtex">
           <UnnnicInput
-            v-model="widgetData.config.utm"
+            v-model="widgetData.config.filter.utm_source"
             :label="
               $t(
                 'drawers.config_gallery.options.vtex_conversions.form.input.utm.label',
@@ -121,7 +121,10 @@ const activeAccordion = ref({
 
 const widgetData = ref({
   name: '',
-  config: { waba_id: '', template_id: '', template_name: '', utm: '' },
+  config: {
+    filter: { waba_id: '', template_id: '', utm_source: '' },
+    template_name: '',
+  },
 });
 
 watch(
@@ -193,7 +196,7 @@ watch(selectedTemplate, () => {
   const selectedTemplateId = selectedTemplate.value[0]?.value;
   const selectedTemplateName = selectedTemplate.value[0]?.label;
   if (!selectedTemplateId) return;
-  widgetData.value.config.template_id = selectedTemplateId;
+  widgetData.value.config.filter.template_id = selectedTemplateId;
   widgetData.value.config.template_name = selectedTemplateName;
 });
 
@@ -230,7 +233,7 @@ watch(selectedWaba, () => {
   templates.value = [];
   const selectedWabaId = selectedWaba.value[0]?.value;
   if (selectedWabaId) {
-    widgetData.value.config.waba_id = selectedWaba.value[0]?.value;
+    widgetData.value.config.filter.waba_id = selectedWaba.value[0]?.value;
     searchTemplate();
   }
 });

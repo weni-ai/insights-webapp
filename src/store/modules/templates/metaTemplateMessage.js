@@ -6,11 +6,13 @@ const mutations = {
   SET_SELECTED_TEMPLATE_UUID: 'SET_SELECTED_TEMPLATE_UUID',
   SET_IS_LOADING_FAVORITES_TEMPLATES: 'SET_IS_LOADING_FAVORITES_TEMPLATES',
   SET_EMPTY_TEMPLATES: 'SET_EMPTY_TEMPLATES',
+  SET_SHOW_SEARCH_TEMPLATE_META_MODAL: 'SET_SHOW_SEARCH_TEMPLATE_META_MODAL',
 };
 
 export default {
   namespaced: true,
   state: {
+    showSearchTemplateMetaModal: false,
     favoritesTemplates: [],
     selectedFavoriteTemplate: [{ value: '' }],
     selectedTemplateUuid: '',
@@ -18,6 +20,9 @@ export default {
     emptyTemplates: false,
   },
   mutations: {
+    [mutations.SET_SHOW_SEARCH_TEMPLATE_META_MODAL](state, payload) {
+      state.showSearchTemplateMetaModal = payload;
+    },
     [mutations.SET_FAVORITES_TEMPLATES](state, payload) {
       state.favoritesTemplates = payload;
     },
@@ -61,6 +66,10 @@ export default {
 
     setEmptyTemplates({ commit }, payload) {
       commit(mutations.SET_EMPTY_TEMPLATES, payload);
+    },
+
+    handlerShowSearchTemplateModal({ commit }, payload) {
+      commit(mutations.SET_SHOW_SEARCH_TEMPLATE_META_MODAL, payload);
     },
   },
 };

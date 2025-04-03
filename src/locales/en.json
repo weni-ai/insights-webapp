@@ -163,6 +163,17 @@
         "sub_title": "Please check the provided UTM is correct or wait for new data to arrive",
         "verify_btn": "Check UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Sent messages",
+        "delivered": "Delivered messages",
+        "read": "Read messages",
+        "clicked": "Clicks",
+        "orders": "Orders",
+        "total_value": "Total value",
+        "average_ticket": "Average ticket"
+      }
     }
   },
   "drawers": {

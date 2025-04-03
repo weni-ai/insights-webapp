@@ -162,8 +162,21 @@ defineEmits(['open-config']);
       flex: 1;
     }
     &-graph {
+      :deep(.unnnic-chart-funnel-base-item__card) {
+        position: relative;
+        z-index: 10;
+      }
       :deep(.unnnic-chart-funnel-base-item:not(:last-child)) {
-        border-bottom: 1px solid $unnnic-color-neutral-soft;
+        position: relative;
+        &::after {
+          z-index: 1;
+          content: '';
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: calc(100%);
+          border-bottom: 1px solid $unnnic-color-neutral-soft;
+        }
       }
     }
   }

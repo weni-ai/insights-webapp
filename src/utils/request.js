@@ -13,3 +13,9 @@ export function createRequestQuery(params, initialParams = {}) {
 
   return initialParams;
 }
+
+export function parseQueryString(nextUrl) {
+  if (!nextUrl) return {};
+  const queryString = nextUrl.split('?')[1];
+  return Object.fromEntries([...new URLSearchParams(queryString)]);
+}

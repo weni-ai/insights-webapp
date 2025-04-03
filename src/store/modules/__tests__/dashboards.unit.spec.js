@@ -190,7 +190,9 @@ describe('Dashboards Store', () => {
 
   describe('actions', () => {
     describe('getDashboards', () => {
-      const dashboardsResponse = [{ id: 1, name: 'Dashboard 1' }];
+      const dashboardsResponse = {
+        dashboards: [{ uuid: 1, name: 'Dashboard 1', is_default: true }],
+      };
 
       beforeEach(() => {
         Dashboards.getAll.mockResolvedValue(dashboardsResponse);
@@ -198,6 +200,7 @@ describe('Dashboards Store', () => {
 
       it('should commit SET_LOADING_DASHBOARDS and commit SET_DASHBOARDS mutations when dashboards retrieve successfully', async () => {
         const commitSpy = vi.spyOn(store, 'commit');
+
         await store.dispatch('dashboards/getDashboards');
 
         expect(commitSpy).toHaveBeenCalledWith(
@@ -208,7 +211,7 @@ describe('Dashboards Store', () => {
 
         expect(commitSpy).toHaveBeenCalledWith(
           'dashboards/SET_DASHBOARDS',
-          dashboardsResponse,
+          dashboardsResponse.dashboards,
           undefined,
         );
 
@@ -364,20 +367,21 @@ describe('Dashboards Store', () => {
       });
 
       it('should set old default dashboard to false', async () => {
+        store.state.dashboards.dashboards[0].is_default = true;
         await store.dispatch(
           'dashboards/setDefaultDashboard',
-          dashboards[0].uuid,
+          dashboards[1].uuid,
         );
-        expect(store.state.dashboards.dashboards[1].is_default).toEqual(false);
+        expect(store.state.dashboards.dashboards[0].is_default).toEqual(false);
+        expect(store.state.dashboards.dashboards[1].is_default).toEqual(true);
       });
     });
   });
 
   describe('getters', () => {
-    it('currentDashboard', () => {
+    it('dashboardDefault', () => {
       const dashboard = { uuid: 1, name: 'Dashboard 1', is_default: true };
-      store.commit('dashboards/SET_CURRENT_DASHBOARD', dashboard);
-
+      store.commit('dashboards/SET_DASHBOARDS', [dashboard]);
       expect(store.getters['dashboards/dashboardDefault']).toEqual(dashboard);
     });
   });

@@ -210,6 +210,18 @@ export default {
         }
       },
     },
+    // currentDashboardFilters() {
+    //   const isQueryEmpty = Object.keys(this.$route.query).length === 0;
+    //   if (isQueryEmpty) {
+    //     const { start, end } = getLastNDays(7);
+
+    //     const currentFilter = this.isMetaTemplateDashboard
+    //       ? { date: { _start: start, _end: end } }
+    //       : { ended_at: { __gte: start, __lte: end } };
+
+    //     this.setAppliedFilters(currentFilter);
+    //   } else this.setAppliedFilters(this.$route.query);
+    // },
   },
 
   methods: {

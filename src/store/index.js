@@ -9,6 +9,7 @@ import user from './modules/user';
 import gpt from './modules/gpt';
 import metaTemplateMessage from './modules/templates/metaTemplateMessage';
 import agentsColumnsFilter from './modules/agentsColumnsFilter';
+import metaTemplateMessage from './modules/templates/metaTemplateMessage';
 
 const store = createStore({
   modules: {
@@ -22,6 +23,7 @@ const store = createStore({
     gpt,
     metaTemplateMessage,
     agentsColumnsFilter,
+    metaTemplateMessage,
   },
 });
 

@@ -192,6 +192,32 @@
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
         },
+        "vtex_conversions": {
+          "title": "Conversão de templates",
+          "description": "Acompanhe a taxa de conversão entre mensagens de template enviadas e vendas concluídas.",
+          "form": {
+            "define_meta_data": "Definir metadados",
+            "define_vtex_data": "Definir dados da VTEX",
+            "input": {
+              "name": {
+                "label": "Nome do widget",
+                "placeholder": "Exemplo: Vendas"
+              },
+              "waba": {
+                "label": "Selecionar número da conta",
+                "placeholder": "Selecione um número de telefone"
+              },
+              "template": {
+                "label": "Selecionar mensagem de template",
+                "placeholder": "Selecione uma mensagem de template"
+              },
+              "utm": {
+                "label": "Fornecer UTM",
+                "placeholder": "Copie da VTEX e cole aqui"
+              }
+            }
+          }
+        },
         "recurrence": {
           "title": "Recorrência",
           "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"
@@ -371,7 +397,7 @@
     "errors": {
       "title": "Não foi possível carregar os dados",
       "description": "Não foi possível carregar os dados. Por favor, tente novamente mais tarde."
-  },
+    },
     "titles": {
       "send-message": "Mensagens enviadas",
       "delivered-messages": "Mensagens entregues",

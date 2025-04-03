@@ -16,3 +16,14 @@ export function compareEquals(arrBase, ...arr) {
   const arrBaseStringfy = JSON.stringify(arrBase);
   return arr.every((arrCheck) => arrBaseStringfy === JSON.stringify(arrCheck));
 }
+
+export function removeDuplicatedItems(array, key) {
+  const itemsChecked = new Set();
+  return array.filter((item) => {
+    if (itemsChecked.has(item[key])) {
+      return false;
+    }
+    itemsChecked.add(item[key]);
+    return true;
+  });
+}

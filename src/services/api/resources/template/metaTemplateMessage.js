@@ -1,4 +1,5 @@
 import http from '@/services/api/http';
+import { asyncTimeout } from '@/utils/time';
 
 export default {
   async listMetricsSource(source) {
@@ -6,6 +7,24 @@ export default {
     const response = await http.get(url);
 
     return response[source];
+  },
+
+  async listWabasId({ project_uuid }) {
+    const url = `/metrics/meta/whatsapp-message-templates/wabas/`;
+    const params = { project_uuid };
+    // const { data } = await http.get(url, { params });
+    const { data } = await asyncTimeout(500).then(() => {
+      return {
+        data: {
+          results: [
+            { id: '116831708012828', phone_number: '+55 99 9999-9999' },
+            { id: '526431330559850', phone_number: '+55 88 8888-8888' },
+          ],
+        },
+      };
+    });
+
+    return data.results;
   },
 
   async listTemplates({
@@ -17,6 +36,7 @@ export default {
     language,
     project_uuid,
     waba_id,
+    fields,
   }) {
     const url = '/metrics/meta/whatsapp-message-templates/list-templates/';
 
@@ -29,6 +49,7 @@ export default {
       language,
       project_uuid,
       waba_id,
+      fields,
     };
 
     const { data, paging } = await http.get(url, { params });

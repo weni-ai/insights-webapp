@@ -228,6 +228,17 @@
         "sub_title": "Compruebe que la UTM introducida es correcta o espere nuevos datos",
         "verify_btn": "Comprobar UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Mensajes enviados",
+        "delivered": "Mensajes entregados",
+        "read": "Mensajes leídos",
+        "clicked": "Clics",
+        "orders": "Pedidos",
+        "total_value": "Valor total",
+        "average_ticket": "Ticket promedio"
+      }
     }
   },
   "drawers": {
@@ -256,6 +267,32 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualice sus datos de ventas VTEX"
+        },
+        "vtex_conversions": {
+          "title": "Conversión de plantillas",
+          "description": "Rastrea la tasa de conversión entre los mensajes de plantilla enviados y las ventas completadas.",
+          "form": {
+            "define_meta_data": "Definir metadatos",
+            "define_vtex_data": "Definir datos de VTEX",
+            "input": {
+              "name": {
+                "label": "Nombre del widget",
+                "placeholder": "Ejemplo: Ventas"
+              },
+              "waba": {
+                "label": "Seleccionar número de cuenta",
+                "placeholder": "Selecciona un número de teléfono"
+              },
+              "template": {
+                "label": "Seleccionar mensaje de plantilla",
+                "placeholder": "Selecciona un mensaje de plantilla"
+              },
+              "utm": {
+                "label": "Proporcionar UTM",
+                "placeholder": "Copia desde VTEX y pégalo aquí"
+              }
+            }
+          }
         },
         "recurrence": {
           "title": "Recurrencia",
@@ -436,7 +473,7 @@
     "errors": {
       "title": "No se pudieron cargar los datos",
       "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
-  },
+    },
     "titles": {
       "send-message": "Mensajes enviados",
       "delivered-messages": "Mensajes entregados",

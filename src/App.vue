@@ -117,31 +117,20 @@ export default {
     }),
 
     async handlerTokenAndProjectUuid() {
-      const hasTokenInUrl = window.location.pathname.startsWith(
-        '/loginexternal/Bearer+',
-      );
-
-      let token = '';
-
-      if (hasTokenInUrl) {
-        token = window.location.pathname
-          .replace('/loginexternal/Bearer+', '')
-          .slice(0, -1);
-      }
-
       const queryString = new URLSearchParams(window.location.search);
 
       const projectUuid = queryString.get('projectUuid');
 
-      const newToken = token || localStorage.getItem('token');
+      const authToken = localStorage.getItem('token');
+
       const newProjectUuid = projectUuid || localStorage.getItem('projectUuid');
 
-      this.setToken(newToken);
+      this.setToken(authToken);
       this.setProject({
         uuid: newProjectUuid,
       });
 
-      const sessionUserEmail = parseJwt(newToken)?.email || null;
+      const sessionUserEmail = parseJwt(authToken)?.email || null;
 
       if (sessionUserEmail) {
         this.setEmail(sessionUserEmail);

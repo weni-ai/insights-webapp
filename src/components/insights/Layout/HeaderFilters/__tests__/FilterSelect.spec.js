@@ -54,6 +54,7 @@ describe('FilterSelect', () => {
       dependsOn: undefined,
       dependsOnValue: null,
       keyValueField: '',
+      fetchRequest: expect.any(Function),
     });
   });
 

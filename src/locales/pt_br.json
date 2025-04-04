@@ -163,6 +163,17 @@
         "sub_title": "Verifique se o UTM informado está correto ou aguarde novos dados",
         "verify_btn": "Verificar UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Mensagens enviadas",
+        "delivered": "Mensagens entregues",
+        "read": "Mensagens lidas",
+        "clicked": "Cliques",
+        "orders": "Pedidos",
+        "total_value": "Valor total",
+        "average_ticket": "Ticket médio"
+      }
     }
   },
   "drawers": {

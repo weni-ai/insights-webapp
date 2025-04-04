@@ -145,15 +145,20 @@ export default {
       const visibleColumns = this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
 
       const formattedItems = this.items.map((item) => {
+        let label = null;
+        if (item.label && this.isExpansive) {
+          label = item.label;
+        }
+
         const baseContent = [
-        {
-              component: markRaw(AgentStatus),
-              props: { status: item.status },
-              events: {},
-            },
-            String(item.agent),
-            String(item.opened),
-            String(item.closed),
+          {
+            component: markRaw(AgentStatus),
+            props: { status: item.status, label },
+            events: {},
+          },
+          String(item.agent),
+          String(item.opened),
+          String(item.closed),
         ];
         
         visibleColumns.forEach(columnName => {

@@ -18,6 +18,7 @@ import FilterDate from './FilterDate.vue';
 import FilterInputText from './FilterInputText.vue';
 import FilterSelect from './FilterSelect.vue';
 import FilterSelectDate from './FilterSelectDate.vue';
+import FilterMultiSelect from './FilterMultiSelect.vue';
 import { findMatchingDate } from '@/utils/time';
 import i18n from '@/utils/plugins/i18n';
 
@@ -46,15 +47,24 @@ export default {
   emits: ['update:model-value'],
 
   computed: {
+    type() {
+      if (this.filter.name === 'sector' && this.filter.type === 'select') {
+        return 'select_multi';
+      }
+
+      return this.filter.type;
+    },
+
     currentComponent() {
       const componentMap = {
         select_date_range: FilterSelectDate,
         date_range: FilterDate,
         input_text: FilterInputText,
         select: FilterSelect,
+        select_multi: FilterMultiSelect,
       };
 
-      return componentMap[this.filter.type] || null;
+      return componentMap[this.type] || null;
     },
 
     filterProps() {
@@ -63,10 +73,16 @@ export default {
       const { type, placeholder, source, depends_on, key_value_field } =
         this.filter;
 
+      let getDisabled = disabled;
+
+      if (this.dependsOnValue && depends_on?.search_param) {
+        getDisabled = this.dependsOnValue[depends_on?.search_param]?.length > 1;
+      }
+
       const defaultProps = {
         placeholder: placeholder ? this.$t(placeholder) : '',
         modelValue: treatedModelValue,
-        disabled,
+        disabled: getDisabled,
         dependsOn: depends_on,
         dependsOnValue: this.dependsOnValue,
       };
@@ -94,6 +110,10 @@ export default {
           source,
           keyValueField: key_value_field,
         },
+        select_multi: {
+          source,
+          keyValueField: key_value_field,
+        },
       };
 
       return { ...defaultProps, ...mappingProps[type] };
@@ -117,6 +137,7 @@ export default {
       const modelValuesMap = {
         date_range: dateModel,
         select_date_range: dateModel,
+        select_multi: modelValue,
       };
 
       return modelValuesMap[filter.type] || modelValue;
@@ -134,12 +155,10 @@ export default {
         select_date_range: dateModel,
         date_range: dateModel,
         select: value?.[0]?.value,
+        select_multi: value,
       };
 
-      this.$emit(
-        'update:model-value',
-        modelValuesMap[this.filter.type] || value,
-      );
+      this.$emit('update:model-value', modelValuesMap[this.type] || value);
     },
   },
 };

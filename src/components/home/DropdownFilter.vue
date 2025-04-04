@@ -1,5 +1,6 @@
 <template>
   <UnnnicDropdown
+    v-on-click-outside="handleClickOutside"
     class="filter-type__select-type"
     position="bottom-left"
     :open="!isDropdownOpen"
@@ -37,6 +38,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { vOnClickOutside } from '@vueuse/components';
 
 interface DropdownItem {
   name: string;
@@ -50,6 +52,12 @@ const props = defineProps<{
 
 const isDropdownOpen = ref(false);
 const currentItem = ref(props.defaultItem);
+
+const handleClickOutside = () => {
+  if (isDropdownOpen.value) {
+    isDropdownOpen.value = false;
+  }
+};
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value;
@@ -80,6 +88,10 @@ const handleItemAction = (action: () => void, name: string) => {
     &-dropdown:hover {
       opacity: 0.9;
     }
+
+    :deep(.unnnic-dropdown__content) {
+      width: $unnnic-avatar-size-sm * 4;
+    }
   }
 
   &__title {
@@ -97,6 +109,11 @@ const handleItemAction = (action: () => void, name: string) => {
     flex-direction: column;
     align-items: flex-start;
     gap: $unnnic-spacing-xs;
+    border-bottom: 1px solid $unnnic-color-background-sky;
+
+    &::before {
+      display: none;
+    }
 
     cursor: pointer;
     white-space: nowrap;
@@ -106,12 +123,17 @@ const handleItemAction = (action: () => void, name: string) => {
     font-weight: $unnnic-font-weight-regular;
     line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
 
+    &:last-child {
+      border-bottom: none;
+    }
+
     &-active {
       font-weight: $unnnic-font-weight-bold;
     }
 
     &:hover {
-      font-weight: $unnnic-font-weight-bold;
+      border-radius: $unnnic-spacing-nano;
+      background-color: $unnnic-color-background-sky;
     }
   }
 }

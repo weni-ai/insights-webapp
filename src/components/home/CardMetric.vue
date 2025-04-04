@@ -17,15 +17,23 @@
       >
         {{ title }}
       </p>
-      <UnnnicIcon
-        v-if="hasInfo"
-        data-test-id="info-icon"
-        class="metric-card__info-icon"
-        icon="info"
-        size="sm"
-        filled
-        scheme="neutral-cleanest"
-      />
+      <UnnnicToolTip
+        v-if="tooltipInfo"
+        enabled
+        :text="tooltipInfo"
+        side="right"
+        class="metric-card__tooltip"
+        data-test-id="metric-tooltip"
+      >
+        <UnnnicIcon
+          data-test-id="info-icon"
+          class="metric-card__info-icon"
+          icon="info"
+          size="sm"
+          filled
+          scheme="neutral-cleanest"
+        />
+      </UnnnicToolTip>
     </section>
 
     <section class="metric-card__content">
@@ -86,9 +94,10 @@ defineProps({
     type: String,
     required: true,
   },
-  hasInfo: {
-    type: Boolean,
-    required: true,
+  tooltipInfo: {
+    type: String,
+    default: '',
+    required: false,
   },
   prefix: {
     type: String,

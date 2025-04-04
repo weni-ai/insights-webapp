@@ -91,10 +91,15 @@ export default {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
       const formattedItems = this.items.map((item) => {
+        let label = null;
+        if (item.label && this.isExpansive) {
+          label = item.label;
+        }
+
         const baseContent = [
           {
             component: markRaw(AgentStatus),
-            props: { status: item.status },
+            props: { status: item.status, label },
             events: {},
           },
           String(item.agent),

@@ -3,7 +3,6 @@ import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
-import { mock } from './mock';
 
 const mutations = {
   SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',

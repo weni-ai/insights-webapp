@@ -29,7 +29,7 @@ describe('CardMetric', () => {
     firstRow: false,
     lastRow: false,
     title: 'Test Metric',
-    hasInfo: false,
+    tooltipInfo: '',
     value: 1000,
     percentage: 10,
     prefix: '',
@@ -57,15 +57,25 @@ describe('CardMetric', () => {
       );
     });
 
-    it('renders info icon when hasInfo is true', async () => {
-      await wrapper.setProps({ hasInfo: true });
+    it('renders tooltip and info icon when tooltipInfo is provided', async () => {
+      await wrapper.setProps({ tooltipInfo: 'Test tooltip' });
+      const tooltip = wrapper.findComponent('[data-test-id="metric-tooltip"]');
       const infoIcon = wrapper.findComponent('[data-test-id="info-icon"]');
+
+      expect(tooltip.exists()).toBeTruthy();
+      expect(tooltip.props('text')).toBe('Test tooltip');
+      expect(tooltip.props('enabled')).toBe(true);
+      expect(tooltip.props('side')).toBe('right');
+
       expect(infoIcon.exists()).toBeTruthy();
       expect(infoIcon.props('icon')).toBe('info');
     });
 
-    it('does not render info icon when hasInfo is false', () => {
+    it('does not render tooltip or info icon when tooltipInfo is empty', () => {
+      const tooltip = wrapper.find('[data-test-id="metric-tooltip"]');
       const infoIcon = wrapper.find('[data-test-id="info-icon"]');
+
+      expect(tooltip.exists()).toBeFalsy();
       expect(infoIcon.exists()).toBeFalsy();
     });
 

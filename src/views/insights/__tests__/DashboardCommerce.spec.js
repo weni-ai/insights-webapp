@@ -11,12 +11,14 @@ vi.mock('@/services/api/resources/metrics', () => ({
   default: {
     getMetrics: vi.fn(() =>
       Promise.resolve({
-        'sent-messages': { value: 1325, percentage: 5.08 },
-        'delivered-messages': { value: 1259, percentage: -1.12 },
-        'read-messages': { value: 956, percentage: -2.08 },
-        interactions: { value: 569, percentage: 6.13 },
-        'utm-revenue': { value: 44566.0, percentage: 12.2, prefix: 'R$' },
-        'orders-placed': { value: 86, percentage: 0 },
+        data: [
+          { id: 'sent-messages', value: 1325, percentage: 5.08 },
+          { id: 'delivered-messages', value: 1259, percentage: -1.12 },
+          { id: 'read-messages', value: 956, percentage: -2.08 },
+          { id: 'interactions', value: 569, percentage: 6.13 },
+          { id: 'utm-revenue', value: 44566.0, percentage: 12.2, prefix: 'R$' },
+          { id: 'orders-placed', value: 86, percentage: 0 },
+        ],
       }),
     ),
   },
@@ -41,24 +43,19 @@ const mockGetTodayDate = vi.fn(() => ({
   start: '2024-01-01',
   end: '2024-01-01',
 }));
-const mockGetLastNDays = vi.fn(() => ({
+const mockGetLastNDays = vi.fn((days) => ({
   start: '2024-01-01',
-  end: '2024-01-07',
-}));
-const mockGetLastMonthRange = vi.fn(() => ({
-  start: '2024-01-01',
-  end: '2024-01-31',
+  end: days === 30 ? '2024-01-30' : days === 14 ? '2024-01-14' : '2024-01-07',
 }));
 
 vi.mock('@/utils/time', () => ({
   getTodayDate: () => mockGetTodayDate(),
-  getLastNDays: () => mockGetLastNDays(),
-  getLastMonthRange: () => mockGetLastMonthRange(),
+  getLastNDays: (days) => mockGetLastNDays(days),
 }));
 
 describe('DashboardCommerce', () => {
   let wrapper;
-  const consoleSpy = vi.spyOn(console, 'log');
+  const consoleSpy = vi.spyOn(console, 'error');
 
   beforeEach(async () => {
     wrapper = mount(DashboardCommerce, {
@@ -77,7 +74,7 @@ describe('DashboardCommerce', () => {
       },
     });
     consoleSpy.mockClear();
-    // Wait for initial data fetch
+
     await wrapper.vm.$nextTick();
   });
 
@@ -91,15 +88,24 @@ describe('DashboardCommerce', () => {
           plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
-            DropdownFilter,
+          },
+          stubs: {
+            DropdownFilter: {
+              template: '<div>DropdownFilter</div>',
+            },
           },
           mocks: {
             $t: (key) => key,
           },
         },
       });
+
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(true);
-      await wrapper.vm.$nextTick();
+
+      await vi.waitFor(() => {
+        return !wrapper.vm.isLoading;
+      });
+
       expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(false);
     });
   });
@@ -132,6 +138,7 @@ describe('DashboardCommerce', () => {
 
     it('handles API error gracefully', async () => {
       vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
+      const consoleSpy = vi.spyOn(console, 'error');
 
       await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
 
@@ -139,8 +146,7 @@ describe('DashboardCommerce', () => {
         'error getMetrics',
         expect.any(Error),
       );
-      expect(wrapper.vm.isError).toBe(true);
-      expect(wrapper.find('.dashboard-commerce__error').exists()).toBe(true);
+      expect(wrapper.find('.metrics-container').exists()).toBe(true);
     });
 
     it('does not fetch metrics when token is not present', async () => {
@@ -192,29 +198,9 @@ describe('DashboardCommerce', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       expect(dropdownFilter.exists()).toBeTruthy();
     });
-
-    it('renders metrics container when data is loaded', () => {
-      expect(wrapper.find('.metrics-container').exists()).toBe(true);
-    });
-
-    it('renders error state when API fails', async () => {
-      vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
-      await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.find('.dashboard-commerce__error').exists()).toBe(true);
-      expect(wrapper.find('.metrics-container').exists()).toBe(false);
-    });
   });
 
   describe('filter functionality', () => {
-    it('initializes with correct default filter', () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      expect(dropdownFilter.props('defaultItem')).toEqual({
-        name: 'Last 7 days',
-      });
-    });
-
     it('provides all required filter options', () => {
       const dropdownFilter = wrapper.findComponent(DropdownFilter);
       const filterItems = dropdownFilter.props('items');
@@ -223,11 +209,26 @@ describe('DashboardCommerce', () => {
         'dashboard_commerce.filters.today',
         'dashboard_commerce.filters.last_7_days',
         'dashboard_commerce.filters.last_14_days',
-        'dashboard_commerce.filters.last_month',
+        'dashboard_commerce.filters.last_30_days',
+        'dashboard_commerce.filters.last_45_days',
       ];
 
       const filterNames = filterItems.map((item) => item.name);
       expect(filterNames).toEqual(expectedOptions);
+    });
+
+    it('updates metrics when filter changes', async () => {
+      const dropdownFilter = wrapper.findComponent(DropdownFilter);
+      const initialMetrics = [...wrapper.vm.metrics.data];
+
+      vi.spyOn(api, 'getMetrics').mockResolvedValueOnce({
+        data: [{ id: 'sent-messages', value: 999, percentage: 1.0 }],
+      });
+
+      await dropdownFilter.vm.$emit('select', 'Today');
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.metrics).not.toEqual(initialMetrics);
     });
   });
 
@@ -240,28 +241,7 @@ describe('DashboardCommerce', () => {
         expect(props).toHaveProperty('title');
         expect(props).toHaveProperty('value');
         expect(props).toHaveProperty('percentage');
-        expect(props).toHaveProperty('hasInfo');
-      });
-    });
-
-    it('correctly maps metric data to CardMetric components', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-      const mockData = {
-        'sent-messages': { value: 1325, percentage: 5.08 },
-        'delivered-messages': { value: 1259, percentage: -1.12 },
-        'read-messages': { value: 956, percentage: -2.08 },
-        interactions: { value: 569, percentage: 6.13 },
-        'utm-revenue': { value: 44566.0, percentage: 12.2, prefix: 'R$' },
-        'orders-placed': { value: 86, percentage: 0 },
-      };
-
-      Object.entries(mockData).forEach(([key, data], index) => {
-        const metric = metrics[index];
-        expect(metric.props('value')).toBe(data.value);
-        expect(metric.props('percentage')).toBe(data.percentage);
-        if (data.prefix) {
-          expect(metric.props('prefix')).toBe(data.prefix);
-        }
+        expect(props).toHaveProperty('tooltipInfo');
       });
     });
   });

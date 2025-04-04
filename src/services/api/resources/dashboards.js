@@ -5,11 +5,14 @@ import User from '@/store/modules/user';
 import DashboardStore from '@/store/modules/dashboards';
 
 import { isFilteringDates } from '@/utils/filter';
-import { createRequestQuery } from '@/utils/request';
+import { createRequestQuery, parseQueryString } from '@/utils/request';
 
 export default {
-  async getAll() {
+  async getAll({ nextReq } = {}) {
+    const nextParams = parseQueryString(nextReq);
+
     const queryParams = createRequestQuery({
+      ...nextParams,
       project: Config.state.project.uuid,
     });
 
@@ -30,7 +33,7 @@ export default {
         ),
     );
 
-    return dashboards;
+    return { dashboards, next: response.next, previous: response.previous };
   },
 
   async getDashboardFilters(uuid) {

@@ -53,7 +53,7 @@ describe('DashboardService', () => {
         ],
       });
 
-      const dashboards = await DashboardService.getAll();
+      const { dashboards } = await DashboardService.getAll();
 
       expect(http.get).toHaveBeenCalledWith('/dashboards/', {
         params: { project: 'mock-project-uuid' },

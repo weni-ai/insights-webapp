@@ -153,7 +153,10 @@ export default {
   },
 
   async created() {
-    if (!this.isLoadedProjectFlows && this.widget.type !== 'vtex_order') {
+    const isVtexWidget = ['vtex_order', 'vtex_conversions'].includes(
+      this.widget?.type,
+    );
+    if (!this.isLoadedProjectFlows && !isVtexWidget) {
       await this.getProjectFlows();
     }
   },

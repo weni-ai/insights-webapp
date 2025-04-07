@@ -179,6 +179,14 @@ export default {
             description: $t(`drawers.config_gallery.options.vtex.description`),
           },
         },
+        vtex_conversions: {
+          default: {
+            title: $t(`drawers.config_gallery.options.vtex_conversions.title`),
+            description: $t(
+              `drawers.config_gallery.options.vtex_conversions.description`,
+            ),
+          },
+        },
       };
 
       return configMap[this.widget?.type][this.configType || 'default'] || {};
@@ -283,6 +291,10 @@ export default {
         case 'vtex_order':
           newWidget = this.createVtexWidget;
           break;
+        case 'vtex_conversions': {
+          newWidget = this.createVtexConversionsWidget;
+          break;
+        }
       }
 
       return { ...defaultConfigs, ...newWidget };

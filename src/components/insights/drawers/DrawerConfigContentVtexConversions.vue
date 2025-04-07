@@ -108,7 +108,11 @@ const store = useStore();
 
 const project_uuid = computed(() => store.state.config.project?.uuid);
 
-const vmodel = defineModel({ required: true, type: Object });
+const props = defineProps({ modelValue: { type: Object, required: true } });
+
+const isEditing = computed(() => {
+  return props.modelValue.type === 'vtex_conversions';
+});
 
 const emit = defineEmits([
   'update:modelValue',
@@ -250,11 +254,37 @@ watch(selectedWaba, () => {
   }
 });
 
-onMounted(() => {
-  getMetaWabas();
+const handlerIsEditingWidgetData = () => {
+  widgetData.value.name = props.modelValue.name;
+  widgetData.value.config = {
+    ...props.modelValue.config,
+  };
+
+  const waba = wabasOptions.value.find(
+    (waba) => waba.value === props.modelValue.config.filter.waba_id,
+  );
+
+  selectedWaba.value = [waba];
+
+  templates.value.push({
+    name: props.modelValue.config.template_name,
+    id: props.modelValue.config.filter.template_id,
+  });
+
+  const template = templatesOptions.value.find(
+    (template) => template.value === props.modelValue.config.filter.template_id,
+  );
+
+  selectedTemplate.value = [template];
+};
+
+onMounted(async () => {
+  await getMetaWabas();
 
   nextTick().then(() => {
     activeAccordion.value.meta = true;
+
+    if (isEditing.value) handlerIsEditingWidgetData();
   });
 });
 </script>

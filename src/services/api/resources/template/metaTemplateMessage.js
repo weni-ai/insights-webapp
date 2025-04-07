@@ -70,7 +70,19 @@ export default {
 
     const is_favorite = response.is_favorite;
 
-    return { title, image, text, hint, status, name, buttons, is_favorite };
+    const link = response.edit_template_url;
+
+    return {
+      title,
+      image,
+      text,
+      hint,
+      status,
+      name,
+      buttons,
+      is_favorite,
+      link,
+    };
   },
 
   async getTemplateMessagesAnalytics({

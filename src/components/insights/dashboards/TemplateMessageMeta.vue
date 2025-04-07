@@ -297,8 +297,9 @@ const getSelectedTemplateData = (
 const appliedFilters = computed(() => store.state.dashboards.appliedFilters);
 
 watch(appliedFilters, () => {
+  const isLoadedPreview = Object.keys(templatePreview.value).length > 0;
   if (selectedTemplateUuid.value)
-    getSelectedTemplateData({ ignorePreview: true });
+    getSelectedTemplateData({ ignorePreview: isLoadedPreview });
 });
 
 watch(selectedTemplateUuid, (newUuid, oldUuid) => {

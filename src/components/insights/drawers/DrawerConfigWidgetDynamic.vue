@@ -291,6 +291,10 @@ export default {
         case 'vtex_order':
           newWidget = this.createVtexWidget;
           break;
+        case 'vtex_conversions': {
+          newWidget = this.createVtexConversionsWidget;
+          break;
+        }
       }
 
       return { ...defaultConfigs, ...newWidget };

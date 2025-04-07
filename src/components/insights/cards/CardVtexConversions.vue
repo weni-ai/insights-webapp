@@ -164,7 +164,7 @@ defineEmits(['open-config']);
     &-graph {
       :deep(.unnnic-chart-funnel-base-item__card) {
         position: relative;
-        z-index: 10;
+        z-index: 2;
       }
       :deep(.unnnic-chart-funnel-base-item:not(:last-child)) {
         position: relative;

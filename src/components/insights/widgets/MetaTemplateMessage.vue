@@ -135,7 +135,7 @@ const props = defineProps({
 defineEmits(['unfavorite', 'favorite']);
 
 const redirectToIntegrations = () => {
-  const path = props.template.link;
+  const path = props.template.link?.url;
   window.parent.postMessage(
     {
       event: 'redirect',

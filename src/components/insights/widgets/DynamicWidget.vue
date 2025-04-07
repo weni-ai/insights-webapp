@@ -205,21 +205,23 @@ export default {
 
     widgetVtexConversionsData() {
       if (this.widget.type === 'vtex_conversions' && this.widget.data) {
-        const { utm_data, graph_data } = this.widget.data;
-        return {
-          graph_data,
-          utm_data: {
-            ...utm_data,
-            accumulated_total: this.getWidgetFormattedData({
-              config: { currency: true },
-              data: { value: utm_data.accumulated_total },
-            }),
-            medium_ticket: this.getWidgetFormattedData({
-              config: { currency: true },
-              data: { value: utm_data.medium_ticket },
-            }),
-          },
-        };
+        const { utm_data, graph_data, error } = this.widget.data;
+        return error
+          ? { error }
+          : {
+              graph_data,
+              utm_data: {
+                ...utm_data,
+                accumulated_total: this.getWidgetFormattedData({
+                  config: { currency: true },
+                  data: { value: utm_data.accumulated_total },
+                }),
+                medium_ticket: this.getWidgetFormattedData({
+                  config: { currency: true },
+                  data: { value: utm_data.medium_ticket },
+                }),
+              },
+            };
       }
       return {};
     },

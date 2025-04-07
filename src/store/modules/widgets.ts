@@ -107,7 +107,8 @@ export default {
         setWidgetData(data);
       } catch (error) {
         console.error(error);
-        setWidgetData(null);
+        if (widget.type === 'vtex_conversions') setWidgetData({ error: true });
+        else setWidgetData(null);
       }
     },
     async getCurrentDashboardWidgetsDatas({ state, dispatch }) {

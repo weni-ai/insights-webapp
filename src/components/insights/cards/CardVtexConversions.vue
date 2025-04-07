@@ -6,6 +6,26 @@
     >
       <UnnnicIconLoading />
     </section>
+    <section
+      v-else-if="!isLoadingData && hasError"
+      class="vtex-conversions-widget__error"
+    >
+      <img src="@/assets/images/icons/empty_cloud.svg" />
+
+      <p class="vtex-conversions-widget__error-title">
+        {{ $t('widgets.vtex_order.empty_data.title') }}
+      </p>
+
+      <p class="vtex-conversions-widget__error-description">
+        {{ $t('widgets.vtex_order.empty_data.sub_title') }}
+      </p>
+      <UnnnicButton
+        :text="$t('widgets.vtex_order.empty_data.verify_btn')"
+        type="primary"
+        size="small"
+        @click="$emit('open-config')"
+      />
+    </section>
     <template v-else>
       <section class="vtex-conversions-widget__header">
         <h1 class="vtex-conversions-widget__title">{{ props.widget?.name }}</h1>
@@ -75,6 +95,8 @@ const props = defineProps({
   },
 });
 
+const hasError = computed(() => props.data.error);
+
 const vtexData = computed(() => {
   return props.data?.utm_data || {};
 });
@@ -104,6 +126,7 @@ defineEmits(['open-config']);
   flex-direction: column;
   padding: $unnnic-spacing-md;
   gap: $unnnic-spacing-md;
+
   &__loading {
     display: flex;
     justify-content: center;
@@ -156,6 +179,7 @@ defineEmits(['open-config']);
       }
     }
   }
+
   &__meta {
     &-container {
       display: flex;
@@ -178,6 +202,24 @@ defineEmits(['open-config']);
           border-bottom: 1px solid $unnnic-color-neutral-soft;
         }
       }
+    }
+  }
+
+  &__error {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: $unnnic-color-neutral-cloudy;
+    font-size: $unnnic-font-size-body-lg;
+    text-align: center;
+    line-height: $unnnic-line-height-small * 6;
+
+    &-description {
+      font-weight: $unnnic-font-weight-bold;
+      padding-bottom: $unnnic-spacing-sm;
     }
   }
 }

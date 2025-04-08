@@ -60,6 +60,13 @@
         "total": "Total",
         "clicks_in_relation_to_the_shot": "Clicks in relation to the shot",
         "click_rate": "Click rate"
+      },
+      "button_type": {
+        "PHONE_NUMBER": "Phone number",
+        "URL": "Link",
+        "COPY_CODE": "Copy",
+        "FLOW": "Flow",
+        "QUICK_REPLY": "Quick reply"
       }
     },
     "template": {

@@ -51,7 +51,6 @@
         :key="metric.id"
         :title="metricTitles[metric.id]"
         :value="metric.value"
-        :percentage="metric.percentage"
         :prefix="metric.prefix"
         :tooltipInfo="infos[metric.id]"
         :leftColumn="index % 3 === 0"

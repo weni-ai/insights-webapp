@@ -60,6 +60,13 @@
         "total": "Total",
         "clicks_in_relation_to_the_shot": "Clics en relación al disparo.",
         "click_rate": "Tasa de clics"
+      },
+      "button_type": {
+        "PHONE_NUMBER": "Número de teléfono",
+        "URL": "Enlace",
+        "COPY_CODE": "Copiar",
+        "FLOW": "Flujo",
+        "QUICK_REPLY": "Respuesta rápida"
       }
     },
     "template": {
@@ -438,7 +445,7 @@
     "errors": {
       "title": "No se pudieron cargar los datos",
       "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
-  },
+    },
     "titles": {
       "send-message": "Mensajes enviados",
       "delivered-messages": "Mensajes entregados",

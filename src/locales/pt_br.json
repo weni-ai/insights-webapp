@@ -60,6 +60,13 @@
         "total": "Total",
         "clicks_in_relation_to_the_shot": "Cliques em relação à disparo",
         "click_rate": "Taxa de cliques"
+      },
+      "button_type": {
+        "PHONE_NUMBER": "Número de telefone",
+        "URL": "Link",
+        "COPY_CODE": "Copiar e colar",
+        "FLOW": "Fluxo",
+        "QUICK_REPLY": "Resposta rápida"
       }
     },
     "template": {

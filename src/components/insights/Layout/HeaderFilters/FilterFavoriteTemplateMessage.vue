@@ -13,6 +13,7 @@
       autocomplete
       autocompleteClearOnFocus
       data-testid="select-favorite-template"
+      :locale="i18n.global.locale"
       @update:model-value="selectFavorite"
     />
   </section>

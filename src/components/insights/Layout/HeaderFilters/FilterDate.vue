@@ -3,8 +3,8 @@
     class="filter-date"
     data-testid="filter-date"
     :modelValue="modelValue"
-    size="sm"
     :inputFormat="$t('date_format')"
+    size="md"
     position="right"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -28,18 +28,5 @@ export default {
 .filter-date.dropdown {
   display: grid;
   height: 100%;
-
-  :deep(.unnnic-form-input) {
-    height: 100%;
-
-    &.text-input > .unnnic-icon {
-      transform: translateY(-50%);
-      top: 50%;
-    }
-
-    .input {
-      font-size: $unnnic-font-size-body-gt;
-    }
-  }
 }
 </style>

@@ -31,7 +31,6 @@ describe('CardMetric', () => {
     title: 'Test Metric',
     tooltipInfo: '',
     value: 1000,
-    percentage: 10,
     prefix: '',
   };
 
@@ -69,6 +68,9 @@ describe('CardMetric', () => {
 
       expect(infoIcon.exists()).toBeTruthy();
       expect(infoIcon.props('icon')).toBe('info');
+      expect(infoIcon.props('size')).toBe('sm');
+      expect(infoIcon.props('filled')).toBe(true);
+      expect(infoIcon.props('scheme')).toBe('neutral-cleanest');
     });
 
     it('does not render tooltip or info icon when tooltipInfo is empty', () => {
@@ -110,57 +112,6 @@ describe('CardMetric', () => {
     it('applies last row class when lastRow is true', async () => {
       await wrapper.setProps({ lastRow: true });
       expect(wrapper.classes()).toContain('metric-card--last-row');
-    });
-  });
-
-  describe('percentage styling', () => {
-    it('applies positive class for positive percentage', async () => {
-      await wrapper.setProps({ percentage: 15.5 });
-      const percentageElement = wrapper.find('[data-test-id="percentage"]');
-      expect(percentageElement.classes()).toContain(
-        'metric-card__percentage--positive',
-      );
-    });
-
-    it('applies negative class for negative percentage', async () => {
-      await wrapper.setProps({ percentage: -15.5 });
-      const percentageElement = wrapper.find('[data-test-id="percentage"]');
-      expect(percentageElement.classes()).toContain(
-        'metric-card__percentage--negative',
-      );
-    });
-
-    it('applies no percentage class for zero percentage', async () => {
-      await wrapper.setProps({ percentage: 0 });
-      const percentageElement = wrapper.find('[data-test-id="percentage"]');
-      expect(percentageElement.classes()).not.toContain(
-        'metric-card__percentage--positive',
-      );
-      expect(percentageElement.classes()).not.toContain(
-        'metric-card__percentage--negative',
-      );
-    });
-  });
-
-  describe('percentage icons', () => {
-    it('shows up arrow with green color for positive percentage', async () => {
-      await wrapper.setProps({ percentage: 10 });
-      const icon = wrapper.findComponent('[data-test-id="icon-arrow"]');
-      expect(icon.props('icon')).toBe('arrow_drop_up');
-      expect(icon.props('scheme')).toBe('aux-green-500');
-    });
-
-    it('shows down arrow with red color for negative percentage', async () => {
-      await wrapper.setProps({ percentage: -10 });
-      const icon = wrapper.findComponent('[data-test-id="icon-arrow"]');
-      expect(icon.props('icon')).toBe('arrow_drop_down');
-      expect(icon.props('scheme')).toBe('aux-red-500');
-    });
-
-    it('does not show arrow when percentage is zero', async () => {
-      await wrapper.setProps({ percentage: 0 });
-      const icon = wrapper.find('[data-test-id="icon-arrow"]');
-      expect(icon.exists()).toBeFalsy();
     });
   });
 });

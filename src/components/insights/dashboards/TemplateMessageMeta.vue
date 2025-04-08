@@ -203,16 +203,18 @@ const buttonClicksTableHeaders = [
 const buttonsClicksData = ref([]);
 const isLoadingButtonsClicksData = ref(false);
 
-const formattedClicksTableData = computed(() =>
-  buttonsClicksData.value?.map((row) => ({
+const formattedClicksTableData = computed(() => {
+  return buttonsClicksData.value?.map((row) => ({
     content: [
       row.label,
-      row.type,
+      i18n.global.t(
+        `template_messages_dashboard.button_clicks_table.button_type.${row.type}`,
+      ),
       String(row.total),
       formatToPercent(row.click_rate),
     ],
-  })),
-);
+  }));
+});
 
 const getButtonClicksData = async () => {
   try {

@@ -18,14 +18,6 @@ const routes = [
     name: 'report',
     component: Report,
   },
-  {
-    path: '/loginexternal/:token',
-    name: 'external.login',
-    component: null,
-    redirect: (to) => {
-      return { path: to.query.next || '/', query: to.query };
-    },
-  },
 ];
 
 const router = createRouter({

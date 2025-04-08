@@ -1,5 +1,8 @@
 <template>
-  <section class="vtex-conversions-form">
+  <section
+    class="vtex-conversions-form"
+    data-testid="vtex-conversions-form"
+  >
     <UnnnicInput
       v-model="widgetData.name"
       :label="

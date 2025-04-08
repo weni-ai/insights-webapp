@@ -15,7 +15,7 @@
       :paginationInterval="paginationInterval"
       :headers="headers"
       :rows="rows"
-      :locale="$i18n.locale"
+      :locale="i18n.global.locale"
       :isLoading="isLoading"
       @update:pagination="$emit('changePage', $event)"
     />
@@ -29,6 +29,7 @@ export default {
 </script>
 
 <script setup>
+import i18n from '@/utils/plugins/i18n';
 import { computed } from 'vue';
 
 const props = defineProps({

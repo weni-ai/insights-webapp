@@ -86,6 +86,7 @@ import weniLoading from '@/assets/images/weni-loading.svg';
 import moment from 'moment';
 
 import Unnnic from '@weni/unnnic-system';
+import { formatValue } from '@/utils/numbers';
 
 const store = useStore();
 
@@ -283,7 +284,10 @@ const formattedMessagesAnalyticsData = computed(() => {
     return {
       group: keyMapper[key],
       data: data,
-      total: messagesAnalyticsData.value.status_count?.[key]?.value || 0,
+      total: formatValue(
+        messagesAnalyticsData.value.status_count?.[key]?.value || 0,
+        i18n.global.locale,
+      ),
     };
   });
 });

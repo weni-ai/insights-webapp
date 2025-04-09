@@ -25,6 +25,14 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach((to, from, next) => {
+  const nextPath = to.query.next;
+
+  if (nextPath)
+    next({ path: nextPath, query: { ...to.query, next: undefined } });
+  else next();
+});
+
 router.afterEach((router) => {
   delete router.query.next;
   delete router.query.projectUuid;

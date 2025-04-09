@@ -1,15 +1,23 @@
 import i18n from './plugins/i18n';
 
 export function getPercentageOf(
-  val: number,
-  total: number,
+  val: number | string,
+  total: number | string,
   precision: number = 2,
 ) {
   if (total === 0) return 0;
+
+  if (typeof val === 'string') {
+    val = Number(val.replace(/[.,]/g, ''));
+  }
+
+  if (typeof total === 'string') {
+    total = Number(total.replace(/[.,]/g, ''));
+  }
+
   const percentage = (val / total) * 100;
-  return percentage.toLocaleString(i18n.global.locale, {
-    maximumFractionDigits: precision,
-  });
+
+  return formatToPercent(percentage, precision);
 }
 
 export function formatToPercent(val: number, precision: number = 2) {

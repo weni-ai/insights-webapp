@@ -34,7 +34,7 @@
               v-if="index !== 0"
               class="multiple-line-chart__count-total-percentage"
             >
-              ({{ getPercentageOf(groupData.total, totalItems) }} %)
+              ({{ getPercentageOf(groupData.total, totalItems) }})
             </p>
           </section>
         </section>

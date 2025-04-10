@@ -18,6 +18,71 @@
       "closeds": "Número total de chats que ya han finalizado."
     }
   },
+  "template_messages_dashboard": {
+    "title": "Plantilla de mensajes Meta",
+    "favorites": "Favoritos",
+    "add_to_favorites": "Añadir a favoritos",
+    "empty_templates": "No hay datos disponibles por ahora. Tan pronto como haya actividad, aparecerá aquí.",
+    "favorite_limit_reached": "Límite de favoritos alcanzado. Por favor, elimina algún favorito e inténtalo de nuevo.",
+    "active_contacts": {
+      "title": "Contactos activos",
+      "tooltip": "Contactos que interactuaron con la plantilla"
+    },
+    "blocks": {
+      "title": "Bloques"
+    },
+    "templates_modal": {
+      "title": "Buscar plantilla",
+      "table": {
+        "header": {
+          "name": "Nombre de la plantilla",
+          "last_edited": "Última edición"
+        }
+      }
+    },
+    "quality": {
+      "high": "Alta calidad",
+      "medium": "Medio calidad",
+      "low": "Baja calidad",
+      "more_info_tooltip": "Obtenga más información a través de la <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=es_ES' target='_blank'>documentación de Meta</a>"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensajes enviados",
+      "delivered_messages": "Mensajes entregados",
+      "readed_messages": "Mensajes leídos",
+      "clicks": "Clics"
+    },
+    "button_clicks_table": {
+      "title": "Clics de botones",
+      "header": {
+        "label": "Etiqueta",
+        "type": "Tipo",
+        "total": "Total",
+        "clicks_in_relation_to_the_shot": "Clics en relación al disparo.",
+        "click_rate": "Tasa de clics"
+      },
+      "button_type": {
+        "PHONE_NUMBER": "Número de teléfono",
+        "URL": "Enlace",
+        "COPY_CODE": "Copiar",
+        "FLOW": "Flujo",
+        "QUICK_REPLY": "Respuesta rápida"
+      }
+    },
+    "template": {
+      "preview": "Avance",
+      "edit_template": "Editar plantilla"
+    },
+    "filter": {
+      "shortcut": {
+        "last_7_days": "Últimos 7 días",
+        "last_14_days": "Últimos 14 días",
+        "last_30_days": "Últimos 30 días",
+        "last_60_days": "Últimos 60 días",
+        "last_90_days": "Últimos 90 días"
+      }
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats en el período"
@@ -99,6 +164,13 @@
   "clear_fields": "Borrar campos",
   "today": "Hoy",
   "date_format": "DD/MM/YYYY",
+  "search": "Buscar",
+  "category": "Categoría",
+  "language": "Idioma",
+  "pending": "Pendiente",
+  "rejected": "Rechazado",
+  "active": "Activo",
+  "disabled": "Deshabilitado",
   "select_date": {
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
@@ -371,7 +443,7 @@
     "errors": {
       "title": "No se pudieron cargar los datos",
       "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
-  },
+    },
     "titles": {
       "send-message": "Mensajes enviados",
       "delivered-messages": "Mensajes entregados",

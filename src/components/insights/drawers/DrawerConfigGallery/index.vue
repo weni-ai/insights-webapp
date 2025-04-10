@@ -114,7 +114,7 @@ export default {
       const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];
 
       const enabledProjects =
-        env('ENVIROMENT') === 'staging'
+        env('ENVIRONMENT') === 'staging'
           ? enabledProjectsStg
           : enabledProjectsProd;
 

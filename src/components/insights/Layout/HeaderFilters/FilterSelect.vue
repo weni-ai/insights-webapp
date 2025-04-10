@@ -5,6 +5,7 @@
     autocomplete
     autocompleteIconLeft
     autocompleteClearOnFocus
+    :placeholder="placeholder"
     @update:model-value="$emit('update:model-value', $event[0].value)"
   />
 </template>
@@ -39,6 +40,12 @@ export default {
     keyValueField: {
       type: String,
       default: '',
+    },
+    fetchRequest: {
+      type: Function,
+      default: (...params) => {
+        return Projects.getProjectSource(...params);
+      },
     },
   },
 
@@ -78,7 +85,6 @@ export default {
         const oldValues = Object.values(oldDependsOnValue || {});
         if (!compareEquals(newValues, oldValues)) {
           const filledDependsOnValue = newValues.every((value) => value);
-
           if (filledDependsOnValue) {
             this.clearOptions();
             this.fetchSource();
@@ -95,7 +101,7 @@ export default {
   methods: {
     async fetchSource() {
       try {
-        const response = await Projects.getProjectSource(
+        const response = await this.fetchRequest(
           this.source,
           this.dependsOnValue || {},
         );

@@ -75,9 +75,10 @@ export default {
   },
 
   watch: {
-    'currentDashboard.uuid'(newCurrentDashboardUuid) {
+    async 'currentDashboard.uuid'(newCurrentDashboardUuid) {
       if (newCurrentDashboardUuid) {
-        this.getCurrentDashboardFilters();
+        this.setCurrentDashboardFilters([]);
+        await this.getCurrentDashboardFilters();
       }
     },
   },
@@ -110,6 +111,7 @@ export default {
 
     ...mapMutations({
       setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
+      setCurrentDashboardFilters: 'dashboards/SET_CURRENT_DASHBOARD_FILTERS',
       setShowCreateDashboardOnboarding:
         'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
       setShowCompleteOnboardingModal:
@@ -117,31 +119,20 @@ export default {
     }),
 
     async handlerTokenAndProjectUuid() {
-      const hasTokenInUrl = window.location.pathname.startsWith(
-        '/loginexternal/Bearer+',
-      );
-
-      let token = '';
-
-      if (hasTokenInUrl) {
-        token = window.location.pathname
-          .replace('/loginexternal/Bearer+', '')
-          .slice(0, -1);
-      }
-
       const queryString = new URLSearchParams(window.location.search);
 
       const projectUuid = queryString.get('projectUuid');
 
-      const newToken = token || localStorage.getItem('token');
+      const authToken = localStorage.getItem('token');
+
       const newProjectUuid = projectUuid || localStorage.getItem('projectUuid');
 
-      this.setToken(newToken);
+      this.setToken(authToken);
       this.setProject({
         uuid: newProjectUuid,
       });
 
-      const sessionUserEmail = parseJwt(newToken)?.email || null;
+      const sessionUserEmail = parseJwt(authToken)?.email || null;
 
       if (sessionUserEmail) {
         this.setEmail(sessionUserEmail);

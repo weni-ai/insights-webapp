@@ -80,9 +80,10 @@ describe('VtexConversionsForm.vue', () => {
 
   it('should fetch templates when WABA is selected', async () => {
     const templatesSpy = vi.spyOn(MetaTemplateMessageService, 'listTemplates');
+
     wrapper.vm.selectedWaba = [{ label: 'WABA Test', value: 'waba-id' }];
 
-    await nextTick();
+    await flushPromises();
 
     expect(templatesSpy).toHaveBeenCalledWith({
       limit: 20,

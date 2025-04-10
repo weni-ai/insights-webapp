@@ -146,14 +146,22 @@ export default {
 
       const formattedItems = this.items.map((item) => {
         let label = null;
-        if (item.label && this.isExpansive) {
-          label = item.label;
+
+        if (
+          ['gray', 'green'].includes(item.status.status) &&
+          this.isExpansive
+        ) {
+          label = item.status.status === 'green' ? 'Online' : 'Offline';
+        }
+
+        if (item.status.label && this.isExpansive) {
+          label = item.status.label;
         }
 
         const baseContent = [
           {
             component: markRaw(AgentStatus),
-            props: { status: item.status, label },
+            props: { status: item.status.status, label },
             events: {},
           },
           String(item.agent),

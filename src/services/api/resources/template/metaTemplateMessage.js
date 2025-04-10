@@ -11,9 +11,9 @@ export default {
   async listWabasId({ project_uuid }) {
     const url = `/metrics/meta/whatsapp-message-templates/wabas/`;
     const params = { project_uuid };
-    const { data } = await http.get(url, { params });
+    const { results } = await http.get(url, { params });
 
-    return data.results;
+    return results;
   },
 
   async listTemplates({

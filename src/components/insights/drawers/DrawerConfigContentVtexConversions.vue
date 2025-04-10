@@ -58,7 +58,7 @@
               autocomplete
               autocompleteClearOnFocus
               autocompleteIconLeft
-              @update:search-value="searchTextTemplate = $event"
+              @update:search-value="setSearchTextTemplateValue"
             />
           </fieldset>
         </section>
@@ -184,6 +184,15 @@ const getMetaWabas = async () => {
 };
 const isLoadingtemplates = ref(false);
 const searchTextTemplate = ref('');
+const setSearchTextTemplateValue = (value) => {
+  searchTextTemplate.value =
+    value ===
+    i18n.global.t(
+      'drawers.config_gallery.options.vtex_conversions.form.input.template.label',
+    )
+      ? ''
+      : value;
+};
 const templates = ref([]);
 const templatesOptions = computed(() => {
   const options = [
@@ -248,12 +257,15 @@ watch(searchTextTemplate, () => {
   searchTimeout.value = setTimeout(() => searchTemplate(), 500);
 });
 
-watch(selectedWaba, () => {
+watch(selectedWaba, (_newWaba, oldWaba) => {
   templates.value = [];
   const selectedWabaId = selectedWaba.value[0]?.value;
   if (selectedWabaId) {
     widgetData.value.config.filter.waba_id = selectedWaba.value[0]?.value;
-    searchTemplate();
+    if (oldWaba[0]?.value) selectedTemplate.value = [templatesOptions.value[0]];
+    nextTick(() => {
+      searchTemplate();
+    });
   }
 });
 

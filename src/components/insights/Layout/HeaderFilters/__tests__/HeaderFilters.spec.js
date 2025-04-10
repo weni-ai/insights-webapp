@@ -12,6 +12,12 @@ const router = createRouter({
 
 const store = createStore({
   modules: {
+    metaTemplateMessage: {
+      namespaced: true,
+      state: {
+        showSearchTemplateMetaModal: false,
+      },
+    },
     dashboards: {
       namespaced: true,
       state: {

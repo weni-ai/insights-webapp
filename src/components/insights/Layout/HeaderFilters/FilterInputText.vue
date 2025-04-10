@@ -2,7 +2,8 @@
   <UnnnicInput
     data-testid="filter-input-text"
     :modelValue="modelValue"
-    iconRight="search"
+    :iconRight="iconPosition === 'right' ? 'search' : ''"
+    :iconLeft="iconPosition === 'left' ? 'search' : ''"
     :placeholder="placeholder"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -19,6 +20,10 @@ export default {
     placeholder: {
       type: String,
       default: '',
+    },
+    iconPosition: {
+      type: String,
+      default: 'right',
     },
   },
   emits: ['update:modelValue'],

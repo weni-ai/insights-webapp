@@ -18,19 +18,19 @@ const routes = [
     name: 'report',
     component: Report,
   },
-  {
-    path: '/loginexternal/:token',
-    name: 'external.login',
-    component: null,
-    redirect: (to) => {
-      return { path: to.query.next || '/', query: to.query };
-    },
-  },
 ];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const nextPath = to.query.next;
+
+  if (nextPath)
+    next({ path: nextPath, query: { ...to.query, next: undefined } });
+  else next();
 });
 
 router.afterEach((router) => {

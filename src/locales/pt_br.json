@@ -235,6 +235,17 @@
         "sub_title": "Verifique se o UTM informado está correto ou aguarde novos dados",
         "verify_btn": "Verificar UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Mensagens enviadas",
+        "delivered": "Mensagens entregues",
+        "read": "Mensagens lidas",
+        "clicked": "Cliques",
+        "orders": "Pedidos",
+        "total_value": "Valor total",
+        "average_ticket": "Ticket médio"
+      }
     }
   },
   "drawers": {
@@ -263,6 +274,32 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
+        },
+        "vtex_conversions": {
+          "title": "Conversão de templates",
+          "description": "Acompanhe a taxa de conversão entre mensagens de template enviadas e vendas concluídas.",
+          "form": {
+            "define_meta_data": "Definir metadados",
+            "define_vtex_data": "Definir dados da VTEX",
+            "input": {
+              "name": {
+                "label": "Nome do widget",
+                "placeholder": "Exemplo: Vendas"
+              },
+              "waba": {
+                "label": "Selecionar número da conta",
+                "placeholder": "Selecione um número de telefone"
+              },
+              "template": {
+                "label": "Selecionar mensagem de template",
+                "placeholder": "Selecione uma mensagem de template"
+              },
+              "utm": {
+                "label": "Fornecer UTM",
+                "placeholder": "Copie da VTEX e cole aqui"
+              }
+            }
+          }
         },
         "recurrence": {
           "title": "Recorrência",

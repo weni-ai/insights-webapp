@@ -33,7 +33,6 @@
       :modelValue="!!currentWidgetEditing"
       @close="updateCurrentWidgetEditing(null)"
     />
-
     <FlowResultContactListModal
       v-if="showFlowResultsContactListModal"
       :flowResultLabel="flowResultsContactListParams?.label"

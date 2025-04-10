@@ -129,6 +129,11 @@ export default {
 <style lang="scss" scoped>
 $dropdownFixedWidth: 314px;
 
+:deep(.unnnic-dropdown__content) {
+  // this is necessary to prevent z-index overlapping when there is a chart below the dropdown
+  z-index: 5 !important;
+}
+
 .header-select-dashboard {
   display: flex;
 

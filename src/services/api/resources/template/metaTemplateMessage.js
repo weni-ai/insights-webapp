@@ -8,6 +8,14 @@ export default {
     return response[source];
   },
 
+  async listWabasId({ project_uuid }) {
+    const url = `/metrics/meta/whatsapp-message-templates/wabas/`;
+    const params = { project_uuid };
+    const { results } = await http.get(url, { params });
+
+    return results;
+  },
+
   async listTemplates({
     limit,
     after,
@@ -17,6 +25,7 @@ export default {
     language,
     project_uuid,
     waba_id,
+    fields,
   }) {
     const url = '/metrics/meta/whatsapp-message-templates/list-templates/';
 
@@ -29,6 +38,7 @@ export default {
       language,
       project_uuid,
       waba_id,
+      fields,
     };
 
     const { data, paging } = await http.get(url, { params });
@@ -70,19 +80,7 @@ export default {
 
     const is_favorite = response.is_favorite;
 
-    const link = response.edit_template_url;
-
-    return {
-      title,
-      image,
-      text,
-      hint,
-      status,
-      name,
-      buttons,
-      is_favorite,
-      link,
-    };
+    return { title, image, text, hint, status, name, buttons, is_favorite };
   },
 
   async getTemplateMessagesAnalytics({

@@ -13,6 +13,7 @@
 <script>
 import Projects from '@/services/api/resources/projects';
 import { compareEquals } from '@/utils/array';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'FilterMultiSelect',
@@ -87,12 +88,20 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      updateSectors: 'sectors/updateSectors',
+    }),
     async fetchSource() {
       try {
         const response = await Projects.getProjectSource(
           this.source,
           this.dependsOnValue || {},
         );
+
+        if (this.source === 'sectors') {
+          this.updateSectors(response);
+        }
+
         response?.forEach((source) => {
           this.options.push({
             value: source[this.keyValueField] || source.uuid,

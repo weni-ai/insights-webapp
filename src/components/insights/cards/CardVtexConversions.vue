@@ -3,12 +3,14 @@
     <section
       v-if="isLoadingData"
       class="vtex-conversions-widget__loading"
+      data-testid="vtex-conversions-loading"
     >
       <UnnnicIconLoading />
     </section>
     <section
       v-else-if="!isLoadingData && hasError"
       class="vtex-conversions-widget__error"
+      data-testid="vtex-conversions-error"
     >
       <img src="@/assets/images/icons/empty_cloud.svg" />
 
@@ -28,11 +30,17 @@
     </section>
     <template v-else>
       <section class="vtex-conversions-widget__header">
-        <h1 class="vtex-conversions-widget__title">{{ props.widget?.name }}</h1>
+        <h1
+          class="vtex-conversions-widget__title"
+          data-testid="vtex-conversions-title"
+        >
+          {{ props.widget?.name }}
+        </h1>
         <UnnnicButton
           size="small"
           type="tertiary"
           iconCenter="tune"
+          data-testid="open-config-button"
           @click.stop="$emit('open-config')"
         />
       </section>
@@ -67,6 +75,7 @@
       <section class="vtex-conversions-widget__meta-container">
         <UnnnicChartFunnel
           class="vtex-conversions-widget__meta-graph"
+          data-testid="vtex-conversions-meta-graph"
           :data="metaData"
         />
       </section>

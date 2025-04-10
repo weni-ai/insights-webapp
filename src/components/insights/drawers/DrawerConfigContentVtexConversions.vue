@@ -1,5 +1,8 @@
 <template>
-  <section class="vtex-conversions-form">
+  <section
+    class="vtex-conversions-form"
+    data-testid="vtex-conversions-form"
+  >
     <UnnnicInput
       v-model="widgetData.name"
       :label="
@@ -254,12 +257,18 @@ watch(searchTextTemplate, () => {
   searchTimeout.value = setTimeout(() => searchTemplate(), 500);
 });
 
-watch(selectedWaba, (_newWaba, oldWaba) => {
+watch(selectedWaba, (newWaba, oldWaba) => {
   templates.value = [];
   const selectedWabaId = selectedWaba.value[0]?.value;
   if (selectedWabaId) {
     widgetData.value.config.filter.waba_id = selectedWaba.value[0]?.value;
-    if (oldWaba[0]?.value) selectedTemplate.value = [templatesOptions.value[0]];
+    const oldWabaValue = oldWaba[0]?.value;
+    const newWabaValue = newWaba[0]?.value;
+
+    if (oldWabaValue && newWabaValue !== oldWabaValue) {
+      selectedTemplate.value = [templatesOptions.value[0]];
+    }
+
     nextTick(() => {
       searchTemplate();
     });

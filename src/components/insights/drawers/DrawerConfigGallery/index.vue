@@ -85,6 +85,7 @@ export default {
 
     galleryOptions() {
       const { $t } = this;
+
       function createOptions(optionKeys) {
         return optionKeys.map((option) => ({
           title: $t(`drawers.config_gallery.options.${option}.title`),
@@ -124,7 +125,10 @@ export default {
 
       const empty_widget_options = ['funnel', 'recurrence'];
 
-      if (isVtexEnabledProject) empty_widget_options.push('vtex');
+      if (isVtexEnabledProject) {
+        empty_widget_options.push('vtex');
+        empty_widget_options.push('vtex_conversions');
+      }
 
       const optionsMap = {
         card: createOptions(['executions', 'flow_result', 'data_crossing']),
@@ -149,7 +153,10 @@ export default {
   },
 
   async created() {
-    if (!this.isLoadedProjectFlows && this.widget.type !== 'vtex_order') {
+    const isVtexWidget = ['vtex_order', 'vtex_conversions'].includes(
+      this.widget?.type,
+    );
+    if (!this.isLoadedProjectFlows && !isVtexWidget) {
       await this.getProjectFlows();
     }
   },

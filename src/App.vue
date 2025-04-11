@@ -104,6 +104,7 @@ export default {
       getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
       setToken: 'config/setToken',
       setProject: 'config/setProject',
+      setIsCommerce: 'project/setIsCommerce',
       checkEnableCreateCustomDashboards:
         'config/checkEnableCreateCustomDashboards',
       setEmail: 'user/setEmail',
@@ -153,8 +154,13 @@ export default {
       this.setProject({ uuid: projectUuid });
     },
 
+    handlerSetIsCommerce(isCommerce) {
+      this.setIsCommerce(isCommerce);
+    },
+
     listenConnect() {
       window.parent.postMessage({ event: 'getLanguage' }, '*');
+      window.parent.postMessage({ event: 'getIsCommerce' }, '*');
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
@@ -167,11 +173,13 @@ export default {
       const handlerFunctionMapper = {
         setLanguage: this.handlerSetLanguage,
         setProject: this.handlerSetProject,
+        setIsCommerce: this.handlerSetIsCommerce,
       };
 
       const handlerParamsMapper = {
         setLanguage: 'language',
         setProject: 'projectUuid',
+        setIsCommerce: 'isCommerce',
       };
 
       return {

@@ -3,6 +3,7 @@ import { parseValue } from '@/utils/object';
 
 const mutations = {
   SET_PROJECT_FLOWS: 'SET_PROJECT_FLOWS',
+  SET_PROJECT_COMMERCE: 'SET_PROJECT_COMMERCE',
 };
 
 export default {
@@ -11,13 +12,20 @@ export default {
     isLoadedFlows: false,
     isLoadingFlows: false,
     flows: [],
+    isCommerce: false,
   },
   mutations: {
     [mutations.SET_PROJECT_FLOWS](state, flows) {
       state.flows = flows;
     },
+    [mutations.SET_PROJECT_COMMERCE](state, isCommerce) {
+      state.isCommerce = isCommerce;
+    },
   },
   actions: {
+    setIsCommerce({ commit }, isCommerce) {
+      commit(mutations.SET_PROJECT_COMMERCE, isCommerce);
+    },
     getProjectFlows({ state, commit }) {
       state.isLoadingFlows = true;
 

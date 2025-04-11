@@ -12,10 +12,15 @@ export default {
 
   getters: {
     hasVisibleColumns: (state) => state.visibleColumns.length > 0,
-    dynamicColumns: (state) => state.visibleColumns.filter(col => !STATIC_COLUMNS.includes(col)),
-    allVisibleColumns: (state) => [...STATIC_COLUMNS, ...state.visibleColumns.filter(col => !STATIC_COLUMNS.includes(col))],
+    dynamicColumns: (state) =>
+      state.visibleColumns.filter((col) => !STATIC_COLUMNS.includes(col)),
+    allVisibleColumns: (state) => [
+      ...STATIC_COLUMNS,
+      ...state.visibleColumns.filter((col) => !STATIC_COLUMNS.includes(col)),
+    ],
     getStorageKey: (state, getters, rootState) => {
-      const projectUuid = rootState.config.project?.uuid || localStorage.getItem('projectUuid');
+      const projectUuid =
+        rootState.config.project?.uuid || localStorage.getItem('projectUuid');
       return projectUuid ? `${STORAGE_KEY}_${projectUuid}` : STORAGE_KEY;
     },
   },
@@ -23,9 +28,9 @@ export default {
   mutations: {
     SET_VISIBLE_COLUMNS(state, columns) {
       if (!Array.isArray(columns)) return;
-      
-      const uniqueColumns = [...new Set(columns)].filter(col => 
-        !STATIC_COLUMNS.includes(col) && typeof col === 'string'
+
+      const uniqueColumns = [...new Set(columns)].filter(
+        (col) => !STATIC_COLUMNS.includes(col) && typeof col === 'string',
       );
       state.visibleColumns = uniqueColumns;
     },
@@ -36,7 +41,7 @@ export default {
 
     TOGGLE_COLUMN(state, columnName) {
       if (STATIC_COLUMNS.includes(columnName)) return;
-      
+
       const index = state.visibleColumns.indexOf(columnName);
       if (index === -1) {
         state.visibleColumns.push(columnName);
@@ -46,14 +51,19 @@ export default {
     },
 
     INITIALIZE_FROM_STORAGE(state, rootState) {
-      const projectUuid = rootState.config.project?.uuid || localStorage.getItem('projectUuid');
+      const projectUuid =
+        rootState.config.project?.uuid || localStorage.getItem('projectUuid');
 
-      const storedColumns = localStorage.getItem(`${STORAGE_KEY}_${projectUuid}`);
-      
+      const storedColumns = localStorage.getItem(
+        `${STORAGE_KEY}_${projectUuid}`,
+      );
+
       if (storedColumns) {
         try {
           const parsedColumns = JSON.parse(storedColumns);
-          state.visibleColumns = parsedColumns.filter(col => !STATIC_COLUMNS.includes(col));
+          state.visibleColumns = parsedColumns.filter(
+            (col) => !STATIC_COLUMNS.includes(col),
+          );
         } catch (error) {
           console.error('Error parsing stored columns:', error);
           state.visibleColumns = [];
@@ -74,9 +84,9 @@ export default {
   actions: {
     setVisibleColumns({ commit, state, getters }, columns) {
       if (!Array.isArray(columns)) return;
-      
+
       commit('SET_VISIBLE_COLUMNS', columns);
-      
+
       const storageKey = getters.getStorageKey;
       localStorage.setItem(storageKey, JSON.stringify(state.visibleColumns));
     },
@@ -88,8 +98,9 @@ export default {
     },
 
     toggleColumn({ commit, state, getters }, columnName) {
-      if (typeof columnName !== 'string' || STATIC_COLUMNS.includes(columnName)) return;
-      
+      if (typeof columnName !== 'string' || STATIC_COLUMNS.includes(columnName))
+        return;
+
       commit('TOGGLE_COLUMN', columnName);
       const storageKey = getters.getStorageKey;
       localStorage.setItem(storageKey, JSON.stringify(state.visibleColumns));

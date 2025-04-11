@@ -16,13 +16,15 @@
         <UnnnicButtonIcon
           size="small"
           icon="expand_content"
+          data-testid="expand-button"
           @click.prevent.stop="$emit('seeMore')"
         />
       </section>
-      <AgentsTableHeader 
-        v-if="isExpansive" 
+      <AgentsTableHeader
+        v-if="isExpansive"
+        data-testid="agents-table-header"
         :headers="headers"
-        :is-loading="isLoading"
+        :isLoading="isLoading"
       />
     </header>
 
@@ -97,15 +99,17 @@ export default {
         }));
       }
 
-      const visibleColumns = this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
+      const visibleColumns =
+        this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
 
-      const staticHeaders = shownHeaders.filter(header => 
-        ['status', 'agent', 'in_progress', 'closeds'].includes(header.name)
+      const staticHeaders = shownHeaders.filter((header) =>
+        ['status', 'agent', 'in_progress', 'closeds'].includes(header.name),
       );
 
-      const dynamicHeaders = shownHeaders.filter(header => 
-        visibleColumns.includes(header.name) && 
-        !['status', 'agent', 'in_progress', 'closeds'].includes(header.name)
+      const dynamicHeaders = shownHeaders.filter(
+        (header) =>
+          visibleColumns.includes(header.name) &&
+          !['status', 'agent', 'in_progress', 'closeds'].includes(header.name),
       );
 
       const allHeaders = [...staticHeaders, ...dynamicHeaders];
@@ -142,7 +146,8 @@ export default {
         });
       }
 
-      const visibleColumns = this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
+      const visibleColumns =
+        this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
 
       const formattedItems = this.items.map((item) => {
         let label = null;
@@ -168,8 +173,8 @@ export default {
           String(item.opened),
           String(item.closed),
         ];
-        
-        visibleColumns.forEach(columnName => {
+
+        visibleColumns.forEach((columnName) => {
           if (item.custom_status && columnName in item.custom_status) {
             const breakTimeInSeconds = item.custom_status[columnName] || 0;
             baseContent.push(this.formatSecondsToTime(breakTimeInSeconds));

@@ -3,11 +3,13 @@
     :class="{
       'expansive-widget': true,
     }"
+    data-testid="expansive-widget"
   >
     <component
       :is="currentComponent"
       if="widget"
       v-bind="widgetProps"
+      data-testid="expansive-widget-component"
       v-on="widgetEvents"
     />
   </section>

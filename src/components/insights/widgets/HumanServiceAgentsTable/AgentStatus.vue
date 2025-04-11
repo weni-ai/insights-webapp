@@ -1,13 +1,18 @@
 <template>
-  <section class="agent-status-container">
+  <section
+    class="agent-status-container"
+    data-testid="agent-status-container"
+  >
     <UnnnicIcon
       icon="indicator"
       size="avatar-nano"
       :class="statusClass"
+      data-testid="agent-status-icon"
     />
     <span
       v-if="label"
       class="agent-status-label"
+      data-testid="agent-status-label"
     >
       {{ label }}
     </span>

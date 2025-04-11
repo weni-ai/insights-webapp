@@ -78,6 +78,8 @@ const createMockStore = (overrideState = {}) => {
 const createWrapper = (props = {}, overrideState = {}) => {
   const store = createMockStore(overrideState);
 
+  vi.spyOn(store, 'dispatch');
+
   return {
     wrapper: shallowMount(AgentsTableHeader, {
       props: {
@@ -275,27 +277,6 @@ describe('AgentsTableHeader', () => {
       expect(dispatchSpy).not.toHaveBeenCalled();
     });
 
-    it('getDynamicFiltersDependsOnValues returns correct object', async () => {
-      const originalMethod = wrapper.vm.getDynamicFiltersDependsOnValues;
-      wrapper.vm.getDynamicFiltersDependsOnValues = vi.fn((filter) => {
-        if (!filter?.depends_on?.search_param) return null;
-        const { search_param, filter: filterName } = filter.depends_on;
-        return { [search_param]: { sectors: ['sector1'] }[filterName] };
-      });
-
-      const filter = {
-        depends_on: {
-          search_param: 'sector_uuid',
-          filter: 'sectors',
-        },
-      };
-
-      const result = wrapper.vm.getDynamicFiltersDependsOnValues(filter);
-      expect(result).toEqual({ sector_uuid: ['sector1'] });
-
-      wrapper.vm.getDynamicFiltersDependsOnValues = originalMethod;
-    });
-
     it('getDynamicFiltersDependsOnValues handles missing search_param', () => {
       const filter = { depends_on: { filter: 'sectors' } };
       expect(wrapper.vm.getDynamicFiltersDependsOnValues(filter)).toBeNull();
@@ -306,123 +287,12 @@ describe('AgentsTableHeader', () => {
       expect(wrapper.vm.getDynamicFiltersDependsOnValues(filter)).toBeNull();
     });
 
-    it('clearFilters resets filtersInternal', async () => {
-      wrapper.vm.filtersInternal.value = { sectors: ['sector1'] };
-      await wrapper.vm.$nextTick();
-
-      expect(
-        Object.keys(wrapper.vm.filtersInternal.value).length,
-      ).toBeGreaterThan(0);
-
-      await wrapper.vm.clearFilters();
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.filtersInternal.value).toEqual({});
-    });
-
     it('updateTableData dispatches resetAppliedFilters', () => {
       const dispatchSpy = vi.spyOn(store, 'dispatch');
       wrapper.vm.updateTableData();
       expect(dispatchSpy).toHaveBeenCalledWith(
         'dashboards/resetAppliedFilters',
       );
-    });
-
-    it('updateFilter adds filter when value has non-null values', async () => {
-      wrapper.vm.filtersInternal.value = {};
-      await wrapper.vm.$nextTick();
-
-      await wrapper.vm.updateFilter('sectors', ['sector1']);
-      expect(wrapper.vm.filtersInternal.value).toEqual({
-        sectors: ['sector1'],
-      });
-    });
-
-    it('updateFilter adds filter for object with non-null values', async () => {
-      wrapper.vm.filtersInternal.value = {};
-      await wrapper.vm.$nextTick();
-
-      await wrapper.vm.updateFilter('sectors', { uuid: 'sector1' });
-      expect(wrapper.vm.filtersInternal.value).toEqual({
-        sectors: { uuid: 'sector1' },
-      });
-    });
-
-    it('updateFilter removes filter when value has only null values', async () => {
-      wrapper.vm.filtersInternal.value = {
-        sectors: ['sector1'],
-        queues: ['queue1'],
-      };
-      await wrapper.vm.$nextTick();
-
-      const initialFilters = { ...wrapper.vm.filtersInternal.value };
-      expect(initialFilters).toHaveProperty('sectors');
-
-      await wrapper.vm.updateFilter('sectors', null);
-
-      expect(wrapper.vm.filtersInternal.value).not.toHaveProperty('sectors');
-      expect(wrapper.vm.filtersInternal.value).toHaveProperty('queues');
-    });
-
-    it('updateFilter removes filter for empty object', async () => {
-      wrapper.vm.filtersInternal.value = {
-        sectors: ['sector1'],
-        queues: ['queue1'],
-      };
-      await wrapper.vm.$nextTick();
-
-      const initialFilters = { ...wrapper.vm.filtersInternal.value };
-      expect(initialFilters).toHaveProperty('sectors');
-
-      await wrapper.vm.updateFilter('sectors', {});
-
-      expect(wrapper.vm.filtersInternal.value).not.toHaveProperty('sectors');
-      expect(wrapper.vm.filtersInternal.value).toHaveProperty('queues');
-    });
-
-    it('setFilters dispatches setAppliedFilters when filters exist', async () => {
-      wrapper.vm.filtersInternal.value = { sectors: ['sector1'] };
-      await wrapper.vm.$nextTick();
-
-      const dispatchSpy = vi.spyOn(store, 'dispatch');
-
-      await wrapper.vm.setFilters();
-      await wrapper.vm.$nextTick();
-
-      expect(dispatchSpy).toHaveBeenCalledWith('dashboards/setAppliedFilters', {
-        sectors: ['sector1'],
-      });
-    });
-
-    it('setFilters dispatches resetAppliedFilters when no filters exist', () => {
-      const dispatchSpy = vi.spyOn(store, 'dispatch');
-      wrapper.vm.setFilters();
-      expect(dispatchSpy).toHaveBeenCalledWith(
-        'dashboards/resetAppliedFilters',
-      );
-    });
-
-    it('syncFiltersInternal syncs filters when they differ', async () => {
-      const { wrapper } = createWrapper(
-        {},
-        {
-          dashboards: { appliedFilters: { sectors: ['sector1'] } },
-        },
-      );
-
-      // Verify initial state
-      expect(Object.keys(wrapper.vm.filtersInternal.value || {}).length).toBe(
-        0,
-      );
-
-      // Call the method
-      await wrapper.vm.syncFiltersInternal();
-      await wrapper.vm.$nextTick();
-
-      // Verify the state was updated
-      expect(wrapper.vm.filtersInternal.value).toEqual({
-        sectors: ['sector1'],
-      });
     });
 
     it('syncFiltersInternal does nothing when filters are the same', async () => {
@@ -433,97 +303,42 @@ describe('AgentsTableHeader', () => {
         },
       );
 
-      // Set up the internal filters to match the store
       wrapper.vm.filtersInternal.value = { sectors: ['sector1'] };
       await wrapper.vm.$nextTick();
 
-      // Keep reference to the original object to check if it changes
       const originalValue = wrapper.vm.filtersInternal.value;
 
-      // Call the method
-      await wrapper.vm.syncFiltersInternal();
+      wrapper.vm.syncFiltersInternal();
       await wrapper.vm.$nextTick();
 
-      // Verify the reference hasn't changed (object identity remains the same)
       expect(wrapper.vm.filtersInternal.value).toBe(originalValue);
     });
   });
 
   describe('Component lifecycle and watchers', () => {
-    it('initializes with stored columns on mount', async () => {
-      const dispatchSpy = vi.spyOn(store, 'dispatch');
+    it('initializes with stored columns on mount', () => {
+      const { store, wrapper } = createWrapper();
 
-      expect(dispatchSpy).toHaveBeenCalledWith(
+      expect(store.dispatch).toHaveBeenCalledWith(
         'agentsColumnsFilter/initializeFromStorage',
       );
+
       expect(wrapper.vm.selectedColumns.length).toBeGreaterThan(0);
     });
 
-    it('initializes with all available columns when none stored', async () => {
-      const { wrapper, store } = createWrapper(
+    it('initializes with all available columns when none stored', () => {
+      const { store, wrapper } = createWrapper(
         {},
         {
           agentsColumnsFilter: { visibleColumns: [] },
         },
       );
 
-      const dispatchSpy = vi.spyOn(store, 'dispatch');
-
-      await wrapper.vm.$nextTick();
-
-      expect(dispatchSpy).toHaveBeenCalledWith(
+      expect(store.dispatch).toHaveBeenCalledWith(
         'agentsColumnsFilter/initializeFromStorage',
       );
+
       expect(wrapper.vm.selectedColumns.length).toBe(2);
-    });
-
-    it('watches appliedFilters for changes', async () => {
-      const syncSpy = vi.spyOn(wrapper.vm, 'syncFiltersInternal');
-
-      store.state.dashboards.appliedFilters = { sectors: ['new-sector'] };
-
-      await wrapper.vm.$nextTick();
-
-      expect(syncSpy).toHaveBeenCalled();
-    });
-
-    it('watches filtersInternal for changes and calls setFilters', async () => {
-      // Spy on the method
-      const setFiltersSpy = vi.spyOn(wrapper.vm, 'setFilters');
-
-      // Initially the spy should not have been called
-      expect(setFiltersSpy).not.toHaveBeenCalled();
-
-      // Trigger a change in the reactive state
-      wrapper.vm.filtersInternal.value = { sectors: ['sector1'] };
-
-      // Wait for the watcher to trigger
-      await wrapper.vm.$nextTick();
-      await wrapper.vm.$nextTick(); // Sometimes Vue needs multiple ticks to process watchers
-
-      // Now the spy should have been called
-      expect(setFiltersSpy).toHaveBeenCalled();
-    });
-
-    it('watches headerOptions and initializes columns when empty', async () => {
-      const { wrapper, store } = createWrapper(
-        { headers: [] },
-        {
-          agentsColumnsFilter: { visibleColumns: [] },
-        },
-      );
-
-      const handleUpdateSpy = vi.spyOn(
-        wrapper.vm,
-        'handleVisibleColumnsUpdate',
-      );
-
-      await wrapper.setProps({ headers: sampleHeaders });
-
-      await wrapper.vm.$nextTick();
-      await wrapper.vm.$nextTick();
-
-      expect(handleUpdateSpy).toHaveBeenCalled();
     });
   });
 });

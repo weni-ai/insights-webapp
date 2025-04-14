@@ -39,7 +39,6 @@
             <UnnnicSelectSmart
               v-model="selectedWaba"
               :options="wabasOptions"
-              :disabled="wabas.length === 1"
             />
           </fieldset>
           <fieldset>
@@ -61,6 +60,12 @@
               @update:search-value="setSearchTextTemplateValue"
             />
           </fieldset>
+          <UnnnicButton
+            class="clear-fields-btn"
+            :text="$t('clear_fields')"
+            type="tertiary"
+            @click="resetMetaFields()"
+          />
         </section>
       </template>
     </FormAccordion>
@@ -89,9 +94,22 @@
               )
             "
           />
+          <UnnnicButton
+            class="clear-fields-btn"
+            :text="$t('clear_fields')"
+            type="tertiary"
+            @click="widgetData.config.filter.utm_source = ''"
+          />
         </section>
       </template>
     </FormAccordion>
+    <UnnnicButton
+      v-if="isEditing"
+      class="clear-widget-btn"
+      :text="$t('drawers.reset_widget')"
+      type="tertiary"
+      @click="$emit('reset-widget')"
+    />
   </section>
 </template>
 
@@ -120,6 +138,7 @@ const isEditing = computed(() => {
 const emit = defineEmits([
   'update:modelValue',
   'update-disable-primary-button',
+  'reset-widget',
 ]);
 
 const activeAccordion = ref({
@@ -149,6 +168,13 @@ watch(
   },
   { deep: true, immediate: true },
 );
+
+const resetMetaFields = () => {
+  selectedWaba.value = [wabasOptions.value[0]];
+  selectedTemplate.value = [templatesOptions.value[0]];
+  widgetData.value.config.filter.template_id = '';
+  widgetData.value.config.filter.waba_id = '';
+};
 
 const wabas = ref([]);
 const wabasOptions = computed(() => {
@@ -323,6 +349,12 @@ fieldset {
   gap: $unnnic-spacing-sm;
 
   &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-xs;
+  }
+
+  &__vtex {
     display: flex;
     flex-direction: column;
     gap: $unnnic-spacing-xs;

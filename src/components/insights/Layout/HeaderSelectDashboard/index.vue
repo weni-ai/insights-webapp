@@ -130,8 +130,9 @@ export default {
 $dropdownFixedWidth: 314px;
 
 :deep(.unnnic-dropdown__content) {
-  // this is necessary to prevent z-index overlapping when there is a chart below the dropdown
-  z-index: 5 !important;
+  &.unnnic-dropdown__content__position-bottom-right {
+    z-index: 5;
+  }
 }
 
 .header-select-dashboard {

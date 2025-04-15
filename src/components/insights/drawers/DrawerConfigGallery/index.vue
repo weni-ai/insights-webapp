@@ -128,6 +128,7 @@ export default {
 
       if (isVtexEnabledProject) {
         empty_widget_options.push('vtex');
+        // temporary disabled option
         // empty_widget_options.push('vtex_conversions');
       }
 

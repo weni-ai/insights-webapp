@@ -128,7 +128,7 @@ export default {
 
       if (isVtexEnabledProject) {
         empty_widget_options.push('vtex');
-        empty_widget_options.push('vtex_conversions');
+        // empty_widget_options.push('vtex_conversions');
       }
 
       const optionsMap = {

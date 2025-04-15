@@ -51,6 +51,8 @@
 import { mapActions, mapMutations, mapState } from 'vuex';
 import unnnic from '@weni/unnnic-system';
 
+import DrawerConfigContentVtexConversions from './DrawerConfigContentVtexConversions.vue';
+import SkeletonConfigContentVtexConversions from './loadings/SkeletonConfigContentVtexConversions.vue';
 import DrawerConfigContentFunnel from './DrawerConfigContentFunnel.vue';
 import DrawerConfigContentCard from './DrawerConfigContentCard.vue';
 import SkeletonConfigContentCard from './loadings/SkeletonConfigContentCard.vue';
@@ -66,6 +68,8 @@ export default {
   name: 'DrawerConfigWidgetDynamic',
 
   components: {
+    DrawerConfigContentVtexConversions,
+    SkeletonConfigContentVtexConversions,
     DrawerConfigContentFunnel,
     DrawerConfigContentCard,
     SkeletonConfigContentCard,
@@ -150,6 +154,12 @@ export default {
             title: $t(`drawers.config_gallery.options.vtex.title`),
             description: $t(`drawers.config_gallery.options.vtex.description`),
           },
+          vtex_conversions: {
+            title: $t(`drawers.config_gallery.options.vtex_conversions.title`),
+            description: $t(
+              `drawers.config_gallery.options.vtex_conversions.description`,
+            ),
+          },
           recurrence: {
             title: $t(`drawers.config_gallery.options.recurrence.title`),
             description: $t(
@@ -169,14 +179,26 @@ export default {
             description: $t(`drawers.config_gallery.options.vtex.description`),
           },
         },
+        vtex_conversions: {
+          default: {
+            title: $t(`drawers.config_gallery.options.vtex_conversions.title`),
+            description: $t(
+              `drawers.config_gallery.options.vtex_conversions.description`,
+            ),
+          },
+        },
       };
 
       return configMap[this.widget?.type][this.configType || 'default'] || {};
     },
+
     content() {
-      const currentType = ['vtex', 'funnel', 'recurrence'].includes(
-        this.configType,
-      )
+      const currentType = [
+        'vtex',
+        'vtex_conversions',
+        'funnel',
+        'recurrence',
+      ].includes(this.configType)
         ? this.configType
         : this.widget?.type;
 
@@ -197,6 +219,10 @@ export default {
           loading: SkeletonConfigContentVtex,
           component: DrawerConfigContentVtex,
         },
+        vtex_conversions: {
+          loading: SkeletonConfigContentVtexConversions,
+          component: DrawerConfigContentVtexConversions,
+        },
         recurrence: {
           loading: SkeletonConfigContentRecurrence,
           component: DrawerConfigContentRecurrence,
@@ -205,6 +231,7 @@ export default {
 
       return componentMap[currentType] || {};
     },
+
     contentProps() {
       const { widget } = this;
 
@@ -218,6 +245,7 @@ export default {
 
       return { ...defaultProps, ...mappingProps[this.widget?.type] };
     },
+
     contentEvents() {
       const defaultEvents = {
         'update:model-value': (config) => (this.config = config),
@@ -254,6 +282,8 @@ export default {
           if (this.configType === 'vtex') newWidget = this.createVtexWidget;
           if (this.configType === 'funnel')
             newWidget = this.createGraphFunnelWidget;
+          if (this.configType === 'vtex_conversions')
+            newWidget = this.createVtexConversionsWidget;
           break;
         case 'recurrence':
           newWidget = this.createRecurrenceWidget;
@@ -261,6 +291,10 @@ export default {
         case 'vtex_order':
           newWidget = this.createVtexWidget;
           break;
+        case 'vtex_conversions': {
+          newWidget = this.createVtexConversionsWidget;
+          break;
+        }
       }
 
       return { ...defaultConfigs, ...newWidget };
@@ -310,6 +344,17 @@ export default {
         name: 'vtex_orders',
         source: 'orders',
         type: 'vtex_order',
+        config,
+      };
+    },
+
+    createVtexConversionsWidget() {
+      const { config, name } = this.config;
+
+      return {
+        name,
+        source: 'vtex_conversions',
+        type: 'vtex_conversions',
         config,
       };
     },

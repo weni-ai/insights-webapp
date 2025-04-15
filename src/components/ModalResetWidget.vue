@@ -69,9 +69,12 @@ export default {
 
       try {
         if (
-          ['vtex_order', 'graph_funnel', 'recurrence'].includes(
-            this.widget.type,
-          )
+          [
+            'vtex_order',
+            'graph_funnel',
+            'recurrence',
+            'vtex_conversions',
+          ].includes(this.widget.type)
         ) {
           await this.updateWidget({
             ...this.widget,

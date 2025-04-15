@@ -90,6 +90,7 @@ describe('Project store', () => {
 
       it('should set isLoadingFlows to false after getProjectFlows action is completed', async () => {
         Projects.getProjectSource.mockResolvedValue([]);
+
         await store.dispatch('project/getProjectFlows');
 
         expect(store.state.project.isLoadingFlows).toBe(false);

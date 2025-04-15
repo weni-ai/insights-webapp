@@ -133,7 +133,7 @@
       "placeholder": "Seleccionar tag"
     }
   },
-  "filter-by": "Filtrar por:",
+  "filter-by": "Periodo:",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",
@@ -441,8 +441,8 @@
   "dashboard_commerce": {
     "title": "Vea lo que está pasando en: Carro abandonado",
     "errors": {
-      "title": "No se pudieron cargar los datos",
-      "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
+        "title": "No se pudieron cargar los datos",
+        "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
     },
     "titles": {
       "send-message": "Mensajes enviados",
@@ -456,15 +456,17 @@
       "today": "Hoy",
       "last_7_days": "Últimos 7 días",
       "last_14_days": "Últimos 14 días",
-      "last_month": "Último mes"
+      "last_30_days": "Últimos 30 días",
+      "last_45_days": "Últimos 45 días",
+      "last_90_days": "Últimos 90 días"
     },
     "infos": {
-      "send-message": "Envío de mensajes en Carro abandonado",
-      "delivered-messages": "Entrega de mensajes en Carro abandonado",
-      "read-messages": "Lectura de mensajes en Carro abandonado",
-      "interactions": "Interacciones en Carro abandonado",
-      "utm-revenue": "Ingresos UTM en Carro abandonado",
-      "orders-placed": "Pedidos realizados en Carro abandonado"
+      "send-message": "Número de veces que el agente envió un mensaje iniciando una interacción",
+      "delivered-messages": "Número de veces que las mensajeras fueron entregadas",
+      "read-messages": "Número de veces que las mensajeras fueron leídas",
+      "interactions": "Número de veces que el contacto interagiu con la mensajera",
+      "utm-revenue": "Valor total de las ventas",
+      "orders-placed": "Número de ventas"
     }
   }
 }

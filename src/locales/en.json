@@ -133,7 +133,7 @@
       "placeholder": "Select tag"
     }
   },
-  "filter-by": "Filter by:",
+  "filter-by": "Period:",
   "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -235,6 +235,17 @@
         "sub_title": "Please check the provided UTM is correct or wait for new data to arrive",
         "verify_btn": "Check UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Sent messages",
+        "delivered": "Delivered messages",
+        "read": "Read messages",
+        "clicked": "Clicks",
+        "orders": "Orders",
+        "total_value": "Total value",
+        "average_ticket": "Average ticket"
+      }
     }
   },
   "drawers": {
@@ -263,6 +274,32 @@
         "vtex": {
           "title": "VTEX",
           "description": "View your VTEX sales data"
+        },
+        "vtex_conversions": {
+          "title": "Template conversion",
+          "description": "Track the conversion rate between sent template messages and completed sales.",
+          "form": {
+            "define_meta_data": "Define Meta data",
+            "define_vtex_data": "Define VTEX data",
+            "input": {
+              "name": {
+                "label": "Name widget",
+                "placeholder": "Example: Sales"
+              },
+              "waba": {
+                "label": "Select account number",
+                "placeholder": "Select a phone number"
+              },
+              "template": {
+                "label": "Select template message",
+                "placeholder": "Select a template message"
+              },
+              "utm": {
+                "label": "Provide UTM",
+                "placeholder": "Copy from VTEX and paste here"
+              }
+            }
+          }
         },
         "recurrence": {
           "title": "Recurrence",
@@ -443,30 +480,32 @@
   "dashboard_commerce": {
     "title": "See what's happening in: Abandoned cart",
     "errors": {
-      "title": "Data not available",
-      "description": "We were unable to load the data. Please try again later."
+        "title": "Data not available",
+        "description": "We were unable to load the data. Please try again later."
     },
     "titles": {
-      "send-message": "Sent messages",
-      "delivered-messages": "Delivered messages",
-      "read-messages": "Read messages",
-      "interactions": "Interactions",
-      "utm-revenue": "UTM revenue",
-      "orders-placed": "Orders placed"
+        "send-message": "Sent messages",
+        "delivered-messages": "Delivered messages",
+        "read-messages": "Read messages",
+        "interactions": "Interactions",
+        "utm-revenue": "UTM revenue",
+        "orders-placed": "Orders placed"
     },
     "filters": {
-      "today": "Today",
-      "last_7_days": "Last 7 days",
-      "last_14_days": "Last 14 days",
-      "last_month": "Last month"
+        "today": "Today",
+        "last_7_days": "Last 7 days",
+        "last_14_days": "Last 14 days",
+        "last_30_days": "Last 30 days",
+        "last_45_days": "Last 45 days",
+        "last_90_days": "Last 90 days"
     },
     "infos": {
-      "send-message": "Sent messages in Abandoned cart",
-      "delivered-messages": "Delivered messages in Abandoned cart",
-      "read-messages": "Read messages in Abandoned cart",
-      "interactions": "Interactions in Abandoned cart",
-      "utm-revenue": "UTM revenue in Abandoned cart",
-      "orders-placed": "Orders placed in Abandoned cart"
+        "send-message": "Number of times the agent sent a message initiating an interaction",
+        "delivered-messages": "Number of times messages were delivered",
+        "read-messages": "Number of times messages were read",
+        "interactions": "Number of times the contact interacted with the message",
+        "utm-revenue": "Total sales value",
+        "orders-placed": "Number of sales made"
     }
   }
 }

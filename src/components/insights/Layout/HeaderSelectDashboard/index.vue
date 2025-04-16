@@ -129,6 +129,12 @@ export default {
 <style lang="scss" scoped>
 $dropdownFixedWidth: 314px;
 
+:deep(.unnnic-dropdown__content) {
+  &.unnnic-dropdown__content__position-bottom-right {
+    z-index: 5;
+  }
+}
+
 .header-select-dashboard {
   display: flex;
 

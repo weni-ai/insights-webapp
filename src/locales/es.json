@@ -133,7 +133,7 @@
       "placeholder": "Seleccionar tag"
     }
   },
-  "filter-by": "Filtrar por:",
+  "filter-by": "Periodo:",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",
@@ -235,6 +235,17 @@
         "sub_title": "Compruebe que la UTM introducida es correcta o espere nuevos datos",
         "verify_btn": "Comprobar UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Mensajes enviados",
+        "delivered": "Mensajes entregados",
+        "read": "Mensajes leídos",
+        "clicked": "Clics",
+        "orders": "Pedidos",
+        "total_value": "Valor total",
+        "average_ticket": "Ticket promedio"
+      }
     }
   },
   "drawers": {
@@ -263,6 +274,32 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualice sus datos de ventas VTEX"
+        },
+        "vtex_conversions": {
+          "title": "Conversión de plantillas",
+          "description": "Rastrea la tasa de conversión entre los mensajes de plantilla enviados y las ventas completadas.",
+          "form": {
+            "define_meta_data": "Definir metadatos",
+            "define_vtex_data": "Definir datos de VTEX",
+            "input": {
+              "name": {
+                "label": "Nombre del widget",
+                "placeholder": "Ejemplo: Ventas"
+              },
+              "waba": {
+                "label": "Seleccionar número de cuenta",
+                "placeholder": "Selecciona un número de teléfono"
+              },
+              "template": {
+                "label": "Seleccionar mensaje de plantilla",
+                "placeholder": "Selecciona un mensaje de plantilla"
+              },
+              "utm": {
+                "label": "Proporcionar UTM",
+                "placeholder": "Copia desde VTEX y pégalo aquí"
+              }
+            }
+          }
         },
         "recurrence": {
           "title": "Recurrencia",
@@ -443,8 +480,8 @@
   "dashboard_commerce": {
     "title": "Vea lo que está pasando en: Carro abandonado",
     "errors": {
-      "title": "No se pudieron cargar los datos",
-      "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
+        "title": "No se pudieron cargar los datos",
+        "description": "No se pudieron cargar los datos. Por favor, inténtelo de nuevo más tarde."
     },
     "titles": {
       "send-message": "Mensajes enviados",
@@ -458,15 +495,17 @@
       "today": "Hoy",
       "last_7_days": "Últimos 7 días",
       "last_14_days": "Últimos 14 días",
-      "last_month": "Último mes"
+      "last_30_days": "Últimos 30 días",
+      "last_45_days": "Últimos 45 días",
+      "last_90_days": "Últimos 90 días"
     },
     "infos": {
-      "send-message": "Envío de mensajes en Carro abandonado",
-      "delivered-messages": "Entrega de mensajes en Carro abandonado",
-      "read-messages": "Lectura de mensajes en Carro abandonado",
-      "interactions": "Interacciones en Carro abandonado",
-      "utm-revenue": "Ingresos UTM en Carro abandonado",
-      "orders-placed": "Pedidos realizados en Carro abandonado"
+      "send-message": "Número de veces que el agente envió un mensaje iniciando una interacción",
+      "delivered-messages": "Número de veces que las mensajeras fueron entregadas",
+      "read-messages": "Número de veces que las mensajeras fueron leídas",
+      "interactions": "Número de veces que el contacto interagiu con la mensajera",
+      "utm-revenue": "Valor total de las ventas",
+      "orders-placed": "Número de ventas"
     }
   }
 }

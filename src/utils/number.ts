@@ -5,8 +5,6 @@ export function getPercentageOf(
   total: number | string,
   precision: number = 2,
 ) {
-  if (total === 0) return 0;
-
   if (typeof val === 'string') {
     val = Number(val.replace(/[.,]/g, ''));
   }
@@ -14,6 +12,8 @@ export function getPercentageOf(
   if (typeof total === 'string') {
     total = Number(total.replace(/[.,]/g, ''));
   }
+
+  if (total === 0) return formatToPercent(0);
 
   const percentage = (val / total) * 100;
 

@@ -153,11 +153,10 @@ export default {
       const processedFilters = { ...this.filtersInternal };
 
       if (processedFilters.sector && Array.isArray(processedFilters.sector)) {
-        processedFilters.sector = processedFilters.sector
-          .map((item) => item.value)
-          .join(',');
+        processedFilters.sector = processedFilters.sector.map(
+          (item) => item.value,
+        );
       }
-
       if (Object.keys(processedFilters).length) {
         this.setAppliedFilters(processedFilters);
       } else {
@@ -173,19 +172,21 @@ export default {
     handleSyncFilters() {
       const processedFilters = { ...this.appliedFilters };
 
-      if (
-        processedFilters.sector &&
-        typeof processedFilters.sector === 'string'
-      ) {
-        processedFilters.sector = processedFilters.sector
-          .split(',')
-          .map((value) => {
-            const sector = this.getSectorById(value.trim());
-            return {
-              value: value.trim(),
-              label: sector ? sector.name : null,
-            };
-          });
+      if (processedFilters.sector) {
+        const sectorValues = Array.isArray(processedFilters.sector)
+          ? processedFilters.sector
+          : typeof processedFilters.sector === 'string'
+            ? processedFilters.sector.split(',')
+            : [];
+
+        processedFilters.sector = sectorValues.map((value) => {
+          const trimmedValue = typeof value === 'string' ? value.trim() : value;
+          const sector = this.getSectorById(trimmedValue);
+          return {
+            value: trimmedValue,
+            label: sector ? sector.name : null,
+          };
+        });
       }
 
       this.filtersInternal = processedFilters;

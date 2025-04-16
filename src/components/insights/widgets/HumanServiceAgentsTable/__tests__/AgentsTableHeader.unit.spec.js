@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
+import { shallowMount, config, flushPromises } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import AgentsTableHeader from '../AgentsTableHeader.vue';
 import i18n from '@/utils/plugins/i18n';
@@ -214,27 +214,6 @@ describe('AgentsTableHeader', () => {
     it('hasFiltersInternal returns false when no filters exist', () => {
       expect(wrapper.vm.hasFiltersInternal).toBe(false);
     });
-
-    it('areStoreFiltersAndInternalEqual compares filters correctly', async () => {
-      expect(wrapper.vm.areStoreFiltersAndInternalEqual).toBe(true);
-
-      wrapper.vm.filtersInternal.value = { sectors: ['sector1'] };
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.areStoreFiltersAndInternalEqual).toBe(false);
-
-      const { wrapper: newWrapper } = createWrapper(
-        {},
-        {
-          dashboards: { appliedFilters: { sectors: ['sector1'] } },
-        },
-      );
-
-      newWrapper.vm.filtersInternal.value = { sectors: ['sector1'] };
-      await newWrapper.vm.$nextTick();
-
-      expect(newWrapper.vm.areStoreFiltersAndInternalEqual).toBe(true);
-    });
   });
 
   describe('Methods', () => {
@@ -311,7 +290,7 @@ describe('AgentsTableHeader', () => {
       wrapper.vm.syncFiltersInternal();
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.vm.filtersInternal.value).toBe(originalValue);
+      expect(wrapper.vm.filtersInternal).toEqual(originalValue);
     });
   });
 

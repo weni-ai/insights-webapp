@@ -12,7 +12,7 @@
   />
 
   <RadioList
-    v-model:selected-radio="config.operation"
+    v-model:selectedRadio="config.operation"
     data-test-id="radio-list"
     :label="$t('drawers.config_card.operation')"
     :radios="operations"

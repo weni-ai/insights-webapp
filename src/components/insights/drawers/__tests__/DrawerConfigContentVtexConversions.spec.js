@@ -133,4 +133,45 @@ describe('VtexConversionsForm.vue', () => {
     expect(wrapper.vm.widgetData.name).toBe('Editing');
     expect(wrapper.vm.selectedTemplate[0].label).toBe('Promo');
   });
+
+  it('should reset widgetData on click reset buttons', async () => {
+    const resetMetaFieldsSpy = vi.spyOn(wrapper.vm, 'resetMetaFields');
+
+    wrapper.vm.widgetData.name = 'My config';
+    wrapper.vm.widgetData.config.filter.utm_source = 'store_utm';
+    wrapper.vm.widgetData.config.template_name = 'Promo';
+    wrapper.vm.widgetData.config.filter.template_id = 'template-id';
+    wrapper.vm.widgetData.config.filter.waba_id = 'waba-id';
+
+    await nextTick();
+
+    const resetMetaData = wrapper.find(
+      '[data-testid="reset-meta-fields-button"]',
+    );
+    const resetVtexData = wrapper.find(
+      '[data-testid="reset-vtex-fields-button"]',
+    );
+
+    await resetMetaData.trigger('click');
+
+    expect(resetMetaFieldsSpy).toHaveBeenCalled();
+    expect(wrapper.vm.widgetData.config.filter.template_id).toBe('');
+    expect(wrapper.vm.widgetData.config.filter.waba_id).toBe('');
+    expect(wrapper.vm.selectedWaba).toStrictEqual([
+      { value: '', label: expect.any(String) },
+    ]);
+    expect(wrapper.vm.selectedTemplate).toStrictEqual([
+      { value: '', label: expect.any(String) },
+    ]);
+
+    await resetVtexData.trigger('click');
+
+    expect(wrapper.vm.widgetData.config.filter.utm_source).toBe('');
+  });
+
+  it('should emit reset-widget when reset widget button click', async () => {
+    const resetWidgetButton = wrapper.find('[data-testid="reset-widget"]');
+    await resetWidgetButton.trigger('click');
+    expect(wrapper.emitted('reset-widget')).toBeTruthy();
+  });
 });

@@ -4,9 +4,16 @@ import { Dashboards } from '@/services/api';
 import { removeDuplicatedItems, sortByKey } from '@/utils/array';
 
 export function treatFilters(filters, valueHandler, currentDashboardFilters) {
+  const currentDashboardFiltersWithSectorId = [
+    ...currentDashboardFilters,
+    { name: 'sector_id' },
+  ];
+
   return Object.entries(filters).reduce((acc, [key, value]) => {
     if (
-      currentDashboardFilters.some((filter) => filter.name === key) &&
+      currentDashboardFiltersWithSectorId.some(
+        (filter) => filter.name === key,
+      ) &&
       value
     ) {
       acc[key] = valueHandler(value);
@@ -95,7 +102,7 @@ export default {
           sortByKey(treatedDashboards, 'is_default', 'desc'),
         );
       } catch (error) {
-        console.log(error);
+        console.error(error);
       } finally {
         if (state.nextDashboards) dispatch('getDashboards');
         else commit(mutations.SET_LOADING_DASHBOARDS, false);
@@ -166,6 +173,9 @@ export default {
         ...currentRoute,
         query: newQuery,
       });
+    },
+    async setCurrentDashboardFilters({ commit }, filters) {
+      commit(mutations.SET_CURRENT_DASHBOARD_FILTERS, filters);
     },
     async setDefaultDashboard({ getters, commit }, uuid) {
       const oldDefaultDashboardUuid = getters.dashboardDefault.uuid;

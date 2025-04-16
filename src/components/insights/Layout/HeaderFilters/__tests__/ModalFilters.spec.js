@@ -378,7 +378,7 @@ describe('ModalFilters', () => {
 
       // Verify
       expect(setAppliedFiltersSpy).toHaveBeenCalledWith({
-        sector: '89815a13-3672-4c6b-a6c2-3598694ffc56',
+        sector: ['89815a13-3672-4c6b-a6c2-3598694ffc56'],
       });
     });
   });

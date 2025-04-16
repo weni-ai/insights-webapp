@@ -154,11 +154,6 @@ const appliedFilters = computed(
 const hasFiltersInternal = computed(
   () => Object.keys(filtersInternal.value).length > 0,
 );
-const areStoreFiltersAndInternalEqual = computed(
-  () =>
-    JSON.stringify(appliedFilters.value) ===
-    JSON.stringify(filtersInternal.value),
-);
 
 const getDynamicFiltersDependsOnValues = (filter) => {
   if (!filter?.depends_on?.search_param) return null;

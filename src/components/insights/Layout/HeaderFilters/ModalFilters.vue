@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import DynamicFilter from './DynamicFilter.vue';
 
 export default {
@@ -79,6 +79,10 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
+      sectors: (state) => state.sectors.sectors,
+    }),
+    ...mapGetters({
+      getSectorById: 'sectors/getSectorById',
     }),
 
     hasFiltersInternal() {
@@ -107,6 +111,9 @@ export default {
   watch: {
     appliedFilters() {
       this.syncFiltersInternal();
+    },
+    sectors() {
+      this.handleSyncFilters();
     },
   },
 
@@ -143,8 +150,15 @@ export default {
       }
     },
     setFilters() {
-      if (Object.keys(this.filtersInternal).length) {
-        this.setAppliedFilters(this.filtersInternal);
+      const processedFilters = { ...this.filtersInternal };
+
+      if (processedFilters.sector && Array.isArray(processedFilters.sector)) {
+        processedFilters.sector = processedFilters.sector.map(
+          (item) => item.value,
+        );
+      }
+      if (Object.keys(processedFilters).length) {
+        this.setAppliedFilters(processedFilters);
       } else {
         this.resetAppliedFilters();
       }
@@ -152,8 +166,30 @@ export default {
     },
     syncFiltersInternal() {
       if (!this.areStoreFiltersAndInternalEqual) {
-        this.filtersInternal = this.appliedFilters;
+        this.handleSyncFilters();
       }
+    },
+    handleSyncFilters() {
+      const processedFilters = { ...this.appliedFilters };
+
+      if (processedFilters.sector) {
+        const sectorValues = Array.isArray(processedFilters.sector)
+          ? processedFilters.sector
+          : typeof processedFilters.sector === 'string'
+            ? processedFilters.sector.split(',')
+            : [];
+
+        processedFilters.sector = sectorValues.map((value) => {
+          const trimmedValue = typeof value === 'string' ? value.trim() : value;
+          const sector = this.getSectorById(trimmedValue);
+          return {
+            value: trimmedValue,
+            label: sector ? sector.name : null,
+          };
+        });
+      }
+
+      this.filtersInternal = processedFilters;
     },
     close() {
       this.$emit('close');

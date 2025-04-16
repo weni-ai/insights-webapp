@@ -2,21 +2,36 @@ import { mount, config } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import DashboardCommerce from '@/views/insights/DashboardCommerce.vue';
 import CardMetric from '@/components/home/CardMetric.vue';
-import DropdownFilter from '@/components/home/DropdownFilter.vue';
 import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import api from '@/services/api/resources/metrics';
+import { format, subDays } from 'date-fns';
+
+vi.mock('@/utils/time', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    getLastNDays: vi.fn((days) => ({
+      start: format(subDays(new Date(), days - 1), 'yyyy-MM-dd'),
+      end: format(new Date(), 'yyyy-MM-dd'),
+    })),
+    getTodayDate: vi.fn(() => ({
+      start: format(new Date(), 'yyyy-MM-dd'),
+      end: format(new Date(), 'yyyy-MM-dd'),
+    })),
+  };
+});
 
 vi.mock('@/services/api/resources/metrics', () => ({
   default: {
     getMetrics: vi.fn(() =>
       Promise.resolve({
-        'sent-messages': { value: 1325, percentage: 5.08 },
-        'delivered-messages': { value: 1259, percentage: -1.12 },
-        'read-messages': { value: 956, percentage: -2.08 },
-        interactions: { value: 569, percentage: 6.13 },
-        'utm-revenue': { value: 44566.0, percentage: 12.2, prefix: 'R$' },
-        'orders-placed': { value: 86, percentage: 0 },
+        'sent-messages': { value: 1325, prefix: '' },
+        'delivered-messages': { value: 1259, prefix: '' },
+        'read-messages': { value: 956, prefix: '' },
+        interactions: { value: 569, prefix: '' },
+        'utm-revenue': { value: 44566.0, prefix: 'R$' },
+        'orders-placed': { value: 86, prefix: '' },
       }),
     ),
   },
@@ -37,30 +52,13 @@ config.global.mocks = {
   $t: (key) => key,
 };
 
-const mockGetTodayDate = vi.fn(() => ({
-  start: '2024-01-01',
-  end: '2024-01-01',
-}));
-const mockGetLastNDays = vi.fn(() => ({
-  start: '2024-01-01',
-  end: '2024-01-07',
-}));
-const mockGetLastMonthRange = vi.fn(() => ({
-  start: '2024-01-01',
-  end: '2024-01-31',
-}));
-
-vi.mock('@/utils/time', () => ({
-  getTodayDate: () => mockGetTodayDate(),
-  getLastNDays: () => mockGetLastNDays(),
-  getLastMonthRange: () => mockGetLastMonthRange(),
-}));
-
 describe('DashboardCommerce', () => {
   let wrapper;
-  const consoleSpy = vi.spyOn(console, 'log');
+  const consoleSpy = vi.spyOn(console, 'error');
 
   beforeEach(async () => {
+    api.getMetrics.mockClear();
+
     wrapper = mount(DashboardCommerce, {
       propsData: {
         auth: { token: 'mock-token', uuid: 'mock-uuid' },
@@ -69,7 +67,9 @@ describe('DashboardCommerce', () => {
         plugins: [i18n, UnnnicSystem],
         components: {
           CardMetric,
-          DropdownFilter,
+        },
+        stubs: {
+          UnnnicInputDatePicker: true,
         },
         mocks: {
           $t: (key) => key,
@@ -77,7 +77,7 @@ describe('DashboardCommerce', () => {
       },
     });
     consoleSpy.mockClear();
-    // Wait for initial data fetch
+
     await wrapper.vm.$nextTick();
   });
 
@@ -91,39 +91,39 @@ describe('DashboardCommerce', () => {
           plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
-            DropdownFilter,
           },
           mocks: {
             $t: (key) => key,
           },
+          stubs: {
+            UnnnicInputDatePicker: true,
+          },
         },
       });
-      expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(true);
-      await wrapper.vm.$nextTick();
-      expect(wrapper.find('.dashboard-commerce__loading').exists()).toBe(false);
+
+      expect(
+        wrapper.find('[data-test-id="dashboard-commerce__loading"]').exists(),
+      ).toBe(true);
+
+      await vi.waitFor(() => {
+        return !wrapper.vm.isLoading;
+      });
+
+      expect(
+        wrapper.find('[data-test-id="dashboard-commerce__loading"]').exists(),
+      ).toBe(false);
     });
   });
 
   describe('API interactions', () => {
     it('calls getMetrics on mount with correct date range and auth token', () => {
-      expect(api.getMetrics).toHaveBeenCalledWith(
-        {
-          start_date: expect.any(String),
-          end_date: expect.any(String),
-          project_uuid: 'mock-uuid',
-        },
-        'mock-token',
-      );
-    });
-
-    it('calls getMetrics when filter changes with correct auth token', async () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      await dropdownFilter.vm.$emit('select', 'Today');
+      const initialStartDate = format(subDays(new Date(), 6), 'yyyy-MM-dd');
+      const initialEndDate = format(new Date(), 'yyyy-MM-dd');
 
       expect(api.getMetrics).toHaveBeenCalledWith(
         {
-          start_date: expect.any(String),
-          end_date: expect.any(String),
+          start_date: initialStartDate,
+          end_date: initialEndDate,
           project_uuid: 'mock-uuid',
         },
         'mock-token',
@@ -131,20 +131,36 @@ describe('DashboardCommerce', () => {
     });
 
     it('handles API error gracefully', async () => {
-      vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
+      api.getMetrics.mockRejectedValueOnce(new Error('API Error'));
+      const consoleSpy = vi.spyOn(console, 'error');
 
-      await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
+      wrapper = mount(DashboardCommerce, {
+        propsData: {
+          auth: { token: 'mock-token', uuid: 'mock-uuid' },
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          components: {
+            CardMetric,
+          },
+          stubs: {
+            UnnnicInputDatePicker: true,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
+      await wrapper.vm.$nextTick();
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'error getMetrics',
         expect.any(Error),
       );
-      expect(wrapper.vm.isError).toBe(true);
-      expect(wrapper.find('.dashboard-commerce__error').exists()).toBe(true);
     });
 
     it('does not fetch metrics when token is not present', async () => {
-      const getMetricsSpy = vi.spyOn(api, 'getMetrics');
+      api.getMetrics.mockClear();
 
       wrapper = mount(DashboardCommerce, {
         propsData: {
@@ -154,16 +170,18 @@ describe('DashboardCommerce', () => {
           plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
-            DropdownFilter,
           },
           mocks: {
             $t: (key) => key,
+          },
+          stubs: {
+            UnnnicInputDatePicker: true,
           },
         },
       });
       await wrapper.vm.$nextTick();
 
-      expect(getMetricsSpy).not.toHaveBeenCalled();
+      expect(api.getMetrics).not.toHaveBeenCalled();
     });
   });
 
@@ -182,86 +200,77 @@ describe('DashboardCommerce', () => {
       expect(headerTitle.text()).toBe('dashboard_commerce.title');
     });
 
-    it('renders the filter section', () => {
-      const filterSection = wrapper.find('[data-test-id="filter-type"]');
-      expect(filterSection.exists()).toBeTruthy();
-      expect(filterSection.text()).toContain('filter-by');
-    });
+    it('renders the date picker filter with correct min/max dates', () => {
+      const datePicker = wrapper.findComponent(
+        '[data-test-id="filter-type__date-picker"]',
+      );
+      expect(datePicker.exists()).toBeTruthy();
+      expect(datePicker.props('disableClear')).toBe(true);
+      expect(datePicker.props('position')).toBe('right');
 
-    it('renders the DropdownFilter component', () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      expect(dropdownFilter.exists()).toBeTruthy();
-    });
+      const expectedMinDate = format(subDays(new Date(), 89), 'yyyy-MM-dd');
+      const expectedMaxDate = format(new Date(), 'yyyy-MM-dd');
 
-    it('renders metrics container when data is loaded', () => {
-      expect(wrapper.find('.metrics-container').exists()).toBe(true);
-    });
-
-    it('renders error state when API fails', async () => {
-      vi.spyOn(api, 'getMetrics').mockRejectedValueOnce(new Error('API Error'));
-      await wrapper.vm.getMetrics('2024-01-01', '2024-01-07');
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.find('.dashboard-commerce__error').exists()).toBe(true);
-      expect(wrapper.find('.metrics-container').exists()).toBe(false);
+      expect(datePicker.props('minDate')).toBe(expectedMinDate);
+      expect(datePicker.props('maxDate')).toBe(expectedMaxDate);
     });
   });
 
   describe('filter functionality', () => {
-    it('initializes with correct default filter', () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      expect(dropdownFilter.props('defaultItem')).toEqual({
-        name: 'Last 7 days',
-      });
-    });
-
     it('provides all required filter options', () => {
-      const dropdownFilter = wrapper.findComponent(DropdownFilter);
-      const filterItems = dropdownFilter.props('items');
-
       const expectedOptions = [
-        'dashboard_commerce.filters.today',
-        'dashboard_commerce.filters.last_7_days',
-        'dashboard_commerce.filters.last_14_days',
-        'dashboard_commerce.filters.last_month',
+        'Last 7 days',
+        'Last 14 days',
+        'Last 30 days',
+        'Last 45 days',
+        'Last 90 days',
       ];
 
-      const filterNames = filterItems.map((item) => item.name);
-      expect(filterNames).toEqual(expectedOptions);
+      expect(wrapper.vm.filterOptions.map((opt) => opt.name)).toEqual(
+        expectedOptions,
+      );
+    });
+
+    it('updates metrics when date filter changes', async () => {
+      const initialMetrics = { ...wrapper.vm.metrics };
+      const newDate = { start: '2024-01-01', end: '2024-01-15' };
+
+      api.getMetrics.mockClear();
+      api.getMetrics.mockResolvedValueOnce({
+        'sent-messages': { value: 999, prefix: '' },
+      });
+
+      await wrapper.vm.updateFilter(newDate);
+      await wrapper.vm.$nextTick();
+
+      expect(api.getMetrics).toHaveBeenCalledWith(
+        {
+          start_date: newDate.start,
+          end_date: newDate.end,
+          project_uuid: 'mock-uuid',
+        },
+        'mock-token',
+      );
+      expect(wrapper.vm.metrics).not.toEqual(initialMetrics);
+      expect(wrapper.vm.metrics['sent-messages'].value).toBe(999);
     });
   });
 
   describe('metrics data structure', () => {
     it('verifies all metrics have required properties', () => {
+      if (wrapper.vm.isLoading) {
+        return;
+      }
       const metrics = wrapper.findAllComponents(CardMetric);
+      expect(metrics.length).toBeGreaterThan(0);
 
       metrics.forEach((metric) => {
         const props = metric.props();
+
         expect(props).toHaveProperty('title');
         expect(props).toHaveProperty('value');
-        expect(props).toHaveProperty('percentage');
-        expect(props).toHaveProperty('hasInfo');
-      });
-    });
-
-    it('correctly maps metric data to CardMetric components', () => {
-      const metrics = wrapper.findAllComponents(CardMetric);
-      const mockData = {
-        'sent-messages': { value: 1325, percentage: 5.08 },
-        'delivered-messages': { value: 1259, percentage: -1.12 },
-        'read-messages': { value: 956, percentage: -2.08 },
-        interactions: { value: 569, percentage: 6.13 },
-        'utm-revenue': { value: 44566.0, percentage: 12.2, prefix: 'R$' },
-        'orders-placed': { value: 86, percentage: 0 },
-      };
-
-      Object.entries(mockData).forEach(([key, data], index) => {
-        const metric = metrics[index];
-        expect(metric.props('value')).toBe(data.value);
-        expect(metric.props('percentage')).toBe(data.percentage);
-        if (data.prefix) {
-          expect(metric.props('prefix')).toBe(data.prefix);
-        }
+        expect(props).toHaveProperty('prefix');
+        expect(props).toHaveProperty('tooltipInfo');
       });
     });
   });

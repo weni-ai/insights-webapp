@@ -292,10 +292,12 @@ describe('ModalFilters', () => {
   });
 
   describe('Sector handling', () => {
-    it('transforms sector string into array with labels from store', async () => {
+    it('handles sector when it comes as an array from store', async () => {
       const appliedFilters = {
-        sector:
-          '89815a13-3672-4c6b-a6c2-3598694ffc56,7fb8724c-4c92-4f3d-8055-766f54bffc4d',
+        sector: [
+          '89815a13-3672-4c6b-a6c2-3598694ffc56',
+          '7fb8724c-4c92-4f3d-8055-766f54bffc4d',
+        ],
       };
 
       store.state.dashboards.appliedFilters = appliedFilters;
@@ -315,13 +317,26 @@ describe('ModalFilters', () => {
       ]);
     });
 
+    it('handles empty sector array gracefully', async () => {
+      const appliedFilters = {
+        sector: [],
+      };
+
+      store.state.dashboards.appliedFilters = appliedFilters;
+
+      wrapper.vm.syncFiltersInternal();
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.filtersInternal.sector).toEqual([]);
+    });
+
     it('updates sector labels when sectors store changes', async () => {
       const isolatedStore = createTestStore();
       const isolatedWrapper = createWrapper(isolatedStore);
 
       // Set up
       const appliedFilters = {
-        sector: '89815a13-3672-4c6b-a6c2-3598694ffc56',
+        sector: ['89815a13-3672-4c6b-a6c2-3598694ffc56'],
       };
 
       // Update store
@@ -358,13 +373,17 @@ describe('ModalFilters', () => {
       );
     });
 
-    it('transforms sector array into string when setting filters', async () => {
+    it('keeps sector values as an array when setting filters', async () => {
       // Set up
       wrapper.vm.filtersInternal = {
         sector: [
           {
             value: '89815a13-3672-4c6b-a6c2-3598694ffc56',
             label: 'Default sector',
+          },
+          {
+            value: '7fb8724c-4c92-4f3d-8055-766f54bffc4d',
+            label: 'Risk',
           },
         ],
       };
@@ -376,9 +395,12 @@ describe('ModalFilters', () => {
       // Execute
       await wrapper.vm.setFilters();
 
-      // Verify
+      // Verify it passes an array of values, not a comma-separated string
       expect(setAppliedFiltersSpy).toHaveBeenCalledWith({
-        sector: ['89815a13-3672-4c6b-a6c2-3598694ffc56'],
+        sector: [
+          '89815a13-3672-4c6b-a6c2-3598694ffc56',
+          '7fb8724c-4c92-4f3d-8055-766f54bffc4d',
+        ],
       });
     });
   });

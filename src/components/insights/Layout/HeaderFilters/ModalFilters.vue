@@ -175,9 +175,7 @@ export default {
       if (processedFilters.sector) {
         const sectorValues = Array.isArray(processedFilters.sector)
           ? processedFilters.sector
-          : typeof processedFilters.sector === 'string'
-            ? processedFilters.sector.split(',')
-            : [];
+          : [];
 
         processedFilters.sector = sectorValues.map((value) => {
           const trimmedValue = typeof value === 'string' ? value.trim() : value;

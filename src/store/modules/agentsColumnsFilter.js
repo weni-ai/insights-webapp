@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'agents_columns_filter';
-const STATIC_COLUMNS = ['status', 'agent', 'in_progress', 'closeds'];
+const STATIC_COLUMNS = ['status', 'agent'];
 
 export default {
   namespaced: true,

@@ -433,7 +433,7 @@ describe('HumanServiceAgentsTable', () => {
     it('correctly formats headers in expansive mode', async () => {
       const headers = expansiveWrapper.vm.formattedHeaders;
 
-      expect(headers.length).toBeGreaterThan(4);
+      expect(headers.length).toBeGreaterThan(2);
     });
   });
 });

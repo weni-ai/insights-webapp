@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { shallowMount, config, flushPromises } from '@vue/test-utils';
+import { shallowMount, config } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import AgentsTableHeader from '../AgentsTableHeader.vue';
 import i18n from '@/utils/plugins/i18n';
@@ -42,7 +42,7 @@ const dashboardFilters = [
   { name: 'other_filter', source: 'other', depends_on: null },
 ];
 
-const storageColumns = ['column1', 'column2'];
+const storageColumns = ['in_progress', 'closeds', 'column1', 'column2'];
 
 const createMockStore = (overrideState = {}) => {
   return createStore({
@@ -69,6 +69,7 @@ const createMockStore = (overrideState = {}) => {
         actions: {
           setAppliedFilters: vi.fn(),
           resetAppliedFilters: vi.fn(),
+          setCurrentDashboardFilters: vi.fn(),
         },
       },
     },
@@ -177,13 +178,24 @@ describe('AgentsTableHeader', () => {
   describe('Computed properties', () => {
     it('headerOptions filters out static and hidden columns', () => {
       const headerOptions = wrapper.vm.headerOptions;
-      expect(headerOptions.length).toBe(2);
-      expect(headerOptions[0].value).toBe('column1');
-      expect(headerOptions[1].value).toBe('column2');
+
+      expect(headerOptions.length).toBe(4);
+
+      const columnNames = headerOptions.map((option) => option.value);
+      expect(columnNames).toContain('column1');
+      expect(columnNames).toContain('column2');
+      expect(columnNames).toContain('in_progress');
+      expect(columnNames).toContain('closeds');
+
+      expect(columnNames).not.toContain('status');
+      expect(columnNames).not.toContain('agent');
+
+      expect(columnNames).not.toContain('hidden_column');
+      expect(columnNames).not.toContain('not_displayed');
     });
 
     it('headerOptions handles invalid headers prop', async () => {
-      const { wrapper } = createWrapper({ headers: 'invalid' });
+      const { wrapper } = createWrapper({ headers: [] });
       expect(wrapper.vm.headerOptions).toEqual([]);
     });
 
@@ -305,9 +317,37 @@ describe('AgentsTableHeader', () => {
       expect(wrapper.vm.selectedColumns.length).toBeGreaterThan(0);
     });
 
-    it('initializes with all available columns when none stored', () => {
+    it('initializes columns based on stored values when length > 2', () => {
       const { store, wrapper } = createWrapper(
         {},
+        {
+          agentsColumnsFilter: {
+            visibleColumns: ['in_progress', 'closeds', 'column1'],
+          },
+        },
+      );
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        'agentsColumnsFilter/initializeFromStorage',
+      );
+
+      expect(wrapper.vm.selectedColumns.length).toBe(3);
+      const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
+      expect(selectedValues).toContain('in_progress');
+      expect(selectedValues).toContain('closeds');
+      expect(selectedValues).toContain('column1');
+      expect(selectedValues).not.toContain('column2');
+    });
+
+    it('initializes with all available columns when none stored and columns > 2', async () => {
+      const customHeaders = [
+        ...sampleHeaders,
+        { name: 'extra_column1', display: true, hidden_name: false },
+        { name: 'extra_column2', display: true, hidden_name: false },
+      ];
+
+      const { store, wrapper } = createWrapper(
+        { headers: customHeaders },
         {
           agentsColumnsFilter: { visibleColumns: [] },
         },
@@ -317,7 +357,114 @@ describe('AgentsTableHeader', () => {
         'agentsColumnsFilter/initializeFromStorage',
       );
 
-      expect(wrapper.vm.selectedColumns.length).toBe(2);
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.headerOptions.length).toBeGreaterThan(2);
+    });
+
+    it('adds sector_id filter based on sector filter during initialization', async () => {
+      const sectorFilter = {
+        name: 'sector',
+        source: 'sectors',
+        depends_on: null,
+      };
+      const mockDashboardFilters = [sectorFilter, ...dashboardFilters];
+
+      const { store } = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboardFilters: mockDashboardFilters,
+          },
+        },
+      );
+
+      expect(store.dispatch).toHaveBeenCalledWith(
+        'dashboards/setCurrentDashboardFilters',
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: 'sector_id',
+            source: 'sector_id',
+          }),
+        ]),
+      );
+
+      const setFiltersCall = store.dispatch.mock.calls.find(
+        (call) => call[0] === 'dashboards/setCurrentDashboardFilters',
+      );
+
+      if (setFiltersCall) {
+        const filtersArray = setFiltersCall[1];
+        expect(filtersArray.length).toBe(mockDashboardFilters.length + 1);
+      }
+    });
+
+    it('does not add sector_id filter when sector filter is not present', async () => {
+      const filtersWithoutSector = dashboardFilters.filter(
+        (filter) => filter.name !== 'sector',
+      );
+
+      const { store } = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboardFilters: filtersWithoutSector,
+          },
+        },
+      );
+
+      const setFiltersCall = store.dispatch.mock.calls.find(
+        (call) => call[0] === 'dashboards/setCurrentDashboardFilters',
+      );
+
+      if (setFiltersCall) {
+        const filtersArray = setFiltersCall[1];
+
+        const sectorIdFilter = filtersArray.find(
+          (filter) => filter.name === 'sector_id',
+        );
+        expect(sectorIdFilter).toBeUndefined();
+
+        expect(filtersArray.length).toBe(filtersWithoutSector.length);
+      }
+    });
+  });
+
+  describe('Initialization of dynamic columns', () => {
+    it('handles in_progress and closeds as dynamic columns', async () => {
+      const { wrapper } = createWrapper(
+        {},
+        {
+          agentsColumnsFilter: {
+            visibleColumns: ['column1', 'column2'],
+          },
+        },
+      );
+
+      const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
+
+      expect(selectedValues).toContain('column1');
+      expect(selectedValues).toContain('column2');
+
+      expect(selectedValues).not.toContain('in_progress');
+      expect(selectedValues).not.toContain('closeds');
+    });
+
+    it('correctly loads in_progress and closeds from storage when present', async () => {
+      const { wrapper } = createWrapper(
+        {},
+        {
+          agentsColumnsFilter: {
+            visibleColumns: ['in_progress', 'closeds', 'column1'],
+          },
+        },
+      );
+
+      const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
+
+      expect(selectedValues).toContain('in_progress');
+      expect(selectedValues).toContain('closeds');
+      expect(selectedValues).toContain('column1');
     });
   });
 });

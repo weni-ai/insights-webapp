@@ -93,11 +93,11 @@ onMounted(() => {
   ]);
   syncFiltersInternal();
   store.dispatch('agentsColumnsFilter/initializeFromStorage');
+
   const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
+
   const availableColumns = headerOptions.value;
-  if (storedColumns.length === 0 && availableColumns.length > 0) {
-    handleVisibleColumnsUpdate(availableColumns);
-  } else if (storedColumns.length > 0 && availableColumns.length > 0) {
+  if (storedColumns.length > 0 && availableColumns.length > 2) {
     const filteredColumns = availableColumns.filter((opt) =>
       storedColumns.includes(opt.value),
     );
@@ -110,15 +110,13 @@ onMounted(() => {
 });
 
 const headerOptions = computed(() => {
-  if (!Array.isArray(props.headers)) return [];
-
   return props.headers
     .filter(
       (header) =>
         header?.display &&
         !header?.hidden_name &&
         header?.name &&
-        !['status', 'agent', 'in_progress', 'closeds'].includes(header.name),
+        !['status', 'agent'].includes(header.name),
     )
     .map((header) => ({
       value: header.name,
@@ -200,17 +198,12 @@ const syncFiltersInternal = () => {
 };
 
 watch(appliedFilters, syncFiltersInternal);
-watch(
-  headerOptions,
-  () => {
-    const storedColumns =
-      store.state?.agentsColumnsFilter?.visibleColumns || [];
-    if (storedColumns.length === 0 && headerOptions.value.length > 0) {
-      handleVisibleColumnsUpdate(headerOptions.value);
-    }
-  },
-  { once: true },
-);
+watch(headerOptions, () => {
+  const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
+  if (storedColumns.length === 0 && headerOptions.value.length > 2) {
+    handleVisibleColumnsUpdate(headerOptions.value);
+  }
+});
 </script>
 
 <style scoped lang="scss">

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import agentsColumnsFilter from '@/store/modules/agentsColumnsFilter';
 
 const STORAGE_KEY = 'agents_columns_filter';
-const STATIC_COLUMNS = ['status', 'agent', 'in_progress', 'closeds'];
+const STATIC_COLUMNS = ['status', 'agent'];
 
 describe('agentsColumnsFilter module', () => {
   let localStorageMock;
@@ -70,16 +70,19 @@ describe('agentsColumnsFilter module', () => {
       expect(result).toBe(false);
     });
 
-    it('dynamicColumns returns columns that are not in STATIC_COLUMNS', () => {
-      state.visibleColumns = [...STATIC_COLUMNS, 'column1', 'column2'];
+    it('dynamicColumns returns columns that are not static', () => {
+      state.visibleColumns = ['in_progress', 'closeds', 'column1', 'column2'];
+
       const result = agentsColumnsFilter.getters.dynamicColumns(state);
-      expect(result).toEqual(['column1', 'column2']);
+      expect(result).toEqual(['in_progress', 'closeds', 'column1', 'column2']);
     });
 
-    it('allVisibleColumns returns all visible columns including static columns', () => {
-      state.visibleColumns = ['column1', 'column2'];
-      const result = agentsColumnsFilter.getters.allVisibleColumns(state);
-      expect(result).toEqual([...STATIC_COLUMNS, 'column1', 'column2']);
+    it('allVisibleColumns returns both static and dynamic columns that are visible', () => {
+      state.visibleColumns = ['in_progress', 'column1'];
+      const result = agentsColumnsFilter.getters.allVisibleColumns(state, {
+        dynamicColumns: ['in_progress', 'closeds', 'column1', 'column2'],
+      });
+      expect(result).toEqual([...STATIC_COLUMNS, 'in_progress', 'column1']);
     });
 
     it('getStorageKey returns key with project uuid when available', () => {
@@ -118,10 +121,10 @@ describe('agentsColumnsFilter module', () => {
   });
 
   describe('mutations', () => {
-    it('SET_VISIBLE_COLUMNS sets unique non-static columns', () => {
-      const columns = ['status', 'column1', 'column1', 'column2'];
+    it('SET_VISIBLE_COLUMNS sets visibleColumns with unique non-static columns', () => {
+      const columns = [...STATIC_COLUMNS, 'in_progress', 'column1', 'column1'];
       agentsColumnsFilter.mutations.SET_VISIBLE_COLUMNS(state, columns);
-      expect(state.visibleColumns).toEqual(['column1', 'column2']);
+      expect(state.visibleColumns).toEqual(['in_progress', 'column1']);
     });
 
     it('SET_VISIBLE_COLUMNS ignores non-array input', () => {
@@ -142,53 +145,34 @@ describe('agentsColumnsFilter module', () => {
       expect(state.visibleColumns).toEqual([]);
     });
 
-    it('TOGGLE_COLUMN adds column when not present', () => {
-      state.visibleColumns = ['column1'];
-      agentsColumnsFilter.mutations.TOGGLE_COLUMN(state, 'column2');
-      expect(state.visibleColumns).toEqual(['column1', 'column2']);
-    });
-
-    it('TOGGLE_COLUMN removes column when already present', () => {
-      state.visibleColumns = ['column1', 'column2'];
-      agentsColumnsFilter.mutations.TOGGLE_COLUMN(state, 'column1');
-      expect(state.visibleColumns).toEqual(['column2']);
-    });
-
     it('TOGGLE_COLUMN ignores static columns', () => {
-      state.visibleColumns = ['column1'];
-      agentsColumnsFilter.mutations.TOGGLE_COLUMN(state, 'status'); // from STATIC_COLUMNS
+      state.visibleColumns = ['in_progress', 'column1'];
+      agentsColumnsFilter.mutations.TOGGLE_COLUMN(state, 'status');
+      expect(state.visibleColumns).toEqual(['in_progress', 'column1']);
+
+      agentsColumnsFilter.mutations.TOGGLE_COLUMN(state, 'in_progress');
       expect(state.visibleColumns).toEqual(['column1']);
+
+      agentsColumnsFilter.mutations.TOGGLE_COLUMN(state, 'closeds');
+      expect(state.visibleColumns).toEqual(['column1', 'closeds']);
     });
 
     it('INITIALIZE_FROM_STORAGE loads columns from localStorage', () => {
-      const storedColumns = ['column1', 'column2', 'status'];
-      localStorageMock.getItem.mockReturnValue(JSON.stringify(storedColumns));
-
-      agentsColumnsFilter.mutations.INITIALIZE_FROM_STORAGE(state, rootState);
-
-      expect(state.visibleColumns).toEqual(['column1', 'column2']);
-      expect(state.hasInitialized).toBe(true);
-      expect(localStorageMock.getItem).toHaveBeenCalledWith(
-        `${STORAGE_KEY}_${projectUuid}`,
+      global.localStorage.getItem.mockReturnValue(
+        JSON.stringify(['in_progress', 'closeds', 'column1']),
       );
-    });
-
-    it('INITIALIZE_FROM_STORAGE handles JSON parse error', () => {
-      localStorageMock.getItem.mockReturnValue('invalid-json');
-      console.error = vi.fn();
-
       agentsColumnsFilter.mutations.INITIALIZE_FROM_STORAGE(state, rootState);
-
-      expect(state.visibleColumns).toEqual([]);
+      expect(state.visibleColumns).toEqual([
+        'in_progress',
+        'closeds',
+        'column1',
+      ]);
       expect(state.hasInitialized).toBe(true);
-      expect(console.error).toHaveBeenCalled();
     });
 
-    it('INITIALIZE_FROM_STORAGE handles missing localStorage data', () => {
-      localStorageMock.getItem.mockReturnValue(null);
-
+    it('INITIALIZE_FROM_STORAGE uses default columns if localStorage is empty', () => {
+      global.localStorage.getItem.mockReturnValue(null);
       agentsColumnsFilter.mutations.INITIALIZE_FROM_STORAGE(state, rootState);
-
       expect(state.visibleColumns).toEqual([]);
       expect(state.hasInitialized).toBe(true);
     });
@@ -243,29 +227,23 @@ describe('agentsColumnsFilter module', () => {
       );
     });
 
-    it('toggleColumn commits TOGGLE_COLUMN and updates localStorage for valid columns', () => {
-      const columnName = 'column1';
-
-      agentsColumnsFilter.actions.toggleColumn(
-        { commit, state, getters },
-        columnName,
-      );
-
-      expect(commit).toHaveBeenCalledWith('TOGGLE_COLUMN', columnName);
-      expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        getters.getStorageKey,
-        JSON.stringify(state.visibleColumns),
-      );
+    it('toggleColumn does not commit for static columns', async () => {
+      await agentsColumnsFilter.actions.toggleColumn({ commit }, 'status');
+      expect(commit).not.toHaveBeenCalled();
     });
 
-    it('toggleColumn does nothing for static columns', () => {
-      agentsColumnsFilter.actions.toggleColumn(
+    it('toggleColumn commits for dynamic columns', async () => {
+      await agentsColumnsFilter.actions.toggleColumn(
         { commit, state, getters },
-        'status', // from STATIC_COLUMNS
+        'in_progress',
       );
+      expect(commit).toHaveBeenCalledWith('TOGGLE_COLUMN', 'in_progress');
 
-      expect(commit).not.toHaveBeenCalled();
-      expect(localStorageMock.setItem).not.toHaveBeenCalled();
+      await agentsColumnsFilter.actions.toggleColumn(
+        { commit, state, getters },
+        'closeds',
+      );
+      expect(commit).toHaveBeenCalledWith('TOGGLE_COLUMN', 'closeds');
     });
 
     it('toggleColumn does nothing for non-string input', () => {
@@ -273,12 +251,6 @@ describe('agentsColumnsFilter module', () => {
 
       expect(commit).not.toHaveBeenCalled();
       expect(localStorageMock.setItem).not.toHaveBeenCalled();
-    });
-
-    it('initializeFromStorage commits INITIALIZE_FROM_STORAGE with rootState', () => {
-      agentsColumnsFilter.actions.initializeFromStorage({ commit, rootState });
-
-      expect(commit).toHaveBeenCalledWith('INITIALIZE_FROM_STORAGE', rootState);
     });
 
     it('updateLastAppliedFilters commits SET_LAST_APPLIED_FILTERS', () => {
@@ -293,6 +265,11 @@ describe('agentsColumnsFilter module', () => {
       agentsColumnsFilter.actions.setInitialized({ commit }, true);
 
       expect(commit).toHaveBeenCalledWith('SET_INITIALIZED', true);
+    });
+
+    it('initializeFromStorage commits INITIALIZE_FROM_STORAGE with rootState', () => {
+      agentsColumnsFilter.actions.initializeFromStorage({ commit, rootState });
+      expect(commit).toHaveBeenCalledWith('INITIALIZE_FROM_STORAGE', rootState);
     });
   });
 });

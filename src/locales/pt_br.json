@@ -371,6 +371,7 @@
     "filtrate": "Filtrar",
     "dynamic_columns": "Colunas personalizáveis",
     "placeholder_dynamic_columns": "Selecionar colunas",
+    "last_updated_at": "Última atualização",
     "clear_filters": "Limpar filtros",
     "add_new_dashboard": "Novo dashboard",
     "set_default_dashboard_success": "Agora o Dashboard {dashboard} é sua página inicial",

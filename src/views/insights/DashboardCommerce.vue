@@ -20,15 +20,14 @@
           :options="filterOptions"
           :disableClear="true"
           position="right"
-          @update:model-value="updateFilter"
           :minDate="handleMinDate()"
           :maxDate="handleMaxDate()"
+          @update:model-value="updateFilter"
         />
-
       </section>
     </section>
     <section
-      v-if="!isLoading"
+      v-if="!isLoading && !isError"
       class="metrics-container"
     >
       <CardMetric
@@ -46,11 +45,26 @@
       />
     </section>
     <section
-      v-else
+      v-if="isLoading"
       class="dashboard-commerce__loading"
       data-test-id="dashboard-commerce__loading"
     >
       <IconLoading />
+    </section>
+    <section v-if="isError && !isLoading">
+      <section class="dashboard-commerce__error">
+        <UnnnicIcon
+          icon="cancel"
+          size="xl"
+          class="dashboard-commerce__error-icon"
+        />
+        <p class="dashboard-commerce__error-title">
+          {{ $t('dashboard_commerce.errors.title') }}
+        </p>
+        <p class="dashboard-commerce__error-description">
+          {{ $t('dashboard_commerce.errors.description') }}
+        </p>
+      </section>
     </section>
   </section>
 </template>
@@ -90,7 +104,11 @@ const infos = {
 
 const metrics = ref<MetricData[]>([]);
 const isLoading = ref(false);
-const filterValue = ref<string>({});
+const isError = ref(false);
+const filterValue = ref<{ start: string; end: string }>({
+  start: '',
+  end: '',
+});
 
 const metricTitles: Record<string, string> = {
   'sent-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
@@ -118,8 +136,10 @@ const getMetrics = async (start: string, end: string) => {
     );
 
     metrics.value = { ...data };
+    if (isError.value) isError.value = false;
   } catch (error) {
     console.error('error getMetrics', error);
+    isError.value = true;
   } finally {
     isLoading.value = false;
   }
@@ -144,7 +164,7 @@ watch(
   { immediate: true },
 );
 
-const updateFilter = (value: string) => {
+const updateFilter = (value: { start: string; end: string }) => {
   filterValue.value = {
     start: value.start,
     end: value.end,
@@ -174,7 +194,6 @@ const filterOptions = [
     id: 'last-90-days',
   },
 ];
-
 
 const handleMinDate = () => {
   const minDate = getLastNDays(90).start;
@@ -215,6 +234,38 @@ const handleMaxDate = () => {
     height: 100%;
     width: 100%;
     padding-top: $unnnic-spacing-md;
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: $unnnic-border-radius-md;
+    border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+    opacity: $unnnic-opacity-level-darkest;
+    background: $unnnic-color-neutral-white;
+    margin-top: $unnnic-spacing-sm;
+    padding: $unnnic-spacing-lg;
+    &-icon {
+      margin-bottom: $unnnic-spacing-sm;
+    }
+    &-title {
+      color: $unnnic-color-neutral-darkest;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-gt;
+      font-style: normal;
+      font-weight: $unnnic-font-weight-bold;
+      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    }
+    &-description {
+      color: $unnnic-color-neutral-cloudy;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-gt;
+      font-style: normal;
+      font-weight: $unnnic-font-weight-regular;
+      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    }
   }
 }
 

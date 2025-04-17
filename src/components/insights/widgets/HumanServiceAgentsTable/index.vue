@@ -16,9 +16,16 @@
         <UnnnicButtonIcon
           size="small"
           icon="expand_content"
+          data-testid="expand-button"
           @click.prevent.stop="$emit('seeMore')"
         />
       </section>
+      <AgentsTableHeader
+        v-if="isExpansive"
+        data-testid="agents-table-header"
+        :headers="headers"
+        :isLoading="isLoading"
+      />
     </header>
 
     <UnnnicTableNext
@@ -38,9 +45,13 @@
 import AgentStatus from './AgentStatus.vue';
 import { markRaw } from 'vue';
 import { intervalToDuration } from 'date-fns';
+import AgentsTableHeader from './AgentsTableHeader.vue';
 
 export default {
   name: 'HumanServiceAgentsTable',
+  components: {
+    AgentsTableHeader,
+  },
   props: {
     headerTitle: {
       type: String,
@@ -75,13 +86,36 @@ export default {
   computed: {
     formattedHeaders() {
       const shownHeaders = this.headers?.filter(
-        (header) => header.display && !header.hidden_name,
+        (header) => header?.display && !header?.hidden_name,
       );
 
       if (!shownHeaders) return [];
 
-      return shownHeaders.map((header, index) => ({
-        content: this.$t(header.name),
+      if (!this.isExpansive) {
+        return shownHeaders.map((header, index) => ({
+          content: this.$t(header.name || ''),
+          isSortable: true,
+          size: index === 1 ? 1 : 0.5,
+        }));
+      }
+
+      const visibleColumns =
+        this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
+
+      const staticHeaders = shownHeaders.filter((header) =>
+        ['status', 'agent'].includes(header.name),
+      );
+
+      const dynamicHeaders = shownHeaders.filter(
+        (header) =>
+          visibleColumns.includes(header.name) &&
+          !['status', 'agent'].includes(header.name),
+      );
+
+      const allHeaders = [...staticHeaders, ...dynamicHeaders];
+
+      return allHeaders.map((header, index) => ({
+        content: this.$t(header.name || ''),
         isSortable: true,
         size: index === 1 ? 1 : 0.5,
       }));
@@ -89,6 +123,31 @@ export default {
 
     formattedItems() {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
+
+      if (!this.isExpansive) {
+        return this.items.map((item) => {
+          const baseContent = [
+            {
+              component: markRaw(AgentStatus),
+              props: { status: item.status },
+              events: {},
+            },
+            String(item.agent),
+            String(item.opened),
+            String(item.closed),
+          ];
+
+          return {
+            ...item,
+            view_mode_url: item.link?.url,
+            link: undefined,
+            content: baseContent,
+          };
+        });
+      }
+
+      const visibleColumns =
+        this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
 
       const formattedItems = this.items.map((item) => {
         let label = null;
@@ -111,25 +170,30 @@ export default {
             events: {},
           },
           String(item.agent),
-          String(item.opened),
-          String(item.closed),
         ];
 
-        if (this.isExpansive && item.custom_status) {
-          const customStatusValues = this.headers
-            .filter((header) => header.value.startsWith('custom_status.'))
-            .map((header) => {
-              const statusKey = header.value.split('.')[1];
-              const breakTimeInSeconds = item.custom_status[statusKey] || 0;
-              return this.formatSecondsToTime(breakTimeInSeconds);
-            });
-
-          baseContent.push(...customStatusValues);
+        if (visibleColumns.includes('in_progress')) {
+          baseContent.push(String(item.opened));
         }
+
+        if (visibleColumns.includes('closeds')) {
+          baseContent.push(String(item.closed));
+        }
+
+        visibleColumns.forEach((columnName) => {
+          if (columnName === 'in_progress' || columnName === 'closeds') {
+            return;
+          }
+
+          if (item.custom_status && columnName in item.custom_status) {
+            const breakTimeInSeconds = item.custom_status[columnName] || 0;
+            baseContent.push(this.formatSecondsToTime(breakTimeInSeconds));
+          }
+        });
 
         return {
           ...item,
-          view_mode_url: item.link.url,
+          view_mode_url: item.link?.url,
           link: undefined,
           content: baseContent,
         };
@@ -167,55 +231,113 @@ export default {
         (header) => header.content === this.sort.header,
       );
 
-      const itemKeyMapper = {
-        0: 'status',
-        1: 'agent',
-        2: 'opened',
-        3: 'closed',
-      };
+      if (!this.isExpansive) {
+        const itemKeyMapper = {
+          0: 'status',
+          1: 'agent',
+          2: 'opened',
+          3: 'closed',
+        };
 
-      if (this.isExpansive) {
-        this.headers
-          .filter((header) => header.value.startsWith('custom_status.'))
-          .forEach((header, index) => {
-            itemKeyMapper[index + 4] = header.value;
-          });
-      }
+        const itemKey = itemKeyMapper[headerIndex];
 
-      const itemKey = itemKeyMapper[headerIndex];
+        return items.sort((a, b) => {
+          if (headerIndex !== -1) {
+            let valueA = a[itemKey];
+            let valueB = b[itemKey];
 
-      return items.sort((a, b) => {
-        if (headerIndex !== -1) {
-          let valueA = a[itemKey];
-          let valueB = b[itemKey];
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+              return this.sort.order === 'asc'
+                ? valueA.localeCompare(valueB)
+                : valueB.localeCompare(valueA);
+            }
 
-          if (itemKey?.startsWith('custom_status.')) {
-            const statusKey = itemKey.split('.')[1];
-            valueA = a.custom_status[statusKey] || 0;
-            valueB = b.custom_status[statusKey] || 0;
+            if (valueA < valueB) return this.sort.order === 'asc' ? -1 : 1;
+            if (valueA > valueB) return this.sort.order === 'asc' ? 1 : -1;
+            return 0;
+          } else {
+            const ongoingA = a.opened;
+            const ongoingB = b.opened;
+
+            const nameA = a.agent?.toLowerCase() || '';
+            const nameB = b.agent?.toLowerCase() || '';
+
+            if (ongoingA !== ongoingB) return ongoingB - ongoingA;
+
+            return nameA.localeCompare(nameB);
           }
+        });
+      } else {
+        const itemKeyMapper = {
+          0: 'status',
+          1: 'agent',
+        };
 
-          if (typeof valueA === 'string' && typeof valueB === 'string') {
-            return this.sort.order === 'asc'
-              ? valueA.localeCompare(valueB)
-              : valueB.localeCompare(valueA);
-          }
+        const visibleColumns =
+          this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
 
-          if (valueA < valueB) return this.sort.order === 'asc' ? -1 : 1;
-          if (valueA > valueB) return this.sort.order === 'asc' ? 1 : -1;
-          return 0;
-        } else {
-          const ongoingA = a.opened;
-          const ongoingB = b.opened;
+        let columnIndex = 2;
 
-          const nameA = a.agent?.toLowerCase() || '';
-          const nameB = b.agent?.toLowerCase() || '';
-
-          if (ongoingA !== ongoingB) return ongoingB - ongoingA;
-
-          return nameA.localeCompare(nameB);
+        if (visibleColumns.includes('in_progress')) {
+          itemKeyMapper[columnIndex++] = 'opened';
         }
-      });
+
+        if (visibleColumns.includes('closeds')) {
+          itemKeyMapper[columnIndex++] = 'closed';
+        }
+
+        visibleColumns
+          .filter((col) => col !== 'in_progress' && col !== 'closeds')
+          .forEach((col) => {
+            if (
+              col.startsWith('custom_status.') ||
+              this.headers.some((header) => header.name === col)
+            ) {
+              itemKeyMapper[columnIndex++] = col;
+            }
+          });
+
+        const itemKey = itemKeyMapper[headerIndex];
+
+        return items.sort((a, b) => {
+          if (headerIndex !== -1) {
+            let valueA = a[itemKey];
+            let valueB = b[itemKey];
+
+            if (itemKey?.startsWith('custom_status.')) {
+              const statusKey = itemKey.split('.')[1];
+              valueA = a.custom_status[statusKey] || 0;
+              valueB = b.custom_status[statusKey] || 0;
+            } else if (itemKey === 'opened') {
+              valueA = a.opened;
+              valueB = b.opened;
+            } else if (itemKey === 'closed') {
+              valueA = a.closed;
+              valueB = b.closed;
+            }
+
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+              return this.sort.order === 'asc'
+                ? valueA.localeCompare(valueB)
+                : valueB.localeCompare(valueA);
+            }
+
+            if (valueA < valueB) return this.sort.order === 'asc' ? -1 : 1;
+            if (valueA > valueB) return this.sort.order === 'asc' ? 1 : -1;
+            return 0;
+          } else {
+            const ongoingA = a.opened;
+            const ongoingB = b.opened;
+
+            const nameA = a.agent?.toLowerCase() || '';
+            const nameB = b.agent?.toLowerCase() || '';
+
+            if (ongoingA !== ongoingB) return ongoingB - ongoingA;
+
+            return nameA.localeCompare(nameB);
+          }
+        });
+      }
     },
   },
 };

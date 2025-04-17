@@ -369,6 +369,8 @@
     "refresh": "Refresh",
     "filters": "Filters",
     "filtrate": "Filtrate",
+    "dynamic_columns": "Customizable columns",
+    "placeholder_dynamic_columns": "Select columns",
     "clear_filters": "Clear filters",
     "add_new_dashboard": "New dashboard",
     "set_default_dashboard_success": "Now the Dashboard {dashboard} is your homepage",

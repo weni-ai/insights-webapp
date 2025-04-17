@@ -64,6 +64,7 @@
             class="clear-fields-btn"
             :text="$t('clear_fields')"
             type="tertiary"
+            data-testid="reset-meta-fields-button"
             @click="resetMetaFields()"
           />
         </section>
@@ -98,6 +99,7 @@
             class="clear-fields-btn"
             :text="$t('clear_fields')"
             type="tertiary"
+            data-testid="reset-vtex-fields-button"
             @click="widgetData.config.filter.utm_source = ''"
           />
         </section>
@@ -108,6 +110,7 @@
       class="clear-widget-btn"
       :text="$t('drawers.reset_widget')"
       type="tertiary"
+      data-testid="reset-widget"
       @click="$emit('reset-widget')"
     />
   </section>

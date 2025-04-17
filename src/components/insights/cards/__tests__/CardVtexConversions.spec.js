@@ -104,4 +104,16 @@ describe('VtexConversionsWidget.vue', () => {
 
     expect(wrapper.emitted('open-config')).toBeTruthy();
   });
+
+  it('should emit "open-config" when empty data verify button is clicked', async () => {
+    await wrapper.setProps({ data: { error: true } });
+
+    const button = wrapper.findComponent(
+      '[data-testid="empty-data-verify-button"]',
+    );
+
+    await button.trigger('click');
+
+    expect(wrapper.emitted('open-config')).toBeTruthy();
+  });
 });

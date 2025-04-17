@@ -201,7 +201,7 @@ describe('Date Utilities', () => {
 
       const result = formatTimeStringWithDayNight(morningDate, true);
 
-      expect(result).toBe('09:15 (AM)');
+      expect(result).toBe('09:15 AM');
     });
 
     it('formats PM time correctly', () => {
@@ -213,7 +213,7 @@ describe('Date Utilities', () => {
 
       expect(result12h).toContain('2:30');
       expect(result12h).toContain('PM');
-      expect(result24h).toBe('14:30 (AM)');
+      expect(result24h).toBe('14:30 AM');
     });
 
     it('handles midnight and noon correctly', () => {
@@ -221,13 +221,13 @@ describe('Date Utilities', () => {
       midnightDate.setHours(0, 0, 0);
 
       const midnightResult = formatTimeStringWithDayNight(midnightDate, true);
-      expect(midnightResult).toBe('00:00 (PM)');
+      expect(midnightResult).toBe('00:00 PM');
 
       const noonDate = new Date();
       noonDate.setHours(12, 0, 0);
 
       const noonResult = formatTimeStringWithDayNight(noonDate, true);
-      expect(noonResult).toBe('12:00 (AM)');
+      expect(noonResult).toBe('12:00 AM');
     });
   });
 });

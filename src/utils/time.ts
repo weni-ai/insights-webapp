@@ -261,5 +261,5 @@ export function formatTimeStringWithDayNight(
     timeFormat = format(date, 'h:mm a');
   }
 
-  return `${timeFormat} (${period})`;
+  return `${timeFormat} ${period}`;
 }

@@ -395,7 +395,12 @@ describe('HumanServiceAgentsTable', () => {
     let expansiveWrapper;
 
     beforeEach(() => {
-      const expansiveStore = createMockStore();
+      const expansiveStore = createMockStore({
+        agentsColumnsFilter: {
+          visibleColumns: ['in_progress', 'closeds', 'column1', 'column2'],
+        },
+      });
+
       expansiveWrapper = mount(HumanServiceAgentsTable, {
         props: {
           isLoading: false,
@@ -433,7 +438,40 @@ describe('HumanServiceAgentsTable', () => {
     it('correctly formats headers in expansive mode', async () => {
       const headers = expansiveWrapper.vm.formattedHeaders;
 
-      expect(headers.length).toBeGreaterThan(2);
+      expect(headers.length).toBe(6);
+
+      expect(headers[0].content).toBe('status');
+      expect(headers[1].content).toBe('agent');
+
+      expect(headers[1].size).toBe(1);
+
+      expect(headers[0].size).toBe(0.5);
+      expect(headers[2].size).toBe(0.5);
+    });
+
+    it('handles items with null or missing custom status values', () => {
+      const items = expansiveWrapper.vm.formattedItems;
+
+      expect(items[3].content[4]).toBe('00:00:00');
+      expect(items[3].content[5]).toBe('00:00:00');
+    });
+  });
+
+  describe('Sorting functionality', () => {
+    it('sorts by default when no header is selected', () => {
+      const items = [...mockItems];
+      wrapper.vm.sort = { header: '', order: '' };
+
+      const sortedItems = wrapper.vm.sortItems(items);
+
+      // Default sort: first by opened (descending), then by agent (ascending)
+      // Charlie has 8 opened, Alice has 5, Bob and Marcus both have 2
+      expect(sortedItems[0].agent).toBe('Charlie');
+      expect(sortedItems[1].agent).toBe('Alice');
+
+      // For Bob and Marcus (same opened count), should sort by name
+      expect(sortedItems[2].agent).toBe('Bob');
+      expect(sortedItems[3].agent).toBe('Marcus');
     });
   });
 });

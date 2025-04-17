@@ -66,7 +66,6 @@ export default {
       state.currentWidgetEditing = widget;
     },
     [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, widget) {
-      console.log('widget', widget);
       if (!widget) {
         state.currentExpansiveWidget = {};
         return;

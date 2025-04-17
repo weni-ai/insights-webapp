@@ -99,7 +99,11 @@ export default {
     },
     appliedFiltersLength() {
       const { appliedFilters } = this;
-      return appliedFilters ? Object.keys(appliedFilters).length : 0;
+
+      return appliedFilters
+        ? Object.keys(appliedFilters).filter((key) => key !== 'sector_id')
+            .length
+        : 0;
     },
     titleButtonManyFilters() {
       const { appliedFiltersLength } = this;

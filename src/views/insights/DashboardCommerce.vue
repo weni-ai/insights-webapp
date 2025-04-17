@@ -30,7 +30,6 @@
       v-if="!isLoading && !isError"
       class="metrics-container"
     >
-      <h1>HII</h1>
       <CardMetric
         v-for="(metric, index) in metrics"
         :key="metric.id"

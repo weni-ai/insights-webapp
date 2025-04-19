@@ -251,6 +251,7 @@
   "drawers": {
     "metric_saved": "@:metric salva com sucesso",
     "reset_widget": "Resetar widget",
+    "clear_all_fields": "Limpar todos os campos",
     "config_gallery": {
       "title": "Galeria de widgets",
       "description": "Escolha o tipo de widget que deseja configurar:",

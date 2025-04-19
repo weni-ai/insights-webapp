@@ -25,6 +25,7 @@ const mutations = {
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
   SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
   SET_SHOW_DASHBOARD_CONFIG: 'SET_SHOW_DASHBOARD_CONFIG',
+  SET_LAST_UPDATED_REQUEST: 'SET_LAST_UPDATED_REQUEST',
 };
 
 export default {
@@ -38,6 +39,7 @@ export default {
     isLoadingCurrentDashboardFilters: false,
     appliedFilters: {},
     showDashboardConfig: false,
+    last_updated_request: null,
   },
   mutations: {
     [mutations.SET_SHOW_DASHBOARD_CONFIG](state, show) {
@@ -74,6 +76,9 @@ export default {
     [mutations.SET_DEFAULT_DASHBOARD](state, { uuid, isDefault }) {
       state.dashboards.find((dash) => dash.uuid === uuid).is_default =
         isDefault;
+    },
+    [mutations.SET_LAST_UPDATED_REQUEST](state, timestamp) {
+      state.last_updated_request = timestamp;
     },
   },
   actions: {
@@ -185,6 +190,9 @@ export default {
         isDefault: false,
       });
     },
+    updateLastUpdatedRequest({ commit }) {
+      commit(mutations.SET_LAST_UPDATED_REQUEST, new Date());
+    },
   },
   getters: {
     dashboardDefault(state) {
@@ -195,5 +203,6 @@ export default {
         )
       );
     },
+    lastUpdatedAt: (state) => state.last_updated_request,
   },
 };

@@ -6,6 +6,8 @@ import {
   getLastMonthRange,
   getYesterdayDate,
   findMatchingDate,
+  formatTimeWithDayNight,
+  formatTimeStringWithDayNight,
 } from '@/utils/time';
 
 import { format, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns';
@@ -123,6 +125,109 @@ describe('Date Utilities', () => {
         mockT,
       );
       expect(result).toBeNull();
+    });
+  });
+
+  describe('formatTimeWithDayNight', () => {
+    it('correctly identifies morning time (AM)', () => {
+      const morningDate = new Date();
+      morningDate.setHours(9, 15, 0);
+
+      const result = formatTimeWithDayNight(morningDate);
+
+      expect(result.hour).toBe(9);
+      expect(result.minute).toBe(15);
+      expect(result.isDayTime).toBe(true);
+      expect(result.period).toBe('AM');
+    });
+
+    it('correctly identifies evening time (PM)', () => {
+      const eveningDate = new Date();
+      eveningDate.setHours(20, 30, 0);
+
+      const result = formatTimeWithDayNight(eveningDate);
+
+      expect(result.hour).toBe(20);
+      expect(result.minute).toBe(30);
+      expect(result.isDayTime).toBe(false);
+      expect(result.period).toBe('PM');
+    });
+
+    it('handles boundary cases correctly', () => {
+      const dayStartDate = new Date();
+      dayStartDate.setHours(6, 0, 0);
+
+      const dayStartResult = formatTimeWithDayNight(dayStartDate);
+      expect(dayStartResult.isDayTime).toBe(true);
+      expect(dayStartResult.period).toBe('AM');
+
+      const beforeDayDate = new Date();
+      beforeDayDate.setHours(5, 59, 0);
+
+      const beforeDayResult = formatTimeWithDayNight(beforeDayDate);
+      expect(beforeDayResult.isDayTime).toBe(false);
+      expect(beforeDayResult.period).toBe('PM');
+
+      const beforeNightDate = new Date();
+      beforeNightDate.setHours(17, 59, 0);
+
+      const beforeNightResult = formatTimeWithDayNight(beforeNightDate);
+      expect(beforeNightResult.isDayTime).toBe(true);
+      expect(beforeNightResult.period).toBe('AM');
+
+      const nightStartDate = new Date();
+      nightStartDate.setHours(18, 0, 0);
+
+      const nightStartResult = formatTimeWithDayNight(nightStartDate);
+      expect(nightStartResult.isDayTime).toBe(false);
+      expect(nightStartResult.period).toBe('PM');
+    });
+  });
+
+  describe('formatTimeStringWithDayNight', () => {
+    it('formats time string correctly with 12-hour format', () => {
+      const morningDate = new Date();
+      morningDate.setHours(9, 15, 0);
+
+      const result = formatTimeStringWithDayNight(morningDate, false);
+
+      expect(result).toContain('9:15');
+      expect(result).toContain('AM');
+    });
+
+    it('formats time string correctly with 24-hour format', () => {
+      const morningDate = new Date();
+      morningDate.setHours(9, 15, 0);
+
+      const result = formatTimeStringWithDayNight(morningDate, true);
+
+      expect(result).toBe('09:15 AM');
+    });
+
+    it('formats PM time correctly', () => {
+      const afternoonDate = new Date();
+      afternoonDate.setHours(14, 30, 0);
+
+      const result12h = formatTimeStringWithDayNight(afternoonDate, false);
+      const result24h = formatTimeStringWithDayNight(afternoonDate, true);
+
+      expect(result12h).toContain('2:30');
+      expect(result12h).toContain('PM');
+      expect(result24h).toBe('14:30 AM');
+    });
+
+    it('handles midnight and noon correctly', () => {
+      const midnightDate = new Date();
+      midnightDate.setHours(0, 0, 0);
+
+      const midnightResult = formatTimeStringWithDayNight(midnightDate, true);
+      expect(midnightResult).toBe('00:00 PM');
+
+      const noonDate = new Date();
+      noonDate.setHours(12, 0, 0);
+
+      const noonResult = formatTimeStringWithDayNight(noonDate, true);
+      expect(noonResult).toBe('12:00 AM');
     });
   });
 });

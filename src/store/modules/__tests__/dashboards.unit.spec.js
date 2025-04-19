@@ -186,6 +186,12 @@ describe('Dashboards Store', () => {
       store.commit('dashboards/SET_SHOW_DASHBOARD_CONFIG', false);
       expect(store.state.dashboards.showDashboardConfig).toBe(false);
     });
+
+    it('SET_LAST_UPDATED_REQUEST', () => {
+      const timestamp = new Date('2023-07-15T14:30:00');
+      store.commit('dashboards/SET_LAST_UPDATED_REQUEST', timestamp);
+      expect(store.state.dashboards.last_updated_request).toBe(timestamp);
+    });
   });
 
   describe('actions', () => {
@@ -376,6 +382,30 @@ describe('Dashboards Store', () => {
         expect(store.state.dashboards.dashboards[1].is_default).toEqual(true);
       });
     });
+
+    describe('updateLastUpdatedRequest', () => {
+      it('should commit SET_LAST_UPDATED_REQUEST mutation with current timestamp', async () => {
+        const commitSpy = vi.spyOn(store, 'commit');
+        const originalDate = global.Date;
+        const mockDate = new Date('2023-07-15T14:30:00');
+        global.Date = class extends Date {
+          constructor() {
+            super();
+            return mockDate;
+          }
+        };
+
+        await store.dispatch('dashboards/updateLastUpdatedRequest');
+
+        expect(commitSpy).toHaveBeenCalledWith(
+          'dashboards/SET_LAST_UPDATED_REQUEST',
+          mockDate,
+          undefined,
+        );
+
+        global.Date = originalDate;
+      });
+    });
   });
 
   describe('getters', () => {
@@ -383,6 +413,12 @@ describe('Dashboards Store', () => {
       const dashboard = { uuid: 1, name: 'Dashboard 1', is_default: true };
       store.commit('dashboards/SET_DASHBOARDS', [dashboard]);
       expect(store.getters['dashboards/dashboardDefault']).toEqual(dashboard);
+    });
+
+    it('lastUpdatedAt', () => {
+      const timestamp = new Date('2023-07-15T14:30:00');
+      store.commit('dashboards/SET_LAST_UPDATED_REQUEST', timestamp);
+      expect(store.getters['dashboards/lastUpdatedAt']).toBe(timestamp);
     });
   });
 });

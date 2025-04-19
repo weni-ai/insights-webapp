@@ -1,6 +1,7 @@
 <template>
   <section class="insights-layout-header-filters">
     <FilterFavoriteTemplateMessage />
+    <LastUpdatedText v-if="isHumanServiceDashboard" />
     <template v-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
@@ -60,6 +61,7 @@ import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
+import LastUpdatedText from './LastUpdatedText.vue';
 import moment from 'moment';
 
 export default {
@@ -70,6 +72,7 @@ export default {
     ModalFilters,
     SearchTemplateMessagesModal,
     FilterFavoriteTemplateMessage,
+    LastUpdatedText,
   },
 
   data() {
@@ -89,6 +92,10 @@ export default {
       showSearchTemplateMetaModal: (state) =>
         state.metaTemplateMessage.showSearchTemplateMetaModal,
     }),
+
+    isHumanServiceDashboard() {
+      return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
 
     isMetaTemplateDashboard() {
       return this.currentDashboard?.config?.is_whatsapp_integration;

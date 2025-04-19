@@ -388,6 +388,7 @@ describe('DynamicWidget', () => {
 
   describe('requestWidgetData method', () => {
     let getCurrentDashboardWidgetDataSpy;
+    let updateLastUpdatedRequestSpy;
 
     beforeEach(() => {
       vi.clearAllMocks();
@@ -396,12 +397,17 @@ describe('DynamicWidget', () => {
         wrapper.vm,
         'getCurrentDashboardWidgetData',
       );
+
+      updateLastUpdatedRequestSpy = vi.spyOn(store, 'dispatch');
     });
 
     it('should fetch widget data when widget is configured', async () => {
       await wrapper.vm.requestWidgetData();
 
       expect(getCurrentDashboardWidgetDataSpy).toHaveBeenCalled();
+      expect(updateLastUpdatedRequestSpy).toHaveBeenCalledWith(
+        'dashboards/updateLastUpdatedRequest',
+      );
     });
 
     it('should not fetch data if widget is not configured', async () => {
@@ -411,6 +417,16 @@ describe('DynamicWidget', () => {
       await wrapper.vm.requestWidgetData();
 
       expect(getCurrentDashboardWidgetDataSpy).not.toHaveBeenCalled();
+      expect(updateLastUpdatedRequestSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not update last updated request when silence parameter is true', async () => {
+      await wrapper.vm.requestWidgetData({ silence: true });
+
+      expect(getCurrentDashboardWidgetDataSpy).toHaveBeenCalled();
+      expect(updateLastUpdatedRequestSpy).not.toHaveBeenCalledWith(
+        'dashboards/updateLastUpdatedRequest',
+      );
     });
 
     it('should handle errors correctly', async () => {
@@ -689,6 +705,85 @@ describe('DynamicWidget', () => {
         const result = wrapper.vm.getHoverTooltipData(wrapper.vm.widget);
         expect(result).toBe(expected);
       });
+    });
+  });
+
+  describe('initRequestDataInterval method', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.spyOn(window, 'setInterval');
+      vi.spyOn(window, 'clearInterval');
+      vi.spyOn(wrapper.vm, 'requestWidgetData').mockImplementation(() => {});
+      vi.spyOn(store, 'dispatch');
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+      vi.clearAllMocks();
+    });
+
+    it('should set up an interval for human service dashboard without date filtering', () => {
+      // Mock isHumanServiceDashboard to return true
+      Object.defineProperty(wrapper.vm, 'isHumanServiceDashboard', {
+        get: () => true,
+      });
+
+      // Mock hasDateFiltering to return false
+      Object.defineProperty(wrapper.vm, 'hasDateFiltering', {
+        get: () => false,
+      });
+
+      wrapper.vm.initRequestDataInterval();
+
+      expect(window.setInterval).toHaveBeenCalled();
+      expect(wrapper.vm.interval).toBeTruthy();
+
+      // Advance timers by one minute (60,000 ms)
+      vi.advanceTimersByTime(60000);
+
+      // Check that requestWidgetData was called with silence=true
+      expect(wrapper.vm.requestWidgetData).toHaveBeenCalledWith({
+        silence: true,
+      });
+
+      // Check that updateLastUpdatedRequest was dispatched
+      expect(store.dispatch).toHaveBeenCalledWith(
+        'dashboards/updateLastUpdatedRequest',
+      );
+    });
+
+    it('should not set up an interval if not human service dashboard', () => {
+      // Mock isHumanServiceDashboard to return false
+      Object.defineProperty(wrapper.vm, 'isHumanServiceDashboard', {
+        get: () => false,
+      });
+
+      // Mock hasDateFiltering to return false
+      Object.defineProperty(wrapper.vm, 'hasDateFiltering', {
+        get: () => false,
+      });
+
+      wrapper.vm.initRequestDataInterval();
+
+      expect(window.setInterval).not.toHaveBeenCalled();
+      expect(wrapper.vm.interval).toBeFalsy();
+    });
+
+    it('should not set up an interval if has date filtering', () => {
+      // Mock isHumanServiceDashboard to return true
+      Object.defineProperty(wrapper.vm, 'isHumanServiceDashboard', {
+        get: () => true,
+      });
+
+      // Mock hasDateFiltering to return true
+      Object.defineProperty(wrapper.vm, 'hasDateFiltering', {
+        get: () => true,
+      });
+
+      wrapper.vm.initRequestDataInterval();
+
+      expect(window.setInterval).not.toHaveBeenCalled();
+      expect(wrapper.vm.interval).toBeFalsy();
     });
   });
 });

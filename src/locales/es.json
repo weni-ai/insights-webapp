@@ -369,6 +369,7 @@
     "refresh": "Actualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
+    "last_updated_at": "Última actualización",
     "clear_filters": "Limpiar filtros",
     "add_new_dashboard": "Nuevo dashboard",
     "set_default_dashboard_success": "Ahora el Tablero {dashboard} es su página de inicio",

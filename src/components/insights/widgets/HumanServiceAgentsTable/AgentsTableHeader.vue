@@ -74,24 +74,6 @@ const filtersInternal = ref({});
 const selectedColumns = ref([]);
 
 onMounted(() => {
-  const currentFilters = store.state?.dashboards?.currentDashboardFilters || [];
-  const sectorFilter = currentFilters.find(
-    (filter) => filter.name === 'sector',
-  );
-
-  store.dispatch('dashboards/setCurrentDashboardFilters', [
-    ...currentFilters,
-    ...(sectorFilter
-      ? [
-          {
-            ...sectorFilter,
-            name: 'sector_id',
-            source: 'sector_id',
-          },
-        ]
-      : []),
-  ]);
-  syncFiltersInternal();
   store.dispatch('agentsColumnsFilter/initializeFromStorage');
 
   const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
@@ -161,7 +143,6 @@ const getDynamicFiltersDependsOnValues = (filter) => {
 
 const clearFilters = () => {
   filtersInternal.value = {};
-  updateTableData();
 };
 
 const updateTableData = () => {
@@ -176,25 +157,23 @@ const updateFilter = (filterName, value) => {
 
   if (hasNonNullValues) {
     filtersInternal.value[filterName] = value;
-    if (Object.keys(filtersInternal.value).length) {
-      const processedFilters = { ...filtersInternal.value };
-      if (filtersInternal.value.sector) {
-        processedFilters.sector_id = filtersInternal.value.sector;
-        delete processedFilters.sector;
-      }
-      store.dispatch('dashboards/setAppliedFilters', processedFilters);
-    }
+  } else {
+    delete filtersInternal.value[filterName];
+  }
+};
+
+const setFilters = () => {
+  if (Object.keys(filtersInternal.value).length) {
+    store.dispatch('dashboards/setAppliedFilters', filtersInternal.value);
+  } else {
+    store.dispatch('dashboards/resetAppliedFilters');
   }
 };
 
 const syncFiltersInternal = () => {
-  const processedFilters = { ...appliedFilters.value };
-
-  if (appliedFilters.value.sector_id) {
-    processedFilters.sector = appliedFilters.value.sector_id;
-    delete processedFilters.sector_id;
+  if (!areStoreFiltersAndInternalEqual.value) {
+    filtersInternal.value = appliedFilters.value;
   }
-  filtersInternal.value = processedFilters;
 };
 
 watch(appliedFilters, syncFiltersInternal);

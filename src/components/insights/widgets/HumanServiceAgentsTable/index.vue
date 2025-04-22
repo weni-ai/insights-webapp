@@ -189,6 +189,16 @@ export default {
           let valueA = a[itemKey];
           let valueB = b[itemKey];
 
+          if (itemKey === 'status') {
+            const statusMapper = {
+              green: 1,
+              orange: 2,
+              gray: 3,
+            };
+            valueA = statusMapper[valueA.status];
+            valueB = statusMapper[valueB.status];
+          }
+
           if (itemKey?.startsWith('custom_status.')) {
             const statusKey = itemKey.split('.')[1];
             valueA = a.custom_status[statusKey] || 0;
@@ -276,6 +286,7 @@ export default {
   :deep(.unnnic-table-next__header-cell) {
     display: inline-block;
   }
+
   :deep(.table-pagination) {
     display: none;
   }

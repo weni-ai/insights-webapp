@@ -142,7 +142,7 @@ describe('HumanServiceAgentsTable', () => {
       sort: { header: 'Agent', order: 'desc' },
     });
     const sortedItems = wrapper.vm.sortItems(mockItems);
-    expect(sortedItems[0].opened).toBe(2);
+    expect(sortedItems[0].opened).toBe(5);
   });
 
   it('calls sortItems correctly for non-string values', () => {

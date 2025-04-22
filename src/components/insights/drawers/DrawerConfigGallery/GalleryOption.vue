@@ -1,7 +1,17 @@
 <template>
   <button class="gallery-option">
-    <p class="gallery-option__title">{{ title }}</p>
-    <p class="gallery-option__description">{{ description }}</p>
+    <p
+      class="gallery-option__title"
+      data-testid="galery-option-title"
+    >
+      {{ title }}
+    </p>
+    <p
+      class="gallery-option__description"
+      data-testid="galery-option-description"
+    >
+      {{ description }}
+    </p>
   </button>
 </template>
 

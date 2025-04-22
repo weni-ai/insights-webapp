@@ -394,6 +394,7 @@ export default {
       if (this.isHumanServiceDashboard && !this.hasDateFiltering) {
         this.interval = setInterval(() => {
           this.requestWidgetData({ silence: true });
+          this.$store.dispatch('dashboards/updateLastUpdatedRequest');
         }, ONE_MINUTE);
       }
     },
@@ -406,6 +407,8 @@ export default {
           await this.getWidgetReportData({ offset, limit, next });
         } else if (this.isConfigured) {
           await this.getCurrentDashboardWidgetData(this.widget);
+          if (!silence)
+            this.$store.dispatch('dashboards/updateLastUpdatedRequest');
         }
       } catch (e) {
         console.error('requestWidgetData error', e);

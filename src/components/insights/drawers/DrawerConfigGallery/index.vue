@@ -22,6 +22,7 @@
           <GalleryOption
             :title="title"
             :description="description"
+            data-testid="gallery-option"
             @click="setDrawerConfigType(value)"
           />
         </li>
@@ -43,7 +44,6 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
-import Config from '@/store/modules/config';
 import env from '@/utils/env';
 import { clearDeepValues } from '@/utils/object.js';
 
@@ -84,19 +84,7 @@ export default {
       return this.widget.config?.type;
     },
 
-    galleryOptions() {
-      const { $t } = this;
-
-      function createOptions(optionKeys) {
-        return optionKeys.map((option) => ({
-          title: $t(`drawers.config_gallery.options.${option}.title`),
-          description: $t(
-            `drawers.config_gallery.options.${option}.description`,
-          ),
-          value: option,
-        }));
-      }
-
+    isVtexEnabledProject() {
       const enabledProjectsProd = [
         '521d2c65-ae66-441d-96ff-2b8471d522c1',
         'd8d6d71d-3daf-4d2e-812b-85cc252a96d8',
@@ -120,16 +108,30 @@ export default {
           ? enabledProjectsStg
           : enabledProjectsProd;
 
-      const isVtexEnabledProject = enabledProjects.includes(
-        Config.state.project.uuid,
-      );
+      return enabledProjects.includes(this.$store.state.config.project.uuid);
+    },
+
+    galleryOptions() {
+      const { $t } = this;
+
+      function createOptions(optionKeys) {
+        return optionKeys.map((option) => ({
+          title: $t(`drawers.config_gallery.options.${option}.title`),
+          description: $t(
+            `drawers.config_gallery.options.${option}.description`,
+          ),
+          value: option,
+        }));
+      }
 
       const empty_widget_options = ['funnel', 'recurrence'];
 
-      if (isVtexEnabledProject) {
+      if (this.isVtexEnabledProject) {
         empty_widget_options.push('vtex');
-        // temporary disabled option
-        // empty_widget_options.push('vtex_conversions');
+        // temporarily removed from production due to an issue with the APIs
+        if (env('ENVIRONMENT') === 'staging') {
+          empty_widget_options.push('vtex_conversions');
+        }
       }
 
       const optionsMap = {

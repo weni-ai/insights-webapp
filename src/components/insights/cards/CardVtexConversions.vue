@@ -25,6 +25,7 @@
         :text="$t('widgets.vtex_order.empty_data.verify_btn')"
         type="primary"
         size="small"
+        data-testid="empty-data-verify-button"
         @click="$emit('open-config')"
       />
     </section>

@@ -369,6 +369,7 @@
     "refresh": "Refresh",
     "filters": "Filters",
     "filtrate": "Filtrate",
+    "last_updated_at": "Last updated at",
     "clear_filters": "Clear filters",
     "add_new_dashboard": "New dashboard",
     "set_default_dashboard_success": "Now the Dashboard {dashboard} is your homepage",

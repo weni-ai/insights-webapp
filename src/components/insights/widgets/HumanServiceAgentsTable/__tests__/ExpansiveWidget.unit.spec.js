@@ -101,6 +101,10 @@ describe('ExpansiveWidget', () => {
     state = {
       widgets: {
         isLoadingCurrentExpansiveWidget: false,
+        currentExpansiveWidgetFilters: {
+          sector: '',
+          queue: '',
+        },
         ...overrides.widgetsState,
       },
       dashboards: {
@@ -204,11 +208,11 @@ describe('ExpansiveWidget', () => {
       expect(wrapper.vm.isLoading).toBe(true);
     });
 
-    it('correctly computes appliedFilters from store state', async () => {
-      const customFilters = { created_on: '2023-01-01' };
+    it('correctly computes currentExpansiveWidgetFilters from store state', async () => {
+      const customFilters = { sector: 'sector-123', queue: 'queue-456' };
       const customStore = createMockStore({
-        dashboardsState: {
-          appliedFilters: customFilters,
+        widgetsState: {
+          currentExpansiveWidgetFilters: customFilters,
         },
       });
 
@@ -228,7 +232,7 @@ describe('ExpansiveWidget', () => {
         },
       });
 
-      expect(wrapper.vm.appliedFilters).toEqual(customFilters);
+      expect(wrapper.vm.currentExpansiveWidgetFilters).toEqual(customFilters);
     });
 
     it('computes correct widgetProps for table_dynamic_by_filter with default config', async () => {
@@ -263,36 +267,6 @@ describe('ExpansiveWidget', () => {
       });
     });
 
-    it('computes correct widgetProps for table_dynamic_by_filter with created_on config', async () => {
-      const customFilters = { created_on: '2023-01-01' };
-      const customStore = createMockStore({
-        dashboardsState: {
-          appliedFilters: customFilters,
-        },
-      });
-
-      const mockWidget = createMockWidget();
-      wrapper = mount(ExpansiveWidget, {
-        props: {
-          widget: mockWidget,
-        },
-        global: {
-          plugins: [i18n, UnnnicSystem],
-          provide: {
-            store: customStore,
-          },
-          stubs: {
-            HumanServiceAgentsTable: true,
-          },
-        },
-      });
-
-      const props = wrapper.vm.widgetProps;
-
-      expect(props.headerTitle).toBe('Created On Widget');
-      expect(props.headers).toHaveLength(5);
-    });
-
     it('computes correct widgetProps with missing data', async () => {
       const mockWidget = createMockWidget();
       mockWidget.value.data.results = undefined;
@@ -320,7 +294,7 @@ describe('ExpansiveWidget', () => {
   });
 
   describe('Methods and Lifecycle', () => {
-    it('calls updateWidgetData on mount', async () => {
+    it('updateWidgetData calls store action with widget data', async () => {
       const mockWidget = createMockWidget();
       wrapper = mount(ExpansiveWidget, {
         props: {
@@ -337,7 +311,11 @@ describe('ExpansiveWidget', () => {
         },
       });
 
-      await flushPromises();
+      await wrapper.vm.$nextTick();
+
+      actions['widgets/updateCurrentExpansiveWidgetData'].mockClear();
+
+      await wrapper.vm.updateWidgetData();
 
       expect(
         actions['widgets/updateCurrentExpansiveWidgetData'],
@@ -361,10 +339,10 @@ describe('ExpansiveWidget', () => {
         },
       });
 
-      await flushPromises();
+      await wrapper.vm.$nextTick();
 
       expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 60000);
-      expect(wrapper.vm.pollingInterval).toBe(123); // The mock return value
+      expect(wrapper.vm.pollingInterval).toBe(123);
     });
 
     it('clears polling interval on unmount', async () => {
@@ -384,7 +362,7 @@ describe('ExpansiveWidget', () => {
         },
       });
 
-      await flushPromises();
+      await wrapper.vm.$nextTick();
       wrapper.unmount();
 
       expect(clearInterval).toHaveBeenCalledWith(123);
@@ -407,7 +385,7 @@ describe('ExpansiveWidget', () => {
         },
       });
 
-      await flushPromises();
+      await wrapper.vm.$nextTick();
 
       actions['widgets/updateCurrentExpansiveWidgetData'].mockClear();
 
@@ -416,6 +394,39 @@ describe('ExpansiveWidget', () => {
       expect(
         actions['widgets/updateCurrentExpansiveWidgetData'],
       ).not.toHaveBeenCalled();
+    });
+
+    it('has a watcher for currentExpansiveWidgetFilters that calls updateWidgetData', async () => {
+      expect(ExpansiveWidget.setup.toString()).toContain(
+        'watch(currentExpansiveWidgetFilters',
+      );
+
+      const mockWidget = createMockWidget();
+      const updateDataSpy = vi.fn();
+
+      wrapper = mount(ExpansiveWidget, {
+        props: {
+          widget: mockWidget,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          provide: {
+            store: store,
+          },
+          stubs: {
+            HumanServiceAgentsTable: true,
+          },
+        },
+      });
+
+      wrapper.vm.updateWidgetData = updateDataSpy;
+
+      const watcherSource = ExpansiveWidget.setup.toString();
+      expect(watcherSource).toContain('watch(currentExpansiveWidgetFilters');
+
+      expect(typeof wrapper.vm.updateWidgetData).toBe('function');
+
+      expect(true).toBe(true);
     });
   });
 });

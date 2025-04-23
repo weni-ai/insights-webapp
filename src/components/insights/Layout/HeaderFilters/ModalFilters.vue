@@ -24,9 +24,7 @@
           data-testid="dynamic-filter"
           :modelValue="filtersInternal[filter.name]"
           :filter="filter"
-          :disabled="
-            filter.depends_on && !filtersInternal[filter.depends_on?.filter]
-          "
+          :disabled="handleDisabledFilter(filter)"
           :dependsOnValue="getDynamicFiltersDependsOnValues(filter)"
           @update:model-value="updateFilter(filter.name, $event)"
         />
@@ -130,9 +128,27 @@ export default {
       if (!filter.depends_on?.search_param) return null;
 
       const { search_param, filter: filterName } = filter.depends_on;
-      return {
-        [search_param]: this.filtersInternal[filterName],
-      };
+
+      if (search_param === 'sector_id') {
+        return {
+          [search_param]: this.filtersInternal[filterName]?.[0]?.value,
+        };
+      } else {
+        return {
+          [search_param]: this.filtersInternal[filterName],
+        };
+      }
+    },
+    handleDisabledFilter(filter) {
+      if (['tags', 'queue'].includes(filter.name)) {
+        const sectorId =
+          this.filtersInternal[filter.depends_on?.filter]?.[0]?.value;
+        return !sectorId;
+      }
+
+      return (
+        filter.depends_on && !this.filtersInternal[filter.depends_on?.filter]
+      );
     },
     clearFilters() {
       this.filtersInternal = {};

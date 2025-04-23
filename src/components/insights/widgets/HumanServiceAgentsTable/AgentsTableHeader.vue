@@ -32,7 +32,7 @@
       :modelValue="selectedQueue"
       :placeholder="$t('filter.queue.placeholder')"
       keyValueField="uuid"
-      source="queue"
+      source="queues"
       data-testid="filter-queue"
       :dependsOnValue="getDynamicFiltersDependsOnValues(dependsOnQueue)"
       :dependsOn="{ search_param: 'sector_id', filter: 'sector' }"

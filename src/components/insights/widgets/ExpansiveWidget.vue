@@ -2,14 +2,14 @@
   <section
     :class="{
       'expansive-widget': true,
-      'expansive-widget--loading': isLoading,
     }"
+    data-testid="expansive-widget"
   >
-    <IconLoading v-if="isLoading" />
     <component
       :is="currentComponent"
-      v-else-if="widget"
+      if="widget"
       v-bind="widgetProps"
+      data-testid="expansive-widget-component"
       v-on="widgetEvents"
     />
   </section>
@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
 import { useStore } from 'vuex';
-import IconLoading from '@/components/IconLoading.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 
 const POLLING_INTERVAL = 60000; // 1 minute in milliseconds
@@ -37,8 +36,8 @@ const isLoading = computed(() => {
   return store.state.widgets.isLoadingCurrentExpansiveWidget;
 });
 
-const appliedFilters = computed(() => {
-  return store.state.dashboards.appliedFilters;
+const currentExpansiveWidgetFilters = computed(() => {
+  return store.state.widgets.currentExpansiveWidgetFilters;
 });
 
 const currentComponent = computed(() => {
@@ -57,8 +56,7 @@ const widgetProps = computed(() => {
     isExpansive: true,
   };
 
-  const tableDynamicFilterConfig =
-    'created_on' in appliedFilters.value ? config?.created_on : config?.default;
+  const tableDynamicFilterConfig = config?.default;
 
   const tableDynamicHeaders = tableDynamicFilterConfig?.fields || [];
 
@@ -121,13 +119,9 @@ onUnmounted(() => {
   }
 });
 
-watch(
-  appliedFilters,
-  async () => {
-    await updateWidgetData();
-  },
-  { immediate: true, deep: true },
-);
+watch(currentExpansiveWidgetFilters, () => {
+  updateWidgetData();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -139,13 +133,6 @@ watch(
   display: grid;
 
   gap: $unnnic-spacing-sm;
-
-  &--loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
 
   & > [class*='chart'] {
     border-radius: $unnnic-spacing-nano;

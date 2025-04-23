@@ -72,7 +72,7 @@
 <script lang="ts" setup>
 import { getLastNDays, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
-import { ref, defineProps, watch } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 import api from '@/services/api/resources/metrics';
 import IconLoading from '@/components/IconLoading.vue';
@@ -83,13 +83,6 @@ interface MetricData {
   percentage: number;
   prefix?: string;
 }
-
-const props = defineProps({
-  auth: {
-    type: Object as () => { token: string; uuid: string } | null,
-    default: null,
-  },
-});
 
 const infos = {
   'sent-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
@@ -109,6 +102,10 @@ const filterValue = ref<{ start: string; end: string }>({
   start: '',
   end: '',
 });
+const auth = reactive({
+  token: '',
+  projectUuid: '',
+});
 
 const metricTitles: Record<string, string> = {
   'sent-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
@@ -122,7 +119,7 @@ const metricTitles: Record<string, string> = {
 };
 
 const getMetrics = async (start: string, end: string) => {
-  if (!props.auth?.token || !props.auth?.uuid) return;
+  if (!auth?.token || !auth?.projectUuid) return;
 
   isLoading.value = true;
   try {
@@ -130,9 +127,9 @@ const getMetrics = async (start: string, end: string) => {
       {
         start_date: start,
         end_date: end,
-        project_uuid: props.auth.uuid,
+        project_uuid: auth.projectUuid,
       },
-      props.auth.token,
+      auth.token,
     );
 
     metrics.value = { ...data };
@@ -153,16 +150,6 @@ const fetchMetrics = async () => {
   };
   getMetrics(start, end);
 };
-
-watch(
-  () => props.auth?.token,
-  (newToken) => {
-    if (newToken && props.auth?.uuid) {
-      fetchMetrics();
-    }
-  },
-  { immediate: true },
-);
 
 const updateFilter = (value: { start: string; end: string }) => {
   filterValue.value = {
@@ -204,6 +191,17 @@ const handleMaxDate = () => {
   const maxDate = getTodayDate().start;
   return maxDate;
 };
+
+onMounted(() => {
+  import('host/sharedStore').then(({ useSharedStore }) => {
+    const sharedStore = useSharedStore();
+
+    auth.token = sharedStore.auth.token;
+    auth.projectUuid = sharedStore.current.project.uuid;
+
+    fetchMetrics();
+  });
+});
 </script>
 
 <style lang="scss" scoped>

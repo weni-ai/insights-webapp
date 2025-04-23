@@ -246,6 +246,16 @@ export default {
             let valueA = a[itemKey];
             let valueB = b[itemKey];
 
+            if (itemKey === 'status') {
+              const statusMapper = {
+                green: 1,
+                orange: 2,
+                gray: 3,
+              };
+              valueA = statusMapper[valueA] || 0;
+              valueB = statusMapper[valueB] || 0;
+            }
+
             if (typeof valueA === 'string' && typeof valueB === 'string') {
               return this.sort.order === 'asc'
                 ? valueA.localeCompare(valueB)
@@ -304,7 +314,15 @@ export default {
             let valueA = a[itemKey];
             let valueB = b[itemKey];
 
-            if (itemKey?.startsWith('custom_status.')) {
+            if (itemKey === 'status') {
+              const statusMapper = {
+                green: 1,
+                orange: 2,
+                gray: 3,
+              };
+              valueA = statusMapper[valueA.status] || 0;
+              valueB = statusMapper[valueB.status] || 0;
+            } else if (itemKey?.startsWith('custom_status.')) {
               const statusKey = itemKey.split('.')[1];
               valueA = a.custom_status[statusKey] || 0;
               valueB = b.custom_status[statusKey] || 0;
@@ -398,6 +416,7 @@ export default {
   :deep(.unnnic-table-next__header-cell) {
     display: inline-block;
   }
+
   :deep(.table-pagination) {
     display: none;
   }

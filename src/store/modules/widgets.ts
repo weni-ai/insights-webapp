@@ -16,6 +16,9 @@ const mutations = {
   UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
   UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
   SET_CURRENT_EXPANSIVE_WIDGET_DATA: 'SET_CURRENT_EXPANSIVE_WIDGET_DATA',
+  SET_CURRENT_EXPANSIVE_WIDGET_FILTERS: 'SET_CURRENT_EXPANSIVE_WIDGET_FILTERS',
+  RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS:
+    'RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS',
 };
 
 export default {
@@ -23,6 +26,10 @@ export default {
   state: {
     currentDashboardWidgets: [],
     currentExpansiveWidget: {},
+    currentExpansiveWidgetFilters: {
+      sector: '',
+      queue: '',
+    },
     isLoadingCurrentExpansiveWidget: false,
     isLoadingCurrentDashboardWidgets: false,
 
@@ -71,6 +78,18 @@ export default {
         return;
       }
       state.currentExpansiveWidget = widget;
+    },
+    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_FILTERS](state, filters) {
+      state.currentExpansiveWidgetFilters = {
+        ...state.currentExpansiveWidgetFilters,
+        ...filters,
+      };
+    },
+    [mutations.RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS](state) {
+      state.currentExpansiveWidgetFilters = {
+        sector: '',
+        queue: '',
+      };
     },
   },
   actions: {
@@ -244,7 +263,7 @@ export default {
       });
       commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
     },
-    async updateCurrentExpansiveWidgetData({ commit }, widget) {
+    async updateCurrentExpansiveWidgetData({ commit, state }, widget) {
       const setWidgetData = (data) =>
         commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA, {
           ...widget,
@@ -254,8 +273,18 @@ export default {
       commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, true);
       setWidgetData(widget);
       try {
+        const customParams: { sector?: string; queue?: string } = {};
+
+        if (state.currentExpansiveWidgetFilters.sector) {
+          customParams.sector = state.currentExpansiveWidgetFilters.sector;
+        }
+
+        if (state.currentExpansiveWidgetFilters.queue) {
+          customParams.queue = state.currentExpansiveWidgetFilters.queue;
+        }
+
         const data = await Dashboards.getCustomStatusData({
-          params: null,
+          params: customParams,
         });
         setWidgetData(data);
       } catch (error) {
@@ -264,6 +293,14 @@ export default {
       } finally {
         commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, false);
       }
+    },
+
+    updateCurrentExpansiveWidgetFilters({ commit }, filters) {
+      commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_FILTERS, filters);
+    },
+
+    resetCurrentExpansiveWidgetFilters({ commit }) {
+      commit(mutations.RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS);
     },
 
     updateCurrentExpansiveWidgetLoading({ commit }, loading) {

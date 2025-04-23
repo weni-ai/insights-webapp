@@ -36,8 +36,8 @@ const isLoading = computed(() => {
   return store.state.widgets.isLoadingCurrentExpansiveWidget;
 });
 
-const appliedFilters = computed(() => {
-  return store.state.dashboards.appliedFilters;
+const currentExpansiveWidgetFilters = computed(() => {
+  return store.state.widgets.currentExpansiveWidgetFilters;
 });
 
 const currentComponent = computed(() => {
@@ -56,8 +56,7 @@ const widgetProps = computed(() => {
     isExpansive: true,
   };
 
-  const tableDynamicFilterConfig =
-    'created_on' in appliedFilters.value ? config?.created_on : config?.default;
+  const tableDynamicFilterConfig = config?.default;
 
   const tableDynamicHeaders = tableDynamicFilterConfig?.fields || [];
 
@@ -120,13 +119,9 @@ onUnmounted(() => {
   }
 });
 
-watch(
-  appliedFilters,
-  async () => {
-    await updateWidgetData();
-  },
-  { immediate: true, deep: true },
-);
+watch(currentExpansiveWidgetFilters, () => {
+  updateWidgetData();
+});
 </script>
 
 <style lang="scss" scoped>

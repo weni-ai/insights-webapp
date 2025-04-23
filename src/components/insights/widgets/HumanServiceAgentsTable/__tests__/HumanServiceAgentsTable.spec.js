@@ -464,14 +464,92 @@ describe('HumanServiceAgentsTable', () => {
 
       const sortedItems = wrapper.vm.sortItems(items);
 
-      // Default sort: first by opened (descending), then by agent (ascending)
-      // Charlie has 8 opened, Alice has 5, Bob and Marcus both have 2
       expect(sortedItems[0].agent).toBe('Charlie');
       expect(sortedItems[1].agent).toBe('Alice');
 
-      // For Bob and Marcus (same opened count), should sort by name
       expect(sortedItems[2].agent).toBe('Bob');
       expect(sortedItems[3].agent).toBe('Marcus');
+    });
+
+    it('sorts by status in non-expansive mode', () => {
+      const items = [...mockItems];
+      wrapper.vm.sort = { header: 'status', order: 'asc' };
+
+      const headers = wrapper.vm.formattedHeaders;
+      const statusHeader = headers[0].content;
+      wrapper.vm.sort.header = statusHeader;
+
+      const sortedItems = wrapper.vm.sortItems(items);
+
+      expect(sortedItems[0].status).toBe('grey');
+      expect(sortedItems[1].status).toBe('grey');
+      expect(sortedItems[2].status).toBe('green');
+      expect(sortedItems[3].status).toBe('green');
+
+      wrapper.vm.sort.order = 'desc';
+      const sortedItemsDesc = wrapper.vm.sortItems([...items]);
+
+      expect(sortedItemsDesc[0].status).toBe('green');
+      expect(sortedItemsDesc[1].status).toBe('green');
+      expect(sortedItemsDesc[2].status).toBe('grey');
+      expect(sortedItemsDesc[3].status).toBe('grey');
+    });
+
+    it('sorts by status in expansive mode', () => {
+      const expansiveStore = createMockStore({
+        agentsColumnsFilter: {
+          visibleColumns: ['in_progress', 'closeds', 'column1', 'column2'],
+        },
+      });
+
+      const expansiveWrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          isLoading: false,
+          headerTitle: 'Expansive Title',
+          headers: mockHeaders,
+          items: mockItemsExpansive,
+          isExpansive: true,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem, expansiveStore],
+          stubs: {
+            UnnnicButtonIcon: true,
+            UnnnicTableNext: true,
+            AgentsTableHeader: true,
+            AgentStatus: true,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
+
+      const headers = expansiveWrapper.vm.formattedHeaders;
+      const statusHeader = headers[0].content;
+
+      expansiveWrapper.vm.sort = { header: statusHeader, order: 'asc' };
+      const sortedItems = expansiveWrapper.vm.sortItems([
+        ...mockItemsExpansive,
+      ]);
+
+      expect(sortedItems[0].status.status).toBe('green');
+      expect(sortedItems[1].status.status).toBe('green');
+
+      expect(sortedItems[2].status.status).toBe('gray');
+      expect(sortedItems[3].status.status).toBe('gray');
+
+      expansiveWrapper.vm.sort.order = 'desc';
+      const sortedItemsDesc = expansiveWrapper.vm.sortItems([
+        ...mockItemsExpansive,
+      ]);
+
+      expect(sortedItemsDesc[0].status.status).toBe('gray');
+      expect(sortedItemsDesc[1].status.status).toBe('gray');
+
+      expect(sortedItemsDesc[2].status.status).toBe('green');
+      expect(sortedItemsDesc[3].status.status).toBe('green');
+
+      expansiveWrapper.unmount();
     });
   });
 });

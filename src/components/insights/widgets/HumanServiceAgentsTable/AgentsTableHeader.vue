@@ -20,28 +20,32 @@
         @update:model-value="handleVisibleColumnsUpdate"
       />
     </section>
-    <template
-      v-for="filter in currentDashboardFilters"
-      :key="filter.name"
-    >
-      <DynamicFilter
-        data-testid="dynamic-filter"
-        :modelValue="filtersInternal[filter.name]"
-        :filter="filter"
-        :disabled="
-          filter.depends_on && !filtersInternal[filter.depends_on?.filter]
-        "
-        :dependsOnValue="getDynamicFiltersDependsOnValues(filter)"
-        @update:model-value="updateFilter(filter.name, $event)"
-      />
-    </template>
+    <FilterSelect
+      :modelValue="selectedSector"
+      :placeholder="$t('filter.sector.placeholder')"
+      keyValueField="uuid"
+      source="sectors"
+      data-testid="filter-sector"
+      @update:model-value="updateSector($event)"
+    />
+    <FilterSelect
+      :modelValue="selectedQueue"
+      :placeholder="$t('filter.queue.placeholder')"
+      keyValueField="uuid"
+      source="tags"
+      data-testid="filter-queue"
+      :dependsOnValue="getDynamicFiltersDependsOnValues(dependsOnQueue)"
+      :dependsOn="{ search_param: 'sector_id', filter: 'sector' }"
+      :disabled="!selectedSector"
+      @update:model-value="updateQueue($event)"
+    />
     <UnnnicButton
       data-testid="refresh-button"
       :text="$t('insights_header.refresh')"
       type="secondary"
       iconLeft="refresh"
       :disabled="isLoading"
-      @click="updateTableData"
+      @click="refreshData"
     />
     <UnnnicButton
       data-testid="clear-filters-button"
@@ -56,7 +60,7 @@
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import DynamicFilter from '@/components/insights/Layout/HeaderFilters/DynamicFilter.vue';
+import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
 
 const props = defineProps({
   headers: {
@@ -70,13 +74,22 @@ const props = defineProps({
 });
 
 const store = useStore();
-const filtersInternal = ref({});
 const selectedColumns = ref([]);
+const dependsOnQueue = ref({
+  search_param: 'sector_id',
+  filter: 'sector',
+});
+const selectedSector = ref('');
+const selectedQueue = ref('');
 
 onMounted(() => {
   store.dispatch('agentsColumnsFilter/initializeFromStorage');
 
   const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
+
+  const currentFilters = store.state.widgets.currentExpansiveWidgetFilters;
+  selectedSector.value = currentFilters.sector;
+  selectedQueue.value = currentFilters.queue;
 
   const availableColumns = headerOptions.value;
   if (storedColumns.length > 0 && availableColumns.length > 2) {
@@ -106,6 +119,10 @@ const headerOptions = computed(() => {
     }));
 });
 
+const hasFiltersInternal = computed(() => {
+  return !!selectedSector.value || !!selectedQueue.value;
+});
+
 const handleVisibleColumnsUpdate = (value) => {
   if (
     !store.state?.agentsColumnsFilter?.hasInitialized ||
@@ -119,69 +136,61 @@ const handleVisibleColumnsUpdate = (value) => {
   store.dispatch('agentsColumnsFilter/setVisibleColumns', columnNames);
 };
 
-const currentDashboardFilters = computed(() => {
-  const filters = ['sectors', 'queues'];
-  return (
-    store.state?.dashboards?.currentDashboardFilters?.filter((filter) =>
-      filters.includes(filter.source),
-    ) || []
-  );
-});
+const updateSector = (value) => {
+  if (value !== selectedSector.value && selectedQueue.value) {
+    selectedQueue.value = '';
+  }
 
-const appliedFilters = computed(
-  () => store.state?.dashboards?.appliedFilters || {},
-);
-const hasFiltersInternal = computed(
-  () => Object.keys(filtersInternal.value).length > 0,
-);
+  selectedSector.value = value;
+
+  if (!value) {
+    selectedQueue.value = '';
+    store.dispatch('widgets/updateCurrentExpansiveWidgetFilters', {
+      queue: '',
+    });
+  }
+};
+
+const updateQueue = (value) => {
+  selectedQueue.value = value;
+};
 
 const getDynamicFiltersDependsOnValues = (filter) => {
-  if (!filter?.depends_on?.search_param) return null;
-  const { search_param, filter: filterName } = filter.depends_on;
-  return { [search_param]: filtersInternal.value[filterName] };
+  if (!filter?.search_param) return null;
+  const { search_param } = filter;
+  return { [search_param]: selectedSector.value };
 };
 
 const clearFilters = () => {
-  filtersInternal.value = {};
+  selectedSector.value = '';
+  selectedQueue.value = '';
+
+  store.dispatch('widgets/resetCurrentExpansiveWidgetFilters');
 };
 
-const updateTableData = () => {
-  store.dispatch('dashboards/resetAppliedFilters');
+const refreshData = () => {
+  store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
+    ...store.state.widgets.currentExpansiveWidget,
+  });
 };
 
-const updateFilter = (filterName, value) => {
-  const hasNonNullValues =
-    typeof value === 'object' && value
-      ? Object.values(value).some((val) => val)
-      : value;
-
-  if (hasNonNullValues) {
-    filtersInternal.value[filterName] = value;
-  } else {
-    delete filtersInternal.value[filterName];
-  }
-};
-
-const setFilters = () => {
-  if (Object.keys(filtersInternal.value).length) {
-    store.dispatch('dashboards/setAppliedFilters', filtersInternal.value);
-  } else {
-    store.dispatch('dashboards/resetAppliedFilters');
-  }
-};
-
-const syncFiltersInternal = () => {
-  if (!areStoreFiltersAndInternalEqual.value) {
-    filtersInternal.value = appliedFilters.value;
-  }
-};
-
-watch(appliedFilters, syncFiltersInternal);
 watch(headerOptions, () => {
   const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
   if (storedColumns.length === 0 && headerOptions.value.length > 2) {
     handleVisibleColumnsUpdate(headerOptions.value);
   }
+});
+
+watch(selectedSector, () => {
+  store.dispatch('widgets/updateCurrentExpansiveWidgetFilters', {
+    sector: selectedSector.value,
+  });
+});
+
+watch(selectedQueue, () => {
+  store.dispatch('widgets/updateCurrentExpansiveWidgetFilters', {
+    queue: selectedQueue.value,
+  });
 });
 </script>
 

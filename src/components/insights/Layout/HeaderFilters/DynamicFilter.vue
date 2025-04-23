@@ -83,16 +83,10 @@ export default {
         disableClear,
       } = this.filter;
 
-      let getDisabled = disabled;
-
-      if (this.dependsOnValue && depends_on?.search_param) {
-        getDisabled = this.dependsOnValue[depends_on?.search_param]?.length > 1;
-      }
-
       const defaultProps = {
         placeholder: placeholder ? this.$t(placeholder) : '',
         modelValue: treatedModelValue,
-        disabled: getDisabled,
+        disabled,
         dependsOn: depends_on,
         dependsOnValue: this.dependsOnValue,
       };

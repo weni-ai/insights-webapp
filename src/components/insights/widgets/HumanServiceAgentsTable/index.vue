@@ -188,8 +188,6 @@ export default {
 
         return {
           ...item,
-          view_mode_url: item.link?.url,
-          link: undefined,
           content: baseContent,
         };
       });

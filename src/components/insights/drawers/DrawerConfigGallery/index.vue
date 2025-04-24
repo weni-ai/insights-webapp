@@ -128,10 +128,8 @@ export default {
 
       if (this.isVtexEnabledProject) {
         empty_widget_options.push('vtex');
-        // temporarily removed from production due to an issue with the APIs
-        if (env('ENVIRONMENT') === 'staging') {
-          empty_widget_options.push('vtex_conversions');
-        }
+
+        empty_widget_options.push('vtex_conversions');
       }
 
       const optionsMap = {

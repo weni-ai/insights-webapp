@@ -136,20 +136,11 @@ export default {
   },
 
   async getCustomStatusData({ params }) {
-    const { appliedFilters } = DashboardStore.state;
-    const { currentDashboardFilters } = DashboardStore.state;
     const { email } = User.state;
 
-    const hasDateFilter = isFilteringDates({
-      currentDashboardFilters,
-      appliedFilters,
-    });
-
-    const treatedParams = createRequestQuery(appliedFilters, {
+    const treatedParams = createRequestQuery(params, {
       project: Config.state.project.uuid,
       user_request: email,
-      is_live: !hasDateFilter || undefined,
-      ...params,
     });
     const widgetData = await http.get(`/dashboards/get_custom_status/`, {
       params: treatedParams,

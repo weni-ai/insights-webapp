@@ -369,6 +369,8 @@
     "refresh": "Atualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
+    "dynamic_columns": "Colunas personalizáveis",
+    "placeholder_dynamic_columns": "Selecionar colunas",
     "last_updated_at": "Última atualização",
     "clear_filters": "Limpar filtros",
     "add_new_dashboard": "Novo dashboard",

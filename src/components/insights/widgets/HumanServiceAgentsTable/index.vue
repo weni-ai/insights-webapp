@@ -124,49 +124,44 @@ export default {
     formattedItems() {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
-      if (!this.isExpansive) {
-        return this.items.map((item) => {
-          const baseContent = [
-            {
-              component: markRaw(AgentStatus),
-              props: { status: item.status },
-              events: {},
-            },
-            String(item.agent),
-            String(item.opened),
-            String(item.closed),
-          ];
-
-          return {
-            ...item,
-            view_mode_url: item.link?.url,
-            link: undefined,
-            content: baseContent,
-          };
-        });
-      }
-
-      const visibleColumns =
-        this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
-
       const formattedItems = this.items.map((item) => {
-        let label = null;
-
-        if (
-          ['gray', 'green'].includes(item.status.status) &&
-          this.isExpansive
-        ) {
-          label = item.status.status === 'green' ? 'Online' : 'Offline';
-        }
-
-        if (item.status.label && this.isExpansive) {
-          label = item.status.label;
-        }
+        const itemLabelMapper = {
+          gray: 'Offline',
+          green: 'Online',
+        };
+        item.status.label =
+          item.status.label || itemLabelMapper[item.status.status];
 
         const baseContent = [
           {
             component: markRaw(AgentStatus),
-            props: { status: item.status.status, label },
+            props: {
+              status: item.status.status,
+              label: item.status.label,
+            },
+            events: {},
+          },
+          String(item.agent),
+          String(item.opened),
+          String(item.closed),
+        ];
+
+        return {
+          ...item,
+          view_mode_url: item.link?.url,
+          link: undefined,
+          content: baseContent,
+        };
+      });
+
+      const visibleColumns =
+        this.$store?.state.agentsColumnsFilter?.visibleColumns || [];
+
+      const formattedExpansiveItems = formattedItems.map((item) => {
+        const baseContent = [
+          {
+            component: markRaw(AgentStatus),
+            props: { status: item.status.status, label: item.status.label },
             events: {},
           },
           String(item.agent),
@@ -199,7 +194,9 @@ export default {
         };
       });
 
-      return this.sortItems(formattedItems);
+      return this.sortItems(
+        this.isExpansive ? formattedExpansiveItems : formattedItems,
+      );
     },
   },
 
@@ -252,8 +249,8 @@ export default {
                 orange: 2,
                 gray: 3,
               };
-              valueA = statusMapper[valueA] || 0;
-              valueB = statusMapper[valueB] || 0;
+              valueA = statusMapper[valueA.status] || 0;
+              valueB = statusMapper[valueB.status] || 0;
             }
 
             if (typeof valueA === 'string' && typeof valueB === 'string') {
@@ -303,7 +300,7 @@ export default {
               col.startsWith('custom_status.') ||
               this.headers.some((header) => header.name === col)
             ) {
-              itemKeyMapper[columnIndex++] = col;
+              itemKeyMapper[columnIndex++] = 'custom_status.' + col;
             }
           });
 
@@ -411,10 +408,6 @@ export default {
     span[data-testid='arrow-desc-icon'] {
       color: $unnnic-color-neutral-cloudy;
     }
-  }
-
-  :deep(.unnnic-table-next__header-cell) {
-    display: inline-block;
   }
 
   :deep(.table-pagination) {

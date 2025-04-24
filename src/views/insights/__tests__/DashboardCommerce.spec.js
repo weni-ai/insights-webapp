@@ -60,9 +60,7 @@ describe('DashboardCommerce', () => {
     api.getMetrics.mockClear();
 
     wrapper = mount(DashboardCommerce, {
-      propsData: {
-        auth: { token: 'mock-token', uuid: 'mock-uuid' },
-      },
+      propsData: {},
       global: {
         plugins: [i18n, UnnnicSystem],
         components: {
@@ -84,9 +82,7 @@ describe('DashboardCommerce', () => {
   describe('loading state', () => {
     it('shows loading state while fetching data', async () => {
       wrapper = mount(DashboardCommerce, {
-        propsData: {
-          auth: { token: 'mock-token', uuid: 'mock-uuid' },
-        },
+        propsData: {},
         global: {
           plugins: [i18n, UnnnicSystem],
           components: {
@@ -135,9 +131,7 @@ describe('DashboardCommerce', () => {
       const consoleSpy = vi.spyOn(console, 'error');
 
       wrapper = mount(DashboardCommerce, {
-        propsData: {
-          auth: { token: 'mock-token', uuid: 'mock-uuid' },
-        },
+        propsData: {},
         global: {
           plugins: [i18n, UnnnicSystem],
           components: {

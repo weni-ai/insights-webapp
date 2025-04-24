@@ -196,8 +196,8 @@ onMounted(() => {
   import('host/sharedStore').then(({ useSharedStore }) => {
     const sharedStore = useSharedStore();
 
-    auth.token = sharedStore.auth.token;
-    auth.projectUuid = sharedStore.current.project.uuid;
+    auth.token = sharedStore.auth?.token;
+    auth.projectUuid = sharedStore.current?.project?.uuid;
 
     fetchMetrics();
   });

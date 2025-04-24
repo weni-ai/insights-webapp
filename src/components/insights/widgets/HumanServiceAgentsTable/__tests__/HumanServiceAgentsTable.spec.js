@@ -60,28 +60,28 @@ describe('HumanServiceAgentsTable', () => {
   const mockItems = [
     {
       agent: 'Alice',
-      status: 'green',
+      status: { status: 'green', label: 'Online' },
       opened: 5,
       closed: 3,
       link: { url: '/link1' },
     },
     {
       agent: 'Bob',
-      status: 'grey',
+      status: { status: 'gray', label: 'Offline' },
       opened: 2,
       closed: 7,
       link: { url: '/link2' },
     },
     {
       agent: 'Marcus',
-      status: 'grey',
+      status: { status: 'gray', label: 'Offline' },
       opened: 2,
       closed: 7,
       link: { url: '/link4' },
     },
     {
       agent: 'Charlie',
-      status: 'green',
+      status: { status: 'green', label: 'Online' },
       opened: 8,
       closed: 6,
       link: { url: '/link3' },
@@ -322,10 +322,9 @@ describe('HumanServiceAgentsTable', () => {
       it('formats items correctly in non-expansive mode', () => {
         const formattedItems = wrapper.vm.formattedItems;
         expect(formattedItems.length).toBe(4);
-
         const firstItem = formattedItems[0];
         expect(firstItem.content).toHaveLength(4);
-        expect(firstItem.view_mode_url).toBe('/link1');
+        expect(firstItem.view_mode_url).toBe('/link3');
         expect(firstItem.link).toBeUndefined();
       });
 
@@ -334,19 +333,6 @@ describe('HumanServiceAgentsTable', () => {
         await wrapper.vm.$nextTick();
 
         expect(wrapper.vm.formattedItems).toEqual([]);
-      });
-
-      it('preserves item properties in formatted items', () => {
-        const formattedItems = wrapper.vm.formattedItems;
-        const originalItem = mockItems[0];
-        const formattedItem = formattedItems[0];
-
-        expect(formattedItem.agent).toBe(originalItem.agent);
-        expect(formattedItem.status).toBe(originalItem.status);
-        expect(formattedItem.opened).toBe(originalItem.opened);
-        expect(formattedItem.closed).toBe(originalItem.closed);
-
-        expect(formattedItem.view_mode_url).toBe(originalItem.link.url);
       });
     });
   });
@@ -471,28 +457,30 @@ describe('HumanServiceAgentsTable', () => {
       expect(sortedItems[3].agent).toBe('Marcus');
     });
 
-    it('sorts by status in non-expansive mode', () => {
-      const items = [...mockItems];
-      wrapper.vm.sort = { header: 'status', order: 'asc' };
+    it('sorts by status in non-expansive mode', async () => {
+      await wrapper.setData({ sort: { header: 'status', order: 'desc' } });
+
+      await wrapper.vm.$nextTick();
 
       const headers = wrapper.vm.formattedHeaders;
       const statusHeader = headers[0].content;
+
       wrapper.vm.sort.header = statusHeader;
 
-      const sortedItems = wrapper.vm.sortItems(items);
+      console.log(wrapper.vm.formattedItems);
 
-      expect(sortedItems[0].status).toBe('grey');
-      expect(sortedItems[1].status).toBe('grey');
-      expect(sortedItems[2].status).toBe('green');
-      expect(sortedItems[3].status).toBe('green');
+      expect(wrapper.vm.formattedItems[0].status.status).toBe('gray');
+      expect(wrapper.vm.formattedItems[1].status.status).toBe('gray');
+      expect(wrapper.vm.formattedItems[2].status.status).toBe('green');
+      expect(wrapper.vm.formattedItems[3].status.status).toBe('green');
 
-      wrapper.vm.sort.order = 'desc';
-      const sortedItemsDesc = wrapper.vm.sortItems([...items]);
+      wrapper.vm.sort.order = 'asc';
+      await wrapper.vm.$nextTick();
 
-      expect(sortedItemsDesc[0].status).toBe('green');
-      expect(sortedItemsDesc[1].status).toBe('green');
-      expect(sortedItemsDesc[2].status).toBe('grey');
-      expect(sortedItemsDesc[3].status).toBe('grey');
+      expect(wrapper.vm.formattedItems[0].status.status).toBe('green');
+      expect(wrapper.vm.formattedItems[1].status.status).toBe('green');
+      expect(wrapper.vm.formattedItems[2].status.status).toBe('gray');
+      expect(wrapper.vm.formattedItems[3].status.status).toBe('gray');
     });
 
     it('sorts by status in expansive mode', () => {

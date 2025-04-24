@@ -411,10 +411,6 @@ export default {
     }
   }
 
-  :deep(.unnnic-table-next__header-cell) {
-    // display: inline-block;
-  }
-
   :deep(.table-pagination) {
     display: none;
   }

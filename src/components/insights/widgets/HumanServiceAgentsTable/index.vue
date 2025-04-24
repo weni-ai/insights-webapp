@@ -323,7 +323,6 @@ export default {
               const statusKey = itemKey.split('.')[1];
               valueA = a.custom_status[statusKey] || 0;
               valueB = b.custom_status[statusKey] || 0;
-              console.log({ valueA, valueB });
             } else if (itemKey === 'opened') {
               valueA = a.opened;
               valueB = b.opened;

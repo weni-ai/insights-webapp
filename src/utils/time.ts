@@ -1,4 +1,12 @@
-import { format, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns';
+import {
+  format,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  subMonths,
+  getHours,
+  getMinutes,
+} from 'date-fns';
 import { useI18n } from 'vue-i18n';
 
 /**
@@ -204,4 +212,54 @@ export function getTodayDate(): DateRange {
     end: todayISO,
     dmFormat: `${todayDM}`,
   };
+}
+
+/**
+ * Formats a date into an object containing hour, minute and day/night indicator
+ * based on user's local time. Day is considered from 6:00 AM to 5:59 PM.
+ *
+ * @param date - The date to format
+ * @returns An object with hour (0-23), minute (0-59), and isDayTime (boolean)
+ */
+export function formatTimeWithDayNight(date: Date): {
+  hour: number;
+  minute: number;
+  isDayTime: boolean;
+  period: string;
+} {
+  const hour = getHours(date);
+  const minute = getMinutes(date);
+  const isDayTime = hour >= 6 && hour < 18; // 6:00 AM to 5:59 PM is day time
+  const period = isDayTime ? 'AM' : 'PM';
+
+  return {
+    hour,
+    minute,
+    isDayTime,
+    period,
+  };
+}
+
+/**
+ * Formats a date into a time string with day/night indicator
+ * based on user's local time.
+ *
+ * @param date - The date to format
+ * @param use24Hour - Whether to use 24-hour format (default: false)
+ * @returns A formatted string like "3:45 PM (day)" or "15:45 (day)" if use24Hour=true
+ */
+export function formatTimeStringWithDayNight(
+  date: Date,
+  use24Hour: boolean = false,
+): string {
+  const { period } = formatTimeWithDayNight(date);
+
+  let timeFormat: string;
+  if (use24Hour) {
+    timeFormat = format(date, 'HH:mm');
+  } else {
+    timeFormat = format(date, 'h:mm a');
+  }
+
+  return `${timeFormat} ${period}`;
 }

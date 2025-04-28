@@ -22,6 +22,7 @@
           <GalleryOption
             :title="title"
             :description="description"
+            data-testid="gallery-option"
             @click="setDrawerConfigType(value)"
           />
         </li>
@@ -43,7 +44,6 @@ import { mapActions, mapMutations, mapState } from 'vuex';
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
-import Config from '@/store/modules/config';
 import env from '@/utils/env';
 import { clearDeepValues } from '@/utils/object.js';
 
@@ -71,6 +71,7 @@ export default {
   computed: {
     ...mapState({
       isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
+      isCommerce: (state) => state.project.isCommerce,
       widget: (state) => state.widgets.currentWidgetEditing,
       onboardingRefs: (state) => state.onboarding.onboardingRefs,
       showConfigWidgetOnboarding: (state) =>
@@ -83,18 +84,7 @@ export default {
       return this.widget.config?.type;
     },
 
-    galleryOptions() {
-      const { $t } = this;
-      function createOptions(optionKeys) {
-        return optionKeys.map((option) => ({
-          title: $t(`drawers.config_gallery.options.${option}.title`),
-          description: $t(
-            `drawers.config_gallery.options.${option}.description`,
-          ),
-          value: option,
-        }));
-      }
-
+    isVtexEnabledProject() {
       const enabledProjectsProd = [
         '521d2c65-ae66-441d-96ff-2b8471d522c1',
         'd8d6d71d-3daf-4d2e-812b-85cc252a96d8',
@@ -114,17 +104,33 @@ export default {
       const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];
 
       const enabledProjects =
-        env('ENVIROMENT') === 'staging'
+        env('ENVIRONMENT') === 'staging'
           ? enabledProjectsStg
           : enabledProjectsProd;
 
-      const isVtexEnabledProject = enabledProjects.includes(
-        Config.state.project.uuid,
-      );
+      return enabledProjects.includes(this.$store.state.config.project.uuid);
+    },
+
+    galleryOptions() {
+      const { $t } = this;
+
+      function createOptions(optionKeys) {
+        return optionKeys.map((option) => ({
+          title: $t(`drawers.config_gallery.options.${option}.title`),
+          description: $t(
+            `drawers.config_gallery.options.${option}.description`,
+          ),
+          value: option,
+        }));
+      }
 
       const empty_widget_options = ['funnel', 'recurrence'];
 
-      if (isVtexEnabledProject) empty_widget_options.push('vtex');
+      if (this.isVtexEnabledProject) {
+        empty_widget_options.push('vtex');
+
+        empty_widget_options.push('vtex_conversions');
+      }
 
       const optionsMap = {
         card: createOptions(['executions', 'flow_result', 'data_crossing']),
@@ -149,7 +155,10 @@ export default {
   },
 
   async created() {
-    if (!this.isLoadedProjectFlows && this.widget.type !== 'vtex_order') {
+    const isVtexWidget = ['vtex_order', 'vtex_conversions'].includes(
+      this.widget?.type,
+    );
+    if (!this.isLoadedProjectFlows && !isVtexWidget) {
       await this.getProjectFlows();
     }
   },

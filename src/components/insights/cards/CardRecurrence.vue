@@ -38,33 +38,34 @@
           class="content__container-icon-loading"
           data-testid="icon-loading"
         />
-        <section
-          v-for="(list, index) in (data || []).slice(0, 5)"
-          v-show="!isLoading"
+        <template
+          v-for="(item, index) in rowData"
           :key="index"
-          class="content__container-group"
-          data-testid="content-container-group"
-          @click.stop="emitClickData(list)"
         >
-          <section class="content">
-            <section class="content__container-item">
-              <p class="content__container-item-text">
-                {{ list.label }}
-              </p>
-            </section>
-            <section class="progress-bar-container">
-              <UnnnicProgressBar
-                v-model="list.value"
-                class="progress-bar"
-                inline
-              />
-            </section>
-          </section>
           <section
-            v-if="index < 4"
-            class="divider"
-          />
-        </section>
+            v-if="!isLoading"
+            class="content__container-group"
+            data-testid="content-container-group"
+            @click.stop="item && emitClickData(item)"
+          >
+            <template v-if="item">
+              <section class="content">
+                <section class="content__container-item">
+                  <p class="content__container-item-text">
+                    {{ item.label }}
+                  </p>
+                </section>
+                <section class="progress-bar-container">
+                  <UnnnicProgressBar
+                    v-model="item.value"
+                    class="progress-bar"
+                    inline
+                  />
+                </section>
+              </section>
+            </template>
+          </section>
+        </template>
       </section>
     </section>
     <a
@@ -113,6 +114,11 @@ export default {
     }),
     isError() {
       return this.data?.length === 0;
+    },
+    rowData() {
+      return Array(5)
+        .fill(null)
+        .map((_, index) => this.data[index] || null);
     },
   },
 
@@ -212,14 +218,28 @@ export default {
 
     .content__container {
       height: 100%;
-      align-items: center;
       display: grid;
-      gap: 1px;
+      grid-template-rows: repeat(5, 1fr);
+      gap: $unnnic-spacing-sm;
       background-color: $unnnic-color-neutral-white;
       padding: $unnnic-spacing-sm;
 
       &-group {
         cursor: pointer;
+        min-height: $unnnic-avatar-size-sm;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        &:empty {
+          background: $unnnic-color-neutral-lightest;
+          border-radius: $unnnic-border-radius-sm;
+        }
+
+        &:not(:last-child) {
+          border-bottom: 1px solid $unnnic-color-neutral-light;
+          padding-bottom: $unnnic-spacing-sm;
+        }
       }
 
       &-isLoading {

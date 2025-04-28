@@ -15,6 +15,7 @@ import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
+import CardVtexConversions from '@/components/insights/cards/CardVtexConversions.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
@@ -77,6 +78,7 @@ export default {
         card: CardDashboard,
         empty_column: CardEmpty,
         vtex_order: CardVtexOrder,
+        vtex_conversions: CardVtexConversions,
         recurrence: CardRecurrence,
         insight: null, // TODO: Create Insight component
       };
@@ -157,6 +159,11 @@ export default {
           widget: this.widget,
           data: this.widgetVtexData,
         },
+        vtex_conversions: {
+          widget: this.widget,
+          data: this.widgetVtexConversionsData,
+          isLoadingData: this.isRequestingData,
+        },
         recurrence: {
           widget: this.widget,
           data: this.widget?.data || [],
@@ -194,6 +201,29 @@ export default {
       }
 
       return null;
+    },
+
+    widgetVtexConversionsData() {
+      if (this.widget.type === 'vtex_conversions' && this.widget.data) {
+        const { utm_data, graph_data, error } = this.widget.data;
+        return error
+          ? { error }
+          : {
+              graph_data,
+              utm_data: {
+                ...utm_data,
+                accumulated_total: this.getWidgetFormattedData({
+                  config: { currency: true },
+                  data: { value: utm_data.accumulated_total },
+                }),
+                medium_ticket: this.getWidgetFormattedData({
+                  config: { currency: true },
+                  data: { value: utm_data.medium_ticket },
+                }),
+              },
+            };
+      }
+      return {};
     },
 
     widgetGraphData() {
@@ -250,6 +280,9 @@ export default {
               this.isRequestingData = false;
             });
           },
+        },
+        vtex_conversions: {
+          openConfig: () => this.$emit('open-config'),
         },
         recurrence: {
           openConfig: () => this.$emit('open-config'),
@@ -361,6 +394,7 @@ export default {
       if (this.isHumanServiceDashboard && !this.hasDateFiltering) {
         this.interval = setInterval(() => {
           this.requestWidgetData({ silence: true });
+          this.$store.dispatch('dashboards/updateLastUpdatedRequest');
         }, ONE_MINUTE);
       }
     },
@@ -373,6 +407,8 @@ export default {
           await this.getWidgetReportData({ offset, limit, next });
         } else if (this.isConfigured) {
           await this.getCurrentDashboardWidgetData(this.widget);
+          if (!silence)
+            this.$store.dispatch('dashboards/updateLastUpdatedRequest');
         }
       } catch (e) {
         console.error('requestWidgetData error', e);
@@ -449,7 +485,7 @@ export default {
         return formatSecondsToHumanString(Math.round(data?.value));
       }
       if (config?.currency) {
-        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2 })}`;
+        return `${currencySymbols[this.currentDashboard.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
       return (data?.value || 0).toLocaleString(this.$i18n.locale || 'en-US');
     },

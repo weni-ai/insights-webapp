@@ -1,7 +1,7 @@
 import Router from '@/router';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards } from '@/services/api';
-import { sortByKey } from '@/utils/array';
+import { removeDuplicatedItems, sortByKey } from '@/utils/array';
 
 export function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -25,11 +25,13 @@ const mutations = {
   SET_APPLIED_FILTERS: 'SET_APPLIED_FILTERS',
   SET_DEFAULT_DASHBOARD: 'SET_DEFAULT_DASHBOARD',
   SET_SHOW_DASHBOARD_CONFIG: 'SET_SHOW_DASHBOARD_CONFIG',
+  SET_LAST_UPDATED_REQUEST: 'SET_LAST_UPDATED_REQUEST',
 };
 
 export default {
   namespaced: true,
   state: {
+    nextDashboards: '',
     dashboards: [],
     isLoadingDashboards: false,
     currentDashboard: {},
@@ -37,6 +39,7 @@ export default {
     isLoadingCurrentDashboardFilters: false,
     appliedFilters: {},
     showDashboardConfig: false,
+    last_updated_request: null,
   },
   mutations: {
     [mutations.SET_SHOW_DASHBOARD_CONFIG](state, show) {
@@ -74,16 +77,34 @@ export default {
       state.dashboards.find((dash) => dash.uuid === uuid).is_default =
         isDefault;
     },
+    [mutations.SET_LAST_UPDATED_REQUEST](state, timestamp) {
+      state.last_updated_request = timestamp;
+    },
   },
   actions: {
-    async getDashboards({ commit }) {
-      commit(mutations.SET_LOADING_DASHBOARDS, true);
-      const dashboards = await Dashboards.getAll();
-      commit(
-        mutations.SET_DASHBOARDS,
-        sortByKey(dashboards, 'is_default', 'desc'),
-      );
-      commit(mutations.SET_LOADING_DASHBOARDS, false);
+    async getDashboards({ commit, state, dispatch }) {
+      try {
+        commit(mutations.SET_LOADING_DASHBOARDS, true);
+        const { dashboards, next } = await Dashboards.getAll({
+          nextReq: state.nextDashboards,
+        });
+        state.nextDashboards = next;
+
+        const treatedDashboards = removeDuplicatedItems(
+          state.dashboards.concat(dashboards),
+          'uuid',
+        );
+
+        commit(
+          mutations.SET_DASHBOARDS,
+          sortByKey(treatedDashboards, 'is_default', 'desc'),
+        );
+      } catch (error) {
+        console.log(error);
+      } finally {
+        if (state.nextDashboards) dispatch('getDashboards');
+        else commit(mutations.SET_LOADING_DASHBOARDS, false);
+      }
     },
     async setCurrentDashboard({ commit }, dashboard) {
       commit(mutations.SET_CURRENT_DASHBOARD, dashboard);
@@ -153,19 +174,24 @@ export default {
     },
     async setDefaultDashboard({ getters, commit }, uuid) {
       const oldDefaultDashboardUuid = getters.dashboardDefault.uuid;
-      const updateDefaultDashboard = async (dashboardUuid, isDefault) => {
-        await Dashboards.setDefaultDashboard({
-          dashboardUuid,
-          isDefault,
-        });
-        commit(mutations.SET_DEFAULT_DASHBOARD, {
-          uuid: dashboardUuid,
-          isDefault,
-        });
-      };
 
-      await updateDefaultDashboard(oldDefaultDashboardUuid, false);
-      await updateDefaultDashboard(uuid, true);
+      await Dashboards.setDefaultDashboard({
+        dashboardUuid: uuid,
+        isDefault: true,
+      });
+
+      commit(mutations.SET_DEFAULT_DASHBOARD, {
+        uuid,
+        isDefault: true,
+      });
+
+      commit(mutations.SET_DEFAULT_DASHBOARD, {
+        uuid: oldDefaultDashboardUuid,
+        isDefault: false,
+      });
+    },
+    updateLastUpdatedRequest({ commit }) {
+      commit(mutations.SET_LAST_UPDATED_REQUEST, new Date());
     },
   },
   getters: {
@@ -177,5 +203,6 @@ export default {
         )
       );
     },
+    lastUpdatedAt: (state) => state.last_updated_request,
   },
 };

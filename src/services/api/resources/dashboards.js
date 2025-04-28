@@ -5,11 +5,14 @@ import User from '@/store/modules/user';
 import DashboardStore from '@/store/modules/dashboards';
 
 import { isFilteringDates } from '@/utils/filter';
-import { createRequestQuery } from '@/utils/request';
+import { createRequestQuery, parseQueryString } from '@/utils/request';
 
 export default {
-  async getAll() {
+  async getAll({ nextReq } = {}) {
+    const nextParams = parseQueryString(nextReq);
+
     const queryParams = createRequestQuery({
+      ...nextParams,
       project: Config.state.project.uuid,
     });
 
@@ -30,7 +33,7 @@ export default {
         ),
     );
 
-    return dashboards;
+    return { dashboards, next: response.next, previous: response.previous };
   },
 
   async getDashboardFilters(uuid) {
@@ -47,6 +50,7 @@ export default {
     const response = await http.get(`/dashboards/${uuid}/filters/`, {
       params: queryParams,
     });
+
     const responseArray = Object.keys(response);
 
     const dashboardFilters = responseArray.map((key) => {
@@ -132,20 +136,11 @@ export default {
   },
 
   async getCustomStatusData({ params }) {
-    const { appliedFilters } = DashboardStore.state;
-    const { currentDashboardFilters } = DashboardStore.state;
     const { email } = User.state;
 
-    const hasDateFilter = isFilteringDates({
-      currentDashboardFilters,
-      appliedFilters,
-    });
-
-    const treatedParams = createRequestQuery(appliedFilters, {
+    const treatedParams = createRequestQuery(params, {
       project: Config.state.project.uuid,
       user_request: email,
-      is_live: !hasDateFilter || undefined,
-      ...params,
     });
     const widgetData = await http.get(`/dashboards/get_custom_status/`, {
       params: treatedParams,

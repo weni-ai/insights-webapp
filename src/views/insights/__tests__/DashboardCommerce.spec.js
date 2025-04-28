@@ -1,4 +1,4 @@
-import { mount, config } from '@vue/test-utils';
+import { mount, config, flushPromises } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import DashboardCommerce from '@/views/insights/DashboardCommerce.vue';
 import CardMetric from '@/components/home/CardMetric.vue';
@@ -6,6 +6,15 @@ import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import api from '@/services/api/resources/metrics';
 import { format, subDays } from 'date-fns';
+
+const useSharedStoreMock = vi.fn(() => ({
+  auth: { token: 'mock-token' },
+  current: { project: { uuid: 'mock-uuid' } },
+}));
+
+vi.mock('host/sharedStore', () => ({
+  useSharedStore: useSharedStoreMock,
+}));
 
 vi.mock('@/utils/time', async (importOriginal) => {
   const actual = await importOriginal();
@@ -60,9 +69,7 @@ describe('DashboardCommerce', () => {
     api.getMetrics.mockClear();
 
     wrapper = mount(DashboardCommerce, {
-      propsData: {
-        auth: { token: 'mock-token', uuid: 'mock-uuid' },
-      },
+      propsData: {},
       global: {
         plugins: [i18n, UnnnicSystem],
         components: {
@@ -84,9 +91,7 @@ describe('DashboardCommerce', () => {
   describe('loading state', () => {
     it('shows loading state while fetching data', async () => {
       wrapper = mount(DashboardCommerce, {
-        propsData: {
-          auth: { token: 'mock-token', uuid: 'mock-uuid' },
-        },
+        propsData: {},
         global: {
           plugins: [i18n, UnnnicSystem],
           components: {
@@ -101,9 +106,17 @@ describe('DashboardCommerce', () => {
         },
       });
 
+      await flushPromises();
+      
+      wrapper.vm.isLoading = true;
+      await wrapper.vm.$nextTick();
+
       expect(
         wrapper.find('[data-test-id="dashboard-commerce__loading"]').exists(),
       ).toBe(true);
+
+      wrapper.vm.isLoading = false;
+      await wrapper.vm.$nextTick();
 
       await vi.waitFor(() => {
         return !wrapper.vm.isLoading;
@@ -116,7 +129,9 @@ describe('DashboardCommerce', () => {
   });
 
   describe('API interactions', () => {
-    it('calls getMetrics on mount with correct date range and auth token', () => {
+    it('calls getMetrics on mount with correct date range and auth token', async () => {
+      await flushPromises();
+
       const initialStartDate = format(subDays(new Date(), 6), 'yyyy-MM-dd');
       const initialEndDate = format(new Date(), 'yyyy-MM-dd');
 
@@ -135,9 +150,7 @@ describe('DashboardCommerce', () => {
       const consoleSpy = vi.spyOn(console, 'error');
 
       wrapper = mount(DashboardCommerce, {
-        propsData: {
-          auth: { token: 'mock-token', uuid: 'mock-uuid' },
-        },
+        propsData: {},
         global: {
           plugins: [i18n, UnnnicSystem],
           components: {
@@ -151,6 +164,8 @@ describe('DashboardCommerce', () => {
           },
         },
       });
+
+      await flushPromises();
       await wrapper.vm.$nextTick();
 
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -162,10 +177,13 @@ describe('DashboardCommerce', () => {
     it('does not fetch metrics when token is not present', async () => {
       api.getMetrics.mockClear();
 
+      useSharedStoreMock.mockResolvedValueOnce(() => ({
+        auth: { token: null },
+        current: { project: { uuid: null } },
+      }));
+
       wrapper = mount(DashboardCommerce, {
-        propsData: {
-          auth: null,
-        },
+        propsData: {},
         global: {
           plugins: [i18n, UnnnicSystem],
           components: {
@@ -232,6 +250,8 @@ describe('DashboardCommerce', () => {
     });
 
     it('updates metrics when date filter changes', async () => {
+      await flushPromises();
+
       const initialMetrics = { ...wrapper.vm.metrics };
       const newDate = { start: '2024-01-01', end: '2024-01-15' };
 
@@ -257,10 +277,11 @@ describe('DashboardCommerce', () => {
   });
 
   describe('metrics data structure', () => {
-    it('verifies all metrics have required properties', () => {
+    it('verifies all metrics have required properties', async () => {
       if (wrapper.vm.isLoading) {
         return;
       }
+      await flushPromises();
       const metrics = wrapper.findAllComponents(CardMetric);
       expect(metrics.length).toBeGreaterThan(0);
 

@@ -188,8 +188,6 @@ export default {
 
         return {
           ...item,
-          view_mode_url: item.link?.url,
-          link: undefined,
           content: baseContent,
         };
       });
@@ -323,7 +321,6 @@ export default {
               const statusKey = itemKey.split('.')[1];
               valueA = a.custom_status[statusKey] || 0;
               valueB = b.custom_status[statusKey] || 0;
-              console.log({ valueA, valueB });
             } else if (itemKey === 'opened') {
               valueA = a.opened;
               valueB = b.opened;
@@ -409,10 +406,6 @@ export default {
     span[data-testid='arrow-desc-icon'] {
       color: $unnnic-color-neutral-cloudy;
     }
-  }
-
-  :deep(.unnnic-table-next__header-cell) {
-    // display: inline-block;
   }
 
   :deep(.table-pagination) {

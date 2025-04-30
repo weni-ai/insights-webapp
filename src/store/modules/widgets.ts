@@ -1,29 +1,12 @@
-import dashboardsStore from './dashboards';
+import { defineStore } from 'pinia';
+import { useDashboards } from './dashboards';
 import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
 
-const mutations = {
-  SET_CURRENT_DASHBOARD_WIDGETS: 'SET_CURRENT_DASHBOARD_WIDGETS',
-  SET_LOADING_CURRENT_DASHBOARD_WIDGETS:
-    'SET_LOADING_CURRENT_DASHBOARD_WIDGETS',
-  SET_LOADING_CURRENT_DASHBOARD_FILTERS:
-    'SET_LOADING_CURRENT_DASHBOARD_FILTERS',
-  SET_LOADING_CURRENT_EXPANSIVE_WIDGET: 'SET_LOADING_CURRENT_EXPANSIVE_WIDGET',
-  RESET_CURRENT_DASHBOARD_WIDGETS: 'RESET_CURRENT_DASHBOARD_WIDGETS',
-  SET_CURRENT_DASHBOARD_WIDGET_DATA: 'SET_CURRENT_DASHBOARD_WIDGET_DATA',
-  UPDATE_CURRENT_DASHBOARD_WIDGET: 'UPDATE_CURRENT_DASHBOARD_WIDGET',
-  UPDATE_CURRENT_WIDGET_EDITING: 'UPDATE_CURRENT_WIDGET_EDITING',
-  SET_CURRENT_EXPANSIVE_WIDGET_DATA: 'SET_CURRENT_EXPANSIVE_WIDGET_DATA',
-  SET_CURRENT_EXPANSIVE_WIDGET_FILTERS: 'SET_CURRENT_EXPANSIVE_WIDGET_FILTERS',
-  RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS:
-    'RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS',
-};
-
-export default {
-  namespaced: true,
-  state: {
+export const useWidgets = defineStore('widgets', {
+  state: () => ({
     currentDashboardWidgets: [],
     currentExpansiveWidget: {},
     currentExpansiveWidgetFilters: {
@@ -32,141 +15,93 @@ export default {
     },
     isLoadingCurrentExpansiveWidget: false,
     isLoadingCurrentDashboardWidgets: false,
-
     currentWidgetEditing: null,
-  },
-  mutations: {
-    [mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS](state, loading) {
-      state.isLoadingCurrentDashboardWidgets = loading;
+  }),
+  actions: {
+    async getCurrentDashboardWidgets() {
+      const dashboardsStore = useDashboards();
+      this.isLoadingCurrentDashboardWidgets = true;
+      const widgets = await Dashboards.getDashboardWidgets(
+        dashboardsStore.currentDashboard.uuid,
+      );
+      this.currentDashboardWidgets = widgets;
+      this.isLoadingCurrentDashboardWidgets = false;
     },
-    [mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET](state, loading) {
-      state.isLoadingCurrentExpansiveWidget = loading;
-    },
-    [mutations.SET_CURRENT_DASHBOARD_WIDGETS](state, widgets) {
-      state.currentDashboardWidgets = widgets;
-    },
-    [mutations.RESET_CURRENT_DASHBOARD_WIDGETS](state) {
-      state.currentDashboardWidgets = [];
-    },
-    [mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA](state, { uuid, data }) {
-      const widgetIndex = state.currentDashboardWidgets.findIndex(
+    setWidgetData({ uuid, data }) {
+      const widgetIndex = this.currentDashboardWidgets.findIndex(
         (widget) => widget.uuid === uuid,
       );
       const isValidWidgetIndex = widgetIndex !== -1;
 
       if (isValidWidgetIndex) {
-        state.currentDashboardWidgets[widgetIndex] = {
-          ...state.currentDashboardWidgets[widgetIndex],
+        this.currentDashboardWidgets[widgetIndex] = {
+          ...this.currentDashboardWidgets[widgetIndex],
           data,
         };
       }
     },
-    [mutations.UPDATE_CURRENT_DASHBOARD_WIDGET](state, widget) {
-      const widgetIndex = state.currentDashboardWidgets.findIndex(
-        (mappedWidget) => mappedWidget.uuid === widget.uuid,
-      );
-
-      state.currentDashboardWidgets[widgetIndex] = widget;
-    },
-    [mutations.UPDATE_CURRENT_WIDGET_EDITING](state, widget) {
-      if (isObjectsEquals(state.currentWidgetEditing, widget)) return;
-      state.currentWidgetEditing = widget;
-    },
-    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA](state, widget) {
-      if (!widget) {
-        state.currentExpansiveWidget = {};
-        return;
-      }
-      state.currentExpansiveWidget = widget;
-    },
-    [mutations.SET_CURRENT_EXPANSIVE_WIDGET_FILTERS](state, filters) {
-      state.currentExpansiveWidgetFilters = {
-        ...state.currentExpansiveWidgetFilters,
-        ...filters,
-      };
-    },
-    [mutations.RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS](state) {
-      state.currentExpansiveWidgetFilters = {
-        sector: '',
-        queue: '',
-      };
-    },
-  },
-  actions: {
-    async getCurrentDashboardWidgets({ commit }) {
-      commit(mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS, true);
-      const widgets = await Dashboards.getDashboardWidgets(
-        dashboardsStore.state.currentDashboard.uuid,
-      );
-      commit(mutations.SET_CURRENT_DASHBOARD_WIDGETS, widgets);
-      commit(mutations.SET_LOADING_CURRENT_DASHBOARD_WIDGETS, false);
-    },
-    async getCurrentDashboardWidgetData({ commit }, widget) {
+    async getCurrentDashboardWidgetData(widget) {
+      const dashboardsStore = useDashboards();
       const { uuid, name } = widget;
-      const setWidgetData = (data) =>
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data,
-        });
 
       if (!name) {
         /* This only checking if the name is not defined, since the widget may be unconfigured,
           but still have empty fields in the "config" object. */
-        setWidgetData(null);
+        this.setWidgetData(null);
         return;
       }
 
       try {
         const data = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          dashboardUuid: dashboardsStore.currentDashboard.uuid,
           widgetUuid: uuid,
         } as any);
 
-        setWidgetData(data);
+        this.setWidgetData(data);
       } catch (error) {
         console.error(error);
-        if (widget.type === 'vtex_conversions') setWidgetData({ error: true });
-        else setWidgetData(null);
+        if (widget.type === 'vtex_conversions') {
+          this.setWidgetData({ error: true });
+        } else {
+          this.setWidgetData(null);
+        }
       }
     },
-    async getCurrentDashboardWidgetsDatas({ state, dispatch }) {
+    async getCurrentDashboardWidgetsDatas() {
       Promise.all(
-        state.currentDashboardWidgets.map(async (widget) => {
+        this.currentDashboardWidgets.map(async (widget) => {
           const { name, config } = widget;
 
           if (name && Object.keys(config).length) {
-            dispatch('getCurrentDashboardWidgetData', widget);
+            this.getCurrentDashboardWidgetData(widget);
           }
         }),
       );
     },
-    async getWidgetRecurrenceData({ commit }, { uuid }) {
+    async getWidgetRecurrenceData({ uuid }) {
+      const dashboardsStore = useDashboards();
       try {
         const response: any = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          dashboardUuid: dashboardsStore.currentDashboard.uuid,
           widgetUuid: uuid,
           params: {},
         });
 
         const formattedResponse = response.results;
 
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: formattedResponse,
-        });
+        this.setWidgetData({ uuid, data: formattedResponse });
       } catch (error) {
         console.error(error);
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: [],
-        });
+        this.setWidgetData({ uuid, data: [] });
       }
     },
-    async getWidgetGraphFunnelData({ commit }, { uuid, widgetFunnelConfig }) {
+    async getWidgetGraphFunnelData({ uuid, widgetFunnelConfig }) {
+      const dashboardsStore = useDashboards();
+
       const fetchData = async (metric) => {
         const { name } = widgetFunnelConfig[metric];
         const { value }: any = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          dashboardUuid: dashboardsStore.currentDashboard.uuid,
           widgetUuid: uuid,
           params: { slug: metric },
         });
@@ -190,19 +125,17 @@ export default {
         })
         .sort((a, b) => b.percentage - a.percentage);
 
-      commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-        uuid,
-        data: formattedResponse,
-      });
+      this.setWidgetData({ uuid, data: formattedResponse });
     },
-    async getWidgetVtexOrderData({ commit }, { uuid, utm_source = '' }) {
+    async getWidgetVtexOrderData({ uuid, utm_source = '' }) {
+      const dashboardsStore = useDashboards();
       try {
         const response: {
           countSell?: string;
           accumulatedTotal?: string;
           medium_ticket?: string;
         } = (await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.state.currentDashboard.uuid,
+          dashboardUuid: dashboardsStore.currentDashboard.uuid,
           widgetUuid: uuid,
           params: {
             utm_source,
@@ -229,13 +162,10 @@ export default {
           };
         }
 
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
-          uuid,
-          data: formattedResponse,
-        });
+        this.setWidgetData({ uuid, data: formattedResponse });
       } catch (error) {
         console.error(error);
-        commit(mutations.SET_CURRENT_DASHBOARD_WIDGET_DATA, {
+        this.setWidgetData({
           uuid,
           data: {
             orders: '',
@@ -245,42 +175,45 @@ export default {
         });
       }
     },
-
-    updateCurrentWidgetEditing({ commit }, widget) {
-      commit(mutations.UPDATE_CURRENT_WIDGET_EDITING, widget);
+    updateCurrentWidgetEditing(widget) {
+      if (isObjectsEquals(this.currentWidgetEditing, widget)) return;
+      this.currentWidgetEditing = widget;
     },
-
-    updateCurrentWidgetEditingConfig({ state, commit }, config) {
-      commit(mutations.UPDATE_CURRENT_WIDGET_EDITING, {
-        ...state.currentWidgetEditing,
-        config,
-      });
+    updateCurrentWidgetEditingConfig(config) {
+      const treatedWidget = { ...this.currentWidgetEditing, config };
+      if (isObjectsEquals(this.currentWidgetEditing, treatedWidget)) return;
+      this.currentWidgetEditing = treatedWidget;
     },
-
-    async updateWidget({ commit }, widget: WidgetType) {
+    async updateWidget(widget: WidgetType) {
       await Widgets.updateWidget({
         widget,
       });
-      commit(mutations.UPDATE_CURRENT_DASHBOARD_WIDGET, widget);
+      const widgetIndex = this.currentDashboardWidgets.findIndex(
+        (mappedWidget) => mappedWidget.uuid === widget.uuid,
+      );
+      this.currentDashboardWidgets[widgetIndex] = widget;
     },
-    async updateCurrentExpansiveWidgetData({ commit, state }, widget) {
-      const setWidgetData = (data) =>
-        commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_DATA, {
-          ...widget,
-          data,
-        });
+    setWidgetExpansiveData(widget) {},
+    async updateCurrentExpansiveWidgetData(widget) {
+      const setWidgetData = (data) => {
+        if (!data) {
+          this.currentExpansiveWidget = {};
+          return;
+        }
+        this.currentExpansiveWidget = data;
+      };
 
-      commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, true);
+      this.isLoadingCurrentExpansiveWidget = true;
       setWidgetData(widget);
       try {
         const customParams: { sector?: string; queue?: string } = {};
 
-        if (state.currentExpansiveWidgetFilters.sector) {
-          customParams.sector = state.currentExpansiveWidgetFilters.sector;
+        if (this.currentExpansiveWidgetFilters.sector) {
+          customParams.sector = this.currentExpansiveWidgetFilters.sector;
         }
 
-        if (state.currentExpansiveWidgetFilters.queue) {
-          customParams.queue = state.currentExpansiveWidgetFilters.queue;
+        if (this.currentExpansiveWidgetFilters.queue) {
+          customParams.queue = this.currentExpansiveWidgetFilters.queue;
         }
 
         const data = await Dashboards.getCustomStatusData({
@@ -291,20 +224,23 @@ export default {
         console.error('getCustomStatusData', error);
         setWidgetData(null);
       } finally {
-        commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, false);
+        this.isLoadingCurrentExpansiveWidget = false;
       }
     },
-
-    updateCurrentExpansiveWidgetFilters({ commit }, filters) {
-      commit(mutations.SET_CURRENT_EXPANSIVE_WIDGET_FILTERS, filters);
+    updateCurrentExpansiveWidgetFilters(filters) {
+      this.currentExpansiveWidgetFilters = {
+        ...this.currentExpansiveWidgetFilters,
+        ...filters,
+      };
     },
-
-    resetCurrentExpansiveWidgetFilters({ commit }) {
-      commit(mutations.RESET_CURRENT_EXPANSIVE_WIDGET_FILTERS);
+    resetCurrentExpansiveWidgetFilters() {
+      this.currentExpansiveWidgetFilters = {
+        sector: '',
+        queue: '',
+      };
     },
-
-    updateCurrentExpansiveWidgetLoading({ commit }, loading) {
-      commit(mutations.SET_LOADING_CURRENT_EXPANSIVE_WIDGET, loading);
+    updateCurrentExpansiveWidgetLoading(loading) {
+      this.isLoadingCurrentExpansiveWidget = loading;
     },
   },
-};
+});

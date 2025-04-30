@@ -65,6 +65,8 @@ import mitt from 'mitt';
 import { formatSecondsToHumanString } from '@/utils/time';
 import { onClickOutside } from '@vueuse/core';
 import { ref } from 'vue';
+import { mapActions } from 'pinia';
+import { useGpt } from '@/store/modules/gpt';
 
 const emitter = mitt();
 
@@ -152,6 +154,7 @@ export default {
   },
 
   methods: {
+    ...mapActions(useGpt, ['getInsights']),
     handleTypingComplete() {
       this.isRenderFeedback = true;
     },
@@ -207,7 +210,7 @@ export default {
           values: dynamicParams,
         })} ${this.$t('insights_header.generate_insight.prompt_language')}`;
 
-        await this.$store.dispatch('gpt/getInsights', { prompt });
+        await this.getInsights({ prompt });
 
         const lastInsight = this.insights.slice(-1)[0];
 

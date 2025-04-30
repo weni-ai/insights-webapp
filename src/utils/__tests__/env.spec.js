@@ -41,5 +41,4 @@ describe('env', () => {
 
     expect(env('TEST_VAR')).toBe('env-value');
   });
-
 });

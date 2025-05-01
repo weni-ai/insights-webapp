@@ -18,6 +18,9 @@ export const useWidgets = defineStore('widgets', {
     currentWidgetEditing: null,
   }),
   actions: {
+    resetCurrentDashboardWidgets() {
+      this.currentDashboardWidgets = [];
+    },
     async getCurrentDashboardWidgets() {
       const dashboardsStore = useDashboards();
       this.isLoadingCurrentDashboardWidgets = true;

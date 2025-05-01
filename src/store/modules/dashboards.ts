@@ -22,7 +22,7 @@ export const useDashboards = defineStore('dashboards', {
     nextDashboards: '',
     dashboards: [],
     isLoadingDashboards: false,
-    currentDashboard: { uuid: '' },
+    currentDashboard: {} as { [key: string]: any },
     currentDashboardFilters: [],
     isLoadingCurrentDashboardFilters: false,
     appliedFilters: {},

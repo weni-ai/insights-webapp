@@ -8,20 +8,22 @@
 
 <script lang="ts" setup>
 import { computed, watch } from 'vue';
-import { useStore } from 'vuex';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useWidgets } from '@/store/modules/widgets';
 
 import DashboardCustom from '@/components/insights/dashboards/DashboardCustom.vue';
 import ExpansiveWidget from '@/components/insights/widgets/ExpansiveWidget.vue';
 import MetaTemplateMessage from '@/components/insights/dashboards/TemplateMessageMeta.vue';
 
-const store = useStore();
+const widgetsStore = useWidgets();
+const dashboardsStore = useDashboards();
 
 const currentExpansiveWidget = computed(() => {
-  return store.state.widgets?.currentExpansiveWidget;
+  return widgetsStore.currentExpansiveWidget;
 });
 
 const currentDashboard = computed(() => {
-  return store.state.dashboards?.currentDashboard;
+  return dashboardsStore.currentDashboard;
 });
 
 const dashboardType = computed(() => {
@@ -72,19 +74,19 @@ const dashboardEvents = computed(() => {
 });
 
 const currentDashboardUuid = computed(
-  () => store.state.dashboards.currentDashboard?.uuid,
+  () => dashboardsStore.currentDashboard.uuid,
 );
 
 const getCurrentDashboardWidgets = () => {
-  return store.dispatch('widgets/getCurrentDashboardWidgets');
+  widgetsStore.getCurrentDashboardWidgets();
 };
 
 const resetCurrentDashboardWidgets = () => {
-  return store.commit('widgets/RESET_CURRENT_DASHBOARD_WIDGETS');
+  widgetsStore.resetCurrentDashboardWidgets();
 };
 
 const resetAppliedFilters = () => {
-  return store.dispatch('dashboards/resetAppliedFilters');
+  dashboardsStore.resetAppliedFilters();
 };
 
 watch(

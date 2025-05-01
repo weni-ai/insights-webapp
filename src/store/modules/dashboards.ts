@@ -30,6 +30,9 @@ export const useDashboards = defineStore('dashboards', {
     last_updated_request: null,
   }),
   actions: {
+    setShowDashboardConfig(payload: Boolean) {
+      this.showDashboardConfig = payload;
+    },
     async getDashboards() {
       try {
         this.isLoadingDashboards = true;

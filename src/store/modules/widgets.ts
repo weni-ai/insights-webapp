@@ -196,18 +196,16 @@ export const useWidgets = defineStore('widgets', {
       );
       this.currentDashboardWidgets[widgetIndex] = widget;
     },
-    setWidgetExpansiveData(widget) {},
+    setCurrentExpansiveData(widget) {
+      if (!widget) {
+        this.currentExpansiveWidget = {};
+        return;
+      }
+      this.currentExpansiveWidget = widget;
+    },
     async updateCurrentExpansiveWidgetData(widget) {
-      const setWidgetData = (data) => {
-        if (!data) {
-          this.currentExpansiveWidget = {};
-          return;
-        }
-        this.currentExpansiveWidget = data;
-      };
-
       this.isLoadingCurrentExpansiveWidget = true;
-      setWidgetData(widget);
+      this.setCurrentExpansiveData(widget);
       try {
         const customParams: { sector?: string; queue?: string } = {};
 
@@ -222,10 +220,10 @@ export const useWidgets = defineStore('widgets', {
         const data = await Dashboards.getCustomStatusData({
           params: customParams,
         });
-        setWidgetData(data);
+        this.setCurrentExpansiveData(data);
       } catch (error) {
         console.error('getCustomStatusData', error);
-        setWidgetData(null);
+        this.setCurrentExpansiveData(null);
       } finally {
         this.isLoadingCurrentExpansiveWidget = false;
       }

@@ -58,15 +58,21 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import { onClickOutside } from '@vueuse/core';
+
+import { mapActions, mapState } from 'pinia';
+import { useGpt } from '@/store/modules/gpt';
+import { useWidgets } from '@/store/modules/widgets';
+import { useUser } from '@/store/modules/user';
+
 import HeaderGenerateInsightText from './HeaderGenerateInsightText.vue';
 import InsightModalFooter from './InsightModalFooter.vue';
+
 import firebaseService from '@/services/api/resources/GPT';
+
 import mitt from 'mitt';
 import { formatSecondsToHumanString } from '@/utils/time';
-import { onClickOutside } from '@vueuse/core';
-import { ref } from 'vue';
-import { mapActions } from 'pinia';
-import { useGpt } from '@/store/modules/gpt';
 
 const emitter = mitt();
 
@@ -116,15 +122,11 @@ export default {
   },
 
   computed: {
+    ...mapState(useWidgets, ['currentDashboardWidgets']),
+    ...mapState(useGpt, ['insights']),
     isRenderFooterFeedback() {
       if (this.generateInsightError) return false;
       return this.isRenderFeedback;
-    },
-    currentDashboardWidgets() {
-      return this.$store.state.widgets.currentDashboardWidgets;
-    },
-    insights() {
-      return this.$store.state.gpt.insights;
     },
   },
   watch: {
@@ -159,12 +161,13 @@ export default {
       this.isRenderFeedback = true;
     },
     async submitReview() {
+      const userStore = useUser();
       this.isSubmitFeedbackLoading = true;
       try {
         await firebaseService.createReview({
           helpful: this.isBtnYesActive ? true : false,
           comment: this.feedbackText || '',
-          user: this.$store.state.user.email || '',
+          user: userStore.email || '',
         });
 
         this.isFeedbackSent = true;

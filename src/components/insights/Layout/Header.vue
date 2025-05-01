@@ -46,7 +46,10 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState, mapMutations } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useWidgets } from '@/store/modules/widgets';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import HeaderTagLive from './HeaderTagLive.vue';
@@ -67,22 +70,21 @@ export default {
     HeaderGenerateInsightButton,
   },
   computed: {
-    ...mapState({
-      dashboards: (state) => state.dashboards.dashboards,
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      isExpansiveMode: (state) => {
-        const currentExpansiveWidget = state.widgets.currentExpansiveWidget;
+    ...mapState(useDashboards, [
+      'dashboards',
+      'currentDashboard',
+      'dashboardDefault',
+      'currentDashboardFilters',
+      'appliedFilters',
+    ]),
+    ...mapState(useWidgets, {
+      isExpansiveMode: (store) => {
+        const currentExpansiveWidget = store.currentExpansiveWidget;
         return (
           currentExpansiveWidget &&
           Object.keys(currentExpansiveWidget).length > 0
         );
       },
-      currentDashboardFilters: (state) =>
-        state.dashboards.currentDashboardFilters,
-      appliedFilters: (state) => state.dashboards.appliedFilters,
-    }),
-    ...mapGetters({
-      dashboardDefault: 'dashboards/dashboardDefault',
     }),
 
     isRenderInsightButton() {
@@ -133,7 +135,7 @@ export default {
   },
 
   watch: {
-    currentDashboard(newCurrentDashboard, oldCurrentDashboard) {
+    currentDashboard(_newCurrentDashboard, oldCurrentDashboard) {
       if (oldCurrentDashboard?.uuid) {
         this.navigateToDashboard(this.currentDashboard.uuid);
       }
@@ -153,12 +155,10 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      setCurrentDashboard: 'dashboards/setCurrentDashboard',
+    ...mapActions(useWidgets, {
+      setCurrentExpansiveWidget: 'setCurrentExpansiveData',
     }),
-    ...mapMutations({
-      setCurrentExpansiveWidget: 'widgets/SET_CURRENT_EXPANSIVE_WIDGET_DATA',
-    }),
+    ...mapActions(useDashboards, ['setCurrentDashboard']),
 
     navigateToDashboard(uuid) {
       this.$router.replace({

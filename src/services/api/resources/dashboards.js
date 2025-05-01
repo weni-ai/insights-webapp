@@ -1,8 +1,9 @@
 import { Dashboard, Filter, Widget } from '@/models';
 import http from '@/services/api/http';
-import Config from '@/store/modules/config';
-import User from '@/store/modules/user';
-import DashboardStore from '@/store/modules/dashboards';
+
+import { useConfig } from '@/store/modules/config';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useUser } from '@/store/modules/user';
 
 import { isFilteringDates } from '@/utils/filter';
 import { createRequestQuery, parseQueryString } from '@/utils/request';
@@ -13,7 +14,7 @@ export default {
 
     const queryParams = createRequestQuery({
       ...nextParams,
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
     });
 
     const response = await http.get('/dashboards/', {
@@ -44,7 +45,7 @@ export default {
     }
 
     const queryParams = createRequestQuery({
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
     });
 
     const response = await http.get(`/dashboards/${uuid}/filters/`, {
@@ -79,7 +80,7 @@ export default {
     }
 
     const queryParams = createRequestQuery({
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
     });
 
     const response = await http.get(`/dashboards/${uuid}/list_widgets/`, {
@@ -108,8 +109,8 @@ export default {
   },
 
   async getDashboardWidgetData({ dashboardUuid, widgetUuid, params }) {
-    const { appliedFilters } = DashboardStore.state;
-    const { currentDashboardFilters } = DashboardStore.state;
+    const { appliedFilters } = useDashboards();
+    const { currentDashboardFilters } = useDashboards();
 
     const hasDateFilter = isFilteringDates({
       currentDashboardFilters,
@@ -123,7 +124,7 @@ export default {
     }
 
     const treatedParams = createRequestQuery(appliedFilters, {
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
       is_live: !hasDateFilter || undefined,
       ...params,
     });
@@ -136,10 +137,10 @@ export default {
   },
 
   async getCustomStatusData({ params }) {
-    const { email } = User.state;
+    const { email } = useUser();
 
     const treatedParams = createRequestQuery(params, {
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
       user_request: email,
     });
     const widgetData = await http.get(`/dashboards/get_custom_status/`, {
@@ -157,7 +158,7 @@ export default {
     }
 
     const queryParams = createRequestQuery({
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
     });
 
     const widgetData = await http.get(
@@ -176,8 +177,8 @@ export default {
     limit,
     next,
   }) {
-    const { appliedFilters } = DashboardStore.state;
-    const { currentDashboardFilters } = DashboardStore.state;
+    const { appliedFilters } = useDashboards();
+    const { currentDashboardFilters } = useDashboards();
 
     const hasDateFilter = isFilteringDates({
       currentDashboardFilters,
@@ -192,7 +193,7 @@ export default {
 
     const queryParams = createRequestQuery(appliedFilters, {
       slug,
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
       offset,
       limit,
       next,
@@ -209,7 +210,7 @@ export default {
 
   async setDefaultDashboard({ dashboardUuid, isDefault }) {
     const queryParams = createRequestQuery({
-      project: Config.state.project.uuid,
+      project: useConfig().project?.uuid,
     });
     const response = await http.patch(
       `/dashboards/${dashboardUuid}/is_default/`,
@@ -231,7 +232,7 @@ export default {
     const response = await http.post(
       '/dashboards/create_flows_dashboard/',
       reqBody,
-      { params: { project: Config.state.project.uuid } },
+      { params: { project: useConfig().project?.uuid } },
     );
 
     return response;
@@ -246,7 +247,7 @@ export default {
       `/dashboards/${dashboardUuid}/`,
       reqBody,
       {
-        params: { project: Config.state.project.uuid },
+        params: { project: useConfig().project?.uuid },
       },
     );
     return response;
@@ -254,7 +255,7 @@ export default {
 
   async deleteDashboard(dashboardUuid) {
     const response = await http.delete(`/dashboards/${dashboardUuid}/`, {
-      params: { project: Config.state.project.uuid },
+      params: { project: useConfig().project?.uuid },
     });
     return response;
   },

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapState, mapActions } from 'pinia';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
@@ -45,6 +45,11 @@ import DashboardOnboarding from './components/insights/onboardings/DashboardOnbo
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
 import moment from 'moment';
+import { useDashboards } from './store/modules/dashboards';
+import { useConfig } from './store/modules/config';
+import { useOnboarding } from './store/modules/onboarding';
+import { useProject } from './store/modules/project';
+import { useUser } from './store/modules/user';
 
 export default {
   components: {
@@ -60,17 +65,16 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      dashboards: (state) => state.dashboards.dashboards,
-      isLoadingDashboards: (state) => state.dashboards.isLoadingDashboards,
-      isLoadingCurrentDashboardFilters: (state) =>
-        state.dashboards.isLoadingCurrentDashboardFilters,
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      token: (state) => state.config.token,
-      showCreateDashboardTour: (state) =>
-        state.onboarding.showCreateDashboardOnboarding,
-      showCompleteOnboardingModal: (state) =>
-        state.onboarding.showCompleteOnboardingModal,
+    ...mapState(useDashboards, [
+      'dashboards',
+      'isLoadingDashboards',
+      'isLoadingCurrentDashboardFilters',
+      'currentDashboard',
+    ]),
+    ...mapState(useConfig, ['token']),
+    ...mapState(useOnboarding, {
+      showCreateDashboardTour: 'showCreateDashboardOnboarding',
+      showCompleteOnboardingModal: 'showCompleteOnboardingModal',
     }),
   },
 
@@ -99,25 +103,23 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      getDashboards: 'dashboards/getDashboards',
-      getCurrentDashboardFilters: 'dashboards/getCurrentDashboardFilters',
-      setToken: 'config/setToken',
-      setProject: 'config/setProject',
-      setIsCommerce: 'project/setIsCommerce',
-      checkEnableCreateCustomDashboards:
-        'config/checkEnableCreateCustomDashboards',
-      setEmail: 'user/setEmail',
-    }),
-
-    ...mapMutations({
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-      setCurrentDashboardFilters: 'dashboards/SET_CURRENT_DASHBOARD_FILTERS',
-      setShowCreateDashboardOnboarding:
-        'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
-      setShowCompleteOnboardingModal:
-        'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
-    }),
+    ...mapActions(useDashboards, [
+      'getDashboards',
+      'getCurrentDashboardFilters',
+      'setCurrentDashboardFilters',
+    ]),
+    ...mapActions(useConfig, [
+      'setToken',
+      'setProject',
+      'checkEnableCreateCustomDashboards',
+    ]),
+    ...mapActions(useProject, ['setIsCommerce']),
+    ...mapActions(useUser, ['setEmail']),
+    ...mapActions(useOnboarding, [
+      'setOnboardingRef',
+      'setShowCreateDashboardOnboarding',
+      'setShowCompleteOnboardingModal',
+    ]),
 
     async handlerTokenAndProjectUuid() {
       const queryString = new URLSearchParams(window.location.search);

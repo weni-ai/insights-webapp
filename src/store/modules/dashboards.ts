@@ -70,8 +70,11 @@ export const useDashboards = defineStore('dashboards', {
       const filters = await Dashboards.getDashboardFilters(
         this.currentDashboard.uuid,
       );
-      this.currentDashboardFilters = filters;
+      this.setCurrentDashboardFilters(filters);
       this.isLoadingCurrentDashboardFilters = false;
+    },
+    setCurrentDashboardFilters(filters) {
+      this.currentDashboardFilters = filters;
     },
     async setAppliedFilters(filters) {
       this.appliedFilters = treatFilters(

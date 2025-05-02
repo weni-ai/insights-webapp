@@ -56,7 +56,7 @@ export const useWidgets = defineStore('widgets', {
       }
     },
 
-    updateCurrentWidgetEditing(widget: any) {
+    async updateCurrentWidgetEditing(widget: any) {
       if (isObjectsEquals(this.currentWidgetEditing, widget)) return;
       this.currentWidgetEditing = widget;
     },

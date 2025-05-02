@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
@@ -16,6 +15,17 @@ import { useReports } from '@/store/modules/reports';
 
 import { formatSecondsToHumanString } from '@/utils/time';
 import { currencySymbols } from '@/utils/currency';
+
+import LineChart from '@/components/insights/charts/LineChart.vue';
+import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
+import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
+import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
+import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
+import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
+import CardVtexConversions from '@/components/insights/cards/CardVtexConversions.vue';
+import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
+import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
+import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
 export default {
   name: 'DynamicWidget',
@@ -61,36 +71,16 @@ export default {
 
     currentComponent() {
       const componentMap = {
-        graph_column: defineAsyncComponent(
-          () => import('@/components/insights/charts/LineChart.vue'),
-        ),
-        graph_bar: defineAsyncComponent(
-          () => import('@/components/insights/charts/HorizontalBarChart.vue'),
-        ),
-        graph_funnel: defineAsyncComponent(
-          () => import('@/components/insights/cards/CardFunnel.vue'),
-        ),
-        table_dynamic_by_filter: defineAsyncComponent(
-          () => import('./HumanServiceAgentsTable/index.vue'),
-        ),
-        table_group: defineAsyncComponent(
-          () => import('@/components/insights/widgets/TableGroup.vue'),
-        ),
-        card: defineAsyncComponent(
-          () => import('@/components/insights/cards/CardDashboard.vue'),
-        ),
-        empty_column: defineAsyncComponent(
-          () => import('@/components/insights/cards/CardEmpty.vue'),
-        ),
-        vtex_order: defineAsyncComponent(
-          () => import('@/components/insights/cards/CardVtexOrder.vue'),
-        ),
-        vtex_conversions: defineAsyncComponent(
-          () => import('@/components/insights/cards/CardVtexConversions.vue'),
-        ),
-        recurrence: defineAsyncComponent(
-          () => import('@/components/insights/cards/CardRecurrence.vue'),
-        ),
+        graph_column: LineChart,
+        graph_bar: HorizontalBarChart,
+        graph_funnel: CardFunnel,
+        table_dynamic_by_filter: HumanServiceAgentsTable,
+        table_group: TableGroup,
+        card: CardDashboard,
+        empty_column: CardEmpty,
+        vtex_order: CardVtexOrder,
+        vtex_conversions: CardVtexConversions,
+        recurrence: CardRecurrence,
         insight: null, // TODO: Create Insight component
       };
 

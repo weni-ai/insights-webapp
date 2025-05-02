@@ -39,7 +39,12 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useProject } from '@/store/modules/project';
+import { useWidgets } from '@/store/modules/widgets';
+import { useOnboarding } from '@/store/modules/onboarding';
+import { useConfig } from '@/store/modules/config';
 
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
@@ -69,14 +74,16 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
-      isCommerce: (state) => state.project.isCommerce,
-      widget: (state) => state.widgets.currentWidgetEditing,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
+    ...mapState(useProject, {
+      isLoadedProjectFlows: 'isLoadedFlows',
+      isCommerce: 'isCommerce',
     }),
+    ...mapState(useWidgets, { widget: 'currentWidgetEditing' }),
+    ...mapState(useOnboarding, [
+      'onboardingRefs',
+      'showConfigWidgetOnboarding',
+    ]),
+    ...mapState(useConfig, ['project']),
 
     widgetConfigType() {
       if (this.widget.type === 'vtex_order') return 'vtex';
@@ -108,7 +115,7 @@ export default {
           ? enabledProjectsStg
           : enabledProjectsProd;
 
-      return enabledProjects.includes(this.$store.state.config.project.uuid);
+      return enabledProjects.includes(this.project.uuid);
     },
 
     galleryOptions() {
@@ -164,16 +171,13 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      getProjectFlows: 'project/getProjectFlows',
-      callTourNextStep: 'onboarding/callTourNextStep',
-      callTourPreviousStep: 'onboarding/callTourPreviousStep',
-      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-    }),
-
-    ...mapMutations({
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-    }),
+    ...mapActions(useProject, ['getProjectFlows']),
+    ...mapActions(useOnboarding, [
+      'callTourNextStep',
+      'callTourPreviousStep',
+      'setOnboardingRef',
+    ]),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditing']),
 
     async closeAllDrawers({ handleTourNextStep } = {}) {
       this.showDrawerConfigWidget = false;

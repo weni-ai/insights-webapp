@@ -118,19 +118,19 @@
 
 <script setup>
 import { onMounted, ref, computed, nextTick, watch } from 'vue';
-import { useStore } from 'vuex';
+
+import { useConfig } from '@/store/modules/config';
 
 import FormAccordion from '@/components/FormAccordion.vue';
-
-import i18n from '@/utils/plugins/i18n';
 
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
 
 import { removeDuplicatedItems } from '@/utils/array';
+import i18n from '@/utils/plugins/i18n';
 
-const store = useStore();
+const configStore = useConfig();
 
-const project_uuid = computed(() => store.state.config.project?.uuid);
+const project_uuid = computed(() => configStore.project?.uuid);
 
 const props = defineProps({ modelValue: { type: Object, required: true } });
 

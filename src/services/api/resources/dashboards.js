@@ -109,8 +109,7 @@ export default {
   },
 
   async getDashboardWidgetData({ dashboardUuid, widgetUuid, params }) {
-    const { appliedFilters } = useDashboards();
-    const { currentDashboardFilters } = useDashboards();
+    const { appliedFilters, currentDashboardFilters } = useDashboards();
 
     const hasDateFilter = isFilteringDates({
       currentDashboardFilters,
@@ -177,8 +176,7 @@ export default {
     limit,
     next,
   }) {
-    const { appliedFilters } = useDashboards();
-    const { currentDashboardFilters } = useDashboards();
+    const { appliedFilters, currentDashboardFilters } = useDashboards();
 
     const hasDateFilter = isFilteringDates({
       currentDashboardFilters,

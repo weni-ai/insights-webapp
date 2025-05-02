@@ -36,6 +36,13 @@
 
 <script>
 import { mapState, mapActions } from 'pinia';
+
+import { useDashboards } from './store/modules/dashboards';
+import { useConfig } from './store/modules/config';
+import { useOnboarding } from './store/modules/onboarding';
+import { useProject } from './store/modules/project';
+import { useUser } from './store/modules/user';
+
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
@@ -45,11 +52,6 @@ import DashboardOnboarding from './components/insights/onboardings/DashboardOnbo
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
 import moment from 'moment';
-import { useDashboards } from './store/modules/dashboards';
-import { useConfig } from './store/modules/config';
-import { useOnboarding } from './store/modules/onboarding';
-import { useProject } from './store/modules/project';
-import { useUser } from './store/modules/user';
 
 export default {
   components: {

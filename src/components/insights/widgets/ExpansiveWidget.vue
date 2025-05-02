@@ -87,16 +87,19 @@ const widgetProps = computed(() => {
           hidden_name: false,
         })) || []),
       ],
-      items:
-        data?.results?.map((item) => ({
-          ...item,
-          custom_status: Object.fromEntries(
-            item.custom_status.map((status) => [
-              status.status_type,
-              status.break_time,
-            ]),
-          ),
-        })) || [],
+      items: data?.results
+        ? data.results.map((item) => ({
+            ...item,
+            custom_status: item.custom_status
+              ? Object.fromEntries(
+                  item?.custom_status?.map((status) => [
+                    status.status_type,
+                    status.break_time,
+                  ]),
+                )
+              : {},
+          }))
+        : [],
     },
   };
 

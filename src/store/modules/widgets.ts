@@ -1,9 +1,9 @@
-import { defineStore } from 'pinia';
 import { useDashboards } from './dashboards';
 import { Dashboards, Widgets } from '@/services/api';
 
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
+import { defineStore } from 'pinia';
 
 export const useWidgets = defineStore('widgets', {
   state: () => ({
@@ -15,61 +15,107 @@ export const useWidgets = defineStore('widgets', {
     },
     isLoadingCurrentExpansiveWidget: false,
     isLoadingCurrentDashboardWidgets: false,
+
     currentWidgetEditing: null,
   }),
   actions: {
+    setLoadingCurrentDashboardWidgets(loading: boolean) {
+      this.isLoadingCurrentDashboardWidgets = loading;
+    },
+
+    setLoadingCurrentExpansiveWidget(loading: boolean) {
+      this.isLoadingCurrentExpansiveWidget = loading;
+    },
+
+    setCurrentDashboardWidgets(widgets: any[]) {
+      this.currentDashboardWidgets = widgets;
+    },
+
     resetCurrentDashboardWidgets() {
       this.currentDashboardWidgets = [];
     },
-    async getCurrentDashboardWidgets() {
-      const dashboardsStore = useDashboards();
-      this.isLoadingCurrentDashboardWidgets = true;
-      const widgets = await Dashboards.getDashboardWidgets(
-        dashboardsStore.currentDashboard.uuid,
-      );
-      this.currentDashboardWidgets = widgets;
-      this.isLoadingCurrentDashboardWidgets = false;
-    },
-    setWidgetData({ uuid, data }) {
+
+    setCurrentDashboardWidgetData({ uuid, data }: { uuid: string; data: any }) {
       const widgetIndex = this.currentDashboardWidgets.findIndex(
         (widget) => widget.uuid === uuid,
       );
-      const isValidWidgetIndex = widgetIndex !== -1;
-
-      if (isValidWidgetIndex) {
+      if (widgetIndex !== -1) {
         this.currentDashboardWidgets[widgetIndex] = {
           ...this.currentDashboardWidgets[widgetIndex],
           data,
         };
       }
     },
+
+    updateCurrentDashboardWidget(widget: any) {
+      const widgetIndex = this.currentDashboardWidgets.findIndex(
+        (mappedWidget) => mappedWidget.uuid === widget.uuid,
+      );
+      if (widgetIndex !== -1) {
+        this.currentDashboardWidgets[widgetIndex] = widget;
+      }
+    },
+
+    updateCurrentWidgetEditing(widget: any) {
+      if (isObjectsEquals(this.currentWidgetEditing, widget)) return;
+      this.currentWidgetEditing = widget;
+    },
+
+    setCurrentExpansiveWidgetData(widget: any) {
+      this.currentExpansiveWidget = widget || {};
+    },
+
+    setCurrentExpansiveWidgetFilters(filters: { [key: string]: string }) {
+      this.currentExpansiveWidgetFilters = {
+        ...this.currentExpansiveWidgetFilters,
+        ...filters,
+      };
+    },
+
+    resetCurrentExpansiveWidgetsFilters() {
+      this.currentExpansiveWidgetFilters = {
+        sector: '',
+        queue: '',
+      };
+    },
+
+    async getCurrentDashboardWidgets() {
+      this.setLoadingCurrentDashboardWidgets(true);
+
+      const widgets = await Dashboards.getDashboardWidgets(
+        useDashboards().currentDashboard.uuid,
+      );
+      this.setCurrentDashboardWidgets(widgets);
+
+      this.setLoadingCurrentDashboardWidgets(false);
+    },
+
     async getCurrentDashboardWidgetData(widget) {
-      const dashboardsStore = useDashboards();
       const { uuid, name } = widget;
+      const setWidgetData = (data) =>
+        this.setCurrentDashboardWidgetData({ uuid, data });
 
       if (!name) {
         /* This only checking if the name is not defined, since the widget may be unconfigured,
           but still have empty fields in the "config" object. */
-        this.setWidgetData({ uuid, data: null });
+        setWidgetData(null);
         return;
       }
 
       try {
         const data = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.currentDashboard.uuid,
+          dashboardUuid: useDashboards().currentDashboard.uuid,
           widgetUuid: uuid,
         } as any);
 
-        this.setWidgetData({ uuid, data });
+        setWidgetData(data);
       } catch (error) {
         console.error(error);
-        if (widget.type === 'vtex_conversions') {
-          this.setWidgetData({ uuid, data: { error: true } });
-        } else {
-          this.setWidgetData({ data: null, uuid });
-        }
+        if (widget.type === 'vtex_conversions') setWidgetData({ error: true });
+        else setWidgetData(null);
       }
     },
+
     async getCurrentDashboardWidgetsDatas() {
       Promise.all(
         this.currentDashboardWidgets.map(async (widget) => {
@@ -81,30 +127,29 @@ export const useWidgets = defineStore('widgets', {
         }),
       );
     },
+
     async getWidgetRecurrenceData({ uuid }) {
-      const dashboardsStore = useDashboards();
       try {
         const response: any = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.currentDashboard.uuid,
+          dashboardUuid: useDashboards().currentDashboard.uuid,
           widgetUuid: uuid,
           params: {},
         });
 
         const formattedResponse = response.results;
 
-        this.setWidgetData({ uuid, data: formattedResponse });
+        this.setCurrentDashboardWidgetData({ uuid, data: formattedResponse });
       } catch (error) {
         console.error(error);
-        this.setWidgetData({ uuid, data: [] });
+        this.setCurrentDashboardWidgetData({ uuid, data: [] });
       }
     },
-    async getWidgetGraphFunnelData({ uuid, widgetFunnelConfig }) {
-      const dashboardsStore = useDashboards();
 
+    async getWidgetGraphFunnelData({ uuid, widgetFunnelConfig }) {
       const fetchData = async (metric) => {
         const { name } = widgetFunnelConfig[metric];
         const { value }: any = await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.currentDashboard.uuid,
+          dashboardUuid: useDashboards().currentDashboard.uuid,
           widgetUuid: uuid,
           params: { slug: metric },
         });
@@ -127,18 +172,17 @@ export const useWidgets = defineStore('widgets', {
           };
         })
         .sort((a, b) => b.percentage - a.percentage);
-
-      this.setWidgetData({ uuid, data: formattedResponse });
+      this.setCurrentDashboardWidgetData({ uuid, data: formattedResponse });
     },
+
     async getWidgetVtexOrderData({ uuid, utm_source = '' }) {
-      const dashboardsStore = useDashboards();
       try {
         const response: {
           countSell?: string;
           accumulatedTotal?: string;
           medium_ticket?: string;
         } = (await Dashboards.getDashboardWidgetData({
-          dashboardUuid: dashboardsStore.currentDashboard.uuid,
+          dashboardUuid: useDashboards().currentDashboard.uuid,
           widgetUuid: uuid,
           params: {
             utm_source,
@@ -164,48 +208,40 @@ export const useWidgets = defineStore('widgets', {
             average_ticket: response.medium_ticket,
           };
         }
-
-        this.setWidgetData({ uuid, data: formattedResponse });
+        this.setCurrentDashboardWidgetData({ uuid, data: formattedResponse });
       } catch (error) {
         console.error(error);
-        this.setWidgetData({
+        this.setCurrentDashboardWidgetData({
           uuid,
           data: {
-            orders: '',
-            total_value: '',
-            average_ticket: '',
+            uuid,
+            data: {
+              orders: '',
+              total_value: '',
+              average_ticket: '',
+            },
           },
         });
       }
     },
-    updateCurrentWidgetEditing(widget) {
-      if (isObjectsEquals(this.currentWidgetEditing, widget)) return;
-      this.currentWidgetEditing = widget;
-    },
+
     updateCurrentWidgetEditingConfig(config) {
-      const treatedWidget = { ...this.currentWidgetEditing, config };
-      if (isObjectsEquals(this.currentWidgetEditing, treatedWidget)) return;
-      this.currentWidgetEditing = treatedWidget;
+      this.updateCurrentWidgetEditing({ ...this.currentWidgetEditing, config });
     },
+
     async updateWidget(widget: WidgetType) {
       await Widgets.updateWidget({
         widget,
       });
-      const widgetIndex = this.currentDashboardWidgets.findIndex(
-        (mappedWidget) => mappedWidget.uuid === widget.uuid,
-      );
-      this.currentDashboardWidgets[widgetIndex] = widget;
+      this.updateCurrentDashboardWidget(widget);
     },
-    setCurrentExpansiveData(widget) {
-      if (!widget) {
-        this.currentExpansiveWidget = {};
-        return;
-      }
-      this.currentExpansiveWidget = widget;
-    },
+
     async updateCurrentExpansiveWidgetData(widget) {
-      this.isLoadingCurrentExpansiveWidget = true;
-      this.setCurrentExpansiveData(widget);
+      const setWidgetData = (data) =>
+        this.setCurrentExpansiveWidgetData({ ...widget, data });
+      this.setLoadingCurrentExpansiveWidget(true);
+
+      setWidgetData(widget);
       try {
         const customParams: { sector?: string; queue?: string } = {};
 
@@ -220,28 +256,25 @@ export const useWidgets = defineStore('widgets', {
         const data = await Dashboards.getCustomStatusData({
           params: customParams,
         });
-        this.setCurrentExpansiveData(data);
+        setWidgetData(data);
       } catch (error) {
         console.error('getCustomStatusData', error);
-        this.setCurrentExpansiveData(null);
+        setWidgetData(null);
       } finally {
-        this.isLoadingCurrentExpansiveWidget = false;
+        this.setLoadingCurrentExpansiveWidget(false);
       }
     },
+
     updateCurrentExpansiveWidgetFilters(filters) {
-      this.currentExpansiveWidgetFilters = {
-        ...this.currentExpansiveWidgetFilters,
-        ...filters,
-      };
+      this.setCurrentExpansiveWidgetFilters(filters);
     },
+
     resetCurrentExpansiveWidgetFilters() {
-      this.currentExpansiveWidgetFilters = {
-        sector: '',
-        queue: '',
-      };
+      this.resetCurrentExpansiveWidgetsFilters();
     },
+
     updateCurrentExpansiveWidgetLoading(loading) {
-      this.isLoadingCurrentExpansiveWidget = loading;
+      this.setLoadingCurrentExpansiveWidget(loading);
     },
   },
 });

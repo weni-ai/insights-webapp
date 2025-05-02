@@ -16,16 +16,10 @@
 </template>
 
 <script setup lang="ts">
-import {
-  computed,
-  watch,
-  onMounted,
-  onUnmounted,
-  ref,
-  defineAsyncComponent,
-} from 'vue';
+import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
 
 import { useWidgets } from '@/store/modules/widgets';
+import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 
 const POLLING_INTERVAL = 60000; // 1 minute in milliseconds
 const pollingInterval = ref<number | null>(null);
@@ -49,9 +43,7 @@ const currentExpansiveWidgetFilters = computed(() => {
 
 const currentComponent = computed(() => {
   const componentMap = {
-    table_dynamic_by_filter: defineAsyncComponent(
-      () => import('./HumanServiceAgentsTable/index.vue'),
-    ),
+    table_dynamic_by_filter: HumanServiceAgentsTable,
   };
 
   return componentMap[props.widget.value.type] || null;

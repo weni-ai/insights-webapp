@@ -43,7 +43,11 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useWidgets } from '@/store/modules/widgets';
+import { useOnboarding } from '@/store/modules/onboarding';
 
 import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
@@ -76,15 +80,13 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      currentDashboardWidgets: (state) => state.widgets.currentDashboardWidgets,
-      currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
-      isLoadingCurrentDashboardWidgets: (state) =>
-        state.widgets.isLoadingCurrentDashboardWidgets,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
-    }),
+    ...mapState(useDashboards, ['currentDashboard']),
+    ...mapState(useWidgets, [
+      'currentDashboardWidgets',
+      'currentWidgetEditing',
+      'isLoadingCurrentDashboardWidgets',
+    ]),
+    ...mapState(useOnboarding, ['showConfigWidgetOnboarding']),
 
     isCustomDashboard() {
       return this.currentDashboard.is_deletable;
@@ -118,14 +120,11 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-      callTourNextStep: 'onboarding/callTourNextStep',
-    }),
-    ...mapMutations({
-      setShowConfigWidgetsOnboarding:
-        'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditing']),
+    ...mapActions(useOnboarding, [
+      'callTourNextStep',
+      'setShowConfigWidgetsOnboarding',
+    ]),
 
     openFlowResultContactList(data) {
       this.flowResultsContactListParams = data;

@@ -156,7 +156,7 @@ export default {
 
   methods: {
     ...mapActions(useWidgets, {
-      setCurrentExpansiveWidget: 'setCurrentExpansiveData',
+      setCurrentExpansiveWidget: 'setCurrentExpansiveWidgetData',
     }),
     ...mapActions(useDashboards, ['setCurrentDashboard']),
 

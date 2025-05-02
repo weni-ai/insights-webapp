@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+import { useWidgets } from '@/store/modules/widgets';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
@@ -77,9 +78,11 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
-    }),
+    ...mapState(useWidgets, ['currentWidgetEditing']),
+
+    widgetConfig() {
+      return this.currentWidgetEditing.config;
+    },
 
     isValidForm() {
       const { config } = this;
@@ -128,10 +131,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditingConfig:
-        'widgets/updateCurrentWidgetEditingConfig',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
   },
 };
 </script>

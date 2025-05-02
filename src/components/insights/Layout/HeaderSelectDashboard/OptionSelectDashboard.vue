@@ -27,7 +27,9 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+import { useDashboards } from '@/store/modules/dashboards';
+
 import Unnnic from '@weni/unnnic-system';
 
 export default {
@@ -48,23 +50,17 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-    }),
-    ...mapGetters({
-      dashboardDefault: 'dashboards/dashboardDefault',
-    }),
-
+    ...mapState(useDashboards, ['currentDashboard', 'dashboardDefault']),
     isDefaultDashboard() {
       return this.dashboardDefault?.uuid === this.dashboard.uuid;
     },
   },
 
   methods: {
-    ...mapActions({
-      setCurrentDashboard: 'dashboards/setCurrentDashboard',
-      setDefaultDashboard: 'dashboards/setDefaultDashboard',
-    }),
+    ...mapActions(useDashboards, [
+      'setCurrentDashboard',
+      'setDefaultDashboard',
+    ]),
 
     setStarHovered(boolean) {
       this.starHovered = boolean;

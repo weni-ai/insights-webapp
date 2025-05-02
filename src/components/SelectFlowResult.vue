@@ -18,7 +18,8 @@
   </section>
 </template>
 <script>
-import { mapState } from 'vuex';
+import { useProject } from '@/store/modules/project';
+import { mapState } from 'pinia';
 
 export default {
   name: 'SelectFlowResult',
@@ -49,8 +50,8 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      projectFlows: (state) => state.project.flows,
+    ...mapState(useProject, {
+      projectFlows: 'flows',
     }),
 
     flowResults() {

@@ -7,7 +7,6 @@ import {
   getHours,
   getMinutes,
 } from 'date-fns';
-import { useI18n } from 'vue-i18n';
 
 /**
  * Formats a number of seconds into a human-readable time string.
@@ -133,7 +132,7 @@ interface MatchResult {
  */
 export function findMatchingDate(
   modelValue: { start: string; end: string },
-  t: ReturnType<typeof useI18n>,
+  t: any,
 ): MatchResult | null {
   const rangeTranslations: RangeTranslation[] = [
     {

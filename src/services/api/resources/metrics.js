@@ -1,10 +1,10 @@
 import http from '@/services/api/http';
-import Config from '@/store/modules/config';
+import { useConfig } from '@/store/modules/config';
 import { createRequestQuery } from '@/utils/request';
 
 export default {
   async getMetrics(queryParams = {}, token) {
-    const { project } = Config.state;
+    const { project } = useConfig();
 
     const defaultParams = {
       skill: 'abandoned_cart',

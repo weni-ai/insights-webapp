@@ -43,13 +43,13 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue';
 import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useOnboarding } from '@/store/modules/onboarding';
 
-import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
 import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
@@ -59,7 +59,9 @@ export default {
   name: 'DashboardCustom',
 
   components: {
-    DynamicWidget,
+    DynamicWidget: defineAsyncComponent(
+      () => import('@/components/insights/widgets/DynamicWidget.vue'),
+    ),
     DrawerConfigGallery,
     IconLoading,
     WidgetOnboarding,

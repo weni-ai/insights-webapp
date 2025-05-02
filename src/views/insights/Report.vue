@@ -22,15 +22,17 @@ import { mapActions, mapState } from 'pinia';
 import { useReports } from '@/store/modules/reports';
 import { useWidgets } from '@/store/modules/widgets';
 
-import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
 import IconLoading from '@/components/IconLoading.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
+import { defineAsyncComponent } from 'vue';
 
 export default {
   name: 'ReportView',
 
   components: {
-    DynamicWidget,
+    DynamicWidget: defineAsyncComponent(
+      () => import('@/components/insights/widgets/DynamicWidget.vue'),
+    ),
     IconLoading,
     FlowResultContactListModal,
   },

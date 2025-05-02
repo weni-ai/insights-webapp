@@ -111,10 +111,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditingConfig:
-        'widgets/updateCurrentWidgetEditingConfig',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
     resetWidget() {
       this.$emit('reset-widget');
     },

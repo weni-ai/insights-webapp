@@ -50,7 +50,7 @@ export const useWidgets = defineStore('widgets', {
       if (!name) {
         /* This only checking if the name is not defined, since the widget may be unconfigured,
           but still have empty fields in the "config" object. */
-        this.setWidgetData(null);
+        this.setWidgetData({ uuid, data: null });
         return;
       }
 
@@ -60,13 +60,13 @@ export const useWidgets = defineStore('widgets', {
           widgetUuid: uuid,
         } as any);
 
-        this.setWidgetData(data);
+        this.setWidgetData({ uuid, data });
       } catch (error) {
         console.error(error);
         if (widget.type === 'vtex_conversions') {
-          this.setWidgetData({ error: true });
+          this.setWidgetData({ uuid, data: { error: true } });
         } else {
-          this.setWidgetData(null);
+          this.setWidgetData({ data: null, uuid });
         }
       }
     },

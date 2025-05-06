@@ -56,7 +56,11 @@ export const useDashboards = defineStore('dashboards', {
           return dash;
         });
 
-        this.dashboards = sortByKey(treatedDashboards, 'is_default', 'desc');
+        this.dashboards = sortByKey(
+          this.dashboards.concat(treatedDashboards),
+          'is_default',
+          'desc',
+        );
       } catch (error) {
         console.log(error);
       } finally {

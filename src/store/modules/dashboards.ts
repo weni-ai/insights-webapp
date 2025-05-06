@@ -167,7 +167,8 @@ export const useDashboards = defineStore('dashboards', {
         state.dashboards.find((dashboard) => dashboard.is_default) ||
         state.dashboards.find(
           (dashboard) => dashboard.name === 'human_service_dashboard.title',
-        )
+        ) ||
+        {}
       );
     },
   },

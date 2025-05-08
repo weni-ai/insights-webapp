@@ -131,7 +131,7 @@ export default {
       return true;
     },
     isDisableClearFields() {
-      return this.metrics.some((e) => e.name === '' || e.flow === '');
+      return this.metrics.some((metric) => metric.name === '' || metric.flow === '');
     },
   },
 

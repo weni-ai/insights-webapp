@@ -141,9 +141,14 @@ export default {
     },
     handleDisabledFilter(filter) {
       if (['tags', 'queue'].includes(filter.name)) {
-        const sectorId =
-          this.filtersInternal[filter.depends_on?.filter]?.[0]?.value;
-        return !sectorId;
+        const disableTagsAndQueueFilter =
+          this.filtersInternal[filter.depends_on?.filter]?.length !== 1;
+
+        if (disableTagsAndQueueFilter) {
+          this.filtersInternal[filter.name] = undefined;
+        }
+
+        return disableTagsAndQueueFilter;
       }
 
       return (

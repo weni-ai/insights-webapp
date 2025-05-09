@@ -47,7 +47,11 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapGetters } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useSectors } from '@/store/modules/sectors';
+
 import DynamicFilter from './DynamicFilter.vue';
 
 export default {
@@ -73,15 +77,8 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboardFilters: (state) =>
-        state.dashboards.currentDashboardFilters,
-      appliedFilters: (state) => state.dashboards.appliedFilters,
-      sectors: (state) => state.sectors.sectors,
-    }),
-    ...mapGetters({
-      getSectorById: 'sectors/getSectorById',
-    }),
+    ...mapState(useDashboards, ['currentDashboardFilters', 'appliedFilters']),
+    ...mapState(useSectors, ['sectors', 'getSectorByUuid']),
 
     hasFiltersInternal() {
       return Object.keys(this.filtersInternal).length;
@@ -120,10 +117,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      setAppliedFilters: 'dashboards/setAppliedFilters',
-      resetAppliedFilters: 'dashboards/resetAppliedFilters',
-    }),
+    ...mapActions(useDashboards, ['setAppliedFilters', 'resetAppliedFilters']),
     getDynamicFiltersDependsOnValues(filter) {
       if (!filter.depends_on?.search_param) return null;
 
@@ -200,7 +194,7 @@ export default {
 
         processedFilters.sector = sectorValues.map((value) => {
           const trimmedValue = typeof value === 'string' ? value.trim() : value;
-          const sector = this.getSectorById(trimmedValue);
+          const sector = this.getSectorByUuid(trimmedValue);
           return {
             value: trimmedValue,
             label: sector ? sector.name : null,

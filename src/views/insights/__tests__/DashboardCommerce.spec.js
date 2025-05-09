@@ -107,7 +107,7 @@ describe('DashboardCommerce', () => {
       });
 
       await flushPromises();
-      
+
       wrapper.vm.isLoading = true;
       await wrapper.vm.$nextTick();
 

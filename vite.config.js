@@ -20,7 +20,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      'host/sharedStore': process.env.NODE_ENV === 'test' ? path.resolve(__dirname, 'tests/__mocks__/host/sharedStore.js') : undefined,
+      'host/sharedStore':
+        process.env.NODE_ENV === 'test'
+          ? path.resolve(__dirname, 'tests/__mocks__/host/sharedStore.js')
+          : undefined,
     },
   },
 });

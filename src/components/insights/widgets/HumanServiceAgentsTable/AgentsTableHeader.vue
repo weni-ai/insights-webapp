@@ -59,7 +59,10 @@
 
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue';
-import { useStore } from 'vuex';
+
+import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
+import { useWidgets } from '@/store/modules/widgets';
+
 import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
 
 const props = defineProps({
@@ -73,7 +76,9 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const agentsColumnsFilterStore = useAgentsColumnsFilter();
+const widgetsStore = useWidgets();
+
 const selectedColumns = ref([]);
 const dependsOnQueue = ref({
   search_param: 'sector_id',
@@ -83,11 +88,11 @@ const selectedSector = ref('');
 const selectedQueue = ref('');
 
 onMounted(() => {
-  store.dispatch('agentsColumnsFilter/initializeFromStorage');
+  agentsColumnsFilterStore.initializeFromStorage();
 
-  const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
+  const storedColumns = agentsColumnsFilterStore.visibleColumns || [];
 
-  const currentFilters = store.state.widgets.currentExpansiveWidgetFilters;
+  const currentFilters = widgetsStore.currentExpansiveWidgetFilters;
   selectedSector.value = currentFilters.sector;
   selectedQueue.value = currentFilters.queue;
 
@@ -124,16 +129,12 @@ const hasFiltersInternal = computed(() => {
 });
 
 const handleVisibleColumnsUpdate = (value) => {
-  if (
-    !store.state?.agentsColumnsFilter?.hasInitialized ||
-    !Array.isArray(value)
-  )
-    return;
+  if (!agentsColumnsFilterStore.hasInitialized || !Array.isArray(value)) return;
 
   const columnNames = value.map((option) => option.value);
 
   selectedColumns.value = value;
-  store.dispatch('agentsColumnsFilter/setVisibleColumns', columnNames);
+  agentsColumnsFilterStore.setVisibleColumns(columnNames);
 };
 
 const updateSector = (value) => {
@@ -145,9 +146,7 @@ const updateSector = (value) => {
 
   if (!value) {
     selectedQueue.value = '';
-    store.dispatch('widgets/updateCurrentExpansiveWidgetFilters', {
-      queue: '',
-    });
+    widgetsStore.updateCurrentExpansiveWidgetFilters({ queue: '' });
   }
 };
 
@@ -164,31 +163,30 @@ const getDynamicFiltersDependsOnValues = (filter) => {
 const clearFilters = () => {
   selectedSector.value = '';
   selectedQueue.value = '';
-
-  store.dispatch('widgets/resetCurrentExpansiveWidgetFilters');
+  widgetsStore.resetCurrentExpansiveWidgetFilters();
 };
 
 const refreshData = () => {
-  store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
-    ...store.state.widgets.currentExpansiveWidget,
+  widgetsStore.updateCurrentExpansiveWidgetData({
+    ...widgetsStore.currentExpansiveWidget,
   });
 };
 
 watch(headerOptions, () => {
-  const storedColumns = store.state?.agentsColumnsFilter?.visibleColumns || [];
+  const storedColumns = agentsColumnsFilterStore.visibleColumns || [];
   if (storedColumns.length === 0 && headerOptions.value.length > 2) {
     handleVisibleColumnsUpdate(headerOptions.value);
   }
 });
 
 watch(selectedSector, () => {
-  store.dispatch('widgets/updateCurrentExpansiveWidgetFilters', {
+  widgetsStore.updateCurrentExpansiveWidgetFilters({
     sector: selectedSector.value,
   });
 });
 
 watch(selectedQueue, () => {
-  store.dispatch('widgets/updateCurrentExpansiveWidgetFilters', {
+  widgetsStore.updateCurrentExpansiveWidgetFilters({
     queue: selectedQueue.value,
   });
 });

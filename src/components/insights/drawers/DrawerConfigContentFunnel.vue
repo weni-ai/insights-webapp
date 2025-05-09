@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+import { useProject } from '@/store/modules/project';
 
 import FormAccordion from '@/components/FormAccordion.vue';
 import SelectFlow from '@/components/SelectFlow.vue';
@@ -105,8 +106,8 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      projectFlows: (state) => state.project.flows,
+    ...mapState(useProject, {
+      projectFlows: 'flows',
     }),
 
     validMetricsLength() {

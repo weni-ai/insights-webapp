@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapState } from 'pinia';
 import unnnic from '@weni/unnnic-system';
 
 import ProgressBar from '@/components/ProgressBar.vue';
@@ -74,6 +74,7 @@ import LayoutSelector from '@/components/insights/dashboards/layout/LayoutSelect
 
 import { Dashboards } from '@/services/api';
 import { Dashboard } from '@/models';
+import { useDashboards } from '@/store/modules/dashboards';
 export default {
   name: 'DrawerDashboardConfig',
   components: { ProgressBar, ModalDeleteDashboard, LayoutSelector },
@@ -109,7 +110,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({ dashboards: (state) => state.dashboards.dashboards }),
+    ...mapState(useDashboards, ['dashboards']),
 
     isValidConfig() {
       const commonValidations = !!(
@@ -131,10 +132,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setDashboards: 'dashboards/SET_DASHBOARDS',
-      setCurrentDashboard: 'dashboards/SET_CURRENT_DASHBOARD',
-    }),
     handleDashboardFields() {
       const currencyOption = this.currencyOptions.find(
         (currency) => currency.value === this.dashboard.config?.currency_type,
@@ -149,9 +146,12 @@ export default {
       this.$emit('close');
     },
     async handleCreateProgressComplete() {
+      const dashboardsStore = useDashboards();
       this.loadingRequest = false;
       this.dashboards.push(this.createdDashboard);
-      this.setCurrentDashboard(this.createdDashboard);
+
+      dashboardsStore.currentDashboard = this.createdDashboard;
+
       await this.$router.push({
         name: 'dashboard',
         params: {
@@ -200,6 +200,7 @@ export default {
         });
     },
     updateDashboard() {
+      const dashboardsStore = useDashboards();
       this.loadingRequest = true;
 
       Dashboards.updateFlowsDashboard({
@@ -224,8 +225,8 @@ export default {
             return dash;
           });
 
-          this.setDashboards(dashboards);
-          this.setCurrentDashboard(updatedDashboard);
+          dashboardsStore.dashboards = dashboards;
+          dashboardsStore.currentDashboard = updatedDashboard;
 
           unnnic.unnnicCallAlert({
             props: {

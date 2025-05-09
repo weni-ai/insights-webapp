@@ -23,11 +23,12 @@
   />
 </template>
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useWidgets } from '@/store/modules/widgets';
 
 import RadioList from '@/components/RadioList.vue';
 import CheckboxList from '@/components/CheckboxList.vue';
-
 import SubWidget from './SubWidget.vue';
 
 export default {
@@ -74,9 +75,11 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
-    }),
+    ...mapState(useWidgets, ['currentWidgetEditing']),
+
+    widgetConfig() {
+      return this.currentWidgetEditing.config;
+    },
 
     formatations() {
       return [
@@ -138,10 +141,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditingConfig:
-        'widgets/updateCurrentWidgetEditingConfig',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
 
     handleConfig() {
       const { widgetConfig } = this;

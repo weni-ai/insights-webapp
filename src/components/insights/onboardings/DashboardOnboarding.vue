@@ -8,15 +8,16 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useOnboarding } from '@/store/modules/onboarding';
+import { useDashboards } from '@/store/modules/dashboards';
 
 export default {
   name: 'DashboardOnboarding',
 
   computed: {
-    ...mapState({
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-    }),
+    ...mapState(useOnboarding, ['onboardingRefs']),
     dashboardTourSteps() {
       return [
         {
@@ -53,15 +54,12 @@ export default {
     });
   },
   methods: {
-    ...mapActions({
-      beforeOpenDashboardList: 'onboarding/beforeOpenDashboardList',
-    }),
-    ...mapMutations({
-      setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-      setShowCreateDashboardOnboarding:
-        'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
-    }),
+    ...mapActions(useOnboarding, [
+      'beforeOpenDashboardList',
+      'setOnboardingRef',
+      'setShowCreateDashboardOnboarding',
+    ]),
+    ...mapActions(useDashboards, ['setShowDashboardConfig']),
   },
 };
 </script>

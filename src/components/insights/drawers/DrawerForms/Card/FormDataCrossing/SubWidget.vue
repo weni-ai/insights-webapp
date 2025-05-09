@@ -11,7 +11,7 @@
         <SelectFlow v-model="configLocal.flow.uuid" />
 
         <RadioList
-          v-model:selected-radio="configLocal.result_type"
+          v-model:selectedRadio="configLocal.result_type"
           :label="$t('drawers.config_card.result_type')"
           :radios="result_types"
           :wrap="false"
@@ -25,7 +25,7 @@
           />
 
           <RadioList
-            v-model:selected-radio="configLocal.operation"
+            v-model:selectedRadio="configLocal.operation"
             :radios="operations"
           />
         </template>

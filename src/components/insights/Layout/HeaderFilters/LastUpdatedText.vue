@@ -9,10 +9,11 @@
 <script setup>
 import { computed } from 'vue';
 import { formatTimeStringWithDayNight } from '@/utils/time';
-import { useStore } from 'vuex';
 
-const store = useStore();
-const lastUpdatedAt = computed(() => store.getters['dashboards/lastUpdatedAt']);
+import { useDashboards } from '@/store/modules/dashboards';
+
+const dashboardsStore = useDashboards();
+const lastUpdatedAt = computed(() => dashboardsStore.lastUpdatedAt);
 
 const formattedTime = computed(() => {
   if (!lastUpdatedAt.value) return '--:--';

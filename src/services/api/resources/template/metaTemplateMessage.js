@@ -1,4 +1,6 @@
 import http from '@/services/api/http';
+import { fullySanitize } from '@/utils/sanatize';
+import { parseWhatsAppFormattingToHtml } from '@/utils/whatsapp';
 
 export default {
   async listMetricsSource(source) {
@@ -60,6 +62,8 @@ export default {
       (element) => element.type === 'HEADER' && element.format === 'TEXT',
     )?.text;
 
+    const safeTitle = parseWhatsAppFormattingToHtml(fullySanitize(title));
+
     const image = response.components.find(
       (element) => element.type === 'HEADER' && element.format === 'IMAGE',
     )?.example?.header_handle?.[0];
@@ -67,6 +71,8 @@ export default {
     const text = response.components.find(
       (element) => element.type === 'BODY',
     )?.text;
+
+    const safeText = parseWhatsAppFormattingToHtml(fullySanitize(text));
 
     const hint = '';
 
@@ -80,7 +86,16 @@ export default {
 
     const is_favorite = response.is_favorite;
 
-    return { title, image, text, hint, status, name, buttons, is_favorite };
+    return {
+      title: safeTitle,
+      image,
+      text: safeText,
+      hint,
+      status,
+      name,
+      buttons,
+      is_favorite,
+    };
   },
 
   async getTemplateMessagesAnalytics({

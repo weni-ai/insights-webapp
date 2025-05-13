@@ -1,5 +1,6 @@
 import http from '@/services/api/http';
 import { fullySanitize } from '@/utils/sanatize';
+import { parseWhatsAppFormattingToHtml } from '@/utils/whatsapp';
 
 export default {
   async listMetricsSource(source) {
@@ -61,7 +62,7 @@ export default {
       (element) => element.type === 'HEADER' && element.format === 'TEXT',
     )?.text;
 
-    const safeTitle = fullySanitize(title).replaceAll('\n', '<br/>');
+    const safeTitle = parseWhatsAppFormattingToHtml(fullySanitize(title));
 
     const image = response.components.find(
       (element) => element.type === 'HEADER' && element.format === 'IMAGE',
@@ -71,7 +72,7 @@ export default {
       (element) => element.type === 'BODY',
     )?.text;
 
-    const safeText = fullySanitize(text).replaceAll('\n', '<br/>');
+    const safeText = parseWhatsAppFormattingToHtml(fullySanitize(text));
 
     const hint = '';
 

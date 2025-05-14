@@ -196,7 +196,7 @@ const handleMaxDate = () => {
 };
 
 onMounted(() => {
-  import('host/sharedStore').then(({ useSharedStore }) => {
+  import('connect/sharedStore').then(({ useSharedStore }) => {
     const sharedStore = useSharedStore();
 
     auth.token = sharedStore.auth?.token;

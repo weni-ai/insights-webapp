@@ -107,6 +107,7 @@ export default {
         'dc69866d-23ba-4e36-93f5-0ede5bdf240c',
         'b9ed3797-36c8-4b50-bfe1-42f1b89de6cf',
         '1db0c133-5d4b-4bc6-a0f1-e722f1385863',
+        '0e1b929b-2fc7-4b26-85d0-d08d4189e78e',
       ];
 
       const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];

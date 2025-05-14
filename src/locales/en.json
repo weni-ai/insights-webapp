@@ -18,6 +18,71 @@
       "closeds": "Total number of chats that have been completed."
     }
   },
+  "template_messages_dashboard": {
+    "title": "Template messages Meta",
+    "favorites": "Favorites",
+    "add_to_favorites": "Add to favorites",
+    "empty_templates": "No data available for now. As soon as there’s activity, it will appear here!",
+    "favorite_limit_reached": "Favorite limit reached. Please remove a favorite and try again.",
+    "active_contacts": {
+      "title": "Active contacts",
+      "tooltip": "Contacts who interacted with the template"
+    },
+    "blocks": {
+      "title": "Blocks"
+    },
+    "templates_modal": {
+      "title": "Search template",
+      "table": {
+        "header": {
+          "name": "Template name",
+          "last_edited": "Last edited"
+        }
+      }
+    },
+    "quality": {
+      "high": "High quality",
+      "medium": "Medium quality",
+      "low": "Low quality",
+      "more_info_tooltip": "Learn more through <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=en_US' target='_blank'>Meta's documentations</a>"
+    },
+    "messages_graph": {
+      "sent_messages": "Sent messages",
+      "delivered_messages": "Delivered messages",
+      "readed_messages": "Readed messages",
+      "clicks": "Clicks"
+    },
+    "button_clicks_table": {
+      "title": "Button Clicks",
+      "header": {
+        "label": "Label",
+        "type": "Type",
+        "total": "Total",
+        "clicks_in_relation_to_the_shot": "Clicks in relation to the shot",
+        "click_rate": "Click rate"
+      },
+      "button_type": {
+        "PHONE_NUMBER": "Phone number",
+        "URL": "Link",
+        "COPY_CODE": "Copy",
+        "FLOW": "Flow",
+        "QUICK_REPLY": "Quick reply"
+      }
+    },
+    "template": {
+      "preview": "Preview",
+      "edit_template": "Edit template"
+    },
+    "filter": {
+      "shortcut": {
+        "last_7_days": "Last 7 days",
+        "last_14_days": "Last 14 days",
+        "last_30_days": "Last 30 days",
+        "last_60_days": "Last 60 days",
+        "last_90_days": "Last 90 days"
+      }
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats in the period"
@@ -68,7 +133,7 @@
       "placeholder": "Select tag"
     }
   },
-  "filter-by": "Filter by:",
+  "filter-by": "Period:",
   "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -99,6 +164,13 @@
   "clear_fields": "Clear fields",
   "today": "Today",
   "date_format": "MM/DD/YYYY",
+  "search": "Search",
+  "category": "Category",
+  "language": "Language",
+  "pending": "Pending",
+  "rejected": "Rejected",
+  "active": "Active",
+  "disabled": "Disabled",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
@@ -163,11 +235,23 @@
         "sub_title": "Please check the provided UTM is correct or wait for new data to arrive",
         "verify_btn": "Check UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Sent messages",
+        "delivered": "Delivered messages",
+        "read": "Read messages",
+        "clicked": "Clicks",
+        "orders": "Orders",
+        "total_value": "Total value",
+        "average_ticket": "Average ticket"
+      }
     }
   },
   "drawers": {
     "metric_saved": "@:metric saved successfully",
     "reset_widget": "Reset widget",
+    "clear_all_fields": "Clear all fields",
     "config_gallery": {
       "title": "Widget gallery",
       "description": "Choose the type of widget you want to configure:",
@@ -191,6 +275,32 @@
         "vtex": {
           "title": "VTEX",
           "description": "View your VTEX sales data"
+        },
+        "vtex_conversions": {
+          "title": "Template conversion",
+          "description": "Track the conversion rate between sent template messages and completed sales.",
+          "form": {
+            "define_meta_data": "Define Meta data",
+            "define_vtex_data": "Define VTEX data",
+            "input": {
+              "name": {
+                "label": "Name widget",
+                "placeholder": "Example: Sales"
+              },
+              "waba": {
+                "label": "Select account number",
+                "placeholder": "Select a phone number"
+              },
+              "template": {
+                "label": "Select template message",
+                "placeholder": "Select a template message"
+              },
+              "utm": {
+                "label": "Provide UTM",
+                "placeholder": "Copy from VTEX and paste here"
+              }
+            }
+          }
         },
         "recurrence": {
           "title": "Recurrence",
@@ -260,6 +370,9 @@
     "refresh": "Refresh",
     "filters": "Filters",
     "filtrate": "Filtrate",
+    "dynamic_columns": "Customizable columns",
+    "placeholder_dynamic_columns": "Select columns",
+    "last_updated_at": "Last updated at",
     "clear_filters": "Clear filters",
     "add_new_dashboard": "New dashboard",
     "set_default_dashboard_success": "Now the Dashboard {dashboard} is your homepage",
@@ -369,30 +482,32 @@
   "dashboard_commerce": {
     "title": "See what's happening in: Abandoned cart",
     "errors": {
-      "title": "Data not available",
-      "description": "We were unable to load the data. Please try again later."
+        "title": "Data not available",
+        "description": "We were unable to load the data. Please try again later."
     },
     "titles": {
-      "send-message": "Sent messages",
-      "delivered-messages": "Delivered messages",
-      "read-messages": "Read messages",
-      "interactions": "Interactions",
-      "utm-revenue": "UTM revenue",
-      "orders-placed": "Orders placed"
+        "send-message": "Sent messages",
+        "delivered-messages": "Delivered messages",
+        "read-messages": "Read messages",
+        "interactions": "Interactions",
+        "utm-revenue": "UTM revenue",
+        "orders-placed": "Orders placed"
     },
     "filters": {
-      "today": "Today",
-      "last_7_days": "Last 7 days",
-      "last_14_days": "Last 14 days",
-      "last_month": "Last month"
+        "today": "Today",
+        "last_7_days": "Last 7 days",
+        "last_14_days": "Last 14 days",
+        "last_30_days": "Last 30 days",
+        "last_45_days": "Last 45 days",
+        "last_90_days": "Last 90 days"
     },
     "infos": {
-      "send-message": "Sent messages in Abandoned cart",
-      "delivered-messages": "Delivered messages in Abandoned cart",
-      "read-messages": "Read messages in Abandoned cart",
-      "interactions": "Interactions in Abandoned cart",
-      "utm-revenue": "UTM revenue in Abandoned cart",
-      "orders-placed": "Orders placed in Abandoned cart"
+        "send-message": "Number of times the agent sent a message initiating an interaction",
+        "delivered-messages": "Number of times messages were delivered",
+        "read-messages": "Number of times messages were read",
+        "interactions": "Number of times the contact interacted with the message",
+        "utm-revenue": "Total sales value",
+        "orders-placed": "Number of sales made"
     }
   }
 }

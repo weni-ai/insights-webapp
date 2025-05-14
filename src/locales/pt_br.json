@@ -18,6 +18,71 @@
       "closeds": "Total de chats que já foram finalizados."
     }
   },
+  "template_messages_dashboard": {
+    "title": "Mensagens template Meta",
+    "favorites": "Favoritos",
+    "add_to_favorites": "Adicionar aos favoritos",
+    "empty_templates": "Nenhum dado disponível no momento. Assim que houver atividade, aparecerá aqui!",
+    "favorite_limit_reached": "Limite de favoritos atingido. Por favor, remova algum favorito e tente novamente.",
+    "active_contacts": {
+      "title": "Contatos ativos",
+      "tooltip": "Contatos que interagiram com o modelo"
+    },
+    "blocks": {
+      "title": "Bloqueios"
+    },
+    "templates_modal": {
+      "title": "Buscar modelo",
+      "table": {
+        "header": {
+          "name": "Nome do modelo",
+          "last_edited": "Última edição"
+        }
+      }
+    },
+    "quality": {
+      "high": "Alta qualidade",
+      "medium": "Média qualidade",
+      "low": "Baixa qualidade",
+      "more_info_tooltip": "Saiba mais através das <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=pt_BR' target='_blank'>documentações da Meta</a>"
+    },
+    "messages_graph": {
+      "sent_messages": "Mensagens enviadas",
+      "delivered_messages": "Mensagens entregues",
+      "readed_messages": "Mensagens lidas",
+      "clicks": "Cliques"
+    },
+    "button_clicks_table": {
+      "title": "Cliques nos botões",
+      "header": {
+        "label": "Rótulo",
+        "type": "Tipo",
+        "total": "Total",
+        "clicks_in_relation_to_the_shot": "Cliques em relação à disparo",
+        "click_rate": "Taxa de cliques"
+      },
+      "button_type": {
+        "PHONE_NUMBER": "Número de telefone",
+        "URL": "Link",
+        "COPY_CODE": "Copiar e colar",
+        "FLOW": "Fluxo",
+        "QUICK_REPLY": "Resposta rápida"
+      }
+    },
+    "template": {
+      "preview": "Visualização",
+      "edit_template": "Editar modelo"
+    },
+    "filter": {
+      "shortcut": {
+        "last_7_days": "Últimos 7 dias",
+        "last_14_days": "Últimos 14 dias",
+        "last_30_days": "Últimos 30 dias",
+        "last_60_days": "Últimos 60 dias",
+        "last_90_days": "Últimos 90 dias"
+      }
+    }
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats no período"
@@ -68,7 +133,7 @@
       "placeholder": "Selecione tag"
     }
   },
-  "filter-by": "Filtrar por:",
+  "filter-by": "Período:",
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",
@@ -99,6 +164,13 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "date_format": "DD/MM/YYYY",
+  "search": "Buscar",
+  "category": "Categoria",
+  "language": "Idioma",
+  "pending": "Pendente",
+  "rejected": "Rejeitado",
+  "active": "Ativo",
+  "disabled": "Desabilitado",
   "select_date": {
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
@@ -163,11 +235,23 @@
         "sub_title": "Verifique se o UTM informado está correto ou aguarde novos dados",
         "verify_btn": "Verificar UTM"
       }
+    },
+    "vtex_conversions": {
+      "label": {
+        "sent": "Mensagens enviadas",
+        "delivered": "Mensagens entregues",
+        "read": "Mensagens lidas",
+        "clicked": "Cliques",
+        "orders": "Pedidos",
+        "total_value": "Valor total",
+        "average_ticket": "Ticket médio"
+      }
     }
   },
   "drawers": {
     "metric_saved": "@:metric salva com sucesso",
     "reset_widget": "Resetar widget",
+    "clear_all_fields": "Limpar todos os campos",
     "config_gallery": {
       "title": "Galeria de widgets",
       "description": "Escolha o tipo de widget que deseja configurar:",
@@ -191,6 +275,32 @@
         "vtex": {
           "title": "VTEX",
           "description": "Visualize seus dados de vendas VTEX"
+        },
+        "vtex_conversions": {
+          "title": "Conversão de templates",
+          "description": "Acompanhe a taxa de conversão entre mensagens de template enviadas e vendas concluídas.",
+          "form": {
+            "define_meta_data": "Definir metadados",
+            "define_vtex_data": "Definir dados da VTEX",
+            "input": {
+              "name": {
+                "label": "Nome do widget",
+                "placeholder": "Exemplo: Vendas"
+              },
+              "waba": {
+                "label": "Selecionar número da conta",
+                "placeholder": "Selecione um número de telefone"
+              },
+              "template": {
+                "label": "Selecionar mensagem de template",
+                "placeholder": "Selecione uma mensagem de template"
+              },
+              "utm": {
+                "label": "Fornecer UTM",
+                "placeholder": "Copie da VTEX e cole aqui"
+              }
+            }
+          }
         },
         "recurrence": {
           "title": "Recorrência",
@@ -260,6 +370,9 @@
     "refresh": "Atualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
+    "dynamic_columns": "Colunas personalizáveis",
+    "placeholder_dynamic_columns": "Selecionar colunas",
+    "last_updated_at": "Última atualização",
     "clear_filters": "Limpar filtros",
     "add_new_dashboard": "Novo dashboard",
     "set_default_dashboard_success": "Agora o Dashboard {dashboard} é sua página inicial",
@@ -369,9 +482,9 @@
   "dashboard_commerce": {
     "title": "Veja o que está acontecendo em: Carrinho abandonado",
     "errors": {
-      "title": "Não foi possível carregar os dados",
-      "description": "Não foi possível carregar os dados. Por favor, tente novamente mais tarde."
-  },
+        "title": "Não foi possível carregar os dados",
+        "description": "Não foi possível carregar os dados. Por favor, tente novamente mais tarde."
+    },
     "titles": {
       "send-message": "Mensagens enviadas",
       "delivered-messages": "Mensagens entregues",
@@ -384,15 +497,17 @@
       "today": "Hoje",
       "last_7_days": "Últimos 7 dias",
       "last_14_days": "Últimos 14 dias",
-      "last_month": "Último mês"
+      "last_30_days": "Últimos 30 dias",
+      "last_45_days": "Últimos 45 dias",
+      "last_90_days": "Últimos 90 dias"
     },
     "infos": {
-      "send-message": "Mensagens enviadas no carrinho abandonado",
-      "delivered-messages": "Mensagens entregues no carrinho abandonado",
-      "read-messages": "Mensagens lidas no carrinho abandonado",
-      "interactions": "Interações no carrinho abandonado",
-      "utm-revenue": "Receita UTM no carrinho abandonado",
-      "orders-placed": "Pedidos realizados no carrinho abandonado"
+      "send-message": "Número de vezes que o agente enviou uma mensagem iniciando uma interação",
+      "delivered-messages": "Número de vezes que as mensagens foram entregues",
+      "read-messages": "Número de vezes que as mensagens foram lidas",
+      "interactions": "Número de vezes que o contato interagiu com a mensagem",
+      "utm-revenue": "Valor total das vendas",
+      "orders-placed": "Número de vendas"
     }
   }
 }

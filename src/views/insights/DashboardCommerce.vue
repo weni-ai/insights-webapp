@@ -14,27 +14,15 @@
         class="filter-type"
         data-test-id="filter-type"
       >
-        <p class="filter-type_title">{{ $t('filter-by') }}</p>
-        <DropdownFilter
-          :items="[
-            {
-              name: $t('dashboard_commerce.filters.today'),
-              action: () => handleFilter('Today'),
-            },
-            {
-              name: $t('dashboard_commerce.filters.last_7_days'),
-              action: () => handleFilter('Last 7 days'),
-            },
-            {
-              name: $t('dashboard_commerce.filters.last_14_days'),
-              action: () => handleFilter('Last 14 days'),
-            },
-            {
-              name: $t('dashboard_commerce.filters.last_month'),
-              action: () => handleFilter('Last month'),
-            },
-          ]"
-          :defaultItem="{ name: 'Last 7 days' }"
+        <UnnnicInputDatePicker
+          data-test-id="filter-type__date-picker"
+          :modelValue="filterValue"
+          :options="filterOptions"
+          :disableClear="true"
+          position="right"
+          :minDate="handleMinDate()"
+          :maxDate="handleMaxDate()"
+          @update:model-value="updateFilter"
         />
       </section>
     </section>
@@ -47,19 +35,19 @@
         :key="metric.id"
         :title="metricTitles[metric.id]"
         :value="metric.value"
-        :percentage="metric.percentage"
         :prefix="metric.prefix"
-        :hasInfo="true"
+        :tooltipInfo="infos[metric.id]"
         :leftColumn="index % 3 === 0"
         :rightColumn="(index + 1) % 3 === 0"
         :middleColumn="index % 3 === 1"
         :firstRow="index < 3"
-        :lastRow="index >= metrics.length - (metrics.length % 3 || 3)"
+        :lastRow="index >= 3"
       />
     </section>
     <section
       v-if="isLoading"
       class="dashboard-commerce__loading"
+      data-test-id="dashboard-commerce__loading"
     >
       <IconLoading />
     </section>
@@ -82,10 +70,9 @@
 </template>
 
 <script lang="ts" setup>
-import { getLastNDays, getLastMonthRange, getTodayDate } from '@/utils/time';
+import { getLastNDays, getTodayDate } from '@/utils/time';
 import CardMetric from '@/components/home/CardMetric.vue';
-import DropdownFilter from '@/components/home/DropdownFilter.vue';
-import { ref, defineProps, watch } from 'vue';
+import { ref, onMounted, reactive } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 import api from '@/services/api/resources/metrics';
 import IconLoading from '@/components/IconLoading.vue';
@@ -97,15 +84,8 @@ interface MetricData {
   prefix?: string;
 }
 
-const props = defineProps({
-  auth: {
-    type: Object as () => { token: string; uuid: string } | null,
-    default: null,
-  },
-});
-
 const infos = {
-  'send-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
+  'sent-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
   'delivered-messages': i18n.global.t(
     'dashboard_commerce.infos.delivered-messages',
   ),
@@ -118,6 +98,15 @@ const infos = {
 const metrics = ref<MetricData[]>([]);
 const isLoading = ref(false);
 const isError = ref(false);
+const filterValue = ref<{ start: string; end: string }>({
+  start: '',
+  end: '',
+});
+const auth = reactive({
+  token: '',
+  projectUuid: '',
+});
+
 const metricTitles: Record<string, string> = {
   'sent-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
   'delivered-messages': i18n.global.t(
@@ -130,22 +119,24 @@ const metricTitles: Record<string, string> = {
 };
 
 const getMetrics = async (start: string, end: string) => {
-  if (!props.auth?.token || !props.auth?.uuid) return;
+  if (!auth?.token || !auth?.projectUuid) return;
 
   isLoading.value = true;
   try {
-    const data: any = await api.getMetrics({
-      start_date: start,
-      end_date: end,
-      project_uuid: props.auth.uuid,
-    },
-    props.auth.token);
+    const data: any = await api.getMetrics(
+      {
+        start_date: start,
+        end_date: end,
+        project_uuid: auth.projectUuid,
+      },
+      auth.token,
+    );
 
     metrics.value = { ...data };
     if (isError.value) isError.value = false;
   } catch (error) {
-    isError.value = true; 
-    console.log('error getMetrics', error);
+    console.error('error getMetrics', error);
+    isError.value = true;
   } finally {
     isLoading.value = false;
   }
@@ -153,33 +144,64 @@ const getMetrics = async (start: string, end: string) => {
 
 const fetchMetrics = async () => {
   const { start, end } = getLastNDays(7);
+  filterValue.value = {
+    start,
+    end,
+  };
   getMetrics(start, end);
 };
 
-watch(
-  () => props.auth?.token,
-  (newToken) => {
-    if (newToken && props.auth?.uuid) {
-      fetchMetrics();
-    }
-  },
-  { immediate: true }
-);
-
-const handleFilter = async (filter: string) => {
-  const type = filter.trim().replace(/\s+/g, '').toLowerCase();
-
-  const getDateRanges = {
-    today: getTodayDate(),
-    last7days: getLastNDays(7),
-    last14days: getLastNDays(14),
-    lastmonth: getLastMonthRange(),
+const updateFilter = (value: { start: string; end: string }) => {
+  filterValue.value = {
+    start: value.start,
+    end: value.end,
   };
-
-  const { start, end } = getDateRanges[type];
-
-  await getMetrics(start, end);
+  getMetrics(value.start, value.end);
 };
+
+const filterOptions = [
+  {
+    name: i18n.global.t('dashboard_commerce.filters.last_7_days'),
+    id: 'last-7-days',
+  },
+  {
+    name: i18n.global.t('dashboard_commerce.filters.last_14_days'),
+    id: 'last-14-days',
+  },
+  {
+    name: i18n.global.t('dashboard_commerce.filters.last_30_days'),
+    id: 'last-30-days',
+  },
+  {
+    name: i18n.global.t('dashboard_commerce.filters.last_45_days'),
+    id: 'last-45-days',
+  },
+  {
+    name: i18n.global.t('dashboard_commerce.filters.last_90_days'),
+    id: 'last-90-days',
+  },
+];
+
+const handleMinDate = () => {
+  const minDate = getLastNDays(90).start;
+  return minDate;
+};
+
+const handleMaxDate = () => {
+  const maxDate = getTodayDate().start;
+  return maxDate;
+};
+
+onMounted(() => {
+  import('host/sharedStore').then(({ useSharedStore }) => {
+    const sharedStore = useSharedStore();
+
+    auth.token = sharedStore.auth?.token;
+    auth.projectUuid = sharedStore.current?.project?.uuid;
+
+    fetchMetrics();
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -190,6 +212,7 @@ const handleFilter = async (filter: string) => {
   &__header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
 
     &-title {
@@ -222,11 +245,9 @@ const handleFilter = async (filter: string) => {
     background: $unnnic-color-neutral-white;
     margin-top: $unnnic-spacing-sm;
     padding: $unnnic-spacing-lg;
-
     &-icon {
       margin-bottom: $unnnic-spacing-sm;
     }
-
     &-title {
       color: $unnnic-color-neutral-darkest;
       font-family: $unnnic-font-family-secondary;
@@ -235,7 +256,6 @@ const handleFilter = async (filter: string) => {
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
     }
-
     &-description {
       color: $unnnic-color-neutral-cloudy;
       font-family: $unnnic-font-family-secondary;

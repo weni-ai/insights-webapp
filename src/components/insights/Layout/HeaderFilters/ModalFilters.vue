@@ -24,9 +24,7 @@
           data-testid="dynamic-filter"
           :modelValue="filtersInternal[filter.name]"
           :filter="filter"
-          :disabled="
-            filter.depends_on && !filtersInternal[filter.depends_on?.filter]
-          "
+          :disabled="handleDisabledFilter(filter)"
           :dependsOnValue="getDynamicFiltersDependsOnValues(filter)"
           @update:model-value="updateFilter(filter.name, $event)"
         />
@@ -49,7 +47,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState, mapGetters } from 'vuex';
 import DynamicFilter from './DynamicFilter.vue';
 
 export default {
@@ -79,6 +77,10 @@ export default {
       currentDashboardFilters: (state) =>
         state.dashboards.currentDashboardFilters,
       appliedFilters: (state) => state.dashboards.appliedFilters,
+      sectors: (state) => state.sectors.sectors,
+    }),
+    ...mapGetters({
+      getSectorById: 'sectors/getSectorById',
     }),
 
     hasFiltersInternal() {
@@ -108,6 +110,9 @@ export default {
     appliedFilters() {
       this.syncFiltersInternal();
     },
+    sectors() {
+      this.handleSyncFilters();
+    },
   },
 
   created() {
@@ -123,9 +128,32 @@ export default {
       if (!filter.depends_on?.search_param) return null;
 
       const { search_param, filter: filterName } = filter.depends_on;
-      return {
-        [search_param]: this.filtersInternal[filterName],
-      };
+
+      if (search_param === 'sector_id') {
+        return {
+          [search_param]: this.filtersInternal[filterName]?.[0]?.value,
+        };
+      } else {
+        return {
+          [search_param]: this.filtersInternal[filterName],
+        };
+      }
+    },
+    handleDisabledFilter(filter) {
+      if (['tags', 'queue'].includes(filter.name)) {
+        const disableTagsAndQueueFilter =
+          this.filtersInternal[filter.depends_on?.filter]?.length !== 1;
+
+        if (disableTagsAndQueueFilter) {
+          this.filtersInternal[filter.name] = undefined;
+        }
+
+        return disableTagsAndQueueFilter;
+      }
+
+      return (
+        filter.depends_on && !this.filtersInternal[filter.depends_on?.filter]
+      );
     },
     clearFilters() {
       this.filtersInternal = {};
@@ -143,8 +171,15 @@ export default {
       }
     },
     setFilters() {
-      if (Object.keys(this.filtersInternal).length) {
-        this.setAppliedFilters(this.filtersInternal);
+      const processedFilters = { ...this.filtersInternal };
+
+      if (processedFilters.sector && Array.isArray(processedFilters.sector)) {
+        processedFilters.sector = processedFilters.sector.map(
+          (item) => item.value,
+        );
+      }
+      if (Object.keys(processedFilters).length) {
+        this.setAppliedFilters(processedFilters);
       } else {
         this.resetAppliedFilters();
       }
@@ -152,8 +187,28 @@ export default {
     },
     syncFiltersInternal() {
       if (!this.areStoreFiltersAndInternalEqual) {
-        this.filtersInternal = this.appliedFilters;
+        this.handleSyncFilters();
       }
+    },
+    handleSyncFilters() {
+      const processedFilters = { ...this.appliedFilters };
+
+      if (processedFilters.sector) {
+        const sectorValues = Array.isArray(processedFilters.sector)
+          ? processedFilters.sector
+          : [];
+
+        processedFilters.sector = sectorValues.map((value) => {
+          const trimmedValue = typeof value === 'string' ? value.trim() : value;
+          const sector = this.getSectorById(trimmedValue);
+          return {
+            value: trimmedValue,
+            label: sector ? sector.name : null,
+          };
+        });
+      }
+
+      this.filtersInternal = processedFilters;
     },
     close() {
       this.$emit('close');

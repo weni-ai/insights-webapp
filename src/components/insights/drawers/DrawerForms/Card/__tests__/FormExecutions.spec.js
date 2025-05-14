@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
 import FormExecutions from '@/components/insights/drawers/DrawerForms/Card/FormExecutions.vue';
 
 const widgetConfigMock = {
@@ -9,18 +10,13 @@ const widgetConfigMock = {
   },
 };
 
-const store = createStore({
-  modules: {
+const store = createTestingPinia({
+  initialState: {
     widgets: {
-      namespaced: true,
-      state: {
-        currentWidgetEditing: {
-          config: widgetConfigMock,
-        },
+      currentWidgetEditing: {
+        config: widgetConfigMock,
       },
-      actions: {
-        updateCurrentWidgetEditingConfig: vi.fn(),
-      },
+      updateCurrentWidgetEditingConfig: vi.fn(),
     },
   },
 });
@@ -62,18 +58,13 @@ describe('FormExecutions', () => {
     });
 
     it('should initialize config with empty uuid when no widgetConfig flow uuid exists', () => {
-      const customStore = createStore({
-        modules: {
+      const customStore = createTestingPinia({
+        initialState: {
           widgets: {
-            namespaced: true,
-            state: {
-              currentWidgetEditing: {
-                config: {},
-              },
+            currentWidgetEditing: {
+              config: {},
             },
-            actions: {
-              updateCurrentWidgetEditingConfig: vi.fn(),
-            },
+            updateCurrentWidgetEditingConfig: vi.fn(),
           },
         },
       });
@@ -202,28 +193,23 @@ describe('FormExecutions', () => {
     });
 
     it('should correctly map and call updateCurrentWidgetEditingConfig action', async () => {
-      const mockStore = createStore({
-        modules: {
+      const mockStore = createTestingPinia({
+        initialState: {
           widgets: {
-            namespaced: true,
-            state: {
-              currentWidgetEditing: {
-                config: widgetConfigMock,
-              },
+            currentWidgetEditing: {
+              config: widgetConfigMock,
             },
-            actions: {
-              updateCurrentWidgetEditingConfig: vi.fn(),
-            },
+            updateCurrentWidgetEditingConfig: vi.fn(),
           },
         },
       });
 
-      const spyAction = vi.spyOn(
-        mockStore._actions['widgets/updateCurrentWidgetEditingConfig'],
-        '0',
-      );
-
       const customWrapper = createWrapper(mockStore);
+
+      const spyAction = vi.spyOn(
+        customWrapper.vm,
+        'updateCurrentWidgetEditingConfig',
+      );
 
       await customWrapper.setData({
         config: {

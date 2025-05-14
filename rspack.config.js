@@ -105,7 +105,9 @@ module.exports = defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
-        './locales': './src/locales/translations.json',
+        './locales/pt_br': './src/locales/pt_br.json',
+        './locales/en': './src/locales/en.json',
+        './locales/es': './src/locales/es.json',
       },
       remotes: {
         host: `host@${process.env.MODULE_FEDERATION_CONNECT_URL}/remoteEntry.js`,

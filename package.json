@@ -9,8 +9,7 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "npm run lint --fix",
-    "translations:unify": "node scripts/generate-unified-translations.js"
+    "format": "npm run lint --fix"
   },
   "dependencies": {
     "@rspack/cli": "^1.1.5",

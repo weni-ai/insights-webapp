@@ -1,4 +1,4 @@
-declare module 'host/sharedStore' {
+declare module 'connect/sharedStore' {
   export function useSharedStore(): {
     auth: {
       token: string;

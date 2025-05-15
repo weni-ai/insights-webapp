@@ -1,5 +1,5 @@
 import { mount, config } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 import { expect, vi, describe, it, beforeEach } from 'vitest';
 import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
@@ -7,6 +7,7 @@ import { nextTick } from 'vue';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import LastUpdatedText from '../LastUpdatedText.vue';
 import * as timeUtils from '@/utils/time';
+import { useDashboards } from '@/store/modules/dashboards';
 
 vi.mock('@/utils/time', () => ({
   formatTimeStringWithDayNight: vi.fn().mockReturnValue('3:45 PM (PM)'),
@@ -38,19 +39,12 @@ describe('LastUpdatedText.vue', () => {
   const testTimestamp = new Date('2023-07-15T14:30:00');
 
   const createWrapper = (initialTimestamp = testTimestamp) => {
-    store = createStore({
-      modules: {
+    store = createTestingPinia({
+      initialState: {
         dashboards: {
-          namespaced: true,
-          state: {
-            last_updated_request: initialTimestamp,
-          },
-          getters: {
-            lastUpdatedAt: (state) => state.last_updated_request,
-          },
-          actions: {
-            updateLastUpdatedRequest: vi.fn(),
-          },
+          last_updated_request: initialTimestamp,
+          lastUpdatedAt: (store) => store.last_updated_request,
+          updateLastUpdatedRequest: vi.fn(),
         },
       },
     });
@@ -103,11 +97,12 @@ describe('LastUpdatedText.vue', () => {
 
   it('reacts to changes in the timestamp', async () => {
     wrapper = createWrapper();
+    const dashboardsStore = useDashboards();
     const newTimestamp = new Date('2023-07-15T18:45:00');
 
     expect(timeUtils.formatTimeStringWithDayNight).toHaveBeenCalledTimes(1);
 
-    store.state.dashboards.last_updated_request = newTimestamp;
+    dashboardsStore.last_updated_request = newTimestamp;
     await nextTick();
 
     expect(timeUtils.formatTimeStringWithDayNight).toHaveBeenCalledTimes(2);

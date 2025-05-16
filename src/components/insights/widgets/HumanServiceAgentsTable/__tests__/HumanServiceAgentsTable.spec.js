@@ -375,6 +375,61 @@ describe('HumanServiceAgentsTable', () => {
         expect(sortedItems).toHaveLength(4);
       });
     });
+
+    describe('sortHeadersByVisibleColumns', () => {
+      it('sorts headers according to visibleColumns order', () => {
+        const headers = [
+          { name: 'column2', value: 'custom_status.column2' },
+          { name: 'column1', value: 'custom_status.column1' },
+          { name: 'column3', value: 'custom_status.column3' },
+        ];
+
+        const visibleColumns = ['column1', 'column3', 'column2'];
+
+        const sortedHeaders = wrapper.vm.sortHeadersByVisibleColumns(
+          headers,
+          visibleColumns,
+        );
+
+        expect(sortedHeaders[0].name).toBe('column1');
+        expect(sortedHeaders[1].name).toBe('column3');
+        expect(sortedHeaders[2].name).toBe('column2');
+      });
+
+      it('prioritizes headers that are in visibleColumns', () => {
+        const headers = [
+          { name: 'not_visible', value: 'not_visible' },
+          { name: 'column1', value: 'custom_status.column1' },
+          { name: 'column3', value: 'custom_status.column3' },
+        ];
+
+        const visibleColumns = ['column1', 'column3'];
+
+        const sortedHeaders = wrapper.vm.sortHeadersByVisibleColumns(
+          headers,
+          visibleColumns,
+        );
+
+        expect(sortedHeaders[0].name).toBe('column1');
+        expect(sortedHeaders[1].name).toBe('column3');
+        expect(sortedHeaders[2].name).toBe('not_visible');
+      });
+
+      it('preserves the original array', () => {
+        const headers = [
+          { name: 'column2', value: 'custom_status.column2' },
+          { name: 'column1', value: 'custom_status.column1' },
+        ];
+
+        const originalHeaders = [...headers];
+        const visibleColumns = ['column1', 'column2'];
+
+        wrapper.vm.sortHeadersByVisibleColumns(headers, visibleColumns);
+
+        expect(headers[0].name).toBe(originalHeaders[0].name);
+        expect(headers[1].name).toBe(originalHeaders[1].name);
+      });
+    });
   });
 
   describe('Expansive mode tests', () => {
@@ -433,6 +488,48 @@ describe('HumanServiceAgentsTable', () => {
 
       expect(headers[0].size).toBe(0.5);
       expect(headers[2].size).toBe(0.5);
+    });
+
+    it('maintains the order of dynamic headers according to visibleColumns', () => {
+      const customOrderStore = createMockStore({
+        agentsColumnsFilter: {
+          visibleColumns: ['column2', 'in_progress', 'column1', 'closeds'],
+        },
+      });
+
+      const customOrderWrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          isLoading: false,
+          headerTitle: 'Custom Order',
+          headers: mockHeaders,
+          items: mockItemsExpansive,
+          isExpansive: true,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem, customOrderStore],
+          stubs: {
+            UnnnicButtonIcon: true,
+            UnnnicTableNext: true,
+            AgentsTableHeader: true,
+            AgentStatus: true,
+          },
+          mocks: {
+            $t: (key) => key,
+          },
+        },
+      });
+
+      const formattedHeaders = customOrderWrapper.vm.formattedHeaders;
+
+      expect(formattedHeaders[0].content).toBe('status');
+      expect(formattedHeaders[1].content).toBe('agent');
+
+      expect(formattedHeaders[2].content).toBe('column2');
+      expect(formattedHeaders[3].content).toBe('in_progress');
+      expect(formattedHeaders[4].content).toBe('column1');
+      expect(formattedHeaders[5].content).toBe('closeds');
+
+      customOrderWrapper.unmount();
     });
 
     it('handles items with null or missing custom status values', () => {

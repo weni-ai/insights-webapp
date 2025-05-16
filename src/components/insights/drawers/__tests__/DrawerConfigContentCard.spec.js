@@ -1,33 +1,28 @@
 import { flushPromises, shallowMount } from '@vue/test-utils';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
 
 import DrawerConfigContentCard from '../DrawerConfigContentCard.vue';
+import { useWidgets } from '@/store/modules/widgets';
 
 describe('DrawerConfigContentCard', () => {
   let wrapper;
-  let mockStore;
   let store;
 
   beforeEach(() => {
-    mockStore = {
-      actions: { 'widgets/updateCurrentWidgetEditingConfig': vi.fn() },
-    };
-    store = createStore({
-      modules: {
+    store = createTestingPinia({
+      initialState: {
         widgets: {
-          namespaced: true,
-          state: {
-            currentWidgetEditing: {
-              config: {
-                name: 'Test Widget',
-                friendly_id: 'emoji-id',
-              },
+          currentWidgetEditing: {
+            config: {
+              name: 'Test Widget',
+              friendly_id: 'emoji-id',
             },
           },
+          updateCurrentWidgetEditingConfig: vi.fn(),
         },
       },
-      actions: mockStore.actions,
     });
 
     wrapper = shallowMount(DrawerConfigContentCard, {
@@ -63,15 +58,15 @@ describe('DrawerConfigContentCard', () => {
     expect(wrapper.emitted('reset-widget')).toBeTruthy();
   });
 
-  it('updates Vuex store when config changes', async () => {
+  it('updates pinia store when config changes', async () => {
+    const widgetsStore = useWidgets();
     wrapper.vm.config.name = 'Updated Widget Name';
-    expect(
-      mockStore.actions['widgets/updateCurrentWidgetEditingConfig'],
-    ).toHaveBeenCalled();
+    expect(widgetsStore.updateCurrentWidgetEditingConfig).toHaveBeenCalled();
   });
 
   it('disables reset button when widgetConfig is empty', async () => {
-    wrapper.vm.$store.state.widgets.currentWidgetEditing.config = {};
+    const widgetsStore = useWidgets();
+    widgetsStore.currentWidgetEditing.config = {};
 
     await wrapper.vm.$forceUpdate();
 
@@ -82,8 +77,8 @@ describe('DrawerConfigContentCard', () => {
   });
 
   it('emits update-disable-primary-button change values', async () => {
-    wrapper.vm.$store.state.widgets.currentWidgetEditing.config.name =
-      'Initial Name';
+    const widgetsStore = useWidgets();
+    widgetsStore.currentWidgetEditing.config.name = 'Initial Name';
 
     await flushPromises();
 

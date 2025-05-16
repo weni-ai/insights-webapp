@@ -2,11 +2,13 @@ import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { afterEach, beforeEach, describe, it, vi } from 'vitest';
 import { shallowMount, config, flushPromises } from '@vue/test-utils';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
 import i18n from '@/utils/plugins/i18n';
 
 import DynamicWidget from '../DynamicWidget.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
+import { useDashboards } from '@/store/modules/dashboards';
 
 beforeAll(() => {
   config.global.plugins = config.global.plugins.filter(
@@ -24,36 +26,19 @@ const router = createRouter({
   ],
 });
 
-const store = createStore({
-  modules: {
-    widgets: {
-      namespaced: true,
-      actions: {
-        getCurrentDashboardWidgetData: vi.fn(),
-        getWidgetGraphFunnelData: vi.fn(),
-        getWidgetVtexOrderData: vi.fn(),
-      },
-    },
-    reports: {
-      namespaced: true,
-      actions: {
-        getWidgetReportData: vi.fn(),
-      },
-    },
+const store = createTestingPinia({
+  initialState: {
     dashboards: {
-      namespaced: true,
-      state: {
-        dashboards: [{ name: 'Dashboard 1', uuid: '1' }],
-        currentDashboard: {
-          name: 'Dashboard 1',
-          uuid: '1',
-          config: {
-            currency_type: 'USD',
-          },
+      dashboards: [{ name: 'Dashboard 1', uuid: '1' }],
+      currentDashboard: {
+        name: 'Dashboard 1',
+        uuid: '1',
+        config: {
+          currency_type: 'USD',
         },
-        appliedFilters: {
-          filter1: { __gte: '2023-01-01', __lte: '2023-01-07' },
-        },
+      },
+      appliedFilters: {
+        filter1: { __gte: '2023-01-01', __lte: '2023-01-07' },
       },
     },
   },
@@ -393,21 +378,24 @@ describe('DynamicWidget', () => {
     beforeEach(() => {
       vi.clearAllMocks();
 
+      const dashboardsStore = useDashboards();
+
       getCurrentDashboardWidgetDataSpy = vi.spyOn(
         wrapper.vm,
         'getCurrentDashboardWidgetData',
       );
 
-      updateLastUpdatedRequestSpy = vi.spyOn(store, 'dispatch');
+      updateLastUpdatedRequestSpy = vi.spyOn(
+        dashboardsStore,
+        'updateLastUpdatedRequest',
+      );
     });
 
     it('should fetch widget data when widget is configured', async () => {
       await wrapper.vm.requestWidgetData();
 
       expect(getCurrentDashboardWidgetDataSpy).toHaveBeenCalled();
-      expect(updateLastUpdatedRequestSpy).toHaveBeenCalledWith(
-        'dashboards/updateLastUpdatedRequest',
-      );
+      expect(updateLastUpdatedRequestSpy).toHaveBeenCalledWith();
     });
 
     it('should not fetch data if widget is not configured', async () => {
@@ -714,7 +702,6 @@ describe('DynamicWidget', () => {
       vi.spyOn(window, 'setInterval');
       vi.spyOn(window, 'clearInterval');
       vi.spyOn(wrapper.vm, 'requestWidgetData').mockImplementation(() => {});
-      vi.spyOn(store, 'dispatch');
     });
 
     afterEach(() => {
@@ -723,6 +710,8 @@ describe('DynamicWidget', () => {
     });
 
     it('should set up an interval for human service dashboard without date filtering', () => {
+      const dashboardsStore = useDashboards();
+      const spy = vi.spyOn(dashboardsStore, 'updateLastUpdatedRequest');
       // Mock isHumanServiceDashboard to return true
       Object.defineProperty(wrapper.vm, 'isHumanServiceDashboard', {
         get: () => true,
@@ -747,9 +736,8 @@ describe('DynamicWidget', () => {
       });
 
       // Check that updateLastUpdatedRequest was dispatched
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'dashboards/updateLastUpdatedRequest',
-      );
+
+      expect(spy).toHaveBeenCalled();
     });
 
     it('should not set up an interval if not human service dashboard', () => {

@@ -15,7 +15,10 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+
+import { useConfig } from '@/store/modules/config';
+import { useWidgets } from '@/store/modules/widgets';
 
 import HeaderGenerateInsightModal from './HeaderGenerateInsightModal.vue';
 
@@ -33,12 +36,10 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      token: (state) => state.config.token,
+    ...mapState(useConfig, ['token']),
+    ...mapState(useWidgets, {
+      isDisableBtn: 'isLoadingCurrentDashboardWidgets',
     }),
-    isDisableBtn() {
-      return this.$store.state.widgets.isLoadingCurrentDashboardWidgets;
-    },
   },
 
   methods: {

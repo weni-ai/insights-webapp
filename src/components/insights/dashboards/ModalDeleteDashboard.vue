@@ -31,9 +31,13 @@
 </template>
 
 <script>
+import { mapState } from 'pinia';
+import { useDashboards } from '@/store/modules/dashboards';
+
 import Dashboards from '@/services/api/resources/dashboards';
-import { mapGetters, mapMutations, mapState } from 'vuex';
+
 import unnnic from '@weni/unnnic-system';
+
 export default {
   name: 'ModalDeleteDashboard',
   props: {
@@ -54,18 +58,13 @@ export default {
     };
   },
   computed: {
-    ...mapState({ dashboards: (state) => state.dashboards.dashboards }),
-
-    ...mapGetters({
-      dashboardDefault: 'dashboards/dashboardDefault',
-    }),
+    ...mapState(useDashboards, ['dashboards', 'dashboardDefault']),
 
     validDashboardName() {
       return this.dashboardName === this.dashboard.name;
     },
   },
   methods: {
-    ...mapMutations({ setDashboards: 'dashboards/SET_DASHBOARDS' }),
     close(cascade = false) {
       this.$emit('close', { cascade });
     },
@@ -74,10 +73,11 @@ export default {
 
       Dashboards.deleteDashboard(this.dashboard.uuid)
         .then(() => {
+          const dashboardsStore = useDashboards();
           const hasDeletedDefaultDashboard = this.dashboard.is_default;
 
-          this.setDashboards(
-            this.dashboards.filter((item) => item.uuid !== this.dashboard.uuid),
+          dashboardsStore.dashboards = this.dashboards.filter(
+            (item) => item.uuid !== this.dashboard.uuid,
           );
 
           if (hasDeletedDefaultDashboard) {

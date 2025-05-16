@@ -1,8 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 
 import ModalFilters from '@/components/insights/Layout/HeaderFilters/ModalFilters.vue';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useSectors } from '@/store/modules/sectors';
 
 const originalSectors = [
   {
@@ -16,31 +18,21 @@ const originalSectors = [
 ];
 
 const createTestStore = () =>
-  createStore({
-    modules: {
+  createTestingPinia({
+    initialState: {
       dashboards: {
-        namespaced: true,
-        state: {
-          appliedFilters: { date_range: '2024-01-01' },
-          currentDashboardFilters: [
-            { name: 'filter1', depends_on: null },
-            { name: 'filter2', depends_on: null },
-          ],
-        },
-        actions: {
-          setAppliedFilters: vi.fn(),
-          resetAppliedFilters: vi.fn(),
-        },
+        setAppliedFilters: vi.fn(),
+        resetAppliedFilters: vi.fn(),
+        appliedFilters: { date_range: '2024-01-01' },
+        currentDashboardFilters: [
+          { name: 'filter1', depends_on: null },
+          { name: 'filter2', depends_on: null },
+        ],
       },
       sectors: {
-        namespaced: true,
-        state: {
-          sectors: JSON.parse(JSON.stringify(originalSectors)),
-        },
-        getters: {
-          getSectorById: (state) => (uuid) =>
-            state.sectors.find((sector) => sector.uuid === uuid),
-        },
+        sectors: JSON.parse(JSON.stringify(originalSectors)),
+        getSectorById: (state) => (uuid) =>
+          state.sectors.find((sector) => sector.uuid === uuid),
       },
     },
   });
@@ -153,12 +145,13 @@ describe('ModalFilters', () => {
 
   describe('State updates and syncing', () => {
     it('calls syncFiltersInternal when appliedFilters changes', async () => {
+      const dashboardsStore = useDashboards();
       vi.clearAllMocks();
       const syncFiltersInternalSpy = vi.spyOn(
         wrapper.vm,
         'syncFiltersInternal',
       );
-      store.state.dashboards.appliedFilters = { date_range: '2023-01-01' };
+      dashboardsStore.appliedFilters = { date_range: '2023-01-01' };
       await wrapper.vm.$nextTick();
 
       expect(syncFiltersInternalSpy).toHaveBeenCalledTimes(1);
@@ -293,6 +286,7 @@ describe('ModalFilters', () => {
 
   describe('Sector handling', () => {
     it('handles sector when it comes as an array from store', async () => {
+      const dashboardsStore = useDashboards();
       const appliedFilters = {
         sector: [
           '89815a13-3672-4c6b-a6c2-3598694ffc56',
@@ -300,7 +294,7 @@ describe('ModalFilters', () => {
         ],
       };
 
-      store.state.dashboards.appliedFilters = appliedFilters;
+      dashboardsStore.appliedFilters = appliedFilters;
 
       wrapper.vm.syncFiltersInternal();
       await wrapper.vm.$nextTick();
@@ -318,11 +312,12 @@ describe('ModalFilters', () => {
     });
 
     it('handles empty sector array gracefully', async () => {
+      const dashboardsStore = useDashboards();
       const appliedFilters = {
         sector: [],
       };
 
-      store.state.dashboards.appliedFilters = appliedFilters;
+      dashboardsStore.appliedFilters = appliedFilters;
 
       wrapper.vm.syncFiltersInternal();
       await wrapper.vm.$nextTick();
@@ -334,13 +329,16 @@ describe('ModalFilters', () => {
       const isolatedStore = createTestStore();
       const isolatedWrapper = createWrapper(isolatedStore);
 
+      const dashboardsStore = useDashboards();
+      const sectorsStore = useSectors();
+
       // Set up
       const appliedFilters = {
         sector: ['89815a13-3672-4c6b-a6c2-3598694ffc56'],
       };
 
       // Update store
-      isolatedStore.state.dashboards.appliedFilters = appliedFilters;
+      dashboardsStore.appliedFilters = appliedFilters;
 
       // Process initial filters
       isolatedWrapper.vm.syncFiltersInternal();
@@ -351,14 +349,8 @@ describe('ModalFilters', () => {
         'Default sector',
       );
 
-      // Create a watcher spy to track when handleSyncFilters is called
-      const handleSyncFiltersSpy = vi.spyOn(
-        isolatedWrapper.vm,
-        'handleSyncFilters',
-      );
-
       // Change sector name in store
-      isolatedStore.state.sectors.sectors[0].name = 'New Sector Name';
+      sectorsStore.sectors[0].name = 'New Sector Name';
 
       // Wait for watcher to trigger
       await isolatedWrapper.vm.$nextTick();

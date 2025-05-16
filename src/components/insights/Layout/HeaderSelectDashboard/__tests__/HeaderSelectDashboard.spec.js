@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
 import { routes } from '@/router';
 
-import dashboardsStore from '@/store/modules/dashboards';
-import onboardingStore from '@/store/modules/onboarding';
-
 import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useConfig } from '@/store/modules/config';
 
 describe('HeaderSelectDashboard', () => {
   let wrapper;
@@ -15,33 +15,33 @@ describe('HeaderSelectDashboard', () => {
     history: createWebHistory(),
     routes,
   });
-  const store = createStore({
-    modules: {
+
+  const store = createTestingPinia({
+    initialState: {
       dashboards: {
-        namespaced: true,
-        state: {
-          dashboards: [
-            { name: 'Dashboard 1', uuid: '1' },
-            { name: 'Dashboard 2', uuid: '2' },
-          ],
-          currentDashboard: { name: 'Dashboard 1', uuid: '1' },
-          showDashboardConfig: false,
-        },
-        mutations: {
-          ...dashboardsStore.mutations,
-        },
-        getters: {
-          dashboardDefault: () => ({ name: 'Default Dashboard' }),
-        },
+        dashboards: [
+          { name: 'Dashboard 1', uuid: '1' },
+          { name: 'Dashboard 2', uuid: '2' },
+        ],
+        currentDashboard: { name: 'Dashboard 1', uuid: '1' },
+        showDashboardConfig: false,
       },
-      config: {
-        namespaced: true,
-        state: {
-          enableCreateCustomDashboards: false,
-        },
-      },
+      config: { enableCreateCustomDashboards: false },
       onboarding: {
-        ...onboardingStore,
+        onboardingRefs: {
+          'select-dashboard': null,
+          'create-dashboard-button': null,
+          'widget-card-metric': null,
+          'widget-gallery': null,
+          'drawer-card-metric-config': null,
+          'widget-graph-empty': null,
+          'drawer-graph-empty': null,
+          'dashboard-onboarding-tour': null,
+          'widgets-onboarding-tour': null,
+        },
+        showCreateDashboardOnboarding: false,
+        showConfigWidgetOnboarding: false,
+        showCompleteOnboardingModal: false,
       },
     },
   });
@@ -137,8 +137,10 @@ describe('HeaderSelectDashboard', () => {
         '[data-testid=select-dashboard-item]',
       );
 
+      const dashboardsStore = useDashboards();
+
       expect(selectDashboardItems.length).toBe(
-        store.state.dashboards.dashboards.length,
+        dashboardsStore.dashboards.length,
       );
     });
   });
@@ -147,7 +149,8 @@ describe('HeaderSelectDashboard', () => {
     let addNewDashboardButton;
 
     beforeEach(async () => {
-      store.state.config.enableCreateCustomDashboards = true;
+      const configStore = useConfig();
+      configStore.enableCreateCustomDashboards = true;
 
       const dropdownTrigger = wrapper.find('[data-testid=dropdown-trigger]');
       await dropdownTrigger.trigger('click');
@@ -160,18 +163,26 @@ describe('HeaderSelectDashboard', () => {
     it('Should display "Create New Dashboard" option when custom dashboards are enabled in the project', async () => {
       expect(addNewDashboardButton.exists()).toBe(true);
 
-      store.state.config.enableCreateCustomDashboards = false;
+      const configStore = useConfig();
+      configStore.enableCreateCustomDashboards = false;
+
       await wrapper.vm.$nextTick();
       expect(addNewDashboardButton.exists()).toBe(false);
     });
 
     it('Should open the DrawerDashboardConfig when the "Create New Dashboard" option is clicked', async () => {
+      const dashboardsStore = useDashboards();
+      dashboardsStore.setShowDashboardConfig = (payload) =>
+        (dashboardsStore.showDashboardConfig = payload);
+
       const drawerDashboardConfigBeforeClick = wrapper.findComponent(
         '[data-testid=drawer-dashboard-config]',
       );
+
       expect(drawerDashboardConfigBeforeClick.exists()).toBe(false);
 
       await addNewDashboardButton.trigger('click');
+
       await wrapper.vm.$nextTick();
 
       const drawerDashboardConfigAfterClick = wrapper.findComponent(

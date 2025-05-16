@@ -15,7 +15,10 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useOnboarding } from '@/store/modules/onboarding';
 
 import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 
@@ -27,10 +30,7 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboardFilters: (state) =>
-        state.dashboards.currentDashboardFilters,
-    }),
+    ...mapState(useDashboards, ['currentDashboardFilters']),
   },
 
   mounted() {
@@ -40,7 +40,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations({ setOnboardingRef: 'onboarding/SET_ONBOARDING_REF' }),
+    ...mapActions(useOnboarding, ['setOnboardingRef']),
   },
 };
 </script>

@@ -43,9 +43,13 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import { defineAsyncComponent } from 'vue';
+import { mapActions, mapState } from 'pinia';
 
-import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useWidgets } from '@/store/modules/widgets';
+import { useOnboarding } from '@/store/modules/onboarding';
+
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
 import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
@@ -55,7 +59,9 @@ export default {
   name: 'DashboardCustom',
 
   components: {
-    DynamicWidget,
+    DynamicWidget: defineAsyncComponent(
+      () => import('@/components/insights/widgets/DynamicWidget.vue'),
+    ),
     DrawerConfigGallery,
     IconLoading,
     WidgetOnboarding,
@@ -76,15 +82,13 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      currentDashboardWidgets: (state) => state.widgets.currentDashboardWidgets,
-      currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
-      isLoadingCurrentDashboardWidgets: (state) =>
-        state.widgets.isLoadingCurrentDashboardWidgets,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
-    }),
+    ...mapState(useDashboards, ['currentDashboard']),
+    ...mapState(useWidgets, [
+      'currentDashboardWidgets',
+      'currentWidgetEditing',
+      'isLoadingCurrentDashboardWidgets',
+    ]),
+    ...mapState(useOnboarding, ['showConfigWidgetOnboarding']),
 
     isCustomDashboard() {
       return this.currentDashboard.is_deletable;
@@ -118,14 +122,11 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-      callTourNextStep: 'onboarding/callTourNextStep',
-    }),
-    ...mapMutations({
-      setShowConfigWidgetsOnboarding:
-        'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditing']),
+    ...mapActions(useOnboarding, [
+      'callTourNextStep',
+      'setShowConfigWidgetsOnboarding',
+    ]),
 
     openFlowResultContactList(data) {
       this.flowResultsContactListParams = data;

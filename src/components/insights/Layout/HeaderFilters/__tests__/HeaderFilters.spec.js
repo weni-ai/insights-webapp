@@ -1,34 +1,25 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 
 import HeaderFilters from '@/components/insights/Layout/HeaderFilters/index.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useDashboards } from '@/store/modules/dashboards';
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [{ path: '/dashboard' }, { path: '/another-route' }],
 });
 
-const store = createStore({
-  modules: {
-    metaTemplateMessage: {
-      namespaced: true,
-      state: {
-        showSearchTemplateMetaModal: false,
-      },
-    },
+const store = createTestingPinia({
+  initialState: {
+    metaTemplateMessage: { showSearchTemplateMetaModal: false },
     dashboards: {
-      namespaced: true,
-      state: {
-        currentDashboardFilters: [{ name: 'filter1', type: 'select' }],
-        appliedFilters: {
-          filter1: { __gte: '2023-01-01', __lte: '2023-01-07' },
-        },
-      },
-      actions: {
-        setAppliedFilters: vi.fn(),
-        resetAppliedFilters: vi.fn(),
+      setAppliedFilters: vi.fn(),
+      resetAppliedFilters: vi.fn(),
+      currentDashboardFilters: [{ name: 'filter1', type: 'select' }],
+      appliedFilters: {
+        filter1: { __gte: '2023-01-01', __lte: '2023-01-07' },
       },
     },
   },
@@ -36,7 +27,8 @@ const store = createStore({
 
 const createWrapper = (props = {}, dashboardName = null) => {
   if (dashboardName) {
-    store.state.dashboards.currentDashboard = { name: dashboardName };
+    const dashboardsStore = useDashboards();
+    dashboardsStore.currentDashboard = { name: dashboardName };
   }
 
   return shallowMount(HeaderFilters, {
@@ -94,9 +86,12 @@ describe('HeaderFilters', () => {
   });
 
   it('should set the filter type to select_date_range if type is date_range', async () => {
-    store.state.dashboards.currentDashboardFilters = [
+    const dashboardsStore = useDashboards();
+
+    dashboardsStore.currentDashboardFilters = [
       { name: 'filter1', type: 'date_range' },
     ];
+
     const filter = wrapper.vm.filter;
 
     expect(filter.type).toBe('select_date_range');
@@ -113,15 +108,17 @@ describe('HeaderFilters', () => {
   });
 
   describe('With many filters', () => {
+    let dashboardsStore;
     beforeEach(() => {
-      store.state.dashboards.currentDashboardFilters = [
+      dashboardsStore = useDashboards();
+      dashboardsStore.currentDashboardFilters = [
         { name: 'filter1', type: 'date_range' },
         { name: 'filter2', type: 'select' },
       ];
     });
 
     afterAll(() => {
-      store.state.dashboards.currentDashboardFilters = [
+      dashboardsStore.currentDashboardFilters = [
         { name: 'filter1', type: 'date_range' },
       ];
     });
@@ -185,23 +182,24 @@ describe('HeaderFilters', () => {
   });
 
   describe('isHumanServiceDashboard computed property', () => {
+    const dashboardsStore = useDashboards();
     it('should return false when dashboard name is not human service dashboard', () => {
-      store.state.dashboards.currentDashboard = { name: 'regular_dashboard' };
+      dashboardsStore.currentDashboard = { name: 'regular_dashboard' };
       expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
     });
 
     it('should return true when dashboard name is human service dashboard', () => {
-      store.state.dashboards.currentDashboard = {
+      dashboardsStore.currentDashboard = {
         name: 'human_service_dashboard.title',
       };
       expect(wrapper.vm.isHumanServiceDashboard).toBe(true);
     });
 
     it('should handle undefined dashboard name gracefully', () => {
-      store.state.dashboards.currentDashboard = {};
+      dashboardsStore.currentDashboard = {};
       expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
 
-      store.state.dashboards.currentDashboard = null;
+      dashboardsStore.currentDashboard = null;
       expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
     });
   });

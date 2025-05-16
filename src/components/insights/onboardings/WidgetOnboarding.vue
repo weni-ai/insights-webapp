@@ -8,7 +8,11 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useOnboarding } from '@/store/modules/onboarding';
+import { useWidgets } from '@/store/modules/widgets';
 
 export default {
   name: 'WidgetOnboarding',
@@ -23,13 +27,12 @@ export default {
     },
   },
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      currentDashboardWidgets: (state) => state.widgets.currentDashboardWidgets,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-    }),
+    ...mapState(useDashboards, ['currentDashboard']),
+    ...mapState(useWidgets, ['currentDashboardWidgets']),
+    ...mapState(useOnboarding, [
+      'onboardingRefs',
+      'showConfigWidgetOnboarding',
+    ]),
 
     hasCardWidget() {
       return !!this.currentDashboardWidgets.some(
@@ -159,17 +162,14 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      beforeOpenWidgetConfig: 'onboarding/beforeOpenWidgetConfig',
-      beforeOpenEmptyWidgetConfig: 'onboarding/beforeOpenEmptyWidgetConfig',
-      beforeOpenGaleryEmptyConfig: 'onboarding/beforeOpenGaleryEmptyConfig',
-      beforeOpenWidgetMetricConfig: 'onboarding/beforeOpenWidgetMetricConfig',
-    }),
-    ...mapMutations({
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-      setShowConfigWidgetsOnboarding:
-        'onboarding/SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-    }),
+    ...mapActions(useOnboarding, [
+      'beforeOpenWidgetConfig',
+      'beforeOpenEmptyWidgetConfig',
+      'beforeOpenGaleryEmptyConfig',
+      'beforeOpenWidgetMetricConfig',
+      'setOnboardingRef',
+      'setShowConfigWidgetsOnboarding',
+    ]),
   },
 };
 </script>

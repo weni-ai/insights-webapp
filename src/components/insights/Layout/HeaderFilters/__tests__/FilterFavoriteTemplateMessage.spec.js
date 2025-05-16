@@ -1,5 +1,7 @@
 import { mount, config } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
+
 import { expect, vi } from 'vitest';
 import { createI18n } from 'vue-i18n';
 
@@ -38,9 +40,11 @@ describe('FilterFavoriteTemplate.vue', () => {
   };
 
   beforeEach(() => {
-    store = createStore({
-      state: {
+    store = createTestingPinia({
+      initialState: {
         metaTemplateMessage: {
+          getFavoritesTemplates: vi.fn(),
+          setSelectedFavorite: vi.fn(),
           emptyTemplates: false,
           favoritesTemplates: [
             { id: '1', name: 'Favorite 1' },
@@ -56,10 +60,6 @@ describe('FilterFavoriteTemplate.vue', () => {
           },
         },
       },
-      actions: {
-        'metaTemplateMessage/getFavoritesTemplates': vi.fn(),
-        'metaTemplateMessage/setSelectedFavorite': vi.fn(),
-      },
     });
     wrapper = createWrapper();
   });
@@ -69,37 +69,43 @@ describe('FilterFavoriteTemplate.vue', () => {
   });
 
   it('calls getFavoritesTemplates on mount', async () => {
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
-    wrapper = createWrapper();
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      'metaTemplateMessage/getFavoritesTemplates',
-      store.state.dashboards.currentDashboard.uuid,
+    const metaTemplateMessageStore = useMetaTemplateMessage();
+
+    const dispatchSpy = vi.spyOn(
+      metaTemplateMessageStore,
+      'getFavoritesTemplates',
     );
+    wrapper = createWrapper();
+    expect(dispatchSpy).toHaveBeenCalled();
   });
 
   it('updates selectedFavorite when a favorite is selected', async () => {
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const metaTemplateMessageStore = useMetaTemplateMessage();
+
+    const dispatchSpy = vi.spyOn(
+      metaTemplateMessageStore,
+      'setSelectedFavorite',
+    );
 
     await wrapper
       .findComponent('[data-testid="select-favorite-template"]')
       .vm.$emit('update:model-value', '1');
 
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      'metaTemplateMessage/setSelectedFavorite',
-      '1',
-    );
+    expect(dispatchSpy).toHaveBeenCalledWith('1');
   });
 
   it('resets selectedFavorite when selectedTemplateUuid changes to non-favorite', async () => {
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const metaTemplateMessageStore = useMetaTemplateMessage();
 
-    store.state.metaTemplateMessage.selectedTemplateUuid = '4';
+    const dispatchSpy = vi.spyOn(
+      metaTemplateMessageStore,
+      'setSelectedFavorite',
+    );
+
+    metaTemplateMessageStore.selectedTemplateUuid = '4';
 
     await wrapper.vm.$nextTick();
 
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      'metaTemplateMessage/setSelectedFavorite',
-      { label: 'Select', value: '' },
-    );
+    expect(dispatchSpy).toHaveBeenCalledWith({ label: 'Select', value: '' });
   });
 });

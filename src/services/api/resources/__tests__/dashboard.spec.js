@@ -17,20 +17,14 @@ vi.mock('@/services/api/http', () => ({
 }));
 
 vi.mock('@/store/modules/config', () => ({
-  default: {
-    state: {
-      project: { uuid: 'mock-project-uuid' },
-    },
-  },
+  useConfig: () => ({ project: { uuid: 'mock-project-uuid' } }),
 }));
 
 vi.mock('@/store/modules/dashboards', () => ({
-  default: {
-    state: {
-      appliedFilters: { status: 'open', priority: 'high' },
-      currentDashboardFilters: [{ name: 'status', type: 'select' }],
-    },
-  },
+  useDashboards: () => ({
+    appliedFilters: { status: 'open', priority: 'high' },
+    currentDashboardFilters: [{ name: 'status', type: 'select' }],
+  }),
 }));
 
 describe('DashboardService', () => {

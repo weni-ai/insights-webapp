@@ -25,7 +25,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
 
 import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
 
@@ -40,9 +42,7 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-    }),
+    ...mapState(useDashboards, ['currentDashboard']),
   },
 };
 </script>

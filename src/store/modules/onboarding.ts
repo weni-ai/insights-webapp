@@ -1,14 +1,12 @@
 import { asyncTimeout } from '@/utils/time';
+import { defineStore } from 'pinia';
 
-const mutations = {
-  SET_ONBOARDING_REF: 'SET_ONBOARDING_REF',
-  SET_SHOW_CREATE_DASHBOARD_ONBOARDING: 'SET_SHOW_CREATE_DASHBOARD_ONBOARDING',
-  SET_SHOW_CONFIG_WIDGETS_ONBOARDING: 'SET_SHOW_CONFIG_WIDGETS_ONBOARDING',
-  SET_SHOW_COMPLETE_ONBOARDING_MODAL: 'SET_SHOW_COMPLETE_ONBOARDING_MODAL',
-};
-export default {
-  namespaced: true,
-  state: {
+interface OnboardingRefs {
+  [key: string]: null | HTMLElement;
+}
+
+export const useOnboarding = defineStore('onboarding', {
+  state: () => ({
     onboardingRefs: {
       'select-dashboard': null,
       'create-dashboard-button': null,
@@ -19,44 +17,41 @@ export default {
       'drawer-graph-empty': null,
       'dashboard-onboarding-tour': null,
       'widgets-onboarding-tour': null,
-    },
+    } as OnboardingRefs,
     showCreateDashboardOnboarding: false,
     showConfigWidgetOnboarding: false,
     showCompleteOnboardingModal: false,
-  },
-  mutations: {
-    [mutations.SET_ONBOARDING_REF](state, { key, ref }) {
-      state.onboardingRefs[key] = ref;
-    },
-    [mutations.SET_SHOW_CREATE_DASHBOARD_ONBOARDING](state, show) {
-      state.showCreateDashboardOnboarding = show;
-    },
-    [mutations.SET_SHOW_CONFIG_WIDGETS_ONBOARDING](state, show) {
-      state.showConfigWidgetOnboarding = show;
-    },
-    [mutations.SET_SHOW_COMPLETE_ONBOARDING_MODAL](state, show) {
-      state.showCompleteOnboardingModal = show;
-    },
-  },
+  }),
   actions: {
-    callTourNextStep({ state }, tour) {
+    setShowCreateDashboardOnboarding(payload: Boolean) {
+      this.showCreateDashboardOnboarding = payload;
+    },
+    setShowConfigWidgetsOnboarding(payload: Boolean) {
+      this.showConfigWidgetOnboarding = payload;
+    },
+    setShowCompleteOnboardingModal(payload: Boolean) {
+      this.showCompleteOnboardingModal = payload;
+    },
+    setOnboardingRef({ key, ref }) {
+      this.onboardingRefs[key] = ref;
+    },
+    callTourNextStep(tour) {
       const {
         showCreateDashboardOnboarding,
         showConfigWidgetOnboarding,
         onboardingRefs,
-      } = state;
+      } = this;
 
       if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
         onboardingRefs[tour]?.nextStep();
       }
     },
-
-    async callTourPreviousStep({ state }, { tour, qtdSteps, timeout }) {
+    async callTourPreviousStep({ tour, qtdSteps, timeout }) {
       const {
         showCreateDashboardOnboarding,
         showConfigWidgetOnboarding,
         onboardingRefs,
-      } = state;
+      } = this;
 
       if (showCreateDashboardOnboarding || showConfigWidgetOnboarding) {
         await asyncTimeout(timeout || 0).then(() => {
@@ -66,14 +61,13 @@ export default {
         });
       }
     },
-
-    async beforeOpenDashboardList({ state, commit }) {
-      if (state.showCreateDashboardOnboarding) {
+    async beforeOpenDashboardList() {
+      if (this.showCreateDashboardOnboarding) {
         const dashboardName = document.querySelector(
           '[data-testid="dropdown-trigger"]',
-        );
+        ) as HTMLElement;
         await dashboardName.click();
-        commit(mutations.SET_ONBOARDING_REF, {
+        this.setOnboardingRef({
           key: 'create-dashboard-button',
           ref: document.querySelector(
             '[data-onboarding-id="create-dashboard-button"]',
@@ -81,57 +75,54 @@ export default {
         });
       }
     },
-
-    async beforeOpenWidgetConfig({ commit, state }) {
-      if (!state.showConfigWidgetOnboarding) return;
+    async beforeOpenWidgetConfig() {
+      if (!this.showConfigWidgetOnboarding) return;
 
       const widgetGallery = document.querySelector(
         '[data-onboarding-id="widget-gallery"]',
-      );
+      ) as HTMLElement;
 
       if (!widgetGallery) {
-        await state.onboardingRefs['widget-card-metric']
+        await this.onboardingRefs['widget-card-metric']
           .querySelector('.card-dashboard__button-config')
           .click();
       }
 
       await asyncTimeout(300).then(() => {
-        commit(mutations.SET_ONBOARDING_REF, {
+        this.setOnboardingRef({
           key: 'widget-gallery',
           ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
         });
       });
     },
-
-    async beforeOpenGaleryEmptyConfig({ commit, state }) {
+    async beforeOpenGaleryEmptyConfig() {
       const galeryDrawer = document.querySelector(
         '[data-onboarding-id="drawer-graph-empty"]',
       );
       if (!galeryDrawer) {
-        await state.onboardingRefs['widget-graph-empty']
+        await this.onboardingRefs['widget-graph-empty']
           .querySelector('.unnnic-button')
           .click();
       }
 
       await asyncTimeout(300).then(() => {
-        commit(mutations.SET_ONBOARDING_REF, {
+        this.setOnboardingRef({
           key: 'widget-gallery',
           ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
         });
       });
     },
-
-    async beforeOpenEmptyWidgetConfig({ commit, state }) {
+    async beforeOpenEmptyWidgetConfig() {
       const galeryDrawer = document.querySelector(
         '[data-onboarding-id="drawer-graph-empty"]',
       );
       if (!galeryDrawer) {
-        await state.onboardingRefs['widget-graph-empty']
+        await this.onboardingRefs['widget-graph-empty']
           .querySelector('.unnnic-button')
           .click();
       }
       await asyncTimeout(600).then(() => {
-        commit(mutations.SET_ONBOARDING_REF, {
+        this.setOnboardingRef({
           key: 'drawer-graph-empty',
           ref: document.querySelector(
             '[data-onboarding-id="drawer-graph-empty"]',
@@ -139,10 +130,9 @@ export default {
         });
       });
     },
-
-    async beforeOpenWidgetMetricConfig({ commit }) {
+    async beforeOpenWidgetMetricConfig() {
       await asyncTimeout(600).then(() => {
-        commit(mutations.SET_ONBOARDING_REF, {
+        this.setOnboardingRef({
           key: 'drawer-card-metric-config',
           ref: document.querySelector(
             '[data-onboarding-id="drawer-card-metric-config"]',
@@ -151,4 +141,4 @@ export default {
       });
     },
   },
-};
+});

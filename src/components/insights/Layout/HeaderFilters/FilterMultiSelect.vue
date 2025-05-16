@@ -11,9 +11,13 @@
 </template>
 
 <script>
+import { mapActions } from 'pinia';
+
+import { useSectors } from '@/store/modules/sectors';
+
 import Projects from '@/services/api/resources/projects';
+
 import { compareEquals } from '@/utils/array';
-import { mapActions } from 'vuex';
 
 export default {
   name: 'FilterMultiSelect',
@@ -88,9 +92,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateSectors: 'sectors/updateSectors',
-    }),
+    ...mapActions(useSectors, ['updateSectors']),
     async fetchSource() {
       try {
         const response = await Projects.getProjectSource(

@@ -17,17 +17,22 @@
 </template>
 
 <script>
-import { mapActions, mapState, mapMutations } from 'vuex';
+import { mapActions, mapState } from 'pinia';
 
-import DynamicWidget from '@/components/insights/widgets/DynamicWidget.vue';
+import { useReports } from '@/store/modules/reports';
+import { useWidgets } from '@/store/modules/widgets';
+
 import IconLoading from '@/components/IconLoading.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
+import { defineAsyncComponent } from 'vue';
 
 export default {
   name: 'ReportView',
 
   components: {
-    DynamicWidget,
+    DynamicWidget: defineAsyncComponent(
+      () => import('@/components/insights/widgets/DynamicWidget.vue'),
+    ),
     IconLoading,
     FlowResultContactListModal,
   },
@@ -40,10 +45,7 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      report: (state) => state.reports.report,
-      isLoadingReport: (state) => state.reports.isLoadingReport,
-    }),
+    ...mapState(useReports, ['report', 'isLoadingReport']),
   },
 
   created() {
@@ -56,14 +58,8 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      resetCurrentDashboardWidgets: 'widgets/RESET_CURRENT_DASHBOARD_WIDGETS',
-      resetReport: 'reports/RESET_REPORT',
-    }),
-    ...mapActions({
-      getWidgetReport: 'reports/getWidgetReport',
-    }),
-
+    ...mapActions(useWidgets, ['resetCurrentDashboardWidgets']),
+    ...mapActions(useReports, ['resetReport', 'getWidgetReport']),
     openFlowResultContactList(data) {
       this.flowResultsContactListParams = data;
       this.showFlowResultsContactListModal = true;

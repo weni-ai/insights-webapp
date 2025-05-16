@@ -1,19 +1,22 @@
 import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
 import HeaderGenerateInsightModal from '@/components/insights/Layout/HeaderGenerateInsights/HeaderGenerateInsightModal.vue';
 import InsightModalFooter from '@/components/insights/Layout/HeaderGenerateInsights/InsightModalFooter.vue';
 import HeaderGenerateInsightText from '@/components/insights/Layout/HeaderGenerateInsights/HeaderGenerateInsightText.vue';
 import firebaseService from '@/services/api/resources/GPT';
 
+import { createTestingPinia } from '@pinia/testing';
+import { useGpt } from '@/store/modules/gpt';
+
 vi.mock('@/services/api/resources/GPT');
 
 describe('HeaderGenerateInsightModal.vue', () => {
   let wrapper;
-  let mockStore;
 
   beforeEach(() => {
-    mockStore = {
-      state: {
+    const store = createTestingPinia({
+      initialState: {
         widgets: {
           currentDashboardWidgets: [
             {
@@ -25,24 +28,24 @@ describe('HeaderGenerateInsightModal.vue', () => {
           ],
         },
         gpt: {
+          getInsights: vi.fn(() => 'Sample Insight'),
           insights: [{ received: { value: 'Sample Insight' } }],
         },
         user: {
           email: 'test@example.com',
         },
       },
-      dispatch: vi.fn(),
-    };
+    });
 
     wrapper = mount(HeaderGenerateInsightModal, {
       global: {
+        plugins: [store],
         stubs: {
           InsightModalFooter: true,
           UnnnicIcon: true,
           Transition: true,
         },
         mocks: {
-          $store: mockStore,
           $t: (key) => key,
         },
       },
@@ -144,16 +147,18 @@ describe('HeaderGenerateInsightModal.vue', () => {
   });
 
   it('generates insight correctly', async () => {
-    mockStore.dispatch.mockResolvedValue();
+    const gptStore = useGpt();
+    const spyGetInsights = vi.spyOn(gptStore, 'getInsights');
     await wrapper.vm.generateInsight();
-    expect(mockStore.dispatch).toHaveBeenCalledWith('gpt/getInsights', {
-      prompt: expect.any(String),
-    });
+    expect(spyGetInsights).toHaveBeenCalled();
     expect(wrapper.vm.generatedInsight).toBe('Sample Insight');
   });
 
   it('handles generate insight error', async () => {
-    mockStore.dispatch.mockRejectedValue(new Error('API Error'));
+    const gptStore = useGpt();
+
+    vi.spyOn(gptStore, 'getInsights').mockRejectedValue(new Error('API Error'));
+
     await wrapper.vm.generateInsight();
     expect(wrapper.vm.generatedInsight).toBe(
       wrapper.vm.$t('insights_header.generate_insight.error'),

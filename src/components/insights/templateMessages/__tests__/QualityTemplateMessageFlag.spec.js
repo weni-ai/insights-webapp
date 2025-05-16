@@ -1,6 +1,7 @@
 import { beforeEach, describe } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
 import QualityTemplateMessageFlag from '../QualityTemplateMessageFlag.vue';
 
 const i18n = createI18n({

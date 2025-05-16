@@ -46,7 +46,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
@@ -74,9 +76,7 @@ export default {
   emits: ['open-config', 'request-data'],
 
   computed: {
-    ...mapState({
-      appliedFilters: (state) => state.dashboards.appliedFilters,
-    }),
+    ...mapState(useDashboards, ['appliedFilters']),
   },
 
   watch: {

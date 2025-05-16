@@ -1,60 +1,42 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
+import { useOnboarding } from '@/store/modules/onboarding';
+import { useDashboards } from '@/store/modules/dashboards';
 
 import DashboardOnboarding from '../DashboardOnboarding.vue';
 
 describe('DashboardOnboarding', () => {
   let wrapper;
-  let actionsMock;
-  let mutationsMock;
+  let spys;
 
   beforeEach(() => {
-    actionsMock = {
-      'onboarding/beforeOpenDashboardList': vi.fn(),
-    };
-
-    mutationsMock = {
-      'dashboards/SET_SHOW_DASHBOARD_CONFIG': vi.fn(),
-      'onboarding/SET_ONBOARDING_REF': vi.fn(),
-      'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING': vi.fn(),
-    };
-    const store = createStore({
-      modules: {
+    const store = createTestingPinia({
+      initialState: {
+        dashboards: { dashboards: [], currentDashboard: {} },
         onboarding: {
-          namespaced: true,
-          state: {
-            onboardingRefs: {
-              'select-dashboard': 'select-dashboard',
-              'create-dashboard-button': null,
-              'widget-card-metric': null,
-              'widget-gallery': null,
-              'drawer-card-metric-config': null,
-              'widget-graph-empty': null,
-              'drawer-graph-empty': null,
-              'dashboard-onboarding-tour': {
-                name: 'dashboard-onboarding-tour',
-                start: vi.fn(),
-                attachedElement: 'dashboard-onboarding-tour',
-              },
-              'widgets-onboarding-tour': null,
+          onboardingRefs: {
+            'select-dashboard': 'select-dashboard',
+            'create-dashboard-button': null,
+            'widget-card-metric': null,
+            'widget-gallery': null,
+            'drawer-card-metric-config': null,
+            'widget-graph-empty': null,
+            'drawer-graph-empty': null,
+            'dashboard-onboarding-tour': {
+              name: 'dashboard-onboarding-tour',
+              start: vi.fn(),
+              attachedElement: 'dashboard-onboarding-tour',
             },
-            showCreateDashboardOnboarding: false,
-            showConfigWidgetOnboarding: false,
-            showCompleteOnboardingModal: false,
+            'widgets-onboarding-tour': null,
           },
-        },
-        dashboards: {
-          namespaced: true,
-          state: { dashboards: [], currentDashboard: {} },
+          showCreateDashboardOnboarding: false,
+          showConfigWidgetOnboarding: false,
+          showCompleteOnboardingModal: false,
         },
       },
-      actions: actionsMock,
-      mutations: mutationsMock,
-      dispatch: vi.fn(),
-      commit: vi.fn(),
     });
-
     wrapper = mount(DashboardOnboarding, {
       global: {
         plugins: [store],
@@ -64,17 +46,28 @@ describe('DashboardOnboarding', () => {
               '<section ref="dashboardOnboardingTour" data-testid="tour"  @close="setShowCreateDashboardOnboarding(false)" @end-tour="setShowDashboardConfig(true)"><slot></slot></section>',
             methods: {
               start: vi.fn(),
-              setShowDashboardConfig:
-                mutationsMock['dashboards/SET_SHOW_DASHBOARD_CONFIG'],
-              setShowCreateDashboardOnboarding:
-                mutationsMock[
-                  'onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING'
-                ],
+              setShowDashboardConfig: vi.fn(),
+              setShowCreateDashboardOnboarding: vi.fn(),
             },
           },
         },
       },
     });
+
+    const onboardingStore = useOnboarding();
+    const dashboardsStore = useDashboards();
+
+    spys = {
+      setShowDashboardConfig: vi.spyOn(
+        dashboardsStore,
+        'setShowDashboardConfig',
+      ),
+      setOnboardingRef: vi.spyOn(onboardingStore, 'setOnboardingRef'),
+      setShowCreateDashboardOnboarding: vi.spyOn(
+        onboardingStore,
+        'setShowCreateDashboardOnboarding',
+      ),
+    };
 
     vi.clearAllMocks();
   });
@@ -97,23 +90,19 @@ describe('DashboardOnboarding', () => {
 
   it('calls setOnboardingRef on mounted', async () => {
     await wrapper.vm.$nextTick();
-    expect(mutationsMock['onboarding/SET_ONBOARDING_REF']).toHaveBeenCalled();
+    expect(spys.setOnboardingRef).toHaveBeenCalled();
   });
 
   it('calls setShowDashboardConfig when the tour ends', async () => {
     const tour = wrapper.findComponent({ ref: 'dashboardOnboardingTour' });
     await tour.vm.$emit('end-tour');
-    expect(
-      mutationsMock['dashboards/SET_SHOW_DASHBOARD_CONFIG'],
-    ).toHaveBeenCalled();
+    expect(spys.setShowDashboardConfig).toHaveBeenCalled();
   });
 
   it('calls setShowCreateDashboardOnboarding when the tour is closed', async () => {
     const tour = wrapper.findComponent({ ref: 'dashboardOnboardingTour' });
     await tour.vm.$emit('close');
 
-    expect(
-      mutationsMock['onboarding/SET_SHOW_CREATE_DASHBOARD_ONBOARDING'],
-    ).toHaveBeenCalled();
+    expect(spys.setShowCreateDashboardOnboarding).toHaveBeenCalled();
   });
 });

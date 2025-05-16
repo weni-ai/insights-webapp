@@ -2,7 +2,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount, config, flushPromises } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
 
 import VtexConversionsForm from '../DrawerConfigContentVtexConversions.vue';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
@@ -54,13 +55,14 @@ describe('VtexConversionsForm.vue', () => {
   };
 
   beforeEach(() => {
-    store = createStore({
-      state: {
+    store = createTestingPinia({
+      initialState: {
         config: {
           project: { uuid: 'test-project-uuid' },
         },
       },
     });
+
     wrapper = createWrapper();
   });
 

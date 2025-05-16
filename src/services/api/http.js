@@ -1,6 +1,6 @@
 import axios from 'axios';
 import env from '@/utils/env';
-import ConfigStore from '@/store/modules/config';
+import { useConfig } from '@/store/modules/config';
 import qs from 'qs';
 //import CustomError from './customError'; //TODO: Apply custom error to failed requests
 
@@ -10,8 +10,9 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
-  if (ConfigStore.state?.token) {
-    config.headers.Authorization = `Bearer ${ConfigStore.state.token}`;
+  const configStore = useConfig();
+  if (configStore?.token) {
+    config.headers.Authorization = `Bearer ${configStore.token}`;
   }
 
   return config;

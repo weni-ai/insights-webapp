@@ -1,9 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+
+import { createPinia } from 'pinia';
+import { useDashboards } from '@/store/modules/dashboards';
 
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
-import dashboards from '@/store/modules/dashboards';
 
 const widgetMock = {
   uuid: '1',
@@ -28,14 +29,7 @@ const dataMock = {
   total_value: '$5000',
 };
 
-const store = createStore({
-  modules: {
-    dashboards: {
-      namespaced: true,
-      ...dashboards,
-    },
-  },
-});
+const store = createPinia();
 
 const createWrapper = (props = {}) => {
   return mount(CardVtexOrder, {
@@ -164,7 +158,9 @@ describe('CardVtexOrder', () => {
   });
 
   it('emits "request-data" when appliedFilters change', async () => {
-    await wrapper.vm.$store.commit('dashboards/SET_APPLIED_FILTERS', {
+    const dashboardsStore = useDashboards();
+
+    await dashboardsStore.setAppliedFilters({
       test: 'key',
     });
 

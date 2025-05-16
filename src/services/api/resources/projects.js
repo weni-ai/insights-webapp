@@ -1,10 +1,10 @@
 import http from '@/services/api/http';
-import Config from '@/store/modules/config';
+import { useConfig } from '@/store/modules/config';
 import { createRequestQuery } from '@/utils/request';
 
 export default {
   async getProjectSource(slug, queryParams = {}) {
-    const { project } = Config.state;
+    const { project } = useConfig();
     if (!slug) {
       throw new Error('Please provide a valid id to request data of source.');
     }
@@ -27,7 +27,7 @@ export default {
     return sources;
   },
   async verifyProjectIndexer() {
-    const { project } = Config.state;
+    const { project } = useConfig();
     const response = await http.get(
       `/projects/${project.uuid}/verify_project_indexer/`,
     );

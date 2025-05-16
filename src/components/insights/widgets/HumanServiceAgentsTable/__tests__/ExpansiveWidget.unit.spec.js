@@ -1,10 +1,12 @@
 import { mount, flushPromises, config } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 
 import ExpansiveWidget from '../../ExpansiveWidget.vue';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import { useWidgets } from '@/store/modules/widgets';
 
 const i18n = createI18n({
   legacy: false,
@@ -25,8 +27,6 @@ vi.stubGlobal('clearInterval', vi.fn());
 describe('ExpansiveWidget', () => {
   let wrapper;
   let store;
-  let actions;
-  let state;
 
   const createMockWidget = (type = 'table_dynamic_by_filter', data = {}) => ({
     value: {
@@ -93,35 +93,22 @@ describe('ExpansiveWidget', () => {
   });
 
   const createMockStore = (overrides = {}) => {
-    actions = {
-      'widgets/updateCurrentExpansiveWidgetData': vi.fn(),
-      ...overrides.actions,
-    };
-
-    state = {
-      widgets: {
-        isLoadingCurrentExpansiveWidget: false,
-        currentExpansiveWidgetFilters: {
-          sector: '',
-          queue: '',
+    return createTestingPinia({
+      initialState: {
+        dashboards: {
+          appliedFilters: {},
+          ...overrides.dashboardsState,
         },
-        ...overrides.widgetsState,
+        widgets: {
+          isLoadingCurrentExpansiveWidget: false,
+          currentExpansiveWidgetFilters: {
+            sector: '',
+            queue: '',
+          },
+          ...overrides.widgetsState,
+        },
       },
-      dashboards: {
-        appliedFilters: {},
-        ...overrides.dashboardsState,
-      },
-    };
-
-    return {
-      state,
-      dispatch: (action, payload) => {
-        if (actions[action]) {
-          return actions[action]({}, payload);
-        }
-        return null;
-      },
-    };
+    });
   };
 
   beforeEach(() => {
@@ -313,13 +300,17 @@ describe('ExpansiveWidget', () => {
 
       await wrapper.vm.$nextTick();
 
-      actions['widgets/updateCurrentExpansiveWidgetData'].mockClear();
+      const widgetsStore = useWidgets();
+      const updateCurrentExpansiveWidgetDataSpy = vi.spyOn(
+        widgetsStore,
+        'updateCurrentExpansiveWidgetData',
+      );
 
       await wrapper.vm.updateWidgetData();
 
-      expect(
-        actions['widgets/updateCurrentExpansiveWidgetData'],
-      ).toHaveBeenCalledWith(expect.anything(), mockWidget.value);
+      expect(updateCurrentExpansiveWidgetDataSpy).toHaveBeenCalledWith(
+        mockWidget.value,
+      );
     });
 
     it('sets up polling interval on mount', async () => {
@@ -387,13 +378,15 @@ describe('ExpansiveWidget', () => {
 
       await wrapper.vm.$nextTick();
 
-      actions['widgets/updateCurrentExpansiveWidgetData'].mockClear();
+      const widgetsStore = useWidgets();
+      const updateCurrentExpansiveWidgetDataSpy = vi.spyOn(
+        widgetsStore,
+        'updateCurrentExpansiveWidgetData',
+      );
 
       await wrapper.vm.updateWidgetData();
 
-      expect(
-        actions['widgets/updateCurrentExpansiveWidgetData'],
-      ).not.toHaveBeenCalled();
+      expect(updateCurrentExpansiveWidgetDataSpy).not.toHaveBeenCalled();
     });
 
     it('has a watcher for currentExpansiveWidgetFilters that calls updateWidgetData', async () => {

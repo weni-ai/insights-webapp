@@ -1,5 +1,5 @@
 import { mount, config } from '@vue/test-utils';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';

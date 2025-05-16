@@ -1,6 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useOnboarding } from '@/store/modules/onboarding';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 
 describe('InsightsLayout', () => {
@@ -23,20 +25,10 @@ describe('InsightsLayout', () => {
   };
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
-        dashboards: {
-          namespaced: true,
-          state: {
-            currentDashboardFilters: [],
-          },
-        },
-        onboarding: {
-          namespaced: true,
-          mutations: {
-            SET_ONBOARDING_REF: mockSetOnboardingRef,
-          },
-        },
+    store = createTestingPinia({
+      initialState: {
+        dashboards: { currentDashboardFilters: [] },
+        onboarding: { setOnboardingRef: mockSetOnboardingRef },
       },
     });
 
@@ -45,7 +37,8 @@ describe('InsightsLayout', () => {
 
   describe('Initial Render', () => {
     it('renders the layout with InsightsLayoutHeader and default slot', async () => {
-      store.state.dashboards.currentDashboardFilters = ['filter1'];
+      const dashboardsStore = useDashboards();
+      dashboardsStore.currentDashboardFilters = ['filter1'];
       await wrapper.vm.$nextTick();
       expect(
         wrapper.findComponent({ name: 'InsightsLayoutHeader' }).exists(),
@@ -64,7 +57,8 @@ describe('InsightsLayout', () => {
 
   describe('Dashboard Filters', () => {
     it('displays the insights section when currentDashboardFilters are present', async () => {
-      store.state.dashboards.currentDashboardFilters = ['filter1'];
+      const dashboardsStore = useDashboards();
+      dashboardsStore.currentDashboardFilters = ['filter1'];
       await wrapper.vm.$nextTick();
 
       const insightsSection = wrapper.find('.insights-layout__insights');
@@ -74,7 +68,10 @@ describe('InsightsLayout', () => {
 
   describe('Vuex Actions', () => {
     it('calls setOnboardingRef mutation on mount with correct payload', () => {
-      expect(mockSetOnboardingRef).toHaveBeenCalledWith(expect.any(Object), {
+      const onboardingStore = useOnboarding();
+      const spy = vi.spyOn(onboardingStore, 'setOnboardingRef');
+      createWrapper();
+      expect(spy).toHaveBeenCalledWith({
         key: 'insights-layout',
         ref: wrapper.element,
       });

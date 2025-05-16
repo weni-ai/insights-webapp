@@ -12,7 +12,7 @@ const useSharedStoreMock = vi.fn(() => ({
   current: { project: { uuid: 'mock-uuid' } },
 }));
 
-vi.mock('host/sharedStore', () => ({
+vi.mock('connect/sharedStore', () => ({
   useSharedStore: useSharedStoreMock,
 }));
 

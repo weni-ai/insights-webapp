@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
-import AgentsTableHeader from '../AgentsTableHeader.vue';
+import { shallowMount, config, flushPromises } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 import i18n from '@/utils/plugins/i18n';
+import AgentsTableHeader from '../AgentsTableHeader.vue';
+import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
+import { useWidgets } from '@/store/modules/widgets';
 
 beforeAll(() => {
   config.global.plugins = config.global.plugins.filter(
@@ -47,50 +50,31 @@ const sampleHeaders = [
 const storageColumns = ['in_progress', 'closeds', 'column1', 'column2'];
 
 const createMockStore = (overrideState = {}) => {
-  const state = {
-    agentsColumnsFilter: {
-      visibleColumns: [...storageColumns],
-      hasInitialized: true,
-      ...overrideState.agentsColumnsFilter,
-    },
-    widgets: {
-      currentExpansiveWidget: {
-        type: 'table_dynamic_by_filter',
-        data: {},
-        uuid: 'test-uuid',
+  return createTestingPinia({
+    initialState: {
+      agentsColumnsFilter: {
+        visibleColumns: [...storageColumns],
+        hasInitialized: true,
+        ...overrideState.agentsColumnsFilter,
       },
-      currentExpansiveWidgetFilters: {
-        sector: '',
-        queue: '',
+      widgets: {
+        currentExpansiveWidget: {
+          type: 'table_dynamic_by_filter',
+          data: {},
+          uuid: 'test-uuid',
+        },
+        currentExpansiveWidgetFilters: {
+          sector: '',
+          queue: '',
+        },
+        ...overrideState.widgets,
       },
-      ...overrideState.widgets,
     },
-  };
-
-  const actions = {
-    'agentsColumnsFilter/initializeFromStorage': vi.fn(),
-    'agentsColumnsFilter/setVisibleColumns': vi.fn(),
-    'widgets/updateCurrentExpansiveWidgetFilters': vi.fn(),
-    'widgets/resetCurrentExpansiveWidgetFilters': vi.fn(),
-    'widgets/updateCurrentExpansiveWidgetData': vi.fn(),
-  };
-
-  return {
-    state,
-    dispatch: (action, payload) => {
-      if (actions[action]) {
-        return actions[action](payload);
-      }
-      return null;
-    },
-    actions,
-  };
+  });
 };
 
 const createWrapper = (props = {}, overrideState = {}) => {
   const store = createMockStore(overrideState);
-
-  vi.spyOn(store, 'dispatch');
 
   return {
     wrapper: shallowMount(AgentsTableHeader, {
@@ -100,9 +84,7 @@ const createWrapper = (props = {}, overrideState = {}) => {
         ...props,
       },
       global: {
-        provide: {
-          store,
-        },
+        plugins: [store],
         stubs: {
           UnnnicLabel: true,
           UnnnicSelectSmart: true,
@@ -114,19 +96,16 @@ const createWrapper = (props = {}, overrideState = {}) => {
         },
       },
     }),
-    store,
   };
 };
 
 describe('AgentsTableHeader', () => {
   let wrapper;
-  let store;
 
   beforeEach(() => {
     vi.clearAllMocks();
     const created = createWrapper();
     wrapper = created.wrapper;
-    store = created.store;
   });
 
   afterEach(() => {
@@ -209,6 +188,13 @@ describe('AgentsTableHeader', () => {
 
   describe('Methods', () => {
     it('handleVisibleColumnsUpdate dispatches action with column names', async () => {
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+
+      const spySetVisibleColumns = vi.spyOn(
+        agentsColumnsFilterStore,
+        'setVisibleColumns',
+      );
+
       const columns = [
         { value: 'column1', label: 'Column 1' },
         { value: 'column2', label: 'Column 2' },
@@ -216,15 +202,12 @@ describe('AgentsTableHeader', () => {
 
       await wrapper.vm.handleVisibleColumnsUpdate(columns);
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'agentsColumnsFilter/setVisibleColumns',
-        ['column1', 'column2'],
-      );
+      expect(spySetVisibleColumns).toHaveBeenCalledWith(['column1', 'column2']);
       expect(wrapper.vm.selectedColumns).toEqual(columns);
     });
 
     it('handleVisibleColumnsUpdate does nothing when not initialized', async () => {
-      const { wrapper, store } = createWrapper(
+      const { wrapper } = createWrapper(
         {},
         {
           agentsColumnsFilter: { hasInitialized: false },
@@ -233,12 +216,16 @@ describe('AgentsTableHeader', () => {
 
       const columns = [{ value: 'column1', label: 'Column 1' }];
 
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+
+      const spySetVisibleColumns = vi.spyOn(
+        agentsColumnsFilterStore,
+        'setVisibleColumns',
+      );
+
       await wrapper.vm.handleVisibleColumnsUpdate(columns);
 
-      expect(store.dispatch).not.toHaveBeenCalledWith(
-        'agentsColumnsFilter/setVisibleColumns',
-        expect.anything(),
-      );
+      expect(spySetVisibleColumns).not.toHaveBeenCalledWith(expect.anything());
       expect(wrapper.vm.selectedColumns).not.toEqual(columns);
     });
 
@@ -258,15 +245,20 @@ describe('AgentsTableHeader', () => {
       wrapper.vm.selectedQueue = 'queue-456';
       await wrapper.vm.$nextTick();
 
+      const widgetsStore = useWidgets();
+      const spyUpdateCurrentExpansiveWidgetFilters = vi.spyOn(
+        widgetsStore,
+        'updateCurrentExpansiveWidgetFilters',
+      );
+
       wrapper.vm.updateSector('');
 
       expect(wrapper.vm.selectedSector).toBe('');
       expect(wrapper.vm.selectedQueue).toBe('');
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'widgets/updateCurrentExpansiveWidgetFilters',
-        { queue: '' },
-      );
+      expect(spyUpdateCurrentExpansiveWidgetFilters).toHaveBeenCalledWith({
+        queue: '',
+      });
     });
 
     it('updateQueue updates local state', async () => {
@@ -276,17 +268,27 @@ describe('AgentsTableHeader', () => {
 
     it('refreshData dispatches updateCurrentExpansiveWidgetData action', async () => {
       const mockWidget = { type: 'table_dynamic_by_filter', uuid: 'test-uuid' };
-      store.state.widgets.currentExpansiveWidget = mockWidget;
+      const widgetsStore = useWidgets();
+      const spyUpdateCurrentExpansiveWidgetData = vi.spyOn(
+        widgetsStore,
+        'updateCurrentExpansiveWidgetData',
+      );
+
+      widgetsStore.currentExpansiveWidget = mockWidget;
 
       wrapper.vm.refreshData();
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'widgets/updateCurrentExpansiveWidgetData',
+      expect(spyUpdateCurrentExpansiveWidgetData).toHaveBeenCalledWith(
         mockWidget,
       );
     });
 
     it('clearFilters resets local state and store filters', async () => {
+      const widgetsStore = useWidgets();
+      const spyResetCurrentExpansiveWidgetFilters = vi.spyOn(
+        widgetsStore,
+        'resetCurrentExpansiveWidgetFilters',
+      );
       wrapper.vm.selectedSector = 'sector-123';
       wrapper.vm.selectedQueue = 'queue-456';
       await wrapper.vm.$nextTick();
@@ -296,9 +298,7 @@ describe('AgentsTableHeader', () => {
       expect(wrapper.vm.selectedSector).toBe('');
       expect(wrapper.vm.selectedQueue).toBe('');
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'widgets/resetCurrentExpansiveWidgetFilters',
-      );
+      expect(spyResetCurrentExpansiveWidgetFilters).toHaveBeenCalled();
     });
 
     it('getDynamicFiltersDependsOnValues returns null when no search_param', () => {
@@ -317,34 +317,47 @@ describe('AgentsTableHeader', () => {
 
   describe('Watchers', () => {
     it('updates store when selectedSector changes', async () => {
+      const widgetsStore = useWidgets();
+      const spyUpdateCurrentExpansiveWidgetFilters = vi.spyOn(
+        widgetsStore,
+        'updateCurrentExpansiveWidgetFilters',
+      );
       wrapper.vm.selectedSector = 'sector-123';
       await wrapper.vm.$nextTick();
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'widgets/updateCurrentExpansiveWidgetFilters',
-        { sector: 'sector-123' },
-      );
+      expect(spyUpdateCurrentExpansiveWidgetFilters).toHaveBeenCalledWith({
+        sector: 'sector-123',
+      });
     });
 
     it('updates store when selectedQueue changes', async () => {
+      const widgetsStore = useWidgets();
+      const spyUpdateCurrentExpansiveWidgetFilters = vi.spyOn(
+        widgetsStore,
+        'updateCurrentExpansiveWidgetFilters',
+      );
+
       wrapper.vm.selectedQueue = 'queue-456';
       await wrapper.vm.$nextTick();
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'widgets/updateCurrentExpansiveWidgetFilters',
-        { queue: 'queue-456' },
-      );
+      expect(spyUpdateCurrentExpansiveWidgetFilters).toHaveBeenCalledWith({
+        queue: 'queue-456',
+      });
     });
 
     it('initializes selectedColumns when headerOptions change', async () => {
-      const { wrapper, store } = createWrapper(
+      const { wrapper } = createWrapper(
         { headers: sampleHeaders.slice(0, 4) },
         {
           agentsColumnsFilter: { visibleColumns: [] },
         },
       );
 
-      store.dispatch.mockClear();
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+      const spySetVisibleColumns = vi.spyOn(
+        agentsColumnsFilterStore,
+        'setVisibleColumns',
+      );
 
       await wrapper.setProps({
         headers: [
@@ -356,10 +369,7 @@ describe('AgentsTableHeader', () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'agentsColumnsFilter/setVisibleColumns',
-        expect.any(Array),
-      );
+      expect(spySetVisibleColumns).toHaveBeenCalledWith(expect.any(Array));
     });
   });
 
@@ -381,12 +391,18 @@ describe('AgentsTableHeader', () => {
       expect(wrapper.vm.selectedQueue).toBe('queue-456');
     });
 
-    it('initializes with stored columns on mount', () => {
-      const { store } = createWrapper();
-
-      expect(store.dispatch).toHaveBeenCalledWith(
-        'agentsColumnsFilter/initializeFromStorage',
+    it('initializes with stored columns on mount', async () => {
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+      const spyInitializeFromStorage = vi.spyOn(
+        agentsColumnsFilterStore,
+        'initializeFromStorage',
       );
+
+      createWrapper();
+
+      await flushPromises();
+
+      expect(spyInitializeFromStorage).toHaveBeenCalled();
     });
 
     it('initializes columns based on stored values when length > 2', () => {

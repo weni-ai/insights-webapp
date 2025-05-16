@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { shallowMount, config, flushPromises } from '@vue/test-utils';
+import { config, flushPromises, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import i18n from '@/utils/plugins/i18n';
 import AgentsTableHeader from '../AgentsTableHeader.vue';
@@ -77,7 +77,7 @@ const createWrapper = (props = {}, overrideState = {}) => {
   const store = createMockStore(overrideState);
 
   return {
-    wrapper: shallowMount(AgentsTableHeader, {
+    wrapper: mount(AgentsTableHeader, {
       props: {
         headers: sampleHeaders,
         isLoading: false,
@@ -393,6 +393,7 @@ describe('AgentsTableHeader', () => {
 
     it('initializes with stored columns on mount', async () => {
       const agentsColumnsFilterStore = useAgentsColumnsFilter();
+
       const spyInitializeFromStorage = vi.spyOn(
         agentsColumnsFilterStore,
         'initializeFromStorage',

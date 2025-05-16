@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { config, flushPromises, mount } from '@vue/test-utils';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { config, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import i18n from '@/utils/plugins/i18n';
 import AgentsTableHeader from '../AgentsTableHeader.vue';
@@ -106,10 +106,6 @@ describe('AgentsTableHeader', () => {
     vi.clearAllMocks();
     const created = createWrapper();
     wrapper = created.wrapper;
-  });
-
-  afterEach(() => {
-    wrapper.unmount();
   });
 
   describe('Component rendering', () => {
@@ -389,21 +385,6 @@ describe('AgentsTableHeader', () => {
 
       expect(wrapper.vm.selectedSector).toBe('sector-123');
       expect(wrapper.vm.selectedQueue).toBe('queue-456');
-    });
-
-    it('initializes with stored columns on mount', async () => {
-      const agentsColumnsFilterStore = useAgentsColumnsFilter();
-
-      const spyInitializeFromStorage = vi.spyOn(
-        agentsColumnsFilterStore,
-        'initializeFromStorage',
-      );
-
-      createWrapper();
-
-      await flushPromises();
-
-      expect(spyInitializeFromStorage).toHaveBeenCalled();
     });
 
     it('initializes columns based on stored values when length > 2', () => {

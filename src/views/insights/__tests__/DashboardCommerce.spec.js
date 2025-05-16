@@ -12,7 +12,7 @@ const useSharedStoreMock = vi.fn(() => ({
   current: { project: { uuid: 'mock-uuid' } },
 }));
 
-vi.mock('host/sharedStore', () => ({
+vi.mock('connect/sharedStore', () => ({
   useSharedStore: useSharedStoreMock,
 }));
 
@@ -107,7 +107,7 @@ describe('DashboardCommerce', () => {
       });
 
       await flushPromises();
-      
+
       wrapper.vm.isLoading = true;
       await wrapper.vm.$nextTick();
 

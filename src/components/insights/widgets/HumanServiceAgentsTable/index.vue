@@ -112,7 +112,12 @@ export default {
           !['status', 'agent'].includes(header.name),
       );
 
-      const allHeaders = [...staticHeaders, ...dynamicHeaders];
+      const sortedDynamicHeaders = this.sortHeadersByVisibleColumns(
+        dynamicHeaders,
+        visibleColumns,
+      );
+
+      const allHeaders = [...staticHeaders, ...sortedDynamicHeaders];
 
       return allHeaders.map((header, index) => ({
         content: this.$t(header.name || ''),
@@ -208,6 +213,22 @@ export default {
       const totalHours = duration.days * 24 + duration.hours;
 
       return `${zeroPad(totalHours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
+    },
+
+    sortHeadersByVisibleColumns(headers, visibleColumns) {
+      return [...headers].sort((a, b) => {
+        const indexA = visibleColumns.indexOf(a.name);
+        const indexB = visibleColumns.indexOf(b.name);
+
+        if (indexA !== -1 && indexB !== -1) {
+          return indexA - indexB;
+        }
+
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+
+        return 0;
+      });
     },
 
     redirectItem(item) {

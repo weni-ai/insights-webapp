@@ -29,7 +29,7 @@ export const useMetaTemplateMessage = defineStore('metaTemplateMessage', {
         favorite[0].value &&
         this.selectedTemplateUuid !== favorite[0].value
       ) {
-        this.setSelectedTemplateUuid = favorite[0].value;
+        this.setSelectedTemplateUuid(favorite[0].value);
       }
     },
     setEmptyTemplates(payload) {

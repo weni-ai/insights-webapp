@@ -39,6 +39,7 @@ describe('DrawerConfigGallery.vue', () => {
           state: () => ({
             isLoadedFlows: true,
             flows: [],
+            isCommerce: false,
           }),
           actions: {
             getProjectFlows: vi.fn(),
@@ -81,6 +82,7 @@ describe('DrawerConfigGallery.vue', () => {
 
   it('renders UnnnicDrawer with gallery options withou vtex', async () => {
     store.state.config.project.uuid = '123';
+    store.state.project.isCommerce = false;
     await wrapper.vm.$nextTick();
     const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(2);
@@ -89,9 +91,26 @@ describe('DrawerConfigGallery.vue', () => {
     expect(options[1].text()).toContain('Recurrence');
   });
 
-  it('renders UnnnicDrawer with gallery options with vtex', async () => {
-    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
+  it('renders UnnnicDrawer with gallery options with vtex when UUID is in the list', async () => {
+    store.state.project.isCommerce = false;
+    store.state.config.project.uuid = '95fa43d6-d91a-48d4-bbe8-256d93bf5254';
+    await wrapper.vm.$nextTick();
 
+    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
+    expect(options.length).toBe(4);
+
+    expect(options[0].text()).toContain('Funnel');
+    expect(options[1].text()).toContain('Recurrence');
+    expect(options[2].text()).toContain('VTEX');
+    expect(options[3].text()).toContain('Template conversion');
+  });
+
+  it('renders UnnnicDrawer with gallery options with vtex when isCommerce is true regardless of UUID', async () => {
+    store.state.config.project.uuid = '123';
+    store.state.project.isCommerce = true;
+    await wrapper.vm.$nextTick();
+
+    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(4);
 
     expect(options[0].text()).toContain('Funnel');

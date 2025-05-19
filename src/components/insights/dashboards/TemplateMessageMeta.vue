@@ -66,7 +66,7 @@ export default {
 </script>
 
 <script setup>
-import { onMounted, ref, computed, watch } from 'vue';
+import { onMounted, ref, computed, watch, onUnmounted } from 'vue';
 import { formatToPercent } from '@/utils/number';
 
 import { useLocalStorage } from '@vueuse/core';
@@ -105,6 +105,10 @@ const project_uuid = computed(() => configStore.project?.uuid);
 const lastOpenTemplates = useLocalStorage('meta-last-templates-viewed', {});
 
 const initialLoading = ref(false);
+
+onUnmounted(() => {
+  metaTemplateMessageStore.setSelectedTemplateUuid('');
+});
 
 onMounted(async () => {
   try {

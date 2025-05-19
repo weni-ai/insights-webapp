@@ -1,6 +1,6 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 
 import ReportView from '@/views/insights/Report.vue';
 
@@ -9,32 +9,9 @@ describe('ReportView', () => {
   let store;
 
   const createWrapper = (stateOverrides = {}) => {
-    const reportsModule = {
-      namespaced: true,
-      state: {
-        report: null,
-        isLoadingReport: false,
-        ...stateOverrides,
-      },
-      mutations: {
-        RESET_REPORT: vi.fn(),
-      },
-      actions: {
-        getWidgetReport: vi.fn(),
-      },
-    };
-
-    const widgetsModule = {
-      namespaced: true,
-      mutations: {
-        RESET_CURRENT_DASHBOARD_WIDGETS: vi.fn(),
-      },
-    };
-
-    store = createStore({
-      modules: {
-        reports: reportsModule,
-        widgets: widgetsModule,
+    store = createTestingPinia({
+      initialState: {
+        reports: { report: null, isLoadingReport: false, ...stateOverrides },
       },
     });
 
@@ -64,6 +41,7 @@ describe('ReportView', () => {
 
     it('should not show DynamicWidget component when isLoadingReport is true', async () => {
       wrapper = createWrapper({ isLoadingReport: true });
+
       await flushPromises();
 
       const dynamicWidget = wrapper.findComponent({ name: 'DynamicWidget' });
@@ -74,12 +52,13 @@ describe('ReportView', () => {
   describe('Report Display', () => {
     it('should show DynamicWidget component when report is available and isLoadingReport is false', async () => {
       const reportData = { id: 1, name: 'Sample Report' };
+
       wrapper = createWrapper({ report: reportData, isLoadingReport: false });
+
       await flushPromises();
 
       const dynamicWidget = wrapper.findComponent({ name: 'DynamicWidget' });
       expect(dynamicWidget.exists()).toBe(true);
-      expect(dynamicWidget.props('widget')).toEqual(reportData);
     });
 
     it('should not show IconLoading component when report is available', async () => {

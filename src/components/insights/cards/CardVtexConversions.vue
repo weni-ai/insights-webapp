@@ -86,7 +86,9 @@
 
 <script setup>
 import { computed } from 'vue';
+
 import CardBase from './CardBase.vue';
+
 import i18n from '@/utils/plugins/i18n';
 import { formatPercentage, formatValue } from '@/utils/numbers';
 

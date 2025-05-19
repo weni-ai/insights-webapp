@@ -68,7 +68,7 @@ export default {
 <script setup>
 import { onMounted, ref, computed, watch } from 'vue';
 import { formatToPercent } from '@/utils/number';
-import { useStore } from 'vuex';
+
 import { useLocalStorage } from '@vueuse/core';
 
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
@@ -86,15 +86,21 @@ import weniLoading from '@/assets/images/weni-loading.svg';
 import moment from 'moment';
 
 import Unnnic from '@weni/unnnic-system';
-import { formatValue } from '@/utils/numbers';
 
-const store = useStore();
+import { formatValue } from '@/utils/numbers';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useConfig } from '@/store/modules/config';
+import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
+
+const dashboardsStore = useDashboards();
+const configStore = useConfig();
+const metaTemplateMessageStore = useMetaTemplateMessage();
 
 const waba_id = computed(
-  () => store.state.dashboards.currentDashboard.config?.waba_id,
+  () => dashboardsStore.currentDashboard.config?.waba_id,
 );
 
-const project_uuid = computed(() => store.state.config.project?.uuid);
+const project_uuid = computed(() => configStore.project?.uuid);
 
 const lastOpenTemplates = useLocalStorage('meta-last-templates-viewed', {});
 
@@ -118,13 +124,10 @@ onMounted(async () => {
         });
 
       if (templates.length) {
-        store.dispatch('metaTemplateMessage/setEmptyTemplates', false);
+        metaTemplateMessageStore.setEmptyTemplates(false);
         handlerSelectedTemplateUuid(templates[0]?.id);
-        store.dispatch(
-          'metaTemplateMessage/handlerShowSearchTemplateModal',
-          true,
-        );
-      } else store.dispatch('metaTemplateMessage/setEmptyTemplates', true);
+        metaTemplateMessageStore.handlerShowSearchTemplateModal(true);
+      } else metaTemplateMessageStore.setEmptyTemplates(true);
     }
   } catch (error) {
     console.error(error);
@@ -134,27 +137,25 @@ onMounted(async () => {
 });
 
 const favoritesTemplates = computed(
-  () => store.state.metaTemplateMessage.favoritesTemplates,
+  () => metaTemplateMessageStore.favoritesTemplates,
 );
 
 const isEmptyTemplates = computed(
-  () => store.state.metaTemplateMessage.emptyTemplates,
+  () => metaTemplateMessageStore.emptyTemplates,
 );
 
 const selectedTemplateUuid = computed(
-  () => store.state.metaTemplateMessage.selectedTemplateUuid,
+  () => metaTemplateMessageStore.selectedTemplateUuid,
 );
 
 const selectedFavoriteTemplate = computed(
-  () => store.state.metaTemplateMessage.selectedFavoriteTemplate,
+  () => metaTemplateMessageStore.selectedFavoriteTemplate,
 );
 
-const currentDashboard = computed(
-  () => store.state.dashboards.currentDashboard,
-);
+const currentDashboard = computed(() => dashboardsStore.currentDashboard);
 
 const handlerSelectedTemplateUuid = (templateUuid) => {
-  store.dispatch('metaTemplateMessage/setSelectedTemplateUuid', templateUuid);
+  metaTemplateMessageStore.setSelectedTemplateUuid(templateUuid);
 };
 
 const templatePreview = ref({});
@@ -300,7 +301,7 @@ const getSelectedTemplateData = (
   getMessagesAnalytics();
 };
 
-const appliedFilters = computed(() => store.state.dashboards.appliedFilters);
+const appliedFilters = computed(() => dashboardsStore.appliedFilters);
 
 watch(appliedFilters, () => {
   const isLoadedPreview = Object.keys(templatePreview.value).length > 0;
@@ -335,12 +336,12 @@ const favoriteTemplate = async () => {
 
   templatePreview.value.is_favorite = true;
 
-  const favorites = store.state.metaTemplateMessage.favoritesTemplates;
+  const favorites = metaTemplateMessageStore.favoritesTemplates;
 
-  store.commit('metaTemplateMessage/SET_FAVORITES_TEMPLATES', [
+  metaTemplateMessageStore.favoritesTemplates = [
     { name: templatePreview.value.name, id: selectedTemplateUuid.value },
     ...favorites,
-  ]);
+  ];
 };
 
 const unfavoriteTemplate = async () => {
@@ -351,17 +352,14 @@ const unfavoriteTemplate = async () => {
 
   templatePreview.value.is_favorite = false;
 
-  const favorites = store.state.metaTemplateMessage.favoritesTemplates;
+  const favorites = metaTemplateMessageStore.favoritesTemplates;
 
   if (selectedFavoriteTemplate.value[0]?.value === selectedTemplateUuid.value) {
-    store.commit('metaTemplateMessage/SET_SELECTED_FAVORITE_TEMPLATE', [
-      { value: '' },
-    ]);
+    metaTemplateMessageStore.setSelectedFavorite([{ value: '' }]);
   }
 
-  store.commit(
-    'metaTemplateMessage/SET_FAVORITES_TEMPLATES',
-    favorites.filter((favorite) => favorite.id !== selectedTemplateUuid.value),
+  metaTemplateMessageStore.favoritesTemplates = favorites.filter(
+    (favorite) => favorite.id !== selectedTemplateUuid.value,
   );
 };
 </script>

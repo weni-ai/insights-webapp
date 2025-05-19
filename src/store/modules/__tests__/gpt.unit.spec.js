@@ -1,6 +1,6 @@
-import { vi } from 'vitest';
-import { createStore } from 'vuex';
-import gptModule from '@/store/modules/gpt';
+import { setActivePinia, createPinia } from 'pinia';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { useGpt } from '../gpt';
 import { GPT } from '@/services/api';
 
 vi.mock('@/services/api', () => ({
@@ -9,48 +9,37 @@ vi.mock('@/services/api', () => ({
   },
 }));
 
-describe('GPT Store', () => {
+describe('useGpt store', () => {
   let store;
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
-        gpt: gptModule,
-      },
-    });
+    setActivePinia(createPinia());
+    store = useGpt();
   });
 
-  describe('mutations', () => {
-    it('should add insight to state', () => {
-      const insight = { request: 'test prompt', received: 'test response' };
-      store.commit('gpt/ADD_INSIGHT', insight);
-      expect(store.state.gpt.insights).toContainEqual(insight);
-    });
+  it('should initialize with an empty insights array', () => {
+    expect(store.insights).toEqual([]);
   });
 
-  describe('actions', () => {
-    const prompt = 'test prompt';
+  it('should call GPT.getInsights and push the result to insights', async () => {
+    const mockPrompt = 'What is the future of AI?';
+    const mockResponse = 'AI will continue to grow rapidly.';
+    GPT.getInsights.mockResolvedValue(mockResponse);
 
-    it('should get insights and commit ADD_INSIGHT mutation', async () => {
-      const response = 'test response';
-      GPT.getInsights.mockResolvedValue(response);
-      await store.dispatch('gpt/getInsights', { prompt });
+    await store.getInsights({ prompt: mockPrompt });
 
-      expect(GPT.getInsights).toHaveBeenCalledWith(prompt);
-      expect(store.state.gpt.insights).toContainEqual({
-        request: prompt,
-        received: response,
-      });
-    });
+    expect(GPT.getInsights).toHaveBeenCalledWith(mockPrompt);
+    expect(store.insights).toEqual([
+      { request: mockPrompt, received: mockResponse },
+    ]);
+  });
 
-    it('should return response empty if no insights', async () => {
-      GPT.getInsights.mockResolvedValue(null);
-      await store.dispatch('gpt/getInsights', { prompt });
+  it('should handle null or undefined responses from GPT.getInsights', async () => {
+    const mockPrompt = 'Explain entropy.';
+    GPT.getInsights.mockResolvedValue(null);
 
-      expect(store.state.gpt.insights).toContainEqual({
-        request: prompt,
-        received: '',
-      });
-    });
+    await store.getInsights({ prompt: mockPrompt });
+
+    expect(store.insights).toEqual([{ request: mockPrompt, received: '' }]);
   });
 });

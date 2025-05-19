@@ -7,7 +7,14 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useWidgets } from '@/store/modules/widgets';
+import { useReports } from '@/store/modules/reports';
+
+import { formatSecondsToHumanString } from '@/utils/time';
+import { currencySymbols } from '@/utils/currency';
 
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '../charts/HorizontalBarChart.vue';
@@ -19,9 +26,6 @@ import CardVtexConversions from '@/components/insights/cards/CardVtexConversions
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
-
-import { formatSecondsToHumanString } from '@/utils/time';
-import { currencySymbols } from '@/utils/currency';
 
 export default {
   name: 'DynamicWidget',
@@ -44,10 +48,7 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      appliedFilters: (state) => state.dashboards.appliedFilters,
-    }),
+    ...mapState(useDashboards, ['appliedFilters', 'currentDashboard']),
 
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
@@ -378,28 +379,30 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
-      getWidgetReportData: 'reports/getWidgetReportData',
-      getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
-      getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
-      getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
-      updateCurrentExpansiveWidgetData:
-        'widgets/updateCurrentExpansiveWidgetData',
-    }),
+    ...mapActions(useWidgets, [
+      'getCurrentDashboardWidgetData',
+      'getWidgetGraphFunnelData',
+      'getWidgetVtexOrderData',
+      'getWidgetRecurrenceData',
+      'updateCurrentExpansiveWidgetData',
+    ]),
+
+    ...mapActions(useReports, ['getWidgetReportData']),
 
     initRequestDataInterval() {
+      const dashboardsStore = useDashboards();
       const ONE_MINUTE = 1000 * 60;
 
       if (this.isHumanServiceDashboard && !this.hasDateFiltering) {
         this.interval = setInterval(() => {
           this.requestWidgetData({ silence: true });
-          this.$store.dispatch('dashboards/updateLastUpdatedRequest');
+          dashboardsStore.updateLastUpdatedRequest();
         }, ONE_MINUTE);
       }
     },
 
     async requestWidgetData({ offset, limit, next, silence } = {}) {
+      const dashboardsStore = useDashboards();
       try {
         if (!silence) this.isRequestingData = true;
 
@@ -407,8 +410,7 @@ export default {
           await this.getWidgetReportData({ offset, limit, next });
         } else if (this.isConfigured) {
           await this.getCurrentDashboardWidgetData(this.widget);
-          if (!silence)
-            this.$store.dispatch('dashboards/updateLastUpdatedRequest');
+          if (!silence) dashboardsStore.updateLastUpdatedRequest();
         }
       } catch (e) {
         console.error('requestWidgetData error', e);

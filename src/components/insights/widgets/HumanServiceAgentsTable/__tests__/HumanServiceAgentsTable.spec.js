@@ -1,6 +1,6 @@
 import { mount, config } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 
 import HumanServiceAgentsTable from '../index.vue';
 
@@ -136,14 +136,11 @@ describe('HumanServiceAgentsTable', () => {
   ];
 
   const createMockStore = (overrideState = {}) => {
-    return createStore({
-      modules: {
+    return createTestingPinia({
+      initialState: {
         agentsColumnsFilter: {
-          namespaced: true,
-          state: {
-            visibleColumns: ['column1', 'column2'],
-            ...overrideState.agentsColumnsFilter,
-          },
+          visibleColumns: ['column1', 'column2'],
+          ...overrideState.agentsColumnsFilter,
         },
       },
     });

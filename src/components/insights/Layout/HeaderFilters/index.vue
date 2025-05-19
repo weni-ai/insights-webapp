@@ -54,14 +54,18 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-import { getLastNDays } from '@/utils/time';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
 import LastUpdatedText from './LastUpdatedText.vue';
+
+import { getLastNDays } from '@/utils/time';
 import moment from 'moment';
 
 export default {
@@ -83,15 +87,15 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      currentDashboardFilters: (state) =>
-        state.dashboards.currentDashboardFilters,
-      appliedFilters: (state) => state.dashboards.appliedFilters,
-      emptyTemplates: (state) => state.metaTemplateMessage.emptyTemplates,
-      showSearchTemplateMetaModal: (state) =>
-        state.metaTemplateMessage.showSearchTemplateMetaModal,
-    }),
+    ...mapState(useDashboards, [
+      'currentDashboard',
+      'currentDashboardFilters',
+      'appliedFilters',
+    ]),
+    ...mapState(useMetaTemplateMessage, [
+      'emptyTemplates',
+      'showSearchTemplateMetaModal',
+    ]),
 
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
@@ -220,12 +224,8 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      setAppliedFilters: 'dashboards/setAppliedFilters',
-      resetAppliedFilters: 'dashboards/resetAppliedFilters',
-      handlerShowSearchTemplateModal:
-        'metaTemplateMessage/handlerShowSearchTemplateModal',
-    }),
+    ...mapActions(useDashboards, ['setAppliedFilters', 'resetAppliedFilters']),
+    ...mapActions(useMetaTemplateMessage, ['handlerShowSearchTemplateModal']),
 
     updateFilter(value) {
       const hasNonNullValues =

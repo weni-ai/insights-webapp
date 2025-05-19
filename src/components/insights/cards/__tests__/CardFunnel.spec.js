@@ -1,10 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+
+import { createPinia } from 'pinia';
+import { useDashboards } from '@/store/modules/dashboards';
 
 import CardFunnel from '../CardFunnel.vue';
-
-import dashboards from '@/store/modules/dashboards';
 
 const widgetMock = {
   uuid: '1',
@@ -21,14 +21,7 @@ const widgetMock = {
   dashboard: '1',
 };
 
-const store = createStore({
-  modules: {
-    dashboards: {
-      namespaced: true,
-      ...dashboards,
-    },
-  },
-});
+const store = createPinia();
 
 const createWraper = (props) => {
   return mount(CardFunnel, {
@@ -101,9 +94,11 @@ describe('CardFunnel', () => {
   });
 
   it('emits "request-data" on creation and when appliedFilters change', async () => {
+    const dashboardStore = useDashboards();
+
     const emitRequestDataSpy = vi.spyOn(CardFunnel.methods, 'emitRequestData');
 
-    const wrapper = createWraper({
+    createWraper({
       configured: true,
       chartData: [],
       widget: widgetMock,
@@ -111,7 +106,7 @@ describe('CardFunnel', () => {
 
     expect(emitRequestDataSpy).toHaveBeenCalledTimes(1);
 
-    await wrapper.vm.$store.commit('dashboards/SET_APPLIED_FILTERS', {
+    await dashboardStore.setAppliedFilters({
       test: 'key',
     });
 

@@ -1,7 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { createStore } from 'vuex';
-import projectModule from '@/store/modules/project';
+import { setActivePinia, createPinia } from 'pinia';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { useProject } from '../project';
 import Projects from '@/services/api/resources/projects';
+import { parseValue } from '@/utils/object';
+import { flushPromises } from '@vue/test-utils';
 
 vi.mock('@/services/api/resources/projects', () => ({
   default: {
@@ -9,92 +11,52 @@ vi.mock('@/services/api/resources/projects', () => ({
   },
 }));
 
-vi.mock('@/utils/object', async (importOriginal) => {
-  const actual = await importOriginal();
-  return {
-    ...actual,
-    parseValue: (value) => value,
-  };
-});
+vi.mock('@/utils/object', () => ({
+  parseValue: vi.fn(),
+}));
 
-describe('Project store', () => {
-  let store;
-
+describe('useProject store', () => {
   beforeEach(() => {
-    store = createStore({
-      modules: {
-        project: {
-          ...projectModule,
-          namespaced: true,
-        },
+    setActivePinia(createPinia());
+  });
+
+  it('should set isCommerce value', () => {
+    const store = useProject();
+    store.setIsCommerce(true);
+    expect(store.isCommerce).toBe(true);
+  });
+
+  it('should fetch and parse project flows', async () => {
+    const store = useProject();
+
+    const mockResponse = [
+      {
+        uuid: 'flow-1',
+        name: 'Flow 1',
+        metadata: '{}',
       },
-    });
-    store.state.project.isLoadingFlows = false;
-    store.state.project.isLoadedFlows = false;
-    store.state.project.flows = [];
+    ];
 
-    vi.clearAllMocks();
-  });
+    const parsedMetadata = {
+      results: [{ key: 'result-1', name: 'Result 1' }],
+    };
 
-  describe('mutations', () => {
-    it('should set project flows with SET_PROJECT_FLOWS mutation', () => {
-      const flows = [{ value: '1', label: 'Flow 1' }];
-      store.commit('project/SET_PROJECT_FLOWS', flows);
+    Projects.getProjectSource.mockResolvedValue(mockResponse);
+    parseValue.mockReturnValue(parsedMetadata);
 
-      expect(store.state.project.flows).toEqual(flows);
-    });
-  });
+    await store.getProjectFlows();
 
-  describe('actions', () => {
-    describe('getProjectFlows', () => {
-      it('should set isLoadingFlows to true when getProjectFlows is dispatched', async () => {
-        Projects.getProjectSource.mockResolvedValue([]);
-
-        const promise = store.dispatch('project/getProjectFlows');
-        expect(store.state.project.isLoadingFlows).toBe(true);
-        await promise;
-      });
-
-      it('should commit formatted flows at SET_PROJECT_FLOWS when getProjectFlows is dispatched', async () => {
-        Projects.getProjectSource.mockResolvedValue([
-          {
-            uuid: '1',
-            name: 'Flow 1',
-            metadata: { results: [{ key: '1', name: 'Result 1' }] },
-          },
-        ]);
-
-        await store.dispatch('project/getProjectFlows');
-
-        expect(store.state.project.flows).toEqual([
-          {
-            value: '1',
-            label: 'Flow 1',
-            results: [
-              {
-                value: '1',
-                label: 'Result 1',
-              },
-            ],
-          },
-        ]);
-      });
-
-      it('should set isLoadedFlows to true when getProjectFlows is dispatched', async () => {
-        Projects.getProjectSource.mockResolvedValue([]);
-
-        await store.dispatch('project/getProjectFlows');
-
-        expect(store.state.project.isLoadedFlows).toBe(true);
-      });
-
-      it('should set isLoadingFlows to false after getProjectFlows action is completed', async () => {
-        Projects.getProjectSource.mockResolvedValue([]);
-
-        await store.dispatch('project/getProjectFlows');
-
-        expect(store.state.project.isLoadingFlows).toBe(false);
-      });
-    });
+    expect(Projects.getProjectSource).toHaveBeenCalledWith('flows');
+    expect(parseValue).toHaveBeenCalledWith('{}');
+    expect(store.flows).toEqual([
+      {
+        value: 'flow-1',
+        label: 'Flow 1',
+        results: [{ value: 'result-1', label: 'Result 1' }],
+      },
+    ]);
+    await flushPromises();
+    expect(store.isLoadedFlows).toBe(true);
+    expect(store.isLoadingFlows).toBe(false);
   });
 });

@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { createStore } from 'vuex';
-import configModule from '@/store/modules/config';
+import { setActivePinia, createPinia } from 'pinia';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { useConfig } from '../config';
 import Projects from '@/services/api/resources/projects';
 
 vi.mock('@/services/api/resources/projects', () => ({
@@ -9,83 +9,58 @@ vi.mock('@/services/api/resources/projects', () => ({
   },
 }));
 
-describe('config module', () => {
+describe('useConfig Store', () => {
   let store;
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
-        config: configModule,
-      },
-    });
+    setActivePinia(createPinia());
+    store = useConfig();
     localStorage.clear();
   });
 
-  describe('Mutations', () => {
-    it('should set project in state and localStorage', () => {
-      const project = { uuid: '12345' };
-      store.commit('config/SET_PROJECT', project);
-
-      expect(store.state.config.project).toEqual(project);
-      expect(localStorage.getItem('projectUuid')).toBe('12345');
-    });
-
-    it('should set token in state and localStorage', () => {
-      const token = 'abcdef';
-      store.commit('config/SET_TOKEN', token);
-
-      expect(store.state.config.token).toBe(token);
-      expect(localStorage.getItem('token')).toBe('abcdef');
-    });
-
-    it('should set enableCreateCustomDashboards in state', () => {
-      store.commit('config/SET_ENABLE_CREATE_CUSTOM_DASHBOARDS', true);
-
-      expect(store.state.config.enableCreateCustomDashboards).toBe(true);
+  describe('Initial state', () => {
+    it('should initialize with default values', () => {
+      expect(store.project).toEqual({ uuid: '' });
+      expect(store.token).toBe('');
+      expect(store.enableCreateCustomDashboards).toBe(false);
     });
   });
 
-  describe('Actions', () => {
-    it('should commit SET_PROJECT with the correct payload', () => {
-      const commit = vi.fn();
-      const project = { uuid: '12345' };
+  describe('setProject', () => {
+    it('should set the project and store uuid in localStorage', () => {
+      const project = { uuid: 'project-123', name: 'Test Project' };
+      store.setProject(project);
 
-      configModule.actions.setProject({ commit }, project);
-
-      expect(commit).toHaveBeenCalledWith('SET_PROJECT', project);
+      expect(store.project).toEqual(project);
+      expect(localStorage.getItem('projectUuid')).toBe('project-123');
     });
+  });
 
-    it('should commit SET_TOKEN with the correct payload', () => {
-      const commit = vi.fn();
-      const token = 'abcdef';
+  describe('setToken', () => {
+    it('should set the token and store it in localStorage', () => {
+      store.setToken('my-secret-token');
 
-      configModule.actions.setToken({ commit }, token);
-
-      expect(commit).toHaveBeenCalledWith('SET_TOKEN', token);
+      expect(store.token).toBe('my-secret-token');
+      expect(localStorage.getItem('token')).toBe('my-secret-token');
     });
+  });
 
-    it('should commit SET_ENABLE_CREATE_CUSTOM_DASHBOARDS with the correct payload based on verifyProjectIndexer result', async () => {
-      const commit = vi.fn();
+  describe('checkEnableCreateCustomDashboards', () => {
+    it('should update enableCreateCustomDashboards to true if API returns true', async () => {
       Projects.verifyProjectIndexer.mockResolvedValue(true);
 
-      await configModule.actions.checkEnableCreateCustomDashboards({ commit });
+      await store.checkEnableCreateCustomDashboards();
 
-      expect(commit).toHaveBeenCalledWith(
-        'SET_ENABLE_CREATE_CUSTOM_DASHBOARDS',
-        true,
-      );
+      expect(Projects.verifyProjectIndexer).toHaveBeenCalled();
+      expect(store.enableCreateCustomDashboards).toBe(true);
     });
 
-    it('should commit SET_ENABLE_CREATE_CUSTOM_DASHBOARDS with false if verifyProjectIndexer resolves to false', async () => {
-      const commit = vi.fn();
+    it('should update enableCreateCustomDashboards to false if API returns false', async () => {
       Projects.verifyProjectIndexer.mockResolvedValue(false);
 
-      await configModule.actions.checkEnableCreateCustomDashboards({ commit });
+      await store.checkEnableCreateCustomDashboards();
 
-      expect(commit).toHaveBeenCalledWith(
-        'SET_ENABLE_CREATE_CUSTOM_DASHBOARDS',
-        false,
-      );
+      expect(store.enableCreateCustomDashboards).toBe(false);
     });
   });
 });

@@ -1,10 +1,14 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { createTestingPinia } from '@pinia/testing';
+import { useConfig } from '@/store/modules/config';
+import { useProject } from '@/store/modules/project';
+
 import DrawerConfigGallery from '../index.vue';
 import GalleryOption from '../GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../../DrawerConfigWidgetDynamic.vue';
 import DrawerConfigContentVtexConversions from '../../DrawerConfigContentVtexConversions.vue';
-import { createStore } from 'vuex';
 
 vi.mock('@/utils/env', () => ({
   default: vi.fn(() => 'staging'),
@@ -24,46 +28,25 @@ describe('DrawerConfigGallery.vue', () => {
   let store;
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
+    store = createTestingPinia({
+      initialState: {
         config: {
-          namespaced: true,
-          state: () => ({
-            project: {
-              uuid: '95fa43d6-d91a-48d4-bbe8-256d93bf5254',
-            },
-          }),
+          project: {
+            uuid: '95fa43d6-d91a-48d4-bbe8-256d93bf5254',
+          },
         },
         project: {
-          namespaced: true,
-          state: () => ({
-            isLoadedFlows: true,
-            flows: [],
-          }),
-          actions: {
-            getProjectFlows: vi.fn(),
-          },
+          isLoadedFlows: true,
+          flows: [],
+          getProjectFlows: vi.fn(),
         },
         widgets: {
-          namespaced: true,
-          state: () => ({ currentWidgetEditing: mockWidget }),
-          actions: {
-            updateCurrentWidgetEditing: vi.fn(),
-          },
+          currentWidgetEditing: mockWidget,
+          updateCurrentWidgetEditing: vi.fn(),
         },
         onboarding: {
-          namespaced: true,
-          state: () => ({
-            onboardingRefs: {},
-            showConfigWidgetOnboarding: false,
-          }),
-          actions: {
-            callTourNextStep: vi.fn(),
-            callTourPreviousStep: vi.fn(),
-          },
-          mutations: {
-            SET_ONBOARDING_REF: vi.fn(),
-          },
+          onboardingRefs: {},
+          showConfigWidgetOnboarding: false,
         },
       },
     });
@@ -80,7 +63,10 @@ describe('DrawerConfigGallery.vue', () => {
   });
 
   it('renders UnnnicDrawer with gallery options withou vtex', async () => {
-    store.state.config.project.uuid = '123';
+    const configStore = useConfig(store);
+    const projectStore = useProject(store);
+    configStore.project.uuid = '123';
+    projectStore.isCommerce = false;
     await wrapper.vm.$nextTick();
     const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(2);
@@ -89,9 +75,30 @@ describe('DrawerConfigGallery.vue', () => {
     expect(options[1].text()).toContain('Recurrence');
   });
 
-  it('renders UnnnicDrawer with gallery options with vtex', async () => {
-    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
+  it('renders UnnnicDrawer with gallery options with vtex when UUID is in the list', async () => {
+    const projectStore = useProject(store);
+    const configStore = useConfig(store);
+    projectStore.isCommerce = false;
+    configStore.project.uuid = '95fa43d6-d91a-48d4-bbe8-256d93bf5254';
+    await wrapper.vm.$nextTick();
 
+    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
+    expect(options.length).toBe(4);
+
+    expect(options[0].text()).toContain('Funnel');
+    expect(options[1].text()).toContain('Recurrence');
+    expect(options[2].text()).toContain('VTEX');
+    expect(options[3].text()).toContain('Template conversion');
+  });
+
+  it('renders UnnnicDrawer with gallery options with vtex when isCommerce is true regardless of UUID', async () => {
+    const configStore = useConfig(store);
+    const projectStore = useProject(store);
+    configStore.project.uuid = '123';
+    projectStore.isCommerce = true;
+    await wrapper.vm.$nextTick();
+
+    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(4);
 
     expect(options[0].text()).toContain('Funnel');

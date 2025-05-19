@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 
@@ -8,34 +9,23 @@ describe('SelectFlow.vue', () => {
   let selectFlowLabel;
 
   const createWrapper = (props) => {
+    const store = createTestingPinia({
+      initialState: {
+        project: {
+          flows: [
+            { value: 'flow1', label: 'Flow 1' },
+            { value: 'flow2', label: 'Flow 2' },
+          ],
+        },
+      },
+    });
     return mount(SelectFlow, {
       props,
       global: {
         mocks: {
           $t: (msg) => msg,
         },
-        plugins: [
-          {
-            install: (app) => {
-              app.config.globalProperties.$store = {
-                state: {
-                  project: {
-                    flows: [
-                      { value: 'flow1', label: 'Flow 1' },
-                      { value: 'flow2', label: 'Flow 2' },
-                    ],
-                  },
-                },
-                getters: {
-                  'project/flows': [
-                    { value: 'flow1', label: 'Flow 1' },
-                    { value: 'flow2', label: 'Flow 2' },
-                  ],
-                },
-              };
-            },
-          },
-        ],
+        plugins: [store],
       },
     });
   };

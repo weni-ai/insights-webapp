@@ -3,6 +3,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { createTestingPinia } from '@pinia/testing';
 import { useConfig } from '@/store/modules/config';
+import { useProject } from '@/store/modules/project';
 
 import DrawerConfigGallery from '../index.vue';
 import GalleryOption from '../GalleryOption.vue';
@@ -62,9 +63,10 @@ describe('DrawerConfigGallery.vue', () => {
   });
 
   it('renders UnnnicDrawer with gallery options withou vtex', async () => {
-    const configStore = useConfig();
-    configStore.project.uuid = 123;
-
+    const configStore = useConfig(store);
+    const projectStore = useProject(store);
+    configStore.project.uuid = '123';
+    projectStore.isCommerce = false;
     await wrapper.vm.$nextTick();
     const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(2);
@@ -73,9 +75,30 @@ describe('DrawerConfigGallery.vue', () => {
     expect(options[1].text()).toContain('Recurrence');
   });
 
-  it('renders UnnnicDrawer with gallery options with vtex', async () => {
-    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
+  it('renders UnnnicDrawer with gallery options with vtex when UUID is in the list', async () => {
+    const projectStore = useProject(store);
+    const configStore = useConfig(store);
+    projectStore.isCommerce = false;
+    configStore.project.uuid = '95fa43d6-d91a-48d4-bbe8-256d93bf5254';
+    await wrapper.vm.$nextTick();
 
+    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
+    expect(options.length).toBe(4);
+
+    expect(options[0].text()).toContain('Funnel');
+    expect(options[1].text()).toContain('Recurrence');
+    expect(options[2].text()).toContain('VTEX');
+    expect(options[3].text()).toContain('Template conversion');
+  });
+
+  it('renders UnnnicDrawer with gallery options with vtex when isCommerce is true regardless of UUID', async () => {
+    const configStore = useConfig(store);
+    const projectStore = useProject(store);
+    configStore.project.uuid = '123';
+    projectStore.isCommerce = true;
+    await wrapper.vm.$nextTick();
+
+    const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(4);
 
     expect(options[0].text()).toContain('Funnel');

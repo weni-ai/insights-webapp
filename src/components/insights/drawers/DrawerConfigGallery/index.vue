@@ -92,6 +92,10 @@ export default {
     },
 
     isVtexEnabledProject() {
+      if (this.isCommerce) {
+        return true;
+      }
+
       const enabledProjectsProd = [
         '521d2c65-ae66-441d-96ff-2b8471d522c1',
         'd8d6d71d-3daf-4d2e-812b-85cc252a96d8',

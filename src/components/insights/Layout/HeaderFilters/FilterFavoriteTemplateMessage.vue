@@ -21,25 +21,23 @@
 
 <script setup>
 import { computed, onMounted, watch } from 'vue';
-import { useStore } from 'vuex';
+
+import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
+import { useDashboards } from '@/store/modules/dashboards';
+
 import i18n from '@/utils/plugins/i18n';
 
-const store = useStore();
+const metaTemplateMessageStore = useMetaTemplateMessage();
+const dashboardsStore = useDashboards();
 
-const emptyTemplates = computed(
-  () => store.state.metaTemplateMessage.emptyTemplates,
-);
+const emptyTemplates = computed(() => metaTemplateMessageStore.emptyTemplates);
 
-const currentDashboard = computed(
-  () => store.state.dashboards.currentDashboard,
-);
+const currentDashboard = computed(() => dashboardsStore.currentDashboard);
 
-const favorites = computed(
-  () => store.state.metaTemplateMessage.favoritesTemplates,
-);
+const favorites = computed(() => metaTemplateMessageStore.favoritesTemplates);
 
 const selectedTemplateUuid = computed(
-  () => store.state.metaTemplateMessage.selectedTemplateUuid,
+  () => metaTemplateMessageStore.selectedTemplateUuid,
 );
 
 const favoriteOptions = computed(() => {
@@ -53,16 +51,15 @@ const favoriteOptions = computed(() => {
 });
 
 const selectedFavorite = computed(
-  () => store.state.metaTemplateMessage.selectedFavoriteTemplate,
+  () => metaTemplateMessageStore.selectedFavoriteTemplate,
 );
 
 const selectFavorite = (favorite) => {
-  store.dispatch('metaTemplateMessage/setSelectedFavorite', favorite);
+  metaTemplateMessageStore.setSelectedFavorite(favorite);
 };
 
 onMounted(async () => {
-  await store.dispatch(
-    'metaTemplateMessage/getFavoritesTemplates',
+  await metaTemplateMessageStore.getFavoritesTemplates(
     currentDashboard.value?.uuid,
   );
 });

@@ -1,10 +1,13 @@
 import { flushPromises, mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+import { createTestingPinia } from '@pinia/testing';
+import { useConfig } from '@/store/modules/config';
+
 import DrawerConfigGallery from '../index.vue';
 import GalleryOption from '../GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../../DrawerConfigWidgetDynamic.vue';
 import DrawerConfigContentVtexConversions from '../../DrawerConfigContentVtexConversions.vue';
-import { createStore } from 'vuex';
 
 vi.mock('@/utils/env', () => ({
   default: vi.fn(() => 'staging'),
@@ -24,46 +27,25 @@ describe('DrawerConfigGallery.vue', () => {
   let store;
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
+    store = createTestingPinia({
+      initialState: {
         config: {
-          namespaced: true,
-          state: () => ({
-            project: {
-              uuid: '95fa43d6-d91a-48d4-bbe8-256d93bf5254',
-            },
-          }),
+          project: {
+            uuid: '95fa43d6-d91a-48d4-bbe8-256d93bf5254',
+          },
         },
         project: {
-          namespaced: true,
-          state: () => ({
-            isLoadedFlows: true,
-            flows: [],
-          }),
-          actions: {
-            getProjectFlows: vi.fn(),
-          },
+          isLoadedFlows: true,
+          flows: [],
+          getProjectFlows: vi.fn(),
         },
         widgets: {
-          namespaced: true,
-          state: () => ({ currentWidgetEditing: mockWidget }),
-          actions: {
-            updateCurrentWidgetEditing: vi.fn(),
-          },
+          currentWidgetEditing: mockWidget,
+          updateCurrentWidgetEditing: vi.fn(),
         },
         onboarding: {
-          namespaced: true,
-          state: () => ({
-            onboardingRefs: {},
-            showConfigWidgetOnboarding: false,
-          }),
-          actions: {
-            callTourNextStep: vi.fn(),
-            callTourPreviousStep: vi.fn(),
-          },
-          mutations: {
-            SET_ONBOARDING_REF: vi.fn(),
-          },
+          onboardingRefs: {},
+          showConfigWidgetOnboarding: false,
         },
       },
     });
@@ -80,7 +62,9 @@ describe('DrawerConfigGallery.vue', () => {
   });
 
   it('renders UnnnicDrawer with gallery options withou vtex', async () => {
-    store.state.config.project.uuid = '123';
+    const configStore = useConfig();
+    configStore.project.uuid = 123;
+
     await wrapper.vm.$nextTick();
     const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
     expect(options.length).toBe(2);

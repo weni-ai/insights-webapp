@@ -14,7 +14,10 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions } from 'pinia';
+
+import { useWidgets } from '@/store/modules/widgets';
+
 import Unnnic from '@weni/unnnic-system';
 
 import { clearDeepValues } from '@/utils/object';
@@ -56,9 +59,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateWidget: 'widgets/updateWidget',
-    }),
+    ...mapActions(useWidgets, ['updateWidget']),
 
     updateModelValue(value) {
       this.$emit('update:model-value', value);

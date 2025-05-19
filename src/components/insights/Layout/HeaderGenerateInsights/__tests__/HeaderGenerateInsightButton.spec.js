@@ -1,11 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 import HeaderGenerateInsightButton from '@/components/insights/Layout/HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 
 const createWrapper = (props = {}, storeState = {}) => {
-  const store = createStore({
-    state: {
+  const store = createTestingPinia({
+    initialState: {
       config: { token: 'default-token' },
       widgets: { isLoadingCurrentDashboardWidgets: false },
       ...storeState,

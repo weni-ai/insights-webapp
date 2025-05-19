@@ -70,12 +70,15 @@
 </template>
 
 <script lang="ts" setup>
-import { getLastNDays, getTodayDate } from '@/utils/time';
-import CardMetric from '@/components/home/CardMetric.vue';
 import { ref, onMounted, reactive } from 'vue';
-import i18n from '@/utils/plugins/i18n';
-import api from '@/services/api/resources/metrics';
+
+import CardMetric from '@/components/home/CardMetric.vue';
 import IconLoading from '@/components/IconLoading.vue';
+
+import api from '@/services/api/resources/metrics';
+
+import i18n from '@/utils/plugins/i18n';
+import { getLastNDays, getTodayDate } from '@/utils/time';
 
 interface MetricData {
   id: string;

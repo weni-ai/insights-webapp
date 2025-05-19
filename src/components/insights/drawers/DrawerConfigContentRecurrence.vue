@@ -30,10 +30,11 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
+import { useWidgets } from '@/store/modules/widgets';
 
 export default {
   name: 'DrawerConfigContentRecurrence',
@@ -56,10 +57,10 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
-      currentWidgetEditing: (state) => state.widgets.currentWidgetEditing,
-    }),
+    ...mapState(useWidgets, ['currentWidgetEditing']),
+    widgetConfig() {
+      return this.currentWidgetEditing.config;
+    },
     isValidForm() {
       const { config } = this;
       return config?.flow.uuid && config?.flow.result && !!config?.name.trim();
@@ -110,10 +111,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditingConfig:
-        'widgets/updateCurrentWidgetEditingConfig',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
     resetWidget() {
       this.$emit('reset-widget');
     },

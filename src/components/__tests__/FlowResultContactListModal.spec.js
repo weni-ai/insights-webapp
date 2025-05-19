@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 
@@ -26,11 +26,7 @@ vi.mock('@/services/api/resources/widgets', () => ({
   },
 }));
 
-const store = createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-});
+const store = createTestingPinia();
 
 describe('FlowResultContactListModal.vue', () => {
   let wrapper;

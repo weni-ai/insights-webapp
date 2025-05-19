@@ -48,8 +48,11 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
-import unnnic from '@weni/unnnic-system';
+import { mapActions, mapState } from 'pinia';
+
+import { useProject } from '@/store/modules/project';
+import { useWidgets } from '@/store/modules/widgets';
+import { useOnboarding } from '@/store/modules/onboarding';
 
 import DrawerConfigContentVtexConversions from './DrawerConfigContentVtexConversions.vue';
 import SkeletonConfigContentVtexConversions from './loadings/SkeletonConfigContentVtexConversions.vue';
@@ -61,8 +64,9 @@ import SkeletonConfigContentVtex from './loadings/SkeletonConfigContentVtex.vue'
 import DrawerConfigContentVtex from './DrawerConfigContentVtex.vue';
 import SkeletonConfigContentRecurrence from './loadings/SkeletonConfigContentRecurrence.vue';
 import DrawerConfigContentRecurrence from './DrawerConfigContentRecurrence.vue';
-
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
+
+import unnnic from '@weni/unnnic-system';
 
 export default {
   name: 'DrawerConfigWidgetDynamic',
@@ -101,15 +105,15 @@ export default {
     };
   },
   computed: {
-    ...mapState({
-      isLoadingProjectFlows: (state) => state.project.isLoadingFlows,
-      projectFlows: (state) => state.project.flows,
-      widget: (state) => state.widgets.currentWidgetEditing,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
+    ...mapState(useProject, {
+      isLoadingProjectFlows: 'isLoadingFlows',
+      projectFlows: 'flows',
     }),
-
+    ...mapState(useWidgets, { widget: 'currentWidgetEditing' }),
+    ...mapState(useOnboarding, [
+      'onboardingRefs',
+      'showConfigWidgetOnboarding',
+    ]),
     drawerProps() {
       const { $t } = this;
       const configMap = {
@@ -393,20 +397,18 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateWidget: 'widgets/updateWidget',
-      getCurrentDashboardWidgetData: 'widgets/getCurrentDashboardWidgetData',
-      getWidgetGraphFunnelData: 'widgets/getWidgetGraphFunnelData',
-      getWidgetRecurrenceData: 'widgets/getWidgetRecurrenceData',
-      getWidgetVtexOrderData: 'widgets/getWidgetVtexOrderData',
-      callTourNextStep: 'onboarding/callTourNextStep',
-      callTourPreviousStep: 'onboarding/callTourPreviousStep',
-    }),
-
-    ...mapMutations({
-      setShowCompleteOnboardingModal:
-        'onboarding/SET_SHOW_COMPLETE_ONBOARDING_MODAL',
-    }),
+    ...mapActions(useWidgets, [
+      'updateWidget',
+      'getCurrentDashboardWidgetData',
+      'getWidgetGraphFunnelData',
+      'getWidgetRecurrenceData',
+      'getWidgetVtexOrderData',
+    ]),
+    ...mapActions(useOnboarding, [
+      'callTourNextStep',
+      'callTourPreviousStep',
+      'setShowCompleteOnboardingModal',
+    ]),
 
     internalClose() {
       this.$refs.unnnicDrawer.close();

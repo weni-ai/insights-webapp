@@ -28,14 +28,15 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
-
-import { checkDeepEmptyValues } from '@/utils/object';
+import { mapActions, mapState } from 'pinia';
+import { useWidgets } from '@/store/modules/widgets';
 
 import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
 import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
 import FormDataCrossing from './DrawerForms/Card/FormDataCrossing/index.vue';
 import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
+
+import { checkDeepEmptyValues } from '@/utils/object';
 
 export default {
   name: 'DrawerConfigContentCard',
@@ -65,9 +66,11 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      widgetConfig: (state) => state.widgets.currentWidgetEditing.config,
-    }),
+    ...mapState(useWidgets, ['currentWidgetEditing']),
+
+    widgetConfig() {
+      return this.currentWidgetEditing.config;
+    },
 
     currentFormComponent() {
       const componentMap = {
@@ -132,10 +135,7 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      updateCurrentWidgetEditingConfig:
-        'widgets/updateCurrentWidgetEditingConfig',
-    }),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
 
     initializeConfigString() {
       if (this.config && !this.initialConfigStringfy) {

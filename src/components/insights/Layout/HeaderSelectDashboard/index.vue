@@ -61,7 +61,11 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useConfig } from '@/store/modules/config';
+import { useOnboarding } from '@/store/modules/onboarding';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
@@ -77,19 +81,18 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      dashboards: (state) => state.dashboards.dashboards,
-      currentDashboard: (state) => state.dashboards.currentDashboard,
-      enableCreateCustomDashboards: (state) =>
-        state.config.enableCreateCustomDashboards,
-      showCreateDashboardTour: (state) =>
-        state.onboarding.showCreateDashboardOnboarding,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-      showDashboardConfig: (state) => state.dashboards.showDashboardConfig,
+    ...mapState(useDashboards, [
+      'dashboards',
+      'currentDashboard',
+      'showDashboardConfig',
+      'dashboardDefault',
+    ]),
+    ...mapState(useConfig, ['enableCreateCustomDashboards']),
+    ...mapState(useOnboarding, {
+      showCreateDashboardTour: 'showCreateDashboardOnboarding',
+      onboardingRefs: 'onboardingRefs',
     }),
-    ...mapGetters({
-      dashboardDefault: 'dashboards/dashboardDefault',
-    }),
+
     dashboardTitle() {
       const title =
         this.currentDashboard.name ||
@@ -108,15 +111,12 @@ export default {
     });
   },
   methods: {
-    ...mapMutations({
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-      setShowDashboardConfig: 'dashboards/SET_SHOW_DASHBOARD_CONFIG',
-    }),
-
-    ...mapActions({
-      beforeOpenDashboardList: 'onboarding/beforeOpenDashboardList',
-      callTourNextStep: 'onboarding/callTourNextStep',
-    }),
+    ...mapActions(useOnboarding, [
+      'setOnboardingRef',
+      'beforeOpenDashboardList',
+      'callTourNextStep',
+    ]),
+    ...mapActions(useDashboards, ['setShowDashboardConfig']),
 
     handlerCreateDashboardClick() {
       this.setShowDashboardConfig(true);

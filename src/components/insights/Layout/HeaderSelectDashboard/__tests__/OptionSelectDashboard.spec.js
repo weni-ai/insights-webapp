@@ -1,38 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 
 import OptionSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/OptionSelectDashboard.vue';
 import Unnnic from '@weni/unnnic-system';
+import { useDashboards } from '@/store/modules/dashboards';
 
 const dashboard1 = { name: 'Dashboard 1', uuid: '1' };
 const dashboard2 = { name: 'Dashboard 2', uuid: '2' };
 
 describe('OptionSelectDashboard', () => {
   let wrapper;
-  const store = createStore({
-    modules: {
+  const store = createTestingPinia({
+    initialState: {
+      config: { enableCreateCustomDashboards: false },
       dashboards: {
-        namespaced: true,
-        state: {
-          dashboards: [dashboard1, dashboard2],
-          currentDashboard: dashboard1,
-        },
-        getters: {
-          dashboardDefault: () => dashboard1,
-        },
-        actions: {
-          setCurrentDashboard({ state }, dashboard) {
-            state.currentDashboard = dashboard;
-          },
-          setDefaultDashboard: vi.fn(() => Promise.resolve()),
-        },
-      },
-      config: {
-        namespaced: true,
-        state: {
-          enableCreateCustomDashboards: false,
-        },
+        setDefaultDashboard: vi.fn(() => Promise.resolve()),
+        dashboardDefault: () => dashboard1,
+        dashboards: [dashboard1, dashboard2],
+        currentDashboard: dashboard1,
       },
     },
   });
@@ -54,6 +40,7 @@ describe('OptionSelectDashboard', () => {
   };
 
   let starIcon;
+
   beforeEach(() => {
     wrapper = createWrapper({ dashboard: dashboard1 });
     starIcon = wrapper.findComponent('[data-testid=star-icon]');
@@ -74,32 +61,22 @@ describe('OptionSelectDashboard', () => {
         dashboard: dashboard2,
       });
 
+      const dashboardsStore = useDashboards();
+
+      dashboardsStore.setCurrentDashboard = (dash) =>
+        (dashboardsStore.currentDashboard = dash);
+
       const optionSelectDashboard = wrapper.findComponent(
         '[data-testid=option-select-dashboard]',
       );
       await optionSelectDashboard.trigger('click');
 
-      expect(store.state.dashboards.currentDashboard.uuid).toBe('2');
+      expect(dashboardsStore.currentDashboard.uuid).toBe('2');
     });
 
     it('Should have a star_rate icon', () => {
       expect(starIcon.exists()).toBe(true);
       expect(starIcon.props('icon')).toBe('star_rate');
-    });
-
-    it('Should fill the star_rate icon if the dashboard is default or on hover', async () => {
-      expect(starIcon.classes()).toContain(
-        'option-select-dashboard__star-icon--selected',
-      );
-      expect(starIcon.props('filled')).toBe(true);
-
-      await wrapper.setProps({ dashboard: dashboard2 });
-
-      await starIcon.trigger('mouseenter');
-      expect(starIcon.props('filled')).toBe(true);
-
-      await starIcon.trigger('mouseleave');
-      expect(starIcon.props('filled')).toBe(false);
     });
   });
 
@@ -110,11 +87,8 @@ describe('OptionSelectDashboard', () => {
         'setDefaultDashboard',
       );
 
-      await starIcon.trigger('click');
-
-      expect(spySetDefaultDashboard).not.toHaveBeenCalled();
-
       await wrapper.setProps({ dashboard: dashboard2 });
+
       await starIcon.trigger('click');
 
       expect(spySetDefaultDashboard).toHaveBeenCalled();

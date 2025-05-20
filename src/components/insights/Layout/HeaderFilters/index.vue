@@ -154,6 +154,18 @@ export default {
             ),
             id: 'last-90-days',
           },
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.current_month',
+            ),
+            id: 'current-month',
+          },
+          {
+            name: this.$t(
+              'template_messages_dashboard.filter.shortcut.previous_month',
+            ),
+            id: 'previous-month',
+          },
         ];
         return {
           ...filter,

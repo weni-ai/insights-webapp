@@ -47,7 +47,6 @@ describe('DropdownFilter', () => {
   it('renders properly with default props', async () => {
     const dropdown = wrapper.findComponent({ name: 'UnnnicDropdown' });
     expect(dropdown.exists()).toBeTruthy();
-    await dropdown.trigger('click');
     expect(wrapper.findAll('[data-testid="option-select"]')).toHaveLength(3);
   });
 
@@ -87,9 +86,6 @@ describe('DropdownFilter', () => {
 
   describe('item selection', () => {
     it('calls action and updates current item when selecting an option', async () => {
-      const dropdown = wrapper.findComponent({ name: 'UnnnicDropdown' });
-      await dropdown.trigger('click');
-
       const dropdownItems = wrapper.findAllComponents(
         '[data-testid="option-select"]',
       );
@@ -103,9 +99,6 @@ describe('DropdownFilter', () => {
     });
 
     it('resets to default item when selecting the current active item', async () => {
-      const dropdown = wrapper.findComponent({ name: 'UnnnicDropdown' });
-      await dropdown.trigger('click');
-
       const dropdownItems = wrapper.findAllComponents({
         name: 'UnnnicDropdownItem',
       });
@@ -122,9 +115,6 @@ describe('DropdownFilter', () => {
     });
 
     it('closes dropdown after selection', async () => {
-      const dropdown = wrapper.findComponent({ name: 'UnnnicDropdown' });
-      await dropdown.trigger('click');
-
       const dropdownItems = wrapper.findAllComponents({
         name: 'UnnnicDropdownItem',
       });

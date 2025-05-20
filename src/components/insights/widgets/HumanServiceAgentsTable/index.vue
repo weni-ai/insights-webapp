@@ -115,14 +115,14 @@ export default {
           visibleColumns.includes(header.name) &&
           !['status', 'agent'].includes(header.name),
       );
-      console.log('dynamicHeaders', dynamicHeaders, visibleColumns);
+
       const sortedDynamicHeaders = this.sortHeadersByVisibleColumns(
         dynamicHeaders,
         visibleColumns,
       );
 
       const allHeaders = [...staticHeaders, ...sortedDynamicHeaders];
-      console.log('allHeaders', allHeaders);
+
       return allHeaders.map((header, index) => ({
         content: this.$t(header.name || ''),
         isSortable: true,

@@ -39,7 +39,12 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapActions, mapState } from 'pinia';
+
+import { useProject } from '@/store/modules/project';
+import { useWidgets } from '@/store/modules/widgets';
+import { useOnboarding } from '@/store/modules/onboarding';
+import { useConfig } from '@/store/modules/config';
 
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
@@ -69,14 +74,16 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      isLoadedProjectFlows: (state) => state.project.isLoadedFlows,
-      isCommerce: (state) => state.project.isCommerce,
-      widget: (state) => state.widgets.currentWidgetEditing,
-      onboardingRefs: (state) => state.onboarding.onboardingRefs,
-      showConfigWidgetOnboarding: (state) =>
-        state.onboarding.showConfigWidgetOnboarding,
+    ...mapState(useProject, {
+      isLoadedProjectFlows: 'isLoadedFlows',
+      isCommerce: 'isCommerce',
     }),
+    ...mapState(useWidgets, { widget: 'currentWidgetEditing' }),
+    ...mapState(useOnboarding, [
+      'onboardingRefs',
+      'showConfigWidgetOnboarding',
+    ]),
+    ...mapState(useConfig, ['project']),
 
     widgetConfigType() {
       if (this.widget.type === 'vtex_order') return 'vtex';
@@ -85,6 +92,10 @@ export default {
     },
 
     isVtexEnabledProject() {
+      if (this.isCommerce) {
+        return true;
+      }
+
       const enabledProjectsProd = [
         '521d2c65-ae66-441d-96ff-2b8471d522c1',
         'd8d6d71d-3daf-4d2e-812b-85cc252a96d8',
@@ -99,6 +110,8 @@ export default {
         'e1390b69-d170-4a37-8b52-5b99eadfbf57',
         'dc69866d-23ba-4e36-93f5-0ede5bdf240c',
         'b9ed3797-36c8-4b50-bfe1-42f1b89de6cf',
+        '1db0c133-5d4b-4bc6-a0f1-e722f1385863',
+        '0e1b929b-2fc7-4b26-85d0-d08d4189e78e',
       ];
 
       const enabledProjectsStg = ['95fa43d6-d91a-48d4-bbe8-256d93bf5254'];
@@ -108,7 +121,7 @@ export default {
           ? enabledProjectsStg
           : enabledProjectsProd;
 
-      return enabledProjects.includes(this.$store.state.config.project.uuid);
+      return enabledProjects.includes(this.project.uuid);
     },
 
     galleryOptions() {
@@ -128,10 +141,8 @@ export default {
 
       if (this.isVtexEnabledProject) {
         empty_widget_options.push('vtex');
-        // temporarily removed from production due to an issue with the APIs
-        if (env('ENVIRONMENT') === 'staging') {
-          empty_widget_options.push('vtex_conversions');
-        }
+
+        empty_widget_options.push('vtex_conversions');
       }
 
       const optionsMap = {
@@ -166,16 +177,13 @@ export default {
   },
 
   methods: {
-    ...mapActions({
-      getProjectFlows: 'project/getProjectFlows',
-      callTourNextStep: 'onboarding/callTourNextStep',
-      callTourPreviousStep: 'onboarding/callTourPreviousStep',
-      updateCurrentWidgetEditing: 'widgets/updateCurrentWidgetEditing',
-    }),
-
-    ...mapMutations({
-      setOnboardingRef: 'onboarding/SET_ONBOARDING_REF',
-    }),
+    ...mapActions(useProject, ['getProjectFlows']),
+    ...mapActions(useOnboarding, [
+      'callTourNextStep',
+      'callTourPreviousStep',
+      'setOnboardingRef',
+    ]),
+    ...mapActions(useWidgets, ['updateCurrentWidgetEditing']),
 
     async closeAllDrawers({ handleTourNextStep } = {}) {
       this.showDrawerConfigWidget = false;

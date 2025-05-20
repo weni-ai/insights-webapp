@@ -12,6 +12,7 @@
 
 <script>
 import Projects from '@/services/api/resources/projects';
+
 import { compareEquals } from '@/utils/array';
 
 export default {

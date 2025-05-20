@@ -1,11 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import Dashboards from '@/services/api/resources/dashboards';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
 
 import unnnic from '@weni/unnnic-system';
 
 import ModalDeleteDashboard from '../ModalDeleteDashboard.vue';
+
+import Dashboards from '@/services/api/resources/dashboards';
 
 vi.mock('@/services/api/resources/dashboards');
 
@@ -18,19 +20,11 @@ describe('ModalDeleteDashboard', () => {
   };
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
+    store = createTestingPinia({
+      initialState: {
         dashboards: {
-          namespaced: true,
-          state: {
-            dashboards: [mockDashboard],
-          },
-          getters: {
-            dashboardDefault: () => mockDashboard,
-          },
-          mutations: {
-            SET_DASHBOARDS: vi.fn(),
-          },
+          dashboards: [mockDashboard],
+          dashboardDefault: () => mockDashboard,
         },
       },
     });
@@ -75,15 +69,20 @@ describe('ModalDeleteDashboard', () => {
   });
 
   it('shows success alert and updates state on successful deletion', async () => {
-    const setDashboards = vi.spyOn(wrapper.vm, 'setDashboards');
-
+    const callAlertSpy = vi.spyOn(unnnic, 'unnnicCallAlert');
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
     const deleteButton = wrapper.find('[data-testid="primary-button"]');
 
     await input.setValue('Test Dashboard');
     await deleteButton.trigger('click');
 
-    expect(setDashboards).toHaveBeenCalledWith([]);
+    expect(callAlertSpy).toHaveBeenCalledWith({
+      props: {
+        text: wrapper.vm.$t('delete_dashboard.alert.success'),
+        type: 'success',
+      },
+      seconds: 5,
+    });
   });
 
   it('shows error alert on failed deletion', async () => {

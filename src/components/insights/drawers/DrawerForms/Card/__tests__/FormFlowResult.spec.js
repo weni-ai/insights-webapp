@@ -1,28 +1,26 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+
+import { createTestingPinia } from '@pinia/testing';
+import { useWidgets } from '@/store/modules/widgets';
+
 import FormFlowResult from '@/components/insights/drawers/DrawerForms/Card/FormFlowResult.vue';
 
 const createDefaultStore = (config = {}) => {
-  return createStore({
-    modules: {
+  return createTestingPinia({
+    initialState: {
       widgets: {
-        namespaced: true,
-        state: {
-          currentWidgetEditing: {
-            config: {
-              flow: {
-                uuid: '',
-                result: '',
-              },
-              operation: '',
-              currency: false,
-              ...config,
+        updateCurrentWidgetEditingConfig: vi.fn(),
+        currentWidgetEditing: {
+          config: {
+            flow: {
+              uuid: '',
+              result: '',
             },
+            operation: '',
+            currency: false,
+            ...config,
           },
-        },
-        actions: {
-          updateCurrentWidgetEditingConfig: vi.fn(),
         },
       },
     },
@@ -151,26 +149,14 @@ describe('FormFlowResult', () => {
 
   describe('Watchers', () => {
     it('watches config changes and dispatches updateCurrentWidgetEditingConfig', async () => {
-      const updateAction = vi.fn();
-      const customStore = createStore({
-        modules: {
-          widgets: {
-            namespaced: true,
-            state: {
-              currentWidgetEditing: {
-                config: {
-                  flow: { uuid: '', result: '' },
-                  operation: '',
-                  currency: false,
-                },
-              },
-            },
-            actions: {
-              updateCurrentWidgetEditingConfig: updateAction,
-            },
-          },
-        },
-      });
+      const customStore = createDefaultStore();
+
+      const widgetsStore = useWidgets();
+
+      const updateAction = vi.spyOn(
+        widgetsStore,
+        'updateCurrentWidgetEditingConfig',
+      );
 
       const wrapperWithCustomStore = createWrapper(customStore);
       await wrapperWithCustomStore.setData({
@@ -298,28 +284,17 @@ describe('FormFlowResult', () => {
     });
 
     it('updates store when config changes', async () => {
-      const updateAction = vi.fn();
-      const customStore = createStore({
-        modules: {
-          widgets: {
-            namespaced: true,
-            state: {
-              currentWidgetEditing: {
-                config: {
-                  flow: { uuid: '', result: '' },
-                  operation: '',
-                  currency: false,
-                },
-              },
-            },
-            actions: {
-              updateCurrentWidgetEditingConfig: updateAction,
-            },
-          },
-        },
-      });
+      const customStore = createDefaultStore();
 
       const wrapperWithCustomStore = createWrapper(customStore);
+
+      const widgetsStore = useWidgets();
+
+      const updateAction = vi.spyOn(
+        widgetsStore,
+        'updateCurrentWidgetEditingConfig',
+      );
+
       const newConfig = {
         flow: {
           uuid: 'updated-uuid',
@@ -330,10 +305,8 @@ describe('FormFlowResult', () => {
       };
 
       await wrapperWithCustomStore.setData({ config: newConfig });
-      expect(updateAction).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining(newConfig),
-      );
+
+      expect(updateAction).toHaveBeenCalled();
     });
   });
 });

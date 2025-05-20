@@ -8,11 +8,7 @@ vi.mock('@/services/api/http', () => ({
 }));
 
 vi.mock('@/store/modules/config', () => ({
-  default: {
-    state: {
-      project: { uuid: 'mock-project-uuid' },
-    },
-  },
+  useConfig: () => ({ project: { uuid: 'mock-project-uuid' } }),
 }));
 
 vi.mock('@/utils/request', () => ({

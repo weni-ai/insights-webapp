@@ -17,7 +17,8 @@
 
 <script setup lang="ts">
 import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
-import { useStore } from 'vuex';
+
+import { useWidgets } from '@/store/modules/widgets';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 
 const POLLING_INTERVAL = 60000; // 1 minute in milliseconds
@@ -30,14 +31,14 @@ const props = defineProps({
   },
 });
 
-const store = useStore();
+const widgetsStore = useWidgets();
 
 const isLoading = computed(() => {
-  return store.state.widgets.isLoadingCurrentExpansiveWidget;
+  return widgetsStore.isLoadingCurrentExpansiveWidget;
 });
 
 const currentExpansiveWidgetFilters = computed(() => {
-  return store.state.widgets.currentExpansiveWidgetFilters;
+  return widgetsStore.currentExpansiveWidgetFilters;
 });
 
 const currentComponent = computed(() => {
@@ -78,16 +79,19 @@ const widgetProps = computed(() => {
           hidden_name: false,
         })) || []),
       ],
-      items:
-        data?.results?.map((item) => ({
-          ...item,
-          custom_status: Object.fromEntries(
-            item.custom_status.map((status) => [
-              status.status_type,
-              status.break_time,
-            ]),
-          ),
-        })) || [],
+      items: data?.results
+        ? data.results.map((item) => ({
+            ...item,
+            custom_status: item.custom_status
+              ? Object.fromEntries(
+                  item?.custom_status?.map((status) => [
+                    status.status_type,
+                    status.break_time,
+                  ]),
+                )
+              : {},
+          }))
+        : [],
     },
   };
 
@@ -100,7 +104,7 @@ const widgetEvents = computed(() => {
 
 const updateWidgetData = async () => {
   if (props.widget.value.type === 'table_dynamic_by_filter') {
-    await store.dispatch('widgets/updateCurrentExpansiveWidgetData', {
+    await widgetsStore.updateCurrentExpansiveWidgetData({
       ...props.widget.value,
     });
   }

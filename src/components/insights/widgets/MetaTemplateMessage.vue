@@ -62,16 +62,14 @@
           <h2
             class="meta-template-message__preview-title"
             data-testid="template-title"
-          >
-            {{ props.template.title }}
-          </h2>
+            v-html="props.template.title"
+          />
 
           <article
             class="meta-template-message__preview-text"
             data-testid="template-text"
-          >
-            {{ props.template.text }}
-          </article>
+            v-html="props.template.text"
+          />
 
           <p
             class="meta-template-message__preview-hint"

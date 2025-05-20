@@ -1,7 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 import CardRecurrence from '../CardRecurrence.vue';
+import { useDashboards } from '@/store/modules/dashboards';
 
 describe('CardRecurrence.vue', () => {
   let store;
@@ -19,8 +20,8 @@ describe('CardRecurrence.vue', () => {
   };
 
   beforeEach(() => {
-    store = createStore({
-      state: {
+    store = createTestingPinia({
+      initialState: {
         dashboards: {
           appliedFilters: [],
         },
@@ -91,7 +92,8 @@ describe('CardRecurrence.vue', () => {
 
   it('emit request data when change appliedFilters', async () => {
     const wrapper = createWrapper();
-    store.state.dashboards.appliedFilters = [{ filter: 'value' }];
+    const dashboardsStore = useDashboards();
+    dashboardsStore.appliedFilters = [{ filter: 'value' }];
     expect(wrapper.emitted('request-data')).toBeTruthy();
   });
 

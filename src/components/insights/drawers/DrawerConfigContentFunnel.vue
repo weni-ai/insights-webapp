@@ -35,16 +35,24 @@
     @click="addMetric"
   />
   <UnnnicButton
+    class="clear-fields-btn"
+    :text="$t('drawers.clear_all_fields')"
+     type="secondary"
+    :disabled="isDisableClearFields"
+    @click="clearAllFields"
+  />
+  <UnnnicButton
     class="clear-widget-btn"
     :text="$t('drawers.reset_widget')"
     type="tertiary"
-    :disabled="isDisableResetWidget"
     @click="resetWidget"
   />
+
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState } from 'pinia';
+import { useProject } from '@/store/modules/project';
 
 import FormAccordion from '@/components/FormAccordion.vue';
 import SelectFlow from '@/components/SelectFlow.vue';
@@ -98,8 +106,8 @@ export default {
   },
 
   computed: {
-    ...mapState({
-      projectFlows: (state) => state.project.flows,
+    ...mapState(useProject, {
+      projectFlows: 'flows',
     }),
 
     validMetricsLength() {
@@ -123,10 +131,8 @@ export default {
       }
       return true;
     },
-    isDisableResetWidget() {
-      const isEmptyValue = (e) => e.name === '' && e.flow === '';
-
-      return this.metrics.every(isEmptyValue);
+    isDisableClearFields() {
+      return this.metrics.some((metric) => metric.name === '' || metric.flow === '');
     },
   },
 
@@ -163,6 +169,18 @@ export default {
 
       this.metrics[index].name = '';
       this.metrics[index].flow = '';
+    },
+    clearAllFields() {
+      const isCreatedMetric = this.metrics.length > 3;
+
+      if (isCreatedMetric) {
+        this.metrics.splice(3, this.metrics.length - 3);
+      }
+
+      this.metrics.forEach((metric) => {
+        metric.name = '';
+        metric.flow = '';
+      });
     },
 
     handleWidgetFields() {

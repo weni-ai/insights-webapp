@@ -1,6 +1,8 @@
 import { vi, beforeEach, expect } from 'vitest';
 import { mount, config, flushPromises } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
+import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
+
 import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import SearchTemplateMessagesModal from '../SearchTemplateMessagesModal.vue';
@@ -54,8 +56,8 @@ describe('SearchTemplateMessagesModal.vue', () => {
   };
 
   beforeEach(() => {
-    store = createStore({
-      state: {
+    store = createTestingPinia({
+      initialState: {
         dashboards: {
           currentDashboard: {
             config: { waba_id: '12345' },
@@ -64,9 +66,6 @@ describe('SearchTemplateMessagesModal.vue', () => {
         config: {
           project: { uuid: 'abcd' },
         },
-      },
-      actions: {
-        'metaTemplateMessage/setSelectedTemplateUuid': vi.fn(),
       },
     });
     wrapper = createWrapper();
@@ -103,13 +102,14 @@ describe('SearchTemplateMessagesModal.vue', () => {
   });
 
   it('calls rowClick and dispatches action', async () => {
-    const dispatchSpy = vi.spyOn(store, 'dispatch');
+    const metaTemplateMessageStore = useMetaTemplateMessage();
+    const dispatchSpy = vi.spyOn(
+      metaTemplateMessageStore,
+      'setSelectedTemplateUuid',
+    );
     await wrapper.vm.rowClick({ id: '1' });
 
-    expect(dispatchSpy).toHaveBeenCalledWith(
-      'metaTemplateMessage/setSelectedTemplateUuid',
-      '1',
-    );
+    expect(dispatchSpy).toHaveBeenCalledWith('1');
   });
 
   it('closes modal when close method is called', async () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createStore } from 'vuex';
+import { createTestingPinia } from '@pinia/testing';
 import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
 import DrawerDashboardConfig from '../../dashboards/DrawerDashboardConfig.vue';
 
@@ -9,16 +9,13 @@ describe('HeaderDashboardSettings.vue', () => {
   let wrapper;
 
   beforeEach(() => {
-    store = createStore({
-      modules: {
+    store = createTestingPinia({
+      initialState: {
         dashboards: {
-          namespaced: true,
-          state: {
-            currentDashboard: {
-              uuid: '123',
-              name: 'Dashboard 1',
-              is_editable: true,
-            },
+          currentDashboard: {
+            uuid: '123',
+            name: 'Dashboard 1',
+            is_editable: true,
           },
         },
       },

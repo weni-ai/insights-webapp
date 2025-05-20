@@ -92,7 +92,10 @@ export default {
 
 <script setup>
 import { markRaw, reactive, ref, onMounted, computed } from 'vue';
-import { useStore } from 'vuex';
+
+import { useDashboards } from '@/store/modules/dashboards';
+import { useConfig } from '@/store/modules/config';
+import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -103,13 +106,15 @@ import QualityTemplateMessageFlag from './QualityTemplateMessageFlag.vue';
 
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
 
-const store = useStore();
+const dashboardsStore = useDashboards();
+const configStore = useConfig();
+const metaTemplateMessageStore = useMetaTemplateMessage();
 
 const waba_id = computed(
-  () => store.state.dashboards.currentDashboard.config?.waba_id,
+  () => dashboardsStore.currentDashboard.config?.waba_id,
 );
 
-const project_uuid = computed(() => store.state.config.project?.uuid);
+const project_uuid = computed(() => configStore.project?.uuid);
 
 const emit = defineEmits(['close']);
 
@@ -206,7 +211,7 @@ const searchTemplates = async (cursorKey) => {
 };
 
 const rowClick = (row) => {
-  store.dispatch('metaTemplateMessage/setSelectedTemplateUuid', row?.id);
+  metaTemplateMessageStore.setSelectedTemplateUuid(row?.id);
   close();
 };
 

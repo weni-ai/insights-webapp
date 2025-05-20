@@ -44,6 +44,9 @@ export default {
     },
     minDate() {
       if (this.isHumanServiceDashboard) return undefined;
+      if (this.isMetaTemplateDashboard) {
+        return moment().subtract(89, 'days').format('YYYY-MM-DD');
+      }
 
       const momentStart = moment(this.selectedDates.start);
       const momentEnd = moment(this.selectedDates.end);
@@ -62,8 +65,7 @@ export default {
         .subtract(89, 'days')
         .format('YYYY-MM-DD');
 
-      const isMinLast90Days =
-        minCalculatedDate === 'Invalid date' || this.isMetaTemplateDashboard;
+      const isMinLast90Days = minCalculatedDate === 'Invalid date';
 
       return isMinLast90Days
         ? moment().subtract(89, 'days').format('YYYY-MM-DD')

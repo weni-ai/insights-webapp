@@ -94,7 +94,7 @@ describe('HeaderFilters', () => {
 
     const filter = wrapper.vm.filter;
 
-    expect(filter.type).toBe('select_date_range');
+    expect(filter.type).toBe('date_range');
   });
 
   it('should call retainRouteQueries when path changes', async () => {

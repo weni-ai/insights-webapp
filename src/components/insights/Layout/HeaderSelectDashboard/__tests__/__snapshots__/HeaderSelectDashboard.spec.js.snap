@@ -9,11 +9,11 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
     class="unnnic-dropdown header-select-dashboard"
     data-onboarding-id="select-dashboard"
     data-v-054061ac=""
-    data-v-36eb394f=""
+    data-v-66495a5a=""
   >
     <div
       class="unnnic-dropdown__trigger"
-      data-v-36eb394f=""
+      data-v-66495a5a=""
     >
       
       <span

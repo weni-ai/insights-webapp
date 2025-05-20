@@ -2,10 +2,14 @@ import { shallowMount } from '@vue/test-utils';
 import { describe, it, expect } from 'vitest';
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import i18n from '@/utils/plugins/i18n';
+import { createTestingPinia } from '@pinia/testing';
 
 const createWrapper = (props = {}) => {
   return shallowMount(FilterDate, {
     props: { modelValue: { start: '2024-11-01', end: '2024-11-11' }, ...props },
+    global: {
+      plugins: [createTestingPinia()],
+    },
   });
 };
 

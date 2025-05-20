@@ -521,10 +521,10 @@ describe('HumanServiceAgentsTable', () => {
       expect(formattedHeaders[0].content).toBe('status');
       expect(formattedHeaders[1].content).toBe('agent');
 
-      expect(formattedHeaders[2].content).toBe('column2');
-      expect(formattedHeaders[3].content).toBe('in_progress');
-      expect(formattedHeaders[4].content).toBe('column1');
-      expect(formattedHeaders[5].content).toBe('closeds');
+      expect(formattedHeaders[2].content).toBe('in_progress');
+      expect(formattedHeaders[3].content).toBe('closeds');
+      expect(formattedHeaders[4].content).toBe('column2');
+      expect(formattedHeaders[5].content).toBe('column1');
 
       customOrderWrapper.unmount();
     });

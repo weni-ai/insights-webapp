@@ -66,7 +66,6 @@ import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMe
 import LastUpdatedText from './LastUpdatedText.vue';
 
 import { getLastNDays } from '@/utils/time';
-import moment from 'moment';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
@@ -123,15 +122,7 @@ export default {
 
       const filter = this.currentDashboardFilters[0];
 
-      if (filter.type === 'date_range' && !this.isMetaTemplateDashboard) {
-        return {
-          ...filter,
-          type: 'select_date_range',
-        };
-      }
-
-      if (this.isMetaTemplateDashboard) {
-        const minDate = moment().subtract(89, 'days').format('YYYY-MM-DD');
+      if (filter.type === 'date_range') {
         const shortCutOptions = [
           {
             name: this.$t(
@@ -164,11 +155,9 @@ export default {
             id: 'last-90-days',
           },
         ];
-
         return {
           ...filter,
           next: true,
-          minDate,
           shortCutOptions,
           disableClear: true,
         };

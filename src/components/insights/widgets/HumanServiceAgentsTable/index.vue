@@ -220,6 +220,12 @@ export default {
 
     sortHeadersByVisibleColumns(headers, visibleColumns) {
       return [...headers].sort((a, b) => {
+        if (a.name === 'in_progress') return -1;
+        if (b.name === 'in_progress') return 1;
+
+        if (a.name === 'closeds') return -1;
+        if (b.name === 'closeds') return 1;
+
         const indexA = visibleColumns.indexOf(a.name);
         const indexB = visibleColumns.indexOf(b.name);
 

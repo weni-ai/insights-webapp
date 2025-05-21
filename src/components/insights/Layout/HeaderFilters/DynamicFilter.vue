@@ -22,7 +22,6 @@ import FilterMultiSelect from './FilterMultiSelect.vue';
 
 import { findMatchingDate } from '@/utils/time';
 import i18n from '@/utils/plugins/i18n';
-import moment from 'moment';
 
 export default {
   name: 'DynamicFilter',
@@ -79,7 +78,6 @@ export default {
         depends_on,
         key_value_field,
         next,
-        minDate,
         shortCutOptions,
         disableClear,
       } = this.filter;
@@ -102,15 +100,12 @@ export default {
                 end: '',
               },
             };
-
       const mappingProps = {
         select_date_range: {
           modelValue: treatedModelValueWithLabel,
         },
         date_range: {
           modelValue: treatedModelValue,
-          maxDate: moment().format('YYYY-MM-DD'),
-          minDate,
           next,
           options: shortCutOptions,
           disableClear,

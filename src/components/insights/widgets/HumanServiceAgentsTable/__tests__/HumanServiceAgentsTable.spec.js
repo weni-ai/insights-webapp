@@ -393,6 +393,27 @@ describe('HumanServiceAgentsTable', () => {
         expect(sortedHeaders[2].name).toBe('column2');
       });
 
+      it('prioritizes in_progress and closeds over other columns', () => {
+        const headers = [
+          { name: 'column2', value: 'custom_status.column2' },
+          { name: 'in_progress', value: 'opened' },
+          { name: 'column1', value: 'custom_status.column1' },
+          { name: 'closeds', value: 'closed' },
+        ];
+
+        const visibleColumns = ['column1', 'column2', 'in_progress', 'closeds'];
+
+        const sortedHeaders = wrapper.vm.sortHeadersByVisibleColumns(
+          headers,
+          visibleColumns,
+        );
+
+        expect(sortedHeaders[0].name).toBe('in_progress');
+        expect(sortedHeaders[1].name).toBe('closeds');
+        expect(sortedHeaders[2].name).toBe('column1');
+        expect(sortedHeaders[3].name).toBe('column2');
+      });
+
       it('prioritizes headers that are in visibleColumns', () => {
         const headers = [
           { name: 'not_visible', value: 'not_visible' },
@@ -521,10 +542,10 @@ describe('HumanServiceAgentsTable', () => {
       expect(formattedHeaders[0].content).toBe('status');
       expect(formattedHeaders[1].content).toBe('agent');
 
-      expect(formattedHeaders[2].content).toBe('column2');
-      expect(formattedHeaders[3].content).toBe('in_progress');
-      expect(formattedHeaders[4].content).toBe('column1');
-      expect(formattedHeaders[5].content).toBe('closeds');
+      expect(formattedHeaders[2].content).toBe('in_progress');
+      expect(formattedHeaders[3].content).toBe('closeds');
+      expect(formattedHeaders[4].content).toBe('column2');
+      expect(formattedHeaders[5].content).toBe('column1');
 
       customOrderWrapper.unmount();
     });

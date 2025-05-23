@@ -91,7 +91,6 @@ onMounted(() => {
   agentsColumnsFilterStore.initializeFromStorage();
 
   const storedColumns = agentsColumnsFilterStore.visibleColumns || [];
-
   const currentFilters = widgetsStore.currentExpansiveWidgetFilters;
   selectedSector.value = currentFilters.sector;
   selectedQueue.value = currentFilters.queue;
@@ -131,10 +130,13 @@ const hasFiltersInternal = computed(() => {
 const handleVisibleColumnsUpdate = (value) => {
   if (!agentsColumnsFilterStore.hasInitialized || !Array.isArray(value)) return;
 
-  const columnNames = value.map((option) => option.value);
+  if (agentsColumnsFilterStore.visibleColumns.length / value.length < 3) {
+    const columnNames = value.map((option) => option.value);
 
-  selectedColumns.value = value;
-  agentsColumnsFilterStore.setVisibleColumns(columnNames);
+    selectedColumns.value = value;
+
+    agentsColumnsFilterStore.setVisibleColumns(columnNames);
+  }
 };
 
 const updateSector = (value) => {

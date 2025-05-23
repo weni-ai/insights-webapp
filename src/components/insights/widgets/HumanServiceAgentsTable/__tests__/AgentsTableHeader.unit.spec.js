@@ -183,8 +183,10 @@ describe('AgentsTableHeader', () => {
   });
 
   describe('Methods', () => {
-    it('handleVisibleColumnsUpdate dispatches action with column names', async () => {
+    it('handleVisibleColumnsUpdate dispatches action with column names when conditions are met', async () => {
       const agentsColumnsFilterStore = useAgentsColumnsFilter();
+      agentsColumnsFilterStore.visibleColumns = ['existing_column'];
+      agentsColumnsFilterStore.hasInitialized = true;
 
       const spySetVisibleColumns = vi.spyOn(
         agentsColumnsFilterStore,
@@ -200,6 +202,30 @@ describe('AgentsTableHeader', () => {
 
       expect(spySetVisibleColumns).toHaveBeenCalledWith(['column1', 'column2']);
       expect(wrapper.vm.selectedColumns).toEqual(columns);
+    });
+
+    it('handleVisibleColumnsUpdate does nothing if column ratio condition is not met', async () => {
+      const { wrapper } = createWrapper(
+        {},
+        {
+          agentsColumnsFilter: {
+            visibleColumns: ['col1', 'col2', 'col3', 'col4', 'col5', 'col6'],
+            hasInitialized: true,
+          },
+        },
+      );
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+      const spySetVisibleColumns = vi.spyOn(
+        agentsColumnsFilterStore,
+        'setVisibleColumns',
+      );
+
+      const columns = [{ value: 'column1', label: 'Column 1' }];
+
+      await wrapper.vm.handleVisibleColumnsUpdate(columns);
+
+      expect(spySetVisibleColumns).not.toHaveBeenCalled();
+      expect(wrapper.vm.selectedColumns).not.toEqual(columns);
     });
 
     it('handleVisibleColumnsUpdate does nothing when not initialized', async () => {
@@ -341,11 +367,50 @@ describe('AgentsTableHeader', () => {
       });
     });
 
-    it('initializes selectedColumns when headerOptions change', async () => {
+    it('initializes selectedColumns when headerOptions change, storedColumns is empty and headerOptions > 2', async () => {
+      const { wrapper } = createWrapper(
+        { headers: sampleHeaders.slice(0, 2) },
+        {
+          agentsColumnsFilter: { visibleColumns: [], hasInitialized: true },
+        },
+      );
+
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+      const spySetVisibleColumns = vi.spyOn(
+        agentsColumnsFilterStore,
+        'setVisibleColumns',
+      );
+
+      const newHeaders = [
+        ...sampleHeaders.slice(0, 2),
+        { name: 'new_column1', display: true, hidden_name: false },
+        { name: 'new_column2', display: true, hidden_name: false },
+        { name: 'new_column3', display: true, hidden_name: false },
+      ];
+
+      await wrapper.setProps({
+        headers: newHeaders,
+      });
+
+      await wrapper.vm.$nextTick();
+      await wrapper.vm.$nextTick();
+
+      expect(spySetVisibleColumns).toHaveBeenCalled();
+      const expectedColumns = ['new_column1', 'new_column2', 'new_column3'];
+      expect(spySetVisibleColumns).toHaveBeenCalledWith(expectedColumns);
+      expect(wrapper.vm.selectedColumns.map((c) => c.value)).toEqual(
+        expectedColumns,
+      );
+    });
+
+    it('does NOT initialize selectedColumns when headerOptions change if storedColumns is NOT empty', async () => {
       const { wrapper } = createWrapper(
         { headers: sampleHeaders.slice(0, 4) },
         {
-          agentsColumnsFilter: { visibleColumns: [] },
+          agentsColumnsFilter: {
+            visibleColumns: ['in_progress'],
+            hasInitialized: true,
+          },
         },
       );
 
@@ -362,14 +427,40 @@ describe('AgentsTableHeader', () => {
           { name: 'new_column2', display: true, hidden_name: false },
         ],
       });
-
       await wrapper.vm.$nextTick();
 
-      expect(spySetVisibleColumns).toHaveBeenCalledWith(expect.any(Array));
+      expect(spySetVisibleColumns).not.toHaveBeenCalled();
+    });
+
+    it('does NOT initialize selectedColumns when headerOptions change if headerOptions.length <= 2', async () => {
+      const { wrapper } = createWrapper(
+        { headers: sampleHeaders },
+        {
+          agentsColumnsFilter: { visibleColumns: [], hasInitialized: true },
+        },
+      );
+
+      const agentsColumnsFilterStore = useAgentsColumnsFilter();
+      const spySetVisibleColumns = vi.spyOn(
+        agentsColumnsFilterStore,
+        'setVisibleColumns',
+      );
+
+      await wrapper.setProps({
+        headers: [
+          { name: 'status', display: true, hidden_name: false },
+          { name: 'agent', display: true, hidden_name: false },
+          { name: 'new_column1', display: true, hidden_name: false },
+          { name: 'new_column2', display: true, hidden_name: false },
+        ],
+      });
+      await wrapper.vm.$nextTick();
+
+      expect(spySetVisibleColumns).not.toHaveBeenCalled();
     });
   });
 
-  describe('Initialization', () => {
+  describe('Initialization (onMounted)', () => {
     it('initializes with stored filter values on mount', async () => {
       const { wrapper } = createWrapper(
         {},
@@ -387,21 +478,86 @@ describe('AgentsTableHeader', () => {
       expect(wrapper.vm.selectedQueue).toBe('queue-456');
     });
 
-    it('initializes columns based on stored values when length > 2', () => {
+    it('initializes selectedColumns from storedColumns if storedColumns exist and availableColumns > 2', () => {
+      const testStoredColumns = ['in_progress', 'closeds', 'column1'];
       const { wrapper } = createWrapper(
-        {},
+        { headers: sampleHeaders },
         {
           agentsColumnsFilter: {
-            visibleColumns: ['in_progress', 'closeds', 'column1'],
+            visibleColumns: [...testStoredColumns],
+            hasInitialized: true,
           },
         },
       );
 
       const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
-      expect(selectedValues).toContain('in_progress');
-      expect(selectedValues).toContain('closeds');
-      expect(selectedValues).toContain('column1');
+      expect(selectedValues).toEqual(expect.arrayContaining(testStoredColumns));
       expect(selectedValues).not.toContain('column2');
+      expect(selectedValues.length).toBe(testStoredColumns.length);
+    });
+
+    it('initializes selectedColumns from storedColumns (as objects) if storedColumns exist and availableColumns <= 2', () => {
+      const testStoredColumns = ['in_progress', 'closeds'];
+      const fewHeaders = [
+        { name: 'status', display: true, hidden_name: false },
+        { name: 'agent', display: true, hidden_name: false },
+        { name: 'in_progress', display: true, hidden_name: false },
+        { name: 'closeds', display: true, hidden_name: false },
+      ];
+
+      const { wrapper } = createWrapper(
+        { headers: fewHeaders },
+        {
+          agentsColumnsFilter: {
+            visibleColumns: [...testStoredColumns],
+            hasInitialized: true,
+          },
+        },
+      );
+
+      const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
+      const selectedLabels = wrapper.vm.selectedColumns.map((col) => col.label);
+
+      expect(selectedValues).toEqual(expect.arrayContaining(testStoredColumns));
+      expect(selectedValues.length).toBe(testStoredColumns.length);
+      testStoredColumns.forEach((colName) => {
+        expect(selectedValues).toContain(colName);
+        expect(selectedLabels).toContain(colName);
+      });
+    });
+
+    it('does NOT initialize selectedColumns if storedColumns is empty on mount (relies on watcher)', () => {
+      const { wrapper } = createWrapper(
+        { headers: sampleHeaders },
+        {
+          agentsColumnsFilter: {
+            visibleColumns: [],
+            hasInitialized: true,
+          },
+        },
+      );
+
+      expect(wrapper.vm.selectedColumns).toEqual([]);
+    });
+
+    it('initializes selectedSector and selectedQueue from store on mount', () => {
+      const { wrapper } = createWrapper(
+        {},
+        {
+          widgets: {
+            currentExpansiveWidgetFilters: {
+              sector: 'initial-sector',
+              queue: 'initial-queue',
+            },
+          },
+          agentsColumnsFilter: {
+            visibleColumns: [],
+            hasInitialized: true,
+          },
+        },
+      );
+      expect(wrapper.vm.selectedSector).toBe('initial-sector');
+      expect(wrapper.vm.selectedQueue).toBe('initial-queue');
     });
   });
 });

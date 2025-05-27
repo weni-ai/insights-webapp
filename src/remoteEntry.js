@@ -4,18 +4,23 @@ import App from './App.vue';
 import router from './router';
 import Unnnic from './utils/plugins/UnnnicSystem';
 import i18n from './utils/plugins/i18n';
-import { getJwtToken } from './utils/jwt';
+
 import * as Sentry from '@sentry/vue';
 import env from './utils/env';
 
 import '@weni/unnnic-system/dist/style.css';
 import './styles/global.scss';
 
-export async function mountInsightsApp(containerId) {
-  // await getJwtToken();
+const { useSharedStore } = await import('connect/sharedStore');
 
+export async function mountInsightsApp(containerId) {
   const app = createApp(App);
   const pinia = createPinia();
+
+  const sharedStore = useSharedStore();
+
+  localStorage.setItem('token', sharedStore.auth.token);
+  localStorage.setItem('projectUuid', sharedStore.current.project.uuid);
 
   app.use(pinia);
   app.use(router);

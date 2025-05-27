@@ -66,7 +66,7 @@ export default {
     color: $unnnic-color-neutral-cloudy;
     font-size: $unnnic-font-size-body-gt;
     line-height: $unnnic-line-height-small * 5.5;
-    text-align: justify;
+    text-align: start;
   }
 }
 </style>

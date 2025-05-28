@@ -20,8 +20,10 @@ const routes = [
   },
 ];
 
+const projectUuid = localStorage.getItem('projectUuid');
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(`/projects/${projectUuid}/insights`),
   routes,
 });
 

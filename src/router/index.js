@@ -23,7 +23,7 @@ const routes = [
 const projectUuid = localStorage.getItem('projectUuid');
 
 const router = createRouter({
-  history: createWebHistory(`/projects/${projectUuid}/insights`),
+  history: createWebHistory(`projects/${projectUuid}/insights`),
   routes,
 });
 
@@ -38,14 +38,22 @@ router.beforeEach((to, from, next) => {
 router.afterEach((router) => {
   delete router.query.next;
   delete router.query.projectUuid;
-  window.parent.postMessage(
-    {
-      event: 'changePathname',
-      pathname: window.location.pathname,
-      query: router.query,
-    },
-    '*',
+  window.dispatchEvent(
+    new CustomEvent('changePathname', {
+      detail: {
+        pathname: window.location.pathname,
+        query: router.query,
+      },
+    }),
   );
+  // window.postMessage(
+  //   {
+  //     event: 'changePathname',
+  //     pathname: window.location.pathname,
+  //     query: router.query,
+  //   },
+  //   '*',
+  // );
 });
 
 export { routes };

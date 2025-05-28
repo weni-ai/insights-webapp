@@ -64,6 +64,7 @@ export default {
       default: () => [],
     },
   },
+  emits: ['input', 'close'],
 
   data: () => ({
     schemes: [

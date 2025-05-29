@@ -104,6 +104,7 @@ module.exports = defineConfig({
       name: 'insights',
       filename: 'remoteEntry.js',
       exposes: {
+        './insights-app': './src/remoteEntry.js',
         './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
         './locales/pt_br': './src/locales/pt_br.json',
         './locales/en': './src/locales/en.json',

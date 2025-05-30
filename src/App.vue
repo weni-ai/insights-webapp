@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    class="app-insights-container"
+  >
     <WelcomeOnboardingModal
       :showModal="showOnboardingModal"
       @close="showOnboardingModal = false"
@@ -232,5 +235,8 @@ export default {
 /* This is necessary to prevent the alert from being behind some screen items such as svgs */
 .alert-container {
   z-index: 99999999;
+}
+.app-insights-container {
+  height: 100%;
 }
 </style>

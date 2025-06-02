@@ -101,6 +101,8 @@ export default {
     'sharedStore.user.language': {
       immediate: true,
       handler(newLanguage) {
+        if (!newLanguage) return;
+
         this.handlerSetLanguage(newLanguage);
       },
     },
@@ -166,8 +168,6 @@ export default {
     },
 
     handlerSetLanguage(language) {
-      console.log('language', language);
-
       this.$i18n.locale = language; // 'en', 'pt-br', 'es'
       moment.locale(language);
     },
@@ -187,7 +187,6 @@ export default {
 
       window.addEventListener('message', (ev) => {
         const message = ev.data;
-        // console.log('message', message);
         const { handler, dataKey } = this.getEventHandler(message?.event);
         if (handler) handler(message?.[dataKey]);
       });

@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Report from '@/views/insights/Report.vue';
 import DynamicDashboard from '@/views/insights/DynamicDashboard.vue';
+import { safeImport } from '@/utils/moduleFederation';
+
+const { useSharedStore } = await safeImport(
+  () => import('connect/sharedStore'),
+  'connect/sharedStore',
+);
 
 const routes = [
   {
@@ -20,10 +26,13 @@ const routes = [
   },
 ];
 
-const projectUuid = localStorage.getItem('projectUuid');
+const sharedStore = useSharedStore?.();
+const sharedProjectUuid = sharedStore?.current?.project?.uuid;
 
 const router = createRouter({
-  history: createWebHistory(`projects/${projectUuid}/insights`),
+  history: createWebHistory(
+    sharedProjectUuid ? `/projects/${sharedProjectUuid}/insights` : '/',
+  ),
   routes,
 });
 

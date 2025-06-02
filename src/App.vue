@@ -106,6 +106,12 @@ export default {
         this.handlerSetLanguage(newLanguage);
       },
     },
+    'sharedStore.current.project.type': {
+      immediate: true,
+      handler(newProjectType) {
+        this.setIsCommerce(newProjectType === 2);
+      },
+    },
   },
 
   created() {
@@ -177,14 +183,7 @@ export default {
       this.setProject({ uuid: projectUuid });
     },
 
-    handlerSetIsCommerce(isCommerce) {
-      this.setIsCommerce(isCommerce);
-    },
-
     listenConnect() {
-      window.parent.postMessage({ event: 'getLanguage' }, '*');
-      window.parent.postMessage({ event: 'getIsCommerce' }, '*');
-
       window.addEventListener('message', (ev) => {
         const message = ev.data;
         const { handler, dataKey } = this.getEventHandler(message?.event);
@@ -195,13 +194,10 @@ export default {
     getEventHandler(eventName) {
       const handlerFunctionMapper = {
         setProject: this.handlerSetProject,
-        setIsCommerce: this.handlerSetIsCommerce,
       };
 
       const handlerParamsMapper = {
-        setLanguage: 'language',
         setProject: 'projectUuid',
-        setIsCommerce: 'isCommerce',
       };
 
       return {

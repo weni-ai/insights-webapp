@@ -336,16 +336,48 @@ describe('HumanServiceAgentsTable', () => {
 
   describe('Methods', () => {
     describe('formatSecondsToTime', () => {
-      it('formats seconds to time strings correctly', () => {
+      it('formats basic time values correctly', () => {
         expect(wrapper.vm.formatSecondsToTime(0)).toBe('00:00:00');
+        expect(wrapper.vm.formatSecondsToTime(30)).toBe('00:00:30'); // 30 seconds
+        expect(wrapper.vm.formatSecondsToTime(60)).toBe('00:01:00'); // 1 minute
         expect(wrapper.vm.formatSecondsToTime(61)).toBe('00:01:01'); // 1m 1s
-        expect(wrapper.vm.formatSecondsToTime(363600)).toBe('101:00:00'); // 101h
+        expect(wrapper.vm.formatSecondsToTime(3600)).toBe('01:00:00'); // 1 hour
+        expect(wrapper.vm.formatSecondsToTime(3661)).toBe('01:01:01'); // 1h 1m 1s
       });
 
-      it('handles edge cases in formatSecondsToTime', () => {
+      it('formats the specific bug case correctly', () => {
+        // This was the problematic case: 4436 seconds should be 01:13:56, not 00:13:56
+        expect(wrapper.vm.formatSecondsToTime(4436)).toBe('01:13:56');
+      });
+
+      it('formats larger time values correctly', () => {
+        expect(wrapper.vm.formatSecondsToTime(7200)).toBe('02:00:00'); // 2 hours
+        expect(wrapper.vm.formatSecondsToTime(7323)).toBe('02:02:03'); // 2h 2m 3s
+        expect(wrapper.vm.formatSecondsToTime(86400)).toBe('24:00:00'); // 24 hours
+        expect(wrapper.vm.formatSecondsToTime(90061)).toBe('25:01:01'); // 25h 1m 1s
+        expect(wrapper.vm.formatSecondsToTime(363600)).toBe('101:00:00'); // 101 hours
+      });
+
+      it('handles decimal values by flooring them', () => {
+        expect(wrapper.vm.formatSecondsToTime(30.7)).toBe('00:00:30');
+        expect(wrapper.vm.formatSecondsToTime(61.9)).toBe('00:01:01');
+        expect(wrapper.vm.formatSecondsToTime(3600.5)).toBe('01:00:00');
+      });
+
+      it('handles edge cases and invalid inputs', () => {
         expect(wrapper.vm.formatSecondsToTime(0)).toBe('00:00:00');
         expect(wrapper.vm.formatSecondsToTime(null)).toBe('00:00:00');
         expect(wrapper.vm.formatSecondsToTime(undefined)).toBe('00:00:00');
+        expect(wrapper.vm.formatSecondsToTime('')).toBe('00:00:00');
+        expect(wrapper.vm.formatSecondsToTime(false)).toBe('00:00:00');
+      });
+
+      it('formats common real-world scenarios', () => {
+        expect(wrapper.vm.formatSecondsToTime(900)).toBe('00:15:00'); // 15 minutes
+        expect(wrapper.vm.formatSecondsToTime(1800)).toBe('00:30:00'); // 30 minutes
+        expect(wrapper.vm.formatSecondsToTime(2700)).toBe('00:45:00'); // 45 minutes
+        expect(wrapper.vm.formatSecondsToTime(5400)).toBe('01:30:00'); // 1.5 hours
+        expect(wrapper.vm.formatSecondsToTime(28800)).toBe('08:00:00'); // 8 hours (work day)
       });
     });
 
@@ -552,9 +584,33 @@ describe('HumanServiceAgentsTable', () => {
 
     it('handles items with null or missing custom status values', () => {
       const items = expansiveWrapper.vm.formattedItems;
+      const charlieItem = items.find((item) => item.agent === 'Charlie');
 
-      expect(items[3].content[4]).toBe('00:00:00');
-      expect(items[3].content[5]).toBe('00:00:00');
+      expect(charlieItem).toBeTruthy();
+
+      const charlieContent = charlieItem.content;
+
+      const visibleColumns = ['in_progress', 'closeds', 'column1', 'column2'];
+      let contentIndex = 2;
+
+      let column1Index = -1;
+      let column2Index = -1;
+
+      if (visibleColumns.includes('in_progress')) {
+        contentIndex++;
+      }
+      if (visibleColumns.includes('closeds')) {
+        contentIndex++;
+      }
+      if (visibleColumns.includes('column1')) {
+        column1Index = contentIndex++;
+      }
+      if (visibleColumns.includes('column2')) {
+        column2Index = contentIndex++;
+      }
+
+      expect(charlieContent[column1Index]).toBe('00:00:00');
+      expect(charlieContent[column2Index]).toBe('00:00:00');
     });
   });
 

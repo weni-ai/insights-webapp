@@ -20,7 +20,9 @@ const routes = [
   },
 ];
 
-export function createInsightsRouter(routerBase) {
+let currentRouterInstance = null;
+
+export function createInsightsRouter(routerBase = '/') {
   const router = createRouter({
     history: createWebHistory(routerBase),
     routes,
@@ -47,8 +49,21 @@ export function createInsightsRouter(routerBase) {
     );
   });
 
+  if (!currentRouterInstance) {
+    currentRouterInstance = router;
+  }
+
   return router;
 }
 
+const routerProxy = new Proxy(
+  {},
+  {
+    get(_, prop) {
+      return currentRouterInstance?.[prop];
+    },
+  },
+);
+
 export { routes, createInsightsRouter as createRouter };
-export default createInsightsRouter;
+export default routerProxy;

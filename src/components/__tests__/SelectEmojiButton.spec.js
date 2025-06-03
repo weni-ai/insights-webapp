@@ -51,7 +51,9 @@ describe('SelectEmojiButton', () => {
 
   describe('Component Structure', () => {
     it('should render the component with correct structure', () => {
-      expect(wrapper.find('.select-emoji-button').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="select-emoji-button"]').exists()).toBe(
+        true,
+      );
       expect(wrapper.element.tagName).toBe('BUTTON');
     });
 
@@ -91,7 +93,7 @@ describe('SelectEmojiButton', () => {
 
     it('should not show selected emoji section when no value', () => {
       const selectedEmoji = wrapper.find(
-        '.select-emoji-button__selected-emoji',
+        '[data-testid="select-emoji-button-selected-emoji"]',
       );
       expect(selectedEmoji.exists()).toBe(false);
     });
@@ -108,7 +110,7 @@ describe('SelectEmojiButton', () => {
 
     it('should show selected emoji instead of icon', () => {
       const selectedEmoji = wrapper.find(
-        '.select-emoji-button__selected-emoji',
+        '[data-testid="select-emoji-button-selected-emoji"]',
       );
       const icon = wrapper.findComponent('[data-icon="add_reaction"]');
 
@@ -118,7 +120,7 @@ describe('SelectEmojiButton', () => {
 
     it('should display correct emoji native character', () => {
       const selectedEmoji = wrapper.find(
-        '.select-emoji-button__selected-emoji',
+        '[data-testid="select-emoji-button-selected-emoji"]',
       );
       expect(selectedEmoji.text()).toBe('😀');
     });
@@ -216,7 +218,9 @@ describe('SelectEmojiButton', () => {
     it('should handle button click', async () => {
       const handleEmojiSpy = vi.spyOn(wrapper.vm, 'handleEmoji');
 
-      await wrapper.find('.select-emoji-button').trigger('click');
+      await wrapper
+        .find('[data-testid="select-emoji-button"]')
+        .trigger('click');
 
       expect(handleEmojiSpy).toHaveBeenCalled();
     });
@@ -256,7 +260,7 @@ describe('SelectEmojiButton', () => {
     it('should hide emoji picker when isEmojiPickerOpen is false', () => {
       wrapper.vm.isEmojiPickerOpen = false;
 
-      const emojiPicker = wrapper.find('.unnnic-emoji-picker');
+      const emojiPicker = wrapper.find('[data-testid="unnnic-emoji-picker"]');
       expect(emojiPicker.isVisible()).toBe(false);
     });
   });

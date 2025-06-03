@@ -20,42 +20,50 @@ const routes = [
   },
 ];
 
-const projectUuid = localStorage.getItem('projectUuid');
+let currentRouterInstance = null;
 
-const router = createRouter({
-  history: createWebHistory(`projects/${projectUuid}/insights`),
-  routes,
-});
+export function createInsightsRouter(routerBase = '/') {
+  const router = createRouter({
+    history: createWebHistory(routerBase),
+    routes,
+  });
 
-router.beforeEach((to, from, next) => {
-  const nextPath = to.query.next;
+  router.beforeEach((to, from, next) => {
+    const nextPath = to.query.next;
 
-  if (nextPath)
-    next({ path: nextPath, query: { ...to.query, next: undefined } });
-  else next();
-});
+    if (nextPath)
+      next({ path: nextPath, query: { ...to.query, next: undefined } });
+    else next();
+  });
 
-router.afterEach((router) => {
-  delete router.query.next;
-  delete router.query.projectUuid;
-  window.dispatchEvent(
-    new CustomEvent('changePathname', {
-      detail: {
-        pathname: window.location.pathname,
-        query: router.query,
-      },
-    }),
-  );
-  // window.postMessage(
-  //   {
-  //     event: 'changePathname',
-  //     pathname: window.location.pathname,
-  //     query: router.query,
-  //   },
-  //   '*',
-  // );
-});
+  router.afterEach((router) => {
+    delete router.query.next;
+    delete router.query.projectUuid;
+    window.dispatchEvent(
+      new CustomEvent('changePathname', {
+        detail: {
+          pathname: window.location.pathname,
+          query: router.query,
+        },
+      }),
+    );
+  });
 
-export { routes };
+  if (!currentRouterInstance) {
+    currentRouterInstance = router;
+  }
 
-export default router;
+  return router;
+}
+
+const routerProxy = new Proxy(
+  {},
+  {
+    get(_, prop) {
+      return currentRouterInstance?.[prop];
+    },
+  },
+);
+
+export { routes, createInsightsRouter as createRouter };
+export default routerProxy;

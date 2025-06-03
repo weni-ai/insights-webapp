@@ -184,7 +184,7 @@ export default {
     handlerWidgetOpenConfig(widget) {
       const isNewWidget = this.currentWidgetEditing?.uuid !== widget.uuid;
       if (isNewWidget) {
-        this.updateCurrentWidgetEditing(widget).then(() => {
+        this.updateCurrentWidgetEditing(widget)?.then(() => {
           this.callTourNextStep('widgets-onboarding-tour');
         });
       }

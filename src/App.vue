@@ -1,7 +1,7 @@
 <template>
   <div
     id="app"
-    class="app-insights-container"
+    :class="`app-insights-${!sharedStore ? 'dev' : 'prod'}`"
   >
     <WelcomeOnboardingModal
       :showModal="showOnboardingModal"
@@ -56,6 +56,13 @@ import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
 import moment from 'moment';
 
+import { safeImport } from './utils/moduleFederation';
+
+const { useSharedStore } = await safeImport(
+  () => import('connect/sharedStore'),
+  'connect/sharedStore',
+);
+
 export default {
   components: {
     InsightsLayout,
@@ -81,6 +88,7 @@ export default {
       showCreateDashboardTour: 'showCreateDashboardOnboarding',
       showCompleteOnboardingModal: 'showCompleteOnboardingModal',
     }),
+    sharedStore: () => useSharedStore?.(),
   },
 
   watch: {
@@ -90,10 +98,24 @@ export default {
         await this.getCurrentDashboardFilters();
       }
     },
-  },
+    'sharedStore.user.language': {
+      immediate: true,
+      handler(newLanguage) {
+        if (!newLanguage) return;
 
-  created() {
-    this.listenConnect();
+        this.handlerSetLanguage(newLanguage);
+      },
+    },
+    'sharedStore.current.project': {
+      immediate: true,
+      deep: true,
+      handler(newProject) {
+        if (!newProject) return;
+
+        this.handlerSetProject(newProject?.uuid);
+        this.setIsCommerce(newProject?.type === 2);
+      },
+    },
   },
 
   async mounted() {
@@ -161,40 +183,6 @@ export default {
       this.setProject({ uuid: projectUuid });
     },
 
-    handlerSetIsCommerce(isCommerce) {
-      this.setIsCommerce(isCommerce);
-    },
-
-    listenConnect() {
-      window.parent.postMessage({ event: 'getLanguage' }, '*');
-      window.parent.postMessage({ event: 'getIsCommerce' }, '*');
-
-      window.addEventListener('message', (ev) => {
-        const message = ev.data;
-        const { handler, dataKey } = this.getEventHandler(message?.event);
-        if (handler) handler(message?.[dataKey]);
-      });
-    },
-
-    getEventHandler(eventName) {
-      const handlerFunctionMapper = {
-        setLanguage: this.handlerSetLanguage,
-        setProject: this.handlerSetProject,
-        setIsCommerce: this.handlerSetIsCommerce,
-      };
-
-      const handlerParamsMapper = {
-        setLanguage: 'language',
-        setProject: 'projectUuid',
-        setIsCommerce: 'isCommerce',
-      };
-
-      return {
-        handler: handlerFunctionMapper[eventName],
-        dataKey: handlerParamsMapper[eventName],
-      };
-    },
-
     handlerShowOnboardingModal() {
       const hasCustomDashboard = this.dashboards.find(
         (dashboard) => dashboard.is_deletable,
@@ -227,7 +215,17 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 100%;
+}
+
+.app-insights-prod {
+  height: 100%;
+  width: 100%;
+}
+
+.app-insights-dev {
   height: 100vh;
+  width: 100vw;
 }
 </style>
 
@@ -235,8 +233,5 @@ export default {
 /* This is necessary to prevent the alert from being behind some screen items such as svgs */
 .alert-container {
   z-index: 99999999;
-}
-.app-insights-container {
-  height: 100%;
 }
 </style>

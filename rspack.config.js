@@ -117,6 +117,7 @@ module.exports = defineConfig({
         ...pkg,
         vue: {
           singleton: true,
+          requiredVersion: '^3.0.0',
           eager: true,
         },
         'vue-i18n': {

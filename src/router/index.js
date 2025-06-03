@@ -1,12 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Report from '@/views/insights/Report.vue';
 import DynamicDashboard from '@/views/insights/DynamicDashboard.vue';
-import { safeImport } from '@/utils/moduleFederation';
-
-const { useSharedStore } = await safeImport(
-  () => import('connect/sharedStore'),
-  'connect/sharedStore',
-);
 
 const routes = [
   {
@@ -26,45 +20,35 @@ const routes = [
   },
 ];
 
-const sharedStore = useSharedStore?.();
-const sharedProjectUuid = sharedStore?.current?.project?.uuid;
+export function createInsightsRouter(routerBase) {
+  const router = createRouter({
+    history: createWebHistory(routerBase),
+    routes,
+  });
 
-const router = createRouter({
-  history: createWebHistory(
-    sharedProjectUuid ? `/projects/${sharedProjectUuid}/insights` : '/',
-  ),
-  routes,
-});
+  router.beforeEach((to, from, next) => {
+    const nextPath = to.query.next;
 
-router.beforeEach((to, from, next) => {
-  const nextPath = to.query.next;
+    if (nextPath)
+      next({ path: nextPath, query: { ...to.query, next: undefined } });
+    else next();
+  });
 
-  if (nextPath)
-    next({ path: nextPath, query: { ...to.query, next: undefined } });
-  else next();
-});
+  router.afterEach((router) => {
+    delete router.query.next;
+    delete router.query.projectUuid;
+    window.dispatchEvent(
+      new CustomEvent('changePathname', {
+        detail: {
+          pathname: window.location.pathname,
+          query: router.query,
+        },
+      }),
+    );
+  });
 
-router.afterEach((router) => {
-  delete router.query.next;
-  delete router.query.projectUuid;
-  window.dispatchEvent(
-    new CustomEvent('changePathname', {
-      detail: {
-        pathname: window.location.pathname,
-        query: router.query,
-      },
-    }),
-  );
-  // window.postMessage(
-  //   {
-  //     event: 'changePathname',
-  //     pathname: window.location.pathname,
-  //     query: router.query,
-  //   },
-  //   '*',
-  // );
-});
+  return router;
+}
 
-export { routes };
-
-export default router;
+export { routes, createInsightsRouter as createRouter };
+export default createInsightsRouter;

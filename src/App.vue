@@ -106,16 +106,16 @@ export default {
         this.handlerSetLanguage(newLanguage);
       },
     },
-    'sharedStore.current.project.type': {
+    'sharedStore.current.project': {
       immediate: true,
-      handler(newProjectType) {
-        this.setIsCommerce(newProjectType === 2);
+      deep: true,
+      handler(newProject) {
+        if (!newProject) return;
+
+        this.handlerSetProject(newProject?.uuid);
+        this.setIsCommerce(newProject?.type === 2);
       },
     },
-  },
-
-  created() {
-    this.listenConnect();
   },
 
   async mounted() {
@@ -181,29 +181,6 @@ export default {
     handlerSetProject(projectUuid) {
       localStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
-    },
-
-    listenConnect() {
-      window.addEventListener('message', (ev) => {
-        const message = ev.data;
-        const { handler, dataKey } = this.getEventHandler(message?.event);
-        if (handler) handler(message?.[dataKey]);
-      });
-    },
-
-    getEventHandler(eventName) {
-      const handlerFunctionMapper = {
-        setProject: this.handlerSetProject,
-      };
-
-      const handlerParamsMapper = {
-        setProject: 'projectUuid',
-      };
-
-      return {
-        handler: handlerFunctionMapper[eventName],
-        dataKey: handlerParamsMapper[eventName],
-      };
     },
 
     handlerShowOnboardingModal() {

@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import router from './router';
+import { createRouter } from './router';
 
 import Unnnic from './utils/plugins/UnnnicSystem';
 import i18n from './utils/plugins/i18n';
@@ -26,12 +26,17 @@ const { useSharedStore } = await safeImport(
 
 const sharedStore = useSharedStore?.();
 
-export default async function mountInsightsApp(containerId = 'app') {
+export default async function mountInsightsApp({
+  containerId = 'app',
+  routerBase = '/',
+} = {}) {
   let appRef = null;
 
   await getJwtToken().then(() => {
     const app = createApp(App);
     const pinia = createPinia();
+
+    const router = createRouter(routerBase);
 
     app.use(pinia);
     app.use(router);

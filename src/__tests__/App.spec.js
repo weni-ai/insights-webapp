@@ -395,8 +395,9 @@ describe('App', () => {
       dashboardsStore.isLoadingDashboards = true;
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.find('.loading-container').exists()).toBe(true);
-      expect(wrapper.find('img[src*="weni-loading.svg"]').exists()).toBe(true);
+      expect(
+        wrapper.find('[data-testid="loading-container-dashboards"]').exists(),
+      ).toBe(true);
     });
 
     it('should show InsightsLayout when dashboards exist and not loading', async () => {
@@ -404,9 +405,9 @@ describe('App', () => {
       dashboardsStore.dashboards = [{ id: 1, name: 'Test Dashboard' }];
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.findComponent('[class="insights-layout"]').exists()).toBe(
-        true,
-      );
+      expect(
+        wrapper.findComponent('[data-testid="insights-layout"]').exists(),
+      ).toBe(true);
     });
 
     it('should show IconLoading when dashboard filters are loading', async () => {
@@ -415,9 +416,9 @@ describe('App', () => {
       dashboardsStore.isLoadingCurrentDashboardFilters = true;
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.findComponent('[class="icon-loading"]').exists()).toBe(
-        true,
-      );
+      expect(
+        wrapper.findComponent('[data-testid="icon-loading"]').exists(),
+      ).toBe(true);
     });
 
     it('should show RouterView when not loading filters', async () => {
@@ -426,9 +427,7 @@ describe('App', () => {
       dashboardsStore.isLoadingCurrentDashboardFilters = false;
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.findComponent('[class="router-view"]').exists()).toBe(
-        true,
-      );
+      expect(wrapper.findComponent({ name: 'RouterView' }).exists()).toBe(true);
     });
 
     it('should show DashboardOnboarding when showCreateDashboardTour is true', async () => {
@@ -436,7 +435,7 @@ describe('App', () => {
       await wrapper.vm.$nextTick();
 
       expect(
-        wrapper.findComponent('[class="dashboard-onboarding"]').exists(),
+        wrapper.findComponent('[data-testid="dashboard-onboarding"]').exists(),
       ).toBe(true);
     });
   });
@@ -457,7 +456,9 @@ describe('App', () => {
       wrapper.vm.showOnboardingModal = true;
       await wrapper.vm.$nextTick();
 
-      const modal = wrapper.findComponent('[class="welcome-onboarding-modal"]');
+      const modal = wrapper.findComponent(
+        '[data-testid="welcome-onboarding-modal"]',
+      );
       await modal.vm.$emit('close');
 
       expect(wrapper.vm.showOnboardingModal).toBe(false);
@@ -471,7 +472,9 @@ describe('App', () => {
       wrapper.vm.showOnboardingModal = true;
       await wrapper.vm.$nextTick();
 
-      const modal = wrapper.findComponent('[class="welcome-onboarding-modal"]');
+      const modal = wrapper.findComponent(
+        '[data-testid="welcome-onboarding-modal"]',
+      );
       await modal.vm.$emit('start-onboarding');
 
       expect(handlerStartOnboardingSpy).toHaveBeenCalled();
@@ -486,7 +489,7 @@ describe('App', () => {
       await wrapper.vm.$nextTick();
 
       const modal = wrapper.findComponent(
-        '[class="complete-onboarding-modal"]',
+        '[data-testid="complete-onboarding-modal"]',
       );
       await modal.vm.$emit('finish-onboarding');
 

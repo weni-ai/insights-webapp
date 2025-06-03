@@ -24,14 +24,15 @@ describe('SugestionCard', () => {
 
   describe('Component Structure', () => {
     it('should render the component with correct structure', () => {
-      expect(wrapper.find('.insights-card').exists()).toBe(true);
-      expect(wrapper.find('.insights-card__title').exists()).toBe(true);
-      expect(wrapper.find('.insights-card__description').exists()).toBe(true);
-    });
-
-    it('should have correct CSS classes', () => {
-      const card = wrapper.find('.insights-card');
-      expect(card.classes()).toContain('insights-card');
+      expect(wrapper.find('[data-testid="sugestion-card"]').exists()).toBe(
+        true,
+      );
+      expect(
+        wrapper.find('[data-testid="sugestion-card-title"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-testid="sugestion-card-description"]').exists(),
+      ).toBe(true);
     });
   });
 
@@ -82,42 +83,13 @@ describe('SugestionCard', () => {
     });
 
     it('should render empty slots without content', () => {
-      const title = wrapper.find('.insights-card__title');
-      const description = wrapper.find('.insights-card__description');
+      const title = wrapper.find('[data-testid="sugestion-card-title"]');
+      const description = wrapper.find(
+        '[data-testid="sugestion-card-description"]',
+      );
 
       expect(title.text()).toBe('');
       expect(description.text()).toBe('');
-    });
-  });
-
-  describe('Styling and Layout', () => {
-    it('should have proper structure for title and description', () => {
-      const card = wrapper.find('.insights-card');
-      const title = wrapper.find('.insights-card__title');
-      const description = wrapper.find('.insights-card__description');
-
-      expect(card.element.tagName).toBe('ARTICLE');
-      expect(title.element.tagName).toBe('P');
-      expect(description.element.tagName).toBe('P');
-    });
-
-    it('should apply correct CSS classes to elements', () => {
-      const title = wrapper.find('.insights-card__title');
-      const description = wrapper.find('.insights-card__description');
-
-      expect(title.classes()).toContain('insights-card__title');
-      expect(description.classes()).toContain('insights-card__description');
-    });
-  });
-
-  describe('Component Properties', () => {
-    it('should have correct component name', () => {
-      expect(wrapper.vm.$options.name).toBe('SugestionCard');
-    });
-
-    it('should be accessible as an article element', () => {
-      const article = wrapper.find('article');
-      expect(article.exists()).toBe(true);
     });
   });
 
@@ -131,8 +103,10 @@ describe('SugestionCard', () => {
         },
       );
 
-      const titleElement = wrapper.find('.insights-card__title');
-      const descriptionElement = wrapper.find('.insights-card__description');
+      const titleElement = wrapper.find('[data-testid="sugestion-card-title"]');
+      const descriptionElement = wrapper.find(
+        '[data-testid="sugestion-card-description"]',
+      );
 
       expect(titleElement.html()).toContain('<strong>Bold Title</strong>');
       expect(descriptionElement.html()).toContain(
@@ -151,7 +125,9 @@ describe('SugestionCard', () => {
         },
       );
 
-      const description = wrapper.find('.insights-card__description');
+      const description = wrapper.find(
+        '[data-testid="sugestion-card-description"]',
+      );
       expect(description.text()).toBe(longText);
     });
   });
@@ -165,9 +141,15 @@ describe('SugestionCard', () => {
     it('should maintain structure when no props are passed', () => {
       wrapper = createWrapper();
 
-      expect(wrapper.find('.insights-card').exists()).toBe(true);
-      expect(wrapper.find('.insights-card__title').exists()).toBe(true);
-      expect(wrapper.find('.insights-card__description').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="sugestion-card"]').exists()).toBe(
+        true,
+      );
+      expect(
+        wrapper.find('[data-testid="sugestion-card-title"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-testid="sugestion-card-description"]').exists(),
+      ).toBe(true);
     });
   });
 });

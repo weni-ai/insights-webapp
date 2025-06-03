@@ -157,7 +157,7 @@ export default {
         key: 'widgets-onboarding-tour',
         ref: this.$refs.widgetsOnboardingTour,
       });
-      this.onboardingRefs['widgets-onboarding-tour'].start();
+      this.onboardingRefs['widgets-onboarding-tour']?.start();
     });
   },
 

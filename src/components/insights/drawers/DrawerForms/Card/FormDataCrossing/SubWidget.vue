@@ -8,13 +8,17 @@
   >
     <template #content>
       <section class="subwidget-form">
-        <SelectFlow v-model="configLocal.flow.uuid" />
+        <SelectFlow
+          v-model="configLocal.flow.uuid"
+          data-testid="select-flow"
+        />
 
         <RadioList
           v-model:selectedRadio="configLocal.result_type"
           :label="$t('drawers.config_card.result_type')"
           :radios="result_types"
           :wrap="false"
+          data-testid="radio-list-result-type"
         />
 
         <template v-if="configLocal.result_type === 'flow_result'">
@@ -22,11 +26,13 @@
             v-model="configLocal.flow.result"
             :flow="configLocal.flow?.uuid"
             :disabled="!configLocal.flow?.uuid"
+            data-testid="select-flow-result"
           />
 
           <RadioList
             v-model:selectedRadio="configLocal.operation"
             :radios="operations"
+            data-testid="radio-list-operation"
           />
         </template>
       </section>

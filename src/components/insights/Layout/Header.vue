@@ -2,6 +2,7 @@
   <header
     v-if="currentDashboard"
     class="insights-layout-header"
+    data-testid="insights-layout-header"
   >
     <UnnnicBreadcrumb
       v-if="!isExpansiveMode"
@@ -13,25 +14,38 @@
     <section
       v-if="!isExpansiveMode"
       class="insights-layout-header__content"
+      data-testid="insights-layout-header-content"
     >
-      <section v-if="isExpansiveMode"><h1>hi</h1></section>
       <HeaderSelectDashboard v-if="!isExpansiveMode" />
 
       <section
         v-if="!isExpansiveMode"
         class="content__actions"
       >
-        <HeaderTagLive v-if="showTagLive" />
-        <InsightsLayoutHeaderFilters v-if="currentDashboardFilters.length" />
+        <HeaderTagLive
+          v-if="showTagLive"
+          data-testid="insights-layout-header-tag-live"
+        />
+        <InsightsLayoutHeaderFilters
+          v-if="currentDashboardFilters.length"
+          data-testid="insights-layout-header-filters"
+        />
         <HeaderDashboardSettings />
-        <HeaderGenerateInsightButton v-if="isRenderInsightButton" />
+        <HeaderGenerateInsightButton
+          v-if="isRenderInsightButton"
+          data-testid="insights-layout-header-generate-insight-button"
+        />
       </section>
     </section>
     <section
       v-if="isExpansiveMode"
       class="insights-layout-header__expansive"
+      data-testid="insights-layout-header-expansive"
     >
-      <p class="insights-layout-header__expansive-title">
+      <p
+        class="insights-layout-header__expansive-title"
+        data-testid="insights-layout-header-expansive-title"
+      >
         {{ $t('human_service_dashboard.all_agents') }}
       </p>
       <UnnnicButtonIcon

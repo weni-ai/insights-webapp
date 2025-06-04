@@ -219,7 +219,7 @@ export default {
           const {
             ctx,
             data: { datasets },
-            chartArea: { width },
+            chartArea: { width, left: chartLeftMargin },
           } = chart;
 
           ctx.save();
@@ -231,7 +231,9 @@ export default {
             ctx.font = 'bold 16px Lato';
             ctx.fillStyle = '#4E5666';
 
-            const startTextPosition = width + 100;
+            // chartLeftMargin is the margin between the chart and the left edge of the chart area (labels space)
+            // 4px is the margin between the chart and the text
+            const startTextPosition = width + chartLeftMargin + 4;
 
             ctx.fillText(
               `${data[index]} ${plugins.datalabelsSuffix}`,

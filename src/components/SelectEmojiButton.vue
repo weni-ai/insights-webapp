@@ -4,10 +4,12 @@
       'select-emoji-button',
       { 'select-emoji-button--selected': !!modelValue },
     ]"
+    data-testid="select-emoji-button"
     @click.stop="handleEmoji"
   >
     <section
       v-if="modelValue"
+      data-testid="select-emoji-button-selected-emoji"
       class="select-emoji-button__selected-emoji"
     >
       {{ selectedEmoji }}
@@ -21,6 +23,7 @@
 
     <UnnnicEmojiPicker
       v-show="isEmojiPickerOpen"
+      data-testid="unnnic-emoji-picker"
       returnName
       :position="pickerPosition"
       @emoji-selected="handleInput"

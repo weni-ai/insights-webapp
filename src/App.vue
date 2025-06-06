@@ -4,18 +4,24 @@
     :class="`app-insights-${!sharedStore ? 'dev' : 'prod'}`"
   >
     <WelcomeOnboardingModal
+      data-testid="welcome-onboarding-modal"
       :showModal="showOnboardingModal"
       @close="showOnboardingModal = false"
       @start-onboarding="handlerStartOnboarding"
     />
     <CompleteOnboardingModal
+      data-testid="complete-onboarding-modal"
       :showModal="showCompleteOnboardingModal"
       @finish-onboarding="setShowCompleteOnboardingModal(false)"
     />
-    <DashboardOnboarding v-if="showCreateDashboardTour" />
+    <DashboardOnboarding
+      v-if="showCreateDashboardTour"
+      data-testid="dashboard-onboarding"
+    />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
+      data-testid="loading-container-dashboards"
     >
       <img
         src="./assets/images/weni-loading.svg"
@@ -25,12 +31,14 @@
     <InsightsLayout
       v-else-if="dashboards.length"
       ref="insights-layout"
+      data-testid="insights-layout"
     >
       <section
         v-if="isLoadingCurrentDashboardFilters"
         class="loading-container"
+        data-testid="loading-container-current-dashboard-filters"
       >
-        <IconLoading />
+        <IconLoading data-testid="icon-loading" />
       </section>
       <RouterView v-else />
     </InsightsLayout>

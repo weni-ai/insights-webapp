@@ -2,6 +2,7 @@
   <component
     :is="currentComponent"
     v-bind="widgetProps"
+    :data-testid="`dynamic-graph-${widget.type}`"
     v-on="widgetEvents"
   />
 </template>

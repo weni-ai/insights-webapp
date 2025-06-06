@@ -60,7 +60,6 @@ const isLoading = computed(() => {
 });
 
 const getWidgetCategory = (widgetType) => {
-  console.log('widgetType', widgetType);
   const graphTypes = ['graph_column', 'graph_bar', 'graph_funnel'];
   const cardTypes = [
     'card',

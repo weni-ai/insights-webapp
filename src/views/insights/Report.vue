@@ -31,6 +31,7 @@ export default {
 
   components: {
     DynamicWidget: defineAsyncComponent(
+      /* istanbul ignore next */
       () => import('@/components/insights/widgets/DynamicWidget.vue'),
     ),
     IconLoading,

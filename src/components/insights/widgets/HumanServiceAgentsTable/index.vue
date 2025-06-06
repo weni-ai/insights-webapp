@@ -43,7 +43,6 @@
 
 <script>
 import { markRaw } from 'vue';
-import { intervalToDuration } from 'date-fns';
 
 import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
 
@@ -210,12 +209,14 @@ export default {
     formatSecondsToTime(seconds) {
       if (!seconds) return '00:00:00';
 
-      const duration = intervalToDuration({ start: 0, end: seconds * 1000 });
+      const totalSeconds = Math.floor(seconds);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const remainingSeconds = totalSeconds % 60;
+
       const zeroPad = (num) => String(num).padStart(2, '0');
 
-      const totalHours = duration.days * 24 + duration.hours;
-
-      return `${zeroPad(totalHours || 0)}:${zeroPad(duration.minutes || 0)}:${zeroPad(duration.seconds || 0)}`;
+      return `${zeroPad(hours)}:${zeroPad(minutes)}:${zeroPad(remainingSeconds)}`;
     },
 
     sortHeadersByVisibleColumns(headers, visibleColumns) {

@@ -208,7 +208,7 @@ export default {
         dashboardName: this.dashboardForm.name,
         currencyType: this.dashboardForm.currency[0].value,
       })
-        .then((response) => {
+        ?.then((response) => {
           let updatedDashboard;
           const dashboards = this.dashboards.map((dash) => {
             if (dash.uuid === this.dashboard.uuid) {

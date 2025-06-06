@@ -20,32 +20,50 @@ const routes = [
   },
 ];
 
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-});
+let currentRouterInstance = null;
 
-router.beforeEach((to, from, next) => {
-  const nextPath = to.query.next;
+export function createInsightsRouter(routerBase = '/') {
+  const router = createRouter({
+    history: createWebHistory(routerBase),
+    routes,
+  });
 
-  if (nextPath)
-    next({ path: nextPath, query: { ...to.query, next: undefined } });
-  else next();
-});
+  router.beforeEach((to, from, next) => {
+    const nextPath = to.query.next;
 
-router.afterEach((router) => {
-  delete router.query.next;
-  delete router.query.projectUuid;
-  window.parent.postMessage(
-    {
-      event: 'changePathname',
-      pathname: window.location.pathname,
-      query: router.query,
+    if (nextPath)
+      next({ path: nextPath, query: { ...to.query, next: undefined } });
+    else next();
+  });
+
+  router.afterEach((router) => {
+    delete router.query.next;
+    delete router.query.projectUuid;
+    window.dispatchEvent(
+      new CustomEvent('changePathname', {
+        detail: {
+          pathname: window.location.pathname,
+          query: router.query,
+        },
+      }),
+    );
+  });
+
+  if (!currentRouterInstance) {
+    currentRouterInstance = router;
+  }
+
+  return router;
+}
+
+const routerProxy = new Proxy(
+  {},
+  {
+    get(_, prop) {
+      return currentRouterInstance?.[prop];
     },
-    '*',
-  );
-});
+  },
+);
 
-export { routes };
-
-export default router;
+export { routes, createInsightsRouter as createRouter };
+export default routerProxy;

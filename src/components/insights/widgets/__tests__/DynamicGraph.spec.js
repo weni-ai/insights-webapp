@@ -29,7 +29,6 @@ afterAll(() => {
   vi.restoreAllMocks();
 });
 
-// Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key) => key,
@@ -274,7 +273,7 @@ describe('DynamicGraph', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).toHaveBeenCalledWith({
           name: 'report',
@@ -296,7 +295,7 @@ describe('DynamicGraph', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(window.open).toHaveBeenCalledWith(
           'https://example.com',
@@ -309,7 +308,7 @@ describe('DynamicGraph', () => {
           widget: { type: 'graph_column', uuid: '123', config: {} },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).not.toHaveBeenCalled();
         expect(window.open).not.toHaveBeenCalled();
@@ -325,7 +324,7 @@ describe('DynamicGraph', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).not.toHaveBeenCalled();
         expect(window.open).not.toHaveBeenCalled();

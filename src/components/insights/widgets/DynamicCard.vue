@@ -11,8 +11,8 @@
 import { computed, defineEmits, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useWidgetNavigation } from '@/utils/useWidgetNavigation';
-import { useWidgetFormatting } from '@/utils/useWidgetFormatting';
+import { useWidgetNavigation } from '@/composables/useWidgetNavigation';
+import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 
 import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';

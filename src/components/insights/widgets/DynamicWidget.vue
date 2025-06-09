@@ -15,7 +15,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
 
-import { useWidgetTypes } from '@/utils/useWidgetTypes';
+import { useWidgetTypes } from '@/composables/useWidgetTypes';
 
 import DynamicCard from './DynamicCard.vue';
 import DynamicGraph from './DynamicGraph.vue';

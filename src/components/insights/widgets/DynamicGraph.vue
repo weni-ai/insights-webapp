@@ -11,7 +11,7 @@
 import { computed, defineEmits, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useWidgetNavigation } from '@/utils/useWidgetNavigation';
+import { useWidgetNavigation } from '@/composables/useWidgetNavigation';
 
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '@/components/insights/charts/HorizontalBarChart.vue';

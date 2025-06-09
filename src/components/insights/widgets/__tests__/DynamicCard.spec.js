@@ -448,7 +448,7 @@ describe('DynamicCard', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).toHaveBeenCalledWith({
           name: 'report',
@@ -470,7 +470,7 @@ describe('DynamicCard', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(window.open).toHaveBeenCalledWith(
           'https://example.com',
@@ -483,7 +483,7 @@ describe('DynamicCard', () => {
           widget: { type: 'card', uuid: '123', config: {} },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).not.toHaveBeenCalled();
         expect(window.open).not.toHaveBeenCalled();
@@ -499,7 +499,7 @@ describe('DynamicCard', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).not.toHaveBeenCalled();
         expect(window.open).not.toHaveBeenCalled();

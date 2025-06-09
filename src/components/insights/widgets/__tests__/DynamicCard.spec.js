@@ -31,7 +31,6 @@ afterAll(() => {
   vi.restoreAllMocks();
 });
 
-// Mock external dependencies
 vi.mock('@/utils/time', () => ({
   formatSecondsToHumanString: vi.fn((seconds) => `${seconds} seconds`),
 }));
@@ -44,7 +43,6 @@ vi.mock('@/utils/currency', () => ({
   },
 }));
 
-// Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key) => key,
@@ -542,7 +540,6 @@ describe('DynamicCard', () => {
         widget: { type: 'card', config: {}, uuid: '123' },
       });
 
-      // Call the openConfig event handler directly
       const events = wrapper.vm.widgetEvents;
       events.openConfig();
       await nextTick();

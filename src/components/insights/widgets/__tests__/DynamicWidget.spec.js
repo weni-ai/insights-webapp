@@ -1,14 +1,6 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  it,
-  vi,
-  beforeAll,
-  afterAll,
-} from 'vitest';
+import { beforeEach, describe, it, vi, beforeAll, afterAll } from 'vitest';
 import { shallowMount, config, flushPromises } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
@@ -20,14 +12,12 @@ import DynamicGraph from '../DynamicGraph.vue';
 import DynamicTable from '../DynamicTable.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
-import { useReports } from '@/store/modules/reports';
 
 beforeAll(() => {
   config.global.plugins = config.global.plugins.filter(
     (plugin) => plugin !== i18n,
   );
 
-  // Mock timers globally
   vi.stubGlobal('setInterval', vi.fn());
   vi.stubGlobal('clearInterval', vi.fn());
 });
@@ -395,18 +385,15 @@ describe('DynamicWidget', () => {
     });
 
     it('should handle general requests through requestWidgetData', async () => {
-      // Test behavior when component is configured
       wrapper = createWrapper({
         widget: { type: 'card', config: { test: 'value' } },
       });
 
-      // Test that general requests don't cause errors
       const requestParams = { offset: 0, limit: 10 };
       await expect(
         wrapper.vm.handleRequestData(requestParams),
       ).resolves.not.toThrow();
 
-      // Check that loading states are properly managed
       expect(wrapper.vm.isRequestingData).toBe(false);
       expect(wrapper.vm.hasError).toBe(false);
     });
@@ -424,10 +411,8 @@ describe('DynamicWidget', () => {
         widget: { type: 'card', config: { test: 'value' } },
       });
 
-      // Test that the component handles report route
       expect(wrapper.vm.$route.name).toBe('report');
 
-      // Test that requestWidgetData doesn't throw errors
       await expect(
         wrapper.vm.requestWidgetData({ offset: 0, limit: 10 }),
       ).resolves.not.toThrow();
@@ -441,10 +426,8 @@ describe('DynamicWidget', () => {
         widget: { type: 'card', config: { test: 'value' } },
       });
 
-      // Test that the component handles dashboard route
       expect(wrapper.vm.$route.name).toBe('dashboard');
 
-      // Test that requestWidgetData doesn't throw errors
       await expect(wrapper.vm.requestWidgetData()).resolves.not.toThrow();
     });
 
@@ -453,12 +436,10 @@ describe('DynamicWidget', () => {
         widget: { type: 'card', config: { test: 'value' } },
       });
 
-      // Test that silent requests work without errors
       await expect(
         wrapper.vm.requestWidgetData({ silence: true }),
       ).resolves.not.toThrow();
 
-      // Check that loading state is properly managed
       expect(wrapper.vm.isRequestingData).toBe(false);
     });
 
@@ -471,7 +452,6 @@ describe('DynamicWidget', () => {
         widget: { type: 'card', config: { test: 'value' } },
       });
 
-      // Mock a failing request
       const widgetsStore = useWidgets();
       vi.spyOn(
         widgetsStore,
@@ -480,7 +460,6 @@ describe('DynamicWidget', () => {
 
       await wrapper.vm.requestWidgetData();
 
-      // Check that errors are handled
       expect(wrapper.vm.isRequestingData).toBe(false);
       expect(consoleErrorSpy).toHaveBeenCalled();
 
@@ -497,7 +476,6 @@ describe('DynamicWidget', () => {
         widget: { type: 'card', config: { test: 'value' } },
       });
 
-      // Change route query
       await router.push({
         name: 'dashboard',
         params: { dashboardUuid: '1' },
@@ -505,7 +483,6 @@ describe('DynamicWidget', () => {
       });
       await flushPromises();
 
-      // Test that component responds to route changes without errors
       expect(wrapper.vm.$route.query.filter).toBe('new');
     });
 
@@ -527,7 +504,6 @@ describe('DynamicWidget', () => {
 
         wrapper = createWrapper({ widget: { type, config: {} } });
 
-        // Change route query
         await router.push({
           name: 'dashboard',
           params: { dashboardUuid: '1' },
@@ -535,7 +511,6 @@ describe('DynamicWidget', () => {
         });
         await flushPromises();
 
-        // Test that component handles route changes for excluded types
         expect(wrapper.vm.$route.query.filter).toBe(type);
       }
     });
@@ -601,7 +576,6 @@ describe('DynamicWidget', () => {
 
       const dashboardsStore = useDashboards();
 
-      // Remove date filtering
       dashboardsStore.appliedFilters = {};
       await nextTick();
 

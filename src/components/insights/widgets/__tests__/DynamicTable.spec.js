@@ -182,7 +182,7 @@ describe('DynamicTable', () => {
         const props = wrapper.vm.widgetProps;
         expect(props.headerTitle).toBe('Custom Table Name');
         expect(props.items).toEqual(mockData.results);
-        expect(props.headers).toHaveLength(3); // status + 2 custom fields
+        expect(props.headers).toHaveLength(3);
         expect(props.headers[0]).toEqual({
           name: 'status',
           value: 'status',
@@ -491,7 +491,7 @@ describe('DynamicTable', () => {
 
       const props = wrapper.vm.widgetProps;
       expect(props.items).toEqual([]);
-      expect(props.headers).toHaveLength(1); // Only status header
+      expect(props.headers).toHaveLength(1);
     });
 
     it('should handle missing fields in config', () => {
@@ -506,7 +506,7 @@ describe('DynamicTable', () => {
       });
 
       const props = wrapper.vm.widgetProps;
-      expect(props.headers).toHaveLength(1); // Only status header
+      expect(props.headers).toHaveLength(1);
       expect(props.headers[0].name).toBe('status');
     });
 
@@ -533,7 +533,6 @@ describe('DynamicTable', () => {
         },
       };
 
-      // Test with created_on filter
       wrapper = createWrapper({
         widget: {
           type: 'table_dynamic_by_filter',
@@ -547,7 +546,6 @@ describe('DynamicTable', () => {
       expect(props.headerTitle).toBe('Date Filtered Table');
       expect(props.headers[1].name).toBe('Date');
 
-      // Test without created_on filter
       wrapper = createWrapper({
         widget: {
           type: 'table_dynamic_by_filter',
@@ -566,7 +564,6 @@ describe('DynamicTable', () => {
       const mockConfig = {
         default: {
           name_overwrite: 'Partial Config',
-          // fields missing
         },
       };
 
@@ -580,7 +577,7 @@ describe('DynamicTable', () => {
 
       const props = wrapper.vm.widgetProps;
       expect(props.headerTitle).toBe('Partial Config');
-      expect(props.headers).toHaveLength(1); // Only status header
+      expect(props.headers).toHaveLength(1);
     });
   });
 

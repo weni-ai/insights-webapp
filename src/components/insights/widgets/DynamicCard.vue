@@ -72,8 +72,6 @@ const currentComponent = computed(() => {
   return componentMap[props.widget.type] || null;
 });
 
-// Functions are now provided by useWidgetFormatting composable
-
 const widgetVtexData = computed(() => {
   if (props.widget.type === 'vtex_order' && props.widget.data) {
     return formatVtexData(props.widget.data);
@@ -104,8 +102,6 @@ const widgetVtexConversionsData = computed(() => {
   }
   return {};
 });
-
-// redirectToReport function is now provided by useWidgetNavigation composable
 
 const widgetProps = computed(() => {
   const { isLoading } = props;

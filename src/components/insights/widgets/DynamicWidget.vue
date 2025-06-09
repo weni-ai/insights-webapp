@@ -63,8 +63,6 @@ const isLoading = computed(() => {
   );
 });
 
-// getWidgetCategory function is now provided by useWidgetTypes composable
-
 const currentComponent = computed(() => {
   const category = getWidgetCategory(props.widget.type);
 

@@ -29,7 +29,6 @@ afterAll(() => {
   vi.restoreAllMocks();
 });
 
-// Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key) => key,

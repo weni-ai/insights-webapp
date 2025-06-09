@@ -118,8 +118,6 @@ const widgetProps = computed(() => {
   return { ...defaultProps, ...mappingProps[type] };
 });
 
-// redirectToReport function is now provided by useWidgetNavigation composable
-
 const widgetEvents = computed(() => {
   const { type, uuid, config } = props.widget;
 

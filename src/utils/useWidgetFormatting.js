@@ -4,6 +4,11 @@ import { storeToRefs } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 import { formatSecondsToHumanString } from '@/utils/time';
 import { currencySymbols } from '@/utils/currency';
+import {
+  formatCurrency,
+  formatPercentageFixed,
+  formatNumber,
+} from '@/utils/numbers';
 
 /**
  * Composable for widget data formatting
@@ -20,28 +25,26 @@ export function useWidgetFormatting() {
    * @param {string} localeValue - The locale string
    * @returns {string} - Formatted currency string
    */
-  const formatCurrency = (value, localeValue = locale.value || 'en-US') => {
+  const formatCurrencyValue = (
+    value,
+    localeValue = locale.value || 'en-US',
+  ) => {
     const symbol =
       currencySymbols[currentDashboard.value?.config?.currency_type];
-    return `${symbol} ${Number(value || 0).toLocaleString(localeValue, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    })}`;
+    return formatCurrency(value, symbol, localeValue);
   };
 
   /**
-   * Format percentage value
+   * Format percentage value with fixed 2 decimal places
    * @param {number} value - The percentage value
    * @param {string} localeValue - The locale string
    * @returns {string} - Formatted percentage string
    */
-  const formatPercentage = (value, localeValue = locale.value || 'en-US') => {
-    return (
-      (value || 0).toLocaleString(localeValue, {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }) + '%'
-    );
+  const formatPercentageValue = (
+    value,
+    localeValue = locale.value || 'en-US',
+  ) => {
+    return formatPercentageFixed(value, localeValue);
   };
 
   /**
@@ -50,13 +53,8 @@ export function useWidgetFormatting() {
    * @param {string} localeValue - The locale string
    * @returns {string} - Formatted number string
    */
-  const formatNumber = (value, localeValue = locale.value || 'en-US') => {
-    // Handle special values
-    if (value === Infinity) return '∞';
-    if (value === -Infinity) return '-∞';
-    if (Number.isNaN(value)) return 'NaN';
-
-    return (value || 0).toLocaleString(localeValue);
+  const formatNumberValue = (value, localeValue = locale.value || 'en-US') => {
+    return formatNumber(value, localeValue);
   };
 
   /**
@@ -72,7 +70,7 @@ export function useWidgetFormatting() {
       config?.data_suffix === '%' ||
       config?.operation === 'percentage'
     ) {
-      return formatPercentage(data?.value);
+      return formatPercentageValue(data?.value);
     }
 
     if (config?.data_type === 'sec') {
@@ -80,10 +78,10 @@ export function useWidgetFormatting() {
     }
 
     if (config?.currency) {
-      return formatCurrency(data?.value);
+      return formatCurrencyValue(data?.value);
     }
 
-    return formatNumber(data?.value);
+    return formatNumberValue(data?.value);
   };
 
   /**
@@ -132,11 +130,11 @@ export function useWidgetFormatting() {
     const existTotalValue = total_value !== '';
     const existAverageTicketValue = average_ticket !== '';
 
-    const numbersNormalization = (value) => formatCurrency(value);
+    const numbersNormalization = (value) => formatCurrencyValue(value);
 
     return {
       ...vtexData,
-      orders: existOrders ? formatNumber(orders) : orders,
+      orders: existOrders ? formatNumberValue(orders) : orders,
       total_value: existTotalValue
         ? numbersNormalization(total_value)
         : total_value,
@@ -147,9 +145,9 @@ export function useWidgetFormatting() {
   };
 
   return {
-    formatCurrency,
-    formatPercentage,
-    formatNumber,
+    formatCurrency: formatCurrencyValue,
+    formatPercentage: formatPercentageValue,
+    formatNumber: formatNumberValue,
     getWidgetFormattedData,
     getHoverTooltipData,
     formatVtexData,

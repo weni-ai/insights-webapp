@@ -5,6 +5,30 @@ import { setActivePinia } from 'pinia';
 import { useWidgetFormatting } from '../useWidgetFormatting';
 import { useDashboards } from '@/store/modules/dashboards';
 
+// Mock the numbers utility
+vi.mock('@/utils/numbers', () => ({
+  formatCurrency: vi.fn(
+    (value, symbol, locale) =>
+      `${symbol} ${(value || 0).toLocaleString(locale || 'en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}`,
+  ),
+  formatPercentageFixed: vi.fn(
+    (value, locale) =>
+      `${(value || 0).toLocaleString(locale || 'en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })}%`,
+  ),
+  formatNumber: vi.fn((value, locale) => {
+    if (value === Infinity) return '∞';
+    if (value === -Infinity) return '-∞';
+    if (Number.isNaN(value)) return 'NaN';
+    return (value || 0).toLocaleString(locale || 'en-US');
+  }),
+}));
+
 // Mock vue-i18n
 const mockT = vi.fn((key) => key);
 const mockLocale = { value: 'en-US' };

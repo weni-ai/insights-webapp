@@ -67,7 +67,6 @@ export default {
 
 <script setup>
 import { onMounted, ref, computed, watch, onUnmounted } from 'vue';
-import { formatToPercent } from '@/utils/number';
 
 import { useLocalStorage } from '@vueuse/core';
 
@@ -87,7 +86,7 @@ import moment from 'moment';
 
 import Unnnic from '@weni/unnnic-system';
 
-import { formatValue } from '@/utils/numbers';
+import { formatValue, formatToPercent } from '@/utils/numbers';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';

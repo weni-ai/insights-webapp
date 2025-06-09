@@ -1,3 +1,5 @@
+import i18n from '@/utils/plugins/i18n';
+
 /**
  * Formats a number value with locale-specific formatting.
  * For integers, uses thousand separators.
@@ -113,10 +115,7 @@ export function getPercentageOf(
  * @returns A formatted percentage string
  */
 export function formatToPercent(val: number, precision: number = 2): string {
-  // Note: This should ideally use i18n context, but we'll use en-US as default
-  const locale = 'en-US';
-
-  const formatedPercent = val.toLocaleString(locale, {
+  const formatedPercent = val.toLocaleString(i18n.global.locale, {
     minimumFractionDigits: precision,
     maximumFractionDigits: precision,
   });

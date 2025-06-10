@@ -133,40 +133,6 @@ export default {
     }
   },
 
-  handlerSetIsCommerce(isCommerce) {
-    this.setIsCommerce(isCommerce);
-  },
-
-  listenConnect() {
-    window.parent.postMessage({ event: 'getLanguage' }, '*');
-    window.parent.postMessage({ event: 'getIsCommerce' }, '*');
-
-    window.addEventListener('message', (ev) => {
-      const message = ev.data;
-      const { handler, dataKey } = this.getEventHandler(message?.event);
-      if (handler) handler(message?.[dataKey]);
-    });
-  },
-
-  getEventHandler(eventName) {
-    const handlerFunctionMapper = {
-      setLanguage: this.handlerSetLanguage,
-      setProject: this.handlerSetProject,
-      setIsCommerce: this.handlerSetIsCommerce,
-    };
-
-    const handlerParamsMapper = {
-      setLanguage: 'language',
-      setProject: 'projectUuid',
-      setIsCommerce: 'isCommerce',
-    };
-
-    return {
-      handler: handlerFunctionMapper[eventName],
-      dataKey: handlerParamsMapper[eventName],
-    };
-  },
-
   methods: {
     ...mapActions(useDashboards, [
       'getDashboards',
@@ -219,6 +185,40 @@ export default {
     handlerSetProject(projectUuid) {
       localStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
+    },
+
+    handlerSetIsCommerce(isCommerce) {
+      this.setIsCommerce(isCommerce);
+    },
+
+    listenConnect() {
+      window.parent.postMessage({ event: 'getLanguage' }, '*');
+      window.parent.postMessage({ event: 'getIsCommerce' }, '*');
+
+      window.addEventListener('message', (ev) => {
+        const message = ev.data;
+        const { handler, dataKey } = this.getEventHandler(message?.event);
+        if (handler) handler(message?.[dataKey]);
+      });
+    },
+
+    getEventHandler(eventName) {
+      const handlerFunctionMapper = {
+        setLanguage: this.handlerSetLanguage,
+        setProject: this.handlerSetProject,
+        setIsCommerce: this.handlerSetIsCommerce,
+      };
+
+      const handlerParamsMapper = {
+        setLanguage: 'language',
+        setProject: 'projectUuid',
+        setIsCommerce: 'isCommerce',
+      };
+
+      return {
+        handler: handlerFunctionMapper[eventName],
+        dataKey: handlerParamsMapper[eventName],
+      };
     },
 
     handlerShowOnboardingModal() {

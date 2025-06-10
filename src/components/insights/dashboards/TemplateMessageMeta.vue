@@ -2,6 +2,7 @@
   <section
     v-if="initialLoading"
     class="template-message-meta-dashboard__loading"
+    data-testid="template-message-meta-dashboard-loading"
   >
     <img
       :src="weniLoading"

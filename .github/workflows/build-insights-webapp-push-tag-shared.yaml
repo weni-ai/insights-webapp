@@ -10,11 +10,20 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     outputs:
       image_latest: ${{ steps.setup.outputs.image_latest }}
       image_tag_latest: ${{ steps.setup.outputs.image_tag_latest }}
       extra_build_args: ${{ steps.extra_build_args.outputs.BUILD_ENV_ARGS}}
     steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ASSUME_ROLE }}
+          aws-region: ${{ secrets.REGION }}
+
       - name: Set outputs
         id: setup
         run: |

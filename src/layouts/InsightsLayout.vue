@@ -50,9 +50,9 @@ export default {
   display: flex;
   flex-direction: column;
 
-  height: 100vh;
+  height: 100%;
   max-height: 100vh;
-  width: 100vw;
+  width: 100%;
   max-width: 100vw;
 
   overflow: hidden;

@@ -10,10 +10,8 @@
 <script setup>
 import { computed, defineEmits, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
 
-import { useDashboards } from '@/store/modules/dashboards';
+import { useWidgetNavigation } from '@/composables/useWidgetNavigation';
 
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '@/components/insights/charts/HorizontalBarChart.vue';
@@ -45,11 +43,8 @@ const props = defineProps({
 const emits = defineEmits(['open-config', 'clickData', 'request-data']);
 
 const { t } = useI18n();
-const router = useRouter();
 
-const dashboardsStore = useDashboards();
-
-const { currentDashboard } = storeToRefs(dashboardsStore);
+const { redirectToReport } = useWidgetNavigation();
 
 const currentComponent = computed(() => {
   const componentMap = {
@@ -123,41 +118,12 @@ const widgetProps = computed(() => {
   return { ...defaultProps, ...mappingProps[type] };
 });
 
-const redirectToReport = () => {
-  const { uuid, report } = props.widget;
-  if (!report) {
-    return;
-  }
-
-  switch (report.type) {
-    case 'internal':
-      router.push({
-        name: 'report',
-        params: {
-          dashboardUuid: currentDashboard.value.uuid,
-          widgetUuid: uuid,
-        },
-        query: {
-          ...router.currentRoute.value.query,
-        },
-      });
-      break;
-
-    case 'external':
-      window.open(report.url, '_blank');
-      break;
-
-    default:
-      break;
-  }
-};
-
 const widgetEvents = computed(() => {
   const { type, uuid, config } = props.widget;
 
   const mappingEvents = {
     graph_column: {
-      seeMore: () => redirectToReport(),
+      seeMore: () => redirectToReport(props.widget),
     },
     graph_bar: {
       clickData: (eventData) =>

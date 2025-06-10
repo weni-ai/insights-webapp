@@ -15,6 +15,8 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
 
+import { useWidgetTypes } from '@/composables/useWidgetTypes';
+
 import DynamicCard from './DynamicCard.vue';
 import DynamicGraph from './DynamicGraph.vue';
 import DynamicTable from './DynamicTable.vue';
@@ -35,6 +37,8 @@ const widgetsStore = useWidgets();
 const reportsStore = useReports();
 
 const { appliedFilters, currentDashboard } = storeToRefs(dashboardsStore);
+
+const { getWidgetCategory } = useWidgetTypes();
 
 const interval = ref(null);
 const isRequestingData = ref(false);
@@ -58,23 +62,6 @@ const isLoading = computed(() => {
     isConfigured.value && (!('data' in props.widget) || isRequestingData.value)
   );
 });
-
-const getWidgetCategory = (widgetType) => {
-  const graphTypes = ['graph_column', 'graph_bar', 'graph_funnel'];
-  const cardTypes = [
-    'card',
-    'empty_column',
-    'vtex_order',
-    'vtex_conversions',
-    'recurrence',
-  ];
-  const tableTypes = ['table_dynamic_by_filter', 'table_group'];
-
-  if (graphTypes.includes(widgetType)) return 'graph';
-  if (cardTypes.includes(widgetType)) return 'card';
-  if (tableTypes.includes(widgetType)) return 'table';
-  return null;
-};
 
 const currentComponent = computed(() => {
   const category = getWidgetCategory(props.widget.type);

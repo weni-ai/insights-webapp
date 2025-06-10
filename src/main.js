@@ -26,46 +26,51 @@ const { useSharedStore } = await safeImport(
 
 const sharedStore = useSharedStore?.();
 
+const isRemoteModuleFederation =
+  `${window.location.origin}/` !== env('PUBLIC_PATH_URL');
+
 export default async function mountInsightsApp({
   containerId = 'app',
   routerBase = '/',
 } = {}) {
   let appRef = null;
 
-  await getJwtToken().then(() => {
-    const app = createApp(App);
-    const pinia = createPinia();
+  if (!isRemoteModuleFederation) {
+    await getJwtToken();
+  }
 
-    const router = createRouter(routerBase);
+  const app = createApp(App);
+  const pinia = createPinia();
 
-    app.use(pinia);
-    app.use(router);
-    app.use(i18n);
-    app.use(Unnnic);
+  const router = createRouter(routerBase);
 
-    if (env('SENTRY_DSN')) {
-      Sentry.init({
-        app,
-        dsn: env('SENTRY_DSN'),
-        integrations: [
-          Sentry.browserTracingIntegration({ router }),
-          Sentry.replayIntegration(),
-        ],
-        tracesSampleRate: 1.0,
-        replaysSessionSampleRate: 0.1,
-        replaysOnErrorSampleRate: 1.0,
-        environment: env('ENVIRONMENT'),
-      });
-    }
+  app.use(pinia);
+  app.use(router);
+  app.use(i18n);
+  app.use(Unnnic);
 
-    app.mount(`#${containerId}`);
-    appRef = app;
-  });
+  if (env('SENTRY_DSN')) {
+    Sentry.init({
+      app,
+      dsn: env('SENTRY_DSN'),
+      integrations: [
+        Sentry.browserTracingIntegration({ router }),
+        Sentry.replayIntegration(),
+      ],
+      tracesSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      environment: env('ENVIRONMENT'),
+    });
+  }
+
+  app.mount(`#${containerId}`);
+  appRef = app;
 
   return appRef;
 }
 
-if (sharedStore) {
+if (sharedStore && isRemoteModuleFederation) {
   localStorage.setItem('token', sharedStore.auth.token);
   localStorage.setItem('projectUuid', sharedStore.current.project.uuid);
 } else {

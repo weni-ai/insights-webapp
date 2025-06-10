@@ -10,13 +10,9 @@
 <script setup>
 import { computed, defineEmits, defineProps } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
 
-import { useDashboards } from '@/store/modules/dashboards';
-
-import { formatSecondsToHumanString } from '@/utils/time';
-import { currencySymbols } from '@/utils/currency';
+import { useWidgetNavigation } from '@/composables/useWidgetNavigation';
+import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 
 import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
 import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
@@ -58,12 +54,11 @@ const emits = defineEmits([
   'redirect-to-expansive',
 ]);
 
-const { t, locale } = useI18n();
-const router = useRouter();
+const { t } = useI18n();
 
-const dashboardsStore = useDashboards();
-
-const { currentDashboard } = storeToRefs(dashboardsStore);
+const { redirectToReport } = useWidgetNavigation();
+const { getWidgetFormattedData, getHoverTooltipData, formatVtexData } =
+  useWidgetFormatting();
 
 const currentComponent = computed(() => {
   const componentMap = {
@@ -77,83 +72,9 @@ const currentComponent = computed(() => {
   return componentMap[props.widget.type] || null;
 });
 
-const getWidgetFormattedData = (widget) => {
-  const { config, data } = widget;
-
-  if (
-    config?.operation === 'recurrence' ||
-    config?.data_suffix === '%' ||
-    config?.operation === 'percentage'
-  ) {
-    return (
-      (data?.value || 0).toLocaleString(locale.value || 'en-US', {
-        minimumFractionDigits: 2,
-      }) + '%'
-    );
-  }
-  if (config?.data_type === 'sec') {
-    return formatSecondsToHumanString(Math.round(data?.value));
-  }
-  if (config?.currency) {
-    return `${currencySymbols[currentDashboard.value.config?.currency_type]} ${Number(data?.value || 0).toLocaleString(locale.value || 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  }
-  return (data?.value || 0).toLocaleString(locale.value || 'en-US');
-};
-
-const getHoverTooltipData = (widget) => {
-  const isHumanServiceDashboard =
-    currentDashboard.value.name === 'human_service_dashboard.title';
-
-  if (isHumanServiceDashboard && widget.type === 'card') {
-    const defaultTranslations = (key) => `human_service_dashboard.${key}`;
-
-    const getTooltipTranslations = {
-      in_progress: t('human_service_dashboard.tooltips.in_progress'),
-      [defaultTranslations('response_time')]: t(
-        'human_service_dashboard.tooltips.response_time',
-      ),
-      [defaultTranslations('interaction_time')]: t(
-        'human_service_dashboard.tooltips.interaction_time',
-      ),
-      [defaultTranslations('waiting_time')]: t(
-        'human_service_dashboard.tooltips.waiting_time',
-      ),
-      [defaultTranslations('awaiting_service')]: t(
-        'human_service_dashboard.tooltips.awaiting_service',
-      ),
-      closeds: t('human_service_dashboard.tooltips.closeds'),
-    };
-
-    return getTooltipTranslations[widget.name] || '';
-  }
-
-  return '';
-};
-
 const widgetVtexData = computed(() => {
   if (props.widget.type === 'vtex_order' && props.widget.data) {
-    const { total_value, average_ticket, orders } = props.widget.data;
-    const existOrders = orders !== '';
-    const existTotalValue = total_value !== '';
-    const existAverageTicketValue = average_ticket !== '';
-    const currentSymbol =
-      currencySymbols[currentDashboard.value.config?.currency_type];
-
-    const numbersNormalization = (value) =>
-      `${currentSymbol} ${Number(value || 0).toLocaleString(locale.value || 'en-US', { minimumFractionDigits: 2 })}`;
-
-    return {
-      ...props.widget.data,
-      orders: existOrders
-        ? (orders || 0).toLocaleString(locale.value || 'en-US')
-        : orders,
-      total_value: existTotalValue
-        ? numbersNormalization(total_value)
-        : total_value,
-      average_ticket: existAverageTicketValue
-        ? numbersNormalization(average_ticket)
-        : average_ticket,
-    };
+    return formatVtexData(props.widget.data);
   }
 
   return null;
@@ -181,35 +102,6 @@ const widgetVtexConversionsData = computed(() => {
   }
   return {};
 });
-
-const redirectToReport = () => {
-  const { uuid, report } = props.widget;
-  if (!report) {
-    return;
-  }
-
-  switch (report.type) {
-    case 'internal':
-      router.push({
-        name: 'report',
-        params: {
-          dashboardUuid: currentDashboard.value.uuid,
-          widgetUuid: uuid,
-        },
-        query: {
-          ...router.currentRoute.value.query,
-        },
-      });
-      break;
-
-    case 'external':
-      window.open(report.url, '_blank');
-      break;
-
-    default:
-      break;
-  }
-};
 
 const widgetProps = computed(() => {
   const { isLoading } = props;
@@ -258,7 +150,7 @@ const widgetEvents = computed(() => {
 
   const mappingEvents = {
     card: {
-      click: () => redirectToReport(),
+      click: () => redirectToReport(props.widget),
       openConfig: () => emits('open-config'),
     },
     empty_column: {
@@ -274,7 +166,7 @@ const widgetEvents = computed(() => {
     },
     recurrence: {
       openConfig: () => emits('open-config'),
-      seeMore: () => redirectToReport(),
+      seeMore: () => redirectToReport(props.widget),
       requestData: () => emits('request-data', { type: 'recurrence', uuid }),
       clickData: (eventData) =>
         emits('clickData', {

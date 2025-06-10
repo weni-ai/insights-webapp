@@ -31,7 +31,6 @@ afterAll(() => {
   vi.restoreAllMocks();
 });
 
-// Mock external dependencies
 vi.mock('@/utils/time', () => ({
   formatSecondsToHumanString: vi.fn((seconds) => `${seconds} seconds`),
 }));
@@ -44,7 +43,6 @@ vi.mock('@/utils/currency', () => ({
   },
 }));
 
-// Mock vue-i18n
 vi.mock('vue-i18n', () => ({
   useI18n: () => ({
     t: (key) => key,
@@ -448,7 +446,7 @@ describe('DynamicCard', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).toHaveBeenCalledWith({
           name: 'report',
@@ -470,7 +468,7 @@ describe('DynamicCard', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(window.open).toHaveBeenCalledWith(
           'https://example.com',
@@ -483,7 +481,7 @@ describe('DynamicCard', () => {
           widget: { type: 'card', uuid: '123', config: {} },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).not.toHaveBeenCalled();
         expect(window.open).not.toHaveBeenCalled();
@@ -499,7 +497,7 @@ describe('DynamicCard', () => {
           },
         });
 
-        wrapper.vm.redirectToReport();
+        wrapper.vm.redirectToReport(wrapper.vm.widget);
 
         expect(router.push).not.toHaveBeenCalled();
         expect(window.open).not.toHaveBeenCalled();
@@ -542,7 +540,6 @@ describe('DynamicCard', () => {
         widget: { type: 'card', config: {}, uuid: '123' },
       });
 
-      // Call the openConfig event handler directly
       const events = wrapper.vm.widgetEvents;
       events.openConfig();
       await nextTick();

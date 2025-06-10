@@ -1,9 +1,18 @@
 <template>
-  <article class="insights-card">
-    <p class="insights-card__title">
+  <article
+    data-testid="sugestion-card"
+    class="insights-card"
+  >
+    <p
+      data-testid="sugestion-card-title"
+      class="insights-card__title"
+    >
       <slot name="title"></slot>
     </p>
-    <p class="insights-card__description">
+    <p
+      data-testid="sugestion-card-description"
+      class="insights-card__description"
+    >
       <slot name="description"></slot>
     </p>
   </article>

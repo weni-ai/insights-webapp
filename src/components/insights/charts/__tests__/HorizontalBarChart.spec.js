@@ -151,7 +151,7 @@ describe('HorizontalBarChart', () => {
     const mockChart = {
       ctx: mockCtx,
       data: { datasets: chartData.datasets },
-      chartArea: { width: 300 },
+      chartArea: { width: 300, left: 0 },
       getDatasetMeta: () => ({
         data: [{ y: 50 }, { y: 100 }],
       }),
@@ -165,11 +165,11 @@ describe('HorizontalBarChart', () => {
 
     expect(mockCtx.fillText).toHaveBeenCalledTimes(4);
 
-    expect(mockCtx.fillText).toHaveBeenCalledWith('75 %', 400, 50);
-    expect(mockCtx.fillText).toHaveBeenCalledWith('| 75', 438, 50);
+    expect(mockCtx.fillText).toHaveBeenCalledWith('75 %', 304, 50);
+    expect(mockCtx.fillText).toHaveBeenCalledWith('| 75', 342, 50);
 
-    expect(mockCtx.fillText).toHaveBeenCalledWith('25 %', 400, 100);
-    expect(mockCtx.fillText).toHaveBeenCalledWith('| 25', 438, 100);
+    expect(mockCtx.fillText).toHaveBeenCalledWith('25 %', 304, 100);
+    expect(mockCtx.fillText).toHaveBeenCalledWith('| 25', 342, 100);
   });
 
   it('should draw background rectangles correctly using horizontalBackgroundColorPlugin', async () => {

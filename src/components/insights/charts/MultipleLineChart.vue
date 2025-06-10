@@ -61,7 +61,7 @@ export default {
 import { computed } from 'vue';
 import BaseChart from './BaseChart.vue';
 import { Tooltip } from 'chart.js';
-import { getPercentageOf } from '@/utils/number';
+import { getPercentageOf } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import weniLoading from '@/assets/images/weni-loading.svg';
 

@@ -3,7 +3,7 @@ name: Build Insights-WebApp in Shared (Push Tag)
 on:
   push:
     branches:
-      - CLOUD-2741
+      - CLOUD-2714
 
 jobs:
   setup:

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import env from '@/utils/env';
 import { useConfig } from '@/store/modules/config';
+import '@/utils/pinia-setup';
 import qs from 'qs';
 //import CustomError from './customError'; //TODO: Apply custom error to failed requests
 

@@ -42,46 +42,40 @@ describe('CardRecurrence.vue', () => {
     expect(wrapper.emitted('open-config')).toBeTruthy();
   });
 
-  it('always renders exactly 5 rows', () => {
+  it('renders ProgressChart component when not in error state', () => {
     const wrapper = createWrapper({ data: [{ label: 'Item 1', value: 70 }] });
-    const groups = wrapper.findAll('[data-testid="content-container-group"]');
-    expect(groups).toHaveLength(5);
+    const progressChart = wrapper.findComponent({ name: 'ProgressChart' });
+    expect(progressChart.exists()).toBe(true);
   });
 
-  it('emits clickData event only when clicking row with data', async () => {
+  it('emits clickData event when ProgressChart emits clickData', async () => {
     const testData = [{ label: 'Item 1', value: 70 }];
     const wrapper = createWrapper({ data: testData });
+    const progressChart = wrapper.findComponent({ name: 'ProgressChart' });
 
-    await wrapper
-      .findAll('[data-testid="content-container-group"]')[0]
-      .trigger('click');
+    const clickData = { label: 'Item 1', data: 70 };
+    await progressChart.vm.$emit('clickData', clickData);
+
     expect(wrapper.emitted('clickData')).toBeTruthy();
-    expect(wrapper.emitted('clickData')[0][0]).toEqual({
-      label: 'Item 1',
-      data: 70,
-    });
-
-    await wrapper
-      .findAll('[data-testid="content-container-group"]')[1]
-      .trigger('click');
-    expect(wrapper.emitted('clickData')).toHaveLength(1);
+    expect(wrapper.emitted('clickData')[0][0]).toEqual(clickData);
   });
 
-  it('renders content correctly for rows with data', () => {
+  it('passes correct props to ProgressChart component', () => {
     const testData = [
       { label: 'Item 1', value: 70 },
       { label: 'Item 2', value: 30 },
     ];
-    const wrapper = createWrapper({ data: testData });
+    const wrapper = createWrapper({ data: testData, isLoading: true });
+    const progressChart = wrapper.findComponent({ name: 'ProgressChart' });
 
-    const contentTexts = wrapper.findAll('.content__container-item-text');
-    expect(contentTexts[0].text()).toBe('Item 1');
-    expect(contentTexts[1].text()).toBe('Item 2');
+    expect(progressChart.props('data')).toEqual(testData);
+    expect(progressChart.props('isLoading')).toBe(true);
   });
 
-  it('shows loading icon when isLoading is true', () => {
+  it('passes loading state to ProgressChart component', () => {
     const wrapper = createWrapper({ isLoading: true });
-    expect(wrapper.find('[data-testid="icon-loading"]').exists()).toBe(true);
+    const progressChart = wrapper.findComponent({ name: 'ProgressChart' });
+    expect(progressChart.props('isLoading')).toBe(true);
   });
 
   it('emit seeMore when see more link clicked', async () => {
@@ -97,14 +91,9 @@ describe('CardRecurrence.vue', () => {
     expect(wrapper.emitted('request-data')).toBeTruthy();
   });
 
-  it('applies empty state styling to rows without data', () => {
-    const wrapper = createWrapper({ data: [{ label: 'Item 1', value: 70 }] });
-    const groups = wrapper.findAll('[data-testid="content-container-group"]');
-
-    expect(groups[0].find('.content').exists()).toBe(true);
-
-    for (let i = 1; i < 5; i++) {
-      expect(groups[i].find('.content').exists()).toBe(false);
-    }
+  it('does not render ProgressChart when in error state', () => {
+    const wrapper = createWrapper({ data: [] }); // Empty data triggers error state
+    const progressChart = wrapper.findComponent({ name: 'ProgressChart' });
+    expect(progressChart.exists()).toBe(false);
   });
 });

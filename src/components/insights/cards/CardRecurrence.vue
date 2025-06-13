@@ -28,45 +28,12 @@
           {{ $t('widgets.recurrence.empty_data.sub_title') }}
         </p>
       </section>
-      <section
+      <ProgressChart
         v-else
-        class="content__container"
-        :class="{ 'content__container-isLoading': isLoading }"
-      >
-        <IconLoading
-          v-if="isLoading"
-          class="content__container-icon-loading"
-          data-testid="icon-loading"
-        />
-        <template
-          v-for="(item, index) in rowData"
-          :key="index"
-        >
-          <section
-            v-if="!isLoading"
-            class="content__container-group"
-            data-testid="content-container-group"
-            @click.stop="item && emitClickData(item)"
-          >
-            <template v-if="item">
-              <section class="content">
-                <section class="content__container-item">
-                  <p class="content__container-item-text">
-                    {{ item.label }}
-                  </p>
-                </section>
-                <section class="progress-bar-container">
-                  <UnnnicProgressBar
-                    v-model="item.value"
-                    class="progress-bar"
-                    inline
-                  />
-                </section>
-              </section>
-            </template>
-          </section>
-        </template>
-      </section>
+        :isLoading="isLoading"
+        :data="data"
+        @click-data="emitClickData"
+      />
     </section>
     <a
       v-if="seeMore && !isLoading"
@@ -86,12 +53,12 @@ import { mapState } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
-import IconLoading from '@/components/IconLoading.vue';
+import ProgressChart from '@/components/insights/charts/ProgressChart.vue';
 
 export default {
   name: 'CardRecurrence',
 
-  components: { CardBase, IconLoading },
+  components: { CardBase, ProgressChart },
 
   props: {
     isLoading: Boolean,
@@ -116,11 +83,6 @@ export default {
     isError() {
       return this.data?.length === 0;
     },
-    rowData() {
-      return Array(5)
-        .fill(null)
-        .map((_, index) => this.data[index] || null);
-    },
   },
 
   watch: {
@@ -138,7 +100,7 @@ export default {
 
   methods: {
     emitClickData(data) {
-      this.$emit('clickData', { label: data.label, data: data.value });
+      this.$emit('clickData', data);
     },
     emitRequestData() {
       this.$emit('request-data');
@@ -217,75 +179,6 @@ export default {
     flex-direction: column;
     justify-content: center;
 
-    .content__container {
-      height: 100%;
-      display: grid;
-      grid-template-rows: repeat(5, 1fr);
-      gap: $unnnic-spacing-sm;
-      background-color: $unnnic-color-neutral-white;
-      padding: $unnnic-spacing-sm;
-
-      &-group {
-        cursor: pointer;
-        min-height: $unnnic-avatar-size-sm;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-
-        &:empty {
-          background: $unnnic-color-neutral-lightest;
-          border-radius: $unnnic-border-radius-sm;
-        }
-
-        &:not(:last-child) {
-          border-bottom: 1px solid $unnnic-color-neutral-light;
-          padding-bottom: $unnnic-spacing-sm;
-        }
-      }
-
-      &-isLoading {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
-
-    .content {
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      &__container-item {
-        max-width: 150px;
-
-        @media screen and (max-width: 1440px) {
-          max-width: 100px;
-        }
-
-        @media screen and (max-width: 1024px) {
-          max-width: 80px;
-        }
-
-        overflow: hidden;
-
-        &-text {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          max-width: 100%;
-          display: inline-block;
-
-          color: $unnnic-color-neutral-cloudy;
-          font-family: $unnnic-font-family-secondary;
-          font-size: $unnnic-font-size-body-lg;
-          font-style: normal;
-          font-weight: $unnnic-font-weight-regular;
-          line-height: $unnnic-font-size-body-sm * 3;
-        }
-      }
-    }
-
     .content__not-configured {
       display: flex;
       flex-direction: column;
@@ -299,42 +192,6 @@ export default {
         line-height: $unnnic-line-height-small * 6;
       }
     }
-  }
-}
-.progress-bar-container {
-  :deep(.unnnic-progress-bar.primary) {
-    background-color: inherit;
-    box-shadow: none;
-  }
-
-  @media screen and (max-width: 1024px) {
-    :deep(
-      .unnnic-progress-bar.primary .progress-bar-container .progress-container
-    ) {
-      min-width: 100px;
-    }
-  }
-
-  :deep(
-    .unnnic-progress-bar.primary
-      .progress-bar-container
-      .progress-container
-      .bar
-  ) {
-    border-radius: 37.5rem;
-    background-color: $unnnic-color-weni-600;
-  }
-
-  :deep(
-    .unnnic-progress-bar.primary .progress-bar-container .progress-container
-  ) {
-    background-color: $unnnic-color-weni-100;
-  }
-
-  :deep(.unnnic-progress-bar.primary .progress-bar-container .percentage) {
-    font-size: $unnnic-font-size-body-lg;
-    line-height: $unnnic-font-size-body-lg * 2;
-    min-width: $unnnic-spacing-lg;
   }
 }
 </style>

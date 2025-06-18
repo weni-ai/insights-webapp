@@ -56,11 +56,14 @@ describe('useReports store', () => {
   it('should handle error in getWidgetReportData', async () => {
     const store = useReports();
     store.report = { data: 'initial' };
+    const mockError = new Error('error');
     vi.mocked(Dashboards.getDashboardWidgetReportData).mockRejectedValue(
-      new Error('error'),
+      mockError,
     );
 
-    await store.getWidgetReportData({ offset: 0, limit: 10, next: null });
+    await expect(
+      store.getWidgetReportData({ offset: 0, limit: 10, next: null }),
+    ).rejects.toThrow('error');
 
     expect(store.report.data).toBeNull();
     expect(store.isLoadingReportData).toBe(false);

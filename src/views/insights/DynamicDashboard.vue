@@ -35,10 +35,15 @@ const dashboardType = computed(() => {
     type = 'metaTemplateMessage';
   }
 
+  if (currentDashboard.value) {
+    type = 'conversations';
+  }
+
   const dashboardTypes = {
     custom: 'custom_dashboard',
     expansive: 'expansive_widget',
     metaTemplateMessage: 'meta_template_message',
+    conversations: 'conversations',
   };
 
   return dashboardTypes[type] || dashboardTypes['custom'];
@@ -54,6 +59,10 @@ const currentComponent = computed(() => {
     ),
     meta_template_message: defineAsyncComponent(
       () => import('@/components/insights/dashboards/TemplateMessageMeta.vue'),
+    ),
+    conversations: defineAsyncComponent(
+      () =>
+        import('@/components/insights/dashboards/DashboardConversations.vue'),
     ),
     template_dashboard: null,
   };

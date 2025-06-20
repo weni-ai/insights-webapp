@@ -179,6 +179,7 @@
     "previous_month": "Previous month ({date})"
   },
   "save_error": "Error saving, please try again",
+  "get_data_error": "Error fetching data, please try again",
   "reset": "Reset",
   "onboarding": {
     "welcome_modal": {

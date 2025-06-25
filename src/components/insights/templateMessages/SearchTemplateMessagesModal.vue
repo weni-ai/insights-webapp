@@ -137,10 +137,11 @@ const tableHeaders = [
     content: i18n.global.t(
       'template_messages_dashboard.templates_modal.table.header.name',
     ),
+    size: 3,
   },
   { content: i18n.global.t('category') },
   { content: i18n.global.t('language') },
-  { content: i18n.global.t('status'), size: 1.5 },
+  { content: i18n.global.t('status') },
 ];
 
 const sourceRequest = (source) => {

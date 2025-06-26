@@ -1,8 +1,24 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
+import { createI18n } from 'vue-i18n';
 import CardRecurrence from '../CardRecurrence.vue';
 import { useDashboards } from '@/store/modules/dashboards';
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  fallbackWarn: false,
+  missingWarn: false,
+});
+
+config.global.plugins = [i18n];
+config.global.mocks = {
+  $t: (key) => key,
+};
 
 describe('CardRecurrence.vue', () => {
   let store;

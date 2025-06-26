@@ -42,7 +42,7 @@
       data-testid="see-more-link"
       @click.prevent.stop="$emit('seeMore')"
     >
-      {{ $t('widgets.recurrence.see_more') }}
+      {{ $t('widgets.see_more') }}
     </a>
   </CardBase>
 </template>

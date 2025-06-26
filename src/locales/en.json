@@ -250,6 +250,14 @@
         "total_value": "Total value",
         "average_ticket": "Average ticket"
       }
+    },
+    "topics": {
+      "title": "Topics",
+      "not_configured": "No data available for now",
+      "tabs": {
+        "general": "General",
+        "human_service": "Human service"
+      }
     }
   },
   "drawers": {

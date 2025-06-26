@@ -250,6 +250,14 @@
         "total_value": "Valor total",
         "average_ticket": "Ticket promedio"
       }
+    },
+    "topics": {
+      "title": "Temas",
+      "not_configured": "Por ahora no hay datos",
+      "tabs": {
+        "general": "General",
+        "human_service": "Atención humana"
+      }
     }
   },
   "drawers": {

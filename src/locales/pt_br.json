@@ -197,6 +197,7 @@
   },
   "widgets": {
     "reset": "Resetar widget",
+    "see_more": "Ver mais",
     "info_reset": "Ao resetar, os dados configurados serão perdidos.",
     "success_reset": "O widget foi resetado com sucesso",
     "error_reset": "Não foi possível resetar o widget. Por favor, tente novamente",

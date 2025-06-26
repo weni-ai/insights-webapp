@@ -197,6 +197,7 @@
   },
   "widgets": {
     "reset": "Reset widget",
+    "see_more": "See more",
     "info_reset": "When reset, the configured data will be lost.",
     "success_reset": "The widget was successfully reset",
     "error_reset": "It was not possible to reset the widget. Please try again",

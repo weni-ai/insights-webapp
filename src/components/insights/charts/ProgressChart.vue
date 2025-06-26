@@ -90,7 +90,6 @@ const emitClickData = (data: DataItem) => {
       justify-content: center;
 
       &:empty {
-        background: $unnnic-color-neutral-lightest;
         border-radius: $unnnic-border-radius-sm;
       }
 

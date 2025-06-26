@@ -38,8 +38,9 @@ const handleSeeMore = () => {
   height: 100%;
   padding: $unnnic-spacing-md;
   border-radius: $unnnic-border-radius-md;
-  border: 1px solid $unnnic-color-neutral-soft;
   background-color: $unnnic-color-neutral-white;
+  box-shadow: $unnnic-shadow-level-far;
+  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
 
   &-title {
     font-size: $unnnic-font-size-title-md;

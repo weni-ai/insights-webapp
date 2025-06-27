@@ -1,6 +1,7 @@
 <template>
   <section class="dashboard-conversations">
     <TotalConversationsWidget />
+    <LineHumanServiceWidget />
     <section class="dashboard-conversations__widget-issues-container">
       <TopicsWidget class="dashboard-conversations__topics-widget" />
       <QueueServiceWidget
@@ -16,6 +17,7 @@ import { ref } from 'vue';
 import TotalConversationsWidget from '@/components/insights/widgets/Conversations/TotalConversationsWidget.vue';
 import QueueServiceWidget from '@/components/insights/widgets/Conversations/QueueServiceWidget.vue';
 import TopicsWidget from '@/components/insights/widgets/Conversations/TopicsWidget.vue';
+import LineHumanServiceWidget from '@/components/insights/widgets/Conversations/LineHumanServiceWidget.vue';
 
 const isLoading = ref(false);
 </script>

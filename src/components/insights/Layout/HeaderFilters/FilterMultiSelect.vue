@@ -1,5 +1,6 @@
 <template>
   <UnnnicSelectSmart
+    data-testid="unnnic-multi-select"
     :modelValue="treatedModelValue"
     :options="options"
     multiple

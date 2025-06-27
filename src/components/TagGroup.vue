@@ -1,4 +1,4 @@
-// Component copied from WeniChats
+<!-- Component copied from WeniChats -->
 <template>
   <section :class="{ 'tag-group': true, flex }">
     <div
@@ -19,8 +19,6 @@
         "
         :class="{ 'tag-group__tags__tag--selected': isSelectedTag(tag) }"
         :scheme="scheme || schemes[i % schemes.length]"
-        @click="select(tag)"
-        @close="close(tag)"
       />
       <p
         v-if="remainingTags > 0"
@@ -112,19 +110,6 @@ export default {
   },
 
   methods: {
-    select(tag) {
-      const tags = this.isSelectedTag(tag)
-        ? this.selected.filter((t) => t.uuid !== tag.uuid)
-        : [...this.selected, tag];
-
-      this.selected = tags;
-    },
-    close(tag) {
-      if (this.selectable) {
-        this.select(tag);
-      }
-      this.$emit('close', tag);
-    },
     isSelectedTag(tag) {
       return this.selected.find((mappedTag) => mappedTag.uuid === tag.uuid);
     },

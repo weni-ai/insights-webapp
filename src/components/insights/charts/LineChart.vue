@@ -1,21 +1,28 @@
 <template>
   <section class="line-chart">
     <header class="line-chart__header">
-      <h1
-        class="header__title"
-        data-testid="chart-title"
+      <slot
+        name="header"
+        :title="title"
+        :seeMore="seeMore"
+        :onSeeMore="() => $emit('seeMore')"
       >
-        {{ title }}
-      </h1>
-      <a
-        v-if="seeMore"
-        class="header__see-more"
-        href="#"
-        data-testid="chart-see-more-link"
-        @click.prevent.stop="$emit('seeMore')"
-      >
-        {{ $t('view_more') }}
-      </a>
+        <h1
+          class="header__title"
+          data-testid="chart-title"
+        >
+          {{ title }}
+        </h1>
+        <a
+          v-if="seeMore"
+          class="header__see-more"
+          href="#"
+          data-testid="chart-see-more-link"
+          @click.prevent.stop="$emit('seeMore')"
+        >
+          {{ $t('view_more') }}
+        </a>
+      </slot>
     </header>
     <section
       ref="lineChart"
@@ -110,9 +117,42 @@ export default {
         },
       };
 
+      let datasets = [{ ...configData }];
+
+      if (this.chartData.datasets.length === 2) {
+        const secondConfigData = {
+          ...configData,
+          borderColor: '#DD6B20',
+          pointBorderColor: '#DD6B20',
+          pointBackgroundColor: '#DD6B20',
+          pointHoverBackgroundColor: '#DD6B20',
+          pointHoverBorderColor: '#DD6B20',
+          backgroundColor: function (context) {
+            const chart = context.chart;
+            const { ctx, chartArea } = chart;
+            if (!chartArea) {
+              return null;
+            }
+            const gradient = ctx.createLinearGradient(
+              0,
+              chartArea.top,
+              0,
+              chartArea.bottom,
+            );
+
+            gradient.addColorStop(0, '#DD6B20');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            return gradient;
+          },
+        };
+
+        datasets = [...datasets, secondConfigData];
+      }
+      console.log(datasets);
       return deepMerge(
         {
-          datasets: [{ ...configData }],
+          datasets,
         },
         this.chartData,
       );

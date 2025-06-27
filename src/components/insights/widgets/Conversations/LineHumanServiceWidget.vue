@@ -145,6 +145,12 @@ const handleChartTabChange = (
 }
 
 .custom-header {
+  &__title {
+    font-size: $unnnic-font-size-title-md;
+    font-weight: $unnnic-font-weight-bold;
+    color: $unnnic-color-neutral-dark;
+  }
+
   &__title-section {
     align-items: center;
   }

@@ -258,6 +258,12 @@
         "general": "Geral",
         "human_service": "Atendimento humano"
       }
+    },
+    "line_human_service": {
+      "dicionary": {
+        "total": "Total",
+        "human_service": "Atendimento humano"
+      }
     }
   },
   "drawers": {

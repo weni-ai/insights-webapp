@@ -27,12 +27,9 @@ const { useSharedStore } = await safeImport(
 const sharedStore = useSharedStore?.();
 
 const isRemoteModuleFederation =
-  `${window.location.origin}/` !== env('PUBLIC_PATH_URL');
+  `${window.location.origin}` !== env('PUBLIC_PATH_URL');
 
-export default async function mountInsightsApp({
-  containerId = 'app',
-  routerBase = '/',
-} = {}) {
+export default async function mountInsightsApp({ containerId = 'app' } = {}) {
   let appRef = null;
 
   if (!isRemoteModuleFederation) {
@@ -42,12 +39,23 @@ export default async function mountInsightsApp({
   const app = createApp(App);
   const pinia = createPinia();
 
-  const router = createRouter(routerBase);
+  const router = createRouter({
+    isFederatedModule: isRemoteModuleFederation,
+  });
 
   app.use(pinia);
   app.use(router);
   app.use(i18n);
   app.use(Unnnic);
+
+  if (isRemoteModuleFederation) {
+    const currentPath = window.location.pathname;
+    const insightsPath = currentPath.includes('/insights')
+      ? currentPath.split('/insights')[1] || '/'
+      : '/';
+
+    await router.push(insightsPath);
+  }
 
   if (env('SENTRY_DSN')) {
     Sentry.init({

@@ -179,6 +179,7 @@
     "previous_month": "Mes anterior ({date})"
   },
   "save_error": "Error al guardar, por favor inténtalo de nuevo",
+  "get_data_error": "Error al obtener datos, por favor inténtalo de nuevo",
   "reset": "Reiniciar",
   "onboarding": {
     "welcome_modal": {

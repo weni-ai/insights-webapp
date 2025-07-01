@@ -12,6 +12,14 @@ import DynamicGraph from '../DynamicGraph.vue';
 import DynamicTable from '../DynamicTable.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+import { useReports } from '@/store/modules/reports';
+
+// Mock Unnnic
+vi.mock('@weni/unnnic-system', () => ({
+  default: {
+    unnnicCallAlert: vi.fn(),
+  },
+}));
 
 beforeAll(() => {
   config.global.plugins = config.global.plugins.filter(
@@ -416,6 +424,38 @@ describe('DynamicWidget', () => {
       await expect(
         wrapper.vm.requestWidgetData({ offset: 0, limit: 10 }),
       ).resolves.not.toThrow();
+    });
+
+    it('should show error alert when report data request fails', async () => {
+      await router.push({
+        name: 'report',
+        params: { dashboardUuid: '1', widgetUuid: '1' },
+      });
+      await flushPromises();
+
+      wrapper = createWrapper({
+        widget: { type: 'card', config: { test: 'value' } },
+      });
+
+      const reportsStore = useReports();
+      const mockError = new Error('Report data error');
+      vi.spyOn(reportsStore, 'getWidgetReportData').mockRejectedValueOnce(
+        mockError,
+      );
+
+      const Unnnic = await import('@weni/unnnic-system');
+      const alertSpy = vi.spyOn(Unnnic.default, 'unnnicCallAlert');
+
+      await wrapper.vm.requestWidgetData({ offset: 0, limit: 10 });
+
+      expect(alertSpy).toHaveBeenCalledWith({
+        props: {
+          text: 'Error fetching data, please try again',
+          type: 'error',
+        },
+      });
+
+      expect(wrapper.vm.isRequestingData).toBe(false);
     });
 
     it('should handle dashboard route data requests', async () => {

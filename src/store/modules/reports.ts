@@ -43,6 +43,7 @@ export const useReports = defineStore('reports', {
       } catch (error) {
         console.error(error);
         if (this.report) this.report.data = null;
+        throw error;
       } finally {
         this.isLoadingReportData = false;
       }

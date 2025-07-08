@@ -197,6 +197,7 @@
   },
   "widgets": {
     "reset": "Reset widget",
+    "see_more": "See more",
     "info_reset": "When reset, the configured data will be lost.",
     "success_reset": "The widget was successfully reset",
     "error_reset": "It was not possible to reset the widget. Please try again",
@@ -248,6 +249,20 @@
         "orders": "Orders",
         "total_value": "Total value",
         "average_ticket": "Average ticket"
+      }
+    },
+    "topics": {
+      "title": "Topics",
+      "not_configured": "No data available for now",
+      "tabs": {
+        "general": "General",
+        "human_service": "Human service"
+      }
+    },
+    "line_human_service": {
+      "dicionary": {
+        "total": "Total",
+        "human_service": "Human service"
       }
     }
   },

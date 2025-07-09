@@ -1,0 +1,209 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { mount, config } from '@vue/test-utils';
+
+import CardConversations from '../CardConversations.vue';
+
+import { createI18n } from 'vue-i18n';
+import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {},
+  },
+  fallbackWarn: false,
+  missingWarn: false,
+});
+
+config.global.plugins = [i18n];
+
+const defaultProps = {
+  title: 'Test Title',
+  value: '123',
+};
+
+const createWrapper = (props = {}) => {
+  return mount(CardConversations, {
+    global: { plugins: [UnnnicSystem] },
+    props: { ...defaultProps, ...props },
+  });
+};
+
+describe('CardConversations.vue', () => {
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = createWrapper();
+  });
+
+  describe('Loading State', () => {
+    it('should show skeleton loading when isLoading is true', async () => {
+      await wrapper.setProps({ isLoading: true });
+
+      expect(wrapper.find('[data-testid="card-skeleton"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="card-conversations"]').exists()).toBe(
+        false,
+      );
+    });
+
+    it('should hide skeleton loading when isLoading is false', () => {
+      expect(wrapper.find('[data-testid="card-skeleton"]').exists()).toBe(
+        false,
+      );
+      expect(wrapper.find('[data-testid="card-conversations"]').exists()).toBe(
+        true,
+      );
+    });
+  });
+
+  describe('Content Rendering', () => {
+    it('should render title and value correctly', () => {
+      expect(wrapper.find('[data-testid="card-title"]').text()).toBe(
+        'Test Title',
+      );
+      expect(wrapper.find('[data-testid="card-value"]').text()).toBe('123');
+    });
+
+    it('should render description when provided', async () => {
+      await wrapper.setProps({ description: 'Test Description' });
+
+      expect(wrapper.find('[data-testid="card-description"]').exists()).toBe(
+        true,
+      );
+      expect(wrapper.find('[data-testid="card-description"]').text()).toBe(
+        'Test Description',
+      );
+    });
+
+    it('should not render description when not provided', () => {
+      expect(wrapper.find('[data-testid="card-description"]').exists()).toBe(
+        false,
+      );
+    });
+
+    it('should render valueDescription when provided', async () => {
+      await wrapper.setProps({ valueDescription: 'Low' });
+
+      expect(
+        wrapper.find('[data-testid="card-value-description"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-testid="card-value-description"]').text(),
+      ).toBe('Low');
+    });
+
+    it('should not render valueDescription when not provided', () => {
+      expect(
+        wrapper.find('[data-testid="card-value-description"]').exists(),
+      ).toBe(false);
+    });
+  });
+
+  describe('Tooltip Functionality', () => {
+    it('should render tooltip when tooltipInfo is provided', async () => {
+      await wrapper.setProps({ tooltipInfo: 'Test Tooltip' });
+
+      expect(
+        wrapper.find('[data-test-id="card-conversations-tooltip"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-test-id="card-conversations-info-icon"]').exists(),
+      ).toBe(true);
+    });
+
+    it('should not render tooltip when tooltipInfo is not provided', () => {
+      expect(
+        wrapper.find('[data-test-id="card-conversations-tooltip"]').exists(),
+      ).toBe(false);
+      expect(
+        wrapper.find('[data-test-id="card-conversations-info-icon"]').exists(),
+      ).toBe(false);
+    });
+  });
+
+  describe('Border Radius Classes', () => {
+    const borderRadiusTests = [
+      {
+        borderRadius: 'full',
+        expectedClass: 'card-conversations--border-full',
+      },
+      {
+        borderRadius: 'left',
+        expectedClass: 'card-conversations--border-left',
+      },
+      {
+        borderRadius: 'right',
+        expectedClass: 'card-conversations--border-right',
+      },
+      {
+        borderRadius: 'none',
+        expectedClass: 'card-conversations--border-none',
+      },
+    ];
+
+    borderRadiusTests.forEach(({ borderRadius, expectedClass }) => {
+      it(`should apply ${expectedClass} class when borderRadius is ${borderRadius}`, async () => {
+        await wrapper.setProps({ borderRadius });
+
+        expect(
+          wrapper.find('[data-testid="card-conversations"]').classes(),
+        ).toContain(expectedClass);
+      });
+    });
+
+    it('should default to full border radius when not specified', () => {
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).toContain('card-conversations--border-full');
+    });
+  });
+
+  describe('Complete Integration', () => {
+    it('should render all elements when all props are provided', async () => {
+      const props = {
+        title: 'Complete Test',
+        value: '456',
+        description: 'Complete Description',
+        valueDescription: 'High',
+        tooltipInfo: 'Complete Tooltip',
+        borderRadius: 'left',
+      };
+
+      await wrapper.setProps(props);
+
+      expect(wrapper.find('[data-testid="card-title"]').text()).toBe(
+        props.title,
+      );
+      expect(wrapper.find('[data-testid="card-value"]').text()).toBe(
+        props.value,
+      );
+      expect(wrapper.find('[data-testid="card-description"]').text()).toBe(
+        props.description,
+      );
+      expect(
+        wrapper.find('[data-testid="card-value-description"]').text(),
+      ).toBe(props.valueDescription);
+      expect(
+        wrapper.find('[data-test-id="card-conversations-tooltip"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).toContain('card-conversations--border-left');
+    });
+
+    it('should render minimal elements when only required props are provided', () => {
+      expect(wrapper.find('[data-testid="card-title"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="card-value"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="card-description"]').exists()).toBe(
+        false,
+      );
+      expect(
+        wrapper.find('[data-testid="card-value-description"]').exists(),
+      ).toBe(false);
+      expect(
+        wrapper.find('[data-testid="card-conversations-tooltip"]').exists(),
+      ).toBe(false);
+    });
+  });
+});

@@ -49,6 +49,63 @@ import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
 
+const cardDefinitions = [
+  {
+    id: 'total_conversations',
+    titleKey: 'conversations_dashboard.header.total',
+    tooltipKey: 'conversations_dashboard.header.tooltips.total',
+  },
+  {
+    id: 'resolved',
+    titleKey: 'conversations_dashboard.header.resolved',
+    tooltipKey: 'conversations_dashboard.header.tooltips.resolved',
+  },
+  {
+    id: 'unresolved',
+    titleKey: 'conversations_dashboard.header.unresolved',
+    tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
+  },
+  {
+    id: 'unengaged',
+    titleKey: 'conversations_dashboard.header.unengaged',
+    tooltipKey: 'conversations_dashboard.header.tooltips.unengaged',
+  },
+];
+
+const createInitialCardData = () => ({
+  value: '-',
+  description: null,
+  isLoading: true,
+});
+
+const cardsData = ref(
+  cardDefinitions.map((def) => ({
+    id: def.id,
+    ...createInitialCardData(),
+  })),
+);
+
+const rightCardData = ref(createInitialCardData());
+
+const cards = computed(() =>
+  cardDefinitions.map((def, index) => ({
+    id: def.id,
+    title: t(def.titleKey),
+    value: cardsData.value[index].value,
+    description: cardsData.value[index].description,
+    tooltipInfo: t(def.tooltipKey),
+    isLoading: cardsData.value[index].isLoading,
+  })),
+);
+
+const rightCard = computed(() => ({
+  title: t('conversations_dashboard.header.transferred'),
+  value: rightCardData.value.value,
+  description: rightCardData.value.description,
+  tooltipInfo: t('conversations_dashboard.header.tooltips.transferred'),
+  isLoading: rightCardData.value.isLoading,
+}));
+
 const mockApiCalls = {
   async fetchTotalConversations() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -91,82 +148,6 @@ const mockApiCalls = {
   },
 };
 
-const cardsData = ref([
-  {
-    id: 'total_conversations',
-    value: '-',
-    description: null,
-    isLoading: true,
-  },
-  {
-    id: 'resolved',
-    value: '-',
-    description: null,
-    isLoading: true,
-  },
-  {
-    id: 'unresolved',
-    value: '-',
-    description: null,
-    isLoading: true,
-  },
-  {
-    id: 'unengaged',
-    value: '-',
-    description: null,
-    isLoading: true,
-  },
-]);
-
-const rightCardData = ref({
-  value: '-',
-  description: null,
-  isLoading: true,
-});
-
-const cards = computed(() => [
-  {
-    id: 'total_conversations',
-    title: t('conversations_dashboard.header.total'),
-    value: cardsData.value[0].value,
-    description: cardsData.value[0].description,
-    tooltipInfo: t('conversations_dashboard.header.tooltips.total'),
-    isLoading: cardsData.value[0].isLoading,
-  },
-  {
-    id: 'resolved',
-    title: t('conversations_dashboard.header.resolved'),
-    value: cardsData.value[1].value,
-    description: cardsData.value[1].description,
-    tooltipInfo: t('conversations_dashboard.header.tooltips.resolved'),
-    isLoading: cardsData.value[1].isLoading,
-  },
-  {
-    id: 'unresolved',
-    title: t('conversations_dashboard.header.unresolved'),
-    value: cardsData.value[2].value,
-    description: cardsData.value[2].description,
-    tooltipInfo: t('conversations_dashboard.header.tooltips.unresolved'),
-    isLoading: cardsData.value[2].isLoading,
-  },
-  {
-    id: 'unengaged',
-    title: t('conversations_dashboard.header.unengaged'),
-    value: cardsData.value[3].value,
-    description: cardsData.value[3].description,
-    tooltipInfo: t('conversations_dashboard.header.tooltips.unengaged'),
-    isLoading: cardsData.value[3].isLoading,
-  },
-]);
-
-const rightCard = computed(() => ({
-  title: t('conversations_dashboard.header.transferred'),
-  value: rightCardData.value.value,
-  description: rightCardData.value.description,
-  tooltipInfo: t('conversations_dashboard.header.tooltips.transferred'),
-  isLoading: rightCardData.value.isLoading,
-}));
-
 const getBorderRadius = (index: number, totalCards: number) => {
   if (totalCards === 1) return 'full';
   if (index === 0) return 'left';
@@ -184,89 +165,52 @@ const showErrorToast = () => {
   });
 };
 
+const loadData = async (
+  fetchFn: () => Promise<{ value: any; description: string | null }>,
+  targetRef: { value: any; description: string | null; isLoading: boolean },
+  errorMessage: string,
+) => {
+  try {
+    const data = await fetchFn();
+    targetRef.value = data.value;
+    targetRef.description = data.description;
+    targetRef.isLoading = false;
+  } catch (error) {
+    console.error(errorMessage, error);
+    targetRef.value = '--';
+    targetRef.description = null;
+    targetRef.isLoading = false;
+    showErrorToast();
+  }
+};
+
 const loadCardData = async () => {
-  const loadTotalConversations = async () => {
-    try {
-      const totalData = await mockApiCalls.fetchTotalConversations();
-      cardsData.value[0].value = totalData.value;
-      cardsData.value[0].description = totalData.description;
-      cardsData.value[0].isLoading = false;
-    } catch (error) {
-      console.error('Error loading total conversations:', error);
-      cardsData.value[0].value = '--';
-      cardsData.value[0].description = null;
-      cardsData.value[0].isLoading = false;
-      showErrorToast();
-    }
-  };
-
-  const loadResolvedConversations = async () => {
-    try {
-      const resolvedData = await mockApiCalls.fetchResolvedConversations();
-      cardsData.value[1].value = resolvedData.value;
-      cardsData.value[1].description = resolvedData.description;
-      cardsData.value[1].isLoading = false;
-    } catch (error) {
-      console.error('Error loading resolved conversations:', error);
-      cardsData.value[1].value = '--';
-      cardsData.value[1].description = null;
-      cardsData.value[1].isLoading = false;
-      showErrorToast();
-    }
-  };
-
-  const loadUnresolvedConversations = async () => {
-    try {
-      const unresolvedData = await mockApiCalls.fetchUnresolvedConversations();
-      cardsData.value[2].value = unresolvedData.value;
-      cardsData.value[2].description = unresolvedData.description;
-      cardsData.value[2].isLoading = false;
-    } catch (error) {
-      console.error('Error loading unresolved conversations:', error);
-      cardsData.value[2].value = '--';
-      cardsData.value[2].description = null;
-      cardsData.value[2].isLoading = false;
-      showErrorToast();
-    }
-  };
-
-  const loadUnengagedConversations = async () => {
-    try {
-      const unengagedData = await mockApiCalls.fetchUnengagedConversations();
-      cardsData.value[3].value = unengagedData.value;
-      cardsData.value[3].description = unengagedData.description;
-      cardsData.value[3].isLoading = false;
-    } catch (error) {
-      console.error('Error loading unengaged conversations:', error);
-      cardsData.value[3].value = '--';
-      cardsData.value[3].description = null;
-      cardsData.value[3].isLoading = false;
-      showErrorToast();
-    }
-  };
-
-  const loadTransferredConversations = async () => {
-    try {
-      const transferredData =
-        await mockApiCalls.fetchTransferredConversations();
-      rightCardData.value.value = transferredData.value;
-      rightCardData.value.description = transferredData.description;
-      rightCardData.value.isLoading = false;
-    } catch (error) {
-      console.error('Error loading transferred conversations:', error);
-      rightCardData.value.value = '--';
-      rightCardData.value.description = null;
-      rightCardData.value.isLoading = false;
-      showErrorToast();
-    }
-  };
-
-  Promise.all([
-    loadTotalConversations(),
-    loadResolvedConversations(),
-    loadUnresolvedConversations(),
-    loadUnengagedConversations(),
-    loadTransferredConversations(),
+  await Promise.all([
+    loadData(
+      mockApiCalls.fetchTotalConversations,
+      cardsData.value[0],
+      'Error loading total conversations:',
+    ),
+    loadData(
+      mockApiCalls.fetchResolvedConversations,
+      cardsData.value[1],
+      'Error loading resolved conversations:',
+    ),
+    loadData(
+      mockApiCalls.fetchUnresolvedConversations,
+      cardsData.value[2],
+      'Error loading unresolved conversations:',
+    ),
+    loadData(
+      mockApiCalls.fetchUnengagedConversations,
+      cardsData.value[3],
+      'Error loading unengaged conversations:',
+    ),
+    loadData(
+      mockApiCalls.fetchTransferredConversations,
+      rightCardData.value,
+      'Error loading transferred conversations:',
+    ),
   ]);
 };
 

@@ -94,6 +94,48 @@ describe('DashboardHeader.vue', () => {
     });
   });
 
+  describe('Card Definitions', () => {
+    it('should have correct card definitions structure', () => {
+      const vm = wrapper.vm;
+      expect(vm.cardDefinitions).toHaveLength(4);
+
+      expect(vm.cardDefinitions[0]).toEqual({
+        id: 'total_conversations',
+        titleKey: 'conversations_dashboard.header.total',
+        tooltipKey: 'conversations_dashboard.header.tooltips.total',
+      });
+
+      expect(vm.cardDefinitions[1]).toEqual({
+        id: 'resolved',
+        titleKey: 'conversations_dashboard.header.resolved',
+        tooltipKey: 'conversations_dashboard.header.tooltips.resolved',
+      });
+
+      expect(vm.cardDefinitions[2]).toEqual({
+        id: 'unresolved',
+        titleKey: 'conversations_dashboard.header.unresolved',
+        tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
+      });
+
+      expect(vm.cardDefinitions[3]).toEqual({
+        id: 'unengaged',
+        titleKey: 'conversations_dashboard.header.unengaged',
+        tooltipKey: 'conversations_dashboard.header.tooltips.unengaged',
+      });
+    });
+
+    it('should create initial card data correctly', () => {
+      const vm = wrapper.vm;
+      const initialData = vm.createInitialCardData();
+
+      expect(initialData).toEqual({
+        value: '-',
+        description: null,
+        isLoading: true,
+      });
+    });
+  });
+
   describe('Initial Loading States', () => {
     it('should show loading state for all cards initially', () => {
       const allCards = wrapper.findAllComponents({ name: 'CardConversations' });
@@ -101,6 +143,18 @@ describe('DashboardHeader.vue', () => {
       allCards.forEach((card) => {
         expect(card.props('isLoading')).toBe(true);
         expect(card.props('value')).toBe('-');
+      });
+    });
+
+    it('should initialize cardsData with correct structure', () => {
+      const vm = wrapper.vm;
+
+      expect(vm.cardsData).toHaveLength(4);
+      vm.cardsData.forEach((card, index) => {
+        expect(card.id).toBe(vm.cardDefinitions[index].id);
+        expect(card.value).toBe('-');
+        expect(card.description).toBe(null);
+        expect(card.isLoading).toBe(true);
       });
     });
 
@@ -137,8 +191,64 @@ describe('DashboardHeader.vue', () => {
     });
   });
 
+  describe('Generic Load Data Function', () => {
+    it('should handle successful data loading', async () => {
+      const vm = wrapper.vm;
+      const mockFetch = vi.fn().mockResolvedValue({
+        value: 'test-value',
+        description: 'test-description',
+      });
+
+      const targetRef = {
+        value: '-',
+        description: null,
+        isLoading: true,
+      };
+
+      await vm.loadData(mockFetch, targetRef, 'Test error message');
+
+      expect(targetRef.value).toBe('test-value');
+      expect(targetRef.description).toBe('test-description');
+      expect(targetRef.isLoading).toBe(false);
+    });
+
+    it('should handle error loading', async () => {
+      const vm = wrapper.vm;
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      const mockFetch = vi.fn().mockRejectedValue(new Error('API Error'));
+
+      const targetRef = {
+        value: '-',
+        description: null,
+        isLoading: true,
+      };
+
+      await vm.loadData(mockFetch, targetRef, 'Test error message');
+
+      expect(targetRef.value).toBe('--');
+      expect(targetRef.description).toBe(null);
+      expect(targetRef.isLoading).toBe(false);
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Test error message',
+        expect.any(Error),
+      );
+      expect(UnnnicSystem.unnnicCallAlert).toHaveBeenCalledWith({
+        props: {
+          text: 'Error loading data',
+          type: 'error',
+        },
+        seconds: 5,
+      });
+
+      consoleSpy.mockRestore();
+    });
+  });
+
   describe('API Loading and State Management', () => {
     it('should handle successful API data loading', async () => {
+      const vm = wrapper.vm;
       const mockData = {
         total: { value: '48.179', description: null },
         resolved: { value: '85.75%', description: '41.313 conversations' },
@@ -147,89 +257,90 @@ describe('DashboardHeader.vue', () => {
         transferred: { value: '12.22%', description: '5.887 conversations' },
       };
 
-      wrapper.vm.cardsData[0] = {
-        ...wrapper.vm.cardsData[0],
+      vm.cardsData[0] = {
+        ...vm.cardsData[0],
         ...mockData.total,
         isLoading: false,
       };
-      wrapper.vm.cardsData[1] = {
-        ...wrapper.vm.cardsData[1],
+      vm.cardsData[1] = {
+        ...vm.cardsData[1],
         ...mockData.resolved,
         isLoading: false,
       };
-      wrapper.vm.cardsData[2] = {
-        ...wrapper.vm.cardsData[2],
+      vm.cardsData[2] = {
+        ...vm.cardsData[2],
         ...mockData.unresolved,
         isLoading: false,
       };
-      wrapper.vm.cardsData[3] = {
-        ...wrapper.vm.cardsData[3],
+      vm.cardsData[3] = {
+        ...vm.cardsData[3],
         ...mockData.unengaged,
         isLoading: false,
       };
-      wrapper.vm.rightCardData = {
-        ...wrapper.vm.rightCardData,
+      vm.rightCardData = {
+        ...vm.rightCardData,
         ...mockData.transferred,
         isLoading: false,
       };
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.vm.cardsData[0].value).toBe('48.179');
-      expect(wrapper.vm.cardsData[1].value).toBe('85.75%');
-      expect(wrapper.vm.cardsData[2].value).toBe('5.25%');
-      expect(wrapper.vm.cardsData[3].value).toBe('9.00%');
-      expect(wrapper.vm.rightCardData.value).toBe('12.22%');
+      expect(vm.cardsData[0].value).toBe('48.179');
+      expect(vm.cardsData[1].value).toBe('85.75%');
+      expect(vm.cardsData[2].value).toBe('5.25%');
+      expect(vm.cardsData[3].value).toBe('9.00%');
+      expect(vm.rightCardData.value).toBe('12.22%');
 
-      expect(wrapper.vm.cardsData[0].isLoading).toBe(false);
-      expect(wrapper.vm.rightCardData.isLoading).toBe(false);
+      expect(vm.cardsData[0].isLoading).toBe(false);
+      expect(vm.rightCardData.isLoading).toBe(false);
     });
 
     it('should handle API errors with error toast and fallback values', async () => {
+      const vm = wrapper.vm;
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      wrapper.vm.cardsData[0] = {
-        ...wrapper.vm.cardsData[0],
+      vm.cardsData[0] = {
+        ...vm.cardsData[0],
         value: '--',
         description: null,
         isLoading: false,
       };
-      wrapper.vm.cardsData[1] = {
-        ...wrapper.vm.cardsData[1],
+      vm.cardsData[1] = {
+        ...vm.cardsData[1],
         value: '--',
         description: null,
         isLoading: false,
       };
-      wrapper.vm.cardsData[2] = {
-        ...wrapper.vm.cardsData[2],
+      vm.cardsData[2] = {
+        ...vm.cardsData[2],
         value: '--',
         description: null,
         isLoading: false,
       };
-      wrapper.vm.cardsData[3] = {
-        ...wrapper.vm.cardsData[3],
+      vm.cardsData[3] = {
+        ...vm.cardsData[3],
         value: '--',
         description: null,
         isLoading: false,
       };
-      wrapper.vm.rightCardData = {
-        ...wrapper.vm.rightCardData,
+      vm.rightCardData = {
+        ...vm.rightCardData,
         value: '--',
         description: null,
         isLoading: false,
       };
 
-      wrapper.vm.showErrorToast();
+      vm.showErrorToast();
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.vm.cardsData[0].value).toBe('--');
-      expect(wrapper.vm.cardsData[1].value).toBe('--');
-      expect(wrapper.vm.cardsData[2].value).toBe('--');
-      expect(wrapper.vm.cardsData[3].value).toBe('--');
-      expect(wrapper.vm.rightCardData.value).toBe('--');
+      expect(vm.cardsData[0].value).toBe('--');
+      expect(vm.cardsData[1].value).toBe('--');
+      expect(vm.cardsData[2].value).toBe('--');
+      expect(vm.cardsData[3].value).toBe('--');
+      expect(vm.rightCardData.value).toBe('--');
 
       expect(UnnnicSystem.unnnicCallAlert).toHaveBeenCalledWith({
         props: {
@@ -243,58 +354,60 @@ describe('DashboardHeader.vue', () => {
     });
 
     it('should handle mixed success and error scenarios', async () => {
+      const vm = wrapper.vm;
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      wrapper.vm.cardsData[0] = {
-        ...wrapper.vm.cardsData[0],
+      vm.cardsData[0] = {
+        ...vm.cardsData[0],
         value: '48.179',
         isLoading: false,
       };
-      wrapper.vm.cardsData[1] = {
-        ...wrapper.vm.cardsData[1],
+      vm.cardsData[1] = {
+        ...vm.cardsData[1],
         value: '--',
         isLoading: false,
       };
-      wrapper.vm.cardsData[2] = {
-        ...wrapper.vm.cardsData[2],
+      vm.cardsData[2] = {
+        ...vm.cardsData[2],
         value: '5.25%',
         isLoading: false,
       };
-      wrapper.vm.cardsData[3] = {
-        ...wrapper.vm.cardsData[3],
+      vm.cardsData[3] = {
+        ...vm.cardsData[3],
         value: '--',
         isLoading: false,
       };
-      wrapper.vm.rightCardData = {
-        ...wrapper.vm.rightCardData,
+      vm.rightCardData = {
+        ...vm.rightCardData,
         value: '12.22%',
         isLoading: false,
       };
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.vm.cardsData[0].value).toBe('48.179');
-      expect(wrapper.vm.cardsData[1].value).toBe('--');
-      expect(wrapper.vm.cardsData[2].value).toBe('5.25%');
-      expect(wrapper.vm.cardsData[3].value).toBe('--');
-      expect(wrapper.vm.rightCardData.value).toBe('12.22%');
+      expect(vm.cardsData[0].value).toBe('48.179');
+      expect(vm.cardsData[1].value).toBe('--');
+      expect(vm.cardsData[2].value).toBe('5.25%');
+      expect(vm.cardsData[3].value).toBe('--');
+      expect(vm.rightCardData.value).toBe('12.22%');
 
       consoleSpy.mockRestore();
     });
 
     it('should test loading state transitions', async () => {
-      expect(wrapper.vm.cardsData[0].isLoading).toBe(true);
-      expect(wrapper.vm.rightCardData.isLoading).toBe(true);
+      const vm = wrapper.vm;
+      expect(vm.cardsData[0].isLoading).toBe(true);
+      expect(vm.rightCardData.isLoading).toBe(true);
 
-      wrapper.vm.cardsData[0].isLoading = false;
-      wrapper.vm.rightCardData.isLoading = false;
+      vm.cardsData[0].isLoading = false;
+      vm.rightCardData.isLoading = false;
 
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.vm.cardsData[0].isLoading).toBe(false);
-      expect(wrapper.vm.rightCardData.isLoading).toBe(false);
+      expect(vm.cardsData[0].isLoading).toBe(false);
+      expect(vm.rightCardData.isLoading).toBe(false);
     });
   });
 

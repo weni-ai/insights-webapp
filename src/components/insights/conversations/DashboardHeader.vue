@@ -1,7 +1,16 @@
 <template>
-  <section class="dashboard-conversational">
-    <section class="dashboard-conversational__header">
-      <section class="dashboard-conversational__header-left">
+  <section
+    class="dashboard-conversational"
+    data-testid="dashboard-conversational"
+  >
+    <section
+      class="dashboard-conversational__header"
+      data-testid="dashboard-header"
+    >
+      <section
+        class="dashboard-conversational__header-left"
+        data-testid="dashboard-header-left"
+      >
         <template
           v-for="(card, index) in cards"
           :key="card.id"
@@ -17,7 +26,10 @@
           />
         </template>
       </section>
-      <section class="dashboard-conversational__header-right">
+      <section
+        class="dashboard-conversational__header-right"
+        data-testid="dashboard-header-right"
+      >
         <CardConversations
           :title="rightCard.title"
           :value="rightCard.value"

@@ -105,19 +105,19 @@ describe('CardConversations.vue', () => {
       await wrapper.setProps({ tooltipInfo: 'Test Tooltip' });
 
       expect(
-        wrapper.find('[data-test-id="card-conversations-tooltip"]').exists(),
+        wrapper.find('[data-testid="card-conversations-tooltip"]').exists(),
       ).toBe(true);
       expect(
-        wrapper.find('[data-test-id="card-conversations-info-icon"]').exists(),
+        wrapper.find('[data-testid="card-conversations-info-icon"]').exists(),
       ).toBe(true);
     });
 
     it('should not render tooltip when tooltipInfo is not provided', () => {
       expect(
-        wrapper.find('[data-test-id="card-conversations-tooltip"]').exists(),
+        wrapper.find('[data-testid="card-conversations-tooltip"]').exists(),
       ).toBe(false);
       expect(
-        wrapper.find('[data-test-id="card-conversations-info-icon"]').exists(),
+        wrapper.find('[data-testid="card-conversations-info-icon"]').exists(),
       ).toBe(false);
     });
   });
@@ -185,7 +185,7 @@ describe('CardConversations.vue', () => {
         wrapper.find('[data-testid="card-value-description"]').text(),
       ).toBe(props.valueDescription);
       expect(
-        wrapper.find('[data-test-id="card-conversations-tooltip"]').exists(),
+        wrapper.find('[data-testid="card-conversations-tooltip"]').exists(),
       ).toBe(true);
       expect(
         wrapper.find('[data-testid="card-conversations"]').classes(),

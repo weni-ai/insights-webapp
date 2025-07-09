@@ -5,19 +5,25 @@
       'card-conversations',
       `card-conversations--border-${props.borderRadius || 'full'}`,
     ]"
+    data-testid="card-conversations"
   >
     <section class="card-conversations__title">
-      <p class="card-conversations__title-text">{{ title }}</p>
+      <p
+        class="card-conversations__title-text"
+        data-testid="card-title"
+      >
+        {{ title }}
+      </p>
       <UnnnicToolTip
         v-if="tooltipInfo"
         enabled
         :text="tooltipInfo"
         side="right"
         class="card-conversations__title-tooltip"
-        data-test-id="card-conversations-tooltip"
+        data-testid="card-conversations-tooltip"
       >
         <UnnnicIcon
-          data-test-id="card-conversations-info-icon"
+          data-testid="card-conversations-info-icon"
           class="card-conversations__info-icon"
           icon="info"
           size="sm"
@@ -26,14 +32,21 @@
         />
       </UnnnicToolTip>
     </section>
-    <section class="card-conversations__content">
+    <section
+      class="card-conversations__content"
+      data-testid="card-content"
+    >
       <section class="card-conversations__content-value">
-        <p class="card-conversations__content-value-number">
+        <p
+          class="card-conversations__content-value-number"
+          data-testid="card-value"
+        >
           {{ value }}
         </p>
         <p
           v-if="valueDescription"
           class="card-conversations__content-value-description"
+          data-testid="card-value-description"
         >
           {{ valueDescription }}
         </p>
@@ -41,6 +54,7 @@
       <p
         v-if="description"
         class="card-conversations__content-description"
+        data-testid="card-description"
       >
         {{ description }}
       </p>
@@ -51,6 +65,7 @@
     class="card-conversations__skeleton"
     :width="`100%`"
     height="134px"
+    data-testid="card-skeleton"
   />
 </template>
 

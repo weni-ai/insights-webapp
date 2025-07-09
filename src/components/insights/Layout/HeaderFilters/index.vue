@@ -1,6 +1,6 @@
 <template>
   <section class="insights-layout-header-filters">
-    <FilterFavoriteTemplateMessage />
+    <!-- <FilterFavoriteTemplateMessage /> -->
     <LastUpdatedText v-if="isHumanServiceDashboard" />
     <template v-if="hasManyFilters">
       <UnnnicButton

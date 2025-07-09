@@ -23,16 +23,21 @@ const currentDashboard = computed(() => {
 });
 
 const dashboardType = computed(() => {
-  let type: string;
+  const config = currentDashboard?.value?.config;
 
-  type =
+  let type: 'custom' | 'expansive' | 'metaTemplateMessage' | 'conversational';
+
+  if (config?.type === 'conversational') {
+    type = 'conversational';
+  } else if (config?.is_whatsapp_integration) {
+    type = 'metaTemplateMessage';
+  } else if (
     currentExpansiveWidget.value &&
     Object.keys(currentExpansiveWidget.value).length > 0
-      ? 'expansive'
-      : 'custom';
-
-  if (currentDashboard?.value?.config?.is_whatsapp_integration) {
-    type = 'metaTemplateMessage';
+  ) {
+    type = 'expansive';
+  } else {
+    type = 'custom';
   }
 
   const dashboardTypes = {
@@ -42,7 +47,7 @@ const dashboardType = computed(() => {
     conversational: 'conversational',
   };
 
-  return dashboardTypes[type] || dashboardTypes['custom'];
+  return dashboardTypes[type];
 });
 
 const currentComponent = computed(() => {

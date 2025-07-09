@@ -9,7 +9,7 @@
   >
     <section class="card-conversations__title">
       <p
-        class="card-conversations__title-text"
+        class="card-conversations__text"
         data-testid="card-title"
       >
         {{ title }}
@@ -19,7 +19,7 @@
         enabled
         :text="tooltipInfo"
         side="left"
-        class="card-conversations__title-tooltip"
+        class="card-conversations__tooltip"
         data-testid="card-conversations-tooltip"
       >
         <UnnnicIcon
@@ -36,16 +36,16 @@
       class="card-conversations__content"
       data-testid="card-content"
     >
-      <section class="card-conversations__content-value">
+      <section class="card-conversations__value">
         <p
-          class="card-conversations__content-value-number"
+          class="card-conversations__number"
           data-testid="card-value"
         >
           {{ value }}
         </p>
         <p
           v-if="valueDescription"
-          class="card-conversations__content-value-description"
+          class="card-conversations__value-description"
           data-testid="card-value-description"
         >
           {{ valueDescription }}
@@ -53,7 +53,7 @@
       </section>
       <p
         v-if="description"
-        class="card-conversations__content-description"
+        class="card-conversations__description"
         data-testid="card-description"
       >
         {{ description }}
@@ -119,63 +119,63 @@ const props = defineProps<Props>();
     width: 100%;
     align-items: center;
     gap: $unnnic-spacing-sm;
+  }
 
-    &-text {
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 1;
-      flex: 1 0 0;
-      overflow: hidden;
-      color: $unnnic-color-neutral-darkest;
-      text-overflow: ellipsis;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-lg;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
-    }
+  &__text {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    flex: 1 0 0;
+    overflow: hidden;
+    color: $unnnic-color-neutral-darkest;
+    text-overflow: ellipsis;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-lg;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+  }
 
-    &__info-icon {
-      cursor: help;
-    }
+  &__info-icon {
+    cursor: help;
   }
 
   &__content {
     display: flex;
     flex-direction: column;
+  }
 
-    &-value {
-      display: flex;
-      align-items: end;
-      gap: $unnnic-spacing-xs;
+  &__value {
+    display: flex;
+    align-items: end;
+    gap: $unnnic-spacing-xs;
+  }
 
-      &-number {
-        color: $unnnic-color-neutral-black;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-title-md;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
-      }
+  &__number {
+    color: $unnnic-color-neutral-black;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-title-md;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-bold;
+    line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
+  }
 
-      &-description {
-        color: $unnnic-color-neutral-cloudy;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-lg;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
-      }
-    }
+  &__value-description {
+    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-lg;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-bold;
+    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+  }
 
-    &-description {
-      color: $unnnic-color-neutral-cloudy;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-md;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
-    }
+  &__description {
+    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-md;
+    font-style: normal;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
   }
 
   &__skeleton {

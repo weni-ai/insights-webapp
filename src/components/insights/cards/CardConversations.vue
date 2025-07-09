@@ -18,7 +18,7 @@
         v-if="tooltipInfo"
         enabled
         :text="tooltipInfo"
-        side="right"
+        side="left"
         class="card-conversations__title-tooltip"
         data-testid="card-conversations-tooltip"
       >

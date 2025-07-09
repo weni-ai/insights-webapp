@@ -18,6 +18,23 @@
       "closeds": "Total number of chats that have been completed."
     }
   },
+  "conversations_dashboard": {
+    "conversations": "conversations",
+    "header": {
+      "total": "Total Conversations",
+      "resolved": "Resolved",
+      "unresolved": "Unresolved",
+      "unengaged": "Unengaged",
+      "transferred": "Transferred to human support",
+      "tooltips": {
+        "total": "Total number of conversations",
+        "resolved": "Number of conversations that have been resolved",
+        "unresolved": "Number of conversations that have not been resolved",
+        "unengaged": "Number of conversations that have not been engaged",
+        "transferred": "Number of conversations that have been transferred to human support"
+      }
+    }
+  },
   "template_messages_dashboard": {
     "title": "Template messages Meta",
     "favorites": "Favorites",

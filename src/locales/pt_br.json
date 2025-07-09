@@ -18,6 +18,23 @@
       "closeds": "Total de chats que já foram finalizados."
     }
   },
+  "conversations_dashboard": {
+    "conversations": "conversas",
+    "header": {
+      "total": "Total de conversas",
+      "resolved": "Resolvidas",
+      "unresolved": "Não resolvidas",
+      "unengaged": "Não engajadas",
+      "transferred": "Transferidas para atendimento humano",
+      "tooltips": {
+        "total": "Total de conversas",
+        "resolved": "Total de conversas resolvidas",
+        "unresolved": "Total de conversas não resolvidas",
+        "unengaged": "Total de conversas não engajadas",
+        "transferred": "Total de conversas transferidas para atendimento humano"
+      }
+    }
+  },
   "template_messages_dashboard": {
     "title": "Mensagens template Meta",
     "favorites": "Favoritos",

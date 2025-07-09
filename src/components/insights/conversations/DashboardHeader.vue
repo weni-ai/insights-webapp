@@ -8,7 +8,7 @@
       data-testid="dashboard-header"
     >
       <section
-        class="dashboard-conversational__header-left"
+        class="dashboard-conversational__cards"
         data-testid="dashboard-header-left"
       >
         <template
@@ -20,14 +20,13 @@
             :value="card.value"
             :description="card.description"
             :tooltipInfo="card.tooltipInfo"
-            :valueDescription="card.valueDescription"
             :borderRadius="getBorderRadius(index, cards.length)"
             :isLoading="card.isLoading"
           />
         </template>
       </section>
       <section
-        class="dashboard-conversational__header-right"
+        class="dashboard-conversational__summary"
         data-testid="dashboard-header-right"
       >
         <CardConversations
@@ -287,16 +286,16 @@ onMounted(() => {
     justify-content: space-between;
     align-items: center;
     gap: $unnnic-spacing-sm;
+  }
 
-    &-left {
-      display: flex;
-      flex: 8;
-    }
+  &__cards {
+    display: flex;
+    flex: 8;
+  }
 
-    &-right {
-      display: flex;
-      flex: 2;
-    }
+  &__summary {
+    display: flex;
+    flex: 2;
   }
 }
 </style>

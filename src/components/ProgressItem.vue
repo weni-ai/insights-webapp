@@ -1,15 +1,35 @@
 <template>
-  <section class="progress-item">
-    <section class="progress-item__container">
-      <p class="progress-item__text">{{ text }}</p>
+  <section
+    class="progress-item"
+    data-testid="progress-item"
+  >
+    <section
+      class="progress-item__container"
+      data-testid="progress-item-container"
+    >
+      <p
+        class="progress-item__text"
+        data-testid="progress-item-text"
+      >
+        {{ text }}
+      </p>
     </section>
-    <section class="progress-item__progress">
+    <section
+      class="progress-item__progress"
+      data-testid="progress-item-progress"
+    >
       <NativeProgress
         :progress="value"
         :backgroundColor="backgroundColor"
         :progressColor="progressColor"
+        data-testid="progress-item-native-progress"
       />
-      <p class="progress-item__progress__value">{{ value }}%</p>
+      <p
+        class="progress-item__progress__value"
+        data-testid="progress-item-value"
+      >
+        {{ value }}%
+      </p>
     </section>
   </section>
 </template>

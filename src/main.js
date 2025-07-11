@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import { createRouter } from './router';
+import router from './router';
 
 import Unnnic from './utils/plugins/UnnnicSystem';
 import i18n from './utils/plugins/i18n';
@@ -17,7 +17,7 @@ import '@weni/unnnic-system/dist/style.css';
 
 import './styles/global.scss';
 
-import { safeImport } from './utils/moduleFederation';
+import { safeImport, isFederatedModule } from './utils/moduleFederation';
 
 const { useSharedStore } = await safeImport(
   () => import('connect/sharedStore'),
@@ -26,23 +26,15 @@ const { useSharedStore } = await safeImport(
 
 const sharedStore = useSharedStore?.();
 
-const isRemoteModuleFederation =
-  `${window.location.origin}/` !== env('PUBLIC_PATH_URL');
-
-export default async function mountInsightsApp({
-  containerId = 'app',
-  routerBase = '/',
-} = {}) {
+export default async function mountInsightsApp({ containerId = 'app' } = {}) {
   let appRef = null;
 
-  if (!isRemoteModuleFederation) {
+  if (!isFederatedModule) {
     await getJwtToken();
   }
 
   const app = createApp(App);
   const pinia = createPinia();
-
-  const router = createRouter(routerBase);
 
   app.use(pinia);
   app.use(router);
@@ -70,7 +62,7 @@ export default async function mountInsightsApp({
   return appRef;
 }
 
-if (sharedStore && isRemoteModuleFederation) {
+if (sharedStore && isFederatedModule) {
   localStorage.setItem('token', sharedStore.auth.token);
   localStorage.setItem('projectUuid', sharedStore.current.project.uuid);
 } else {

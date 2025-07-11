@@ -1,10 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  createMemoryHistory,
+} from 'vue-router';
+import { isFederatedModule } from '@/utils/moduleFederation';
 import Report from '@/views/insights/Report.vue';
 import DynamicDashboard from '@/views/insights/DynamicDashboard.vue';
 
 const routes = [
   {
     path: '/',
+    alias: '/init',
     name: 'home',
     component: DynamicDashboard,
   },
@@ -20,50 +26,44 @@ const routes = [
   },
 ];
 
-let currentRouterInstance = null;
+const history = isFederatedModule
+  ? createMemoryHistory() // To isolate routing from parent app
+  : createWebHistory('/');
 
-export function createInsightsRouter(routerBase = '/') {
-  const router = createRouter({
-    history: createWebHistory(routerBase),
-    routes,
-  });
+const router = createRouter({
+  history,
+  routes,
+});
 
-  router.beforeEach((to, from, next) => {
-    const nextPath = to.query.next;
+router.beforeEach((to, from, next) => {
+  const nextPath = to.query.next;
 
-    if (nextPath)
-      next({ path: nextPath, query: { ...to.query, next: undefined } });
-    else next();
-  });
+  if (nextPath)
+    next({ path: nextPath, query: { ...to.query, next: undefined } });
+  else next();
+});
 
-  router.afterEach((router) => {
-    delete router.query.next;
-    delete router.query.projectUuid;
+router.afterEach((router) => {
+  delete router.query.next;
+  delete router.query.projectUuid;
+
+  if (isFederatedModule) {
     window.dispatchEvent(
-      new CustomEvent('changePathname', {
-        detail: {
-          pathname: window.location.pathname,
-          query: router.query,
-        },
+      new CustomEvent('updateRoute', {
+        detail: { path: router.path, query: router.query },
       }),
     );
-  });
-
-  if (!currentRouterInstance) {
-    currentRouterInstance = router;
+  } else {
+    window.parent.postMessage(
+      {
+        event: 'changePathname',
+        pathname: window.location.pathname,
+        query: router.query,
+      },
+      '*',
+    );
   }
+});
 
-  return router;
-}
-
-const routerProxy = new Proxy(
-  {},
-  {
-    get(_, prop) {
-      return currentRouterInstance?.[prop];
-    },
-  },
-);
-
-export { routes, createInsightsRouter as createRouter };
-export default routerProxy;
+export { routes };
+export default router;

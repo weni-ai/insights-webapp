@@ -237,11 +237,11 @@ describe('DashboardCommerce', () => {
   describe('filter functionality', () => {
     it('provides all required filter options', () => {
       const expectedOptions = [
-        'Last 7 days',
-        'Last 14 days',
-        'Last 30 days',
-        'Last 45 days',
-        'Last 90 days',
+        'dashboard_commerce.filters.last_7_days',
+        'dashboard_commerce.filters.last_14_days',
+        'dashboard_commerce.filters.last_30_days',
+        'dashboard_commerce.filters.last_45_days',
+        'dashboard_commerce.filters.last_90_days',
       ];
 
       expect(wrapper.vm.filterOptions.map((opt) => opt.name)).toEqual(

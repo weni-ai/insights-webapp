@@ -179,6 +179,7 @@
     "previous_month": "Mês anterior ({date})"
   },
   "save_error": "Erro ao salvar, tente novamente",
+  "get_data_error": "Erro ao buscar dados, por favor tente novamente",
   "reset": "Resetar",
   "onboarding": {
     "welcome_modal": {

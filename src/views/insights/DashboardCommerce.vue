@@ -70,14 +70,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted, reactive } from 'vue';
+import { ref, onMounted, reactive, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import CardMetric from '@/components/home/CardMetric.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
 import api from '@/services/api/resources/metrics';
-
-import i18n from '@/utils/plugins/i18n';
 import { getLastNDays, getTodayDate } from '@/utils/time';
 
 interface MetricData {
@@ -87,16 +86,16 @@ interface MetricData {
   prefix?: string;
 }
 
-const infos = {
-  'sent-messages': i18n.global.t('dashboard_commerce.infos.send-message'),
-  'delivered-messages': i18n.global.t(
-    'dashboard_commerce.infos.delivered-messages',
-  ),
-  'read-messages': i18n.global.t('dashboard_commerce.infos.read-messages'),
-  interactions: i18n.global.t('dashboard_commerce.infos.interactions'),
-  'utm-revenue': i18n.global.t('dashboard_commerce.infos.utm-revenue'),
-  'orders-placed': i18n.global.t('dashboard_commerce.infos.orders-placed'),
-};
+const { t } = useI18n();
+
+const infos = computed(() => ({
+  'sent-messages': t('dashboard_commerce.infos.send-message'),
+  'delivered-messages': t('dashboard_commerce.infos.delivered-messages'),
+  'read-messages': t('dashboard_commerce.infos.read-messages'),
+  interactions: t('dashboard_commerce.infos.interactions'),
+  'utm-revenue': t('dashboard_commerce.infos.utm-revenue'),
+  'orders-placed': t('dashboard_commerce.infos.orders-placed'),
+}));
 
 const metrics = ref<MetricData[]>([]);
 const isLoading = ref(false);
@@ -110,16 +109,14 @@ const auth = reactive({
   projectUuid: '',
 });
 
-const metricTitles: Record<string, string> = {
-  'sent-messages': i18n.global.t('dashboard_commerce.titles.send-message'),
-  'delivered-messages': i18n.global.t(
-    'dashboard_commerce.titles.delivered-messages',
-  ),
-  'read-messages': i18n.global.t('dashboard_commerce.titles.read-messages'),
-  interactions: i18n.global.t('dashboard_commerce.titles.interactions'),
-  'utm-revenue': i18n.global.t('dashboard_commerce.titles.utm-revenue'),
-  'orders-placed': i18n.global.t('dashboard_commerce.titles.orders-placed'),
-};
+const metricTitles = computed<Record<string, string>>(() => ({
+  'sent-messages': t('dashboard_commerce.titles.send-message'),
+  'delivered-messages': t('dashboard_commerce.titles.delivered-messages'),
+  'read-messages': t('dashboard_commerce.titles.read-messages'),
+  interactions: t('dashboard_commerce.titles.interactions'),
+  'utm-revenue': t('dashboard_commerce.titles.utm-revenue'),
+  'orders-placed': t('dashboard_commerce.titles.orders-placed'),
+}));
 
 const getMetrics = async (start: string, end: string) => {
   if (!auth?.token || !auth?.projectUuid) return;
@@ -162,28 +159,28 @@ const updateFilter = (value: { start: string; end: string }) => {
   getMetrics(value.start, value.end);
 };
 
-const filterOptions = [
+const filterOptions = computed(() => [
   {
-    name: i18n.global.t('dashboard_commerce.filters.last_7_days'),
+    name: t('dashboard_commerce.filters.last_7_days'),
     id: 'last-7-days',
   },
   {
-    name: i18n.global.t('dashboard_commerce.filters.last_14_days'),
+    name: t('dashboard_commerce.filters.last_14_days'),
     id: 'last-14-days',
   },
   {
-    name: i18n.global.t('dashboard_commerce.filters.last_30_days'),
+    name: t('dashboard_commerce.filters.last_30_days'),
     id: 'last-30-days',
   },
   {
-    name: i18n.global.t('dashboard_commerce.filters.last_45_days'),
+    name: t('dashboard_commerce.filters.last_45_days'),
     id: 'last-45-days',
   },
   {
-    name: i18n.global.t('dashboard_commerce.filters.last_90_days'),
+    name: t('dashboard_commerce.filters.last_90_days'),
     id: 'last-90-days',
   },
-];
+]);
 
 const handleMinDate = () => {
   const minDate = getLastNDays(90).start;

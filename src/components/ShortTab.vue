@@ -1,6 +1,12 @@
 <template>
-  <section class="short-tab">
-    <div class="short-tab__tabs">
+  <section
+    class="short-tab"
+    data-testid="short-tab"
+  >
+    <div
+      class="short-tab__tabs"
+      data-testid="short-tab-container"
+    >
       <button
         v-for="(tab, index) in tabs"
         :key="index"
@@ -8,6 +14,7 @@
           'short-tab__tab',
           { 'short-tab__tab--active': activeTab === index },
         ]"
+        :data-testid="`short-tab-button-${index}`"
         @click="switchTab(index)"
       >
         {{ tab.name }}
@@ -17,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from 'vue';
+import { ref, defineEmits, watch } from 'vue';
 interface Tab {
   name: string;
   key: string;
@@ -30,13 +37,21 @@ const props = withDefaults(defineProps<Props>(), {
   defaultTab: 0,
 });
 const emit = defineEmits<{
-  (_e: 'tabChange', tab: string): void;
+  (_e: 'tab-change', tab: string): void;
 }>();
 const activeTab = ref(props.defaultTab);
+
+watch(
+  () => props.defaultTab,
+  (newDefaultTab) => {
+    activeTab.value = newDefaultTab;
+  },
+);
+
 const switchTab = (index: number) => {
   if (index !== activeTab.value) {
     activeTab.value = index;
-    emit('tabChange', props.tabs[index].key);
+    emit('tab-change', props.tabs[index].key);
   }
 };
 </script>

@@ -59,7 +59,7 @@ export default async function mountInsightsApp({ containerId = 'app' } = {}) {
   app.mount(`#${containerId}`);
   appRef = app;
 
-  return appRef;
+  return { app: appRef, router };
 }
 
 if (sharedStore && isFederatedModule) {

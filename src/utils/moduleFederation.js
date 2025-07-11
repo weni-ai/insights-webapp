@@ -4,6 +4,9 @@ import env from './env';
 
 const isDev = !env('MODULE_FEDERATION_CONNECT_URL');
 
+export const isFederatedModule =
+  `${window.location.origin}` !== env('PUBLIC_PATH_URL');
+
 /**
  * Creates a safe async component with automatic defineAsyncComponent wrapper
  * @param {Function} importFn - The import function (e.g., () => import('remote/component'))

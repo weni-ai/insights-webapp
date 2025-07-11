@@ -3,6 +3,7 @@ import {
   createWebHistory,
   createMemoryHistory,
 } from 'vue-router';
+import { isFederatedModule } from '@/utils/moduleFederation';
 import Report from '@/views/insights/Report.vue';
 import DynamicDashboard from '@/views/insights/DynamicDashboard.vue';
 
@@ -25,65 +26,44 @@ const routes = [
   },
 ];
 
-let currentRouterInstance = null;
+const history = isFederatedModule
+  ? createMemoryHistory() // To isolate routing from parent app
+  : createWebHistory('/');
 
-export function createInsightsRouter(options = {}) {
-  const { isFederatedModule = false } = options;
+const router = createRouter({
+  history,
+  routes,
+});
 
-  const history = isFederatedModule
-    ? createMemoryHistory() // To isolate routing from parent app
-    : createWebHistory('/');
+router.beforeEach((to, from, next) => {
+  const nextPath = to.query.next;
 
-  const router = createRouter({
-    history,
-    routes,
-  });
+  if (nextPath)
+    next({ path: nextPath, query: { ...to.query, next: undefined } });
+  else next();
+});
 
-  router.beforeEach((to, from, next) => {
-    const nextPath = to.query.next;
+router.afterEach((router) => {
+  delete router.query.next;
+  delete router.query.projectUuid;
 
-    if (nextPath)
-      next({ path: nextPath, query: { ...to.query, next: undefined } });
-    else next();
-  });
-
-  router.afterEach((router) => {
-    delete router.query.next;
-    delete router.query.projectUuid;
-
-    if (isFederatedModule) {
-      window.dispatchEvent(
-        new CustomEvent('updateRoute', {
-          detail: { path: router.path, query: router.query },
-        }),
-      );
-    } else {
-      window.parent.postMessage(
-        {
-          event: 'changePathname',
-          pathname: window.location.pathname,
-          query: router.query,
-        },
-        '*',
-      );
-    }
-  });
-
-  if (!currentRouterInstance) {
-    currentRouterInstance = router;
+  if (isFederatedModule) {
+    window.dispatchEvent(
+      new CustomEvent('updateRoute', {
+        detail: { path: router.path, query: router.query },
+      }),
+    );
+  } else {
+    window.parent.postMessage(
+      {
+        event: 'changePathname',
+        pathname: window.location.pathname,
+        query: router.query,
+      },
+      '*',
+    );
   }
+});
 
-  return router;
-}
-
-const routerProxy = new Proxy(
-  {},
-  {
-    get(_, prop) {
-      return currentRouterInstance?.[prop];
-    },
-  },
-);
-
-export { routes, createInsightsRouter as createRouter };
-export default routerProxy;
+export { routes };
+export default router;

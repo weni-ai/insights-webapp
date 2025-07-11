@@ -1,10 +1,22 @@
 <template>
-  <section class="add-widget">
-    <h2 class="add-widget__title">Customize your dashboard</h2>
-    <p class="add-widget__description">
+  <section
+    class="add-widget"
+    data-testid="add-widget"
+  >
+    <h2
+      class="add-widget__title"
+      data-testid="add-widget-title"
+    >
+      Customize your dashboard
+    </h2>
+    <p
+      class="add-widget__description"
+      data-testid="add-widget-description"
+    >
       Customize the dashboard with your key metrics
     </p>
     <UnnnicButton
+      data-testid="add-widget-button"
       text="Add widget"
       iconLeft="add"
       size="small"
@@ -18,6 +30,7 @@
     :modelValue="isAddWidgetDrawerOpen"
     title="Widgets"
     class="add-widget-drawer"
+    data-testid="add-widget-drawer"
     @close="handleDrawerAddWidget"
   >
     <template #content>
@@ -26,9 +39,18 @@
           v-for="widget in availableWidgets"
           :key="widget.name"
           class="widget-list__item"
+          data-testid="add-widget-drawer-item"
         >
-          <h2 class="item__title">{{ widget.name }}</h2>
-          <p class="item__description">
+          <h2
+            class="item__title"
+            data-testid="add-widget-drawer-item-title"
+          >
+            {{ widget.name }}
+          </h2>
+          <p
+            class="item__description"
+            data-testid="add-widget-drawer-item-description"
+          >
             {{ widget.description }}
           </p>
         </li>

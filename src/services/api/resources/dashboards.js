@@ -54,17 +54,22 @@ export default {
 
   async getDashboardFilters(uuid) {
     // TODO: Remove this mock after the API is updated
-    if (uuid === mockConversationalDashboard.uuid)
-      return [
-        new Filter({
-          name: 0,
-          label: null,
-          placeholder: null,
-          type: 'select_date_range',
-          start_sufix: '_start',
-          end_sufix: '_end',
-        }),
-      ];
+    if (uuid === mockConversationalDashboard.uuid) {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve([
+            new Filter({
+              name: 0,
+              label: null,
+              placeholder: null,
+              type: 'date_range',
+              start_sufix: '_start',
+              end_sufix: '_end',
+            }),
+          ]);
+        }, 1000);
+      });
+    }
 
     if (!uuid) {
       throw new Error(

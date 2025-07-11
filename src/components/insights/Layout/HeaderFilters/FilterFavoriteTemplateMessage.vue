@@ -1,8 +1,5 @@
 <template>
-  <section
-    v-if="currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates"
-    class="filter-favorite-template"
-  >
+  <section class="filter-favorite-template">
     <p class="filter-favorite-template__label">
       {{ `${$t('template_messages_dashboard.favorites')}:` }}
     </p>
@@ -29,8 +26,6 @@ import i18n from '@/utils/plugins/i18n';
 
 const metaTemplateMessageStore = useMetaTemplateMessage();
 const dashboardsStore = useDashboards();
-
-const emptyTemplates = computed(() => metaTemplateMessageStore.emptyTemplates);
 
 const currentDashboard = computed(() => dashboardsStore.currentDashboard);
 

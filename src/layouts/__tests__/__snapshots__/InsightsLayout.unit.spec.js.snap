@@ -6,6 +6,7 @@ exports[`InsightsLayout > matches snapshot 1`] = `
   data-v-abe5f7dc=""
 >
   <insights-layout-header-stub
+    class="insights-layout__header"
     data-v-abe5f7dc=""
   />
   <!--v-if-->

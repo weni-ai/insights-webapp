@@ -2,8 +2,6 @@ import { defineAsyncComponent } from 'vue';
 import * as Sentry from '@sentry/browser';
 import env from './env';
 
-const isDev = !env('MODULE_FEDERATION_CONNECT_URL');
-
 export const isFederatedModule =
   `${window.location.origin}` !== env('PUBLIC_PATH_URL');
 
@@ -14,7 +12,7 @@ export const isFederatedModule =
  * @returns {Component} - Vue async component ready to use
  */
 export function safeAsyncComponent(importFn) {
-  if (isDev) return {};
+  if (!isFederatedModule) return {};
 
   return defineAsyncComponent(async () => {
     try {
@@ -46,7 +44,7 @@ export function safeAsyncComponent(importFn) {
  * @returns {Promise<Object>} - The imported object or empty object
  */
 export async function safeImport(importFn, importPath) {
-  if (isDev) return {};
+  if (!isFederatedModule) return {};
 
   try {
     const module = await importFn();

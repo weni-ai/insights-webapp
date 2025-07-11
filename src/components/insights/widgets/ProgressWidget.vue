@@ -81,7 +81,7 @@ import CardConversations from '@/components/insights/cards/CardConversations.vue
 import ShortTab from '@/components/ShortTab.vue';
 
 const emit = defineEmits<{
-  (_e: 'tabChange', tab: string): void;
+  (_e: 'tab-change', tab: string): void;
 }>();
 
 const props = defineProps<{
@@ -119,7 +119,7 @@ const showProgressWidget = computed(() => {
 });
 
 const handleTabChange = (tab: string) => {
-  emit('tabChange', tab);
+  emit('tab-change', tab);
 };
 </script>
 

@@ -124,15 +124,15 @@ describe('ProgressWidget.vue', () => {
       const shortTab = wrapper.findComponent({ name: 'ShortTab' });
       await shortTab.vm.$emit('tab-change', 'human-support');
 
-      expect(wrapper.emitted('tabChange')).toBeTruthy();
-      expect(wrapper.emitted('tabChange')[0]).toEqual(['human-support']);
+      expect(wrapper.emitted('tab-change')).toBeTruthy();
+      expect(wrapper.emitted('tab-change')[0]).toEqual(['human-support']);
     });
 
     it('should handle tab change correctly', async () => {
       await wrapper.vm.handleTabChange('intelligence-artificial');
 
-      expect(wrapper.emitted('tabChange')).toBeTruthy();
-      expect(wrapper.emitted('tabChange')[0]).toEqual([
+      expect(wrapper.emitted('tab-change')).toBeTruthy();
+      expect(wrapper.emitted('tab-change')[0]).toEqual([
         'intelligence-artificial',
       ]);
     });

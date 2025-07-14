@@ -59,15 +59,15 @@ export default {
         setTimeout(() => {
           resolve([
             new Filter({
-              name: 0,
+              name: 'ended_at',
               label: null,
               placeholder: null,
               type: 'date_range',
-              start_sufix: '_start',
-              end_sufix: '_end',
+              start_sufix: '__gte',
+              end_sufix: '__lte',
             }),
           ]);
-        }, 1000);
+        }, 500);
       });
     }
 

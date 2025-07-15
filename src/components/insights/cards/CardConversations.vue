@@ -18,7 +18,7 @@
         v-if="tooltipInfo"
         enabled
         :text="tooltipInfo"
-        side="left"
+        :side="tooltipSide || 'top '"
         class="card-conversations__tooltip"
         data-testid="card-conversations-tooltip"
       >
@@ -78,6 +78,7 @@ interface Props {
   description?: string;
   tooltipInfo?: string;
   isLoading?: boolean;
+  tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
 }
 
 const props = defineProps<Props>();

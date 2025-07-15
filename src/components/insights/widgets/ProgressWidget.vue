@@ -17,6 +17,7 @@
           :value="card.value"
           :valueDescription="card.valueDescription"
           :tooltipInfo="card.tooltipInfo"
+          :tooltipSide="'left'"
           :isLoading="card.isLoading"
         />
       </section>

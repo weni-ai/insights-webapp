@@ -17,6 +17,7 @@
           :description="card.description"
           :tooltipInfo="card.tooltipInfo"
           :borderRadius="getBorderRadius(index, cards.length)"
+          :tooltipSide="'top'"
           :isLoading="card.isLoading"
         />
       </template>
@@ -30,6 +31,7 @@
         :value="rightCard.value"
         :description="rightCard.description"
         :tooltipInfo="rightCard.tooltipInfo"
+        :tooltipSide="'left'"
         :isLoading="rightCard.isLoading"
       />
     </section>
@@ -172,8 +174,8 @@ const loadData = async (
     targetRef.isLoading = false;
   } catch (error) {
     console.error(errorMessage, error);
-    targetRef.value = '--';
-    targetRef.description = null;
+    targetRef.value = '-';
+    targetRef.description = `0 ${t('conversations_dashboard.conversations')}`;
     targetRef.isLoading = false;
     showErrorToast();
   }

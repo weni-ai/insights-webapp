@@ -49,9 +49,11 @@ describe('AddWidget', () => {
   describe('Initial render', () => {
     it('should render the component with correct title and description', () => {
       expect(addWidgetSection().exists()).toBe(true);
-      expect(addWidgetTitle().text()).toBe('Customize your dashboard');
+      expect(addWidgetTitle().text()).toBe(
+        'conversations_dashboard.customize_your_dashboard.title',
+      );
       expect(addWidgetDescription().text()).toBe(
-        'Customize the dashboard with your key metrics',
+        'conversations_dashboard.customize_your_dashboard.description',
       );
     });
 

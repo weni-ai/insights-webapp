@@ -21,6 +21,7 @@
             :description="card.description"
             :tooltipInfo="card.tooltipInfo"
             :borderRadius="getBorderRadius(index, cards.length)"
+            :tooltipSide="'top'"
             :isLoading="card.isLoading"
           />
         </template>
@@ -34,6 +35,7 @@
           :value="rightCard.value"
           :description="rightCard.description"
           :tooltipInfo="rightCard.tooltipInfo"
+          :tooltipSide="'left'"
           :isLoading="rightCard.isLoading"
         />
       </section>

@@ -76,6 +76,7 @@ defineProps<{
       flex-shrink: 0;
       display: flex;
       align-items: center;
+      justify-content: end;
       color: $unnnic-color-neutral-dark;
       font-family: $unnnic-font-family-secondary;
       font-size: $unnnic-font-size-body-lg;

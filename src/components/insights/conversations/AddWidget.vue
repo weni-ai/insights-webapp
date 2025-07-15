@@ -7,17 +7,17 @@
       class="add-widget__title"
       data-testid="add-widget-title"
     >
-      Customize your dashboard
+      {{ $t('conversations_dashboard.customize_your_dashboard.title') }}
     </h2>
     <p
       class="add-widget__description"
       data-testid="add-widget-description"
     >
-      Customize the dashboard with your key metrics
+      {{ $t('conversations_dashboard.customize_your_dashboard.description') }}
     </p>
     <UnnnicButton
       data-testid="add-widget-button"
-      text="Add widget"
+      :text="$t('conversations_dashboard.customize_your_dashboard.add_widget')"
       iconLeft="add"
       size="small"
       type="primary"
@@ -84,6 +84,10 @@ const availableWidgets = ref([
 
 <style scoped lang="scss">
 .add-widget {
+  position: absolute;
+  top: 0;
+  right: 0;
+
   padding: $unnnic-spacing-nano 0;
 
   display: flex;
@@ -95,7 +99,7 @@ const availableWidgets = ref([
   width: 100%;
   height: 100%;
 
-  border-radius: $unnnic-border-radius-sm;
+  border-radius: $unnnic-border-radius-md;
   border: $unnnic-border-width-thinner dashed $unnnic-color-neutral-soft;
   background: #ffffffcc;
 

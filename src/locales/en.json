@@ -23,15 +23,15 @@
     "header": {
       "total": "Total Conversations",
       "resolved": "Resolved",
-      "unresolved": "Unresolved",
+      "unresolved": "Unresolved", 
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
-        "total": "Total number of conversations",
-        "resolved": "Number of conversations that have been resolved",
-        "unresolved": "Number of conversations that have not been resolved",
-        "unengaged": "Number of conversations that have not been engaged",
-        "transferred": "Number of conversations that have been transferred to human support"
+        "total": "Total conversations started in the period. A conversation is  counted 24 hours after the contact's first message.",
+        "resolved": "Resolved Conversation: The contact interacted with questions/requests and received responses that helped complete the demand (total or partial).",
+        "unresolved": "Unresolved Conversation: The contact interacted with questions/requests,  but the conversation didn't resolve the demand (totally or partially).",
+        "unengaged": "Conversation without useful engagement: The conversation was limited to greetings, emojis, or was ended without relevant interaction.",
+        "transferred": "Includes conversations (resolved or unresolved) that were forwarded to a human agent."
       }
     }
   },
@@ -126,7 +126,7 @@
       "get_data_fail": "Failed to fetch data from contacts who responded to this flow."
     }
   },
-  "filter": {
+  "filter": { 
     "agent": {
       "label": "Agent",
       "placeholder": "Select agent"

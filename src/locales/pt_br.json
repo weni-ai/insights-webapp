@@ -27,11 +27,11 @@
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
-        "total": "Total de conversas",
-        "resolved": "Total de conversas resolvidas",
-        "unresolved": "Total de conversas não resolvidas",
-        "unengaged": "Total de conversas não engajadas",
-        "transferred": "Total de conversas transferidas para atendimento humano"
+        "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
+        "resolved": "Conversa resolvida: O contato interagiu com perguntas/solicitações e recebeu respostas que ajudaram a completar a demanda (total ou parcial).",
+        "unresolved": "Conversa não resolvida: O contato interagiu com perguntas/solicitações, mas a conversa não resolveu a demanda (total ou parcial).",
+        "unengaged": "Conversa sem engajamento útil: A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
+        "transferred": "Inclui conversas (resolvidas ou não) que foram encaminhadas para atendimento humano."
       }
     }
   },

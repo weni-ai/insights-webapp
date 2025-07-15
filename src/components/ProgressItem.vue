@@ -3,17 +3,12 @@
     class="progress-item"
     data-testid="progress-item"
   >
-    <section
-      class="progress-item__container"
-      data-testid="progress-item-container"
+    <p
+      class="progress-item__text"
+      data-testid="progress-item-text"
     >
-      <p
-        class="progress-item__text"
-        data-testid="progress-item-text"
-      >
-        {{ text }}
-      </p>
-    </section>
+      {{ text }}
+    </p>
     <section
       class="progress-item__progress"
       data-testid="progress-item-progress"
@@ -54,21 +49,13 @@ defineProps<{
   align-items: center;
   align-self: stretch;
 
-  &__container {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: center;
-    height: 100%;
-  }
-
   &__text {
     flex: 2;
+    width: 180px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     flex-shrink: 0;
-    align-items: center;
+    align-items: flex-start;
     color: $unnnic-color-neutral-darkest;
     font-family: $unnnic-font-family-secondary;
     font-size: $unnnic-font-size-body-lg;

@@ -40,7 +40,6 @@ describe('ProgressItem.vue', () => {
   describe('Component Structure', () => {
     const requiredElements = [
       'progress-item',
-      'progress-item-container',
       'progress-item-text',
       'progress-item-progress',
       'progress-item-native-progress',
@@ -55,11 +54,6 @@ describe('ProgressItem.vue', () => {
 
     it('should apply correct CSS classes', () => {
       expectElementClass(wrapper, 'progress-item', 'progress-item');
-      expectElementClass(
-        wrapper,
-        'progress-item-container',
-        'progress-item__container',
-      );
       expectElementClass(wrapper, 'progress-item-text', 'progress-item__text');
       expectElementClass(
         wrapper,

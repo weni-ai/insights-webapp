@@ -65,9 +65,6 @@ describe('DashboardHeader.vue', () => {
 
   describe('Component Structure', () => {
     it('should render dashboard structure correctly', () => {
-      expect(
-        wrapper.find('[data-testid="dashboard-conversational"]').exists(),
-      ).toBe(true);
       expect(wrapper.find('[data-testid="dashboard-header"]').exists()).toBe(
         true,
       );
@@ -471,10 +468,6 @@ describe('DashboardHeader.vue', () => {
 
   describe('Integration Testing', () => {
     it('should handle complete component lifecycle', async () => {
-      expect(
-        wrapper.find('[data-testid="dashboard-conversational"]').exists(),
-      ).toBe(true);
-
       const allCards = wrapper.findAllComponents({ name: 'CardConversations' });
       expect(allCards).toHaveLength(5);
 
@@ -537,9 +530,6 @@ describe('DashboardHeader.vue', () => {
       const testWrapper = createWrapper();
 
       expect(testWrapper.exists()).toBe(true);
-      expect(
-        testWrapper.find('[data-testid="dashboard-conversational"]').exists(),
-      ).toBe(true);
 
       expect(testWrapper.vm.cardsData).toHaveLength(4);
       expect(testWrapper.vm.rightCardData).toBeDefined();

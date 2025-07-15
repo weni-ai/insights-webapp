@@ -1,44 +1,39 @@
 <template>
   <section
-    class="dashboard-conversational"
-    data-testid="dashboard-conversational"
+    class="dashboard-conversational__header"
+    data-testid="dashboard-header"
   >
     <section
-      class="dashboard-conversational__header"
-      data-testid="dashboard-header"
+      class="header__cards"
+      data-testid="dashboard-header-left"
     >
-      <section
-        class="dashboard-conversational__cards"
-        data-testid="dashboard-header-left"
-      >
-        <template
-          v-for="(card, index) in cards"
-          :key="card.id"
-        >
-          <CardConversations
-            :title="card.title"
-            :value="card.value"
-            :description="card.description"
-            :tooltipInfo="card.tooltipInfo"
-            :borderRadius="getBorderRadius(index, cards.length)"
-            :tooltipSide="'top'"
-            :isLoading="card.isLoading"
-          />
-        </template>
-      </section>
-      <section
-        class="dashboard-conversational__summary"
-        data-testid="dashboard-header-right"
+      <template
+        v-for="(card, index) in cards"
+        :key="card.id"
       >
         <CardConversations
-          :title="rightCard.title"
-          :value="rightCard.value"
-          :description="rightCard.description"
-          :tooltipInfo="rightCard.tooltipInfo"
-          :tooltipSide="'left'"
-          :isLoading="rightCard.isLoading"
+          :title="card.title"
+          :value="card.value"
+          :description="card.description"
+          :tooltipInfo="card.tooltipInfo"
+          :borderRadius="getBorderRadius(index, cards.length)"
+          :tooltipSide="'top'"
+          :isLoading="card.isLoading"
         />
-      </section>
+      </template>
+    </section>
+    <section
+      class="header__summary"
+      data-testid="dashboard-header-right"
+    >
+      <CardConversations
+        :title="rightCard.title"
+        :value="rightCard.value"
+        :description="rightCard.description"
+        :tooltipInfo="rightCard.tooltipInfo"
+        :tooltipSide="'left'"
+        :isLoading="rightCard.isLoading"
+      />
     </section>
   </section>
 </template>
@@ -222,26 +217,22 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-.dashboard-conversational {
+.dashboard-conversational__header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: $unnnic-spacing-sm;
 
-  &__header {
+  width: 100%;
+
+  .header__cards {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: $unnnic-spacing-sm;
+    flex: 9;
   }
 
-  &__cards {
+  .header__summary {
     display: flex;
-    flex: 8;
-  }
-
-  &__summary {
-    display: flex;
-    flex: 2;
+    flex: 3;
   }
 }
 </style>

@@ -20,6 +20,8 @@
   },
   "conversations_dashboard": {
     "conversations": "conversaciones",
+    "artificial_intelligence": "IA",
+    "human_support": "Atención humana",
     "header": {
       "total": "Total de conversaciones",
       "resolved": "Resueltas",
@@ -33,6 +35,14 @@
         "unengaged": "Total de conversaciones no engajadas",
         "transferred": "Total de conversaciones transferidas para atención humana"
       }
+    },
+    "most_talked_about_topics": {
+      "title": "Tópicos más hablados"
+    },
+    "customize_your_dashboard": {
+      "title": "Personaliza tu dashboard",
+      "description": "Personaliza el dashboard con tus métricas clave",
+      "add_widget": "Agregar widget"
     }
   },
   "template_messages_dashboard": {

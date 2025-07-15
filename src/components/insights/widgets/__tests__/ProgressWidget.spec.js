@@ -44,37 +44,7 @@ describe('ProgressWidget.vue', () => {
     wrapper = createWrapper();
   });
 
-  describe('Loading State', () => {
-    it('should show skeleton when isLoading is true', async () => {
-      await wrapper.setProps({ isLoading: true });
-
-      expectElementExists(wrapper, 'progress-widget-skeleton');
-      expectElementExists(wrapper, 'progress-widget', false);
-    });
-
-    it('should show content when isLoading is false', () => {
-      expectElementExists(wrapper, 'progress-widget-skeleton', false);
-      expectElementExists(wrapper, 'progress-widget');
-    });
-  });
-
   describe('Content Rendering', () => {
-    it('should render title correctly', () => {
-      expectElementText(
-        wrapper,
-        'progress-widget-title',
-        'Test Progress Widget',
-      );
-    });
-
-    it('should render tabs with correct configuration', () => {
-      expectElementExists(wrapper, 'progress-widget-tabs');
-      expect(wrapper.vm.tabs).toEqual([
-        { name: 'IA', key: 'intelligence-artificial' },
-        { name: 'Human support', key: 'human-support' },
-      ]);
-    });
-
     it('should render progress items', () => {
       const progressItems = wrapper.findAll(
         '[data-testid="progress-widget-progress-item"]',
@@ -119,25 +89,6 @@ describe('ProgressWidget.vue', () => {
     });
   });
 
-  describe('Tab Functionality', () => {
-    it('should emit tabChange event when tab is changed', async () => {
-      const shortTab = wrapper.findComponent({ name: 'ShortTab' });
-      await shortTab.vm.$emit('tab-change', 'human-support');
-
-      expect(wrapper.emitted('tab-change')).toBeTruthy();
-      expect(wrapper.emitted('tab-change')[0]).toEqual(['human-support']);
-    });
-
-    it('should handle tab change correctly', async () => {
-      await wrapper.vm.handleTabChange('intelligence-artificial');
-
-      expect(wrapper.emitted('tab-change')).toBeTruthy();
-      expect(wrapper.emitted('tab-change')[0]).toEqual([
-        'intelligence-artificial',
-      ]);
-    });
-  });
-
   describe('Props Integration', () => {
     it('should render all elements when all props are provided', async () => {
       const props = {
@@ -163,7 +114,6 @@ describe('ProgressWidget.vue', () => {
 
       await wrapper.setProps(props);
 
-      expectElementText(wrapper, 'progress-widget-title', props.title);
       expectElementExists(wrapper, 'progress-widget-card');
       expectElementExists(wrapper, 'progress-widget-footer');
       expectElementText(
@@ -190,8 +140,6 @@ describe('ProgressWidget.vue', () => {
         progressItems: [{ text: 'Minimal Item', value: 25 }],
       });
 
-      expectElementExists(minimalWrapper, 'progress-widget-title');
-      expectElementExists(minimalWrapper, 'progress-widget-tabs');
       expectElementExists(minimalWrapper, 'progress-widget-card', false);
       expectElementExists(minimalWrapper, 'progress-widget-footer', false);
 
@@ -202,29 +150,10 @@ describe('ProgressWidget.vue', () => {
     });
   });
 
-  describe('Computed Properties', () => {
-    it('should compute showProgressWidget correctly', async () => {
-      expect(wrapper.vm.showProgressWidget).toBe(true);
-
-      await wrapper.setProps({ isLoading: true });
-      expect(wrapper.vm.showProgressWidget).toBe(false);
-    });
-
-    it('should compute tabs correctly', () => {
-      expect(wrapper.vm.tabs).toEqual([
-        { name: 'IA', key: 'intelligence-artificial' },
-        { name: 'Human support', key: 'human-support' },
-      ]);
-    });
-  });
-
   describe('Component Structure', () => {
     const requiredElements = [
-      'progress-widget-header',
-      'progress-widget-title',
-      'progress-widget-actions',
-      'progress-widget-tabs',
       'progress-widget-content',
+      'progress-widget-progress-item',
     ];
 
     requiredElements.forEach((testId) => {

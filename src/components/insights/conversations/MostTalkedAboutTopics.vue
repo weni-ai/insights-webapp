@@ -47,9 +47,13 @@ const MOCK_DATA = [
 
 <style lang="scss" scoped>
 .most-talked-about-topics {
+  padding-bottom: $unnnic-spacing-sm;
+
   overflow: hidden;
 
   min-width: 100%;
   height: 380px;
+
+  gap: $unnnic-spacing-ant;
 }
 </style>

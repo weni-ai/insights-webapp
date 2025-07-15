@@ -1,8 +1,14 @@
 <template>
-  <canvas
-    ref="treemapCanvas"
-    style="height: 100%; width: 100%"
-  />
+  <section
+    ref="treemapChart"
+    class="treemap-chart"
+  >
+    <canvas
+      ref="treemapCanvas"
+      class="treemap-canvas"
+      height="100%"
+    />
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -17,6 +23,7 @@ ChartJS.defaults.font.family = 'Lato, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);
 
 const treemapCanvas = ref<HTMLCanvasElement | null>(null);
+const treemapChart = ref<HTMLDivElement | null>(null);
 
 const emit = defineEmits<{
   (_event: 'click', _data: TreemapDataItem);
@@ -96,6 +103,7 @@ onMounted(() => {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           display: false,
@@ -132,3 +140,14 @@ onMounted(() => {
   });
 });
 </script>
+
+<style lang="scss" scoped>
+.treemap-chart {
+  height: 100%;
+  width: calc(100% + 12px);
+}
+
+.treemap-canvas {
+  transform: translateX(-6px);
+}
+</style>

@@ -4,32 +4,32 @@
     class="base-conversation-widget__skeleton"
     :width="`100%`"
     height="450px"
-    data-testid="progress-widget-skeleton"
+    data-testid="base-conversation-widget-skeleton"
   />
 
   <section
     v-else
     class="base-conversation-widget"
     v-bind="$attrs"
-    data-testid="progress-widget"
+    data-testid="base-conversation-widget"
   >
     <section
       class="base-conversation-widget__header"
-      data-testid="progress-widget-header"
+      data-testid="base-conversation-widget-header"
     >
       <p
         class="header__title"
-        data-testid="progress-widget-title"
+        data-testid="base-conversation-widget-title"
       >
         {{ title }}
       </p>
       <section
         class="header__actions"
-        data-testid="progress-widget-actions"
+        data-testid="base-conversation-widget-actions"
       >
         <ShortTab
           :tabs="tabs"
-          data-testid="progress-widget-tabs"
+          data-testid="base-conversation-widget-tabs"
           @tab-change="handleTabChange"
         />
         <slot name="actions" />
@@ -56,7 +56,7 @@ defineProps<{
 const tabs = computed(() => [
   {
     name: i18n.global.t('conversations_dashboard.artificial_intelligence'),
-    key: 'intelligence-artificial',
+    key: 'artificial-intelligence',
   },
   {
     name: i18n.global.t('conversations_dashboard.human_support'),

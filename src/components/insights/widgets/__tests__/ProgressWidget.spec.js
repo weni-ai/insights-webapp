@@ -152,9 +152,8 @@ describe('ProgressWidget.vue', () => {
 
   describe('Component Structure', () => {
     const requiredElements = [
-      'progress-widget-header',
-      'progress-widget-actions',
       'progress-widget-content',
+      'progress-widget-progress-item',
     ];
 
     requiredElements.forEach((testId) => {

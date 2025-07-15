@@ -18,6 +18,33 @@
       "closeds": "Total number of chats that have been completed."
     }
   },
+  "conversations_dashboard": {
+    "conversations": "conversations",
+    "artificial_intelligence": "AI",
+    "human_support": "Human Support",
+    "header": {
+      "total": "Total Conversations",
+      "resolved": "Resolved",
+      "unresolved": "Unresolved", 
+      "unengaged": "Unengaged",
+      "transferred": "Transferred to human support",
+      "tooltips": {
+        "total": "Total conversations started in the period. A conversation is  counted 24 hours after the contact's first message.",
+        "resolved": "Resolved Conversation: The contact interacted with questions/requests and received responses that helped complete the demand (total or partial).",
+        "unresolved": "Unresolved Conversation: The contact interacted with questions/requests,  but the conversation didn't resolve the demand (totally or partially).",
+        "unengaged": "Conversation without useful engagement: The conversation was limited to greetings, emojis, or was ended without relevant interaction.",
+        "transferred": "Includes conversations (resolved or unresolved) that were forwarded to a human agent."
+      }
+    },
+    "most_talked_about_topics": {
+      "title": "Most talked about topics"
+    },
+    "customize_your_dashboard": {
+      "title": "Customize your dashboard",
+      "description": "Customize the dashboard with your key metrics",
+      "add_widget": "Add widget"
+    }
+  },
   "template_messages_dashboard": {
     "title": "Template messages Meta",
     "favorites": "Favorites",
@@ -109,7 +136,7 @@
       "get_data_fail": "Failed to fetch data from contacts who responded to this flow."
     }
   },
-  "filter": {
+  "filter": { 
     "agent": {
       "label": "Agent",
       "placeholder": "Select agent"

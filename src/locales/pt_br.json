@@ -18,6 +18,33 @@
       "closeds": "Total de chats que já foram finalizados."
     }
   },
+  "conversations_dashboard": {
+    "conversations": "conversas",
+    "artificial_intelligence": "IA",
+    "human_support": "Atendimento humano",
+    "header": {
+      "total": "Total de conversas",
+      "resolved": "Resolvidas",
+      "unresolved": "Não resolvidas",
+      "unengaged": "Não engajadas",
+      "transferred": "Transferidas para atendimento humano",
+      "tooltips": {
+        "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
+        "resolved": "Conversa resolvida: O contato interagiu com perguntas/solicitações e recebeu respostas que ajudaram a completar a demanda (total ou parcial).",
+        "unresolved": "Conversa não resolvida: O contato interagiu com perguntas/solicitações, mas a conversa não resolveu a demanda (total ou parcial).",
+        "unengaged": "Conversa sem engajamento útil: A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
+        "transferred": "Inclui conversas (resolvidas ou não) que foram encaminhadas para atendimento humano."
+      }
+    },
+    "most_talked_about_topics": {
+      "title": "Tópicos mais falados"
+    },
+    "customize_your_dashboard": {
+      "title": "Personalize seu dashboard",
+      "description": "Personalize o dashboard com suas métricas chave",
+      "add_widget": "Adicionar widget"
+    }
+  },
   "template_messages_dashboard": {
     "title": "Mensagens template Meta",
     "favorites": "Favoritos",

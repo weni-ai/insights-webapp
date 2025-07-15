@@ -1,6 +1,10 @@
 <template>
   <section class="insights-layout-header-filters">
-    <FilterFavoriteTemplateMessage />
+    <FilterFavoriteTemplateMessage
+      v-if="
+        currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates
+      "
+    />
     <LastUpdatedText v-if="isHumanServiceDashboard" />
     <template v-if="hasManyFilters">
       <UnnnicButton

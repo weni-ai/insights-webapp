@@ -179,8 +179,8 @@ const loadData = async (
     targetRef.isLoading = false;
   } catch (error) {
     console.error(errorMessage, error);
-    targetRef.value = '--';
-    targetRef.description = null;
+    targetRef.value = '-';
+    targetRef.description = `0 ${t('conversations_dashboard.conversations')}`;
     targetRef.isLoading = false;
     showErrorToast();
   }

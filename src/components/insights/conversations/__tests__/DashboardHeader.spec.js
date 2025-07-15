@@ -227,8 +227,8 @@ describe('DashboardHeader.vue', () => {
 
       await vm.loadData(mockFetch, targetRef, 'Test error message');
 
-      expect(targetRef.value).toBe('--');
-      expect(targetRef.description).toBe(null);
+      expect(targetRef.value).toBe('-');
+      expect(targetRef.description).toBe('0 conversations');
       expect(targetRef.isLoading).toBe(false);
       expect(consoleSpy).toHaveBeenCalledWith(
         'Test error message',
@@ -303,32 +303,32 @@ describe('DashboardHeader.vue', () => {
 
       vm.cardsData[0] = {
         ...vm.cardsData[0],
-        value: '--',
-        description: null,
+        value: '-',
+        description: '0 conversations',
         isLoading: false,
       };
       vm.cardsData[1] = {
         ...vm.cardsData[1],
-        value: '--',
-        description: null,
+        value: '-',
+        description: '0 conversations',
         isLoading: false,
       };
       vm.cardsData[2] = {
         ...vm.cardsData[2],
-        value: '--',
-        description: null,
+        value: '-',
+        description: '0 conversations',
         isLoading: false,
       };
       vm.cardsData[3] = {
         ...vm.cardsData[3],
-        value: '--',
-        description: null,
+        value: '-',
+        description: '0 conversations',
         isLoading: false,
       };
       vm.rightCardData = {
         ...vm.rightCardData,
-        value: '--',
-        description: null,
+        value: '-',
+        description: '0 conversations',
         isLoading: false,
       };
 
@@ -336,11 +336,11 @@ describe('DashboardHeader.vue', () => {
 
       await wrapper.vm.$nextTick();
 
-      expect(vm.cardsData[0].value).toBe('--');
-      expect(vm.cardsData[1].value).toBe('--');
-      expect(vm.cardsData[2].value).toBe('--');
-      expect(vm.cardsData[3].value).toBe('--');
-      expect(vm.rightCardData.value).toBe('--');
+      expect(vm.cardsData[0].value).toBe('-');
+      expect(vm.cardsData[1].value).toBe('-');
+      expect(vm.cardsData[2].value).toBe('-');
+      expect(vm.cardsData[3].value).toBe('-');
+      expect(vm.rightCardData.value).toBe('-');
 
       expect(UnnnicSystem.unnnicCallAlert).toHaveBeenCalledWith({
         props: {
@@ -366,7 +366,7 @@ describe('DashboardHeader.vue', () => {
       };
       vm.cardsData[1] = {
         ...vm.cardsData[1],
-        value: '--',
+        value: '-',
         isLoading: false,
       };
       vm.cardsData[2] = {
@@ -376,7 +376,7 @@ describe('DashboardHeader.vue', () => {
       };
       vm.cardsData[3] = {
         ...vm.cardsData[3],
-        value: '--',
+        value: '-',
         isLoading: false,
       };
       vm.rightCardData = {
@@ -388,9 +388,9 @@ describe('DashboardHeader.vue', () => {
       await wrapper.vm.$nextTick();
 
       expect(vm.cardsData[0].value).toBe('48.179');
-      expect(vm.cardsData[1].value).toBe('--');
+      expect(vm.cardsData[1].value).toBe('-');
       expect(vm.cardsData[2].value).toBe('5.25%');
-      expect(vm.cardsData[3].value).toBe('--');
+      expect(vm.cardsData[3].value).toBe('-');
       expect(vm.rightCardData.value).toBe('12.22%');
 
       consoleSpy.mockRestore();

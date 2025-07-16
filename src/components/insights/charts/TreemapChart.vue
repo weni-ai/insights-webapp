@@ -1,10 +1,12 @@
 <template>
   <section
     ref="treemapChart"
+    data-testid="treemap-chart"
     class="treemap-chart"
   >
     <canvas
       ref="treemapCanvas"
+      data-testid="treemap-canvas"
       class="treemap-canvas"
       height="100%"
     />
@@ -147,10 +149,12 @@ onMounted(() => {
 <style lang="scss" scoped>
 .treemap-chart {
   height: 100%;
-  width: calc(100% + 12px);
+  width: calc(
+    100% + 12px
+  ); // 12px is the compensation for the  visual padding to the chart
 }
 
 .treemap-canvas {
-  transform: translateX(-6px);
+  transform: translateX(-6px); // Need to remove visual padding from the chart
 }
 </style>

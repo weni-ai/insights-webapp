@@ -70,12 +70,12 @@ onMounted(() => {
               if (ctx.type !== 'data') return;
 
               const data = ctx.raw._data;
-              const paddingLeft = '    ';
-              // Yes, this is a workaround to add left padding to the label.
+              const padding = '    ';
+              // Yes, this is a workaround to add padding to the label.
               // Each space here is 4px, so 4 spaces is 16px :)
               return [
-                `${paddingLeft}${data.label} (${data.percentage}%)`,
-                `${paddingLeft}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}`,
+                `${padding}${data.label} (${data.percentage}%)${padding}`,
+                `${padding}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}${padding}`,
               ];
             },
             color: '#3B414D',

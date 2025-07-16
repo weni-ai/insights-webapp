@@ -22,6 +22,8 @@
     "conversations": "conversaciones",
     "artificial_intelligence": "IA",
     "human_support": "Atención humana",
+    "others": "Otros",
+    "unclassified": "No clasificado",
     "header": {
       "total": "Total de conversaciones",
       "resolved": "Resueltas",

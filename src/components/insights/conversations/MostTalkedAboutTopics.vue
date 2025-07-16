@@ -3,16 +3,57 @@
     class="most-talked-about-topics"
     :title="$t('conversations_dashboard.most_talked_about_topics.title')"
   >
+    <TreemapChart :data="MOCK_DATA" />
   </BaseConversationWidget>
 </template>
 
 <script setup lang="ts">
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
+import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
+
+const MOCK_DATA = [
+  {
+    label: 'Entrega atrasada',
+    value: 6973,
+    percentage: 29,
+  },
+  {
+    label: 'Produto defeituoso',
+    value: 5500,
+    percentage: 23,
+  },
+  {
+    label: 'Dúvidas sobre preço',
+    value: 1600,
+    percentage: 16,
+  },
+  {
+    label: 'Cancelamento',
+    value: 1400,
+    percentage: 14,
+  },
+  {
+    label: 'Unclassified',
+    value: 1000,
+    percentage: 13,
+  },
+  {
+    label: 'Outros',
+    value: 500,
+    percentage: 5,
+  },
+];
 </script>
 
 <style lang="scss" scoped>
 .most-talked-about-topics {
+  padding-bottom: $unnnic-spacing-sm;
+
+  overflow: hidden;
+
   min-width: 100%;
-  min-height: 380px;
+  height: 380px;
+
+  gap: $unnnic-spacing-ant;
 }
 </style>

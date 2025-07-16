@@ -6,31 +6,31 @@
         {
           text: '🤩 Very satisfied',
           value: 57,
-          color: '#673AB7',
+          color: '#805AD5',
           backgroundColor: '#E9D8FD',
         },
         {
           text: '😁 Satisfied',
           value: 25,
-          color: '#673AB7',
+          color: '#805AD5',
           backgroundColor: '#E9D8FD',
         },
         {
           text: '😐 Neutral',
           value: 12,
-          color: '#673AB7',
+          color: '#805AD5',
           backgroundColor: '#E9D8FD',
         },
         {
           text: '☹️ Dissatisfied',
           value: 5,
-          color: '#673AB7',
+          color: '#805AD5',
           backgroundColor: '#E9D8FD',
         },
         {
           text: '😡 Very dissatisfied',
           value: 1,
-          color: '#673AB7',
+          color: '#805AD5',
           backgroundColor: '#E9D8FD',
         },
       ]"

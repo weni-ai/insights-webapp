@@ -21,15 +21,8 @@
           :isLoading="card.isLoading"
         />
       </section>
-      <ProgressItem
-        v-for="item in progressItems"
-        :key="item.text"
-        :text="item.text"
-        :value="item.value"
-        :backgroundColor="item.backgroundColor"
-        :progressColor="item.color"
-        data-testid="progress-widget-progress-item"
-      />
+
+      <ProgressTable :progressItems="treatedProgressItems" />
     </section>
     <section
       v-if="footerText"
@@ -47,12 +40,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
+import { computed, defineProps } from 'vue';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
-import ProgressItem from '@/components/ProgressItem.vue';
+import ProgressTable from '@/components/ProgressTable.vue';
 
-defineProps<{
+const props = defineProps<{
   title: string;
   card?: {
     title: string;
@@ -70,6 +63,16 @@ defineProps<{
   footerText?: string;
   isLoading?: boolean;
 }>();
+
+const treatedProgressItems = computed(() => {
+  return props.progressItems.map((item) => ({
+    label: item.text,
+    description: `${item.value}%`,
+    value: item.value,
+    backgroundColor: item.backgroundColor,
+    color: item.color,
+  }));
+});
 </script>
 
 <style scoped lang="scss">

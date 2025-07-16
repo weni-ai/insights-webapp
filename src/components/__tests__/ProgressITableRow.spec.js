@@ -1,17 +1,18 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 
-import ProgressItem from '../ProgressItem.vue';
+import ProgressTableRow from '../ProgressTableRow.vue';
 
 config.global.plugins = [];
 
 const defaultProps = {
-  text: 'Test Progress',
+  label: 'Test Progress',
   value: 75,
+  description: 'Test Description',
 };
 
 const createWrapper = (props = {}) => {
-  return mount(ProgressItem, {
+  return mount(ProgressTableRow, {
     props: { ...defaultProps, ...props },
   });
 };
@@ -30,7 +31,7 @@ const expectElementClass = (wrapper, testId, expectedClass) => {
   );
 };
 
-describe('ProgressItem.vue', () => {
+describe('ProgressTableRow.vue', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -39,11 +40,10 @@ describe('ProgressItem.vue', () => {
 
   describe('Component Structure', () => {
     const requiredElements = [
-      'progress-item',
-      'progress-item-text',
-      'progress-item-progress',
-      'progress-item-native-progress',
-      'progress-item-value',
+      'progress-table-row',
+      'progress-table-row-text',
+      'progress-table-row-progress',
+      'progress-table-row-description',
     ];
 
     requiredElements.forEach((testId) => {
@@ -53,42 +53,40 @@ describe('ProgressItem.vue', () => {
     });
 
     it('should apply correct CSS classes', () => {
-      expectElementClass(wrapper, 'progress-item', 'progress-item');
-      expectElementClass(wrapper, 'progress-item-text', 'progress-item__text');
+      expectElementClass(wrapper, 'progress-table-row', 'progress-table-row');
       expectElementClass(
         wrapper,
-        'progress-item-progress',
-        'progress-item__progress',
+        'progress-table-row-text',
+        'progress-table-row__text',
       );
       expectElementClass(
         wrapper,
-        'progress-item-value',
-        'progress-item__progress__value',
+        'progress-table-row-description',
+        'progress-table-row__description',
       );
     });
   });
 
   describe('Content Rendering', () => {
     it('should render text prop correctly', () => {
-      expectElementText(wrapper, 'progress-item-text', 'Test Progress');
+      expectElementText(wrapper, 'progress-table-row-text', 'Test Progress');
     });
 
     it('should render value as percentage', () => {
-      expectElementText(wrapper, 'progress-item-value', '75%');
+      expectElementText(
+        wrapper,
+        'progress-table-row-description',
+        'Test Description',
+      );
     });
 
     it('should render custom text when provided', async () => {
-      await wrapper.setProps({ text: 'Custom Progress Text' });
-      expectElementText(wrapper, 'progress-item-text', 'Custom Progress Text');
-    });
-
-    it('should render different value percentages', async () => {
-      const testValues = [0, 25, 50, 100];
-
-      for (const value of testValues) {
-        await wrapper.setProps({ value });
-        expectElementText(wrapper, 'progress-item-value', `${value}%`);
-      }
+      await wrapper.setProps({ label: 'Custom Progress Text' });
+      expectElementText(
+        wrapper,
+        'progress-table-row-text',
+        'Custom Progress Text',
+      );
     });
   });
 
@@ -132,8 +130,13 @@ describe('ProgressItem.vue', () => {
 
   describe('Props Validation', () => {
     const propsTests = [
-      { prop: 'text', value: 'New Text', expected: 'New Text' },
+      { prop: 'label', value: 'New Text', expected: 'New Text' },
       { prop: 'value', value: 90, expected: '90%' },
+      {
+        prop: 'description',
+        value: 'New Description',
+        expected: 'New Description',
+      },
       { prop: 'progressColor', value: '#blue' },
       { prop: 'backgroundColor', value: '#gray' },
     ];
@@ -142,14 +145,19 @@ describe('ProgressItem.vue', () => {
       it(`should handle ${prop} prop correctly`, async () => {
         await wrapper.setProps({ [prop]: value });
 
-        if (prop === 'text') {
-          expectElementText(wrapper, 'progress-item-text', expected);
+        if (prop === 'label') {
+          expectElementText(wrapper, 'progress-table-row-text', expected);
         } else if (prop === 'value') {
-          expectElementText(wrapper, 'progress-item-value', expected);
           const nativeProgress = wrapper.findComponent({
             name: 'NativeProgress',
           });
           expect(nativeProgress.props('progress')).toBe(value);
+        } else if (prop === 'description') {
+          expectElementText(
+            wrapper,
+            'progress-table-row-description',
+            expected,
+          );
         } else {
           const nativeProgress = wrapper.findComponent({
             name: 'NativeProgress',
@@ -160,47 +168,26 @@ describe('ProgressItem.vue', () => {
     });
   });
 
-  describe('Edge Cases', () => {
-    const edgeCaseTests = [
-      { value: 0, description: 'zero progress' },
-      { value: 100, description: 'full progress' },
-      { value: 0.5, description: 'decimal progress' },
-    ];
-
-    edgeCaseTests.forEach(({ value, description }) => {
-      it(`should handle ${description}`, async () => {
-        await wrapper.setProps({ value });
-        expectElementText(wrapper, 'progress-item-value', `${value}%`);
-
-        const nativeProgress = wrapper.findComponent({
-          name: 'NativeProgress',
-        });
-        expect(nativeProgress.props('progress')).toBe(value);
-      });
-    });
-
-    it('should handle long text', async () => {
-      const longText = 'Very long progress text that might overflow';
-      await wrapper.setProps({ text: longText });
-      expectElementText(wrapper, 'progress-item-text', longText);
-    });
-  });
-
   describe('Component Integration', () => {
     it('should render with all props provided', () => {
       const fullPropsWrapper = createWrapper({
-        text: 'Complete Test',
+        label: 'Complete Test',
         value: 85,
+        description: '85%',
         progressColor: '#success',
         backgroundColor: '#light',
       });
 
       expectElementText(
         fullPropsWrapper,
-        'progress-item-text',
+        'progress-table-row-text',
         'Complete Test',
       );
-      expectElementText(fullPropsWrapper, 'progress-item-value', '85%');
+      expectElementText(
+        fullPropsWrapper,
+        'progress-table-row-description',
+        '85%',
+      );
 
       const nativeProgress = fullPropsWrapper.findComponent({
         name: 'NativeProgress',
@@ -212,51 +199,57 @@ describe('ProgressItem.vue', () => {
 
     it('should render with minimal props', () => {
       const minimalWrapper = createWrapper({
-        text: 'Minimal',
+        label: 'Minimal',
         value: 50,
+        description: 'Description',
       });
 
-      expectElementExists(minimalWrapper, 'progress-item');
-      expectElementText(minimalWrapper, 'progress-item-text', 'Minimal');
-      expectElementText(minimalWrapper, 'progress-item-value', '50%');
+      expectElementExists(minimalWrapper, 'progress-table-row');
+      expectElementText(minimalWrapper, 'progress-table-row-text', 'Minimal');
+      expectElementText(
+        minimalWrapper,
+        'progress-table-row-description',
+        'Description',
+      );
     });
   });
 
   describe('Reactivity', () => {
     it('should update when props change', async () => {
-      expect(wrapper.vm.$props.text).toBe('Test Progress');
+      expect(wrapper.vm.$props.label).toBe('Test Progress');
       expect(wrapper.vm.$props.value).toBe(75);
 
       await wrapper.setProps({
-        text: 'Updated Progress',
+        label: 'Updated Progress',
         value: 90,
+        description: '90%',
         progressColor: '#updated',
       });
 
-      expect(wrapper.vm.$props.text).toBe('Updated Progress');
+      expect(wrapper.vm.$props.label).toBe('Updated Progress');
       expect(wrapper.vm.$props.value).toBe(90);
       expect(wrapper.vm.$props.progressColor).toBe('#updated');
 
-      expectElementText(wrapper, 'progress-item-text', 'Updated Progress');
-      expectElementText(wrapper, 'progress-item-value', '90%');
+      expectElementText(wrapper, 'progress-table-row-text', 'Updated Progress');
+      expectElementText(wrapper, 'progress-table-row-description', '90%');
     });
   });
 
   describe('Component Lifecycle', () => {
     it('should mount successfully', () => {
       expect(wrapper.exists()).toBe(true);
-      expectElementExists(wrapper, 'progress-item');
+      expectElementExists(wrapper, 'progress-table-row');
     });
 
     it('should handle prop updates without errors', async () => {
       const initialText = wrapper
-        .find('[data-testid="progress-item-text"]')
+        .find('[data-testid="progress-table-row-text"]')
         .text();
 
-      await wrapper.setProps({ text: 'Changed Text' });
+      await wrapper.setProps({ label: 'Changed Text' });
 
       const updatedText = wrapper
-        .find('[data-testid="progress-item-text"]')
+        .find('[data-testid="progress-table-row-text"]')
         .text();
       expect(updatedText).not.toBe(initialText);
       expect(updatedText).toBe('Changed Text');

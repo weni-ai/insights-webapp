@@ -181,7 +181,7 @@ describe('TreemapChart', () => {
         key: 'value',
         borderWidth: 0,
         borderRadius: 8,
-        spacing: 8,
+        spacing: 4,
       });
     });
 

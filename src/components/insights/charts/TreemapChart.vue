@@ -48,7 +48,7 @@ onMounted(() => {
           key: 'value',
           borderWidth: 0,
           borderRadius: 8,
-          spacing: 8,
+          spacing: 4,
 
           backgroundColor(ctx: any) {
             if (ctx.type !== 'data') {

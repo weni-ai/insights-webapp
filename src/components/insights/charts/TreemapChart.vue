@@ -108,6 +108,9 @@ onMounted(() => {
         legend: {
           display: false,
         },
+        datalabels: {
+          display: false,
+        },
         tooltip: {
           enabled: true,
           backgroundColor: '#272B33',

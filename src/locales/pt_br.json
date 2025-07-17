@@ -48,6 +48,7 @@
       "context_description": "Adicione um contexto para melhorar a classificação da IA",
       "sub_topics": "Sub-tópicos",
       "new_sub_topic": "Novo sub-tópico",
+      "sub_topics_added": "{sub_topics} sub-tópicos adicionados",
       "remove_modal": {
         "title_remove_topic": "Remover tópico",
         "title_remove_sub_topic": "Remover sub-tópico",

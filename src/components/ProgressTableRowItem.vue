@@ -107,7 +107,7 @@ const handleExpand = () => {
     border-bottom: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
   }
 
-  &--expandable &__main-row {
+  &--expandable {
     cursor: pointer;
   }
 
@@ -176,6 +176,7 @@ const handleExpand = () => {
   }
 
   &__sub-items-row {
+    cursor: default;
     border-top: none;
 
     .sub-items-row__sub-items {
@@ -190,9 +191,14 @@ const handleExpand = () => {
 
         overflow: hidden;
 
-        padding: $unnnic-spacing-xs $unnnic-spacing-sm;
+        padding: 0 $unnnic-spacing-sm;
 
         width: calc(100% - $unnnic-spacing-lg);
+
+        :deep(.progress-table-row-item__main-row > *) {
+          padding-top: $unnnic-spacing-md;
+          padding-bottom: $unnnic-spacing-md;
+        }
       }
     }
   }

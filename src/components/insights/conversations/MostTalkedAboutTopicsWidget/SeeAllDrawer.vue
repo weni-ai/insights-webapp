@@ -7,7 +7,13 @@
     @close="emit('update:modelValue', false)"
   >
     <template #content>
-      <ProgressTable :progressItems="MOCK_DATA_PROGRESS_TABLE" />
+      <ProgressTable
+        :progressItems="MOCK_DATA_PROGRESS_TABLE"
+        :subItemsDescription="
+          $t('conversations_dashboard.most_talked_about_topics.subtopics')
+        "
+        :expandedItems="expandedItems"
+      />
     </template>
   </UnnnicDrawer>
 </template>
@@ -51,6 +57,18 @@ const MOCK_DATA = [
     label: 'Dúvidas sobre preço',
     value: 1600,
     percentage: 16,
+    subItems: [
+      {
+        label: 'Desconto no valor',
+        value: 1825,
+        percentage: 35,
+      },
+      {
+        label: 'Desconto no frete',
+        value: 375,
+        percentage: 65,
+      },
+    ],
   },
   {
     label: 'Cancelamento',
@@ -87,4 +105,8 @@ const MOCK_DATA_PROGRESS_TABLE = coloredData.map((item) => ({
     color: item.hoverColor,
   })),
 }));
+
+const expandedItems = defineModel<string[]>('expandedItems', {
+  default: () => [],
+});
 </script>

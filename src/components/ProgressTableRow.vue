@@ -23,7 +23,6 @@
         :description="item.description"
         :color="item.color"
         :backgroundColor="item.backgroundColor"
-        :isExpandable="false"
       />
     </template>
   </ProgressTableRowItem>

@@ -40,7 +40,8 @@
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",
-      "see_all": "See all"
+      "see_all": "See all",
+      "subtopics": "subtopics"
     },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",

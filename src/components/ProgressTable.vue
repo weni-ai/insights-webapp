@@ -12,9 +12,9 @@
         :color="item.color"
         :isExpandable="!!item.subItems"
         :expandableDescription="`${item.subItems?.length} ${subItemsDescription || ''}`"
-        :expanded="expandedRow === item.label"
+        :expanded="expandedItems.includes(item.label)"
         :subItems="item.subItems"
-        @expand="expandedRow = $event ? item.label : ''"
+        @expand="expandItem(item.label, $event)"
       />
     </tbody>
   </table>
@@ -28,10 +28,18 @@ import ProgressItem from './ProgressTableRow.vue';
 const props = defineProps<{
   progressItems: ProgressTableRowItem[];
   subItemsDescription?: string;
-  expandedItem?: string;
+  expandedItems?: string[];
 }>();
 
-const expandedRow = ref(props.expandedItem || '');
+const expandedItems = ref(props.expandedItems || []);
+
+const expandItem = (label: string, expanded: boolean) => {
+  if (expanded) {
+    expandedItems.value.push(label);
+  } else {
+    expandedItems.value = expandedItems.value.filter((item) => item !== label);
+  }
+};
 </script>
 
 <style scoped lang="scss">

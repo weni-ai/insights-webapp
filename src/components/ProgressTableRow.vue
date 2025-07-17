@@ -4,7 +4,7 @@
     :label="label"
     :value="value"
     :description="description"
-    :progressColor="color"
+    :color="color"
     :backgroundColor="backgroundColor"
     :isExpandable="isExpandable"
     :expandableDescription="expandableDescription"
@@ -21,7 +21,7 @@
         :label="item.label"
         :value="item.value"
         :description="item.description"
-        :progressColor="item.color"
+        :color="item.color"
         :backgroundColor="item.backgroundColor"
         :isExpandable="false"
       />
@@ -30,27 +30,12 @@
 </template>
 
 <script setup lang="ts">
+import type { ProgressTableRowItem as ProgressTableRowItemType } from './ProgressTableRowItem.vue';
 import ProgressTableRowItem from './ProgressTableRowItem.vue';
 
 const emit = defineEmits<{
   (_e: 'expand', _expanded: boolean): void;
 }>();
 
-defineProps<{
-  label: string;
-  value: number;
-  description: string;
-  color?: string;
-  backgroundColor?: string;
-  isExpandable?: boolean;
-  expandableDescription?: string;
-  expanded?: boolean;
-  subItems?: {
-    label: string;
-    value: number;
-    description: string;
-    color?: string;
-    backgroundColor?: string;
-  }[];
-}>();
+defineProps<ProgressTableRowItemType>();
 </script>

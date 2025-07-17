@@ -42,7 +42,7 @@
         <NativeProgress
           :progress="value"
           :backgroundColor="backgroundColor"
-          :progressColor="progressColor"
+          :progressColor="color"
           data-testid="progress-table-row-item-progress"
         />
       </td>
@@ -73,16 +73,22 @@
 <script setup lang="ts">
 import NativeProgress from './insights/charts/NativeProgress.vue';
 
-const props = defineProps<{
+export interface BaseProgressTableRowItem {
   label: string;
   value: number;
   description: string;
-  progressColor?: string;
   backgroundColor?: string;
+  color?: string;
+}
+
+export interface ProgressTableRowItem extends BaseProgressTableRowItem {
+  expanded?: boolean;
   isExpandable?: boolean;
   expandableDescription?: string;
-  expanded?: boolean;
-}>();
+  subItems?: BaseProgressTableRowItem[];
+}
+
+const props = defineProps<ProgressTableRowItem>();
 
 const emit = defineEmits<{
   (_e: 'expand', _expanded: boolean): void;

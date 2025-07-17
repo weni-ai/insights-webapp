@@ -9,7 +9,7 @@
         :value="item.value"
         :description="item.description"
         :backgroundColor="item.backgroundColor"
-        :progressColor="item.color"
+        :color="item.color"
         :isExpandable="!!item.subItems"
         :expandableDescription="`${item.subItems?.length} ${subItemsDescription || ''}`"
         :expanded="expandedRow === item.label"
@@ -22,20 +22,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import type { ProgressTableRowItem } from './ProgressTableRowItem.vue';
 import ProgressItem from './ProgressTableRow.vue';
 
-interface ProgressTableRow {
-  label: string;
-  value: number;
-  description: string;
-  backgroundColor: string;
-  color: string;
-}
-
 const props = defineProps<{
-  progressItems: (ProgressTableRow & {
-    subItems?: ProgressTableRow[];
-  })[];
+  progressItems: ProgressTableRowItem[];
   subItemsDescription?: string;
   expandedItem?: string;
 }>();

@@ -136,7 +136,13 @@ describe('TableGroup', () => {
     it('resets the page when route query changes', async () => {
       await wrapper.setData({ page: 1 });
 
-      wrapper.vm.$options.watch['$route.query'].call(wrapper.vm);
+      wrapper.vm.$options.watch['$route.query'].call(
+        wrapper.vm,
+        {
+          slug: 'tab1',
+        },
+        { slug: 'tab2' },
+      );
 
       expect(wrapper.vm.page).toBe(0);
     });

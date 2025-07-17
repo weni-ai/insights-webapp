@@ -4,8 +4,8 @@
       <p class="form-topic-item__header__title">
         {{
           isSubTopic
-            ? $t('conversations_dashboard.form_topic.new_topic')
-            : $t('conversations_dashboard.form_topic.new_sub_topic')
+            ? $t('conversations_dashboard.form_topic.new_sub_topic')
+            : $t('conversations_dashboard.form_topic.new_topic')
         }}
       </p>
       <UnnnicButton
@@ -13,7 +13,7 @@
         type="tertiary"
         iconCenter="delete"
         class="form-topic-item__header__delete-button"
-        @click="$emit('delete-topic', topicIndex)"
+        @click="handleDeleteTopic"
       />
     </section>
 
@@ -88,15 +88,25 @@
       </section>
     </section>
   </section>
+  <ModalTopic
+    :isOpen="isOpenModal"
+    :type="modalType"
+    :text="topicOrSubTopicName"
+    @primary-button-click="primaryButtonClick"
+    @secondary-button-click="secondaryButtonClick"
+  />
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, computed } from 'vue';
+
 import AddTopicButton from '../AddTopicButton.vue';
+import ModalTopic from '../ModalTopic.vue';
 
 interface Topic {
   name: string;
   context: string;
+  isNew?: boolean;
   subTopics?: Topic[];
 }
 
@@ -125,6 +135,7 @@ const emit = defineEmits<{
 }>();
 
 const showSubTopics = ref(false);
+const isOpenModal = ref(false);
 
 const updateTopicName = (value: string) => {
   emit('update-topic', props.topicIndex, 'name', value, props.parentIndex);
@@ -137,6 +148,35 @@ const updateTopicContext = (value: string) => {
 const toggleSubTopics = () => {
   showSubTopics.value = !showSubTopics.value;
   emit('toggle-sub-topics', props.topicIndex);
+};
+
+const handleDeleteTopic = () => {
+  if (props.topic.isNew) {
+    emit('delete-topic', props.topicIndex, props.parentIndex);
+  } else {
+    isOpenModal.value = true;
+  }
+};
+
+const modalType = computed(() => {
+  return props.isSubTopic ? 'remove-sub-topic' : 'remove-topic';
+});
+
+const topicOrSubTopicName = computed(() => {
+  if (props.isSubTopic) {
+    return props.topic.name || `Unnamed Sub-topic ${props.topicIndex + 1}`;
+  } else {
+    return props.topic.name || `Unnamed Topic ${props.topicIndex + 1}`;
+  }
+});
+
+const primaryButtonClick = () => {
+  emit('delete-topic', props.topicIndex, props.parentIndex);
+  isOpenModal.value = false;
+};
+
+const secondaryButtonClick = () => {
+  isOpenModal.value = false;
 };
 </script>
 
@@ -245,7 +285,6 @@ const toggleSubTopics = () => {
     display: flex;
     flex-direction: column;
     gap: $unnnic-spacing-sm;
-    margin-left: $unnnic-spacing-md;
   }
 }
 </style>

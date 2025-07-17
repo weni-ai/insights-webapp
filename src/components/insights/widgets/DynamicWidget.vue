@@ -163,7 +163,12 @@ const initRequestDataInterval = () => {
 
   if (isHumanServiceDashboard.value && !hasDateFiltering.value) {
     interval.value = setInterval(() => {
-      requestWidgetData({ silence: true });
+      const params = {
+        silence: true,
+        limit: route.query.limit,
+        offset: route.query.offset,
+      };
+      requestWidgetData(params);
       dashboardsStore.updateLastUpdatedRequest();
     }, ONE_MINUTE);
   }

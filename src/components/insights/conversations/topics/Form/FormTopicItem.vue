@@ -1,71 +1,68 @@
 <template>
-  <section class="form-topic-item">
-    <section class="form-topic-item__header">
-      <p class="form-topic-item__header__title">
-        {{
-          isSubTopic
-            ? $t('conversations_dashboard.form_topic.new_sub_topic')
-            : $t('conversations_dashboard.form_topic.new_topic')
-        }}
-      </p>
-      <UnnnicButton
-        size="small"
-        type="tertiary"
-        iconCenter="delete"
-        class="form-topic-item__header__delete-button"
-        @click="handleDeleteTopic"
-      />
-    </section>
-
-    <form class="form-topic-item__form">
-      <UnnnicInput
-        :modelValue="topic.name"
-        :label="$t('conversations_dashboard.form_topic.topic_name')"
-        class="form-topic-item__input"
-        @update:model-value="updateTopicName"
-      />
-
-      <section class="form-topic-item__context">
-        <UnnnicInput
-          :modelValue="topic.context"
-          :label="$t('conversations_dashboard.form_topic.context')"
-          class="form-topic-item__input"
-          @update:model-value="updateTopicContext"
-        />
-
-        <section class="form-topic-item__context__description">
-          <p class="form-topic-item__context__description__text">
-            {{ $t('conversations_dashboard.form_topic.context_description') }}
-          </p>
-          <p class="form-topic-item__context__description__text">
-            {{ topic.context.length }}/100
-          </p>
-        </section>
-      </section>
-    </form>
+  <section :class="['form-topic-item', { 'form-topic-item-gap': topic.isNew }]">
+    <FormTopicCard
+      :topic="topic"
+      :isNew="topic.isNew"
+      :isSubTopic="isSubTopic"
+      :showSubTopics="showSubTopics"
+      @delete-topic="handleDeleteTopic"
+      @update-topic-name="updateTopicName"
+      @update-topic-context="updateTopicContext"
+      @toggle-sub-topics="toggleSubTopics"
+    />
 
     <section
       v-if="!isSubTopic"
-      class="form-topic-item__footer"
+      :class="[
+        'form-topic-item__footer',
+        {
+          'form-topic-item-gap': topic.isNew,
+        },
+      ]"
     >
       <section
-        class="form-topic-item__footer__sub_topics"
+        v-if="!topic.isNew && showSubTopics"
+        class="form-topic-item__footer__divider"
+      />
+      <section
+        :class="[
+          'form-topic-item__footer__sub_topics',
+          {
+            'form-topic-item__footer__sub_topics-gap': topic.isNew,
+          },
+        ]"
         @click="toggleSubTopics"
       >
         <UnnnicIcon
+          v-if="topic.isNew"
           :icon="showSubTopics ? 'keyboard_arrow_down' : 'keyboard_arrow_right'"
           size="md"
           class="form-topic-item__footer__sub_topics__icon"
           scheme="neutral-cloudy"
         />
-        <p class="form-topic-item__footer__sub_topics__title">
-          {{ $t('conversations_dashboard.form_topic.sub_topics') }}
+        <p
+          v-if="topic.isNew || showSubTopics"
+          :class="[
+            'form-topic-item__footer__sub_topics__title',
+            {
+              'form-topic-item__footer__sub_topics-padding-bottom':
+                !topic.isNew,
+            },
+          ]"
+        >
+          {{ subTopicsTitle }}
         </p>
       </section>
 
       <section
         v-if="showSubTopics"
-        class="form-topic-item__sub-topics"
+        :class="[
+          'form-topic-item__sub-topics',
+          {
+            'form-topic-item-gap': topic.isNew,
+            'form-topic-item-xs-gap': !topic.isNew,
+          },
+        ]"
       >
         <FormTopicItem
           v-for="(subTopic, subIndex) in topic.subTopics"
@@ -101,8 +98,11 @@
 import { ref, defineProps, defineEmits, computed } from 'vue';
 import { type Topic } from '@/store/modules/conversational/topics';
 
+import { useI18n } from 'vue-i18n';
+
 import AddTopicButton from '../AddTopicButton.vue';
 import ModalTopic from '../ModalTopic.vue';
+import FormTopicCard from './FormTopicCard.vue';
 
 interface Props {
   topic: Topic;
@@ -127,6 +127,8 @@ const emit = defineEmits<{
   'add-sub-topic': [index: number];
   'toggle-sub-topics': [index: number];
 }>();
+
+const { t } = useI18n();
 
 const showSubTopics = ref(false);
 const isOpenModal = ref(false);
@@ -172,6 +174,16 @@ const primaryButtonClick = () => {
 const secondaryButtonClick = () => {
   isOpenModal.value = false;
 };
+
+const subTopicsTitle = computed(() => {
+  if (!props.topic.isNew) {
+    return t('conversations_dashboard.form_topic.sub_topics_added', {
+      sub_topics: props.topic.subTopics.filter((v) => !v.isNew).length || 0,
+    });
+  } else {
+    return t('conversations_dashboard.form_topic.sub_topics');
+  }
+});
 </script>
 
 <style lang="scss" scoped>
@@ -180,87 +192,35 @@ const secondaryButtonClick = () => {
   padding: $unnnic-spacing-sm;
   flex-direction: column;
   align-items: flex-start;
-  gap: $unnnic-spacing-sm;
+
+  &-gap {
+    gap: $unnnic-spacing-sm;
+  }
+
+  &-xs-gap {
+    gap: $unnnic-spacing-xs;
+  }
+
   align-self: stretch;
   border-radius: $unnnic-spacing-xs;
   border: 1px solid $unnnic-color-neutral-soft;
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-
-    :deep(.unnnic-button--icon-on-center.unnnic-button--size-small) {
-      padding: 0;
-      width: $unnnic-icon-size-ant;
-      height: $unnnic-icon-size-ant;
-    }
-
-    &__title {
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-lg;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
-    }
-
-    &__delete-button {
-      :deep(.unnnic-icon__size--md) {
-        width: $unnnic-icon-size-ant;
-        height: $unnnic-icon-size-ant;
-        min-width: $unnnic-icon-size-ant;
-        min-height: $unnnic-icon-size-ant;
-      }
-    }
-  }
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-xs;
-    width: 100%;
-  }
-
-  &__input {
-    width: 100%;
-    :deep(.unnnic-form__label) {
-      margin: 0 0 $unnnic-spacing-nano 0;
-    }
-  }
-
-  &__context {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-nano;
-
-    &__description {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      &__text {
-        color: $unnnic-color-neutral-cloudy;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-md;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
-      }
-    }
-  }
-
   &__footer {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
     width: 100%;
+
+    &__divider {
+      width: 100%;
+      height: 1px;
+      margin-top: $unnnic-spacing-sm;
+      margin-bottom: $unnnic-spacing-sm;
+      background-color: $unnnic-color-neutral-soft;
+    }
 
     &__sub_topics {
       display: flex;
       align-items: center;
-      gap: $unnnic-spacing-xs;
       align-self: stretch;
       cursor: pointer;
 
@@ -272,13 +232,16 @@ const secondaryButtonClick = () => {
         font-weight: $unnnic-font-weight-regular;
         line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
       }
+
+      &-padding-bottom {
+        padding-bottom: $unnnic-spacing-xs;
+      }
     }
   }
 
   &__sub-topics {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
   }
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <UnnnicModalDialog
+    data-testid="modal-topic"
     :modelValue="props.isOpen"
     :title="title"
     :type="modalType"

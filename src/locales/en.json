@@ -39,7 +39,8 @@
       }
     },
     "most_talked_about_topics": {
-      "title": "Most talked about topics"
+      "title": "Most talked about topics",
+      "see_all": "See all"
     },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",

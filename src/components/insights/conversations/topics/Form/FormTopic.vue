@@ -7,7 +7,10 @@
       />
     </section>
 
-    <section class="form-topic__divider" />
+    <section
+      v-if="topics.length > 0"
+      class="form-topic__divider"
+    />
 
     <section class="form-topic__body">
       <FormTopicItem
@@ -34,6 +37,7 @@ interface Topic {
   name: string;
   context: string;
   subTopics: Topic[];
+  isNew?: boolean;
 }
 
 const topics = ref<Topic[]>([]);
@@ -41,6 +45,7 @@ const topics = ref<Topic[]>([]);
 const createNewTopic = (): Topic => ({
   name: '',
   context: '',
+  isNew: false,
   subTopics: [],
 });
 

@@ -4,29 +4,43 @@
       <ProgressItem
         v-for="item in progressItems"
         :key="item.label"
+        data-testid="progress-widget-progress-item"
         :label="item.label"
         :value="item.value"
         :description="item.description"
         :backgroundColor="item.backgroundColor"
         :progressColor="item.color"
-        data-testid="progress-widget-progress-item"
+        :isExpandable="!!item.subItems"
+        :expandableDescription="`${item.subItems?.length} ${subItemsDescription || ''}`"
+        :expanded="expandedRow === item.label"
+        :subItems="item.subItems"
+        @expand="expandedRow = $event ? item.label : ''"
       />
     </tbody>
   </table>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import ProgressItem from './ProgressTableRow.vue';
 
-defineProps<{
-  progressItems: {
-    label: string;
-    value: number;
-    description: string;
-    backgroundColor: string;
-    color: string;
-  }[];
+interface ProgressTableRow {
+  label: string;
+  value: number;
+  description: string;
+  backgroundColor: string;
+  color: string;
+}
+
+const props = defineProps<{
+  progressItems: (ProgressTableRow & {
+    subItems?: ProgressTableRow[];
+  })[];
+  subItemsDescription?: string;
+  expandedItem?: string;
 }>();
+
+const expandedRow = ref(props.expandedItem || '');
 </script>
 
 <style scoped lang="scss">

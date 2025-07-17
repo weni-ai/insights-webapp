@@ -99,16 +99,10 @@
 
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, computed } from 'vue';
+import { type Topic } from '@/store/modules/conversational/topics';
 
 import AddTopicButton from '../AddTopicButton.vue';
 import ModalTopic from '../ModalTopic.vue';
-
-interface Topic {
-  name: string;
-  context: string;
-  isNew?: boolean;
-  subTopics?: Topic[];
-}
 
 interface Props {
   topic: Topic;

@@ -29,36 +29,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed } from 'vue';
+import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import AddTopicButton from '../AddTopicButton.vue';
 import FormTopicItem from './FormTopicItem.vue';
 
-interface Topic {
-  name: string;
-  context: string;
-  subTopics: Topic[];
-  isNew?: boolean;
-}
+const {
+  topics: topicsStore,
+  addTopic,
+  deleteTopic,
+  updateTopic,
+  addSubTopic,
+  createNewTopic,
+} = useConversationalTopics();
 
-const topics = ref<Topic[]>([]);
-
-const createNewTopic = (): Topic => ({
-  name: '',
-  context: '',
-  isNew: false,
-  subTopics: [],
-});
+const topics = computed(() => topicsStore);
 
 const handleAddTopic = () => {
-  topics.value.push(createNewTopic());
+  const newTopic = createNewTopic();
+  addTopic(newTopic);
 };
 
 const handleDeleteTopic = (index: number, parentIndex?: number) => {
-  if (parentIndex !== undefined) {
-    topics.value[parentIndex].subTopics.splice(index, 1);
-  } else {
-    topics.value.splice(index, 1);
-  }
+  deleteTopic(index, parentIndex);
 };
 
 const handleUpdateTopic = (
@@ -67,34 +60,16 @@ const handleUpdateTopic = (
   value: string,
   parentIndex?: number,
 ) => {
-  if (parentIndex !== undefined) {
-    // Updating a sub-topic
-    const subTopic = topics.value[parentIndex].subTopics[index];
-    if (field === 'name') {
-      subTopic.name = value;
-    } else if (field === 'context') {
-      subTopic.context = value;
-    }
-  } else {
-    // Updating a main topic
-    const topic = topics.value[index];
-    if (field === 'name') {
-      topic.name = value;
-    } else if (field === 'context') {
-      topic.context = value;
-    }
-  }
+  updateTopic(index, field, value, parentIndex);
 };
 
 const handleAddSubTopic = (topicIndex: number) => {
-  topics.value[topicIndex].subTopics.push(createNewTopic());
+  addSubTopic(topicIndex, createNewTopic());
 };
 
 const handleToggleSubTopics = (topicIndex: number) => {
   console.log(`Toggled sub-topics for topic ${topicIndex}`);
 };
-
-// handleAddTopic();
 </script>
 
 <style lang="scss" scoped>

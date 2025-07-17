@@ -21,7 +21,7 @@ import { useI18n } from 'vue-i18n';
 
 interface Props {
   type: 'remove-topic' | 'remove-sub-topic' | 'cancel-topic';
-  text: string;
+  text?: string;
   isOpen: boolean;
 }
 
@@ -35,6 +35,7 @@ const { t } = useI18n();
 const props = withDefaults(defineProps<Props>(), {
   type: 'remove-topic',
   isOpen: false,
+  text: '',
 });
 
 const modalType = computed(() => {
@@ -55,7 +56,7 @@ const primaryButtonProps = computed(() => {
   return {
     text: remove.includes(props.type)
       ? t('conversations_dashboard.form_topic.remove_modal.remove')
-      : t('conversations_dashboard.form_topic.cancel_modal.continue'),
+      : t('conversations_dashboard.form_topic.cancel_modal.cancel'),
   };
 });
 
@@ -65,7 +66,7 @@ const secondaryButtonProps = computed(() => {
   return {
     text: remove.includes(props.type)
       ? t('conversations_dashboard.form_topic.remove_modal.cancel')
-      : t('conversations_dashboard.form_topic.cancel_modal.cancel'),
+      : t('conversations_dashboard.form_topic.cancel_modal.continue'),
   };
 });
 

@@ -1,10 +1,14 @@
 <template>
-  <section :class="['form-topic-item', { 'form-topic-item-gap': topic.isNew }]">
+  <section
+    :class="['form-topic-item', { 'form-topic-item-gap': topic.isNew }]"
+    data-testid="form-topic-item"
+  >
     <FormTopicCard
       :topic="topic"
       :isNew="topic.isNew"
       :isSubTopic="isSubTopic"
       :showSubTopics="showSubTopics"
+      data-testid="form-topic-card"
       @delete-topic="handleDeleteTopic"
       @update-topic-name="updateTopicName"
       @update-topic-context="updateTopicContext"
@@ -19,10 +23,12 @@
           'form-topic-item-gap': topic.isNew,
         },
       ]"
+      data-testid="form-topic-item-footer"
     >
       <section
         v-if="!topic.isNew && showSubTopics"
         class="form-topic-item__footer__divider"
+        data-testid="form-topic-item-divider"
       />
       <section
         :class="[
@@ -31,6 +37,7 @@
             'form-topic-item__footer__sub_topics-gap': topic.isNew,
           },
         ]"
+        data-testid="form-topic-item-sub-topics-toggle"
         @click="toggleSubTopics"
       >
         <UnnnicIcon
@@ -39,6 +46,7 @@
           size="md"
           class="form-topic-item__footer__sub_topics__icon"
           scheme="neutral-cloudy"
+          data-testid="form-topic-item-toggle-icon"
         />
         <p
           v-if="topic.isNew || showSubTopics"
@@ -49,6 +57,7 @@
                 !topic.isNew,
             },
           ]"
+          data-testid="form-topic-item-sub-topics-title"
         >
           {{ subTopicsTitle }}
         </p>
@@ -63,6 +72,7 @@
             'form-topic-item-xs-gap': !topic.isNew,
           },
         ]"
+        data-testid="form-topic-item-sub-topics-list"
       >
         <FormTopicItem
           v-for="(subTopic, subIndex) in topic.subTopics"
@@ -71,6 +81,7 @@
           :topicIndex="subIndex"
           :parentIndex="topicIndex"
           :isSubTopic="true"
+          data-testid="form-topic-item-sub-topic"
           @delete-topic="(index) => $emit('delete-topic', index, topicIndex)"
           @update-topic="
             (index, field, value) =>
@@ -80,6 +91,7 @@
 
         <AddTopicButton
           :text="$t('conversations_dashboard.form_topic.add_sub_topic')"
+          data-testid="form-topic-item-add-sub-topic-button"
           @add-topic="$emit('add-sub-topic', topicIndex)"
         />
       </section>
@@ -89,6 +101,7 @@
     :isOpen="isOpenModal"
     :type="modalType"
     :text="topicOrSubTopicName"
+    data-testid="form-topic-item-modal"
     @primary-button-click="primaryButtonClick"
     @secondary-button-click="secondaryButtonClick"
   />

@@ -1,8 +1,15 @@
 <template>
-  <section class="form-topic">
-    <section class="form-topic__header">
+  <section
+    class="form-topic"
+    data-testid="form-topic"
+  >
+    <section
+      class="form-topic__header"
+      data-testid="form-topic-header"
+    >
       <AddTopicButton
         :text="$t('conversations_dashboard.form_topic.add_topic')"
+        data-testid="form-topic-add-button"
         @add-topic="handleAddTopic"
       />
     </section>
@@ -10,15 +17,20 @@
     <section
       v-if="topics.length > 0"
       class="form-topic__divider"
+      data-testid="form-topic-divider"
     />
 
-    <section class="form-topic__body">
+    <section
+      class="form-topic__body"
+      data-testid="form-topic-body"
+    >
       <FormTopicItem
         v-for="(topic, index) in topics"
         :key="`topic-${index}`"
         :topic="topic"
         :topicIndex="index"
         :isSubTopic="false"
+        data-testid="form-topic-item"
         @delete-topic="handleDeleteTopic"
         @update-topic="handleUpdateTopic"
         @add-sub-topic="handleAddSubTopic"

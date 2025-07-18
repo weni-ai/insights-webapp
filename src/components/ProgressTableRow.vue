@@ -1,6 +1,7 @@
 <template>
   <ProgressTableRowItem
     :key="label"
+    data-testid="progress-table-row-item-main"
     :label="label"
     :value="value"
     :description="description"
@@ -18,6 +19,7 @@
       <ProgressTableRowItem
         v-for="item in subItems"
         :key="item.label"
+        data-testid="progress-table-row-item-sub"
         :label="item.label"
         :value="item.value"
         :description="item.description"

@@ -1,10 +1,16 @@
 <template>
-  <table class="progress-table">
-    <tbody class="progress-table__body">
+  <table
+    class="progress-table"
+    data-testid="progress-table"
+  >
+    <tbody
+      class="progress-table__body"
+      data-testid="progress-table-body"
+    >
       <ProgressItem
         v-for="item in progressItems"
         :key="item.label"
-        data-testid="progress-widget-progress-item"
+        data-testid="progress-table-item"
         :label="item.label"
         :value="item.value"
         :description="item.description"
@@ -34,6 +40,8 @@ const props = defineProps<{
 const expandedItems = ref(props.expandedItems || []);
 
 const expandItem = (label: string, expanded: boolean) => {
+  console.log('label', label);
+  console.log('expanded', expanded);
   if (expanded) {
     expandedItems.value.push(label);
   } else {

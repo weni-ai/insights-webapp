@@ -22,7 +22,11 @@
         />
       </section>
 
-      <ProgressTable :progressItems="treatedProgressItems" />
+      <ProgressTable
+        v-if="treatedProgressItems.length > 0"
+        :progressItems="treatedProgressItems"
+        data-testid="progress-widget-table"
+      />
     </section>
     <section
       v-if="footerText"

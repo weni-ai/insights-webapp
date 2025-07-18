@@ -139,7 +139,12 @@ onMounted(() => {
         },
       },
       onClick: (_el, ctx: any) => {
+        if (!ctx[0]) return;
         emit('click', ctx[0].element.$context.raw._data);
+      },
+      onHover: (el: any) => {
+        if (!el.chart) return;
+        el.chart.canvas.style.cursor = 'pointer';
       },
     },
   });

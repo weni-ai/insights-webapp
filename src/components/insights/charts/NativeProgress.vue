@@ -17,14 +17,14 @@ import { computed } from 'vue';
 
 interface Props {
   progress: number;
-  progressColor?: string;
+  color?: string;
   backgroundColor?: string;
   height?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   progress: 0,
-  progressColor: '#007bff',
+  color: '#007bff',
   backgroundColor: '#e9ecef',
   height: 8,
 });
@@ -40,14 +40,14 @@ const containerStyles = computed(() => ({
 
 const progressBarStyles = computed(() => ({
   width: `${normalizedProgress.value}%`,
-  backgroundColor: props.progressColor,
+  backgroundColor: props.color,
 }));
 </script>
 
 <style scoped lang="scss">
 .native-progress {
   width: 100%;
-  border-radius: 4px;
+  border-radius: $unnnic-border-radius-sm;
   overflow: hidden;
   position: relative;
 

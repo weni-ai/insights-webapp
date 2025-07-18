@@ -1,0 +1,54 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ProgressTable > Component Structure > should match snapshot 1`] = `
+<table
+  class="progress-table"
+  data-testid="progress-table"
+  data-v-465a5819=""
+>
+  <tbody
+    class="progress-table__body"
+    data-testid="progress-table-body"
+    data-v-465a5819=""
+  >
+    
+    <progress-item-stub
+      backgroundcolor="#e3f2fd"
+      color="#2196f3"
+      data-testid="progress-table-item"
+      data-v-465a5819=""
+      description="First task description"
+      expandabledescription="undefined "
+      expanded="false"
+      isexpandable="false"
+      label="Task 1"
+      value="75"
+    />
+    <progress-item-stub
+      backgroundcolor="#f3e5f5"
+      color="#9c27b0"
+      data-testid="progress-table-item"
+      data-v-465a5819=""
+      description="Second task description"
+      expandabledescription="2 "
+      expanded="false"
+      isexpandable="true"
+      label="Task 2"
+      subitems="[object Object],[object Object]"
+      value="50"
+    />
+    <progress-item-stub
+      data-testid="progress-table-item"
+      data-v-465a5819=""
+      description="Third task description"
+      expandabledescription="3 "
+      expanded="false"
+      isexpandable="true"
+      label="Task 3"
+      subitems="[object Object],[object Object],[object Object]"
+      value="100"
+    />
+    
+  </tbody>
+</table>
+`;

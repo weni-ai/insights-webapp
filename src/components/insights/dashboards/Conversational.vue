@@ -2,7 +2,7 @@
   <section class="dashboard-conversational">
     <DashboardHeader class="dashboard-conversational__header" />
 
-    <MostTalkedAboutTopics
+    <MostTalkedAboutTopicsWidget
       class="dashboard-conversational__most-talked-about-topics"
     />
 
@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
-import MostTalkedAboutTopics from '@/components/insights/conversations/MostTalkedAboutTopics.vue';
+import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
 
 type ConversationalWidgetType = 'csat' | 'nps' | 'add';

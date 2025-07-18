@@ -14,7 +14,7 @@
     >
       <td
         class="progress-table-row-item__label"
-        data-testid="progress-table-row-item-text"
+        data-testid="progress-table-row-item-label"
       >
         <UnnnicIcon
           v-if="isExpandable"
@@ -42,7 +42,7 @@
         <NativeProgress
           :progress="value"
           :backgroundColor="backgroundColor"
-          :progressColor="color"
+          :color="color"
           data-testid="progress-table-row-item-progress"
         />
       </td>

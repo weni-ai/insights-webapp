@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 
-import ProgressTableRow from '../ProgressTableRow.vue';
+import ProgressTableRowItem from '../ProgressTableRowItem.vue';
 
 config.global.plugins = [];
 
@@ -12,7 +12,7 @@ const defaultProps = {
 };
 
 const createWrapper = (props = {}) => {
-  return mount(ProgressTableRow, {
+  return mount(ProgressTableRowItem, {
     props: { ...defaultProps, ...props },
   });
 };
@@ -31,7 +31,7 @@ const expectElementClass = (wrapper, testId, expectedClass) => {
   );
 };
 
-describe('ProgressTableRow.vue', () => {
+describe('ProgressTableRowItem.vue', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -40,10 +40,10 @@ describe('ProgressTableRow.vue', () => {
 
   describe('Component Structure', () => {
     const requiredElements = [
-      'progress-table-row',
-      'progress-table-row-text',
-      'progress-table-row-progress',
-      'progress-table-row-description',
+      'progress-table-row-item',
+      'progress-table-row-item-label',
+      'progress-table-row-item-progress',
+      'progress-table-row-item-description',
     ];
 
     requiredElements.forEach((testId) => {
@@ -53,29 +53,37 @@ describe('ProgressTableRow.vue', () => {
     });
 
     it('should apply correct CSS classes', () => {
-      expectElementClass(wrapper, 'progress-table-row', 'progress-table-row');
       expectElementClass(
         wrapper,
-        'progress-table-row-text',
-        'progress-table-row__text',
+        'progress-table-row-item',
+        'progress-table-row-item',
       );
       expectElementClass(
         wrapper,
-        'progress-table-row-description',
-        'progress-table-row__description',
+        'progress-table-row-item-label',
+        'progress-table-row-item__label',
+      );
+      expectElementClass(
+        wrapper,
+        'progress-table-row-item-description',
+        'progress-table-row-item__description',
       );
     });
   });
 
   describe('Content Rendering', () => {
     it('should render text prop correctly', () => {
-      expectElementText(wrapper, 'progress-table-row-text', 'Test Progress');
+      expectElementText(
+        wrapper,
+        'progress-table-row-item-label',
+        'Test Progress',
+      );
     });
 
     it('should render value as percentage', () => {
       expectElementText(
         wrapper,
-        'progress-table-row-description',
+        'progress-table-row-item-description',
         'Test Description',
       );
     });
@@ -84,7 +92,7 @@ describe('ProgressTableRow.vue', () => {
       await wrapper.setProps({ label: 'Custom Progress Text' });
       expectElementText(
         wrapper,
-        'progress-table-row-text',
+        'progress-table-row-item-label',
         'Custom Progress Text',
       );
     });
@@ -107,14 +115,14 @@ describe('ProgressTableRow.vue', () => {
 
     it('should pass custom colors to NativeProgress when provided', async () => {
       await wrapper.setProps({
-        progressColor: '#ff0000',
+        color: '#ff0000',
         backgroundColor: '#00ff00',
       });
 
       const nativeProgress = wrapper.findComponent({
         name: 'NativeProgress',
       });
-      expect(nativeProgress.props('progressColor')).toBe('#ff0000');
+      expect(nativeProgress.props('color')).toBe('#ff0000');
       expect(nativeProgress.props('backgroundColor')).toBe('#00ff00');
     });
 
@@ -123,7 +131,7 @@ describe('ProgressTableRow.vue', () => {
         name: 'NativeProgress',
       });
 
-      expect(nativeProgress.props('progressColor')).toBe('#007bff');
+      expect(nativeProgress.props('color')).toBe('#007bff');
       expect(nativeProgress.props('backgroundColor')).toBe('#e9ecef');
     });
   });
@@ -137,7 +145,7 @@ describe('ProgressTableRow.vue', () => {
         value: 'New Description',
         expected: 'New Description',
       },
-      { prop: 'progressColor', value: '#blue' },
+      { prop: 'color', value: '#blue' },
       { prop: 'backgroundColor', value: '#gray' },
     ];
 
@@ -146,7 +154,7 @@ describe('ProgressTableRow.vue', () => {
         await wrapper.setProps({ [prop]: value });
 
         if (prop === 'label') {
-          expectElementText(wrapper, 'progress-table-row-text', expected);
+          expectElementText(wrapper, 'progress-table-row-item-label', expected);
         } else if (prop === 'value') {
           const nativeProgress = wrapper.findComponent({
             name: 'NativeProgress',
@@ -155,7 +163,7 @@ describe('ProgressTableRow.vue', () => {
         } else if (prop === 'description') {
           expectElementText(
             wrapper,
-            'progress-table-row-description',
+            'progress-table-row-item-description',
             expected,
           );
         } else {
@@ -174,18 +182,18 @@ describe('ProgressTableRow.vue', () => {
         label: 'Complete Test',
         value: 85,
         description: '85%',
-        progressColor: '#success',
+        color: '#success',
         backgroundColor: '#light',
       });
 
       expectElementText(
         fullPropsWrapper,
-        'progress-table-row-text',
+        'progress-table-row-item-label',
         'Complete Test',
       );
       expectElementText(
         fullPropsWrapper,
-        'progress-table-row-description',
+        'progress-table-row-item-description',
         '85%',
       );
 
@@ -193,7 +201,7 @@ describe('ProgressTableRow.vue', () => {
         name: 'NativeProgress',
       });
       expect(nativeProgress.props('progress')).toBe(85);
-      expect(nativeProgress.props('progressColor')).toBe('#success');
+      expect(nativeProgress.props('color')).toBe('#success');
       expect(nativeProgress.props('backgroundColor')).toBe('#light');
     });
 
@@ -204,11 +212,15 @@ describe('ProgressTableRow.vue', () => {
         description: 'Description',
       });
 
-      expectElementExists(minimalWrapper, 'progress-table-row');
-      expectElementText(minimalWrapper, 'progress-table-row-text', 'Minimal');
+      expectElementExists(minimalWrapper, 'progress-table-row-item');
       expectElementText(
         minimalWrapper,
-        'progress-table-row-description',
+        'progress-table-row-item-label',
+        'Minimal',
+      );
+      expectElementText(
+        minimalWrapper,
+        'progress-table-row-item-description',
         'Description',
       );
     });
@@ -223,33 +235,37 @@ describe('ProgressTableRow.vue', () => {
         label: 'Updated Progress',
         value: 90,
         description: '90%',
-        progressColor: '#updated',
+        color: '#updated',
       });
 
       expect(wrapper.vm.$props.label).toBe('Updated Progress');
       expect(wrapper.vm.$props.value).toBe(90);
-      expect(wrapper.vm.$props.progressColor).toBe('#updated');
+      expect(wrapper.vm.$props.color).toBe('#updated');
 
-      expectElementText(wrapper, 'progress-table-row-text', 'Updated Progress');
-      expectElementText(wrapper, 'progress-table-row-description', '90%');
+      expectElementText(
+        wrapper,
+        'progress-table-row-item-label',
+        'Updated Progress',
+      );
+      expectElementText(wrapper, 'progress-table-row-item-description', '90%');
     });
   });
 
   describe('Component Lifecycle', () => {
     it('should mount successfully', () => {
       expect(wrapper.exists()).toBe(true);
-      expectElementExists(wrapper, 'progress-table-row');
+      expectElementExists(wrapper, 'progress-table-row-item');
     });
 
     it('should handle prop updates without errors', async () => {
       const initialText = wrapper
-        .find('[data-testid="progress-table-row-text"]')
+        .find('[data-testid="progress-table-row-item-label"]')
         .text();
 
       await wrapper.setProps({ label: 'Changed Text' });
 
       const updatedText = wrapper
-        .find('[data-testid="progress-table-row-text"]')
+        .find('[data-testid="progress-table-row-item-label"]')
         .text();
       expect(updatedText).not.toBe(initialText);
       expect(updatedText).toBe('Changed Text');

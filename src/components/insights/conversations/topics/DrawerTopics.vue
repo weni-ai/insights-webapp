@@ -4,7 +4,7 @@
     :modelValue="isAddTopicsDrawerOpen"
     :title="$t('conversations_dashboard.form_topic.title')"
     class="add-topics-drawer"
-    data-testid="add-topics-drawer"
+    data-testid="drawer-topics-drawer"
     :primaryButtonText="$t('conversations_dashboard.form_topic.save')"
     :secondaryButtonText="$t('conversations_dashboard.form_topic.cancel')"
     @close="handleDrawerAddTopics"
@@ -12,12 +12,13 @@
     @secondary-button-click="handleDrawerAddTopics"
   >
     <template #content>
-      <FormTopic />
+      <FormTopic data-testid="drawer-topics-form" />
     </template>
   </UnnnicDrawer>
   <ModalTopic
     :isOpen="isOpenModal"
     type="cancel-topic"
+    data-testid="drawer-topics-modal"
     @primary-button-click="handleCancelTopic"
     @secondary-button-click="handleKeepAddingTopic"
   />

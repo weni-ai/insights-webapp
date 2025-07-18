@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 
 import ProgressTableRowItem from '../ProgressTableRowItem.vue';
@@ -33,6 +33,25 @@ const expectElementClass = (wrapper, testId, expectedClass) => {
 
 describe('ProgressTableRowItem.vue', () => {
   let wrapper;
+
+  const progressTableRowItem = () =>
+    wrapper.find('[data-testid="progress-table-row-item"]');
+
+  const progressTableRowItemMainRow = () =>
+    progressTableRowItem().find(
+      '[data-testid="progress-table-row-item-main-row"]',
+    );
+
+  const progressTableRowItemExpandableDescription = () =>
+    wrapper.find(
+      '[data-testid="progress-table-row-item-expandable-description"]',
+    );
+
+  const progressTableRowItemIcon = () =>
+    wrapper.find('[data-testid="progress-table-row-item-icon"]');
+
+  const progressTableRowItemSubItemsRow = () =>
+    wrapper.find('[data-testid="progress-table-row-item-sub-items-row"]');
 
   beforeEach(() => {
     wrapper = createWrapper();
@@ -269,6 +288,165 @@ describe('ProgressTableRowItem.vue', () => {
         .text();
       expect(updatedText).not.toBe(initialText);
       expect(updatedText).toBe('Changed Text');
+    });
+  });
+
+  describe('Expandable Functionality', () => {
+    beforeEach(() => {
+      wrapper.setProps({
+        label: 'Expandable Item',
+        value: 60,
+        description: '60%',
+        isExpandable: true,
+        expandableDescription: 'Click to expand',
+        expanded: false,
+      });
+    });
+
+    describe('Expandable Props and Classes', () => {
+      it('should apply expandable CSS class when isExpandable is true', () => {
+        expectElementClass(
+          wrapper,
+          'progress-table-row-item',
+          'progress-table-row-item--expandable',
+        );
+      });
+
+      it('should not apply expandable CSS class when isExpandable is false', async () => {
+        await wrapper.setProps({
+          isExpandable: false,
+        });
+
+        expect(progressTableRowItem().classes()).not.toContain(
+          'progress-table-row-item--expandable',
+        );
+      });
+
+      it('should render expandable description when provided', async () => {
+        expect(progressTableRowItemExpandableDescription().text()).toContain(
+          'Click to expand',
+        );
+      });
+    });
+
+    describe('Icon Behavior', () => {
+      it('should render expand icon when isExpandable is true', () => {
+        expect(progressTableRowItemIcon().exists()).toBe(true);
+        expect(progressTableRowItemIcon().attributes('icon')).toBe(
+          'keyboard_arrow_down',
+        );
+      });
+
+      it('should not render expand icon when isExpandable is false', async () => {
+        await wrapper.setProps({
+          isExpandable: false,
+        });
+        expect(progressTableRowItemIcon().exists()).toBe(false);
+      });
+
+      it('should apply correct icon classes when collapsed', () => {
+        expect(progressTableRowItemIcon().classes()).toContain('label__icon');
+        expect(progressTableRowItemIcon().classes()).not.toContain(
+          'label__icon--expanded',
+        );
+      });
+
+      it('should apply expanded icon class when expanded', async () => {
+        await wrapper.setProps({ expanded: true });
+        expect(progressTableRowItemIcon().classes()).toContain('label__icon');
+        expect(progressTableRowItemIcon().classes()).toContain(
+          'label__icon--expanded',
+        );
+      });
+
+      it('should have correct icon properties', () => {
+        expect(progressTableRowItemIcon().attributes('size')).toBe('md');
+        expect(progressTableRowItemIcon().attributes('scheme')).toBe(
+          'neutral-cloudy',
+        );
+      });
+    });
+
+    describe('Click Handling', () => {
+      it('should emit expand event when clicked and expandable', async () => {
+        await progressTableRowItemMainRow().trigger('click');
+
+        expect(wrapper.emitted('expand')).toBeTruthy();
+        expect(wrapper.emitted('expand')[0]).toEqual([true]);
+      });
+
+      it('should emit correct expanded state on subsequent clicks', async () => {
+        await progressTableRowItemMainRow().trigger('click');
+        expect(wrapper.emitted('expand')[0]).toEqual([true]);
+
+        await wrapper.setProps({ expanded: true });
+
+        await progressTableRowItemMainRow().trigger('click');
+        expect(wrapper.emitted('expand')[1]).toEqual([false]);
+      });
+
+      it('should not emit expand event when not expandable', async () => {
+        await wrapper.setProps({
+          isExpandable: false,
+        });
+
+        await progressTableRowItemMainRow().trigger('click');
+        expect(wrapper.emitted('expand')).toBeFalsy();
+      });
+
+      it('should call handleExpand method on click', async () => {
+        const handleExpandSpy = vi.spyOn(wrapper.vm, 'handleExpand');
+        await progressTableRowItemMainRow().trigger('click');
+        expect(handleExpandSpy).toHaveBeenCalled();
+      });
+    });
+
+    describe('Slot Functionality', () => {
+      it('should render sub-items slot when expanded', async () => {
+        const expandableWrapperWithSlot = mount(ProgressTableRowItem, {
+          props: {
+            label: 'Test with slot',
+            value: 50,
+            description: '50%',
+            isExpandable: true,
+            expanded: true,
+          },
+          slots: {
+            'sub-items': '<div data-testid="slot-content">Slot Content</div>',
+          },
+        });
+
+        const slotContent = expandableWrapperWithSlot.find(
+          '[data-testid="slot-content"]',
+        );
+        expect(slotContent.exists()).toBe(true);
+        expect(slotContent.text()).toBe('Slot Content');
+      });
+
+      it('should not render sub-items slot when collapsed', () => {
+        const expandableWrapperWithSlot = mount(ProgressTableRowItem, {
+          props: {
+            label: 'Test with slot',
+            value: 50,
+            description: '50%',
+            isExpandable: true,
+            expanded: false,
+          },
+          slots: {
+            'sub-items': '<div data-testid="slot-content">Slot Content</div>',
+          },
+        });
+
+        const slotContent = expandableWrapperWithSlot.find(
+          '[data-testid="slot-content"]',
+        );
+        expect(slotContent.exists()).toBe(false);
+      });
+
+      it('should have correct sub-items container structure', async () => {
+        await wrapper.setProps({ expanded: true });
+        expect(progressTableRowItemSubItemsRow().exists()).toBe(true);
+      });
     });
   });
 });

@@ -10,6 +10,7 @@
   >
     <tr
       class="progress-table-row-item__main-row"
+      data-testid="progress-table-row-item-main-row"
       @click="handleExpand()"
     >
       <td
@@ -18,6 +19,7 @@
       >
         <UnnnicIcon
           v-if="isExpandable"
+          data-testid="progress-table-row-item-icon"
           :class="[
             'label__icon',
             {
@@ -33,6 +35,7 @@
           <p
             v-if="isExpandable"
             class="infos__description"
+            data-testid="progress-table-row-item-expandable-description"
           >
             {{ expandableDescription }}
           </p>
@@ -57,6 +60,7 @@
     <tr
       v-if="isExpandable && expanded"
       class="progress-table-row-item__sub-items-row"
+      data-testid="progress-table-row-item-sub-items-row"
     >
       <td
         colspan="3"

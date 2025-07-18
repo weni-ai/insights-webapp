@@ -27,12 +27,5 @@ const handleAddTopic = () => {
 <style lang="scss" scoped>
 .add-topic-button {
   width: 100%;
-
-  :deep(.unnnic-icon__size--md) {
-    width: $unnnic-icon-size-ant;
-    height: $unnnic-icon-size-ant;
-    min-width: $unnnic-icon-size-ant;
-    min-height: $unnnic-icon-size-ant;
-  }
 }
 </style>

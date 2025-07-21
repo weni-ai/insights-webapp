@@ -3,7 +3,7 @@
     class="form-topic"
     data-testid="form-topic"
   >
-    <section
+    <header
       class="form-topic__header"
       data-testid="form-topic-header"
     >
@@ -12,7 +12,7 @@
         data-testid="form-topic-add-button"
         @add-topic="handleAddTopic"
       />
-    </section>
+    </header>
 
     <section
       v-if="topics.length > 0"

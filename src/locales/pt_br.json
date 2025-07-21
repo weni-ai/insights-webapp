@@ -38,6 +38,34 @@
         "transferred": "Inclui conversas (resolvidas ou não) que foram encaminhadas para atendimento humano."
       }
     },
+    "form_topic": {
+      "add_topic": "Adicionar tópico",
+      "add_sub_topic": "Adicionar sub-tópico",
+      "title": "Editar tópicos e sub-tópicos",
+      "cancel": "Cancelar",
+      "save": "Salvar alterações",
+      "new_topic": "Novo tópico",
+      "topic_name": "Nome do tópico",
+      "context": "Contexto",
+      "context_description": "Adicione um contexto para melhorar a classificação da IA",
+      "sub_topics": "Sub-tópicos",
+      "new_sub_topic": "Novo sub-tópico",
+      "sub_topics_added": "{sub_topics} sub-tópicos adicionados",
+      "remove_modal": {
+        "title_remove_topic": "Remover tópico",
+        "title_remove_sub_topic": "Remover sub-tópico",
+        "description_remove_topic": "Tem certeza que deseja remover o tópico {topic}? Todos os sub-tópicos também serão removidos, e qualquer dado previamente associado a este tópico será desclassificado e não mais acessível através desta classificação.",
+        "description_remove_sub_topic": "Tem certeza que deseja remover o sub-tópico {sub_topic}? Qualquer dado previamente associado a este sub-tópico será desclassificado e não mais acessível através desta classificação.",
+        "remove": "Remover",
+        "cancel": "Cancelar"
+      },
+      "cancel_modal": {
+        "title": "Cancelar edição de tópicos",
+        "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
+        "cancel": "Cancelar",
+        "continue": "Continuar"
+      }
+    },
     "most_talked_about_topics": {
       "title": "Tópicos mais falados",
       "see_all": "Ver todos",

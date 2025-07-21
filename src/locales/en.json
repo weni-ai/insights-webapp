@@ -22,6 +22,8 @@
     "conversations": "conversations",
     "artificial_intelligence": "AI",
     "human_support": "Human Support",
+    "others": "Others",
+    "unclassified": "Unclassified",
     "header": {
       "total": "Total Conversations",
       "resolved": "Resolved",
@@ -36,8 +38,38 @@
         "transferred": "Includes conversations (resolved or unresolved) that were forwarded to a human agent."
       }
     },
+    "form_topic": {
+      "add_topic": "Add topic",
+      "add_sub_topic": "Add sub-topic",
+      "title": "Edit topics and sub-topics",
+      "cancel": "Cancel",
+      "save": "Save Changes", 
+      "new_topic": "New topic",
+      "topic_name": "Topic name",
+      "context": "Context",
+      "context_description": "Add a context to improve the AI classification",
+      "sub_topics": "Sub-topics",
+      "new_sub_topic": "New sub-topic",
+      "sub_topics_added": "{sub_topics} sub-topics added",
+      "remove_modal": {
+        "title_remove_topic": "Remove topic",
+        "title_remove_sub_topic": "Remove sub-topic",
+        "description_remove_topic": "Are you sure you want to remove the {topic} topic? All sub-topics will also be removed, and any data previously associated with this topic will be unclassified and no longer accessible through this classification.",
+        "description_remove_sub_topic": "Are you sure you want to remove the {sub_topic} sub-topic? Any data previously associated with this subtopic will be unclassified and no longer accessible through this classification.",
+        "remove": "Remove",
+        "cancel": "Cancel"
+      },
+      "cancel_modal": {
+        "title": "Cancel editing topics",
+        "description_cancel": "Are you sure you want to cancel? All progress will be lost.",
+        "cancel": "Cancel adding",
+        "continue": "Keep adding"
+      }
+    },
     "most_talked_about_topics": {
-      "title": "Most talked about topics"
+      "title": "Most talked about topics",
+      "see_all": "See all",
+      "subtopics": "subtopics"
     },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
@@ -76,7 +108,7 @@
     "messages_graph": {
       "sent_messages": "Sent messages",
       "delivered_messages": "Delivered messages",
-      "readed_messages": "Readed messages",
+      "read_messages": "Read messages",
       "clicks": "Clicks"
     },
     "button_clicks_table": {
@@ -170,6 +202,7 @@
   "closeds": "Closeds",
   "in_progress": "Ongoing",
   "waiting": "Waiting",
+  "in-service": "In Service",
   "status": "Status",
   "metric": "Metric",
   "metrics": "Metrics",

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { nextTick } from 'vue';
-import { mount, config } from '@vue/test-utils';
+import { shallowMount, config } from '@vue/test-utils';
 import Conversational from '../Conversational.vue';
 import { createI18n } from 'vue-i18n';
 
@@ -14,7 +14,7 @@ describe('Conversational', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = mount(Conversational);
+    wrapper = shallowMount(Conversational);
   });
 
   describe('orderedDynamicWidgets computed property', () => {

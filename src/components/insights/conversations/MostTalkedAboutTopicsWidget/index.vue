@@ -1,27 +1,45 @@
 <template>
-  <BaseConversationWidget
-    class="most-talked-about-topics"
-    :title="$t('conversations_dashboard.most_talked_about_topics.title')"
-  >
-    <TreemapChart
-      :data="MOCK_DATA"
-      @click="handleSeeAllDrawer($event.label)"
+  <section class="most-talked-about-topics">
+    <BaseConversationWidget
+      class="most-talked-about-topics__conversation-widget"
+      :title="$t('conversations_dashboard.most_talked_about_topics.title')"
+    >
+      <TreemapChart
+        :data="MOCK_DATA"
+        @click="handleSeeAllDrawer($event.label)"
+      />
+
+      <UnnnicButton
+        type="tertiary"
+        size="small"
+        :text="$t('conversations_dashboard.most_talked_about_topics.see_all')"
+        @click="handleSeeAllDrawer()"
+      />
+
+      <SeeAllDrawer
+        v-if="isSeeAllDrawerOpen"
+        v-model="isSeeAllDrawerOpen"
+        :data="MOCK_DATA"
+        :expandedItems="expandedItems"
+      />
+    </BaseConversationWidget>
+
+    <AddWidget
+      v-if="topicsStore.topics.length === 0"
+      :title="$t('conversations_dashboard.most_talked_about_topics.no_topics')"
+      :description="
+        $t(
+          'conversations_dashboard.most_talked_about_topics.no_topics_description',
+        )
+      "
+      :actionText="
+        $t('conversations_dashboard.most_talked_about_topics.add_first_topic')
+      "
+      @action="topicsStore.toggleAddTopicsDrawer"
     />
 
-    <UnnnicButton
-      type="tertiary"
-      size="small"
-      :text="$t('conversations_dashboard.most_talked_about_topics.see_all')"
-      @click="handleSeeAllDrawer()"
-    />
-
-    <SeeAllDrawer
-      v-if="isSeeAllDrawerOpen"
-      v-model="isSeeAllDrawerOpen"
-      :data="MOCK_DATA"
-      :expandedItems="expandedItems"
-    />
-  </BaseConversationWidget>
+    <DrawerTopics v-if="topicsStore.isAddTopicsDrawerOpen" />
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -29,6 +47,9 @@ import { ref } from 'vue';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
+import AddWidget from '../AddWidget.vue';
+import { useConversationalTopics } from '@/store/modules/conversational/topics';
+import DrawerTopics from '../topics/DrawerTopics.vue';
 
 const MOCK_DATA = [
   {
@@ -63,6 +84,8 @@ const MOCK_DATA = [
   },
 ];
 
+const topicsStore = useConversationalTopics();
+
 const expandedItems = ref<string[]>([]);
 
 const isSeeAllDrawerOpen = ref(false);
@@ -75,6 +98,8 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
 
 <style lang="scss" scoped>
 .most-talked-about-topics {
+  position: relative;
+
   padding-bottom: $unnnic-spacing-sm;
 
   overflow: hidden;
@@ -82,6 +107,10 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
   min-width: 100%;
   height: 380px;
 
-  gap: $unnnic-spacing-ant;
+  &__conversation-widget {
+    height: 100%;
+
+    gap: $unnnic-spacing-ant;
+  }
 }
 </style>

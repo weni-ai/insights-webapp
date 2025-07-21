@@ -1,41 +1,75 @@
 <template>
-  <section
-    class="add-widget"
+  <AddWidget
     data-testid="add-widget"
+    :title="$t('conversations_dashboard.customize_your_dashboard.title')"
+    :description="
+      $t('conversations_dashboard.customize_your_dashboard.description')
+    "
+    :actionText="
+      $t('conversations_dashboard.customize_your_dashboard.add_widget')
+    "
+    @action="handleDrawerAddWidget"
+  />
+
+  <UnnnicDrawer
+    v-if="isAddWidgetDrawerOpen"
+    :modelValue="isAddWidgetDrawerOpen"
+    title="Widgets"
+    class="add-widget-drawer"
+    data-testid="add-widget-drawer"
+    @close="handleDrawerAddWidget"
   >
-    <h2
-      class="add-widget__title"
-      data-testid="add-widget-title"
-    >
-      {{ title }}
-    </h2>
-    <p
-      class="add-widget__description"
-      data-testid="add-widget-description"
-    >
-      {{ description }}
-    </p>
-    <UnnnicButton
-      data-testid="add-widget-button"
-      :text="actionText"
-      iconLeft="add"
-      size="small"
-      type="primary"
-      @click="emit('action')"
-    />
-  </section>
+    <template #content>
+      <ul class="add-widget-drawer__widget-list">
+        <li
+          v-for="widget in availableWidgets"
+          :key="widget.name"
+          class="widget-list__item"
+          data-testid="add-widget-drawer-item"
+        >
+          <h2
+            class="item__title"
+            data-testid="add-widget-drawer-item-title"
+          >
+            {{ widget.name }}
+          </h2>
+          <p
+            class="item__description"
+            data-testid="add-widget-drawer-item-description"
+          >
+            {{ widget.description }}
+          </p>
+        </li>
+      </ul>
+    </template>
+  </UnnnicDrawer>
 </template>
 
-<script setup lang="ts">
-const emit = defineEmits<{
-  (_e: 'action'): void;
-}>();
+<script setup>
+import { ref } from 'vue';
+import AddWidget from './AddWidget.vue';
+import i18n from '@/utils/plugins/i18n';
 
-defineProps<{
-  title: string;
-  description: string;
-  actionText: string;
-}>();
+const isAddWidgetDrawerOpen = ref(false);
+
+function handleDrawerAddWidget() {
+  isAddWidgetDrawerOpen.value = !isAddWidgetDrawerOpen.value;
+}
+
+const availableWidgets = ref([
+  {
+    name: i18n.global.t('conversations_dashboard.csat'),
+    description: i18n.global.t(
+      'conversations_dashboard.customize_your_dashboard.csat_description',
+    ),
+  },
+  {
+    name: i18n.global.t('conversations_dashboard.nps'),
+    description: i18n.global.t(
+      'conversations_dashboard.customize_your_dashboard.nps_description',
+    ),
+  },
+]);
 </script>
 
 <style scoped lang="scss">
@@ -69,15 +103,10 @@ defineProps<{
   }
 
   &__description {
-    padding: 0 $unnnic-spacing-sm;
-
-    max-width: 600px;
-
     color: $unnnic-color-neutral-cloudy;
     font-size: $unnnic-font-size-body-lg;
     font-weight: $unnnic-font-weight-regular;
     line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
-    text-align: center;
   }
 
   &-drawer {

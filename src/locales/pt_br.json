@@ -69,12 +69,19 @@
     "most_talked_about_topics": {
       "title": "Tópicos mais falados",
       "see_all": "Ver todos",
-      "subtopics": "subtópicos"
+      "subtopics": "subtópicos",
+      "no_topics": "Nenhum tópico ainda",
+      "no_topics_description": "Adicione um tópico para começar a analisar as conversas",
+      "add_first_topic": "Adicione seu primeiro tópico"
     },
+    "csat": "CSAT",
+    "nps": "NPS",
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas métricas chave",
-      "add_widget": "Adicionar widget"
+      "add_widget": "Adicionar widget",
+      "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
+      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas."
     }
   },
   "template_messages_dashboard": {

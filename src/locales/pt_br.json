@@ -108,7 +108,7 @@
     "messages_graph": {
       "sent_messages": "Mensagens enviadas",
       "delivered_messages": "Mensagens entregues",
-      "readed_messages": "Mensagens lidas",
+      "read_messages": "Mensagens lidas",
       "clicks": "Cliques"
     },
     "button_clicks_table": {
@@ -202,6 +202,7 @@
   "closeds": "Encerrados",
   "in_progress": "Em andamento",
   "waiting": "Aguardando",
+  "in-service": "Em atendimento",
   "status": "Status",
   "metric": "Métrica",
   "metrics": "Métricas",

@@ -42,7 +42,7 @@ const mockData = [
     total: 20,
   },
   {
-    group: 'template_messages_dashboard.messages_graph.readed_messages',
+    group: 'template_messages_dashboard.messages_graph.read_messages',
     data: [
       { label: '24/11', value: 1 },
       { label: '25/11', value: 2 },

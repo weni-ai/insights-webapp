@@ -22,6 +22,8 @@
     "conversations": "conversations",
     "artificial_intelligence": "AI",
     "human_support": "Human Support",
+    "others": "Others",
+    "unclassified": "Unclassified",
     "header": {
       "total": "Total Conversations",
       "resolved": "Resolved",

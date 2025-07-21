@@ -39,15 +39,13 @@ const props = defineProps<{
 
 const expandedItems = ref(props.expandedItems || []);
 
-const expandItem = (label: string, expanded: boolean) => {
-  console.log('label', label);
-  console.log('expanded', expanded);
+function expandItem(label: string, expanded: boolean) {
   if (expanded) {
     expandedItems.value.push(label);
   } else {
     expandedItems.value = expandedItems.value.filter((item) => item !== label);
   }
-};
+}
 </script>
 
 <style scoped lang="scss">

@@ -5,11 +5,12 @@
       :title="$t('conversations_dashboard.most_talked_about_topics.title')"
     >
       <TreemapChart
-        :data="MOCK_DATA"
+        :data="treemapData"
         @click="handleSeeAllDrawer($event.label)"
       />
 
       <UnnnicButton
+        v-if="treemapData.length > 0"
         type="tertiary"
         size="small"
         :text="$t('conversations_dashboard.most_talked_about_topics.see_all')"
@@ -25,7 +26,7 @@
     </BaseConversationWidget>
 
     <AddWidget
-      v-if="topicsStore.topics.length === 0"
+      v-if="topicsStore.topicsCount === 0"
       :title="$t('conversations_dashboard.most_talked_about_topics.no_topics')"
       :description="
         $t(
@@ -43,7 +44,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
@@ -84,6 +85,8 @@ const MOCK_DATA = [
   },
 ];
 
+const MOCK_EMPTY_DATA = [];
+
 const topicsStore = useConversationalTopics();
 
 const expandedItems = ref<string[]>([]);
@@ -94,6 +97,10 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
 
   isSeeAllDrawerOpen.value = !isSeeAllDrawerOpen.value;
 };
+
+const treemapData = computed(() => {
+  return topicsStore.topicsCount > 0 ? MOCK_EMPTY_DATA : MOCK_DATA; // TODO: Change to real data instead of MOCK_EMPTY_DATA
+});
 </script>
 
 <style lang="scss" scoped>

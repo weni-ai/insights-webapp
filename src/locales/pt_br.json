@@ -315,6 +315,9 @@
         "total_value": "Valor total",
         "average_ticket": "Ticket médio"
       }
+    },
+    "treemap": {
+      "no_data": "Nenhum dado para mostrar"
     }
   },
   "drawers": {

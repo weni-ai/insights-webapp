@@ -121,6 +121,20 @@ describe('TreemapChart', () => {
     });
   });
 
+  describe('No Data Scenarios', () => {
+    it('should handle empty data array gracefully', async () => {
+      const wrapper = createWrapper({ data: [] });
+      await wrapper.vm.$nextTick();
+
+      expect(
+        wrapper.find('[data-testid="treemap-chart-no-data"]').exists(),
+      ).toBe(true);
+      expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(
+        false,
+      );
+    });
+  });
+
   describe('Chart Initialization', () => {
     it('should register Chart.js plugins on creation', () => {
       createWrapper();

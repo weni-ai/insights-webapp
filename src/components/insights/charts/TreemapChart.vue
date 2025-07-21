@@ -4,10 +4,19 @@
     data-testid="treemap-chart"
     class="treemap-chart"
   >
+    <p
+      v-if="data.length === 0"
+      data-testid="treemap-chart-no-data"
+      class="treemap-chart__no-data"
+    >
+      {{ $t('widgets.treemap.no_data') }}
+    </p>
+
     <canvas
+      v-else
       ref="treemapCanvas"
       data-testid="treemap-canvas"
-      class="treemap-canvas"
+      class="treemap-chart__canvas"
       height="100%"
     />
   </section>
@@ -32,7 +41,7 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
-  data: TreemapDataItem[];
+  data: TreemapDataItem[] | [];
 }>();
 
 const preparedData = prepareTopData(props.data);
@@ -157,9 +166,21 @@ onMounted(() => {
   width: calc(
     100% + 12px
   ); // 12px is the compensation for the  visual padding to the chart
-}
 
-.treemap-canvas {
-  transform: translateX(-6px); // Need to remove visual padding from the chart
+  &__no-data {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: $unnnic-font-size-body-gt;
+    font-family: $unnnic-font-family-secondary;
+    color: $unnnic-color-neutral-cloudy;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  }
+
+  &__canvas {
+    transform: translateX(-6px); // Need to remove visual padding from the chart
+  }
 }
 </style>

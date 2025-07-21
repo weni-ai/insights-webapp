@@ -64,14 +64,12 @@
 
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
 import { useWidgets } from '@/store/modules/widgets';
 
 import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
-
-const { t } = useI18n();
+import i18n from '@/utils/plugins/i18n';
 
 const props = defineProps({
   headers: {
@@ -130,8 +128,8 @@ const headerOptions = computed(() => {
         !['status', 'agent'].includes(header.name),
     )
     .map((header) => ({
-      value: t(header.name?.toLowerCase()),
-      label: t(header.name?.toLowerCase()),
+      value: i18n.global.t(header.name?.toLowerCase()),
+      label: i18n.global.t(header.name?.toLowerCase()),
       key: header.name,
     }));
 });
@@ -145,7 +143,6 @@ const handleVisibleColumnsUpdate = (value) => {
 
   if (agentsColumnsFilterStore.visibleColumns.length / value.length < 3) {
     const columnNames = value.map((option) => option.key);
-
     selectedColumns.value = value;
 
     agentsColumnsFilterStore.setVisibleColumns(columnNames);

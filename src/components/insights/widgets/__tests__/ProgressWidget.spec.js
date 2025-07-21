@@ -26,6 +26,7 @@ const createWrapper = (props = {}) => {
   return mount(ProgressWidget, {
     global: { plugins: [UnnnicSystem] },
     props: { ...defaultProps, ...props },
+    stubs: ['ProgressTable'],
   });
 };
 
@@ -45,11 +46,10 @@ describe('ProgressWidget.vue', () => {
   });
 
   describe('Content Rendering', () => {
-    it('should render progress items', () => {
-      const progressItems = wrapper.findAll(
-        '[data-testid="progress-widget-progress-item"]',
-      );
-      expect(progressItems).toHaveLength(2);
+    it('should render table', () => {
+      expect(
+        wrapper.find('[data-testid="progress-widget-table"]').exists(),
+      ).toBe(true);
     });
 
     it('should render card when provided', async () => {
@@ -102,10 +102,17 @@ describe('ProgressWidget.vue', () => {
         },
         progressItems: [
           {
-            text: 'Complete Item',
+            label: 'Complete Item',
             value: 90,
+            description: 'Complete description',
             backgroundColor: '#green',
             color: '#white',
+            subItems: [
+              {
+                label: 'Sub Item',
+                value: 80,
+              },
+            ],
           },
         ],
         footerText: 'Complete footer',
@@ -128,10 +135,13 @@ describe('ProgressWidget.vue', () => {
       expect(cardConversations.exists()).toBe(true);
       expect(cardConversations.props('title')).toBe('Complete Card');
 
-      const progressItems = wrapper.findAll(
-        '[data-testid="progress-widget-progress-item"]',
+      const progressTable = wrapper.findComponent(
+        '[data-testid="progress-widget-table"]',
       );
-      expect(progressItems).toHaveLength(1);
+      expect(progressTable.exists()).toBe(true);
+      expect(progressTable.props('progressItems')).toEqual(
+        wrapper.vm.treatedProgressItems,
+      );
     });
 
     it('should render minimal elements when only required props are provided', () => {
@@ -143,17 +153,20 @@ describe('ProgressWidget.vue', () => {
       expectElementExists(minimalWrapper, 'progress-widget-card', false);
       expectElementExists(minimalWrapper, 'progress-widget-footer', false);
 
-      const progressItems = minimalWrapper.findAll(
-        '[data-testid="progress-widget-progress-item"]',
+      const progressTable = minimalWrapper.findComponent(
+        '[data-testid="progress-widget-table"]',
       );
-      expect(progressItems).toHaveLength(1);
+      expect(progressTable.exists()).toBe(true);
+      expect(progressTable.props('progressItems')).toEqual(
+        minimalWrapper.vm.treatedProgressItems,
+      );
     });
   });
 
   describe('Component Structure', () => {
     const requiredElements = [
       'progress-widget-content',
-      'progress-widget-progress-item',
+      'progress-widget-table',
     ];
 
     requiredElements.forEach((testId) => {
@@ -167,21 +180,10 @@ describe('ProgressWidget.vue', () => {
     it('should handle empty progress items array', async () => {
       await wrapper.setProps({ progressItems: [] });
 
-      const progressItems = wrapper.findAll(
-        '[data-testid="progress-widget-progress-item"]',
+      const progressTable = wrapper.findComponent(
+        '[data-testid="progress-widget-table"]',
       );
-      expect(progressItems).toHaveLength(0);
-    });
-
-    it('should handle progress items without optional properties', async () => {
-      await wrapper.setProps({
-        progressItems: [{ text: 'Simple Item', value: 60 }],
-      });
-
-      const progressItems = wrapper.findAll(
-        '[data-testid="progress-widget-progress-item"]',
-      );
-      expect(progressItems).toHaveLength(1);
+      expect(progressTable.exists()).toBe(false);
     });
   });
 });

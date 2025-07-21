@@ -67,7 +67,9 @@
       }
     },
     "most_talked_about_topics": {
-      "title": "Tópicos mais falados"
+      "title": "Tópicos mais falados",
+      "see_all": "Ver todos",
+      "subtopics": "subtópicos"
     },
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",

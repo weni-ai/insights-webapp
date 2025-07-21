@@ -3,13 +3,32 @@
     class="most-talked-about-topics"
     :title="$t('conversations_dashboard.most_talked_about_topics.title')"
   >
-    <TreemapChart :data="MOCK_DATA" />
+    <TreemapChart
+      :data="MOCK_DATA"
+      @click="handleSeeAllDrawer($event.label)"
+    />
+
+    <UnnnicButton
+      type="tertiary"
+      size="small"
+      :text="$t('conversations_dashboard.most_talked_about_topics.see_all')"
+      @click="handleSeeAllDrawer()"
+    />
+
+    <SeeAllDrawer
+      v-if="isSeeAllDrawerOpen"
+      v-model="isSeeAllDrawerOpen"
+      :data="MOCK_DATA"
+      :expandedItems="expandedItems"
+    />
   </BaseConversationWidget>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
+import SeeAllDrawer from './SeeAllDrawer.vue';
 
 const MOCK_DATA = [
   {
@@ -43,6 +62,15 @@ const MOCK_DATA = [
     percentage: 5,
   },
 ];
+
+const expandedItems = ref<string[]>([]);
+
+const isSeeAllDrawerOpen = ref(false);
+const handleSeeAllDrawer = (expandedItem?: string) => {
+  expandedItems.value = expandedItem ? [expandedItem] : [];
+
+  isSeeAllDrawerOpen.value = !isSeeAllDrawerOpen.value;
+};
 </script>
 
 <style lang="scss" scoped>

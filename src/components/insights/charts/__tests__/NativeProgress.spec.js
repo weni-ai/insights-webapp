@@ -69,7 +69,7 @@ describe('NativeProgress.vue', () => {
 
   describe('Default Props', () => {
     const defaultValues = [
-      { prop: 'progressColor', expected: '#007bff' },
+      { prop: 'color', expected: '#007bff' },
       { prop: 'backgroundColor', expected: '#e9ecef' },
       { prop: 'height', expected: 8 },
     ];
@@ -117,7 +117,7 @@ describe('NativeProgress.vue', () => {
     it('should calculate progress bar styles correctly', () => {
       const testWrapper = createWrapper({
         progress: 75,
-        progressColor: '#28a745',
+        color: '#28a745',
       });
 
       const expectedStyles = {
@@ -133,7 +133,7 @@ describe('NativeProgress.vue', () => {
     it('should render with all custom props', () => {
       const customProps = {
         progress: 80,
-        progressColor: '#dc3545',
+        color: '#dc3545',
         backgroundColor: '#f8f9fa',
         height: 16,
       };
@@ -152,7 +152,7 @@ describe('NativeProgress.vue', () => {
     });
 
     it('should update styles when props change', async () => {
-      await wrapper.setProps({ progress: 25, progressColor: '#ffc107' });
+      await wrapper.setProps({ progress: 25, color: '#ffc107' });
 
       expectElementStyles(wrapper, 'native-progress-bar', {
         width: '25%',
@@ -196,7 +196,7 @@ describe('NativeProgress.vue', () => {
       await wrapper.setProps({
         progress: 75,
         height: 10,
-        progressColor: '#success',
+        color: '#success',
       });
 
       expect(vm.normalizedProgress).toBe(75);

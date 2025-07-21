@@ -36,6 +36,34 @@
         "transferred": "Incluye conversaciones (resueltas o no) que fueron transferidas a atención humana."
       }
     },
+    "form_topic": {
+      "add_topic": "Agregar tema",
+      "add_sub_topic": "Agregar sub-tema",
+      "title": "Editar temas y sub-temas",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios",
+      "new_topic": "Nuevo tema",
+      "topic_name": "Nombre del tema",
+      "context": "Contexto",
+      "context_description": "Agrega un contexto para mejorar la clasificación de la IA",
+      "sub_topics": "Sub-temas",
+      "new_sub_topic": "Nuevo sub-tema",
+      "sub_topics_added": "{sub_topics} sub-temas agregados",
+      "remove_modal": {
+        "title_remove_topic": "Eliminar tema",
+        "title_remove_sub_topic": "Eliminar sub-tema",
+        "description_remove_topic": "¿Estás seguro de querer eliminar el tema {topic}? Todos los sub-temas también serán eliminados, y cualquier dato previamente asociado con este tema será desclasificado y ya no accesible a través de esta clasificación.",
+        "description_remove_sub_topic": "¿Estás seguro de querer eliminar el sub-tema {sub_topic}? Cualquier dato previamente asociado con este sub-tema será desclasificado y ya no accesible a través de esta clasificación.",
+        "remove": "Eliminar",
+        "cancel": "Cancelar"
+      },
+      "cancel_modal": {
+        "title": "Cancelar edición de temas",
+        "description_cancel": "¿Estás seguro de querer cancelar? Se perderán todos los cambios.",
+        "cancel": "Cancelar",
+        "continue": "Continuar"
+      }
+    },
     "most_talked_about_topics": {
       "title": "Tópicos más hablados"
     },

@@ -3,6 +3,11 @@
     class="agents-table-header"
     data-testid="agents-table-header"
   >
+    <UnnnicInputDatePicker
+      v-model="selectedDate"
+      next
+      class="agents-table-header__date-picker"
+    />
     <section
       class="dynamic-columns-filter"
       data-testid="dynamic-columns-filter"
@@ -59,11 +64,14 @@
 
 <script setup>
 import { computed, ref, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
 import { useWidgets } from '@/store/modules/widgets';
 
 import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
+
+const { t } = useI18n();
 
 const props = defineProps({
   headers: {
@@ -86,6 +94,10 @@ const dependsOnQueue = ref({
 });
 const selectedSector = ref('');
 const selectedQueue = ref('');
+const selectedDate = ref({
+  start: '',
+  end: '',
+});
 
 onMounted(() => {
   agentsColumnsFilterStore.initializeFromStorage();
@@ -118,8 +130,9 @@ const headerOptions = computed(() => {
         !['status', 'agent'].includes(header.name),
     )
     .map((header) => ({
-      value: header.name,
-      label: header.name,
+      value: t(header.name?.toLowerCase()),
+      label: t(header.name?.toLowerCase()),
+      key: header.name,
     }));
 });
 
@@ -131,7 +144,7 @@ const handleVisibleColumnsUpdate = (value) => {
   if (!agentsColumnsFilterStore.hasInitialized || !Array.isArray(value)) return;
 
   if (agentsColumnsFilterStore.visibleColumns.length / value.length < 3) {
-    const columnNames = value.map((option) => option.value);
+    const columnNames = value.map((option) => option.key);
 
     selectedColumns.value = value;
 
@@ -181,6 +194,12 @@ watch(headerOptions, () => {
   }
 });
 
+watch(selectedDate, () => {
+  widgetsStore.updateCurrentExpansiveWidgetFilters({
+    date: selectedDate.value,
+  });
+});
+
 watch(selectedSector, () => {
   widgetsStore.updateCurrentExpansiveWidgetFilters({
     sector: selectedSector.value,
@@ -195,6 +214,10 @@ watch(selectedQueue, () => {
 </script>
 
 <style scoped lang="scss">
+:deep(.agents-table-header__date-picker) {
+  width: 250px;
+}
+
 .agents-table-header {
   display: flex;
   flex-direction: row;

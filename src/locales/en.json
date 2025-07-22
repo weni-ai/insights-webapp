@@ -19,6 +19,7 @@
     }
   },
   "conversations_dashboard": {
+    "title": "Support",
     "conversations": "conversations",
     "artificial_intelligence": "AI",
     "human_support": "Human Support",

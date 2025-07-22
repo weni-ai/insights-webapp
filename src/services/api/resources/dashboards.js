@@ -16,7 +16,7 @@ const mockConversationalDashboard = {
   is_default: false,
   is_deletable: false,
   is_editable: false,
-  name: 'Conversational',
+  name: 'conversations_dashboard.title',
   uuid: 'f58b3945-a641-4c8e-9e6d-b4644d8172f7',
 };
 

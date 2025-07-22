@@ -45,12 +45,9 @@ import Unnnic from '@/utils/plugins/UnnnicSystem';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 
-const {
-  formatPercentage: formatPercentageValue,
-  formatNumber: formatNumberValue,
-} = useWidgetFormatting();
+const { formatPercentage, formatNumber } = useWidgetFormatting();
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const cardDefinitions = [
   {
@@ -108,14 +105,6 @@ const rightCard = computed(() => ({
   tooltipInfo: t('conversations_dashboard.header.tooltips.transferred'),
   isLoading: rightCardData.value.isLoading,
 }));
-
-const formatPercentage = (value: number) => {
-  return formatPercentageValue(value, locale.value);
-};
-
-const formatNumber = (value: number) => {
-  return formatNumberValue(value, locale.value);
-};
 
 const mockApiCalls = {
   async fetchTotalConversations() {

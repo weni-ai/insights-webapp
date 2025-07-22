@@ -82,7 +82,10 @@
       "description": "Personalize o dashboard com suas métricas chave",
       "add_widget": "Adicionar widget",
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
-      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas."
+      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
+      "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar:",
+      "human_support": "Atendimento humano",
+      "ai_support": "IA"
     }
   },
   "template_messages_dashboard": {

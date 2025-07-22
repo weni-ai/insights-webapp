@@ -55,7 +55,7 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   data: TreemapDataItem[] | [];
-  isLoading: boolean;
+  isLoading?: boolean;
 }>();
 
 const preparedData = prepareTopData(props.data);

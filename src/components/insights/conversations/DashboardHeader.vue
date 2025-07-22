@@ -43,8 +43,14 @@ import { ref, computed, onMounted } from 'vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import Unnnic from '@/utils/plugins/UnnnicSystem';
 import { useI18n } from 'vue-i18n';
+import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 
-const { t } = useI18n();
+const {
+  formatPercentage: formatPercentageValue,
+  formatNumber: formatNumberValue,
+} = useWidgetFormatting();
+
+const { t, locale } = useI18n();
 
 const cardDefinitions = [
   {
@@ -103,44 +109,61 @@ const rightCard = computed(() => ({
   isLoading: rightCardData.value.isLoading,
 }));
 
+const formatPercentage = (value: number) => {
+  return formatPercentageValue(value, locale.value);
+};
+
+const formatNumber = (value: number) => {
+  return formatNumberValue(value, locale.value);
+};
+
 const mockApiCalls = {
   async fetchTotalConversations() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
+    const value = 48179.55;
     return {
-      value: '48.179',
+      value: formatNumber(value),
       description: null,
     };
   },
 
   async fetchResolvedConversations() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
+    const value = 85.75;
+    const description = 41313.55;
     return {
-      value: '85.75%',
-      description: `41.313 ${t('conversations_dashboard.conversations')}`,
+      value: formatPercentage(value),
+      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
     };
   },
 
   async fetchUnresolvedConversations() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
+    const value = 5.25;
+    const description = 2529;
     return {
-      value: '5.25%',
-      description: `2.529 ${t('conversations_dashboard.conversations')}`,
+      value: formatPercentage(value),
+      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
     };
   },
 
   async fetchUnengagedConversations() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
+    const value = 9;
+    const description = 4338;
     return {
-      value: '9.00%',
-      description: `4.338 ${t('conversations_dashboard.conversations')}`,
+      value: formatPercentage(value),
+      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
     };
   },
 
   async fetchTransferredConversations() {
     await new Promise((resolve) => setTimeout(resolve, 3000));
+    const value = 12.22;
+    const description = 5887;
     return {
-      value: '12.22%',
-      description: `5.887 ${t('conversations_dashboard.conversations')}`,
+      value: formatPercentage(value),
+      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
     };
   },
 };

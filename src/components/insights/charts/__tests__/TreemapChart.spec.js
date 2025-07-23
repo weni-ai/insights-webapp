@@ -121,6 +121,58 @@ describe('TreemapChart', () => {
     });
   });
 
+  describe('Loading State', () => {
+    it('should render loading skeleton when isLoading is true', async () => {
+      const wrapper = createWrapper({ isLoading: true });
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.find('.treemap-chart__loading').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(
+        false,
+      );
+      expect(
+        wrapper.find('[data-testid="treemap-chart-no-data"]').exists(),
+      ).toBe(false);
+    });
+
+    it('should render 5 skeleton loading components', async () => {
+      const wrapper = createWrapper({ isLoading: true });
+      await wrapper.vm.$nextTick();
+
+      const skeletons = wrapper.findAll(
+        '[data-testid="treemap-chart-loading-skeleton"]',
+      );
+      expect(skeletons).toHaveLength(5);
+    });
+
+    it('should apply correct CSS classes to each skeleton', async () => {
+      const wrapper = createWrapper({ isLoading: true });
+      await wrapper.vm.$nextTick();
+
+      const skeletons = wrapper.findAll(
+        '[data-testid="treemap-chart-loading-skeleton"]',
+      );
+
+      expect(skeletons[0].classes()).toContain('loading__skeleton--1');
+      expect(skeletons[1].classes()).toContain('loading__skeleton--2');
+      expect(skeletons[2].classes()).toContain('loading__skeleton--3');
+      expect(skeletons[3].classes()).toContain('loading__skeleton--4');
+      expect(skeletons[4].classes()).toContain('loading__skeleton--5');
+    });
+
+    it('should apply grid layout styles to loading container', async () => {
+      const wrapper = createWrapper({ isLoading: true });
+      await wrapper.vm.$nextTick();
+
+      const loadingContainer = wrapper.find(
+        '[data-testid="treemap-chart-loading"]',
+      );
+      expect(loadingContainer.exists()).toBe(true);
+
+      expect(loadingContainer.classes()).toContain('treemap-chart__loading');
+    });
+  });
+
   describe('No Data Scenarios', () => {
     it('should handle empty data array gracefully', async () => {
       const wrapper = createWrapper({ data: [] });

@@ -39,13 +39,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
-import Unnnic from '@/utils/plugins/UnnnicSystem';
+import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
+import conversationalHeaderApi from '@/services/api/resources/conversational/header';
+import { useDashboards } from '@/store/modules/dashboards';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
+
+const { appliedFilters } = useDashboards();
 
 const { t } = useI18n();
 
@@ -66,7 +70,7 @@ const cardDefinitions = [
     tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
   },
   {
-    id: 'unengaged',
+    id: 'abandoned',
     titleKey: 'conversations_dashboard.header.unengaged',
     tooltipKey: 'conversations_dashboard.header.tooltips.unengaged',
   },
@@ -106,55 +110,36 @@ const rightCard = computed(() => ({
   isLoading: rightCardData.value.isLoading,
 }));
 
-const mockApiCalls = {
-  async fetchTotalConversations() {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const value = 48179.55;
-    return {
-      value: formatNumber(value),
-      description: null,
-    };
+watch(
+  appliedFilters,
+  () => {
+    loadCardData();
   },
+  { deep: true },
+);
 
-  async fetchResolvedConversations() {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const value = 85.75;
-    const description = 41313.55;
-    return {
-      value: formatPercentage(value),
-      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
-    };
-  },
+const fetchConversationalHeaderData = async () => {
+  const { ended_at } =
+    (appliedFilters as {
+      ended_at: { __gte: string; __lte: string };
+    }) || {};
 
-  async fetchUnresolvedConversations() {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const value = 5.25;
-    const description = 2529;
-    return {
-      value: formatPercentage(value),
-      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
-    };
-  },
+  const { __gte, __lte } = ended_at as {
+    __gte: string;
+    __lte: string;
+  };
 
-  async fetchUnengagedConversations() {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const value = 9;
-    const description = 4338;
-    return {
-      value: formatPercentage(value),
-      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
-    };
-  },
+  const formattedParams = {
+    start_date: __gte,
+    end_date: __lte,
+  };
 
-  async fetchTransferredConversations() {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    const value = 12.22;
-    const description = 5887;
-    return {
-      value: formatPercentage(value),
-      description: `${formatNumber(description)} ${t('conversations_dashboard.conversations')}`,
-    };
-  },
+  const response =
+    await conversationalHeaderApi.getConversationalHeaderTotals(
+      formattedParams,
+    );
+
+  return response;
 };
 
 const getBorderRadius = (index: number, totalCards: number) => {
@@ -170,57 +155,49 @@ const showErrorToast = () => {
       text: t('widgets.graph_funnel.error.title'),
       type: 'error',
     },
-    seconds: 5,
+    containerRef: null,
   });
 };
 
-const loadData = async (
-  fetchFn: () => Promise<{ value: any; description: string | null }>,
-  targetRef: { value: any; description: string | null; isLoading: boolean },
-  errorMessage: string,
-) => {
+const loadCardData = async () => {
   try {
-    const data = await fetchFn();
-    targetRef.value = data.value;
-    targetRef.description = data.description;
-    targetRef.isLoading = false;
+    const response = await fetchConversationalHeaderData();
+
+    response.forEach((metric) => {
+      const cardToUpdate = cardsData.value.find(
+        (card) => card.id === metric.id,
+      );
+
+      if (cardToUpdate) {
+        if (metric.id === 'total_conversations') {
+          cardToUpdate.value = formatNumber(metric.value);
+          cardToUpdate.description = null;
+        } else {
+          cardToUpdate.value = formatPercentage(metric.percentage);
+          cardToUpdate.description = `${formatNumber(metric.value)} ${t('conversations_dashboard.conversations')}`;
+        }
+        cardToUpdate.isLoading = false;
+      } else if (metric.id === 'transferred_to_human') {
+        rightCardData.value.value = formatPercentage(metric.percentage);
+        rightCardData.value.description = `${formatNumber(metric.value)} ${t('conversations_dashboard.conversations')}`;
+        rightCardData.value.isLoading = false;
+      }
+    });
   } catch (error) {
-    console.error(errorMessage, error);
-    targetRef.value = '-';
-    targetRef.description = `0 ${t('conversations_dashboard.conversations')}`;
-    targetRef.isLoading = false;
+    console.error('Error loading conversational header data:', error);
+
+    cardsData.value.forEach((card) => {
+      card.value = '-';
+      card.description = `0 ${t('conversations_dashboard.conversations')}`;
+      card.isLoading = false;
+    });
+
+    rightCardData.value.value = '-';
+    rightCardData.value.description = `0 ${t('conversations_dashboard.conversations')}`;
+    rightCardData.value.isLoading = false;
+
     showErrorToast();
   }
-};
-
-const loadCardData = async () => {
-  await Promise.all([
-    loadData(
-      mockApiCalls.fetchTotalConversations,
-      cardsData.value[0],
-      'Error loading total conversations:',
-    ),
-    loadData(
-      mockApiCalls.fetchResolvedConversations,
-      cardsData.value[1],
-      'Error loading resolved conversations:',
-    ),
-    loadData(
-      mockApiCalls.fetchUnresolvedConversations,
-      cardsData.value[2],
-      'Error loading unresolved conversations:',
-    ),
-    loadData(
-      mockApiCalls.fetchUnengagedConversations,
-      cardsData.value[3],
-      'Error loading unengaged conversations:',
-    ),
-    loadData(
-      mockApiCalls.fetchTransferredConversations,
-      rightCardData.value,
-      'Error loading transferred conversations:',
-    ),
-  ]);
 };
 
 onMounted(() => {

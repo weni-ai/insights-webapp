@@ -4,12 +4,57 @@ import { mount, config } from '@vue/test-utils';
 import DashboardHeader from '../DashboardHeader.vue';
 
 import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import Unnnic from '@weni/unnnic-system';
 
-vi.mock('@/utils/plugins/UnnnicSystem', () => ({
+vi.mock('@weni/unnnic-system', () => ({
   default: {
     unnnicCallAlert: vi.fn(),
   },
+}));
+
+vi.mock('@/services/api/resources/conversational/header', () => ({
+  default: {
+    getConversationalHeaderTotals: vi.fn().mockResolvedValue([
+      { id: 'total_conversations', value: 0, percentage: 100 },
+      { id: 'resolved', value: 0, percentage: 0 },
+      { id: 'unresolved', value: 0, percentage: 0 },
+      { id: 'abandoned', value: 0, percentage: 0 },
+      { id: 'transferred_to_human', value: 0, percentage: 0 },
+    ]),
+  },
+}));
+
+vi.mock('vue-router', () => ({
+  useRoute: () => ({
+    params: {},
+    query: {},
+  }),
+  useRouter: () => ({
+    push: vi.fn(),
+  }),
+}));
+
+vi.mock('@/store/modules/dashboards', () => ({
+  useDashboards: () => ({
+    appliedFilters: {
+      ended_at: {
+        __gte: '2024-01-01',
+        __lte: '2024-01-31',
+      },
+    },
+  }),
+}));
+
+vi.mock('@/composables/useWidgetFormatting', () => ({
+  useWidgetFormatting: () => ({
+    formatPercentage: vi.fn((value) => `${value.toFixed(2)}%`),
+    formatNumber: vi.fn((value) =>
+      value.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 3,
+      }),
+    ),
+  }),
 }));
 
 const i18n = createI18n({
@@ -51,7 +96,7 @@ config.global.plugins = [i18n];
 
 const createWrapper = () => {
   return mount(DashboardHeader, {
-    global: { plugins: [UnnnicSystem] },
+    global: { plugins: [Unnnic] },
   });
 };
 
@@ -60,6 +105,7 @@ describe('DashboardHeader.vue', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
     wrapper = createWrapper();
   });
 
@@ -115,7 +161,7 @@ describe('DashboardHeader.vue', () => {
       });
 
       expect(vm.cardDefinitions[3]).toEqual({
-        id: 'unengaged',
+        id: 'abandoned',
         titleKey: 'conversations_dashboard.header.unengaged',
         tooltipKey: 'conversations_dashboard.header.tooltips.unengaged',
       });
@@ -134,24 +180,79 @@ describe('DashboardHeader.vue', () => {
   });
 
   describe('Initial Loading States', () => {
-    it('should show loading state for all cards initially', () => {
-      const allCards = wrapper.findAllComponents({ name: 'CardConversations' });
+    it('should show loading state for all cards initially', async () => {
+      const delayedMock = vi.fn().mockImplementation(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  total_conversations: { value: 0, percentage: 100 },
+                  resolved: { value: 0, percentage: 0 },
+                  unresolved: { value: 0, percentage: 0 },
+                  abandoned: { value: 0, percentage: 0 },
+                  transferred_to_human: { value: 0, percentage: 0 },
+                }),
+              100,
+            ),
+          ),
+      );
+
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockImplementation(
+        delayedMock,
+      );
+
+      const testWrapper = createWrapper();
+
+      // Check loading state immediately after mount
+      const allCards = testWrapper.findAllComponents({
+        name: 'CardConversations',
+      });
 
       allCards.forEach((card) => {
         expect(card.props('isLoading')).toBe(true);
         expect(card.props('value')).toBe('-');
       });
+
+      await new Promise((resolve) => setTimeout(resolve, 150));
+      await testWrapper.vm.$nextTick();
     });
 
-    it('should initialize cardsData with correct structure', () => {
-      const vm = wrapper.vm;
+    it('should initialize cardsData with correct structure', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        [
+          { id: 'total_conversations', value: 0, percentage: 100 },
+          { id: 'resolved', value: 0, percentage: 0 },
+          { id: 'unresolved', value: 0, percentage: 0 },
+          { id: 'abandoned', value: 0, percentage: 0 },
+          { id: 'transferred_to_human', value: 0, percentage: 0 },
+        ],
+      );
+
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+
+      // Allow mounted hook to run and state to update
+      await testWrapper.vm.$nextTick();
+      await testWrapper.vm.$nextTick();
 
       expect(vm.cardsData).toHaveLength(4);
-      vm.cardsData.forEach((card, index) => {
-        expect(card.id).toBe(vm.cardDefinitions[index].id);
-        expect(card.value).toBe('-');
-        expect(card.description).toBe(null);
-        expect(card.isLoading).toBe(true);
+      vm.cardsData.forEach((card) => {
+        expect(card.isLoading).toBe(false);
+
+        if (card.id === 'total_conversations') {
+          expect(card.value).toBe('0');
+          expect(card.description).toBe(null);
+        } else {
+          expect(card.value).toBe('0.00%');
+          expect(card.description).toBe('0 conversations');
+        }
       });
     });
 
@@ -188,55 +289,73 @@ describe('DashboardHeader.vue', () => {
     });
   });
 
-  describe('Generic Load Data Function', () => {
-    it('should handle successful data loading', async () => {
+  describe('API Data Loading', () => {
+    it('should handle successful API data loading', async () => {
+      const mockApiResponse = [
+        { id: 'total_conversations', value: 1000, percentage: 100 },
+        { id: 'resolved', value: 850, percentage: 85 },
+        { id: 'unresolved', value: 100, percentage: 10 },
+        { id: 'abandoned', value: 50, percentage: 5 },
+        { id: 'transferred_to_human', value: 25, percentage: 2.5 },
+      ];
+
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        mockApiResponse,
+      );
+
       const vm = wrapper.vm;
-      const mockFetch = vi.fn().mockResolvedValue({
-        value: 'test-value',
-        description: 'test-description',
-      });
+      await vm.loadCardData();
 
-      const targetRef = {
-        value: '-',
-        description: null,
-        isLoading: true,
-      };
+      expect(vm.cardsData[0].value).toBe('1,000');
+      expect(vm.cardsData[1].value).toBe('85.00%');
+      expect(vm.cardsData[2].value).toBe('10.00%');
+      expect(vm.cardsData[3].value).toBe('5.00%');
+      expect(vm.rightCardData.value).toBe('2.50%');
 
-      await vm.loadData(mockFetch, targetRef, 'Test error message');
-
-      expect(targetRef.value).toBe('test-value');
-      expect(targetRef.description).toBe('test-description');
-      expect(targetRef.isLoading).toBe(false);
+      // All cards should not be loading
+      expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
+      expect(vm.rightCardData.isLoading).toBe(false);
     });
 
-    it('should handle error loading', async () => {
-      const vm = wrapper.vm;
+    it('should handle API error loading', async () => {
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
-      const mockFetch = vi.fn().mockRejectedValue(new Error('API Error'));
 
-      const targetRef = {
-        value: '-',
-        description: null,
-        isLoading: true,
-      };
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockRejectedValue(
+        new Error('API Error'),
+      );
 
-      await vm.loadData(mockFetch, targetRef, 'Test error message');
+      const vm = wrapper.vm;
+      await vm.loadCardData();
 
-      expect(targetRef.value).toBe('-');
-      expect(targetRef.description).toBe('0 conversations');
-      expect(targetRef.isLoading).toBe(false);
+      vm.cardsData.forEach((card) => {
+        expect(card.value).toBe('-');
+        expect(card.description).toBe('0 conversations');
+        expect(card.isLoading).toBe(false);
+      });
+
+      expect(vm.rightCardData.value).toBe('-');
+      expect(vm.rightCardData.description).toBe('0 conversations');
+      expect(vm.rightCardData.isLoading).toBe(false);
+
       expect(consoleSpy).toHaveBeenCalledWith(
-        'Test error message',
+        'Error loading conversational header data:',
         expect.any(Error),
       );
-      expect(UnnnicSystem.unnnicCallAlert).toHaveBeenCalledWith({
+
+      expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: 'Error loading data',
           type: 'error',
         },
-        seconds: 5,
+        containerRef: null,
       });
 
       consoleSpy.mockRestore();
@@ -339,12 +458,12 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[3].value).toBe('-');
       expect(vm.rightCardData.value).toBe('-');
 
-      expect(UnnnicSystem.unnnicCallAlert).toHaveBeenCalledWith({
+      expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: 'Error loading data',
           type: 'error',
         },
-        seconds: 5,
+        containerRef: null,
       });
 
       consoleSpy.mockRestore();
@@ -395,16 +514,30 @@ describe('DashboardHeader.vue', () => {
 
     it('should test loading state transitions', async () => {
       const vm = wrapper.vm;
-      expect(vm.cardsData[0].isLoading).toBe(true);
-      expect(vm.rightCardData.isLoading).toBe(true);
 
-      vm.cardsData[0].isLoading = false;
-      vm.rightCardData.isLoading = false;
+      const mockApiResponse = [
+        { id: 'total_conversations', value: 100, percentage: 100 },
+        { id: 'resolved', value: 80, percentage: 80 },
+        { id: 'unresolved', value: 20, percentage: 20 },
+        { id: 'abandoned', value: 0, percentage: 0 },
+        { id: 'transferred_to_human', value: 5, percentage: 5 },
+      ];
 
-      await wrapper.vm.$nextTick();
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        mockApiResponse,
+      );
+
+      await vm.loadCardData();
 
       expect(vm.cardsData[0].isLoading).toBe(false);
       expect(vm.rightCardData.isLoading).toBe(false);
+
+      // Verify data was loaded successfully
+      expect(vm.cardsData[0].value).toBe('100');
+      expect(vm.rightCardData.value).toBe('5.00%');
     });
   });
 
@@ -498,15 +631,11 @@ describe('DashboardHeader.vue', () => {
     });
   });
 
-  describe('Mock API Functions', () => {
-    it('should test mockApiCalls structure', () => {
+  describe('API Functions', () => {
+    it('should test fetchConversationalHeaderData function exists', () => {
       const vm = wrapper.vm;
-      expect(vm.mockApiCalls).toBeDefined();
-      expect(vm.mockApiCalls.fetchTotalConversations).toBeDefined();
-      expect(vm.mockApiCalls.fetchResolvedConversations).toBeDefined();
-      expect(vm.mockApiCalls.fetchUnresolvedConversations).toBeDefined();
-      expect(vm.mockApiCalls.fetchUnengagedConversations).toBeDefined();
-      expect(vm.mockApiCalls.fetchTransferredConversations).toBeDefined();
+      expect(vm.fetchConversationalHeaderData).toBeDefined();
+      expect(typeof vm.fetchConversationalHeaderData).toBe('function');
     });
 
     it('should test loadCardData function exists', () => {
@@ -521,7 +650,7 @@ describe('DashboardHeader.vue', () => {
       expect(typeof vm.showErrorToast).toBe('function');
 
       vm.showErrorToast();
-      expect(UnnnicSystem.unnnicCallAlert).toHaveBeenCalled();
+      expect(Unnnic.unnnicCallAlert).toHaveBeenCalled();
     });
   });
 

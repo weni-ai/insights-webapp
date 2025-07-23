@@ -48,6 +48,7 @@
 
       <ConfigCsatOrNpsWidget
         v-else
+        data-testid="config-csat-or-nps-widget"
         :type="type"
       />
     </template>

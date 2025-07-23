@@ -36,13 +36,13 @@
       ]"
       footerText="1500 reviews"
     />
-    <AddWidget v-if="type === 'add'" />
+    <AddCsatOrNpsWidget v-if="type === 'add'" />
   </section>
 </template>
 
 <script setup lang="ts">
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
-import AddWidget from '@/components/insights/conversations/AddWidget.vue';
+import AddCsatOrNpsWidget from '@/components/insights/conversations/AddCsatOrNpsWidget.vue';
 
 defineProps<{
   type: 'csat' | 'nps' | 'add';

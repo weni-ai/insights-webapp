@@ -69,12 +69,19 @@
     "most_talked_about_topics": {
       "title": "Most talked about topics",
       "see_all": "See all",
-      "subtopics": "subtopics"
+      "subtopics": "subtopics",
+      "no_topics": "No topics yet",
+      "no_topics_description": "Add the topics you want to track. The AI will automatically tag every conversation with them, then you’ll see the most talked-about subjects right here.",
+      "add_first_topic": "Add your first topic"
     },
+    "csat": "CSAT",
+    "nps": "NPS",
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
-      "add_widget": "Add widget"
+      "add_widget": "Add widget",
+      "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
+      "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others."
     }
   },
   "template_messages_dashboard": {
@@ -309,6 +316,9 @@
         "total_value": "Total value",
         "average_ticket": "Average ticket"
       }
+    },
+    "treemap": {
+      "no_data": "No data to show"
     }
   },
   "drawers": {

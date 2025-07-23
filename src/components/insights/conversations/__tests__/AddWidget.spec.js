@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
-import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import AddWidget from '../AddWidget.vue';
@@ -13,13 +12,11 @@ config.global.plugins = [
 
 const createWrapper = (props = {}) => {
   return shallowMount(AddWidget, {
-    props: { ...props },
-    global: {
-      stubs: {
-        UnnnicDrawer: {
-          template: '<div><slot name="content" /></div>',
-        },
-      },
+    props: {
+      title: 'Test Title',
+      description: 'Test Description',
+      actionText: 'Test Action',
+      ...props,
     },
   });
 };
@@ -37,108 +34,105 @@ describe('AddWidget', () => {
     wrapper.find('[data-testid="add-widget-description"]');
   const addWidgetButton = () =>
     wrapper.find('[data-testid="add-widget-button"]');
-  const addWidgetDrawer = () =>
-    wrapper.find('[data-testid="add-widget-drawer"]');
-  const addWidgetDrawerItems = () =>
-    wrapper.findAll('[data-testid="add-widget-drawer-item"]');
-  const addWidgetDrawerItemsTitles = () =>
-    wrapper.findAll('[data-testid="add-widget-drawer-item-title"]');
-  const addWidgetDrawerItemsDescriptions = () =>
-    wrapper.findAll('[data-testid="add-widget-drawer-item-description"]');
 
   describe('Initial render', () => {
-    it('should render the component with correct title and description', () => {
+    it('should render the component with correct structure', () => {
       expect(addWidgetSection().exists()).toBe(true);
-      expect(addWidgetTitle().text()).toBe(
-        'conversations_dashboard.customize_your_dashboard.title',
-      );
-      expect(addWidgetDescription().text()).toBe(
-        'conversations_dashboard.customize_your_dashboard.description',
-      );
+      expect(addWidgetSection().classes()).toContain('add-widget');
     });
 
-    it('should render the add widget button', () => {
+    it('should render the component with correct title and description', () => {
+      expect(addWidgetTitle().exists()).toBe(true);
+      expect(addWidgetTitle().text()).toBe('Test Title');
+      expect(addWidgetDescription().exists()).toBe(true);
+      expect(addWidgetDescription().text()).toBe('Test Description');
+    });
+
+    it('should render the add widget button with correct text', () => {
+      expect(addWidgetButton().exists()).toBe(true);
+      expect(addWidgetButton().attributes('text')).toBe('Test Action');
+    });
+
+    it('should have correct button props', () => {
+      expect(addWidgetButton().attributes('iconleft')).toBe('add');
+      expect(addWidgetButton().attributes('size')).toBe('small');
+      expect(addWidgetButton().attributes('type')).toBe('primary');
+    });
+  });
+
+  describe('Props', () => {
+    it('should display custom title when passed as prop', () => {
+      wrapper = createWrapper({ title: 'Custom Title' });
+      expect(addWidgetTitle().text()).toBe('Custom Title');
+    });
+
+    it('should display custom description when passed as prop', () => {
+      wrapper = createWrapper({ description: 'Custom Description' });
+      expect(addWidgetDescription().text()).toBe('Custom Description');
+    });
+
+    it('should display custom actionText when passed as prop', () => {
+      wrapper = createWrapper({ actionText: 'Custom Action' });
+      expect(addWidgetButton().attributes('text')).toBe('Custom Action');
+    });
+
+    it('should handle all props together', () => {
+      wrapper = createWrapper({
+        title: 'All Custom Title',
+        description: 'All Custom Description',
+        actionText: 'All Custom Action',
+      });
+
+      expect(addWidgetTitle().text()).toBe('All Custom Title');
+      expect(addWidgetDescription().text()).toBe('All Custom Description');
+      expect(addWidgetButton().attributes('text')).toBe('All Custom Action');
+    });
+  });
+
+  describe('Event handling', () => {
+    it('should emit action event when button is clicked', async () => {
+      await addWidgetButton().trigger('click');
+
+      expect(wrapper.emitted('action')).toBeTruthy();
+      expect(wrapper.emitted('action')).toHaveLength(1);
+    });
+
+    it('should emit action event multiple times when clicked multiple times', async () => {
+      await addWidgetButton().trigger('click');
+      await addWidgetButton().trigger('click');
+      await addWidgetButton().trigger('click');
+
+      expect(wrapper.emitted('action')).toHaveLength(3);
+    });
+  });
+
+  describe('Component structure', () => {
+    it('should have the correct component hierarchy', () => {
+      expect(addWidgetSection().exists()).toBe(true);
+      expect(addWidgetTitle().exists()).toBe(true);
+      expect(addWidgetDescription().exists()).toBe(true);
       expect(addWidgetButton().exists()).toBe(true);
     });
 
-    it('should not render the drawer initially', () => {
-      expect(addWidgetDrawer().exists()).toBe(false);
-    });
-  });
-
-  describe('Drawer functionality', () => {
-    it('should open the drawer when add widget button is clicked', async () => {
-      await addWidgetButton().trigger('click');
-      await nextTick();
-
-      expect(addWidgetDrawer().exists()).toBe(true);
-      expect(wrapper.vm.isAddWidgetDrawerOpen).toBe(true);
-    });
-
-    it('should close the drawer when close event is emitted', async () => {
-      await addWidgetButton().trigger('click');
-      await nextTick();
-
-      expect(wrapper.vm.isAddWidgetDrawerOpen).toBe(true);
-
-      await addWidgetDrawer().trigger('close');
-      await nextTick();
-
-      expect(wrapper.vm.isAddWidgetDrawerOpen).toBe(false);
-    });
-
-    it('should toggle drawer state when handleDrawerAddWidget is called', async () => {
-      expect(wrapper.vm.isAddWidgetDrawerOpen).toBe(false);
-
-      wrapper.vm.handleDrawerAddWidget();
-      await nextTick();
-      expect(wrapper.vm.isAddWidgetDrawerOpen).toBe(true);
-
-      wrapper.vm.handleDrawerAddWidget();
-      await nextTick();
-      expect(wrapper.vm.isAddWidgetDrawerOpen).toBe(false);
-    });
-  });
-
-  describe('Available widgets', () => {
-    it('should render the correct number of available widgets', async () => {
-      await addWidgetButton().trigger('click');
-      await nextTick();
-
-      expect(addWidgetDrawerItems()).toHaveLength(2);
-    });
-
-    it('should render CSAT widget with correct name and description', async () => {
-      await addWidgetButton().trigger('click');
-      await nextTick();
-
-      expect(addWidgetDrawerItemsTitles()[0].text()).toBe('CSAT');
-      expect(addWidgetDrawerItemsDescriptions()[0].text()).toBe(
-        'The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.',
+    it('should apply correct CSS classes', () => {
+      expect(addWidgetSection().classes()).toContain('add-widget');
+      expect(addWidgetTitle().classes()).toContain('add-widget__title');
+      expect(addWidgetDescription().classes()).toContain(
+        'add-widget__description',
       );
     });
 
-    it('should render NPS widget with correct name and description', async () => {
-      await addWidgetButton().trigger('click');
-      await nextTick();
-
-      expect(addWidgetDrawerItemsTitles()[1].text()).toBe('NPS');
-      expect(addWidgetDrawerItemsDescriptions()[1].text()).toBe(
-        'The Net Promoter Score indicates how likely contact are to recommend the service they received to others.',
+    it('should have correct data-testid attributes', () => {
+      expect(addWidgetSection().attributes('data-testid')).toBe('add-widget');
+      expect(addWidgetTitle().attributes('data-testid')).toBe(
+        'add-widget-title',
       );
-    });
-
-    it('should have the correct widget data structure', () => {
-      expect(wrapper.vm.availableWidgets).toStrictEqual([
-        {
-          name: expect.any(String),
-          description: expect.any(String),
-        },
-        {
-          name: expect.any(String),
-          description: expect.any(String),
-        },
-      ]);
+      expect(addWidgetDescription().attributes('data-testid')).toBe(
+        'add-widget-description',
+      );
+      expect(addWidgetButton().attributes('data-testid')).toBe(
+        'add-widget-button',
+      );
     });
   });
 });

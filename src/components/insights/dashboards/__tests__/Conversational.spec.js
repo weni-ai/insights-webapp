@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { nextTick } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
+import { setActivePinia, createPinia } from 'pinia';
 import Conversational from '../Conversational.vue';
 import { createI18n } from 'vue-i18n';
 
@@ -14,7 +15,16 @@ describe('Conversational', () => {
   let wrapper;
 
   beforeEach(() => {
-    wrapper = shallowMount(Conversational);
+    setActivePinia(createPinia());
+    wrapper = shallowMount(Conversational, {
+      global: {
+        stubs: {
+          DashboardHeader: true,
+          MostTalkedAboutTopicsWidget: true,
+          ConversationalDynamicWidget: true,
+        },
+      },
+    });
   });
 
   describe('orderedDynamicWidgets computed property', () => {

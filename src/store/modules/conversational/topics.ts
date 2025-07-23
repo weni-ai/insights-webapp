@@ -30,7 +30,40 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
   getters: {
     topicsCount: (state) => state.topics.length,
 
-    hasNewTopics: (state) => state.topics.some((topic) => topic.isNew === true),
+    hasNewTopics: (state) =>
+      state.topics.some(
+        (topic) =>
+          topic.isNew === true &&
+          (topic.context.trim() !== '' || topic.name.trim() !== ''),
+      ),
+
+    hasNewSubTopics: (state) =>
+      state.topics.some((topic) =>
+        topic.subTopics?.some(
+          (subTopic) =>
+            subTopic.isNew === true &&
+            (subTopic.context.trim() !== '' || subTopic.name.trim() !== ''),
+        ),
+      ),
+
+    allNewTopicsComplete: (state) => {
+      const newMainTopics = state.topics.filter(
+        (topic) => topic.isNew === true,
+      );
+      const newSubTopics = state.topics.flatMap(
+        (topic) =>
+          topic.subTopics?.filter((subTopic) => subTopic.isNew === true) || [],
+      );
+      const allNewTopics = [...newMainTopics, ...newSubTopics];
+
+      if (allNewTopics.length === 0) {
+        return false;
+      }
+
+      return allNewTopics.every(
+        (topic) => topic.context.trim() !== '' && topic.name.trim() !== '',
+      );
+    },
 
     hasExistingTopics: (state) =>
       state.topics.some((topic) => topic.isNew === false),

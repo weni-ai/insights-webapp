@@ -79,6 +79,166 @@ describe('useConversationalTopics store', () => {
       expect(store.topicsCount).toBe(0);
       expect(store.hasNewTopics).toBe(false);
       expect(store.hasExistingTopics).toBe(false);
+      expect(store.allNewTopicsComplete).toBe(false);
+    });
+
+    describe('allNewTopicsComplete getter', () => {
+      it('should return false when there are no new topics', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: 'Topic 1',
+            context: 'Context 1',
+            isNew: false,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return false when new topics have empty name or context', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: '',
+            context: 'Context 1',
+            isNew: true,
+            subTopics: [],
+          },
+          {
+            id: '2',
+            name: 'Topic 2',
+            context: '',
+            isNew: true,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return false when some new topics are incomplete', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: 'Complete Topic',
+            context: 'Complete Context',
+            isNew: true,
+            subTopics: [],
+          },
+          {
+            id: '2',
+            name: '',
+            context: 'Incomplete Context',
+            isNew: true,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return true when all new topics have name and context', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: 'Topic 1',
+            context: 'Context 1',
+            isNew: true,
+            subTopics: [],
+          },
+          {
+            id: '2',
+            name: 'Topic 2',
+            context: 'Context 2',
+            isNew: true,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(true);
+      });
+
+      it('should return false when new subtopics are incomplete', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: 'Topic 1',
+            context: 'Context 1',
+            isNew: true,
+            subTopics: [
+              {
+                id: '1-1',
+                name: 'Complete SubTopic',
+                context: 'Complete Sub Context',
+                isNew: true,
+                subTopics: [],
+              },
+              {
+                id: '1-2',
+                name: '',
+                context: 'Incomplete Sub Context',
+                isNew: true,
+                subTopics: [],
+              },
+            ],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return true when all new topics and subtopics are complete', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: 'Topic 1',
+            context: 'Context 1',
+            isNew: true,
+            subTopics: [
+              {
+                id: '1-1',
+                name: 'SubTopic 1',
+                context: 'Sub Context 1',
+                isNew: true,
+                subTopics: [],
+              },
+            ],
+          },
+          {
+            id: '2',
+            name: 'Topic 2',
+            context: 'Context 2',
+            isNew: false,
+            subTopics: [
+              {
+                id: '2-1',
+                name: 'SubTopic 2',
+                context: 'Sub Context 2',
+                isNew: true,
+                subTopics: [],
+              },
+            ],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(true);
+      });
+
+      it('should handle topics with only whitespace in name or context', () => {
+        store.topics = [
+          {
+            id: '1',
+            name: '   ',
+            context: 'Context 1',
+            isNew: true,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
     });
   });
 

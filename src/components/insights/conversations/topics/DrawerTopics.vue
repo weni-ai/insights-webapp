@@ -7,6 +7,7 @@
     data-testid="drawer-topics-drawer"
     :primaryButtonText="$t('conversations_dashboard.form_topic.save')"
     :secondaryButtonText="$t('conversations_dashboard.form_topic.cancel')"
+    :disabledPrimaryButton="disabledPrimaryButton"
     @close="handleDrawerAddTopics"
     @primary-button-click="handleAddTopic"
     @secondary-button-click="handleDrawerAddTopics"
@@ -21,6 +22,7 @@
     data-testid="drawer-topics-modal"
     @primary-button-click="handleCancelTopic"
     @secondary-button-click="handleKeepAddingTopic"
+    @close="handleKeepAddingTopic"
   />
 </template>
 
@@ -34,6 +36,7 @@ const topicsStore = useConversationalTopics();
 
 const isAddTopicsDrawerOpen = computed(() => topicsStore.isAddTopicsDrawerOpen);
 const isOpenModal = computed(() => topicsStore.isOpenModal);
+const disabledPrimaryButton = computed(() => !topicsStore.allNewTopicsComplete);
 
 onMounted(() => {
   topicsStore.initializeMockData();
@@ -41,7 +44,7 @@ onMounted(() => {
 });
 
 const handleDrawerAddTopics = () => {
-  if (topicsStore.hasNewTopics) {
+  if (topicsStore.hasNewTopics || topicsStore.hasNewSubTopics) {
     topicsStore.openModal('cancel-topic');
   } else {
     topicsStore.closeAddTopicsDrawer();

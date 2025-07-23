@@ -27,6 +27,8 @@ const createMockStore = (overrides = {}) => ({
   isAddTopicsDrawerOpen: false,
   isOpenModal: false,
   hasNewTopics: false,
+  hasNewSubTopics: false,
+  allNewTopicsComplete: false,
   topics: [],
   initializeMockData: vi.fn(),
   openAddTopicsDrawer: vi.fn(),

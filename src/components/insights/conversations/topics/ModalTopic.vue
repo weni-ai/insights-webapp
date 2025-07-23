@@ -11,6 +11,7 @@
     size="sm"
     @secondary-button-click="secondaryButtonClick"
     @primary-button-click="primaryButtonClick"
+    @update:model-value="emit('close')"
   >
     {{ description }}
   </UnnnicModalDialog>
@@ -29,6 +30,7 @@ interface Props {
 const emit = defineEmits<{
   (e: 'primary-button-click'): void;
   (e: 'secondary-button-click'): void;
+  (e: 'close'): void;
 }>();
 
 const { t } = useI18n();

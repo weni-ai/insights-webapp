@@ -1,10 +1,16 @@
 <template>
   <section class="config-csat-or-nps">
-    <h2 class="config-csat-or-nps__title">
+    <h2
+      class="config-csat-or-nps__title"
+      data-testid="config-csat-or-nps-title"
+    >
       {{ $t(`conversations_dashboard.${type}`) }}
     </h2>
 
-    <p class="config-csat-or-nps__description">
+    <p
+      class="config-csat-or-nps__description"
+      data-testid="config-csat-or-nps-description"
+    >
       {{
         $t(
           'conversations_dashboard.customize_your_dashboard.config_csat_or_nps_description',
@@ -14,6 +20,7 @@
     </p>
 
     <UnnnicCheckbox
+      data-testid="config-csat-or-nps-checkbox-human-support"
       :modelValue="humanSupport"
       :textRight="
         $t('conversations_dashboard.customize_your_dashboard.human_support')
@@ -24,21 +31,23 @@
     <section
       v-if="humanSupport"
       class="config-csat-or-nps__section"
+      data-testid="config-csat-or-nps-section-human-support"
     >
       <SelectFlow
         v-model="flow.uuid"
-        data-test-id="select-flow"
+        data-testid="config-csat-or-nps-select-flow"
       />
 
       <SelectFlowResult
         v-model="flow.result"
-        data-test-id="select-flow-result"
+        data-testid="config-csat-or-nps-select-flow-result"
         :flow="flow.uuid"
         :disabled="!flow.uuid"
       />
     </section>
 
     <UnnnicCheckbox
+      data-testid="config-csat-or-nps-checkbox-ai-support"
       :modelValue="aiSupport"
       :textRight="
         $t('conversations_dashboard.customize_your_dashboard.ai_support')
@@ -48,9 +57,11 @@
     <section
       v-if="aiSupport"
       class="config-csat-or-nps__section"
+      data-testid="config-csat-or-nps-section-ai-support"
     >
       <UnnnicButton
         v-if="!agent"
+        data-testid="config-csat-or-nps-button-activate-agent"
         :text="
           $t('conversations_dashboard.customize_your_dashboard.activate_agent')
         "
@@ -61,10 +72,12 @@
       />
       <section
         v-else
+        data-testid="config-csat-or-nps-section-agent"
         class="config-csat-or-nps__section"
       >
         <section>
           <UnnnicLabel
+            data-testid="config-csat-or-nps-label-select-agent"
             :label="
               $t(
                 'conversations_dashboard.customize_your_dashboard.select_agent',
@@ -72,6 +85,7 @@
             "
           />
           <UnnnicSelectSmart
+            data-testid="config-csat-or-nps-select-agent"
             :modelValue="[{ value: agent.uuid, label: agent.name }]"
             :options="[]"
             autocomplete
@@ -81,7 +95,10 @@
           />
         </section>
 
-        <p class="config-csat-or-nps__agent-active">
+        <p
+          class="config-csat-or-nps__agent-active"
+          data-testid="config-csat-or-nps-agent-active"
+        >
           {{
             $t(
               'conversations_dashboard.customize_your_dashboard.your_agent_is_active',

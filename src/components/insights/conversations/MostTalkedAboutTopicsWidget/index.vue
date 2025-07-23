@@ -3,6 +3,15 @@
     <BaseConversationWidget
       class="most-talked-about-topics__conversation-widget"
       :title="$t('conversations_dashboard.most_talked_about_topics.title')"
+      :actions="[
+        {
+          icon: 'edit_square',
+          text: $t(
+            'conversations_dashboard.most_talked_about_topics.edit_topics_and_subtopics',
+          ),
+          onClick: topicsStore.toggleAddTopicsDrawer,
+        },
+      ]"
     >
       <TreemapChart
         :data="treemapData"

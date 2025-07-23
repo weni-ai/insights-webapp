@@ -72,7 +72,8 @@
       "subtopics": "subtemas",
       "no_topics": "No hay temas aún",
       "no_topics_description": "Agrega un tema para empezar a analizar las conversas",
-      "add_first_topic": "Agrega tu primer tema"
+      "add_first_topic": "Agrega tu primer tema",
+      "edit_topics_and_subtopics": "Editar temas y subtemas"
     },
     "csat": "CSAT",
     "nps": "NPS",

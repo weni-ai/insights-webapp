@@ -32,7 +32,44 @@
           data-testid="base-conversation-widget-tabs"
           @tab-change="handleTabChange"
         />
-        <slot name="actions" />
+
+        <UnnnicDropdown
+          v-if="actions"
+          class="actions__dropdown"
+          data-testid="actions-dropdown"
+        >
+          <template #trigger>
+            <UnnnicIcon
+              icon="more_vert"
+              size="ant"
+              scheme="neutral-cloudy"
+            />
+          </template>
+
+          <UnnnicDropdownItem
+            v-for="(action, index) in actions"
+            :key="index"
+            class="dropdown__action"
+            data-testid="action"
+            @click="action.onClick()"
+          >
+            <UnnnicIcon
+              data-testid="action-icon"
+              :icon="action.icon"
+              size="sm"
+              :scheme="action.scheme || 'neutral-dark'"
+            />
+            <p
+              data-testid="action-text"
+              :class="[
+                'action__text',
+                `u color-${action.scheme || 'neutral-dark'}`, // Unnnic color classes
+              ]"
+            >
+              {{ action.text }}
+            </p>
+          </UnnnicDropdownItem>
+        </UnnnicDropdown>
       </section>
     </section>
     <slot />
@@ -51,6 +88,12 @@ const emit = defineEmits<{
 defineProps<{
   title: string;
   isLoading?: boolean;
+  actions?: {
+    icon: string;
+    text: string;
+    onClick: () => void;
+    scheme?: string;
+  }[];
 }>();
 
 const tabs = computed(() => [
@@ -95,6 +138,41 @@ const handleTabChange = (tab: string) => {
       font-weight: $unnnic-font-weight-bold;
       font-style: normal;
       line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+    }
+
+    .header__actions {
+      display: flex;
+      align-items: center;
+      gap: $unnnic-spacing-xs;
+
+      .actions__dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        :deep(.unnnic-dropdown__trigger) {
+          display: flex;
+
+          cursor: pointer;
+        }
+
+        :deep(.unnnic-dropdown__content) {
+          padding: $unnnic-spacing-sm;
+        }
+
+        .dropdown__action {
+          display: flex;
+          align-items: center;
+          gap: $unnnic-spacing-xs;
+
+          .action__text {
+            font-family: $unnnic-font-family-secondary;
+            font-size: $unnnic-font-size-body-md;
+            line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+            white-space: nowrap;
+          }
+        }
+      }
     }
   }
 }

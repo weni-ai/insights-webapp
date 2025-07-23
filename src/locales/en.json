@@ -72,7 +72,8 @@
       "subtopics": "subtopics",
       "no_topics": "No topics yet",
       "no_topics_description": "Add the topics you want to track. The AI will automatically tag every conversation with them, then you’ll see the most talked-about subjects right here.",
-      "add_first_topic": "Add your first topic"
+      "add_first_topic": "Add your first topic",
+      "edit_topics_and_subtopics": "Edit topics and sub-topics"
     },
     "csat": "CSAT",
     "nps": "NPS",

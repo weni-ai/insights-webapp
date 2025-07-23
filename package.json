@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development rspack server --port 3003",
     "build": "cross-env NODE_ENV=production rspack build",
+    "analyze": "rspack --analyze",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",

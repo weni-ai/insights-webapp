@@ -73,7 +73,8 @@
       "subtopics": "subtópicos",
       "no_topics": "Nenhum tópico ainda",
       "no_topics_description": "Adicione um tópico para começar a analisar as conversas",
-      "add_first_topic": "Adicione seu primeiro tópico"
+      "add_first_topic": "Adicione seu primeiro tópico",
+      "edit_topics_and_subtopics": "Editar tópicos e subtópicos"
     },
     "csat": "CSAT",
     "nps": "NPS",
@@ -122,7 +123,7 @@
     "messages_graph": {
       "sent_messages": "Mensagens enviadas",
       "delivered_messages": "Mensagens entregues",
-      "readed_messages": "Mensagens lidas",
+      "read_messages": "Mensagens lidas",
       "clicks": "Cliques"
     },
     "button_clicks_table": {
@@ -216,6 +217,7 @@
   "closeds": "Encerrados",
   "in_progress": "Em andamento",
   "waiting": "Aguardando",
+  "in-service": "Em atendimento",
   "status": "Status",
   "metric": "Métrica",
   "metrics": "Métricas",

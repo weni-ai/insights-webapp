@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from 'vitest';
-import { shallowMount } from '@vue/test-utils';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import { config } from '@vue/test-utils';
 
@@ -12,10 +12,15 @@ config.global.plugins = [
 ];
 
 const createWrapper = (props = {}, options = {}) => {
-  return shallowMount(BaseConversationWidget, {
+  return mount(BaseConversationWidget, {
     props: {
       title: 'Test Widget Title',
       ...props,
+    },
+    global: {
+      stubs: {
+        ShortTab: true,
+      },
     },
     ...options,
   });
@@ -35,6 +40,8 @@ describe('BaseConversationWidget', () => {
     wrapper.find('[data-testid="base-conversation-widget-actions"]');
   const tabs = () =>
     wrapper.findComponent('[data-testid="base-conversation-widget-tabs"]');
+  const dropdown = () => wrapper.find('[data-testid="actions-dropdown"]');
+  const dropdownItems = () => wrapper.findAll('[data-testid="action"]');
 
   describe('when component is rendered', () => {
     beforeEach(() => {
@@ -76,6 +83,10 @@ describe('BaseConversationWidget', () => {
 
     it('should not render skeleton loading when isLoading is false', () => {
       expect(skeleton().exists()).toBe(false);
+    });
+
+    it('should not render dropdown when no actions are provided', () => {
+      expect(dropdown().exists()).toBe(false);
     });
   });
 
@@ -128,60 +139,99 @@ describe('BaseConversationWidget', () => {
     });
   });
 
-  describe('slots functionality', () => {
-    it('should render default slot content', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          slots: {
-            default:
-              '<div data-testid="default-slot-content">Default Content</div>',
-          },
-        },
-      );
+  describe('actions functionality', () => {
+    const mockActions = [
+      {
+        icon: 'edit',
+        text: 'Edit Widget',
+        onClick: vi.fn(),
+        scheme: 'weni-500',
+      },
+      {
+        icon: 'delete',
+        text: 'Delete Widget',
+        onClick: vi.fn(),
+        scheme: 'aux-red-500',
+      },
+      {
+        icon: 'copy',
+        text: 'Duplicate Widget',
+        onClick: vi.fn(),
+        // No scheme - should use fallback
+      },
+    ];
 
-      expect(
-        wrapper.find('[data-testid="default-slot-content"]').exists(),
-      ).toBe(true);
-      expect(wrapper.find('[data-testid="default-slot-content"]').text()).toBe(
-        'Default Content',
-      );
+    beforeEach(() => {
+      wrapper = createWrapper({ actions: mockActions });
     });
 
-    it('should render actions slot content', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          slots: {
-            actions:
-              '<button data-testid="action-button">Action Button</button>',
-          },
-        },
-      );
-
-      expect(wrapper.find('[data-testid="action-button"]').exists()).toBe(true);
-      expect(wrapper.find('[data-testid="action-button"]').text()).toBe(
-        'Action Button',
-      );
+    it('should render dropdown when actions are provided', () => {
+      console.log('wrapper.html()', wrapper.html());
+      expect(dropdown().exists()).toBe(true);
     });
 
-    it('should render both default and actions slots', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          slots: {
-            default: '<div data-testid="default-content">Main Content</div>',
-            actions: '<div data-testid="actions-content">Actions Content</div>',
-          },
-        },
-      );
+    it('should render correct number of dropdown items', () => {
+      expect(dropdownItems()).toHaveLength(3);
+    });
 
-      expect(wrapper.find('[data-testid="default-content"]').exists()).toBe(
-        true,
-      );
-      expect(wrapper.find('[data-testid="actions-content"]').exists()).toBe(
-        true,
-      );
+    it('should render action icons with correct props', () => {
+      const icons = wrapper.findAll('[data-testid="action-icon"]');
+
+      expect(icons[0].attributes()).toMatchObject({
+        icon: 'edit',
+        size: 'sm',
+        scheme: 'weni-500',
+      });
+
+      expect(icons[1].attributes()).toMatchObject({
+        icon: 'delete',
+        size: 'sm',
+        scheme: 'aux-red-500',
+      });
+
+      expect(icons[2].attributes()).toMatchObject({
+        icon: 'copy',
+        size: 'sm',
+        scheme: 'neutral-dark',
+      });
+    });
+
+    it('should apply correct color utility classes to action text', () => {
+      const actionTexts = wrapper.findAll('[data-testid="action-text"]');
+
+      actionTexts.forEach((actionText, i) => {
+        expect(actionText.classes()).toContain('u');
+
+        if (wrapper.vm.actions[i].scheme) {
+          expect(actionText.classes()).toContain(
+            `color-${wrapper.vm.actions[i].scheme}`,
+          );
+        } else {
+          expect(actionText.classes()).toContain('color-neutral-dark');
+        }
+      });
+    });
+
+    it('should display correct action text content', () => {
+      const actionTexts = wrapper.findAll('.action__text');
+
+      expect(actionTexts[0].text()).toBe('Edit Widget');
+      expect(actionTexts[1].text()).toBe('Delete Widget');
+      expect(actionTexts[2].text()).toBe('Duplicate Widget');
+    });
+
+    it('should call onClick handler when action is clicked', async () => {
+      await dropdownItems()[0].trigger('click');
+
+      expect(mockActions[0].onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('should maintain action order in dropdown', () => {
+      const actionTexts = wrapper.findAll('[data-testid="action-text"]');
+
+      expect(actionTexts[0].text()).toBe('Edit Widget');
+      expect(actionTexts[1].text()).toBe('Delete Widget');
+      expect(actionTexts[2].text()).toBe('Duplicate Widget');
     });
   });
 });

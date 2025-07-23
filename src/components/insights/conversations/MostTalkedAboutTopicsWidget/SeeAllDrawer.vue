@@ -21,6 +21,9 @@
 <script setup lang="ts">
 import ProgressTable from '@/components/ProgressTable.vue';
 import { addColors } from '@/utils/treemap';
+import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
+
+const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 defineProps<{
   modelValue: boolean;
@@ -92,7 +95,7 @@ const coloredData = addColors(MOCK_DATA);
 const MOCK_DATA_PROGRESS_TABLE = coloredData.map((item) => ({
   label: item.label,
   value: item.percentage,
-  description: `${item.percentage}% (${item.value})`,
+  description: `${formatPercentage(item.percentage)} (${formatNumber(item.value)})`,
   backgroundColor: item.color,
   color: item.hoverColor,
   subItems: MOCK_DATA.find(
@@ -100,7 +103,7 @@ const MOCK_DATA_PROGRESS_TABLE = coloredData.map((item) => ({
   )?.subItems?.map((subItem) => ({
     label: subItem.label,
     value: subItem.percentage,
-    description: `${subItem.percentage}% (${subItem.value})`,
+    description: `${formatPercentage(subItem.percentage)} (${formatNumber(subItem.value)})`,
     backgroundColor: item.color,
     color: item.hoverColor,
   })),

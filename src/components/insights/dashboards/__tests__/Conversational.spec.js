@@ -5,42 +5,6 @@ import { setActivePinia, createPinia } from 'pinia';
 import Conversational from '../Conversational.vue';
 import { createI18n } from 'vue-i18n';
 
-vi.mock('@/components/insights/conversations/topics/DrawerTopics.vue', () => ({
-  default: {
-    name: 'DrawerTopics',
-    template: '<div data-testid="drawer-topics-mock"></div>',
-  },
-}));
-
-vi.mock('@/components/insights/conversations/DashboardHeader.vue', () => ({
-  default: {
-    name: 'DashboardHeader',
-    template: '<div data-testid="dashboard-header-mock"></div>',
-  },
-}));
-
-vi.mock(
-  '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue',
-  () => ({
-    default: {
-      name: 'MostTalkedAboutTopicsWidget',
-      template: '<div data-testid="most-talked-about-topics-mock"></div>',
-    },
-  }),
-);
-
-vi.mock(
-  '@/components/insights/conversations/ConversationalDynamicWidget.vue',
-  () => ({
-    default: {
-      name: 'ConversationalDynamicWidget',
-      props: ['type'],
-      template:
-        '<div data-testid="conversational-dynamic-widget-mock" :data-type="type"></div>',
-    },
-  }),
-);
-
 config.global.plugins = [
   createI18n({
     legacy: false,
@@ -52,7 +16,15 @@ describe('Conversational', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    wrapper = mount(Conversational);
+    wrapper = mount(Conversational, {
+      global: {
+        stubs: {
+          DashboardHeader: true,
+          MostTalkedAboutTopicsWidget: true,
+          ConversationalDynamicWidget: true,
+        },
+      },
+    });
   });
 
   describe('orderedDynamicWidgets computed property', () => {

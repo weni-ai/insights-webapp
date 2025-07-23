@@ -12,10 +12,11 @@ export const useConversational = defineStore('conversational', {
           ended_at: { __gte: string; __lte: string };
         }) || {};
 
-      const { __gte, __lte } = ended_at as {
-        __gte: string;
-        __lte: string;
-      };
+      const { __gte, __lte } =
+        (ended_at as {
+          __gte: string;
+          __lte: string;
+        }) || {};
 
       const formattedAppliedFilters = {
         start_date: __gte,

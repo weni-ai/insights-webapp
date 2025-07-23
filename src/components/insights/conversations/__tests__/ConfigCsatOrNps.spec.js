@@ -5,7 +5,7 @@ import Unnnic from '@weni/unnnic-system';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import ConfigCsatOrNps from '../ConfigCsatOrNps.vue';
+import ConfigCsatOrNps from '../CsatOrNpsWidget/ConfigCsatOrNps.vue';
 
 config.global.plugins = [
   createI18n({

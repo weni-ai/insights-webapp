@@ -19,6 +19,7 @@
     }
   },
   "conversations_dashboard": {
+    "title": "Atención",
     "conversations": "conversaciones",
     "artificial_intelligence": "IA",
     "human_support": "Atención humana",

@@ -89,7 +89,18 @@
       "ai_support": "AI",
       "activate_agent": "Activate agent",
       "select_agent": "Select agent",
-      "your_agent_is_active": "Your agent is active!"
+      "your_agent_is_active": "Your agent is active!",
+      "return": "Return",
+      "save_changes": "Save changes",
+      "modal_attention": {
+        "title_return": "Return to previous step",
+        "description_return": "Are you sure you want to return? All progress will be lost.",
+        "title_cancel": "Cancel configuration",
+        "description_cancel": "Are you sure you want to cancel? All progress will be lost.",
+        "keep_configuring": "Keep configuring",
+        "return": "Return",
+        "cancel": "Cancel"
+      }
     }
   },
   "template_messages_dashboard": {

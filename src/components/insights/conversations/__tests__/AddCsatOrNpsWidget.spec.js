@@ -3,7 +3,7 @@ import { config, shallowMount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import AddCsatOrNpsWidget from '../AddCsatOrNpsWidget.vue';
+import AddCsatOrNpsWidget from '../CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
 
 config.global.plugins = [
   createI18n({

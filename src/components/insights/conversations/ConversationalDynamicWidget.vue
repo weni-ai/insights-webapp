@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
-import AddCsatOrNpsWidget from '@/components/insights/conversations/AddCsatOrNpsWidget.vue';
+import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
 
 defineProps<{
   type: 'csat' | 'nps' | 'add';

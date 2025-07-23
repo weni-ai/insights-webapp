@@ -17,7 +17,17 @@
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
-    @close="handleDrawerAddWidget"
+    :primaryButtonText="
+      type
+        ? $t('conversations_dashboard.customize_your_dashboard.save_changes')
+        : ''
+    "
+    :secondaryButtonText="
+      type ? $t('conversations_dashboard.customize_your_dashboard.return') : ''
+    "
+    @primary-button-click="saveWidgetConfigs"
+    @secondary-button-click="warningModalType = 'return'"
+    @close="closeDrawer"
   >
     <template #content>
       <ul
@@ -53,19 +63,37 @@
       />
     </template>
   </UnnnicDrawer>
+
+  <ModalAttention
+    :modelValue="!!warningModalType"
+    :type="warningModalType"
+    data-testid="drawer-csat-or-nps-widget-modal"
+    @primary-button-click="confirmAttentionModal"
+    @secondary-button-click="closeWarningModal"
+  />
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import AddWidget from './AddWidget.vue';
+import AddWidget from '@/components/insights/conversations/AddWidget.vue';
 import i18n from '@/utils/plugins/i18n';
 import ConfigCsatOrNpsWidget from './ConfigCsatOrNps.vue';
+import ModalAttention from './ModalAttention.vue';
 
 const isAddWidgetDrawerOpen = ref(false);
 const type = ref(null);
+const warningModalType = ref('');
 
 function handleDrawerAddWidget() {
   isAddWidgetDrawerOpen.value = !isAddWidgetDrawerOpen.value;
+}
+
+function closeDrawer() {
+  if (type.value) {
+    warningModalType.value = 'cancel';
+  } else {
+    isAddWidgetDrawerOpen.value = false;
+  }
 }
 
 const availableWidgets = ref([
@@ -82,6 +110,31 @@ const availableWidgets = ref([
     ),
   },
 ]);
+
+function closeWarningModal() {
+  warningModalType.value = '';
+}
+
+function saveWidgetConfigs() {
+  console.log('saveWidgetConfigs');
+}
+
+function returnWidgetTypeChoice() {
+  closeWarningModal();
+  type.value = null;
+}
+
+function cancelWidgetConfigs() {
+  closeWarningModal();
+  type.value = null;
+  isAddWidgetDrawerOpen.value = false;
+}
+
+function confirmAttentionModal() {
+  warningModalType.value === 'return'
+    ? returnWidgetTypeChoice()
+    : cancelWidgetConfigs();
+}
 </script>
 
 <style scoped lang="scss">

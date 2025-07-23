@@ -89,7 +89,18 @@
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
       "select_agent": "Selecionar agente",
-      "your_agent_is_active": "Seu agente está ativo!"
+      "your_agent_is_active": "Seu agente está ativo!",
+      "return": "Voltar",
+      "save_changes": "Salvar alterações",
+      "modal_attention": {
+        "title_return": "Voltar para o passo anterior",
+        "description_return": "Tem certeza que deseja voltar? Todos os progressos serão perdidos.",
+        "title_cancel": "Cancelar configuração",
+        "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
+        "keep_configuring": "Continuar configurando",
+        "return": "Voltar",
+        "cancel": "Cancelar"
+      }
     }
   },
   "template_messages_dashboard": {

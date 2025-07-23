@@ -49,24 +49,66 @@
       v-if="aiSupport"
       class="config-csat-or-nps__section"
     >
-      <p>test</p>
+      <UnnnicButton
+        v-if="!agent"
+        :text="
+          $t('conversations_dashboard.customize_your_dashboard.activate_agent')
+        "
+        type="secondary"
+        :loading="isActivatingAgent"
+        :disabled="project.isLoadingAgentsTeam"
+        @click="handleActivateAgent"
+      />
+      <section
+        v-else
+        class="config-csat-or-nps__section"
+      >
+        <section>
+          <UnnnicLabel
+            :label="
+              $t(
+                'conversations_dashboard.customize_your_dashboard.select_agent',
+              )
+            "
+          />
+          <UnnnicSelectSmart
+            :modelValue="[{ value: agent.uuid, label: agent.name }]"
+            :options="[]"
+            autocomplete
+            autocompleteIconLeft
+            selectFirst
+            disabled
+          />
+        </section>
+
+        <p class="config-csat-or-nps__agent-active">
+          {{
+            $t(
+              'conversations_dashboard.customize_your_dashboard.your_agent_is_active',
+            )
+          }}
+        </p>
+      </section>
     </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 
 import { useProject } from '@/store/modules/project';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
+import env from '@/utils/env';
 
-defineProps<{
+const props = defineProps<{
   type: 'csat' | 'nps';
 }>();
 
-const { isLoadedFlows, getProjectFlows } = useProject();
+const project = useProject();
+const { isLoadedFlows, getProjectFlows, getAgentsTeam, activateAgent } =
+  project;
 
 const humanSupport = ref(false);
 const aiSupport = ref(false);
@@ -81,9 +123,25 @@ async function getFlows() {
   }
 }
 
-// onMounted(() => {
-//   getFlows();
-// });
+const agent = computed(() => {
+  return props.type === 'csat' ? project.csatAgent : project.npsAgent;
+});
+
+const isActivatingAgent = ref(false);
+async function handleActivateAgent() {
+  isActivatingAgent.value = true;
+  await activateAgent(
+    props.type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
+  );
+
+  await getAgentsTeam();
+  isActivatingAgent.value = false;
+}
+
+onMounted(() => {
+  getFlows();
+  getAgentsTeam();
+});
 </script>
 
 <style lang="scss" scoped>
@@ -114,8 +172,15 @@ async function getFlows() {
   &__section {
     :deep(.unnnic-label__label) {
       margin: 0;
-      margin-bottom: $unnnic-spacing-xs;
+      margin-bottom: $unnnic-spacing-nano;
     }
+  }
+
+  &__agent-active {
+    color: $unnnic-color-neutral-cloudy;
+    font-size: $unnnic-font-size-body-md;
+    font-family: $unnnic-font-family-secondary;
+    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
   }
 }
 </style>

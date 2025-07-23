@@ -20,12 +20,16 @@
     @close="handleDrawerAddWidget"
   >
     <template #content>
-      <ul class="add-widget-drawer__widget-list">
+      <ul
+        v-if="!type"
+        class="add-widget-drawer__widget-list"
+      >
         <li
           v-for="widget in availableWidgets"
           :key="widget.name"
           class="widget-list__item"
           data-testid="add-widget-drawer-item"
+          @click="type = widget.name.toLowerCase()"
         >
           <h2
             class="item__title"
@@ -41,6 +45,11 @@
           </p>
         </li>
       </ul>
+
+      <ConfigCsatOrNpsWidget
+        v-else
+        :type="type"
+      />
     </template>
   </UnnnicDrawer>
 </template>
@@ -49,8 +58,10 @@
 import { ref } from 'vue';
 import AddWidget from './AddWidget.vue';
 import i18n from '@/utils/plugins/i18n';
+import ConfigCsatOrNpsWidget from './ConfigCsatOrNps.vue';
 
 const isAddWidgetDrawerOpen = ref(false);
+const type = ref(null);
 
 function handleDrawerAddWidget() {
   isAddWidgetDrawerOpen.value = !isAddWidgetDrawerOpen.value;

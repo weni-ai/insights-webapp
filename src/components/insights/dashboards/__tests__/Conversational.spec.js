@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { nextTick } from 'vue';
-import { mount, config } from '@vue/test-utils';
+import { shallowMount, config } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import Conversational from '../Conversational.vue';
 import { createI18n } from 'vue-i18n';
@@ -16,7 +16,7 @@ describe('Conversational', () => {
 
   beforeEach(() => {
     setActivePinia(createPinia());
-    wrapper = mount(Conversational, {
+    wrapper = shallowMount(Conversational, {
       global: {
         stubs: {
           DashboardHeader: true,

@@ -4,10 +4,32 @@
     data-testid="treemap-chart"
     class="treemap-chart"
   >
+    <section
+      v-if="isLoading"
+      class="treemap-chart__loading"
+      data-testid="treemap-chart-loading"
+    >
+      <UnnnicSkeletonLoading
+        v-for="i in 5"
+        :key="i"
+        :class="`loading__skeleton loading__skeleton--${i}`"
+        data-testid="treemap-chart-loading-skeleton"
+      />
+    </section>
+
+    <p
+      v-else-if="data.length === 0"
+      data-testid="treemap-chart-no-data"
+      class="treemap-chart__no-data"
+    >
+      {{ $t('widgets.treemap.no_data') }}
+    </p>
+
     <canvas
+      v-else
       ref="treemapCanvas"
       data-testid="treemap-canvas"
-      class="treemap-canvas"
+      class="treemap-chart__canvas"
       height="100%"
     />
   </section>
@@ -32,7 +54,8 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
-  data: TreemapDataItem[];
+  data: TreemapDataItem[] | [];
+  isLoading?: boolean;
 }>();
 
 const preparedData = prepareTopData(props.data);
@@ -157,9 +180,61 @@ onMounted(() => {
   width: calc(
     100% + 12px
   ); // 12px is the compensation for the  visual padding to the chart
-}
 
-.treemap-canvas {
-  transform: translateX(-6px); // Need to remove visual padding from the chart
+  &__loading {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: $unnnic-spacing-xs;
+
+    height: 100%;
+
+    .loading__skeleton {
+      border-radius: $unnnic-border-radius-md;
+      height: 100%;
+      width: 100%;
+
+      &--1 {
+        grid-column: 1 / 5;
+        grid-row: 1 / 3;
+      }
+
+      &--2 {
+        grid-column: 5 / 9;
+        grid-row: 1 / 2;
+      }
+
+      &--3 {
+        grid-column: 5 / 7;
+        grid-row: 2 / 3;
+      }
+
+      &--4 {
+        grid-column: 7 / 8;
+        grid-row: 2 / 3;
+      }
+
+      &--5 {
+        grid-column: 8 / 9;
+        grid-row: 2 / 3;
+      }
+    }
+  }
+
+  &__no-data {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: $unnnic-font-size-body-gt;
+    font-family: $unnnic-font-family-secondary;
+    color: $unnnic-color-neutral-cloudy;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  }
+
+  &__canvas {
+    transform: translateX(-6px); // Need to remove visual padding from the chart
+  }
 }
 </style>

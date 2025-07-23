@@ -65,6 +65,7 @@
   </UnnnicDrawer>
 
   <ModalAttention
+    v-if="!!warningModalType"
     :modelValue="!!warningModalType"
     :type="warningModalType"
     data-testid="drawer-csat-or-nps-widget-modal"

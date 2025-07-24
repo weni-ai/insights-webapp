@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
-import { createRouter } from './router';
+import router from './router';
 
 import Unnnic from './utils/plugins/UnnnicSystem';
 import i18n from './utils/plugins/i18n';
@@ -17,7 +17,7 @@ import '@weni/unnnic-system/dist/style.css';
 
 import './styles/global.scss';
 
-import { safeImport } from './utils/moduleFederation';
+import { safeImport, isFederatedModule } from './utils/moduleFederation';
 
 const { useSharedStore } = await safeImport(
   () => import('connect/sharedStore'),
@@ -28,44 +28,46 @@ const sharedStore = useSharedStore?.();
 
 export default async function mountInsightsApp({
   containerId = 'app',
-  routerBase = '/',
+  initialRoute,
 } = {}) {
   let appRef = null;
 
-  await getJwtToken().then(() => {
-    const app = createApp(App);
-    const pinia = createPinia();
+  if (!isFederatedModule) {
+    await getJwtToken();
+  }
 
-    const router = createRouter(routerBase);
+  const app = createApp(App);
+  const pinia = createPinia();
 
-    app.use(pinia);
-    app.use(router);
-    app.use(i18n);
-    app.use(Unnnic);
+  app.use(pinia);
+  app.use(router);
+  app.use(i18n);
+  app.use(Unnnic);
 
-    if (env('SENTRY_DSN')) {
-      Sentry.init({
-        app,
-        dsn: env('SENTRY_DSN'),
-        integrations: [
-          Sentry.browserTracingIntegration({ router }),
-          Sentry.replayIntegration(),
-        ],
-        tracesSampleRate: 1.0,
-        replaysSessionSampleRate: 0.1,
-        replaysOnErrorSampleRate: 1.0,
-        environment: env('ENVIRONMENT'),
-      });
-    }
+  if (isFederatedModule && initialRoute) await router.replace(initialRoute);
 
-    app.mount(`#${containerId}`);
-    appRef = app;
-  });
+  if (env('SENTRY_DSN')) {
+    Sentry.init({
+      app,
+      dsn: env('SENTRY_DSN'),
+      integrations: [
+        Sentry.browserTracingIntegration({ router }),
+        Sentry.replayIntegration(),
+      ],
+      tracesSampleRate: 1.0,
+      replaysSessionSampleRate: 0.1,
+      replaysOnErrorSampleRate: 1.0,
+      environment: env('ENVIRONMENT'),
+    });
+  }
 
-  return appRef;
+  app.mount(`#${containerId}`);
+  appRef = app;
+
+  return { app: appRef, router };
 }
 
-if (sharedStore) {
+if (sharedStore && isFederatedModule) {
   localStorage.setItem('token', sharedStore.auth.token);
   localStorage.setItem('projectUuid', sharedStore.current.project.uuid);
 } else {

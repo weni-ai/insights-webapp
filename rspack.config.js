@@ -23,13 +23,16 @@ module.exports = defineConfig({
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: `${process.env.PUBLIC_PATH_URL}`,
+    publicPath: `${process.env.PUBLIC_PATH_URL}/`,
     filename: 'assets/js/[name]-[contenthash].js',
     chunkFilename: 'assets/js/[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext]',
   },
   entry: {
     main: './src/main.js',
+  },
+  stats: {
+    warnings: false,
   },
   resolve: {
     extensions: ['...', '.ts', '.vue'],

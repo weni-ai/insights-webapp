@@ -2,6 +2,7 @@
   <section
     v-if="initialLoading"
     class="template-message-meta-dashboard__loading"
+    data-testid="template-message-meta-dashboard-loading"
   >
     <img
       :src="weniLoading"
@@ -274,7 +275,7 @@ const formattedMessagesAnalyticsData = computed(() => {
   const keyMapper = {
     sent: 'template_messages_dashboard.messages_graph.sent_messages',
     delivered: 'template_messages_dashboard.messages_graph.delivered_messages',
-    read: 'template_messages_dashboard.messages_graph.readed_messages',
+    read: 'template_messages_dashboard.messages_graph.read_messages',
     clicked: 'template_messages_dashboard.messages_graph.clicks',
   };
 

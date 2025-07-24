@@ -21,6 +21,9 @@ import DynamicCard from './DynamicCard.vue';
 import DynamicGraph from './DynamicGraph.vue';
 import DynamicTable from './DynamicTable.vue';
 
+import Unnnic from '@weni/unnnic-system';
+import i18n from '@/utils/plugins/i18n';
+
 const props = defineProps({
   widget: {
     type: Object,
@@ -91,7 +94,16 @@ const requestWidgetData = async ({ offset, limit, next, silence } = {}) => {
     if (!silence) isRequestingData.value = true;
 
     if (route.name === 'report') {
-      await reportsStore.getWidgetReportData({ offset, limit, next });
+      try {
+        await reportsStore.getWidgetReportData({ offset, limit, next });
+      } catch (error) {
+        Unnnic.unnnicCallAlert({
+          props: {
+            text: i18n.global.t('get_data_error'),
+            type: 'error',
+          },
+        });
+      }
     } else if (isConfigured.value) {
       await widgetsStore.getCurrentDashboardWidgetData(props.widget);
       if (!silence) dashboardsStore.updateLastUpdatedRequest();
@@ -151,7 +163,12 @@ const initRequestDataInterval = () => {
 
   if (isHumanServiceDashboard.value && !hasDateFiltering.value) {
     interval.value = setInterval(() => {
-      requestWidgetData({ silence: true });
+      const params = {
+        silence: true,
+        limit: route.query.limit,
+        offset: route.query.offset,
+      };
+      requestWidgetData(params);
       dashboardsStore.updateLastUpdatedRequest();
     }, ONE_MINUTE);
   }

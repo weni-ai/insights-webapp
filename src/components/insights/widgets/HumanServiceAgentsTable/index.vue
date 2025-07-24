@@ -123,7 +123,7 @@ export default {
       const allHeaders = [...staticHeaders, ...sortedDynamicHeaders];
 
       return allHeaders.map((header, index) => ({
-        content: this.$t(header.name || ''),
+        content: this.$t(header.name?.toLowerCase() || ''),
         isSortable: true,
         size: index === 1 ? 1 : 0.5,
       }));

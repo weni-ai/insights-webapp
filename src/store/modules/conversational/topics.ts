@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia';
+import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
+import topicsService from '@/services/api/resources/conversational/topics';
 
 export interface Topic {
-  id?: string;
+  uuid?: string;
   name: string;
   context: string;
   isNew?: boolean;
@@ -10,8 +12,11 @@ export interface Topic {
 
 export interface ConversationalTopicsState {
   topics: Topic[];
+  topicsDistribution: topicDistributionMetric[];
+  topicType: 'HUMAN' | 'AI';
   isAddTopicsDrawerOpen: boolean;
   isLoadingTopics: boolean;
+  isLoadingTopicsDistribution: boolean;
   isOpenModal: boolean;
   modalType: string;
   selectedTopicForDeletion: Topic | null;
@@ -20,6 +25,9 @@ export interface ConversationalTopicsState {
 export const useConversationalTopics = defineStore('conversationalTopics', {
   state: (): ConversationalTopicsState => ({
     topics: [],
+    topicsDistribution: [],
+    topicType: 'AI',
+    isLoadingTopicsDistribution: false,
     isAddTopicsDrawerOpen: false,
     isLoadingTopics: false,
     isOpenModal: false,
@@ -29,6 +37,8 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
 
   getters: {
     topicsCount: (state) => state.topics.length,
+
+    topicsDistributionCount: (state) => state.topicsDistribution.length,
 
     hasNewTopics: (state) =>
       state.topics.some(
@@ -68,80 +78,14 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
     hasExistingTopics: (state) =>
       state.topics.some((topic) => topic.isNew === false),
 
-    getTopicById: (state) => (id: string) =>
-      state.topics.find((topic) => topic.id === id),
+    getTopicById: (state) => (uuid: string) =>
+      state.topics.find((topic) => topic.uuid === uuid),
 
     getSubTopicsCount: (state) => (topicIndex: number) =>
       state.topics[topicIndex]?.subTopics?.length || 0,
   },
 
   actions: {
-    initializeMockData() {
-      this.topics = this.getMockTopics();
-    },
-
-    getMockTopics(): Topic[] {
-      return [
-        {
-          id: '1',
-          name: 'Customer Support',
-          context: 'Questions and issues related to customer service',
-          subTopics: [
-            {
-              id: '1-1',
-              name: 'Billing Issues',
-              context: 'Problems with payments and billing',
-              subTopics: [],
-            },
-            {
-              id: '1-2',
-              name: 'Technical Support',
-              context: 'Technical problems and troubleshooting',
-              subTopics: [],
-            },
-          ],
-        },
-        {
-          id: '2',
-          name: 'Product Information',
-          context: 'Questions about product features and specifications',
-          subTopics: [
-            {
-              id: '2-1',
-              name: 'Feature Requests',
-              context: 'Customer requests for new features',
-              subTopics: [],
-            },
-          ],
-        },
-        {
-          id: '3',
-          name: 'Sales Inquiries',
-          context: 'Questions about purchasing and pricing',
-          subTopics: [],
-        },
-        {
-          id: '4',
-          name: 'Feedback and Reviews',
-          context: 'Customer feedback about products and services',
-          subTopics: [
-            {
-              id: '4-1',
-              name: 'Product Reviews',
-              context: 'Reviews and ratings for products',
-              subTopics: [],
-            },
-            {
-              id: '4-2',
-              name: 'Service Feedback',
-              context: 'Feedback about customer service experience',
-              subTopics: [],
-            },
-          ],
-        },
-      ];
-    },
-
     toggleAddTopicsDrawer() {
       this.isAddTopicsDrawerOpen = !this.isAddTopicsDrawerOpen;
     },
@@ -227,11 +171,26 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       this.selectedTopicForDeletion = topic;
     },
 
-    async loadTopics() {
+    setTopicType(type: 'HUMAN' | 'AI') {
+      this.topicType = type;
+    },
+
+    async loadFormTopics() {
       this.isLoadingTopics = true;
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        this.initializeMockData();
+        const response = await topicsService.getConversationalFormTopics();
+        this.topics = response.map((topic) => ({
+          uuid: topic.uuid,
+          name: topic.name,
+          context: topic.description || '',
+          isNew: false,
+          subTopics: topic.subtopic.map((subtopic) => ({
+            uuid: subtopic.uuid,
+            name: subtopic.name,
+            context: subtopic.description || '',
+            isNew: false,
+          })),
+        }));
       } catch (error) {
         console.error('Error loading topics:', error);
       } finally {
@@ -239,11 +198,33 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       }
     },
 
-    async saveTopic(topic: Topic) {
+    async loadTopicsDistribution() {
+      this.isLoadingTopicsDistribution = true;
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        const response =
+          await topicsService.getConversationalTopicsDistribution(
+            this.topicType,
+          );
 
-        const topicToUpdate = this.topics.find((t) => t.id === topic.id);
+        this.topicsDistribution = response.topics;
+      } catch (error) {
+        console.error('Error loading topics distribution:', error);
+      } finally {
+        this.isLoadingTopicsDistribution = false;
+      }
+    },
+
+    async saveTopic(topic: Topic) {
+      if (!topic.isNew) return;
+
+      try {
+        await topicsService.createTopic({
+          name: topic.name,
+          description: topic.context,
+        });
+
+        const topicToUpdate = this.topics.find((t) => t.uuid === topic.uuid);
+
         if (topicToUpdate) {
           topicToUpdate.isNew = false;
         }
@@ -251,6 +232,30 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
         return true;
       } catch (error) {
         console.error('Error saving topic:', error);
+        return false;
+      }
+    },
+
+    async saveSubTopic(topicUuid: string, subTopic: Topic) {
+      if (!subTopic.isNew) return;
+
+      try {
+        await topicsService.createSubTopic(topicUuid, {
+          name: subTopic.name,
+          description: subTopic.context,
+        });
+
+        const subTopicToUpdate = this.topics.find(
+          (t) => t.uuid === subTopic.uuid,
+        );
+
+        if (subTopicToUpdate) {
+          subTopicToUpdate.isNew = false;
+        }
+
+        return true;
+      } catch (error) {
+        console.error('Error saving sub topic:', error);
         return false;
       }
     },

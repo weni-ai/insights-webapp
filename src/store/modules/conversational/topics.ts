@@ -214,50 +214,77 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       }
     },
 
-    async saveTopic(topic: Topic) {
-      if (!topic.isNew) return;
+    async saveTopicAndSubTopics(topic: Topic): Promise<boolean> {
+      let topicUUID = topic.uuid;
+      let topicSavedSuccessfully = true;
 
-      try {
-        await topicsService.createTopic({
-          name: topic.name,
-          description: topic.context,
+      if (topic.isNew) {
+        if (!topic.name.trim() || !topic.context.trim()) {
+          return false;
+        }
+        try {
+          const createdTopic = await topicsService.createTopic({
+            name: topic.name,
+            description: topic.context,
+          });
+          topic.uuid = createdTopic.uuid;
+          topic.isNew = false;
+          topicUUID = topic.uuid;
+        } catch (error) {
+          console.error('Error saving topic:', error);
+          topicSavedSuccessfully = false;
+          return false;
+        }
+      }
+
+      if (!topicUUID || !topic.subTopics) {
+        return topicSavedSuccessfully;
+      }
+
+      const subTopicsToSave = topic.subTopics.filter((st) => st.isNew);
+
+      const subTopicPromises = subTopicsToSave
+        .filter((st) => st.name.trim() && st.context.trim())
+        .map(async (subTopic) => {
+          try {
+            const parentWithSubtopics = await topicsService.createSubTopic(
+              topicUUID!,
+              {
+                name: subTopic.name,
+                description: subTopic.context,
+              },
+            );
+            return { success: true, parentWithSubtopics };
+          } catch (error) {
+            console.error('Error saving sub topic:', error);
+            return { success: false, parentWithSubtopics: null };
+          }
         });
 
-        const topicToUpdate = this.topics.find((t) => t.uuid === topic.uuid);
-
-        if (topicToUpdate) {
-          topicToUpdate.isNew = false;
-        }
-
-        return true;
-      } catch (error) {
-        console.error('Error saving topic:', error);
-        return false;
+      if (subTopicPromises.length === 0) {
+        return topicSavedSuccessfully;
       }
-    },
 
-    async saveSubTopic(topicUuid: string, subTopic: Topic) {
-      if (!subTopic.isNew) return;
+      const results = await Promise.all(subTopicPromises);
 
-      try {
-        await topicsService.createSubTopic(topicUuid, {
-          name: subTopic.name,
-          description: subTopic.context,
-        });
-
-        const subTopicToUpdate = this.topics.find(
-          (t) => t.uuid === subTopic.uuid,
-        );
-
-        if (subTopicToUpdate) {
-          subTopicToUpdate.isNew = false;
+      const successfulSaves = results.filter((r) => r.success);
+      if (successfulSaves.length > 0) {
+        const lastResponse =
+          successfulSaves[successfulSaves.length - 1].parentWithSubtopics;
+        if (lastResponse) {
+          topic.subTopics =
+            lastResponse.subtopic?.map((st) => ({
+              uuid: st.uuid,
+              name: st.name,
+              context: st.description || '',
+              isNew: false,
+              subTopics: [],
+            })) || [];
         }
-
-        return true;
-      } catch (error) {
-        console.error('Error saving sub topic:', error);
-        return false;
       }
+
+      const allSubtopicsSaved = results.every((r) => r.success);
+      return topicSavedSuccessfully && allSubtopicsSaved;
     },
 
     async deleteTopicByUuid(topicUuid: string) {

@@ -38,7 +38,7 @@ interface ConversationalFormTopics {
   uuid: string;
   description?: string;
   created_at: string;
-  subtopic: {
+  subtopic?: {
     name: string;
     uuid: string;
     description?: string;
@@ -106,13 +106,15 @@ export default {
   async createTopic(topic: {
     name: string;
     description?: string;
-  }): Promise<void> {
+  }): Promise<ConversationalFormTopics> {
     const { project } = useConfig();
 
-    await http.post(`/metrics/conversations/topics/`, {
+    const response = (await http.post(`/metrics/conversations/topics/`, {
       ...topic,
       project_uuid: project.uuid,
-    });
+    })) as ConversationalFormTopics;
+
+    return response;
   },
 
   async createSubTopic(
@@ -121,13 +123,18 @@ export default {
       name: string;
       description?: string;
     },
-  ): Promise<void> {
+  ): Promise<ConversationalFormTopics> {
     const { project } = useConfig();
 
-    await http.post(`/metrics/conversations/topics/${topicUuid}/subtopics/`, {
-      ...subtopic,
-      project_uuid: project.uuid,
-    });
+    const response = (await http.post(
+      `/metrics/conversations/topics/${topicUuid}/subtopics/`,
+      {
+        ...subtopic,
+        project_uuid: project.uuid,
+      },
+    )) as ConversationalFormTopics;
+
+    return response;
   },
 
   async deleteTopic(topicUuid: string): Promise<void> {

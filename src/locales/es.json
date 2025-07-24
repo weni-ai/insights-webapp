@@ -18,6 +18,80 @@
       "closeds": "Número total de chats que ya han finalizado."
     }
   },
+  "conversations_dashboard": {
+    "title": "Atención",
+    "conversations": "conversaciones",
+    "artificial_intelligence": "IA",
+    "human_support": "Atención humana",
+    "others": "Otros",
+    "unclassified": "No clasificado",
+    "header": {
+      "total": "Total de conversaciones",
+      "resolved": "Resueltas",
+      "unresolved": "No resueltas",
+      "unengaged": "No engajadas",
+      "transferred": "Transferidas para atención humana",
+      "tooltips": {
+        "total": "Total de conversaciones iniciadas en el período. Una conversa se cuenta 24 horas después del primer mensaje del contacto.",
+        "resolved": "Conversación resuelta: El contacto interaccionó con preguntas/solicitudes y recibió respuestas que ayudaron a completar la demanda (total o parcial).",
+        "unresolved": "Conversación no resuelta: El contacto interaccionó con preguntas/solicitudes, pero la conversa no resolvió la demanda (total o parcial).",
+        "unengaged": "Conversación sin engajamiento útil: La conversa se limitó a saludos, emojis o fue cerrada sin interacción relevante.",
+        "transferred": "Incluye conversaciones (resueltas o no) que fueron transferidas a atención humana."
+      }
+    },
+    "form_topic": {
+      "add_topic": "Agregar tema",
+      "add_sub_topic": "Agregar sub-tema",
+      "title": "Editar temas y sub-temas",
+      "cancel": "Cancelar",
+      "save": "Guardar cambios",
+      "new_topic": "Nuevo tema",
+      "topic_name": "Nombre del tema",
+      "context": "Contexto",
+      "context_description": "Agrega un contexto para mejorar la clasificación de la IA",
+      "sub_topics": "Sub-temas",
+      "new_sub_topic": "Nuevo sub-tema",
+      "sub_topics_added": "{sub_topics} sub-temas agregados",
+      "success_save_topics_or_subtopics": "Temas o sub-temas agregados con éxito",
+      "error_save_topics_or_subtopics": "Error al guardar temas o sub-temas",
+      "success_remove_topic": "Tema eliminado con éxito",
+      "error_remove_topic": "Error al eliminar tema",
+      "success_remove_subtopic": "Sub-tema eliminado con éxito",
+      "error_remove_subtopic": "Error al eliminar sub-tema",
+      "remove_modal": {
+        "title_remove_topic": "Eliminar tema",
+        "title_remove_sub_topic": "Eliminar sub-tema",
+        "description_remove_topic": "¿Estás seguro de querer eliminar el tema {topic}? Todos los sub-temas también serán eliminados, y cualquier dato previamente asociado con este tema será desclasificado y ya no accesible a través de esta clasificación.",
+        "description_remove_sub_topic": "¿Estás seguro de querer eliminar el sub-tema {sub_topic}? Cualquier dato previamente asociado con este sub-tema será desclasificado y ya no accesible a través de esta clasificación.",
+        "remove": "Eliminar",
+        "cancel": "Cancelar"
+      },
+      "cancel_modal": {
+        "title": "Cancelar edición de temas",
+        "description_cancel": "¿Estás seguro de querer cancelar? Se perderán todos los cambios.",
+        "cancel": "Cancelar",
+        "continue": "Continuar"
+      }
+    },
+    "most_talked_about_topics": {
+      "title": "Tópicos más hablados",
+      "see_all": "Ver todos",
+      "subtopics": "subtemas",
+      "no_topics": "No hay temas aún",
+      "no_topics_description": "Agrega un tema para empezar a analizar las conversas",
+      "add_first_topic": "Agrega tu primer tema",
+      "edit_topics_and_subtopics": "Editar temas y subtemas"
+    },
+    "csat": "CSAT",
+    "nps": "NPS",
+    "customize_your_dashboard": {
+      "title": "Personaliza tu dashboard",
+      "description": "Personaliza el dashboard con tus métricas clave",
+      "add_widget": "Agregar widget",
+      "csat_description": "La Puntuación de Satisfacción del Cliente indica el nivel de satisfacción del contacto con el servicio recibido.",
+      "nps_description": "La Puntuación Neta del Promotor indica qué tan probable es que el contacto recomiende el servicio que recibió a otras personas."
+    }
+  },
   "template_messages_dashboard": {
     "title": "Plantilla de mensajes Meta",
     "favorites": "Favoritos",
@@ -250,6 +324,9 @@
         "total_value": "Valor total",
         "average_ticket": "Ticket promedio"
       }
+    },
+    "treemap": {
+      "no_data": "No hay datos para mostrar"
     }
   },
   "drawers": {

@@ -201,7 +201,7 @@ export default {
   created() {
     if (this.$route.query.offset) {
       const page = Number(this.$route.query.offset) / this.paginationInterval;
-      this.page = page;
+      this.page = page || 0;
     }
   },
 

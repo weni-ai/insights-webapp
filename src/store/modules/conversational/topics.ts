@@ -260,12 +260,37 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       }
     },
 
-    async deleteTopicById(topicId: string) {
+    async deleteTopicByUuid(topicUuid: string) {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await topicsService.deleteTopic(topicUuid);
+
+        this.topics = this.topics.filter((t) => t.uuid !== topicUuid);
+
         return true;
       } catch (error) {
         console.error('Error deleting topic:', error);
+        return false;
+      }
+    },
+
+    async deleteSubTopicByUuid(topicUuid: string, subTopicUuid: string) {
+      try {
+        await topicsService.deleteSubTopic(topicUuid, subTopicUuid);
+
+        this.topics = this.topics.map((t) =>
+          t.uuid === topicUuid
+            ? {
+                ...t,
+                subTopics: t.subTopics?.filter(
+                  (st) => st.uuid !== subTopicUuid,
+                ),
+              }
+            : t,
+        );
+
+        return true;
+      } catch (error) {
+        console.error('Error deleting sub topic:', error);
         return false;
       }
     },

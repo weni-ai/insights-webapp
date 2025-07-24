@@ -15,12 +15,13 @@
     </header>
 
     <section
-      v-if="topics.length > 0"
+      v-if="topics.length > 0 && !isLoadingTopics"
       class="form-topic__divider"
       data-testid="form-topic-divider"
     />
 
     <section
+      v-if="!isLoadingTopics"
       class="form-topic__body"
       data-testid="form-topic-body"
     >
@@ -37,25 +38,39 @@
         @toggle-sub-topics="handleToggleSubTopics"
       />
     </section>
+
+    <section
+      v-if="isLoadingTopics"
+      class="form-topic__skeleton"
+    >
+      <UnnnicSkeletonLoading
+        v-for="i in 4"
+        :key="i"
+        data-testid="form-topic-loading-skeleton"
+        height="82px"
+        width="100%"
+      />
+    </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import AddTopicButton from '../AddTopicButton.vue';
 import FormTopicItem from './FormTopicItem.vue';
+import { storeToRefs } from 'pinia';
+
+const topicsConversationalStore = useConversationalTopics();
 
 const {
-  topics: topicsStore,
   addTopic,
-  deleteTopic,
+  removeTopicOrSubtopic,
   updateTopic,
   addSubTopic,
   createNewTopic,
-} = useConversationalTopics();
+} = topicsConversationalStore;
 
-const topics = computed(() => topicsStore);
+const { isLoadingTopics, topics } = storeToRefs(topicsConversationalStore);
 
 const handleAddTopic = () => {
   const newTopic = createNewTopic();
@@ -63,7 +78,7 @@ const handleAddTopic = () => {
 };
 
 const handleDeleteTopic = (index: number, parentIndex?: number) => {
-  deleteTopic(index, parentIndex);
+  removeTopicOrSubtopic(index, parentIndex);
 };
 
 const handleUpdateTopic = (
@@ -107,6 +122,13 @@ const handleToggleSubTopics = (topicIndex: number) => {
     flex-direction: column;
     align-items: center;
     gap: $unnnic-spacing-sm;
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-sm;
+    margin-top: $unnnic-spacing-md;
   }
 }
 </style>

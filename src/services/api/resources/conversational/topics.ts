@@ -140,7 +140,7 @@ export default {
   async deleteTopic(topicUuid: string): Promise<void> {
     const { project } = useConfig();
     await http.delete(`/metrics/conversations/topics/${topicUuid}/`, {
-      params: {
+      data: {
         project_uuid: project.uuid,
       },
     });
@@ -151,7 +151,7 @@ export default {
     await http.delete(
       `/metrics/conversations/topics/${topicUuid}/subtopics/${subtopicUuid}/`,
       {
-        params: {
+        data: {
           project_uuid: project.uuid,
         },
       },

@@ -163,6 +163,11 @@ describe('topicsService', () => {
       await topicsService.deleteTopic(topicUuid);
       expect(http.delete).toHaveBeenCalledWith(
         `/metrics/conversations/topics/${topicUuid}/`,
+        {
+          data: {
+            project_uuid: mockProjectUuid,
+          },
+        },
       );
     });
 
@@ -183,6 +188,11 @@ describe('topicsService', () => {
       await topicsService.deleteSubTopic(topicUuid, subtopicUuid);
       expect(http.delete).toHaveBeenCalledWith(
         `/metrics/conversations/topics/${topicUuid}/subtopics/${subtopicUuid}/`,
+        {
+          data: {
+            project_uuid: mockProjectUuid,
+          },
+        },
       );
     });
 

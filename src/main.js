@@ -26,7 +26,10 @@ const { useSharedStore } = await safeImport(
 
 const sharedStore = useSharedStore?.();
 
-export default async function mountInsightsApp({ containerId = 'app' } = {}) {
+export default async function mountInsightsApp({
+  containerId = 'app',
+  initialRoute,
+} = {}) {
   let appRef = null;
 
   if (!isFederatedModule) {
@@ -40,6 +43,8 @@ export default async function mountInsightsApp({ containerId = 'app' } = {}) {
   app.use(router);
   app.use(i18n);
   app.use(Unnnic);
+
+  if (isFederatedModule && initialRoute) await router.replace(initialRoute);
 
   if (env('SENTRY_DSN')) {
     Sentry.init({

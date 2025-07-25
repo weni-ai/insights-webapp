@@ -340,57 +340,78 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       return topicSavedSuccessfully && allSubtopicsSaved;
     },
 
+    async _removeTopic(index: number) {
+      const topic = this.topics[index];
+      if (!topic) return;
+
+      const removeInternalTopic = () => {
+        this.topics.splice(index, 1);
+      };
+
+      if (topic.isNew || !topic.uuid) {
+        removeInternalTopic();
+        return;
+      }
+
+      try {
+        await topicsService.deleteTopic(topic.uuid);
+        removeInternalTopic();
+        this.defaultAlert(
+          'success',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.success_remove_topic',
+          ),
+        );
+      } catch (error) {
+        this.defaultAlert(
+          'error',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.error_remove_topic',
+          ),
+        );
+        console.error('Error deleting topic:', error);
+      }
+    },
+
+    async _removeSubTopic(index: number, parentIndex: number) {
+      const parentTopic = this.topics[parentIndex];
+      const subtopic = parentTopic?.subTopics?.[index];
+      if (!subtopic) return;
+
+      const removeInternalSubtopic = () => {
+        parentTopic.subTopics?.splice(index, 1);
+      };
+
+      if (subtopic.isNew || !parentTopic.uuid || !subtopic.uuid) {
+        removeInternalSubtopic();
+        return;
+      }
+
+      try {
+        await topicsService.deleteSubTopic(parentTopic.uuid, subtopic.uuid);
+        removeInternalSubtopic();
+        this.defaultAlert(
+          'success',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.success_remove_subtopic',
+          ),
+        );
+      } catch (error) {
+        this.defaultAlert(
+          'error',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.error_remove_subtopic',
+          ),
+        );
+        console.error('Error deleting sub topic:', error);
+      }
+    },
+
     async removeTopicOrSubtopic(index: number, parentIndex?: number) {
       if (parentIndex !== undefined) {
-        const subtopic = this.topics[parentIndex].subTopics?.[index];
-        const removeInternalSubtopic = () => {
-          this.topics[parentIndex].subTopics?.splice(index, 1);
-        };
-        if (!subtopic?.isNew) {
-          try {
-            await topicsService.deleteSubTopic(subtopic.uuid, subtopic.uuid);
-            removeInternalSubtopic();
-            this.defaultAlert(
-              'success',
-              i18n.global.t(
-                'conversations_dashboard.form_topic.success_remove_subtopic',
-              ),
-            );
-          } catch (error) {
-            this.defaultAlert(
-              'error',
-              i18n.global.t(
-                'conversations_dashboard.form_topic.error_remove_subtopic',
-              ),
-            );
-            console.error('Error deleting sub topic:', error);
-          }
-        } else removeInternalSubtopic();
+        await this._removeSubTopic(index, parentIndex);
       } else {
-        const topic = this.topics[index];
-        const removeInternalTopic = () => {
-          this.topics.splice(index, 1);
-        };
-        if (!topic?.isNew) {
-          try {
-            await topicsService.deleteTopic(topic.uuid);
-            removeInternalTopic();
-            this.defaultAlert(
-              'success',
-              i18n.global.t(
-                'conversations_dashboard.form_topic.success_remove_topic',
-              ),
-            );
-          } catch (error) {
-            this.defaultAlert(
-              'error',
-              i18n.global.t(
-                'conversations_dashboard.form_topic.error_remove_topic',
-              ),
-            );
-            console.error('Error deleting topic:', error);
-          }
-        } else removeInternalTopic();
+        await this._removeTopic(index);
       }
     },
   },

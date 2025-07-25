@@ -747,7 +747,7 @@ describe('useConversationalTopics store', () => {
 
         expect(store.topics[0].subTopics).toHaveLength(0);
         expect(topicsService.deleteSubTopic).toHaveBeenCalledWith(
-          'sub-1',
+          'topic-1',
           'sub-1',
         );
       });
@@ -772,6 +772,56 @@ describe('useConversationalTopics store', () => {
         expect(store.topics).toHaveLength(1);
         expect(consoleSpy).toHaveBeenCalled();
         consoleSpy.mockRestore();
+      });
+
+      it('should handle API errors for subtopic deletion', async () => {
+        store.topics = [
+          {
+            uuid: 'topic-1',
+            name: 'Main Topic',
+            context: 'Context',
+            subTopics: [
+              {
+                uuid: 'sub-1',
+                name: 'Existing Sub',
+                context: 'Sub Context',
+                isNew: false,
+              },
+            ],
+          },
+        ];
+
+        const consoleSpy = vi
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
+        topicsService.deleteSubTopic.mockRejectedValue(
+          new Error('Delete Error'),
+        );
+
+        await store.removeTopicOrSubtopic(0, 0);
+
+        expect(store.topics[0].subTopics).toHaveLength(1);
+        expect(consoleSpy).toHaveBeenCalled();
+        consoleSpy.mockRestore();
+      });
+
+      it('should not throw when removing non-existent topic', async () => {
+        store.topics = [];
+        await expect(store.removeTopicOrSubtopic(0)).resolves.not.toThrow();
+        expect(store.topics).toHaveLength(0);
+      });
+
+      it('should not throw when removing non-existent subtopic', async () => {
+        store.topics = [
+          {
+            uuid: 'topic-1',
+            name: 'Main Topic',
+            context: 'Context',
+            subTopics: [],
+          },
+        ];
+        await expect(store.removeTopicOrSubtopic(0, 0)).resolves.not.toThrow();
+        expect(store.topics[0].subTopics).toHaveLength(0);
       });
     });
   });

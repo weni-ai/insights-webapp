@@ -16,7 +16,7 @@
         :description="item.description"
         :backgroundColor="item.backgroundColor"
         :color="item.color"
-        :isExpandable="!!item.subItems"
+        :isExpandable="item.subItems?.length > 0"
         :expandableDescription="`${item.subItems?.length} ${subItemsDescription || ''}`"
         :expanded="expandedItems.includes(item.label)"
         :subItems="item.subItems"

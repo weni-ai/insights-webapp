@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia';
+import unnnic from '@weni/unnnic-system';
+import i18n from '@/utils/plugins/i18n';
+import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
+import topicsService from '@/services/api/resources/conversational/topics';
 
 export interface Topic {
-  id?: string;
+  uuid?: string;
   name: string;
   context: string;
   isNew?: boolean;
@@ -10,8 +14,12 @@ export interface Topic {
 
 export interface ConversationalTopicsState {
   topics: Topic[];
+  topicsDistribution: topicDistributionMetric[];
+  topicType: 'HUMAN' | 'AI';
   isAddTopicsDrawerOpen: boolean;
   isLoadingTopics: boolean;
+  isLoadingTopicsDistribution: boolean;
+  isSavingTopics: boolean;
   isOpenModal: boolean;
   modalType: string;
   selectedTopicForDeletion: Topic | null;
@@ -20,8 +28,12 @@ export interface ConversationalTopicsState {
 export const useConversationalTopics = defineStore('conversationalTopics', {
   state: (): ConversationalTopicsState => ({
     topics: [],
+    topicsDistribution: [],
+    topicType: 'AI',
+    isLoadingTopicsDistribution: false,
     isAddTopicsDrawerOpen: false,
     isLoadingTopics: false,
+    isSavingTopics: false,
     isOpenModal: false,
     modalType: '',
     selectedTopicForDeletion: null,
@@ -29,6 +41,8 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
 
   getters: {
     topicsCount: (state) => state.topics.length,
+
+    topicsDistributionCount: (state) => state.topicsDistribution.length,
 
     hasNewTopics: (state) =>
       state.topics.some(
@@ -68,78 +82,22 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
     hasExistingTopics: (state) =>
       state.topics.some((topic) => topic.isNew === false),
 
-    getTopicById: (state) => (id: string) =>
-      state.topics.find((topic) => topic.id === id),
+    getTopicById: (state) => (uuid: string) =>
+      state.topics.find((topic) => topic.uuid === uuid),
 
     getSubTopicsCount: (state) => (topicIndex: number) =>
       state.topics[topicIndex]?.subTopics?.length || 0,
   },
 
   actions: {
-    initializeMockData() {
-      this.topics = this.getMockTopics();
-    },
-
-    getMockTopics(): Topic[] {
-      return [
-        {
-          id: '1',
-          name: 'Customer Support',
-          context: 'Questions and issues related to customer service',
-          subTopics: [
-            {
-              id: '1-1',
-              name: 'Billing Issues',
-              context: 'Problems with payments and billing',
-              subTopics: [],
-            },
-            {
-              id: '1-2',
-              name: 'Technical Support',
-              context: 'Technical problems and troubleshooting',
-              subTopics: [],
-            },
-          ],
+    defaultAlert(type: 'success' | 'error', text: string, seconds: number = 5) {
+      (unnnic.unnnicCallAlert as any)({
+        props: {
+          text,
+          type,
         },
-        {
-          id: '2',
-          name: 'Product Information',
-          context: 'Questions about product features and specifications',
-          subTopics: [
-            {
-              id: '2-1',
-              name: 'Feature Requests',
-              context: 'Customer requests for new features',
-              subTopics: [],
-            },
-          ],
-        },
-        {
-          id: '3',
-          name: 'Sales Inquiries',
-          context: 'Questions about purchasing and pricing',
-          subTopics: [],
-        },
-        {
-          id: '4',
-          name: 'Feedback and Reviews',
-          context: 'Customer feedback about products and services',
-          subTopics: [
-            {
-              id: '4-1',
-              name: 'Product Reviews',
-              context: 'Reviews and ratings for products',
-              subTopics: [],
-            },
-            {
-              id: '4-2',
-              name: 'Service Feedback',
-              context: 'Feedback about customer service experience',
-              subTopics: [],
-            },
-          ],
-        },
-      ];
+        seconds,
+      });
     },
 
     toggleAddTopicsDrawer() {
@@ -172,14 +130,6 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
         subTopics: topic.subTopics || [],
       };
       this.topics.push(newTopic);
-    },
-
-    deleteTopic(topicIndex: number, parentIndex?: number) {
-      if (parentIndex !== undefined) {
-        this.topics[parentIndex].subTopics?.splice(topicIndex, 1);
-      } else {
-        this.topics.splice(topicIndex, 1);
-      }
     },
 
     updateTopic(
@@ -227,11 +177,72 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       this.selectedTopicForDeletion = topic;
     },
 
-    async loadTopics() {
+    setTopicType(type: 'HUMAN' | 'AI') {
+      this.topicType = type;
+    },
+
+    async saveAllNewTopics() {
+      this.isSavingTopics = true;
+      try {
+        const newTopicsAndSubtopics = this.topics.filter(
+          (topic) =>
+            topic.isNew || topic.subTopics?.some((subTopic) => subTopic.isNew),
+        );
+
+        if (newTopicsAndSubtopics.length === 0) {
+          return true;
+        }
+
+        const topicPromises = newTopicsAndSubtopics.map((topic) =>
+          this.saveTopicAndSubTopics(topic),
+        );
+
+        const results = await Promise.all(topicPromises);
+        const allSucceeded = results.every((result) => result);
+
+        if (allSucceeded) {
+          this.defaultAlert(
+            'success',
+            i18n.global.t(
+              'conversations_dashboard.form_topic.success_save_topics_or_subtopics',
+            ),
+          );
+          await this.loadFormTopics();
+          return true;
+        } else {
+          throw new Error('Some topics failed to save');
+        }
+      } catch (error) {
+        this.defaultAlert(
+          'error',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.error_save_topics_or_subtopics',
+          ),
+        );
+        console.error('Error saving new topics:', error);
+        return false;
+      } finally {
+        this.isSavingTopics = false;
+        this.loadTopicsDistribution();
+      }
+    },
+
+    async loadFormTopics() {
       this.isLoadingTopics = true;
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        this.initializeMockData();
+        const response = await topicsService.getConversationalFormTopics();
+        this.topics = response.map((topic) => ({
+          uuid: topic.uuid,
+          name: topic.name,
+          context: topic.description || '',
+          isNew: false,
+          subTopics: topic.subtopic.map((subtopic) => ({
+            uuid: subtopic.uuid,
+            name: subtopic.name,
+            context: subtopic.description || '',
+            isNew: false,
+          })),
+        }));
       } catch (error) {
         console.error('Error loading topics:', error);
       } finally {
@@ -239,29 +250,168 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       }
     },
 
-    async saveTopic(topic: Topic) {
+    async loadTopicsDistribution() {
+      this.isLoadingTopicsDistribution = true;
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        const response =
+          await topicsService.getConversationalTopicsDistribution(
+            this.topicType,
+          );
 
-        const topicToUpdate = this.topics.find((t) => t.id === topic.id);
-        if (topicToUpdate) {
-          topicToUpdate.isNew = false;
-        }
-
-        return true;
+        this.topicsDistribution = response.topics;
       } catch (error) {
-        console.error('Error saving topic:', error);
-        return false;
+        console.error('Error loading topics distribution:', error);
+      } finally {
+        this.isLoadingTopicsDistribution = false;
       }
     },
 
-    async deleteTopicById(topicId: string) {
+    async saveTopicAndSubTopics(topic: Topic): Promise<boolean> {
+      let topicUUID = topic.uuid;
+      let topicSavedSuccessfully = true;
+
+      if (topic.isNew) {
+        if (!topic.name.trim() || !topic.context.trim()) {
+          return false;
+        }
+        try {
+          const createdTopic = await topicsService.createTopic({
+            name: topic.name,
+            description: topic.context,
+          });
+
+          topic.uuid = createdTopic.uuid;
+          topic.isNew = false;
+          topicUUID = topic.uuid;
+        } catch (error) {
+          console.error('Error saving topic:', error);
+          topicSavedSuccessfully = false;
+        }
+      }
+
+      if (!topicUUID || !topic.subTopics) {
+        return topicSavedSuccessfully;
+      }
+
+      const subTopicsToSave = topic.subTopics.filter((st) => st.isNew);
+
+      const subTopicPromises = subTopicsToSave
+        .filter((st) => st.name.trim() && st.context.trim())
+        .map(async (subTopic) => {
+          try {
+            const parentWithSubtopics = await topicsService.createSubTopic(
+              topicUUID!,
+              {
+                name: subTopic.name,
+                description: subTopic.context,
+              },
+            );
+
+            return { success: true, parentWithSubtopics };
+          } catch (error) {
+            console.error('Error saving sub topic:', error);
+            return { success: false, parentWithSubtopics: null };
+          }
+        });
+
+      if (subTopicPromises.length === 0) {
+        return topicSavedSuccessfully;
+      }
+
+      const results = await Promise.all(subTopicPromises);
+
+      const successfulSaves = results.filter((r) => r.success);
+      if (successfulSaves.length > 0) {
+        const lastResponse =
+          successfulSaves[successfulSaves.length - 1].parentWithSubtopics;
+        if (lastResponse) {
+          topic.subTopics =
+            lastResponse.subtopic?.map((st) => ({
+              uuid: st.uuid,
+              name: st.name,
+              context: st.description || '',
+              isNew: false,
+              subTopics: [],
+            })) || [];
+        }
+      }
+
+      const allSubtopicsSaved = results.every((r) => r.success);
+      return topicSavedSuccessfully && allSubtopicsSaved;
+    },
+
+    async _removeTopic(index: number) {
+      const topic = this.topics[index];
+      if (!topic) return;
+
+      const removeInternalTopic = () => {
+        this.topics.splice(index, 1);
+      };
+
+      if (topic.isNew || !topic.uuid) {
+        removeInternalTopic();
+        return;
+      }
+
       try {
-        await new Promise((resolve) => setTimeout(resolve, 500));
-        return true;
+        await topicsService.deleteTopic(topic.uuid);
+        removeInternalTopic();
+        this.defaultAlert(
+          'success',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.success_remove_topic',
+          ),
+        );
       } catch (error) {
+        this.defaultAlert(
+          'error',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.error_remove_topic',
+          ),
+        );
         console.error('Error deleting topic:', error);
-        return false;
+      }
+    },
+
+    async _removeSubTopic(index: number, parentIndex: number) {
+      const parentTopic = this.topics[parentIndex];
+      const subtopic = parentTopic?.subTopics?.[index];
+      if (!subtopic) return;
+
+      const removeInternalSubtopic = () => {
+        parentTopic.subTopics?.splice(index, 1);
+      };
+
+      if (subtopic.isNew || !parentTopic.uuid || !subtopic.uuid) {
+        removeInternalSubtopic();
+        return;
+      }
+
+      try {
+        await topicsService.deleteSubTopic(parentTopic.uuid, subtopic.uuid);
+        removeInternalSubtopic();
+        this.defaultAlert(
+          'success',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.success_remove_subtopic',
+          ),
+        );
+      } catch (error) {
+        this.defaultAlert(
+          'error',
+          i18n.global.t(
+            'conversations_dashboard.form_topic.error_remove_subtopic',
+          ),
+        );
+        console.error('Error deleting sub topic:', error);
+      }
+    },
+
+    async removeTopicOrSubtopic(index: number, parentIndex?: number) {
+      if (parentIndex !== undefined) {
+        await this._removeSubTopic(index, parentIndex);
+      } else {
+        await this._removeTopic(index);
       }
     },
   },

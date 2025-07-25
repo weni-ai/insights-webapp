@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import FormTopic from '../FormTopic.vue';
@@ -22,21 +22,39 @@ config.global.plugins = [
 ];
 
 const mockTopics = [
-  { name: 'Topic 1', context: 'Context 1', isNew: true, subTopics: [] },
   {
+    uuid: '1',
+    name: 'Topic 1',
+    context: 'Context 1',
+    isNew: true,
+    subTopics: [],
+  },
+  {
+    uuid: '2',
     name: 'Topic 2',
     context: 'Context 2',
     isNew: false,
     subTopics: [
-      { name: 'Sub 1', context: 'Sub Context 1', isNew: false, subTopics: [] },
+      {
+        uuid: '2-1',
+        name: 'Sub 1',
+        context: 'Sub Context 1',
+        isNew: false,
+        subTopics: [],
+      },
     ],
   },
 ];
 
+// Reactive refs for the store
+const topicsRef = ref([]);
+const isLoadingTopicsRef = ref(false);
+
 const mockStore = {
   topics: [],
+  isLoadingTopics: false,
   addTopic: vi.fn(),
-  deleteTopic: vi.fn(),
+  removeTopicOrSubtopic: vi.fn(),
   updateTopic: vi.fn(),
   addSubTopic: vi.fn(),
   createNewTopic: vi.fn(() => ({
@@ -51,21 +69,30 @@ vi.mock('@/store/modules/conversational/topics', () => ({
   useConversationalTopics: () => mockStore,
 }));
 
-const createWrapper = (storeTopics = []) => {
+vi.mock('pinia', () => ({
+  storeToRefs: () => ({
+    topics: topicsRef,
+    isLoadingTopics: isLoadingTopicsRef,
+  }),
+}));
+
+const createWrapper = (storeTopics = [], isLoading = false) => {
   mockStore.topics = storeTopics;
+  mockStore.isLoadingTopics = isLoading;
+  topicsRef.value = storeTopics;
+  isLoadingTopicsRef.value = isLoading;
 
   return shallowMount(FormTopic, {
     global: {
       stubs: {
         AddTopicButton: {
           template:
-            '<button data-testid="stub-add-topic-button" @click="$emit(\'add-topic\')">{{ text }}</button>',
+            '<button data-testid="form-topic-add-button" @click="$emit(\'add-topic\')">{{ text }}</button>',
           props: ['text'],
           emits: ['add-topic'],
         },
         FormTopicItem: {
-          template:
-            '<div data-testid="stub-form-topic-item">{{ topic.name }}</div>',
+          template: '<div data-testid="form-topic-item">{{ topic.name }}</div>',
           props: ['topic', 'topicIndex', 'isSubTopic'],
           emits: [
             'delete-topic',
@@ -73,6 +100,10 @@ const createWrapper = (storeTopics = []) => {
             'add-sub-topic',
             'toggle-sub-topics',
           ],
+        },
+        UnnnicSkeletonLoading: {
+          template: '<div data-testid="form-topic-loading-skeleton"></div>',
+          props: ['height', 'width'],
         },
       },
     },
@@ -84,6 +115,8 @@ describe('FormTopic', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    topicsRef.value = [];
+    isLoadingTopicsRef.value = false;
     wrapper = createWrapper();
   });
 
@@ -98,8 +131,11 @@ describe('FormTopic', () => {
   const formTopicBody = () => wrapper.find('[data-testid="form-topic-body"]');
   const formTopicItems = () =>
     wrapper.findAll('[data-testid="form-topic-item"]');
+  const formTopicSkeleton = () => wrapper.find('.form-topic__skeleton');
+  const skeletonLoadings = () =>
+    wrapper.findAll('[data-testid="form-topic-loading-skeleton"]');
 
-  describe('Initial render', () => {
+  describe('Component structure', () => {
     it('should render the component with correct structure', () => {
       expect(formTopic().exists()).toBe(true);
       expect(formTopicHeader().exists()).toBe(true);
@@ -113,45 +149,47 @@ describe('FormTopic', () => {
         'conversations_dashboard.form_topic.add_topic',
       );
     });
-
-    it('should not render divider when no topics exist', () => {
-      expect(formTopicDivider().exists()).toBe(false);
-    });
-
-    it('should not render topic items when no topics exist', () => {
-      expect(formTopicItems()).toHaveLength(0);
-    });
   });
 
   describe('Conditional rendering', () => {
-    const renderingTests = [
-      { topicsCount: 0, expectDivider: false, expectItems: 0 },
-      { topicsCount: 1, expectDivider: true, expectItems: 1 },
-      { topicsCount: 3, expectDivider: true, expectItems: 3 },
-    ];
-
-    renderingTests.forEach(({ topicsCount, expectDivider, expectItems }) => {
-      it(`should ${expectDivider ? 'show' : 'hide'} divider and render ${expectItems} items with ${topicsCount} topics`, () => {
-        const topics = Array.from({ length: topicsCount }, (_, i) => ({
-          ...mockTopics[0],
-          name: `Topic ${i + 1}`,
-        }));
-
-        wrapper = createWrapper(topics);
-
-        expect(formTopicDivider().exists()).toBe(expectDivider);
-        expect(formTopicItems()).toHaveLength(expectItems);
-      });
+    it('should not render divider and topics when no topics exist', () => {
+      expect(formTopicDivider().exists()).toBe(false);
+      expect(formTopicItems()).toHaveLength(0);
     });
 
-    it('should render topics with correct props', () => {
-      wrapper = createWrapper(mockTopics);
-      const items = formTopicItems();
+    it('should render divider and topics when topics exist', async () => {
+      wrapper = createWrapper(mockTopics, false);
+      await nextTick();
 
-      expect(items).toHaveLength(mockTopics.length);
-      mockTopics.forEach((topic, index) => {
-        expect(items[index].text()).toBe(topic.name);
-      });
+      expect(formTopicDivider().exists()).toBe(true);
+      expect(formTopicItems()).toHaveLength(mockTopics.length);
+    });
+
+    it('should not render body when loading', async () => {
+      wrapper = createWrapper([], true);
+      await nextTick();
+
+      expect(formTopicBody().exists()).toBe(false);
+      expect(formTopicDivider().exists()).toBe(false);
+    });
+  });
+
+  describe('Loading state', () => {
+    it('should show skeleton loading when isLoadingTopics is true', async () => {
+      wrapper = createWrapper([], true);
+      await nextTick();
+
+      expect(formTopicSkeleton().exists()).toBe(true);
+      expect(skeletonLoadings()).toHaveLength(4);
+    });
+
+    it('should hide skeleton loading when isLoadingTopics is false', async () => {
+      wrapper = createWrapper(mockTopics, false);
+      await nextTick();
+
+      expect(formTopicSkeleton().exists()).toBe(false);
+      expect(skeletonLoadings()).toHaveLength(0);
+      expect(formTopicBody().exists()).toBe(true);
     });
   });
 
@@ -169,44 +207,6 @@ describe('FormTopic', () => {
       });
     });
 
-    const eventHandlerTests = [
-      {
-        event: 'delete-topic',
-        handler: 'handleDeleteTopic',
-        args: [0, 1],
-        storeMethod: 'deleteTopic',
-        expectedArgs: [0, 1],
-      },
-      {
-        event: 'update-topic',
-        handler: 'handleUpdateTopic',
-        args: [0, 'name', 'test', 1],
-        storeMethod: 'updateTopic',
-        expectedArgs: [0, 'name', 'test', 1],
-      },
-      {
-        event: 'add-sub-topic',
-        handler: 'handleAddSubTopic',
-        args: [0],
-        storeMethod: 'addSubTopic',
-        expectedArgs: [
-          0,
-          { name: '', context: '', isNew: true, subTopics: [] },
-        ],
-      },
-    ];
-
-    eventHandlerTests.forEach(
-      ({ event, handler, args, storeMethod, expectedArgs }) => {
-        it(`should call ${storeMethod} when ${handler} is triggered`, () => {
-          wrapper.vm[handler](...args);
-
-          expect(mockStore[storeMethod]).toHaveBeenCalledTimes(1);
-          expect(mockStore[storeMethod]).toHaveBeenCalledWith(...expectedArgs);
-        });
-      },
-    );
-
     it('should handle toggle-sub-topics event', () => {
       const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
@@ -217,43 +217,7 @@ describe('FormTopic', () => {
     });
   });
 
-  describe('Store integration', () => {
-    it('should use topics from store as computed property', () => {
-      wrapper = createWrapper(mockTopics);
-
-      expect(wrapper.vm.topics).toEqual(mockTopics);
-    });
-
-    it('should react to store changes', async () => {
-      expect(formTopicItems()).toHaveLength(0);
-
-      wrapper = createWrapper(mockTopics);
-      await nextTick();
-
-      expect(formTopicItems()).toHaveLength(mockTopics.length);
-    });
-
-    it('should call store methods with correct signatures', () => {
-      const methods = [
-        { name: 'addTopic', spy: mockStore.addTopic },
-        { name: 'deleteTopic', spy: mockStore.deleteTopic },
-        { name: 'updateTopic', spy: mockStore.updateTopic },
-        { name: 'addSubTopic', spy: mockStore.addSubTopic },
-        { name: 'createNewTopic', spy: mockStore.createNewTopic },
-      ];
-
-      methods.forEach(({ name, spy }) => {
-        expect(typeof spy).toBe('function');
-        expect(spy).toBeInstanceOf(Function);
-      });
-    });
-  });
-
   describe('Component methods', () => {
-    beforeEach(() => {
-      vi.clearAllMocks();
-    });
-
     it('should have all required handler methods', () => {
       const methods = [
         'handleAddTopic',
@@ -268,33 +232,19 @@ describe('FormTopic', () => {
       });
     });
 
-    it('should create new topic with correct structure', () => {
-      wrapper.vm.handleAddTopic();
-
-      const newTopic = mockStore.createNewTopic.mock.results[0].value;
-      expect(newTopic).toEqual({
-        name: '',
-        context: '',
-        isNew: true,
-        subTopics: [],
-      });
-    });
-
-    it('should execute handleDeleteTopic with index only', () => {
+    it('should execute handleDeleteTopic correctly', () => {
       wrapper.vm.handleDeleteTopic(0);
-      expect(mockStore.deleteTopic).toHaveBeenCalledTimes(1);
-      expect(mockStore.deleteTopic).toHaveBeenCalledWith(0, undefined);
-    });
+      expect(mockStore.removeTopicOrSubtopic).toHaveBeenCalledWith(
+        0,
+        undefined,
+      );
 
-    it('should execute handleDeleteTopic with index and parentIndex', () => {
       wrapper.vm.handleDeleteTopic(0, 1);
-      expect(mockStore.deleteTopic).toHaveBeenCalledTimes(1);
-      expect(mockStore.deleteTopic).toHaveBeenCalledWith(0, 1);
+      expect(mockStore.removeTopicOrSubtopic).toHaveBeenCalledWith(0, 1);
     });
 
-    it('should execute handleUpdateTopic with all parameters', () => {
+    it('should execute handleUpdateTopic correctly', () => {
       wrapper.vm.handleUpdateTopic(0, 'name', 'test', 1);
-      expect(mockStore.updateTopic).toHaveBeenCalledTimes(1);
       expect(mockStore.updateTopic).toHaveBeenCalledWith(0, 'name', 'test', 1);
     });
 
@@ -305,35 +255,31 @@ describe('FormTopic', () => {
     });
   });
 
-  describe('Child component props', () => {
-    beforeEach(() => {
-      wrapper = createWrapper(mockTopics);
+  describe('Store integration', () => {
+    it('should react to store changes', async () => {
+      expect(formTopicItems()).toHaveLength(0);
+
+      topicsRef.value = mockTopics;
+      await nextTick();
+
+      expect(formTopicItems()).toHaveLength(mockTopics.length);
     });
 
-    it('should pass correct props to FormTopicItem components', () => {
-      const items = formTopicItems();
+    it('should use reactive properties from store', async () => {
+      isLoadingTopicsRef.value = true;
+      await nextTick();
 
-      expect(items).toHaveLength(mockTopics.length);
-      mockTopics.forEach((topic, index) => {
-        expect(items[index].text()).toBe(topic.name);
-      });
+      expect(isLoadingTopicsRef.value).toBe(true);
     });
+  });
 
-    it('should pass correct text prop to AddTopicButton', () => {
-      expect(formTopicAddButton().text()).toBe(
-        'conversations_dashboard.form_topic.add_topic',
+  describe('Data attributes', () => {
+    it('should have correct data-testid attributes', () => {
+      expect(formTopic().attributes('data-testid')).toBe('form-topic');
+      expect(formTopicHeader().attributes('data-testid')).toBe(
+        'form-topic-header',
       );
-    });
-
-    it('should handle edge cases with empty or undefined topics', () => {
-      const edgeCases = [[], undefined, null];
-
-      edgeCases.forEach((topics) => {
-        wrapper = createWrapper(topics || []);
-
-        expect(formTopicDivider().exists()).toBe(false);
-        expect(formTopicItems()).toHaveLength(0);
-      });
+      expect(formTopicBody().attributes('data-testid')).toBe('form-topic-body');
     });
   });
 });

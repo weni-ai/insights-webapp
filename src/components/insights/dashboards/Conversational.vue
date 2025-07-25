@@ -12,8 +12,6 @@
       :type="widget"
       class="dashboard-conversational__dynamic-widget"
     />
-
-    <DrawerTopics />
   </section>
 </template>
 
@@ -22,7 +20,6 @@ import { ref, computed } from 'vue';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
-import DrawerTopics from '@/components/insights/conversations/topics/DrawerTopics.vue';
 
 type ConversationalWidgetType = 'csat' | 'nps' | 'add';
 

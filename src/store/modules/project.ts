@@ -1,6 +1,8 @@
 import Projects from '@/services/api/resources/projects';
+import NexusApi from '@/services/api/resources/nexus';
 import { parseValue } from '@/utils/object';
 import { defineStore } from 'pinia';
+import env from '@/utils/env';
 
 export const useProject = defineStore('project', {
   state: () => ({
@@ -8,7 +10,23 @@ export const useProject = defineStore('project', {
     isLoadingFlows: false,
     flows: [],
     isCommerce: false,
+    agentsTeam: {
+      manager: null,
+      agents: [],
+    },
+    isLoadingAgentsTeam: false,
   }),
+
+  getters: {
+    csatAgent: (state) =>
+      state.agentsTeam.agents.find(
+        (agent) => agent.uuid === env('CSAT_AGENT_UUID'),
+      ),
+    npsAgent: (state) =>
+      state.agentsTeam.agents.find(
+        (agent) => agent.uuid === env('NPS_AGENT_UUID'),
+      ),
+  },
 
   actions: {
     setIsCommerce(isCommerce) {
@@ -34,6 +52,25 @@ export const useProject = defineStore('project', {
         .finally(() => {
           this.isLoadingFlows = false;
         });
+    },
+    async getAgentsTeam() {
+      this.isLoadingAgentsTeam = true;
+
+      try {
+        const response = await NexusApi.getAgentsTeam();
+        this.agentsTeam = response;
+
+        this.isLoadingAgentsTeam = false;
+      } catch (error) {
+        console.error('Error getting agents team', error);
+      }
+    },
+    async activateAgent(uuid: string) {
+      try {
+        await NexusApi.activateAgent(uuid);
+      } catch (error) {
+        console.error('Error activating agent', error);
+      }
     },
   },
 });

@@ -41,6 +41,8 @@ describe('AddCsatOrNpsWidget', () => {
     wrapper.findAll('[data-testid="add-widget-drawer-item-title"]');
   const drawerItemDescriptions = () =>
     wrapper.findAll('[data-testid="add-widget-drawer-item-description"]');
+  const configCsatOrNpsWidget = () =>
+    wrapper.findComponent('[data-testid="config-csat-or-nps-widget"]');
 
   describe('Initial render', () => {
     it('should render AddWidget component', () => {
@@ -149,6 +151,22 @@ describe('AddCsatOrNpsWidget', () => {
         expect(item.classes()).toContain('widget-list__item');
         expect(item.attributes('data-testid')).toBe('add-widget-drawer-item');
       });
+    });
+
+    it('should set type when widget is selected', async () => {
+      await drawerItems()[0].trigger('click');
+      await nextTick();
+      expect(wrapper.vm.type).toBe('csat');
+    });
+
+    it('should render ConfigCsatOrNpsWidget component when widget is selected and hide drawer items', async () => {
+      expect(configCsatOrNpsWidget().exists()).toBe(false);
+
+      await drawerItems()[0].trigger('click');
+      await nextTick();
+
+      expect(configCsatOrNpsWidget().exists()).toBe(true);
+      expect(drawerItems()).toHaveLength(0);
     });
   });
 

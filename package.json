@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development rspack server --port 3003",
     "build": "cross-env NODE_ENV=production rspack build",
+    "analyze": "rspack --analyze",
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
@@ -19,6 +20,7 @@
     "@weni/unnnic-system": "^2.33.4",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
+    "chartjs-chart-treemap": "^3.1.0",
     "chartjs-plugin-datalabels": "^2.2.0",
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",

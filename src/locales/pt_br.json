@@ -18,6 +18,80 @@
       "closeds": "Total de chats que já foram finalizados."
     }
   },
+  "conversations_dashboard": {
+    "title": "Atendimento",
+    "conversations": "conversas",
+    "artificial_intelligence": "IA",
+    "human_support": "Atendimento humano",
+    "others": "Outros",
+    "unclassified": "Não classificado",
+    "header": {
+      "total": "Total de conversas",
+      "resolved": "Resolvidas",
+      "unresolved": "Não resolvidas",
+      "unengaged": "Não engajadas",
+      "transferred": "Transferidas para atendimento humano",
+      "tooltips": {
+        "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
+        "resolved": "Conversa resolvida: O contato interagiu com perguntas/solicitações e recebeu respostas que ajudaram a completar a demanda (total ou parcial).",
+        "unresolved": "Conversa não resolvida: O contato interagiu com perguntas/solicitações, mas a conversa não resolveu a demanda (total ou parcial).",
+        "unengaged": "Conversa sem engajamento útil: A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
+        "transferred": "Inclui conversas (resolvidas ou não) que foram encaminhadas para atendimento humano."
+      }
+    },
+    "form_topic": {
+      "add_topic": "Adicionar tópico",
+      "add_sub_topic": "Adicionar sub-tópico",
+      "title": "Editar tópicos e sub-tópicos",
+      "cancel": "Cancelar",
+      "save": "Salvar alterações",
+      "new_topic": "Novo tópico",
+      "topic_name": "Nome do tópico",
+      "context": "Contexto",
+      "context_description": "Adicione um contexto para melhorar a classificação da IA",
+      "sub_topics": "Sub-tópicos",
+      "new_sub_topic": "Novo sub-tópico",
+      "sub_topics_added": "{sub_topics} sub-tópicos adicionados",
+      "success_save_topics_or_subtopics": "Tópicos ou sub-tópicos adicionados com sucesso",
+      "error_save_topics_or_subtopics": "Erro ao salvar tópicos ou sub-tópicos",
+      "success_remove_topic": "Tópico removido com sucesso",
+      "error_remove_topic": "Erro ao remover tópico",
+      "success_remove_subtopic": "Sub-tópico removido com sucesso",
+      "error_remove_subtopic": "Erro ao remover sub-tópico",
+      "remove_modal": {
+        "title_remove_topic": "Remover tópico",
+        "title_remove_sub_topic": "Remover sub-tópico",
+        "description_remove_topic": "Tem certeza que deseja remover o tópico {topic}? Todos os sub-tópicos também serão removidos, e qualquer dado previamente associado a este tópico será desclassificado e não mais acessível através desta classificação.",
+        "description_remove_sub_topic": "Tem certeza que deseja remover o sub-tópico {sub_topic}? Qualquer dado previamente associado a este sub-tópico será desclassificado e não mais acessível através desta classificação.",
+        "remove": "Remover",
+        "cancel": "Cancelar"
+      },
+      "cancel_modal": {
+        "title": "Cancelar edição de tópicos",
+        "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
+        "cancel": "Cancelar",
+        "continue": "Continuar"
+      }
+    },
+    "most_talked_about_topics": {
+      "title": "Tópicos mais falados",
+      "see_all": "Ver todos",
+      "subtopics": "subtópicos",
+      "no_topics": "Nenhum tópico ainda",
+      "no_topics_description": "Adicione um tópico para começar a analisar as conversas",
+      "add_first_topic": "Adicione seu primeiro tópico",
+      "edit_topics_and_subtopics": "Editar tópicos e subtópicos"
+    },
+    "csat": "CSAT",
+    "nps": "NPS",
+    "customize_your_dashboard": {
+      "title": "Personalize seu dashboard",
+      "description": "Personalize o dashboard com suas métricas chave",
+      "add_widget": "Adicionar widget",
+      "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
+      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas."
+    }
+  },
   "template_messages_dashboard": {
     "title": "Mensagens template Meta",
     "favorites": "Favoritos",
@@ -250,6 +324,9 @@
         "total_value": "Valor total",
         "average_ticket": "Ticket médio"
       }
+    },
+    "treemap": {
+      "no_data": "Nenhum dado para mostrar"
     }
   },
   "drawers": {

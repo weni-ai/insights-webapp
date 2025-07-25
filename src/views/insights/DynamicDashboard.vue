@@ -23,25 +23,31 @@ const currentDashboard = computed(() => {
 });
 
 const dashboardType = computed(() => {
-  let type;
+  const config = currentDashboard?.value?.config;
 
-  type =
+  let type: 'custom' | 'expansive' | 'metaTemplateMessage' | 'conversational';
+
+  if (config?.type === 'conversational') {
+    type = 'conversational';
+  } else if (config?.is_whatsapp_integration) {
+    type = 'metaTemplateMessage';
+  } else if (
     currentExpansiveWidget.value &&
     Object.keys(currentExpansiveWidget.value).length > 0
-      ? 'expansive'
-      : 'custom';
-
-  if (currentDashboard?.value?.config?.is_whatsapp_integration) {
-    type = 'metaTemplateMessage';
+  ) {
+    type = 'expansive';
+  } else {
+    type = 'custom';
   }
 
   const dashboardTypes = {
     custom: 'custom_dashboard',
     expansive: 'expansive_widget',
     metaTemplateMessage: 'meta_template_message',
+    conversational: 'conversational',
   };
 
-  return dashboardTypes[type] || dashboardTypes['custom'];
+  return dashboardTypes[type];
 });
 
 const currentComponent = computed(() => {
@@ -54,6 +60,9 @@ const currentComponent = computed(() => {
     ),
     meta_template_message: defineAsyncComponent(
       () => import('@/components/insights/dashboards/TemplateMessageMeta.vue'),
+    ),
+    conversational: defineAsyncComponent(
+      () => import('@/components/insights/dashboards/Conversational.vue'),
     ),
     template_dashboard: null,
   };

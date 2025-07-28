@@ -2,6 +2,24 @@
   <BaseConversationWidget
     :isLoading="isLoading"
     :title="title"
+    :actions="[
+      {
+        icon: 'edit_square',
+        text: $tc(
+          'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
+          { type: title },
+        ),
+        onClick: () => {},
+      },
+      {
+        icon: 'delete',
+        text: $t(
+          'conversations_dashboard.customize_your_dashboard.remove_widget',
+        ),
+        onClick: () => {},
+        scheme: 'aux-red-500',
+      },
+    ]"
   >
     <section
       class="progress-widget__content"

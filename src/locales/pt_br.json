@@ -95,7 +95,9 @@
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
       "select_agent": "Selecionar agente",
-      "your_agent_is_active": "Seu agente está ativo!"
+      "your_agent_is_active": "Seu agente está ativo!",
+      "edit_csat_or_nps": "Editar {type}",
+      "remove_widget": "Remover widget"
     }
   },
   "template_messages_dashboard": {

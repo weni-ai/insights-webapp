@@ -17,7 +17,25 @@ import '@weni/unnnic-system/dist/style.css';
 
 import './styles/global.scss';
 
-getJwtToken().then(() => {
+import { safeImport, isFederatedModule } from './utils/moduleFederation';
+
+const { useSharedStore } = await safeImport(
+  () => import('connect/sharedStore'),
+  'connect/sharedStore',
+);
+
+const sharedStore = useSharedStore?.();
+
+export default async function mountInsightsApp({
+  containerId = 'app',
+  initialRoute,
+} = {}) {
+  let appRef = null;
+
+  if (!isFederatedModule) {
+    await getJwtToken();
+  }
+
   const app = createApp(App);
   const pinia = createPinia();
 
@@ -25,6 +43,8 @@ getJwtToken().then(() => {
   app.use(router);
   app.use(i18n);
   app.use(Unnnic);
+
+  if (isFederatedModule && initialRoute) await router.replace(initialRoute);
 
   if (env('SENTRY_DSN')) {
     Sentry.init({
@@ -40,5 +60,16 @@ getJwtToken().then(() => {
       environment: env('ENVIRONMENT'),
     });
   }
-  app.mount('#app');
-});
+
+  app.mount(`#${containerId}`);
+  appRef = app;
+
+  return { app: appRef, router };
+}
+
+if (sharedStore && isFederatedModule) {
+  localStorage.setItem('token', sharedStore.auth.token);
+  localStorage.setItem('projectUuid', sharedStore.current.project.uuid);
+} else {
+  mountInsightsApp();
+}

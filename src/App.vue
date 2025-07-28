@@ -1,5 +1,8 @@
 <template>
-  <div id="app">
+  <div
+    id="app"
+    :class="`app-insights-${!sharedStore ? 'dev' : 'prod'}`"
+  >
     <WelcomeOnboardingModal
       data-testid="welcome-onboarding-modal"
       :showModal="showOnboardingModal"
@@ -61,6 +64,13 @@ import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
 import moment from 'moment';
 
+import { safeImport } from './utils/moduleFederation';
+
+const { useSharedStore } = await safeImport(
+  () => import('connect/sharedStore'),
+  'connect/sharedStore',
+);
+
 export default {
   components: {
     InsightsLayout,
@@ -86,6 +96,7 @@ export default {
       showCreateDashboardTour: 'showCreateDashboardOnboarding',
       showCompleteOnboardingModal: 'showCompleteOnboardingModal',
     }),
+    sharedStore: () => useSharedStore?.(),
   },
 
   watch: {
@@ -94,6 +105,24 @@ export default {
         this.setCurrentDashboardFilters([]);
         await this.getCurrentDashboardFilters();
       }
+    },
+    'sharedStore.user.language': {
+      immediate: true,
+      handler(newLanguage) {
+        if (!newLanguage) return;
+
+        this.handlerSetLanguage(newLanguage);
+      },
+    },
+    'sharedStore.current.project': {
+      immediate: true,
+      deep: true,
+      handler(newProject) {
+        if (!newProject) return;
+
+        this.handlerSetProject(newProject?.uuid);
+        this.setIsCommerce(newProject?.type === 2);
+      },
     },
   },
 
@@ -232,7 +261,17 @@ export default {
   justify-content: center;
   align-items: center;
   width: 100%;
+  height: 100%;
+}
+
+.app-insights-prod {
+  height: 100%;
+  width: 100%;
+}
+
+.app-insights-dev {
   height: 100vh;
+  width: 100vw;
 }
 </style>
 

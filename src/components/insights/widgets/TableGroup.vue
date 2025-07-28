@@ -72,10 +72,6 @@ export default {
       type: Number,
       default: 0,
     },
-    initialTab: {
-      type: String,
-      default: '',
-    },
   },
 
   emits: ['request-data'],
@@ -162,9 +158,11 @@ export default {
   },
 
   watch: {
-    '$route.query'() {
-      this.page = 0;
-      this.emitRequestData();
+    '$route.query'(newQuery, oldQuery) {
+      if (newQuery.slug !== oldQuery.slug) {
+        if (this.page === 0) this.emitRequestData();
+        else this.page = 0;
+      }
     },
     async activeTabName() {
       const { $route } = this;
@@ -173,28 +171,52 @@ export default {
         ...$route,
         query: {
           ...$route.query,
-          ...{ slug: this.activeTab?.key },
+          ...{
+            slug: this.activeTab?.key,
+            offset: this.paginationConfig.offset,
+            limit: this.paginationConfig.limit,
+          },
         },
       });
-
-      this.page = 0;
     },
     page: {
       handler() {
+        this.$router.replace({
+          ...this.$route,
+          query: {
+            ...this.$route.query,
+            ...{
+              slug: this.activeTab?.key,
+              offset: this.paginationConfig.offset,
+              limit: this.paginationConfig.limit,
+            },
+          },
+        });
+
         this.emitRequestData();
       },
     },
+  },
+
+  created() {
+    if (this.$route.query.offset) {
+      const page = Number(this.$route.query.offset) / this.paginationInterval;
+      this.page = page || 0;
+    }
   },
 
   unmounted() {
     this.$router.replace({
       ...this.$route,
       slug: undefined,
+      offset: undefined,
+      limit: undefined,
     });
   },
 
   mounted() {
-    if (this.initialTab) this.changeActiveTabName(this.initialTab);
+    const { slug } = this.$route.query;
+    if (slug) this.changeActiveTabName(slug);
     else {
       Object.keys(this.tabs).forEach((tabKey) => {
         if (this.tabs[tabKey].is_default) this.changeActiveTabName(tabKey);

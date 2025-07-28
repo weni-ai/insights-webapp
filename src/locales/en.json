@@ -18,6 +18,80 @@
       "closeds": "Total number of chats that have been completed."
     }
   },
+  "conversations_dashboard": {
+    "title": "Support",
+    "conversations": "conversations",
+    "artificial_intelligence": "AI",
+    "human_support": "Human Support",
+    "others": "Others",
+    "unclassified": "Unclassified",
+    "header": {
+      "total": "Total Conversations",
+      "resolved": "Resolved",
+      "unresolved": "Unresolved", 
+      "unengaged": "Unengaged",
+      "transferred": "Transferred to human support",
+      "tooltips": {
+        "total": "Total conversations started in the period. A conversation is  counted 24 hours after the contact's first message.",
+        "resolved": "Resolved Conversation: The contact interacted with questions/requests and received responses that helped complete the demand (total or partial).",
+        "unresolved": "Unresolved Conversation: The contact interacted with questions/requests,  but the conversation didn't resolve the demand (totally or partially).",
+        "unengaged": "Conversation without useful engagement: The conversation was limited to greetings, emojis, or was ended without relevant interaction.",
+        "transferred": "Includes conversations (resolved or unresolved) that were forwarded to a human agent."
+      }
+    },
+    "form_topic": {
+      "add_topic": "Add topic",
+      "add_sub_topic": "Add sub-topic",
+      "title": "Edit topics and sub-topics",
+      "cancel": "Cancel",
+      "save": "Save Changes", 
+      "new_topic": "New topic",
+      "topic_name": "Topic name",
+      "context": "Context",
+      "context_description": "Add a context to improve the AI classification",
+      "sub_topics": "Sub-topics",
+      "new_sub_topic": "New sub-topic",
+      "sub_topics_added": "{sub_topics} sub-topics added",
+      "success_save_topics_or_subtopics": "Topics or sub-topics added successfully",
+      "error_save_topics_or_subtopics": "Error saving topics or sub-topics",
+      "success_remove_topic": "Topic removed successfully",
+      "error_remove_topic": "Error removing topic",
+      "success_remove_subtopic": "Sub-topic removed successfully",
+      "error_remove_subtopic": "Error removing sub-topic",
+      "remove_modal": {
+        "title_remove_topic": "Remove topic",
+        "title_remove_sub_topic": "Remove sub-topic",
+        "description_remove_topic": "Are you sure you want to remove the {topic} topic? All sub-topics will also be removed, and any data previously associated with this topic will be unclassified and no longer accessible through this classification.",
+        "description_remove_sub_topic": "Are you sure you want to remove the {sub_topic} sub-topic? Any data previously associated with this subtopic will be unclassified and no longer accessible through this classification.",
+        "remove": "Remove",
+        "cancel": "Cancel"
+      },
+      "cancel_modal": {
+        "title": "Cancel editing topics",
+        "description_cancel": "Are you sure you want to cancel? All progress will be lost.",
+        "cancel": "Cancel adding",
+        "continue": "Keep adding"
+      }
+    },
+    "most_talked_about_topics": {
+      "title": "Most talked about topics",
+      "see_all": "See all",
+      "subtopics": "subtopics",
+      "no_topics": "No topics yet",
+      "no_topics_description": "Add the topics you want to track. The AI will automatically tag every conversation with them, then you’ll see the most talked-about subjects right here.",
+      "add_first_topic": "Add your first topic",
+      "edit_topics_and_subtopics": "Edit topics and sub-topics"
+    },
+    "csat": "CSAT",
+    "nps": "NPS",
+    "customize_your_dashboard": {
+      "title": "Customize your dashboard",
+      "description": "Customize the dashboard with your key metrics",
+      "add_widget": "Add widget",
+      "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
+      "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others."
+    }
+  },
   "template_messages_dashboard": {
     "title": "Template messages Meta",
     "favorites": "Favorites",
@@ -49,7 +123,7 @@
     "messages_graph": {
       "sent_messages": "Sent messages",
       "delivered_messages": "Delivered messages",
-      "readed_messages": "Readed messages",
+      "read_messages": "Read messages",
       "clicks": "Clicks"
     },
     "button_clicks_table": {
@@ -109,7 +183,7 @@
       "get_data_fail": "Failed to fetch data from contacts who responded to this flow."
     }
   },
-  "filter": {
+  "filter": { 
     "agent": {
       "label": "Agent",
       "placeholder": "Select agent"
@@ -143,6 +217,7 @@
   "closeds": "Closeds",
   "in_progress": "Ongoing",
   "waiting": "Waiting",
+  "in-service": "In Service",
   "status": "Status",
   "metric": "Metric",
   "metrics": "Metrics",
@@ -249,6 +324,9 @@
         "total_value": "Total value",
         "average_ticket": "Average ticket"
       }
+    },
+    "treemap": {
+      "no_data": "No data to show"
     }
   },
   "drawers": {

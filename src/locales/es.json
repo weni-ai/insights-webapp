@@ -52,6 +52,12 @@
       "sub_topics": "Sub-temas",
       "new_sub_topic": "Nuevo sub-tema",
       "sub_topics_added": "{sub_topics} sub-temas agregados",
+      "success_save_topics_or_subtopics": "Temas o sub-temas agregados con éxito",
+      "error_save_topics_or_subtopics": "Error al guardar temas o sub-temas",
+      "success_remove_topic": "Tema eliminado con éxito",
+      "error_remove_topic": "Error al eliminar tema",
+      "success_remove_subtopic": "Sub-tema eliminado con éxito",
+      "error_remove_subtopic": "Error al eliminar sub-tema",
       "remove_modal": {
         "title_remove_topic": "Eliminar tema",
         "title_remove_sub_topic": "Eliminar sub-tema",

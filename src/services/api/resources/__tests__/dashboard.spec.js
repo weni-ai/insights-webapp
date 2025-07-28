@@ -52,7 +52,7 @@ describe('DashboardService', () => {
       expect(http.get).toHaveBeenCalledWith('/dashboards/', {
         params: { project: 'mock-project-uuid' },
       });
-      expect(dashboards).toHaveLength(2); // TODO: Return the correct number of dashboards (1) after the conversational dashboard is implemented
+      expect(dashboards).toHaveLength(1);
       expect(dashboards[0]).toMatchObject({
         uuid: 'uuid1',
         name: 'Dashboard 1',

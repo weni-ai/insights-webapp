@@ -9,11 +9,13 @@
           text: $t(
             'conversations_dashboard.most_talked_about_topics.edit_topics_and_subtopics',
           ),
-          onClick: topicsStore.toggleAddTopicsDrawer,
+          onClick: toggleAddTopicsDrawer,
         },
       ]"
+      @tab-change="handleTabChange"
     >
       <TreemapChart
+        :isLoading="isLoadingTopicsDistribution"
         :data="treemapData"
         @click="handleSeeAllDrawer($event.label)"
       />
@@ -29,13 +31,13 @@
       <SeeAllDrawer
         v-if="isSeeAllDrawerOpen"
         v-model="isSeeAllDrawerOpen"
-        :data="MOCK_DATA"
+        :data="treemapData"
         :expandedItems="expandedItems"
       />
     </BaseConversationWidget>
 
     <AddWidget
-      v-if="topicsStore.topicsCount === 0"
+      v-if="topicsDistributionCount === 0 && !isLoadingTopicsDistribution"
       :title="$t('conversations_dashboard.most_talked_about_topics.no_topics')"
       :description="
         $t(
@@ -45,70 +47,113 @@
       :actionText="
         $t('conversations_dashboard.most_talked_about_topics.add_first_topic')
       "
-      @action="topicsStore.toggleAddTopicsDrawer"
+      @action="toggleAddTopicsDrawer"
     />
 
-    <DrawerTopics v-if="topicsStore.isAddTopicsDrawerOpen" />
+    <DrawerTopics />
   </section>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
 import AddWidget from '../AddWidget.vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import DrawerTopics from '../topics/DrawerTopics.vue';
+import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
+import type { Tab } from '../BaseConversationWidget.vue';
+import { useRoute } from 'vue-router';
 
-const MOCK_DATA = [
+const conversationalTopicsStore = useConversationalTopics();
+
+const route = useRoute();
+
+const MOCK_DATA: topicDistributionMetric[] = [
   {
     label: 'Entrega atrasada',
     value: 6973,
     percentage: 29,
+    uuid: '',
   },
   {
     label: 'Produto defeituoso',
     value: 5500,
     percentage: 23,
+    uuid: '',
   },
   {
     label: 'Dúvidas sobre preço',
     value: 1600,
     percentage: 16,
+    uuid: '',
   },
   {
     label: 'Cancelamento',
     value: 1400,
     percentage: 14,
+    uuid: '',
   },
   {
     label: 'Unclassified',
     value: 1000,
     percentage: 13,
+    uuid: '',
   },
   {
     label: 'Outros',
     value: 500,
     percentage: 5,
+    uuid: '',
   },
 ];
 
-const MOCK_EMPTY_DATA = [];
+const {
+  topicsDistributionCount,
+  topicsDistribution,
+  isLoadingTopicsDistribution,
+  topicType,
+} = storeToRefs(conversationalTopicsStore);
 
-const topicsStore = useConversationalTopics();
+const { loadTopicsDistribution, toggleAddTopicsDrawer, setTopicType } =
+  conversationalTopicsStore;
 
 const expandedItems = ref<string[]>([]);
 
 const isSeeAllDrawerOpen = ref(false);
 const handleSeeAllDrawer = (expandedItem?: string) => {
+  if (isLoadingTopicsDistribution.value) return;
+
   expandedItems.value = expandedItem ? [expandedItem] : [];
 
   isSeeAllDrawerOpen.value = !isSeeAllDrawerOpen.value;
 };
 
 const treemapData = computed(() => {
-  return topicsStore.topicsCount > 0 ? MOCK_EMPTY_DATA : MOCK_DATA; // TODO: Change to real data instead of MOCK_EMPTY_DATA
+  return topicsDistributionCount.value > 0
+    ? topicsDistribution.value
+    : MOCK_DATA;
+});
+
+const handleTabChange = (tab: Tab) => {
+  setTopicType(tab === 'artificial-intelligence' ? 'AI' : 'HUMAN');
+};
+
+watch(topicType, () => {
+  loadTopicsDistribution();
+});
+
+watch(
+  () => route.query,
+  () => {
+    loadTopicsDistribution();
+  },
+);
+
+onMounted(() => {
+  loadTopicsDistribution();
 });
 </script>
 

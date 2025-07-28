@@ -3,6 +3,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import headerService from '../header';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
+import { useConversational } from '@/store/modules/conversational/conversational';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http', () => ({
@@ -13,6 +14,10 @@ vi.mock('@/services/api/http', () => ({
 
 vi.mock('@/store/modules/config', () => ({
   useConfig: vi.fn(),
+}));
+
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: vi.fn(),
 }));
 
 vi.mock('@/utils/request', () => ({
@@ -28,6 +33,9 @@ describe('headerService', () => {
     abandoned: { value: 10, percentage: 6.67 },
     transferred_to_human: { value: 5, percentage: 3.33 },
   };
+  const mockAppliedFilters = {
+    'some-filter': 'some-value',
+  };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -38,22 +46,24 @@ describe('headerService', () => {
         uuid: mockProjectUuid,
       },
     });
+
+    useConversational.mockReturnValue({
+      appliedFilters: mockAppliedFilters,
+    });
   });
 
   describe('getConversationalHeaderTotals', () => {
     it('should fetch, format, and return conversational totals successfully', async () => {
-      // Arrange
       const queryParams = { start_date: '2023-01-01', end_date: '2023-01-31' };
       http.get.mockResolvedValue(mockApiResponse);
 
-      // Act
       const result =
         await headerService.getConversationalHeaderTotals(queryParams);
 
-      // Assert
       const expectedParams = {
         ...queryParams,
         project_uuid: mockProjectUuid,
+        ...mockAppliedFilters,
       };
       expect(createRequestQuery).toHaveBeenCalledWith(queryParams);
       expect(http.get).toHaveBeenCalledWith('/metrics/conversations/totals/', {
@@ -73,26 +83,22 @@ describe('headerService', () => {
     });
 
     it('should handle API errors by rejecting the promise', async () => {
-      // Arrange
       const apiError = new Error('Network Error');
       http.get.mockRejectedValue(apiError);
 
-      // Act & Assert
       await expect(
         headerService.getConversationalHeaderTotals(),
       ).rejects.toThrow('Network Error');
     });
 
     it('should work correctly with empty query parameters', async () => {
-      // Arrange
       http.get.mockResolvedValue(mockApiResponse);
 
-      // Act
       await headerService.getConversationalHeaderTotals();
 
-      // Assert
       const expectedParams = {
         project_uuid: mockProjectUuid,
+        ...mockAppliedFilters,
       };
       expect(http.get).toHaveBeenCalledWith(
         expect.any(String),

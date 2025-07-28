@@ -1,5 +1,8 @@
 <template>
-  <section class="conversational-dynamic-widget">
+  <section
+    v-if="isDev"
+    class="conversational-dynamic-widget"
+  >
     <ProgressWidget
       title="CSAT"
       :progressItems="[
@@ -43,10 +46,13 @@
 <script setup lang="ts">
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import AddCsatOrNpsWidget from '@/components/insights/conversations/AddCsatOrNpsWidget.vue';
+import env from '@/utils/env';
 
 defineProps<{
   type: 'csat' | 'nps' | 'add';
 }>();
+
+const isDev = env('ENVIRONMENT') !== 'production';
 </script>
 
 <style lang="scss" scoped>

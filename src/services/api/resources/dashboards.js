@@ -8,18 +8,6 @@ import { useUser } from '@/store/modules/user';
 import { isFilteringDates } from '@/utils/filter';
 import { createRequestQuery, parseQueryString } from '@/utils/request';
 
-const mockConversationalDashboard = {
-  config: {
-    type: 'conversational',
-  },
-  grid: [2, 3],
-  is_default: false,
-  is_deletable: false,
-  is_editable: false,
-  name: 'conversations_dashboard.title',
-  uuid: 'f58b3945-a641-4c8e-9e6d-b4644d8172f7',
-};
-
 export default {
   async getAll({ nextReq } = {}) {
     const nextParams = parseQueryString(nextReq);
@@ -33,8 +21,14 @@ export default {
       params: queryParams,
     });
 
-    // TODO: Remove this mock after the API is updated
-    response.results = [...response.results, mockConversationalDashboard];
+    const configConversational = {
+      type: 'conversational',
+    };
+
+    // TODO: Remove this logic after the API is key in the dashboard
+    const isConversational = (name) => {
+      return name === 'conversations_dashboard.title';
+    };
 
     const dashboards = response.results.map(
       (dashboard) =>
@@ -45,7 +39,9 @@ export default {
           dashboard.is_default,
           dashboard.is_editable,
           dashboard.is_deletable,
-          dashboard.config,
+          isConversational(dashboard.name)
+            ? configConversational
+            : dashboard.config,
         ),
     );
 
@@ -53,24 +49,6 @@ export default {
   },
 
   async getDashboardFilters(uuid) {
-    // TODO: Remove this mock after the API is updated
-    if (uuid === mockConversationalDashboard.uuid) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve([
-            new Filter({
-              name: 'ended_at',
-              label: null,
-              placeholder: null,
-              type: 'date_range',
-              start_sufix: '__gte',
-              end_sufix: '__lte',
-            }),
-          ]);
-        }, 500);
-      });
-    }
-
     if (!uuid) {
       throw new Error(
         'Please provide a valid UUID to request dashboard filters.',
@@ -106,23 +84,6 @@ export default {
   },
 
   async getDashboardWidgets(uuid) {
-    // TODO: Remove this mock after the API is updated
-    if (uuid === mockConversationalDashboard.uuid)
-      return [
-        new Widget({
-          uuid: 'f58b3945-a641-4c8e-9e6d-b4644d8172f7',
-          name: 'Conversational',
-          type: 'conversational',
-          config: null,
-          grid_position: {
-            column_start: 1,
-            column_end: 2,
-            row_start: 1,
-            row_end: 3,
-          },
-        }),
-      ];
-
     if (!uuid) {
       throw new Error(
         'Please provide a valid UUID parameter to request widgets from this dashboard.',

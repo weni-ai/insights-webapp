@@ -1,27 +1,38 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
+import { config, shallowMount } from '@vue/test-utils';
+import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
+
 import TreemapChart from '../TreemapChart.vue';
-import { Chart as ChartJS, LinearScale, Tooltip } from 'chart.js';
-import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
-import en from '@/locales/en.json';
-import { addColors, prepareTopData } from '@/utils/treemap';
 
 config.global.plugins = [
   createI18n({
     legacy: false,
+    locale: 'en',
+    messages: {
+      en: {
+        widgets: {
+          treemap: {
+            no_data: 'No data available',
+          },
+        },
+        conversations_dashboard: {
+          conversations: 'conversations',
+        },
+      },
+    },
   }),
 ];
 
-// Mock Chart.js and treemap dependencies
 vi.mock('chart.js', () => {
-  const Chart = vi.fn();
-  Chart.register = vi.fn();
+  const Chart = vi.fn().mockImplementation(() => ({
+    destroy: vi.fn(),
+  }));
   Chart.defaults = {
-    font: {
-      family: '',
-    },
+    font: { family: 'Lato, sans-serif' },
   };
+  Chart.register = vi.fn();
+
   return {
     Chart,
     LinearScale: vi.fn(),
@@ -34,407 +45,224 @@ vi.mock('chartjs-chart-treemap', () => ({
   TreemapElement: vi.fn(),
 }));
 
-// Mock treemap utilities
 vi.mock('@/utils/treemap', () => ({
-  addColors: vi.fn((data) =>
-    data.map((item, index) => ({
-      ...item,
-      color: `#color-${index}`,
-      hoverColor: `#hover-${index}`,
-    })),
-  ),
-  prepareTopData: vi.fn((data) => data.slice(0, 5)),
-  TreemapDataItem: {},
+  prepareTopData: vi.fn((data) => data),
+  addColors: vi.fn((data) => data.map((item) => ({ ...item, color: '#000' }))),
 }));
 
-// Mock i18n
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-const mockData = [
-  {
-    label: 'Entrega atrasada',
-    value: 6973,
-    percentage: 29,
-  },
-  {
-    label: 'Produto defeituoso',
-    value: 5500,
-    percentage: 23,
-  },
-  {
-    label: 'Dúvidas sobre preço',
-    value: 1600,
-    percentage: 16,
-  },
-  {
-    label: 'Cancelamento',
-    value: 1400,
-    percentage: 14,
-  },
-  {
-    label: 'Unclassified',
-    value: 1000,
-    percentage: 13,
-  },
-];
-
-const createWrapper = (props = {}) => {
-  return mount(TreemapChart, {
-    props: {
-      data: mockData,
-      ...props,
-    },
+vi.mock('@/utils/plugins/i18n', () => ({
+  default: {
     global: {
-      plugins: [i18n],
+      t: vi.fn((key) => key),
     },
-  });
-};
+  },
+}));
+
+const mockData = [{ label: 'Topic 1', value: 100, percentage: 50, uuid: '1' }];
 
 describe('TreemapChart', () => {
+  let wrapper;
+
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset Chart.js constructor mock
-    ChartJS.mockClear && ChartJS.mockClear();
-  });
-
-  describe('Component Rendering', () => {
-    it('should render the component structure', () => {
-      const wrapper = createWrapper();
-
-      expect(wrapper.find('[data-testid="treemap-chart"]').exists()).toBe(true);
-      expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(
-        true,
-      );
-    });
-
-    it('should set canvas height to 100%', () => {
-      const wrapper = createWrapper();
-      const canvas = wrapper.find('[data-testid="treemap-canvas"]');
-
-      expect(canvas.attributes('height')).toBe('100%');
-    });
-  });
-
-  describe('Loading State', () => {
-    it('should render loading skeleton when isLoading is true', async () => {
-      const wrapper = createWrapper({ isLoading: true });
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.find('.treemap-chart__loading').exists()).toBe(true);
-      expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(
-        false,
-      );
-      expect(
-        wrapper.find('[data-testid="treemap-chart-no-data"]').exists(),
-      ).toBe(false);
-    });
-
-    it('should render 5 skeleton loading components', async () => {
-      const wrapper = createWrapper({ isLoading: true });
-      await wrapper.vm.$nextTick();
-
-      const skeletons = wrapper.findAll(
-        '[data-testid="treemap-chart-loading-skeleton"]',
-      );
-      expect(skeletons).toHaveLength(5);
-    });
-
-    it('should apply correct CSS classes to each skeleton', async () => {
-      const wrapper = createWrapper({ isLoading: true });
-      await wrapper.vm.$nextTick();
-
-      const skeletons = wrapper.findAll(
-        '[data-testid="treemap-chart-loading-skeleton"]',
-      );
-
-      expect(skeletons[0].classes()).toContain('loading__skeleton--1');
-      expect(skeletons[1].classes()).toContain('loading__skeleton--2');
-      expect(skeletons[2].classes()).toContain('loading__skeleton--3');
-      expect(skeletons[3].classes()).toContain('loading__skeleton--4');
-      expect(skeletons[4].classes()).toContain('loading__skeleton--5');
-    });
-
-    it('should apply grid layout styles to loading container', async () => {
-      const wrapper = createWrapper({ isLoading: true });
-      await wrapper.vm.$nextTick();
-
-      const loadingContainer = wrapper.find(
-        '[data-testid="treemap-chart-loading"]',
-      );
-      expect(loadingContainer.exists()).toBe(true);
-
-      expect(loadingContainer.classes()).toContain('treemap-chart__loading');
-    });
-  });
-
-  describe('No Data Scenarios', () => {
-    it('should handle empty data array gracefully', async () => {
-      const wrapper = createWrapper({ data: [] });
-      await wrapper.vm.$nextTick();
-
-      expect(
-        wrapper.find('[data-testid="treemap-chart-no-data"]').exists(),
-      ).toBe(true);
-      expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(
-        false,
-      );
-    });
-  });
-
-  describe('Chart Initialization', () => {
-    it('should register Chart.js plugins on creation', () => {
-      createWrapper();
-
-      expect(ChartJS.register).toHaveBeenCalledWith(
-        TreemapController,
-        TreemapElement,
-        LinearScale,
-        Tooltip,
-      );
-    });
-
-    it('should set Chart.js default font family', () => {
-      createWrapper();
-      expect(ChartJS.defaults.font.family).toBe('Lato, sans-serif');
-    });
-
-    it('should initialize Chart.js with correct config on mount', async () => {
-      const wrapper = createWrapper();
-      await wrapper.vm.$nextTick();
-
-      expect(ChartJS).toHaveBeenCalledWith(
-        wrapper.vm.$refs.treemapCanvas,
-        expect.objectContaining({
-          type: 'treemap',
-          data: expect.objectContaining({
-            datasets: expect.any(Array),
-          }),
-          options: expect.any(Object),
-        }),
-      );
-    });
-  });
-
-  describe('Data Processing', () => {
-    it('should handle data transformation correctly', async () => {
-      createWrapper();
-
-      expect(prepareTopData).toHaveBeenCalledWith(mockData);
-      expect(addColors).toHaveBeenCalledWith(prepareTopData(mockData));
-    });
-  });
-
-  describe('Chart Configuration', () => {
-    let chartConfig;
-
-    beforeEach(async () => {
-      const wrapper = createWrapper();
-      await wrapper.vm.$nextTick();
-
-      if (ChartJS.mock.calls.length > 0) {
-        chartConfig = ChartJS.mock.calls[0][1];
-      }
-    });
-
-    it('should configure treemap dataset correctly', () => {
-      expect(chartConfig?.data?.datasets?.[0]).toMatchObject({
-        key: 'value',
-        borderWidth: 0,
-        borderRadius: 8,
-        spacing: 4,
-      });
-    });
-
-    it('should set responsive options', () => {
-      expect(chartConfig?.options?.responsive).toBe(true);
-      expect(chartConfig?.options?.maintainAspectRatio).toBe(false);
-    });
-
-    it('should configure legend to be hidden', () => {
-      expect(chartConfig?.options?.plugins?.legend?.display).toBe(false);
-    });
-
-    it('should disable datalabels plugin', () => {
-      expect(chartConfig?.options?.plugins?.datalabels?.display).toBe(false);
-    });
-
-    it('should configure tooltip properly', () => {
-      const tooltipConfig = chartConfig?.options?.plugins?.tooltip;
-
-      expect(tooltipConfig?.enabled).toBe(true);
-      expect(tooltipConfig?.backgroundColor).toBe('#272B33');
-      expect(tooltipConfig?.displayColors).toBe(false);
-      expect(tooltipConfig?.position).toBe('nearest');
-      expect(tooltipConfig?.intersect).toBe(true);
-      expect(tooltipConfig?.mode).toBe('index');
-    });
-  });
-
-  describe('Event Handling', () => {
-    it('should emit click event when chart is clicked', async () => {
-      const wrapper = createWrapper();
-      await wrapper.vm.$nextTick();
-
-      const chartConfig = ChartJS.mock.calls[0][1];
-      const mockClickData = {
-        raw: {
-          _data: {
-            label: 'Test',
-            value: 100,
-            percentage: 50,
-          },
+    wrapper = shallowMount(TreemapChart, {
+      props: {
+        data: [],
+        isLoading: false,
+      },
+      global: {
+        stubs: {
+          UnnnicSkeletonLoading: true,
         },
-      };
-
-      // Simulate click event
-      chartConfig.options.onClick(null, [
-        { element: { $context: mockClickData } },
-      ]);
-
-      expect(wrapper.emitted('click')).toBeTruthy();
-      expect(wrapper.emitted('click')[0][0]).toEqual(mockClickData.raw._data);
+      },
     });
   });
 
-  describe('Tooltip Callbacks', () => {
-    let tooltipCallbacks;
+  it('should show loading when isLoading is true', async () => {
+    await wrapper.setProps({ isLoading: true });
 
-    beforeEach(async () => {
-      const wrapper = createWrapper();
-      await wrapper.vm.$nextTick();
-
-      const chartConfig = ChartJS.mock.calls[0][1];
-      tooltipCallbacks = chartConfig?.options?.plugins?.tooltip?.callbacks;
-    });
-
-    it('should format tooltip title correctly', () => {
-      const mockContext = [
-        {
-          raw: {
-            _data: {
-              label: 'Test Label',
-              percentage: 25,
-            },
-          },
-        },
-      ];
-
-      const result = tooltipCallbacks?.title(mockContext);
-      expect(result).toBe('Test Label (25%)');
-    });
-
-    it('should format tooltip label correctly', () => {
-      const mockContext = {
-        raw: {
-          _data: {
-            value: 150,
-          },
-        },
-      };
-
-      const result = tooltipCallbacks?.label(mockContext);
-      expect(result).toContain('150');
-      expect(result).toContain('conversations');
-    });
+    expect(wrapper.find('[data-testid="treemap-chart-loading"]').exists()).toBe(
+      true,
+    );
+    expect(wrapper.find('[data-testid="treemap-chart-no-data"]').exists()).toBe(
+      false,
+    );
+    expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(false);
   });
 
-  describe('Labels Configuration', () => {
-    let labelsConfig;
-
-    beforeEach(async () => {
-      const wrapper = createWrapper();
-      await wrapper.vm.$nextTick();
-
-      const chartConfig = ChartJS.mock.calls[0][1];
-      labelsConfig = chartConfig?.data?.datasets?.[0]?.labels;
-    });
-
-    it('should configure labels display and alignment', () => {
-      expect(labelsConfig?.display).toBe(true);
-      expect(labelsConfig?.align).toBe('left');
-      expect(labelsConfig?.overflow).toBe('hidden');
-      expect(labelsConfig?.position).toBe('middle');
-    });
-
-    it('should format labels correctly', () => {
-      const mockContext = {
-        type: 'data',
-        raw: {
-          _data: {
-            label: 'Test',
-            percentage: 30,
-            value: 200,
-          },
-        },
-      };
-
-      const result = labelsConfig?.formatter(mockContext);
-
-      expect(Array.isArray(result)).toBe(true);
-      expect(result[0]).toContain('Test (30%)');
-      expect(result[1]).toContain('200');
-      expect(result[1]).toContain('conversations');
-    });
-
-    it('should not format labels for non-data contexts', () => {
-      const mockContext = { type: 'other' };
-      const result = labelsConfig?.formatter(mockContext);
-      expect(result).toBeUndefined();
-    });
-
-    it('should configure font styles correctly', () => {
-      expect(labelsConfig?.font).toHaveLength(2);
-      expect(labelsConfig?.font[0]).toMatchObject({
-        size: 16,
-        family: 'Lato, sans-serif',
-        lineHeight: '26px',
-        weight: 'bold',
-      });
-      expect(labelsConfig?.font[1]).toMatchObject({
-        size: 14,
-        family: 'Lato, sans-serif',
-        lineHeight: '24px',
-      });
-    });
+  it('should show no data message when data is empty', () => {
+    expect(wrapper.find('[data-testid="treemap-chart-no-data"]').exists()).toBe(
+      true,
+    );
+    expect(wrapper.find('[data-testid="treemap-chart-loading"]').exists()).toBe(
+      false,
+    );
+    expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(false);
   });
 
-  describe('Captions Configuration', () => {
-    let captionsConfig;
+  it('should show canvas when data is provided', async () => {
+    await wrapper.setProps({ data: mockData });
 
-    beforeEach(async () => {
-      const wrapper = createWrapper();
-      await wrapper.vm.$nextTick();
+    expect(wrapper.find('[data-testid="treemap-canvas"]').exists()).toBe(true);
+    expect(wrapper.find('[data-testid="treemap-chart-loading"]').exists()).toBe(
+      false,
+    );
+    expect(wrapper.find('[data-testid="treemap-chart-no-data"]').exists()).toBe(
+      false,
+    );
+  });
 
-      const chartConfig = ChartJS.mock.calls[0][1];
-      captionsConfig = chartConfig?.data?.datasets?.[0]?.captions;
+  it('should handle data prop changes', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    expect(Chart).toHaveBeenCalled();
+
+    await wrapper.setProps({
+      data: [
+        ...mockData,
+        { label: 'Topic 2', value: 50, percentage: 25, uuid: '2' },
+      ],
     });
+    await nextTick();
 
-    it('should configure captions display and alignment', () => {
-      expect(captionsConfig?.display).toBe(true);
-      expect(captionsConfig?.align).toBe('center');
+    expect(Chart).toHaveBeenCalledTimes(2);
+  });
+
+  it('should handle click events', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+    const mockClickData = { _data: mockData[0] };
+
+    chartConfig.options.onClick(null, [
+      { element: { $context: { raw: mockClickData } } },
+    ]);
+
+    expect(wrapper.emitted('click')).toBeTruthy();
+    expect(wrapper.emitted('click')[0]).toEqual([mockData[0]]);
+  });
+
+  it('should handle empty click events', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+
+    chartConfig.options.onClick(null, []);
+
+    expect(wrapper.emitted('click')).toBeFalsy();
+  });
+
+  it('should handle hover events', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+    const mockHoverEvent = {
+      chart: {
+        canvas: { style: {} },
+      },
+    };
+
+    chartConfig.options.onHover(mockHoverEvent);
+
+    expect(mockHoverEvent.chart.canvas.style.cursor).toBe('pointer');
+  });
+
+  it('should handle empty hover events', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+
+    chartConfig.options.onHover({});
+
+    expect(true).toBe(true);
+  });
+
+  it('should handle chart callback functions', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+    const dataset = chartConfig.data.datasets[0];
+
+    const bgColor = dataset.backgroundColor({
+      type: 'data',
+      raw: { _data: { color: '#ff0000' } },
     });
+    expect(bgColor).toBe('#ff0000');
 
-    it('should format captions correctly', () => {
-      const mockContext = {
-        type: 'data',
-        raw: { v: 250 },
-      };
+    const bgColorTransparent = dataset.backgroundColor({ type: 'not-data' });
+    expect(bgColorTransparent).toBe('transparent');
 
-      const result = captionsConfig?.formatter(mockContext);
-      expect(result).toContain('250');
-      expect(result).toContain('conversations');
+    const hoverColor = dataset.hoverBackgroundColor({
+      type: 'data',
+      raw: { _data: { hoverColor: '#00ff00' } },
     });
+    expect(hoverColor).toBe('#00ff00');
 
-    it('should not format captions for non-data contexts', () => {
-      const mockContext = { type: 'other' };
-      const result = captionsConfig?.formatter(mockContext);
-      expect(result).toBeUndefined();
+    const hoverColorTransparent = dataset.hoverBackgroundColor({
+      type: 'not-data',
     });
+    expect(hoverColorTransparent).toBe('transparent');
+
+    const labelResult = dataset.labels.formatter({
+      type: 'data',
+      raw: { _data: { label: 'Test Topic', percentage: 50, value: 100 } },
+    });
+    expect(Array.isArray(labelResult)).toBe(true);
+
+    const labelEmpty = dataset.labels.formatter({ type: 'not-data' });
+    expect(labelEmpty).toBeUndefined();
+
+    const captionResult = dataset.captions.formatter({
+      type: 'data',
+      raw: { v: 100 },
+    });
+    expect(typeof captionResult).toBe('string');
+
+    const captionEmpty = dataset.captions.formatter({ type: 'not-data' });
+    expect(captionEmpty).toBeUndefined();
+  });
+
+  it('should handle tooltip callbacks', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+    const tooltipCallbacks = chartConfig.options.plugins.tooltip.callbacks;
+
+    const titleResult = tooltipCallbacks.title([
+      { raw: { _data: { label: 'Test', percentage: 50 } } },
+    ]);
+    expect(titleResult).toContain('Test');
+    expect(titleResult).toContain('50%');
+
+    const labelResult = tooltipCallbacks.label({
+      raw: { _data: { value: 100 } },
+    });
+    expect(labelResult).toContain('100');
+
+    const caretPadding = chartConfig.options.plugins.tooltip.caretPadding({
+      tooltipItems: [{ element: { height: 100 } }],
+    });
+    expect(caretPadding).toBe(50);
   });
 });

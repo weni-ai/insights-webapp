@@ -1,5 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
+import { useConversational } from '@/store/modules/conversational/conversational';
 import { createRequestQuery } from '@/utils/request';
 
 interface ConversationMetric {
@@ -36,12 +37,14 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<FormattedMetric[]> {
     const { project } = useConfig();
+    const { appliedFilters } = useConversational();
 
     const params = createRequestQuery(queryParams);
 
     const formattedParams: FormattedParams = {
-      ...params,
       project_uuid: project.uuid,
+      ...appliedFilters,
+      ...params,
     };
 
     const response = (await http.get(`/metrics/conversations/totals/`, {

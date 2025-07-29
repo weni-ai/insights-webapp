@@ -117,6 +117,7 @@ const handleTabChange = (tab: Tab) => {
 <style scoped lang="scss">
 .base-conversation-widget {
   width: 100%;
+  height: 100%;
   display: flex;
   padding: $unnnic-spacing-md;
   flex-direction: column;

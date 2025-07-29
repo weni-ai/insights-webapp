@@ -115,6 +115,11 @@
         "remove": "Eliminar",
         "cancel": "Cancelar"
       }
+    },
+    "setup_csat_or_nps_widget": {
+      "title": "{type} {tab} no configurado",
+      "description": "Configure {type} {tab} para acompanhar suas métricas",
+      "action_text": "Configurar ahora"
     }
   },
   "template_messages_dashboard": {

@@ -5,50 +5,57 @@
     :actions="actions"
     @tab-change="handleTabChange"
   >
-    <section
-      class="progress-widget__content"
-      data-testid="progress-widget-content"
-    >
+    <slot
+      v-if="treatedProgressItems.length === 0"
+      name="setup-widget"
+    />
+
+    <template v-else>
       <section
-        v-if="card"
-        class="content__card"
-        data-testid="progress-widget-card"
+        class="progress-widget__content"
+        data-testid="progress-widget-content"
       >
-        <CardConversations
-          :title="card.title"
-          :value="card.value"
-          :valueDescription="card.valueDescription"
-          :tooltipInfo="card.tooltipInfo"
-          :tooltipSide="'left'"
-          :isLoading="card.isLoading"
+        <section
+          v-if="card"
+          class="content__card"
+          data-testid="progress-widget-card"
+        >
+          <CardConversations
+            :title="card.title"
+            :value="card.value"
+            :valueDescription="card.valueDescription"
+            :tooltipInfo="card.tooltipInfo"
+            :tooltipSide="'left'"
+            :isLoading="card.isLoading"
+          />
+        </section>
+
+        <ProgressTable
+          v-if="treatedProgressItems.length > 0"
+          :isLoading="isChangingTab"
+          :progressItems="treatedProgressItems"
+          data-testid="progress-widget-table"
         />
       </section>
 
-      <ProgressTable
-        v-if="treatedProgressItems.length > 0"
-        :isLoading="isChangingTab"
-        :progressItems="treatedProgressItems"
-        data-testid="progress-widget-table"
+      <UnnnicSkeletonLoading
+        v-if="isChangingTab"
+        width="80px"
+        height="20px"
       />
-    </section>
-
-    <UnnnicSkeletonLoading
-      v-if="isChangingTab"
-      width="80px"
-      height="20px"
-    />
-    <section
-      v-else-if="footerText"
-      class="progress-widget__footer"
-      data-testid="progress-widget-footer"
-    >
-      <p
-        class="footer__text"
-        data-testid="progress-widget-footer-text"
+      <section
+        v-else-if="footerText"
+        class="progress-widget__footer"
+        data-testid="progress-widget-footer"
       >
-        {{ footerText }}
-      </p>
-    </section>
+        <p
+          class="footer__text"
+          data-testid="progress-widget-footer-text"
+        >
+          {{ footerText }}
+        </p>
+      </section>
+    </template>
   </BaseConversationWidget>
 </template>
 

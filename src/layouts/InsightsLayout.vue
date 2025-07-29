@@ -1,6 +1,6 @@
 <template>
   <section class="insights-layout">
-    <InsightsLayoutHeader />
+    <InsightsLayoutHeader class="insights-layout__header" />
     <section
       v-if="currentDashboardFilters.length"
       ref="insightsContent"
@@ -50,20 +50,27 @@ export default {
   display: flex;
   flex-direction: column;
 
-  height: 100vh;
+  height: 100%;
   max-height: 100vh;
-  width: 100vw;
+  width: 100%;
   max-width: 100vw;
 
   overflow: hidden;
 
   padding: $unnnic-spacing-sm;
+  padding-right: 0;
 
   gap: $unnnic-spacing-sm;
   position: relative;
 
+  &__header {
+    margin-right: $unnnic-spacing-sm;
+  }
+
   &__insights {
     overflow: hidden;
+
+    margin-right: $unnnic-spacing-xs;
 
     height: 100%;
 
@@ -74,6 +81,8 @@ export default {
 
       display: flex;
       flex-direction: column;
+
+      padding-right: $unnnic-spacing-xs;
 
       background-color: $unnnic-color-neutral-white;
 

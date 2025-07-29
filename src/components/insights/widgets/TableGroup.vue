@@ -158,11 +158,14 @@ export default {
   },
 
   watch: {
-    '$route.query'(newQuery, oldQuery) {
-      if (newQuery.slug !== oldQuery.slug) {
-        if (this.page === 0) this.emitRequestData();
-        else this.page = 0;
-      }
+    '$route.query': {
+      handler(query, oldQuery) {
+        if (!query?.slug) return;
+
+        if (query.slug !== oldQuery?.slug) this.page = 0;
+
+        this.emitRequestData();
+      },
     },
     async activeTabName() {
       const { $route } = this;
@@ -192,8 +195,6 @@ export default {
             },
           },
         });
-
-        this.emitRequestData();
       },
     },
   },

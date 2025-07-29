@@ -124,19 +124,10 @@ describe('TableGroup', () => {
       expect(wrapper.vm.paginationConfig).toEqual({ limit: 5, offset: 5 });
     });
 
-    it('emits a request-data event when the page changes', async () => {
-      await wrapper.setData({ page: 1 });
-
-      expect(wrapper.emitted('request-data')).toBeTruthy();
-      expect(wrapper.emitted('request-data')[1]).toEqual([
-        { offset: 5, limit: 5 },
-      ]);
-    });
-
     it('resets the page when route query changes', async () => {
       await wrapper.setData({ page: 1 });
 
-      wrapper.vm.$options.watch['$route.query'].call(
+      wrapper.vm.$options.watch['$route.query'].handler.call(
         wrapper.vm,
         {
           slug: 'tab1',

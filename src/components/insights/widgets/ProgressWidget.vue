@@ -3,6 +3,7 @@
     :isLoading="isLoading"
     :title="title"
     :actions="actions"
+    @tab-change="handleTabChange"
   >
     <section
       class="progress-widget__content"
@@ -25,12 +26,19 @@
 
       <ProgressTable
         v-if="treatedProgressItems.length > 0"
+        :isLoading="isChangingTab"
         :progressItems="treatedProgressItems"
         data-testid="progress-widget-table"
       />
     </section>
+
+    <UnnnicSkeletonLoading
+      v-if="isChangingTab"
+      width="80px"
+      height="20px"
+    />
     <section
-      v-if="footerText"
+      v-else-if="footerText"
       class="progress-widget__footer"
       data-testid="progress-widget-footer"
     >
@@ -45,7 +53,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
+import { computed, defineProps, ref } from 'vue';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
@@ -84,6 +92,16 @@ const treatedProgressItems = computed(() => {
     color: item.color,
   }));
 });
+
+const isChangingTab = ref(false);
+
+function handleTabChange() {
+  isChangingTab.value = true;
+  setTimeout(() => {
+    // TODO: remove this setTimeout after the tab change is implemented
+    isChangingTab.value = false;
+  }, 1000);
+}
 </script>
 
 <style scoped lang="scss">

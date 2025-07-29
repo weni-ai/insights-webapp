@@ -4,6 +4,7 @@
     data-testid="add-widget"
   >
     <SetupWidget
+      data-testid="setup-widget"
       :title="title"
       :description="description"
       :actionText="actionText"

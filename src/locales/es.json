@@ -96,8 +96,25 @@
       "activate_agent": "Activar agente",
       "select_agent": "Seleccionar agente",
       "your_agent_is_active": "Tu agente está activo!",
+      "return": "Volver",
+      "save_changes": "Guardar cambios",
+      "modal_attention": {
+        "title_return": "Volver al paso anterior",
+        "description_return": "¿Estás seguro de querer volver? Se perderán todos los cambios.",
+        "title_cancel": "Cancelar configuración",
+        "description_cancel": "¿Estás seguro de querer cancelar? Se perderán todos los cambios.",
+        "keep_configuring": "Continuar configurando",
+        "return": "Volver",
+        "cancel": "Cancelar"
+      },
       "edit_csat_or_nps": "Editar {type}",
-      "remove_widget": "Eliminar widget"
+      "remove_widget": "Eliminar widget",
+      "modal_remove_widget": {
+        "title": "Eliminar widget {type}",
+        "description": "¿Estás seguro de querer eliminar el widget {type}?",
+        "remove": "Eliminar",
+        "cancel": "Cancelar"
+      }
     }
   },
   "template_messages_dashboard": {

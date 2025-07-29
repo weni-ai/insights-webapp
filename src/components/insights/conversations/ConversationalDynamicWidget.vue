@@ -5,6 +5,7 @@
   >
     <ProgressWidget
       :title="widgetType?.toUpperCase() || '-'"
+      :actions="actions"
       :progressItems="[
         {
           text: '🤩 Very satisfied',
@@ -38,7 +39,6 @@
         },
       ]"
       footerText="1500 reviews"
-      @edit="handleOpenDrawer"
     />
     <AddCsatOrNpsWidget
       v-if="type === 'add'"
@@ -51,14 +51,23 @@
       :type="type === 'add' ? null : type"
       @update:model-value="isDrawerOpen = $event"
     />
+    <ModalRemoveWidget
+      v-if="isRemoveWidgetModalOpen && type !== 'add'"
+      v-model="isRemoveWidgetModalOpen"
+      :type="type"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
-import AddCsatOrNpsWidget from '@/components/insights/conversations/AddCsatOrNpsWidget.vue';
-import CsatOrNpsDrawer from '@/components/insights/conversations/CsatOrNpsDrawer.vue';
+import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
+import CsatOrNpsDrawer from '@/components/insights/conversations/CsatOrNpsWidget/CsatOrNpsDrawer.vue';
+import ModalRemoveWidget from './CsatOrNpsWidget/ModalRemoveWidget.vue';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 import env from '@/utils/env';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { storeToRefs } from 'pinia';
@@ -70,7 +79,7 @@ const props = defineProps<{
 const isDev = env('ENVIRONMENT') !== 'production';
 
 const isDrawerOpen = ref(false);
-
+const isRemoveWidgetModalOpen = ref(false);
 function handleOpenDrawer() {
   isDrawerOpen.value = true;
 }
@@ -132,6 +141,23 @@ onMounted(() => {
     loadWidgetData[props.type]();
   }
 });
+
+const actions = [
+  {
+    icon: 'edit_square',
+    text: t(
+      'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
+      { type: props.type },
+    ),
+    onClick: () => handleOpenDrawer(),
+  },
+  {
+    icon: 'delete',
+    text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
+    onClick: () => (isRemoveWidgetModalOpen.value = true),
+    scheme: 'aux-red-500',
+  },
+];
 </script>
 
 <style lang="scss" scoped>

@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import AddWidget from './AddWidget.vue';
+import AddWidget from '@/components/insights/conversations/AddWidget.vue';
 
 const emit = defineEmits<{
   (_e: 'add'): void;

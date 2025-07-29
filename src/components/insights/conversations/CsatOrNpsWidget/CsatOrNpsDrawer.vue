@@ -5,7 +5,17 @@
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
-    @close="handleDrawerAddWidget"
+    :primaryButtonText="
+      type
+        ? $t('conversations_dashboard.customize_your_dashboard.save_changes')
+        : ''
+    "
+    :secondaryButtonText="
+      type ? $t('conversations_dashboard.customize_your_dashboard.return') : ''
+    "
+    @primary-button-click="saveWidgetConfigs"
+    @secondary-button-click="warningModalType = 'return'"
+    @close="closeDrawer"
   >
     <template #content>
       <ul
@@ -41,11 +51,21 @@
       />
     </template>
   </UnnnicDrawer>
+
+  <ModalAttention
+    v-if="!!warningModalType"
+    :modelValue="!!warningModalType"
+    :type="warningModalType"
+    data-testid="drawer-csat-or-nps-widget-modal"
+    @primary-button-click="confirmAttentionModal"
+    @secondary-button-click="closeWarningModal"
+  />
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import ConfigCsatOrNpsWidget from './ConfigCsatOrNps.vue';
+import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
 
 type DrawerType = 'csat' | 'nps' | null;
@@ -59,9 +79,41 @@ const emit = defineEmits<{
 }>();
 
 const type = defineModel<DrawerType>('type');
+const warningModalType = ref<'cancel' | 'return' | ''>('');
 
-function handleDrawerAddWidget() {
+function closeDrawer() {
+  if (type.value) {
+    warningModalType.value = 'cancel';
+  } else {
+    emit('update:modelValue', false);
+  }
+}
+
+function closeWarningModal() {
+  warningModalType.value = '';
+}
+
+function saveWidgetConfigs() {
+  console.log('saveWidgetConfigs');
+  // TODO: Implement save logic
   emit('update:modelValue', false);
+}
+
+function returnWidgetTypeChoice() {
+  closeWarningModal();
+  type.value = null;
+}
+
+function cancelWidgetConfigs() {
+  closeWarningModal();
+  type.value = null;
+  emit('update:modelValue', false);
+}
+
+function confirmAttentionModal() {
+  warningModalType.value === 'return'
+    ? returnWidgetTypeChoice()
+    : cancelWidgetConfigs();
 }
 
 const availableWidgets = ref([

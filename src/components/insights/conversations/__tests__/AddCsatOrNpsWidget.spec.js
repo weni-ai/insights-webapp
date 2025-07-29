@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import AddCsatOrNpsWidget from '../AddCsatOrNpsWidget.vue';
+import AddCsatOrNpsWidget from '../CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
 
 config.global.plugins = [
   createI18n({

@@ -1,5 +1,8 @@
 <template>
-  <section class="conversational-dynamic-widget">
+  <section
+    v-if="isDev"
+    class="conversational-dynamic-widget"
+  >
     <ProgressWidget
       title="CSAT"
       :progressItems="[
@@ -35,18 +38,40 @@
         },
       ]"
       footerText="1500 reviews"
+      @edit="handleOpenDrawer"
     />
-    <AddCsatOrNpsWidget v-if="type === 'add'" />
+    <AddCsatOrNpsWidget
+      v-if="type === 'add'"
+      @add="handleOpenDrawer"
+    />
+
+    <CsatOrNpsDrawer
+      v-if="isDrawerOpen"
+      :modelValue="isDrawerOpen"
+      :type="type === 'add' ? null : type"
+      @update:model-value="isDrawerOpen = $event"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
+import CsatOrNpsDrawer from '@/components/insights/conversations/CsatOrNpsWidget/CsatOrNpsDrawer.vue';
+import env from '@/utils/env';
 
 defineProps<{
   type: 'csat' | 'nps' | 'add';
 }>();
+
+const isDev = env('ENVIRONMENT') !== 'production';
+
+const isDrawerOpen = ref(false);
+
+function handleOpenDrawer() {
+  isDrawerOpen.value = true;
+}
 </script>
 
 <style lang="scss" scoped>

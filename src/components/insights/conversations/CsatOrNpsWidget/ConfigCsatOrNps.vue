@@ -12,9 +12,9 @@
       data-testid="config-csat-or-nps-description"
     >
       {{
-        $t(
+        $tc(
           'conversations_dashboard.customize_your_dashboard.config_csat_or_nps_description',
-          { type },
+          { type: type.toUpperCase() },
         )
       }}
     </p>

@@ -104,6 +104,7 @@
     data-testid="form-topic-item-modal"
     @primary-button-click="primaryButtonClick"
     @secondary-button-click="secondaryButtonClick"
+    @close="secondaryButtonClick"
   />
 </template>
 

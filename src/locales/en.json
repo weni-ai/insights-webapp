@@ -52,6 +52,12 @@
       "sub_topics": "Sub-topics",
       "new_sub_topic": "New sub-topic",
       "sub_topics_added": "{sub_topics} sub-topics added",
+      "success_save_topics_or_subtopics": "Topics or sub-topics added successfully",
+      "error_save_topics_or_subtopics": "Error saving topics or sub-topics",
+      "success_remove_topic": "Topic removed successfully",
+      "error_remove_topic": "Error removing topic",
+      "success_remove_subtopic": "Sub-topic removed successfully",
+      "error_remove_subtopic": "Error removing sub-topic",
       "remove_modal": {
         "title_remove_topic": "Remove topic",
         "title_remove_sub_topic": "Remove sub-topic",
@@ -84,7 +90,7 @@
       "add_widget": "Add widget",
       "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
       "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others.",
-      "config_csat_or_nps_description": "Define which @.upper:{type} you want to track:",
+      "config_csat_or_nps_description": "Define which {type} you want to track:",
       "human_support": "Human Support",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -100,7 +106,9 @@
         "keep_configuring": "Keep configuring",
         "return": "Return",
         "cancel": "Cancel"
-      }
+      },
+      "edit_csat_or_nps": "Edit {type}",
+      "remove_widget": "Remove widget"
     }
   },
   "template_messages_dashboard": {

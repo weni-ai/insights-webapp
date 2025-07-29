@@ -309,6 +309,10 @@ describe('DashboardHeader.vue', () => {
       const vm = wrapper.vm;
       await vm.loadCardData();
 
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).toHaveBeenCalled();
+
       expect(vm.cardsData[0].value).toBe('1,000');
       expect(vm.cardsData[1].value).toBe('85.00%');
       expect(vm.cardsData[2].value).toBe('10.00%');
@@ -334,6 +338,10 @@ describe('DashboardHeader.vue', () => {
 
       const vm = wrapper.vm;
       await vm.loadCardData();
+
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).toHaveBeenCalled();
 
       vm.cardsData.forEach((card) => {
         expect(card.value).toBe('-');
@@ -407,7 +415,7 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[3].value).toBe('9.00%');
       expect(vm.rightCardData.value).toBe('12.22%');
 
-      expect(vm.cardsData[0].isLoading).toBe(false);
+      expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
       expect(vm.rightCardData.isLoading).toBe(false);
     });
 
@@ -530,9 +538,14 @@ describe('DashboardHeader.vue', () => {
         mockApiResponse,
       );
 
-      await vm.loadCardData();
+      const promise = vm.loadCardData();
 
-      expect(vm.cardsData[0].isLoading).toBe(false);
+      expect(vm.cardsData.every((card) => card.isLoading)).toBe(true);
+      expect(vm.rightCardData.isLoading).toBe(true);
+
+      await promise;
+
+      expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
       expect(vm.rightCardData.isLoading).toBe(false);
 
       // Verify data was loaded successfully
@@ -632,12 +645,6 @@ describe('DashboardHeader.vue', () => {
   });
 
   describe('API Functions', () => {
-    it('should test fetchConversationalHeaderData function exists', () => {
-      const vm = wrapper.vm;
-      expect(vm.fetchConversationalHeaderData).toBeDefined();
-      expect(typeof vm.fetchConversationalHeaderData).toBe('function');
-    });
-
     it('should test loadCardData function exists', () => {
       const vm = wrapper.vm;
       expect(vm.loadCardData).toBeDefined();

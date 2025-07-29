@@ -1,17 +1,14 @@
 import i18n from '@/utils/plugins/i18n';
-
-export interface TreemapDataItem {
-  label: string;
-  value: number;
-  percentage?: number;
-}
+import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 
 /**
  * Sorts, limits to 5 items, and groups the rest under "Others".
  * @param data Original array
  * @returns New array ready to use
  */
-export function prepareTopData(data: TreemapDataItem[]): TreemapDataItem[] {
+export function prepareTopData(
+  data: topicDistributionMetric[],
+): topicDistributionMetric[] {
   const sorted = [...data].sort((a, b) => b.value - a.value);
 
   if (sorted.length <= 5) {
@@ -31,12 +28,12 @@ export function prepareTopData(data: TreemapDataItem[]): TreemapDataItem[] {
     label: i18n.global.t('conversations_dashboard.others'),
     value: othersValue,
     percentage: othersPercentage,
+    uuid: '',
   });
-
   return topFive;
 }
 
-interface DataWithColor extends TreemapDataItem {
+interface DataWithColor extends topicDistributionMetric {
   color: string;
   hoverColor: string;
 }
@@ -114,7 +111,7 @@ function getItemColors(
  * @param data Sorted array
  * @returns New array with color field
  */
-export function addColors(data: TreemapDataItem[]): DataWithColor[] {
+export function addColors(data: topicDistributionMetric[]): DataWithColor[] {
   return data.map((item, index) => ({
     ...item,
     ...getItemColors(item.label, index),

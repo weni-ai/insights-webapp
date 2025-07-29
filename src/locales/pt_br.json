@@ -52,6 +52,12 @@
       "sub_topics": "Sub-tópicos",
       "new_sub_topic": "Novo sub-tópico",
       "sub_topics_added": "{sub_topics} sub-tópicos adicionados",
+      "success_save_topics_or_subtopics": "Tópicos ou sub-tópicos adicionados com sucesso",
+      "error_save_topics_or_subtopics": "Erro ao salvar tópicos ou sub-tópicos",
+      "success_remove_topic": "Tópico removido com sucesso",
+      "error_remove_topic": "Erro ao remover tópico",
+      "success_remove_subtopic": "Sub-tópico removido com sucesso",
+      "error_remove_subtopic": "Erro ao remover sub-tópico",
       "remove_modal": {
         "title_remove_topic": "Remover tópico",
         "title_remove_sub_topic": "Remover sub-tópico",
@@ -84,7 +90,7 @@
       "add_widget": "Adicionar widget",
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
       "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
-      "config_csat_or_nps_description": "Defina qual @.upper:{type} você deseja acompanhar:",
+      "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar:",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -100,7 +106,9 @@
         "keep_configuring": "Continuar configurando",
         "return": "Voltar",
         "cancel": "Cancelar"
-      }
+      },
+      "edit_csat_or_nps": "Editar {type}",
+      "remove_widget": "Remover widget"
     }
   },
   "template_messages_dashboard": {

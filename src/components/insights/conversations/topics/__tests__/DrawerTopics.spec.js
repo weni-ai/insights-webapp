@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import DrawerTopics from '../DrawerTopics.vue';
@@ -13,7 +13,7 @@ config.global.plugins = [
       en: {
         conversations_dashboard: {
           form_topic: {
-            title: 'Topics',
+            title: 'Add Topics',
             save: 'Save',
             cancel: 'Cancel',
           },
@@ -23,57 +23,67 @@ config.global.plugins = [
   }),
 ];
 
-const createMockStore = (overrides = {}) => ({
-  isAddTopicsDrawerOpen: false,
-  isOpenModal: false,
-  hasNewTopics: false,
-  topics: [],
-  initializeMockData: vi.fn(),
-  openAddTopicsDrawer: vi.fn(),
+const isAddTopicsDrawerOpenRef = ref(false);
+const isOpenModalRef = ref(false);
+const isSavingTopicsRef = ref(false);
+const allNewTopicsCompleteRef = ref(true);
+const hasNewTopicsRef = ref(false);
+const hasNewSubTopicsRef = ref(false);
+
+const mockStore = {
+  get isAddTopicsDrawerOpen() {
+    return isAddTopicsDrawerOpenRef.value;
+  },
+  get isOpenModal() {
+    return isOpenModalRef.value;
+  },
+  get isSavingTopics() {
+    return isSavingTopicsRef.value;
+  },
+  get allNewTopicsComplete() {
+    return allNewTopicsCompleteRef.value;
+  },
+  get hasNewTopics() {
+    return hasNewTopicsRef.value;
+  },
+  get hasNewSubTopics() {
+    return hasNewSubTopicsRef.value;
+  },
+  loadFormTopics: vi.fn(),
   closeAddTopicsDrawer: vi.fn(),
   openModal: vi.fn(),
   closeModal: vi.fn(),
-  ...overrides,
-});
-
-let mockStore = createMockStore();
+  saveAllNewTopics: vi.fn(() => Promise.resolve(true)),
+};
 
 vi.mock('@/store/modules/conversational/topics', () => ({
   useConversationalTopics: () => mockStore,
 }));
 
-const createWrapper = (storeOverrides = {}) => {
-  mockStore = createMockStore(storeOverrides);
+const createWrapper = (storeState = {}) => {
+  const newState = {
+    isAddTopicsDrawerOpen: false,
+    isOpenModal: false,
+    isSavingTopics: false,
+    allNewTopicsComplete: true,
+    hasNewTopics: false,
+    hasNewSubTopics: false,
+    ...storeState,
+  };
+
+  isAddTopicsDrawerOpenRef.value = newState.isAddTopicsDrawerOpen;
+  isOpenModalRef.value = newState.isOpenModal;
+  isSavingTopicsRef.value = newState.isSavingTopics;
+  allNewTopicsCompleteRef.value = newState.allNewTopicsComplete;
+  hasNewTopicsRef.value = newState.hasNewTopics;
+  hasNewSubTopicsRef.value = newState.hasNewSubTopics;
 
   return shallowMount(DrawerTopics, {
     global: {
       stubs: {
-        UnnnicDrawer: {
-          template: `
-            <div v-if="modelValue" data-testid="stub-unnnic-drawer">
-              <div data-testid="drawer-title">{{ title }}</div>
-              <div data-testid="drawer-primary-btn">{{ primaryButtonText }}</div>
-              <div data-testid="drawer-secondary-btn">{{ secondaryButtonText }}</div>
-              <slot name="content" />
-            </div>
-          `,
-          props: [
-            'modelValue',
-            'title',
-            'primaryButtonText',
-            'secondaryButtonText',
-          ],
-          emits: ['close', 'primary-button-click', 'secondary-button-click'],
-        },
-        FormTopic: {
-          template: '<div data-testid="stub-form-topic">FormTopic</div>',
-        },
-        ModalTopic: {
-          template:
-            '<div v-if="isOpen" data-testid="stub-modal-topic">{{ type }}</div>',
-          props: ['isOpen', 'type'],
-          emits: ['primary-button-click', 'secondary-button-click'],
-        },
+        UnnnicDrawer: true,
+        FormTopic: true,
+        ModalTopic: true,
       },
     },
   });
@@ -84,216 +94,153 @@ describe('DrawerTopics', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    mockStore = createMockStore();
+    isAddTopicsDrawerOpenRef.value = false;
+    isOpenModalRef.value = false;
+    isSavingTopicsRef.value = false;
+    allNewTopicsCompleteRef.value = true;
+    hasNewTopicsRef.value = false;
+    hasNewSubTopicsRef.value = false;
     wrapper = createWrapper();
   });
 
-  const stubDrawer = () => wrapper.find('[data-testid="stub-unnnic-drawer"]');
-  const stubModal = () => wrapper.find('[data-testid="stub-modal-topic"]');
-
-  describe('Initial render', () => {
-    it('should render the component with correct structure', () => {
-      expect(wrapper.vm).toBeDefined();
-    });
-
-    it('should not render drawer when closed', () => {
-      wrapper = createWrapper({ isAddTopicsDrawerOpen: false });
-
-      expect(stubDrawer().exists()).toBe(false);
-    });
-
-    it('should not render modal when closed', () => {
-      wrapper = createWrapper({ isOpenModal: false });
-
-      expect(stubModal().exists()).toBe(false);
-    });
-
-    it('should call initialization methods on mount', () => {
-      expect(mockStore.initializeMockData).toHaveBeenCalledTimes(1);
-      expect(mockStore.openAddTopicsDrawer).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('Component structure', () => {
-    it('should render with correct component structure', () => {
-      expect(wrapper.vm).toBeDefined();
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it('should have access to store computed properties', () => {
-      expect(wrapper.vm).toHaveProperty('isAddTopicsDrawerOpen');
-      expect(wrapper.vm).toHaveProperty('isOpenModal');
-    });
-
-    it('should contain component templates in source', () => {
-      const html = wrapper.html();
-      expect(html).toBeDefined();
-      expect(html.length).toBeGreaterThan(0);
-    });
-  });
-
-  describe('Computed properties', () => {
-    it('should return correct drawer state from store', () => {
+  describe('Conditional rendering', () => {
+    it('should render drawer when isAddTopicsDrawerOpen is true', async () => {
       wrapper = createWrapper({ isAddTopicsDrawerOpen: true });
+      await nextTick();
 
-      expect(wrapper.vm.isAddTopicsDrawerOpen).toBe(true);
+      expect(wrapper.findComponent({ name: 'UnnnicDrawer' }).exists()).toBe(
+        true,
+      );
     });
 
-    it('should return correct modal state from store', () => {
+    it('should not render drawer when isAddTopicsDrawerOpen is false', async () => {
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: false });
+      await nextTick();
+
+      expect(wrapper.findComponent({ name: 'UnnnicDrawer' }).exists()).toBe(
+        false,
+      );
+    });
+
+    it('should always render modal component', async () => {
       wrapper = createWrapper({ isOpenModal: true });
+      await nextTick();
 
-      expect(wrapper.vm.isOpenModal).toBe(true);
-    });
-
-    it('should use computed properties from store', () => {
-      wrapper = createWrapper({
-        isAddTopicsDrawerOpen: true,
-        isOpenModal: true,
-      });
-
-      expect(wrapper.vm.isAddTopicsDrawerOpen).toBe(true);
-      expect(wrapper.vm.isOpenModal).toBe(true);
+      expect(wrapper.findComponent({ name: 'ModalTopic' }).exists()).toBe(true);
     });
   });
 
-  describe('Event handling', () => {
-    beforeEach(() => {
+  describe('Store integration', () => {
+    it('should call loadFormTopics when drawer opens via watcher', async () => {
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: true });
+      await nextTick();
+
+      expect(mockStore.loadFormTopics).toHaveBeenCalled();
+    });
+  });
+
+  describe('Event handlers', () => {
+    it('should close drawer when no new topics exist', async () => {
       wrapper = createWrapper({
         isAddTopicsDrawerOpen: true,
-        isOpenModal: true,
+        hasNewTopics: false,
+        hasNewSubTopics: false,
       });
-    });
+      await nextTick();
 
-    it('should handle drawer close with new topics', () => {
-      mockStore.hasNewTopics = true;
-
-      wrapper.vm.handleDrawerAddTopics();
-
-      expect(mockStore.openModal).toHaveBeenCalledTimes(1);
-      expect(mockStore.openModal).toHaveBeenCalledWith('cancel-topic');
-      expect(mockStore.closeAddTopicsDrawer).not.toHaveBeenCalled();
-    });
-
-    it('should handle drawer close without new topics', () => {
-      mockStore.hasNewTopics = false;
-
-      wrapper.vm.handleDrawerAddTopics();
+      await wrapper.vm.handleDrawerAddTopics();
 
       expect(mockStore.openModal).not.toHaveBeenCalled();
       expect(mockStore.closeAddTopicsDrawer).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle add topic action', () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    it('should open modal when closing drawer with new topics', async () => {
+      wrapper = createWrapper({
+        isAddTopicsDrawerOpen: true,
+        hasNewTopics: true,
+      });
+      await nextTick();
 
-      wrapper.vm.handleAddTopic();
+      await wrapper.vm.handleDrawerAddTopics();
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Saving topics:',
-        mockStore.topics,
-      );
-      expect(mockStore.closeAddTopicsDrawer).toHaveBeenCalledTimes(1);
-
-      consoleSpy.mockRestore();
+      expect(mockStore.openModal).toHaveBeenCalledWith('cancel-topic');
+      expect(mockStore.closeAddTopicsDrawer).not.toHaveBeenCalled();
     });
 
-    it('should handle keep adding topic action', () => {
-      wrapper.vm.handleKeepAddingTopic();
+    it('should open modal when closing drawer with new sub topics', async () => {
+      wrapper = createWrapper({
+        isAddTopicsDrawerOpen: true,
+        hasNewSubTopics: true,
+      });
+      await nextTick();
+
+      await wrapper.vm.handleDrawerAddTopics();
+
+      expect(mockStore.openModal).toHaveBeenCalledWith('cancel-topic');
+      expect(mockStore.closeAddTopicsDrawer).not.toHaveBeenCalled();
+    });
+
+    it('should handle successful topic save', async () => {
+      mockStore.saveAllNewTopics.mockResolvedValue(true);
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: true });
+      await nextTick();
+
+      await wrapper.vm.handleAddTopic();
+
+      expect(mockStore.saveAllNewTopics).toHaveBeenCalledTimes(1);
+      expect(mockStore.closeAddTopicsDrawer).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle failed topic save', async () => {
+      mockStore.saveAllNewTopics.mockResolvedValue(false);
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: true });
+      await nextTick();
+
+      await wrapper.vm.handleAddTopic();
+
+      expect(mockStore.saveAllNewTopics).toHaveBeenCalledTimes(1);
+      expect(mockStore.closeAddTopicsDrawer).not.toHaveBeenCalled();
+    });
+
+    it('should handle keep adding topic', async () => {
+      wrapper = createWrapper();
+      await nextTick();
+
+      await wrapper.vm.handleKeepAddingTopic();
 
       expect(mockStore.closeModal).toHaveBeenCalledTimes(1);
     });
 
-    it('should handle cancel topic action', () => {
-      wrapper.vm.handleCancelTopic();
+    it('should handle cancel topic', async () => {
+      wrapper = createWrapper();
+      await nextTick();
+
+      await wrapper.vm.handleCancelTopic();
 
       expect(mockStore.closeModal).toHaveBeenCalledTimes(1);
       expect(mockStore.closeAddTopicsDrawer).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('Component methods', () => {
-    it('should have all required handler methods', () => {
-      const methods = [
-        'handleDrawerAddTopics',
-        'handleAddTopic',
-        'handleKeepAddingTopic',
-        'handleCancelTopic',
-      ];
-
-      methods.forEach((method) => {
-        expect(typeof wrapper.vm[method]).toBe('function');
+  describe('Computed properties', () => {
+    it('should compute disabledPrimaryButton correctly', async () => {
+      wrapper = createWrapper({
+        isAddTopicsDrawerOpen: true,
+        allNewTopicsComplete: false,
       });
+      await nextTick();
+
+      expect(wrapper.vm.disabledPrimaryButton).toBe(true);
     });
 
-    const methodTests = [
-      { method: 'handleKeepAddingTopic', expectedCalls: { closeModal: 1 } },
-      {
-        method: 'handleCancelTopic',
-        expectedCalls: { closeModal: 1, closeAddTopicsDrawer: 1 },
-      },
-    ];
-
-    methodTests.forEach(({ method, expectedCalls }) => {
-      it(`should call correct store methods when ${method} is executed`, () => {
-        wrapper.vm[method]();
-
-        Object.entries(expectedCalls).forEach(([storMethod, callCount]) => {
-          expect(mockStore[storMethod]).toHaveBeenCalledTimes(callCount);
-        });
+    it('should enable primary button when allNewTopicsComplete is true', async () => {
+      wrapper = createWrapper({
+        isAddTopicsDrawerOpen: true,
+        allNewTopicsComplete: true,
       });
-    });
-  });
+      await nextTick();
 
-  describe('Store integration', () => {
-    it('should use computed properties from store', () => {
-      const storeProperties = ['isAddTopicsDrawerOpen', 'isOpenModal'];
-
-      storeProperties.forEach((prop) => {
-        expect(wrapper.vm).toHaveProperty(prop);
-      });
-    });
-
-    it('should call store methods with correct signatures', () => {
-      const storeMethods = [
-        'initializeMockData',
-        'openAddTopicsDrawer',
-        'closeAddTopicsDrawer',
-        'openModal',
-        'closeModal',
-      ];
-
-      storeMethods.forEach((method) => {
-        expect(typeof mockStore[method]).toBe('function');
-        expect(mockStore[method]).toBeInstanceOf(Function);
-      });
-    });
-
-    it('should handle store state combinations correctly', () => {
-      const stateTests = [
-        { hasNewTopics: true, expectModalOpen: true },
-        { hasNewTopics: false, expectModalOpen: false },
-      ];
-
-      stateTests.forEach(({ hasNewTopics, expectModalOpen }) => {
-        mockStore.hasNewTopics = hasNewTopics;
-
-        wrapper.vm.handleDrawerAddTopics();
-
-        if (expectModalOpen) {
-          expect(mockStore.openModal).toHaveBeenCalledWith('cancel-topic');
-        } else {
-          expect(mockStore.closeAddTopicsDrawer).toHaveBeenCalled();
-        }
-
-        vi.clearAllMocks();
-      });
-    });
-  });
-
-  describe('Lifecycle hooks', () => {
-    it('should call initialization methods on component mount', () => {
-      expect(mockStore.initializeMockData).toHaveBeenCalledTimes(1);
-      expect(mockStore.openAddTopicsDrawer).toHaveBeenCalledTimes(1);
+      expect(wrapper.vm.disabledPrimaryButton).toBe(false);
     });
   });
 });

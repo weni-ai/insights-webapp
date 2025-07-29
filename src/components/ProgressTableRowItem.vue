@@ -154,6 +154,7 @@ const handleExpand = () => {
       }
 
       .infos__description {
+        white-space: nowrap;
         color: $unnnic-color-neutral-cloudy;
         font-family: $unnnic-font-family-secondary;
         font-size: $unnnic-font-size-body-md;

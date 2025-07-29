@@ -81,8 +81,10 @@ import { defineProps, computed } from 'vue';
 import ShortTab from '@/components/ShortTab.vue';
 import i18n from '@/utils/plugins/i18n';
 
+export type Tab = 'artificial-intelligence' | 'human-support';
+
 const emit = defineEmits<{
-  (_event: 'tab-change', _tab: string): void;
+  (_event: 'tab-change', _tab: Tab): void;
 }>();
 
 defineProps<{
@@ -107,7 +109,7 @@ const tabs = computed(() => [
   },
 ]);
 
-const handleTabChange = (tab: string) => {
+const handleTabChange = (tab: Tab) => {
   emit('tab-change', tab);
 };
 </script>
@@ -158,6 +160,8 @@ const handleTabChange = (tab: string) => {
 
         :deep(.unnnic-dropdown__content) {
           padding: $unnnic-spacing-sm;
+
+          gap: $unnnic-spacing-sm;
         }
 
         .dropdown__action {
@@ -170,6 +174,10 @@ const handleTabChange = (tab: string) => {
             font-size: $unnnic-font-size-body-md;
             line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
             white-space: nowrap;
+          }
+
+          &::before {
+            display: none;
           }
         }
       }

@@ -58,6 +58,9 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
         UnnnicCheckbox: Unnnic.unnnicCheckbox,
         UnnnicSelectSmart: Unnnic.unnnicSelectSmart,
       },
+      mocks: {
+        $tc: (key) => key,
+      },
     },
   });
 };

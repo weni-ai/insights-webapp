@@ -45,13 +45,13 @@ import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
-import { useDashboards } from '@/store/modules/dashboards';
+import { useRoute } from 'vue-router';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
-const { appliedFilters } = useDashboards();
-
 const { t } = useI18n();
+
+const route = useRoute();
 
 const cardDefinitions = [
   {
@@ -111,36 +111,11 @@ const rightCard = computed(() => ({
 }));
 
 watch(
-  appliedFilters,
+  () => route.query,
   () => {
     loadCardData();
   },
-  { deep: true },
 );
-
-const fetchConversationalHeaderData = async () => {
-  const { ended_at } =
-    (appliedFilters as {
-      ended_at: { __gte: string; __lte: string };
-    }) || {};
-
-  const { __gte, __lte } = ended_at as {
-    __gte: string;
-    __lte: string;
-  };
-
-  const formattedParams = {
-    start_date: __gte,
-    end_date: __lte,
-  };
-
-  const response =
-    await conversationalHeaderApi.getConversationalHeaderTotals(
-      formattedParams,
-    );
-
-  return response;
-};
 
 const getBorderRadius = (index: number, totalCards: number) => {
   if (totalCards === 1) return 'full';
@@ -160,8 +135,14 @@ const showErrorToast = () => {
 };
 
 const loadCardData = async () => {
+  cardsData.value.forEach((card) => {
+    card.isLoading = true;
+  });
+  rightCardData.value.isLoading = true;
+
   try {
-    const response = await fetchConversationalHeaderData();
+    const response =
+      await conversationalHeaderApi.getConversationalHeaderTotals();
 
     response.forEach((metric) => {
       const cardToUpdate = cardsData.value.find(
@@ -174,13 +155,15 @@ const loadCardData = async () => {
           cardToUpdate.description = null;
         } else {
           cardToUpdate.value = formatPercentage(metric.percentage);
-          cardToUpdate.description = `${formatNumber(metric.value)} ${t('conversations_dashboard.conversations')}`;
+          cardToUpdate.description = `${formatNumber(metric.value)} ${t(
+            'conversations_dashboard.conversations',
+          )}`;
         }
-        cardToUpdate.isLoading = false;
       } else if (metric.id === 'transferred_to_human') {
         rightCardData.value.value = formatPercentage(metric.percentage);
-        rightCardData.value.description = `${formatNumber(metric.value)} ${t('conversations_dashboard.conversations')}`;
-        rightCardData.value.isLoading = false;
+        rightCardData.value.description = `${formatNumber(metric.value)} ${t(
+          'conversations_dashboard.conversations',
+        )}`;
       }
     });
   } catch (error) {
@@ -189,14 +172,19 @@ const loadCardData = async () => {
     cardsData.value.forEach((card) => {
       card.value = '-';
       card.description = `0 ${t('conversations_dashboard.conversations')}`;
-      card.isLoading = false;
     });
 
     rightCardData.value.value = '-';
-    rightCardData.value.description = `0 ${t('conversations_dashboard.conversations')}`;
-    rightCardData.value.isLoading = false;
+    rightCardData.value.description = `0 ${t(
+      'conversations_dashboard.conversations',
+    )}`;
 
     showErrorToast();
+  } finally {
+    cardsData.value.forEach((card) => {
+      card.isLoading = false;
+    });
+    rightCardData.value.isLoading = false;
   }
 };
 

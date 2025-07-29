@@ -108,7 +108,13 @@
         "cancel": "Cancel"
       },
       "edit_csat_or_nps": "Edit {type}",
-      "remove_widget": "Remove widget"
+      "remove_widget": "Remove widget",
+      "modal_remove_widget": {
+        "title": "Remove {type} widget",
+        "description": "Are you sure you want to remove the {type} widget?",
+        "remove": "Remove",
+        "cancel": "Cancel"
+      }
     }
   },
   "template_messages_dashboard": {

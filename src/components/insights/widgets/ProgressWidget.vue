@@ -2,24 +2,7 @@
   <BaseConversationWidget
     :isLoading="isLoading"
     :title="title"
-    :actions="[
-      {
-        icon: 'edit_square',
-        text: $tc(
-          'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-          { type: title },
-        ),
-        onClick: () => emit('edit'),
-      },
-      {
-        icon: 'delete',
-        text: $t(
-          'conversations_dashboard.customize_your_dashboard.remove_widget',
-        ),
-        onClick: () => {},
-        scheme: 'aux-red-500',
-      },
-    ]"
+    :actions="actions"
   >
     <section
       class="progress-widget__content"
@@ -67,10 +50,6 @@ import BaseConversationWidget from '@/components/insights/conversations/BaseConv
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
 
-const emit = defineEmits<{
-  (_e: 'edit'): void;
-}>();
-
 const props = defineProps<{
   title: string;
   card?: {
@@ -88,6 +67,12 @@ const props = defineProps<{
   }[];
   footerText?: string;
   isLoading?: boolean;
+  actions?: {
+    icon: string;
+    text: string;
+    onClick: () => void;
+    scheme?: string;
+  }[];
 }>();
 
 const treatedProgressItems = computed(() => {

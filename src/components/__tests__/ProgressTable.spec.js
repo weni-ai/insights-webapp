@@ -242,4 +242,121 @@ describe('ProgressTable', () => {
       expect(progressTableItems()[0].props().subItems).toBeUndefined();
     });
   });
+
+  describe('Loading State', () => {
+    it('should show skeleton loading when isLoading is true', () => {
+      wrapper = createWrapper({ isLoading: true });
+
+      const skeletonElements = wrapper.findAll(
+        '[data-testid="progress-table-skeleton"]',
+      );
+      const progressTable = wrapper.find('[data-testid="progress-table"]');
+
+      expect(skeletonElements).toHaveLength(5);
+      expect(progressTable.exists()).toBe(false);
+    });
+
+    it('should render correct number of skeleton loading elements', () => {
+      wrapper = createWrapper({ isLoading: true });
+
+      const skeletonElements = wrapper.findAll(
+        '[data-testid="progress-table-skeleton"]',
+      );
+      expect(skeletonElements).toHaveLength(5);
+    });
+
+    it('should apply correct props to skeleton loading elements', () => {
+      wrapper = createWrapper({ isLoading: true });
+
+      const skeletonElements = wrapper.findAll(
+        '[data-testid="progress-table-skeleton"]',
+      );
+
+      skeletonElements.forEach((skeleton) => {
+        expect(skeleton.attributes('width')).toBe('100%');
+        expect(skeleton.attributes('height')).toBe('51.5px');
+      });
+    });
+
+    it('should show loading section with correct class when isLoading is true', () => {
+      wrapper = createWrapper({ isLoading: true });
+
+      const loadingSection = wrapper.find('.progress-table__loading');
+      expect(loadingSection.exists()).toBe(true);
+      expect(loadingSection.element.tagName).toBe('SECTION');
+    });
+
+    it('should hide table when isLoading is true', () => {
+      wrapper = createWrapper({ isLoading: true });
+
+      const progressTable = wrapper.find('[data-testid="progress-table"]');
+      const progressTableBody = wrapper.find(
+        '[data-testid="progress-table-body"]',
+      );
+      const progressTableItems = wrapper.findAllComponents(
+        '[data-testid="progress-table-item"]',
+      );
+
+      expect(progressTable.exists()).toBe(false);
+      expect(progressTableBody.exists()).toBe(false);
+      expect(progressTableItems).toHaveLength(0);
+    });
+
+    it('should show table and hide loading when isLoading is false', () => {
+      wrapper = createWrapper({ isLoading: false });
+
+      const skeletonElements = wrapper.findAll(
+        '[data-testid="progress-table-skeleton"]',
+      );
+      const loadingSection = wrapper.find('.progress-table__loading');
+      const progressTable = wrapper.find('[data-testid="progress-table"]');
+
+      expect(skeletonElements).toHaveLength(0);
+      expect(loadingSection.exists()).toBe(false);
+      expect(progressTable.exists()).toBe(true);
+    });
+
+    it('should show table by default when isLoading prop is not provided', () => {
+      wrapper = createWrapper();
+
+      const skeletonElements = wrapper.findAll(
+        '[data-testid="progress-table-skeleton"]',
+      );
+      const loadingSection = wrapper.find('.progress-table__loading');
+      const progressTable = wrapper.find('[data-testid="progress-table"]');
+
+      expect(skeletonElements).toHaveLength(0);
+      expect(loadingSection.exists()).toBe(false);
+      expect(progressTable.exists()).toBe(true);
+    });
+
+    it('should toggle between loading and table states correctly', async () => {
+      wrapper = createWrapper({ isLoading: true });
+
+      expect(
+        wrapper.findAll('[data-testid="progress-table-skeleton"]'),
+      ).toHaveLength(5);
+      expect(wrapper.find('[data-testid="progress-table"]').exists()).toBe(
+        false,
+      );
+
+      await wrapper.setProps({ isLoading: false });
+
+      expect(
+        wrapper.findAll('[data-testid="progress-table-skeleton"]'),
+      ).toHaveLength(0);
+      expect(wrapper.find('[data-testid="progress-table"]').exists()).toBe(
+        true,
+      );
+
+      await wrapper.setProps({ isLoading: true });
+
+      expect(
+        wrapper.findAll('[data-testid="progress-table-skeleton"]'),
+      ).toHaveLength(5);
+      expect(wrapper.find('[data-testid="progress-table"]').exists()).toBe(
+        false,
+      );
+    });
+  });
 });

@@ -23,13 +23,16 @@ module.exports = defineConfig({
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: `${process.env.PUBLIC_PATH_URL}`,
-    filename: '/assets/js/[name]-[contenthash].js',
-    chunkFilename: '/assets/js/[name]-[contenthash].js',
-    assetModuleFilename: '/assets/[name]-[hash][ext]',
+    publicPath: `${process.env.PUBLIC_PATH_URL}/`,
+    filename: 'assets/js/[name]-[contenthash].js',
+    chunkFilename: 'assets/js/[name]-[contenthash].js',
+    assetModuleFilename: 'assets/[name]-[hash][ext]',
   },
   entry: {
     main: './src/main.js',
+  },
+  stats: {
+    warnings: false,
   },
   resolve: {
     extensions: ['...', '.ts', '.vue'],
@@ -75,7 +78,7 @@ module.exports = defineConfig({
         test: /\.(png|jpe?g|gif|svg|webp|avif)$/i,
         type: 'asset/resource',
         generator: {
-          filename: '/assets/images/[name]-[hash][ext]',
+          filename: 'assets/images/[name]-[hash][ext]',
         },
       },
     ],
@@ -96,7 +99,7 @@ module.exports = defineConfig({
       __VUE_PROD_DEVTOOLS__: false,
       'process.env': JSON.stringify(process.env),
       'import.meta.env': JSON.stringify({
-        BASE_URL: process.env.BASE_URL || '/',
+        BASE_URL: '/',
       }),
     }),
     new VueLoaderPlugin(),
@@ -104,6 +107,7 @@ module.exports = defineConfig({
       name: 'insights',
       filename: 'remoteEntry.js',
       exposes: {
+        './main': './src/main.js',
         './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
         './locales/pt_br': './src/locales/pt_br.json',
         './locales/en': './src/locales/en.json',
@@ -116,6 +120,7 @@ module.exports = defineConfig({
         ...pkg,
         vue: {
           singleton: true,
+          requiredVersion: '^3.0.0',
           eager: true,
         },
         'vue-i18n': {

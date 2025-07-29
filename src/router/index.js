@@ -1,10 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  createMemoryHistory,
+} from 'vue-router';
+import { isFederatedModule } from '@/utils/moduleFederation';
 import Report from '@/views/insights/Report.vue';
 import DynamicDashboard from '@/views/insights/DynamicDashboard.vue';
 
 const routes = [
   {
     path: '/',
+    alias: '/init',
     name: 'home',
     component: DynamicDashboard,
   },
@@ -20,8 +26,12 @@ const routes = [
   },
 ];
 
+const history = isFederatedModule
+  ? createMemoryHistory() // To isolate routing from parent app
+  : createWebHistory('/');
+
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history,
   routes,
 });
 
@@ -36,16 +46,24 @@ router.beforeEach((to, from, next) => {
 router.afterEach((router) => {
   delete router.query.next;
   delete router.query.projectUuid;
-  window.parent.postMessage(
-    {
-      event: 'changePathname',
-      pathname: window.location.pathname,
-      query: router.query,
-    },
-    '*',
-  );
+
+  if (isFederatedModule) {
+    window.dispatchEvent(
+      new CustomEvent('updateRoute', {
+        detail: { path: router.path, query: router.query },
+      }),
+    );
+  } else {
+    window.parent.postMessage(
+      {
+        event: 'changePathname',
+        pathname: window.location.pathname,
+        query: router.query,
+      },
+      '*',
+    );
+  }
 });
 
 export { routes };
-
 export default router;

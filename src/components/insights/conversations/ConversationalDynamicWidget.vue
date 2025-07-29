@@ -52,7 +52,7 @@ defineProps<{
   type: 'csat' | 'nps' | 'add';
 }>();
 
-const isDev = env('ENVIROMENT') !== 'production';
+const isDev = env('ENVIRONMENT') !== 'production';
 </script>
 
 <style lang="scss" scoped>

@@ -24,9 +24,14 @@ const defaultProps = {
 
 const createWrapper = (props = {}) => {
   return mount(ProgressWidget, {
-    global: { plugins: [UnnnicSystem] },
+    global: {
+      plugins: [UnnnicSystem],
+      stubs: ['ProgressTable'],
+      mocks: {
+        $tc: (key) => key,
+      },
+    },
     props: { ...defaultProps, ...props },
-    stubs: ['ProgressTable'],
   });
 };
 

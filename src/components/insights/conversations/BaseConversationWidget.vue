@@ -160,6 +160,8 @@ const handleTabChange = (tab: Tab) => {
 
         :deep(.unnnic-dropdown__content) {
           padding: $unnnic-spacing-sm;
+
+          gap: $unnnic-spacing-sm;
         }
 
         .dropdown__action {
@@ -172,6 +174,10 @@ const handleTabChange = (tab: Tab) => {
             font-size: $unnnic-font-size-body-md;
             line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
             white-space: nowrap;
+          }
+
+          &::before {
+            display: none;
           }
         }
       }

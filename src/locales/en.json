@@ -89,7 +89,15 @@
       "description": "Customize the dashboard with your key metrics",
       "add_widget": "Add widget",
       "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
-      "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others."
+      "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others.",
+      "config_csat_or_nps_description": "Define which {type} you want to track:",
+      "human_support": "Human Support",
+      "ai_support": "AI",
+      "activate_agent": "Activate agent",
+      "select_agent": "Select agent",
+      "your_agent_is_active": "Your agent is active!",
+      "edit_csat_or_nps": "Edit {type}",
+      "remove_widget": "Remove widget"
     }
   },
   "template_messages_dashboard": {

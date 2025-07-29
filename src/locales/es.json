@@ -89,7 +89,15 @@
       "description": "Personaliza el dashboard con tus métricas clave",
       "add_widget": "Agregar widget",
       "csat_description": "La Puntuación de Satisfacción del Cliente indica el nivel de satisfacción del contacto con el servicio recibido.",
-      "nps_description": "La Puntuación Neta del Promotor indica qué tan probable es que el contacto recomiende el servicio que recibió a otras personas."
+      "nps_description": "La Puntuación Neta del Promotor indica qué tan probable es que el contacto recomiende el servicio que recibió a otras personas.",
+      "config_csat_or_nps_description": "Define qué {type} quieres acompañar:",
+      "human_support": "Atención humana",
+      "ai_support": "IA",
+      "activate_agent": "Activar agente",
+      "select_agent": "Seleccionar agente",
+      "your_agent_is_active": "Tu agente está activo!",
+      "edit_csat_or_nps": "Editar {type}",
+      "remove_widget": "Eliminar widget"
     }
   },
   "template_messages_dashboard": {

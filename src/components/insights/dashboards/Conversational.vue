@@ -11,6 +11,10 @@
       :key="index"
       :type="widget"
       class="dashboard-conversational__dynamic-widget"
+      :class="{
+        'dashboard-conversational__dynamic-widget--only-add':
+          orderedDynamicWidgets.length === 1 && widget === 'add',
+      }"
     />
   </section>
 </template>
@@ -92,6 +96,10 @@ $layout-gap: $unnnic-spacing-sm;
   &__dynamic-widget {
     min-width: calc(50% - $layout-gap / 2);
     width: fit-content;
+
+    &--only-add {
+      min-width: 100%;
+    }
   }
 }
 </style>

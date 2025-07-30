@@ -1,8 +1,8 @@
 <template>
   <BaseConversationWidget
-    :isLoading="isLoading"
     :title="title"
     :actions="actions"
+    @tab-change="handleTabChange"
   >
     <section
       class="progress-widget__content"
@@ -24,13 +24,23 @@
       </section>
 
       <ProgressTable
-        v-if="treatedProgressItems.length > 0"
+        v-if="treatedProgressItems?.length > 0 && !isLoading"
         :progressItems="treatedProgressItems"
         data-testid="progress-widget-table"
       />
+      <section v-if="isLoading">
+        <UnnnicSkeletonLoading
+          v-for="index in card ? 3 : 5"
+          :key="index"
+          class="progress-widget__skeleton"
+          data-testid="progress-widget-skeleton"
+          width="100%"
+          height="56px"
+        />
+      </section>
     </section>
     <section
-      v-if="footerText"
+      v-if="footerText && !isLoading"
       class="progress-widget__footer"
       data-testid="progress-widget-footer"
     >
@@ -41,14 +51,27 @@
         {{ footerText }}
       </p>
     </section>
+    <UnnnicSkeletonLoading
+      v-if="isLoading"
+      class="progress-widget__skeleton"
+      data-testid="progress-widget-skeleton"
+      width="100%"
+      height="22px"
+    />
   </BaseConversationWidget>
 </template>
 
 <script setup lang="ts">
 import { computed, defineProps } from 'vue';
-import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
+import BaseConversationWidget, {
+  Tab,
+} from '@/components/insights/conversations/BaseConversationWidget.vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
+
+const emit = defineEmits<{
+  (e: 'tab-change', tab: Tab): void;
+}>();
 
 const props = defineProps<{
   title: string;
@@ -76,7 +99,7 @@ const props = defineProps<{
 }>();
 
 const treatedProgressItems = computed(() => {
-  return props.progressItems.map((item) => ({
+  return props.progressItems?.map((item) => ({
     label: item.text,
     description: `${item.value}%`,
     value: item.value,
@@ -84,6 +107,10 @@ const treatedProgressItems = computed(() => {
     color: item.color,
   }));
 });
+
+const handleTabChange = (tab: Tab) => {
+  emit('tab-change', tab);
+};
 </script>
 
 <style scoped lang="scss">

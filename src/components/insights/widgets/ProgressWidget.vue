@@ -4,60 +4,66 @@
     :actions="actions"
     @tab-change="handleTabChange"
   >
-    <section
-      class="progress-widget__content"
-      data-testid="progress-widget-content"
-    >
-      <section
-        v-if="card"
-        class="content__card"
-        data-testid="progress-widget-card"
-      >
-        <CardConversations
-          :title="card.title"
-          :value="card.value"
-          :valueDescription="card.valueDescription"
-          :tooltipInfo="card.tooltipInfo"
-          :tooltipSide="'left'"
-          :isLoading="card.isLoading"
-        />
-      </section>
-
-      <ProgressTable
-        v-if="treatedProgressItems?.length > 0 && !isLoading"
-        :progressItems="treatedProgressItems"
-        data-testid="progress-widget-table"
-      />
-      <section v-if="isLoading">
-        <UnnnicSkeletonLoading
-          v-for="index in card ? 3 : 5"
-          :key="index"
-          class="progress-widget__skeleton"
-          data-testid="progress-widget-skeleton"
-          width="100%"
-          height="56px"
-        />
-      </section>
-    </section>
-    <section
-      v-if="footerText && !isLoading"
-      class="progress-widget__footer"
-      data-testid="progress-widget-footer"
-    >
-      <p
-        class="footer__text"
-        data-testid="progress-widget-footer-text"
-      >
-        {{ footerText }}
-      </p>
-    </section>
-    <UnnnicSkeletonLoading
-      v-if="isLoading"
-      class="progress-widget__skeleton"
-      data-testid="progress-widget-skeleton"
-      width="100%"
-      height="22px"
+    <slot
+      v-if="treatedProgressItems?.length === 0"
+      name="setup-widget"
     />
+    <template v-else>
+      <section
+        class="progress-widget__content"
+        data-testid="progress-widget-content"
+      >
+        <section
+          v-if="card"
+          class="content__card"
+          data-testid="progress-widget-card"
+        >
+          <CardConversations
+            :title="card.title"
+            :value="card.value"
+            :valueDescription="card.valueDescription"
+            :tooltipInfo="card.tooltipInfo"
+            :tooltipSide="'left'"
+            :isLoading="card.isLoading"
+          />
+        </section>
+
+        <ProgressTable
+          v-if="treatedProgressItems?.length > 0 && !isLoading"
+          :progressItems="treatedProgressItems"
+          data-testid="progress-widget-table"
+        />
+        <section v-if="isLoading">
+          <UnnnicSkeletonLoading
+            v-for="index in card ? 3 : 5"
+            :key="index"
+            class="progress-widget__skeleton"
+            data-testid="progress-widget-skeleton"
+            width="100%"
+            height="56px"
+          />
+        </section>
+      </section>
+      <section
+        v-if="footerText && !isLoading"
+        class="progress-widget__footer"
+        data-testid="progress-widget-footer"
+      >
+        <p
+          class="footer__text"
+          data-testid="progress-widget-footer-text"
+        >
+          {{ footerText }}
+        </p>
+      </section>
+      <UnnnicSkeletonLoading
+        v-if="isLoading"
+        class="progress-widget__skeleton"
+        data-testid="progress-widget-skeleton"
+        width="100%"
+        height="22px"
+      />
+    </template>
   </BaseConversationWidget>
 </template>
 

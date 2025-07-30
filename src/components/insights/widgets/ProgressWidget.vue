@@ -2,6 +2,7 @@
   <BaseConversationWidget
     :title="title"
     :actions="actions"
+    :isLoading="isLoading"
     @tab-change="handleTabChange"
   >
     <section
@@ -24,23 +25,26 @@
       </section>
 
       <ProgressTable
-        v-if="treatedProgressItems?.length > 0 && !isLoading"
+        v-if="treatedProgressItems?.length > 0 && !isLoadingProgress"
         :progressItems="treatedProgressItems"
         data-testid="progress-widget-table"
       />
-      <section v-if="isLoading">
+      <section
+        v-if="isLoadingProgress"
+        class="progress-widget__skeleton-container"
+      >
         <UnnnicSkeletonLoading
           v-for="index in card ? 3 : 5"
           :key="index"
           class="progress-widget__skeleton"
           data-testid="progress-widget-skeleton"
           width="100%"
-          height="56px"
+          height="51.2px"
         />
       </section>
     </section>
     <section
-      v-if="footerText && !isLoading"
+      v-if="footerText && !isLoadingProgress"
       class="progress-widget__footer"
       data-testid="progress-widget-footer"
     >
@@ -52,10 +56,10 @@
       </p>
     </section>
     <UnnnicSkeletonLoading
-      v-if="isLoading"
+      v-if="isLoadingProgress"
       class="progress-widget__skeleton"
       data-testid="progress-widget-skeleton"
-      width="100%"
+      width="80px"
       height="22px"
     />
   </BaseConversationWidget>
@@ -90,6 +94,7 @@ const props = defineProps<{
   }[];
   footerText?: string;
   isLoading?: boolean;
+  isLoadingProgress?: boolean;
   actions?: {
     icon: string;
     text: string;
@@ -146,6 +151,12 @@ const handleTabChange = (tab: Tab) => {
       font-style: normal;
       line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
     }
+  }
+
+  &__skeleton-container {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-nano;
   }
 }
 </style>

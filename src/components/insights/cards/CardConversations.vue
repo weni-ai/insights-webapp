@@ -64,7 +64,7 @@
     v-if="isLoading"
     class="card-conversations__skeleton"
     :width="`100%`"
-    height="134px"
+    height="112px"
     data-testid="card-skeleton"
   />
 </template>

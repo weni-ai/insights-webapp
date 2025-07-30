@@ -10,7 +10,10 @@
           ? `${widgetData.reviews} ${t('conversations_dashboard.reviews')}`
           : null
       "
-      :isLoading="isLoading"
+      :isLoading="
+        isLoading && (type === 'nps' ? !npsWidgetData : !csatWidgetData)
+      "
+      :isLoadingProgress="isLoading"
       @tab-change="handleTabChange"
     />
     <AddCsatOrNpsWidget
@@ -71,6 +74,8 @@ const {
   npsWidget,
   isLoadingCsatWidgetData,
   isLoadingNpsWidgetData,
+  csatWidgetData,
+  npsWidgetData,
   csatWidgetType,
   npsWidgetType,
 } = storeToRefs(conversationalWidgets);

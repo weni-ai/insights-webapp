@@ -54,6 +54,10 @@ export default {
     modelValue() {
       this.treatModelValue();
     },
+    projectFlows() {
+      this.flowsOptions = [this.flowsOptionsPlaceholder, ...this.projectFlows];
+      this.treatModelValue();
+    },
   },
 
   created() {

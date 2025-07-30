@@ -111,12 +111,11 @@ const widgetData = computed(() => {
     csat: handleCsatWidgetData(csatWidget.value?.data),
     nps: handleNpsWidgetData(npsWidget.value?.data),
   };
-  console.log(widgetDataTypes[props.type]);
+
   return widgetDataTypes[props.type];
 });
 
 onMounted(() => {
-  console.log('onMounted', props.type);
   const isCsatOrNps = ['csat', 'nps'].includes(props.type);
 
   if (isCsatOrNps) {
@@ -124,7 +123,6 @@ onMounted(() => {
       csat: loadCsatWidgetData,
       nps: loadNpsWidgetData,
     };
-    console.log('loadWidgetData mounted', props.type);
     loadWidgetData[props.type]();
   }
 });

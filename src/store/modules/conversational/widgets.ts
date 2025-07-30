@@ -173,6 +173,16 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           };
         }
 
+        if (!this.isFormAi) {
+          currentWidget = {
+            ...widget,
+            config: {
+              ...widget.config,
+              datalake_config: {},
+            },
+          };
+        }
+
         await WidgetService.updateWidget({
           widget: currentWidget,
         });
@@ -302,6 +312,46 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       return (
         useWidgets().findWidgetBySource('conversations.csat') !== undefined
       );
+    },
+
+    isNpsAiConfig: () => {
+      const { findWidgetBySource } = useWidgets();
+      const widgetNps = findWidgetBySource('conversations.nps');
+      const config = widgetNps?.config as CsatOrNpsCardConfig;
+
+      return !!config?.datalake_config?.agent_uuid;
+    },
+
+    isNpsHumanConfig: () => {
+      const { findWidgetBySource } = useWidgets();
+      const widgetNps = findWidgetBySource('conversations.nps');
+      const config = widgetNps?.config as CsatOrNpsCardConfig;
+
+      if (config?.filter?.flow && config?.op_field) {
+        return true;
+      }
+
+      return false;
+    },
+
+    isCsatAiConfig: () => {
+      const { findWidgetBySource } = useWidgets();
+      const widgetCsat = findWidgetBySource('conversations.csat');
+      const config = widgetCsat?.config as CsatOrNpsCardConfig;
+
+      return !!config?.datalake_config?.agent_uuid;
+    },
+
+    isCsatHumanConfig: () => {
+      const { findWidgetBySource } = useWidgets();
+      const widgetCsat = findWidgetBySource('conversations.csat');
+      const config = widgetCsat?.config as CsatOrNpsCardConfig;
+
+      if (config?.filter?.flow && config?.op_field) {
+        return true;
+      }
+
+      return false;
     },
   },
 });

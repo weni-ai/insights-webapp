@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import FormTopic from './Form/FormTopic.vue';
 import ModalTopic from './ModalTopic.vue';
@@ -64,10 +64,8 @@ const handleCancelTopic = () => {
   topicsStore.closeAddTopicsDrawer();
 };
 
-watch(isAddTopicsDrawerOpen, (newVal) => {
-  if (newVal) {
-    topicsStore.loadFormTopics();
-  }
+onMounted(() => {
+  topicsStore.loadFormTopics();
 });
 </script>
 

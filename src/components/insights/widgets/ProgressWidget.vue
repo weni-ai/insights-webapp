@@ -3,6 +3,7 @@
     :title="title"
     :actions="actions"
     :isLoading="isLoading"
+    :currentTab="currentTab"
     @tab-change="handleTabChange"
   >
     <slot
@@ -107,6 +108,7 @@ const props = defineProps<{
     onClick: () => void;
     scheme?: string;
   }[];
+  currentTab?: string;
 }>();
 
 const treatedProgressItems = computed(() => {

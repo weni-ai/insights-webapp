@@ -276,5 +276,11 @@ export const useWidgets = defineStore('widgets', {
     updateCurrentExpansiveWidgetLoading(loading) {
       this.setLoadingCurrentExpansiveWidget(loading);
     },
+
+    findWidgetBySource(source: string): WidgetType | undefined {
+      return this.currentDashboardWidgets.find(
+        (widget: WidgetType) => widget.source === source,
+      );
+    },
   },
 });

@@ -13,6 +13,13 @@
     :secondaryButtonText="
       type ? $t('conversations_dashboard.customize_your_dashboard.return') : ''
     "
+    :disabledPrimaryButton="
+      props.isNew
+        ? !isEnabledSaveNewWidget
+        : type === 'csat'
+          ? !isEnabledUpdateWidgetCsat
+          : !isEnabledUpdateWidgetNps
+    "
     @primary-button-click="saveWidgetConfigs"
     @secondary-button-click="warningModalType = 'return'"
     @close="closeDrawer"
@@ -48,6 +55,7 @@
         v-else
         data-testid="config-csat-or-nps-widget"
         :type="type"
+        :isNew="isNew"
       />
     </template>
   </UnnnicDrawer>
@@ -63,15 +71,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import ConfigCsatOrNpsWidget from './ConfigCsatOrNps.vue';
 import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
+import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+import { storeToRefs } from 'pinia';
 
 type DrawerType = 'csat' | 'nps' | null;
 
-defineProps<{
+const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
+  useConversationalWidgets();
+const {
+  isEnabledSaveNewWidget,
+  isCsatConfigured,
+  isNpsConfigured,
+  isEnabledUpdateWidgetCsat,
+  isEnabledUpdateWidgetNps,
+} = storeToRefs(useConversationalWidgets());
+
+const props = defineProps<{
   modelValue: boolean;
+  isNew: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -93,9 +114,13 @@ function closeWarningModal() {
   warningModalType.value = '';
 }
 
-function saveWidgetConfigs() {
-  console.log('saveWidgetConfigs');
-  // TODO: Implement save logic
+async function saveWidgetConfigs() {
+  if (props.isNew) {
+    await saveNewWidget();
+  } else {
+    await updateConversationalWidget(type.value as 'csat' | 'nps');
+  }
+
   emit('update:modelValue', false);
 }
 
@@ -111,25 +136,38 @@ function cancelWidgetConfigs() {
 }
 
 function confirmAttentionModal() {
+  resetNewWidget();
   warningModalType.value === 'return'
     ? returnWidgetTypeChoice()
     : cancelWidgetConfigs();
 }
 
-const availableWidgets = ref([
-  {
-    name: i18n.global.t('conversations_dashboard.csat'),
-    description: i18n.global.t(
-      'conversations_dashboard.customize_your_dashboard.csat_description',
-    ),
-  },
-  {
-    name: i18n.global.t('conversations_dashboard.nps'),
-    description: i18n.global.t(
-      'conversations_dashboard.customize_your_dashboard.nps_description',
-    ),
-  },
-]);
+const availableWidgets = computed(() => {
+  const availableWidgets = [
+    {
+      name: i18n.global.t('conversations_dashboard.csat'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.csat_description',
+      ),
+    },
+    {
+      name: i18n.global.t('conversations_dashboard.nps'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.nps_description',
+      ),
+    },
+  ];
+
+  if (isCsatConfigured.value) {
+    availableWidgets.splice(0, 1);
+  }
+
+  if (isNpsConfigured.value) {
+    availableWidgets.splice(1, 1);
+  }
+
+  return availableWidgets;
+});
 </script>
 
 <style scoped lang="scss">

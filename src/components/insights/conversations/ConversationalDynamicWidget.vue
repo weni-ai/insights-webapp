@@ -3,16 +3,38 @@
     <ProgressWidget
       :title="widgetType?.toUpperCase() || '-'"
       :actions="actions"
-      :progressItems="isCsatOrNps ? widgetData.progressItems : MOCK_DATA"
-      :card="isCsatOrNps ? widgetData.card : null"
-      :footerText="
-        isCsatOrNps
-          ? `${widgetData.reviews} ${t('conversations_dashboard.reviews')}`
-          : null
-      "
+      :progressItems="renderProgressItems"
+      :card="renderCard"
+      :footerText="renderFooterText"
       :isLoading="isLoading"
       @tab-change="handleTabChange"
-    />
+    >
+      <template #setup-widget>
+        <SetupWidget
+          v-if="isSetupWidget"
+          class="conversational-dynamic-widget__setup-widget"
+          :title="
+            $tc('conversations_dashboard.setup_csat_or_nps_widget.title', {
+              type: type.toUpperCase(),
+              tab: type === 'csat' ? csatWidgetType : npsWidgetType,
+            })
+          "
+          :description="
+            $tc(
+              'conversations_dashboard.setup_csat_or_nps_widget.description',
+              {
+                type: type.toUpperCase(),
+                tab: type === 'csat' ? csatWidgetType : npsWidgetType,
+              },
+            )
+          "
+          :actionText="
+            $t('conversations_dashboard.setup_csat_or_nps_widget.action_text')
+          "
+          @action="handleOpenDrawer"
+        />
+      </template>
+    </ProgressWidget>
     <AddCsatOrNpsWidget
       v-if="type === 'add'"
       @add="handleOpenDrawer"
@@ -40,6 +62,7 @@ import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWid
 import CsatOrNpsDrawer from '@/components/insights/conversations/CsatOrNpsWidget/CsatOrNpsDrawer.vue';
 import ModalRemoveWidget from './CsatOrNpsWidget/ModalRemoveWidget.vue';
 import { useI18n } from 'vue-i18n';
+import SetupWidget from './SetupWidget.vue';
 
 const { t } = useI18n();
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
@@ -73,6 +96,10 @@ const {
   isLoadingNpsWidgetData,
   csatWidgetType,
   npsWidgetType,
+  isCsatHumanConfig,
+  isCsatAiConfig,
+  isNpsHumanConfig,
+  isNpsAiConfig,
 } = storeToRefs(conversationalWidgets);
 
 const isCsatOrNps = computed(() => {
@@ -113,6 +140,76 @@ const widgetData = computed(() => {
   };
 
   return widgetDataTypes[props.type];
+});
+
+const renderProgressItems = computed(() => {
+  if (props.type === 'csat') {
+    if (
+      (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) ||
+      (csatWidgetType.value === 'HUMAN' && !isCsatHumanConfig.value)
+    ) {
+      return [];
+    }
+
+    return widgetData.value.progressItems;
+  }
+
+  if (props.type === 'nps') {
+    if (
+      (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) ||
+      (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value)
+    ) {
+      return [];
+    }
+
+    return widgetData.value.progressItems;
+  }
+
+  return MOCK_DATA;
+});
+
+const renderCard = computed(() => {
+  if (props.type === 'csat') {
+    return widgetData.value.card;
+  }
+
+  if (props.type === 'nps') {
+    return widgetData.value.card;
+  }
+
+  return null;
+});
+
+const renderFooterText = computed(() => {
+  if (isCsatOrNps.value) {
+    return `${widgetData.value.reviews} ${t('conversations_dashboard.reviews')}`;
+  }
+
+  return null;
+});
+
+const isSetupWidget = computed(() => {
+  const isCsat = props.type === 'csat';
+  const isNps = props.type === 'nps';
+  const isCsatAi =
+    isCsat && csatWidgetType.value === 'AI' && !isCsatAiConfig.value;
+  const isCsatHuman =
+    isCsat && csatWidgetType.value === 'HUMAN' && !isCsatHumanConfig.value;
+  const isNpsAi = isNps && npsWidgetType.value === 'AI' && !isNpsAiConfig;
+  const isNpsHuman =
+    isNps && npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value;
+
+  if (isCsatAi || isCsatHuman) {
+    return true;
+  }
+
+  if (isNpsAi || isNpsHuman) {
+    console.log('isNpsAi', isNpsAi);
+    console.log('isNpsHuman', isNpsHuman);
+    return true;
+  }
+
+  return false;
 });
 
 onMounted(() => {
@@ -283,12 +380,24 @@ const handleTabChange = (tab: Tab) => {
   }
 };
 
-watch(csatWidgetType, () => {
-  loadCsatWidgetData();
+watch(csatWidgetType, (value) => {
+  if (value === 'HUMAN' && isCsatHumanConfig.value) {
+    loadCsatWidgetData();
+  }
+
+  if (value === 'AI' && isCsatAiConfig.value) {
+    loadCsatWidgetData();
+  }
 });
 
-watch(npsWidgetType, () => {
-  loadNpsWidgetData();
+watch(npsWidgetType, (value) => {
+  if (value === 'HUMAN' && isNpsHumanConfig.value) {
+    loadNpsWidgetData();
+  }
+
+  if (value === 'AI' && isNpsAiConfig.value) {
+    loadNpsWidgetData();
+  }
 });
 
 const MOCK_DATA = [
@@ -328,5 +437,11 @@ const MOCK_DATA = [
 <style lang="scss" scoped>
 .conversational-dynamic-widget {
   position: relative;
+
+  &__setup-widget {
+    $header-height: 60px;
+    height: calc(100% - $header-height);
+    top: $header-height / 2;
+  }
 }
 </style>

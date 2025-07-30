@@ -6,7 +6,10 @@
       :progressItems="renderProgressItems"
       :card="renderCard"
       :footerText="renderFooterText"
-      :isLoading="isLoading"
+      :isLoading="
+        isLoading && (type === 'nps' ? !npsWidgetData : !csatWidgetData)
+      "
+      :isLoadingProgress="isLoading"
       @tab-change="handleTabChange"
     >
       <template #setup-widget>
@@ -94,6 +97,8 @@ const {
   npsWidget,
   isLoadingCsatWidgetData,
   isLoadingNpsWidgetData,
+  csatWidgetData,
+  npsWidgetData,
   csatWidgetType,
   npsWidgetType,
   isCsatHumanConfig,

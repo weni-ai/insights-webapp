@@ -99,16 +99,21 @@ export default {
     });
 
     const widgets = response.results.map((widget) => {
+      const position =
+        widget?.position?.length !== 0
+          ? widget?.position
+          : { columns: [0, 0], rows: [0, 0] };
+
       return new Widget({
         uuid: widget.uuid,
         name: widget.name,
         type: widget.type,
         config: widget.config,
         grid_position: {
-          column_start: widget.position.columns[0],
-          column_end: widget.position.columns[1],
-          row_start: widget.position.rows[0],
-          row_end: widget.position.rows[1],
+          column_start: position?.columns[0] || 0,
+          column_end: position?.columns[1] || 0,
+          row_start: position?.rows[0] || 0,
+          row_end: position?.rows[1] || 0,
         },
         report: widget.report,
         source: widget.source,

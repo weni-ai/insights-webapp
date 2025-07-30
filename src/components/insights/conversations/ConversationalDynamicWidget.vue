@@ -195,7 +195,7 @@ const isSetupWidget = computed(() => {
     isCsat && csatWidgetType.value === 'AI' && !isCsatAiConfig.value;
   const isCsatHuman =
     isCsat && csatWidgetType.value === 'HUMAN' && !isCsatHumanConfig.value;
-  const isNpsAi = isNps && npsWidgetType.value === 'AI' && !isNpsAiConfig;
+  const isNpsAi = isNps && npsWidgetType.value === 'AI' && !isNpsAiConfig.value;
   const isNpsHuman =
     isNps && npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value;
 
@@ -204,8 +204,6 @@ const isSetupWidget = computed(() => {
   }
 
   if (isNpsAi || isNpsHuman) {
-    console.log('isNpsAi', isNpsAi);
-    console.log('isNpsHuman', isNpsHuman);
     return true;
   }
 
@@ -439,7 +437,7 @@ const MOCK_DATA = [
   position: relative;
 
   &__setup-widget {
-    $header-height: 60px;
+    $header-height: 120px;
     height: calc(100% - $header-height);
     top: $header-height / 2;
   }

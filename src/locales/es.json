@@ -84,6 +84,33 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "reviews": "evaluaciones",
+    "csat_widget": {
+      "very_satisfied": "Muy satisfecho",
+      "satisfied": "Satisfeito",
+      "neutral": "Neutro",
+      "dissatisfied": "Insatisfeito",
+      "very_dissatisfied": "Muito insatisfeito"
+    },
+    "nps_widget": {
+      "promoters": "Promotores (clasificados 9 o 10)",
+      "passive": "Passivos (clasificados 7 o 8)",
+      "detractors": "Detractores (clasificados 0 a 6)",
+      "current_score": "Puntuación actual",
+      "current_score_types": {
+        "low": "Bajo",
+        "good": "Bueno",
+        "great": "Excelente",
+        "excellent": "Excelente"
+      },
+      "tooltips": {
+        "classification": "Clasificación (%Promotores - %Detractores):",
+        "low": "-100 a 0: Bajo (riesgo reputacional)",
+        "good": "1 a 30: Bueno",
+        "great": "31 a 70: Excelente",
+        "excellent": "71 a 100: Excelente"
+      }
+    },
     "customize_your_dashboard": {
       "title": "Personaliza tu dashboard",
       "description": "Personaliza el dashboard con tus métricas clave",

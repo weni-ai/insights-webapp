@@ -31,6 +31,12 @@
         >
           {{ dashboardTitle }}
         </h1>
+        <section
+          v-if="isConversationalDashboard"
+          class="trigger__beta-container"
+        >
+          <p class="trigger__beta">BETA</p>
+        </section>
         <UnnnicIcon
           data-testid="expand-icon"
           icon="expand_more"
@@ -101,6 +107,10 @@ export default {
         '';
       return this.$t(title);
     },
+
+    isConversationalDashboard() {
+      return this.currentDashboard.name === 'conversations_dashboard.title';
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -153,6 +163,24 @@ $dropdownFixedWidth: 314px;
       font-size: $unnnic-font-size-title-sm;
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-line-height-large * 2;
+    }
+
+    .trigger__beta-container {
+      display: flex;
+      padding: 0 $unnnic-spacing-nano;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+
+      border-radius: $unnnic-border-radius-sm;
+      background: $unnnic-color-weni-50;
+    }
+    .trigger__beta {
+      color: $unnnic-color-weni-600;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-md;
+      font-weight: $unnnic-font-weight-bold;
+      line-height: $unnnic-line-height-md + $unnnic-font-size-body-md;
     }
   }
 

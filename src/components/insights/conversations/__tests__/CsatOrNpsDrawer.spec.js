@@ -114,9 +114,7 @@ describe('CsatOrNpsDrawer', () => {
   describe('Drawer button functionality', () => {
     it('should show correct button text when in add mode', () => {
       const drawerComponent = drawer();
-      expect(drawerComponent.attributes('primarybuttontext')).toBe(
-        'conversations_dashboard.customize_your_dashboard.save_changes',
-      );
+      expect(drawerComponent.attributes('primarybuttontext')).toBe('');
       expect(drawerComponent.attributes('secondarybuttontext')).toBe('cancel');
     });
 
@@ -125,7 +123,9 @@ describe('CsatOrNpsDrawer', () => {
       await nextTick();
 
       const drawerComponent = drawer();
-      expect(drawerComponent.attributes('primarybuttontext')).toBe('');
+      expect(drawerComponent.attributes('primarybuttontext')).toBe(
+        'conversations_dashboard.customize_your_dashboard.save_changes',
+      );
       expect(drawerComponent.attributes('secondarybuttontext')).toBe(
         'conversations_dashboard.customize_your_dashboard.return',
       );
@@ -139,7 +139,9 @@ describe('CsatOrNpsDrawer', () => {
       expect(drawerComponent.attributes('primarybuttontext')).toBe(
         'conversations_dashboard.customize_your_dashboard.save_changes',
       );
-      expect(drawerComponent.attributes('secondarybuttontext')).toBe('cancel');
+      expect(drawerComponent.attributes('secondarybuttontext')).toBe(
+        'conversations_dashboard.customize_your_dashboard.return',
+      );
     });
 
     it('should handle secondary button click when in add mode', async () => {
@@ -155,12 +157,23 @@ describe('CsatOrNpsDrawer', () => {
       expect(wrapper.vm.warningModalType).toBe('return');
     });
 
-    it('should handle secondary button click when type is selected', async () => {
-      conversationalStore.drawerWidgetType = 'csat';
+    it('should handle secondary button click when type is selected but no changes detected', async () => {
+      const wrapperWithConfig = createWrapper(
+        {},
+        {
+          drawerWidgetType: 'csat',
+          isNewDrawerCsatOrNps: false,
+        },
+      );
+      const conversationalStoreConfig = useConversational();
+
       await nextTick();
 
-      await drawer().vm.$emit('secondary-button-click');
-      expect(conversationalStore.isDrawerCsatOrNpsOpen).toBe(false);
+      await wrapperWithConfig
+        .findComponent('[data-testid="add-widget-drawer"]')
+        .vm.$emit('secondary-button-click');
+
+      expect(conversationalStoreConfig.isDrawerCsatOrNpsOpen).toBe(false);
     });
 
     it('should call saveWidgetConfigs when primary button is clicked', async () => {
@@ -199,11 +212,11 @@ describe('CsatOrNpsDrawer', () => {
   });
 
   describe('Warning modal functionality', () => {
-    it('should render ModalAttention but with modelValue false', async () => {
+    it('should render ModalAttention with modelValue true when warningModalType is set', async () => {
       wrapper.vm.warningModalType = 'return';
       await nextTick();
       expect(modalAttention().exists()).toBe(true);
-      expect(modalAttention().vm.modelValue).toBe(false);
+      expect(modalAttention().vm.modelValue).toBe(true);
     });
   });
 
@@ -217,11 +230,12 @@ describe('CsatOrNpsDrawer', () => {
     it('should reset type on returnWidgetTypeChoice', () => {
       conversationalStore.drawerWidgetType = 'csat';
       wrapper.vm.returnWidgetTypeChoice();
-      expect(conversationalStore.drawerWidgetType).toBe(null);
+      expect(conversationalStore.drawerWidgetType).toBe('add');
     });
 
     it('should close drawer on cancelWidgetConfigs', () => {
       wrapper.vm.cancelWidgetConfigs();
+      expect(conversationalStore.drawerWidgetType).toBe(null);
       expect(conversationalStore.isDrawerCsatOrNpsOpen).toBe(false);
     });
   });

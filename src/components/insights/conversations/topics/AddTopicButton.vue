@@ -6,6 +6,7 @@
     iconLeft="add-1"
     size="large"
     type="secondary"
+    :disabled="disabled"
     @click="handleAddTopic"
   />
 </template>
@@ -17,6 +18,7 @@ const emit = defineEmits<{
 
 defineProps<{
   text: string;
+  disabled?: boolean;
 }>();
 
 const handleAddTopic = () => {

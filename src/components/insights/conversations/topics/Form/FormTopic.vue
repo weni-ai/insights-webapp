@@ -10,6 +10,7 @@
       <AddTopicButton
         :text="$t('conversations_dashboard.form_topic.add_topic')"
         data-testid="form-topic-add-button"
+        :disabled="isLimitTopicsReached"
         @add-topic="handleAddTopic"
       />
     </header>
@@ -55,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import AddTopicButton from '../AddTopicButton.vue';
 import FormTopicItem from './FormTopicItem.vue';
@@ -70,7 +72,13 @@ const {
   createNewTopic,
 } = topicsConversationalStore;
 
-const { isLoadingTopics, topics } = storeToRefs(topicsConversationalStore);
+const { isLoadingTopics, topics, topicsCount } = storeToRefs(
+  topicsConversationalStore,
+);
+
+const isLimitTopicsReached = computed(() => {
+  return topicsCount?.value >= 10;
+});
 
 const handleAddTopic = () => {
   const newTopic = createNewTopic();

@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
+import { createI18n } from 'vue-i18n';
 
 import { createTestingPinia } from '@pinia/testing';
 import { routes } from '@/router';
@@ -47,16 +48,31 @@ describe('HeaderSelectDashboard', () => {
   });
 
   const createWrapper = (props) => {
+    const i18n = createI18n({
+      legacy: false,
+      locale: 'en',
+      messages: {
+        en: {
+          'Dashboard 1': 'Dashboard 1',
+          'Dashboard 2': 'Dashboard 2',
+        },
+      },
+    });
+
     return mount(HeaderSelectDashboard, {
       props,
       global: {
-        plugins: [router, store],
+        plugins: [router, store, i18n],
         stubs: {
           UnnnicAvatarIcon: true,
           UnnnicIcon: true,
+          UnnnicDropdown: {
+            template: '<div><slot name="trigger" /><slot /></div>',
+          },
           OptionSelectDashboard: true,
           OptionCreateNewDashboard: true,
           DrawerDashboardConfig: true,
+          BetaText: true,
         },
       },
     });

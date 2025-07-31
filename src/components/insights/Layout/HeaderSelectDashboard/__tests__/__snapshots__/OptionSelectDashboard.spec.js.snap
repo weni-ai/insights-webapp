@@ -7,7 +7,13 @@ exports[`OptionSelectDashboard > Should match the snapshot 1`] = `
   data-v-000aa0c0=""
 >
   
-  Dashboard 1 
+  <section
+    class="option-select-dashboard__content"
+    data-v-000aa0c0=""
+  >
+    Dashboard 1 
+    <!--v-if-->
+  </section>
   <span
     class="material-symbols-rounded unnnic-icon-scheme--neutral-clean unnnic-icon-size--md unnnic--clickable option-select-dashboard__star-icon"
     data-testid="star-icon"

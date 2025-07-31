@@ -47,6 +47,37 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
   }),
 
   actions: {
+    _hasValidConfig(config: CsatOrNpsCardConfig | undefined): boolean {
+      if (!config) return false;
+
+      const hasValidAiConfig = !!config.datalake_config?.agent_uuid;
+      const hasValidHumanConfig = !!(config.filter?.flow && config.op_field);
+
+      return (
+        (this.isFormAi && hasValidAiConfig) ||
+        (this.isFormHuman && hasValidHumanConfig)
+      );
+    },
+
+    _hasConfigChanges(
+      dashboardConfig: CsatOrNpsCardConfig | undefined,
+      widgetConfig: CsatOrNpsCardConfig | undefined,
+    ): boolean {
+      if (!dashboardConfig || !widgetConfig) return false;
+
+      const aiConfigChanged =
+        dashboardConfig.datalake_config?.agent_uuid !==
+        widgetConfig.datalake_config?.agent_uuid;
+
+      const humanConfigChanged =
+        dashboardConfig.filter?.flow !== widgetConfig.filter?.flow ||
+        dashboardConfig.op_field !== widgetConfig.op_field;
+
+      return (
+        (this.isFormAi && aiConfigChanged) ||
+        (this.isFormHuman && humanConfigChanged)
+      );
+    },
     setNewWidget(widget: WidgetType | null) {
       this.newWidget = widget;
     },
@@ -256,19 +287,39 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       );
     },
     isEnabledUpdateWidgetCsat: (state) => {
-      return !!(
-        (state.csatWidget?.config as CsatOrNpsCardConfig)?.datalake_config
-          ?.agent_uuid ||
-        ((state.csatWidget?.config as CsatOrNpsCardConfig)?.filter?.flow &&
-          (state.csatWidget?.config as CsatOrNpsCardConfig)?.op_field)
+      const { findWidgetBySource } = useWidgets();
+      const { _hasValidConfig, _hasConfigChanges } = useConversationalWidgets();
+      const widgetCsatFromDashboard = findWidgetBySource('conversations.csat');
+
+      if (!widgetCsatFromDashboard || !state.csatWidget) {
+        return false;
+      }
+
+      const dashboardConfig =
+        widgetCsatFromDashboard.config as CsatOrNpsCardConfig;
+      const csatWidgetConfig = state.csatWidget.config as CsatOrNpsCardConfig;
+
+      return (
+        _hasValidConfig(csatWidgetConfig) &&
+        _hasConfigChanges(dashboardConfig, csatWidgetConfig)
       );
     },
     isEnabledUpdateWidgetNps: (state) => {
-      return !!(
-        ((state.npsWidget?.config as CsatOrNpsCardConfig)?.filter?.flow &&
-          (state.npsWidget?.config as CsatOrNpsCardConfig)?.op_field) ||
-        (state.npsWidget?.config as CsatOrNpsCardConfig)?.datalake_config
-          ?.agent_uuid
+      const { findWidgetBySource } = useWidgets();
+      const { _hasValidConfig, _hasConfigChanges } = useConversationalWidgets();
+      const widgetNpsFromDashboard = findWidgetBySource('conversations.nps');
+
+      if (!widgetNpsFromDashboard || !state.npsWidget) {
+        return false;
+      }
+
+      const dashboardConfig =
+        widgetNpsFromDashboard.config as CsatOrNpsCardConfig;
+      const npsWidgetConfig = state.npsWidget.config as CsatOrNpsCardConfig;
+
+      return (
+        _hasValidConfig(npsWidgetConfig) &&
+        _hasConfigChanges(dashboardConfig, npsWidgetConfig)
       );
     },
     getDynamicWidgets: () => {

@@ -11,7 +11,7 @@
         : ''
     "
     :secondaryButtonText="
-      !drawerWidgetType
+      drawerWidgetType !== 'add' && isNewDrawerCsatOrNps
         ? $t('conversations_dashboard.customize_your_dashboard.return')
         : $t('cancel')
     "
@@ -65,8 +65,8 @@
   </UnnnicDrawer>
 
   <ModalAttention
-    :modelValue="false"
-    type="cancel"
+    :modelValue="warningModalType !== ''"
+    :type="warningModalType !== '' ? warningModalType : 'cancel'"
     data-testid="drawer-csat-or-nps-widget-modal"
     @primary-button-click="confirmAttentionModal"
     @secondary-button-click="closeWarningModal"
@@ -117,7 +117,7 @@ async function saveWidgetConfigs() {
 }
 
 function handleSecondaryButtonClick() {
-  if (!drawerWidgetType.value) {
+  if (drawerWidgetType.value !== 'add' && isNewDrawerCsatOrNps.value) {
     warningModalType.value = 'return';
   } else {
     setIsDrawerCsatOrNpsOpen(false, null, false);
@@ -126,12 +126,12 @@ function handleSecondaryButtonClick() {
 
 function returnWidgetTypeChoice() {
   closeWarningModal();
-  drawerWidgetType.value = null;
+  drawerWidgetType.value = 'add';
 }
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  drawerWidgetType.value = null;
+  drawerWidgetType.value = 'add';
   setIsDrawerCsatOrNpsOpen(false, null, false);
 }
 

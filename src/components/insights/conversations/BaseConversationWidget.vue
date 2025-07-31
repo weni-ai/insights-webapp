@@ -29,6 +29,7 @@
       >
         <ShortTab
           :tabs="tabs"
+          :currentTab="currentTab"
           data-testid="base-conversation-widget-tabs"
           @tab-change="handleTabChange"
         />
@@ -96,6 +97,7 @@ defineProps<{
     onClick: () => void;
     scheme?: string;
   }[];
+  currentTab?: string;
 }>();
 
 const tabs = computed(() => [

@@ -249,7 +249,7 @@ const actions = [
     icon: 'edit_square',
     text: t(
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: props.type },
+      { type: props.type.toUpperCase() },
     ),
     onClick: () => handleOpenDrawer(false),
   },

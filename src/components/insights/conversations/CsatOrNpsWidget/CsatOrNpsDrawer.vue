@@ -22,6 +22,7 @@
           ? !isEnabledUpdateWidgetCsat
           : !isEnabledUpdateWidgetNps
     "
+    :loadingPrimaryButton="isLoadingSaveButton"
     @primary-button-click="saveWidgetConfigs"
     @secondary-button-click="handleSecondaryButtonClick"
     @close="closeDrawer"
@@ -90,6 +91,8 @@ const {
   isNpsConfigured,
   isEnabledUpdateWidgetCsat,
   isEnabledUpdateWidgetNps,
+  isLoadingSaveNewWidget,
+  isLoadingUpdateWidget,
 } = storeToRefs(useConversationalWidgets());
 
 const { setIsDrawerCsatOrNpsOpen } = useConversational();
@@ -115,6 +118,14 @@ async function saveWidgetConfigs() {
 
   setIsDrawerCsatOrNpsOpen(false, null, false);
 }
+
+const isLoadingSaveButton = computed(() => {
+  if(isNewDrawerCsatOrNps.value) {
+    return isLoadingSaveNewWidget.value;
+  }
+  
+  return isLoadingUpdateWidget.value;
+});
 
 function handleSecondaryButtonClick() {
   if (drawerWidgetType.value !== 'add' && isNewDrawerCsatOrNps.value) {

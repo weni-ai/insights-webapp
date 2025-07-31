@@ -6,7 +6,7 @@
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
     :primaryButtonText="
-      drawerWidgetType
+      drawerWidgetType !== 'add'
         ? $t('conversations_dashboard.customize_your_dashboard.save_changes')
         : ''
     "

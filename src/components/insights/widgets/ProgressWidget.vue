@@ -45,7 +45,7 @@
             class="progress-widget__skeleton"
             data-testid="progress-widget-skeleton"
             width="100%"
-            height="51.2px"
+            height="56px"
           />
         </section>
       </section>
@@ -142,6 +142,8 @@ const handleTabChange = (tab: Tab) => {
 
   &__content {
     .content__card {
+      display: flex;
+      min-height: calc(114px + $unnnic-spacing-sm);
       padding-bottom: $unnnic-spacing-sm;
     }
   }

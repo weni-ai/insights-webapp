@@ -15,6 +15,7 @@
       text: $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove',
       ),
+      loading: isLoading,
       onClick: handleRemoveWidget,
     }"
     :secondaryButtonProps="{
@@ -39,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 
 interface Props {
@@ -54,9 +56,18 @@ const emit = defineEmits<{
 
 const { deleteWidget } = useConversationalWidgets();
 
-const handleRemoveWidget = () => {
-  deleteWidget(props.type);
-  emit('update:modelValue', false);
+const isLoading = ref(false);
+
+const handleRemoveWidget = async () => {
+  try {
+    isLoading.value = true;
+    await deleteWidget(props.type);
+    emit('update:modelValue', false);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 

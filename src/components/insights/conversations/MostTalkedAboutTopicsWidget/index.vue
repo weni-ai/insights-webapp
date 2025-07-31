@@ -24,6 +24,7 @@
         v-if="treemapData.length > 0"
         type="tertiary"
         size="small"
+        :disabled="isLoadingTopicsDistribution"
         :text="$t('conversations_dashboard.most_talked_about_topics.see_all')"
         @click="handleSeeAllDrawer()"
       />

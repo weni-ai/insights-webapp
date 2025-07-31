@@ -49,7 +49,7 @@ export default {
 
   watch: {
     flow(newFlow) {
-      this.$emit('update:model-value', newFlow?.[0].value);
+      this.$emit('update:model-value', newFlow?.[0]?.value);
     },
     modelValue() {
       this.treatModelValue();
@@ -68,7 +68,7 @@ export default {
   methods: {
     treatModelValue() {
       const { modelValue } = this;
-
+      console.log('treatModelValue', modelValue);
       if (!modelValue || (Array.isArray(modelValue) && !modelValue.length)) {
         this.flow = [this.flowsOptionsPlaceholder];
         return;

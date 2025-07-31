@@ -69,6 +69,7 @@ import {
 } from '@/services/api/resources/conversational/widgets';
 import { Tab } from './BaseConversationWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { useRoute } from 'vue-router';
 
 const props = defineProps<{
   type: 'csat' | 'nps' | 'add';
@@ -77,10 +78,8 @@ const props = defineProps<{
 const isRemoveWidgetModalOpen = ref(false);
 const conversational = useConversational();
 const { setIsDrawerCsatOrNpsOpen } = conversational;
+const route = useRoute();
 
-function handleOpenDrawer(isNew: boolean) {
-  setIsDrawerCsatOrNpsOpen(true, props.type, isNew);
-}
 const conversationalWidgets = useConversationalWidgets();
 
 const {
@@ -313,6 +312,10 @@ const handleCsatWidgetData = (data: CsatResponse) => {
   };
 };
 
+const handleOpenDrawer = (isNew: boolean) => {
+  setIsDrawerCsatOrNpsOpen(true, props.type, isNew);
+};
+
 const handleNpsWidgetData = (data: NpsResponse) => {
   const colors = {
     promoters: {
@@ -430,6 +433,19 @@ watch(npsWidgetType, (value) => {
     loadNpsWidgetData();
   }
 });
+
+watch(
+  () => route.query,
+  () => {
+    if (props.type === 'csat') {
+      loadCsatWidgetData();
+    }
+
+    if (props.type === 'nps') {
+      loadNpsWidgetData();
+    }
+  },
+);
 
 const MOCK_DATA = [
   {

@@ -31,12 +31,7 @@
         >
           {{ dashboardTitle }}
         </h1>
-        <section
-          v-if="isConversationalDashboard"
-          class="trigger__beta-container"
-        >
-          <p class="trigger__beta">BETA</p>
-        </section>
+        <BetaText />
         <UnnnicIcon
           data-testid="expand-icon"
           icon="expand_more"
@@ -76,6 +71,7 @@ import { useOnboarding } from '@/store/modules/onboarding';
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
+import BetaText from './BetaText.vue';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -84,6 +80,7 @@ export default {
     OptionSelectDashboard,
     OptionCreateNewDashboard,
     DrawerDashboardConfig,
+    BetaText,
   },
 
   computed: {
@@ -106,10 +103,6 @@ export default {
         this.dashboards[0].name ||
         '';
       return this.$t(title);
-    },
-
-    isConversationalDashboard() {
-      return this.currentDashboard.name === 'conversations_dashboard.title';
     },
   },
   mounted() {
@@ -163,24 +156,6 @@ $dropdownFixedWidth: 314px;
       font-size: $unnnic-font-size-title-sm;
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-line-height-large * 2;
-    }
-
-    .trigger__beta-container {
-      display: flex;
-      padding: 0 $unnnic-spacing-nano;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-
-      border-radius: $unnnic-border-radius-sm;
-      background: $unnnic-color-weni-50;
-    }
-    .trigger__beta {
-      color: $unnnic-color-weni-600;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-md;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-line-height-md + $unnnic-font-size-body-md;
     }
   }
 

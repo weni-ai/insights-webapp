@@ -107,8 +107,17 @@ const handleExpand = () => {
 
 <style scoped lang="scss">
 .progress-table-row-item {
+  display: table-row;
+
   &:not(:last-of-type) {
-    border-bottom: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+    &::after {
+      content: '';
+      display: block;
+      width: 100%;
+      margin: $unnnic-spacing-nano 0;
+      height: $unnnic-border-width-thinner;
+      background-color: $unnnic-color-neutral-soft;
+    }
   }
 
   &--expandable {

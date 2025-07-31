@@ -20,7 +20,7 @@
           :title="
             $tc('conversations_dashboard.setup_csat_or_nps_widget.title', {
               type: type.toUpperCase(),
-              tab: type === 'csat' ? csatWidgetType : npsWidgetType,
+              tab: tabName,
             })
           "
           :description="
@@ -28,7 +28,7 @@
               'conversations_dashboard.setup_csat_or_nps_widget.description',
               {
                 type: type.toUpperCase(),
-                tab: type === 'csat' ? csatWidgetType : npsWidgetType,
+                tab: tabName,
               },
             )
           "
@@ -160,6 +160,17 @@ const renderProgressItems = computed(() => {
   return MOCK_DATA;
 });
 
+const tabName = computed(() => {
+  const type =
+    props.type === 'csat' ? csatWidgetType.value : npsWidgetType.value;
+  const tabTranslations = {
+    AI: 'artificial_intelligence',
+    HUMAN: 'human_support',
+  };
+
+  return t(`conversations_dashboard.${tabTranslations[type]}`);
+});
+
 const renderCard = computed(() => {
   if (props.type === 'csat') {
     return widgetData.value.card;
@@ -248,7 +259,7 @@ const actions = [
     icon: 'edit_square',
     text: t(
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: props.type },
+      { type: props.type.toUpperCase() },
     ),
     onClick: () => handleOpenDrawer(false),
   },

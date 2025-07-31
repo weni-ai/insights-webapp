@@ -12,7 +12,6 @@ interface ConversationalHeaderTotalsResponse {
   total_conversations: ConversationMetric;
   resolved: ConversationMetric;
   unresolved: ConversationMetric;
-  abandoned: ConversationMetric;
   transferred_to_human: ConversationMetric;
 }
 

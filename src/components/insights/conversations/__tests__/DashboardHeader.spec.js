@@ -18,7 +18,6 @@ vi.mock('@/services/api/resources/conversational/header', () => ({
       { id: 'total_conversations', value: 0, percentage: 100 },
       { id: 'resolved', value: 0, percentage: 0 },
       { id: 'unresolved', value: 0, percentage: 0 },
-      { id: 'abandoned', value: 0, percentage: 0 },
       { id: 'transferred_to_human', value: 0, percentage: 0 },
     ]),
   },
@@ -159,12 +158,6 @@ describe('DashboardHeader.vue', () => {
         titleKey: 'conversations_dashboard.header.unresolved',
         tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
       });
-
-      expect(vm.cardDefinitions[3]).toEqual({
-        id: 'abandoned',
-        titleKey: 'conversations_dashboard.header.unengaged',
-        tooltipKey: 'conversations_dashboard.header.tooltips.unengaged',
-      });
     });
 
     it('should create initial card data correctly', () => {
@@ -190,7 +183,6 @@ describe('DashboardHeader.vue', () => {
                   total_conversations: { value: 0, percentage: 100 },
                   resolved: { value: 0, percentage: 0 },
                   unresolved: { value: 0, percentage: 0 },
-                  abandoned: { value: 0, percentage: 0 },
                   transferred_to_human: { value: 0, percentage: 0 },
                 }),
               100,
@@ -230,7 +222,6 @@ describe('DashboardHeader.vue', () => {
           { id: 'total_conversations', value: 0, percentage: 100 },
           { id: 'resolved', value: 0, percentage: 0 },
           { id: 'unresolved', value: 0, percentage: 0 },
-          { id: 'abandoned', value: 0, percentage: 0 },
           { id: 'transferred_to_human', value: 0, percentage: 0 },
         ],
       );
@@ -295,7 +286,6 @@ describe('DashboardHeader.vue', () => {
         { id: 'total_conversations', value: 1000, percentage: 100 },
         { id: 'resolved', value: 850, percentage: 85 },
         { id: 'unresolved', value: 100, percentage: 10 },
-        { id: 'abandoned', value: 50, percentage: 5 },
         { id: 'transferred_to_human', value: 25, percentage: 2.5 },
       ];
 
@@ -527,7 +517,6 @@ describe('DashboardHeader.vue', () => {
         { id: 'total_conversations', value: 100, percentage: 100 },
         { id: 'resolved', value: 80, percentage: 80 },
         { id: 'unresolved', value: 20, percentage: 20 },
-        { id: 'abandoned', value: 0, percentage: 0 },
         { id: 'transferred_to_human', value: 5, percentage: 5 },
       ];
 

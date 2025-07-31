@@ -383,7 +383,8 @@
       }
     },
     "treemap": {
-      "no_data": "No data to show"
+      "no_data": "No data to show",
+      "no_data_description": "No conversations have been classified yet"
     }
   },
   "drawers": {

@@ -10,6 +10,7 @@
         isLoading && (type === 'nps' ? !npsWidgetData : !csatWidgetData)
       "
       :isLoadingProgress="isLoading"
+      :currentTab="handleCurrentTab"
       @tab-change="handleTabChange"
     >
       <template #setup-widget>
@@ -43,13 +44,6 @@
       @add="handleOpenDrawer"
     />
 
-    <CsatOrNpsDrawer
-      v-if="isDrawerOpen"
-      :modelValue="isDrawerOpen"
-      :type="type === 'add' ? null : type"
-      :isNew="type === 'add'"
-      @update:model-value="isDrawerOpen = $event"
-    />
     <ModalRemoveWidget
       v-if="isRemoveWidgetModalOpen && type !== 'add'"
       v-model="isRemoveWidgetModalOpen"
@@ -62,7 +56,6 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
-import CsatOrNpsDrawer from '@/components/insights/conversations/CsatOrNpsWidget/CsatOrNpsDrawer.vue';
 import ModalRemoveWidget from './CsatOrNpsWidget/ModalRemoveWidget.vue';
 import { useI18n } from 'vue-i18n';
 import SetupWidget from './SetupWidget.vue';
@@ -75,26 +68,42 @@ import {
   NpsResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { Tab } from './BaseConversationWidget.vue';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 const props = defineProps<{
   type: 'csat' | 'nps' | 'add';
 }>();
 
-const isDrawerOpen = ref(false);
 const isRemoveWidgetModalOpen = ref(false);
+const conversational = useConversational();
+const { isDrawerCsatOrNpsOpen } = storeToRefs(conversational);
+const { setIsDrawerCsatOrNpsOpen } = conversational;
+
 function handleOpenDrawer() {
-  isDrawerOpen.value = true;
+  console.log('handleOpenDrawer', props.type);
+  setIsDrawerCsatOrNpsOpen(true, props.type);
+  if (props.type === 'csat') {
+    setIsEditCsat(true);
+  }
+
+  if (props.type === 'nps') {
+    setIsEditNps(true);
+  }
 }
 const conversationalWidgets = useConversationalWidgets();
+
 const {
   loadCsatWidgetData,
   loadNpsWidgetData,
   setCsatWidgetType,
   setNpsWidgetType,
+  setIsEditCsat,
+  setIsEditNps,
 } = conversationalWidgets;
+
 const {
-  csatWidget,
-  npsWidget,
+  currentCsatWidget,
+  currentNpsWidget,
   isLoadingCsatWidgetData,
   isLoadingNpsWidgetData,
   csatWidgetData,
@@ -120,15 +129,6 @@ const widgetType = computed(() => {
   return widgetTypes[props.type];
 });
 
-const widget = computed(() => {
-  const widgetTypes = {
-    csat: csatWidget.value,
-    nps: npsWidget.value,
-  };
-
-  return widgetTypes[props.type];
-});
-
 const isLoading = computed(() => {
   const isLoadingTypes = {
     csat: isLoadingCsatWidgetData.value,
@@ -140,8 +140,8 @@ const isLoading = computed(() => {
 
 const widgetData = computed(() => {
   const widgetDataTypes = {
-    csat: handleCsatWidgetData(csatWidget.value?.data),
-    nps: handleNpsWidgetData(npsWidget.value?.data),
+    csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
+    nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
   };
 
   return widgetDataTypes[props.type];
@@ -166,7 +166,6 @@ const renderProgressItems = computed(() => {
     ) {
       return [];
     }
-
     return widgetData.value.progressItems;
   }
 
@@ -215,15 +214,44 @@ const isSetupWidget = computed(() => {
   return false;
 });
 
-onMounted(() => {
-  const isCsatOrNps = ['csat', 'nps'].includes(props.type);
+const handleCurrentTab = computed(() => {
+  const tabs = {
+    csat: {
+      AI: 'artificial-intelligence',
+      HUMAN: 'human-support',
+    },
+    nps: {
+      AI: 'artificial-intelligence',
+      HUMAN: 'human-support',
+    },
+  };
 
-  if (isCsatOrNps) {
-    const loadWidgetData = {
-      csat: loadCsatWidgetData,
-      nps: loadNpsWidgetData,
-    };
-    loadWidgetData[props.type]();
+  if (props.type === 'csat') {
+    return tabs[props.type][csatWidgetType.value];
+  }
+
+  if (props.type === 'nps') {
+    return tabs[props.type][npsWidgetType.value];
+  }
+
+  return '';
+});
+
+onMounted(() => {
+  if (props.type === 'csat') {
+    loadCsatWidgetData();
+    if (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) {
+      handleTabChange('human-support');
+      return 'human-support';
+    }
+  }
+
+  if (props.type === 'nps') {
+    loadNpsWidgetData();
+    if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
+      handleTabChange('human-support');
+      return 'human-support';
+    }
   }
 });
 

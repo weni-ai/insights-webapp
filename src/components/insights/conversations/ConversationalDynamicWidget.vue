@@ -35,13 +35,13 @@
           :actionText="
             $t('conversations_dashboard.setup_csat_or_nps_widget.action_text')
           "
-          @action="handleOpenDrawer"
+          @action="handleOpenDrawer(false)"
         />
       </template>
     </ProgressWidget>
     <AddCsatOrNpsWidget
       v-if="type === 'add'"
-      @add="handleOpenDrawer"
+      @add="handleOpenDrawer(true)"
     />
 
     <ModalRemoveWidget
@@ -76,19 +76,10 @@ const props = defineProps<{
 
 const isRemoveWidgetModalOpen = ref(false);
 const conversational = useConversational();
-const { isDrawerCsatOrNpsOpen } = storeToRefs(conversational);
 const { setIsDrawerCsatOrNpsOpen } = conversational;
 
-function handleOpenDrawer() {
-  console.log('handleOpenDrawer', props.type);
-  setIsDrawerCsatOrNpsOpen(true, props.type);
-  if (props.type === 'csat') {
-    setIsEditCsat(true);
-  }
-
-  if (props.type === 'nps') {
-    setIsEditNps(true);
-  }
+function handleOpenDrawer(isNew: boolean) {
+  setIsDrawerCsatOrNpsOpen(true, props.type, isNew);
 }
 const conversationalWidgets = useConversationalWidgets();
 
@@ -97,8 +88,6 @@ const {
   loadNpsWidgetData,
   setCsatWidgetType,
   setNpsWidgetType,
-  setIsEditCsat,
-  setIsEditNps,
 } = conversationalWidgets;
 
 const {
@@ -262,7 +251,7 @@ const actions = [
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
       { type: props.type },
     ),
-    onClick: () => handleOpenDrawer(),
+    onClick: () => handleOpenDrawer(false),
   },
   {
     icon: 'delete',

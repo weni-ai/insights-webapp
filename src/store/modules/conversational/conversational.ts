@@ -6,15 +6,18 @@ export const useConversational = defineStore('conversational', {
   state: () => ({
     isDrawerCsatOrNpsOpen: false,
     drawerWidgetType: null as 'nps' | 'csat' | 'add' | null,
+    isNewDrawerCsatOrNps: false,
   }),
 
   actions: {
     setIsDrawerCsatOrNpsOpen(
       isDrawerCsatOrNpsOpen: boolean,
       type: 'nps' | 'csat' | 'add' | null,
+      isNew: boolean,
     ) {
       this.isDrawerCsatOrNpsOpen = isDrawerCsatOrNpsOpen;
       this.drawerWidgetType = type;
+      this.isNewDrawerCsatOrNps = isNew;
     },
   },
   getters: {

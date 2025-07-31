@@ -189,6 +189,8 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+$min-height: 134px;
+
 .dashboard-conversational__header {
   display: flex;
   justify-content: space-between;
@@ -200,11 +202,13 @@ onMounted(() => {
   .header__cards {
     display: flex;
     flex: 9;
+    min-height: $min-height;
   }
 
   .header__summary {
     display: flex;
     flex: 3;
+    min-height: $min-height;
   }
 }
 </style>

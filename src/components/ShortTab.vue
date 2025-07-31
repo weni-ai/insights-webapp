@@ -12,10 +12,10 @@
         :key="index"
         :class="[
           'short-tab__tab',
-          { 'short-tab__tab--active': activeTab === index },
+          { 'short-tab__tab--active': activeTab === tab.key },
         ]"
         :data-testid="`short-tab-button-${index}`"
-        @click="switchTab(index)"
+        @click="switchTab(tab.key)"
       >
         {{ tab.name }}
       </button>
@@ -31,27 +31,27 @@ interface Tab {
 }
 interface Props {
   tabs: Tab[];
-  defaultTab?: number;
+  currentTab?: string;
 }
 const props = withDefaults(defineProps<Props>(), {
-  defaultTab: 0,
+  currentTab: '',
 });
 const emit = defineEmits<{
   (_e: 'tab-change', tab: string): void;
 }>();
-const activeTab = ref(props.defaultTab);
+const activeTab = ref(props.currentTab);
 
 watch(
-  () => props.defaultTab,
-  (newDefaultTab) => {
-    activeTab.value = newDefaultTab;
+  () => props.currentTab,
+  (newCurrentTab) => {
+    activeTab.value = newCurrentTab;
   },
 );
 
-const switchTab = (index: number) => {
-  if (index !== activeTab.value) {
-    activeTab.value = index;
-    emit('tab-change', props.tabs[index].key);
+const switchTab = (key: string) => {
+  if (key !== activeTab.value) {
+    activeTab.value = key;
+    emit('tab-change', key);
   }
 };
 </script>

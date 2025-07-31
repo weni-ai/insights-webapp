@@ -17,13 +17,24 @@
       />
     </section>
 
-    <p
+    <section
       v-else-if="data.length === 0"
       data-testid="treemap-chart-no-data"
       class="treemap-chart__no-data"
     >
-      {{ $t('widgets.treemap.no_data') }}
-    </p>
+      <p
+        data-testid="treemap-chart-no-data"
+        class="no-data__title"
+      >
+        {{ $t('widgets.treemap.no_data') }}
+      </p>
+      <p
+        data-testid="treemap-chart-no-data"
+        class="no-data__description"
+      >
+        {{ $t('widgets.treemap.no_data_description') }}
+      </p>
+    </section>
 
     <canvas
       v-else
@@ -258,14 +269,27 @@ watch(treemapCanvas, (newValue) => {
 
   &__no-data {
     height: 100%;
+
     display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-ant;
     justify-content: center;
     align-items: center;
 
-    font-size: $unnnic-font-size-body-gt;
-    font-family: $unnnic-font-family-secondary;
-    color: $unnnic-color-neutral-cloudy;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    .no-data__title {
+      font-size: $unnnic-font-size-title-sm;
+      font-family: $unnnic-font-family-secondary;
+      font-weight: $unnnic-font-weight-bold;
+      color: $unnnic-color-neutral-darkest;
+      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+    }
+
+    .no-data__description {
+      font-size: $unnnic-font-size-body-lg;
+      font-family: $unnnic-font-family-secondary;
+      color: $unnnic-color-neutral-cloudy;
+      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    }
   }
 
   &__canvas {

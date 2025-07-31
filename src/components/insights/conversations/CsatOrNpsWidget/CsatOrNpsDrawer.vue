@@ -1,32 +1,34 @@
 <template>
   <UnnnicDrawer
-    v-if="modelValue"
-    :modelValue="modelValue"
+    v-if="isDrawerCsatOrNpsOpen"
+    :modelValue="isDrawerCsatOrNpsOpen"
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
     :primaryButtonText="
-      type
+      drawerWidgetType
         ? $t('conversations_dashboard.customize_your_dashboard.save_changes')
         : ''
     "
     :secondaryButtonText="
-      type ? $t('conversations_dashboard.customize_your_dashboard.return') : ''
+      !drawerWidgetType
+        ? $t('conversations_dashboard.customize_your_dashboard.return')
+        : $t('cancel')
     "
     :disabledPrimaryButton="
-      props.isNew
+      isNew
         ? !isEnabledSaveNewWidget
-        : type === 'csat'
+        : drawerWidgetType === 'csat'
           ? !isEnabledUpdateWidgetCsat
           : !isEnabledUpdateWidgetNps
     "
     @primary-button-click="saveWidgetConfigs"
-    @secondary-button-click="warningModalType = 'return'"
+    @secondary-button-click="handleSecondaryButtonClick"
     @close="closeDrawer"
   >
     <template #content>
       <ul
-        v-if="!type"
+        v-if="drawerWidgetType === 'add'"
         class="add-widget-drawer__widget-list"
       >
         <li
@@ -34,7 +36,10 @@
           :key="widget.name"
           class="widget-list__item"
           data-testid="add-widget-drawer-item"
-          @click="type = widget.name.toLowerCase() as DrawerType"
+          @click="
+            ((drawerWidgetType = widget.name.toLowerCase() as 'csat' | 'nps'),
+            (isNew = true))
+          "
         >
           <h2
             class="item__title"
@@ -54,16 +59,15 @@
       <ConfigCsatOrNpsWidget
         v-else
         data-testid="config-csat-or-nps-widget"
-        :type="type"
+        :type="drawerWidgetType"
         :isNew="isNew"
       />
     </template>
   </UnnnicDrawer>
 
   <ModalAttention
-    v-if="!!warningModalType"
-    :modelValue="!!warningModalType"
-    :type="warningModalType"
+    :modelValue="false"
+    type="cancel"
     data-testid="drawer-csat-or-nps-widget-modal"
     @primary-button-click="confirmAttentionModal"
     @secondary-button-click="closeWarningModal"
@@ -77,8 +81,7 @@ import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { storeToRefs } from 'pinia';
-
-type DrawerType = 'csat' | 'nps' | null;
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
   useConversationalWidgets();
@@ -90,24 +93,14 @@ const {
   isEnabledUpdateWidgetNps,
 } = storeToRefs(useConversationalWidgets());
 
-const props = defineProps<{
-  modelValue: boolean;
-  isNew: boolean;
-}>();
+const { setIsDrawerCsatOrNpsOpen } = useConversational();
+const { isDrawerCsatOrNpsOpen, drawerWidgetType } =
+  storeToRefs(useConversational());
 
-const emit = defineEmits<{
-  (_e: 'update:modelValue', _value: boolean): void;
-}>();
-
-const type = defineModel<DrawerType>('type');
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
 function closeDrawer() {
-  if (type.value) {
-    warningModalType.value = 'cancel';
-  } else {
-    emit('update:modelValue', false);
-  }
+  setIsDrawerCsatOrNpsOpen(false, null);
 }
 
 function closeWarningModal() {
@@ -115,24 +108,32 @@ function closeWarningModal() {
 }
 
 async function saveWidgetConfigs() {
-  if (props.isNew) {
+  if (isNew.value) {
     await saveNewWidget();
   } else {
-    await updateConversationalWidget(type.value as 'csat' | 'nps');
+    await updateConversationalWidget(drawerWidgetType.value as 'csat' | 'nps');
   }
 
-  emit('update:modelValue', false);
+  setIsDrawerCsatOrNpsOpen(false, null);
+}
+
+function handleSecondaryButtonClick() {
+  if (!drawerWidgetType.value) {
+    warningModalType.value = 'return';
+  } else {
+    setIsDrawerCsatOrNpsOpen(false, null);
+  }
 }
 
 function returnWidgetTypeChoice() {
   closeWarningModal();
-  type.value = null;
+  drawerWidgetType.value = null;
 }
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  type.value = null;
-  emit('update:modelValue', false);
+  drawerWidgetType.value = null;
+  setIsDrawerCsatOrNpsOpen(false, null);
 }
 
 function confirmAttentionModal() {
@@ -141,6 +142,8 @@ function confirmAttentionModal() {
     ? returnWidgetTypeChoice()
     : cancelWidgetConfigs();
 }
+
+const isNew = ref(drawerWidgetType.value === 'add');
 
 const availableWidgets = computed(() => {
   const availableWidgets = [

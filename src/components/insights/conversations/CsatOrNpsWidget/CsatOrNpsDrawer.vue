@@ -119,6 +119,11 @@ async function saveWidgetConfigs() {
 function handleSecondaryButtonClick() {
   if (drawerWidgetType.value !== 'add' && isNewDrawerCsatOrNps.value) {
     warningModalType.value = 'return';
+  } else if (
+    (drawerWidgetType.value === 'csat' && isEnabledUpdateWidgetCsat.value) ||
+    (drawerWidgetType.value === 'nps' && isEnabledUpdateWidgetNps.value)
+  ) {
+    warningModalType.value = 'cancel';
   } else {
     setIsDrawerCsatOrNpsOpen(false, null, false);
   }

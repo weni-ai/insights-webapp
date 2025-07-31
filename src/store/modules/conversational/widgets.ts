@@ -50,13 +50,17 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     _hasValidConfig(config: CsatOrNpsCardConfig | undefined): boolean {
       if (!config) return false;
 
-      const hasValidAiConfig = !!config.datalake_config?.agent_uuid;
-      const hasValidHumanConfig = !!(config.filter?.flow && config.op_field);
+      const hasValidAiConfig =
+        !!config.datalake_config?.agent_uuid && this.isFormAi;
+      const hasValidHumanConfig =
+        !!(config.filter?.flow && config.op_field && config.op_field !== '') &&
+        this.isFormHuman;
 
-      return (
-        (this.isFormAi && hasValidAiConfig) ||
-        (this.isFormHuman && hasValidHumanConfig)
-      );
+      if (this.isFormAi && this.isFormHuman) {
+        return hasValidAiConfig && hasValidHumanConfig;
+      }
+
+      return hasValidAiConfig || hasValidHumanConfig;
     },
 
     _hasConfigChanges(

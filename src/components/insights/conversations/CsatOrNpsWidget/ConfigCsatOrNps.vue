@@ -298,11 +298,13 @@ function setFormDataAiSupport() {
     const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.datalake_config?.agent_uuid) {
       aiSupport.value = true;
+      conversationalWidgets.setIsFormAi(true);
     }
   } else {
     const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.datalake_config?.agent_uuid) {
       aiSupport.value = true;
+      conversationalWidgets.setIsFormAi(true);
     }
   }
 }
@@ -312,11 +314,13 @@ function setFormDataHumanSupport() {
     const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.filter?.flow && config?.op_field) {
       humanSupport.value = true;
+      conversationalWidgets.setIsFormHuman(true);
     }
   } else {
     const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.filter?.flow && config?.op_field) {
       humanSupport.value = true;
+      conversationalWidgets.setIsFormHuman(true);
     }
   }
 }

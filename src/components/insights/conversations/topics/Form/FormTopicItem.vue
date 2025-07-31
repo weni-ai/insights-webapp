@@ -201,7 +201,7 @@ const subTopicsTitle = computed(() => {
 });
 
 const isLimitSubTopicsReached = computed(() => {
-  return props.topic.subTopics.length >= 5;
+  return props.topic?.subTopics?.length >= 5;
 });
 </script>
 

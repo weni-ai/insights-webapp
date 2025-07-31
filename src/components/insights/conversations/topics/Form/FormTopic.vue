@@ -77,7 +77,7 @@ const { isLoadingTopics, topics, topicsCount } = storeToRefs(
 );
 
 const isLimitTopicsReached = computed(() => {
-  return topicsCount.value >= 10;
+  return topicsCount?.value >= 10;
 });
 
 const handleAddTopic = () => {

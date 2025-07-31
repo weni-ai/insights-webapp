@@ -249,6 +249,7 @@ function handleChangeFlow(value: string) {
         config: {
           ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
           filter: { flow: value },
+          op_field: '',
         },
       };
       if (props.type === 'csat') {

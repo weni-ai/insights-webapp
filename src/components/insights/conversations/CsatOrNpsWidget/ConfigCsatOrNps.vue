@@ -145,9 +145,9 @@ const widget = ref<WidgetType>({
   type: 'flow_result',
   config: {
     filter: {
-      flow: '',
+      flow: null,
     },
-    op_field: '',
+    op_field: null,
     type: 'flow_result',
     operation: 'recurrence',
     datalake_config: {
@@ -309,18 +309,25 @@ function setFormDataAiSupport() {
   }
 }
 
-function setFormDataHumanSupport() {
+async function setFormDataHumanSupport() {
+  await getFlows();
   if (props.type === 'csat') {
     const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.filter?.flow && config?.op_field) {
       humanSupport.value = true;
       conversationalWidgets.setIsFormHuman(true);
+      if (project?.flows?.length > 0) {
+        setFormFlow();
+      }
     }
   } else {
     const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.filter?.flow && config?.op_field) {
       humanSupport.value = true;
       conversationalWidgets.setIsFormHuman(true);
+      if (project?.flows?.length > 0) {
+        setFormFlow();
+      }
     }
   }
 }
@@ -329,14 +336,14 @@ function setFormFlow() {
   if (props.type === 'csat') {
     const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
     flow.value = {
-      uuid: config?.filter?.flow || '',
-      result: config?.op_field || '',
+      uuid: config?.filter?.flow || null,
+      result: config?.op_field || null,
     };
   } else {
     const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
     flow.value = {
-      uuid: config?.filter?.flow || '',
-      result: config?.op_field || '',
+      uuid: config?.filter?.flow || null,
+      result: config?.op_field || null,
     };
   }
 }
@@ -357,14 +364,13 @@ watch(
   },
 );
 
-onBeforeMount(async () => {
-  await getFlows();
-  await getAgentsTeam();
+onBeforeMount(() => {
+  getFlows();
+  getAgentsTeam();
 });
 
 onMounted(async () => {
   if (props.isNew) {
-    console.log('onMounted', props.type, props.isNew);
     widget.value.source =
       props.type === 'csat' ? 'conversations.csat' : 'conversations.nps';
     setNewWidget(widget.value);

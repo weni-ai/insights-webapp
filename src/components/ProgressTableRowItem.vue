@@ -150,7 +150,7 @@ const handleExpand = () => {
         font-weight: $unnnic-font-weight-regular;
         line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
 
-        max-width: 250px;
+        width: 200px;
       }
 
       .infos__description {

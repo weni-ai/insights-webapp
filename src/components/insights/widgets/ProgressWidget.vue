@@ -1,53 +1,88 @@
 <template>
   <BaseConversationWidget
-    :isLoading="isLoading"
     :title="title"
+    :actions="actions"
+    :isLoading="isLoading"
+    :currentTab="currentTab"
+    @tab-change="handleTabChange"
   >
-    <section
-      class="progress-widget__content"
-      data-testid="progress-widget-content"
-    >
+    <slot
+      v-if="treatedProgressItems?.length === 0"
+      name="setup-widget"
+    />
+    <template v-else>
       <section
-        v-if="card"
-        class="content__card"
-        data-testid="progress-widget-card"
+        class="progress-widget__content"
+        data-testid="progress-widget-content"
       >
-        <CardConversations
-          :title="card.title"
-          :value="card.value"
-          :valueDescription="card.valueDescription"
-          :tooltipInfo="card.tooltipInfo"
-          :tooltipSide="'left'"
-          :isLoading="card.isLoading"
-        />
-      </section>
+        <section
+          v-if="card"
+          class="content__card"
+          data-testid="progress-widget-card"
+        >
+          <CardConversations
+            :title="card.title"
+            :value="card.value"
+            :valueDescription="card.valueDescription"
+            :tooltipInfo="card.tooltipInfo"
+            :tooltipSide="'left'"
+            :isLoading="card.isLoading"
+          />
+        </section>
 
-      <ProgressTable
-        v-if="treatedProgressItems.length > 0"
-        :progressItems="treatedProgressItems"
-        data-testid="progress-widget-table"
-      />
-    </section>
-    <section
-      v-if="footerText"
-      class="progress-widget__footer"
-      data-testid="progress-widget-footer"
-    >
-      <p
-        class="footer__text"
-        data-testid="progress-widget-footer-text"
+        <ProgressTable
+          v-if="treatedProgressItems?.length > 0 && !isLoadingProgress"
+          :progressItems="treatedProgressItems"
+          data-testid="progress-widget-table"
+        />
+        <section
+          v-if="isLoadingProgress"
+          class="progress-widget__skeleton-container"
+        >
+          <UnnnicSkeletonLoading
+            v-for="index in card ? 3 : 5"
+            :key="index"
+            class="progress-widget__skeleton"
+            data-testid="progress-widget-skeleton"
+            width="100%"
+            height="51.2px"
+          />
+        </section>
+      </section>
+      <section
+        v-if="footerText && !isLoadingProgress"
+        class="progress-widget__footer"
+        data-testid="progress-widget-footer"
       >
-        {{ footerText }}
-      </p>
-    </section>
+        <p
+          class="footer__text"
+          data-testid="progress-widget-footer-text"
+        >
+          {{ footerText }}
+        </p>
+      </section>
+      <UnnnicSkeletonLoading
+        v-if="isLoadingProgress"
+        class="progress-widget__skeleton"
+        data-testid="progress-widget-skeleton"
+        width="80px"
+        height="22px"
+      />
+    </template>
   </BaseConversationWidget>
 </template>
 
 <script setup lang="ts">
 import { computed, defineProps } from 'vue';
-import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
+import BaseConversationWidget, {
+  Tab,
+} from '@/components/insights/conversations/BaseConversationWidget.vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
+
+const emit = defineEmits<{
+  (e: 'tab-change', tab: Tab): void;
+}>();
 
 const props = defineProps<{
   title: string;
@@ -66,10 +101,18 @@ const props = defineProps<{
   }[];
   footerText?: string;
   isLoading?: boolean;
+  isLoadingProgress?: boolean;
+  actions?: {
+    icon: string;
+    text: string;
+    onClick: () => void;
+    scheme?: string;
+  }[];
+  currentTab?: string;
 }>();
 
 const treatedProgressItems = computed(() => {
-  return props.progressItems.map((item) => ({
+  return props.progressItems?.map((item) => ({
     label: item.text,
     description: `${item.value}%`,
     value: item.value,
@@ -77,6 +120,10 @@ const treatedProgressItems = computed(() => {
     color: item.color,
   }));
 });
+
+const handleTabChange = (tab: Tab) => {
+  emit('tab-change', tab);
+};
 </script>
 
 <style scoped lang="scss">
@@ -112,6 +159,12 @@ const treatedProgressItems = computed(() => {
       font-style: normal;
       line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
     }
+  }
+
+  &__skeleton-container {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-nano;
   }
 }
 </style>

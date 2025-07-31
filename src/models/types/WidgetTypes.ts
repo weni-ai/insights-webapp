@@ -109,6 +109,19 @@ export type DataCrossingSubwidgetFlowResult = {
   operation: string;
 };
 
+export interface CsatOrNpsCardConfig {
+  filter: {
+    flow: string;
+  };
+  op_field: string;
+  type: string;
+  operation: string;
+  datalake_config: {
+    type: string;
+    agent_uuid: string;
+  };
+}
+
 export type DataCrossingSubwidget =
   | DataCrossingSubwidgetExecution
   | DataCrossingSubwidgetFlowResult;
@@ -117,6 +130,7 @@ export type CardConfig =
   | ExecutionsCardConfig
   | FlowResultCardConfig
   | DataCrossingCardConfig
+  | CsatOrNpsCardConfig
   | BaseCardConfig;
 
 type InsightConfig = object;
@@ -137,7 +151,8 @@ export type WidgetInternalType =
   | 'table_dynamic_by_filter'
   | 'table_group'
   | 'card'
-  | 'insight';
+  | 'insight'
+  | 'flow_result';
 
 export type WidgetReport = {
   type: 'internal' | 'external';

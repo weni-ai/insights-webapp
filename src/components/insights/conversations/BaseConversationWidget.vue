@@ -29,6 +29,7 @@
       >
         <ShortTab
           :tabs="tabs"
+          :currentTab="currentTab"
           data-testid="base-conversation-widget-tabs"
           @tab-change="handleTabChange"
         />
@@ -96,6 +97,7 @@ defineProps<{
     onClick: () => void;
     scheme?: string;
   }[];
+  currentTab?: string;
 }>();
 
 const tabs = computed(() => [
@@ -117,6 +119,7 @@ const handleTabChange = (tab: Tab) => {
 <style scoped lang="scss">
 .base-conversation-widget {
   width: 100%;
+  height: 100%;
   display: flex;
   padding: $unnnic-spacing-md;
   flex-direction: column;
@@ -160,6 +163,8 @@ const handleTabChange = (tab: Tab) => {
 
         :deep(.unnnic-dropdown__content) {
           padding: $unnnic-spacing-sm;
+
+          gap: $unnnic-spacing-sm;
         }
 
         .dropdown__action {
@@ -172,6 +177,10 @@ const handleTabChange = (tab: Tab) => {
             font-size: $unnnic-font-size-body-md;
             line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
             white-space: nowrap;
+          }
+
+          &::before {
+            display: none;
           }
         }
       }

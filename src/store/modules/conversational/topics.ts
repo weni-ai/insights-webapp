@@ -80,7 +80,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
     },
 
     hasExistingTopics: (state) =>
-      state.topics.some((topic) => topic.isNew === false),
+      state.topics?.some((topic) => topic.isNew === false) || false,
 
     getTopicById: (state) => (uuid: string) =>
       state.topics.find((topic) => topic.uuid === uuid),

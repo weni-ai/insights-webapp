@@ -84,12 +84,69 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "reviews": "reviews",
+    "csat_widget": {
+      "very_satisfied": "Very satisfied",
+      "satisfied": "Satisfied",
+      "neutral": "Neutral",
+      "dissatisfied": "Dissatisfied",
+      "very_dissatisfied": "Very dissatisfied"
+    },
+    "nps_widget": {
+      "promoters": "Promoters (rated 9 or 10)",
+      "passive": "Passive (rated 7 or 8)",
+      "detractors": "Detractors (rated 0 to 6)", 
+      "current_score": "Current score",
+      "current_score_types": {
+        "low": "Low",
+        "good": "Good",
+        "great": "Great",
+        "excellent": "Excellent"
+      },
+      "tooltips": {
+        "classification": "Classification (%Promoters - %Detractors):",
+        "low": "-100 to 0: Low (reputational risk)",
+        "good": "1 to 30: Good",
+        "great": "31 to 70: Great",
+        "excellent": "71 to 100: Excellent"
+      }
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
       "add_widget": "Add widget",
       "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
-      "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others."
+      "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others.",
+      "config_csat_or_nps_description": "Define which {type} you want to track:",
+      "human_support": "Human Support",
+      "ai_support": "AI",
+      "activate_agent": "Activate agent",
+      "select_agent": "Select agent",
+      "your_agent_is_active": "Your agent is active!",
+      "return": "Return",
+      "save_changes": "Save changes",
+      "modal_attention": {
+        "title_return": "Return to previous step",
+        "description_return": "Are you sure you want to return? All progress will be lost.",
+        "title_cancel": "Cancel configuration",
+        "description_cancel": "Are you sure you want to cancel? All progress will be lost.",
+        "keep_configuring": "Keep configuring",
+        "return": "Return",
+        "cancel": "Cancel"
+      },
+      "edit_csat_or_nps": "Edit {type}",
+      "remove_widget": "Remove widget",
+      "modal_remove_widget": {
+        "title": "Remove {type} widget",
+        "description": "Are you sure you want to remove the {type} widget?",
+        "remove": "Remove",
+        "cancel": "Cancel"
+      }
+    },
+    "setup_csat_or_nps_widget": {
+      "title": "{type} {tab} not configured",
+      "description": "Configure {type} {tab} to track your metrics",
+      "action_text": "Configure now"
     }
   },
   "template_messages_dashboard": {

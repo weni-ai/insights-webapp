@@ -84,12 +84,69 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "reviews": "avaliações",
+    "csat_widget": {
+      "very_satisfied": "Muito satisfeito",
+      "satisfied": "Satisfeito",
+      "neutral": "Neutro",
+      "dissatisfied": "Insatisfeito",
+      "very_dissatisfied": "Muito insatisfeito"
+    },
+    "nps_widget": {
+      "promoters": "Promotores (classificados 9 ou 10)",
+      "passive": "Passivos (classificados 7 ou 8)",
+      "detractors": "Detratores (classificados 0 a 6)",
+      "current_score": "Pontuação atual",
+      "current_score_types": {
+        "low": "Baixo",
+        "good": "Bom",
+        "great": "Ótimo",
+        "excellent": "Excelente"
+      },
+      "tooltips": {
+        "classification": "Classificação (%Promotores - %Detratores):",
+        "low": "-100 a 0: Baixo (risco reputacional)",
+        "good": "1 a 30: Bom",
+        "great": "31 a 70: Ótimo",
+        "excellent": "71 a 100: Excelente"
+      }
+    },
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas métricas chave",
       "add_widget": "Adicionar widget",
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
-      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas."
+      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
+      "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar:",
+      "human_support": "Atendimento humano",
+      "ai_support": "IA",
+      "activate_agent": "Ativar agente",
+      "select_agent": "Selecionar agente",
+      "your_agent_is_active": "Seu agente está ativo!",
+      "return": "Voltar",
+      "save_changes": "Salvar alterações",
+      "modal_attention": {
+        "title_return": "Voltar para o passo anterior",
+        "description_return": "Tem certeza que deseja voltar? Todos os progressos serão perdidos.",
+        "title_cancel": "Cancelar configuração",
+        "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
+        "keep_configuring": "Continuar configurando",
+        "return": "Voltar",
+        "cancel": "Cancelar"
+      },
+      "edit_csat_or_nps": "Editar {type}",
+      "remove_widget": "Remover widget",
+      "modal_remove_widget": {
+        "title": "Remover widget {type}",
+        "description": "Tem certeza que deseja remover o widget {type}?",
+        "remove": "Remover",
+        "cancel": "Cancelar"
+      }
+    },
+    "setup_csat_or_nps_widget": {
+      "title": "{type} {tab} não configurado",
+      "description": "Configure {type} {tab} para acompanhar suas métricas",
+      "action_text": "Configurar agora"
     }
   },
   "template_messages_dashboard": {

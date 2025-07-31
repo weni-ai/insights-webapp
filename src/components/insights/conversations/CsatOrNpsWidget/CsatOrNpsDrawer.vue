@@ -120,10 +120,10 @@ async function saveWidgetConfigs() {
 }
 
 const isLoadingSaveButton = computed(() => {
-  if(isNewDrawerCsatOrNps.value) {
+  if (isNewDrawerCsatOrNps.value) {
     return isLoadingSaveNewWidget.value;
   }
-  
+
   return isLoadingUpdateWidget.value;
 });
 

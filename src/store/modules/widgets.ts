@@ -4,6 +4,7 @@ import { Dashboards, Widgets } from '@/services/api';
 import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
 import { defineStore } from 'pinia';
+import { useConversationalWidgets } from './conversational/widgets';
 
 export const useWidgets = defineStore('widgets', {
   state: () => ({
@@ -86,6 +87,22 @@ export const useWidgets = defineStore('widgets', {
         useDashboards().currentDashboard.uuid,
       );
       this.setCurrentDashboardWidgets(widgets);
+
+      if (widgets.length > 0) {
+        const { setCsatWidget, setNpsWidget } = useConversationalWidgets();
+        const csatWidget = widgets.find(
+          (widget) => widget.source === 'conversations.csat',
+        );
+        const npsWidget = widgets.find(
+          (widget) => widget.source === 'conversations.nps',
+        );
+        if (csatWidget) {
+          setCsatWidget(csatWidget);
+        }
+        if (npsWidget) {
+          setNpsWidget(npsWidget);
+        }
+      }
 
       this.setLoadingCurrentDashboardWidgets(false);
     },
@@ -275,6 +292,12 @@ export const useWidgets = defineStore('widgets', {
 
     updateCurrentExpansiveWidgetLoading(loading) {
       this.setLoadingCurrentExpansiveWidget(loading);
+    },
+
+    findWidgetBySource(source: string): WidgetType | undefined {
+      return this.currentDashboardWidgets.find(
+        (widget: WidgetType) => widget.source === source,
+      );
     },
   },
 });

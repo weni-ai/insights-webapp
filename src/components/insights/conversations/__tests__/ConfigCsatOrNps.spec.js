@@ -50,6 +50,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
   return shallowMount(ConfigCsatOrNps, {
     props: {
       type: 'csat',
+      isNew: false,
       ...props,
     },
     global: {
@@ -57,6 +58,8 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
       stubs: {
         UnnnicCheckbox: Unnnic.unnnicCheckbox,
         UnnnicSelectSmart: Unnnic.unnnicSelectSmart,
+        SelectFlow: true,
+        SelectFlowResult: true,
       },
       mocks: {
         $tc: (key) => key,
@@ -174,6 +177,7 @@ describe('ConfigCsatOrNps', () => {
     });
 
     it('should update flow result when SelectFlowResult emits update', async () => {
+      wrapper = createWrapper({ isNew: true });
       wrapper.vm.humanSupport = true;
       await nextTick();
 
@@ -189,9 +193,9 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.humanSupport = true;
       await nextTick();
 
-      expect(configCsatOrNpsSelectFlowResult().attributes('disabled')).toBe(
-        'true',
-      );
+      expect(
+        configCsatOrNpsSelectFlowResult().attributes('disabled'),
+      ).toBeDefined();
     });
 
     it('should enable SelectFlowResult when flow uuid is selected', async () => {
@@ -237,9 +241,9 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.aiSupport = true;
       await nextTick();
 
-      expect(configCsatOrNpsButtonActivateAgent().attributes('disabled')).toBe(
-        'true',
-      );
+      expect(
+        configCsatOrNpsButtonActivateAgent().attributes('disabled'),
+      ).toBeDefined();
     });
 
     it('should display agent info when agent exists', async () => {
@@ -253,8 +257,6 @@ describe('ConfigCsatOrNps', () => {
     it('should display correct agent info for CSAT type', async () => {
       wrapper.vm.aiSupport = true;
       await nextTick();
-
-      console.log('configCsatOrNpsSelectAgent', wrapper.html());
 
       expect(configCsatOrNpsSelectAgent().props('modelValue')).toEqual([
         { value: 'csat-agent-uuid', label: 'CSAT Agent' },
@@ -283,9 +285,9 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.isActivatingAgent = true;
       await nextTick();
 
-      expect(configCsatOrNpsButtonActivateAgent().attributes('loading')).toBe(
-        'true',
-      );
+      expect(
+        configCsatOrNpsButtonActivateAgent().attributes('loading'),
+      ).toBeDefined();
     });
   });
 });

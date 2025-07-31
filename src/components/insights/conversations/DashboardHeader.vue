@@ -69,11 +69,6 @@ const cardDefinitions = [
     titleKey: 'conversations_dashboard.header.unresolved',
     tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
   },
-  {
-    id: 'abandoned',
-    titleKey: 'conversations_dashboard.header.unengaged',
-    tooltipKey: 'conversations_dashboard.header.tooltips.unengaged',
-  },
 ];
 
 const createInitialCardData = () => ({

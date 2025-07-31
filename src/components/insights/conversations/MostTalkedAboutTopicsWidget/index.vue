@@ -37,7 +37,7 @@
     </BaseConversationWidget>
 
     <AddWidget
-      v-if="topicsDistributionCount === 0 && !isLoadingTopicsDistribution"
+      v-if="!hasExistingTopics && !isLoadingTopicsDistribution"
       :title="$t('conversations_dashboard.most_talked_about_topics.no_topics')"
       :description="
         $t(
@@ -115,6 +115,7 @@ const {
   topicsDistribution,
   isLoadingTopicsDistribution,
   topicType,
+  hasExistingTopics,
 } = storeToRefs(conversationalTopicsStore);
 
 const { loadTopicsDistribution, toggleAddTopicsDrawer, setTopicType } =
@@ -132,9 +133,11 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
 };
 
 const treemapData = computed(() => {
-  return topicsDistributionCount.value > 0
-    ? topicsDistribution.value
-    : MOCK_DATA;
+  if (!hasExistingTopics.value) return MOCK_DATA;
+
+  if (topicsDistributionCount.value === 0) return [];
+
+  return topicsDistribution.value;
 });
 
 const handleTabChange = (tab: Tab) => {

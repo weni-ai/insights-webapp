@@ -102,16 +102,16 @@ describe('ShortTab.vue', () => {
 
   describe('Active Tab State', () => {
     it('should have first tab active by default', () => {
-      expect(wrapper.vm.activeTab).toBe(0);
+      expect(wrapper.vm.activeTab).toBe('tab1');
       expect(
         wrapper.find('[data-testid="short-tab-button-0"]').classes(),
       ).toContain('short-tab__tab--active');
     });
 
-    it('should respect custom defaultTab prop', async () => {
-      await wrapper.setProps({ defaultTab: 1 });
+    it('should respect custom currentTab prop', async () => {
+      await wrapper.setProps({ currentTab: 'tab2' });
 
-      expect(wrapper.vm.activeTab).toBe(1);
+      expect(wrapper.vm.activeTab).toBe('tab2');
       expect(
         wrapper.find('[data-testid="short-tab-button-1"]').classes(),
       ).toContain('short-tab__tab--active');
@@ -121,7 +121,7 @@ describe('ShortTab.vue', () => {
       const secondButton = wrapper.find('[data-testid="short-tab-button-1"]');
       await secondButton.trigger('click');
 
-      expect(wrapper.vm.activeTab).toBe(1);
+      expect(wrapper.vm.activeTab).toBe('tab2');
       expect(
         wrapper.find('[data-testid="short-tab-button-1"]').classes(),
       ).toContain('short-tab__tab--active');
@@ -134,7 +134,7 @@ describe('ShortTab.vue', () => {
       const firstButton = wrapper.find('[data-testid="short-tab-button-0"]');
       await firstButton.trigger('click');
 
-      expect(wrapper.vm.activeTab).toBe(0);
+      expect(wrapper.vm.activeTab).toBe('tab1');
       expect(wrapper.emitted('tab-change')).toBeFalsy();
     });
   });
@@ -167,7 +167,7 @@ describe('ShortTab.vue', () => {
   describe('Props Integration', () => {
     it('should handle single tab correctly', async () => {
       const singleTab = [{ name: 'Only Tab', key: 'only' }];
-      await wrapper.setProps({ tabs: singleTab });
+      await wrapper.setProps({ tabs: singleTab, currentTab: 'only' });
 
       expectElementExists(wrapper, 'short-tab-button-0');
       expectElementExists(wrapper, 'short-tab-button-1', false);
@@ -183,12 +183,12 @@ describe('ShortTab.vue', () => {
           { name: 'First', key: 'first' },
           { name: 'Second', key: 'second' },
         ],
-        defaultTab: 1,
+        currentTab: 'second',
       };
 
       await wrapper.setProps(props);
 
-      expect(wrapper.vm.activeTab).toBe(1);
+      expect(wrapper.vm.activeTab).toBe('second');
       expectElementText(wrapper, 'short-tab-button-0', 'First');
       expectElementText(wrapper, 'short-tab-button-1', 'Second');
       expect(
@@ -199,33 +199,30 @@ describe('ShortTab.vue', () => {
 
   describe('Method Testing', () => {
     it('should execute switchTab method correctly', async () => {
-      await wrapper.vm.switchTab(2);
+      await wrapper.vm.switchTab('tab3');
 
-      expect(wrapper.vm.activeTab).toBe(2);
+      expect(wrapper.vm.activeTab).toBe('tab3');
       expect(wrapper.emitted('tab-change')).toBeTruthy();
       expect(wrapper.emitted('tab-change')[0]).toEqual(['tab3']);
     });
 
-    it('should not execute switchTab when index is same as active', async () => {
-      await wrapper.vm.switchTab(0);
+    it('should not execute switchTab when key is same as active', async () => {
+      await wrapper.vm.switchTab('tab1');
 
-      expect(wrapper.vm.activeTab).toBe(0);
+      expect(wrapper.vm.activeTab).toBe('tab1');
       expect(wrapper.emitted('tab-change')).toBeFalsy();
     });
   });
 
   describe('Edge Cases', () => {
-    it('should handle empty tabs array', async () => {
-      await wrapper.setProps({ tabs: [] });
-
-      const buttons = wrapper.findAll('[data-testid^="short-tab-button-"]');
-      expect(buttons).toHaveLength(0);
+    it('should throw error if tabs array is empty', () => {
+      expect(() => createWrapper({ tabs: [] })).toThrow();
     });
 
-    it('should handle invalid defaultTab gracefully', async () => {
-      await wrapper.setProps({ defaultTab: 99 });
+    it('should handle invalid currentTab gracefully', async () => {
+      await wrapper.setProps({ currentTab: 'invalid-key' });
 
-      expect(wrapper.vm.activeTab).toBe(99);
+      expect(wrapper.vm.activeTab).toBe('invalid-key');
       expect(
         wrapper.find('[data-testid="short-tab-button-0"]').classes(),
       ).not.toContain('short-tab__tab--active');
@@ -249,7 +246,7 @@ describe('ShortTab.vue', () => {
       expect(wrapper.vm.$props.tabs).toHaveLength(3);
 
       const newTabs = [{ name: 'New Tab', key: 'new' }];
-      await wrapper.setProps({ tabs: newTabs });
+      await wrapper.setProps({ tabs: newTabs, currentTab: 'new' });
 
       expect(wrapper.vm.$props.tabs).toHaveLength(1);
       expectElementText(wrapper, 'short-tab-button-0', 'New Tab');

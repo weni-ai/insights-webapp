@@ -1,25 +1,34 @@
 <template>
   <UnnnicDrawer
-    v-if="modelValue"
-    :modelValue="modelValue"
+    v-if="isDrawerCsatOrNpsOpen"
+    :modelValue="isDrawerCsatOrNpsOpen"
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
     :primaryButtonText="
-      type
+      drawerWidgetType
         ? $t('conversations_dashboard.customize_your_dashboard.save_changes')
         : ''
     "
     :secondaryButtonText="
-      type ? $t('conversations_dashboard.customize_your_dashboard.return') : ''
+      !drawerWidgetType
+        ? $t('conversations_dashboard.customize_your_dashboard.return')
+        : $t('cancel')
+    "
+    :disabledPrimaryButton="
+      isNewDrawerCsatOrNps
+        ? !isEnabledSaveNewWidget
+        : drawerWidgetType === 'csat'
+          ? !isEnabledUpdateWidgetCsat
+          : !isEnabledUpdateWidgetNps
     "
     @primary-button-click="saveWidgetConfigs"
-    @secondary-button-click="warningModalType = 'return'"
+    @secondary-button-click="handleSecondaryButtonClick"
     @close="closeDrawer"
   >
     <template #content>
       <ul
-        v-if="!type"
+        v-if="drawerWidgetType === 'add'"
         class="add-widget-drawer__widget-list"
       >
         <li
@@ -27,7 +36,9 @@
           :key="widget.name"
           class="widget-list__item"
           data-testid="add-widget-drawer-item"
-          @click="type = widget.name.toLowerCase() as DrawerType"
+          @click="
+            drawerWidgetType = widget.name.toLowerCase() as 'csat' | 'nps'
+          "
         >
           <h2
             class="item__title"
@@ -47,15 +58,15 @@
       <ConfigCsatOrNpsWidget
         v-else
         data-testid="config-csat-or-nps-widget"
-        :type="type"
+        :type="drawerWidgetType"
+        :isNew="isNewDrawerCsatOrNps"
       />
     </template>
   </UnnnicDrawer>
 
   <ModalAttention
-    v-if="!!warningModalType"
-    :modelValue="!!warningModalType"
-    :type="warningModalType"
+    :modelValue="false"
+    type="cancel"
     data-testid="drawer-csat-or-nps-widget-modal"
     @primary-button-click="confirmAttentionModal"
     @secondary-button-click="closeWarningModal"
@@ -63,73 +74,100 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import ConfigCsatOrNpsWidget from './ConfigCsatOrNps.vue';
 import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
+import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+import { storeToRefs } from 'pinia';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
-type DrawerType = 'csat' | 'nps' | null;
+const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
+  useConversationalWidgets();
+const {
+  isEnabledSaveNewWidget,
+  isCsatConfigured,
+  isNpsConfigured,
+  isEnabledUpdateWidgetCsat,
+  isEnabledUpdateWidgetNps,
+} = storeToRefs(useConversationalWidgets());
 
-defineProps<{
-  modelValue: boolean;
-}>();
+const { setIsDrawerCsatOrNpsOpen } = useConversational();
+const { isDrawerCsatOrNpsOpen, drawerWidgetType, isNewDrawerCsatOrNps } =
+  storeToRefs(useConversational());
 
-const emit = defineEmits<{
-  (_e: 'update:modelValue', _value: boolean): void;
-}>();
-
-const type = defineModel<DrawerType>('type');
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
 function closeDrawer() {
-  if (type.value) {
-    warningModalType.value = 'cancel';
-  } else {
-    emit('update:modelValue', false);
-  }
+  setIsDrawerCsatOrNpsOpen(false, null, false);
 }
 
 function closeWarningModal() {
   warningModalType.value = '';
 }
 
-function saveWidgetConfigs() {
-  console.log('saveWidgetConfigs');
-  // TODO: Implement save logic
-  emit('update:modelValue', false);
+async function saveWidgetConfigs() {
+  if (isNewDrawerCsatOrNps.value) {
+    await saveNewWidget();
+  } else {
+    await updateConversationalWidget(drawerWidgetType.value as 'csat' | 'nps');
+  }
+
+  setIsDrawerCsatOrNpsOpen(false, null, false);
+}
+
+function handleSecondaryButtonClick() {
+  if (!drawerWidgetType.value) {
+    warningModalType.value = 'return';
+  } else {
+    setIsDrawerCsatOrNpsOpen(false, null, false);
+  }
 }
 
 function returnWidgetTypeChoice() {
   closeWarningModal();
-  type.value = null;
+  drawerWidgetType.value = null;
 }
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  type.value = null;
-  emit('update:modelValue', false);
+  drawerWidgetType.value = null;
+  setIsDrawerCsatOrNpsOpen(false, null, false);
 }
 
 function confirmAttentionModal() {
+  resetNewWidget();
   warningModalType.value === 'return'
     ? returnWidgetTypeChoice()
     : cancelWidgetConfigs();
 }
 
-const availableWidgets = ref([
-  {
-    name: i18n.global.t('conversations_dashboard.csat'),
-    description: i18n.global.t(
-      'conversations_dashboard.customize_your_dashboard.csat_description',
-    ),
-  },
-  {
-    name: i18n.global.t('conversations_dashboard.nps'),
-    description: i18n.global.t(
-      'conversations_dashboard.customize_your_dashboard.nps_description',
-    ),
-  },
-]);
+const availableWidgets = computed(() => {
+  const availableWidgets = [
+    {
+      name: i18n.global.t('conversations_dashboard.csat'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.csat_description',
+      ),
+    },
+    {
+      name: i18n.global.t('conversations_dashboard.nps'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.nps_description',
+      ),
+    },
+  ];
+
+  if (isCsatConfigured.value) {
+    availableWidgets.splice(0, 1);
+  }
+
+  if (isNpsConfigured.value) {
+    availableWidgets.splice(1, 1);
+  }
+
+  return availableWidgets;
+});
 </script>
 
 <style scoped lang="scss">

@@ -73,10 +73,13 @@ const COLOR_PALETTE = {
  * Determines if a label is a special case (others or unclassified)
  */
 function isSpecialLabel(label: string): 'others' | 'unclassified' | null {
-  if (label === i18n.global.t('conversations_dashboard.others')) {
+  if (label.toLowerCase() === 'other') {
     return 'others';
   }
-  if (label === i18n.global.t('conversations_dashboard.unclassified')) {
+  if (
+    label.toLowerCase() ===
+    i18n.global.t('conversations_dashboard.unclassified')
+  ) {
     return 'unclassified';
   }
   return null;
@@ -114,6 +117,10 @@ function getItemColors(
 export function addColors(data: topicDistributionMetric[]): DataWithColor[] {
   return data.map((item, index) => ({
     ...item,
+    label:
+      item.label === 'other'
+        ? i18n.global.t('conversations_dashboard.others')
+        : item.label,
     ...getItemColors(item.label, index),
   }));
 }

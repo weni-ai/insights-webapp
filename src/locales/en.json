@@ -84,6 +84,33 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "reviews": "reviews",
+    "csat_widget": {
+      "very_satisfied": "Very satisfied",
+      "satisfied": "Satisfied",
+      "neutral": "Neutral",
+      "dissatisfied": "Dissatisfied",
+      "very_dissatisfied": "Very dissatisfied"
+    },
+    "nps_widget": {
+      "promoters": "Promoters (rated 9 or 10)",
+      "passive": "Passive (rated 7 or 8)",
+      "detractors": "Detractors (rated 0 to 6)", 
+      "current_score": "Current score",
+      "current_score_types": {
+        "low": "Low",
+        "good": "Good",
+        "great": "Great",
+        "excellent": "Excellent"
+      },
+      "tooltips": {
+        "classification": "Classification (%Promoters - %Detractors):",
+        "low": "-100 to 0: Low (reputational risk)",
+        "good": "1 to 30: Good",
+        "great": "31 to 70: Great",
+        "excellent": "71 to 100: Excellent"
+      }
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
@@ -115,6 +142,11 @@
         "remove": "Remove",
         "cancel": "Cancel"
       }
+    },
+    "setup_csat_or_nps_widget": {
+      "title": "{type} {tab} not configured",
+      "description": "Configure {type} {tab} to track your metrics",
+      "action_text": "Configure now"
     }
   },
   "template_messages_dashboard": {

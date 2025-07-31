@@ -43,4 +43,19 @@ export default {
 
     return response;
   },
+
+  async saveNewWidget(widget) {
+    const { currentDashboard } = useDashboards();
+
+    const response = await http.post(`/widgets/`, {
+      ...widget,
+      dashboard: currentDashboard?.uuid,
+    });
+    return response;
+  },
+
+  async deleteWidget(widgetUuid) {
+    const response = await http.delete(`/widgets/${widgetUuid}/`);
+    return response;
+  },
 };

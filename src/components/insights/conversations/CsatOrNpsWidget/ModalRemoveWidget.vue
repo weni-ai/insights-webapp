@@ -15,6 +15,7 @@
       text: $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove',
       ),
+      onClick: handleRemoveWidget,
     }"
     :secondaryButtonProps="{
       text: $t(
@@ -38,16 +39,25 @@
 </template>
 
 <script setup lang="ts">
+import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+
 interface Props {
   type: 'csat' | 'nps';
   modelValue: boolean;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
 }>();
+
+const { deleteWidget } = useConversationalWidgets();
+
+const handleRemoveWidget = () => {
+  deleteWidget(props.type);
+  emit('update:modelValue', false);
+};
 </script>
 
 <style lang="scss" scoped>

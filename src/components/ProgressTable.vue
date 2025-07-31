@@ -1,5 +1,18 @@
 <template>
+  <section
+    v-if="isLoading"
+    class="progress-table__loading"
+  >
+    <UnnnicSkeletonLoading
+      v-for="i in 5"
+      :key="i"
+      width="100%"
+      height="51.5px"
+      data-testid="progress-table-skeleton"
+    />
+  </section>
   <table
+    v-else
     class="progress-table"
     data-testid="progress-table"
   >
@@ -32,6 +45,7 @@ import type { ProgressTableRowItem } from './ProgressTableRowItem.vue';
 import ProgressItem from './ProgressTableRow.vue';
 
 const props = defineProps<{
+  isLoading?: boolean;
   progressItems: ProgressTableRowItem[];
   subItemsDescription?: string;
   expandedItems?: string[];
@@ -49,6 +63,12 @@ function expandItem(label: string, expanded: boolean) {
 </script>
 
 <style scoped lang="scss">
+.progress-table__loading {
+  display: flex;
+  flex-direction: column;
+  gap: $unnnic-spacing-nano;
+}
+
 .progress-table {
   width: 100%;
   border-collapse: collapse;

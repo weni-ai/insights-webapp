@@ -3,6 +3,20 @@ import { defineStore } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 
 export const useConversational = defineStore('conversational', {
+  state: () => ({
+    isDrawerCsatOrNpsOpen: false,
+    drawerWidgetType: null as 'nps' | 'csat' | 'add' | null,
+  }),
+
+  actions: {
+    setIsDrawerCsatOrNpsOpen(
+      isDrawerCsatOrNpsOpen: boolean,
+      type: 'nps' | 'csat' | 'add' | null,
+    ) {
+      this.isDrawerCsatOrNpsOpen = isDrawerCsatOrNpsOpen;
+      this.drawerWidgetType = type;
+    },
+  },
   getters: {
     appliedFilters: () => {
       const { appliedFilters } = useDashboards();

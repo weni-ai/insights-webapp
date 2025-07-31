@@ -114,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
 
 import { useProject } from '@/store/modules/project';
 
@@ -123,7 +123,6 @@ import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import env from '@/utils/env';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { WidgetType, CsatOrNpsCardConfig } from '@/models/types/WidgetTypes';
-import { useWidgets } from '@/store/modules/widgets';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps<{
@@ -135,11 +134,10 @@ const project = useProject();
 const { isLoadedFlows, getProjectFlows, getAgentsTeam, activateAgent } =
   project;
 
-const { updateCurrentDashboardWidget } = useWidgets();
-
 const conversationalWidgets = useConversationalWidgets();
-const { setNewWidget } = conversationalWidgets;
-const { csatWidget, npsWidget } = storeToRefs(conversationalWidgets);
+const { setNewWidget, setCsatWidget, setNpsWidget } = conversationalWidgets;
+const { currentCsatWidget, currentNpsWidget, csatWidget, npsWidget } =
+  storeToRefs(conversationalWidgets);
 
 const widget = ref<WidgetType>({
   uuid: '',
@@ -170,6 +168,7 @@ const widget = ref<WidgetType>({
 
 const humanSupport = ref(false);
 const aiSupport = ref(false);
+
 const flow = ref({
   uuid: null,
   result: null,
@@ -215,57 +214,72 @@ function handleSetAgent() {
     };
     setNewWidget(widget.value);
   } else {
-    updateCurrentDashboardWidget({
+    const data = {
       ...currentWidget.value,
       config: {
-        ...currentWidget.value.config,
+        ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
         datalake_config: {
           type,
           agent_uuid:
             type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
         },
       },
-    });
+    };
+    if (props.type === 'csat') {
+      setCsatWidget(data);
+    } else {
+      setNpsWidget(data);
+    }
   }
 }
-
-watch(agent, () => {
-  if (agent?.value) {
-    handleSetAgent();
-  }
-});
 
 function handleChangeAgent() {
   handleSetAgent();
 }
 
 function handleChangeFlow(value: string) {
+  flow.value.uuid = value;
   if (props.isNew) {
     (widget.value.config as CsatOrNpsCardConfig).filter.flow = value;
     setNewWidget(widget.value);
   } else {
-    updateCurrentDashboardWidget({
-      ...currentWidget.value,
-      config: {
-        ...currentWidget.value.config,
-        filter: { flow: value },
-      },
-    });
+    if (value) {
+      const data = {
+        ...currentWidget.value,
+        config: {
+          ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
+          filter: { flow: value },
+        },
+      };
+      if (props.type === 'csat') {
+        setCsatWidget(data);
+      } else {
+        setNpsWidget(data);
+      }
+    }
   }
 }
 
 function handleChangeFlowResult(value: string) {
+  flow.value.result = value;
   if (props.isNew) {
     (widget.value.config as CsatOrNpsCardConfig).op_field = value;
     setNewWidget(widget.value);
   } else {
-    updateCurrentDashboardWidget({
-      ...currentWidget.value,
-      config: {
-        ...currentWidget.value.config,
-        op_field: value,
-      },
-    });
+    if (value) {
+      const data = {
+        ...currentWidget.value,
+        config: {
+          ...currentWidget.value.config,
+          op_field: value,
+        },
+      };
+      if (props.type === 'csat') {
+        setCsatWidget(data);
+      } else {
+        setNpsWidget(data);
+      }
+    }
   }
 }
 
@@ -279,44 +293,80 @@ function handleChangeAiSupport($event: boolean) {
   conversationalWidgets.setIsFormAi($event);
 }
 
-function setFormData() {
+function setFormDataAiSupport() {
   if (props.type === 'csat') {
-    const config = csatWidget.value?.config as CsatOrNpsCardConfig;
-
-    if (config?.filter?.flow && config?.op_field) {
-      humanSupport.value = true;
-      flow.value = {
-        uuid: config?.filter?.flow || '',
-        result: config?.op_field || '',
-      };
-    }
+    const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.datalake_config?.agent_uuid) {
       aiSupport.value = true;
     }
   } else {
-    const config = npsWidget.value?.config as CsatOrNpsCardConfig;
-    if (config?.filter?.flow && config?.op_field) {
-      humanSupport.value = true;
-      flow.value = {
-        uuid: config?.filter?.flow || '',
-        result: config?.op_field || '',
-      };
-    }
+    const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
     if (config?.datalake_config?.agent_uuid) {
       aiSupport.value = true;
     }
   }
 }
 
-onMounted(async () => {
-  await Promise.all([getFlows(), getAgentsTeam()]);
+function setFormDataHumanSupport() {
+  if (props.type === 'csat') {
+    const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
+    if (config?.filter?.flow && config?.op_field) {
+      humanSupport.value = true;
+    }
+  } else {
+    const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
+    if (config?.filter?.flow && config?.op_field) {
+      humanSupport.value = true;
+    }
+  }
+}
 
+function setFormFlow() {
+  if (props.type === 'csat') {
+    const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
+    flow.value = {
+      uuid: config?.filter?.flow || '',
+      result: config?.op_field || '',
+    };
+  } else {
+    const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
+    flow.value = {
+      uuid: config?.filter?.flow || '',
+      result: config?.op_field || '',
+    };
+  }
+}
+
+watch(
+  () => project.flows,
+  () => {
+    if (!props.isNew) {
+      setFormFlow();
+    }
+  },
+);
+
+watch(
+  () => agent.value,
+  () => {
+    handleSetAgent();
+  },
+);
+
+onBeforeMount(async () => {
+  await getFlows();
+  await getAgentsTeam();
+});
+
+onMounted(async () => {
   if (props.isNew) {
+    console.log('onMounted', props.type, props.isNew);
     widget.value.source =
       props.type === 'csat' ? 'conversations.csat' : 'conversations.nps';
     setNewWidget(widget.value);
   } else {
-    setFormData();
+    setFormDataAiSupport();
+    setFormDataHumanSupport();
   }
 });
 </script>

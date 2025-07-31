@@ -1,5 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { prepareTopData, addColors } from '@/utils/treemap';
+import i18n from '@/utils/plugins/i18n';
+
+vi.mock('@/utils/plugins/i18n', () => ({
+  default: {
+    global: {
+      t: vi.fn((key) => {
+        if (key === 'conversations_dashboard.others') return 'Others';
+        if (key === 'conversations_dashboard.unclassified')
+          return 'unclassified';
+        return key;
+      }),
+    },
+  },
+}));
 
 describe('Treemap Utilities', () => {
   beforeEach(() => {
@@ -182,7 +196,7 @@ describe('Treemap Utilities', () => {
     it('should assign special colors for "Others" label', () => {
       const data = [
         { label: 'Regular Item', value: 100, percentage: 60 },
-        { label: 'Others', value: 80, percentage: 40 },
+        { label: 'other', value: 80, percentage: 40 },
       ];
 
       const result = addColors(data);
@@ -192,6 +206,7 @@ describe('Treemap Utilities', () => {
         hoverColor: '#4DFBEA',
       });
       expect(result[1]).toMatchObject({
+        label: 'Others',
         color: '#E2E6ED', // special others color
         hoverColor: '#D0D3D9',
       });
@@ -210,6 +225,7 @@ describe('Treemap Utilities', () => {
         hoverColor: '#4DFBEA',
       });
       expect(result[1]).toMatchObject({
+        label: 'Unclassified',
         color: '#FED7D7', // special unclassified color
         hoverColor: '#FC8181',
       });
@@ -420,11 +436,11 @@ describe('Treemap Utilities', () => {
       });
     });
 
-    it('should handle case-sensitive special labels', () => {
+    it('should handle special "others" labels case-insensitively', () => {
       const data = [
         { label: 'others', value: 100, percentage: 50 },
         { label: 'OTHERS', value: 90, percentage: 40 },
-        { label: 'Others', value: 80, percentage: 30 },
+        { label: 'other', value: 80, percentage: 30 },
       ];
 
       const coloredData = addColors(data);

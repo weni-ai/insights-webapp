@@ -96,6 +96,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         this.setCsatWidgetData(csatData);
       } catch (error) {
+        this.setCsatWidgetData({ results: [] });
         console.error('Error loading CSAT widget data', error);
       } finally {
         this.isLoadingCsatWidgetData = false;
@@ -120,6 +121,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         this.setNpsWidgetData(npsData);
       } catch (error) {
+        this.setNpsWidgetData({ total_responses: 0 });
         console.error('Error loading NPS widget data', error);
       } finally {
         this.isLoadingNpsWidgetData = false;

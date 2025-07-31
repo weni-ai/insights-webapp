@@ -24,8 +24,6 @@ interface ConversationalWidgetsState {
   isLoadingSaveNewWidget: boolean;
   isLoadingDeleteWidget: boolean;
   isLoadingUpdateWidget: boolean;
-  isEditCsat: boolean;
-  isEditNps: boolean;
   csatWidget: WidgetType | null;
   npsWidget: WidgetType | null;
 }
@@ -44,8 +42,6 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isLoadingSaveNewWidget: false,
     isLoadingDeleteWidget: false,
     isLoadingUpdateWidget: false,
-    isEditCsat: false,
-    isEditNps: false,
     csatWidget: null,
     npsWidget: null,
   }),
@@ -56,12 +52,6 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     },
     resetNewWidget() {
       this.newWidget = null;
-    },
-    setIsEditCsat(isEdit: boolean) {
-      this.isEditCsat = isEdit;
-    },
-    setIsEditNps(isEdit: boolean) {
-      this.isEditNps = isEdit;
     },
     setCsatWidget(widget: WidgetType | null) {
       this.csatWidget = widget;

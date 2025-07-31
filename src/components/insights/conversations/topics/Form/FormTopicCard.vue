@@ -44,6 +44,7 @@
             :label="$t('conversations_dashboard.form_topic.context')"
             class="form-topic-card__form__input"
             data-testid="form-topic-card-context-input"
+            :maxlength="100"
             @update:model-value="updateTopicContext"
           />
 
@@ -91,6 +92,7 @@
           </p>
           <p
             class="form-topic-card__item__content__container__description"
+            :title="topic.context"
             data-testid="form-topic-card-item-description"
           >
             {{ topic.context }}
@@ -250,7 +252,6 @@ const toggleSubTopics = () => {
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 1;
-          text-align: center;
           text-overflow: ellipsis;
           overflow: hidden;
           color: $unnnic-color-neutral-cloudy;

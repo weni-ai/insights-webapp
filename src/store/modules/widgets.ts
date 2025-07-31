@@ -13,6 +13,7 @@ export const useWidgets = defineStore('widgets', {
     currentExpansiveWidgetFilters: {
       sector: '',
       queue: '',
+      date: { start: '', end: '' },
     },
     isLoadingCurrentExpansiveWidget: false,
     isLoadingCurrentDashboardWidgets: false,
@@ -260,7 +261,7 @@ export const useWidgets = defineStore('widgets', {
 
       setWidgetData(widget);
       try {
-        const customParams: { sector?: string; queue?: string } = {};
+        const customParams: { [key: string]: any } = {};
 
         if (this.currentExpansiveWidgetFilters.sector) {
           customParams.sector = this.currentExpansiveWidgetFilters.sector;
@@ -268,6 +269,15 @@ export const useWidgets = defineStore('widgets', {
 
         if (this.currentExpansiveWidgetFilters.queue) {
           customParams.queue = this.currentExpansiveWidgetFilters.queue;
+        }
+
+        if (this.currentExpansiveWidgetFilters.date?.start) {
+          customParams.start_date =
+            this.currentExpansiveWidgetFilters.date.start;
+        }
+
+        if (this.currentExpansiveWidgetFilters.date?.end) {
+          customParams.end_date = this.currentExpansiveWidgetFilters.date.end;
         }
 
         const data = await Dashboards.getCustomStatusData({

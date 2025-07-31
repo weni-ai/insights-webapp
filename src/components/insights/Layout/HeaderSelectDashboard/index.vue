@@ -31,6 +31,7 @@
         >
           {{ dashboardTitle }}
         </h1>
+        <BetaText />
         <UnnnicIcon
           data-testid="expand-icon"
           icon="expand_more"
@@ -70,6 +71,7 @@ import { useOnboarding } from '@/store/modules/onboarding';
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
+import BetaText from './BetaText.vue';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -78,6 +80,7 @@ export default {
     OptionSelectDashboard,
     OptionCreateNewDashboard,
     DrawerDashboardConfig,
+    BetaText,
   },
 
   computed: {

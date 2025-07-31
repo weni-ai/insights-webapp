@@ -68,7 +68,7 @@ export default {
   methods: {
     treatModelValue() {
       const { modelValue } = this;
-      console.log('treatModelValue', modelValue);
+
       if (!modelValue || (Array.isArray(modelValue) && !modelValue.length)) {
         this.flow = [this.flowsOptionsPlaceholder];
         return;

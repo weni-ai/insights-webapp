@@ -6,50 +6,66 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
 >
   
   <div
-    class="unnnic-dropdown header-select-dashboard"
+    class="header-select-dashboard"
     data-onboarding-id="select-dashboard"
     data-v-054061ac=""
-    data-v-66495a5a=""
+    position="bottom-right"
   >
-    <div
-      class="unnnic-dropdown__trigger"
-      data-v-66495a5a=""
+    
+    <span
+      class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md unnnic--clickable header-select-dashboard__arrow-back"
+      data-testid="back-icon"
+      data-v-054061ac=""
+      data-v-9846e6db=""
+      translate="no"
     >
-      
+      arrow_back
+    </span>
+    <section
+      class="dropdown__trigger"
+      data-testid="dropdown-trigger"
+      data-v-054061ac=""
+    >
+      <h1
+        class="trigger__title"
+        data-testid="dashboard-title"
+        data-v-054061ac=""
+      >
+        Dashboard 1
+      </h1>
+      <beta-text-stub
+        data-v-054061ac=""
+      />
       <span
-        class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md unnnic--clickable header-select-dashboard__arrow-back"
-        data-testid="back-icon"
+        class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md"
+        data-testid="expand-icon"
         data-v-054061ac=""
         data-v-9846e6db=""
         translate="no"
       >
-        arrow_back
+        expand_more
       </span>
-      <section
-        class="dropdown__trigger"
-        data-testid="dropdown-trigger"
-        data-v-054061ac=""
-      >
-        <h1
-          class="trigger__title"
-          data-testid="dashboard-title"
-          data-v-054061ac=""
-        >
-          Dashboard 1
-        </h1>
-        <span
-          class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md"
-          data-testid="expand-icon"
-          data-v-054061ac=""
-          data-v-9846e6db=""
-          translate="no"
-        >
-          expand_more
-        </span>
-      </section>
-      
-      <!---->
-    </div>
+    </section>
+    
+    
+    
+    <option-select-dashboard-stub
+      dashboard="[object Object]"
+      data-testid="select-dashboard-item"
+      data-v-054061ac=""
+    />
+    <option-select-dashboard-stub
+      dashboard="[object Object]"
+      data-testid="select-dashboard-item"
+      data-v-054061ac=""
+    />
+    
+    <option-create-new-dashboard-stub
+      data-onboarding-id="create-dashboard-button"
+      data-testid="add-new-dashboard-button"
+      data-v-054061ac=""
+    />
+    
   </div>
   <drawer-dashboard-config-stub
     data-testid="drawer-dashboard-config"

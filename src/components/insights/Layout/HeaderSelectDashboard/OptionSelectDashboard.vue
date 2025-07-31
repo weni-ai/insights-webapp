@@ -8,7 +8,11 @@
     }"
     @click="setCurrentDashboard(dashboard)"
   >
-    {{ $t(dashboard.name) }}
+    <section class="option-select-dashboard__content">
+      {{ $t(dashboard.name) }}
+      <BetaText v-if="dashboard.name === 'conversations_dashboard.title'" />
+    </section>
+
     <UnnnicIcon
       data-testid="star-icon"
       class="option-select-dashboard__star-icon"
@@ -31,9 +35,14 @@ import { mapActions, mapState } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 
 import Unnnic from '@weni/unnnic-system';
+import BetaText from './BetaText.vue';
 
 export default {
   name: 'OptionSelectDashboard',
+
+  components: {
+    BetaText,
+  },
 
   props: {
     dashboard: {
@@ -120,6 +129,12 @@ export default {
   color: $unnnic-color-neutral-darkest;
   font-family: $unnnic-font-family-secondary;
   font-size: $unnnic-font-size-body-gt;
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: $unnnic-spacing-nano;
+  }
 
   &--active {
     background-color: $unnnic-color-neutral-lightest;

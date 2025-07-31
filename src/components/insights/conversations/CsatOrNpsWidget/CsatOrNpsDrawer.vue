@@ -6,12 +6,12 @@
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
     :primaryButtonText="
-      drawerWidgetType
+      drawerWidgetType !== 'add'
         ? $t('conversations_dashboard.customize_your_dashboard.save_changes')
         : ''
     "
     :secondaryButtonText="
-      !drawerWidgetType
+      drawerWidgetType !== 'add' && isNewDrawerCsatOrNps
         ? $t('conversations_dashboard.customize_your_dashboard.return')
         : $t('cancel')
     "
@@ -22,6 +22,7 @@
           ? !isEnabledUpdateWidgetCsat
           : !isEnabledUpdateWidgetNps
     "
+    :loadingPrimaryButton="isLoadingSaveButton"
     @primary-button-click="saveWidgetConfigs"
     @secondary-button-click="handleSecondaryButtonClick"
     @close="closeDrawer"
@@ -65,8 +66,8 @@
   </UnnnicDrawer>
 
   <ModalAttention
-    :modelValue="false"
-    type="cancel"
+    :modelValue="warningModalType !== ''"
+    :type="warningModalType !== '' ? warningModalType : 'cancel'"
     data-testid="drawer-csat-or-nps-widget-modal"
     @primary-button-click="confirmAttentionModal"
     @secondary-button-click="closeWarningModal"
@@ -90,6 +91,8 @@ const {
   isNpsConfigured,
   isEnabledUpdateWidgetCsat,
   isEnabledUpdateWidgetNps,
+  isLoadingSaveNewWidget,
+  isLoadingUpdateWidget,
 } = storeToRefs(useConversationalWidgets());
 
 const { setIsDrawerCsatOrNpsOpen } = useConversational();
@@ -116,9 +119,22 @@ async function saveWidgetConfigs() {
   setIsDrawerCsatOrNpsOpen(false, null, false);
 }
 
+const isLoadingSaveButton = computed(() => {
+  if (isNewDrawerCsatOrNps.value) {
+    return isLoadingSaveNewWidget.value;
+  }
+
+  return isLoadingUpdateWidget.value;
+});
+
 function handleSecondaryButtonClick() {
-  if (!drawerWidgetType.value) {
+  if (drawerWidgetType.value !== 'add' && isNewDrawerCsatOrNps.value) {
     warningModalType.value = 'return';
+  } else if (
+    (drawerWidgetType.value === 'csat' && isEnabledUpdateWidgetCsat.value) ||
+    (drawerWidgetType.value === 'nps' && isEnabledUpdateWidgetNps.value)
+  ) {
+    warningModalType.value = 'cancel';
   } else {
     setIsDrawerCsatOrNpsOpen(false, null, false);
   }
@@ -126,12 +142,12 @@ function handleSecondaryButtonClick() {
 
 function returnWidgetTypeChoice() {
   closeWarningModal();
-  drawerWidgetType.value = null;
+  drawerWidgetType.value = 'add';
 }
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  drawerWidgetType.value = null;
+  drawerWidgetType.value = 'add';
   setIsDrawerCsatOrNpsOpen(false, null, false);
 }
 

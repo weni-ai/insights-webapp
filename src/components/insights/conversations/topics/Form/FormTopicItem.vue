@@ -92,6 +92,7 @@
         <AddTopicButton
           :text="$t('conversations_dashboard.form_topic.add_sub_topic')"
           data-testid="form-topic-item-add-sub-topic-button"
+          :disabled="isLimitSubTopicsReached"
           @add-topic="$emit('add-sub-topic', topicIndex)"
         />
       </section>
@@ -197,6 +198,10 @@ const subTopicsTitle = computed(() => {
   } else {
     return t('conversations_dashboard.form_topic.sub_topics');
   }
+});
+
+const isLimitSubTopicsReached = computed(() => {
+  return props.topic?.subTopics?.length >= 5;
 });
 </script>
 

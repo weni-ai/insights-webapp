@@ -196,7 +196,11 @@ describe('ExpansiveWidget', () => {
     });
 
     it('correctly computes currentExpansiveWidgetFilters from store state', async () => {
-      const customFilters = { sector: 'sector-123', queue: 'queue-456' };
+      const customFilters = {
+        sector: 'sector-123',
+        queue: 'queue-456',
+        date: { start: '2021-01-01', end: '2021-01-02' },
+      };
       const customStore = createMockStore({
         widgetsState: {
           currentExpansiveWidgetFilters: customFilters,

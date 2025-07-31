@@ -39,15 +39,15 @@ vi.mock('@/components/insights/Layout/HeaderFilters/FilterSelect.vue', () => ({
 const sampleHeaders = [
   { name: 'status', display: true, hidden_name: false },
   { name: 'agent', display: true, hidden_name: false },
-  { name: 'in_progress', display: true, hidden_name: false },
-  { name: 'closeds', display: true, hidden_name: false },
+  { name: 'Ongoing', display: true, hidden_name: false },
+  { name: 'Closeds', display: true, hidden_name: false },
   { name: 'column1', display: true, hidden_name: false },
   { name: 'column2', display: true, hidden_name: false },
   { name: 'hidden_column', display: true, hidden_name: true },
   { name: 'not_displayed', display: false, hidden_name: false },
 ];
 
-const storageColumns = ['in_progress', 'closeds', 'column1', 'column2'];
+const storageColumns = ['Ongoing', 'Closeds', 'column1', 'column2'];
 
 const createMockStore = (overrideState = {}) => {
   return createTestingPinia({
@@ -66,6 +66,7 @@ const createMockStore = (overrideState = {}) => {
         currentExpansiveWidgetFilters: {
           sector: '',
           queue: '',
+          date: { start: '', end: '' },
         },
         ...overrideState.widgets,
       },
@@ -90,9 +91,6 @@ const createWrapper = (props = {}, overrideState = {}) => {
           UnnnicSelectSmart: true,
           UnnnicButton: true,
           FilterSelect: true,
-        },
-        mocks: {
-          $t: (key) => key,
         },
       },
     }),
@@ -151,10 +149,11 @@ describe('AgentsTableHeader', () => {
       expect(headerOptions.length).toBe(4);
 
       const columnNames = headerOptions.map((option) => option.value);
+
       expect(columnNames).toContain('column1');
       expect(columnNames).toContain('column2');
-      expect(columnNames).toContain('in_progress');
-      expect(columnNames).toContain('closeds');
+      expect(columnNames).toContain('ongoing');
+      expect(columnNames).toContain('Closeds');
 
       expect(columnNames).not.toContain('status');
       expect(columnNames).not.toContain('agent');
@@ -194,8 +193,8 @@ describe('AgentsTableHeader', () => {
       );
 
       const columns = [
-        { value: 'column1', label: 'Column 1' },
-        { value: 'column2', label: 'Column 2' },
+        { value: 'column1', label: 'Column 1', key: 'column1' },
+        { value: 'column2', label: 'Column 2', key: 'column2' },
       ];
 
       await wrapper.vm.handleVisibleColumnsUpdate(columns);
@@ -478,8 +477,8 @@ describe('AgentsTableHeader', () => {
       expect(wrapper.vm.selectedQueue).toBe('queue-456');
     });
 
-    it('initializes selectedColumns from storedColumns if storedColumns exist and availableColumns > 2', () => {
-      const testStoredColumns = ['in_progress', 'closeds', 'column1'];
+    it('initializes selectedColumns from storedColumns if storedColumns exist and availableColumns > 2', async () => {
+      const testStoredColumns = ['ongoing', 'Closeds', 'column1'];
       const { wrapper } = createWrapper(
         { headers: sampleHeaders },
         {
@@ -489,6 +488,8 @@ describe('AgentsTableHeader', () => {
           },
         },
       );
+
+      await wrapper.vm.$nextTick();
 
       const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
       expect(selectedValues).toEqual(expect.arrayContaining(testStoredColumns));

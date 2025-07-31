@@ -229,7 +229,11 @@ describe('useWidgets store', () => {
 
   it('should update current expansive widget filters', () => {
     const store = useWidgets();
-    const filters = { sector: 'new-sector', queue: 'new-queue' };
+    const filters = {
+      sector: 'new-sector',
+      queue: 'new-queue',
+      date: { start: '', end: '' },
+    };
 
     store.updateCurrentExpansiveWidgetFilters(filters);
 

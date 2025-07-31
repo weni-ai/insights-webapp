@@ -24,6 +24,10 @@ interface ConversationalWidgetsState {
   isLoadingSaveNewWidget: boolean;
   isLoadingDeleteWidget: boolean;
   isLoadingUpdateWidget: boolean;
+  isEditCsat: boolean;
+  isEditNps: boolean;
+  csatWidget: WidgetType | null;
+  npsWidget: WidgetType | null;
 }
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
@@ -40,6 +44,10 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isLoadingSaveNewWidget: false,
     isLoadingDeleteWidget: false,
     isLoadingUpdateWidget: false,
+    isEditCsat: false,
+    isEditNps: false,
+    csatWidget: null,
+    npsWidget: null,
   }),
 
   actions: {
@@ -48,6 +56,18 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     },
     resetNewWidget() {
       this.newWidget = null;
+    },
+    setIsEditCsat(isEdit: boolean) {
+      this.isEditCsat = isEdit;
+    },
+    setIsEditNps(isEdit: boolean) {
+      this.isEditNps = isEdit;
+    },
+    setCsatWidget(widget: WidgetType | null) {
+      this.csatWidget = widget;
+    },
+    setNpsWidget(widget: WidgetType | null) {
+      this.npsWidget = widget;
     },
     setIsFormAi(isFormAi: boolean) {
       this.isFormAi = isFormAi;
@@ -127,6 +147,15 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         widget.position = [];
 
+        if (!this.isFormAi) {
+          delete widget.config.datalake_config;
+        }
+
+        if (!this.isFormHuman) {
+          delete widget.config.filter;
+          delete widget.config.op_field;
+        }
+
         await WidgetService.saveNewWidget(widget);
 
         this.resetNewWidget();
@@ -150,23 +179,13 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     async updateConversationalWidget(type: 'csat' | 'nps') {
       this.isLoadingUpdateWidget = true;
       try {
-        const { findWidgetBySource } = useWidgets();
-        const widget =
-          type === 'csat'
-            ? findWidgetBySource('conversations.csat')
-            : findWidgetBySource('conversations.nps');
-
-        if (!widget) {
-          throw new Error(`${type} widget not found`);
-        }
-
-        let currentWidget = widget;
+        let currentWidget = type === 'csat' ? this.csatWidget : this.npsWidget;
 
         if (!this.isFormHuman) {
           currentWidget = {
-            ...widget,
+            ...currentWidget,
             config: {
-              ...widget.config,
+              ...currentWidget.config,
               filter: {},
               op_field: '',
             },
@@ -175,16 +194,16 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         if (!this.isFormAi) {
           currentWidget = {
-            ...widget,
+            ...currentWidget,
             config: {
-              ...widget.config,
+              ...currentWidget.config,
               datalake_config: {},
             },
           };
         }
 
         await WidgetService.updateWidget({
-          widget: currentWidget,
+          widget: currentWidget as WidgetType,
         });
 
         const { getCurrentDashboardWidgets } = useWidgets();
@@ -244,31 +263,20 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           (state.newWidget?.config as CsatOrNpsCardConfig)?.op_field)
       );
     },
-    isEnabledUpdateWidgetCsat: () => {
-      const { findWidgetBySource } = useWidgets();
-      const widgetCsat = findWidgetBySource('conversations.csat');
-      const config = widgetCsat?.config as CsatOrNpsCardConfig;
-      if (!widgetCsat) {
-        return false;
-      }
-
+    isEnabledUpdateWidgetCsat: (state) => {
       return !!(
-        config?.datalake_config?.agent_uuid ||
-        (config?.filter?.flow && config?.op_field)
+        (state.csatWidget?.config as CsatOrNpsCardConfig)?.datalake_config
+          ?.agent_uuid ||
+        ((state.csatWidget?.config as CsatOrNpsCardConfig)?.filter?.flow &&
+          (state.csatWidget?.config as CsatOrNpsCardConfig)?.op_field)
       );
     },
-    isEnabledUpdateWidgetNps: () => {
-      const { findWidgetBySource } = useWidgets();
-      const widgetNps = findWidgetBySource('conversations.nps');
-      const config = widgetNps?.config as CsatOrNpsCardConfig;
-
-      if (!widgetNps) {
-        return false;
-      }
-
+    isEnabledUpdateWidgetNps: (state) => {
       return !!(
-        (config?.filter?.flow && config?.op_field) ||
-        config?.datalake_config?.agent_uuid
+        ((state.npsWidget?.config as CsatOrNpsCardConfig)?.filter?.flow &&
+          (state.npsWidget?.config as CsatOrNpsCardConfig)?.op_field) ||
+        (state.npsWidget?.config as CsatOrNpsCardConfig)?.datalake_config
+          ?.agent_uuid
       );
     },
     getDynamicWidgets: () => {
@@ -280,7 +288,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       return currentDashboardWidgets.value.filter(isNpsOrCsat);
     },
 
-    npsWidget: (state) => {
+    currentNpsWidget: (state) => {
       const { findWidgetBySource } = useWidgets();
       const widgetNps = findWidgetBySource('conversations.nps');
 
@@ -292,7 +300,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         : null;
     },
 
-    csatWidget: (state) => {
+    currentCsatWidget: (state) => {
       const { findWidgetBySource } = useWidgets();
       const widgetCsat = findWidgetBySource('conversations.csat');
 

@@ -39,7 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   (_e: 'tab-change', tab: string): void;
 }>();
-const activeTab = ref(props.currentTab);
+const activeTab = ref(props.currentTab || props.tabs[0].key);
 
 watch(
   () => props.currentTab,

@@ -129,7 +129,7 @@ describe('DashboardHeader.vue', () => {
 
       expect(
         leftSection.findAllComponents({ name: 'CardConversations' }),
-      ).toHaveLength(4);
+      ).toHaveLength(3);
       expect(
         rightSection.findAllComponents({ name: 'CardConversations' }),
       ).toHaveLength(1);
@@ -139,7 +139,7 @@ describe('DashboardHeader.vue', () => {
   describe('Card Definitions', () => {
     it('should have correct card definitions structure', () => {
       const vm = wrapper.vm;
-      expect(vm.cardDefinitions).toHaveLength(4);
+      expect(vm.cardDefinitions).toHaveLength(3);
 
       expect(vm.cardDefinitions[0]).toEqual({
         id: 'total_conversations',
@@ -179,12 +179,12 @@ describe('DashboardHeader.vue', () => {
           new Promise((resolve) =>
             setTimeout(
               () =>
-                resolve({
-                  total_conversations: { value: 0, percentage: 100 },
-                  resolved: { value: 0, percentage: 0 },
-                  unresolved: { value: 0, percentage: 0 },
-                  transferred_to_human: { value: 0, percentage: 0 },
-                }),
+                resolve([
+                  { id: 'total_conversations', value: 0, percentage: 100 },
+                  { id: 'resolved', value: 0, percentage: 0 },
+                  { id: 'unresolved', value: 0, percentage: 0 },
+                  { id: 'transferred_to_human', value: 0, percentage: 0 },
+                ]),
               100,
             ),
           ),
@@ -233,7 +233,7 @@ describe('DashboardHeader.vue', () => {
       await testWrapper.vm.$nextTick();
       await testWrapper.vm.$nextTick();
 
-      expect(vm.cardsData).toHaveLength(4);
+      expect(vm.cardsData).toHaveLength(3);
       vm.cardsData.forEach((card) => {
         expect(card.isLoading).toBe(false);
 
@@ -258,7 +258,6 @@ describe('DashboardHeader.vue', () => {
       expect(leftCards[0].props('title')).toBe('Total conversations');
       expect(leftCards[1].props('title')).toBe('Resolved');
       expect(leftCards[2].props('title')).toBe('Unresolved');
-      expect(leftCards[3].props('title')).toBe('Unengaged');
       expect(rightCard.props('title')).toBe('Transferred to human support');
     });
   });
@@ -306,7 +305,6 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('1,000');
       expect(vm.cardsData[1].value).toBe('85.00%');
       expect(vm.cardsData[2].value).toBe('10.00%');
-      expect(vm.cardsData[3].value).toBe('5.00%');
       expect(vm.rightCardData.value).toBe('2.50%');
 
       // All cards should not be loading
@@ -367,7 +365,6 @@ describe('DashboardHeader.vue', () => {
         total: { value: '48.179', description: null },
         resolved: { value: '85.75%', description: '41.313 conversations' },
         unresolved: { value: '5.25%', description: '2.529 conversations' },
-        unengaged: { value: '9.00%', description: '4.338 conversations' },
         transferred: { value: '12.22%', description: '5.887 conversations' },
       };
 
@@ -386,11 +383,6 @@ describe('DashboardHeader.vue', () => {
         ...mockData.unresolved,
         isLoading: false,
       };
-      vm.cardsData[3] = {
-        ...vm.cardsData[3],
-        ...mockData.unengaged,
-        isLoading: false,
-      };
       vm.rightCardData = {
         ...vm.rightCardData,
         ...mockData.transferred,
@@ -402,7 +394,6 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('48.179');
       expect(vm.cardsData[1].value).toBe('85.75%');
       expect(vm.cardsData[2].value).toBe('5.25%');
-      expect(vm.cardsData[3].value).toBe('9.00%');
       expect(vm.rightCardData.value).toBe('12.22%');
 
       expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
@@ -433,12 +424,6 @@ describe('DashboardHeader.vue', () => {
         description: '0 conversations',
         isLoading: false,
       };
-      vm.cardsData[3] = {
-        ...vm.cardsData[3],
-        value: '-',
-        description: '0 conversations',
-        isLoading: false,
-      };
       vm.rightCardData = {
         ...vm.rightCardData,
         value: '-',
@@ -453,7 +438,6 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('-');
       expect(vm.cardsData[1].value).toBe('-');
       expect(vm.cardsData[2].value).toBe('-');
-      expect(vm.cardsData[3].value).toBe('-');
       expect(vm.rightCardData.value).toBe('-');
 
       expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
@@ -488,11 +472,6 @@ describe('DashboardHeader.vue', () => {
         value: '5.25%',
         isLoading: false,
       };
-      vm.cardsData[3] = {
-        ...vm.cardsData[3],
-        value: '-',
-        isLoading: false,
-      };
       vm.rightCardData = {
         ...vm.rightCardData,
         value: '12.22%',
@@ -504,7 +483,6 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('48.179');
       expect(vm.cardsData[1].value).toBe('-');
       expect(vm.cardsData[2].value).toBe('5.25%');
-      expect(vm.cardsData[3].value).toBe('-');
       expect(vm.rightCardData.value).toBe('12.22%');
 
       consoleSpy.mockRestore();
@@ -547,7 +525,7 @@ describe('DashboardHeader.vue', () => {
     it('should reactively compute card properties', async () => {
       const vm = wrapper.vm;
 
-      expect(vm.cards).toHaveLength(4);
+      expect(vm.cards).toHaveLength(3);
       expect(vm.rightCard).toBeDefined();
 
       vm.cards.forEach((card) => {
@@ -592,9 +570,6 @@ describe('DashboardHeader.vue', () => {
       expect(leftCards[2].props('tooltipInfo')).toBe(
         'Conversations that were not resolved',
       );
-      expect(leftCards[3].props('tooltipInfo')).toBe(
-        'Conversations where users did not engage',
-      );
       expect(rightCard.props('tooltipInfo')).toBe(
         'Conversations transferred to human support',
       );
@@ -604,7 +579,7 @@ describe('DashboardHeader.vue', () => {
   describe('Integration Testing', () => {
     it('should handle complete component lifecycle', async () => {
       const allCards = wrapper.findAllComponents({ name: 'CardConversations' });
-      expect(allCards).toHaveLength(5);
+      expect(allCards).toHaveLength(4);
 
       allCards.forEach((card) => {
         expect(card.props('title')).toBeDefined();
@@ -620,8 +595,7 @@ describe('DashboardHeader.vue', () => {
 
       expect(leftCards[0].props('borderRadius')).toBe('left');
       expect(leftCards[1].props('borderRadius')).toBe('none');
-      expect(leftCards[2].props('borderRadius')).toBe('none');
-      expect(leftCards[3].props('borderRadius')).toBe('right');
+      expect(leftCards[2].props('borderRadius')).toBe('right');
     });
 
     it('should not apply border radius to right section card', () => {
@@ -656,7 +630,7 @@ describe('DashboardHeader.vue', () => {
 
       expect(testWrapper.exists()).toBe(true);
 
-      expect(testWrapper.vm.cardsData).toHaveLength(4);
+      expect(testWrapper.vm.cardsData).toHaveLength(3);
       expect(testWrapper.vm.rightCardData).toBeDefined();
     });
   });

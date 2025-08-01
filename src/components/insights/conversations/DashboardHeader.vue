@@ -12,6 +12,7 @@
         :key="card.id"
       >
         <CardConversations
+          class="header__card"
           :title="card.title"
           :value="card.value"
           :description="card.description"
@@ -19,6 +20,7 @@
           :borderRadius="getBorderRadius(index, cards.length)"
           :tooltipSide="'top'"
           :isLoading="card.isLoading"
+          @click="handleCardClick(card.id)"
         />
       </template>
     </section>
@@ -27,12 +29,14 @@
       data-testid="dashboard-header-right"
     >
       <CardConversations
+        class="header__card"
         :title="rightCard.title"
         :value="rightCard.value"
         :description="rightCard.description"
         :tooltipInfo="rightCard.tooltipInfo"
         :tooltipSide="'left'"
         :isLoading="rightCard.isLoading"
+        @click="handleCardClick('transferred_to_human')"
       />
     </section>
   </section>
@@ -183,6 +187,23 @@ const loadCardData = async () => {
   }
 };
 
+const handleCardClick = (cardId: string) => {
+  const statusMap = {
+    total_conversations: '',
+    resolved: 'resolved',
+    unresolved: 'unresolved',
+    transferred_to_human: 'transferred_to_human_support',
+  };
+
+  window.parent.postMessage(
+    {
+      event: 'redirect',
+      path: `agents-builder:supervisor?status=${statusMap[cardId]}`,
+    },
+    '*',
+  );
+};
+
 onMounted(() => {
   loadCardData();
 });
@@ -209,6 +230,10 @@ $min-height: 134px;
     display: flex;
     flex: 3;
     min-height: $min-height;
+  }
+
+  :deep(.header__card) {
+    cursor: pointer;
   }
 }
 </style>

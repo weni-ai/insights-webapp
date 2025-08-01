@@ -4,8 +4,10 @@
     :class="[
       'card-conversations',
       `card-conversations--border-${props.borderRadius || 'full'}`,
+      props.class,
     ]"
     data-testid="card-conversations"
+    @click="$emit('click')"
   >
     <section class="card-conversations__title">
       <p
@@ -71,6 +73,7 @@
 
 <script setup lang="ts">
 interface Props {
+  class?: string;
   title: string;
   value: string;
   borderRadius?: 'full' | 'left' | 'right' | 'none';
@@ -82,6 +85,10 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+defineEmits<{
+  (_e: 'click'): void;
+}>();
 </script>
 
 <style scoped lang="scss">

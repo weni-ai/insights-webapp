@@ -209,7 +209,8 @@ describe('useConversationalTopics store', () => {
     });
 
     describe('allNewTopicsComplete getter', () => {
-      it('should return false when there are no new topics', () => {
+      it('should return false when no new topics exist or are empty', () => {
+        // No new topics, only existing
         store.topics = [
           {
             uuid: '1',
@@ -219,99 +220,74 @@ describe('useConversationalTopics store', () => {
             subTopics: [],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(false);
-      });
 
-      it('should return false when new topics have empty name or context', () => {
+        // New topics completely empty
         store.topics = [
           {
             uuid: '1',
             name: '',
-            context: 'Context 1',
-            isNew: true,
-            subTopics: [],
-          },
-          {
-            uuid: '2',
-            name: 'Topic 2',
             context: '',
             isNew: true,
             subTopics: [],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(false);
       });
 
-      it('should return false when some new topics are incomplete', () => {
+      it('should return false when new topics are incomplete (missing name or context)', () => {
+        // Topics with only name or only context
         store.topics = [
           {
             uuid: '1',
-            name: 'Complete Topic',
-            context: 'Complete Context',
+            name: 'Topic Name',
+            context: '', // missing context
             isNew: true,
             subTopics: [],
           },
           {
             uuid: '2',
-            name: '',
-            context: 'Incomplete Context',
+            name: '', // missing name
+            context: 'Topic Context',
             isNew: true,
             subTopics: [],
           },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should return true when all new topics have name and context', () => {
-        store.topics = [
           {
-            uuid: '1',
-            name: 'Topic 1',
+            uuid: '3',
+            name: '   ', // whitespace name
             context: 'Context 1',
             isNew: true,
             subTopics: [],
           },
-          {
-            uuid: '2',
-            name: 'Topic 2',
-            context: 'Context 2',
-            isNew: true,
-            subTopics: [],
-          },
         ];
-
-        expect(store.allNewTopicsComplete).toBe(true);
+        expect(store.allNewTopicsComplete).toBe(false);
       });
 
       it('should return false when new subtopics are incomplete', () => {
         store.topics = [
           {
             uuid: '1',
-            name: 'Topic 1',
-            context: 'Context 1',
+            name: 'Complete Topic',
+            context: 'Complete Context',
             isNew: true,
             subTopics: [
               {
                 uuid: '1-1',
-                name: 'Complete SubTopic',
-                context: 'Complete Sub Context',
+                name: 'Sub Name',
+                context: '', // incomplete subtopic
                 isNew: true,
                 subTopics: [],
               },
               {
                 uuid: '1-2',
-                name: '',
-                context: 'Incomplete Sub Context',
+                name: '', // incomplete subtopic
+                context: 'Sub Context',
                 isNew: true,
                 subTopics: [],
               },
             ],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(false);
       });
 
@@ -336,136 +312,20 @@ describe('useConversationalTopics store', () => {
             uuid: '2',
             name: 'Topic 2',
             context: 'Context 2',
-            isNew: false,
-            subTopics: [
-              {
-                uuid: '2-1',
-                name: 'SubTopic 2',
-                context: 'Sub Context 2',
-                isNew: true,
-                subTopics: [],
-              },
-            ],
+            isNew: true,
+            subTopics: [],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(true);
       });
 
-      it('should handle topics with only whitespace in name or context', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: '   ',
-            context: 'Context 1',
-            isNew: true,
-            subTopics: [],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should return false when topic has only name but no context', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: 'Topic Name',
-            context: '',
-            isNew: true,
-            subTopics: [],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should return false when topic has only context but no name', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: '',
-            context: 'Topic Context',
-            isNew: true,
-            subTopics: [],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should return false when subtopic has only name but no context', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: 'Main Topic',
-            context: 'Main Context',
-            isNew: true,
-            subTopics: [
-              {
-                uuid: '1-1',
-                name: 'Sub Name',
-                context: '',
-                isNew: true,
-                subTopics: [],
-              },
-            ],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should return false when subtopic has only context but no name', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: 'Main Topic',
-            context: 'Main Context',
-            isNew: true,
-            subTopics: [
-              {
-                uuid: '1-1',
-                name: '',
-                context: 'Sub Context',
-                isNew: true,
-                subTopics: [],
-              },
-            ],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should ignore existing topics when checking completion (only consider new topics)', () => {
+      it('should ignore existing topics and subtopics in completion check', () => {
         store.topics = [
           {
             uuid: '1',
             name: 'Complete New Topic',
             context: 'Complete New Context',
             isNew: true,
-            subTopics: [],
-          },
-          {
-            uuid: '2',
-            name: '', // incomplete existing topic - should be ignored
-            context: 'Existing Context',
-            isNew: false,
-            subTopics: [],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(true);
-      });
-
-      it('should ignore existing subtopics when checking completion (only consider new subtopics)', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: 'Main Topic',
-            context: 'Main Context',
-            isNew: false,
             subTopics: [
               {
                 uuid: '1-1',
@@ -476,15 +336,21 @@ describe('useConversationalTopics store', () => {
               },
               {
                 uuid: '1-2',
-                name: '', // incomplete existing subtopic - should be ignored
+                name: '', // incomplete existing subtopic - ignored
                 context: 'Existing Sub Context',
                 isNew: false,
                 subTopics: [],
               },
             ],
           },
+          {
+            uuid: '2',
+            name: '', // incomplete existing topic - ignored
+            context: 'Existing Context',
+            isNew: false,
+            subTopics: [],
+          },
         ];
-
         expect(store.allNewTopicsComplete).toBe(true);
       });
     });

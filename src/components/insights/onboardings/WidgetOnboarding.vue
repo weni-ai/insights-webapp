@@ -26,6 +26,12 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      widgetsRendered: false,
+      checkWidgetsInterval: null,
+    };
+  },
   computed: {
     ...mapState(useDashboards, ['currentDashboard']),
     ...mapState(useWidgets, ['currentDashboardWidgets']),
@@ -138,27 +144,31 @@ export default {
     },
   },
 
-  mounted() {
-    this.$nextTick(() => {
-      this.setOnboardingRef({
-        key: 'widget-card-metric',
-        ref: document.querySelector(
-          '[data-onboarding-id="widget-card-metric"]',
-        ),
-      });
-      this.setOnboardingRef({
-        key: 'widget-graph-empty',
-        ref: document.querySelector(
-          '[data-onboarding-id="widget-graph-empty"]',
-        ),
-      });
+  watch: {
+    showCardTour: {
+      immediate: true,
+      handler(newValue) {
+        if (newValue && this.widgetsRendered) {
+          this.initializeOnboarding();
+        }
+      },
+    },
+    showWidgetTour: {
+      immediate: true,
+      handler(newValue) {
+        if (newValue && this.widgetsRendered) {
+          this.initializeOnboarding();
+        }
+      },
+    },
+  },
 
-      this.setOnboardingRef({
-        key: 'widgets-onboarding-tour',
-        ref: this.$refs.widgetsOnboardingTour,
-      });
-      this.onboardingRefs['widgets-onboarding-tour']?.start();
-    });
+  mounted() {
+    this.startWidgetsRenderingCheck();
+  },
+
+  beforeUnmount() {
+    this.stopWidgetsRenderingCheck();
   },
 
   methods: {
@@ -170,6 +180,67 @@ export default {
       'setOnboardingRef',
       'setShowConfigWidgetsOnboarding',
     ]),
+
+    startWidgetsRenderingCheck() {
+      this.checkWidgetsInterval = setInterval(() => {
+        this.checkWidgetsRendered();
+      }, 100);
+    },
+
+    stopWidgetsRenderingCheck() {
+      if (this.checkWidgetsInterval) {
+        clearInterval(this.checkWidgetsInterval);
+        this.checkWidgetsInterval = null;
+      }
+    },
+
+    checkWidgetsRendered() {
+      const requiredElements = [];
+
+      if (this.showCardTour) {
+        requiredElements.push('widget-card-metric');
+      }
+
+      if (this.showWidgetTour) {
+        requiredElements.push('widget-graph-empty');
+      }
+
+      const allElementsPresent = requiredElements.every((elementId) => {
+        return document.querySelector(`[data-onboarding-id="${elementId}"]`);
+      });
+
+      if (allElementsPresent && !this.widgetsRendered) {
+        this.widgetsRendered = true;
+        this.initializeOnboarding();
+        this.stopWidgetsRenderingCheck();
+      }
+    },
+
+    initializeOnboarding() {
+      this.$nextTick(() => {
+        this.setOnboardingRef({
+          key: 'widget-card-metric',
+          ref: document.querySelector(
+            '[data-onboarding-id="widget-card-metric"]',
+          ),
+        });
+        this.setOnboardingRef({
+          key: 'widget-graph-empty',
+          ref: document.querySelector(
+            '[data-onboarding-id="widget-graph-empty"]',
+          ),
+        });
+
+        this.setOnboardingRef({
+          key: 'widgets-onboarding-tour',
+          ref: this.$refs.widgetsOnboardingTour,
+        });
+
+        if (this.onboardingRefs['widgets-onboarding-tour']) {
+          this.onboardingRefs['widgets-onboarding-tour'].start();
+        }
+      });
+    },
   },
 };
 </script>

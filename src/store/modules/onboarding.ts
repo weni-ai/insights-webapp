@@ -75,6 +75,7 @@ export const useOnboarding = defineStore('onboarding', {
         });
       }
     },
+
     async beforeOpenWidgetConfig() {
       if (!this.showConfigWidgetOnboarding) return;
 
@@ -121,12 +122,13 @@ export const useOnboarding = defineStore('onboarding', {
           .querySelector('.unnnic-button')
           .click();
       }
+
       await asyncTimeout(600).then(() => {
         this.setOnboardingRef({
           key: 'drawer-graph-empty',
           ref: document.querySelector(
             '[data-onboarding-id="drawer-graph-empty"]',
-          )?.children[1],
+          )?.children?.[1],
         });
       });
     },
@@ -136,7 +138,7 @@ export const useOnboarding = defineStore('onboarding', {
           key: 'drawer-card-metric-config',
           ref: document.querySelector(
             '[data-onboarding-id="drawer-card-metric-config"]',
-          ).children[1],
+          )?.children?.[1],
         });
       });
     },

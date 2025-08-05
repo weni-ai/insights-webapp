@@ -83,13 +83,11 @@ describe('useConversationalTopics store', () => {
     });
 
     it('should return correct hasNewTopics and hasNewSubTopics with mock data', () => {
-      // Using the initial mock data from beforeEach
       expect(store.hasNewTopics).toBe(true);
       expect(store.hasNewSubTopics).toBe(true);
     });
 
     it('should evaluate hasNewTopics based on checkIsEmptyValuesAndNewTopics logic', () => {
-      // False when new topics are completely empty
       store.topics = [
         {
           uuid: '1',
@@ -102,13 +100,12 @@ describe('useConversationalTopics store', () => {
           uuid: '2',
           name: 'Existing Topic',
           context: 'Existing Context',
-          isNew: false, // existing topics should be ignored
+          isNew: false,
           subTopics: [],
         },
       ];
       expect(store.hasNewTopics).toBe(false);
 
-      // True when new topics have at least name or context
       store.topics = [
         {
           uuid: '1',
@@ -133,7 +130,6 @@ describe('useConversationalTopics store', () => {
     });
 
     it('should evaluate hasNewSubTopics based on checkIsEmptyValuesAndNewTopics logic', () => {
-      // False when new subtopics are completely empty
       store.topics = [
         {
           uuid: '1',
@@ -152,7 +148,7 @@ describe('useConversationalTopics store', () => {
               uuid: '1-2',
               name: 'Existing Sub',
               context: 'Existing Sub Context',
-              isNew: false, // existing subtopics should be ignored
+              isNew: false,
               subTopics: [],
             },
           ],
@@ -160,7 +156,6 @@ describe('useConversationalTopics store', () => {
       ];
       expect(store.hasNewSubTopics).toBe(false);
 
-      // True when new subtopics have at least name or context
       store.topics = [
         {
           uuid: '1',
@@ -210,7 +205,6 @@ describe('useConversationalTopics store', () => {
 
     describe('allNewTopicsComplete getter', () => {
       it('should return false when no new topics exist or are empty', () => {
-        // No new topics, only existing
         store.topics = [
           {
             uuid: '1',
@@ -222,7 +216,6 @@ describe('useConversationalTopics store', () => {
         ];
         expect(store.allNewTopicsComplete).toBe(false);
 
-        // New topics completely empty
         store.topics = [
           {
             uuid: '1',
@@ -236,25 +229,24 @@ describe('useConversationalTopics store', () => {
       });
 
       it('should return false when new topics are incomplete (missing name or context)', () => {
-        // Topics with only name or only context
         store.topics = [
           {
             uuid: '1',
             name: 'Topic Name',
-            context: '', // missing context
+            context: '',
             isNew: true,
             subTopics: [],
           },
           {
             uuid: '2',
-            name: '', // missing name
+            name: '',
             context: 'Topic Context',
             isNew: true,
             subTopics: [],
           },
           {
             uuid: '3',
-            name: '   ', // whitespace name
+            name: '   ',
             context: 'Context 1',
             isNew: true,
             subTopics: [],
@@ -274,13 +266,13 @@ describe('useConversationalTopics store', () => {
               {
                 uuid: '1-1',
                 name: 'Sub Name',
-                context: '', // incomplete subtopic
+                context: '',
                 isNew: true,
                 subTopics: [],
               },
               {
                 uuid: '1-2',
-                name: '', // incomplete subtopic
+                name: '',
                 context: 'Sub Context',
                 isNew: true,
                 subTopics: [],
@@ -336,7 +328,7 @@ describe('useConversationalTopics store', () => {
               },
               {
                 uuid: '1-2',
-                name: '', // incomplete existing subtopic - ignored
+                name: '',
                 context: 'Existing Sub Context',
                 isNew: false,
                 subTopics: [],
@@ -345,7 +337,7 @@ describe('useConversationalTopics store', () => {
           },
           {
             uuid: '2',
-            name: '', // incomplete existing topic - ignored
+            name: '',
             context: 'Existing Context',
             isNew: false,
             subTopics: [],

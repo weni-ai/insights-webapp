@@ -82,15 +82,14 @@ describe('useConversationalTopics store', () => {
       expect(store.topicsDistributionCount).toBe(2);
     });
 
-    it('should return correct hasNewTopics', () => {
+    it('should return correct hasNewTopics and hasNewSubTopics with mock data', () => {
+      // Using the initial mock data from beforeEach
       expect(store.hasNewTopics).toBe(true);
-    });
-
-    it('should return correct hasNewSubTopics', () => {
       expect(store.hasNewSubTopics).toBe(true);
     });
 
-    it('should return false for hasNewTopics when new topics are completely empty', () => {
+    it('should evaluate hasNewTopics based on checkIsEmptyValuesAndNewTopics logic', () => {
+      // False when new topics are completely empty
       store.topics = [
         {
           uuid: '1',
@@ -103,15 +102,13 @@ describe('useConversationalTopics store', () => {
           uuid: '2',
           name: 'Existing Topic',
           context: 'Existing Context',
-          isNew: false,
+          isNew: false, // existing topics should be ignored
           subTopics: [],
         },
       ];
-
       expect(store.hasNewTopics).toBe(false);
-    });
 
-    it('should return true for hasNewTopics when new topics have at least name or context', () => {
+      // True when new topics have at least name or context
       store.topics = [
         {
           uuid: '1',
@@ -121,7 +118,6 @@ describe('useConversationalTopics store', () => {
           subTopics: [],
         },
       ];
-
       expect(store.hasNewTopics).toBe(true);
 
       store.topics = [
@@ -133,11 +129,11 @@ describe('useConversationalTopics store', () => {
           subTopics: [],
         },
       ];
-
       expect(store.hasNewTopics).toBe(true);
     });
 
-    it('should return false for hasNewSubTopics when new subtopics are completely empty', () => {
+    it('should evaluate hasNewSubTopics based on checkIsEmptyValuesAndNewTopics logic', () => {
+      // False when new subtopics are completely empty
       store.topics = [
         {
           uuid: '1',
@@ -152,14 +148,19 @@ describe('useConversationalTopics store', () => {
               isNew: true,
               subTopics: [],
             },
+            {
+              uuid: '1-2',
+              name: 'Existing Sub',
+              context: 'Existing Sub Context',
+              isNew: false, // existing subtopics should be ignored
+              subTopics: [],
+            },
           ],
         },
       ];
-
       expect(store.hasNewSubTopics).toBe(false);
-    });
 
-    it('should return true for hasNewSubTopics when new subtopics have at least name or context', () => {
+      // True when new subtopics have at least name or context
       store.topics = [
         {
           uuid: '1',
@@ -177,7 +178,6 @@ describe('useConversationalTopics store', () => {
           ],
         },
       ];
-
       expect(store.hasNewSubTopics).toBe(true);
     });
 
@@ -436,6 +436,56 @@ describe('useConversationalTopics store', () => {
         ];
 
         expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should ignore existing topics when checking completion (only consider new topics)', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: 'Complete New Topic',
+            context: 'Complete New Context',
+            isNew: true,
+            subTopics: [],
+          },
+          {
+            uuid: '2',
+            name: '', // incomplete existing topic - should be ignored
+            context: 'Existing Context',
+            isNew: false,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(true);
+      });
+
+      it('should ignore existing subtopics when checking completion (only consider new subtopics)', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: 'Main Topic',
+            context: 'Main Context',
+            isNew: false,
+            subTopics: [
+              {
+                uuid: '1-1',
+                name: 'Complete New Sub',
+                context: 'Complete New Sub Context',
+                isNew: true,
+                subTopics: [],
+              },
+              {
+                uuid: '1-2',
+                name: '', // incomplete existing subtopic - should be ignored
+                context: 'Existing Sub Context',
+                isNew: false,
+                subTopics: [],
+              },
+            ],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(true);
       });
     });
   });

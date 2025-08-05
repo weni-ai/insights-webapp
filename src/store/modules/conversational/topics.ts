@@ -61,12 +61,18 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       ),
 
     allNewTopicsComplete: (state) => {
+      const checkIsEmptyValues = (t: Topic) =>
+        t.context.trim() !== '' || t.name.trim() !== '';
+
       const newMainTopics = state.topics.filter(
-        (topic) => topic.isNew === true,
+        (topic) => topic.isNew === true && checkIsEmptyValues(topic),
       );
       const newSubTopics = state.topics.flatMap(
         (topic) =>
-          topic.subTopics?.filter((subTopic) => subTopic.isNew === true) || [],
+          topic.subTopics?.filter(
+            (subTopic) =>
+              subTopic.isNew === true && checkIsEmptyValues(subTopic),
+          ) || [],
       );
       const allNewTopics = [...newMainTopics, ...newSubTopics];
 

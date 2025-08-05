@@ -90,6 +90,97 @@ describe('useConversationalTopics store', () => {
       expect(store.hasNewSubTopics).toBe(true);
     });
 
+    it('should return false for hasNewTopics when new topics are completely empty', () => {
+      store.topics = [
+        {
+          uuid: '1',
+          name: '',
+          context: '',
+          isNew: true,
+          subTopics: [],
+        },
+        {
+          uuid: '2',
+          name: 'Existing Topic',
+          context: 'Existing Context',
+          isNew: false,
+          subTopics: [],
+        },
+      ];
+
+      expect(store.hasNewTopics).toBe(false);
+    });
+
+    it('should return true for hasNewTopics when new topics have at least name or context', () => {
+      store.topics = [
+        {
+          uuid: '1',
+          name: 'Some Name',
+          context: '',
+          isNew: true,
+          subTopics: [],
+        },
+      ];
+
+      expect(store.hasNewTopics).toBe(true);
+
+      store.topics = [
+        {
+          uuid: '1',
+          name: '',
+          context: 'Some Context',
+          isNew: true,
+          subTopics: [],
+        },
+      ];
+
+      expect(store.hasNewTopics).toBe(true);
+    });
+
+    it('should return false for hasNewSubTopics when new subtopics are completely empty', () => {
+      store.topics = [
+        {
+          uuid: '1',
+          name: 'Main Topic',
+          context: 'Main Context',
+          isNew: false,
+          subTopics: [
+            {
+              uuid: '1-1',
+              name: '',
+              context: '',
+              isNew: true,
+              subTopics: [],
+            },
+          ],
+        },
+      ];
+
+      expect(store.hasNewSubTopics).toBe(false);
+    });
+
+    it('should return true for hasNewSubTopics when new subtopics have at least name or context', () => {
+      store.topics = [
+        {
+          uuid: '1',
+          name: 'Main Topic',
+          context: 'Main Context',
+          isNew: false,
+          subTopics: [
+            {
+              uuid: '1-1',
+              name: 'Sub Name',
+              context: '',
+              isNew: true,
+              subTopics: [],
+            },
+          ],
+        },
+      ];
+
+      expect(store.hasNewSubTopics).toBe(true);
+    });
+
     it('should return correct hasExistingTopics', () => {
       expect(store.hasExistingTopics).toBe(true);
     });
@@ -269,6 +360,78 @@ describe('useConversationalTopics store', () => {
             context: 'Context 1',
             isNew: true,
             subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return false when topic has only name but no context', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: 'Topic Name',
+            context: '',
+            isNew: true,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return false when topic has only context but no name', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: '',
+            context: 'Topic Context',
+            isNew: true,
+            subTopics: [],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return false when subtopic has only name but no context', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: 'Main Topic',
+            context: 'Main Context',
+            isNew: true,
+            subTopics: [
+              {
+                uuid: '1-1',
+                name: 'Sub Name',
+                context: '',
+                isNew: true,
+                subTopics: [],
+              },
+            ],
+          },
+        ];
+
+        expect(store.allNewTopicsComplete).toBe(false);
+      });
+
+      it('should return false when subtopic has only context but no name', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: 'Main Topic',
+            context: 'Main Context',
+            isNew: true,
+            subTopics: [
+              {
+                uuid: '1-1',
+                name: '',
+                context: 'Sub Context',
+                isNew: true,
+                subTopics: [],
+              },
+            ],
           },
         ];
 

@@ -91,7 +91,7 @@ export default {
       'isLoadingCurrentDashboardFilters',
       'currentDashboard',
     ]),
-    ...mapState(useConfig, ['token']),
+    ...mapState(useConfig, ['token', 'enableCreateCustomDashboards']),
     ...mapState(useOnboarding, {
       showCreateDashboardTour: 'showCreateDashboardOnboarding',
       showCompleteOnboardingModal: 'showCompleteOnboardingModal',
@@ -234,7 +234,7 @@ export default {
         (dashboard) => dashboard.is_deletable,
       );
 
-      if (hasCustomDashboard) {
+      if (hasCustomDashboard || !this.enableCreateCustomDashboards) {
         localStorage.setItem('hasDashboardOnboardingComplete', 'true');
         this.showOnboardingModal = false;
         return;

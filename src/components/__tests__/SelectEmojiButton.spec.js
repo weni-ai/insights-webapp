@@ -261,7 +261,7 @@ describe('SelectEmojiButton', () => {
       wrapper.vm.isEmojiPickerOpen = false;
 
       const emojiPicker = wrapper.find('[data-testid="unnnic-emoji-picker"]');
-      expect(emojiPicker.isVisible()).toBe(false);
+      expect(emojiPicker.exists()).toBe(false);
     });
   });
 

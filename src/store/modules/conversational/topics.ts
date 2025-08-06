@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import unnnic from '@weni/unnnic-system';
 import i18n from '@/utils/plugins/i18n';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import topicsService from '@/services/api/resources/conversational/topics';
+import { checkIsEmptyValuesAndNewTopics, defaultAlert } from '@/utils/topics';
 
 export interface Topic {
   uuid?: string;
@@ -61,9 +61,6 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       ),
 
     allNewTopicsComplete: (state) => {
-      const checkIsEmptyValuesAndNewTopics = (t: Topic) =>
-        t.isNew === true && (t.context.trim() !== '' || t.name.trim() !== '');
-
       const newMainTopics = state.topics.filter(checkIsEmptyValuesAndNewTopics);
       const newSubTopics = state.topics.flatMap(
         (topic) =>
@@ -91,16 +88,6 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
   },
 
   actions: {
-    defaultAlert(type: 'success' | 'error', text: string, seconds: number = 5) {
-      (unnnic.unnnicCallAlert as any)({
-        props: {
-          text,
-          type,
-        },
-        seconds,
-      });
-    },
-
     toggleAddTopicsDrawer() {
       this.isAddTopicsDrawerOpen = !this.isAddTopicsDrawerOpen;
     },
@@ -187,7 +174,10 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       try {
         const newTopicsAndSubtopics = this.topics.filter(
           (topic) =>
-            topic.isNew || topic.subTopics?.some((subTopic) => subTopic.isNew),
+            checkIsEmptyValuesAndNewTopics(topic) ||
+            topic.subTopics?.some((subTopic) =>
+              checkIsEmptyValuesAndNewTopics(subTopic),
+            ),
         );
 
         if (newTopicsAndSubtopics.length === 0) {
@@ -202,7 +192,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
         const allSucceeded = results.every((result) => result);
 
         if (allSucceeded) {
-          this.defaultAlert(
+          defaultAlert(
             'success',
             i18n.global.t(
               'conversations_dashboard.form_topic.success_save_topics_or_subtopics',
@@ -214,7 +204,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
           throw new Error('Some topics failed to save');
         }
       } catch (error) {
-        this.defaultAlert(
+        defaultAlert(
           'error',
           i18n.global.t(
             'conversations_dashboard.form_topic.error_save_topics_or_subtopics',
@@ -357,14 +347,14 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       try {
         await topicsService.deleteTopic(topic.uuid);
         removeInternalTopic();
-        this.defaultAlert(
+        defaultAlert(
           'success',
           i18n.global.t(
             'conversations_dashboard.form_topic.success_remove_topic',
           ),
         );
       } catch (error) {
-        this.defaultAlert(
+        defaultAlert(
           'error',
           i18n.global.t(
             'conversations_dashboard.form_topic.error_remove_topic',
@@ -391,14 +381,14 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       try {
         await topicsService.deleteSubTopic(parentTopic.uuid, subtopic.uuid);
         removeInternalSubtopic();
-        this.defaultAlert(
+        defaultAlert(
           'success',
           i18n.global.t(
             'conversations_dashboard.form_topic.success_remove_subtopic',
           ),
         );
       } catch (error) {
-        this.defaultAlert(
+        defaultAlert(
           'error',
           i18n.global.t(
             'conversations_dashboard.form_topic.error_remove_subtopic',

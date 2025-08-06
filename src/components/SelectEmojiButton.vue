@@ -20,9 +20,8 @@
       scheme="neutral-dark"
       size="avatar-nano"
     />
-
     <UnnnicEmojiPicker
-      v-show="isEmojiPickerOpen"
+      v-if="isEmojiPickerOpen && isMounted"
       data-testid="unnnic-emoji-picker"
       returnName
       :position="pickerPosition"
@@ -54,8 +53,10 @@ export default {
   data() {
     return {
       isEmojiPickerOpen: false,
+      isMounted: false,
     };
   },
+
   computed: {
     selectedEmoji() {
       if (!this.modelValue) return '';
@@ -63,9 +64,15 @@ export default {
       return emoji;
     },
   },
+
+  mounted() {
+    this.isMounted = true;
+  },
   methods: {
     openEmojiPicker() {
-      this.isEmojiPickerOpen = true;
+      if (this.isMounted) {
+        this.isEmojiPickerOpen = true;
+      }
     },
     closeEmojiPicker() {
       this.isEmojiPickerOpen = false;
@@ -78,7 +85,11 @@ export default {
       }
     },
     toggleEmojiPicker() {
-      this.isEmojiPickerOpen ? this.closeEmojiPicker() : this.openEmojiPicker();
+      if (this.isMounted) {
+        this.isEmojiPickerOpen
+          ? this.closeEmojiPicker()
+          : this.openEmojiPicker();
+      }
     },
     handleInput(event) {
       this.$emit('update:model-value', event);

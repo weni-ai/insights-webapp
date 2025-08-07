@@ -28,7 +28,7 @@
     "header": {
       "total": "Total Conversations",
       "resolved": "Resolved",
-      "unresolved": "Unresolved", 
+      "unresolved": "Unresolved",
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
@@ -44,7 +44,7 @@
       "add_sub_topic": "Add sub-topic",
       "title": "Edit topics and sub-topics",
       "cancel": "Cancel",
-      "save": "Save Changes", 
+      "save": "Save Changes",
       "new_topic": "New topic",
       "topic_name": "Topic name",
       "context": "Context",
@@ -95,7 +95,7 @@
     "nps_widget": {
       "promoters": "Promoters (rated 9 or 10)",
       "passive": "Passive (rated 7 or 8)",
-      "detractors": "Detractors (rated 0 to 6)", 
+      "detractors": "Detractors (rated 0 to 6)",
       "current_score": "Current score",
       "current_score_types": {
         "low": "Low",
@@ -155,6 +155,7 @@
     "add_to_favorites": "Add to favorites",
     "empty_templates": "No data available for now. As soon as there’s activity, it will appear here!",
     "favorite_limit_reached": "Favorite limit reached. Please remove a favorite and try again.",
+    "all_data": "All data",
     "active_contacts": {
       "title": "Active contacts",
       "tooltip": "Contacts who interacted with the template"
@@ -240,7 +241,7 @@
       "get_data_fail": "Failed to fetch data from contacts who responded to this flow."
     }
   },
-  "filter": { 
+  "filter": {
     "agent": {
       "label": "Agent",
       "placeholder": "Select agent"

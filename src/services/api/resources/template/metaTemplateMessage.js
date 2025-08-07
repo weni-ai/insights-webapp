@@ -1,5 +1,6 @@
 import http from '@/services/api/http';
 import { fullySanitize } from '@/utils/sanatize';
+import { asyncTimeout } from '@/utils/time';
 import { parseWhatsAppFormattingToHtml } from '@/utils/whatsapp';
 
 export default {
@@ -180,6 +181,34 @@ export default {
     const body = { dashboard: dashboardUuid, template_id: templateUuid };
 
     const response = await http.post(url, body);
+
+    return response;
+  },
+
+  async getCategoriesMetrics({ waba_id, project_uuid, start_date, end_date }) {
+    const url = '/metrics/meta/whatsapp-message-templates/categories-metrics/';
+    const params = { waba_id, project_uuid, start_date, end_date };
+
+    // const response = await http.get(url, { params });
+
+    await asyncTimeout(2000);
+
+    const response = {
+      categories: [
+        {
+          name: 'MARKETING',
+          qty: 10,
+        },
+        {
+          name: 'UTILITY',
+          qty: 9,
+        },
+        {
+          name: 'AUTHENTICATION',
+          qty: 3,
+        },
+      ],
+    };
 
     return response;
   },

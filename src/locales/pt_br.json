@@ -156,6 +156,13 @@
     "empty_templates": "Nenhum dado disponível no momento. Assim que houver atividade, aparecerá aqui!",
     "favorite_limit_reached": "Limite de favoritos atingido. Por favor, remova algum favorito e tente novamente.",
     "all_data": "Todos os dados",
+    "all_data_table": {
+      "title": "Número de mensagens",
+      "header": {
+        "category": "Categoria",
+        "qtd": "Quantidade"
+      }
+    },
     "active_contacts": {
       "title": "Contatos ativos",
       "tooltip": "Contatos que interagiram com o modelo"

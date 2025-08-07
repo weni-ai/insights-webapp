@@ -39,9 +39,19 @@
     </template>
   </section>
   <template v-if="viewTab === 'home'">
-    <div>
-      <h1>Home View</h1>
-    </div>
+    <h1 class="template-message-meta-dashboard__categories-title">
+      {{ $t('template_messages_dashboard.all_data_table.title') }}
+    </h1>
+    <section class="template-message-meta-dashboard__categories">
+      <SingleTable
+        :headers="categoriesMetricsHeaders"
+        :rows="formattedCategoriesMetrics"
+        hidePagination
+        :pagination="1"
+        :paginationInterval="3"
+        :paginationTotal="categoriesMetrics?.length"
+      />
+    </section>
   </template>
 
   <template v-else-if="viewTab === 'template'">
@@ -201,7 +211,26 @@ const handlerSelectedTemplateUuid = (templateUuid) => {
   metaTemplateMessageStore.setSelectedTemplateUuid(templateUuid);
 };
 
+const categoriesMetricsHeaders = [
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.all_data_table.header.category',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.all_data_table.header.qtd',
+    ),
+  },
+];
+
 const categoriesMetrics = ref([]);
+
+const formattedCategoriesMetrics = computed(() => {
+  return categoriesMetrics.value?.map((row) => ({
+    content: [row.name, row.qtd],
+  }));
+});
 
 const getCategoriesMetrics = async () => {
   try {
@@ -453,6 +482,21 @@ const unfavoriteTemplate = async () => {
       color: $unnnic-color-neutral-dark;
       font-weight: $unnnic-font-weight-black;
       text-decoration: none;
+    }
+  }
+
+  &__categories {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 100%;
+    &-title {
+      font-family: $unnnic-font-family-secondary;
+      font-weight: $unnnic-font-weight-bold;
+      font-size: $unnnic-font-size-body-lg;
+      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
+      color: $unnnic-color-neutral-dark;
+      margin-bottom: 10px;
     }
   }
 

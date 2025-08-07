@@ -156,6 +156,13 @@
     "empty_templates": "No data available for now. As soon as there’s activity, it will appear here!",
     "favorite_limit_reached": "Favorite limit reached. Please remove a favorite and try again.",
     "all_data": "All data",
+    "all_data_table": {
+      "title": "Number of messages",
+      "header": {
+        "category": "Category",
+        "qtd": "Quantity"
+      }
+    },
     "active_contacts": {
       "title": "Active contacts",
       "tooltip": "Contacts who interacted with the template"

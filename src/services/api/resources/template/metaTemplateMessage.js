@@ -197,15 +197,15 @@ export default {
       categories: [
         {
           name: 'MARKETING',
-          qty: 10,
+          qtd: 10,
         },
         {
           name: 'UTILITY',
-          qty: 9,
+          qtd: 9,
         },
         {
           name: 'AUTHENTICATION',
-          qty: 3,
+          qtd: 3,
         },
       ],
     };

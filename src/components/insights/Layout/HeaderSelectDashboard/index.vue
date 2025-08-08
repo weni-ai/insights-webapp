@@ -28,15 +28,17 @@
         <h1
           data-testid="dashboard-title"
           class="trigger__title"
+          :title="dashboardTitle"
         >
           {{ dashboardTitle }}
         </h1>
         <BetaText />
-        <UnnnicIcon
-          data-testid="expand-icon"
-          icon="expand_more"
-        />
       </section>
+      <UnnnicIcon
+        class="dropdown__trigger"
+        data-testid="expand-icon"
+        icon="expand_more"
+      />
     </template>
 
     <OptionSelectDashboard
@@ -156,6 +158,10 @@ $dropdownFixedWidth: 314px;
       font-size: $unnnic-font-size-title-sm;
       font-weight: $unnnic-font-weight-bold;
       line-height: $unnnic-line-height-large * 2;
+      text-wrap: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 621px;
     }
   }
 
@@ -173,7 +179,7 @@ $dropdownFixedWidth: 314px;
 
       left: 0;
 
-      width: $dropdownFixedWidth;
+      width: 100%;
 
       padding: $unnnic-spacing-xs;
       gap: $unnnic-spacing-nano;

@@ -50,6 +50,7 @@
         :pagination="1"
         :paginationInterval="3"
         :paginationTotal="categoriesMetrics?.length"
+        :isLoading="isLoadingCategoriesMetrics"
       />
     </section>
   </template>
@@ -232,8 +233,11 @@ const formattedCategoriesMetrics = computed(() => {
   }));
 });
 
+const isLoadingCategoriesMetrics = ref(false);
+
 const getCategoriesMetrics = async () => {
   try {
+    isLoadingCategoriesMetrics.value = true;
     const response = await MetaTemplateMessageService.getCategoriesMetrics({
       waba_id: waba_id.value,
       project_uuid: project_uuid.value,
@@ -244,6 +248,8 @@ const getCategoriesMetrics = async () => {
     categoriesMetrics.value = response?.categories;
   } catch (error) {
     console.log(error);
+  } finally {
+    isLoadingCategoriesMetrics.value = false;
   }
 };
 

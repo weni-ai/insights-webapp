@@ -135,6 +135,8 @@ export default {
 $dropdownFixedWidth: 314px;
 
 :deep(.unnnic-dropdown__content) {
+  overflow-y: auto;
+  max-height: 80vh;
   &.unnnic-dropdown__content__position-bottom-right {
     z-index: 5;
   }

@@ -356,9 +356,10 @@ describe('App', () => {
         );
       });
 
-      it('should show modal when no custom dashboard and onboarding not complete', () => {
+      it('should show modal when no custom dashboard, enableCreateCustomDashboards is true and onboarding not complete', () => {
         dashboardsStore.dashboards = [{ id: 1, is_deletable: false }];
         localStorageMock.getItem.mockReturnValue('false');
+        configStore.enableCreateCustomDashboards = true;
 
         wrapper.vm.handlerShowOnboardingModal();
 

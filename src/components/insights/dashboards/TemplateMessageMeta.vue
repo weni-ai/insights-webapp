@@ -11,53 +11,98 @@
     />
   </section>
 
-  <section
-    v-else-if="isEmptyTemplates"
-    class="template-message-meta-dashboard__empty"
-  >
-    <img
-      class="template-message-meta-dashboard__empty-image"
-      :src="emptyMonitory"
-    />
-    <p class="template-message-meta-dashboard__empty-text">
-      {{ $t('template_messages_dashboard.empty_templates') }}
+  <section class="template-message-meta-dashboard__tabs">
+    <p
+      :class="{
+        'template-message-meta-dashboard__tab': true,
+        'template-message-meta-dashboard__tab--active': viewTab === 'home',
+      }"
+      @click="viewTab = 'home'"
+    >
+      {{ $t('template_messages_dashboard.all_data') }}
     </p>
+    <template v-if="templatePreview.name">
+      <UnnnicIcon
+        icon="arrow-right-1-1"
+        size="sm"
+      />
+      <p
+        :class="{
+          'template-message-meta-dashboard__tab': true,
+          'template-message-meta-dashboard__tab--active':
+            viewTab === 'template',
+        }"
+        @click="viewTab = 'template'"
+      >
+        {{ templatePreview.name }}
+      </p>
+    </template>
   </section>
-
-  <section
-    v-else
-    class="template-message-meta-dashboard"
-  >
-    <section class="template-message-meta-dashboard__template-container">
-      <MetaTemplateMessage
-        class="template-message-preview"
-        :template="templatePreview"
-        :isLoading="isLoadingTemplatePreview"
-        @favorite="favoriteTemplate()"
-        @unfavorite="unfavoriteTemplate()"
+  <template v-if="viewTab === 'home'">
+    <h1 class="template-message-meta-dashboard__categories-title">
+      {{ $t('template_messages_dashboard.all_data_table.title') }}
+    </h1>
+    <section class="template-message-meta-dashboard__categories">
+      <SingleTable
+        :headers="categoriesMetricsHeaders"
+        :rows="formattedCategoriesMetrics"
+        hidePagination
+        :pagination="1"
+        :paginationInterval="3"
+        :paginationTotal="categoriesMetrics?.length"
       />
     </section>
-    <section class="template-message-meta-dashboard__template-info">
-      <div class="template-message-meta-dashboard__template-info-container">
-        <MultipleLineChart
-          class="line-chart"
-          :isLoading="isLoadingMessagesAnalyticsData"
-          :data="formattedMessagesAnalyticsData"
-        />
-        <SingleTable
-          class="button-clicks-table"
-          :title="$t('template_messages_dashboard.button_clicks_table.title')"
-          hidePagination
-          :pagination="1"
-          :paginationInterval="10"
-          :paginationTotal="formattedClicksTableData?.length"
-          :headers="buttonClicksTableHeaders"
-          :rows="formattedClicksTableData"
-          :isLoading="isLoadingButtonsClicksData"
-        />
-      </div>
+  </template>
+
+  <template v-else-if="viewTab === 'template'">
+    <section
+      v-if="isEmptyTemplates"
+      class="template-message-meta-dashboard__empty"
+    >
+      <img
+        class="template-message-meta-dashboard__empty-image"
+        :src="emptyMonitory"
+      />
+      <p class="template-message-meta-dashboard__empty-text">
+        {{ $t('template_messages_dashboard.empty_templates') }}
+      </p>
     </section>
-  </section>
+
+    <section
+      v-else
+      class="template-message-meta-dashboard"
+    >
+      <section class="template-message-meta-dashboard__template-container">
+        <MetaTemplateMessage
+          class="template-message-preview"
+          :template="templatePreview"
+          :isLoading="isLoadingTemplatePreview"
+          @favorite="favoriteTemplate()"
+          @unfavorite="unfavoriteTemplate()"
+        />
+      </section>
+      <section class="template-message-meta-dashboard__template-info">
+        <div class="template-message-meta-dashboard__template-info-container">
+          <MultipleLineChart
+            class="line-chart"
+            :isLoading="isLoadingMessagesAnalyticsData"
+            :data="formattedMessagesAnalyticsData"
+          />
+          <SingleTable
+            class="button-clicks-table"
+            :title="$t('template_messages_dashboard.button_clicks_table.title')"
+            hidePagination
+            :pagination="1"
+            :paginationInterval="10"
+            :paginationTotal="formattedClicksTableData?.length"
+            :headers="buttonClicksTableHeaders"
+            :rows="formattedClicksTableData"
+            :isLoading="isLoadingButtonsClicksData"
+          />
+        </div>
+      </section>
+    </section>
+  </template>
 </template>
 
 <script>
@@ -106,6 +151,8 @@ const lastOpenTemplates = useLocalStorage('meta-last-templates-viewed', {});
 
 const initialLoading = ref(false);
 
+const viewTab = ref('home');
+
 onUnmounted(() => {
   metaTemplateMessageStore.setSelectedTemplateUuid('');
 });
@@ -113,6 +160,8 @@ onUnmounted(() => {
 onMounted(async () => {
   try {
     initialLoading.value = true;
+
+    getCategoriesMetrics();
 
     const lastViwedTemplateUuid =
       lastOpenTemplates.value[currentDashboard.value?.uuid];
@@ -160,6 +209,42 @@ const currentDashboard = computed(() => dashboardsStore.currentDashboard);
 
 const handlerSelectedTemplateUuid = (templateUuid) => {
   metaTemplateMessageStore.setSelectedTemplateUuid(templateUuid);
+};
+
+const categoriesMetricsHeaders = [
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.all_data_table.header.category',
+    ),
+  },
+  {
+    content: i18n.global.t(
+      'template_messages_dashboard.all_data_table.header.qtd',
+    ),
+  },
+];
+
+const categoriesMetrics = ref([]);
+
+const formattedCategoriesMetrics = computed(() => {
+  return categoriesMetrics.value?.map((row) => ({
+    content: [row.name, row.qtd],
+  }));
+});
+
+const getCategoriesMetrics = async () => {
+  try {
+    const response = await MetaTemplateMessageService.getCategoriesMetrics({
+      waba_id: waba_id.value,
+      project_uuid: project_uuid.value,
+      start_date: appliedFilters.value?.date?._start,
+      end_date: appliedFilters.value?.date?._end,
+    });
+
+    categoriesMetrics.value = response?.categories;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const templatePreview = ref({});
@@ -309,6 +394,7 @@ const appliedFilters = computed(() => dashboardsStore.appliedFilters);
 
 watch(appliedFilters, () => {
   const isLoadedPreview = Object.keys(templatePreview.value).length > 0;
+  getCategoriesMetrics();
   if (selectedTemplateUuid.value)
     getSelectedTemplateData({ ignorePreview: isLoadedPreview });
 });
@@ -316,6 +402,7 @@ watch(appliedFilters, () => {
 watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   if (newUuid !== oldUuid) {
     lastOpenTemplates.value[currentDashboard.value.uuid] = newUuid;
+    if (oldUuid) viewTab.value = 'template';
     getSelectedTemplateData();
   }
 });
@@ -374,6 +461,44 @@ const unfavoriteTemplate = async () => {
   grid-template-columns: 2.5fr 9.5fr;
   gap: $unnnic-spacing-sm;
   height: 100%;
+
+  &__tabs {
+    display: flex;
+    align-items: center;
+    gap: $unnnic-spacing-sm;
+    margin-bottom: $unnnic-spacing-md;
+  }
+
+  &__tab {
+    cursor: pointer;
+    font-family: $unnnic-font-family-secondary;
+    font-weight: $unnnic-font-weight-regular;
+    font-size: $unnnic-font-size-body-gt;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-medium;
+    text-decoration: underline solid;
+    color: $unnnic-color-neutral-cloudy;
+
+    &--active {
+      color: $unnnic-color-neutral-dark;
+      font-weight: $unnnic-font-weight-black;
+      text-decoration: none;
+    }
+  }
+
+  &__categories {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    height: 100%;
+    &-title {
+      font-family: $unnnic-font-family-secondary;
+      font-weight: $unnnic-font-weight-bold;
+      font-size: $unnnic-font-size-body-lg;
+      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
+      color: $unnnic-color-neutral-dark;
+      margin-bottom: 10px;
+    }
+  }
 
   &__empty {
     display: flex;

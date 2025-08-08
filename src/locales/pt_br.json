@@ -161,6 +161,11 @@
       "header": {
         "category": "Categoria",
         "qtd": "Quantidade"
+      },
+      "row": {
+        "MARKETING": "Marketing",
+        "UTILITY": "Utilitário",
+        "AUTHENTICATION": "Autenticação"
       }
     },
     "active_contacts": {

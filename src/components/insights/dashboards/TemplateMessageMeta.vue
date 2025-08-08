@@ -229,7 +229,12 @@ const categoriesMetrics = ref([]);
 
 const formattedCategoriesMetrics = computed(() => {
   return categoriesMetrics.value?.map((row) => ({
-    content: [row.name, row.qtd],
+    content: [
+      i18n.global.t(
+        `template_messages_dashboard.all_data_table.row.${row.name}`,
+      ),
+      row.qtd,
+    ],
   }));
 });
 

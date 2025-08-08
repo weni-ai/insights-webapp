@@ -214,6 +214,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     gap: $unnnic-spacing-xs;
 
     .content__actions {

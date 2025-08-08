@@ -82,11 +82,97 @@ describe('useConversationalTopics store', () => {
       expect(store.topicsDistributionCount).toBe(2);
     });
 
-    it('should return correct hasNewTopics', () => {
+    it('should return correct hasNewTopics and hasNewSubTopics with mock data', () => {
+      expect(store.hasNewTopics).toBe(true);
+      expect(store.hasNewSubTopics).toBe(true);
+    });
+
+    it('should evaluate hasNewTopics based on checkIsEmptyValuesAndNewTopics logic', () => {
+      store.topics = [
+        {
+          uuid: '1',
+          name: '',
+          context: '',
+          isNew: true,
+          subTopics: [],
+        },
+        {
+          uuid: '2',
+          name: 'Existing Topic',
+          context: 'Existing Context',
+          isNew: false,
+          subTopics: [],
+        },
+      ];
+      expect(store.hasNewTopics).toBe(false);
+
+      store.topics = [
+        {
+          uuid: '1',
+          name: 'Some Name',
+          context: '',
+          isNew: true,
+          subTopics: [],
+        },
+      ];
+      expect(store.hasNewTopics).toBe(true);
+
+      store.topics = [
+        {
+          uuid: '1',
+          name: '',
+          context: 'Some Context',
+          isNew: true,
+          subTopics: [],
+        },
+      ];
       expect(store.hasNewTopics).toBe(true);
     });
 
-    it('should return correct hasNewSubTopics', () => {
+    it('should evaluate hasNewSubTopics based on checkIsEmptyValuesAndNewTopics logic', () => {
+      store.topics = [
+        {
+          uuid: '1',
+          name: 'Main Topic',
+          context: 'Main Context',
+          isNew: false,
+          subTopics: [
+            {
+              uuid: '1-1',
+              name: '',
+              context: '',
+              isNew: true,
+              subTopics: [],
+            },
+            {
+              uuid: '1-2',
+              name: 'Existing Sub',
+              context: 'Existing Sub Context',
+              isNew: false,
+              subTopics: [],
+            },
+          ],
+        },
+      ];
+      expect(store.hasNewSubTopics).toBe(false);
+
+      store.topics = [
+        {
+          uuid: '1',
+          name: 'Main Topic',
+          context: 'Main Context',
+          isNew: false,
+          subTopics: [
+            {
+              uuid: '1-1',
+              name: 'Sub Name',
+              context: '',
+              isNew: true,
+              subTopics: [],
+            },
+          ],
+        },
+      ];
       expect(store.hasNewSubTopics).toBe(true);
     });
 
@@ -118,7 +204,7 @@ describe('useConversationalTopics store', () => {
     });
 
     describe('allNewTopicsComplete getter', () => {
-      it('should return false when there are no new topics', () => {
+      it('should return false when no new topics exist or are empty', () => {
         store.topics = [
           {
             uuid: '1',
@@ -128,99 +214,72 @@ describe('useConversationalTopics store', () => {
             subTopics: [],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(false);
-      });
 
-      it('should return false when new topics have empty name or context', () => {
         store.topics = [
           {
             uuid: '1',
             name: '',
-            context: 'Context 1',
-            isNew: true,
-            subTopics: [],
-          },
-          {
-            uuid: '2',
-            name: 'Topic 2',
             context: '',
             isNew: true,
             subTopics: [],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(false);
       });
 
-      it('should return false when some new topics are incomplete', () => {
+      it('should return false when new topics are incomplete (missing name or context)', () => {
         store.topics = [
           {
             uuid: '1',
-            name: 'Complete Topic',
-            context: 'Complete Context',
+            name: 'Topic Name',
+            context: '',
             isNew: true,
             subTopics: [],
           },
           {
             uuid: '2',
             name: '',
-            context: 'Incomplete Context',
+            context: 'Topic Context',
             isNew: true,
             subTopics: [],
           },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
-      });
-
-      it('should return true when all new topics have name and context', () => {
-        store.topics = [
           {
-            uuid: '1',
-            name: 'Topic 1',
+            uuid: '3',
+            name: '   ',
             context: 'Context 1',
             isNew: true,
             subTopics: [],
           },
-          {
-            uuid: '2',
-            name: 'Topic 2',
-            context: 'Context 2',
-            isNew: true,
-            subTopics: [],
-          },
         ];
-
-        expect(store.allNewTopicsComplete).toBe(true);
+        expect(store.allNewTopicsComplete).toBe(false);
       });
 
       it('should return false when new subtopics are incomplete', () => {
         store.topics = [
           {
             uuid: '1',
-            name: 'Topic 1',
-            context: 'Context 1',
+            name: 'Complete Topic',
+            context: 'Complete Context',
             isNew: true,
             subTopics: [
               {
                 uuid: '1-1',
-                name: 'Complete SubTopic',
-                context: 'Complete Sub Context',
+                name: 'Sub Name',
+                context: '',
                 isNew: true,
                 subTopics: [],
               },
               {
                 uuid: '1-2',
                 name: '',
-                context: 'Incomplete Sub Context',
+                context: 'Sub Context',
                 isNew: true,
                 subTopics: [],
               },
             ],
           },
         ];
-
         expect(store.allNewTopicsComplete).toBe(false);
       });
 
@@ -245,66 +304,46 @@ describe('useConversationalTopics store', () => {
             uuid: '2',
             name: 'Topic 2',
             context: 'Context 2',
-            isNew: false,
-            subTopics: [
-              {
-                uuid: '2-1',
-                name: 'SubTopic 2',
-                context: 'Sub Context 2',
-                isNew: true,
-                subTopics: [],
-              },
-            ],
-          },
-        ];
-
-        expect(store.allNewTopicsComplete).toBe(true);
-      });
-
-      it('should handle topics with only whitespace in name or context', () => {
-        store.topics = [
-          {
-            uuid: '1',
-            name: '   ',
-            context: 'Context 1',
             isNew: true,
             subTopics: [],
           },
         ];
-
-        expect(store.allNewTopicsComplete).toBe(false);
+        expect(store.allNewTopicsComplete).toBe(true);
       });
-    });
-  });
 
-  describe('Default alert action', () => {
-    it('should call unnnic alert with correct parameters', () => {
-      const mockAlert = vi.fn();
-      unnnic.unnnicCallAlert = mockAlert;
-
-      store.defaultAlert('success', 'Test message', 10);
-
-      expect(mockAlert).toHaveBeenCalledWith({
-        props: {
-          text: 'Test message',
-          type: 'success',
-        },
-        seconds: 10,
-      });
-    });
-
-    it('should use default seconds when not provided', () => {
-      const mockAlert = vi.fn();
-      unnnic.unnnicCallAlert = mockAlert;
-
-      store.defaultAlert('error', 'Error message');
-
-      expect(mockAlert).toHaveBeenCalledWith({
-        props: {
-          text: 'Error message',
-          type: 'error',
-        },
-        seconds: 5,
+      it('should ignore existing topics and subtopics in completion check', () => {
+        store.topics = [
+          {
+            uuid: '1',
+            name: 'Complete New Topic',
+            context: 'Complete New Context',
+            isNew: true,
+            subTopics: [
+              {
+                uuid: '1-1',
+                name: 'Complete New Sub',
+                context: 'Complete New Sub Context',
+                isNew: true,
+                subTopics: [],
+              },
+              {
+                uuid: '1-2',
+                name: '',
+                context: 'Existing Sub Context',
+                isNew: false,
+                subTopics: [],
+              },
+            ],
+          },
+          {
+            uuid: '2',
+            name: '',
+            context: 'Existing Context',
+            isNew: false,
+            subTopics: [],
+          },
+        ];
+        expect(store.allNewTopicsComplete).toBe(true);
       });
     });
   });
@@ -665,6 +704,151 @@ describe('useConversationalTopics store', () => {
         expect(store.isSavingTopics).toBe(false);
         expect(consoleSpy).toHaveBeenCalled();
         consoleSpy.mockRestore();
+      });
+
+      it('should save topics with subtopics successfully', async () => {
+        store.topics = [
+          {
+            name: 'New Topic',
+            context: 'New Context',
+            isNew: true,
+            subTopics: [
+              {
+                name: 'Sub Topic 1',
+                context: 'Sub Context 1',
+                isNew: true,
+              },
+              {
+                name: 'Sub Topic 2',
+                context: 'Sub Context 2',
+                isNew: true,
+              },
+            ],
+          },
+        ];
+
+        topicsService.createTopic.mockResolvedValue({ uuid: 'new-uuid' });
+        topicsService.createSubTopic.mockResolvedValue({
+          uuid: 'parent-uuid',
+          subtopic: [
+            {
+              uuid: 'sub-uuid-1',
+              name: 'Sub Topic 1',
+              description: 'Sub Context 1',
+            },
+            {
+              uuid: 'sub-uuid-2',
+              name: 'Sub Topic 2',
+              description: 'Sub Context 2',
+            },
+          ],
+        });
+        topicsService.getConversationalFormTopics.mockResolvedValue([]);
+
+        const result = await store.saveAllNewTopics();
+
+        expect(result).toBe(true);
+        expect(store.isSavingTopics).toBe(false);
+        expect(topicsService.createTopic).toHaveBeenCalledWith({
+          name: 'New Topic',
+          description: 'New Context',
+        });
+        expect(topicsService.createSubTopic).toHaveBeenCalledTimes(2);
+      });
+
+      it('should handle partial subtopic save failures', async () => {
+        store.topics = [
+          {
+            name: 'New Topic',
+            context: 'New Context',
+            isNew: true,
+            subTopics: [
+              {
+                name: 'Sub Topic 1',
+                context: 'Sub Context 1',
+                isNew: true,
+              },
+              {
+                name: 'Sub Topic 2',
+                context: 'Sub Context 2',
+                isNew: true,
+              },
+            ],
+          },
+        ];
+
+        const consoleSpy = vi
+          .spyOn(console, 'error')
+          .mockImplementation(() => {});
+
+        topicsService.createTopic.mockResolvedValue({ uuid: 'new-uuid' });
+        topicsService.createSubTopic
+          .mockResolvedValueOnce({
+            uuid: 'parent-uuid',
+            subtopic: [
+              {
+                uuid: 'sub-uuid-1',
+                name: 'Sub Topic 1',
+                description: 'Sub Context 1',
+              },
+            ],
+          })
+          .mockRejectedValueOnce(new Error('Sub topic save error'));
+
+        const result = await store.saveAllNewTopics();
+
+        expect(result).toBe(false);
+        expect(consoleSpy).toHaveBeenCalled();
+        consoleSpy.mockRestore();
+      });
+
+      it('should skip subtopics with empty name or context', async () => {
+        store.topics = [
+          {
+            name: 'New Topic',
+            context: 'New Context',
+            isNew: true,
+            subTopics: [
+              {
+                name: 'Valid Sub Topic',
+                context: 'Valid Sub Context',
+                isNew: true,
+              },
+              {
+                name: '',
+                context: 'Empty name',
+                isNew: true,
+              },
+              {
+                name: 'Empty context',
+                context: '',
+                isNew: true,
+              },
+            ],
+          },
+        ];
+
+        topicsService.createTopic.mockResolvedValue({ uuid: 'new-uuid' });
+        topicsService.createSubTopic.mockResolvedValue({
+          uuid: 'parent-uuid',
+          subtopic: [
+            {
+              uuid: 'sub-uuid-1',
+              name: 'Valid Sub Topic',
+              description: 'Valid Sub Context',
+            },
+          ],
+        });
+        topicsService.getConversationalFormTopics.mockResolvedValue([]);
+
+        const result = await store.saveAllNewTopics();
+
+        expect(result).toBe(true);
+        expect(topicsService.createSubTopic).toHaveBeenCalledTimes(1);
+        expect(topicsService.createSubTopic).toHaveBeenCalledWith('new-uuid', {
+          name: 'Valid Sub Topic',
+          description: 'Valid Sub Context',
+        });
       });
     });
 

@@ -1,7 +1,15 @@
 import http from '@/services/api/http';
+import { useConfig } from '@/store/modules/config';
 import { fullySanitize } from '@/utils/sanatize';
-import { asyncTimeout } from '@/utils/time';
 import { parseWhatsAppFormattingToHtml } from '@/utils/whatsapp';
+
+const { INTEGRATIONS_API_URL } = process.env;
+import axios from 'axios';
+const integrationsHttp = axios.create({
+  baseURL: `${INTEGRATIONS_API_URL}/api/v1`,
+});
+
+import moment from 'moment';
 
 export default {
   async listMetricsSource(source) {
@@ -185,31 +193,22 @@ export default {
     return response;
   },
 
-  async getCategoriesMetrics({ waba_id, project_uuid, start_date, end_date }) {
-    const url = '/metrics/meta/whatsapp-message-templates/categories-metrics/';
-    const params = { waba_id, project_uuid, start_date, end_date };
+  async getCategoriesMetrics({ app_uuid, project_uuid, start, end }) {
+    const url = `/apptypes/wpp-cloud/apps/${app_uuid}/conversations/`;
 
-    // const response = await http.get(url, { params });
-
-    await asyncTimeout(2000);
-
-    const response = {
-      categories: [
-        {
-          name: 'MARKETING',
-          qtd: 10,
-        },
-        {
-          name: 'UTILITY',
-          qtd: 9,
-        },
-        {
-          name: 'AUTHENTICATION',
-          qtd: 3,
-        },
-      ],
+    const params = {
+      start: moment(start).format('M-D-YYYY'),
+      end: moment(end).format('M-D-YYYY'),
     };
 
-    return response;
+    const response = await integrationsHttp.get(url, {
+      params,
+      headers: {
+        'project-uuid': project_uuid,
+        Authorization: `Bearer ${useConfig().token}`,
+      },
+    });
+
+    return response.data;
   },
 };

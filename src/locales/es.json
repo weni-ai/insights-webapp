@@ -163,6 +163,7 @@
         "qtd": "Cantidad"
       },
       "row": {
+        "SERVICE": "Servicio",
         "MARKETING": "Marketing",
         "UTILITY": "Utilidad",
         "AUTHENTICATION": "Autenticación"

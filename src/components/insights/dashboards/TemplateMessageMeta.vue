@@ -146,6 +146,10 @@ const waba_id = computed(
   () => dashboardsStore.currentDashboard.config?.waba_id,
 );
 
+const app_uuid = computed(
+  () => dashboardsStore.currentDashboard.config?.app_uuid,
+);
+
 const project_uuid = computed(() => configStore.project?.uuid);
 
 const lastOpenTemplates = useLocalStorage('meta-last-templates-viewed', {});
@@ -225,15 +229,18 @@ const categoriesMetricsHeaders = [
   },
 ];
 
-const categoriesMetrics = ref([]);
+const categoriesMetrics = ref({
+  MARKETING: 0,
+  SERVICE: 0,
+  UTILITY: 0,
+  AUTHENTICATION: 0,
+});
 
 const formattedCategoriesMetrics = computed(() => {
-  return categoriesMetrics.value?.map((row) => ({
+  return Object.entries(categoriesMetrics.value).map(([key, value]) => ({
     content: [
-      i18n.global.t(
-        `template_messages_dashboard.all_data_table.row.${row.name}`,
-      ),
-      row.qtd,
+      i18n.global.t(`template_messages_dashboard.all_data_table.row.${key}`),
+      value,
     ],
   }));
 });
@@ -244,13 +251,18 @@ const getCategoriesMetrics = async () => {
   try {
     isLoadingCategoriesMetrics.value = true;
     const response = await MetaTemplateMessageService.getCategoriesMetrics({
-      waba_id: waba_id.value,
+      app_uuid: app_uuid.value,
       project_uuid: project_uuid.value,
-      start_date: appliedFilters.value?.date?._start,
-      end_date: appliedFilters.value?.date?._end,
+      start: appliedFilters.value?.date?._start,
+      end: appliedFilters.value?.date?._end,
     });
 
-    categoriesMetrics.value = response?.categories;
+    if (response?.templates) {
+      const keys = Object.keys(categoriesMetrics.value);
+      keys.forEach((key) => {
+        categoriesMetrics.value[key] = response.templates[key] || 0;
+      });
+    }
   } catch (error) {
     console.log(error);
   } finally {

@@ -67,7 +67,7 @@ describe('Conversational.vue', () => {
     conversationalWidgetsStore.isNpsConfigured.value = true;
     conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps']);
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
   });
 
   it('should show only add widget when no dynamic widgets are configured', async () => {
@@ -80,16 +80,60 @@ describe('Conversational.vue', () => {
     conversationalWidgetsStore.isNpsConfigured.value = true;
     conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps']);
-
-    // This also tests the order from the `orderedDynamicWidgets` computed
-    // as it will re-order them regardless of the order in `dynamicWidgets`
-    // for which we don't have direct control in the test anyway.
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
   });
 
   it('should show no dynamic widgets when loading', async () => {
     widgetsStore.isLoadingCurrentDashboardWidgets.value = true;
     await nextTick();
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([]);
+  });
+
+  describe('isOnlyAddWidget', () => {
+    it('should return true for add widget when there is an odd number of widgets', async () => {
+      await nextTick();
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['add']);
+      expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
+      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
+      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
+    });
+
+    it('should return true for add widget when there are 3 widgets (odd)', async () => {
+      conversationalWidgetsStore.isCsatConfigured.value = true;
+      conversationalWidgetsStore.isNpsConfigured.value = true;
+      await nextTick();
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+      expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
+      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
+      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
+    });
+
+    it('should return true for add widget when there are 3 widgets (csat, nps, add - odd)', async () => {
+      conversationalWidgetsStore.isCsatConfigured.value = true;
+      conversationalWidgetsStore.isNpsConfigured.value = true;
+      conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+      await nextTick();
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+      expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
+      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
+      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
+    });
+
+    it('should return false for add widget when there would be an even number of widgets', async () => {
+      conversationalWidgetsStore.isCsatConfigured.value = true;
+      await nextTick();
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'add']);
+      expect(wrapper.vm.isOnlyAddWidget('add')).toBe(false);
+      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
+    });
+
+    it('should return false for non-add widgets even with odd number of widgets', async () => {
+      conversationalWidgetsStore.isCsatConfigured.value = true;
+      conversationalWidgetsStore.isNpsConfigured.value = true;
+      await nextTick();
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
+      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
+    });
   });
 });

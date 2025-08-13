@@ -184,7 +184,6 @@ onMounted(async () => {
       if (templates.length) {
         metaTemplateMessageStore.setEmptyTemplates(false);
         handlerSelectedTemplateUuid(templates[0]?.id);
-        metaTemplateMessageStore.handlerShowSearchTemplateModal(true);
       } else metaTemplateMessageStore.setEmptyTemplates(true);
     }
   } catch (error) {

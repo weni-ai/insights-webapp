@@ -13,7 +13,7 @@
       class="dashboard-conversational__dynamic-widget"
       :class="{
         'dashboard-conversational__dynamic-widget--only-add':
-          orderedDynamicWidgets.length === 1 && widget === 'add',
+          isOnlyAddWidget(widget),
       }"
     />
 
@@ -51,9 +51,7 @@ const dynamicWidgets = computed(() => {
     widgets.push('nps');
   }
 
-  if (getDynamicWidgets.value?.length < 2) {
-    widgets.push('add');
-  }
+  widgets.push('add');
 
   return widgets;
 });
@@ -79,6 +77,13 @@ const orderedDynamicWidgets = computed(() => {
 
   return widgets;
 });
+
+const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
+  const isOddNumberOfWidgets = orderedDynamicWidgets.value.length % 2 === 1;
+  const isLastWidgetAdd = widget === 'add';
+
+  return isOddNumberOfWidgets && isLastWidgetAdd;
+};
 </script>
 
 <style lang="scss" scoped>

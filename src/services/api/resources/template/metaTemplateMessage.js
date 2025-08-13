@@ -1,6 +1,15 @@
 import http from '@/services/api/http';
+import { useConfig } from '@/store/modules/config';
 import { fullySanitize } from '@/utils/sanatize';
 import { parseWhatsAppFormattingToHtml } from '@/utils/whatsapp';
+
+const { INTEGRATIONS_API_URL } = process.env;
+import axios from 'axios';
+const integrationsHttp = axios.create({
+  baseURL: `${INTEGRATIONS_API_URL}/api/v1`,
+});
+
+import moment from 'moment';
 
 export default {
   async listMetricsSource(source) {
@@ -182,5 +191,24 @@ export default {
     const response = await http.post(url, body);
 
     return response;
+  },
+
+  async getCategoriesMetrics({ app_uuid, project_uuid, start, end }) {
+    const url = `/apptypes/wpp-cloud/apps/${app_uuid}/conversations/`;
+
+    const params = {
+      start: moment(start).format('M-D-YYYY'),
+      end: moment(end).format('M-D-YYYY'),
+    };
+
+    const response = await integrationsHttp.get(url, {
+      params,
+      headers: {
+        'project-uuid': project_uuid,
+        Authorization: `Bearer ${useConfig().token}`,
+      },
+    });
+
+    return response.data;
   },
 };

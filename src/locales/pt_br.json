@@ -141,6 +141,16 @@
         "description": "Tem certeza que deseja remover o widget {type}?",
         "remove": "Remover",
         "cancel": "Cancelar"
+      },
+      "tabs": {
+        "sentiment_analysis": "Análise de sentimento",
+        "customized": "Personalizado"
+      },
+      "select_chart_type": "Selecione o tipo de gráfico:",
+      "select_data": "Selecione os dados que você deseja acompanhar:",
+      "horizontal_bar_chart": {
+        "title": "Gráfico de barras horizontal",
+        "description": "Uma visualização de dados onde as barras estão orientadas horizontalmente, com o comprimento de cada barra indicando a magnitude do seu valor correspondente."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -266,6 +276,7 @@
       "placeholder": "Selecione tag"
     }
   },
+  "key": "Chave",
   "filter-by": "Período:",
   "reload": "Recarregar",
   "agent": "Agente",

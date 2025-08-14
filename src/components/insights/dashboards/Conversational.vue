@@ -67,6 +67,8 @@ const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
 };
 
 watch(currentDashboardWidgets, () => {
+  dynamicWidgets.value = [];
+
   if (isCsatConfigured.value) {
     dynamicWidgets.value.push({ type: 'csat', uuid: '' });
   }

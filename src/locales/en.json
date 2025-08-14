@@ -123,6 +123,7 @@
       "ai_support": "AI",
       "activate_agent": "Activate agent",
       "select_agent": "Select agent",
+      "select_key": "Enter the key",
       "your_agent_is_active": "Your agent is active!",
       "return": "Return",
       "save_changes": "Save changes",

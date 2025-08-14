@@ -19,6 +19,7 @@
       :type="type"
       :isNew="isNew"
     />
+    <CustomizedForm v-if="type === 'horizontal_bar_chart'" />
   </section>
 </template>
 
@@ -26,6 +27,7 @@
 import SentimentAnalysisForm from './Forms/SentimentAnalysisForm.vue';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
+import CustomizedForm from './Forms/CustomizedForm.vue';
 
 const { t } = useI18n();
 
@@ -35,7 +37,6 @@ const props = defineProps<{
 }>();
 
 const renderDescription = computed(() => {
-  console.log(props.type);
   if (props.type === 'horizontal_bar_chart') {
     return t('conversations_dashboard.customize_your_dashboard.select_data');
   }

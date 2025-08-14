@@ -126,7 +126,7 @@ import { WidgetType, CsatOrNpsCardConfig } from '@/models/types/WidgetTypes';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps<{
-  type: 'csat' | 'nps';
+  type: 'csat' | 'nps' | 'horizontal_bar_chart';
   isNew: boolean;
 }>();
 

@@ -4,6 +4,7 @@
     :actions="actions"
     :isLoading="isLoading"
     :currentTab="currentTab"
+    :isOnlyTab="isOnlyTab"
     @tab-change="handleTabChange"
   >
     <slot
@@ -109,6 +110,7 @@ const props = defineProps<{
     scheme?: string;
   }[];
   currentTab?: string;
+  isOnlyTab?: boolean;
 }>();
 
 const treatedProgressItems = computed(() => {

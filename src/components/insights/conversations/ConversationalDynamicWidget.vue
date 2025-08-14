@@ -11,6 +11,7 @@
       "
       :isLoadingProgress="isLoading"
       :currentTab="handleCurrentTab"
+      :isOnlyTab="isOnlyTab"
       @tab-change="handleTabChange"
     >
       <template #setup-widget>
@@ -72,7 +73,8 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useRoute } from 'vue-router';
 
 const props = defineProps<{
-  type: 'csat' | 'nps' | 'add';
+  type: 'csat' | 'nps' | 'add' | 'custom';
+  uuid?: string;
 }>();
 
 const isRemoveWidgetModalOpen = ref(false);
@@ -112,6 +114,7 @@ const widgetType = computed(() => {
   const widgetTypes = {
     csat: 'csat',
     nps: 'nps',
+    custom: 'custom',
   };
 
   return widgetTypes[props.type];
@@ -233,7 +236,17 @@ const handleCurrentTab = computed(() => {
     return tabs[props.type][npsWidgetType.value];
   }
 
+  if (props.type === 'custom') {
+    return 'artificial-intelligence';
+  }
+
   return '';
+});
+
+const isOnlyTab = computed(() => {
+  if (props.type === 'custom') return true;
+
+  return false;
 });
 
 onMounted(() => {
@@ -402,6 +415,8 @@ const handleNpsWidgetData = (data: NpsResponse) => {
 };
 
 const handleTabChange = (tab: Tab) => {
+  if (props.type === 'custom') return;
+
   const setWidgetType = {
     csat: setCsatWidgetType,
     nps: setNpsWidgetType,

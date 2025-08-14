@@ -42,7 +42,7 @@ describe('Conversational.vue', () => {
           DashboardHeader: true,
           MostTalkedAboutTopicsWidget: true,
           ConversationalDynamicWidget: true,
-          CsatOrNpsDrawer: true,
+          CustomizableDrawer: true,
         },
       },
     });

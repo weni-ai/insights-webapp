@@ -17,7 +17,7 @@
       }"
     />
 
-    <CsatOrNpsDrawer />
+    <CustomizableDrawer />
   </section>
 </template>
 
@@ -29,7 +29,7 @@ import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/Mos
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
-import CsatOrNpsDrawer from '@/components/insights/conversations/CsatOrNpsWidget/CsatOrNpsDrawer.vue';
+import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
 
 type ConversationalWidgetType = 'csat' | 'nps' | 'add';
 

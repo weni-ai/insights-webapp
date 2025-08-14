@@ -56,9 +56,9 @@
         </li>
       </ul>
 
-      <ConfigCsatOrNpsWidget
+      <ConfigCustomizableForm
         v-else
-        data-testid="config-csat-or-nps-widget"
+        data-testid="config-customizable-form"
         :type="drawerWidgetType"
         :isNew="isNewDrawerCsatOrNps"
       />
@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import ConfigCsatOrNpsWidget from './ConfigCsatOrNps.vue';
+import ConfigCustomizableForm from './ConfigCustomizableForm.vue';
 import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';

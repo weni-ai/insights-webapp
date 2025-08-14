@@ -1,15 +1,15 @@
 <template>
-  <section class="config-csat-or-nps">
+  <section class="config-customizable-form">
     <h2
-      class="config-csat-or-nps__title"
-      data-testid="config-csat-or-nps-title"
+      class="config-customizable-form__title"
+      data-testid="config-customizable-form-title"
     >
       {{ $t(`conversations_dashboard.${type}`) }}
     </h2>
 
     <p
-      class="config-csat-or-nps__description"
-      data-testid="config-csat-or-nps-description"
+      class="config-customizable-form__description"
+      data-testid="config-customizable-form-description"
     >
       {{
         $tc(
@@ -20,7 +20,7 @@
     </p>
 
     <UnnnicCheckbox
-      data-testid="config-csat-or-nps-checkbox-human-support"
+      data-testid="config-customizable-form-checkbox-human-support"
       :modelValue="humanSupport"
       :textRight="
         $t('conversations_dashboard.customize_your_dashboard.human_support')
@@ -30,18 +30,18 @@
 
     <section
       v-if="humanSupport"
-      class="config-csat-or-nps__section"
-      data-testid="config-csat-or-nps-section-human-support"
+      class="config-customizable-form__section"
+      data-testid="config-customizable-form-section-human-support"
     >
       <SelectFlow
         v-model="flow.uuid"
-        data-testid="config-csat-or-nps-select-flow"
+        data-testid="config-customizable-form-select-flow"
         @update:model-value="handleChangeFlow"
       />
 
       <SelectFlowResult
         v-model="flow.result"
-        data-testid="config-csat-or-nps-select-flow-result"
+        data-testid="config-customizable-form-select-flow-result"
         :flow="flow.uuid"
         :disabled="!flow.uuid"
         @update:model-value="handleChangeFlowResult"
@@ -49,7 +49,7 @@
     </section>
 
     <UnnnicCheckbox
-      data-testid="config-csat-or-nps-checkbox-ai-support"
+      data-testid="config-customizable-form-checkbox-ai-support"
       :modelValue="aiSupport"
       :textRight="
         $t('conversations_dashboard.customize_your_dashboard.ai_support')
@@ -58,12 +58,12 @@
     />
     <section
       v-if="aiSupport"
-      class="config-csat-or-nps__section"
-      data-testid="config-csat-or-nps-section-ai-support"
+      class="config-customizable-form__section"
+      data-testid="config-customizable-form-section-ai-support"
     >
       <UnnnicButton
         v-if="!agent"
-        data-testid="config-csat-or-nps-button-activate-agent"
+        data-testid="config-customizable-form-button-activate-agent"
         :text="
           $t('conversations_dashboard.customize_your_dashboard.activate_agent')
         "
@@ -74,12 +74,12 @@
       />
       <section
         v-else
-        data-testid="config-csat-or-nps-section-agent"
-        class="config-csat-or-nps__section"
+        data-testid="config-customizable-form-section-agent"
+        class="config-customizable-form__section"
       >
         <section>
           <UnnnicLabel
-            data-testid="config-csat-or-nps-label-select-agent"
+            data-testid="config-customizable-form-label-select-agent"
             :label="
               $t(
                 'conversations_dashboard.customize_your_dashboard.select_agent',
@@ -87,7 +87,7 @@
             "
           />
           <UnnnicSelectSmart
-            data-testid="config-csat-or-nps-select-agent"
+            data-testid="config-customizable-form-select-agent"
             :modelValue="[{ value: agent?.uuid, label: agent?.name }]"
             :options="[]"
             autocomplete
@@ -99,8 +99,8 @@
         </section>
 
         <p
-          class="config-csat-or-nps__agent-active"
-          data-testid="config-csat-or-nps-agent-active"
+          class="config-customizable-form__agent-active"
+          data-testid="config-customizable-form-agent-active"
         >
           {{
             $t(
@@ -383,14 +383,14 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.config-csat-or-nps,
-.config-csat-or-nps__section {
+.config-customizable-form,
+.config-customizable-form__section {
   display: flex;
   flex-direction: column;
   gap: $unnnic-spacing-sm;
 }
 
-.config-csat-or-nps {
+.config-customizable-form {
   &__title {
     color: $unnnic-color-neutral-black;
     font-weight: $unnnic-font-weight-bold;

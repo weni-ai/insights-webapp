@@ -39,7 +39,7 @@
         />
       </template>
     </ProgressWidget>
-    <AddCsatOrNpsWidget
+    <AddCustomizableWidget
       v-if="type === 'add'"
       @add="handleOpenDrawer(true)"
     />
@@ -55,8 +55,8 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
-import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
-import ModalRemoveWidget from './CsatOrNpsWidget/ModalRemoveWidget.vue';
+import AddCustomizableWidget from '@/components/insights/conversations/CustomizableWidget/AddCustomizableWidget.vue';
+import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
 import { useI18n } from 'vue-i18n';
 import SetupWidget from './SetupWidget.vue';
 

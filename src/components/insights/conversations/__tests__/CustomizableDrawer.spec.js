@@ -4,7 +4,7 @@ import { createTestingPinia } from '@pinia/testing';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import CsatOrNpsDrawer from '../CsatOrNpsWidget/CsatOrNpsDrawer.vue';
+import CustomizableDrawer from '../CustomizableWidget/CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 vi.mock('@/utils/plugins/i18n', () => ({
@@ -58,7 +58,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
     stubActions: false,
   });
 
-  return shallowMount(CsatOrNpsDrawer, {
+  return shallowMount(CustomizableDrawer, {
     props: {
       ...props,
     },
@@ -81,7 +81,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
   });
 };
 
-describe('CsatOrNpsDrawer', () => {
+describe('CustomizableWidget', () => {
   let wrapper;
   let conversationalStore;
 
@@ -94,8 +94,8 @@ describe('CsatOrNpsDrawer', () => {
     wrapper.findComponent('[data-testid="add-widget-drawer"]');
   const drawerItems = () =>
     wrapper.findAll('[data-testid="add-widget-drawer-item"]');
-  const configCsatOrNpsWidget = () =>
-    wrapper.findComponent('[data-testid="config-csat-or-nps-widget"]');
+  const configCustomizableForm = () =>
+    wrapper.findComponent('[data-testid="config-customizable-form"]');
   const modalAttention = () =>
     wrapper.findComponent('[data-testid="drawer-csat-or-nps-widget-modal"]');
 
@@ -204,10 +204,10 @@ describe('CsatOrNpsDrawer', () => {
       expect(conversationalStore.drawerWidgetType).toBe('csat');
     });
 
-    it('should render ConfigCsatOrNpsWidget component when widget is selected', async () => {
+    it('should render ConfigCustomizableForm component when widget is selected', async () => {
       await drawerItems()[0].trigger('click');
       await nextTick();
-      expect(configCsatOrNpsWidget().exists()).toBe(true);
+      expect(configCustomizableForm().exists()).toBe(true);
     });
   });
 

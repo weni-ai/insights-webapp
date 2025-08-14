@@ -28,33 +28,65 @@
     @close="closeDrawer"
   >
     <template #content>
-      <ul
+      <UnnnicTab
         v-if="drawerWidgetType === 'add'"
-        class="add-widget-drawer__widget-list"
+        data-testid="add-widget-drawer-tab"
+        :tabs="availableTabs.map((tab) => tab.name)"
+        :activeTab="activeTab"
       >
-        <li
-          v-for="widget in availableWidgets"
-          :key="widget.name"
-          class="widget-list__item"
-          data-testid="add-widget-drawer-item"
-          @click="
-            drawerWidgetType = widget.name.toLowerCase() as 'csat' | 'nps'
-          "
+        <template
+          v-for="tab in availableTabs"
+          #[`tab-head-${tab.name}`]
+          :key="`tab-head-${tab.name}`"
         >
-          <h2
-            class="item__title"
-            data-testid="add-widget-drawer-item-title"
-          >
-            {{ widget.name }}
-          </h2>
-          <p
-            class="item__description"
-            data-testid="add-widget-drawer-item-description"
-          >
-            {{ widget.description }}
-          </p>
-        </li>
-      </ul>
+          {{ $t(tab.name) }}
+        </template>
+        <template
+          v-for="tab in availableTabs"
+          #[`tab-panel-${tab.name}`]
+          :key="`tab-panel-${tab.name}`"
+        >
+          <section class="add-widget-drawer__section">
+            <p
+              v-if="tab.key === 'customized'"
+              class="add-widget-drawer__section-title"
+            >
+              {{
+                $t(
+                  'conversations_dashboard.customize_your_dashboard.select_chart_type',
+                )
+              }}
+            </p>
+            <ul class="add-widget-drawer__widget-list">
+              <li
+                v-for="widget in handleTabChoice(tab.key)"
+                :key="widget.name"
+                class="widget-list__item"
+                data-testid="add-widget-drawer-item"
+                @click="
+                  drawerWidgetType = widget.name.toLowerCase() as
+                    | 'csat'
+                    | 'nps'
+                    | 'horizontal_bar_chart'
+                "
+              >
+                <h2
+                  class="item__title"
+                  data-testid="add-widget-drawer-item-title"
+                >
+                  {{ widget.name }}
+                </h2>
+                <p
+                  class="item__description"
+                  data-testid="add-widget-drawer-item-description"
+                >
+                  {{ widget.description }}
+                </p>
+              </li>
+            </ul>
+          </section>
+        </template>
+      </UnnnicTab>
 
       <ConfigCustomizableForm
         v-else
@@ -159,35 +191,116 @@ function confirmAttentionModal() {
 }
 
 const availableWidgets = computed(() => {
-  const availableWidgets = [
+  /* if (isCsatConfigured.value) {
+    console.log('isCsatConfigured', isCsatConfigured.value);
+    availableWidgets.splice(0, 1);
+  }
+
+  if (isNpsConfigured.value) {
+    console.log('isNpsConfigured', isNpsConfigured.value);
+    availableWidgets.splice(1, 1);
+  }*/
+
+  return [
     {
       name: i18n.global.t('conversations_dashboard.csat'),
       description: i18n.global.t(
         'conversations_dashboard.customize_your_dashboard.csat_description',
       ),
+      key: 'csat',
     },
     {
       name: i18n.global.t('conversations_dashboard.nps'),
       description: i18n.global.t(
         'conversations_dashboard.customize_your_dashboard.nps_description',
       ),
+      key: 'nps',
+    },
+    {
+      name: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.horizontal_bar_chart.title',
+      ),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.horizontal_bar_chart.description',
+      ),
+      key: 'horizontal_bar_chart',
     },
   ];
-
-  if (isCsatConfigured.value) {
-    availableWidgets.splice(0, 1);
-  }
-
-  if (isNpsConfigured.value) {
-    availableWidgets.splice(1, 1);
-  }
-
-  return availableWidgets;
 });
+
+const activeTab = computed(() => {
+  if (
+    drawerWidgetType.value === 'add' &&
+    !(isCsatConfigured.value || isNpsConfigured.value)
+  ) {
+    return availableTabs.find((tab) => tab.key === 'sentiment_analysis')?.name;
+  }
+
+  return availableTabs.find((tab) => tab.key === 'customized')?.name;
+});
+
+const availableTabs: {
+  key: 'sentiment_analysis' | 'customized';
+  name: string;
+}[] = [
+  {
+    key: 'sentiment_analysis',
+    name: 'conversations_dashboard.customize_your_dashboard.tabs.sentiment_analysis',
+  },
+  {
+    key: 'customized',
+    name: 'conversations_dashboard.customize_your_dashboard.tabs.customized',
+  },
+];
+
+const handleTabChoice = (tabKey: 'sentiment_analysis' | 'customized') => {
+  if (tabKey === 'sentiment_analysis') {
+    let widgets = [
+      handleWidgetTypeChoice('csat'),
+      handleWidgetTypeChoice('nps'),
+    ];
+
+    if (isCsatConfigured.value) {
+      widgets = widgets.filter((widget) => widget.key !== 'csat');
+    }
+
+    if (isNpsConfigured.value) {
+      widgets = widgets.filter((widget) => widget.key !== 'nps');
+    }
+
+    return widgets;
+  }
+
+  if (tabKey === 'customized') {
+    return [handleWidgetTypeChoice('horizontal_bar_chart')];
+  }
+
+  return [];
+};
+
+const handleWidgetTypeChoice = (
+  widgetType: 'csat' | 'nps' | 'horizontal_bar_chart',
+) => {
+  return availableWidgets.value.find((widget) => widget.key === widgetType);
+};
 </script>
 
 <style scoped lang="scss">
 .add-widget-drawer {
+  &__section-title {
+    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-lg;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+  }
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-sm;
+  }
+
   &__widget-list {
     display: flex;
     flex-direction: column;

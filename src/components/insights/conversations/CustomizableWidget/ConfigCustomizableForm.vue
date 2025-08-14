@@ -19,7 +19,7 @@
       :type="type"
       :isNew="isNew"
     />
-    <CustomizedForm v-if="type === 'horizontal_bar_chart'" />
+    <CustomizedForm v-if="type === 'custom'" />
   </section>
 </template>
 
@@ -32,12 +32,12 @@ import CustomizedForm from './Forms/CustomizedForm.vue';
 const { t } = useI18n();
 
 const props = defineProps<{
-  type: 'csat' | 'nps' | 'horizontal_bar_chart';
+  type: 'csat' | 'nps' | 'custom';
   isNew: boolean;
 }>();
 
 const renderDescription = computed(() => {
-  if (props.type === 'horizontal_bar_chart') {
+  if (props.type === 'custom') {
     return t('conversations_dashboard.customize_your_dashboard.select_data');
   }
 

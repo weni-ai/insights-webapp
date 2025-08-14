@@ -216,7 +216,6 @@ describe('CustomizableWidget', () => {
     });
 
     it('should render correct number of available widgets when no CSAT/NPS configured', () => {
-      // When no CSAT/NPS is configured, all 3 widgets should be available (CSAT, NPS, horizontal_bar_chart)
       expect(drawerItems()).toHaveLength(3);
     });
 
@@ -269,8 +268,7 @@ describe('CustomizableWidget', () => {
     });
 
     it('should show customized tab as active when CSAT or NPS is configured', async () => {
-      // Test the logic directly by checking when drawerWidgetType is not 'add' or when widgets are configured
-      conversationalStore.drawerWidgetType = 'csat'; // Not 'add'
+      conversationalStore.drawerWidgetType = 'csat';
       await nextTick();
       expect(wrapper.vm.activeTab).toBe(
         'conversations_dashboard.customize_your_dashboard.tabs.customized',
@@ -285,7 +283,6 @@ describe('CustomizableWidget', () => {
     });
 
     it('should filter out CSAT widget when already configured', async () => {
-      // Create a new wrapper with CSAT configured
       const wrapperWithCsat = createWrapper(
         {},
         {
@@ -296,7 +293,6 @@ describe('CustomizableWidget', () => {
         },
       );
 
-      // Access the store directly to verify the configuration
       const conversationalWidgetsStore = useConversationalWidgets();
       conversationalWidgetsStore.isCsatConfigured = true;
       conversationalWidgetsStore.isNpsConfigured = false;
@@ -310,7 +306,6 @@ describe('CustomizableWidget', () => {
     });
 
     it('should filter out NPS widget when already configured', async () => {
-      // Create a new wrapper with NPS configured
       const wrapperWithNps = createWrapper(
         {},
         {
@@ -321,7 +316,6 @@ describe('CustomizableWidget', () => {
         },
       );
 
-      // Access the store directly to verify the configuration
       const conversationalWidgetsStore = useConversationalWidgets();
       conversationalWidgetsStore.isCsatConfigured = false;
       conversationalWidgetsStore.isNpsConfigured = true;
@@ -334,10 +328,10 @@ describe('CustomizableWidget', () => {
       expect(sentimentWidgets[0].key).toBe('csat');
     });
 
-    it('should return horizontal_bar_chart for customized tab', () => {
+    it('should return custom for customized tab', () => {
       const customizedWidgets = wrapper.vm.handleTabChoice('customized');
       expect(customizedWidgets).toHaveLength(1);
-      expect(customizedWidgets[0].key).toBe('horizontal_bar_chart');
+      expect(customizedWidgets[0].key).toBe('custom');
       expect(customizedWidgets[0].name).toBe('Horizontal Bar Chart');
     });
 
@@ -348,13 +342,12 @@ describe('CustomizableWidget', () => {
   });
 
   describe('Widget type selection', () => {
-    it('should handle horizontal_bar_chart widget selection', async () => {
+    it('should handle custom widget selection', async () => {
       conversationalStore.drawerWidgetType = 'add';
       await nextTick();
 
-      // Simulate clicking on horizontal_bar_chart widget
       const customizedWidgets = wrapper.vm.handleTabChoice('customized');
-      expect(customizedWidgets[0].key).toBe('horizontal_bar_chart');
+      expect(customizedWidgets[0].key).toBe('custom');
     });
 
     it('should find correct widget by type', () => {
@@ -366,10 +359,8 @@ describe('CustomizableWidget', () => {
       expect(npsWidget.key).toBe('nps');
       expect(npsWidget.name).toBe('NPS');
 
-      const horizontalBarWidget = wrapper.vm.handleWidgetTypeChoice(
-        'horizontal_bar_chart',
-      );
-      expect(horizontalBarWidget.key).toBe('horizontal_bar_chart');
+      const horizontalBarWidget = wrapper.vm.handleWidgetTypeChoice('custom');
+      expect(horizontalBarWidget.key).toBe('custom');
       expect(horizontalBarWidget.name).toBe('Horizontal Bar Chart');
     });
   });
@@ -378,11 +369,7 @@ describe('CustomizableWidget', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
       expect(widgets).toHaveLength(3);
-      expect(widgets.map((w) => w.key)).toEqual([
-        'csat',
-        'nps',
-        'horizontal_bar_chart',
-      ]);
+      expect(widgets.map((w) => w.key)).toEqual(['csat', 'nps', 'custom']);
     });
   });
 });

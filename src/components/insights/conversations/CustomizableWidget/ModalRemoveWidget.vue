@@ -44,7 +44,7 @@ import { ref } from 'vue';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 
 interface Props {
-  type: 'csat' | 'nps';
+  type: 'csat' | 'nps' | 'custom';
   modelValue: boolean;
 }
 
@@ -61,7 +61,11 @@ const isLoading = ref(false);
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
-    await deleteWidget(props.type);
+    if (props.type === 'custom') {
+      //await deleteCustomWidget(props.uuid);
+    } else {
+      await deleteWidget(props.type);
+    }
     emit('update:modelValue', false);
   } catch (error) {
     console.error(error);

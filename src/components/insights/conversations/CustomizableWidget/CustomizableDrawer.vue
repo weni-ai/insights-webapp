@@ -58,10 +58,7 @@
                 class="widget-list__item"
                 data-testid="add-widget-drawer-item"
                 @click="
-                  drawerWidgetType = widget.key as
-                    | 'csat'
-                    | 'nps'
-                    | 'horizontal_bar_chart'
+                  drawerWidgetType = widget.key as 'csat' | 'nps' | 'custom'
                 "
               >
                 <h2
@@ -141,7 +138,7 @@ function closeWarningModal() {
 }
 
 async function saveWidgetConfigs() {
-  if (drawerWidgetType.value === 'horizontal_bar_chart') {
+  if (drawerWidgetType.value === 'custom') {
     await saveCustomWidget();
   } else if (isNewDrawerCustomizable.value) {
     await saveNewWidget();
@@ -214,7 +211,7 @@ const availableWidgets = computed(() => {
       description: i18n.global.t(
         'conversations_dashboard.customize_your_dashboard.horizontal_bar_chart.description',
       ),
-      key: 'horizontal_bar_chart',
+      key: 'custom',
     },
   ];
 });
@@ -263,20 +260,18 @@ const handleTabChoice = (tabKey: 'sentiment_analysis' | 'customized') => {
   }
 
   if (tabKey === 'customized') {
-    return [handleWidgetTypeChoice('horizontal_bar_chart')];
+    return [handleWidgetTypeChoice('custom')];
   }
 
   return [];
 };
 
-const handleWidgetTypeChoice = (
-  widgetType: 'csat' | 'nps' | 'horizontal_bar_chart',
-) => {
+const handleWidgetTypeChoice = (widgetType: 'csat' | 'nps' | 'custom') => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };
 
 const isDisabledPrimaryButton = computed(() => {
-  if (drawerWidgetType.value === 'horizontal_bar_chart') {
+  if (drawerWidgetType.value === 'custom') {
     return !isEnabledCreateCustomForm.value;
   }
 

@@ -49,6 +49,7 @@
       v-if="isRemoveWidgetModalOpen && type !== 'add'"
       v-model="isRemoveWidgetModalOpen"
       :type="type"
+      :uuid="uuid"
     />
   </section>
 </template>
@@ -67,10 +68,12 @@ import { storeToRefs } from 'pinia';
 import {
   CsatResponse,
   NpsResponse,
+  CustomWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { Tab } from './BaseConversationWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useRoute } from 'vue-router';
+import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 const props = defineProps<{
   type: 'csat' | 'nps' | 'add' | 'custom';
@@ -83,6 +86,9 @@ const { setIsDrawerCustomizableOpen } = conversational;
 const route = useRoute();
 
 const conversationalWidgets = useConversationalWidgets();
+const conversationalCustomWidgets = useCustomWidgets();
+const { loadCustomWidgetData, getCustomWidgetByUuid, getIsLoadingByUuid } =
+  conversationalCustomWidgets;
 
 const {
   loadCsatWidgetData,
@@ -124,6 +130,7 @@ const isLoading = computed(() => {
   const isLoadingTypes = {
     csat: isLoadingCsatWidgetData.value,
     nps: isLoadingNpsWidgetData.value,
+    custom: getIsLoadingByUuid(props.uuid as string),
   };
 
   return isLoadingTypes[props.type];
@@ -133,6 +140,9 @@ const widgetData = computed(() => {
   const widgetDataTypes = {
     csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
     nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
+    custom: handleCustomWidgetData(
+      getCustomWidgetByUuid(props.uuid as string)?.data || null,
+    ),
   };
 
   return widgetDataTypes[props.type];
@@ -157,6 +167,10 @@ const renderProgressItems = computed(() => {
     ) {
       return [];
     }
+    return widgetData.value.progressItems;
+  }
+
+  if (props.type === 'custom') {
     return widgetData.value.progressItems;
   }
 
@@ -265,6 +279,10 @@ onMounted(() => {
       return 'human-support';
     }
   }
+
+  if (props.type === 'custom') {
+    loadCustomWidgetData(props.uuid as string);
+  }
 });
 
 const actions = [
@@ -283,6 +301,33 @@ const actions = [
     scheme: 'aux-red-500',
   },
 ];
+
+const handleCustomWidgetData = (data: CustomWidgetResponse) => {
+  const defaultColors = {
+    color: '#3182CE',
+    backgroundColor: '#BEE3F8',
+  };
+
+  if (data?.results?.length === 0) {
+    return {
+      progressItems: [5, 4, 3, 2, 1]?.map(() => ({
+        text: '-',
+        value: 0,
+        color: defaultColors.color,
+        backgroundColor: defaultColors.backgroundColor,
+      })),
+    };
+  }
+
+  return {
+    progressItems: data?.results?.map((result) => ({
+      text: result?.label,
+      value: result?.value,
+      color: defaultColors.color,
+      backgroundColor: defaultColors.backgroundColor,
+    })),
+  };
+};
 
 const handleCsatWidgetData = (data: CsatResponse) => {
   const defaultColors = {
@@ -458,6 +503,10 @@ watch(
 
     if (props.type === 'nps') {
       loadNpsWidgetData();
+    }
+
+    if (props.type === 'custom') {
+      loadCustomWidgetData(props.uuid as string);
     }
   },
 );

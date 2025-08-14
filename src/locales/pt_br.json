@@ -84,6 +84,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "horizontal_bar_chart": "Gráfico de barras horizontal",
     "reviews": "avaliações",
     "csat_widget": {
       "very_satisfied": "Muito satisfeito",

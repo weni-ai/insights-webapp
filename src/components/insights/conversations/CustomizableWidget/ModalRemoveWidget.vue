@@ -41,11 +41,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 
 interface Props {
   type: 'csat' | 'nps' | 'custom';
   modelValue: boolean;
+  uuid?: string;
 }
 
 const props = defineProps<Props>();
@@ -55,6 +57,7 @@ const emit = defineEmits<{
 }>();
 
 const { deleteWidget } = useConversationalWidgets();
+const { deleteCustomWidget } = useCustomWidgets();
 
 const isLoading = ref(false);
 
@@ -62,7 +65,7 @@ const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
     if (props.type === 'custom') {
-      //await deleteCustomWidget(props.uuid);
+      await deleteCustomWidget(props.uuid);
     } else {
       await deleteWidget(props.type);
     }

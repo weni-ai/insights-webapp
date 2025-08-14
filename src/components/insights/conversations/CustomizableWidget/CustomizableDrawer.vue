@@ -15,13 +15,7 @@
         ? $t('conversations_dashboard.customize_your_dashboard.return')
         : $t('cancel')
     "
-    :disabledPrimaryButton="
-      isNewDrawerCustomizable
-        ? !isEnabledSaveNewWidget
-        : drawerWidgetType === 'csat'
-          ? !isEnabledUpdateWidgetCsat
-          : !isEnabledUpdateWidgetNps
-    "
+    :disabledPrimaryButton="isDisabledPrimaryButton"
     :loadingPrimaryButton="isLoadingSaveButton"
     @primary-button-click="saveWidgetConfigs"
     @secondary-button-click="handleSecondaryButtonClick"
@@ -114,6 +108,7 @@ import i18n from '@/utils/plugins/i18n';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
   useConversationalWidgets();
@@ -131,6 +126,10 @@ const { setIsDrawerCustomizableOpen } = useConversational();
 const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
   storeToRefs(useConversational());
 
+const customWidgets = useCustomWidgets();
+const { isEnabledCreateCustomForm } = storeToRefs(customWidgets);
+const { saveCustomWidget } = customWidgets;
+
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
 function closeDrawer() {
@@ -142,7 +141,9 @@ function closeWarningModal() {
 }
 
 async function saveWidgetConfigs() {
-  if (isNewDrawerCustomizable.value) {
+  if (drawerWidgetType.value === 'horizontal_bar_chart') {
+    await saveCustomWidget();
+  } else if (isNewDrawerCustomizable.value) {
     await saveNewWidget();
   } else {
     await updateConversationalWidget(drawerWidgetType.value as 'csat' | 'nps');
@@ -191,16 +192,6 @@ function confirmAttentionModal() {
 }
 
 const availableWidgets = computed(() => {
-  /* if (isCsatConfigured.value) {
-    console.log('isCsatConfigured', isCsatConfigured.value);
-    availableWidgets.splice(0, 1);
-  }
-
-  if (isNpsConfigured.value) {
-    console.log('isNpsConfigured', isNpsConfigured.value);
-    availableWidgets.splice(1, 1);
-  }*/
-
   return [
     {
       name: i18n.global.t('conversations_dashboard.csat'),
@@ -283,6 +274,18 @@ const handleWidgetTypeChoice = (
 ) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };
+
+const isDisabledPrimaryButton = computed(() => {
+  if (drawerWidgetType.value === 'horizontal_bar_chart') {
+    return !isEnabledCreateCustomForm.value;
+  }
+
+  return isNewDrawerCustomizable.value
+    ? !isEnabledSaveNewWidget.value
+    : drawerWidgetType.value === 'csat'
+      ? !isEnabledUpdateWidgetCsat.value
+      : !isEnabledUpdateWidgetNps.value;
+});
 </script>
 
 <style scoped lang="scss">

@@ -87,8 +87,12 @@ const route = useRoute();
 
 const conversationalWidgets = useConversationalWidgets();
 const conversationalCustomWidgets = useCustomWidgets();
-const { loadCustomWidgetData, getCustomWidgetByUuid, getIsLoadingByUuid } =
-  conversationalCustomWidgets;
+const {
+  loadCustomWidgetData,
+  getCustomWidgetByUuid,
+  getIsLoadingByUuid,
+  setCustomForm,
+} = conversationalCustomWidgets;
 
 const {
   loadCsatWidgetData,
@@ -371,6 +375,18 @@ const handleCsatWidgetData = (data: CsatResponse) => {
 };
 
 const handleOpenDrawer = (isNew: boolean) => {
+  if (props.type === 'custom') {
+    if (!isNew) {
+      const customWidget = getCustomWidgetByUuid(props.uuid as string);
+
+      setCustomForm({
+        agent_uuid: customWidget?.config?.datalake_config?.agent_uuid,
+        agent_name: '',
+        key: customWidget?.config?.datalake_config?.key,
+      });
+    }
+  }
+
   setIsDrawerCustomizableOpen(true, props.type, isNew);
 };
 

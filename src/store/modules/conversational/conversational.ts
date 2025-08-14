@@ -5,14 +5,19 @@ import { useDashboards } from '@/store/modules/dashboards';
 export const useConversational = defineStore('conversational', {
   state: () => ({
     isDrawerCsatOrNpsOpen: false,
-    drawerWidgetType: null as 'nps' | 'csat' | 'add' | null,
+    drawerWidgetType: null as
+      | 'nps'
+      | 'csat'
+      | 'add'
+      | 'horizontal_bar_chart'
+      | null,
     isNewDrawerCsatOrNps: false,
   }),
 
   actions: {
     setIsDrawerCsatOrNpsOpen(
       isDrawerCsatOrNpsOpen: boolean,
-      type: 'nps' | 'csat' | 'add' | null,
+      type: 'nps' | 'csat' | 'add' | 'horizontal_bar_chart' | null,
       isNew: boolean,
     ) {
       this.isDrawerCsatOrNpsOpen = isDrawerCsatOrNpsOpen;

@@ -1,7 +1,7 @@
 <template>
   <UnnnicDrawer
-    v-if="isDrawerCsatOrNpsOpen"
-    :modelValue="isDrawerCsatOrNpsOpen"
+    v-if="isDrawerCustomizableOpen"
+    :modelValue="isDrawerCustomizableOpen"
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
@@ -11,12 +11,12 @@
         : ''
     "
     :secondaryButtonText="
-      drawerWidgetType !== 'add' && isNewDrawerCsatOrNps
+      drawerWidgetType !== 'add' && isNewDrawerCustomizable
         ? $t('conversations_dashboard.customize_your_dashboard.return')
         : $t('cancel')
     "
     :disabledPrimaryButton="
-      isNewDrawerCsatOrNps
+      isNewDrawerCustomizable
         ? !isEnabledSaveNewWidget
         : drawerWidgetType === 'csat'
           ? !isEnabledUpdateWidgetCsat
@@ -64,7 +64,7 @@
                 class="widget-list__item"
                 data-testid="add-widget-drawer-item"
                 @click="
-                  drawerWidgetType = widget.name.toLowerCase() as
+                  drawerWidgetType = widget.key as
                     | 'csat'
                     | 'nps'
                     | 'horizontal_bar_chart'
@@ -92,7 +92,7 @@
         v-else
         data-testid="config-customizable-form"
         :type="drawerWidgetType"
-        :isNew="isNewDrawerCsatOrNps"
+        :isNew="isNewDrawerCustomizable"
       />
     </template>
   </UnnnicDrawer>
@@ -127,14 +127,14 @@ const {
   isLoadingUpdateWidget,
 } = storeToRefs(useConversationalWidgets());
 
-const { setIsDrawerCsatOrNpsOpen } = useConversational();
-const { isDrawerCsatOrNpsOpen, drawerWidgetType, isNewDrawerCsatOrNps } =
+const { setIsDrawerCustomizableOpen } = useConversational();
+const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
   storeToRefs(useConversational());
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
 function closeDrawer() {
-  setIsDrawerCsatOrNpsOpen(false, null, false);
+  setIsDrawerCustomizableOpen(false, null, false);
 }
 
 function closeWarningModal() {
@@ -142,17 +142,17 @@ function closeWarningModal() {
 }
 
 async function saveWidgetConfigs() {
-  if (isNewDrawerCsatOrNps.value) {
+  if (isNewDrawerCustomizable.value) {
     await saveNewWidget();
   } else {
     await updateConversationalWidget(drawerWidgetType.value as 'csat' | 'nps');
   }
 
-  setIsDrawerCsatOrNpsOpen(false, null, false);
+  setIsDrawerCustomizableOpen(false, null, false);
 }
 
 const isLoadingSaveButton = computed(() => {
-  if (isNewDrawerCsatOrNps.value) {
+  if (isNewDrawerCustomizable.value) {
     return isLoadingSaveNewWidget.value;
   }
 
@@ -160,7 +160,7 @@ const isLoadingSaveButton = computed(() => {
 });
 
 function handleSecondaryButtonClick() {
-  if (drawerWidgetType.value !== 'add' && isNewDrawerCsatOrNps.value) {
+  if (drawerWidgetType.value !== 'add' && isNewDrawerCustomizable.value) {
     warningModalType.value = 'return';
   } else if (
     (drawerWidgetType.value === 'csat' && isEnabledUpdateWidgetCsat.value) ||
@@ -168,7 +168,7 @@ function handleSecondaryButtonClick() {
   ) {
     warningModalType.value = 'cancel';
   } else {
-    setIsDrawerCsatOrNpsOpen(false, null, false);
+    setIsDrawerCustomizableOpen(false, null, false);
   }
 }
 
@@ -180,7 +180,7 @@ function returnWidgetTypeChoice() {
 function cancelWidgetConfigs() {
   closeWarningModal();
   drawerWidgetType.value = 'add';
-  setIsDrawerCsatOrNpsOpen(false, null, false);
+  setIsDrawerCustomizableOpen(false, null, false);
 }
 
 function confirmAttentionModal() {

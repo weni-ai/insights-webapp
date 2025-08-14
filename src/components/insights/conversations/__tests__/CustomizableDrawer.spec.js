@@ -51,9 +51,9 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
   const pinia = createTestingPinia({
     initialState: {
       conversational: {
-        isDrawerCsatOrNpsOpen: true,
+        isDrawerCustomizableOpen: true,
         drawerWidgetType: 'add',
-        isNewDrawerCsatOrNps: true,
+        isNewDrawerCustomizable: true,
         ...storeOverrides.conversational,
       },
       conversationalWidgets: {
@@ -120,14 +120,14 @@ describe('CustomizableWidget', () => {
     wrapper.findComponent('[data-testid="drawer-csat-or-nps-widget-modal"]');
 
   describe('Drawer functionality', () => {
-    it('should open drawer when isDrawerCsatOrNpsOpen is true', () => {
-      expect(conversationalStore.isDrawerCsatOrNpsOpen).toBe(true);
+    it('should open drawer when isDrawerCustomizableOpen is true', () => {
+      expect(conversationalStore.isDrawerCustomizableOpen).toBe(true);
       expect(drawer().exists()).toBe(true);
     });
 
     it('should close drawer when close event is triggered', async () => {
       await drawer().vm.$emit('close');
-      expect(conversationalStore.isDrawerCsatOrNpsOpen).toBe(false);
+      expect(conversationalStore.isDrawerCustomizableOpen).toBe(false);
     });
   });
 
@@ -166,7 +166,7 @@ describe('CustomizableWidget', () => {
 
     it('should handle secondary button click when in add mode', async () => {
       await drawer().vm.$emit('secondary-button-click');
-      expect(conversationalStore.isDrawerCsatOrNpsOpen).toBe(false);
+      expect(conversationalStore.isDrawerCustomizableOpen).toBe(false);
     });
 
     it('should handle secondary button click when drawerWidgetType is falsy', async () => {
@@ -182,7 +182,7 @@ describe('CustomizableWidget', () => {
         {},
         {
           drawerWidgetType: 'csat',
-          isNewDrawerCsatOrNps: false,
+          isNewDrawerCustomizable: false,
         },
       );
       const conversationalStoreConfig = useConversational();
@@ -193,7 +193,7 @@ describe('CustomizableWidget', () => {
         .findComponent('[data-testid="add-widget-drawer"]')
         .vm.$emit('secondary-button-click');
 
-      expect(conversationalStoreConfig.isDrawerCsatOrNpsOpen).toBe(false);
+      expect(conversationalStoreConfig.isDrawerCustomizableOpen).toBe(false);
     });
 
     it('should call saveWidgetConfigs when primary button is clicked', async () => {
@@ -257,7 +257,7 @@ describe('CustomizableWidget', () => {
     it('should close drawer on cancelWidgetConfigs', () => {
       wrapper.vm.cancelWidgetConfigs();
       expect(conversationalStore.drawerWidgetType).toBe(null);
-      expect(conversationalStore.isDrawerCsatOrNpsOpen).toBe(false);
+      expect(conversationalStore.isDrawerCustomizableOpen).toBe(false);
     });
   });
 

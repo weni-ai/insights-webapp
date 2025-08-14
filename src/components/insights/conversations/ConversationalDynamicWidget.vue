@@ -77,7 +77,7 @@ const props = defineProps<{
 
 const isRemoveWidgetModalOpen = ref(false);
 const conversational = useConversational();
-const { setIsDrawerCsatOrNpsOpen } = conversational;
+const { setIsDrawerCustomizableOpen } = conversational;
 const route = useRoute();
 
 const conversationalWidgets = useConversationalWidgets();
@@ -313,7 +313,7 @@ const handleCsatWidgetData = (data: CsatResponse) => {
 };
 
 const handleOpenDrawer = (isNew: boolean) => {
-  setIsDrawerCsatOrNpsOpen(true, props.type, isNew);
+  setIsDrawerCustomizableOpen(true, props.type, isNew);
 };
 
 const handleNpsWidgetData = (data: NpsResponse) => {

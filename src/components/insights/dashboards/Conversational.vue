@@ -9,11 +9,13 @@
     <ConversationalDynamicWidget
       v-for="(widget, index) in orderedDynamicWidgets"
       :key="index"
-      :type="widget"
+      :type="widget.type"
+      :uuid="widget.uuid"
       class="dashboard-conversational__dynamic-widget"
       :class="{
-        'dashboard-conversational__dynamic-widget--only-add':
-          isOnlyAddWidget(widget),
+        'dashboard-conversational__dynamic-widget--only-add': isOnlyAddWidget(
+          widget.type,
+        ),
       }"
     />
 
@@ -22,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
@@ -30,60 +32,61 @@ import ConversationalDynamicWidget from '@/components/insights/conversations/Con
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
+import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
-type ConversationalWidgetType = 'csat' | 'nps' | 'add';
+type ConversationalWidgetType = 'csat' | 'nps' | 'add' | 'custom';
+
+const customWidgets = useCustomWidgets();
+const { getCustomWidgets } = storeToRefs(customWidgets);
 
 const conversationalWidgets = useConversationalWidgets();
 const { isCsatConfigured, isNpsConfigured, getDynamicWidgets } = storeToRefs(
   conversationalWidgets,
 );
 const widgets = useWidgets();
-const { isLoadingCurrentDashboardWidgets } = storeToRefs(widgets);
+const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
+  storeToRefs(widgets);
 
-const dynamicWidgets = computed(() => {
-  const widgets: ConversationalWidgetType[] = [];
-
-  if (isCsatConfigured.value) {
-    widgets.push('csat');
-  }
-
-  if (isNpsConfigured.value) {
-    widgets.push('nps');
-  }
-
-  widgets.push('add');
-
-  return widgets;
-});
+const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
+  [],
+);
 
 const orderedDynamicWidgets = computed(() => {
-  const widgets: ConversationalWidgetType[] = [];
-
   if (isLoadingCurrentDashboardWidgets.value) {
     return [];
   }
 
-  if (dynamicWidgets.value.includes('csat')) {
-    widgets.push('csat');
-  }
-
-  if (dynamicWidgets.value.includes('nps')) {
-    widgets.push('nps');
-  }
-
-  if (dynamicWidgets.value.includes('add')) {
-    widgets.push('add');
-  }
-
-  return widgets;
+  return dynamicWidgets.value;
 });
 
 const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
-  const isOddNumberOfWidgets = orderedDynamicWidgets.value.length % 2 === 1;
+  const isOddNumberOfWidgets = dynamicWidgets.value.length % 2 === 1;
   const isLastWidgetAdd = widget === 'add';
 
   return isOddNumberOfWidgets && isLastWidgetAdd;
 };
+
+watch(currentDashboardWidgets, () => {
+  if (isCsatConfigured.value) {
+    dynamicWidgets.value.push({ type: 'csat', uuid: '' });
+  }
+
+  if (isNpsConfigured.value) {
+    dynamicWidgets.value.push({ type: 'nps', uuid: '' });
+  }
+
+  if (getCustomWidgets.value.length > 0) {
+    getCustomWidgets.value.forEach((widget) => {
+      dynamicWidgets.value.push({ type: 'custom', uuid: widget.uuid });
+    });
+  }
+
+  dynamicWidgets.value.push({ type: 'add', uuid: '' });
+});
+
+onUnmounted(() => {
+  dynamicWidgets.value = [];
+});
 </script>
 
 <style lang="scss" scoped>

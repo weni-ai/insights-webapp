@@ -2,6 +2,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useConfig } from '../config';
 import Projects from '@/services/api/resources/projects';
+import { moduleStorage } from '@/utils/storage';
 
 vi.mock('@/services/api/resources/projects', () => ({
   default: {
@@ -16,6 +17,7 @@ describe('useConfig Store', () => {
     setActivePinia(createPinia());
     store = useConfig();
     localStorage.clear();
+    vi.clearAllMocks();
   });
 
   describe('Initial state', () => {
@@ -27,21 +29,21 @@ describe('useConfig Store', () => {
   });
 
   describe('setProject', () => {
-    it('should set the project and store uuid in localStorage', () => {
+    it('should set the project and store uuid in moduleStorage', () => {
       const project = { uuid: 'project-123', name: 'Test Project' };
       store.setProject(project);
 
       expect(store.project).toEqual(project);
-      expect(localStorage.getItem('projectUuid')).toBe('project-123');
+      expect(moduleStorage.getItem('projectUuid')).toBe('project-123');
     });
   });
 
   describe('setToken', () => {
-    it('should set the token and store it in localStorage', () => {
+    it('should set the token and store it in moduleStorage', () => {
       store.setToken('my-secret-token');
 
       expect(store.token).toBe('my-secret-token');
-      expect(localStorage.getItem('token')).toBe('my-secret-token');
+      expect(moduleStorage.getItem('token')).toBe('my-secret-token');
     });
   });
 

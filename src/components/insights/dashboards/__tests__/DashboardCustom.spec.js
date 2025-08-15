@@ -5,6 +5,7 @@ import DashboardCustom from '../DashboardCustom.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useOnboarding } from '@/store/modules/onboarding';
+import { moduleStorage } from '@/utils/storage';
 
 describe('DashboardCustom', () => {
   let wrapper;
@@ -33,6 +34,9 @@ describe('DashboardCustom', () => {
   };
 
   beforeEach(() => {
+    localStorage.clear();
+    vi.clearAllMocks();
+
     wrapper = mount(DashboardCustom, {
       global: {
         plugins: [
@@ -123,7 +127,7 @@ describe('DashboardCustom', () => {
   });
 
   it('shows onboarding when conditions are met', async () => {
-    localStorage.setItem('hasWidgetsOnboardingComplete', 'false');
+    moduleStorage.setItem('hasWidgetsOnboardingComplete', false);
     widgetsStore.currentDashboardWidgets = [
       {
         type: 'card',

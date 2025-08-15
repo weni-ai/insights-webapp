@@ -12,6 +12,8 @@
       :isLoadingProgress="isLoading"
       :currentTab="handleCurrentTab"
       :isOnlyTab="isOnlyTab"
+      :isExpanded="isExpanded"
+      @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
       <template #setup-widget>
@@ -51,6 +53,12 @@
       :type="type"
       :uuid="uuid"
     />
+
+    <SeeAllDrawer
+      v-if="isSeeAllDrawerOpen"
+      v-model="isSeeAllDrawerOpen"
+      :data="getCustomWidgetByUuid(props.uuid as string)?.data?.results || []"
+    />
   </section>
 </template>
 
@@ -61,6 +69,7 @@ import AddCustomizableWidget from '@/components/insights/conversations/Customiza
 import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
 import { useI18n } from 'vue-i18n';
 import SetupWidget from './SetupWidget.vue';
+import SeeAllDrawer from './CustomizableWidget/SeeAllDrawer.vue';
 
 const { t } = useI18n();
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
@@ -80,6 +89,7 @@ const props = defineProps<{
   uuid?: string;
 }>();
 
+const isSeeAllDrawerOpen = ref(false);
 const isRemoveWidgetModalOpen = ref(false);
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
@@ -266,6 +276,20 @@ const isOnlyTab = computed(() => {
 
   return false;
 });
+
+const isExpanded = computed(() => {
+  if (props.type === 'custom') {
+    const customWidget = getCustomWidgetByUuid(props.uuid as string);
+
+    return customWidget?.data?.results?.length > 5 || false;
+  }
+
+  return false;
+});
+
+const handleOpenExpanded = () => {
+  isSeeAllDrawerOpen.value = true;
+};
 
 onMounted(() => {
   if (props.type === 'csat') {

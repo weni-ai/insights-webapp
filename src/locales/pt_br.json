@@ -84,7 +84,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
-    "horizontal_bar_chart": "Gráfico de barras horizontal",
+    "custom": "Gráfico de barras horizontal",
     "reviews": "avaliações",
     "csat_widget": {
       "very_satisfied": "Muito satisfeito",
@@ -280,6 +280,7 @@
   },
   "key": "Chave",
   "filter-by": "Período:",
+  "see_more": "Ver mais",
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",

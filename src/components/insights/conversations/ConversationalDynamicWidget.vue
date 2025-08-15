@@ -347,8 +347,10 @@ const handleCustomWidgetData = (data: CustomWidgetResponse) => {
     };
   }
 
+  const orderByValue = data?.results?.sort((a, b) => b.value - a.value);
+
   return {
-    progressItems: data?.results?.map((result) => ({
+    progressItems: orderByValue?.slice(0, 5)?.map((result) => ({
       text: result?.label,
       value: result?.value,
       color: defaultColors.color,

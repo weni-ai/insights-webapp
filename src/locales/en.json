@@ -84,6 +84,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "custom": "Horizontal bar chart",
     "reviews": "reviews",
     "csat_widget": {
       "very_satisfied": "Very satisfied",
@@ -122,6 +123,7 @@
       "ai_support": "AI",
       "activate_agent": "Activate agent",
       "select_agent": "Select agent",
+      "select_key": "Enter the key",
       "your_agent_is_active": "Your agent is active!",
       "return": "Return",
       "save_changes": "Save changes",
@@ -141,6 +143,16 @@
         "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
         "cancel": "Cancel"
+      },
+      "tabs": {
+        "sentiment_analysis": "Sentiment analysis",
+        "customized": "Customized"
+      },
+      "select_chart_type": "Select a chart type:",
+      "select_data": "Select the data you want to track:",
+      "horizontal_bar_chart": {
+        "title": "Horizontal bar chart",
+        "description": "A visual representation of data where bars are oriented horizontally, with the length of each bar indicating the magnitude of its corresponding value."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -280,7 +292,9 @@
       "placeholder": "Select tag"
     }
   },
+  "key": "Key",
   "filter-by": "Period:",
+  "see_more": "See more",
   "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",

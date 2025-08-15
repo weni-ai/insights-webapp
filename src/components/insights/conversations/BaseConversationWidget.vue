@@ -88,7 +88,7 @@ const emit = defineEmits<{
   (_event: 'tab-change', _tab: Tab): void;
 }>();
 
-defineProps<{
+const props = defineProps<{
   title: string;
   isLoading?: boolean;
   actions?: {
@@ -98,18 +98,27 @@ defineProps<{
     scheme?: string;
   }[];
   currentTab?: string;
+  isOnlyTab?: boolean;
 }>();
 
-const tabs = computed(() => [
-  {
-    name: i18n.global.t('conversations_dashboard.artificial_intelligence'),
-    key: 'artificial-intelligence',
-  },
-  {
-    name: i18n.global.t('conversations_dashboard.human_support'),
-    key: 'human-support',
-  },
-]);
+const tabs = computed(() => {
+  const tabs = [
+    {
+      name: i18n.global.t('conversations_dashboard.artificial_intelligence'),
+      key: 'artificial-intelligence',
+    },
+    {
+      name: i18n.global.t('conversations_dashboard.human_support'),
+      key: 'human-support',
+    },
+  ];
+
+  if (props.isOnlyTab) {
+    return [tabs[0]];
+  }
+
+  return tabs;
+});
 
 const handleTabChange = (tab: Tab) => {
   emit('tab-change', tab);

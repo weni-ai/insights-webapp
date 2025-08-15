@@ -84,6 +84,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "custom": "Gráfico de barras horizontal",
     "reviews": "evaluaciones",
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",
@@ -122,6 +123,7 @@
       "ai_support": "IA",
       "activate_agent": "Activar agente",
       "select_agent": "Seleccionar agente",
+      "select_key": "Digite la clave",
       "your_agent_is_active": "Tu agente está activo!",
       "return": "Volver",
       "save_changes": "Guardar cambios",
@@ -141,6 +143,16 @@
         "description": "¿Estás seguro de querer eliminar el widget {type}?",
         "remove": "Eliminar",
         "cancel": "Cancelar"
+      },
+      "tabs": {
+        "sentiment_analysis": "Análisis de sentimiento",
+        "customized": "Personalizado"
+      },
+      "select_chart_type": "Seleccionar un tipo de gráfico:",
+      "select_data": "Selecciona los datos que quieres analizar:",
+      "horizontal_bar_chart": {
+        "title": "Gráfico de barras horizontal",
+        "description": "Una visualización de datos donde las barras están orientadas horizontalmente, con la longitud de cada barra indicando la magnitud de su valor correspondiente."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -280,7 +292,9 @@
       "placeholder": "Seleccionar tag"
     }
   },
+  "key": "Clave",
   "filter-by": "Periodo:",
+  "see_more": "Ver más",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",

@@ -12,6 +12,9 @@ interface CsatResult {
 interface CsatResponse {
   results: CsatResult[];
 }
+interface CustomWidgetResponse {
+  results: CsatResult[];
+}
 
 interface NpsResponse {
   score: number;
@@ -69,6 +72,31 @@ export default {
 
     return response;
   },
+
+  async getCustomWidgetData(
+    queryParams: WidgetQueryParams,
+  ): Promise<CustomWidgetResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/conversations/custom/', {
+      params,
+    })) as CustomWidgetResponse;
+
+    return response;
+  },
 };
 
-export type { CsatResponse, NpsResponse, WidgetQueryParams, CsatResult };
+export type {
+  CsatResponse,
+  NpsResponse,
+  WidgetQueryParams,
+  CsatResult,
+  CustomWidgetResponse,
+};

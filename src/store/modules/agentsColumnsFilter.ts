@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { useConfig } from './config';
+import { moduleStorage } from '@/utils/storage';
 
 const STORAGE_KEY = 'agents_columns_filter';
 const STATIC_COLUMNS = ['status', 'agent'];
@@ -19,12 +20,12 @@ export const useAgentsColumnsFilter = defineStore('agentsColumnsFilter', {
       );
 
       const storageKey = this.getStorageKey;
-      localStorage.setItem(storageKey, JSON.stringify(this.visibleColumns));
+      moduleStorage.setItem(storageKey, this.visibleColumns);
     },
     clearVisibleColumns() {
       this.visibleColumns = [];
       const storageKey = this.getStorageKey;
-      localStorage.removeItem(storageKey);
+      moduleStorage.removeItem(storageKey);
     },
     handleToggleColumn(columnName: string) {
       if (STATIC_COLUMNS.includes(columnName)) return;
@@ -42,27 +43,23 @@ export const useAgentsColumnsFilter = defineStore('agentsColumnsFilter', {
 
       this.handleToggleColumn(columnName);
       const storageKey = this.getStorageKey;
-      localStorage.setItem(storageKey, JSON.stringify(this.visibleColumns));
+      moduleStorage.setItem(storageKey, this.visibleColumns);
     },
     initializeFromStorage() {
       const configStore = useConfig();
       const projectUuid =
-        configStore.project?.uuid || localStorage.getItem('projectUuid');
+        configStore.project?.uuid || moduleStorage.getItem('projectUuid');
 
-      const storedColumns = localStorage.getItem(
+      const storedColumns = moduleStorage.getItem(
         `${STORAGE_KEY}_${projectUuid}`,
       );
 
-      if (storedColumns) {
-        try {
-          const parsedColumns = JSON.parse(storedColumns);
-          this.visibleColumns = parsedColumns.filter(
-            (column) => !STATIC_COLUMNS.includes(column),
-          );
-        } catch (error) {
-          console.error('Error parsing stored columns:', error);
-          this.visibleColumns = [];
-        }
+      if (storedColumns && Array.isArray(storedColumns)) {
+        this.visibleColumns = storedColumns.filter(
+          (column) => !STATIC_COLUMNS.includes(column),
+        );
+      } else {
+        this.visibleColumns = [];
       }
       this.hasInitialized = true;
     },
@@ -86,7 +83,7 @@ export const useAgentsColumnsFilter = defineStore('agentsColumnsFilter', {
     getStorageKey: () => {
       const configStore = useConfig();
       const projectUuid =
-        configStore.project?.uuid || localStorage.getItem('projectUuid');
+        configStore.project?.uuid || moduleStorage.getItem('projectUuid');
       return projectUuid ? `${STORAGE_KEY}_${projectUuid}` : STORAGE_KEY;
     },
   },

@@ -14,6 +14,12 @@ interface customForm {
 
 interface customWidget extends WidgetType {
   data: CustomWidgetResponse;
+  config: {
+    datalake_config: {
+      agent_uuid: string;
+      key: string;
+    };
+  };
 }
 
 export const useCustomWidgets = defineStore('customWidgets', {
@@ -78,13 +84,11 @@ export const useCustomWidgets = defineStore('customWidgets', {
 
         await WidgetService.saveNewWidget(widget);
 
-        this.resetNewWidget();
+        this.resetCustomForm();
 
         const { getCurrentDashboardWidgets } = useWidgets();
 
         await getCurrentDashboardWidgets();
-
-        this.customForm = {} as customForm;
       } catch (error) {
         console.error('Error saving new custom widget', error);
       } finally {

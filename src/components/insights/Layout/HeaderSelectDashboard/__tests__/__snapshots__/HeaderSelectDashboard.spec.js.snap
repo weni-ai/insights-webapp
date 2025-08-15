@@ -30,22 +30,23 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
         class="trigger__title"
         data-testid="dashboard-title"
         data-v-054061ac=""
+        title="Dashboard 1"
       >
         Dashboard 1
       </h1>
       <beta-text-stub
         data-v-054061ac=""
       />
-      <span
-        class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md"
-        data-testid="expand-icon"
-        data-v-054061ac=""
-        data-v-9846e6db=""
-        translate="no"
-      >
-        expand_more
-      </span>
     </section>
+    <span
+      class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md dropdown__trigger"
+      data-testid="expand-icon"
+      data-v-054061ac=""
+      data-v-9846e6db=""
+      translate="no"
+    >
+      expand_more
+    </span>
     
     
     

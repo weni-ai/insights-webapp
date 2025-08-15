@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
@@ -84,10 +84,6 @@ watch(currentDashboardWidgets, () => {
   }
 
   dynamicWidgets.value.push({ type: 'add', uuid: '' });
-});
-
-onUnmounted(() => {
-  dynamicWidgets.value = [];
 });
 </script>
 

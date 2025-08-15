@@ -6,6 +6,7 @@ import Conversational from '../Conversational.vue';
 import { createI18n } from 'vue-i18n';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
+import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 config.global.plugins = [
   createI18n({
@@ -15,11 +16,13 @@ config.global.plugins = [
 
 vi.mock('@/store/modules/conversational/widgets');
 vi.mock('@/store/modules/widgets');
+vi.mock('@/store/modules/conversational/customWidgets');
 
 describe('Conversational.vue', () => {
   let wrapper;
   let conversationalWidgetsStore;
   let widgetsStore;
+  let customWidgetsStore;
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -33,8 +36,14 @@ describe('Conversational.vue', () => {
 
     widgetsStore = {
       isLoadingCurrentDashboardWidgets: ref(false),
+      currentDashboardWidgets: ref([]),
     };
     useWidgets.mockReturnValue(widgetsStore);
+
+    customWidgetsStore = {
+      getCustomWidgets: ref([]),
+    };
+    useCustomWidgets.mockReturnValue(customWidgetsStore);
 
     wrapper = shallowMount(Conversational, {
       global: {
@@ -51,36 +60,77 @@ describe('Conversational.vue', () => {
   it('should show csat and add widgets when only csat is configured and widgets are less than 2', async () => {
     conversationalWidgetsStore.isCsatConfigured.value = true;
     conversationalWidgetsStore.getDynamicWidgets.value = [];
+
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'add']);
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'csat', uuid: '' },
+      { type: 'add', uuid: '' },
+    ]);
   });
 
   it('should show nps and add widgets when only nps is configured and widgets are less than 2', async () => {
     conversationalWidgetsStore.isNpsConfigured.value = true;
     conversationalWidgetsStore.getDynamicWidgets.value = [];
+
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [{ type: 'nps' }];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['nps', 'add']);
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'nps', uuid: '' },
+      { type: 'add', uuid: '' },
+    ]);
   });
 
   it('should show csat and nps widgets when both are configured', async () => {
     conversationalWidgetsStore.isCsatConfigured.value = true;
     conversationalWidgetsStore.isNpsConfigured.value = true;
     conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [
+      { type: 'csat' },
+      { type: 'nps' },
+    ];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'csat', uuid: '' },
+      { type: 'nps', uuid: '' },
+      { type: 'add', uuid: '' },
+    ]);
   });
 
   it('should show only add widget when no dynamic widgets are configured', async () => {
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['add']);
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'add', uuid: '' },
+    ]);
   });
 
   it('should maintain csat first, then nps order when both are present', async () => {
     conversationalWidgetsStore.isCsatConfigured.value = true;
     conversationalWidgetsStore.isNpsConfigured.value = true;
     conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [
+      { type: 'csat' },
+      { type: 'nps' },
+    ];
     await nextTick();
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'csat', uuid: '' },
+      { type: 'nps', uuid: '' },
+      { type: 'add', uuid: '' },
+    ]);
   });
 
   it('should show no dynamic widgets when loading', async () => {
@@ -89,10 +139,54 @@ describe('Conversational.vue', () => {
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([]);
   });
 
+  it('should include custom widgets when they exist', async () => {
+    customWidgetsStore.getCustomWidgets.value = [
+      { uuid: 'custom-1', type: 'custom_widget' },
+      { uuid: 'custom-2', type: 'custom_widget' },
+    ];
+
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [];
+    await nextTick();
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'custom', uuid: 'custom-1' },
+      { type: 'custom', uuid: 'custom-2' },
+      { type: 'add', uuid: '' },
+    ]);
+  });
+
+  it('should include custom widgets along with csat and nps', async () => {
+    conversationalWidgetsStore.isCsatConfigured.value = true;
+    conversationalWidgetsStore.isNpsConfigured.value = true;
+    customWidgetsStore.getCustomWidgets.value = [
+      { uuid: 'custom-1', type: 'custom_widget' },
+    ];
+
+    // Trigger the watcher by changing currentDashboardWidgets
+    widgetsStore.currentDashboardWidgets.value = [
+      { type: 'csat' },
+      { type: 'nps' },
+    ];
+    await nextTick();
+
+    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      { type: 'csat', uuid: '' },
+      { type: 'nps', uuid: '' },
+      { type: 'custom', uuid: 'custom-1' },
+      { type: 'add', uuid: '' },
+    ]);
+  });
+
   describe('isOnlyAddWidget', () => {
     it('should return true for add widget when there is an odd number of widgets', async () => {
+      // Trigger the watcher by changing currentDashboardWidgets
+      widgetsStore.currentDashboardWidgets.value = [];
       await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['add']);
+
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        { type: 'add', uuid: '' },
+      ]);
       expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
       expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
@@ -101,8 +195,18 @@ describe('Conversational.vue', () => {
     it('should return true for add widget when there are 3 widgets (odd)', async () => {
       conversationalWidgetsStore.isCsatConfigured.value = true;
       conversationalWidgetsStore.isNpsConfigured.value = true;
+
+      // Trigger the watcher by changing currentDashboardWidgets
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'csat' },
+        { type: 'nps' },
+      ];
       await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        { type: 'csat', uuid: '' },
+        { type: 'nps', uuid: '' },
+        { type: 'add', uuid: '' },
+      ]);
       expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
       expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
@@ -112,8 +216,18 @@ describe('Conversational.vue', () => {
       conversationalWidgetsStore.isCsatConfigured.value = true;
       conversationalWidgetsStore.isNpsConfigured.value = true;
       conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+
+      // Trigger the watcher by changing currentDashboardWidgets
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'csat' },
+        { type: 'nps' },
+      ];
       await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        { type: 'csat', uuid: '' },
+        { type: 'nps', uuid: '' },
+        { type: 'add', uuid: '' },
+      ]);
       expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
       expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
@@ -121,8 +235,14 @@ describe('Conversational.vue', () => {
 
     it('should return false for add widget when there would be an even number of widgets', async () => {
       conversationalWidgetsStore.isCsatConfigured.value = true;
+
+      // Trigger the watcher by changing currentDashboardWidgets
+      widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
       await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'add']);
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        { type: 'csat', uuid: '' },
+        { type: 'add', uuid: '' },
+      ]);
       expect(wrapper.vm.isOnlyAddWidget('add')).toBe(false);
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
     });
@@ -130,8 +250,18 @@ describe('Conversational.vue', () => {
     it('should return false for non-add widgets even with odd number of widgets', async () => {
       conversationalWidgetsStore.isCsatConfigured.value = true;
       conversationalWidgetsStore.isNpsConfigured.value = true;
+
+      // Trigger the watcher by changing currentDashboardWidgets
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'csat' },
+        { type: 'nps' },
+      ];
       await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual(['csat', 'nps', 'add']);
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        { type: 'csat', uuid: '' },
+        { type: 'nps', uuid: '' },
+        { type: 'add', uuid: '' },
+      ]);
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
       expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
     });

@@ -115,7 +115,7 @@ export default {
 <script setup>
 import { onMounted, ref, computed, watch, onUnmounted } from 'vue';
 
-import { useLocalStorage } from '@vueuse/core';
+import { moduleStorage } from '@/utils/storage';
 
 import MultipleLineChart from '@/components/insights/charts/MultipleLineChart.vue';
 import SingleTable from '@/components/insights/widgets/SingleTable.vue';
@@ -152,7 +152,9 @@ const app_uuid = computed(
 
 const project_uuid = computed(() => configStore.project?.uuid);
 
-const lastOpenTemplates = useLocalStorage('meta-last-templates-viewed', {});
+const lastOpenTemplates = ref(
+  moduleStorage.getItem('meta-last-templates-viewed', {}),
+);
 
 const initialLoading = ref(false);
 
@@ -424,6 +426,10 @@ watch(appliedFilters, () => {
 watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   if (newUuid !== oldUuid) {
     lastOpenTemplates.value[currentDashboard.value.uuid] = newUuid;
+    moduleStorage.setItem(
+      'meta-last-templates-viewed',
+      lastOpenTemplates.value,
+    );
     if (oldUuid) viewTab.value = 'template';
     getSelectedTemplateData();
   }

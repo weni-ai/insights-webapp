@@ -51,16 +51,30 @@
         </section>
       </section>
       <section
-        v-if="footerText && !isLoadingProgress"
-        class="progress-widget__footer"
+        v-if="(footerText || isExpanded) && !isLoadingProgress"
+        :class="[
+          'progress-widget__footer',
+          footerText
+            ? 'progress-widget__footer-content-start'
+            : 'progress-widget__footer-content-center',
+        ]"
         data-testid="progress-widget-footer"
       >
         <p
+          v-if="footerText"
           class="footer__text"
           data-testid="progress-widget-footer-text"
         >
           {{ footerText }}
         </p>
+        <UnnnicButton
+          v-if="isExpanded"
+          class="progress-widget__footer-button"
+          data-testid="progress-widget-footer-button"
+          :text="$t('see_more')"
+          type="tertiary"
+          @click.stop="$emit('open-expanded')"
+        />
       </section>
       <UnnnicSkeletonLoading
         v-if="isLoadingProgress"
@@ -83,6 +97,7 @@ import ProgressTable from '@/components/ProgressTable.vue';
 
 const emit = defineEmits<{
   (e: 'tab-change', tab: Tab): void;
+  (e: 'open-expanded'): void;
 }>();
 
 const props = defineProps<{
@@ -101,6 +116,7 @@ const props = defineProps<{
     color?: string;
   }[];
   footerText?: string;
+  isExpanded?: boolean;
   isLoading?: boolean;
   isLoadingProgress?: boolean;
   actions?: {
@@ -152,8 +168,14 @@ const handleTabChange = (tab: Tab) => {
 
   &__footer {
     display: flex;
-    justify-content: flex-start;
     align-items: center;
+
+    &-content-start {
+      justify-content: flex-start;
+    }
+    &-content-center {
+      justify-content: center;
+    }
 
     .footer__text {
       color: $unnnic-color-neutral-clean;
@@ -162,6 +184,10 @@ const handleTabChange = (tab: Tab) => {
       font-weight: $unnnic-font-weight-regular;
       font-style: normal;
       line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    }
+
+    &-button {
+      width: 100%;
     }
   }
 

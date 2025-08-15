@@ -407,6 +407,7 @@ const handleOpenDrawer = (isNew: boolean) => {
         agent_uuid: customWidget?.config?.datalake_config?.agent_uuid,
         agent_name: '',
         key: customWidget?.config?.datalake_config?.key,
+        widget_uuid: customWidget?.uuid,
       });
     }
   }

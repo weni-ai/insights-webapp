@@ -10,6 +10,7 @@ interface customForm {
   agent_uuid: string;
   agent_name: string;
   key: string;
+  widget_uuid: string;
 }
 
 interface customWidget extends WidgetType {
@@ -29,6 +30,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       agent_uuid: '',
       agent_name: '',
       key: '',
+      widget_uuid: '',
     } as customForm,
     isLoadingSaveNewCustomWidget: false,
     isLoadingDeleteCustomWidget: false,
@@ -63,6 +65,9 @@ export const useCustomWidgets = defineStore('customWidgets', {
     setCustomFormKey(key: string) {
       this.customForm.key = key;
     },
+    setCustomFormWidgetUuid(widget_uuid: string) {
+      this.customForm.widget_uuid = widget_uuid;
+    },
     async saveCustomWidget() {
       this.isLoadingSaveNewCustomWidget = true;
       try {
@@ -82,7 +87,16 @@ export const useCustomWidgets = defineStore('customWidgets', {
           type: 'custom_widget',
         };
 
-        await WidgetService.saveNewWidget(widget);
+        if (this.customForm.widget_uuid) {
+          await WidgetService.updateWidget({
+            widget: {
+              ...widget,
+              uuid: this.customForm.widget_uuid,
+            },
+          });
+        } else {
+          await WidgetService.saveNewWidget(widget);
+        }
 
         this.resetCustomForm();
 

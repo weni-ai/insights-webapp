@@ -36,6 +36,7 @@
           data-testid="insights-layout-header-generate-insight-button"
         />
         <UnnnicButton
+          v-if="isRenderExportButton"
           type="primary"
           size="large"
           text="Export Data"
@@ -96,6 +97,7 @@ export default {
       'dashboardDefault',
       'currentDashboardFilters',
       'appliedFilters',
+      'exportData',
     ]),
     ...mapState(useWidgets, {
       isExpansiveMode: (store) => {
@@ -108,6 +110,14 @@ export default {
     }),
 
     isRenderInsightButton() {
+      return this.isHumanServiceDashboard;
+    },
+
+    isRenderExportButton() {
+      return this.isHumanServiceDashboard;
+    },
+
+    isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
     },
 
@@ -209,7 +219,7 @@ export default {
     },
 
     handleExport() {
-      console.log('export');
+      this.exportData.setIsRenderExportData(true);
     },
   },
 };

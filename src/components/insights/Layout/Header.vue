@@ -35,6 +35,12 @@
           v-if="isRenderInsightButton"
           data-testid="insights-layout-header-generate-insight-button"
         />
+        <UnnnicButton
+          type="primary"
+          size="large"
+          text="Export Data"
+          @click="handleExport"
+        />
       </section>
     </section>
     <section
@@ -200,6 +206,10 @@ export default {
       this.setCurrentDashboard(
         dashboardRelativeToPath || this.dashboardDefault,
       );
+    },
+
+    handleExport() {
+      console.log('export');
     },
   },
 };

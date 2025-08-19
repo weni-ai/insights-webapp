@@ -35,13 +35,7 @@
           v-if="isRenderInsightButton"
           data-testid="insights-layout-header-generate-insight-button"
         />
-        <UnnnicButton
-          v-if="isRenderExportButton"
-          type="primary"
-          size="large"
-          text="Export Data"
-          @click="handleExport"
-        />
+        <ModalExportData />
       </section>
     </section>
     <section
@@ -77,6 +71,7 @@ import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
 import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
+import ModalExportData from '../export/ModalExportData.vue';
 
 import moment from 'moment';
 
@@ -89,6 +84,7 @@ export default {
     InsightsLayoutHeaderFilters,
     HeaderDashboardSettings,
     HeaderGenerateInsightButton,
+    ModalExportData,
   },
   computed: {
     ...mapState(useDashboards, [

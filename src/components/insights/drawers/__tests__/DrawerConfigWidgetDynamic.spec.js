@@ -2,6 +2,7 @@ import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { createTestingPinia } from '@pinia/testing';
+import { moduleStorage } from '@/utils/storage';
 
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 import DrawerConfigContentCard from '../DrawerConfigContentCard.vue';
@@ -391,8 +392,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
 
         expect(tourNextStepSpy).toHaveBeenCalledWith('widgets-onboarding-tour');
         expect(setModalSpy).toHaveBeenCalledWith(true);
-        expect(localStorage.getItem('hasWidgetsOnboardingComplete')).toBe(
-          'true',
+        expect(moduleStorage.getItem('hasWidgetsOnboardingComplete')).toBe(
+          true,
         );
       });
 

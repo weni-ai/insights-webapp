@@ -63,6 +63,7 @@ import DashboardOnboarding from './components/insights/onboardings/DashboardOnbo
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
 import moment from 'moment';
+import { moduleStorage } from '@/utils/storage';
 
 import { safeImport } from './utils/moduleFederation';
 
@@ -165,9 +166,10 @@ export default {
 
       const projectUuid = queryString.get('projectUuid');
 
-      const authToken = localStorage.getItem('token');
+      const authToken = moduleStorage.getItem('token');
 
-      const newProjectUuid = projectUuid || localStorage.getItem('projectUuid');
+      const newProjectUuid =
+        projectUuid || moduleStorage.getItem('projectUuid');
 
       this.setToken(authToken);
       this.setProject({
@@ -191,7 +193,7 @@ export default {
     },
 
     handlerSetProject(projectUuid) {
-      localStorage.setItem('projectUuid', projectUuid);
+      moduleStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
     },
 
@@ -235,14 +237,15 @@ export default {
       );
 
       if (hasCustomDashboard || !this.enableCreateCustomDashboards) {
-        localStorage.setItem('hasDashboardOnboardingComplete', 'true');
+        moduleStorage.setItem('hasDashboardOnboardingComplete', true);
         this.showOnboardingModal = false;
         return;
       }
 
-      const hasOnboardingComplete =
-        JSON.parse(localStorage.getItem('hasDashboardOnboardingComplete')) ||
-        false;
+      const hasOnboardingComplete = moduleStorage.getItem(
+        'hasDashboardOnboardingComplete',
+        false,
+      );
 
       this.showOnboardingModal = !hasOnboardingComplete;
     },

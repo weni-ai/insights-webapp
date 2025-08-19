@@ -1,3 +1,5 @@
+import { moduleStorage } from '@/utils/storage';
+
 export function parseJwt(token) {
   var base64Url = token.split('.')[1];
   var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -22,7 +24,7 @@ export function getJwtToken() {
 
     const eventHandler = (event) => {
       if (event.data.event === 'updateToken') {
-        localStorage.setItem('token', event.data.token);
+        moduleStorage.setItem('token', event.data.token);
         window.removeEventListener('message', eventHandler);
         return resolve();
       }

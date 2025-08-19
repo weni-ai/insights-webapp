@@ -4,6 +4,7 @@ import { createTestingPinia } from '@pinia/testing';
 
 import TemplateMessageMeta from '../TemplateMessageMeta.vue';
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
+import { moduleStorage } from '@/utils/storage';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
@@ -32,6 +33,7 @@ vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
     getTemplatePreview: vi.fn(),
     getTemplateButtonsAnalytics: vi.fn(),
     getTemplateMessagesAnalytics: vi.fn(),
+    getCategoriesMetrics: vi.fn(),
     favoriteTemplate: vi.fn(),
     unfavoriteTemplate: vi.fn(),
   },
@@ -108,10 +110,9 @@ describe('TemplateMessageMeta', () => {
     });
 
     mockLocalStorage = {
-      'meta-last-templates-viewed': '{}',
+      'insights_meta-last-templates-viewed': '{}',
     };
 
-    // Mock localStorage
     Object.defineProperty(window, 'localStorage', {
       value: {
         getItem: vi.fn((key) => mockLocalStorage[key]),
@@ -140,6 +141,14 @@ describe('TemplateMessageMeta', () => {
     MetaTemplateMessageService.getTemplateButtonsAnalytics.mockResolvedValue(
       mockButtonsAnalytics,
     );
+    MetaTemplateMessageService.getCategoriesMetrics.mockResolvedValue({
+      templates: {
+        MARKETING: 10,
+        SERVICE: 5,
+        UTILITY: 3,
+        AUTHENTICATION: 1,
+      },
+    });
     MetaTemplateMessageService.favoriteTemplate.mockResolvedValue({});
     MetaTemplateMessageService.unfavoriteTemplate.mockResolvedValue({});
 
@@ -202,10 +211,7 @@ describe('TemplateMessageMeta', () => {
   it('should call getTemplatePreview on mount when last viewed template is not empty', async () => {
     const initialValue = { 'dashboard-uuid': '123' };
 
-    localStorage.setItem(
-      'meta-last-templates-viewed',
-      JSON.stringify(initialValue),
-    );
+    moduleStorage.setItem('meta-last-templates-viewed', initialValue);
 
     const handlerSelectedTemplateUuidSpy = vi.spyOn(
       metaTemplateMessageStore,
@@ -218,29 +224,38 @@ describe('TemplateMessageMeta', () => {
     expect(handlerSelectedTemplateUuidSpy).toHaveBeenCalledWith('123');
   });
 
-  it('should handle useLocalStorage for meta-last-templates-viewed', async () => {
-    // Set initial value in localStorage
+  it('should handle moduleStorage for meta-last-templates-viewed', async () => {
     const initialValue = { templateId: 'test-123' };
 
-    localStorage.setItem(
-      'meta-last-templates-viewed',
-      JSON.stringify(initialValue),
-    );
+    moduleStorage.setItem('meta-last-templates-viewed', initialValue);
 
     wrapper = createWrapper();
     await flushPromises();
 
-    // Verify the component can read the value
     expect(wrapper.vm.lastOpenTemplates).toEqual(initialValue);
 
-    // Update the value
     const newValue = { templateId: 'new-123' };
     wrapper.vm.lastOpenTemplates = newValue;
+
+    moduleStorage.setItem('meta-last-templates-viewed', newValue);
     await nextTick();
 
-    // Verify the value was updated in localStorage
-    expect(
-      JSON.parse(localStorage.getItem('meta-last-templates-viewed')),
-    ).toEqual(newValue);
+    expect(moduleStorage.getItem('meta-last-templates-viewed')).toEqual(
+      newValue,
+    );
+  });
+
+  it('should save template selection to moduleStorage when selectedTemplateUuid changes', async () => {
+    wrapper = createWrapper();
+    await flushPromises();
+
+    wrapper.vm.lastOpenTemplates['dashboard-uuid'] = 'new-template-123';
+    moduleStorage.setItem(
+      'meta-last-templates-viewed',
+      wrapper.vm.lastOpenTemplates,
+    );
+
+    const savedValue = moduleStorage.getItem('meta-last-templates-viewed');
+    expect(savedValue['dashboard-uuid']).toBe('new-template-123');
   });
 });

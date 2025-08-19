@@ -150,9 +150,9 @@ describe('App', () => {
 
     localStorageMock.getItem.mockImplementation((key) => {
       const items = {
-        token: 'mock-token',
-        projectUuid: 'stored-project-uuid',
-        hasDashboardOnboardingComplete: 'false',
+        insights_token: 'mock-token',
+        insights_projectUuid: 'stored-project-uuid',
+        insights_hasDashboardOnboardingComplete: 'false',
       };
       return items[key] || null;
     });
@@ -261,13 +261,13 @@ describe('App', () => {
 
   describe('Methods', () => {
     describe('handlerSetProject', () => {
-      it('should set project in localStorage and store', () => {
+      it('should set project in moduleStorage and store', () => {
         const setProjectSpy = vi.spyOn(configStore, 'setProject');
 
         wrapper.vm.handlerSetProject('new-project-uuid');
 
         expect(localStorageMock.setItem).toHaveBeenCalledWith(
-          'projectUuid',
+          'insights_projectUuid',
           'new-project-uuid',
         );
         expect(setProjectSpy).toHaveBeenCalledWith({
@@ -351,14 +351,17 @@ describe('App', () => {
 
         expect(wrapper.vm.showOnboardingModal).toBe(false);
         expect(localStorageMock.setItem).toHaveBeenCalledWith(
-          'hasDashboardOnboardingComplete',
+          'insights_hasDashboardOnboardingComplete',
           'true',
         );
       });
 
       it('should show modal when no custom dashboard, enableCreateCustomDashboards is true and onboarding not complete', () => {
         dashboardsStore.dashboards = [{ id: 1, is_deletable: false }];
-        localStorageMock.getItem.mockReturnValue('false');
+        localStorageMock.getItem.mockImplementation((key) => {
+          if (key === 'insights_hasDashboardOnboardingComplete') return null;
+          return null;
+        });
         configStore.enableCreateCustomDashboards = true;
 
         wrapper.vm.handlerShowOnboardingModal();
@@ -368,7 +371,10 @@ describe('App', () => {
 
       it('should not show modal when onboarding is complete', () => {
         dashboardsStore.dashboards = [{ id: 1, is_deletable: false }];
-        localStorageMock.getItem.mockReturnValue('true');
+        localStorageMock.getItem.mockImplementation((key) => {
+          if (key === 'insights_hasDashboardOnboardingComplete') return 'true';
+          return null;
+        });
 
         wrapper.vm.handlerShowOnboardingModal();
 

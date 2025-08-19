@@ -10,8 +10,9 @@ interface ExportData {
   date_range: DateRange;
   open_chats: boolean;
   closed_chats: boolean;
-  type: string;
+  type: '.csv' | '.xlsx';
   export_data: object;
+  accept_terms: boolean;
 }
 
 export const useExportData = defineStore('exportData', {
@@ -20,8 +21,9 @@ export const useExportData = defineStore('exportData', {
     date_range: {} as DateRange,
     open_chats: true,
     closed_chats: false,
-    type: 'csv',
+    type: '.csv',
     export_data: {},
+    accept_terms: false,
   }),
 
   actions: {
@@ -41,6 +43,9 @@ export const useExportData = defineStore('exportData', {
     },
     setExportData(export_data: object) {
       this.export_data = export_data;
+    },
+    setAcceptTerms(accept_terms: boolean) {
+      this.accept_terms = accept_terms;
     },
   },
 });

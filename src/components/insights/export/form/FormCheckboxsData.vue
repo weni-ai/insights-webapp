@@ -8,15 +8,17 @@
         <section class="form-checkboxs-data__model">
           <div class="form-checkboxs-data__model-header">
             <UnnnicCheckbox
-              :modelValue="isModelSelected(String(modelName))"
+              :modelValue="isModelEnabled(String(modelName))"
               :textRight="getModelLabel(String(modelName))"
-              :indeterminate="isModelIndeterminate(String(modelName))"
-              @change="toggleModel(String(modelName), $event)"
+              @change="toggleModelEnabled(String(modelName), $event)"
             />
           </div>
 
           <div
-            v-if="getModelFieldsList(String(modelName)).length > 0"
+            v-if="
+              isModelEnabled(String(modelName)) &&
+              getModelFieldsList(String(modelName)).length > 0
+            "
             class="form-checkboxs-data__fields"
           >
             <template
@@ -55,8 +57,10 @@ import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 
 const exportDataStore = useExportData();
-const { setModelFields, updateModelFieldSelection } = exportDataStore;
-const { model_fields, selected_fields } = storeToRefs(exportDataStore);
+const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
+  exportDataStore;
+const { model_fields, selected_fields, enabled_models } =
+  storeToRefs(exportDataStore);
 const isLoading = ref(false);
 
 const fetchModelFields = async () => {
@@ -98,18 +102,8 @@ const isFieldSelected = (modelName: string, fieldName: string) => {
   return selected_fields.value[modelName]?.includes(fieldName) || false;
 };
 
-const isModelSelected = (modelName: string) => {
-  const modelFields = getModelFieldsList(modelName);
-  const selectedFields = selected_fields.value[modelName] || [];
-  return modelFields.length > 0 && selectedFields.length === modelFields.length;
-};
-
-const isModelIndeterminate = (modelName: string) => {
-  const modelFields = getModelFieldsList(modelName);
-  const selectedFields = selected_fields.value[modelName] || [];
-  return (
-    selectedFields.length > 0 && selectedFields.length < modelFields.length
-  );
+const isModelEnabled = (modelName: string) => {
+  return enabled_models.value.includes(modelName);
 };
 
 const toggleField = (
@@ -118,20 +112,6 @@ const toggleField = (
   selected: boolean,
 ) => {
   updateModelFieldSelection(modelName, fieldName, selected);
-};
-
-const toggleModel = (modelName: string, selected: boolean) => {
-  const modelFields = getModelFieldsList(modelName);
-
-  if (selected) {
-    const allFieldNames = modelFields.map((field) => field.name);
-    if (!selected_fields.value[modelName]) {
-      selected_fields.value[modelName] = [];
-    }
-    selected_fields.value[modelName] = allFieldNames;
-  } else {
-    selected_fields.value[modelName] = [];
-  }
 };
 
 const getModelLabel = (modelName: string) => {

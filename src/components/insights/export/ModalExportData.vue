@@ -3,25 +3,23 @@
     <UnnnicButton
       type="primary"
       size="large"
-      text="Export Data"
+      :text="$t('export_data.title')"
       @click="setIsRenderExportData(true)"
     />
     <UnnnicModalDialog
       data-test-id="modal-dialog"
       :modelValue="isRenderExportData"
       class="finish-onboarding-modal"
-      :primaryButtonProps="{ text: 'Ok' }"
-      hideSecondaryButton
+      :primaryButtonProps="{ text: $t('export_data.save_btn') }"
+      :secondaryButtonProps="{ text: $t('export_data.cancel_btn') }"
       showActionsDivider
       size="lg"
-      title="Export Data"
+      :title="$t('export_data.title')"
       showCloseIcon
       @primary-button-click="setIsRenderExportData(false)"
       @update:model-value="setIsRenderExportData(false)"
     >
-      <section class="finish-onboarding-modal__content">
-        <h1>Export Data</h1>
-      </section>
+      <FormExportData />
     </UnnnicModalDialog>
   </section>
 </template>
@@ -29,6 +27,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useExportData } from '@/store/modules/export/exportData';
+import FormExportData from './form/FormExportData.vue';
 
 const useExportDataStore = useExportData();
 const { setIsRenderExportData } = useExportDataStore;

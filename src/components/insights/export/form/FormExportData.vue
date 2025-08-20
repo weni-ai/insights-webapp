@@ -85,6 +85,43 @@
           />
         </section>
       </section>
+
+      <section class="export-data-form__format">
+        <UnnnicLabel :label="$t('export_data.select_format')" />
+        <UnnnicRadio
+          :data-testid="'radio-format-csv'"
+          :modelValue="selectedFormat"
+          value=".csv"
+          @update:model-value="updateFormat('.csv')"
+        >
+          {{ '.CSV' }}
+        </UnnnicRadio>
+        <UnnnicRadio
+          :data-testid="'radio-format-xlsx'"
+          :modelValue="selectedFormat"
+          value=".xlsx"
+          @update:model-value="updateFormat('.xlsx')"
+        >
+          {{ '.XLSX' }}
+        </UnnnicRadio>
+      </section>
+
+      <section class="export-data-form__terms">
+        <p class="export-data-form__terms-warning">
+          <UnnnicIcon
+            icon="alert-circle-1"
+            filled
+            next
+            scheme="feedback-yellow"
+            size="ant"
+          />{{ $t('export_data.warning_terms') }}
+        </p>
+        <UnnnicCheckbox
+          :modelValue="accept_terms"
+          :textRight="$t('export_data.accept_terms')"
+          @update:model-value="updateAcceptTerms"
+        />
+      </section>
     </section>
   </section>
 </template>
@@ -105,13 +142,19 @@ const {
   setAgents,
   setQueues,
   setTags,
+  setType,
+  setAcceptTerms,
 } = exportDataStore;
-const { open_chats, sectors, agents, queues, tags } =
+const { open_chats, sectors, agents, queues, tags, type, accept_terms } =
   storeToRefs(exportDataStore);
 
 const dateRange = ref({
   start: '',
   end: '',
+});
+
+const selectedFormat = computed(() => {
+  return type.value === '.csv' ? '.csv' : '.xlsx';
 });
 
 const selectedChatStatus = computed(() => {
@@ -129,7 +172,6 @@ const sectorsForDependency = computed(() => {
 const updateDateRange = (value: { start: string; end: string }) => {
   dateRange.value = value;
   setDateRange(value.start, value.end);
-  console.log('Date range updated:', value);
 };
 
 const updateChatStatus = (status: string) => {
@@ -153,6 +195,14 @@ const updateQueues = (value: string) => {
 
 const updateTags = (value: string) => {
   setTags(value);
+};
+
+const updateFormat = (format: '.csv' | '.xlsx') => {
+  setType(format);
+};
+
+const updateAcceptTerms = (value: boolean) => {
+  setAcceptTerms(value);
 };
 </script>
 
@@ -204,6 +254,29 @@ const updateTags = (value: string) => {
     display: flex;
     flex-direction: column;
     gap: $unnnic-spacing-sm;
+  }
+
+  &__format {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-sm;
+  }
+
+  &__terms {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-sm;
+  }
+
+  &__terms-warning {
+    display: flex;
+    gap: $unnnic-spacing-xs;
+
+    color: $unnnic-color-neutral-dark;
+    font-family: $unnnic-font-family-secondary;
+    font-size: $unnnic-font-size-body-gt;
+    font-weight: $unnnic-font-weight-regular;
+    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
   }
 }
 </style>

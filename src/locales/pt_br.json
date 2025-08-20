@@ -662,5 +662,34 @@
       "utm-revenue": "Valor total das vendas",
       "orders-placed": "Número de vendas"
     }
+  },
+  "export_data": {
+    "title": "Exportar dados",
+    "description": "Selecione os dados que deseja exportar. O arquivo completo será enviado para seu email após a confirmação.",
+    "select_data": {
+      "label": "Selecione o período para busca de dados",
+      "placeholder": "DD/MM/AAAA"
+    },
+    "chats_open": "Considerar chats abertos durante este período",
+    "chats_closed": "Considerar chats encerrados durante este período",
+    "filters": {
+      "sector": "Setor",
+      "select_sector": "Selecione o setor",
+      "agent": "Agente", 
+      "select_agent": "Selecione o agente",
+      "queue": "Fila",
+      "select_queue": "Selecione a fila",
+      "tag": "Tag",
+      "select_tag": "Selecione a tag",
+      "all_sectors": "Todos os setores",
+      "all_agents": "Todos os agentes",
+      "all_queues": "Todas as filas",
+      "all_tags": "Todas as tags"
+    },
+    "select_format": "Selecione o formato em que os dados serão exportados.",
+    "warning_terms": "Enquanto o exportação está sendo processada, a geração de novas exportações será bloqueada para todos os perfis no projeto. Por favor, confirme que você entende para continuar.",
+    "accept_terms": "Aceito os termos",
+    "save_btn": "Exportar dados",
+    "cancel_btn": "Cancelar"
   }
 }

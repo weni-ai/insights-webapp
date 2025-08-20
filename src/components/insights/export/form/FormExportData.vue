@@ -6,12 +6,33 @@
       </p>
     </header>
     <section class="export-data-form__content">
-      <UnnnicLabel :label="$t('export_data.select_data.label')" />
-      <FilterDate
-        v-model="dateRange"
-        :placeholder="$t('export_data.select_data.placeholder')"
-        @update:model-value="updateDateRange"
-      />
+      <section class="export-data-form__date-range">
+        <UnnnicLabel :label="$t('export_data.select_data.label')" />
+        <FilterDate
+          v-model="dateRange"
+          :placeholder="$t('export_data.select_data.placeholder')"
+          @update:model-value="updateDateRange"
+        />
+      </section>
+
+      <section class="export-data-form__chats-status">
+        <UnnnicRadio
+          :data-testid="'radio-chats-open'"
+          :modelValue="selectedChatStatus"
+          value="open"
+          @update:model-value="updateChatStatus('open')"
+        >
+          {{ $t('export_data.chats_open') }}
+        </UnnnicRadio>
+        <UnnnicRadio
+          :data-testid="'radio-chats-closed'"
+          :modelValue="selectedChatStatus"
+          value="closed"
+          @update:model-value="updateChatStatus('closed')"
+        >
+          {{ $t('export_data.chats_closed') }}
+        </UnnnicRadio>
+      </section>
 
       <section class="export-data-form__filters">
         <section class="export-data-form__filters-container">
@@ -63,25 +84,6 @@
             @update:model-value="updateTags"
           />
         </section>
-      </section>
-
-      <section class="export-data-form__chats-status">
-        <UnnnicRadio
-          :data-testid="'radio-chats-open'"
-          :modelValue="selectedChatStatus"
-          value="open"
-          @update:model-value="updateChatStatus('open')"
-        >
-          {{ $t('export_data.chats_open') }}
-        </UnnnicRadio>
-        <UnnnicRadio
-          :data-testid="'radio-chats-closed'"
-          :modelValue="selectedChatStatus"
-          value="closed"
-          @update:model-value="updateChatStatus('closed')"
-        >
-          {{ $t('export_data.chats_closed') }}
-        </UnnnicRadio>
       </section>
     </section>
   </section>
@@ -165,6 +167,15 @@ const updateTags = (value: string) => {
     display: flex;
     flex-direction: column;
     gap: $unnnic-spacing-sm;
+    :deep(.unnnic-label__label) {
+      margin: 0;
+    }
+  }
+
+  &__date-range {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-spacing-nano;
   }
 
   &__description {
@@ -181,10 +192,6 @@ const updateTags = (value: string) => {
     gap: $unnnic-spacing-nano;
     flex: 1 1 calc(50% - #{$unnnic-spacing-sm / 2});
     min-width: 0;
-
-    :deep(.unnnic-label__label) {
-      margin: 0;
-    }
   }
 
   &__filters {

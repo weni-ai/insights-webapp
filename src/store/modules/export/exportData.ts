@@ -1,5 +1,9 @@
+import { ModelFields } from '@/services/api/resources/export/export';
 import { defineStore } from 'pinia';
 
+interface SelectedFields {
+  [modelName: string]: string[];
+}
 interface DateRange {
   start_date: string;
   end_date: string;
@@ -22,6 +26,8 @@ interface ExportData {
   agents: Filter[];
   queues: Filter[];
   tags: Filter[];
+  model_fields: ModelFields;
+  selected_fields: SelectedFields;
 }
 
 export const useExportData = defineStore('exportData', {
@@ -37,6 +43,8 @@ export const useExportData = defineStore('exportData', {
     agents: [],
     queues: [],
     tags: [],
+    model_fields: {},
+    selected_fields: {},
   }),
 
   actions: {
@@ -71,6 +79,31 @@ export const useExportData = defineStore('exportData', {
     },
     setTags(tags: Filter[]) {
       this.tags = tags;
+    },
+    setModelFields(modelFields: ModelFields) {
+      this.model_fields = modelFields;
+    },
+    setSelectedFields(selectedFields: SelectedFields) {
+      this.selected_fields = selectedFields;
+    },
+    updateModelFieldSelection(
+      modelName: string,
+      fieldName: string,
+      selected: boolean,
+    ) {
+      if (!this.selected_fields[modelName]) {
+        this.selected_fields[modelName] = [];
+      }
+
+      if (selected) {
+        if (!this.selected_fields[modelName].includes(fieldName)) {
+          this.selected_fields[modelName].push(fieldName);
+        }
+      } else {
+        this.selected_fields[modelName] = this.selected_fields[
+          modelName
+        ].filter((field) => field !== fieldName);
+      }
     },
   },
 });

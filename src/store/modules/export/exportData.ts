@@ -13,6 +13,10 @@ interface ExportData {
   type: '.csv' | '.xlsx';
   export_data: object;
   accept_terms: boolean;
+  sectors: any[];
+  agents: string;
+  queues: string;
+  tags: string;
 }
 
 export const useExportData = defineStore('exportData', {
@@ -24,6 +28,10 @@ export const useExportData = defineStore('exportData', {
     type: '.csv',
     export_data: {},
     accept_terms: false,
+    sectors: [],
+    agents: '',
+    queues: '',
+    tags: '',
   }),
 
   actions: {
@@ -46,6 +54,18 @@ export const useExportData = defineStore('exportData', {
     },
     setAcceptTerms(accept_terms: boolean) {
       this.accept_terms = accept_terms;
+    },
+    setSectors(sectors: any[]) {
+      this.sectors = sectors;
+    },
+    setAgents(agents: string) {
+      this.agents = agents;
+    },
+    setQueues(queues: string) {
+      this.queues = queues;
+    },
+    setTags(tags: string) {
+      this.tags = tags;
     },
   },
 });

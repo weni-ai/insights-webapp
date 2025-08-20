@@ -47,19 +47,6 @@
         </section>
 
         <section class="export-data-form__filters-container">
-          <UnnnicLabel :label="$t('export_data.filters.agent')" />
-          <FilterSelect
-            v-model="agents"
-            :placeholder="$t('export_data.filters.select_agent')"
-            source="agents"
-            keyValueField="uuid"
-            :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
-            @update:model-value="updateAgents"
-          />
-        </section>
-
-        <section class="export-data-form__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.queue')" />
           <FilterSelect
             v-model="queues"
@@ -69,6 +56,19 @@
             :disabled="!hasSectorsSelected"
             :dependsOnValue="{ sectors: sectorsForDependency }"
             @update:model-value="updateQueues"
+          />
+        </section>
+
+        <section class="export-data-form__filters-container">
+          <UnnnicLabel :label="$t('export_data.filters.agent')" />
+          <FilterSelect
+            v-model="agents"
+            :placeholder="$t('export_data.filters.select_agent')"
+            source="agents"
+            keyValueField="uuid"
+            :disabled="!hasSectorsSelected"
+            :dependsOnValue="{ sectors: sectorsForDependency }"
+            @update:model-value="updateAgents"
           />
         </section>
 
@@ -85,6 +85,8 @@
           />
         </section>
       </section>
+
+      <FormCheckboxsData />
 
       <section class="export-data-form__format">
         <UnnnicLabel :label="$t('export_data.select_format')" />
@@ -130,6 +132,7 @@
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
+import FormCheckboxsData from './FormCheckboxsData.vue';
 import { useExportData } from '@/store/modules/export/exportData';
 import { storeToRefs } from 'pinia';
 import { ref, computed } from 'vue';

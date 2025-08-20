@@ -28,6 +28,7 @@ interface ExportData {
   tags: Filter[];
   model_fields: ModelFields;
   selected_fields: SelectedFields;
+  enabled_models: string[];
 }
 
 export const useExportData = defineStore('exportData', {
@@ -45,6 +46,7 @@ export const useExportData = defineStore('exportData', {
     tags: [],
     model_fields: {},
     selected_fields: {},
+    enabled_models: [],
   }),
 
   actions: {
@@ -103,6 +105,19 @@ export const useExportData = defineStore('exportData', {
         this.selected_fields[modelName] = this.selected_fields[
           modelName
         ].filter((field) => field !== fieldName);
+      }
+    },
+    toggleModelEnabled(modelName: string, enabled: boolean) {
+      if (enabled) {
+        if (!this.enabled_models.includes(modelName)) {
+          this.enabled_models.push(modelName);
+        }
+      } else {
+        this.enabled_models = this.enabled_models.filter(
+          (model) => model !== modelName,
+        );
+
+        this.selected_fields[modelName] = [];
       }
     },
   },

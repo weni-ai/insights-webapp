@@ -42,6 +42,7 @@
             :placeholder="$t('export_data.filters.select_sector')"
             source="sectors"
             keyValueField="uuid"
+            :allLabel="$t('export_data.filters.all_sectors')"
             @update:model-value="updateSectors"
           />
         </section>
@@ -53,6 +54,7 @@
             :placeholder="$t('export_data.filters.select_queue')"
             source="queues"
             keyValueField="uuid"
+            :allLabel="$t('export_data.filters.all_queues')"
             :disabled="!hasSectorsSelected"
             :dependsOnValue="{ sectors: sectorsForDependency }"
             @update:model-value="updateQueues"
@@ -66,6 +68,7 @@
             :placeholder="$t('export_data.filters.select_agent')"
             source="agents"
             keyValueField="uuid"
+            :allLabel="$t('export_data.filters.all_agents')"
             :disabled="!hasSectorsSelected"
             :dependsOnValue="{ sectors: sectorsForDependency }"
             @update:model-value="updateAgents"
@@ -79,6 +82,7 @@
             :placeholder="$t('export_data.filters.select_tag')"
             source="tags"
             keyValueField="uuid"
+            :allLabel="$t('export_data.filters.all_tags')"
             :disabled="!hasSectorsSelected"
             :dependsOnValue="{ sectors: sectorsForDependency }"
             @update:model-value="updateTags"

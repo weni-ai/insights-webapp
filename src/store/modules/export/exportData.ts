@@ -5,6 +5,11 @@ interface DateRange {
   end_date: string;
 }
 
+interface Filter {
+  value: string;
+  label: string;
+}
+
 interface ExportData {
   isRenderExportData: boolean;
   date_range: DateRange;
@@ -13,10 +18,10 @@ interface ExportData {
   type: '.csv' | '.xlsx';
   export_data: object;
   accept_terms: boolean;
-  sectors: any[];
-  agents: string;
-  queues: string;
-  tags: string;
+  sectors: Filter[];
+  agents: Filter[];
+  queues: Filter[];
+  tags: Filter[];
 }
 
 export const useExportData = defineStore('exportData', {
@@ -29,9 +34,9 @@ export const useExportData = defineStore('exportData', {
     export_data: {},
     accept_terms: false,
     sectors: [],
-    agents: '',
-    queues: '',
-    tags: '',
+    agents: [],
+    queues: [],
+    tags: [],
   }),
 
   actions: {
@@ -55,16 +60,16 @@ export const useExportData = defineStore('exportData', {
     setAcceptTerms(accept_terms: boolean) {
       this.accept_terms = accept_terms;
     },
-    setSectors(sectors: any[]) {
+    setSectors(sectors: Filter[]) {
       this.sectors = sectors;
     },
-    setAgents(agents: string) {
+    setAgents(agents: Filter[]) {
       this.agents = agents;
     },
-    setQueues(queues: string) {
+    setQueues(queues: Filter[]) {
       this.queues = queues;
     },
-    setTags(tags: string) {
+    setTags(tags: Filter[]) {
       this.tags = tags;
     },
   },

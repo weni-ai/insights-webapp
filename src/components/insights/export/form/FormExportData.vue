@@ -48,7 +48,7 @@
 
         <section class="export-data-form__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.queue')" />
-          <FilterSelect
+          <FilterMultiSelect
             v-model="queues"
             :placeholder="$t('export_data.filters.select_queue')"
             source="queues"
@@ -61,7 +61,7 @@
 
         <section class="export-data-form__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.agent')" />
-          <FilterSelect
+          <FilterMultiSelect
             v-model="agents"
             :placeholder="$t('export_data.filters.select_agent')"
             source="agents"
@@ -74,7 +74,7 @@
 
         <section class="export-data-form__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.tag')" />
-          <FilterSelect
+          <FilterMultiSelect
             v-model="tags"
             :placeholder="$t('export_data.filters.select_tag')"
             source="tags"
@@ -130,7 +130,6 @@
 
 <script setup lang="ts">
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
-import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 import FormCheckboxsData from './FormCheckboxsData.vue';
 import { useExportData } from '@/store/modules/export/exportData';
@@ -183,20 +182,20 @@ const updateChatStatus = (status: string) => {
 
 const updateSectors = (value: any[]) => {
   setSectors(value);
-  setAgents('');
-  setQueues('');
-  setTags('');
+  setAgents([]);
+  setQueues([]);
+  setTags([]);
 };
 
-const updateAgents = (value: string) => {
+const updateAgents = (value: any[]) => {
   setAgents(value);
 };
 
-const updateQueues = (value: string) => {
+const updateQueues = (value: any[]) => {
   setQueues(value);
 };
 
-const updateTags = (value: string) => {
+const updateTags = (value: any[]) => {
   setTags(value);
 };
 

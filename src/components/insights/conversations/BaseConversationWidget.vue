@@ -152,6 +152,12 @@ const handleTabChange = (tab: Tab) => {
       font-weight: $unnnic-font-weight-bold;
       font-style: normal;
       line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 500px;
+      margin-right: $unnnic-spacing-xs;
     }
 
     .header__actions {

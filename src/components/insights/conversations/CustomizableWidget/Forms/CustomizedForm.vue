@@ -1,5 +1,41 @@
 <template>
   <section class="customized-form">
+    <p
+      class="customized-form__description"
+      data-testid="customized-form-description"
+    >
+      {{
+        $t('conversations_dashboard.customize_your_dashboard.set_widget_name')
+      }}
+    </p>
+    <section>
+      <UnnnicLabel
+        data-testid="customized-form-label-widget-name"
+        :label="
+          $t(
+            'conversations_dashboard.customize_your_dashboard.label_widget_name',
+          )
+        "
+      />
+      <UnnnicInput
+        data-testid="customized-form-input-widget-name"
+        :placeholder="
+          $t(
+            'conversations_dashboard.customize_your_dashboard.widget_name_description',
+          )
+        "
+        :modelValue="getCustomForm.widget_name"
+        @update:model-value="handleChangeWidgetName"
+      />
+    </section>
+
+    <p
+      class="customized-form__description"
+      data-testid="customized-form-description"
+    >
+      {{ $t('conversations_dashboard.customize_your_dashboard.select_data') }}
+    </p>
+
     <section>
       <UnnnicLabel
         data-testid="customized-form-label-select-agent"
@@ -50,8 +86,13 @@ import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 const customWidgets = useCustomWidgets();
-const { getCustomForm, setCustomFormAgent, setCustomFormKey, resetCustomForm } =
-  customWidgets;
+const {
+  getCustomForm,
+  setCustomFormAgent,
+  setCustomFormKey,
+  setCustomFormWidgetName,
+  resetCustomForm,
+} = customWidgets;
 
 const { customForm } = storeToRefs(customWidgets);
 const project = useProject();
@@ -78,6 +119,10 @@ onUnmounted(() => {
 
 const handleChangeAgent = (agent: any) => {
   setCustomFormAgent(agent[0].value, agent[0].label);
+};
+
+const handleChangeWidgetName = (widgetName: string) => {
+  setCustomFormWidgetName(widgetName);
 };
 
 const handleChangeKey = (key: string) => {

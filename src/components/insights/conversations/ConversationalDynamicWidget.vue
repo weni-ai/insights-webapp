@@ -1,7 +1,7 @@
 <template>
   <section class="conversational-dynamic-widget">
     <ProgressWidget
-      :title="widgetType?.toUpperCase() || '-'"
+      :title="titleWidget"
       :actions="actions"
       :progressItems="renderProgressItems"
       :card="renderCard"
@@ -287,6 +287,16 @@ const isExpanded = computed(() => {
   return false;
 });
 
+const titleWidget = computed(() => {
+  const defaultTitle = widgetType.value?.toUpperCase() || '-';
+
+  if (props.type === 'custom') {
+    return getCustomWidgetByUuid(props.uuid as string)?.name || defaultTitle;
+  }
+
+  return defaultTitle;
+});
+
 const handleOpenExpanded = () => {
   isSeeAllDrawerOpen.value = true;
 };
@@ -313,12 +323,16 @@ onMounted(() => {
   }
 });
 
-const actions = [
+const actions = computed(() => [
   {
     icon: 'edit_square',
     text: t(
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: props.type.toUpperCase() },
+      {
+        type: ['csat', 'nps'].includes(props.type)
+          ? props.type.toUpperCase()
+          : '',
+      },
     ),
     onClick: () => handleOpenDrawer(false),
   },
@@ -328,7 +342,7 @@ const actions = [
     onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
   },
-];
+]);
 
 const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   const defaultColors = {
@@ -410,6 +424,7 @@ const handleOpenDrawer = (isNew: boolean) => {
         agent_name: '',
         key: customWidget?.config?.datalake_config?.key,
         widget_uuid: customWidget?.uuid,
+        widget_name: customWidget?.name,
       });
     }
   }

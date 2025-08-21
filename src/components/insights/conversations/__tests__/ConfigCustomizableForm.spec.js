@@ -20,6 +20,7 @@ const createWrapper = (props = {}) => {
     global: {
       stubs: {
         SentimentAnalysisForm: true,
+        CustomizedForm: true,
       },
       mocks: {
         $tc: (key) => key,
@@ -33,10 +34,10 @@ describe('ConfigCustomizableForm', () => {
 
   const configCustomizableFormTitle = () =>
     wrapper.find('[data-testid="config-customizable-form-title"]');
-  const configCustomizableFormDescription = () =>
-    wrapper.find('[data-testid="config-customizable-form-description"]');
   const sentimentAnalysisForm = () =>
     wrapper.findComponent({ name: 'SentimentAnalysisForm' });
+  const customizedForm = () =>
+    wrapper.findComponent({ name: 'CustomizedForm' });
 
   describe('Component Structure', () => {
     beforeEach(() => {
@@ -45,7 +46,6 @@ describe('ConfigCustomizableForm', () => {
 
     it('should render component with correct structure', () => {
       expect(configCustomizableFormTitle().exists()).toBe(true);
-      expect(configCustomizableFormDescription().exists()).toBe(true);
       expect(sentimentAnalysisForm().exists()).toBe(true);
     });
 
@@ -62,10 +62,10 @@ describe('ConfigCustomizableForm', () => {
       );
     });
 
-    it('should display correct description with type interpolation', () => {
-      expect(configCustomizableFormDescription().text()).toBe(
-        'conversations_dashboard.customize_your_dashboard.config_csat_or_nps_description',
-      );
+    it('should render CustomizedForm when type is custom', () => {
+      wrapper = createWrapper({ type: 'custom' });
+      expect(customizedForm().exists()).toBe(true);
+      expect(sentimentAnalysisForm().exists()).toBe(false);
     });
 
     it('should pass correct props to SentimentAnalysisForm', () => {

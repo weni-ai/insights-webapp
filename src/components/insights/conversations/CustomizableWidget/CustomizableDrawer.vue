@@ -124,7 +124,8 @@ const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
   storeToRefs(useConversational());
 
 const customWidgets = useCustomWidgets();
-const { isEnabledCreateCustomForm } = storeToRefs(customWidgets);
+const { isEnabledCreateCustomForm, isLoadingSaveNewCustomWidget } =
+  storeToRefs(customWidgets);
 const { saveCustomWidget } = customWidgets;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
@@ -150,6 +151,10 @@ async function saveWidgetConfigs() {
 }
 
 const isLoadingSaveButton = computed(() => {
+  if (drawerWidgetType.value === 'custom') {
+    return isLoadingSaveNewCustomWidget.value;
+  }
+
   if (isNewDrawerCustomizable.value) {
     return isLoadingSaveNewWidget.value;
   }

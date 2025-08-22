@@ -11,6 +11,9 @@
         <FilterDate
           v-model="dateRange"
           :placeholder="$t('export_data.select_data.placeholder')"
+          :options="shortCutOptions"
+          :minDate="handleMinDate()"
+          :maxDate="handleMaxDate()"
           @update:model-value="updateDateRange"
         />
       </section>
@@ -139,6 +142,8 @@ import FormCheckboxsData from './FormCheckboxsData.vue';
 import { useExportData } from '@/store/modules/export/exportData';
 import { storeToRefs } from 'pinia';
 import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { getLastNDays, getTodayDate } from '@/utils/time';
 
 const exportDataStore = useExportData();
 const {
@@ -209,6 +214,49 @@ const updateFormat = (format: '.csv' | '.xlsx') => {
 
 const updateAcceptTerms = (value: boolean) => {
   setAcceptTerms(value);
+};
+
+const { t } = useI18n();
+
+const shortCutOptions = computed(() => [
+  {
+    name: t('export_data.select_data.shortcuts.last_7_days'),
+    id: 'last-7-days',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.last_14_days'),
+    id: 'last-14-days',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.last_30_days'),
+    id: 'last-30-days',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.last_60_days'),
+    id: 'last-60-days',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.last_90_days'),
+    id: 'last-90-days',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.current_month'),
+    id: 'current-month',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.previous_month'),
+    id: 'previous-month',
+  },
+]);
+
+const handleMinDate = () => {
+  const minDate = getLastNDays(92).start;
+  return minDate;
+};
+
+const handleMaxDate = () => {
+  const maxDate = getTodayDate().start;
+  return maxDate;
 };
 </script>
 

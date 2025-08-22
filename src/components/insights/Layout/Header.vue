@@ -35,7 +35,7 @@
           v-if="isRenderInsightButton"
           data-testid="insights-layout-header-generate-insight-button"
         />
-        <ModalExportData />
+        <ModalExportData v-if="isRenderExportButton" />
       </section>
     </section>
     <section
@@ -212,10 +212,6 @@ export default {
       this.setCurrentDashboard(
         dashboardRelativeToPath || this.dashboardDefault,
       );
-    },
-
-    handleExport() {
-      this.exportData.setIsRenderExportData(true);
     },
   },
 };

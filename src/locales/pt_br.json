@@ -669,8 +669,17 @@
     "feedback": "Você receberá por email em breve. Lembre-se de verificar sua pasta de spam.",
     "feedback_title": "Processando exportação",
     "select_data": {
-      "label": "Selecione o período para busca de dados",
-      "placeholder": "DD/MM/AAAA"
+      "label": "Selecione o período para busca de dados (máximo de 92 dias entre a data inicial e a data final)",
+      "placeholder": "DD/MM/AAAA",
+      "shortcuts": {
+        "last_7_days": "Últimos 7 dias",
+        "last_14_days": "Últimos 14 dias",
+        "last_30_days": "Últimos 30 dias",
+        "last_60_days": "Últimos 60 dias",
+        "last_90_days": "Últimos 90 dias",
+        "current_month": "Mês atual",
+        "previous_month": "Mês anterior"
+      }
     },
     "chats_open": "Considerar chats abertos durante este período",
     "chats_closed": "Considerar chats encerrados durante este período",

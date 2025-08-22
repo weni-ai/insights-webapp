@@ -666,6 +666,8 @@
   "export_data": {
     "title": "Export data",
     "description": "Select data to export. The full file will be sent to your email after confirmation.",
+    "feedback": "You will receive it by email shortly. Remember to check your spam folder.",
+    "feedback_title": "Processing export",
     "select_data": {
       "label": "Select the time for data search",
       "placeholder": "MM/MM/MMM"

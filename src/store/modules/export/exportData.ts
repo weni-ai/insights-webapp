@@ -16,6 +16,7 @@ interface Filter {
 
 interface ExportData {
   isRenderExportData: boolean;
+  isRenderExportDataFeedback: boolean;
   date_range: DateRange;
   open_chats: boolean;
   closed_chats: boolean;
@@ -34,6 +35,7 @@ interface ExportData {
 export const useExportData = defineStore('exportData', {
   state: (): ExportData => ({
     isRenderExportData: false,
+    isRenderExportDataFeedback: false,
     date_range: {} as DateRange,
     open_chats: true,
     closed_chats: false,
@@ -52,6 +54,9 @@ export const useExportData = defineStore('exportData', {
   actions: {
     setIsRenderExportData(isRenderExportData: boolean) {
       this.isRenderExportData = isRenderExportData;
+    },
+    setIsRenderExportDataFeedback(isRenderExportDataFeedback: boolean) {
+      this.isRenderExportDataFeedback = isRenderExportDataFeedback;
     },
     setDateRange(start_date: string, end_date: string) {
       this.date_range.start_date = start_date;

@@ -21,6 +21,20 @@
     >
       <FormExportData />
     </UnnnicModalDialog>
+    <UnnnicModalDialog
+      data-test-id="modal-dialog-feedback"
+      :modelValue="isRenderExportDataFeedback"
+      class="finish-onboarding-modal"
+      :title="t('export_data.feedback_title')"
+      type="success"
+      size="md"
+      showCloseIcon
+      @update:model-value="setIsRenderExportDataFeedback(false)"
+    >
+      <p class="export-data-feedback__text">
+        {{ $t('export_data.feedback') }}
+      </p>
+    </UnnnicModalDialog>
   </section>
 </template>
 
@@ -32,12 +46,22 @@ import FormExportData from './form/FormExportData.vue';
 
 const { t } = useI18n();
 const useExportDataStore = useExportData();
-const { setIsRenderExportData } = useExportDataStore;
-const { isRenderExportData } = storeToRefs(useExportDataStore);
+const { setIsRenderExportData, setIsRenderExportDataFeedback } =
+  useExportDataStore;
+const { isRenderExportData, isRenderExportDataFeedback } =
+  storeToRefs(useExportDataStore);
 </script>
 
 <style lang="scss" scoped>
 .modal-export-data {
   display: flex;
+}
+
+.export-data-feedback__text {
+  font-family: $unnnic-font-family-secondary;
+  color: $unnnic-color-neutral-cloudy;
+  font-size: $unnnic-font-size-body-gt;
+  font-weight: $unnnic-font-weight-regular;
+  line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
 }
 </style>

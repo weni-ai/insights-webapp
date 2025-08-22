@@ -666,6 +666,8 @@
   "export_data": {
     "title": "Exportar datos",
     "description": "Seleccione los datos que desea exportar. El archivo completo será enviado a su correo electrónico después de la confirmación.",
+    "feedback": "Recibirá un correo electrónico en breve. Recuerde verificar su carpeta de spam.",
+    "feedback_title": "Procesando exportación",
     "select_data": {
       "label": "Seleccione el período para buscar datos",
       "placeholder": "DD/MM/AAAA"

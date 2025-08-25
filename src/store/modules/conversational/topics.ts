@@ -198,7 +198,6 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
               'conversations_dashboard.form_topic.success_save_topics_or_subtopics',
             ),
           );
-          await this.loadFormTopics();
           return true;
         } else {
           throw new Error('Some topics failed to save');

@@ -35,6 +35,7 @@
           v-if="isRenderInsightButton"
           data-testid="insights-layout-header-generate-insight-button"
         />
+        <ModalExportData v-if="isRenderExportButton" />
       </section>
     </section>
     <section
@@ -70,6 +71,7 @@ import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
 import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
+import ModalExportData from '../export/ModalExportData.vue';
 
 import moment from 'moment';
 
@@ -82,6 +84,7 @@ export default {
     InsightsLayoutHeaderFilters,
     HeaderDashboardSettings,
     HeaderGenerateInsightButton,
+    ModalExportData,
   },
   computed: {
     ...mapState(useDashboards, [
@@ -90,6 +93,7 @@ export default {
       'dashboardDefault',
       'currentDashboardFilters',
       'appliedFilters',
+      'exportData',
     ]),
     ...mapState(useWidgets, {
       isExpansiveMode: (store) => {
@@ -102,6 +106,14 @@ export default {
     }),
 
     isRenderInsightButton() {
+      return this.isHumanServiceDashboard;
+    },
+
+    isRenderExportButton() {
+      return this.isHumanServiceDashboard;
+    },
+
+    isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
     },
 

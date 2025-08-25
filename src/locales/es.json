@@ -676,5 +676,76 @@
       "utm-revenue": "Valor total de las ventas",
       "orders-placed": "Número de ventas"
     }
+  },
+  "export_data": {
+    "title": "Exportar datos",
+    "description": "Seleccione los datos que desea exportar. El archivo completo será enviado a su correo electrónico después de la confirmación.",
+    "feedback": "Recibirá un correo electrónico en breve. Recuerde verificar su carpeta de spam.",
+    "feedback_title": "Procesando exportación",
+    "model_labels": {
+      "sectors": "Sectores",
+      "queues": "Colas",
+      "rooms": "Salas",
+      "users": "Agentes",
+      "sector_tags": "Etiquetas",
+      "contacts": "Contactos"
+    },
+    "field_labels": {
+      "config": "Configuración",
+      "name": "Nombre",
+      "rooms_limit": "Límite de salas",
+      "is_delete": "Está eliminado",
+      "user": "Usuario",
+      "ended_at": "Finalizado en",
+      "ended_by": "Finalizado por",
+      "is_active": "Está activo",
+      "is_wating": "Está esperando",
+      "protocol": "Protocolo",
+      "urn": "URN",
+      "full_transfer_history": "Historial completo de transferencia",
+      "service_chat": "Chat de servicio",
+      "custom_fields": "Campos personalizados",
+      "contact": "Contacto",
+      "tags": "Etiquetas",
+      "last_name": "Apellido",
+      "email": "Correo electrónico",
+      "first_name": "Nombre",
+      "phone": "Teléfono",
+      "status": "Estado"
+    },
+    "select_data": {
+      "label": "Seleccione el período para buscar datos (máximo de 92 días entre la fecha inicial y la fecha final)",
+      "placeholder": "DD/MM/AAAA",
+      "shortcuts": {
+        "last_7_days": "Últimos 7 días",
+        "last_14_days": "Últimos 14 días",
+        "last_30_days": "Últimos 30 días",
+        "last_60_days": "Últimos 60 días",
+        "last_90_days": "Últimos 90 días",
+        "current_month": "Mes actual",
+        "previous_month": "Mes anterior"
+      }
+    },
+    "chats_open": "Considerar chats abiertos durante este período",
+    "chats_closed": "Considerar chats cerrados durante este período",
+    "filters": {
+      "sector": "Sector",
+      "select_sector": "Seleccione el sector",
+      "agent": "Agente", 
+      "select_agent": "Seleccione el agente",
+      "queue": "Cola",
+      "select_queue": "Seleccione la cola",
+      "tag": "Etiqueta",
+      "select_tag": "Seleccione la etiqueta",
+      "all_sectors": "Todos los sectores",
+      "all_agents": "Todos los agentes",
+      "all_queues": "Todas las colas",
+      "all_tags": "Todas las etiquetas"
+    },
+    "select_format": "Seleccione el formato en que los datos serán exportados.",
+    "warning_terms": "Mientras se procesa la exportación, la generación de nuevas exportaciones estará bloqueada para todos los perfiles en el proyecto. Por favor, confirme que entiende para continuar.",
+    "accept_terms": "Entiendo",
+    "save_btn": "Exportar datos",
+    "cancel_btn": "Cancelar"
   }
 }

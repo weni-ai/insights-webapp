@@ -117,7 +117,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
         isNew: true,
         subTopics: topic.subTopics || [],
       };
-      this.topics.push(newTopic);
+      this.topics.unshift(newTopic);
     },
 
     updateTopic(

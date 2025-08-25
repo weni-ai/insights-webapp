@@ -74,6 +74,7 @@ describe('FilterMultiSelect', () => {
         dependsOn: undefined,
         dependsOnValue: null,
         keyValueField: '',
+        allLabel: '',
       });
     });
   });

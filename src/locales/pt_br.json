@@ -19,7 +19,7 @@
     }
   },
   "conversations_dashboard": {
-    "title": "Atendimento",
+    "title": "Conversacional",
     "conversations": "conversas",
     "artificial_intelligence": "IA",
     "human_support": "Atendimento humano",
@@ -27,63 +27,64 @@
     "unclassified": "Não classificado",
     "header": {
       "total": "Total de conversas",
-      "resolved": "Resolvidas",
-      "unresolved": "Não resolvidas",
+      "resolved": "Resoluções Otimizadas",
+      "unresolved": "Outras Conclusões",
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
         "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
-        "resolved": "Conversa resolvida: O contato interagiu com perguntas/solicitações e recebeu respostas que ajudaram a completar a demanda (total ou parcial).",
-        "unresolved": "Conversa não resolvida: O contato interagiu com perguntas/solicitações, mas a conversa não resolveu a demanda (total ou parcial).",
+        "resolved": "Conversas que foram concluídas com uma resolução clara e efetiva para o contato.",
+        "unresolved": "Conversas que chegaram ao fim de outras formas, como interações rápidas, cumprimentos, abandonos ou casos que seguiram outro fluxo sem resolução direta.",
         "unengaged": "Conversa sem engajamento útil: A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
         "transferred": "Inclui conversas (resolvidas ou não) que foram encaminhadas para atendimento humano."
       }
     },
     "form_topic": {
-      "add_topic": "Adicionar tópico",
-      "add_sub_topic": "Adicionar sub-tópico",
-      "title": "Editar tópicos e sub-tópicos",
+      "add_topic": "Adicionar assunto",
+      "add_sub_topic": "Adicionar subassunto",
+      "title": "Editar assuntos e subassuntos",
       "cancel": "Cancelar",
       "save": "Salvar alterações",
-      "new_topic": "Novo tópico",
-      "topic_name": "Nome do tópico",
+      "new_topic": "Novo assunto",
+      "topic_name": "Nome do assunto",
       "context": "Contexto",
       "context_description": "Adicione um contexto para melhorar a classificação da IA",
-      "sub_topics": "Sub-tópicos",
-      "new_sub_topic": "Novo sub-tópico",
-      "sub_topics_added": "{sub_topics} sub-tópicos adicionados",
-      "success_save_topics_or_subtopics": "Tópicos ou sub-tópicos adicionados com sucesso",
-      "error_save_topics_or_subtopics": "Erro ao salvar tópicos ou sub-tópicos",
-      "success_remove_topic": "Tópico removido com sucesso",
-      "error_remove_topic": "Erro ao remover tópico",
-      "success_remove_subtopic": "Sub-tópico removido com sucesso",
-      "error_remove_subtopic": "Erro ao remover sub-tópico",
+      "sub_topics": "Subassuntos",
+      "new_sub_topic": "Novo subassunto",
+      "sub_topics_added": "{sub_topics} subassuntos adicionados",
+      "success_save_topics_or_subtopics": "Assuntos ou subassuntos adicionados com sucesso",
+      "error_save_topics_or_subtopics": "Erro ao salvar assuntos ou subassuntos",
+      "success_remove_topic": "Assunto removido com sucesso",
+      "error_remove_topic": "Erro ao remover assunto",
+      "success_remove_subtopic": "Subassunto removido com sucesso",
+      "error_remove_subtopic": "Erro ao remover subassunto",
       "remove_modal": {
-        "title_remove_topic": "Remover tópico",
-        "title_remove_sub_topic": "Remover sub-tópico",
-        "description_remove_topic": "Tem certeza que deseja remover o tópico {topic}? Todos os sub-tópicos também serão removidos, e qualquer dado previamente associado a este tópico será desclassificado e não mais acessível através desta classificação.",
-        "description_remove_sub_topic": "Tem certeza que deseja remover o sub-tópico {sub_topic}? Qualquer dado previamente associado a este sub-tópico será desclassificado e não mais acessível através desta classificação.",
+        "title_remove_topic": "Remover assunto",
+        "title_remove_sub_topic": "Remover subassunto",
+        "description_remove_topic": "Tem certeza que deseja remover o assunto {topic}? Todos os subassuntos também serão removidos, e qualquer dado previamente associado a este assunto será desclassificado e não mais acessível através desta classificação.",
+        "description_remove_sub_topic": "Tem certeza que deseja remover o subassunto {sub_topic}? Qualquer dado previamente associado a este subassunto será desclassificado e não mais acessível através desta classificação.",
         "remove": "Remover",
         "cancel": "Cancelar"
       },
       "cancel_modal": {
-        "title": "Cancelar edição de tópicos",
+        "title": "Cancelar edição de assuntos",
         "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
         "cancel": "Cancelar",
         "continue": "Continuar"
       }
     },
     "most_talked_about_topics": {
-      "title": "Tópicos mais falados",
+      "title": "Assuntos mais falados",
       "see_all": "Ver todos",
-      "subtopics": "subtópicos",
-      "no_topics": "Nenhum tópico ainda",
-      "no_topics_description": "Adicione um tópico para começar a analisar as conversas",
-      "add_first_topic": "Adicione seu primeiro tópico",
-      "edit_topics_and_subtopics": "Editar tópicos e subtópicos"
+      "subtopics": "Subassuntos",
+      "no_topics": "Nenhum assunto ainda",
+      "no_topics_description": "Adicione um assunto para começar a analisar as conversas",
+      "add_first_topic": "Adicione seu primeiro assunto",
+      "edit_topics_and_subtopics": "Editar Assuntos e Subassuntos"
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "custom": "Gráfico de barras horizontal",
     "reviews": "avaliações",
     "csat_widget": {
       "very_satisfied": "Muito satisfeito",
@@ -117,11 +118,15 @@
       "add_widget": "Adicionar widget",
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
       "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
-      "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar:",
+      "config_csat_or_nps_description": "Defina select_keyqual {type} você deseja acompanhar:",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
       "select_agent": "Selecionar agente",
+      "select_key": "Digite a chave",
+      "set_widget_name": "Definir nome do widget",
+      "label_widget_name": "Nome do widget",
+      "widget_name_description": "Digite o nome do widget aqui",
       "your_agent_is_active": "Seu agente está ativo!",
       "return": "Voltar",
       "save_changes": "Salvar alterações",
@@ -141,6 +146,16 @@
         "description": "Tem certeza que deseja remover o widget {type}?",
         "remove": "Remover",
         "cancel": "Cancelar"
+      },
+      "tabs": {
+        "sentiment_analysis": "Análise de sentimento",
+        "customized": "Personalizado"
+      },
+      "select_chart_type": "Selecione o tipo de gráfico:",
+      "select_data": "Selecione os dados que você deseja acompanhar:",
+      "horizontal_bar_chart": {
+        "title": "Gráfico de barras horizontal",
+        "description": "Uma visualização de dados onde as barras estão orientadas horizontalmente, com o comprimento de cada barra indicando a magnitude do seu valor correspondente."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -280,7 +295,9 @@
       "placeholder": "Selecione tag"
     }
   },
+  "key": "Chave",
   "filter-by": "Período:",
+  "see_more": "Ver mais",
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",

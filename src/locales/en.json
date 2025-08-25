@@ -19,7 +19,7 @@
     }
   },
   "conversations_dashboard": {
-    "title": "Support",
+    "title": "Conversational",
     "conversations": "conversations",
     "artificial_intelligence": "AI",
     "human_support": "Human Support",
@@ -27,14 +27,14 @@
     "unclassified": "Unclassified",
     "header": {
       "total": "Total Conversations",
-      "resolved": "Resolved",
-      "unresolved": "Unresolved",
+      "resolved": "Optimized Resolutions",
+      "unresolved": "Other Conclusions",
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is  counted 24 hours after the contact's first message.",
-        "resolved": "Resolved Conversation: The contact interacted with questions/requests and received responses that helped complete the demand (total or partial).",
-        "unresolved": "Unresolved Conversation: The contact interacted with questions/requests,  but the conversation didn't resolve the demand (totally or partially).",
+        "resolved": "Conversations that were concluded with a clear and effective resolution for the contact.",
+        "unresolved": "Conversations that ended in other ways, such as quick interactions, greetings, drop-offs, or cases that followed a different flow without a direct resolution.",
         "unengaged": "Conversation without useful engagement: The conversation was limited to greetings, emojis, or was ended without relevant interaction.",
         "transferred": "Includes conversations (resolved or unresolved) that were forwarded to a human agent."
       }
@@ -84,6 +84,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "custom": "Horizontal bar chart",
     "reviews": "reviews",
     "csat_widget": {
       "very_satisfied": "Very satisfied",
@@ -122,6 +123,10 @@
       "ai_support": "AI",
       "activate_agent": "Activate agent",
       "select_agent": "Select agent",
+      "select_key": "Enter the key",
+      "set_widget_name": "Set a name for the widget:",
+      "label_widget_name": "Widget name",
+      "widget_name_description": "Enter the widget name here",
       "your_agent_is_active": "Your agent is active!",
       "return": "Return",
       "save_changes": "Save changes",
@@ -141,6 +146,16 @@
         "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
         "cancel": "Cancel"
+      },
+      "tabs": {
+        "sentiment_analysis": "Sentiment analysis",
+        "customized": "Customized"
+      },
+      "select_chart_type": "Select a chart type:",
+      "select_data": "Select the data you want to track:",
+      "horizontal_bar_chart": {
+        "title": "Horizontal bar chart",
+        "description": "A visual representation of data where bars are oriented horizontally, with the length of each bar indicating the magnitude of its corresponding value."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -280,7 +295,9 @@
       "placeholder": "Select tag"
     }
   },
+  "key": "Key",
   "filter-by": "Period:",
+  "see_more": "See more",
   "reload": "Reload",
   "agent": "Agent",
   "online_agents": "Online agents",

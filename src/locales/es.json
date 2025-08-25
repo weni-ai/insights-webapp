@@ -19,7 +19,7 @@
     }
   },
   "conversations_dashboard": {
-    "title": "Atención",
+    "title": "Conversacional",
     "conversations": "conversaciones",
     "artificial_intelligence": "IA",
     "human_support": "Atención humana",
@@ -27,14 +27,14 @@
     "unclassified": "No clasificado",
     "header": {
       "total": "Total de conversaciones",
-      "resolved": "Resueltas",
-      "unresolved": "No resueltas",
+      "resolved": "Resoluciones Optimizadas",
+      "unresolved": "Otras Conclusiones",
       "unengaged": "No engajadas",
       "transferred": "Transferidas para atención humana",
       "tooltips": {
         "total": "Total de conversaciones iniciadas en el período. Una conversa se cuenta 24 horas después del primer mensaje del contacto.",
-        "resolved": "Conversación resuelta: El contacto interaccionó con preguntas/solicitudes y recibió respuestas que ayudaron a completar la demanda (total o parcial).",
-        "unresolved": "Conversación no resuelta: El contacto interaccionó con preguntas/solicitudes, pero la conversa no resolvió la demanda (total o parcial).",
+        "resolved": "Conversaciones que fueron concluidas con una resolución clara y efectiva para el contacto.",
+        "unresolved": "Conversaciones que terminaron de otras formas, como interacciones rápidas, saludos, abandonos o casos que siguieron otro flujo sin una resolución directa.",
         "unengaged": "Conversación sin engajamiento útil: La conversa se limitó a saludos, emojis o fue cerrada sin interacción relevante.",
         "transferred": "Incluye conversaciones (resueltas o no) que fueron transferidas a atención humana."
       }
@@ -84,6 +84,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "custom": "Gráfico de barras horizontal",
     "reviews": "evaluaciones",
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",
@@ -122,6 +123,10 @@
       "ai_support": "IA",
       "activate_agent": "Activar agente",
       "select_agent": "Seleccionar agente",
+      "select_key": "Digite la clave",
+      "set_widget_name": "Establecer nombre del widget",
+      "label_widget_name": "Nombre del widget",
+      "widget_name_description": "Digite el nombre del widget aquí",
       "your_agent_is_active": "Tu agente está activo!",
       "return": "Volver",
       "save_changes": "Guardar cambios",
@@ -141,6 +146,16 @@
         "description": "¿Estás seguro de querer eliminar el widget {type}?",
         "remove": "Eliminar",
         "cancel": "Cancelar"
+      },
+      "tabs": {
+        "sentiment_analysis": "Análisis de sentimiento",
+        "customized": "Personalizado"
+      },
+      "select_chart_type": "Seleccionar un tipo de gráfico:",
+      "select_data": "Selecciona los datos que quieres analizar:",
+      "horizontal_bar_chart": {
+        "title": "Gráfico de barras horizontal",
+        "description": "Una visualización de datos donde las barras están orientadas horizontalmente, con la longitud de cada barra indicando la magnitud de su valor correspondiente."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -280,7 +295,9 @@
       "placeholder": "Seleccionar tag"
     }
   },
+  "key": "Clave",
   "filter-by": "Periodo:",
+  "see_more": "Ver más",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes en línea",

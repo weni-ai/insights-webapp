@@ -189,6 +189,7 @@ const handleExpand = () => {
     font-size: $unnnic-font-size-body-lg;
     font-weight: $unnnic-font-weight-bold;
     line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    min-width: 55px;
   }
 
   &__sub-items-row {

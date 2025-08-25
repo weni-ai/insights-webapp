@@ -2,6 +2,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useAgentsColumnsFilter } from '../agentsColumnsFilter';
 import { useConfig } from '../config';
+import { moduleStorage } from '@/utils/storage';
 
 vi.mock('../config', () => ({
   useConfig: vi.fn(),
@@ -22,6 +23,7 @@ describe('useAgentsColumnsFilter Store', () => {
     store = useAgentsColumnsFilter();
 
     localStorage.clear();
+    vi.clearAllMocks();
   });
 
   describe('setVisibleColumns', () => {
@@ -30,10 +32,10 @@ describe('useAgentsColumnsFilter Store', () => {
       expect(store.visibleColumns).toEqual(['name', 'email']);
     });
 
-    it('should save to localStorage', () => {
+    it('should save to moduleStorage', () => {
       store.setVisibleColumns(['email']);
       const key = `${store.getStorageKey}`;
-      expect(localStorage.getItem(key)).toEqual(JSON.stringify(['email']));
+      expect(moduleStorage.getItem(key)).toEqual(['email']);
     });
 
     it('should ignore non-array input', () => {
@@ -48,11 +50,11 @@ describe('useAgentsColumnsFilter Store', () => {
   });
 
   describe('clearVisibleColumns', () => {
-    it('should clear visible columns and remove from localStorage', () => {
+    it('should clear visible columns and remove from moduleStorage', () => {
       store.setVisibleColumns(['name']);
       store.clearVisibleColumns();
       expect(store.visibleColumns).toEqual([]);
-      expect(localStorage.getItem(store.getStorageKey)).toBeNull();
+      expect(moduleStorage.getItem(store.getStorageKey)).toBeNull();
     });
   });
 
@@ -73,27 +75,28 @@ describe('useAgentsColumnsFilter Store', () => {
       expect(store.visibleColumns).not.toContain('status');
     });
 
-    it('should save updated columns to localStorage', () => {
+    it('should save updated columns to moduleStorage', () => {
       store.toggleColumn('email');
-      expect(localStorage.getItem(store.getStorageKey)).toEqual(
-        JSON.stringify(['email']),
-      );
+      expect(moduleStorage.getItem(store.getStorageKey)).toEqual(['email']);
     });
   });
 
   describe('initializeFromStorage', () => {
-    it('should load valid columns from localStorage', () => {
-      localStorage.setItem(
-        `${store.getStorageKey}`,
-        JSON.stringify(['name', 'agent']),
-      );
+    it('should load valid columns from moduleStorage', () => {
+      moduleStorage.setItem(store.getStorageKey, ['name', 'agent']);
       store.initializeFromStorage();
       expect(store.visibleColumns).toEqual(['name']);
       expect(store.hasInitialized).toBe(true);
     });
 
-    it('should handle invalid JSON', () => {
-      localStorage.setItem(`${store.getStorageKey}`, '{invalid_json}');
+    it('should handle non-array data', () => {
+      moduleStorage.setItem(store.getStorageKey, 'invalid_data');
+      store.initializeFromStorage();
+      expect(store.visibleColumns).toEqual([]);
+      expect(store.hasInitialized).toBe(true);
+    });
+
+    it('should handle missing data', () => {
       store.initializeFromStorage();
       expect(store.visibleColumns).toEqual([]);
       expect(store.hasInitialized).toBe(true);

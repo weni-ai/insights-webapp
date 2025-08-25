@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import Projects from '@/services/api/resources/projects';
+import { moduleStorage } from '@/utils/storage';
 
 export const useConfig = defineStore('config', {
   state: () => ({
@@ -12,11 +13,11 @@ export const useConfig = defineStore('config', {
   actions: {
     setProject(project) {
       this.project = project;
-      localStorage.setItem('projectUuid', project.uuid);
+      moduleStorage.setItem('projectUuid', project.uuid);
     },
     setToken(token: string) {
       this.token = token;
-      localStorage.setItem('token', token);
+      moduleStorage.setItem('token', token);
     },
 
     async checkEnableCreateCustomDashboards() {

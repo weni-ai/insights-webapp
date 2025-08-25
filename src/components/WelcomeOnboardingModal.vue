@@ -31,6 +31,8 @@
 </template>
 
 <script setup>
+import { moduleStorage } from '@/utils/storage';
+
 const props = defineProps({
   showModal: {
     type: Boolean,
@@ -41,8 +43,8 @@ const props = defineProps({
 const emit = defineEmits(['close', 'start-onboarding']);
 
 const ignoreOnboarding = () => {
-  localStorage.setItem('hasDashboardOnboardingComplete', 'true');
-  localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
+  moduleStorage.setItem('hasDashboardOnboardingComplete', true);
+  moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
   emit('close');
 };
 </script>

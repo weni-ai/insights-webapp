@@ -54,6 +54,7 @@ import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGalle
 import IconLoading from '@/components/IconLoading.vue';
 import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
+import { moduleStorage } from '@/utils/storage';
 
 export default {
   name: 'DashboardCustom',
@@ -166,13 +167,13 @@ export default {
 
     handlerWidgetsOnboarding() {
       const hasWidgetsOnboardingComplete =
-        localStorage.getItem('hasWidgetsOnboardingComplete') === 'true';
+        moduleStorage.getItem('hasWidgetsOnboardingComplete') === true;
 
       if (!hasWidgetsOnboardingComplete) {
         this.handleWidgetFilledData();
 
         if (!this.showOnboarding.card && !this.showOnboarding.empty_widget) {
-          localStorage.setItem('hasWidgetsOnboardingComplete', 'true');
+          moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
         }
 
         if (this.showOnboarding.card || this.showOnboarding.empty_widget) {

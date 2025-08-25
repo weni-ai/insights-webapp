@@ -67,6 +67,7 @@ import DrawerConfigContentRecurrence from './DrawerConfigContentRecurrence.vue';
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
 
 import unnnic from '@weni/unnnic-system';
+import { moduleStorage } from '@/utils/storage';
 
 export default {
   name: 'DrawerConfigWidgetDynamic',
@@ -457,7 +458,7 @@ export default {
           if (isLastTourStep) {
             this.callTourNextStep('widgets-onboarding-tour');
             this.setShowCompleteOnboardingModal(true);
-            localStorage.setItem('hasWidgetsOnboardingComplete', true);
+            moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
           }
         }
         unnnic.unnnicCallAlert({

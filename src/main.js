@@ -9,6 +9,7 @@ import './utils/plugins/Hotjar.js';
 import './utils/plugins/Firebase.js';
 
 import { getJwtToken } from './utils/jwt';
+import { moduleStorage } from './utils/storage';
 
 import * as Sentry from '@sentry/vue';
 import env from './utils/env';
@@ -68,8 +69,8 @@ export default async function mountInsightsApp({
 }
 
 if (sharedStore && isFederatedModule) {
-  localStorage.setItem('token', sharedStore.auth.token);
-  localStorage.setItem('projectUuid', sharedStore.current.project.uuid);
+  moduleStorage.setItem('token', sharedStore.auth.token);
+  moduleStorage.setItem('projectUuid', sharedStore.current.project.uuid);
 } else {
   mountInsightsApp();
 }

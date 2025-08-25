@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { parseJwt } from '@/utils/jwt';
 import { getJwtToken } from '@/utils/jwt';
+import { moduleStorage } from '@/utils/storage';
 
 describe('parseJwt', () => {
   it('parses JWT token correctly', () => {
@@ -62,7 +63,7 @@ describe('getJwtToken', () => {
     await promise;
   });
 
-  it('handles token update event and stores in localStorage', async () => {
+  it('handles token update event and stores in moduleStorage', async () => {
     window.self = {};
     window.top = {};
 
@@ -79,7 +80,7 @@ describe('getJwtToken', () => {
     );
 
     await promise;
-    expect(localStorage.getItem('token')).toBe(testToken);
+    expect(moduleStorage.getItem('token')).toBe(testToken);
 
     window.self = window.top;
   });

@@ -30,7 +30,7 @@
             >
               <UnnnicCheckbox
                 :modelValue="isFieldSelected(String(modelName), field.name)"
-                :textRight="getFieldLabel(field.name, field.type)"
+                :textRight="getFieldLabel(field.name)"
                 @change="toggleField(String(modelName), field.name, $event)"
               />
             </template>
@@ -58,10 +58,12 @@ import exportService from '@/services/api/resources/export/export';
 import { useExportData } from '@/store/modules/export/exportData';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 const exportDataStore = useExportData();
 const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
   exportDataStore;
+const { t } = useI18n();
 const {
   model_fields,
   selected_fields,
@@ -145,14 +147,31 @@ const toggleField = (
 };
 
 const getModelLabel = (modelName: string) => {
+  const translationKey = `export_data.model_labels.${modelName}`;
+  const translation = t(translationKey);
+
+  if (translation && translation !== translationKey) {
+    return translation;
+  }
+
   return modelName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 };
 
-const getFieldLabel = (fieldName: string, fieldType: string) => {
-  const formattedName = fieldName
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (l) => l.toUpperCase());
-  return `${formattedName} (${fieldType})`;
+const getFieldLabel = (fieldName: string) => {
+  const translationKey = `export_data.field_labels.${fieldName}`;
+  const translation = t(translationKey);
+
+  let fieldLabel;
+
+  if (translation && translation !== translationKey) {
+    fieldLabel = translation;
+  } else {
+    fieldLabel = fieldName
+      .replace(/_/g, ' ')
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+  }
+
+  return fieldLabel;
 };
 
 onMounted(() => {

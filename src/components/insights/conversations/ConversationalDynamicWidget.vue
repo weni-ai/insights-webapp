@@ -1,7 +1,7 @@
 <template>
   <section class="conversational-dynamic-widget">
     <ProgressWidget
-      :title="widgetType?.toUpperCase() || '-'"
+      :title="titleWidget"
       :actions="actions"
       :progressItems="renderProgressItems"
       :card="renderCard"
@@ -11,6 +11,9 @@
       "
       :isLoadingProgress="isLoading"
       :currentTab="handleCurrentTab"
+      :isOnlyTab="isOnlyTab"
+      :isExpanded="isExpanded"
+      @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
       <template #setup-widget>
@@ -39,7 +42,7 @@
         />
       </template>
     </ProgressWidget>
-    <AddCsatOrNpsWidget
+    <AddCustomizableWidget
       v-if="type === 'add'"
       @add="handleOpenDrawer(true)"
     />
@@ -48,6 +51,13 @@
       v-if="isRemoveWidgetModalOpen && type !== 'add'"
       v-model="isRemoveWidgetModalOpen"
       :type="type"
+      :uuid="uuid"
+    />
+
+    <SeeAllDrawer
+      v-if="isSeeAllDrawerOpen"
+      v-model="isSeeAllDrawerOpen"
+      :data="getCustomWidgetByUuid(props.uuid as string)?.data?.results || []"
     />
   </section>
 </template>
@@ -55,10 +65,11 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
-import AddCsatOrNpsWidget from '@/components/insights/conversations/CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
-import ModalRemoveWidget from './CsatOrNpsWidget/ModalRemoveWidget.vue';
+import AddCustomizableWidget from '@/components/insights/conversations/CustomizableWidget/AddCustomizableWidget.vue';
+import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
 import { useI18n } from 'vue-i18n';
 import SetupWidget from './SetupWidget.vue';
+import SeeAllDrawer from './CustomizableWidget/SeeAllDrawer.vue';
 
 const { t } = useI18n();
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
@@ -66,21 +77,32 @@ import { storeToRefs } from 'pinia';
 import {
   CsatResponse,
   NpsResponse,
+  CustomWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { Tab } from './BaseConversationWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useRoute } from 'vue-router';
+import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 const props = defineProps<{
-  type: 'csat' | 'nps' | 'add';
+  type: 'csat' | 'nps' | 'add' | 'custom';
+  uuid?: string;
 }>();
 
+const isSeeAllDrawerOpen = ref(false);
 const isRemoveWidgetModalOpen = ref(false);
 const conversational = useConversational();
-const { setIsDrawerCsatOrNpsOpen } = conversational;
+const { setIsDrawerCustomizableOpen } = conversational;
 const route = useRoute();
 
 const conversationalWidgets = useConversationalWidgets();
+const conversationalCustomWidgets = useCustomWidgets();
+const {
+  loadCustomWidgetData,
+  getCustomWidgetByUuid,
+  getIsLoadingByUuid,
+  setCustomForm,
+} = conversationalCustomWidgets;
 
 const {
   loadCsatWidgetData,
@@ -112,6 +134,7 @@ const widgetType = computed(() => {
   const widgetTypes = {
     csat: 'csat',
     nps: 'nps',
+    custom: 'custom',
   };
 
   return widgetTypes[props.type];
@@ -121,6 +144,7 @@ const isLoading = computed(() => {
   const isLoadingTypes = {
     csat: isLoadingCsatWidgetData.value,
     nps: isLoadingNpsWidgetData.value,
+    custom: getIsLoadingByUuid(props.uuid as string),
   };
 
   return isLoadingTypes[props.type];
@@ -130,6 +154,9 @@ const widgetData = computed(() => {
   const widgetDataTypes = {
     csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
     nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
+    custom: handleCustomWidgetData(
+      getCustomWidgetByUuid(props.uuid as string)?.data || null,
+    ),
   };
 
   return widgetDataTypes[props.type];
@@ -154,6 +181,10 @@ const renderProgressItems = computed(() => {
     ) {
       return [];
     }
+    return widgetData.value.progressItems;
+  }
+
+  if (props.type === 'custom') {
     return widgetData.value.progressItems;
   }
 
@@ -233,8 +264,42 @@ const handleCurrentTab = computed(() => {
     return tabs[props.type][npsWidgetType.value];
   }
 
+  if (props.type === 'custom') {
+    return 'artificial-intelligence';
+  }
+
   return '';
 });
+
+const isOnlyTab = computed(() => {
+  if (props.type === 'custom') return true;
+
+  return false;
+});
+
+const isExpanded = computed(() => {
+  if (props.type === 'custom') {
+    const customWidget = getCustomWidgetByUuid(props.uuid as string);
+
+    return customWidget?.data?.results?.length > 5 || false;
+  }
+
+  return false;
+});
+
+const titleWidget = computed(() => {
+  const defaultTitle = widgetType.value?.toUpperCase() || '-';
+
+  if (props.type === 'custom') {
+    return getCustomWidgetByUuid(props.uuid as string)?.name || defaultTitle;
+  }
+
+  return defaultTitle;
+});
+
+const handleOpenExpanded = () => {
+  isSeeAllDrawerOpen.value = true;
+};
 
 onMounted(() => {
   if (props.type === 'csat') {
@@ -252,14 +317,22 @@ onMounted(() => {
       return 'human-support';
     }
   }
+
+  if (props.type === 'custom') {
+    loadCustomWidgetData(props.uuid as string);
+  }
 });
 
-const actions = [
+const actions = computed(() => [
   {
     icon: 'edit_square',
     text: t(
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: props.type.toUpperCase() },
+      {
+        type: ['csat', 'nps'].includes(props.type)
+          ? props.type.toUpperCase()
+          : '',
+      },
     ),
     onClick: () => handleOpenDrawer(false),
   },
@@ -269,7 +342,36 @@ const actions = [
     onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
   },
-];
+]);
+
+const handleCustomWidgetData = (data: CustomWidgetResponse) => {
+  const defaultColors = {
+    color: '#3182CE',
+    backgroundColor: '#BEE3F8',
+  };
+
+  if (data?.results?.length === 0) {
+    return {
+      progressItems: [5, 4, 3, 2, 1]?.map(() => ({
+        text: '-',
+        value: 0,
+        color: defaultColors.color,
+        backgroundColor: defaultColors.backgroundColor,
+      })),
+    };
+  }
+
+  const orderByValue = data?.results?.sort((a, b) => b.value - a.value);
+
+  return {
+    progressItems: orderByValue?.slice(0, 5)?.map((result) => ({
+      text: result?.label,
+      value: result?.value,
+      color: defaultColors.color,
+      backgroundColor: defaultColors.backgroundColor,
+    })),
+  };
+};
 
 const handleCsatWidgetData = (data: CsatResponse) => {
   const defaultColors = {
@@ -313,7 +415,21 @@ const handleCsatWidgetData = (data: CsatResponse) => {
 };
 
 const handleOpenDrawer = (isNew: boolean) => {
-  setIsDrawerCsatOrNpsOpen(true, props.type, isNew);
+  if (props.type === 'custom') {
+    if (!isNew) {
+      const customWidget = getCustomWidgetByUuid(props.uuid as string);
+
+      setCustomForm({
+        agent_uuid: customWidget?.config?.datalake_config?.agent_uuid,
+        agent_name: '',
+        key: customWidget?.config?.datalake_config?.key,
+        widget_uuid: customWidget?.uuid,
+        widget_name: customWidget?.name,
+      });
+    }
+  }
+
+  setIsDrawerCustomizableOpen(true, props.type, isNew);
 };
 
 const handleNpsWidgetData = (data: NpsResponse) => {
@@ -402,6 +518,8 @@ const handleNpsWidgetData = (data: NpsResponse) => {
 };
 
 const handleTabChange = (tab: Tab) => {
+  if (props.type === 'custom') return;
+
   const setWidgetType = {
     csat: setCsatWidgetType,
     nps: setNpsWidgetType,
@@ -443,6 +561,10 @@ watch(
 
     if (props.type === 'nps') {
       loadNpsWidgetData();
+    }
+
+    if (props.type === 'custom') {
+      loadCustomWidgetData(props.uuid as string);
     }
   },
 );

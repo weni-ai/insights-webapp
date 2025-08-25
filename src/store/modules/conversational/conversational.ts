@@ -4,20 +4,20 @@ import { useDashboards } from '@/store/modules/dashboards';
 
 export const useConversational = defineStore('conversational', {
   state: () => ({
-    isDrawerCsatOrNpsOpen: false,
-    drawerWidgetType: null as 'nps' | 'csat' | 'add' | null,
-    isNewDrawerCsatOrNps: false,
+    isDrawerCustomizableOpen: false,
+    drawerWidgetType: null as 'nps' | 'csat' | 'add' | 'custom' | null,
+    isNewDrawerCustomizable: false,
   }),
 
   actions: {
-    setIsDrawerCsatOrNpsOpen(
-      isDrawerCsatOrNpsOpen: boolean,
-      type: 'nps' | 'csat' | 'add' | null,
+    setIsDrawerCustomizableOpen(
+      isDrawerCustomizableOpen: boolean,
+      type: 'nps' | 'csat' | 'add' | 'custom' | null,
       isNew: boolean,
     ) {
-      this.isDrawerCsatOrNpsOpen = isDrawerCsatOrNpsOpen;
+      this.isDrawerCustomizableOpen = isDrawerCustomizableOpen;
       this.drawerWidgetType = type;
-      this.isNewDrawerCsatOrNps = isNew;
+      this.isNewDrawerCustomizable = isNew;
     },
   },
   getters: {

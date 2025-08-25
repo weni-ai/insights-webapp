@@ -5,6 +5,7 @@ import { WidgetType } from '@/models/types/WidgetTypes';
 import { isObjectsEquals } from '@/utils/object';
 import { defineStore } from 'pinia';
 import { useConversationalWidgets } from './conversational/widgets';
+import { useCustomWidgets } from './conversational/customWidgets';
 
 export const useWidgets = defineStore('widgets', {
   state: () => ({
@@ -89,8 +90,16 @@ export const useWidgets = defineStore('widgets', {
       );
       this.setCurrentDashboardWidgets(widgets);
 
-      if (widgets.length > 0) {
+      if (widgets?.length > 0) {
         const { setCsatWidget, setNpsWidget } = useConversationalWidgets();
+        const { setCustomWidgets } = useCustomWidgets();
+
+        const customWidgets = widgets.filter(
+          (widget) => widget.source === 'conversations.custom',
+        );
+
+        setCustomWidgets(customWidgets);
+
         const csatWidget = widgets.find(
           (widget) => widget.source === 'conversations.csat',
         );

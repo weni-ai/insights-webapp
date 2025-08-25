@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, mount, shallowMount } from '@vue/test-utils';
+import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import ModalAttention from '../CsatOrNpsWidget/ModalAttention.vue';
+import ModalAttention from '../CustomizableWidget/ModalAttention.vue';
 
 config.global.plugins = [
   createI18n({

@@ -5,7 +5,7 @@ import Unnnic from '@weni/unnnic-system';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import ConfigCsatOrNps from '../CsatOrNpsWidget/ConfigCsatOrNps.vue';
+import SentimentAnalysisForm from '../SentimentAnalysisForm.vue';
 
 config.global.plugins = [
   createI18n({
@@ -47,7 +47,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
     },
   });
 
-  return shallowMount(ConfigCsatOrNps, {
+  return shallowMount(SentimentAnalysisForm, {
     props: {
       type: 'csat',
       isNew: false,
@@ -58,6 +58,8 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
       stubs: {
         UnnnicCheckbox: Unnnic.unnnicCheckbox,
         UnnnicSelectSmart: Unnnic.unnnicSelectSmart,
+        UnnnicButton: Unnnic.unnnicButton,
+        UnnnicLabel: Unnnic.unnnicLabel,
         SelectFlow: true,
         SelectFlowResult: true,
       },
@@ -68,39 +70,43 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
   });
 };
 
-describe('ConfigCsatOrNps', () => {
+describe('SentimentAnalysisForm', () => {
   let wrapper;
 
-  const configCsatOrNpsTitle = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-title"]');
-  const configCsatOrNpsDescription = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-description"]');
-  const configCsatOrNpsCheckboxHumanSupport = () =>
+  const sentimentAnalysisFormCheckboxHumanSupport = () =>
     wrapper.findComponent(
-      '[data-testid="config-csat-or-nps-checkbox-human-support"]',
+      '[data-testid="sentiment-analysis-form-checkbox-human-support"]',
     );
-  const configCsatOrNpsCheckboxAiSupport = () =>
+  const sentimentAnalysisFormCheckboxAiSupport = () =>
     wrapper.findComponent(
-      '[data-testid="config-csat-or-nps-checkbox-ai-support"]',
+      '[data-testid="sentiment-analysis-form-checkbox-ai-support"]',
     );
-  const configCsatOrNpsSectionHumanSupport = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-section-human-support"]');
-  const configCsatOrNpsSelectFlow = () =>
-    wrapper.findComponent('[data-testid="config-csat-or-nps-select-flow"]');
-  const configCsatOrNpsSelectFlowResult = () =>
+  const sentimentAnalysisFormSectionHumanSupport = () =>
+    wrapper.find(
+      '[data-testid="sentiment-analysis-form-section-human-support"]',
+    );
+  const sentimentAnalysisFormSelectFlow = () =>
     wrapper.findComponent(
-      '[data-testid="config-csat-or-nps-select-flow-result"]',
+      '[data-testid="sentiment-analysis-form-select-flow"]',
     );
-  const configCsatOrNpsSectionAiSupport = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-section-ai-support"]');
-  const configCsatOrNpsButtonActivateAgent = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-button-activate-agent"]');
-  const configCsatOrNpsLabelSelectAgent = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-label-select-agent"]');
-  const configCsatOrNpsSelectAgent = () =>
-    wrapper.findComponent('[data-testid="config-csat-or-nps-select-agent"]');
-  const configCsatOrNpsAgentActive = () =>
-    wrapper.find('[data-testid="config-csat-or-nps-agent-active"]');
+  const sentimentAnalysisFormSelectFlowResult = () =>
+    wrapper.findComponent(
+      '[data-testid="sentiment-analysis-form-select-flow-result"]',
+    );
+  const sentimentAnalysisFormSectionAiSupport = () =>
+    wrapper.find('[data-testid="sentiment-analysis-form-section-ai-support"]');
+  const sentimentAnalysisFormButtonActivateAgent = () =>
+    wrapper.findComponent(
+      '[data-testid="sentiment-analysis-form-button-activate-agent"]',
+    );
+  const sentimentAnalysisFormLabelSelectAgent = () =>
+    wrapper.find('[data-testid="sentiment-analysis-form-label-select-agent"]');
+  const sentimentAnalysisFormSelectAgent = () =>
+    wrapper.findComponent(
+      '[data-testid="sentiment-analysis-form-select-agent"]',
+    );
+  const sentimentAnalysisFormAgentActive = () =>
+    wrapper.find('[data-testid="sentiment-analysis-form-agent-active"]');
 
   describe('Component Initialization', () => {
     beforeEach(() => {
@@ -108,35 +114,16 @@ describe('ConfigCsatOrNps', () => {
     });
 
     it('should render component with correct structure', () => {
-      expect(configCsatOrNpsTitle().exists()).toBe(true);
-      expect(configCsatOrNpsDescription().exists()).toBe(true);
-      expect(configCsatOrNpsCheckboxHumanSupport().exists()).toBe(true);
-      expect(configCsatOrNpsCheckboxAiSupport().exists()).toBe(true);
-      expect(configCsatOrNpsSectionHumanSupport().exists()).toBe(false);
-      expect(configCsatOrNpsSelectFlow().exists()).toBe(false);
-      expect(configCsatOrNpsSelectFlowResult().exists()).toBe(false);
-      expect(configCsatOrNpsSectionAiSupport().exists()).toBe(false);
-      expect(configCsatOrNpsButtonActivateAgent().exists()).toBe(false);
-      expect(configCsatOrNpsLabelSelectAgent().exists()).toBe(false);
-      expect(configCsatOrNpsSelectAgent().exists()).toBe(false);
-      expect(configCsatOrNpsAgentActive().exists()).toBe(false);
-    });
-
-    it('should display correct title based on type prop', () => {
-      expect(configCsatOrNpsTitle().text()).toBe(
-        'conversations_dashboard.csat',
-      );
-    });
-
-    it('should display correct title for NPS type', async () => {
-      wrapper = createWrapper({ type: 'nps' });
-      expect(configCsatOrNpsTitle().text()).toBe('conversations_dashboard.nps');
-    });
-
-    it('should display correct description with type interpolation', () => {
-      expect(configCsatOrNpsDescription().text()).toBe(
-        'conversations_dashboard.customize_your_dashboard.config_csat_or_nps_description',
-      );
+      expect(sentimentAnalysisFormCheckboxHumanSupport().exists()).toBe(true);
+      expect(sentimentAnalysisFormCheckboxAiSupport().exists()).toBe(true);
+      expect(sentimentAnalysisFormSectionHumanSupport().exists()).toBe(false);
+      expect(sentimentAnalysisFormSelectFlow().exists()).toBe(false);
+      expect(sentimentAnalysisFormSelectFlowResult().exists()).toBe(false);
+      expect(sentimentAnalysisFormSectionAiSupport().exists()).toBe(false);
+      expect(sentimentAnalysisFormButtonActivateAgent().exists()).toBe(false);
+      expect(sentimentAnalysisFormLabelSelectAgent().exists()).toBe(false);
+      expect(sentimentAnalysisFormSelectAgent().exists()).toBe(false);
+      expect(sentimentAnalysisFormAgentActive().exists()).toBe(false);
     });
   });
 
@@ -146,14 +133,20 @@ describe('ConfigCsatOrNps', () => {
     });
 
     it('should not display flow selection section when humanSupport is false', () => {
-      expect(configCsatOrNpsSectionHumanSupport().exists()).toBe(false);
+      expect(sentimentAnalysisFormSectionHumanSupport().exists()).toBe(false);
     });
 
     it('should toggle humanSupport when checkbox is changed', async () => {
-      await configCsatOrNpsCheckboxHumanSupport().vm.$emit('change', true);
+      await sentimentAnalysisFormCheckboxHumanSupport().vm.$emit(
+        'change',
+        true,
+      );
       expect(wrapper.vm.humanSupport).toBe(true);
 
-      await configCsatOrNpsCheckboxHumanSupport().vm.$emit('change', false);
+      await sentimentAnalysisFormCheckboxHumanSupport().vm.$emit(
+        'change',
+        false,
+      );
       expect(wrapper.vm.humanSupport).toBe(false);
     });
 
@@ -161,14 +154,14 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.humanSupport = true;
       await nextTick();
 
-      expect(configCsatOrNpsSectionHumanSupport().exists()).toBe(true);
+      expect(sentimentAnalysisFormSectionHumanSupport().exists()).toBe(true);
     });
 
     it('should update flow uuid when SelectFlow emits update', async () => {
       wrapper.vm.humanSupport = true;
       await nextTick();
 
-      await configCsatOrNpsSelectFlow().vm.$emit(
+      await sentimentAnalysisFormSelectFlow().vm.$emit(
         'update:modelValue',
         'new-flow-uuid',
       );
@@ -181,7 +174,7 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.humanSupport = true;
       await nextTick();
 
-      await configCsatOrNpsSelectFlowResult().vm.$emit(
+      await sentimentAnalysisFormSelectFlowResult().vm.$emit(
         'update:modelValue',
         'new-result',
       );
@@ -194,7 +187,7 @@ describe('ConfigCsatOrNps', () => {
       await nextTick();
 
       expect(
-        configCsatOrNpsSelectFlowResult().attributes('disabled'),
+        sentimentAnalysisFormSelectFlowResult().attributes('disabled'),
       ).toBeDefined();
     });
 
@@ -203,9 +196,9 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.flow.uuid = 'flow-1';
       await nextTick();
 
-      expect(configCsatOrNpsSelectFlowResult().attributes('disabled')).toBe(
-        'false',
-      );
+      expect(
+        sentimentAnalysisFormSelectFlowResult().attributes('disabled'),
+      ).toBe('false');
     });
   });
 
@@ -215,10 +208,10 @@ describe('ConfigCsatOrNps', () => {
     });
 
     it('should toggle aiSupport when checkbox is changed', async () => {
-      await configCsatOrNpsCheckboxAiSupport().vm.$emit('change', true);
+      await sentimentAnalysisFormCheckboxAiSupport().vm.$emit('change', true);
       expect(wrapper.vm.aiSupport).toBe(true);
 
-      await configCsatOrNpsCheckboxAiSupport().vm.$emit('change', false);
+      await sentimentAnalysisFormCheckboxAiSupport().vm.$emit('change', false);
       expect(wrapper.vm.aiSupport).toBe(false);
     });
 
@@ -227,7 +220,7 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.aiSupport = true;
       await nextTick();
 
-      expect(configCsatOrNpsButtonActivateAgent().exists()).toBe(true);
+      expect(sentimentAnalysisFormButtonActivateAgent().exists()).toBe(true);
     });
 
     it('should disable activate button when agents team is loading', async () => {
@@ -242,7 +235,7 @@ describe('ConfigCsatOrNps', () => {
       await nextTick();
 
       expect(
-        configCsatOrNpsButtonActivateAgent().attributes('disabled'),
+        sentimentAnalysisFormButtonActivateAgent().attributes('disabled'),
       ).toBeDefined();
     });
 
@@ -250,15 +243,15 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.aiSupport = true;
       await nextTick();
 
-      expect(configCsatOrNpsSelectAgent().exists()).toBe(true);
-      expect(configCsatOrNpsAgentActive().exists()).toBe(true);
+      expect(sentimentAnalysisFormSelectAgent().exists()).toBe(true);
+      expect(sentimentAnalysisFormAgentActive().exists()).toBe(true);
     });
 
     it('should display correct agent info for CSAT type', async () => {
       wrapper.vm.aiSupport = true;
       await nextTick();
 
-      expect(configCsatOrNpsSelectAgent().props('modelValue')).toEqual([
+      expect(sentimentAnalysisFormSelectAgent().props('modelValue')).toEqual([
         { value: 'csat-agent-uuid', label: 'CSAT Agent' },
       ]);
     });
@@ -275,7 +268,7 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.aiSupport = true;
       await nextTick();
 
-      await configCsatOrNpsButtonActivateAgent().trigger('click');
+      await sentimentAnalysisFormButtonActivateAgent().trigger('click');
 
       expect(activateAgentSpy).toHaveBeenCalled();
     });
@@ -285,9 +278,9 @@ describe('ConfigCsatOrNps', () => {
       wrapper.vm.isActivatingAgent = true;
       await nextTick();
 
-      expect(
-        configCsatOrNpsButtonActivateAgent().attributes('loading'),
-      ).toBeDefined();
+      expect(sentimentAnalysisFormButtonActivateAgent().props('loading')).toBe(
+        true,
+      );
     });
   });
 });

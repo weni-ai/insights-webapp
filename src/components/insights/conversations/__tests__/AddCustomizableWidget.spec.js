@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import AddCsatOrNpsWidget from '../CsatOrNpsWidget/AddCsatOrNpsWidget.vue';
+import AddCustomizableWidget from '../CustomizableWidget/AddCustomizableWidget.vue';
 
 config.global.plugins = [
   createI18n({
@@ -11,7 +11,7 @@ config.global.plugins = [
 ];
 
 const createWrapper = (props = {}) => {
-  return shallowMount(AddCsatOrNpsWidget, {
+  return shallowMount(AddCustomizableWidget, {
     props: { ...props },
     global: {
       stubs: {
@@ -25,7 +25,7 @@ const createWrapper = (props = {}) => {
   });
 };
 
-describe('AddCsatOrNpsWidget', () => {
+describe('AddCustomizableWidget', () => {
   let wrapper;
 
   beforeEach(() => {

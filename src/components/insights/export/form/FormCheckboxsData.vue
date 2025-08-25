@@ -5,7 +5,10 @@
         v-for="(modelData, modelName) in model_fields"
         :key="modelName"
       >
-        <section class="form-checkboxs-data__model">
+        <section
+          v-if="shouldRenderModel(String(modelName))"
+          class="form-checkboxs-data__model"
+        >
           <div class="form-checkboxs-data__model-header">
             <UnnnicCheckbox
               :modelValue="isModelEnabled(String(modelName))"
@@ -59,8 +62,15 @@ import { onMounted, ref } from 'vue';
 const exportDataStore = useExportData();
 const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
   exportDataStore;
-const { model_fields, selected_fields, enabled_models } =
-  storeToRefs(exportDataStore);
+const {
+  model_fields,
+  selected_fields,
+  enabled_models,
+  sectors,
+  queues,
+  agents,
+  tags,
+} = storeToRefs(exportDataStore);
 const isLoading = ref(false);
 
 const fetchModelFields = async () => {
@@ -104,6 +114,26 @@ const isFieldSelected = (modelName: string, fieldName: string) => {
 
 const isModelEnabled = (modelName: string) => {
   return enabled_models.value.includes(modelName);
+};
+
+const shouldRenderModel = (modelName: string) => {
+  if (modelName === 'sectors') {
+    return sectors.value.length > 0;
+  }
+
+  if (modelName === 'queues') {
+    return queues.value.length > 0;
+  }
+
+  if (modelName === 'users') {
+    return agents.value.length > 0;
+  }
+
+  if (modelName === 'sector_tags') {
+    return tags.value.length > 0;
+  }
+
+  return true;
 };
 
 const toggleField = (

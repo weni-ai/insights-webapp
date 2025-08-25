@@ -10,13 +10,17 @@
       data-test-id="modal-dialog"
       :modelValue="isRenderExportData"
       class="finish-onboarding-modal"
-      :primaryButtonProps="{ text: t('export_data.save_btn') }"
+      :primaryButtonProps="{
+        text: t('export_data.save_btn'),
+        disabled: !hasEnabledToExport,
+        loading: isLoadingCreateExport,
+      }"
       :secondaryButtonProps="{ text: t('export_data.cancel_btn') }"
       showActionsDivider
       size="lg"
       :title="t('export_data.title')"
       showCloseIcon
-      @primary-button-click="setIsRenderExportData(false)"
+      @primary-button-click="createExport"
       @update:model-value="setIsRenderExportData(false)"
     >
       <FormExportData />
@@ -46,10 +50,14 @@ import FormExportData from './form/FormExportData.vue';
 
 const { t } = useI18n();
 const useExportDataStore = useExportData();
-const { setIsRenderExportData, setIsRenderExportDataFeedback } =
+const { setIsRenderExportData, setIsRenderExportDataFeedback, createExport } =
   useExportDataStore;
-const { isRenderExportData, isRenderExportDataFeedback } =
-  storeToRefs(useExportDataStore);
+const {
+  isRenderExportData,
+  isRenderExportDataFeedback,
+  hasEnabledToExport,
+  isLoadingCreateExport,
+} = storeToRefs(useExportDataStore);
 </script>
 
 <style lang="scss" scoped>

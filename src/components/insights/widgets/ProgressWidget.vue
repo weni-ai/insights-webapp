@@ -11,7 +11,7 @@
       v-if="treatedProgressItems?.length === 0"
       name="setup-widget"
     />
-    <template v-else>
+    <template v-else-if="!isError">
       <WarningMessage
         v-if="isWarningMessage"
         :title="$t('conversations_dashboard.no_data_available')"
@@ -88,6 +88,13 @@
         height="22px"
       />
     </template>
+    <template v-else>
+      <WidgetError
+        :title="actionError?.title"
+        :buttonText="actionError?.buttonText"
+        @click="actionError?.onClick"
+      />
+    </template>
   </BaseConversationWidget>
 </template>
 
@@ -99,6 +106,7 @@ import BaseConversationWidget, {
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
 import WarningMessage from '@/components/WarningMessage.vue';
+import WidgetError from '@/components/insights/conversations/WidgetError.vue';
 
 const emit = defineEmits<{
   (e: 'tab-change', tab: Tab): void;
@@ -132,6 +140,12 @@ const props = defineProps<{
   }[];
   currentTab?: string;
   isOnlyTab?: boolean;
+  isError?: boolean;
+  actionError?: {
+    title: string;
+    buttonText: string;
+    onClick: () => void;
+  };
 }>();
 
 const treatedProgressItems = computed(() => {

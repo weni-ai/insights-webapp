@@ -1,5 +1,17 @@
 <template>
   <section class="sentiment-analysis-form">
+    <p
+      class="sentiment-analysis-form__description"
+      data-testid="sentiment-analysis-form-description"
+    >
+      {{
+        $t(
+          'conversations_dashboard.customize_your_dashboard.config_csat_or_nps_description',
+          { type: props.type.toUpperCase() },
+        )
+      }}
+    </p>
+
     <UnnnicCheckbox
       data-testid="sentiment-analysis-form-checkbox-human-support"
       :modelValue="humanSupport"

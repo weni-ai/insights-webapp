@@ -26,6 +26,8 @@ interface ConversationalWidgetsState {
   isLoadingUpdateWidget: boolean;
   csatWidget: WidgetType | null;
   npsWidget: WidgetType | null;
+  isCsatWidgetDataError: boolean;
+  isNpsWidgetDataError: boolean;
 }
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
@@ -44,6 +46,8 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isLoadingUpdateWidget: false,
     csatWidget: null,
     npsWidget: null,
+    isCsatWidgetDataError: false,
+    isNpsWidgetDataError: false,
   }),
 
   actions: {
@@ -130,8 +134,10 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         );
 
         this.setCsatWidgetData(csatData);
+        this.isCsatWidgetDataError = false;
       } catch (error) {
         this.setCsatWidgetData({ results: [] });
+        this.isCsatWidgetDataError = true;
         console.error('Error loading CSAT widget data', error);
       } finally {
         this.isLoadingCsatWidgetData = false;
@@ -155,8 +161,10 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         );
 
         this.setNpsWidgetData(npsData);
+        this.isNpsWidgetDataError = false;
       } catch (error) {
         this.setNpsWidgetData({ total_responses: 0 });
+        this.isNpsWidgetDataError = true;
         console.error('Error loading NPS widget data', error);
       } finally {
         this.isLoadingNpsWidgetData = false;

@@ -181,6 +181,7 @@ $dropdownFixedWidth: 314px;
 
       left: 0;
 
+      min-width: $dropdownFixedWidth;
       width: 100%;
 
       padding: $unnnic-spacing-xs;

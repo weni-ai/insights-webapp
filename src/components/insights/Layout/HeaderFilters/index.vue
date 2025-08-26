@@ -69,7 +69,7 @@ import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
 import LastUpdatedText from './LastUpdatedText.vue';
 
-import { getLastNDays } from '@/utils/time';
+import { getLastNDays, getYesterdayNDays } from '@/utils/time';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
@@ -171,12 +171,25 @@ export default {
             id: 'previous-month',
           },
         ];
-        return {
+        let customFilter = {
           ...filter,
           next: true,
           shortCutOptions,
           disableClear: true,
         };
+
+        if (this.currentDashboard?.name === 'conversations_dashboard.title') {
+          customFilter.shortCutOptions = [
+            {
+              name: this.$t(
+                'template_messages_dashboard.filter.shortcut.previous_month',
+              ),
+              id: 'previous-month',
+            },
+          ];
+        }
+
+        return customFilter;
       }
 
       return filter;
@@ -201,7 +214,12 @@ export default {
       handler(filters) {
         if (filters.length === 1) {
           const { date, ended_at } = this.$route.query;
-          const { start, end } = getLastNDays(7);
+          const isConversational =
+            this.currentDashboard?.name === 'conversations_dashboard.title';
+
+          const { start, end } = isConversational
+            ? getYesterdayNDays(7)
+            : getLastNDays(7);
 
           const defaultFilterValue = this.isMetaTemplateDashboard
             ? { _start: start, _end: end }

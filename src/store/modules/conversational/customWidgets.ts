@@ -11,6 +11,7 @@ interface customForm {
   agent_name: string;
   key: string;
   widget_uuid: string;
+  widget_name: string;
 }
 
 interface customWidget extends WidgetType {
@@ -31,10 +32,12 @@ export const useCustomWidgets = defineStore('customWidgets', {
       agent_name: '',
       key: '',
       widget_uuid: '',
+      widget_name: '',
     } as customForm,
     isLoadingSaveNewCustomWidget: false,
     isLoadingDeleteCustomWidget: false,
     loadingByUuid: [] as string[],
+    customWidgetDataErrorByUuid: {} as Record<string, boolean>,
   }),
 
   actions: {
@@ -65,8 +68,8 @@ export const useCustomWidgets = defineStore('customWidgets', {
     setCustomFormKey(key: string) {
       this.customForm.key = key;
     },
-    setCustomFormWidgetUuid(widget_uuid: string) {
-      this.customForm.widget_uuid = widget_uuid;
+    setCustomFormWidgetName(widget_name: string) {
+      this.customForm.widget_name = widget_name;
     },
     async saveCustomWidget() {
       this.isLoadingSaveNewCustomWidget = true;
@@ -83,7 +86,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
           position: [],
           report: null,
           is_configurable: true,
-          name: '',
+          name: this.customForm.widget_name,
           type: 'custom_widget',
         };
 
@@ -132,7 +135,9 @@ export const useCustomWidgets = defineStore('customWidgets', {
           widget_uuid: uuid,
         });
         this.updateCustomWidget(uuid, response);
+        this.customWidgetDataErrorByUuid[uuid] = false;
       } catch (error) {
+        this.customWidgetDataErrorByUuid[uuid] = true;
         console.error('Error loading custom widget data', error);
       } finally {
         this.loadingByUuid = this.loadingByUuid.filter((id) => id !== uuid);

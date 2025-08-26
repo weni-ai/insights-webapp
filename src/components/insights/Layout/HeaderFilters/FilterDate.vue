@@ -39,13 +39,18 @@ export default {
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
     },
+    isConversationalDashboard() {
+      return this.currentDashboard?.name === 'conversations_dashboard.title';
+    },
     minDate() {
       if (this.isHumanServiceDashboard) return undefined;
       return moment().subtract(89, 'days').format('YYYY-MM-DD');
     },
     maxDate() {
-      const today = moment();
-      return today.format('YYYY-MM-DD');
+      if (this.isConversationalDashboard) {
+        return moment().subtract(1, 'days').format('YYYY-MM-DD');
+      }
+      return moment().format('YYYY-MM-DD');
     },
   },
 };

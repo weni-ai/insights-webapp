@@ -1,7 +1,7 @@
 <template>
   <section class="conversational-dynamic-widget">
     <ProgressWidget
-      :title="widgetType?.toUpperCase() || '-'"
+      :title="titleWidget"
       :actions="actions"
       :progressItems="renderProgressItems"
       :card="renderCard"
@@ -13,6 +13,8 @@
       :currentTab="handleCurrentTab"
       :isOnlyTab="isOnlyTab"
       :isExpanded="isExpanded"
+      :isError="isError"
+      :actionError="actionError"
       @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
@@ -104,6 +106,10 @@ const {
   setCustomForm,
 } = conversationalCustomWidgets;
 
+const { customWidgetDataErrorByUuid } = storeToRefs(
+  conversationalCustomWidgets,
+);
+
 const {
   loadCsatWidgetData,
   loadNpsWidgetData,
@@ -124,10 +130,36 @@ const {
   isCsatAiConfig,
   isNpsHumanConfig,
   isNpsAiConfig,
+  isCsatWidgetDataError,
+  isNpsWidgetDataError,
 } = storeToRefs(conversationalWidgets);
 
 const isCsatOrNps = computed(() => {
   return ['csat', 'nps'].includes(props.type);
+});
+
+const actionError = computed(() => {
+  return {
+    title: t('conversations_dashboard.widget_error.title'),
+    buttonText: t('conversations_dashboard.widget_error.button'),
+    onClick: () => handleOpenDrawer(false),
+  };
+});
+
+const isError = computed(() => {
+  if (props.type === 'csat') {
+    return isCsatWidgetDataError.value;
+  }
+
+  if (props.type === 'nps') {
+    return isNpsWidgetDataError.value;
+  }
+
+  if (props.type === 'custom') {
+    return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
+  }
+
+  return false;
 });
 
 const widgetType = computed(() => {
@@ -155,7 +187,7 @@ const widgetData = computed(() => {
     csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
     nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
     custom: handleCustomWidgetData(
-      getCustomWidgetByUuid(props.uuid as string)?.data || null,
+      getCustomWidgetByUuid(props.uuid as string)?.data || { results: [] },
     ),
   };
 
@@ -287,6 +319,16 @@ const isExpanded = computed(() => {
   return false;
 });
 
+const titleWidget = computed(() => {
+  const defaultTitle = widgetType.value?.toUpperCase() || '-';
+
+  if (props.type === 'custom') {
+    return getCustomWidgetByUuid(props.uuid as string)?.name || defaultTitle;
+  }
+
+  return defaultTitle;
+});
+
 const handleOpenExpanded = () => {
   isSeeAllDrawerOpen.value = true;
 };
@@ -313,12 +355,16 @@ onMounted(() => {
   }
 });
 
-const actions = [
+const actions = computed(() => [
   {
     icon: 'edit_square',
     text: t(
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: props.type.toUpperCase() },
+      {
+        type: ['csat', 'nps'].includes(props.type)
+          ? props.type.toUpperCase()
+          : '',
+      },
     ),
     onClick: () => handleOpenDrawer(false),
   },
@@ -328,7 +374,7 @@ const actions = [
     onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
   },
-];
+]);
 
 const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   const defaultColors = {
@@ -410,6 +456,7 @@ const handleOpenDrawer = (isNew: boolean) => {
         agent_name: '',
         key: customWidget?.config?.datalake_config?.key,
         widget_uuid: customWidget?.uuid,
+        widget_name: customWidget?.name,
       });
     }
   }

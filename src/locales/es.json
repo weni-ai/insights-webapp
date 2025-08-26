@@ -85,6 +85,11 @@
     "csat": "CSAT",
     "nps": "NPS",
     "custom": "Gráfico de barras horizontal",
+    "no_data_available": "No hay datos disponibles para el período de uso.",
+    "widget_error": {
+      "title": "¡Ups, hubo un problema al cargar los datos!",
+      "button": "Verificar configuración del widget"
+    },
     "reviews": "evaluaciones",
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",

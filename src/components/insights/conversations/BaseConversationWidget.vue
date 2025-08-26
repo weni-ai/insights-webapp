@@ -132,6 +132,7 @@ const handleTabChange = (tab: Tab) => {
   display: flex;
   padding: $unnnic-spacing-md;
   flex-direction: column;
+  justify-content: space-between;
   gap: $unnnic-spacing-sm;
   flex: 1 0 0;
   align-self: stretch;

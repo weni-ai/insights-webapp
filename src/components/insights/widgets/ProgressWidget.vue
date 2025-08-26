@@ -12,6 +12,10 @@
       name="setup-widget"
     />
     <template v-else>
+      <WarningMessage
+        v-if="isWarningMessage"
+        :title="$t('conversations_dashboard.no_data_available')"
+      />
       <section
         class="progress-widget__content"
         data-testid="progress-widget-content"
@@ -94,6 +98,7 @@ import BaseConversationWidget, {
 } from '@/components/insights/conversations/BaseConversationWidget.vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
+import WarningMessage from '@/components/WarningMessage.vue';
 
 const emit = defineEmits<{
   (e: 'tab-change', tab: Tab): void;
@@ -142,6 +147,16 @@ const treatedProgressItems = computed(() => {
 const handleTabChange = (tab: Tab) => {
   emit('tab-change', tab);
 };
+
+const isWarningMessage = computed(() => {
+  if (!treatedProgressItems.value?.length) return false;
+
+  const isAllValuesZero = treatedProgressItems.value.every(
+    (item) => item?.value === 0,
+  );
+
+  return !props.isLoadingProgress && isAllValuesZero;
+});
 </script>
 
 <style scoped lang="scss">

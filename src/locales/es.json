@@ -749,6 +749,8 @@
     "warning_terms": "Mientras se procesa la exportación, la generación de nuevas exportaciones estará bloqueada para todos los perfiles en el proyecto. Por favor, confirme que entiende para continuar.",
     "accept_terms": "Entiendo",
     "save_btn": "Exportar datos",
-    "cancel_btn": "Cancelar"
+    "cancel_btn": "Cancelar",
+    "error_pending_export": "Ya existe un reporte para este proyecto en progreso, intente nuevamente más tarde!",
+    "error_default": "Oops, algo salió mal"
   }
 }

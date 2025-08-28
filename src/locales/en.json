@@ -749,6 +749,8 @@
     "warning_terms": "While the export is processing, generating new exports will be blocked for all profiles in the project. Please confirm that you understand to continue.",
     "accept_terms": "I understand",
     "save_btn": "Export data",
-    "cancel_btn": "Cancel"
+    "cancel_btn": "Cancel",
+    "error_pending_export": "There is already a report for this project in progress, try again later!",
+    "error_default": "Oops, something went wrong"
   }
 }

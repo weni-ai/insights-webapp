@@ -21,6 +21,7 @@
       :title="t('export_data.title')"
       showCloseIcon
       @primary-button-click="createExport"
+      @secondary-button-click="setIsRenderExportData(false)"
       @update:model-value="setIsRenderExportData(false)"
     >
       <FormExportData />

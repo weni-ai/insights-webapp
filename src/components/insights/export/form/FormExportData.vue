@@ -9,7 +9,7 @@
       <section class="export-data-form__date-range">
         <UnnnicLabel :label="$t('export_data.select_data.label')" />
         <FilterDate
-          v-model="dateRange"
+          v-model="date_range"
           :placeholder="$t('export_data.select_data.placeholder')"
           :options="shortCutOptions"
           :minDate="handleMinDate()"
@@ -141,7 +141,7 @@ import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/Filter
 import FormCheckboxsData from './FormCheckboxsData.vue';
 import { useExportData } from '@/store/modules/export/exportData';
 import { storeToRefs } from 'pinia';
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getLastNDays, getTodayDate } from '@/utils/time';
 
@@ -156,13 +156,16 @@ const {
   setType,
   setAcceptTerms,
 } = exportDataStore;
-const { open_chats, sectors, agents, queues, tags, type, accept_terms } =
-  storeToRefs(exportDataStore);
-
-const dateRange = ref({
-  start: '',
-  end: '',
-});
+const {
+  open_chats,
+  sectors,
+  agents,
+  queues,
+  tags,
+  type,
+  accept_terms,
+  date_range,
+} = storeToRefs(exportDataStore);
 
 const selectedFormat = computed(() => {
   return type.value === '.csv' ? '.csv' : '.xlsx';
@@ -181,7 +184,6 @@ const sectorsForDependency = computed(() => {
 });
 
 const updateDateRange = (value: { start: string; end: string }) => {
-  dateRange.value = value;
   setDateRange(value.start, value.end);
 };
 

@@ -3,14 +3,16 @@ import exportApi, {
   ExportResponse,
   ModelFields,
 } from '@/services/api/resources/export/export';
+import i18n from '@/utils/plugins/i18n';
+import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';
 
 interface SelectedFields {
   [modelName: string]: string[];
 }
 interface DateRange {
-  start_date: string;
-  end_date: string;
+  start: string;
+  end: string;
 }
 
 interface Filter {
@@ -65,8 +67,8 @@ export const useExportData = defineStore('exportData', {
       this.isRenderExportDataFeedback = isRenderExportDataFeedback;
     },
     setDateRange(start_date: string, end_date: string) {
-      this.date_range.start_date = start_date;
-      this.date_range.end_date = end_date;
+      this.date_range.start = start_date;
+      this.date_range.end = end_date;
     },
     setStatusChats(status: boolean) {
       this.open_chats = status;
@@ -135,8 +137,8 @@ export const useExportData = defineStore('exportData', {
       this.isLoadingCreateExport = true;
       try {
         const exportData: Omit<ExportRequest, 'project_uuid'> = {
-          start_date: this.date_range.start_date,
-          end_date: this.date_range.end_date,
+          start_date: this.date_range.start,
+          end_date: this.date_range.end,
           open_chats: this.open_chats,
           closed_chats: this.closed_chats,
           type: this.type,
@@ -178,6 +180,14 @@ export const useExportData = defineStore('exportData', {
         this.setIsRenderExportData(false);
         this.setIsRenderExportDataFeedback(true);
       } catch (error) {
+        if (error?.status === 400) {
+          defaultAlert(
+            'error',
+            i18n.global.t('export_data.error_pending_export'),
+          );
+        } else {
+          defaultAlert('error', i18n.global.t('export_data.error_default'));
+        }
         console.error('Error creating export', error);
       } finally {
         this.isLoadingCreateExport = false;
@@ -186,8 +196,7 @@ export const useExportData = defineStore('exportData', {
   },
   getters: {
     hasEnabledToExport: (state) => {
-      const isDateRange =
-        state.date_range.start_date && state.date_range.end_date;
+      const isDateRange = state.date_range.start && state.date_range.end;
       const isOpenChatsOrClosedChats = state.open_chats || state.closed_chats;
       const isType = state.type;
       const isSectors = state.sectors.length > 0;

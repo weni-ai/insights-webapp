@@ -3,6 +3,8 @@ import exportApi, {
   ExportResponse,
   ModelFields,
 } from '@/services/api/resources/export/export';
+import i18n from '@/utils/plugins/i18n';
+import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';
 
 interface SelectedFields {
@@ -178,6 +180,14 @@ export const useExportData = defineStore('exportData', {
         this.setIsRenderExportData(false);
         this.setIsRenderExportDataFeedback(true);
       } catch (error) {
+        if (error.response.status === 400) {
+          defaultAlert(
+            'error',
+            i18n.global.t('export_data.error_pending_export'),
+          );
+        } else {
+          defaultAlert('error', i18n.global.t('export_data.error_default'));
+        }
         console.error('Error creating export', error);
       } finally {
         this.isLoadingCreateExport = false;

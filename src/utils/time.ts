@@ -111,6 +111,29 @@ export function getYesterdayDate(): DateRange {
   };
 }
 
+/**
+ * Gets the date range for the last N days starting from yesterday (excluding today).
+ * @param days - The number of days to look back from yesterday.
+ * @returns An object containing the start and end dates in 'yyyy-MM-dd' format,
+ *          and a formatted string representation of the date range.
+ */
+export function getYesterdayNDays(days: number): DateRange {
+  const endDate = subDays(new Date(), 1); // Yesterday
+  const startDate = subDays(endDate, days - 1); // N days before yesterday
+
+  const start = format(startDate, 'yyyy-MM-dd');
+  const end = format(endDate, 'yyyy-MM-dd');
+
+  const startDM = format(startDate, 'dd/MM');
+  const endDM = format(endDate, 'dd/MM');
+
+  return {
+    start,
+    end,
+    dmFormat: `${startDM} - ${endDM}`,
+  };
+}
+
 interface RangeTranslation {
   range: DateRange;
   translation: string;

@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
@@ -66,7 +66,7 @@ const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
   return isOddNumberOfWidgets && isLastWidgetAdd;
 };
 
-watch(currentDashboardWidgets, () => {
+const setDynamicWidgets = () => {
   dynamicWidgets.value = [];
 
   if (isCsatConfigured.value) {
@@ -84,6 +84,20 @@ watch(currentDashboardWidgets, () => {
   }
 
   dynamicWidgets.value.push({ type: 'add', uuid: '' });
+};
+
+watch(currentDashboardWidgets, () => {
+  setDynamicWidgets();
+});
+
+onMounted(() => {
+  if (dynamicWidgets.value.length === 0) {
+    setDynamicWidgets();
+  }
+});
+
+onUnmounted(() => {
+  dynamicWidgets.value = [];
 });
 </script>
 

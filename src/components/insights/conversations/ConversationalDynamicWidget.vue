@@ -13,6 +13,8 @@
       :currentTab="handleCurrentTab"
       :isOnlyTab="isOnlyTab"
       :isExpanded="isExpanded"
+      :isError="isError"
+      :actionError="actionError"
       @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
@@ -104,6 +106,10 @@ const {
   setCustomForm,
 } = conversationalCustomWidgets;
 
+const { customWidgetDataErrorByUuid } = storeToRefs(
+  conversationalCustomWidgets,
+);
+
 const {
   loadCsatWidgetData,
   loadNpsWidgetData,
@@ -124,10 +130,36 @@ const {
   isCsatAiConfig,
   isNpsHumanConfig,
   isNpsAiConfig,
+  isCsatWidgetDataError,
+  isNpsWidgetDataError,
 } = storeToRefs(conversationalWidgets);
 
 const isCsatOrNps = computed(() => {
   return ['csat', 'nps'].includes(props.type);
+});
+
+const actionError = computed(() => {
+  return {
+    title: t('conversations_dashboard.widget_error.title'),
+    buttonText: t('conversations_dashboard.widget_error.button'),
+    onClick: () => handleOpenDrawer(false),
+  };
+});
+
+const isError = computed(() => {
+  if (props.type === 'csat') {
+    return isCsatWidgetDataError.value;
+  }
+
+  if (props.type === 'nps') {
+    return isNpsWidgetDataError.value;
+  }
+
+  if (props.type === 'custom') {
+    return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
+  }
+
+  return false;
 });
 
 const widgetType = computed(() => {
@@ -155,7 +187,7 @@ const widgetData = computed(() => {
     csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
     nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
     custom: handleCustomWidgetData(
-      getCustomWidgetByUuid(props.uuid as string)?.data || null,
+      getCustomWidgetByUuid(props.uuid as string)?.data || { results: [] },
     ),
   };
 

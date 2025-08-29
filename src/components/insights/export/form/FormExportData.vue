@@ -98,20 +98,20 @@
       <section class="export-data-form__format">
         <UnnnicLabel :label="$t('export_data.select_format')" />
         <UnnnicRadio
-          :data-testid="'radio-format-csv'"
-          :modelValue="selectedFormat"
-          value=".csv"
-          @update:model-value="updateFormat('.csv')"
-        >
-          {{ '.CSV' }}
-        </UnnnicRadio>
-        <UnnnicRadio
           :data-testid="'radio-format-xlsx'"
           :modelValue="selectedFormat"
           value=".xlsx"
           @update:model-value="updateFormat('.xlsx')"
         >
           {{ '.XLSX' }}
+        </UnnnicRadio>
+        <UnnnicRadio
+          :data-testid="'radio-format-csv'"
+          :modelValue="selectedFormat"
+          value=".csv"
+          @update:model-value="updateFormat('.csv')"
+        >
+          {{ '.CSV' }}
         </UnnnicRadio>
       </section>
 

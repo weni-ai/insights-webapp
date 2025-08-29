@@ -46,7 +46,7 @@ export const useExportData = defineStore('exportData', {
     date_range: {} as DateRange,
     open_chats: true,
     closed_chats: false,
-    type: '.csv',
+    type: '.xlsx',
     export_data: {} as ExportResponse,
     accept_terms: false,
     sectors: [],

@@ -7,6 +7,7 @@
     autocomplete
     autocompleteIconLeft
     autocompleteClearOnFocus
+    :orderedByIndex="allLabel ? true : false"
     @update:model-value="updateModelValue"
   />
 </template>
@@ -76,11 +77,13 @@ export default {
     optionsWithAll() {
       const baseOptions = [...this.options];
 
-      if (baseOptions.length > 1 && this.allLabel) {
-        baseOptions.splice(1, 0, {
+      if (this.allLabel) {
+        const allOption = {
           value: '__all__',
           label: this.allLabel,
-        });
+        };
+
+        return [allOption, ...baseOptions];
       }
 
       return baseOptions;

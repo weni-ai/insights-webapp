@@ -146,6 +146,7 @@ export default {
             props: {
               status: item.status.status,
               label: item.status.label,
+              agent: item.agent,
             },
             events: {},
           },
@@ -168,7 +169,11 @@ export default {
         const baseContent = [
           {
             component: markRaw(AgentStatus),
-            props: { status: item.status.status, label: item.status.label },
+            props: {
+              status: item.status.status,
+              label: item.status.label,
+              agent: item.agent,
+            },
             events: {},
           },
           String(item.agent),

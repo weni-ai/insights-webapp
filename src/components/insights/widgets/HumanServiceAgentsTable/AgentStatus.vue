@@ -16,7 +16,10 @@
     >
       {{ label }}
     </span>
-    <DisconnectAgent :agent="agent" />
+    <DisconnectAgent
+      v-if="status === 'green'"
+      :agent="agent"
+    />
   </section>
 </template>
 
@@ -36,8 +39,11 @@ const props = defineProps({
     default: '',
   },
   agent: {
-    type: String,
-    default: '',
+    type: Object,
+    default: () => ({
+      name: '',
+      email: '',
+    }),
     required: false,
   },
 });
@@ -53,8 +59,8 @@ const statusClass = computed(() => {
 <style scoped lang="scss">
 .agent-status-container {
   display: flex;
-  gap: $unnnic-spacing-nano;
   align-items: center;
+  gap: $unnnic-spacing-nano;
 }
 
 .agent-status-label {

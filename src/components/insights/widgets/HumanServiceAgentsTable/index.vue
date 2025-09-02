@@ -177,7 +177,7 @@ export default {
               label: item.status.label,
               agent: {
                 name: item.agent,
-                email: 'marcus.viana@weni.ai' || item.agent_email,
+                email: item.agent_email,
               },
             },
             events: {},

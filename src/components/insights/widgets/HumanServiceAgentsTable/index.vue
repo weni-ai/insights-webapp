@@ -146,7 +146,10 @@ export default {
             props: {
               status: item.status.status,
               label: item.status.label,
-              agent: item.agent,
+              agent: {
+                name: item.agent,
+                email: item.agent_email,
+              },
             },
             events: {},
           },
@@ -172,7 +175,10 @@ export default {
             props: {
               status: item.status.status,
               label: item.status.label,
-              agent: item.agent,
+              agent: {
+                name: item.agent,
+                email: 'marcus.viana@weni.ai' || item.agent_email,
+              },
             },
             events: {},
           },

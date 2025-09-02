@@ -16,11 +16,14 @@
     >
       {{ label }}
     </span>
+    <DisconnectAgent :agent="agent" />
   </section>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+
+import DisconnectAgent from '@/components/DisconnectAgent.vue';
 
 const props = defineProps({
   status: {
@@ -31,6 +34,11 @@ const props = defineProps({
   label: {
     type: String,
     default: '',
+  },
+  agent: {
+    type: String,
+    default: '',
+    required: false,
   },
 });
 

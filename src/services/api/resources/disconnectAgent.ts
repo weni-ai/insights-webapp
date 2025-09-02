@@ -12,7 +12,7 @@ export default {
 
     const formattedBody: FormattedBody = {
       project_uuid: project.uuid,
-      agent: 'alan.dovale@weni.ai',
+      agent,
     };
 
     const response = (await http.post(

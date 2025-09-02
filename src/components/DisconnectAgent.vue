@@ -33,10 +33,14 @@
     >
       <section class="disconnect-agent-modal-content">
         <p class="disconnect-agent-modal-content__text">
-          {{ $t('disconnectAgent.description', { agent }) }}
+          {{ $t('disconnectAgent.description', { agent: props.agent.name }) }}
         </p>
         <p class="disconnect-agent-modal-content__text">
-          {{ $t('disconnectAgent.description_confirm', { agent }) }}
+          {{
+            $t('disconnectAgent.description_confirm', {
+              agent: props.agent.name,
+            })
+          }}
         </p>
       </section>
     </UnnnicModalDialog>
@@ -53,7 +57,11 @@ const { t } = useI18n();
 
 const props = defineProps({
   agent: {
-    type: String,
+    type: Object,
+    default: () => ({
+      name: '',
+      email: '',
+    }),
     required: true,
   },
 });
@@ -76,16 +84,16 @@ const handleUpdateModelValue = (value: boolean) => {
 const handleDisconnectModalClick = async () => {
   isLoading.value = true;
   try {
-    await disconnectAgentApi.disconnectAgent({ agent: props.agent });
+    await disconnectAgentApi.disconnectAgent({ agent: props.agent.email });
     modelValue.value = false;
     defaultAlert(
       'success',
-      t('disconnectAgent.sucess_message', { agent: props.agent }),
+      t('disconnectAgent.sucess_message', { agent: props.agent.name }),
     );
   } catch (error) {
     defaultAlert(
       'error',
-      t('disconnectAgent.error_message', { agent: props.agent }),
+      t('disconnectAgent.error_message', { agent: props.agent.name }),
     );
     console.error('Error disconnecting agent', error);
   } finally {
@@ -111,6 +119,10 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
 
   :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
     font-size: $unnnic-font-size-title-sm;
+  }
+  :deep(.unnnic-button--icon-on-center.unnnic-button--size-small) {
+    padding: 0;
+    width: $unnnic-font-size-title-sm;
   }
 }
 

@@ -190,8 +190,8 @@ const loadCardData = async () => {
 const handleCardClick = (cardId: string) => {
   const statusMap = {
     total_conversations: '',
-    resolved: 'resolved',
-    unresolved: 'unresolved',
+    resolved: 'optimized_resolution',
+    unresolved: 'other_conclusion',
     transferred_to_human: 'transferred_to_human_support',
   };
 

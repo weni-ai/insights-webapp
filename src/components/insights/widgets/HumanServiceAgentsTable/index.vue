@@ -182,7 +182,9 @@ export default {
                 email: item.agent_email,
               },
             },
-            events: {},
+            events: {
+              requestData: () => this.$emit('request-data'),
+            },
           },
           String(item.agent),
         ];

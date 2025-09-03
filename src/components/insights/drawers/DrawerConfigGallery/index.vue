@@ -76,7 +76,6 @@ export default {
   computed: {
     ...mapState(useProject, {
       isLoadedProjectFlows: 'isLoadedFlows',
-      isCommerce: 'isCommerce',
     }),
     ...mapState(useWidgets, { widget: 'currentWidgetEditing' }),
     ...mapState(useOnboarding, [

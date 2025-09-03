@@ -19,6 +19,7 @@
     <DisconnectAgent
       v-if="status === 'green'"
       :agent="agent"
+      @request-data="emits('request-data')"
     />
   </section>
 </template>
@@ -47,6 +48,8 @@ const props = defineProps({
     required: false,
   },
 });
+
+const emits = defineEmits(['request-data']);
 
 const statusClass = computed(() => {
   return {

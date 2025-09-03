@@ -37,6 +37,7 @@ interface ExportData {
   selected_fields: SelectedFields;
   enabled_models: string[];
   isLoadingCreateExport: boolean;
+  isLoadingCheckExportStatus: boolean;
 }
 
 export const useExportData = defineStore('exportData', {
@@ -57,6 +58,7 @@ export const useExportData = defineStore('exportData', {
     selected_fields: {},
     enabled_models: [],
     isLoadingCreateExport: false,
+    isLoadingCheckExportStatus: false,
   }),
 
   actions: {
@@ -170,12 +172,7 @@ export const useExportData = defineStore('exportData', {
 
         const response = await exportApi.createExport(exportData);
 
-        this.export_data = {
-          status: response.status,
-          created_at: response.created_at,
-          email: response.email,
-          uuid: response.uuid,
-        };
+        this.export_data = response;
 
         this.setIsRenderExportData(false);
         this.setIsRenderExportDataFeedback(true);
@@ -191,6 +188,17 @@ export const useExportData = defineStore('exportData', {
         console.error('Error creating export', error);
       } finally {
         this.isLoadingCreateExport = false;
+      }
+    },
+    async checkExportStatus() {
+      this.isLoadingCheckExportStatus = true;
+      try {
+        const response = await exportApi.checkExportStatus();
+        this.export_data = response;
+      } catch (error) {
+        console.error('Error checking export status', error);
+      } finally {
+        this.isLoadingCheckExportStatus = false;
       }
     },
   },

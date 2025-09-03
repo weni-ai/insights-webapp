@@ -33,9 +33,8 @@ interface ExportRequest {
 
 interface ExportResponse {
   status: string;
-  created_at: string;
   email: string;
-  uuid: string;
+  uuid_relatorio: string;
 }
 
 export default {
@@ -60,7 +59,7 @@ export default {
       project_uuid: project.uuid,
     };
 
-    const response = (await chatsHttp.get(`/chats/report /`, {
+    const response = (await chatsHttp.get(`/chats/report/`, {
       params: formattedParams,
     })) as ExportResponse;
 

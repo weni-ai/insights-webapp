@@ -757,5 +757,15 @@
     "cancel_btn": "Cancelar",
     "error_pending_export": "Ya existe un reporte para este proyecto en progreso, intente nuevamente más tarde!",
     "error_default": "Oops, algo salió mal"
+  },
+  "disconnectAgent": {
+    "title": "Desconectar agente",
+    "description": "¿Estás seguro de querer desconectar el agente {agent}?",
+    "description_confirm": "Después de la confirmación, el estado del agente {agent} será offline.",
+    "tooltip": "Desconectar agente",
+    "save_btn": "Desconectar",
+    "cancel_btn": "Cancelar",
+    "sucess_message": "{agent} está offline!",
+    "error_message": "Error al desconectar agente {agent}"
   }
 }

@@ -78,7 +78,7 @@ export default {
     },
   },
 
-  emits: ['seeMore'],
+  emits: ['seeMore', 'request-data'],
 
   data() {
     return {
@@ -151,7 +151,9 @@ export default {
                 email: item.agent_email,
               },
             },
-            events: {},
+            events: {
+              requestData: () => this.$emit('request-data'),
+            },
           },
           String(item.agent),
           String(item.opened),

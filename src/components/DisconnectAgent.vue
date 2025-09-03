@@ -1,5 +1,8 @@
 <template>
-  <section class="disconnect-agent-container">
+  <section
+    class="disconnect-agent-container"
+    @click.stop
+  >
     <UnnnicToolTip
       :text="$t('disconnectAgent.tooltip')"
       side="right"
@@ -30,6 +33,7 @@
       @primary-button-click="handleDisconnectModalClick"
       @secondary-button-click="handleCancelClick"
       @update:model-value="handleUpdateModelValue"
+      @click.stop
     >
       <section class="disconnect-agent-modal-content">
         <p class="disconnect-agent-modal-content__text">
@@ -66,10 +70,13 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(['request-data']);
+
 const modelValue = ref(false);
 const isLoading = ref(false);
 
-const handleModalClick = () => {
+const handleModalClick = (event: Event) => {
+  event.stopPropagation();
   modelValue.value = true;
 };
 
@@ -90,6 +97,7 @@ const handleDisconnectModalClick = async () => {
       'success',
       t('disconnectAgent.sucess_message', { agent: props.agent.name }),
     );
+    emits('request-data');
   } catch (error) {
     defaultAlert(
       'error',

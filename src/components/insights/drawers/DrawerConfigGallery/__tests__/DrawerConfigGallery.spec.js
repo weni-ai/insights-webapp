@@ -62,23 +62,21 @@ describe('DrawerConfigGallery.vue', () => {
     });
   });
 
-  it('renders UnnnicDrawer with gallery options withou vtex', async () => {
+  it('renders UnnnicDrawer with all gallery options', async () => {
     const configStore = useConfig(store);
-    const projectStore = useProject(store);
     configStore.project.uuid = '123';
-    projectStore.isCommerce = false;
     await wrapper.vm.$nextTick();
     const options = wrapper.findAllComponents('[data-testid="gallery-option"]');
-    expect(options.length).toBe(2);
+    expect(options.length).toBe(4);
 
     expect(options[0].text()).toContain('Funnel');
     expect(options[1].text()).toContain('Recurrence');
+    expect(options[2].text()).toContain('VTEX');
+    expect(options[3].text()).toContain('Template conversion');
   });
 
-  it('renders UnnnicDrawer with gallery options with vtex when UUID is in the list', async () => {
-    const projectStore = useProject(store);
+  it('renders UnnnicDrawer with consistent gallery options regardless of UUID', async () => {
     const configStore = useConfig(store);
-    projectStore.isCommerce = false;
     configStore.project.uuid = '95fa43d6-d91a-48d4-bbe8-256d93bf5254';
     await wrapper.vm.$nextTick();
 
@@ -91,11 +89,9 @@ describe('DrawerConfigGallery.vue', () => {
     expect(options[3].text()).toContain('Template conversion');
   });
 
-  it('renders UnnnicDrawer with gallery options with vtex when isCommerce is true regardless of UUID', async () => {
+  it('renders UnnnicDrawer with consistent gallery options for different project configurations', async () => {
     const configStore = useConfig(store);
-    const projectStore = useProject(store);
-    configStore.project.uuid = '123';
-    projectStore.isCommerce = true;
+    configStore.project.uuid = 'different-uuid-123';
     await wrapper.vm.$nextTick();
 
     const options = wrapper.findAllComponents('[data-testid="gallery-option"]');

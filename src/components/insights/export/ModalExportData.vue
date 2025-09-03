@@ -1,11 +1,20 @@
 <template>
   <section class="modal-export-data">
-    <UnnnicButton
-      type="primary"
-      size="large"
-      :text="t('export_data.title')"
-      @click="setIsRenderExportData(true)"
-    />
+    <UnnnicToolTip
+      data-testid="export-data-tooltip"
+      :text="t('export_data.tooltip')"
+      side="left"
+      :enabled="!hasExportData"
+    >
+      <UnnnicButton
+        type="primary"
+        size="large"
+        :text="t('export_data.title')"
+        :loading="isLoadingCheckExportStatus"
+        :disabled="!hasExportData"
+        @click="setIsRenderExportData(true)"
+      />
+    </UnnnicToolTip>
     <UnnnicModalDialog
       data-test-id="modal-dialog"
       :modelValue="isRenderExportData"
@@ -46,6 +55,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
+import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useExportData } from '@/store/modules/export/exportData';
 import FormExportData from './form/FormExportData.vue';
 
@@ -58,7 +68,42 @@ const {
   isRenderExportDataFeedback,
   hasEnabledToExport,
   isLoadingCreateExport,
+  export_data,
+  isLoadingCheckExportStatus,
 } = storeToRefs(useExportDataStore);
+
+const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
+const secondsToPoll = ref(60000);
+
+const hasExportData = computed(() => {
+  return export_data.value?.status?.toLowerCase() === 'ready';
+});
+
+const startPolling = () => {
+  if (pollingInterval.value) {
+    clearInterval(pollingInterval.value);
+  }
+
+  pollingInterval.value = setInterval(() => {
+    useExportDataStore.checkExportStatus();
+  }, secondsToPoll.value);
+};
+
+const stopPolling = () => {
+  if (pollingInterval.value) {
+    clearInterval(pollingInterval.value);
+    pollingInterval.value = null;
+  }
+};
+
+onMounted(() => {
+  useExportDataStore.checkExportStatus();
+  startPolling();
+});
+
+onUnmounted(() => {
+  stopPolling();
+});
 </script>
 
 <style lang="scss" scoped>

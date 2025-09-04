@@ -687,6 +687,7 @@
   },
   "export_data": {
     "title": "Exportar datos",
+    "tooltip": "La exportación está en progreso! Puede generar un nuevo informe para este proyecto una vez que se complete.",
     "description": "Seleccione los datos que desea exportar. El archivo completo será enviado a su correo electrónico después de la confirmación.",
     "feedback": "Recibirá un correo electrónico en breve. Recuerde verificar su carpeta de spam.",
     "feedback_title": "Procesando exportación",

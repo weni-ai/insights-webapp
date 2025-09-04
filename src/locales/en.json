@@ -687,6 +687,7 @@
   },
   "export_data": {
     "title": "Export data",
+    "tooltip": "Export is in progress! You will be able to generate a new report for this project once this is complete.",
     "description": "Select data to export. The full file will be sent to your email after confirmation.",
     "feedback": "You will receive it by email shortly. Remember to check your spam folder.",
     "feedback_title": "Processing export",

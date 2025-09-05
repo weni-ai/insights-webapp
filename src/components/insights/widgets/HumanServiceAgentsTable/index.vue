@@ -78,7 +78,7 @@ export default {
     },
   },
 
-  emits: ['seeMore'],
+  emits: ['seeMore', 'request-data'],
 
   data() {
     return {
@@ -146,8 +146,14 @@ export default {
             props: {
               status: item.status.status,
               label: item.status.label,
+              agent: {
+                name: item.agent,
+                email: item.agent_email,
+              },
             },
-            events: {},
+            events: {
+              requestData: () => this.$emit('request-data'),
+            },
           },
           String(item.agent),
           String(item.opened),
@@ -168,8 +174,17 @@ export default {
         const baseContent = [
           {
             component: markRaw(AgentStatus),
-            props: { status: item.status.status, label: item.status.label },
-            events: {},
+            props: {
+              status: item.status.status,
+              label: item.status.label,
+              agent: {
+                name: item.agent,
+                email: item.agent_email,
+              },
+            },
+            events: {
+              requestData: () => this.$emit('request-data'),
+            },
           },
           String(item.agent),
         ];

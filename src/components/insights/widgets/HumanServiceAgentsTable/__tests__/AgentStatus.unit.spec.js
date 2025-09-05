@@ -1,10 +1,28 @@
 import { mount, config } from '@vue/test-utils';
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, vi } from 'vitest';
 import { createI18n } from 'vue-i18n';
 import en from '@/locales/en.json';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 
 import AgentStatus from '../AgentStatus.vue';
+
+vi.mock('@/components/DisconnectAgent.vue', () => ({
+  default: {
+    name: 'DisconnectAgent',
+    template: '<div data-testid="disconnect-agent-mock" />',
+    props: ['agent'],
+  },
+}));
+
+vi.mock('@/services/api/resources/disconnectAgent', () => ({
+  default: {
+    disconnectAgent: vi.fn(),
+  },
+}));
+
+vi.mock('@/utils/env', () => ({
+  default: vi.fn(() => 'http://localhost:3000'),
+}));
 
 const i18n = createI18n({
   legacy: false,
@@ -16,11 +34,15 @@ const i18n = createI18n({
 
 config.global.plugins = [i18n, UnnnicSystem];
 
-// Mock UnnnicIcon component to avoid loading real icons
 const UnnnicIconStub = {
   template:
     '<div class="unnnic-icon" :data-icon="icon" :class="$attrs.class" :data-testid="$attrs[\'data-testid\']"><slot /></div>',
   props: ['icon', 'size'],
+};
+
+const DisconnectAgentStub = {
+  template: '<div data-testid="disconnect-agent-stub" />',
+  props: ['agent'],
 };
 
 describe('AgentStatus', () => {
@@ -40,6 +62,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -61,6 +84,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -79,6 +103,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -98,6 +123,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -116,6 +142,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -135,6 +162,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -165,16 +193,15 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
 
-      // Initially no label should be shown
       expect(wrapper.find('[data-testid="agent-status-label"]').exists()).toBe(
         false,
       );
 
-      // Update the props to include a label
       await wrapper.setProps({ label: 'Test Label' });
 
       const label = wrapper.find('[data-testid="agent-status-label"]');
@@ -193,6 +220,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -211,6 +239,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -229,6 +258,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -247,17 +277,15 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
 
-      // Check initial computed classes
       expect(wrapper.vm.statusClass['agent-status--green']).toBe(true);
 
-      // Update the status prop
       await wrapper.setProps({ status: 'orange' });
 
-      // Check that computed classes updated
       expect(wrapper.vm.statusClass['agent-status--green']).toBe(undefined);
       expect(wrapper.vm.statusClass['agent-status--orange']).toBe(true);
 
@@ -276,6 +304,7 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
@@ -302,37 +331,232 @@ describe('AgentStatus', () => {
           plugins: [i18n, UnnnicSystem],
           stubs: {
             UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
           },
         },
       });
 
-      // Check initial state
       let icon = wrapper.find('[data-testid="agent-status-icon"]');
       let label = wrapper.find('[data-testid="agent-status-label"]');
 
       expect(icon.classes()).toContain('agent-status--green');
       expect(label.text()).toBe('Online');
 
-      // Update both props
       await wrapper.setProps({
         status: 'gray',
         label: 'Offline',
       });
 
-      // Check that both updates were applied
       icon = wrapper.find('[data-testid="agent-status-icon"]');
       label = wrapper.find('[data-testid="agent-status-label"]');
 
       expect(icon.classes()).toContain('agent-status--gray');
       expect(label.text()).toBe('Offline');
 
-      // Remove the label
       await wrapper.setProps({ label: '' });
 
-      // Label should no longer exist in the DOM
       expect(wrapper.find('[data-testid="agent-status-label"]').exists()).toBe(
         false,
       );
+    });
+  });
+
+  describe('DisconnectAgent integration', () => {
+    it('renders DisconnectAgent component when status is green', () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      const disconnectAgent = wrapper.find(
+        '[data-testid="disconnect-agent-stub"]',
+      );
+      expect(disconnectAgent.exists()).toBe(true);
+    });
+
+    it('does not render DisconnectAgent component when status is gray', () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'gray',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      const disconnectAgent = wrapper.find(
+        '[data-testid="disconnect-agent-stub"]',
+      );
+      expect(disconnectAgent.exists()).toBe(false);
+    });
+
+    it('does not render DisconnectAgent component when status is orange', () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'orange',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      const disconnectAgent = wrapper.find(
+        '[data-testid="disconnect-agent-stub"]',
+      );
+      expect(disconnectAgent.exists()).toBe(false);
+    });
+
+    it('passes the correct agent prop to DisconnectAgent component', () => {
+      const mockAgent = {
+        name: 'Jane Smith',
+        email: 'jane.smith@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      const disconnectAgentComponent =
+        wrapper.findComponent(DisconnectAgentStub);
+      expect(disconnectAgentComponent.exists()).toBe(true);
+      expect(disconnectAgentComponent.props('agent')).toEqual(mockAgent);
+    });
+
+    it('shows and hides DisconnectAgent when status changes from green to gray', async () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(
+        wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
+      ).toBe(true);
+
+      await wrapper.setProps({ status: 'gray' });
+
+      expect(
+        wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
+      ).toBe(false);
+    });
+  });
+
+  describe('Agent prop', () => {
+    it('accepts agent prop with default values', () => {
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(wrapper.exists()).toBe(true);
+      expect(
+        wrapper.find('[data-testid="agent-status-container"]').exists(),
+      ).toBe(true);
+    });
+
+    it('accepts custom agent object', () => {
+      const customAgent = {
+        name: 'Custom Agent',
+        email: 'custom@example.com',
+        id: 123,
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+          agent: customAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      const disconnectAgentComponent =
+        wrapper.findComponent(DisconnectAgentStub);
+      expect(disconnectAgentComponent.props('agent')).toEqual(customAgent);
+    });
+
+    it('validates agent prop structure', () => {
+      const agentProp = AgentStatus.props.agent;
+
+      expect(agentProp.type).toBe(Object);
+      expect(agentProp.required).toBe(false);
+      expect(typeof agentProp.default).toBe('function');
+
+      const defaultAgent = agentProp.default();
+      expect(defaultAgent).toEqual({
+        name: '',
+        email: '',
+      });
     });
   });
 });

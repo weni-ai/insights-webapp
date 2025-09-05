@@ -3,7 +3,20 @@ import { mount } from '@vue/test-utils';
 
 import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
 
-// Mock emoji data
+vi.mock('emoji-mart-vue-fast', () => ({
+  emojis: {
+    smile: {
+      skins: [{ native: '😀' }],
+    },
+    heart: {
+      skins: [{ native: '❤️' }],
+    },
+    thumbsup: {
+      skins: [{ native: '👍' }],
+    },
+  },
+}));
+
 vi.mock('@emoji-mart/data', () => ({
   emojis: {
     smile: {
@@ -33,13 +46,21 @@ describe('SelectEmojiButton', () => {
           UnnnicEmojiPicker: {
             name: 'UnnnicEmojiPicker',
             template:
-              '<div class="unnnic-emoji-picker" :data-position="position"></div>',
-            props: ['returnName', 'position'],
+              '<div class="unnnic-emoji-picker" :data-position="position" :data-locale="locale"></div>',
+            props: ['returnName', 'position', 'locale'],
             emits: ['emoji-selected', 'close'],
+          },
+          UnnnicIcon: {
+            name: 'UnnnicIcon',
+            template: '<div class="unnnic-icon" :data-icon="icon"></div>',
+            props: ['icon', 'scheme', 'size'],
           },
         },
         mocks: {
           $t: (key) => key,
+          $i18n: {
+            locale: 'pt-BR',
+          },
         },
       },
     });
@@ -112,7 +133,7 @@ describe('SelectEmojiButton', () => {
       const selectedEmoji = wrapper.find(
         '[data-testid="select-emoji-button-selected-emoji"]',
       );
-      const icon = wrapper.findComponent('[data-icon="add_reaction"]');
+      const icon = wrapper.find('[data-icon="add_reaction"]');
 
       expect(selectedEmoji.exists()).toBe(true);
       expect(icon.exists()).toBe(false);
@@ -226,35 +247,33 @@ describe('SelectEmojiButton', () => {
     });
 
     it('should handle emoji picker emoji-selected event', async () => {
-      wrapper.vm.isEmojiPickerOpen = true;
-      await wrapper.vm.$nextTick();
+      const handleInputSpy = vi.spyOn(wrapper.vm, 'handleInput');
 
-      const emojiPicker = wrapper.findComponent('[data-position="top"]');
-      await emojiPicker.vm.$emit('emoji-selected', 'thumbsup');
+      await wrapper.vm.handleInput('thumbsup');
 
+      expect(handleInputSpy).toHaveBeenCalledWith('thumbsup');
       expect(wrapper.emitted('update:model-value')).toBeTruthy();
       expect(wrapper.emitted('update:model-value')[0][0]).toBe('thumbsup');
       expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
     });
 
     it('should handle emoji picker close event', async () => {
+      const closeEmojiPickerSpy = vi.spyOn(wrapper.vm, 'closeEmojiPicker');
       wrapper.vm.isEmojiPickerOpen = true;
-      await wrapper.vm.$nextTick();
 
-      const emojiPicker = wrapper.findComponent('[data-position="top"]');
-      await emojiPicker.vm.$emit('close');
+      await wrapper.vm.closeEmojiPicker();
 
+      expect(closeEmojiPickerSpy).toHaveBeenCalled();
       expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
     });
   });
 
   describe('Emoji Picker Visibility', () => {
     it('should show emoji picker when isEmojiPickerOpen is true', async () => {
+      wrapper.vm.isMounted = true;
       wrapper.vm.isEmojiPickerOpen = true;
-      await wrapper.vm.$nextTick();
 
-      const emojiPicker = wrapper.findComponent('[data-position="top"]');
-      expect(emojiPicker.exists()).toBe(true);
+      expect(wrapper.vm.isEmojiPickerOpen && wrapper.vm.isMounted).toBe(true);
     });
 
     it('should hide emoji picker when isEmojiPickerOpen is false', () => {

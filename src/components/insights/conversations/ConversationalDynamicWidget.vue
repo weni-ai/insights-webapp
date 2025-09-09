@@ -638,6 +638,7 @@ const MOCK_DATA = [
 <style lang="scss" scoped>
 .conversational-dynamic-widget {
   position: relative;
+  min-height: 490px;
 
   &__setup-widget {
     $header-height: 120px;

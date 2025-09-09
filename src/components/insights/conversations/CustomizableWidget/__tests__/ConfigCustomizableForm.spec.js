@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import ConfigCustomizableForm from '../CustomizableWidget/ConfigCustomizableForm.vue';
+import ConfigCustomizableForm from '../ConfigCustomizableForm.vue';
 
 config.global.plugins = [
   createI18n({

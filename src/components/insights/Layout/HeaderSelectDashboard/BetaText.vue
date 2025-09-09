@@ -2,8 +2,14 @@
   <section
     v-if="isConversationalDashboard"
     class="beta_text_container"
+    data-testid="beta-container"
   >
-    <p class="beta_text">BETA</p>
+    <p
+      class="beta_text"
+      data-testid="beta-text"
+    >
+      BETA
+    </p>
   </section>
 </template>
 

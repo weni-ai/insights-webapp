@@ -129,7 +129,6 @@ const handleToggleSubTopics = (topicIndex: number) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $unnnic-spacing-sm;
   }
 
   &__skeleton {

@@ -71,7 +71,8 @@
         "description_cancel": "Are you sure you want to cancel? All progress will be lost.",
         "cancel": "Cancel adding",
         "continue": "Keep adding"
-      }
+      },
+      "added_topic": "Added on {date} at {time}"
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",

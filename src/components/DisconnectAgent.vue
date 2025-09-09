@@ -5,9 +5,10 @@
   >
     <UnnnicToolTip
       :text="$t('disconnectAgent.tooltip')"
-      side="right"
+      side="top"
       class="disconnect-agent-tooltip"
       data-test-id="disconnect-agent-tooltip"
+      enabled
     >
       <UnnnicButton
         data-testid="disconnect-agent-button"

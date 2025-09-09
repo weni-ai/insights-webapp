@@ -8,6 +8,7 @@ export interface Topic {
   uuid?: string;
   name: string;
   context: string;
+  createdAt?: string;
   isNew?: boolean;
   subTopics?: Topic[];
 }
@@ -225,11 +226,13 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
           uuid: topic.uuid,
           name: topic.name,
           context: topic.description || '',
+          createdAt: topic.created_at,
           isNew: false,
           subTopics: topic.subtopic.map((subtopic) => ({
             uuid: subtopic.uuid,
             name: subtopic.name,
             context: subtopic.description || '',
+            createdAt: subtopic.created_at,
             isNew: false,
           })),
         }));

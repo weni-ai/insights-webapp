@@ -1,6 +1,7 @@
 <template>
   <UnnnicDrawer
     class="see-all-drawer"
+    data-testid="topics-see-all-drawer"
     :modelValue="modelValue"
     :title="$t('conversations_dashboard.most_talked_about_topics.title')"
     size="lg"
@@ -13,6 +14,7 @@
           $t('conversations_dashboard.most_talked_about_topics.subtopics')
         "
         :expandedItems="expandedItems"
+        data-testid="topics-see-all-table"
       />
     </template>
   </UnnnicDrawer>

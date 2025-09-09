@@ -71,7 +71,8 @@
         "description_cancel": "Are you sure you want to cancel? All progress will be lost.",
         "cancel": "Cancel adding",
         "continue": "Keep adding"
-      }
+      },
+      "added_topic": "Added on {date} at {time}"
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",
@@ -85,6 +86,11 @@
     "csat": "CSAT",
     "nps": "NPS",
     "custom": "Horizontal bar chart",
+    "no_data_available": "No data available for the period of use.",
+    "widget_error": {
+      "title": "Oops, there was a problem loading the data!",
+      "button": "Check widget configuration"
+    },
     "reviews": "reviews",
     "csat_widget": {
       "very_satisfied": "Very satisfied",

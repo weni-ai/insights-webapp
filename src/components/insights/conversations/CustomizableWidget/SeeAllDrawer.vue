@@ -1,13 +1,17 @@
 <template>
   <UnnnicDrawer
     class="see-all-drawer"
+    data-testid="see-all-drawer"
     :modelValue="modelValue"
     title="CUSTOM"
     size="lg"
     @close="emit('update:modelValue', false)"
   >
     <template #content>
-      <ProgressTable :progressItems="formattedData" />
+      <ProgressTable
+        :progressItems="formattedData"
+        data-testid="see-all-drawer-table"
+      />
     </template>
   </UnnnicDrawer>
 </template>

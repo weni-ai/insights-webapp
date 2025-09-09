@@ -7,6 +7,7 @@ import {
   getHours,
   getMinutes,
 } from 'date-fns';
+import { es, enUS, ptBR } from 'date-fns/locale';
 
 /**
  * Formats a number of seconds into a human-readable time string.
@@ -284,4 +285,43 @@ export function formatTimeStringWithDayNight(
   }
 
   return `${timeFormat} ${period}`;
+}
+
+/**
+ * Alternative implementation using date-fns localized tokens for more flexibility.
+ * This version uses the 'P' token which automatically adapts to locale conventions.
+ * @param date - The date to format
+ * @param locale - The locale code (e.g., 'en', 'pt-br', 'es')
+ * @returns A formatted object with time and localized date
+ */
+export function formatDateAndTimeLocalized(
+  date: Date,
+  locale: string = 'en',
+): {
+  time: string;
+  date: string;
+} {
+  const localeMap = {
+    'pt-br': ptBR,
+    en: enUS,
+    es: es,
+  };
+
+  const dateFnsLocale = localeMap[locale.toLowerCase()] || enUS;
+
+  // Time format is consistent across locales (24-hour format)
+  const time = format(date, 'HH:mm', { locale: dateFnsLocale });
+
+  // Use the 'P' token for automatic locale-specific date formatting
+  // This will adapt the format based on the locale:
+  // - en-US: "09/09/2025"
+  // - pt-BR: "09/09/2025"
+  // - es: "09/09/2025"
+  // Note: Some locales might use different separators or order
+  const formattedDate = format(date, 'P', { locale: dateFnsLocale });
+
+  return {
+    time,
+    date: formattedDate,
+  };
 }

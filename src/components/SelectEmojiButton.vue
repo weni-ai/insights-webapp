@@ -25,6 +25,7 @@
       data-testid="unnnic-emoji-picker"
       returnName
       :position="pickerPosition"
+      :locale="$i18n.locale"
       @emoji-selected="handleInput"
       @close="closeEmojiPicker"
     />
@@ -33,9 +34,9 @@
 
 <script>
 import { emojis } from '@emoji-mart/data';
+
 export default {
   name: 'SelectEmojiButton',
-
   props: {
     modelValue: {
       type: String,

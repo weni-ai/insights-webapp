@@ -1,7 +1,8 @@
 <template>
-  <section class="most-talked-about-topics">
+  <section class="most-talked-about-topics" data-testid="most-talked-about-topics">
     <BaseConversationWidget
       class="most-talked-about-topics__conversation-widget"
+      data-testid="topics-base-widget"
       :title="$t('conversations_dashboard.most_talked_about_topics.title')"
       :actions="[
         {
@@ -17,6 +18,7 @@
       <TreemapChart
         :isLoading="isLoadingTopicsDistribution"
         :data="treemapData"
+        data-testid="topics-treemap-chart"
         @click="handleSeeAllDrawer($event.label)"
       />
 
@@ -26,6 +28,7 @@
         size="small"
         :disabled="isLoadingTopicsDistribution"
         :text="$t('conversations_dashboard.most_talked_about_topics.see_all')"
+        data-testid="topics-see-all-button"
         @click="handleSeeAllDrawer()"
       />
 
@@ -34,6 +37,7 @@
         v-model="isSeeAllDrawerOpen"
         :data="treemapData"
         :expandedItems="expandedItems"
+        data-testid="topics-see-all-drawer"
       />
     </BaseConversationWidget>
 
@@ -48,10 +52,11 @@
       :actionText="
         $t('conversations_dashboard.most_talked_about_topics.add_first_topic')
       "
+      data-testid="topics-add-widget"
       @action="toggleAddTopicsDrawer"
     />
 
-    <DrawerTopics />
+    <DrawerTopics data-testid="topics-drawer" />
   </section>
 </template>
 

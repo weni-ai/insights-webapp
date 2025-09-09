@@ -71,7 +71,8 @@
         "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
         "cancel": "Cancelar",
         "continue": "Continuar"
-      }
+      },
+      "added_topic": "Adicionado em {date} às {time}"
     },
     "most_talked_about_topics": {
       "title": "Assuntos mais falados",

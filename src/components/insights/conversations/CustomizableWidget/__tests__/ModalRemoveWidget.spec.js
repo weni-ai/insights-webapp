@@ -58,7 +58,8 @@ describe('ModalRemoveWidget', () => {
       global: {
         stubs: {
           UnnnicModalDialog: {
-            template: '<div data-testid="modal-remove-widget" class="modal-remove-widget"><slot /></div>',
+            template:
+              '<div data-testid="modal-remove-widget" class="modal-remove-widget"><slot /></div>',
           },
         },
         mocks: {

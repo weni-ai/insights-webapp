@@ -28,7 +28,10 @@
     size="sm"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <p class="modal-remove-widget__description">
+    <p
+      class="modal-remove-widget__description"
+      data-testid="modal-remove-widget-description"
+    >
       {{
         $tc(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',

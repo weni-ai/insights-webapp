@@ -1,0 +1,30 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`WidgetError > Component structure > should match snapshot 1`] = `
+<section
+  class="widget-error"
+  data-testid="widget-error"
+  data-v-ad848305=""
+>
+  <unnnic-icon-stub
+    data-testid="widget-error-icon"
+    data-v-ad848305=""
+    icon="warning"
+    scheme="feedback-red"
+    size="md"
+  />
+  <p
+    class="widget-error__title"
+    data-testid="widget-error-title"
+    data-v-ad848305=""
+  >
+    Error Title
+  </p>
+  <unnnic-button-stub
+    data-testid="widget-error-button"
+    data-v-ad848305=""
+    text="Retry"
+    type="warning"
+  />
+</section>
+`;

@@ -14,7 +14,6 @@
       @update-topic-context="updateTopicContext"
       @toggle-sub-topics="toggleSubTopics"
     />
-
     <section
       v-if="!isSubTopic"
       :class="[
@@ -98,6 +97,11 @@
       </section>
     </section>
   </section>
+  <section class="form-topic-item-footer">
+    <p class="form-topic-item-footer__title">
+      {{ handleFormatDate(topic.createdAt) }}
+    </p>
+  </section>
   <ModalTopic
     :isOpen="isOpenModal"
     :type="modalType"
@@ -118,6 +122,7 @@ import { useI18n } from 'vue-i18n';
 import AddTopicButton from '../AddTopicButton.vue';
 import ModalTopic from '../ModalTopic.vue';
 import FormTopicCard from './FormTopicCard.vue';
+import { useDateTime } from '@/composables/useDateTime';
 
 interface Props {
   topic: Topic;
@@ -144,6 +149,7 @@ const emit = defineEmits<{
 }>();
 
 const { t } = useI18n();
+const { formatDateAndTimeWithLocale } = useDateTime();
 
 const showSubTopics = ref(false);
 const isOpenModal = ref(false);
@@ -203,6 +209,17 @@ const subTopicsTitle = computed(() => {
 const isLimitSubTopicsReached = computed(() => {
   return props.topic?.subTopics?.length >= 5;
 });
+
+const handleFormatDate = (date: string) => {
+  const { time, date: dateFormat } = formatDateAndTimeWithLocale(
+    new Date(date),
+  );
+
+  return t('conversations_dashboard.form_topic.added_topic', {
+    time,
+    date: dateFormat,
+  });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -261,6 +278,28 @@ const isLimitSubTopicsReached = computed(() => {
   &__sub-topics {
     display: flex;
     flex-direction: column;
+  }
+
+  &-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    justify-content: end;
+    width: 100%;
+    padding-bottom: $unnnic-spacing-sm;
+
+    &__title {
+      overflow: hidden;
+      color: $unnnic-color-neutral-cloudy;
+      text-align: right;
+      text-overflow: ellipsis;
+      font-family: $unnnic-font-family-secondary;
+      font-size: $unnnic-font-size-body-md;
+      font-weight: $unnnic-font-weight-regular;
+      line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+      font-style: italic;
+      padding-right: $unnnic-spacing-nano;
+    }
   }
 }
 </style>

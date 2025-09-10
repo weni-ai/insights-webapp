@@ -1,17 +1,25 @@
 <template>
-  <section class="widget-error">
+  <section
+    class="widget-error"
+    data-testid="widget-error"
+  >
     <UnnnicIcon
       icon="warning"
       size="md"
       scheme="feedback-red"
+      data-testid="widget-error-icon"
     />
-    <p class="widget-error__title">
+    <p
+      class="widget-error__title"
+      data-testid="widget-error-title"
+    >
       {{ title }}
     </p>
 
     <UnnnicButton
       :text="buttonText"
       type="warning"
+      data-testid="widget-error-button"
       @click="handleClick"
     />
   </section>
@@ -24,7 +32,7 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'click'): void;
+  (_e: 'click'): void;
 }>();
 
 const handleClick = () => {

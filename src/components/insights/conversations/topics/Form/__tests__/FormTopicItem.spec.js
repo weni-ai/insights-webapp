@@ -1,9 +1,18 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import FormTopicItem from '../FormTopicItem.vue';
+
+vi.mock('@/composables/useDateTime', () => ({
+  useDateTime: () => ({
+    formatDateAndTimeWithLocale: vi.fn(() => ({
+      time: '14:30',
+      date: '15/09/2025',
+    })),
+  }),
+}));
 
 config.global.plugins = [
   createI18n({
@@ -16,6 +25,7 @@ config.global.plugins = [
             sub_topics: 'Sub-topics',
             sub_topics_added: '{sub_topics} sub-topics added',
             add_sub_topic: 'Add Sub-topic',
+            added_topic: 'Added {time} - {date}',
           },
         },
       },
@@ -27,6 +37,7 @@ const mockTopic = {
   name: 'Test Topic',
   context: 'Test context',
   isNew: true,
+  createdAt: '2025-09-15T14:30:00Z',
   subTopics: [
     {
       name: 'Sub-topic 1',
@@ -108,6 +119,8 @@ describe('FormTopicItem', () => {
   const addSubTopicButton = () =>
     wrapper.find('[data-testid="form-topic-item-add-sub-topic-button"]');
   const modal = () => wrapper.find('[data-testid="form-topic-item-modal"]');
+  const dateFooter = () => wrapper.find('.form-topic-item-footer');
+  const dateFooterTitle = () => wrapper.find('.form-topic-item-footer__title');
 
   describe('Initial render', () => {
     it('should render the component with correct structure', () => {
@@ -371,13 +384,97 @@ describe('FormTopicItem', () => {
       const topicVariations = [
         { ...mockTopic, subTopics: [] },
         { ...mockTopic, isNew: false },
-        { name: '', context: '', isNew: true, subTopics: [] },
+        {
+          name: '',
+          context: '',
+          isNew: true,
+          subTopics: [],
+          createdAt: '2025-01-01T00:00:00Z',
+        },
       ];
 
       topicVariations.forEach((topic) => {
         wrapper = createWrapper({ topic });
         expect(wrapper.vm.$props.topic).toEqual(topic);
       });
+    });
+  });
+
+  describe('Date Footer', () => {
+    it('should render date footer with formatted date and time', () => {
+      expect(dateFooter().exists()).toBe(true);
+      expect(dateFooterTitle().exists()).toBe(true);
+    });
+
+    it('should call handleFormatDate with correct date', () => {
+      const spy = vi.spyOn(wrapper.vm, 'handleFormatDate');
+
+      wrapper.vm.handleFormatDate(mockTopic.createdAt);
+
+      expect(spy).toHaveBeenCalledWith(mockTopic.createdAt);
+    });
+
+    it('should format date correctly and display in footer', () => {
+      const formattedDate = wrapper.vm.handleFormatDate(mockTopic.createdAt);
+
+      expect(formattedDate).toBe('Added 14:30 - 15/09/2025');
+      expect(dateFooterTitle().text()).toBe(formattedDate);
+    });
+
+    it('should handle different date formats', () => {
+      const testDates = [
+        '2025-01-01T00:00:00Z',
+        '2025-12-31T23:59:59Z',
+        '2024-02-29T12:00:00Z',
+      ];
+
+      testDates.forEach((date) => {
+        wrapper = createWrapper({
+          topic: { ...mockTopic, createdAt: date },
+        });
+
+        const formattedDate = wrapper.vm.handleFormatDate(date);
+        expect(formattedDate).toContain('Added 14:30 - 15/09/2025');
+        expect(typeof formattedDate).toBe('string');
+        expect(formattedDate.length).toBeGreaterThan(0);
+      });
+    });
+
+    it('should update footer when topic createdAt changes', async () => {
+      const newDate = '2025-01-01T09:15:00Z';
+
+      await wrapper.setProps({
+        topic: { ...mockTopic, createdAt: newDate },
+      });
+
+      expect(dateFooterTitle().text()).toBe('Added 14:30 - 15/09/2025');
+    });
+
+    it('should have correct CSS classes for date footer', () => {
+      expect(dateFooter().classes()).toContain('form-topic-item-footer');
+      expect(dateFooterTitle().classes()).toContain(
+        'form-topic-item-footer__title',
+      );
+    });
+  });
+
+  describe('handleFormatDate method', () => {
+    it('should be a function', () => {
+      expect(typeof wrapper.vm.handleFormatDate).toBe('function');
+    });
+
+    it('should return a translated string with time and date', () => {
+      const result = wrapper.vm.handleFormatDate('2025-09-15T14:30:00Z');
+
+      expect(result).toBe('Added 14:30 - 15/09/2025');
+      expect(result).toContain('14:30');
+      expect(result).toContain('15/09/2025');
+    });
+
+    it('should handle invalid dates gracefully', () => {
+      const result = wrapper.vm.handleFormatDate('invalid-date');
+
+      expect(typeof result).toBe('string');
     });
   });
 });

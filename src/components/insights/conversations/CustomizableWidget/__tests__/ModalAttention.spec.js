@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import ModalAttention from '../CustomizableWidget/ModalAttention.vue';
+import ModalAttention from '../ModalAttention.vue';
 
 config.global.plugins = [
   createI18n({

@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`MostTalkedAboutTopicsWidget > Component structure > should match snapshot 1`] = `
+<section
+  class="most-talked-about-topics"
+  data-testid="most-talked-about-topics"
+  data-v-56fece4b=""
+>
+  <base-conversation-widget-stub
+    actions="[object Object]"
+    class="most-talked-about-topics__conversation-widget"
+    data-testid="topics-base-widget"
+    data-v-56fece4b=""
+    isloading="false"
+    isonlytab="false"
+    title="conversations_dashboard.most_talked_about_topics.title"
+  />
+  <!--v-if-->
+  <drawer-topics-stub
+    data-testid="topics-drawer"
+    data-v-56fece4b=""
+  />
+</section>
+`;

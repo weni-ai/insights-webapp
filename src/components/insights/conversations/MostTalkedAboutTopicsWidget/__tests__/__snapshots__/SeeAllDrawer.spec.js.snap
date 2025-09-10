@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SeeAllDrawer > Component structure > should match snapshot 1`] = `
+<div
+  class="see-all-drawer"
+  data-testid="topics-see-all-drawer"
+  modelvalue="true"
+  size="lg"
+  title="conversations_dashboard.most_talked_about_topics.title"
+>
+  
+  <progress-table-stub
+    data-testid="topics-see-all-table"
+    expandeditems="Technology"
+    isloading="false"
+    progressitems="[object Object],[object Object],[object Object]"
+    subitemsdescription="conversations_dashboard.most_talked_about_topics.subtopics"
+  />
+  
+</div>
+`;

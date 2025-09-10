@@ -4,7 +4,7 @@ import { createTestingPinia } from '@pinia/testing';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import CustomizableDrawer from '../CustomizableWidget/CustomizableDrawer.vue';
+import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 

@@ -6,6 +6,7 @@ import exportApi, {
 import i18n from '@/utils/plugins/i18n';
 import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';
+import { WidgetType } from '@/models/types/WidgetTypes';
 
 interface SelectedFields {
   [modelName: string]: string[];
@@ -17,9 +18,10 @@ interface DateRange {
 }
 
 interface SectionField {
-  type: string;
+  type?: string;
   hasSubOptions?: boolean;
   subOptions?: string[];
+  uuid?: string;
 }
 
 interface ConversationalModelFields {
@@ -39,7 +41,7 @@ interface ExportData {
   selected_fields: SelectedFields;
   enabled_models: string[];
   sections: TypeSections[];
-  custom_widgets: string[];
+  custom_widgets: WidgetType[];
   isLoadingCreateExport: boolean;
   isLoadingCheckExportStatus: boolean;
 }
@@ -84,6 +86,18 @@ export const useConversationalExport = defineStore('conversationalExport', {
     setModelFields(modelFields: ConversationalModelFields) {
       this.model_fields = modelFields;
     },
+    addCustomWidgets(widgets: WidgetType[]) {
+      if (Object.keys(this.model_fields).length > 5) return;
+
+      this.custom_widgets = widgets;
+
+      const customWidgetsFields = widgets.reduce((acc, widget) => {
+        acc[widget.uuid] = {};
+        return acc;
+      }, {} as ConversationalModelFields);
+
+      this.model_fields = { ...this.model_fields, ...customWidgetsFields };
+    },
     setSelectedFields(selectedFields: SelectedFields) {
       this.selected_fields = selectedFields;
     },
@@ -127,12 +141,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
     },
     initializeDefaultFields() {
       const defaultFields: ConversationalModelFields = {
-        resolutions: {
-          main: { type: 'section' },
-        },
-        transferred: {
-          main: { type: 'section' },
-        },
+        resolutions: {},
+        transferred: {},
         topics: {
           human: { type: 'subsection' },
           ai: { type: 'subsection' },
@@ -147,7 +157,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
         },
       };
 
-      this.setModelFields(defaultFields);
+      this.setModelFields({ ...defaultFields, ...this.model_fields });
     },
     async createExport() {
       this.isLoadingCreateExport = true;
@@ -200,7 +210,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
           sections: selectedSections,
           custom_widgets: this.custom_widgets,
         };
-
+        console.log('exportData', exportData);
         const response = await exportApi.createExport(exportData);
 
         this.export_data = response;

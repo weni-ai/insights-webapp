@@ -60,7 +60,7 @@ import { useI18n } from 'vue-i18n';
 
 // Types
 interface ModelField {
-  type: string;
+  type?: string;
 }
 
 interface ModelFields {
@@ -71,7 +71,7 @@ interface ModelFields {
 
 interface FieldItem {
   name: string;
-  type: string;
+  type?: string;
 }
 
 interface FilterItem {
@@ -109,14 +109,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n();
 
-// Methods
 const getModelFieldsList = (modelName: string): FieldItem[] => {
   const modelData = props.modelFields[modelName];
   if (!modelData) return [];
 
   return Object.entries(modelData).map(([fieldName, fieldData]) => ({
     name: fieldName,
-    type: fieldData.type,
+    type: fieldData.type || 'string',
   }));
 };
 

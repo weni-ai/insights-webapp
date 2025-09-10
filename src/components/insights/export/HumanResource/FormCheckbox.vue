@@ -3,10 +3,7 @@
     :modelFields="model_fields"
     :selectedFields="selected_fields"
     :enabledModels="enabled_models"
-    :sectors="sectors"
-    :queues="queues"
-    :agents="agents"
-    :tags="tags"
+    :modelFilters="modelFilters"
     :isLoading="isLoading"
     @model-toggle="handleModelToggle"
     @field-toggle="handleFieldToggle"
@@ -18,7 +15,7 @@ import ExportCheckboxs from '../ExportCheckboxs.vue';
 import exportService from '@/services/api/resources/export/export';
 import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 
 const humanResourceExport = useHumanResourceExport();
 const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
@@ -33,6 +30,25 @@ const {
   tags,
 } = storeToRefs(humanResourceExport);
 const isLoading = ref(false);
+
+const modelFilters = computed(() => [
+  {
+    modelName: 'sectors',
+    filterData: sectors.value,
+  },
+  {
+    modelName: 'queues',
+    filterData: queues.value,
+  },
+  {
+    modelName: 'users',
+    filterData: agents.value,
+  },
+  {
+    modelName: 'sector_tags',
+    filterData: tags.value,
+  },
+]);
 
 const fetchModelFields = async () => {
   isLoading.value = true;

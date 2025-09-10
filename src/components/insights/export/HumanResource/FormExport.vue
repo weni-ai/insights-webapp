@@ -6,17 +6,15 @@
       </p>
     </header>
     <section class="export-data-form__content">
-      <section class="export-data-form__date-range">
-        <UnnnicLabel :label="$t('export_data.select_data.label')" />
-        <FilterDate
-          v-model="date_range"
-          :placeholder="$t('export_data.select_data.placeholder')"
-          :options="shortCutOptions"
-          :minDate="handleMinDate()"
-          :maxDate="handleMaxDate()"
-          @update:model-value="updateDateRange"
-        />
-      </section>
+      <ExportFilterDate
+        v-model="date_range"
+        :label="$t('export_data.select_data.label')"
+        :placeholder="$t('export_data.select_data.placeholder')"
+        :options="shortCutOptions"
+        :minDate="handleMinDate()"
+        :maxDate="handleMaxDate()"
+        @update:model-value="updateDateRange"
+      />
 
       <section class="export-data-form__chats-status">
         <UnnnicRadio
@@ -109,10 +107,10 @@
 </template>
 
 <script setup lang="ts">
-import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 import FormCheckbox from './FormCheckbox.vue';
 import ExportFooter from '../ExportFooter.vue';
+import ExportFilterDate from '../ExportFilterDate.vue';
 import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
@@ -250,12 +248,6 @@ const handleMaxDate = () => {
     :deep(.unnnic-label__label) {
       margin: 0;
     }
-  }
-
-  &__date-range {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-nano;
   }
 
   &__description {

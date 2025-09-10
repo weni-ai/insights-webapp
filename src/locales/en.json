@@ -698,7 +698,12 @@
       "rooms": "Rooms",
       "users": "Agents",
       "sector_tags": "Tags",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "resolutions": "Resolution of conversations",
+      "transferred": "Conversations transferred to human support",
+      "topics": "Topics",
+      "csat": "CSAT",
+      "nps": "NPS"
     },
     "field_labels": {
       "config": "Configuration",
@@ -721,7 +726,9 @@
       "email": "Email",
       "first_name": "First name",
       "phone": "Phone",
-      "status": "Status"
+      "status": "Status",
+      "ai": "AI",
+      "human": "Human support"
     },
     "select_data": {
       "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",

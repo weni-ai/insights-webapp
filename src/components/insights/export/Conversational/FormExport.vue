@@ -8,7 +8,7 @@
     <section class="conversational-export-form__content">
       <ExportFilterDate
         v-model="date_range"
-        :label="$t('export_data.select_period.label')"
+        :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_period.placeholder')"
         :options="conversationalShortcuts"
         :minDate="getMinDate()"

@@ -35,7 +35,7 @@
           v-if="isRenderInsightButton"
           data-testid="insights-layout-header-generate-insight-button"
         />
-        <HumanResourceExport v-if="isRenderExportButton" />
+        <HumanSupportExport v-if="isRenderExportButton" />
       </section>
     </section>
     <section
@@ -71,7 +71,7 @@ import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
 import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
-import HumanResourceExport from '../export/HumanResourceExport.vue';
+import HumanSupportExport from '../export/HumanSupportExport.vue';
 
 import moment from 'moment';
 
@@ -84,7 +84,7 @@ export default {
     InsightsLayoutHeaderFilters,
     HeaderDashboardSettings,
     HeaderGenerateInsightButton,
-    HumanResourceExport,
+    HumanSupportExport,
   },
   computed: {
     ...mapState(useDashboards, [

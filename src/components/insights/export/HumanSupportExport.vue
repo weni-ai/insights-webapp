@@ -56,13 +56,13 @@
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed } from 'vue';
-import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
-import FormExport from './HumanResource/FormExport.vue';
+import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
+import FormExport from './HumanSupport/FormExport.vue';
 
 const { t } = useI18n();
-const useHumanResouceExport = useHumanResourceExport();
+const humanSupportExport = useHumanSupportExport();
 const { setIsRenderExportData, setIsRenderExportDataFeedback, createExport } =
-  useHumanResouceExport;
+  humanSupportExport;
 const {
   isRenderExportData,
   isRenderExportDataFeedback,
@@ -70,7 +70,7 @@ const {
   isLoadingCreateExport,
   export_data,
   isLoadingCheckExportStatus,
-} = storeToRefs(useHumanResouceExport);
+} = storeToRefs(humanSupportExport);
 
 const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
@@ -85,7 +85,7 @@ const startPolling = () => {
   }
 
   pollingInterval.value = setInterval(() => {
-    useHumanResouceExport.checkExportStatus();
+    humanSupportExport.checkExportStatus();
   }, secondsToPoll.value);
 };
 
@@ -97,7 +97,7 @@ const stopPolling = () => {
 };
 
 onMounted(() => {
-  useHumanResouceExport.checkExportStatus();
+  humanSupportExport.checkExportStatus();
   startPolling();
 });
 

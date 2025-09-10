@@ -13,13 +13,13 @@
 <script setup lang="ts">
 import ExportCheckboxs from '../ExportCheckboxs.vue';
 import exportService from '@/services/api/resources/export/humanSupport/export';
-import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
+import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref, computed } from 'vue';
 
-const humanResourceExport = useHumanResourceExport();
+const humanSupportExport = useHumanSupportExport();
 const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
-  humanResourceExport;
+  humanSupportExport;
 const {
   model_fields,
   selected_fields,
@@ -28,7 +28,7 @@ const {
   queues,
   agents,
   tags,
-} = storeToRefs(humanResourceExport);
+} = storeToRefs(humanSupportExport);
 const isLoading = ref(false);
 
 const modelFilters = computed(() => [

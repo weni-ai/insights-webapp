@@ -55,14 +55,14 @@
 
 <script setup lang="ts">
 import exportService from '@/services/api/resources/export/export';
-import { useExportData } from '@/store/modules/export/exportData';
+import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const exportDataStore = useExportData();
+const humanResourceExport = useHumanResourceExport();
 const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
-  exportDataStore;
+  humanResourceExport;
 const { t } = useI18n();
 const {
   model_fields,
@@ -72,7 +72,7 @@ const {
   queues,
   agents,
   tags,
-} = storeToRefs(exportDataStore);
+} = storeToRefs(humanResourceExport);
 const isLoading = ref(false);
 
 const fetchModelFields = async () => {

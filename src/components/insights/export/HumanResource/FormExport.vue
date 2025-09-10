@@ -139,13 +139,13 @@
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 import FormCheckboxsData from '../Form/FormCheckboxsData.vue';
-import { useExportData } from '@/store/modules/export/exportData';
+import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getLastNDays, getTodayDate } from '@/utils/time';
 
-const exportDataStore = useExportData();
+const humanResourceExport = useHumanResourceExport();
 const {
   setStatusChats,
   setDateRange,
@@ -155,7 +155,7 @@ const {
   setTags,
   setType,
   setAcceptTerms,
-} = exportDataStore;
+} = humanResourceExport;
 const {
   open_chats,
   sectors,
@@ -165,7 +165,7 @@ const {
   type,
   accept_terms,
   date_range,
-} = storeToRefs(exportDataStore);
+} = storeToRefs(humanResourceExport);
 
 const selectedFormat = computed(() => {
   return type.value === '.csv' ? '.csv' : '.xlsx';

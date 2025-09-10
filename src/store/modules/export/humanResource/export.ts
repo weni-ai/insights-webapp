@@ -40,7 +40,7 @@ interface ExportData {
   isLoadingCheckExportStatus: boolean;
 }
 
-export const useExportData = defineStore('exportData', {
+export const useHumanResourceExport = defineStore('humanResourceExport', {
   state: (): ExportData => ({
     isRenderExportData: false,
     isRenderExportDataFeedback: false,

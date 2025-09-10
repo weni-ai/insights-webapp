@@ -685,5 +685,15 @@
       "utm-revenue": "Total sales value",
       "orders-placed": "Number of sales made"
     }
+  },
+  "disconnectAgent": {
+    "title": "Disconnect agent",
+    "description": "Are you sure you want to disconnect agent {agent}?",
+    "description_confirm": "After confirmation, agent {agent} status will be offline.",
+    "tooltip": "Disconnect agent",
+    "save_btn": "Disconnect",
+    "cancel_btn": "Cancel",
+    "sucess_message": "{agent} is offline!",
+    "error_message": "Error when disconnecting agent {agent}"
   }
 }

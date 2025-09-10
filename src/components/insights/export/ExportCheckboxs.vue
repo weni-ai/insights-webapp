@@ -79,15 +79,17 @@ interface FilterItem {
   label: string;
 }
 
+interface ModelFilterConfig {
+  modelName: string;
+  filterData: FilterItem[];
+}
+
 // Props
 interface Props {
   modelFields: ModelFields;
   selectedFields: { [modelName: string]: string[] };
   enabledModels: string[];
-  sectors: FilterItem[];
-  queues: FilterItem[];
-  agents: FilterItem[];
-  tags: FilterItem[];
+  modelFilters: ModelFilterConfig[];
   isLoading: boolean;
 }
 
@@ -95,10 +97,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelFields: () => ({}),
   selectedFields: () => ({}),
   enabledModels: () => [],
-  sectors: () => [],
-  queues: () => [],
-  agents: () => [],
-  tags: () => [],
+  modelFilters: () => [],
   isLoading: false,
 });
 
@@ -130,20 +129,12 @@ const isModelEnabled = (modelName: string): boolean => {
 };
 
 const shouldRenderModel = (modelName: string): boolean => {
-  if (modelName === 'sectors') {
-    return props.sectors.length > 0;
-  }
+  const filterConfig = props.modelFilters.find(
+    (filter) => filter.modelName === modelName,
+  );
 
-  if (modelName === 'queues') {
-    return props.queues.length > 0;
-  }
-
-  if (modelName === 'users') {
-    return props.agents.length > 0;
-  }
-
-  if (modelName === 'sector_tags') {
-    return props.tags.length > 0;
+  if (filterConfig) {
+    return filterConfig.filterData.length > 0;
   }
 
   return true;

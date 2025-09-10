@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import ExportCheckboxs from '../ExportCheckboxs.vue';
-import exportService from '@/services/api/resources/export/export';
+import exportService from '@/services/api/resources/export/humanSupport/export';
 import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref, computed } from 'vue';

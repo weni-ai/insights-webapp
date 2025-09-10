@@ -2,7 +2,7 @@ import exportApi, {
   ExportRequest,
   ExportResponse,
   ModelFields,
-} from '@/services/api/resources/export/export';
+} from '@/services/api/resources/export/humanSupport/export';
 import i18n from '@/utils/plugins/i18n';
 import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';

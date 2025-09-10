@@ -93,7 +93,7 @@
         </section>
       </section>
 
-      <FormCheckboxsData />
+      <ExportCheckBoxs />
 
       <section class="export-data-form__format">
         <UnnnicLabel :label="$t('export_data.select_format')" />
@@ -138,7 +138,7 @@
 <script setup lang="ts">
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
-import FormCheckboxsData from '../Form/FormCheckboxsData.vue';
+import ExportCheckBoxs from '../ExportCheckboxs.vue';
 import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';

@@ -2,7 +2,7 @@
   <section class="form-checkboxs-data">
     <section class="form-checkboxs-data__models">
       <template
-        v-for="(modelData, modelName) in model_fields"
+        v-for="(modelData, modelName) in modelFields"
         :key="modelName"
       >
         <section
@@ -13,7 +13,7 @@
             <UnnnicCheckbox
               :modelValue="isModelEnabled(String(modelName))"
               :textRight="getModelLabel(String(modelName))"
-              @change="toggleModelEnabled(String(modelName), $event)"
+              @change="handleModelToggle(String(modelName), $event)"
             />
           </div>
 
@@ -31,7 +31,9 @@
               <UnnnicCheckbox
                 :modelValue="isFieldSelected(String(modelName), field.name)"
                 :textRight="getFieldLabel(field.name)"
-                @change="toggleField(String(modelName), field.name, $event)"
+                @change="
+                  handleFieldToggle(String(modelName), field.name, $event)
+                "
               />
             </template>
           </div>
@@ -54,54 +56,63 @@
 </template>
 
 <script setup lang="ts">
-import exportService from '@/services/api/resources/export/export';
-import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
-import { storeToRefs } from 'pinia';
-import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-const humanResourceExport = useHumanResourceExport();
-const { setModelFields, updateModelFieldSelection, toggleModelEnabled } =
-  humanResourceExport;
+// Types
+interface ModelField {
+  type: string;
+}
+
+interface ModelFields {
+  [modelName: string]: {
+    [fieldName: string]: ModelField;
+  };
+}
+
+interface FieldItem {
+  name: string;
+  type: string;
+}
+
+interface FilterItem {
+  value: string;
+  label: string;
+}
+
+// Props
+interface Props {
+  modelFields: ModelFields;
+  selectedFields: { [modelName: string]: string[] };
+  enabledModels: string[];
+  sectors: FilterItem[];
+  queues: FilterItem[];
+  agents: FilterItem[];
+  tags: FilterItem[];
+  isLoading: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  modelFields: () => ({}),
+  selectedFields: () => ({}),
+  enabledModels: () => [],
+  sectors: () => [],
+  queues: () => [],
+  agents: () => [],
+  tags: () => [],
+  isLoading: false,
+});
+
+// Emits
+const emit = defineEmits<{
+  'model-toggle': [modelName: string, enabled: boolean];
+  'field-toggle': [modelName: string, fieldName: string, selected: boolean];
+}>();
+
 const { t } = useI18n();
-const {
-  model_fields,
-  selected_fields,
-  enabled_models,
-  sectors,
-  queues,
-  agents,
-  tags,
-} = storeToRefs(humanResourceExport);
-const isLoading = ref(false);
 
-const fetchModelFields = async () => {
-  isLoading.value = true;
-  try {
-    const modelFields = await exportService.getModelFields();
-    const transformedFields: any = {};
-
-    Object.entries(modelFields).forEach(([modelName, fields]) => {
-      transformedFields[modelName] = {};
-      Object.entries(fields as any).forEach(
-        ([fieldName, fieldData]: [string, any]) => {
-          transformedFields[modelName][fieldName] = {
-            type: fieldData.type,
-          };
-        },
-      );
-    });
-
-    setModelFields(transformedFields);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
-const getModelFieldsList = (modelName: string) => {
-  const modelData = model_fields.value[modelName];
+// Methods
+const getModelFieldsList = (modelName: string): FieldItem[] => {
+  const modelData = props.modelFields[modelName];
   if (!modelData) return [];
 
   return Object.entries(modelData).map(([fieldName, fieldData]) => ({
@@ -110,43 +121,47 @@ const getModelFieldsList = (modelName: string) => {
   }));
 };
 
-const isFieldSelected = (modelName: string, fieldName: string) => {
-  return selected_fields.value[modelName]?.includes(fieldName) || false;
+const isFieldSelected = (modelName: string, fieldName: string): boolean => {
+  return props.selectedFields[modelName]?.includes(fieldName) || false;
 };
 
-const isModelEnabled = (modelName: string) => {
-  return enabled_models.value.includes(modelName);
+const isModelEnabled = (modelName: string): boolean => {
+  return props.enabledModels.includes(modelName);
 };
 
-const shouldRenderModel = (modelName: string) => {
+const shouldRenderModel = (modelName: string): boolean => {
   if (modelName === 'sectors') {
-    return sectors.value.length > 0;
+    return props.sectors.length > 0;
   }
 
   if (modelName === 'queues') {
-    return queues.value.length > 0;
+    return props.queues.length > 0;
   }
 
   if (modelName === 'users') {
-    return agents.value.length > 0;
+    return props.agents.length > 0;
   }
 
   if (modelName === 'sector_tags') {
-    return tags.value.length > 0;
+    return props.tags.length > 0;
   }
 
   return true;
 };
 
-const toggleField = (
+const handleModelToggle = (modelName: string, enabled: boolean): void => {
+  emit('model-toggle', modelName, enabled);
+};
+
+const handleFieldToggle = (
   modelName: string,
   fieldName: string,
   selected: boolean,
-) => {
-  updateModelFieldSelection(modelName, fieldName, selected);
+): void => {
+  emit('field-toggle', modelName, fieldName, selected);
 };
 
-const getModelLabel = (modelName: string) => {
+const getModelLabel = (modelName: string): string => {
   const translationKey = `export_data.model_labels.${modelName}`;
   const translation = t(translationKey);
 
@@ -157,7 +172,7 @@ const getModelLabel = (modelName: string) => {
   return modelName.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 };
 
-const getFieldLabel = (fieldName: string) => {
+const getFieldLabel = (fieldName: string): string => {
   const translationKey = `export_data.field_labels.${fieldName}`;
   const translation = t(translationKey);
 
@@ -173,10 +188,6 @@ const getFieldLabel = (fieldName: string) => {
 
   return fieldLabel;
 };
-
-onMounted(() => {
-  fetchModelFields();
-});
 </script>
 
 <style scoped lang="scss">

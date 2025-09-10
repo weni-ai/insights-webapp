@@ -8,7 +8,7 @@
       :enabled="!hasExportData"
     >
       <UnnnicButton
-        type="primary"
+        type="secondary"
         size="large"
         :text="t('export_data.title')"
         :loading="isLoadingCheckExportStatus"

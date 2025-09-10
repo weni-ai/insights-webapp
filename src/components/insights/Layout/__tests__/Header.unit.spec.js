@@ -95,7 +95,7 @@ describe('InsightsLayoutHeader.vue', () => {
           HeaderDashboardSettings: true,
           HeaderGenerateInsightButton: true,
           UnnnicButtonIcon: true,
-          ModalExportData: true,
+          HumanResourceExport: true,
         },
       },
       ...options,

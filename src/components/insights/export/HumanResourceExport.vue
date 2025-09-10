@@ -33,7 +33,7 @@
       @secondary-button-click="setIsRenderExportData(false)"
       @update:model-value="setIsRenderExportData(false)"
     >
-      <FormExportData />
+      <FormExport />
     </UnnnicModalDialog>
     <UnnnicModalDialog
       data-test-id="modal-dialog-feedback"
@@ -57,7 +57,7 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useExportData } from '@/store/modules/export/exportData';
-import FormExportData from './form/FormExportData.vue';
+import FormExport from './HumanResource/FormExport.vue';
 
 const { t } = useI18n();
 const useExportDataStore = useExportData();

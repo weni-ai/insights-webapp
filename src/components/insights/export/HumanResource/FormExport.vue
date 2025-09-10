@@ -95,42 +95,15 @@
 
       <FormCheckbox />
 
-      <section class="export-data-form__format">
-        <UnnnicLabel :label="$t('export_data.select_format')" />
-        <UnnnicRadio
-          :data-testid="'radio-format-xlsx'"
-          :modelValue="selectedFormat"
-          value=".xlsx"
-          @update:model-value="updateFormat('.xlsx')"
-        >
-          {{ '.XLSX' }}
-        </UnnnicRadio>
-        <UnnnicRadio
-          :data-testid="'radio-format-csv'"
-          :modelValue="selectedFormat"
-          value=".csv"
-          @update:model-value="updateFormat('.csv')"
-        >
-          {{ '.CSV' }}
-        </UnnnicRadio>
-      </section>
-
-      <section class="export-data-form__terms">
-        <p class="export-data-form__terms-warning">
-          <UnnnicIcon
-            icon="alert-circle-1"
-            filled
-            next
-            scheme="feedback-yellow"
-            size="ant"
-          />{{ $t('export_data.warning_terms') }}
-        </p>
-        <UnnnicCheckbox
-          :modelValue="accept_terms"
-          :textRight="$t('export_data.accept_terms')"
-          @update:model-value="updateAcceptTerms"
-        />
-      </section>
+      <ExportFooter
+        :selectedFormat="selectedFormat"
+        :acceptTerms="accept_terms"
+        :formatLabel="$t('export_data.select_format')"
+        :warningTermsText="$t('export_data.warning_terms')"
+        :acceptTermsText="$t('export_data.accept_terms')"
+        @format-change="updateFormat"
+        @accept-terms-change="updateAcceptTerms"
+      />
     </section>
   </section>
 </template>
@@ -139,6 +112,7 @@
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 import FormCheckbox from './FormCheckbox.vue';
+import ExportFooter from '../ExportFooter.vue';
 import { useHumanResourceExport } from '@/store/modules/export/humanResource/export';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
@@ -310,29 +284,6 @@ const handleMaxDate = () => {
     display: flex;
     flex-direction: column;
     gap: $unnnic-spacing-sm;
-  }
-
-  &__format {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-sm;
-  }
-
-  &__terms {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-sm;
-  }
-
-  &__terms-warning {
-    display: flex;
-    gap: $unnnic-spacing-xs;
-
-    color: $unnnic-color-neutral-dark;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
   }
 }
 </style>

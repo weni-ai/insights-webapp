@@ -10,7 +10,7 @@
         v-model="date_range"
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_period.placeholder')"
-        :options="conversationalShortcuts"
+        :options="shortCutOptions"
         :minDate="getMinDate()"
         :maxDate="getMaxDate()"
         @update:model-value="updateDateRange"
@@ -51,30 +51,34 @@ const selectedFormat = computed(() => {
   return type.value === 'CSV' ? '.csv' : '.xlsx';
 });
 
-const conversationalShortcuts = computed(() => [
+const shortCutOptions = computed(() => [
   {
-    name: t('conversational_export.shortcuts.last_3_days'),
-    id: 'last-3-days',
-  },
-  {
-    name: t('conversational_export.shortcuts.last_7_days'),
+    name: t('export_data.select_data.shortcuts.last_7_days'),
     id: 'last-7-days',
   },
   {
-    name: t('conversational_export.shortcuts.last_15_days'),
-    id: 'last-15-days',
+    name: t('export_data.select_data.shortcuts.last_14_days'),
+    id: 'last-14-days',
   },
   {
-    name: t('conversational_export.shortcuts.last_30_days'),
+    name: t('export_data.select_data.shortcuts.last_30_days'),
     id: 'last-30-days',
   },
   {
-    name: t('conversational_export.shortcuts.current_week'),
-    id: 'current-week',
+    name: t('export_data.select_data.shortcuts.last_60_days'),
+    id: 'last-60-days',
   },
   {
-    name: t('conversational_export.shortcuts.current_month'),
+    name: t('export_data.select_data.shortcuts.last_90_days'),
+    id: 'last-90-days',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.current_month'),
     id: 'current-month',
+  },
+  {
+    name: t('export_data.select_data.shortcuts.previous_month'),
+    id: 'previous-month',
   },
 ]);
 

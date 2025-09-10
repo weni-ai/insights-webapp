@@ -163,6 +163,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
       this.isLoadingCreateExport = true;
       try {
         const selectedSections: TypeSections[] = [];
+        const selectedCustomWidgets: string[] = [];
 
         if (this.enabled_models.includes('resolutions')) {
           selectedSections.push('RESOLUTIONS');
@@ -201,6 +202,14 @@ export const useConversationalExport = defineStore('conversationalExport', {
           }
         }
 
+        if (this.custom_widgets.length > 0) {
+          this.custom_widgets.forEach((widget) => {
+            if (this.enabled_models.includes(widget.uuid)) {
+              selectedCustomWidgets.push(widget.uuid);
+            }
+          });
+        }
+
         const exportData: Omit<ExportRequest, 'project_uuid'> = {
           filters: {
             start_date: this.date_range.start,
@@ -208,9 +217,9 @@ export const useConversationalExport = defineStore('conversationalExport', {
           },
           type: this.type,
           sections: selectedSections,
-          custom_widgets: this.custom_widgets,
+          custom_widgets: selectedCustomWidgets,
         };
-        console.log('exportData', exportData);
+
         const response = await exportApi.createExport(exportData);
 
         this.export_data = response;

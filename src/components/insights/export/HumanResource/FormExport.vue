@@ -138,7 +138,7 @@
 <script setup lang="ts">
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
-import FormCheckboxsData from './FormCheckboxsData.vue';
+import FormCheckboxsData from '../Form/FormCheckboxsData.vue';
 import { useExportData } from '@/store/modules/export/exportData';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';

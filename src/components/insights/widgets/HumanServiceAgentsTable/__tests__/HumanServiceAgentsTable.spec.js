@@ -22,6 +22,14 @@ global.window.parent = {
   postMessage: vi.fn(),
 };
 
+vi.mock('@/components/DisconnectAgent.vue', () => ({
+  default: {
+    name: 'DisconnectAgent',
+    template: '<button data-testid="disconnect-agent-mock" @click.stop />',
+    props: ['agent'],
+  },
+}));
+
 describe('HumanServiceAgentsTable', () => {
   let wrapper;
   let store;
@@ -638,8 +646,6 @@ describe('HumanServiceAgentsTable', () => {
 
       wrapper.vm.sort.header = statusHeader;
 
-      console.log(wrapper.vm.formattedItems);
-
       expect(wrapper.vm.formattedItems[0].status.status).toBe('gray');
       expect(wrapper.vm.formattedItems[1].status.status).toBe('gray');
       expect(wrapper.vm.formattedItems[2].status.status).toBe('green');
@@ -709,6 +715,72 @@ describe('HumanServiceAgentsTable', () => {
       expect(sortedItemsDesc[3].status.status).toBe('green');
 
       expansiveWrapper.unmount();
+    });
+  });
+
+  describe('Event handling', () => {
+    it('should not trigger row redirect when clicking on DisconnectAgent button', async () => {
+      const postMessageSpy = vi.spyOn(window.parent, 'postMessage');
+
+      wrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          headers: mockHeaders,
+          items: mockItems,
+        },
+        global: {
+          plugins: [store, i18n, UnnnicSystem],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const disconnectButton = wrapper.find(
+        '[data-testid="disconnect-agent-mock"]',
+      );
+      expect(disconnectButton.exists()).toBe(true);
+
+      await disconnectButton.trigger('click');
+
+      expect(postMessageSpy).not.toHaveBeenCalled();
+
+      postMessageSpy.mockRestore();
+    });
+
+    it('should trigger row redirect when clicking outside DisconnectAgent button', async () => {
+      const postMessageSpy = vi.spyOn(window.parent, 'postMessage');
+
+      wrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          headers: mockHeaders,
+          items: mockItems,
+        },
+        global: {
+          plugins: [store, i18n, UnnnicSystem],
+        },
+      });
+
+      await wrapper.vm.$nextTick();
+
+      const table = wrapper.findComponent(
+        '[data-testid="human-service-agents-table"]',
+      );
+      expect(table.exists()).toBe(true);
+
+      const mockItem = {
+        view_mode_url: 'http://example.com/agent/123',
+      };
+
+      wrapper.vm.redirectItem(mockItem);
+
+      expect(postMessageSpy).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: 'http://example.com/agent/123/insights',
+        },
+        '*',
+      );
+
+      postMessageSpy.mockRestore();
     });
   });
 });

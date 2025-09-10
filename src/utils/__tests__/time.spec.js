@@ -8,6 +8,7 @@ import {
   findMatchingDate,
   formatTimeWithDayNight,
   formatTimeStringWithDayNight,
+  formatDateAndTimeLocalized,
 } from '@/utils/time';
 
 import { format, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns';
@@ -228,6 +229,100 @@ describe('Date Utilities', () => {
 
       const noonResult = formatTimeStringWithDayNight(noonDate, true);
       expect(noonResult).toBe('12:00 AM');
+    });
+  });
+
+  describe('formatDateAndTimeLocalized', () => {
+    it('formats date and time with default locale (en)', () => {
+      const testDate = new Date(2025, 8, 15, 14, 30, 0); // September 15, 2025, 14:30
+      const result = formatDateAndTimeLocalized(testDate);
+
+      expect(result.time).toBe('14:30');
+      expect(result.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+    });
+
+    it('formats date and time with English locale using P token', () => {
+      const testDate = new Date(2025, 8, 15, 14, 30, 0); // September 15, 2025, 14:30
+      const result = formatDateAndTimeLocalized(testDate, 'en');
+
+      expect(result.time).toBe('14:30');
+      expect(result.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+      expect(typeof result.date).toBe('string');
+      expect(result.date.length).toBeGreaterThan(0);
+    });
+
+    it('formats date and time with Portuguese locale using P token', () => {
+      const testDate = new Date(2025, 8, 15, 14, 30, 0); // September 15, 2025, 14:30
+      const result = formatDateAndTimeLocalized(testDate, 'pt-br');
+
+      expect(result.time).toBe('14:30');
+      expect(result.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+      expect(typeof result.date).toBe('string');
+      expect(result.date.length).toBeGreaterThan(0);
+    });
+
+    it('formats date and time with Spanish locale using P token', () => {
+      const testDate = new Date(2025, 8, 15, 14, 30, 0); // September 15, 2025, 14:30
+      const result = formatDateAndTimeLocalized(testDate, 'es');
+
+      expect(result.time).toBe('14:30');
+      expect(result.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+      expect(typeof result.date).toBe('string');
+      expect(result.date.length).toBeGreaterThan(0);
+    });
+
+    it('handles different times correctly with localization', () => {
+      const morningDate = new Date(2025, 0, 1, 9, 5, 0); // January 1, 2025, 09:05
+      const morningResult = formatDateAndTimeLocalized(morningDate, 'en');
+
+      expect(morningResult.time).toBe('09:05');
+      expect(morningResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+
+      const eveningDate = new Date(2025, 11, 31, 23, 59, 0); // December 31, 2025, 23:59
+      const eveningResult = formatDateAndTimeLocalized(eveningDate, 'pt-br');
+
+      expect(eveningResult.time).toBe('23:59');
+      expect(eveningResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+    });
+
+    it('falls back to en locale for unknown locale', () => {
+      const testDate = new Date(2025, 8, 15, 14, 30, 0); // September 15, 2025, 14:30
+      const result = formatDateAndTimeLocalized(testDate, 'unknown-locale');
+
+      expect(result.time).toBe('14:30');
+      expect(result.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+      expect(typeof result.date).toBe('string');
+      expect(result.date.length).toBeGreaterThan(0);
+    });
+
+    it('ensures time format is consistent across locales', () => {
+      const testDate = new Date(2025, 8, 15, 5, 7, 0); // September 15, 2025, 05:07
+
+      const enResult = formatDateAndTimeLocalized(testDate, 'en');
+      const ptResult = formatDateAndTimeLocalized(testDate, 'pt-br');
+      const esResult = formatDateAndTimeLocalized(testDate, 'es');
+
+      expect(enResult.time).toBe('05:07');
+      expect(ptResult.time).toBe('05:07');
+      expect(esResult.time).toBe('05:07');
+
+      expect(enResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+      expect(ptResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+      expect(esResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+    });
+
+    it('handles edge case dates correctly', () => {
+      const leapYearDate = new Date(2024, 1, 29, 12, 0, 0); // February 29, 2024 (leap year)
+      const result = formatDateAndTimeLocalized(leapYearDate, 'pt-br');
+
+      expect(result.time).toBe('12:00');
+      expect(result.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+
+      const newYearDate = new Date(2025, 0, 1, 0, 0, 0); // January 1, 2025, 00:00
+      const newYearResult = formatDateAndTimeLocalized(newYearDate, 'es');
+
+      expect(newYearResult.time).toBe('00:00');
+      expect(newYearResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
     });
   });
 });

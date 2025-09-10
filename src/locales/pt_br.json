@@ -71,7 +71,8 @@
         "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
         "cancel": "Cancelar",
         "continue": "Continuar"
-      }
+      },
+      "added_topic": "Adicionado em {date} às {time}"
     },
     "most_talked_about_topics": {
       "title": "Assuntos mais falados",
@@ -684,5 +685,15 @@
       "utm-revenue": "Valor total das vendas",
       "orders-placed": "Número de vendas"
     }
+  },
+  "disconnectAgent": {
+    "title": "Desconectar agente",
+    "description": "Tem certeza que deseja desconectar o agente {agent}?",
+    "description_confirm": "Após confirmação, o status do agente {agent} será offline.",
+    "tooltip": "Desconectar agente",
+    "save_btn": "Desconectar",
+    "cancel_btn": "Cancelar",
+    "sucess_message": "{agent} está offline!",
+    "error_message": "Erro ao desconectar agente {agent}"
   }
 }

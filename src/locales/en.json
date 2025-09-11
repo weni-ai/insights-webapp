@@ -698,7 +698,12 @@
       "rooms": "Rooms",
       "users": "Agents",
       "sector_tags": "Tags",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "resolutions": "Resolution of conversations",
+      "transferred": "Conversations transferred to human support",
+      "topics": "Topics",
+      "csat": "CSAT",
+      "nps": "NPS"
     },
     "field_labels": {
       "config": "Configuration",
@@ -721,7 +726,9 @@
       "email": "Email",
       "first_name": "First name",
       "phone": "Phone",
-      "status": "Status"
+      "status": "Status",
+      "ai": "AI",
+      "human": "Human support"
     },
     "select_data": {
       "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",
@@ -759,5 +766,15 @@
     "cancel_btn": "Cancel",
     "error_pending_export": "There is already a report for this project in progress, try again later!",
     "error_default": "Oops, something went wrong"
+  },
+  "disconnectAgent": {
+    "title": "Disconnect agent",
+    "description": "Are you sure you want to disconnect agent {agent}?",
+    "description_confirm": "After confirmation, agent {agent} status will be offline.",
+    "tooltip": "Disconnect agent",
+    "save_btn": "Disconnect",
+    "cancel_btn": "Cancel",
+    "sucess_message": "{agent} is offline!",
+    "error_message": "Error when disconnecting agent {agent}"
   }
 }

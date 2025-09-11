@@ -698,7 +698,12 @@
       "rooms": "Salas",
       "users": "Agentes",
       "sector_tags": "Tags",
-      "contacts": "Contatos"
+      "contacts": "Contatos",
+      "resolutions": "Resoluções de conversas",
+      "transferred": "Conversas transferidas para atendimento humano",
+      "topics": "Assuntos",
+      "csat": "CSAT",
+      "nps": "NPS"
     },
     "field_labels": {
       "config": "Configuração",
@@ -721,7 +726,9 @@
       "email": "E-mail",
       "first_name": "Nome",
       "phone": "Telefone",
-      "status": "Status"
+      "status": "Status",
+      "ai": "IA",
+      "human": "Atendimento humano"
     },
     "select_data": {
       "label": "Selecione o período para busca de dados (máximo de 92 dias entre a data inicial e a data final)",
@@ -759,5 +766,15 @@
     "cancel_btn": "Cancelar",
     "error_pending_export": "Já existe um relatório para este projeto em andamento, tente novamente mais tarde!",
     "error_default": "Oops, aconteceu algum problema"
+  },
+  "disconnectAgent": {
+    "title": "Desconectar agente",
+    "description": "Tem certeza que deseja desconectar o agente {agent}?",
+    "description_confirm": "Após confirmação, o status do agente {agent} será offline.",
+    "tooltip": "Desconectar agente",
+    "save_btn": "Desconectar",
+    "cancel_btn": "Cancelar",
+    "sucess_message": "{agent} está offline!",
+    "error_message": "Erro ao desconectar agente {agent}"
   }
 }

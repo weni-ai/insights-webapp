@@ -2,7 +2,7 @@ import exportApi, {
   ExportRequest,
   ExportResponse,
   ModelFields,
-} from '@/services/api/resources/export/export';
+} from '@/services/api/resources/export/humanSupport/export';
 import i18n from '@/utils/plugins/i18n';
 import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';
@@ -40,7 +40,7 @@ interface ExportData {
   isLoadingCheckExportStatus: boolean;
 }
 
-export const useExportData = defineStore('exportData', {
+export const useHumanSupportExport = defineStore('humanSupportExport', {
   state: (): ExportData => ({
     isRenderExportData: false,
     isRenderExportDataFeedback: false,
@@ -126,6 +126,11 @@ export const useExportData = defineStore('exportData', {
       if (enabled) {
         if (!this.enabled_models.includes(modelName)) {
           this.enabled_models.push(modelName);
+        }
+
+        if (this.model_fields[modelName]) {
+          const allFields = Object.keys(this.model_fields[modelName]);
+          this.selected_fields[modelName] = [...allFields];
         }
       } else {
         this.enabled_models = this.enabled_models.filter(

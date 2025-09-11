@@ -99,7 +99,15 @@ const widgetProps = computed(() => {
 });
 
 const widgetEvents = computed(() => {
-  return null;
+  const { type } = props.widget.value;
+
+  const mappingEvents = {
+    table_dynamic_by_filter: {
+      requestData: () => updateWidgetData(),
+    },
+  };
+
+  return mappingEvents[type] || null;
 });
 
 const updateWidgetData = async () => {

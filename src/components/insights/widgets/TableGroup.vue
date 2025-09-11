@@ -110,7 +110,7 @@ export default {
       }
 
       const formatRowValue = (value) => {
-        const isDateValid = (date) => !isNaN(new Date(date));
+        const isDateValid = (date) => moment(date, moment.ISO_8601).isValid();
 
         if (Array.isArray(value)) {
           return {

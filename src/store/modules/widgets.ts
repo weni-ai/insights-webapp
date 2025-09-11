@@ -6,6 +6,7 @@ import { isObjectsEquals } from '@/utils/object';
 import { defineStore } from 'pinia';
 import { useConversationalWidgets } from './conversational/widgets';
 import { useCustomWidgets } from './conversational/customWidgets';
+import { useConversationalExport } from './export/conversational/export';
 
 export const useWidgets = defineStore('widgets', {
   state: () => ({
@@ -93,12 +94,14 @@ export const useWidgets = defineStore('widgets', {
       if (widgets?.length > 0) {
         const { setCsatWidget, setNpsWidget } = useConversationalWidgets();
         const { setCustomWidgets } = useCustomWidgets();
+        const { addCustomWidgets } = useConversationalExport();
 
         const customWidgets = widgets.filter(
           (widget) => widget.source === 'conversations.custom',
         );
 
         setCustomWidgets(customWidgets);
+        addCustomWidgets(customWidgets);
 
         const csatWidget = widgets.find(
           (widget) => widget.source === 'conversations.csat',

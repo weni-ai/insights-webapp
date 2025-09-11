@@ -11,9 +11,10 @@
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_data.placeholder')"
         :options="shortCutOptions"
-        :minDate="handleMinDate()"
-        :maxDate="handleMaxDate()"
+        :minDate="getMinDate()"
+        :maxDate="getMaxDate()"
         @update:model-value="updateDateRange"
+        @select-date="updateSelectDateRange"
       />
 
       <section class="export-data-form__chats-status">
@@ -113,9 +114,9 @@ import ExportFooter from '../ExportFooter.vue';
 import ExportFilterDate from '../ExportFilterDate.vue';
 import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getLastNDays, getTodayDate } from '@/utils/time';
+import { format, subDays, addDays, isValid, parseISO, isAfter } from 'date-fns';
 
 const humanSupportExport = useHumanSupportExport();
 const {
@@ -159,6 +160,10 @@ const updateDateRange = (value: { start: string; end: string }) => {
   setDateRange(value.start, value.end);
 };
 
+const updateSelectDateRange = (value: { start: string; end: string }) => {
+  selectDateRange.value = value;
+};
+
 const updateChatStatus = (status: string) => {
   setStatusChats(status === 'open');
 };
@@ -192,6 +197,8 @@ const updateAcceptTerms = (value: boolean) => {
 
 const { t } = useI18n();
 
+const selectDateRange = ref({ start: '', end: '' });
+
 const shortCutOptions = computed(() => [
   {
     name: t('export_data.select_data.shortcuts.last_7_days'),
@@ -223,14 +230,64 @@ const shortCutOptions = computed(() => [
   },
 ]);
 
-const handleMinDate = () => {
-  const minDate = getLastNDays(92).start;
-  return minDate;
+const getMinDate = (): string => {
+  const currentSelection = selectDateRange.value;
+
+  const defaultMin = format(subDays(new Date(), 92), 'yyyy-MM-dd');
+
+  if (currentSelection.start === '' && currentSelection.end === '') {
+    return null;
+  }
+
+  if (!currentSelection || !currentSelection.start) {
+    return defaultMin;
+  }
+
+  const startDate = parseISO(currentSelection.start);
+
+  if (
+    isValid(startDate) &&
+    (!currentSelection.end || currentSelection.start === currentSelection.end)
+  ) {
+    const calculatedMin = format(subDays(startDate, 92), 'yyyy-MM-dd');
+    const calculatedMinDate = parseISO(calculatedMin);
+    return isValid(calculatedMinDate) ? calculatedMin : defaultMin;
+  }
+
+  if (!isValid(startDate)) {
+    return null;
+  }
+
+  if (isValid(startDate) && defaultMin !== format(startDate, 'yyyy-MM-dd')) {
+    return format(subDays(startDate, 92), 'yyyy-MM-dd');
+  }
+
+  return defaultMin;
 };
 
-const handleMaxDate = () => {
-  const maxDate = getTodayDate().start;
-  return maxDate;
+const getMaxDate = (): string => {
+  const today = new Date();
+  const currentSelection = selectDateRange.value;
+  const defaultMax = format(today, 'yyyy-MM-dd');
+
+  if (!currentSelection || !currentSelection.start) {
+    return defaultMax;
+  }
+
+  const startDate = parseISO(currentSelection.start);
+
+  if (
+    isValid(startDate) &&
+    (!currentSelection.end || currentSelection.start === currentSelection.end)
+  ) {
+    const calculatedMax = addDays(startDate, 92);
+    if (isAfter(calculatedMax, today)) {
+      return defaultMax;
+    }
+    return format(calculatedMax, 'yyyy-MM-dd');
+  }
+
+  return defaultMax;
 };
 </script>
 

@@ -8,6 +8,7 @@
       :minDate="minDate"
       :maxDate="maxDate"
       @update:model-value="handleUpdateModelValue"
+      @select-date="handleDateSelect"
     />
   </section>
 </template>
@@ -45,10 +46,15 @@ withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   'update:model-value': [value: DateRange];
+  'select-date': [value: DateRange];
 }>();
 
 const handleUpdateModelValue = (value: DateRange): void => {
   emit('update:model-value', value);
+};
+
+const handleDateSelect = (value: DateRange): void => {
+  emit('select-date', value);
 };
 </script>
 

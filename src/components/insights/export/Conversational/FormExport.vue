@@ -14,6 +14,7 @@
         :minDate="getMinDate()"
         :maxDate="getMaxDate()"
         @update:model-value="updateDateRange"
+        @select-date="updateSelectDateRange"
       />
 
       <FormCheckbox />
@@ -37,9 +38,9 @@ import ExportFooter from '../ExportFooter.vue';
 import FormCheckbox from './FormCheckbox.vue';
 import { useConversationalExport } from '@/store/modules/export/conversational/export';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getLastNDays, getTodayDate } from '@/utils/time';
+import { format, subDays, addDays, isValid, parseISO, isAfter } from 'date-fns';
 
 const conversationalExport = useConversationalExport();
 const { setDateRange, setType, setAcceptTerms } = conversationalExport;
@@ -50,6 +51,8 @@ const { t } = useI18n();
 const selectedFormat = computed(() => {
   return type.value === 'CSV' ? '.csv' : '.xlsx';
 });
+
+const selectDateRange = ref({ start: '', end: '' });
 
 const shortCutOptions = computed(() => [
   {
@@ -83,17 +86,71 @@ const shortCutOptions = computed(() => [
 ]);
 
 const getMinDate = (): string => {
-  const minDate = getLastNDays(90).start;
-  return minDate;
+  const currentSelection = selectDateRange.value;
+
+  const defaultMin = format(subDays(new Date(), 92), 'yyyy-MM-dd');
+
+  if (currentSelection.start === '' && currentSelection.end === '') {
+    return null;
+  }
+
+  if (!currentSelection || !currentSelection.start) {
+    return defaultMin;
+  }
+
+  const startDate = parseISO(currentSelection.start);
+
+  if (
+    isValid(startDate) &&
+    (!currentSelection.end || currentSelection.start === currentSelection.end)
+  ) {
+    const calculatedMin = format(subDays(startDate, 92), 'yyyy-MM-dd');
+    const calculatedMinDate = parseISO(calculatedMin);
+    return isValid(calculatedMinDate) ? calculatedMin : defaultMin;
+  }
+
+  if (!isValid(startDate)) {
+    return null;
+  }
+
+  if (isValid(startDate) && defaultMin !== format(startDate, 'yyyy-MM-dd')) {
+    return format(subDays(startDate, 92), 'yyyy-MM-dd');
+  }
+
+  return defaultMin;
 };
 
 const getMaxDate = (): string => {
-  const maxDate = getTodayDate().start;
-  return maxDate;
+  const today = new Date();
+  const currentSelection = selectDateRange.value;
+  const defaultMax = format(today, 'yyyy-MM-dd');
+
+  if (!currentSelection || !currentSelection.start) {
+    return defaultMax;
+  }
+
+  const startDate = parseISO(currentSelection.start);
+
+  if (
+    isValid(startDate) &&
+    (!currentSelection.end || currentSelection.start === currentSelection.end)
+  ) {
+    const calculatedMax = addDays(startDate, 92);
+    if (isAfter(calculatedMax, today)) {
+      return defaultMax;
+    }
+    return format(calculatedMax, 'yyyy-MM-dd');
+  }
+
+  return defaultMax;
 };
 
 const updateDateRange = (value: { start: string; end: string }) => {
   setDateRange(value.start, value.end);
+};
+
+const updateSelectDateRange = (value: { start: string; end: string }) => {
+  selectDateRange.value = value;
 };
 
 const updateFormat = (format: '.csv' | '.xlsx') => {

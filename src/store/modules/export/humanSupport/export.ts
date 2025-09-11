@@ -127,6 +127,11 @@ export const useHumanSupportExport = defineStore('humanSupportExport', {
         if (!this.enabled_models.includes(modelName)) {
           this.enabled_models.push(modelName);
         }
+
+        if (this.model_fields[modelName]) {
+          const allFields = Object.keys(this.model_fields[modelName]);
+          this.selected_fields[modelName] = [...allFields];
+        }
       } else {
         this.enabled_models = this.enabled_models.filter(
           (model) => model !== modelName,

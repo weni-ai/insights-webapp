@@ -765,7 +765,7 @@
     "save_btn": "Exportar dados",
     "cancel_btn": "Cancelar",
     "error_pending_export": "Já existe um relatório para este projeto em andamento, tente novamente mais tarde!",
-    "error_default": "Oops, aconteceu algum problema",
+    "error_default": "Oops, aconteceu algum problema"
   },
   "disconnectAgent": {
     "title": "Desconectar agente",

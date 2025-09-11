@@ -765,7 +765,7 @@
     "save_btn": "Export data",
     "cancel_btn": "Cancel",
     "error_pending_export": "There is already a report for this project in progress, try again later!",
-    "error_default": "Oops, something went wrong",
+    "error_default": "Oops, something went wrong"
   },
   "disconnectAgent": {
     "title": "Disconnect agent",

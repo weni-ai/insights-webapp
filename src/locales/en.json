@@ -765,6 +765,16 @@
     "save_btn": "Export data",
     "cancel_btn": "Cancel",
     "error_pending_export": "There is already a report for this project in progress, try again later!",
-    "error_default": "Oops, something went wrong"
+    "error_default": "Oops, something went wrong",
+  },
+  "disconnectAgent": {
+    "title": "Disconnect agent",
+    "description": "Are you sure you want to disconnect agent {agent}?",
+    "description_confirm": "After confirmation, agent {agent} status will be offline.",
+    "tooltip": "Disconnect agent",
+    "save_btn": "Disconnect",
+    "cancel_btn": "Cancel",
+    "sucess_message": "{agent} is offline!",
+    "error_message": "Error when disconnecting agent {agent}"
   }
 }

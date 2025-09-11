@@ -66,6 +66,7 @@ import moment from 'moment';
 import { moduleStorage } from '@/utils/storage';
 
 import { safeImport } from './utils/moduleFederation';
+import { useFeatureFlag } from './store/modules/featureFlag';
 
 const { useSharedStore } = await safeImport(
   () => import('connect/sharedStore'),
@@ -105,6 +106,7 @@ export default {
       if (newCurrentDashboardUuid) {
         this.setCurrentDashboardFilters([]);
         await this.getCurrentDashboardFilters();
+        await this.getFeatureFlags();
       }
     },
     'sharedStore.user.language': {
@@ -153,6 +155,7 @@ export default {
       'setProject',
       'checkEnableCreateCustomDashboards',
     ]),
+    ...mapActions(useFeatureFlag, ['getFeatureFlags']),
     ...mapActions(useProject, ['setIsCommerce']),
     ...mapActions(useUser, ['setEmail']),
     ...mapActions(useOnboarding, [

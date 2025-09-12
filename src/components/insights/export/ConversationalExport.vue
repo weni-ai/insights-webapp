@@ -1,13 +1,14 @@
 <template>
   <section class="modal-export-data">
     <UnnnicToolTip
+      class="export-data-tooltip"
       data-testid="export-data-tooltip"
       :text="t('export_data.tooltip')"
       side="left"
       :enabled="!hasExportData"
     >
       <UnnnicButton
-        type="primary"
+        type="secondary"
         size="large"
         :text="t('export_data.title')"
         :loading="isLoadingCheckExportStatus"
@@ -33,7 +34,7 @@
       @secondary-button-click="setIsRenderExportData(false)"
       @update:model-value="setIsRenderExportData(false)"
     >
-      <FormExportData />
+      <FormExport />
     </UnnnicModalDialog>
     <UnnnicModalDialog
       data-test-id="modal-dialog-feedback"
@@ -56,13 +57,13 @@
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed } from 'vue';
-import { useExportData } from '@/store/modules/export/exportData';
-import FormExportData from './form/FormExportData.vue';
+import { useConversationalExport } from '@/store/modules/export/conversational/export';
+import FormExport from './Conversational/FormExport.vue';
 
 const { t } = useI18n();
-const useExportDataStore = useExportData();
+const conversationalExport = useConversationalExport();
 const { setIsRenderExportData, setIsRenderExportDataFeedback, createExport } =
-  useExportDataStore;
+  conversationalExport;
 const {
   isRenderExportData,
   isRenderExportDataFeedback,
@@ -70,7 +71,7 @@ const {
   isLoadingCreateExport,
   export_data,
   isLoadingCheckExportStatus,
-} = storeToRefs(useExportDataStore);
+} = storeToRefs(conversationalExport);
 
 const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
@@ -85,7 +86,7 @@ const startPolling = () => {
   }
 
   pollingInterval.value = setInterval(() => {
-    useExportDataStore.checkExportStatus();
+    conversationalExport.checkExportStatus();
   }, secondsToPoll.value);
 };
 
@@ -97,7 +98,7 @@ const stopPolling = () => {
 };
 
 onMounted(() => {
-  useExportDataStore.checkExportStatus();
+  conversationalExport.checkExportStatus();
   startPolling();
 });
 
@@ -117,5 +118,9 @@ onUnmounted(() => {
   font-size: $unnnic-font-size-body-gt;
   font-weight: $unnnic-font-weight-regular;
   line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+}
+
+.export-data-tooltip {
+  z-index: 5;
 }
 </style>

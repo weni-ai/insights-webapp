@@ -698,7 +698,13 @@
       "rooms": "Salas",
       "users": "Agentes",
       "sector_tags": "Etiquetas",
-      "contacts": "Contactos"
+      "contacts": "Contactos",
+      "resolutions": "Resoluciones de conversas",
+      "transferred": "Conversas transferidas para atención humana",
+      "topics": "Temas",
+      "csat": "CSAT",
+      "nps": "NPS"
+
     },
     "field_labels": {
       "config": "Configuración",
@@ -721,7 +727,9 @@
       "email": "Correo electrónico",
       "first_name": "Nombre",
       "phone": "Teléfono",
-      "status": "Estado"
+      "status": "Estado",
+      "ai": "IA",
+      "human": "Human Support"
     },
     "select_data": {
       "label": "Seleccione el período para buscar datos (máximo de 92 días entre la fecha inicial y la fecha final)",

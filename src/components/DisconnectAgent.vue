@@ -54,7 +54,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import Unnnic from '@weni/unnnic-system';
+import { unnnicCallAlert, UnnnicButton } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import disconnectAgentApi from '@/services/api/resources/disconnectAgent';
 
@@ -111,7 +111,7 @@ const handleDisconnectModalClick = async () => {
 };
 
 const defaultAlert = (type: 'success' | 'error', text: string) => {
-  Unnnic.unnnicCallAlert({
+  unnnicCallAlert({
     props: {
       text,
       type,

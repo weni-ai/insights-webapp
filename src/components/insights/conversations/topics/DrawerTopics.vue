@@ -14,6 +14,12 @@
     @secondary-button-click="handleDrawerAddTopics"
   >
     <template #content>
+      <UnnnicDisclaimer
+        class="drawer-topics-disclaimer"
+        :text="$t('conversations_dashboard.form_topic.disclaimer')"
+        icon="alert-circle-1"
+        iconColor="feedback-blue"
+      />
       <FormTopic data-testid="drawer-topics-form" />
     </template>
   </UnnnicDrawer>
@@ -28,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicDisclaimer } from '@weni/unnnic-system';
 import { computed, onMounted } from 'vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import FormTopic from './Form/FormTopic.vue';
@@ -72,5 +79,9 @@ onMounted(() => {
 <style lang="scss" scoped>
 .add-topics {
   display: flex;
+}
+
+.drawer-topics-disclaimer {
+  margin-bottom: $unnnic-spacing-sm;
 }
 </style>

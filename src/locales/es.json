@@ -72,7 +72,8 @@
         "cancel": "Cancelar",
         "continue": "Continuar"
       },
-      "added_topic": "Agregado el {date} a las {time}"
+      "added_topic": "Agregado el {date} a las {time}",
+      "disclaimer": "Al agregar temas, permites que la IA etiquete automáticamente las conversaciones con ellos. Esto ayudará a la IA a entender mejor las conversaciones y proporcionar respuestas más precisas."
     },
     "most_talked_about_topics": {
       "title": "Tópicos más hablados",

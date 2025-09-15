@@ -72,7 +72,8 @@
         "cancel": "Cancel adding",
         "continue": "Keep adding"
       },
-      "added_topic": "Added on {date} at {time}"
+      "added_topic": "Added on {date} at {time}",
+      "disclaimer": "The topics you add will only be sorted in future conversations. Previous conversations will not be re-sorted."
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",

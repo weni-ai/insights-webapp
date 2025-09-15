@@ -1,5 +1,8 @@
 <template>
-  <section class="most-talked-about-topics" data-testid="most-talked-about-topics">
+  <section
+    class="most-talked-about-topics"
+    data-testid="most-talked-about-topics"
+  >
     <BaseConversationWidget
       class="most-talked-about-topics__conversation-widget"
       data-testid="topics-base-widget"
@@ -143,7 +146,9 @@ const treemapData = computed(() => {
 
   if (topicsDistributionCount.value === 0) return [];
 
-  return topicsDistribution.value;
+  return [...topicsDistribution.value].sort(
+    (a, b) => b?.percentage - a?.percentage,
+  );
 });
 
 const handleTabChange = (tab: Tab) => {

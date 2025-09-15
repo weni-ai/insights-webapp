@@ -77,7 +77,10 @@ export default {
     optionsWithAll() {
       const baseOptions = [...this.options];
 
-      if (this.allLabel) {
+      const hasOptions =
+        this.options.filter((option) => option.value !== '').length > 0;
+
+      if (this.allLabel && hasOptions) {
         const allOption = {
           value: '__all__',
           label: this.allLabel,

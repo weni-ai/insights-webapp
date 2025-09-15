@@ -1,5 +1,5 @@
 <template>
-  <div class="export-footer">
+  <section class="export-footer">
     <section class="export-footer__format">
       <UnnnicLabel :label="formatLabel" />
       <UnnnicRadio
@@ -36,10 +36,17 @@
         @update:model-value="handleAcceptTermsChange"
       />
     </section>
-  </div>
+  </section>
 </template>
 
 <script setup lang="ts">
+import {
+  UnnnicCheckbox,
+  UnnnicIcon,
+  UnnnicLabel,
+  UnnnicRadio
+} from '@weni/unnnic-system';
+
 type FormatType = '.csv' | '.xlsx';
 
 interface Props {

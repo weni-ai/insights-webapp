@@ -57,8 +57,8 @@
             source="queues"
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_queues')"
-            :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
+            :disabled="!hasSectorsSelected || isManySectorsSelected"
+            :dependsOnValue="dependsOnValueQueues"
             @update:model-value="updateQueues"
           />
         </section>
@@ -72,7 +72,7 @@
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_agents')"
             :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
+            :dependsOnValue="dependsOnValueAgents"
             @update:model-value="updateAgents"
           />
         </section>
@@ -85,8 +85,8 @@
             source="tags"
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_tags')"
-            :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
+            :disabled="!hasSectorsSelected || isManySectorsSelected"
+            :dependsOnValue="dependsOnValueTags"
             @update:model-value="updateTags"
           />
         </section>
@@ -154,6 +154,31 @@ const hasSectorsSelected = computed(() => {
 
 const sectorsForDependency = computed(() => {
   return sectors.value?.map((sector: any) => sector.value).join(',') || '';
+});
+
+const isManySectorsSelected = computed(() => {
+  return sectors.value?.length > 1 && sectorsForDependency.value !== '__all__';
+});
+
+const dependsOnValueQueues = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
+const dependsOnValueAgents = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
+const dependsOnValueTags = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
 });
 
 const updateDateRange = (value: { start: string; end: string }) => {

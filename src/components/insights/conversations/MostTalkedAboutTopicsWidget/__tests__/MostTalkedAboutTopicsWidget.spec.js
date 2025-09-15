@@ -150,6 +150,48 @@ describe('MostTalkedAboutTopicsWidget', () => {
 
       expect(wrapper.vm.treemapData).toEqual(mockDistribution);
     });
+
+    it('should sort topics distribution by percentage in descending order', () => {
+      const mockDistribution = [
+        { label: 'Topic A', value: 100, percentage: 30 },
+        { label: 'Topic B', value: 200, percentage: 50 },
+        { label: 'Topic C', value: 150, percentage: 20 },
+      ];
+      const expectedSorted = [
+        { label: 'Topic B', value: 200, percentage: 50 },
+        { label: 'Topic A', value: 100, percentage: 30 },
+        { label: 'Topic C', value: 150, percentage: 20 },
+      ];
+
+      wrapper = createWrapper({
+        hasExistingTopics: { value: true },
+        topicsDistributionCount: { value: 3 },
+        topicsDistribution: { value: mockDistribution },
+      });
+
+      expect(wrapper.vm.treemapData).toEqual(expectedSorted);
+    });
+
+    it('should not mutate original topics distribution array', () => {
+      const mockDistribution = [
+        { label: 'Topic A', value: 100, percentage: 30 },
+        { label: 'Topic B', value: 200, percentage: 50 },
+      ];
+      const originalOrder = [...mockDistribution];
+
+      wrapper = createWrapper({
+        hasExistingTopics: { value: true },
+        topicsDistributionCount: { value: 2 },
+        topicsDistribution: { value: mockDistribution },
+      });
+
+      const sortedData = wrapper.vm.treemapData;
+
+      expect(mockDistribution).toEqual(originalOrder);
+      expect(sortedData[0].percentage).toBeGreaterThanOrEqual(
+        sortedData[1].percentage,
+      );
+    });
   });
 
   describe('Event handling', () => {

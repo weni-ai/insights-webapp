@@ -150,7 +150,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
       if (!this.topics[topicIndex].subTopics) {
         this.topics[topicIndex].subTopics = [];
       }
-      this.topics[topicIndex].subTopics?.push(newSubTopic);
+      this.topics[topicIndex].subTopics?.unshift(newSubTopic);
     },
 
     createNewTopic(): Topic {

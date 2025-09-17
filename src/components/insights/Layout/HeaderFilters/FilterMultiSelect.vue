@@ -2,11 +2,12 @@
   <UnnnicSelectSmart
     data-testid="unnnic-multi-select"
     :modelValue="treatedModelValue"
-    :options="options"
+    :options="optionsWithAll"
     multiple
     autocomplete
     autocompleteIconLeft
     autocompleteClearOnFocus
+    :orderedByIndex="allLabel ? true : false"
     @update:model-value="updateModelValue"
   />
 </template>
@@ -47,6 +48,10 @@ export default {
       type: String,
       default: '',
     },
+    allLabel: {
+      type: String,
+      default: '',
+    },
   },
 
   emits: ['update:model-value'],
@@ -67,6 +72,24 @@ export default {
       const { modelValue } = this;
 
       return modelValue || [];
+    },
+
+    optionsWithAll() {
+      const baseOptions = [...this.options];
+
+      const hasOptions =
+        this.options.filter((option) => option.value !== '').length > 0;
+
+      if (this.allLabel && hasOptions) {
+        const allOption = {
+          value: '__all__',
+          label: this.allLabel,
+        };
+
+        return [allOption, ...baseOptions];
+      }
+
+      return baseOptions;
     },
   },
 
@@ -120,6 +143,36 @@ export default {
       this.options = [optionsPlaceholder];
     },
     updateModelValue(value) {
+      if (this.allLabel && value && Array.isArray(value)) {
+        const hasAllSelected = value.some((item) => item.value === '__all__');
+        const hasOthersSelected = value.some(
+          (item) => item.value !== '__all__' && item.value !== '',
+        );
+
+        if (hasAllSelected && hasOthersSelected) {
+          const allOption = value.find((item) => item.value === '__all__');
+          this.$emit('update:model-value', [allOption]);
+          return;
+        }
+
+        if (
+          hasOthersSelected &&
+          this.modelValue &&
+          Array.isArray(this.modelValue)
+        ) {
+          const wasAllSelected = this.modelValue.some(
+            (item) => item.value === '__all__',
+          );
+          if (wasAllSelected) {
+            const filteredValue = value.filter(
+              (item) => item.value !== '__all__' && item.value !== '',
+            );
+            this.$emit('update:model-value', filteredValue);
+            return;
+          }
+        }
+      }
+
       this.$emit('update:model-value', value);
     },
   },

@@ -12,15 +12,17 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
     position="bottom-right"
   >
     
-    <span
-      class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md unnnic--clickable header-select-dashboard__arrow-back"
+    <unnnic-icon-stub
+      class="header-select-dashboard__arrow-back"
+      clickable="true"
       data-testid="back-icon"
       data-v-054061ac=""
-      data-v-9846e6db=""
-      translate="no"
-    >
-      arrow_back
-    </span>
+      filled="false"
+      icon="arrow_back"
+      next="false"
+      scheme="neutral-darkest"
+      size="md"
+    />
     <section
       class="dropdown__trigger"
       data-testid="dropdown-trigger"
@@ -38,15 +40,17 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
         data-v-054061ac=""
       />
     </section>
-    <span
-      class="material-symbols-rounded unnnic-icon-scheme--neutral-darkest unnnic-icon-size--md dropdown__trigger"
+    <unnnic-icon-stub
+      class="dropdown__trigger"
+      clickable="false"
       data-testid="expand-icon"
       data-v-054061ac=""
-      data-v-9846e6db=""
-      translate="no"
-    >
-      expand_more
-    </span>
+      filled="false"
+      icon="expand_more"
+      next="false"
+      scheme="neutral-darkest"
+      size="md"
+    />
     
     
     

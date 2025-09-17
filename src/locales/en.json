@@ -698,7 +698,12 @@
       "rooms": "Rooms",
       "users": "Agents",
       "sector_tags": "Tags",
-      "contacts": "Contacts"
+      "contacts": "Contacts",
+      "resolutions": "Resolution of conversations",
+      "transferred": "Conversations transferred to human support",
+      "topics": "Topics",
+      "csat": "CSAT",
+      "nps": "NPS"
     },
     "field_labels": {
       "config": "Configuration",
@@ -706,12 +711,13 @@
       "rooms_limit": "Rooms limit",
       "is_delete": "Is deleted",
       "user": "User",
-      "ended_at": "Ended at",
+      "ended_at": "Date of completion of service",
       "ended_by": "Ended by",
-      "is_active": "Is active",
+      "is_active": "Status",
       "is_wating": "Is waiting",
       "protocol": "Protocol",
-      "urn": "URN",
+      "urn": "URN of contact",
+      "transfer_history": "Transfer history",
       "full_transfer_history": "Full transfer history",
       "service_chat": "Service chat",
       "custom_fields": "Custom fields",
@@ -721,7 +727,18 @@
       "email": "Email",
       "first_name": "First name",
       "phone": "Phone",
-      "status": "Status"
+      "status": "Status",
+      "ai": "AI",
+      "human": "Human support",
+      "user__first_name": "First name of agent",
+      "user__last_name": "Last name of agent",
+      "user__email": "Email",
+      "contact_name": "Contact name",
+      "contact__uuid": "Contact UUID",
+      "queue__name": "Queue",
+      "queue__uuid": "Queue UUID",
+      "queue__sector__name": "Sector",
+      "created_on": "Date of commencement of service"
     },
     "select_data": {
       "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",
@@ -759,5 +776,15 @@
     "cancel_btn": "Cancel",
     "error_pending_export": "There is already a report for this project in progress, try again later!",
     "error_default": "Oops, something went wrong"
+  },
+  "disconnectAgent": {
+    "title": "Disconnect agent",
+    "description": "Are you sure you want to disconnect agent {agent}?",
+    "description_confirm": "After confirmation, agent {agent} status will be offline.",
+    "tooltip": "Disconnect agent",
+    "save_btn": "Disconnect",
+    "cancel_btn": "Cancel",
+    "sucess_message": "{agent} is offline!",
+    "error_message": "Error when disconnecting agent {agent}"
   }
 }

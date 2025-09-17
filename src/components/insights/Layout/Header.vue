@@ -35,7 +35,8 @@
           v-if="isRenderInsightButton"
           data-testid="insights-layout-header-generate-insight-button"
         />
-        <ModalExportData v-if="isRenderExportButton" />
+        <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
+        <ConversationalExport v-if="isRenderConversationalBtnExport" />
       </section>
     </section>
     <section
@@ -71,7 +72,8 @@ import HeaderTagLive from './HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
 import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
 import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
-import ModalExportData from '../export/ModalExportData.vue';
+import HumanSupportExport from '../export/HumanSupportExport.vue';
+import ConversationalExport from '../export/ConversationalExport.vue';
 
 import moment from 'moment';
 
@@ -84,7 +86,8 @@ export default {
     InsightsLayoutHeaderFilters,
     HeaderDashboardSettings,
     HeaderGenerateInsightButton,
-    ModalExportData,
+    HumanSupportExport,
+    ConversationalExport,
   },
   computed: {
     ...mapState(useDashboards, [
@@ -109,12 +112,20 @@ export default {
       return this.isHumanServiceDashboard;
     },
 
-    isRenderExportButton() {
+    isRenderHumanSupportBtnExport() {
       return this.isHumanServiceDashboard;
+    },
+    // TODO: change to isConversationalDashboard when the API is ready
+    isRenderConversationalBtnExport() {
+      return false;
     },
 
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
+
+    isConversationalDashboard() {
+      return this.currentDashboard?.name === 'conversations_dashboard.title';
     },
 
     breadcrumbs() {

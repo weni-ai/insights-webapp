@@ -105,6 +105,8 @@ const widgetEvents = computed(() => {
   const mappingEvents = {
     table_dynamic_by_filter: {
       seeMore: () => redirectToTableAgents(),
+      requestData: () =>
+        emits('request-data', { type: 'table_dynamic_by_filter' }),
     },
     table_group: {
       requestData: ({ offset, limit }) =>

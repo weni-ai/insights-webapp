@@ -16,11 +16,18 @@
     >
       {{ label }}
     </span>
+    <DisconnectAgent
+      v-if="status === 'green'"
+      :agent="agent"
+      @request-data="emits('request-data')"
+    />
   </section>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+
+import DisconnectAgent from '@/components/DisconnectAgent.vue';
 
 const props = defineProps({
   status: {
@@ -32,7 +39,17 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  agent: {
+    type: Object,
+    default: () => ({
+      name: '',
+      email: '',
+    }),
+    required: false,
+  },
 });
+
+const emits = defineEmits(['request-data']);
 
 const statusClass = computed(() => {
   return {
@@ -45,8 +62,8 @@ const statusClass = computed(() => {
 <style scoped lang="scss">
 .agent-status-container {
   display: flex;
-  gap: $unnnic-spacing-nano;
   align-items: center;
+  gap: $unnnic-spacing-nano;
 }
 
 .agent-status-label {

@@ -698,7 +698,13 @@
       "rooms": "Salas",
       "users": "Agentes",
       "sector_tags": "Etiquetas",
-      "contacts": "Contactos"
+      "contacts": "Contactos",
+      "resolutions": "Resoluciones de conversas",
+      "transferred": "Conversas transferidas para atención humana",
+      "topics": "Temas",
+      "csat": "CSAT",
+      "nps": "NPS"
+
     },
     "field_labels": {
       "config": "Configuración",
@@ -706,13 +712,14 @@
       "rooms_limit": "Límite de salas",
       "is_delete": "Está eliminado",
       "user": "Usuario",
-      "ended_at": "Finalizado en",
+      "ended_at": "Fecha de finalización del servicio",
       "ended_by": "Finalizado por",
-      "is_active": "Está activo",
+      "is_active": "Estado",
       "is_wating": "Está esperando",
       "protocol": "Protocolo",
-      "urn": "URN",
+      "urn": "URN del contacto",
       "full_transfer_history": "Historial completo de transferencia",
+      "transfer_history": "Historial de transferencia",
       "service_chat": "Chat de servicio",
       "custom_fields": "Campos personalizados",
       "contact": "Contacto",
@@ -721,7 +728,18 @@
       "email": "Correo electrónico",
       "first_name": "Nombre",
       "phone": "Teléfono",
-      "status": "Estado"
+      "status": "Estado",
+      "ai": "IA",
+      "human": "Human Support",
+      "user__first_name": "Nombre del agente",
+      "user__last_name": "Apellido del agente",
+      "user__email": "Correo electrónico",
+      "contact__name": "Nombre del contacto",
+      "contact__uuid": "ID del contacto",
+      "queue__name": "Cola",
+      "queue__uuid": "ID de la cola",
+      "queue__sector__name": "Sector",
+      "created_on": "Fecha de inicio del servicio"
     },
     "select_data": {
       "label": "Seleccione el período para buscar datos (máximo de 92 días entre la fecha inicial y la fecha final)",
@@ -759,5 +777,15 @@
     "cancel_btn": "Cancelar",
     "error_pending_export": "Ya existe un reporte para este proyecto en progreso, intente nuevamente más tarde!",
     "error_default": "Oops, algo salió mal"
+  },
+  "disconnectAgent": {
+    "title": "Desconectar agente",
+    "description": "¿Estás seguro de querer desconectar el agente {agent}?",
+    "description_confirm": "Después de la confirmación, el estado del agente {agent} será offline.",
+    "tooltip": "Desconectar agente",
+    "save_btn": "Desconectar",
+    "cancel_btn": "Cancelar",
+    "sucess_message": "{agent} está offline!",
+    "error_message": "Error al desconectar agente {agent}"
   }
 }

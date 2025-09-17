@@ -688,7 +688,7 @@
   },
   "export_data": {
     "title": "Exportar dados",
-    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto uma vez que esta conclusão.",
+    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto quando concluido.",
     "description": "Selecione os dados que deseja exportar. O arquivo completo será enviado para seu email após a confirmação.",
     "feedback": "Você receberá por email em breve. Lembre-se de verificar sua pasta de spam.",
     "feedback_title": "Processando exportação",
@@ -698,7 +698,12 @@
       "rooms": "Salas",
       "users": "Agentes",
       "sector_tags": "Tags",
-      "contacts": "Contatos"
+      "contacts": "Contatos",
+      "resolutions": "Resoluções de conversas",
+      "transferred": "Conversas transferidas para atendimento humano",
+      "topics": "Assuntos",
+      "csat": "CSAT",
+      "nps": "NPS"
     },
     "field_labels": {
       "config": "Configuração",
@@ -706,13 +711,14 @@
       "rooms_limit": "Limite de salas",
       "is_delete": "Está deletado",
       "user": "Usuário",
-      "ended_at": "Finalizado em",
+      "ended_at": "Data de Finalização do atendimento",
       "ended_by": "Finalizado por",
-      "is_active": "Está ativo",
+      "is_active": "Status",
       "is_wating": "Está aguardando",
       "protocol": "Protocolo",
-      "urn": "URN",
+      "urn": "URN do contato",
       "full_transfer_history": "Histórico completo de transferência",
+      "transfer_history": "Histórico de transferência",
       "service_chat": "Chat de atendimento",
       "custom_fields": "Campos personalizados",
       "contact": "Contato",
@@ -721,7 +727,18 @@
       "email": "E-mail",
       "first_name": "Nome",
       "phone": "Telefone",
-      "status": "Status"
+      "status": "Status",
+      "ai": "IA",
+      "human": "Atendimento humano",
+      "user__first_name": "Nome do atendente",
+      "user__last_name": "Sobrenome do atendente",
+      "user__email": "E-mail",
+      "contact__name": "Nome do contato",
+      "contact__uuid": "ID do contato",
+      "queue__name": "Fila",
+      "queue__uuid": "ID da fila",
+      "queue__sector__name": "Setor",
+      "created_on": "Data de Início do atendimento"
     },
     "select_data": {
       "label": "Selecione o período para busca de dados (máximo de 92 dias entre a data inicial e a data final)",
@@ -759,5 +776,15 @@
     "cancel_btn": "Cancelar",
     "error_pending_export": "Já existe um relatório para este projeto em andamento, tente novamente mais tarde!",
     "error_default": "Oops, aconteceu algum problema"
+  },
+  "disconnectAgent": {
+    "title": "Desconectar agente",
+    "description": "Tem certeza que deseja desconectar o agente {agent}?",
+    "description_confirm": "Após confirmação, o status do agente {agent} será offline.",
+    "tooltip": "Desconectar agente",
+    "save_btn": "Desconectar",
+    "cancel_btn": "Cancelar",
+    "sucess_message": "{agent} está offline!",
+    "error_message": "Erro ao desconectar agente {agent}"
   }
 }

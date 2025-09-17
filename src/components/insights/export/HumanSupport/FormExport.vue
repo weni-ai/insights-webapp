@@ -6,17 +6,16 @@
       </p>
     </header>
     <section class="export-data-form__content">
-      <section class="export-data-form__date-range">
-        <UnnnicLabel :label="$t('export_data.select_data.label')" />
-        <FilterDate
-          v-model="date_range"
-          :placeholder="$t('export_data.select_data.placeholder')"
-          :options="shortCutOptions"
-          :minDate="handleMinDate()"
-          :maxDate="handleMaxDate()"
-          @update:model-value="updateDateRange"
-        />
-      </section>
+      <ExportFilterDate
+        v-model="date_range"
+        :label="$t('export_data.select_data.label')"
+        :placeholder="$t('export_data.select_data.placeholder')"
+        :options="shortCutOptions"
+        :minDate="getMinDate()"
+        :maxDate="getMaxDate()"
+        @update:model-value="updateDateRange"
+        @select-date="updateSelectDateRange"
+      />
 
       <section class="export-data-form__chats-status">
         <UnnnicRadio
@@ -58,8 +57,8 @@
             source="queues"
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_queues')"
-            :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
+            :disabled="!hasSectorsSelected || isManySectorsSelected"
+            :dependsOnValue="dependsOnValueQueues"
             @update:model-value="updateQueues"
           />
         </section>
@@ -73,7 +72,7 @@
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_agents')"
             :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
+            :dependsOnValue="dependsOnValueAgents"
             @update:model-value="updateAgents"
           />
         </section>
@@ -86,66 +85,40 @@
             source="tags"
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_tags')"
-            :disabled="!hasSectorsSelected"
-            :dependsOnValue="{ sectors: sectorsForDependency }"
+            :disabled="!hasSectorsSelected || isManySectorsSelected"
+            :dependsOnValue="dependsOnValueTags"
             @update:model-value="updateTags"
           />
         </section>
       </section>
 
-      <FormCheckboxsData />
+      <FormCheckbox />
 
-      <section class="export-data-form__format">
-        <UnnnicLabel :label="$t('export_data.select_format')" />
-        <UnnnicRadio
-          :data-testid="'radio-format-xlsx'"
-          :modelValue="selectedFormat"
-          value=".xlsx"
-          @update:model-value="updateFormat('.xlsx')"
-        >
-          {{ '.XLSX' }}
-        </UnnnicRadio>
-        <UnnnicRadio
-          :data-testid="'radio-format-csv'"
-          :modelValue="selectedFormat"
-          value=".csv"
-          @update:model-value="updateFormat('.csv')"
-        >
-          {{ '.CSV' }}
-        </UnnnicRadio>
-      </section>
-
-      <section class="export-data-form__terms">
-        <p class="export-data-form__terms-warning">
-          <UnnnicIcon
-            icon="alert-circle-1"
-            filled
-            next
-            scheme="feedback-yellow"
-            size="ant"
-          />{{ $t('export_data.warning_terms') }}
-        </p>
-        <UnnnicCheckbox
-          :modelValue="accept_terms"
-          :textRight="$t('export_data.accept_terms')"
-          @update:model-value="updateAcceptTerms"
-        />
-      </section>
+      <ExportFooter
+        :selectedFormat="selectedFormat"
+        :acceptTerms="accept_terms"
+        :formatLabel="$t('export_data.select_format')"
+        :warningTermsText="$t('export_data.warning_terms')"
+        :acceptTermsText="$t('export_data.accept_terms')"
+        @format-change="updateFormat"
+        @accept-terms-change="updateAcceptTerms"
+      />
     </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
-import FormCheckboxsData from './FormCheckboxsData.vue';
-import { useExportData } from '@/store/modules/export/exportData';
+import FormCheckbox from './FormCheckbox.vue';
+import ExportFooter from '../ExportFooter.vue';
+import ExportFilterDate from '../ExportFilterDate.vue';
+import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { getLastNDays, getTodayDate } from '@/utils/time';
+import { format, subDays, addDays, isValid, parseISO, isAfter } from 'date-fns';
 
-const exportDataStore = useExportData();
+const humanSupportExport = useHumanSupportExport();
 const {
   setStatusChats,
   setDateRange,
@@ -155,7 +128,7 @@ const {
   setTags,
   setType,
   setAcceptTerms,
-} = exportDataStore;
+} = humanSupportExport;
 const {
   open_chats,
   sectors,
@@ -165,7 +138,7 @@ const {
   type,
   accept_terms,
   date_range,
-} = storeToRefs(exportDataStore);
+} = storeToRefs(humanSupportExport);
 
 const selectedFormat = computed(() => {
   return type.value === '.csv' ? '.csv' : '.xlsx';
@@ -183,8 +156,37 @@ const sectorsForDependency = computed(() => {
   return sectors.value?.map((sector: any) => sector.value).join(',') || '';
 });
 
+const isManySectorsSelected = computed(() => {
+  return sectors.value?.length > 1 && sectorsForDependency.value !== '__all__';
+});
+
+const dependsOnValueQueues = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
+const dependsOnValueAgents = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
+const dependsOnValueTags = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
 const updateDateRange = (value: { start: string; end: string }) => {
   setDateRange(value.start, value.end);
+};
+
+const updateSelectDateRange = (value: { start: string; end: string }) => {
+  selectDateRange.value = value;
 };
 
 const updateChatStatus = (status: string) => {
@@ -220,6 +222,8 @@ const updateAcceptTerms = (value: boolean) => {
 
 const { t } = useI18n();
 
+const selectDateRange = ref({ start: '', end: '' });
+
 const shortCutOptions = computed(() => [
   {
     name: t('export_data.select_data.shortcuts.last_7_days'),
@@ -251,14 +255,64 @@ const shortCutOptions = computed(() => [
   },
 ]);
 
-const handleMinDate = () => {
-  const minDate = getLastNDays(92).start;
-  return minDate;
+const getMinDate = (): string => {
+  const currentSelection = selectDateRange.value;
+
+  const defaultMin = format(subDays(new Date(), 92), 'yyyy-MM-dd');
+
+  if (currentSelection.start === '' && currentSelection.end === '') {
+    return null;
+  }
+
+  if (!currentSelection || !currentSelection.start) {
+    return defaultMin;
+  }
+
+  const startDate = parseISO(currentSelection.start);
+
+  if (
+    isValid(startDate) &&
+    (!currentSelection.end || currentSelection.start === currentSelection.end)
+  ) {
+    const calculatedMin = format(subDays(startDate, 92), 'yyyy-MM-dd');
+    const calculatedMinDate = parseISO(calculatedMin);
+    return isValid(calculatedMinDate) ? calculatedMin : defaultMin;
+  }
+
+  if (!isValid(startDate)) {
+    return null;
+  }
+
+  if (isValid(startDate) && defaultMin !== format(startDate, 'yyyy-MM-dd')) {
+    return format(subDays(startDate, 92), 'yyyy-MM-dd');
+  }
+
+  return defaultMin;
 };
 
-const handleMaxDate = () => {
-  const maxDate = getTodayDate().start;
-  return maxDate;
+const getMaxDate = (): string => {
+  const today = new Date();
+  const currentSelection = selectDateRange.value;
+  const defaultMax = format(today, 'yyyy-MM-dd');
+
+  if (!currentSelection || !currentSelection.start) {
+    return defaultMax;
+  }
+
+  const startDate = parseISO(currentSelection.start);
+
+  if (
+    isValid(startDate) &&
+    (!currentSelection.end || currentSelection.start === currentSelection.end)
+  ) {
+    const calculatedMax = addDays(startDate, 92);
+    if (isAfter(calculatedMax, today)) {
+      return defaultMax;
+    }
+    return format(calculatedMax, 'yyyy-MM-dd');
+  }
+
+  return defaultMax;
 };
 </script>
 
@@ -276,12 +330,6 @@ const handleMaxDate = () => {
     :deep(.unnnic-label__label) {
       margin: 0;
     }
-  }
-
-  &__date-range {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-nano;
   }
 
   &__description {
@@ -310,29 +358,6 @@ const handleMaxDate = () => {
     display: flex;
     flex-direction: column;
     gap: $unnnic-spacing-sm;
-  }
-
-  &__format {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-sm;
-  }
-
-  &__terms {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-spacing-sm;
-  }
-
-  &__terms-warning {
-    display: flex;
-    gap: $unnnic-spacing-xs;
-
-    color: $unnnic-color-neutral-dark;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
   }
 }
 </style>

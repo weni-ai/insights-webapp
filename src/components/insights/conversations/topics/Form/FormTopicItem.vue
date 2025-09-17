@@ -97,7 +97,10 @@
       </section>
     </section>
   </section>
-  <section class="form-topic-item-footer">
+  <section
+    v-if="topic.createdAt"
+    class="form-topic-item-footer"
+  >
     <p class="form-topic-item-footer__title">
       {{ handleFormatDate(topic.createdAt) }}
     </p>

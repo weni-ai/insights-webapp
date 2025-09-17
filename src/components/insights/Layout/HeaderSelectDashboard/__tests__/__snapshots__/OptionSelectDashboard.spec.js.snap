@@ -14,15 +14,17 @@ exports[`OptionSelectDashboard > Should match the snapshot 1`] = `
     Dashboard 1 
     <!--v-if-->
   </section>
-  <span
-    class="material-symbols-rounded unnnic-icon-scheme--neutral-clean unnnic-icon-size--md unnnic--clickable option-select-dashboard__star-icon"
+  <unnnic-icon-stub
+    class="option-select-dashboard__star-icon"
+    clickable="true"
     data-testid="star-icon"
     data-v-000aa0c0=""
-    data-v-9846e6db=""
-    translate="no"
-  >
-    star_rate
-  </span>
+    filled="false"
+    icon="star_rate"
+    next="false"
+    scheme="neutral-clean"
+    size="md"
+  />
   
 </a>
 `;

@@ -16,6 +16,7 @@ config.global.plugins = [
             title: 'Add Topics',
             save: 'Save',
             cancel: 'Cancel',
+            disclaimer: 'This is a disclaimer message for adding topics',
           },
         },
       },
@@ -82,6 +83,7 @@ const createWrapper = (storeState = {}) => {
     global: {
       stubs: {
         UnnnicDrawer: true,
+        UnnnicDisclaimer: true,
         FormTopic: true,
         ModalTopic: true,
       },
@@ -127,6 +129,27 @@ describe('DrawerTopics', () => {
       await nextTick();
 
       expect(wrapper.findComponent({ name: 'ModalTopic' }).exists()).toBe(true);
+    });
+
+    it('should render drawer component with proper structure when open', async () => {
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: true });
+      await nextTick();
+
+      expect(wrapper.findComponent({ name: 'UnnnicDrawer' }).exists()).toBe(
+        true,
+      );
+
+      const drawerComponent = wrapper.findComponent({ name: 'UnnnicDrawer' });
+      expect(drawerComponent.attributes('modelvalue')).toBe('true');
+    });
+
+    it('should not render disclaimer when drawer is closed', async () => {
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: false });
+      await nextTick();
+
+      expect(wrapper.findComponent({ name: 'UnnnicDisclaimer' }).exists()).toBe(
+        false,
+      );
     });
   });
 
@@ -241,6 +264,18 @@ describe('DrawerTopics', () => {
       await nextTick();
 
       expect(wrapper.vm.disabledPrimaryButton).toBe(false);
+    });
+  });
+
+  describe('Component structure validation', () => {
+    it('should render drawer with appropriate data-testid', () => {
+      wrapper = createWrapper({ isAddTopicsDrawerOpen: true });
+
+      const drawerComponent = wrapper.findComponent({ name: 'UnnnicDrawer' });
+      expect(drawerComponent.exists()).toBe(true);
+      expect(drawerComponent.attributes('data-testid')).toBe(
+        'drawer-topics-drawer',
+      );
     });
   });
 });

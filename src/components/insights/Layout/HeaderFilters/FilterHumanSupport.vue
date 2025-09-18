@@ -14,7 +14,10 @@
         />
       </template>
 
-      <section class="filter-human-support__filters">
+      <section
+        class="filter-human-support__filters"
+        @click.stop
+      >
         <section class="filter-human-support__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.sector')" />
           <FilterMultiSelect
@@ -75,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicButton, UnnnicLabel } from '@weni/unnnic-system';
+import { UnnnicButton, UnnnicLabel, UnnnicDropdown } from '@weni/unnnic-system';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';

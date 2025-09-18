@@ -14,30 +14,47 @@
         />
       </template>
 
-      <UnnnicDropdownItem
-        v-for="(action, index) in [
-          {
-            icon: 'filter_list',
-            text: titleButtonFilters,
-            onClick: openFiltersDropdown,
-          },
-        ]"
-        :key="index"
-        class="dropdown__action"
-        data-testid="action"
-      >
+      <section class="filter-human-support__filters">
         <section class="filter-human-support__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.sector')" />
           <FilterMultiSelect
             v-model="sectors"
-            class="filter-human-support__filter-multi-select"
             :placeholder="$t('export_data.filters.select_sector')"
             source="sectors"
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_sectors')"
+            @update:model-value="updateSectors"
           />
         </section>
-      </UnnnicDropdownItem>
+
+        <section class="filter-human-support__filters-container">
+          <UnnnicLabel :label="$t('export_data.filters.queue')" />
+          <FilterMultiSelect
+            v-model="queues"
+            :placeholder="$t('export_data.filters.select_queue')"
+            source="queues"
+            keyValueField="uuid"
+            :allLabel="$t('export_data.filters.all_queues')"
+            :disabled="!hasSectorsSelected || isManySectorsSelected"
+            :dependsOnValue="dependsOnValueQueues"
+            @update:model-value="updateQueues"
+          />
+        </section>
+
+        <section class="filter-human-support__filters-container">
+          <UnnnicLabel :label="$t('export_data.filters.tag')" />
+          <FilterMultiSelect
+            v-model="tags"
+            :placeholder="$t('export_data.filters.select_tag')"
+            source="tags"
+            keyValueField="uuid"
+            :allLabel="$t('export_data.filters.all_tags')"
+            :disabled="!hasSectorsSelected || isManySectorsSelected"
+            :dependsOnValue="dependsOnValueTags"
+            @update:model-value="updateTags"
+          />
+        </section>
+      </section>
     </UnnnicDropdown>
   </section>
 </template>
@@ -52,12 +69,54 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
 
-const { appliedFiltersLength, sectors } = storeToRefs(humanSupportMonitoring);
+const { appliedFiltersLength, sectors, queues, tags } = storeToRefs(
+  humanSupportMonitoring,
+);
 
 const { t } = useI18n();
 
 const openFiltersDropdown = () => {
   console.log('openFiltersDropdown');
+};
+
+const hasSectorsSelected = computed(() => {
+  return sectors.value && sectors.value.length > 0;
+});
+
+const sectorsForDependency = computed(() => {
+  return sectors.value?.map((sector: any) => sector.value).join(',') || '';
+});
+
+const isManySectorsSelected = computed(() => {
+  return sectors.value?.length > 1 && sectorsForDependency.value !== '__all__';
+});
+
+const dependsOnValueQueues = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
+const dependsOnValueTags = computed(() => {
+  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+    return { sector_id: sectorsForDependency.value };
+  }
+  return { sectors: sectorsForDependency.value };
+});
+
+const updateSectors = (value: any[]) => {
+  sectors.value = value;
+  queues.value = [];
+  tags.value = [];
+};
+
+const updateQueues = (value: any[]) => {
+  queues.value = value;
+};
+
+const updateTags = (value: any[]) => {
+  tags.value = value;
 };
 
 const titleButtonFilters = computed(() => {
@@ -74,10 +133,17 @@ const titleButtonFilters = computed(() => {
   display: flex;
 }
 
-.filter-human-support__filters-container {
+.filter-human-support__filters {
   width: 400px;
   display: flex;
+  flex-wrap: wrap;
+  gap: $unnnic-spacing-md;
+  padding: $unnnic-space-3 $unnnic-space-2;
+}
+
+.filter-human-support__filters-container {
+  width: 100%;
+  display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
 }
 </style>

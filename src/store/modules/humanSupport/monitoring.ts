@@ -60,6 +60,17 @@ export const useHumanSupportMonitoring = defineStore(
       appliedFilters.value = filters;
     };
 
+    const clearFilters = () => {
+      sectors.value = [];
+      queues.value = [];
+      tags.value = [];
+      appliedFilters.value = {
+        sectors: [],
+        queues: [],
+        tags: [],
+      };
+    };
+
     return {
       sectors,
       queues,
@@ -69,6 +80,7 @@ export const useHumanSupportMonitoring = defineStore(
 
       loadData,
       saveAppliedFilters,
+      clearFilters,
     };
   },
 );

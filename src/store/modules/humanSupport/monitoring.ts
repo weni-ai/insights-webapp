@@ -22,7 +22,6 @@ export const useHumanSupportMonitoring = defineStore(
 
         await new Promise((resolve) => setTimeout(resolve, 3000));
         updateLastUpdatedRequest();
-        console.log('Data loaded');
       } catch (error) {
         console.error('Error loading monitoring data:', error);
       } finally {

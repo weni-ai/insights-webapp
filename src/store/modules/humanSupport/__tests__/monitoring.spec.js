@@ -1,11 +1,22 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useHumanSupportMonitoring } from '../monitoring';
+import { useDashboards } from '@/store/modules/dashboards';
+
+vi.mock('@/store/modules/dashboards', () => ({
+  useDashboards: vi.fn(),
+}));
 
 describe('useHumanSupportMonitoring store', () => {
   let store;
+  let mockUpdateLastUpdatedRequest;
 
   beforeEach(() => {
+    mockUpdateLastUpdatedRequest = vi.fn();
+    useDashboards.mockReturnValue({
+      updateLastUpdatedRequest: mockUpdateLastUpdatedRequest,
+    });
+
     setActivePinia(createPinia());
     store = useHumanSupportMonitoring();
   });
@@ -15,7 +26,7 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.sectors).toEqual([]);
       expect(store.queues).toEqual([]);
       expect(store.tags).toEqual([]);
-      expect(store.loadingData).toBe(false);
+      expect(store.isLoadingData).toBe(false);
     });
   });
 
@@ -31,12 +42,21 @@ describe('useHumanSupportMonitoring store', () => {
     it('should set loading to true during data loading', async () => {
       const loadDataPromise = store.loadData();
 
-      expect(store.loadingData).toBe(true);
+      expect(store.isLoadingData).toBe(true);
 
-      vi.advanceTimersByTime(1000);
+      vi.advanceTimersByTime(3000);
       await loadDataPromise;
 
-      expect(store.loadingData).toBe(false);
+      expect(store.isLoadingData).toBe(false);
+    });
+
+    it('should call updateLastUpdatedRequest when loadData completes successfully', async () => {
+      const loadDataPromise = store.loadData();
+
+      vi.advanceTimersByTime(3000);
+      await loadDataPromise;
+
+      expect(mockUpdateLastUpdatedRequest).toHaveBeenCalledTimes(1);
     });
 
     it('should handle errors gracefully', async () => {
@@ -54,7 +74,7 @@ describe('useHumanSupportMonitoring store', () => {
         'Error loading monitoring data:',
         expect.any(Error),
       );
-      expect(store.loadingData).toBe(false);
+      expect(store.isLoadingData).toBe(false);
 
       consoleSpy.mockRestore();
     });
@@ -70,7 +90,23 @@ describe('useHumanSupportMonitoring store', () => {
 
       await store.loadData();
 
-      expect(store.loadingData).toBe(false);
+      expect(store.isLoadingData).toBe(false);
+
+      consoleSpy.mockRestore();
+    });
+
+    it('should not call updateLastUpdatedRequest when an error occurs', async () => {
+      vi.spyOn(global, 'setTimeout').mockImplementationOnce(() => {
+        throw new Error('API Error');
+      });
+
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
+      await store.loadData();
+
+      expect(mockUpdateLastUpdatedRequest).not.toHaveBeenCalled();
 
       consoleSpy.mockRestore();
     });

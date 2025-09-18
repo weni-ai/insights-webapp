@@ -14,7 +14,7 @@
         #[`tab-head-${key}`]
         :key="`tab-head-${key}`"
       >
-        {{ $t(tab.name) }}
+        {{ $t(`human_support_dashboard.${tab.name}`) }}
       </template>
       <template
         v-for="key in Object.keys(tabs)"
@@ -38,11 +38,11 @@ import Monitoring from '../humanSupport/Monitoring.vue';
 
 const tabs = {
   monitoring: {
-    name: 'Monitoring',
+    name: 'monitoring',
     component: Monitoring,
   },
   analysis: {
-    name: 'Analysis',
+    name: 'analysis',
     component: Analysis,
   },
 };

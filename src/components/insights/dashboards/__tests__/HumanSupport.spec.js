@@ -62,11 +62,11 @@ describe('HumanSupport.vue', () => {
     it('should have correct tabs configuration', () => {
       expect(wrapper.vm.tabs).toEqual({
         monitoring: {
-          name: 'Monitoring',
+          name: 'monitoring',
           component: expect.any(Object),
         },
         analysis: {
-          name: 'Analysis',
+          name: 'analysis',
           component: expect.any(Object),
         },
       });
@@ -93,7 +93,6 @@ describe('HumanSupport.vue', () => {
       const tab = wrapper.find('[data-testid="human-support-tab"]');
       await tab.trigger('change', 'analysis');
 
-      // Test the function directly since the event handling is internal
       wrapper.vm.changeActiveTabName('analysis');
       expect(wrapper.vm.activeTabName).toBe('analysis');
     });
@@ -112,8 +111,8 @@ describe('HumanSupport.vue', () => {
   describe('Component Integration', () => {
     it('should have correct tab configuration structure', () => {
       expect(Object.keys(wrapper.vm.tabs)).toEqual(['monitoring', 'analysis']);
-      expect(wrapper.vm.tabs.monitoring.name).toBe('Monitoring');
-      expect(wrapper.vm.tabs.analysis.name).toBe('Analysis');
+      expect(wrapper.vm.tabs.monitoring.name).toBe('monitoring');
+      expect(wrapper.vm.tabs.analysis.name).toBe('analysis');
     });
 
     it('should render tab component correctly', () => {

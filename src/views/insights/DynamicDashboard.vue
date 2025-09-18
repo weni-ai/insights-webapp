@@ -25,7 +25,12 @@ const currentDashboard = computed(() => {
 const dashboardType = computed(() => {
   const config = currentDashboard?.value?.config;
 
-  let type: 'custom' | 'expansive' | 'metaTemplateMessage' | 'conversational';
+  let type:
+    | 'custom'
+    | 'expansive'
+    | 'metaTemplateMessage'
+    | 'conversational'
+    | 'human_support';
 
   if (config?.type === 'conversational') {
     type = 'conversational';
@@ -36,6 +41,8 @@ const dashboardType = computed(() => {
     Object.keys(currentExpansiveWidget.value).length > 0
   ) {
     type = 'expansive';
+  } else if (config?.type === 'human_support') {
+    type = 'human_support';
   } else {
     type = 'custom';
   }
@@ -45,6 +52,7 @@ const dashboardType = computed(() => {
     expansive: 'expansive_widget',
     metaTemplateMessage: 'meta_template_message',
     conversational: 'conversational',
+    human_support: 'human_support',
   };
 
   return dashboardTypes[type];
@@ -63,6 +71,9 @@ const currentComponent = computed(() => {
     ),
     conversational: defineAsyncComponent(
       () => import('@/components/insights/dashboards/Conversational.vue'),
+    ),
+    human_support: defineAsyncComponent(
+      () => import('@/components/insights/dashboards/HumanSupport.vue'),
     ),
     template_dashboard: null,
   };

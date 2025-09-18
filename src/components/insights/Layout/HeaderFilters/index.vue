@@ -5,7 +5,6 @@
         currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates
       "
     />
-    <LastUpdatedText v-if="isHumanServiceDashboard" />
     <template v-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
@@ -67,7 +66,6 @@ import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
-import LastUpdatedText from './LastUpdatedText.vue';
 
 import { getLastNDays, getYesterdayNDays } from '@/utils/time';
 
@@ -79,7 +77,6 @@ export default {
     ModalFilters,
     SearchTemplateMessagesModal,
     FilterFavoriteTemplateMessage,
-    LastUpdatedText,
   },
 
   data() {

@@ -160,5 +160,4 @@ describe('HeaderFilters', () => {
       expect(wrapper.vm.filterModalOpened).toBe(false);
     });
   });
-
 });

@@ -27,6 +27,7 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.queues).toEqual([]);
       expect(store.tags).toEqual([]);
       expect(store.isLoadingData).toBe(false);
+      expect(store.appliedFiltersLength).toBe(0);
     });
   });
 
@@ -109,6 +110,71 @@ describe('useHumanSupportMonitoring store', () => {
       expect(mockUpdateLastUpdatedRequest).not.toHaveBeenCalled();
 
       consoleSpy.mockRestore();
+    });
+  });
+
+  describe('filter management', () => {
+    beforeEach(() => {
+      // Set up some test data
+      store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
+      store.queues = [{ value: 'queue1', label: 'Queue 1' }];
+      store.tags = [{ value: 'tag1', label: 'Tag 1' }];
+    });
+
+    describe('saveAppliedFilters', () => {
+      it('should save current filter values to appliedFilters', () => {
+        store.saveAppliedFilters();
+
+        expect(store.appliedFiltersLength).toBe(3);
+      });
+
+      it('should update appliedFiltersLength based on saved filters', () => {
+        store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
+        store.queues = [];
+        store.tags = [];
+
+        store.saveAppliedFilters();
+
+        expect(store.appliedFiltersLength).toBe(1);
+      });
+    });
+
+    describe('clearFilters', () => {
+      it('should clear all filter arrays', () => {
+        store.clearFilters();
+
+        expect(store.sectors).toEqual([]);
+        expect(store.queues).toEqual([]);
+        expect(store.tags).toEqual([]);
+      });
+
+      it('should reset appliedFiltersLength to 0', () => {
+        store.saveAppliedFilters(); // First save some filters
+        expect(store.appliedFiltersLength).toBe(3);
+
+        store.clearFilters();
+        expect(store.appliedFiltersLength).toBe(0);
+      });
+    });
+
+    describe('appliedFiltersLength computed', () => {
+      it('should return 0 when no filters are applied', () => {
+        store.clearFilters();
+        expect(store.appliedFiltersLength).toBe(0);
+      });
+
+      it('should count each filter type as 1 when applied', () => {
+        store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
+        store.queues = [
+          { value: 'queue1', label: 'Queue 1' },
+          { value: 'queue2', label: 'Queue 2' },
+        ];
+        store.tags = [];
+
+        store.saveAppliedFilters();
+
+        expect(store.appliedFiltersLength).toBe(2); // sectors + queues
+      });
     });
   });
 });

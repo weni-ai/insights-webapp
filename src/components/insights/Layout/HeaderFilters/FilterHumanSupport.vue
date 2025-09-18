@@ -54,6 +54,21 @@
             @update:model-value="updateTags"
           />
         </section>
+
+        <section class="filter-human-support__filters-footer">
+          <UnnnicButton
+            class="filter-human-support__filters-footer__button"
+            text="Limpar"
+            type="tertiary"
+            @click="clearFiltersButton"
+          />
+          <UnnnicButton
+            class="filter-human-support__filters-footer__button"
+            text="Filtrar"
+            type="primary"
+            @click="applyFiltersButton"
+          />
+        </section>
       </section>
     </UnnnicDropdown>
   </section>
@@ -68,7 +83,7 @@ import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
-
+const { clearFilters, saveAppliedFilters } = humanSupportMonitoring;
 const { appliedFiltersLength, sectors, queues, tags } = storeToRefs(
   humanSupportMonitoring,
 );
@@ -105,6 +120,14 @@ const dependsOnValueTags = computed(() => {
   return { sectors: sectorsForDependency.value };
 });
 
+const applyFiltersButton = () => {
+  saveAppliedFilters();
+};
+
+const clearFiltersButton = () => {
+  clearFilters();
+};
+
 const updateSectors = (value: any[]) => {
   sectors.value = value;
   queues.value = [];
@@ -131,19 +154,31 @@ const titleButtonFilters = computed(() => {
 <style lang="scss" scoped>
 .filter-human-support {
   display: flex;
-}
 
-.filter-human-support__filters {
-  width: 400px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: $unnnic-spacing-md;
-  padding: $unnnic-space-3 $unnnic-space-2;
-}
+  &__filters {
+    width: 400px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $unnnic-spacing-md;
+    padding: $unnnic-space-3 $unnnic-space-2;
 
-.filter-human-support__filters-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+    &-container {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: $unnnic-spacing-nano;
+    }
+
+    &-footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      gap: $unnnic-spacing-sm;
+
+      &__button {
+        width: 100%;
+      }
+    }
+  }
 }
 </style>

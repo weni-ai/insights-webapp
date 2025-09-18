@@ -8,6 +8,7 @@ import { useConfig } from '@/store/modules/config';
 import { useOnboarding } from '@/store/modules/onboarding';
 import { useProject } from '@/store/modules/project';
 import { useUser } from '@/store/modules/user';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 vi.mock('@/services/api', () => {
   return {
@@ -77,6 +78,7 @@ describe('App', () => {
   let configStore;
   let onboardingStore;
   let projectStore;
+  let featureFlagStore;
 
   const localStorageMock = {
     getItem: vi.fn(),
@@ -170,6 +172,7 @@ describe('App', () => {
     configStore = useConfig();
     onboardingStore = useOnboarding();
     projectStore = useProject();
+    featureFlagStore = useFeatureFlag();
     useUser();
 
     dashboardsStore.dashboards = [];
@@ -224,13 +227,17 @@ describe('App', () => {
         dashboardsStore,
         'getCurrentDashboardFilters',
       );
+      const getFeatureFlagsSpy = vi.spyOn(wrapper.vm, 'getFeatureFlags');
 
-      // Change currentDashboard uuid
-      dashboardsStore.currentDashboard = { uuid: 'new-uuid' };
-      await wrapper.vm.$nextTick();
+      const newUuid = 'new-uuid';
+      await wrapper.vm.$options.watch['currentDashboard.uuid'].call(
+        wrapper.vm,
+        newUuid,
+      );
 
       expect(setCurrentDashboardFiltersSpy).toHaveBeenCalledWith([]);
       expect(getCurrentDashboardFiltersSpy).toHaveBeenCalled();
+      expect(getFeatureFlagsSpy).toHaveBeenCalled();
     });
 
     it('should not trigger actions when currentDashboard.uuid is null', async () => {
@@ -242,12 +249,16 @@ describe('App', () => {
         dashboardsStore,
         'getCurrentDashboardFilters',
       );
+      const getFeatureFlagsSpy = vi.spyOn(wrapper.vm, 'getFeatureFlags');
 
-      dashboardsStore.currentDashboard = { uuid: null };
-      await wrapper.vm.$nextTick();
+      await wrapper.vm.$options.watch['currentDashboard.uuid'].call(
+        wrapper.vm,
+        null,
+      );
 
       expect(setCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
       expect(getCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
+      expect(getFeatureFlagsSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -260,6 +271,23 @@ describe('App', () => {
   });
 
   describe('Methods', () => {
+    describe('getFeatureFlags action mapping', () => {
+      it('should have getFeatureFlags method mapped from featureFlag store', () => {
+        expect(typeof wrapper.vm.getFeatureFlags).toBe('function');
+      });
+
+      it('should call featureFlag store getFeatureFlags when method is invoked', async () => {
+        const getFeatureFlagsSpy = vi.spyOn(
+          featureFlagStore,
+          'getFeatureFlags',
+        );
+
+        await wrapper.vm.getFeatureFlags();
+
+        expect(getFeatureFlagsSpy).toHaveBeenCalled();
+      });
+    });
+
     describe('handlerSetProject', () => {
       it('should set project in moduleStorage and store', () => {
         const setProjectSpy = vi.spyOn(configStore, 'setProject');

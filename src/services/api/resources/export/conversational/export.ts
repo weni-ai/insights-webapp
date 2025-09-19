@@ -13,10 +13,8 @@ type TypeSections =
 
 interface ExportRequest {
   project_uuid: string;
-  filters: {
-    start_date: string; // YYYY-MM-DD format
-    end_date: string; // YYYY-MM-DD format
-  };
+  start_date: string; // YYYY-MM-DD format
+  end_date: string; // YYYY-MM-DD format
   type: 'CSV' | 'XLSX';
   sections: TypeSections[];
   custom_widgets: string[];

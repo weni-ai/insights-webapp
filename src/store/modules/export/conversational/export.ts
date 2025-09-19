@@ -216,10 +216,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
         }
 
         const exportData: Omit<ExportRequest, 'project_uuid'> = {
-          filters: {
-            start_date: this.date_range.start,
-            end_date: this.date_range.end,
-          },
+          start_date: this.date_range.start,
+          end_date: this.date_range.end,
           type: this.type,
           sections: selectedSections,
           custom_widgets: selectedCustomWidgets,

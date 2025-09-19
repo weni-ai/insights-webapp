@@ -787,5 +787,23 @@
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
     "error_message": "Erro ao desconectar agente {agent}"
+  },
+  "human_support_dashboard": {
+    "title": "Atendimento humano",
+    "monitoring": "Monitoramento",
+    "analysis": "Análise",
+    "support_status": {
+      "title": "Status dos atendimentos",
+      "is_awaiting": "Em espera",
+      "is_in_progress": "Em andamento",
+      "is_closed": "Finalizado" 
+    },
+    "time_metrics": {
+      "title": "Métricas de tempo agora",
+      "average_time_is_waiting": "Tempo médio em espera",
+      "average_time_first_response": "Tempo médio para 1ª resposta",
+      "average_time_chat": "Duração média da conversa",
+      "max": "Máximo"
+    }
   }
 }

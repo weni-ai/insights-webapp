@@ -270,10 +270,19 @@ export const useConversationalExport = defineStore('conversationalExport', {
         hasValidSelections = true;
       }
 
-      ['topics', 'csat', 'nps'].forEach((section) => {
+      [
+        'topics',
+        'csat',
+        'nps',
+        ...state.custom_widgets.map((widget) => widget.uuid),
+      ].forEach((section) => {
         if (state.enabled_models.includes(section)) {
           const sectionFields = state.selected_fields[section] || [];
           if (sectionFields.length > 0) {
+            hasValidSelections = true;
+          }
+
+          if (state.custom_widgets.some((widget) => widget.uuid === section)) {
             hasValidSelections = true;
           }
         }

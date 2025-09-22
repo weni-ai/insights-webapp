@@ -3,7 +3,10 @@
     <UnnnicDropdown
       class="actions__dropdown"
       data-testid="actions-dropdown"
+      :useOpenProp="true"
+      :open="isOpenDropdown"
       :forceOpen="isOptionsActive"
+      @update:open="handleDropdownToggle"
     >
       <template #trigger>
         <UnnnicButton
@@ -11,7 +14,6 @@
           type="secondary"
           iconLeft="filter_list"
           :text="titleButtonFilters"
-          @click="openFiltersDropdown"
         />
       </template>
 
@@ -96,9 +98,14 @@ const { appliedFiltersLength, sectors, queues, tags } = storeToRefs(
 const { t } = useI18n();
 
 const isOptionsActive = ref(false);
+const isOpenDropdown = ref(false);
 
-const openFiltersDropdown = () => {
-  console.log('openFiltersDropdown');
+const handleDropdownToggle = (open: boolean) => {
+  if (!open && isOptionsActive.value) {
+    isOpenDropdown.value = true;
+    return;
+  }
+  isOpenDropdown.value = open;
 };
 
 const hasSectorsSelected = computed(() => {
@@ -129,10 +136,12 @@ const dependsOnValueTags = computed(() => {
 
 const applyFiltersButton = () => {
   saveAppliedFilters();
+  isOpenDropdown.value = false;
 };
 
 const clearFiltersButton = () => {
   clearFilters();
+  isOpenDropdown.value = false;
 };
 
 const updateSectors = (value: any[]) => {

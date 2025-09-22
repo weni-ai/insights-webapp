@@ -27,33 +27,45 @@
         :isLoading="isLoading"
       />
     </header>
-
-    <UnnnicTableNext
-      class="widget-human-service-agents__table"
-      :isLoading="isLoading"
+    <UnnnicDataTable
       :locale="$i18n.locale"
+      :isLoading="isLoading"
+      clickable
+      fixedHeaders
+      height="100%"
       :headers="formattedHeaders"
-      :rows="formattedItems"
+      :items="formattedItems"
+      hidePagination
       data-testid="human-service-agents-table"
-      @row-click="redirectItem($event)"
-      @sort="sort = $event"
-    />
+      @update:sort="sort = $event"
+      @item-click="redirectItem($event)"
+    >
+      <template #body-status="{ item }">
+        <AgentStatus
+          :status="item.status.status"
+          :label="item.status.label"
+          :agent="{ name: item.agent, email: item.agent_email }"
+        />
+      </template>
+    </UnnnicDataTable>
   </section>
 </template>
 
 <script>
-import { markRaw } from 'vue';
-
 import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
 
 import AgentStatus from './AgentStatus.vue';
 import AgentsTableHeader from './AgentsTableHeader.vue';
+
 import { mapState } from 'pinia';
+import { useWidgets } from '@/store/modules/widgets';
+import { useDashboards } from '@/store/modules/dashboards';
 
 export default {
   name: 'HumanServiceAgentsTable',
   components: {
     AgentsTableHeader,
+    AgentStatus,
   },
   props: {
     headerTitle: {
@@ -82,12 +94,17 @@ export default {
 
   data() {
     return {
-      sort: { header: '', order: '' },
+      sort: { header: '', order: '', itemKey: '' },
     };
   },
 
   computed: {
     ...mapState(useAgentsColumnsFilter, ['visibleColumns']),
+    ...mapState(useWidgets, ['currentExpansiveWidgetFilters']),
+    ...mapState(useDashboards, ['appliedFilters']),
+    hasExpansiveWidgetFilteringDates() {
+      return !!this.currentExpansiveWidgetFilters.date.start;
+    },
     formattedHeaders() {
       const shownHeaders = this.headers?.filter(
         (header) => header?.display && !header?.hidden_name,
@@ -97,7 +114,8 @@ export default {
 
       if (!this.isExpansive) {
         return shownHeaders.map((header, index) => ({
-          content: this.$t(header.name || ''),
+          title: this.$t(header.name || ''),
+          itemKey: header.value,
           isSortable: true,
           size: index === 1 ? 1 : 0.5,
         }));
@@ -123,7 +141,11 @@ export default {
       const allHeaders = [...staticHeaders, ...sortedDynamicHeaders];
 
       return allHeaders.map((header, index) => ({
-        content: this.$t(header.name?.toLowerCase() || ''),
+        title:
+          this.hasExpansiveWidgetFilteringDates && header.value === 'opened'
+            ? this.$t('table_dynamic_by_filter.chats_in_period')
+            : this.$t(header.name || ''),
+        itemKey: header.value,
         isSortable: true,
         size: index === 1 ? 1 : 0.5,
       }));
@@ -137,66 +159,16 @@ export default {
           gray: 'Offline',
           green: 'Online',
         };
+
         item.status.label =
           item.status.label || itemLabelMapper[item.status.status];
 
-        const baseContent = [
-          {
-            component: markRaw(AgentStatus),
-            props: {
-              status: item.status.status,
-              label: item.status.label,
-              agent: {
-                name: item.agent,
-                email: item.agent_email,
-              },
-            },
-            events: {
-              requestData: () => this.$emit('request-data'),
-            },
-          },
-          String(item.agent),
-          String(item.opened),
-          String(item.closed),
-        ];
-
-        return {
-          ...item,
-          view_mode_url: item.link?.url,
-          link: undefined,
-          content: baseContent,
-        };
+        return item;
       });
 
       const visibleColumns = this.visibleColumns || [];
 
       const formattedExpansiveItems = formattedItems.map((item) => {
-        const baseContent = [
-          {
-            component: markRaw(AgentStatus),
-            props: {
-              status: item.status.status,
-              label: item.status.label,
-              agent: {
-                name: item.agent,
-                email: item.agent_email,
-              },
-            },
-            events: {
-              requestData: () => this.$emit('request-data'),
-            },
-          },
-          String(item.agent),
-        ];
-
-        if (visibleColumns.includes('in_progress')) {
-          baseContent.push(String(item.opened));
-        }
-
-        if (visibleColumns.includes('closeds')) {
-          baseContent.push(String(item.closed));
-        }
-
         visibleColumns.forEach((columnName) => {
           if (columnName === 'in_progress' || columnName === 'closeds') {
             return;
@@ -204,14 +176,12 @@ export default {
 
           if (item.custom_status && columnName in item.custom_status) {
             const breakTimeInSeconds = item.custom_status[columnName] || 0;
-            baseContent.push(this.formatSecondsToTime(breakTimeInSeconds));
+            item[`custom_status.${columnName}`] =
+              this.formatSecondsToTime(breakTimeInSeconds);
           }
         });
 
-        return {
-          ...item,
-          content: baseContent,
-        };
+        return item;
       });
 
       return this.sortItems(
@@ -257,7 +227,7 @@ export default {
     },
 
     redirectItem(item) {
-      const path = `${item.view_mode_url}/insights`;
+      const path = `${item.link.url}/insights`;
       window.parent.postMessage(
         {
           event: 'redirect',
@@ -269,7 +239,7 @@ export default {
 
     sortItems(items) {
       const headerIndex = this.formattedHeaders.findIndex(
-        (header) => header.content === this.sort.header,
+        (header) => header.itemKey === this.sort.itemKey,
       );
 
       if (!this.isExpansive) {

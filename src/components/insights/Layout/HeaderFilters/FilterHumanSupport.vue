@@ -3,6 +3,7 @@
     <UnnnicDropdown
       class="actions__dropdown"
       data-testid="actions-dropdown"
+      :forceOpen="isOptionsActive"
     >
       <template #trigger>
         <UnnnicButton
@@ -27,6 +28,7 @@
             keyValueField="uuid"
             :allLabel="$t('export_data.filters.all_sectors')"
             @update:model-value="updateSectors"
+            @on-options-active-change="handleOptionsActiveChange"
           />
         </section>
 
@@ -40,7 +42,7 @@
             :allLabel="$t('export_data.filters.all_queues')"
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueQueues"
-            @update:model-value="updateQueues"
+            @on-options-active-change="handleOptionsActiveChange"
           />
         </section>
 
@@ -54,7 +56,7 @@
             :allLabel="$t('export_data.filters.all_tags')"
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueTags"
-            @update:model-value="updateTags"
+            @on-options-active-change="handleOptionsActiveChange"
           />
         </section>
 
@@ -81,7 +83,7 @@
 import { UnnnicButton, UnnnicLabel, UnnnicDropdown } from '@weni/unnnic-system';
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
@@ -92,6 +94,8 @@ const { appliedFiltersLength, sectors, queues, tags } = storeToRefs(
 );
 
 const { t } = useI18n();
+
+const isOptionsActive = ref(false);
 
 const openFiltersDropdown = () => {
   console.log('openFiltersDropdown');
@@ -137,12 +141,14 @@ const updateSectors = (value: any[]) => {
   tags.value = [];
 };
 
-const updateQueues = (value: any[]) => {
-  queues.value = value;
-};
-
-const updateTags = (value: any[]) => {
-  tags.value = value;
+const handleOptionsActiveChange = (active) => {
+  if (!active) {
+    setTimeout(() => {
+      isOptionsActive.value = active;
+    }, 100);
+  } else {
+    isOptionsActive.value = active;
+  }
 };
 
 const titleButtonFilters = computed(() => {

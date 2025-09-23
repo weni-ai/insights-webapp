@@ -54,13 +54,29 @@ export const useHumanSupportMonitoring = defineStore(
     });
 
     const saveAppliedFilters = () => {
-      const filters = {
-        sectors: sectors.value,
-        queues: queues.value,
-        tags: tags.value,
+      appliedFilters.value = {
+        sectors: [...sectors.value],
+        queues: [...queues.value],
+        tags: [...tags.value],
       };
-      appliedFilters.value = filters;
     };
+
+    const hasAppliedFiltersNoChanges = computed(() => {
+      const areArraysEqual = (current: Filter[], applied: Filter[]) =>
+        current.length === applied.length &&
+        current.every((item) =>
+          applied.some((app) => app.value === item.value),
+        ) &&
+        applied.every((app) =>
+          current.some((item) => item.value === app.value),
+        );
+
+      return [
+        [sectors.value, appliedFilters.value.sectors],
+        [queues.value, appliedFilters.value.queues],
+        [tags.value, appliedFilters.value.tags],
+      ].every(([current, applied]) => areArraysEqual(current, applied));
+    });
 
     const clearFilters = () => {
       sectors.value = [];
@@ -136,6 +152,7 @@ export const useHumanSupportMonitoring = defineStore(
       loadingServiceStatusData,
       loadingTimeMetricsData,
       loadingHumanSupportByHourData,
+      hasAppliedFiltersNoChanges,
 
       loadAllData,
       loadServiceStatusData,

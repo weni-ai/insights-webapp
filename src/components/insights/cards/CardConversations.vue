@@ -43,7 +43,21 @@
       ]"
       data-testid="card-content"
     >
-      <section class="card-conversations__value">
+      <section
+        :class="[
+          'card-conversations__value',
+          {
+            'card-conversations__value--enable-time-icon': props.enableTimeIcon,
+          },
+        ]"
+      >
+        <UnnnicIcon
+          v-if="props.enableTimeIcon"
+          icon="alarm"
+          size="sm"
+          filled
+          scheme="neutral-black"
+        />
         <p
           class="card-conversations__number"
           data-testid="card-value"
@@ -88,6 +102,7 @@ interface Props {
   isLoading?: boolean;
   tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
   activeDescriptionGap?: boolean;
+  enableTimeIcon?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -165,8 +180,12 @@ defineEmits<{
 
   &__value {
     display: flex;
-    align-items: end;
     gap: $unnnic-spacing-xs;
+    align-items: end;
+
+    &--enable-time-icon {
+      align-items: center;
+    }
   }
 
   &__number {

@@ -796,14 +796,24 @@
       "title": "Status dos atendimentos",
       "is_awaiting": "Em espera",
       "is_in_progress": "Em andamento",
-      "is_closed": "Finalizado" 
+      "is_closed": "Finalizado",
+      "tooltips": {
+        "is_awaiting": "Número de contatos esperando o início do atendimento agora",
+        "is_in_progress": "Número de contatos em atendimento agora",
+        "is_closed": "Número de atendimentos finalizados hoje"
+      }
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
       "average_time_is_waiting": "Tempo médio em espera",
       "average_time_first_response": "Tempo médio para 1ª resposta",
       "average_time_chat": "Duração média da conversa",
-      "max": "Máximo"
+      "max": "Máximo",
+      "tooltips": {
+        "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
+        "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",
+        "average_time_chat": "Média do tempo total da conversa, do início do atendimento com atendente até ser finalizada"
+      }
     }
   }
 }

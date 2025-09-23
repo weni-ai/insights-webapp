@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useDashboards } from '../dashboards';
+import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/serviceStatus';
+//import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
 
 interface Filter {
   value: string;
@@ -23,23 +25,23 @@ export const useHumanSupportMonitoring = defineStore(
       queues: [],
       tags: [],
     });
-    const loadingData = ref(false);
+    const serviceStatusData = ref<ServiceStatusDataResponse>({
+      is_awaiting: null,
+      in_progress: null,
+      finished: null,
+    });
+    const loadingServiceStatusData = ref(false);
+    const loadingTimeMetricsData = ref(false);
+    const loadingHumanSupportByHourData = ref(false);
+
     const { updateLastUpdatedRequest } = useDashboards();
 
-    const loadData = async () => {
-      try {
-        loadingData.value = true;
-
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        updateLastUpdatedRequest();
-      } catch (error) {
-        console.error('Error loading monitoring data:', error);
-      } finally {
-        loadingData.value = false;
-      }
-    };
-
-    const isLoadingData = computed(() => loadingData.value);
+    const isLoadingAllData = computed(
+      () =>
+        loadingServiceStatusData.value ||
+        loadingTimeMetricsData.value ||
+        loadingHumanSupportByHourData.value,
+    );
 
     const appliedFiltersLength = computed(() => {
       const sectorsLength = appliedFilters.value.sectors.length > 0 ? 1 : 0;
@@ -71,14 +73,74 @@ export const useHumanSupportMonitoring = defineStore(
       };
     };
 
+    const loadAllData = () => {
+      loadServiceStatusData();
+      loadTimeMetricsData();
+      loadHumanSupportByHourData();
+    };
+
+    const loadServiceStatusData = async () => {
+      try {
+        loadingServiceStatusData.value = true;
+        updateLastUpdatedRequest();
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        //serviceStatusData.value = await ServiceStatusService.getServiceStatusData();
+        serviceStatusData.value = {
+          is_awaiting: Math.floor(Math.random() * 100),
+          in_progress: Math.floor(Math.random() * 100),
+          finished: Math.floor(Math.random() * 100),
+        };
+      } catch (error) {
+        console.error('Error loading service status data:', error);
+      } finally {
+        loadingServiceStatusData.value = false;
+      }
+    };
+
+    const loadTimeMetricsData = async () => {
+      try {
+        loadingTimeMetricsData.value = true;
+        updateLastUpdatedRequest();
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      } catch (error) {
+        console.error('Error loading time metrics data:', error);
+      } finally {
+        loadingTimeMetricsData.value = false;
+      }
+    };
+
+    const loadHumanSupportByHourData = async () => {
+      try {
+        loadingHumanSupportByHourData.value = true;
+        updateLastUpdatedRequest();
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+      } catch (error) {
+        console.error('Error loading human support by hour data:', error);
+      } finally {
+        loadingHumanSupportByHourData.value = false;
+      }
+    };
+
+    watch(appliedFilters, () => {
+      loadAllData();
+    });
+
     return {
       sectors,
       queues,
       tags,
-      isLoadingData,
+      isLoadingAllData,
       appliedFiltersLength,
+      appliedFilters,
+      serviceStatusData,
+      loadingServiceStatusData,
+      loadingTimeMetricsData,
+      loadingHumanSupportByHourData,
 
-      loadData,
+      loadAllData,
+      loadServiceStatusData,
+      loadTimeMetricsData,
+      loadHumanSupportByHourData,
       saveAppliedFilters,
       clearFilters,
     };

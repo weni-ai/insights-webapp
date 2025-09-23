@@ -33,8 +33,8 @@
 <script setup lang="ts">
 import { UnnnicTab } from '@weni/unnnic-system';
 import { ref } from 'vue';
-import Analysis from '../humanSupport/Analysis.vue';
-import Monitoring from '../humanSupport/Monitoring.vue';
+import Analysis from '../humanSupport/Analysis/Analysis.vue';
+import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
 
 const tabs = {
   monitoring: {
@@ -61,5 +61,9 @@ const changeActiveTabName = (tab: string) => {
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-8;
+
+  :deep(.tab-header) {
+    margin-bottom: $unnnic-space-8;
+  }
 }
 </style>

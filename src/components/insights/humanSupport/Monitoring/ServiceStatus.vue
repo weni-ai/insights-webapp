@@ -1,9 +1,18 @@
 <template>
-  <section class="service-status">
-    <p class="service-status__title">
+  <section
+    class="service-status"
+    data-testid="service-status"
+  >
+    <p
+      class="service-status__title"
+      data-testid="service-status-title"
+    >
       {{ $t('human_support_dashboard.support_status.title') }}
     </p>
-    <section class="service-status__cards">
+    <section
+      class="service-status__cards"
+      data-testid="service-status-cards"
+    >
       <template
         v-for="(card, index) in cardDefinitions"
         :key="`${card.id}-${index}`"

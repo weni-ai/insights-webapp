@@ -1,7 +1,10 @@
 <template>
-  <section class="monitoring">
-    <ServiceStatus />
-    <TimeMetrics />
+  <section
+    class="monitoring"
+    data-testid="monitoring"
+  >
+    <ServiceStatus data-testid="monitoring-service-status" />
+    <TimeMetrics data-testid="monitoring-time-metrics" />
   </section>
 </template>
 

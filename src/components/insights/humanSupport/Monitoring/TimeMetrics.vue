@@ -1,9 +1,18 @@
 <template>
-  <section class="time-metrics">
-    <p class="time-metrics__title">
+  <section
+    class="time-metrics"
+    data-testid="time-metrics"
+  >
+    <p
+      class="time-metrics__title"
+      data-testid="time-metrics-title"
+    >
       {{ $t('human_support_dashboard.time_metrics.title') }}
     </p>
-    <section class="time-metrics__cards">
+    <section
+      class="time-metrics__cards"
+      data-testid="time-metrics-cards"
+    >
       <template
         v-for="(card, index) in cardDefinitions"
         :key="`${card.id}-${index}`"

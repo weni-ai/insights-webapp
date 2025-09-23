@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import {
   formatSecondsToHumanString,
+  formatSecondsToTime,
   asyncTimeout,
   getLastNDays,
   getLastMonthRange,
@@ -27,6 +28,146 @@ describe('Date Utilities', () => {
       expect(formatSecondsToHumanString(60)).toBe('1m');
       expect(formatSecondsToHumanString(1)).toBe('1s');
       expect(formatSecondsToHumanString(0)).toBe('0s');
+    });
+  });
+
+  describe('formatSecondsToTime', () => {
+    describe('Edge Cases', () => {
+      it('handles null and undefined values', () => {
+        expect(formatSecondsToTime(null)).toBe('-');
+        expect(formatSecondsToTime(undefined)).toBe('-');
+      });
+
+      it('handles zero value', () => {
+        expect(formatSecondsToTime(0)).toBe('0s');
+      });
+
+      it('handles negative values by taking absolute value', () => {
+        expect(formatSecondsToTime(-30)).toBe('30s');
+        expect(formatSecondsToTime(-90)).toBe('1m 30s');
+        expect(formatSecondsToTime(-3661)).toBe('1h 01m 01s');
+      });
+
+      it('handles decimal values by flooring them', () => {
+        expect(formatSecondsToTime(30.7)).toBe('30s');
+        expect(formatSecondsToTime(90.9)).toBe('1m 30s');
+        expect(formatSecondsToTime(3661.5)).toBe('1h 01m 01s');
+      });
+    });
+
+    describe('Seconds Only (< 60s)', () => {
+      it('formats seconds without padding when less than 60', () => {
+        expect(formatSecondsToTime(1)).toBe('1s');
+        expect(formatSecondsToTime(5)).toBe('5s');
+        expect(formatSecondsToTime(30)).toBe('30s');
+        expect(formatSecondsToTime(59)).toBe('59s');
+      });
+    });
+
+    describe('Minutes and Seconds (1m - 59m)', () => {
+      it('formats minutes and seconds with padded seconds', () => {
+        expect(formatSecondsToTime(60)).toBe('1m 00s');
+        expect(formatSecondsToTime(61)).toBe('1m 01s');
+        expect(formatSecondsToTime(90)).toBe('1m 30s');
+        expect(formatSecondsToTime(125)).toBe('2m 05s');
+        expect(formatSecondsToTime(3599)).toBe('59m 59s');
+      });
+
+      it('formats exact minute values', () => {
+        expect(formatSecondsToTime(120)).toBe('2m 00s');
+        expect(formatSecondsToTime(300)).toBe('5m 00s');
+        expect(formatSecondsToTime(600)).toBe('10m 00s');
+      });
+    });
+
+    describe('Hours, Minutes and Seconds (≥ 1h)', () => {
+      it('formats hours with padded minutes and seconds', () => {
+        expect(formatSecondsToTime(3600)).toBe('1h 00m 00s');
+        expect(formatSecondsToTime(3661)).toBe('1h 01m 01s');
+        expect(formatSecondsToTime(3730)).toBe('1h 02m 10s');
+        expect(formatSecondsToTime(7200)).toBe('2h 00m 00s');
+        expect(formatSecondsToTime(7265)).toBe('2h 01m 05s');
+      });
+
+      it('formats large hour values correctly', () => {
+        expect(formatSecondsToTime(36000)).toBe('10h 00m 00s');
+        expect(formatSecondsToTime(86400)).toBe('24h 00m 00s');
+        expect(formatSecondsToTime(90061)).toBe('25h 01m 01s');
+      });
+
+      it('handles hours with zero minutes but non-zero seconds', () => {
+        expect(formatSecondsToTime(3605)).toBe('1h 00m 05s');
+        expect(formatSecondsToTime(7230)).toBe('2h 00m 30s');
+      });
+
+      it('handles hours with non-zero minutes but zero seconds', () => {
+        expect(formatSecondsToTime(3660)).toBe('1h 01m 00s');
+        expect(formatSecondsToTime(7320)).toBe('2h 02m 00s');
+      });
+    });
+
+    describe('Real-world Time Metrics Scenarios', () => {
+      it('formats typical waiting times (30s - 5min)', () => {
+        expect(formatSecondsToTime(30)).toBe('30s');
+        expect(formatSecondsToTime(90)).toBe('1m 30s');
+        expect(formatSecondsToTime(180)).toBe('3m 00s');
+        expect(formatSecondsToTime(300)).toBe('5m 00s');
+      });
+
+      it('formats typical first response times (10s - 2min)', () => {
+        expect(formatSecondsToTime(10)).toBe('10s');
+        expect(formatSecondsToTime(45)).toBe('45s');
+        expect(formatSecondsToTime(75)).toBe('1m 15s');
+        expect(formatSecondsToTime(120)).toBe('2m 00s');
+      });
+
+      it('formats typical chat duration times (3min - 30min)', () => {
+        expect(formatSecondsToTime(180)).toBe('3m 00s');
+        expect(formatSecondsToTime(600)).toBe('10m 00s');
+        expect(formatSecondsToTime(900)).toBe('15m 00s');
+        expect(formatSecondsToTime(1800)).toBe('30m 00s');
+      });
+
+      it('formats maximum expected chat durations (30min - 2h)', () => {
+        expect(formatSecondsToTime(1800)).toBe('30m 00s');
+        expect(formatSecondsToTime(3600)).toBe('1h 00m 00s');
+        expect(formatSecondsToTime(5400)).toBe('1h 30m 00s');
+        expect(formatSecondsToTime(7200)).toBe('2h 00m 00s');
+      });
+    });
+
+    describe('Boundary Values', () => {
+      it('handles boundary between seconds and minutes', () => {
+        expect(formatSecondsToTime(59)).toBe('59s');
+        expect(formatSecondsToTime(60)).toBe('1m 00s');
+        expect(formatSecondsToTime(61)).toBe('1m 01s');
+      });
+
+      it('handles boundary between minutes and hours', () => {
+        expect(formatSecondsToTime(3599)).toBe('59m 59s');
+        expect(formatSecondsToTime(3600)).toBe('1h 00m 00s');
+        expect(formatSecondsToTime(3601)).toBe('1h 00m 01s');
+      });
+    });
+
+    describe('Padding Consistency', () => {
+      it('ensures consistent zero-padding for minutes when hours are present', () => {
+        expect(formatSecondsToTime(3605)).toBe('1h 00m 05s');
+        expect(formatSecondsToTime(3665)).toBe('1h 01m 05s');
+        expect(formatSecondsToTime(4205)).toBe('1h 10m 05s');
+      });
+
+      it('ensures consistent zero-padding for seconds when minutes/hours are present', () => {
+        expect(formatSecondsToTime(65)).toBe('1m 05s');
+        expect(formatSecondsToTime(3605)).toBe('1h 00m 05s');
+        expect(formatSecondsToTime(605)).toBe('10m 05s');
+      });
+
+      it('does not pad single units', () => {
+        expect(formatSecondsToTime(5)).toBe('5s');
+        expect(formatSecondsToTime(65)).toBe('1m 05s');
+        expect(formatSecondsToTime(605)).toBe('10m 05s');
+      });
     });
   });
 

@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useDashboards } from '../dashboards';
 import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/serviceStatus';
+import { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/timeMetrics';
 //import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
+//import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
 
 interface Filter {
   value: string;
@@ -29,6 +31,11 @@ export const useHumanSupportMonitoring = defineStore(
       is_awaiting: null,
       in_progress: null,
       finished: null,
+    });
+    const timeMetricsData = ref<TimeMetricsDataResponse>({
+      average_time_is_waiting: { average: null, max: null },
+      average_time_first_response: { average: null, max: null },
+      average_time_chat: { average: null, max: null },
     });
     const loadingServiceStatusData = ref(false);
     const loadingTimeMetricsData = ref(false);
@@ -136,6 +143,21 @@ export const useHumanSupportMonitoring = defineStore(
         loadingTimeMetricsData.value = true;
         updateLastUpdatedRequest();
         await new Promise((resolve) => setTimeout(resolve, 3000));
+        //timeMetricsData.value = await TimeMetricsService.getTimeMetricsData();
+        timeMetricsData.value = {
+          average_time_is_waiting: {
+            average: Math.floor(Math.random() * 300) + 30,
+            max: Math.floor(Math.random() * 600) + 300,
+          },
+          average_time_first_response: {
+            average: Math.floor(Math.random() * 60) + 10,
+            max: Math.floor(Math.random() * 120) + 60,
+          },
+          average_time_chat: {
+            average: Math.floor(Math.random() * 900) + 180,
+            max: Math.floor(Math.random() * 1800) + 900,
+          },
+        };
       } catch (error) {
         console.error('Error loading time metrics data:', error);
       } finally {
@@ -167,6 +189,7 @@ export const useHumanSupportMonitoring = defineStore(
       appliedFiltersLength,
       appliedFilters,
       serviceStatusData,
+      timeMetricsData,
       loadingServiceStatusData,
       loadingTimeMetricsData,
       loadingHumanSupportByHourData,

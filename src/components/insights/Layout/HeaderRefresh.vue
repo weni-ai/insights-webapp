@@ -4,7 +4,7 @@
     :text="$t('insights_header.refresh')"
     type="tertiary"
     iconLeft="refresh"
-    :disabled="isLoadingData"
+    :disabled="isLoadingAllData"
     @click="refreshData"
   />
 </template>
@@ -16,10 +16,10 @@ import { storeToRefs } from 'pinia';
 
 const useMonitoring = useHumanSupportMonitoring();
 
-const { isLoadingData } = storeToRefs(useMonitoring);
-const { loadData } = useMonitoring;
+const { isLoadingAllData } = storeToRefs(useMonitoring);
+const { loadAllData } = useMonitoring;
 
 const refreshData = () => {
-  loadData();
+  loadAllData();
 };
 </script>

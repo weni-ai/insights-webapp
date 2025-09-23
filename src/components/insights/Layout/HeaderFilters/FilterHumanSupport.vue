@@ -73,6 +73,7 @@
             class="filter-human-support__filters-footer__button"
             text="Filtrar"
             type="primary"
+            :disabled="hasAppliedFiltersNoChanges"
             @click="applyFiltersButton"
           />
         </section>
@@ -91,9 +92,13 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { clearFilters, saveAppliedFilters } = humanSupportMonitoring;
-const { appliedFiltersLength, sectors, queues, tags } = storeToRefs(
-  humanSupportMonitoring,
-);
+const {
+  appliedFiltersLength,
+  sectors,
+  queues,
+  tags,
+  hasAppliedFiltersNoChanges,
+} = storeToRefs(humanSupportMonitoring);
 
 const { t } = useI18n();
 

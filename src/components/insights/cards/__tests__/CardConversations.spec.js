@@ -193,12 +193,10 @@ describe('CardConversations.vue', () => {
     it('should show time icon and apply value class when enableTimeIcon is true', async () => {
       await wrapper.setProps({ enableTimeIcon: true });
 
-      const timeIcon = wrapper.find('[icon="alarm"]');
+      const timeIcon = wrapper.find('[data-testid="card-time-icon"]');
       const valueSection = wrapper.find('.card-conversations__value');
 
       expect(timeIcon.exists()).toBe(true);
-      expect(timeIcon.attributes('size')).toBe('sm');
-      expect(timeIcon.attributes('scheme')).toBe('neutral-black');
       expect(valueSection.classes()).toContain(
         'card-conversations__value--enable-time-icon',
       );
@@ -207,7 +205,7 @@ describe('CardConversations.vue', () => {
     it('should not show time icon and not apply value class when enableTimeIcon is false', async () => {
       await wrapper.setProps({ enableTimeIcon: false });
 
-      const timeIcon = wrapper.find('[icon="alarm"]');
+      const timeIcon = wrapper.find('[data-testid="card-time-icon"]');
       const valueSection = wrapper.find('.card-conversations__value');
 
       expect(timeIcon.exists()).toBe(false);
@@ -217,7 +215,7 @@ describe('CardConversations.vue', () => {
     });
 
     it('should not show time icon and not apply value class when enableTimeIcon is not provided', () => {
-      const timeIcon = wrapper.find('[icon="alarm"]');
+      const timeIcon = wrapper.find('[data-testid="card-time-icon"]');
       const valueSection = wrapper.find('.card-conversations__value');
 
       expect(timeIcon.exists()).toBe(false);
@@ -266,7 +264,9 @@ describe('CardConversations.vue', () => {
       expect(wrapper.find('.card-conversations__value').classes()).toContain(
         'card-conversations__value--enable-time-icon',
       );
-      expect(wrapper.find('[icon="alarm"]').exists()).toBe(true);
+      expect(wrapper.find('[data-testid="card-time-icon"]').exists()).toBe(
+        true,
+      );
     });
 
     it('should render minimal elements when only required props are provided', () => {

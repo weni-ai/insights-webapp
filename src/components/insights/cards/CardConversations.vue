@@ -20,7 +20,7 @@
         v-if="tooltipInfo"
         enabled
         :text="tooltipInfo"
-        :side="tooltipSide || 'top '"
+        :side="tooltipSide || 'top'"
         class="card-conversations__tooltip"
         data-testid="card-conversations-tooltip"
       >
@@ -57,6 +57,7 @@
           size="sm"
           filled
           scheme="neutral-black"
+          data-testid="card-time-icon"
         />
         <p
           class="card-conversations__number"

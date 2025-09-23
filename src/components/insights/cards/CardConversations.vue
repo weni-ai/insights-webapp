@@ -35,7 +35,12 @@
       </UnnnicToolTip>
     </section>
     <section
-      class="card-conversations__content"
+      :class="[
+        'card-conversations__content',
+        {
+          'card-conversations__content--active-gap': props.activeDescriptionGap,
+        },
+      ]"
       data-testid="card-content"
     >
       <section class="card-conversations__value">
@@ -82,6 +87,7 @@ interface Props {
   tooltipInfo?: string;
   isLoading?: boolean;
   tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
+  activeDescriptionGap?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -151,6 +157,10 @@ defineEmits<{
   &__content {
     display: flex;
     flex-direction: column;
+
+    &--active-gap {
+      gap: $unnnic-space-2;
+    }
   }
 
   &__value {

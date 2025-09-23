@@ -159,6 +159,36 @@ describe('CardConversations.vue', () => {
     });
   });
 
+  describe('Active Description Gap', () => {
+    it('should apply active gap class when activeDescriptionGap is true', async () => {
+      await wrapper.setProps({
+        activeDescriptionGap: true,
+        description: 'Test Description',
+      });
+
+      expect(wrapper.find('[data-testid="card-content"]').classes()).toContain(
+        'card-conversations__content--active-gap',
+      );
+    });
+
+    it('should not apply active gap class when activeDescriptionGap is false', async () => {
+      await wrapper.setProps({
+        activeDescriptionGap: false,
+        description: 'Test Description',
+      });
+
+      expect(
+        wrapper.find('[data-testid="card-content"]').classes(),
+      ).not.toContain('card-conversations__content--active-gap');
+    });
+
+    it('should not apply active gap class when activeDescriptionGap is not provided', () => {
+      expect(
+        wrapper.find('[data-testid="card-content"]').classes(),
+      ).not.toContain('card-conversations__content--active-gap');
+    });
+  });
+
   describe('Complete Integration', () => {
     it('should render all elements when all props are provided', async () => {
       const props = {
@@ -168,6 +198,7 @@ describe('CardConversations.vue', () => {
         valueDescription: 'High',
         tooltipInfo: 'Complete Tooltip',
         borderRadius: 'left',
+        activeDescriptionGap: true,
       };
 
       await wrapper.setProps(props);
@@ -190,6 +221,9 @@ describe('CardConversations.vue', () => {
       expect(
         wrapper.find('[data-testid="card-conversations"]').classes(),
       ).toContain('card-conversations--border-left');
+      expect(wrapper.find('[data-testid="card-content"]').classes()).toContain(
+        'card-conversations__content--active-gap',
+      );
     });
 
     it('should render minimal elements when only required props are provided', () => {

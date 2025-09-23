@@ -189,6 +189,44 @@ describe('CardConversations.vue', () => {
     });
   });
 
+  describe('Enable Time Icon', () => {
+    it('should show time icon and apply value class when enableTimeIcon is true', async () => {
+      await wrapper.setProps({ enableTimeIcon: true });
+
+      const timeIcon = wrapper.find('[icon="alarm"]');
+      const valueSection = wrapper.find('.card-conversations__value');
+
+      expect(timeIcon.exists()).toBe(true);
+      expect(timeIcon.attributes('size')).toBe('sm');
+      expect(timeIcon.attributes('scheme')).toBe('neutral-black');
+      expect(valueSection.classes()).toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+    });
+
+    it('should not show time icon and not apply value class when enableTimeIcon is false', async () => {
+      await wrapper.setProps({ enableTimeIcon: false });
+
+      const timeIcon = wrapper.find('[icon="alarm"]');
+      const valueSection = wrapper.find('.card-conversations__value');
+
+      expect(timeIcon.exists()).toBe(false);
+      expect(valueSection.classes()).not.toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+    });
+
+    it('should not show time icon and not apply value class when enableTimeIcon is not provided', () => {
+      const timeIcon = wrapper.find('[icon="alarm"]');
+      const valueSection = wrapper.find('.card-conversations__value');
+
+      expect(timeIcon.exists()).toBe(false);
+      expect(valueSection.classes()).not.toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+    });
+  });
+
   describe('Complete Integration', () => {
     it('should render all elements when all props are provided', async () => {
       const props = {
@@ -199,6 +237,7 @@ describe('CardConversations.vue', () => {
         tooltipInfo: 'Complete Tooltip',
         borderRadius: 'left',
         activeDescriptionGap: true,
+        enableTimeIcon: true,
       };
 
       await wrapper.setProps(props);
@@ -224,6 +263,10 @@ describe('CardConversations.vue', () => {
       expect(wrapper.find('[data-testid="card-content"]').classes()).toContain(
         'card-conversations__content--active-gap',
       );
+      expect(wrapper.find('.card-conversations__value').classes()).toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+      expect(wrapper.find('[icon="alarm"]').exists()).toBe(true);
     });
 
     it('should render minimal elements when only required props are provided', () => {

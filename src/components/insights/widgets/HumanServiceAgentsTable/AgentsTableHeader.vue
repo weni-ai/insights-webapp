@@ -118,6 +118,10 @@ onMounted(() => {
   }
 });
 
+const hasDateFilter = computed(() => {
+  return !!widgetsStore.currentExpansiveWidgetFilters.date.start;
+});
+
 const headerOptions = computed(() => {
   return props.headers
     .filter(
@@ -129,7 +133,10 @@ const headerOptions = computed(() => {
     )
     .map((header) => ({
       value: i18n.global.t(header.name?.toLowerCase()),
-      label: i18n.global.t(header.name?.toLowerCase()),
+      label:
+        hasDateFilter.value && header.value === 'opened'
+          ? i18n.global.t('table_dynamic_by_filter.chats_in_period')
+          : i18n.global.t(header.name),
       key: header.name,
     }));
 });

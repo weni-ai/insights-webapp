@@ -115,9 +115,9 @@ export default {
     isRenderHumanSupportBtnExport() {
       return this.isHumanServiceDashboard;
     },
-
+    // TODO: change to isConversationalDashboard when the API is ready
     isRenderConversationalBtnExport() {
-      return this.isConversationalDashboard;
+      return false;
     },
 
     isHumanServiceDashboard() {

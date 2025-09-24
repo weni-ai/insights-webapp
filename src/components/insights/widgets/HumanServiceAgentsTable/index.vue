@@ -45,6 +45,7 @@
           :status="item.status.status"
           :label="item.status.label"
           :agent="{ name: item.agent, email: item.agent_email }"
+          @request-data="$emit('request-data')"
         />
       </template>
     </UnnnicDataTable>

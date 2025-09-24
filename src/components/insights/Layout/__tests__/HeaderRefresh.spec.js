@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
@@ -17,8 +17,14 @@ config.global.plugins = [
   }),
 ];
 
-// Mock the store
 vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('pinia', async () => {
+  const actual = await vi.importActual('pinia');
+  return {
+    ...actual,
+    storeToRefs: vi.fn(),
+  };
+});
 
 const createWrapper = (options = {}) => {
   return shallowMount(HeaderRefresh, {
@@ -35,16 +41,23 @@ const createWrapper = (options = {}) => {
 describe('HeaderRefresh.vue', () => {
   let wrapper;
   let monitoringStore;
+  let mockStoreToRefs;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     setActivePinia(createPinia());
 
-    // Setup mock store
     monitoringStore = {
-      isLoadingData: false,
-      loadData: vi.fn(),
+      isLoadingAllData: false,
+      loadAllData: vi.fn(),
     };
+
+    mockStoreToRefs = {
+      isLoadingAllData: ref(false),
+    };
+
     useHumanSupportMonitoring.mockReturnValue(monitoringStore);
+    const { storeToRefs } = await import('pinia');
+    storeToRefs.mockReturnValue(mockStoreToRefs);
 
     wrapper = createWrapper();
   });
@@ -67,23 +80,28 @@ describe('HeaderRefresh.vue', () => {
   });
 
   describe('Loading State', () => {
-    it('should pass isLoadingData to disabled prop', () => {
+    it('should pass isLoadingAllData to disabled prop', () => {
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
 
-      // Check that disabled prop receives the value from isLoadingData
       expect(refreshButton.props('disabled')).toBe(
-        monitoringStore.isLoadingData,
+        monitoringStore.isLoadingAllData,
       );
     });
 
     it('should connect disabled prop to loading state', () => {
-      // Verify that the component template binds disabled to isLoadingData
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
 
-      // The disabled prop should be bound to the store's loading state
       expect(refreshButton.props('disabled')).toBe(
-        monitoringStore.isLoadingData,
+        monitoringStore.isLoadingAllData,
       );
+    });
+
+    it('should disable button when loading is true', async () => {
+      mockStoreToRefs.isLoadingAllData.value = true;
+      await nextTick();
+
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(true);
     });
   });
 
@@ -93,13 +111,13 @@ describe('HeaderRefresh.vue', () => {
 
       await refreshButton.vm.$emit('click');
 
-      expect(monitoringStore.loadData).toHaveBeenCalledTimes(1);
+      expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(1);
     });
 
-    it('should call loadData from store when refreshData is executed', () => {
+    it('should call loadAllData from store when refreshData is executed', () => {
       wrapper.vm.refreshData();
 
-      expect(monitoringStore.loadData).toHaveBeenCalledTimes(1);
+      expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(1);
     });
 
     it('should handle multiple refresh clicks', async () => {
@@ -109,17 +127,23 @@ describe('HeaderRefresh.vue', () => {
       await refreshButton.vm.$emit('click');
       await refreshButton.vm.$emit('click');
 
-      expect(monitoringStore.loadData).toHaveBeenCalledTimes(3);
+      expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(3);
+    });
+
+    it('should show disabled state when loading', async () => {
+      mockStoreToRefs.isLoadingAllData.value = true;
+      await nextTick();
+
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(true);
     });
   });
 
   describe('Component Behavior', () => {
     it('should have proper template structure', () => {
-      // Verify the component renders correctly
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
       expect(refreshButton.exists()).toBe(true);
 
-      // Verify the button is configured correctly
       expect(refreshButton.props('type')).toBe('tertiary');
       expect(refreshButton.props('iconLeft')).toBe('refresh');
     });
@@ -134,8 +158,8 @@ describe('HeaderRefresh.vue', () => {
       expect(typeof wrapper.vm.refreshData).toBe('function');
     });
 
-    it('should access loadData function from store', () => {
-      expect(wrapper.vm.loadData).toBe(monitoringStore.loadData);
+    it('should access loadAllData function from store', () => {
+      expect(wrapper.vm.loadAllData).toBe(monitoringStore.loadAllData);
     });
   });
 
@@ -156,18 +180,40 @@ describe('HeaderRefresh.vue', () => {
 
   describe('Edge Cases', () => {
     it('should handle store being defined with expected properties', () => {
-      expect(monitoringStore.isLoadingData).toBeDefined();
-      expect(monitoringStore.loadData).toBeDefined();
-      expect(typeof monitoringStore.loadData).toBe('function');
+      expect(monitoringStore.isLoadingAllData).toBeDefined();
+      expect(monitoringStore.loadAllData).toBeDefined();
+      expect(typeof monitoringStore.loadAllData).toBe('function');
     });
 
-    it('should handle loadData throwing an error', async () => {
-      monitoringStore.loadData.mockRejectedValue(new Error('Load failed'));
+    it('should handle loadAllData throwing an error', async () => {
+      monitoringStore.loadAllData.mockRejectedValue(new Error('Load failed'));
 
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
 
       await refreshButton.vm.$emit('click');
-      expect(monitoringStore.loadData).toHaveBeenCalled();
+      expect(monitoringStore.loadAllData).toHaveBeenCalled();
+    });
+
+    it('should handle store reactivity changes', async () => {
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(false);
+
+      mockStoreToRefs.isLoadingAllData.value = true;
+      await nextTick();
+      expect(refreshButton.props('disabled')).toBe(true);
+
+      mockStoreToRefs.isLoadingAllData.value = false;
+      await nextTick();
+      expect(refreshButton.props('disabled')).toBe(false);
+    });
+
+    it('should handle missing store methods gracefully', () => {
+      const incompleteStore = {
+        isLoadingAllData: false,
+      };
+      useHumanSupportMonitoring.mockReturnValue(incompleteStore);
+
+      expect(() => createWrapper()).not.toThrow();
     });
   });
 });

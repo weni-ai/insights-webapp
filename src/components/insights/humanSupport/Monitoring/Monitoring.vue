@@ -1,6 +1,10 @@
 <template>
-  <section class="monitoring">
-    <h1>Monitoring</h1>
+  <section
+    class="monitoring"
+    data-testid="monitoring"
+  >
+    <ServiceStatus data-testid="monitoring-service-status" />
+    <TimeMetrics data-testid="monitoring-time-metrics" />
   </section>
 </template>
 
@@ -8,6 +12,9 @@
 import { onMounted, onUnmounted, ref } from 'vue';
 
 import { useDashboards } from '@/store/modules/dashboards';
+import ServiceStatus from './ServiceStatus.vue';
+import TimeMetrics from './TimeMetrics.vue';
+
 const isLoading = ref(false);
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 

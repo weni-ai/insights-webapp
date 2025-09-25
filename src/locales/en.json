@@ -814,6 +814,9 @@
         "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
         "average_time_chat": "Average total duration of the conversation, from the start of the service with the agent until it is finalized"
       }
+    },
+    "services_open_by_hour": {
+      "title": "Services open by hour"
     }
   }
 }

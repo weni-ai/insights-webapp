@@ -815,6 +815,9 @@
         "average_time_first_response": "Tiempo medio hasta la primera respuesta del agente después de que se asigne la sala",
         "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del servicio con el agente hasta que se finaliza"
       }
+    },
+    "services_open_by_hour": {
+      "title": "Atendimientos abiertos por hora"
     }
   }
 }

@@ -1,0 +1,18 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ServicesOpenByHour > Component rendering > should match snapshot 1`] = `
+<section
+  class="services-open-by-hour"
+  data-testid="services-open-by-hour"
+  data-v-5e3726dc=""
+>
+  <line-chart-stub
+    chartdata="[object Object]"
+    data-testid="services-open-by-hour-chart"
+    data-v-5e3726dc=""
+    isloading="false"
+    seemore="false"
+    title="human_support_dashboard.services_open_by_hour.title"
+  />
+</section>
+`;

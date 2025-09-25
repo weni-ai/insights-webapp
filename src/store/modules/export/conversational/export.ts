@@ -216,10 +216,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
         }
 
         const exportData: Omit<ExportRequest, 'project_uuid'> = {
-          filters: {
-            start_date: this.date_range.start,
-            end_date: this.date_range.end,
-          },
+          start_date: this.date_range.start,
+          end_date: this.date_range.end,
           type: this.type,
           sections: selectedSections,
           custom_widgets: selectedCustomWidgets,
@@ -272,10 +270,19 @@ export const useConversationalExport = defineStore('conversationalExport', {
         hasValidSelections = true;
       }
 
-      ['topics', 'csat', 'nps'].forEach((section) => {
+      [
+        'topics',
+        'csat',
+        'nps',
+        ...state.custom_widgets.map((widget) => widget.uuid),
+      ].forEach((section) => {
         if (state.enabled_models.includes(section)) {
           const sectionFields = state.selected_fields[section] || [];
           if (sectionFields.length > 0) {
+            hasValidSelections = true;
+          }
+
+          if (state.custom_widgets.some((widget) => widget.uuid === section)) {
             hasValidSelections = true;
           }
         }

@@ -3,8 +3,10 @@ import { computed, ref, watch } from 'vue';
 import { useDashboards } from '../dashboards';
 import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/serviceStatus';
 import { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/timeMetrics';
+import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/servicesOpenByHour';
 //import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
 //import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
+//import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
 
 interface Filter {
   value: string;
@@ -37,6 +39,7 @@ export const useHumanSupportMonitoring = defineStore(
       average_time_first_response: { average: null, max: null },
       average_time_chat: { average: null, max: null },
     });
+    const servicesOpenByHourData = ref<ServicesOpenByHourData[]>([]);
     const loadingServiceStatusData = ref(false);
     const loadingTimeMetricsData = ref(false);
     const loadingHumanSupportByHourData = ref(false);
@@ -170,6 +173,33 @@ export const useHumanSupportMonitoring = defineStore(
         loadingHumanSupportByHourData.value = true;
         updateLastUpdatedRequest();
         await new Promise((resolve) => setTimeout(resolve, 3000));
+        //servicesOpenByHourData.value = await ServicesOpenByHourService.getServicesOpenByHourData();
+        servicesOpenByHourData.value = [
+          { label: '0h', value: Math.floor(Math.random() * 100) },
+          { label: '1h', value: Math.floor(Math.random() * 100) },
+          { label: '2h', value: Math.floor(Math.random() * 100) },
+          { label: '3h', value: Math.floor(Math.random() * 100) },
+          { label: '4h', value: Math.floor(Math.random() * 100) },
+          { label: '5h', value: Math.floor(Math.random() * 100) },
+          { label: '6h', value: Math.floor(Math.random() * 100) },
+          { label: '7h', value: Math.floor(Math.random() * 100) },
+          { label: '8h', value: Math.floor(Math.random() * 100) },
+          { label: '9h', value: Math.floor(Math.random() * 100) },
+          { label: '10h', value: Math.floor(Math.random() * 100) },
+          { label: '11h', value: Math.floor(Math.random() * 100) },
+          { label: '12h', value: Math.floor(Math.random() * 100) },
+          { label: '13h', value: Math.floor(Math.random() * 100) },
+          { label: '14h', value: Math.floor(Math.random() * 100) },
+          { label: '15h', value: Math.floor(Math.random() * 100) },
+          { label: '16h', value: Math.floor(Math.random() * 100) },
+          { label: '17h', value: Math.floor(Math.random() * 100) },
+          { label: '18h', value: Math.floor(Math.random() * 100) },
+          { label: '19h', value: Math.floor(Math.random() * 100) },
+          { label: '20h', value: Math.floor(Math.random() * 100) },
+          { label: '21h', value: Math.floor(Math.random() * 100) },
+          { label: '22h', value: Math.floor(Math.random() * 100) },
+          { label: '23h', value: Math.floor(Math.random() * 100) },
+        ];
       } catch (error) {
         console.error('Error loading human support by hour data:', error);
       } finally {
@@ -194,6 +224,7 @@ export const useHumanSupportMonitoring = defineStore(
       loadingTimeMetricsData,
       loadingHumanSupportByHourData,
       hasAppliedFiltersNoChanges,
+      servicesOpenByHourData,
 
       loadAllData,
       loadServiceStatusData,

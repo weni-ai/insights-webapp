@@ -788,5 +788,36 @@
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
     "error_message": "Error al desconectar agente {agent}"
+  },
+  "human_support_dashboard": {
+    "title": "Atención humana",
+    "monitoring": "Monitorización",
+    "analysis": "Análisis",
+    "support_status": {
+      "title": "Estado de los atendimientos",
+      "is_awaiting": "En espera",
+      "is_in_progress": "En progreso",
+      "is_closed": "Finalizado",
+      "tooltips": {
+        "is_awaiting": "Número de contactos esperando el inicio del servicio ahora",
+        "is_in_progress": "Número de contactos en servicio ahora",
+        "is_closed": "Número de servicios finalizados hoy"
+      }
+    },
+    "time_metrics": {
+      "title": "Métricas de tiempo ahora",
+      "average_time_is_waiting": "Tiempo medio en espera",
+      "average_time_first_response": "Tiempo medio para 1ª respuesta",
+      "average_time_chat": "Duración media de la conversa",
+      "max": "Máximo",
+      "tooltips": {
+        "average_time_is_waiting": "Tiempo medio que los contactos esperan en la cola hasta que el servicio comience",
+        "average_time_first_response": "Tiempo medio hasta la primera respuesta del agente después de que se asigne la sala",
+        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del servicio con el agente hasta que se finaliza"
+      }
+    },
+    "services_open_by_hour": {
+      "title": "Atendimientos abiertos por hora"
+    }
   }
 }

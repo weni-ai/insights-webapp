@@ -21,13 +21,24 @@ export default {
       params: queryParams,
     });
 
-    const configConversational = {
-      type: 'conversational',
-    };
-
     // TODO: Remove this logic after the API is key in the dashboard
-    const isConversational = (name) => {
-      return name === 'conversations_dashboard.title';
+    const handleConfigDashboard = (name, config) => {
+      const isConversational = name === 'conversations_dashboard.title';
+      const isHumanSupport = name === 'human_support_dashboard.title';
+
+      if (isConversational) {
+        return {
+          type: 'conversational',
+        };
+      }
+
+      if (isHumanSupport) {
+        return {
+          type: 'human_support',
+        };
+      }
+
+      return config;
     };
 
     const dashboards = response.results.map(
@@ -39,9 +50,7 @@ export default {
           dashboard.is_default,
           dashboard.is_editable,
           dashboard.is_deletable,
-          isConversational(dashboard.name)
-            ? configConversational
-            : dashboard.config,
+          handleConfigDashboard(dashboard.name, dashboard.config),
         ),
     );
 

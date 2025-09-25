@@ -26,6 +26,10 @@
           v-if="showTagLive"
           data-testid="insights-layout-header-tag-live"
         />
+        <LastUpdatedText
+          v-if="isHumanServiceDashboard || isHumanSupportDashboard"
+        />
+        <HeaderRefresh v-if="isHumanSupportDashboard" />
         <InsightsLayoutHeaderFilters
           v-if="currentDashboardFilters.length"
           data-testid="insights-layout-header-filters"
@@ -74,6 +78,8 @@ import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
 import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
 import HumanSupportExport from '../export/HumanSupportExport.vue';
 import ConversationalExport from '../export/ConversationalExport.vue';
+import LastUpdatedText from './HeaderFilters/LastUpdatedText.vue';
+import HeaderRefresh from './HeaderRefresh.vue';
 
 import moment from 'moment';
 
@@ -88,6 +94,8 @@ export default {
     HeaderGenerateInsightButton,
     HumanSupportExport,
     ConversationalExport,
+    LastUpdatedText,
+    HeaderRefresh,
   },
   computed: {
     ...mapState(useDashboards, [
@@ -113,7 +121,7 @@ export default {
     },
 
     isRenderHumanSupportBtnExport() {
-      return this.isHumanServiceDashboard;
+      return this.isHumanServiceDashboard || this.isHumanSupportDashboard;
     },
 
     isRenderConversationalBtnExport() {
@@ -122,6 +130,10 @@ export default {
 
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
+
+    isHumanSupportDashboard() {
+      return this.currentDashboard?.name === 'human_support_dashboard.title';
     },
 
     isConversationalDashboard() {
@@ -152,6 +164,10 @@ export default {
     },
 
     showTagLive() {
+      if (this.isHumanSupportDashboard) {
+        return true;
+      }
+
       const dateFilter = this.currentDashboardFilters.find(
         (filter) => filter.type === 'date_range',
       );

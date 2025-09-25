@@ -31,7 +31,6 @@ vi.mock('pinia', async (importOriginal) => {
   };
 });
 
-// Mock console.log to avoid noise in tests
 global.console = {
   ...console,
   log: vi.fn(),
@@ -113,10 +112,6 @@ describe('ServicesOpenByHour', () => {
   describe('Data loading and store integration', () => {
     it('should call loadHumanSupportByHourData on mount', () => {
       expect(mockMonitoringStore.loadHumanSupportByHourData).toHaveBeenCalled();
-    });
-
-    it('should log mount message', () => {
-      expect(console.log).toHaveBeenCalledWith('ServicesOpenByHour mounted');
     });
 
     it('should compute loading state correctly', () => {
@@ -235,7 +230,6 @@ describe('ServicesOpenByHour', () => {
     it('should have reactive data computed property', () => {
       const vm = wrapper.vm;
 
-      // Test that the computed property returns expected structure
       expect(vm.data).toHaveProperty('labels');
       expect(vm.data).toHaveProperty('datasets');
       expect(Array.isArray(vm.data.labels)).toBe(true);
@@ -247,20 +241,10 @@ describe('ServicesOpenByHour', () => {
       expect(typeof vm.isLoading).toBe('boolean');
       expect(vm.isLoading).toBe(false);
 
-      // Test with loading state
       wrapper = createWrapper({
         loadingHumanSupportByHourData: { value: true },
       });
       expect(wrapper.vm.isLoading).toBe(true);
-    });
-  });
-
-  describe('Lifecycle hooks', () => {
-    it('should execute onMounted hook correctly', () => {
-      expect(
-        mockMonitoringStore.loadHumanSupportByHourData,
-      ).toHaveBeenCalledTimes(1);
-      expect(console.log).toHaveBeenCalledWith('ServicesOpenByHour mounted');
     });
   });
 

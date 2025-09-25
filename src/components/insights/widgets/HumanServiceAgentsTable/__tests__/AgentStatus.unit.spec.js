@@ -414,7 +414,7 @@ describe('AgentStatus', () => {
       expect(disconnectAgent.exists()).toBe(false);
     });
 
-    it('does not render DisconnectAgent component when status is orange', () => {
+    it('renders DisconnectAgent component when status is orange', () => {
       const mockAgent = {
         name: 'John Doe',
         email: 'john.doe@example.com',
@@ -437,7 +437,7 @@ describe('AgentStatus', () => {
       const disconnectAgent = wrapper.find(
         '[data-testid="disconnect-agent-stub"]',
       );
-      expect(disconnectAgent.exists()).toBe(false);
+      expect(disconnectAgent.exists()).toBe(true);
     });
 
     it('passes the correct agent prop to DisconnectAgent component', () => {
@@ -495,6 +495,147 @@ describe('AgentStatus', () => {
       expect(
         wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
       ).toBe(false);
+    });
+
+    it('shows and hides DisconnectAgent when status changes from orange to gray', async () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'orange',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(
+        wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
+      ).toBe(true);
+
+      await wrapper.setProps({ status: 'gray' });
+
+      expect(
+        wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
+      ).toBe(false);
+    });
+
+    it('keeps DisconnectAgent visible when status changes from green to orange', async () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(
+        wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
+      ).toBe(true);
+
+      await wrapper.setProps({ status: 'orange' });
+
+      expect(
+        wrapper.find('[data-testid="disconnect-agent-stub"]').exists(),
+      ).toBe(true);
+    });
+  });
+
+  describe('enabledDisconnectAgent computed property', () => {
+    it('returns true for green status', () => {
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(true);
+    });
+
+    it('returns true for orange status', () => {
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'orange',
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(true);
+    });
+
+    it('returns false for gray status', () => {
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'gray',
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(false);
+    });
+
+    it('updates enabledDisconnectAgent when status prop changes', async () => {
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'gray',
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: DisconnectAgentStub,
+          },
+        },
+      });
+
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(false);
+
+      await wrapper.setProps({ status: 'green' });
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(true);
+
+      await wrapper.setProps({ status: 'orange' });
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(true);
+
+      await wrapper.setProps({ status: 'gray' });
+      expect(wrapper.vm.enabledDisconnectAgent).toBe(false);
     });
   });
 
@@ -557,6 +698,113 @@ describe('AgentStatus', () => {
         name: '',
         email: '',
       });
+    });
+  });
+
+  describe('Event emission', () => {
+    it('emits request-data event when DisconnectAgent emits it with green status', async () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'green',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: {
+              template:
+                '<div data-testid="disconnect-agent-stub" @click="$emit(\'request-data\')" />',
+              props: ['agent'],
+              emits: ['request-data'],
+            },
+          },
+        },
+      });
+
+      const disconnectAgent = wrapper.find(
+        '[data-testid="disconnect-agent-stub"]',
+      );
+      expect(disconnectAgent.exists()).toBe(true);
+
+      await disconnectAgent.trigger('click');
+
+      expect(wrapper.emitted('request-data')).toBeTruthy();
+      expect(wrapper.emitted('request-data')).toHaveLength(1);
+    });
+
+    it('emits request-data event when DisconnectAgent emits it with orange status', async () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'orange',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: {
+              template:
+                '<div data-testid="disconnect-agent-stub" @click="$emit(\'request-data\')" />',
+              props: ['agent'],
+              emits: ['request-data'],
+            },
+          },
+        },
+      });
+
+      const disconnectAgent = wrapper.find(
+        '[data-testid="disconnect-agent-stub"]',
+      );
+      expect(disconnectAgent.exists()).toBe(true);
+
+      await disconnectAgent.trigger('click');
+
+      expect(wrapper.emitted('request-data')).toBeTruthy();
+      expect(wrapper.emitted('request-data')).toHaveLength(1);
+    });
+
+    it('does not emit request-data event when status is gray and DisconnectAgent is not present', async () => {
+      const mockAgent = {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+      };
+
+      wrapper = mount(AgentStatus, {
+        props: {
+          status: 'gray',
+          agent: mockAgent,
+        },
+        global: {
+          plugins: [i18n, UnnnicSystem],
+          stubs: {
+            UnnnicIcon: UnnnicIconStub,
+            DisconnectAgent: {
+              template:
+                '<div data-testid="disconnect-agent-stub" @click="$emit(\'request-data\')" />',
+              props: ['agent'],
+              emits: ['request-data'],
+            },
+          },
+        },
+      });
+
+      const disconnectAgent = wrapper.find(
+        '[data-testid="disconnect-agent-stub"]',
+      );
+      expect(disconnectAgent.exists()).toBe(false);
+
+      expect(wrapper.emitted('request-data')).toBeFalsy();
     });
   });
 });

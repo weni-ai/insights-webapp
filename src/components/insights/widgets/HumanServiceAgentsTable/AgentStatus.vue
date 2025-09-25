@@ -17,7 +17,7 @@
       {{ label }}
     </span>
     <DisconnectAgent
-      v-if="status === 'green'"
+      v-if="enabledDisconnectAgent"
       :agent="agent"
       @request-data="emits('request-data')"
     />
@@ -56,6 +56,10 @@ const statusClass = computed(() => {
     'agent-status': true,
     [`agent-status--${props.status}`]: true,
   };
+});
+
+const enabledDisconnectAgent = computed(() => {
+  return ['green', 'orange'].includes(props.status);
 });
 </script>
 

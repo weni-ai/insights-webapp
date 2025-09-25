@@ -42,6 +42,7 @@ describe('Monitoring', () => {
         stubs: {
           ServiceStatus: true,
           TimeMetrics: true,
+          ServicesOpenByHour: true,
         },
       },
     });
@@ -79,17 +80,26 @@ describe('Monitoring', () => {
       expect(wrapper.findComponent({ name: 'TimeMetrics' }).exists()).toBe(
         true,
       );
+      expect(
+        wrapper.findComponent({ name: 'ServicesOpenByHour' }).exists(),
+      ).toBe(true);
     });
 
     it('should have correct data-testids for child components', () => {
       const serviceStatus = wrapper.findComponent({ name: 'ServiceStatus' });
       const timeMetrics = wrapper.findComponent({ name: 'TimeMetrics' });
+      const servicesOpenByHour = wrapper.findComponent({
+        name: 'ServicesOpenByHour',
+      });
 
       expect(serviceStatus.attributes('data-testid')).toBe(
         'monitoring-service-status',
       );
       expect(timeMetrics.attributes('data-testid')).toBe(
         'monitoring-time-metrics',
+      );
+      expect(servicesOpenByHour.attributes('data-testid')).toBe(
+        'monitoring-services-open-by-hour',
       );
     });
   });

@@ -14,5 +14,9 @@ exports[`Monitoring > Component structure > should match snapshot 1`] = `
     data-testid="monitoring-time-metrics"
     data-v-ada4682d=""
   />
+  <services-open-by-hour-stub
+    data-testid="monitoring-services-open-by-hour"
+    data-v-ada4682d=""
+  />
 </section>
 `;

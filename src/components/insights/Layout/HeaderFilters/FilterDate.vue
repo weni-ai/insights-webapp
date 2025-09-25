@@ -44,6 +44,7 @@ export default {
     },
     minDate() {
       if (this.isHumanServiceDashboard) return undefined;
+      if (this.isConversationalDashboard) return undefined;
       return moment().subtract(89, 'days').format('YYYY-MM-DD');
     },
     maxDate() {

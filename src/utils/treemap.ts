@@ -118,7 +118,7 @@ export function addColors(data: topicDistributionMetric[]): DataWithColor[] {
   return data.map((item, index) => ({
     ...item,
     label:
-      item.label === 'other'
+      item?.label?.toLowerCase() === 'other'
         ? i18n.global.t('conversations_dashboard.others')
         : item.label,
     ...getItemColors(item.label, index),

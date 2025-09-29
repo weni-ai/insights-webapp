@@ -91,7 +91,7 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
-$min-height: 134px;
+$min-height: 112px;
 
 .service-status {
   display: flex;

@@ -35,6 +35,7 @@ interface QueryParams {
   ordering?: string;
   limit?: number;
   offset?: number;
+  agent?: string;
 }
 
 export default {

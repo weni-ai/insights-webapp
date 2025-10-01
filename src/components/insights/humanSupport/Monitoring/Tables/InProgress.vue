@@ -15,6 +15,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @update:page="handlePageChange"
+    @item-click="redirectItem"
   />
 </template>
 
@@ -93,6 +94,18 @@ const handleSort = (sort: { header: string; order: string }) => {
 const handlePageChange = (newPage: number) => {
   page.value = newPage;
   loadData();
+};
+
+const redirectItem = (item: InProgressDataResult) => {
+  if (!item?.link?.url) return;
+  const path = `${item.link?.url}/insights`;
+  window.parent.postMessage(
+    {
+      event: 'redirect',
+      path,
+    },
+    '*',
+  );
 };
 
 const loadData = async () => {

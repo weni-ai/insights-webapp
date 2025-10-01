@@ -64,25 +64,25 @@ const formattedHeaders = computed(() => {
       title: t('human_support_dashboard.detailed_monitoring.pauses.status'),
       itemKey: 'status',
       isSortable: true,
-      size: 0.8,
+      size: 0.5,
     },
     {
       title: t('human_support_dashboard.detailed_monitoring.pauses.agent'),
       itemKey: 'agent',
       isSortable: true,
-      size: 1,
+      size: 0.8,
     },
     {
       title: t('human_support_dashboard.detailed_monitoring.pauses.opened'),
       itemKey: 'opened',
       isSortable: true,
-      size: 0.6,
+      size: 0.4,
     },
     {
       title: t('human_support_dashboard.detailed_monitoring.pauses.closed'),
       itemKey: 'closed',
       isSortable: true,
-      size: 0.6,
+      size: 0.4,
     },
   ];
 
@@ -90,7 +90,7 @@ const formattedHeaders = computed(() => {
     title: statusType,
     itemKey: statusType,
     isSortable: true,
-    size: 0.8,
+    size: 0.5,
   }));
 
   return [...baseHeaders, ...dynamicHeaders];
@@ -150,14 +150,6 @@ const loadData = async () => {
     if (apiData.value) {
       rawItems.value = apiData.value.results;
       pageTotal.value = apiData.value.count;
-
-      console.log(
-        `Loaded ${apiData.value.results.length} items from total of ${apiData.value.count}`,
-      );
-      console.log(
-        `Page ${page.value}, has next: ${!!apiData.value.next}, has previous: ${!!apiData.value.previous}`,
-      );
-      console.log('Custom status types found:', customStatusTypes.value);
     } else {
       rawItems.value = [];
       pageTotal.value = 0;

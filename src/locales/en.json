@@ -840,6 +840,12 @@
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
+      },
+      "pauses": {
+        "status": "Status",
+        "agent": "Agent",
+        "opened": "Opened",
+        "closed": "Closed"
       }
     }
   }

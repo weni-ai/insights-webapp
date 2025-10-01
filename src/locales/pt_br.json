@@ -840,6 +840,12 @@
         "sector": "Setor",
         "queue": "Fila",
         "contact": "Contato"
+      },
+      "pauses": {
+        "status": "Status",
+        "agent": "Agente",
+        "opened": "Abertos",
+        "closed": "Fechados"
       }
     }
   }

@@ -825,7 +825,7 @@
         "in_awaiting": "En espera",
         "in_progress": "En progreso",
         "attendant": "Atendido",
-        "pausas": "Pausas"
+        "pauses": "Pausas"
       },
       "filters": {
         "attendant": {
@@ -841,6 +841,12 @@
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto"
+      },
+      "pauses": {
+        "status": "Estado",
+        "agent": "Agente",
+        "opened": "Abiertos",
+        "closed": "Cerrados"
       }
     }
   }

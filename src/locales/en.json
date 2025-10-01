@@ -846,6 +846,12 @@
         "agent": "Agent",
         "opened": "Opened",
         "closed": "Closed"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Awaiting time",
+        "contact": "Contact",
+        "sector": "Sector",
+        "queue": "Queue"
       }
     }
   }

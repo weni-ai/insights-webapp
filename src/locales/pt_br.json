@@ -846,6 +846,12 @@
         "agent": "Agente",
         "opened": "Abertos",
         "closed": "Fechados"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Tempo em espera",
+        "contact": "Contato",
+        "sector": "Setor",
+        "queue": "Fila"
       }
     }
   }

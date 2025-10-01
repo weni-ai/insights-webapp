@@ -847,6 +847,12 @@
         "agent": "Agente",
         "opened": "Abiertos",
         "closed": "Cerrados"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Tiempo en espera",
+        "contact": "Contacto",
+        "sector": "Sector",
+        "queue": "Cola"
       }
     }
   }

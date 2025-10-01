@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AttendantDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
@@ -163,12 +163,7 @@ const loadData = async () => {
 };
 
 onMounted(() => {
-  console.log('attendant-table mounted');
   loadData();
-});
-
-onUnmounted(() => {
-  console.log('attendant-table unmounted');
 });
 
 watch(currentSort, () => {

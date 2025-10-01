@@ -1,6 +1,9 @@
 <template>
   <section
-    class="disconnect-agent-container"
+    :class="[
+      'disconnect-agent-container',
+      { 'disconnect-agent-container--center': props.containerCenter },
+    ]"
     @click.stop
   >
     <UnnnicToolTip
@@ -69,6 +72,10 @@ const props = defineProps({
     }),
     required: true,
   },
+  containerCenter: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emits = defineEmits(['request-data']);
@@ -125,6 +132,10 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
 .disconnect-agent-container {
   display: flex;
   align-items: center;
+
+  &--center {
+    justify-content: center;
+  }
 
   :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
     font-size: $unnnic-font-size-title-sm;

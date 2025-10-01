@@ -861,7 +861,8 @@
         "average_girst_response_time": "Average first response time",
         "average_response_time": "Average response time",
         "average_duration": "Average duration",
-        "time_in_service": "Time in service"
+        "time_in_service": "Time in service",
+        "action": "Action"
       }
     }
   }

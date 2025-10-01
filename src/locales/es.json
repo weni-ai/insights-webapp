@@ -862,7 +862,8 @@
         "average_girst_response_time": "Tiempo medio para 1ª respuesta",
         "average_response_time": "Tiempo medio de respuesta",
         "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento"
+        "time_in_service": "Tempo em atendimento",
+        "action": "Acción"
       }
     }
   }

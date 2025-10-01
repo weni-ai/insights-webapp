@@ -15,6 +15,10 @@ interface InAwaitingDataResult {
   contact: string;
   sector: string;
   queue: string;
+  link: {
+    url: string;
+    type: string;
+  };
 }
 
 interface QueryParams {

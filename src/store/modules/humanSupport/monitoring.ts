@@ -18,6 +18,11 @@ interface AppliedFilters {
   tags: Filter[];
 }
 
+interface AppliedAgentFilter {
+  value: string;
+  label: string;
+}
+
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
@@ -28,6 +33,10 @@ export const useHumanSupportMonitoring = defineStore(
       sectors: [],
       queues: [],
       tags: [],
+    });
+    const appliedAgentFilter = ref<AppliedAgentFilter>({
+      value: '',
+      label: '',
     });
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_awaiting: null,
@@ -68,6 +77,13 @@ export const useHumanSupportMonitoring = defineStore(
         sectors: [...sectors.value],
         queues: [...queues.value],
         tags: [...tags.value],
+      };
+    };
+
+    const saveAppliedAgentFilter = (value: string, label: string) => {
+      appliedAgentFilter.value = {
+        value: value,
+        label: label,
       };
     };
 
@@ -225,12 +241,14 @@ export const useHumanSupportMonitoring = defineStore(
       loadingHumanSupportByHourData,
       hasAppliedFiltersNoChanges,
       servicesOpenByHourData,
+      appliedAgentFilter,
 
       loadAllData,
       loadServiceStatusData,
       loadTimeMetricsData,
       loadHumanSupportByHourData,
       saveAppliedFilters,
+      saveAppliedAgentFilter,
       clearFilters,
     };
   },

@@ -21,27 +21,25 @@
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import {
-  PausesData,
-  PausesDataResult,
-} from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
+import { PausesDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 const { t } = useI18n();
 
 const isLoading = ref(false);
+const humanSupportMonitoring = useHumanSupportMonitoring();
 
 const page = ref(1);
 const pageInterval = ref(12);
 const pageTotal = ref(0);
 
-const currentSort = ref<{ field: string; order: string }>({
-  field: 'agent',
+const currentSort = ref<{ header: string; order: string }>({
+  header: 'agent',
   order: 'asc',
 });
 
-const apiData = ref<PausesData | null>(null);
 const rawItems = ref<PausesDataResult[]>([]);
 
 const customStatusTypes = computed(() => {
@@ -114,7 +112,7 @@ const formattedItems = computed(() => {
   });
 });
 
-const handleSort = (sort: { field: string; order: string }) => {
+const handleSort = (sort: { header: string; order: string }) => {
   currentSort.value = sort;
 };
 
@@ -130,26 +128,20 @@ const loadData = async () => {
     const offset = (page.value - 1) * pageInterval.value;
     const ordering =
       currentSort.value.order === 'desc'
-        ? `-${currentSort.value.field}`
-        : currentSort.value.field;
+        ? `-${currentSort.value.header}`
+        : currentSort.value.header;
 
     const data =
       await getDetailedMonitoringPausesService.getDetailedMonitoringPauses({
         ordering,
         limit: pageInterval.value,
         offset,
+        agent: humanSupportMonitoring.appliedAgentFilter.value,
       });
 
-    apiData.value = {
-      next: '',
-      previous: '',
-      count: 0,
-      results: data.results,
-    };
-
-    if (apiData.value) {
-      rawItems.value = apiData.value.results;
-      pageTotal.value = apiData.value.count;
+    if (data.results) {
+      rawItems.value = data.results;
+      pageTotal.value = data.count;
     } else {
       rawItems.value = [];
       pageTotal.value = 0;
@@ -171,4 +163,13 @@ watch(currentSort, () => {
   page.value = 1;
   loadData();
 });
+
+watch(
+  () => humanSupportMonitoring.appliedAgentFilter,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

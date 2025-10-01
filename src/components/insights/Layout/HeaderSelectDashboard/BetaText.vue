@@ -1,6 +1,6 @@
 <template>
   <section
-    v-if="isConversationalDashboard"
+    v-if="isConversationalDashboard || isHumanSupportDashboard"
     class="beta_text_container"
     data-testid="beta-container"
   >
@@ -22,6 +22,10 @@ const { currentDashboard } = storeToRefs(useDashboards());
 
 const isConversationalDashboard = computed(() => {
   return currentDashboard.value.name === 'conversations_dashboard.title';
+});
+
+const isHumanSupportDashboard = computed(() => {
+  return currentDashboard.value.name === 'human_support_dashboard.title';
 });
 </script>
 

@@ -15,7 +15,15 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @update:page="handlePageChange"
-  />
+  >
+    <template #body-action="{ item }">
+      <DisconnectAgent
+        :agent="{ name: item.agent, email: item.agent_email }"
+        containerCenter
+        @request-data="loadData"
+      />
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
@@ -25,6 +33,7 @@ import { useI18n } from 'vue-i18n';
 import { AttendantDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import DisconnectAgent from '@/components/DisconnectAgent.vue';
 
 const { t } = useI18n();
 
@@ -90,6 +99,13 @@ const formattedHeaders = computed(() => [
     ),
     itemKey: 'time_in_service',
     isSortable: true,
+  },
+  {
+    title: t('human_support_dashboard.detailed_monitoring.attendant.action'),
+    itemKey: 'action',
+    isSortable: false,
+    size: 0.5,
+    align: 'center',
   },
 ]);
 

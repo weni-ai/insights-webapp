@@ -25,21 +25,20 @@ interface AttendantDataResult {
   };
 }
 
-interface AttendantDataResponse {
-  data: AttendantData[];
-}
-
 interface QueryParams {
   sectors?: string[];
   queues?: string[];
   tags?: string[];
   ordering?: string;
+  limit?: number;
+  offset?: number;
+  agent?: string;
 }
 
 export default {
   async getDetailedMonitoringAttendant(
     queryParams: QueryParams = {},
-  ): Promise<AttendantData[]> {
+  ): Promise<AttendantData> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
 
@@ -63,12 +62,12 @@ export default {
       {
         params: formattedParams,
       },
-    )) as AttendantDataResponse;
+    )) as AttendantData;
 
-    const formattedResponse: AttendantData[] = response.data;
+    const formattedResponse: AttendantData = response;
 
     return formattedResponse;
   },
 };
 
-export type { AttendantDataResponse, QueryParams, AttendantData };
+export type { QueryParams, AttendantData, AttendantDataResult };

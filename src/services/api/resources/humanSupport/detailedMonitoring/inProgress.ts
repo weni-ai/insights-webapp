@@ -18,10 +18,10 @@ interface InProgressDataResult {
   sector: string;
   queue: string;
   contact: string;
-}
-
-interface InProgressDataResponse {
-  data: InProgressData[];
+  link: {
+    url: string;
+    type: string;
+  };
 }
 
 interface QueryParams {
@@ -29,12 +29,14 @@ interface QueryParams {
   queues?: string[];
   tags?: string[];
   ordering?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export default {
   async getDetailedMonitoringInProgress(
     queryParams: QueryParams = {},
-  ): Promise<InProgressData[]> {
+  ): Promise<InProgressData> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
 
@@ -58,9 +60,9 @@ export default {
       {
         params: formattedParams,
       },
-    )) as InProgressDataResponse;
+    )) as InProgressData;
 
-    const formattedResponse: InProgressData[] = response.data;
+    const formattedResponse: InProgressData = response;
 
     return formattedResponse;
   },

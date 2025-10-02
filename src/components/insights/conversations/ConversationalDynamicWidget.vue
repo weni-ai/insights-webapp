@@ -23,19 +23,16 @@
           v-if="isSetupWidget"
           class="conversational-dynamic-widget__setup-widget"
           :title="
-            $tc('conversations_dashboard.setup_csat_or_nps_widget.title', {
+            $t('conversations_dashboard.setup_csat_or_nps_widget.title', {
               type: type.toUpperCase(),
               tab: tabName,
             })
           "
           :description="
-            $tc(
-              'conversations_dashboard.setup_csat_or_nps_widget.description',
-              {
-                type: type.toUpperCase(),
-                tab: tabName,
-              },
-            )
+            $t('conversations_dashboard.setup_csat_or_nps_widget.description', {
+              type: type.toUpperCase(),
+              tab: tabName,
+            })
           "
           :actionText="
             $t('conversations_dashboard.setup_csat_or_nps_widget.action_text')

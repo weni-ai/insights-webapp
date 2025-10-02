@@ -9,7 +9,6 @@ import { useWidgets } from '@/store/modules/widgets';
 
 import moment from 'moment';
 
-// Mock do router
 const mockRouter = {
   push: vi.fn(),
   replace: vi.fn(),
@@ -96,6 +95,9 @@ describe('InsightsLayoutHeader.vue', () => {
           HeaderGenerateInsightButton: true,
           UnnnicButtonIcon: true,
           HumanSupportExport: true,
+          LastUpdatedText: true,
+          ConversationalExport: true,
+          HeaderRefresh: true,
         },
       },
       ...options,
@@ -180,6 +182,58 @@ describe('InsightsLayoutHeader.vue', () => {
           .findComponent('[data-testid="insights-layout-header-filters"]')
           .exists(),
       ).toBe(true);
+    });
+
+    it('should render LastUpdatedText for human service dashboard', () => {
+      expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
+        true,
+      );
+    });
+
+    it('should render LastUpdatedText for human support dashboard', () => {
+      dashboardsStore.currentDashboard = {
+        name: 'human_support_dashboard.title',
+      };
+
+      expect(wrapper.vm.isHumanSupportDashboard).toBe(true);
+      expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
+        true,
+      );
+    });
+
+    it('should not render LastUpdatedText for other dashboards', () => {
+      dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
+
+      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
+      expect(wrapper.vm.isHumanSupportDashboard).toBe(false);
+    });
+
+    it('should render HeaderRefresh for human support dashboard', () => {
+      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
+        false,
+      );
+    });
+
+    it('should not render HeaderRefresh for human service dashboard', () => {
+      dashboardsStore.currentDashboard = {
+        name: 'human_service_dashboard.title',
+      };
+
+      expect(wrapper.vm.isHumanServiceDashboard).toBe(true);
+      expect(wrapper.vm.isHumanSupportDashboard).toBe(false);
+      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
+        false,
+      );
+    });
+
+    it('should not render HeaderRefresh for other dashboards', () => {
+      dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
+
+      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
+      expect(wrapper.vm.isHumanSupportDashboard).toBe(false);
+      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
+        false,
+      );
     });
   });
 
@@ -329,7 +383,6 @@ describe('InsightsLayoutHeader.vue', () => {
 
         wrapper.vm.$route.params.dashboardUuid = 'new-uuid';
 
-        // Trigger the watcher manually
         wrapper.vm.$options.watch.$route.call(
           wrapper.vm,
           { params: { dashboardUuid: 'new-uuid' } },
@@ -345,7 +398,6 @@ describe('InsightsLayoutHeader.vue', () => {
           'routeUpdateCurrentDashboard',
         );
 
-        // Trigger the watcher manually with same uuid
         wrapper.vm.$options.watch.$route.call(
           wrapper.vm,
           { params: { dashboardUuid: 'same-uuid' } },

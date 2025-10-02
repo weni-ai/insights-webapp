@@ -160,47 +160,4 @@ describe('HeaderFilters', () => {
       expect(wrapper.vm.filterModalOpened).toBe(false);
     });
   });
-
-  describe('LastUpdatedText integration', () => {
-    it('should not render LastUpdatedText when not in human service dashboard', () => {
-      wrapper = createWrapper({}, 'regular_dashboard');
-
-      const lastUpdatedComponent = wrapper.findComponent({
-        name: 'LastUpdatedText',
-      });
-      expect(lastUpdatedComponent.exists()).toBe(false);
-    });
-
-    it('should render LastUpdatedText when in human service dashboard', () => {
-      wrapper = createWrapper({}, 'human_service_dashboard.title');
-
-      const lastUpdatedComponent = wrapper.findComponent({
-        name: 'LastUpdatedText',
-      });
-      expect(lastUpdatedComponent.exists()).toBe(true);
-    });
-  });
-
-  describe('isHumanServiceDashboard computed property', () => {
-    const dashboardsStore = useDashboards();
-    it('should return false when dashboard name is not human service dashboard', () => {
-      dashboardsStore.currentDashboard = { name: 'regular_dashboard' };
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-    });
-
-    it('should return true when dashboard name is human service dashboard', () => {
-      dashboardsStore.currentDashboard = {
-        name: 'human_service_dashboard.title',
-      };
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(true);
-    });
-
-    it('should handle undefined dashboard name gracefully', () => {
-      dashboardsStore.currentDashboard = {};
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-
-      dashboardsStore.currentDashboard = null;
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-    });
-  });
 });

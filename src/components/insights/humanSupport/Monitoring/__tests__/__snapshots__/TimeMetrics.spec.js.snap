@@ -1,0 +1,64 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
+<section
+  class="time-metrics"
+  data-testid="time-metrics"
+  data-v-3fd5bf3d=""
+>
+  <p
+    class="time-metrics__title"
+    data-testid="time-metrics-title"
+    data-v-3fd5bf3d=""
+  >
+    human_support_dashboard.time_metrics.title
+  </p>
+  <section
+    class="time-metrics__cards"
+    data-testid="time-metrics-cards"
+    data-v-3fd5bf3d=""
+  >
+    
+    <card-conversations-stub
+      activedescriptiongap="true"
+      borderradius="full"
+      class="time-metrics__card"
+      data-v-3fd5bf3d=""
+      description="Max: 5m 00s"
+      enabletimeicon="true"
+      isloading="false"
+      title="human_support_dashboard.time_metrics.average_time_is_waiting"
+      tooltipinfo="human_support_dashboard.time_metrics.tooltips.average_time_is_waiting"
+      tooltipside="top"
+      value="2m 00s"
+    />
+    <card-conversations-stub
+      activedescriptiongap="true"
+      borderradius="full"
+      class="time-metrics__card"
+      data-v-3fd5bf3d=""
+      description="Max: 1m 30s"
+      enabletimeicon="true"
+      isloading="false"
+      title="human_support_dashboard.time_metrics.average_time_first_response"
+      tooltipinfo="human_support_dashboard.time_metrics.tooltips.average_time_first_response"
+      tooltipside="top"
+      value="45s"
+    />
+    <card-conversations-stub
+      activedescriptiongap="true"
+      borderradius="full"
+      class="time-metrics__card"
+      data-v-3fd5bf3d=""
+      description="Max: 20m 00s"
+      enabletimeicon="true"
+      isloading="false"
+      title="human_support_dashboard.time_metrics.average_time_chat"
+      tooltipinfo="human_support_dashboard.time_metrics.tooltips.average_time_chat"
+      tooltipside="left"
+      value="10m 00s"
+    />
+    
+  </section>
+</section>
+`;

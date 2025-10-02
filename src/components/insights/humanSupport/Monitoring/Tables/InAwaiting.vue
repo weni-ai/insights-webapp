@@ -25,8 +25,10 @@ import { computed, onMounted, ref, watch } from 'vue';
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
 import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 const { t } = useI18n();
+const humanSupportMonitoring = useHumanSupportMonitoring();
 
 const isLoading = ref(false);
 
@@ -120,4 +122,13 @@ watch(currentSort, () => {
   page.value = 1;
   loadData();
 });
+
+watch(
+  () => humanSupportMonitoring.appliedFilters,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

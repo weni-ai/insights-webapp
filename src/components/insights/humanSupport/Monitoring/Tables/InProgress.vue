@@ -25,13 +25,14 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inProgress';
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/inProgress';
 import { useI18n } from 'vue-i18n';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 const { t } = useI18n();
-
+const humanSupportMonitoring = useHumanSupportMonitoring();
 const isLoading = ref(false);
 
 const page = ref(1);
-const pageInterval = ref(6);
+const pageInterval = ref(2);
 const pageTotal = ref(0);
 
 const currentSort = ref<{ header: string; order: string }>({
@@ -142,4 +143,13 @@ watch(currentSort, () => {
   page.value = 1;
   loadData();
 });
+
+watch(
+  () => humanSupportMonitoring.appliedFilters,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

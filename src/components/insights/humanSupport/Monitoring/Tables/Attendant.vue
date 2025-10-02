@@ -179,4 +179,13 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupportMonitoring.appliedFilters,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

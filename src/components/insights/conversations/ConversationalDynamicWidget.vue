@@ -335,19 +335,17 @@ const handleOpenExpanded = () => {
 
 onMounted(() => {
   if (props.type === 'csat') {
-    loadCsatWidgetData();
     if (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) {
-      handleTabChange('human-support');
-      return 'human-support';
+      setCsatWidgetType('HUMAN');
     }
+    loadCsatWidgetData();
   }
 
   if (props.type === 'nps') {
-    loadNpsWidgetData();
     if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
-      handleTabChange('human-support');
-      return 'human-support';
+      setNpsWidgetType('HUMAN');
     }
+    loadNpsWidgetData();
   }
 
   if (props.type === 'custom') {
@@ -564,41 +562,50 @@ const handleTabChange = (tab: Tab) => {
   }
 };
 
-watch(csatWidgetType, (value) => {
-  if (value === 'HUMAN' && isCsatHumanConfig.value) {
-    loadCsatWidgetData();
-  }
+watch(
+  csatWidgetType,
+  (value, oldValue) => {
+    if (props.type !== 'csat') return;
+    if (value !== oldValue) {
+      if (value === 'HUMAN' && isCsatHumanConfig.value) {
+        loadCsatWidgetData();
+      } else if (value === 'AI' && isCsatAiConfig.value) {
+        loadCsatWidgetData();
+      }
+    }
+  },
+  { flush: 'post' },
+);
 
-  if (value === 'AI' && isCsatAiConfig.value) {
-    loadCsatWidgetData();
-  }
-});
-
-watch(npsWidgetType, (value) => {
-  if (value === 'HUMAN' && isNpsHumanConfig.value) {
-    loadNpsWidgetData();
-  }
-
-  if (value === 'AI' && isNpsAiConfig.value) {
-    loadNpsWidgetData();
-  }
-});
+watch(
+  npsWidgetType,
+  (value, oldValue) => {
+    if (props.type !== 'nps') return;
+    if (value !== oldValue) {
+      if (value === 'HUMAN' && isNpsHumanConfig.value) {
+        loadNpsWidgetData();
+      } else if (value === 'AI' && isNpsAiConfig.value) {
+        loadNpsWidgetData();
+      }
+    }
+  },
+  { flush: 'post' },
+);
 
 watch(
   () => route.query,
   () => {
+    if (props.type === 'add') return;
+
     if (props.type === 'csat') {
       loadCsatWidgetData();
-    }
-
-    if (props.type === 'nps') {
+    } else if (props.type === 'nps') {
       loadNpsWidgetData();
-    }
-
-    if (props.type === 'custom') {
-      loadCustomWidgetData(props.uuid as string);
+    } else if (props.type === 'custom' && props.uuid) {
+      loadCustomWidgetData(props.uuid);
     }
   },
+  { deep: true },
 );
 
 const MOCK_DATA = [

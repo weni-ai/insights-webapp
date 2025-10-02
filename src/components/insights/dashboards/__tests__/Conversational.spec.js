@@ -28,9 +28,8 @@ describe('Conversational.vue', () => {
     setActivePinia(createPinia());
 
     conversationalWidgetsStore = {
-      isCsatConfigured: ref(false),
-      isNpsConfigured: ref(false),
-      getDynamicWidgets: ref([]),
+      isCsatConfigured: false,
+      isNpsConfigured: false,
     };
     useConversationalWidgets.mockReturnValue(conversationalWidgetsStore);
 
@@ -41,7 +40,7 @@ describe('Conversational.vue', () => {
     useWidgets.mockReturnValue(widgetsStore);
 
     customWidgetsStore = {
-      getCustomWidgets: ref([]),
+      getCustomWidgets: [],
     };
     useCustomWidgets.mockReturnValue(customWidgetsStore);
 
@@ -58,10 +57,8 @@ describe('Conversational.vue', () => {
   });
 
   it('should show csat and add widgets when only csat is configured and widgets are less than 2', async () => {
-    conversationalWidgetsStore.isCsatConfigured.value = true;
-    conversationalWidgetsStore.getDynamicWidgets.value = [];
+    conversationalWidgetsStore.isCsatConfigured = true;
 
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
     await nextTick();
 
@@ -72,10 +69,8 @@ describe('Conversational.vue', () => {
   });
 
   it('should show nps and add widgets when only nps is configured and widgets are less than 2', async () => {
-    conversationalWidgetsStore.isNpsConfigured.value = true;
-    conversationalWidgetsStore.getDynamicWidgets.value = [];
+    conversationalWidgetsStore.isNpsConfigured = true;
 
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [{ type: 'nps' }];
     await nextTick();
 
@@ -86,11 +81,9 @@ describe('Conversational.vue', () => {
   });
 
   it('should show csat and nps widgets when both are configured', async () => {
-    conversationalWidgetsStore.isCsatConfigured.value = true;
-    conversationalWidgetsStore.isNpsConfigured.value = true;
-    conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+    conversationalWidgetsStore.isCsatConfigured = true;
+    conversationalWidgetsStore.isNpsConfigured = true;
 
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [
       { type: 'csat' },
       { type: 'nps' },
@@ -105,7 +98,6 @@ describe('Conversational.vue', () => {
   });
 
   it('should show only add widget when no dynamic widgets are configured', async () => {
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [];
     await nextTick();
 
@@ -115,11 +107,9 @@ describe('Conversational.vue', () => {
   });
 
   it('should maintain csat first, then nps order when both are present', async () => {
-    conversationalWidgetsStore.isCsatConfigured.value = true;
-    conversationalWidgetsStore.isNpsConfigured.value = true;
-    conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+    conversationalWidgetsStore.isCsatConfigured = true;
+    conversationalWidgetsStore.isNpsConfigured = true;
 
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [
       { type: 'csat' },
       { type: 'nps' },
@@ -140,12 +130,11 @@ describe('Conversational.vue', () => {
   });
 
   it('should include custom widgets when they exist', async () => {
-    customWidgetsStore.getCustomWidgets.value = [
+    customWidgetsStore.getCustomWidgets = [
       { uuid: 'custom-1', type: 'custom_widget' },
       { uuid: 'custom-2', type: 'custom_widget' },
     ];
 
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [];
     await nextTick();
 
@@ -157,13 +146,12 @@ describe('Conversational.vue', () => {
   });
 
   it('should include custom widgets along with csat and nps', async () => {
-    conversationalWidgetsStore.isCsatConfigured.value = true;
-    conversationalWidgetsStore.isNpsConfigured.value = true;
-    customWidgetsStore.getCustomWidgets.value = [
+    conversationalWidgetsStore.isCsatConfigured = true;
+    conversationalWidgetsStore.isNpsConfigured = true;
+    customWidgetsStore.getCustomWidgets = [
       { uuid: 'custom-1', type: 'custom_widget' },
     ];
 
-    // Trigger the watcher by changing currentDashboardWidgets
     widgetsStore.currentDashboardWidgets.value = [
       { type: 'csat' },
       { type: 'nps' },
@@ -180,7 +168,6 @@ describe('Conversational.vue', () => {
 
   describe('isOnlyAddWidget', () => {
     it('should return true for add widget when there is an odd number of widgets', async () => {
-      // Trigger the watcher by changing currentDashboardWidgets
       widgetsStore.currentDashboardWidgets.value = [];
       await nextTick();
 
@@ -193,10 +180,9 @@ describe('Conversational.vue', () => {
     });
 
     it('should return true for add widget when there are 3 widgets (odd)', async () => {
-      conversationalWidgetsStore.isCsatConfigured.value = true;
-      conversationalWidgetsStore.isNpsConfigured.value = true;
+      conversationalWidgetsStore.isCsatConfigured = true;
+      conversationalWidgetsStore.isNpsConfigured = true;
 
-      // Trigger the watcher by changing currentDashboardWidgets
       widgetsStore.currentDashboardWidgets.value = [
         { type: 'csat' },
         { type: 'nps' },
@@ -213,11 +199,9 @@ describe('Conversational.vue', () => {
     });
 
     it('should return true for add widget when there are 3 widgets (csat, nps, add - odd)', async () => {
-      conversationalWidgetsStore.isCsatConfigured.value = true;
-      conversationalWidgetsStore.isNpsConfigured.value = true;
-      conversationalWidgetsStore.getDynamicWidgets.value = ['csat', 'nps'];
+      conversationalWidgetsStore.isCsatConfigured = true;
+      conversationalWidgetsStore.isNpsConfigured = true;
 
-      // Trigger the watcher by changing currentDashboardWidgets
       widgetsStore.currentDashboardWidgets.value = [
         { type: 'csat' },
         { type: 'nps' },
@@ -234,9 +218,8 @@ describe('Conversational.vue', () => {
     });
 
     it('should return false for add widget when there would be an even number of widgets', async () => {
-      conversationalWidgetsStore.isCsatConfigured.value = true;
+      conversationalWidgetsStore.isCsatConfigured = true;
 
-      // Trigger the watcher by changing currentDashboardWidgets
       widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
       await nextTick();
       expect(wrapper.vm.orderedDynamicWidgets).toEqual([
@@ -248,10 +231,9 @@ describe('Conversational.vue', () => {
     });
 
     it('should return false for non-add widgets even with odd number of widgets', async () => {
-      conversationalWidgetsStore.isCsatConfigured.value = true;
-      conversationalWidgetsStore.isNpsConfigured.value = true;
+      conversationalWidgetsStore.isCsatConfigured = true;
+      conversationalWidgetsStore.isNpsConfigured = true;
 
-      // Trigger the watcher by changing currentDashboardWidgets
       widgetsStore.currentDashboardWidgets.value = [
         { type: 'csat' },
         { type: 'nps' },

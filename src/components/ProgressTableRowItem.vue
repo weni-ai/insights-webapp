@@ -201,6 +201,9 @@ const handleExpand = () => {
       border-top: none;
 
       .sub-items__items-container {
+        display: flex;
+        flex-direction: column;
+
         margin: 0 0 $unnnic-spacing-sm $unnnic-spacing-lg;
 
         border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;

@@ -27,14 +27,14 @@
     "unclassified": "Unclassified",
     "header": {
       "total": "Total Conversations",
-      "resolved": "Optimized Resolutions",
-      "unresolved": "Other Conclusions",
+      "resolved": "AI-Assisted",
+      "unresolved": "Not Assisted",
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is  counted 24 hours after the contact's first message.",
-        "resolved": "Conversations that were concluded with a clear and effective resolution for the contact.",
-        "unresolved": "Conversations that ended in other ways, such as quick interactions, greetings, drop-offs, or cases that followed a different flow without a direct resolution.",
+        "resolved": "When the agent demonstrates competence and provides useful service.",
+        "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures).",
         "unengaged": "Conversation without useful engagement: The conversation was limited to greetings, emojis, or was ended without relevant interaction.",
         "transferred": "Includes conversations (resolved or unresolved) that were forwarded to a human agent."
       }

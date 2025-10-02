@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import WidgetOnboarding from '../WidgetOnboarding.vue';
@@ -48,6 +48,8 @@ describe('WidgetOnboarding', () => {
   };
 
   beforeEach(() => {
+    vi.useFakeTimers();
+
     document.querySelector = vi.fn(() => {
       const element = document.createElement('div');
       return element;
@@ -65,6 +67,14 @@ describe('WidgetOnboarding', () => {
       },
     };
     widgetsStore.currentDashboardWidgets = [];
+  });
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.unmount();
+    }
+    vi.clearAllTimers();
+    vi.useRealTimers();
   });
 
   describe('Component Structure', () => {

@@ -195,6 +195,8 @@ export default {
     },
 
     checkWidgetsRendered() {
+      if (typeof document === 'undefined') return;
+
       const requiredElements = [];
 
       if (this.showCardTour) {

@@ -8,7 +8,7 @@
 
     <ConversationalDynamicWidget
       v-for="(widget, index) in orderedDynamicWidgets"
-      :key="index"
+      :key="`${widget.type}-${widget.uuid || index}`"
       :type="widget.type"
       :uuid="widget.uuid"
       class="dashboard-conversational__dynamic-widget"
@@ -37,13 +37,9 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 type ConversationalWidgetType = 'csat' | 'nps' | 'add' | 'custom';
 
 const customWidgets = useCustomWidgets();
-const { getCustomWidgets } = storeToRefs(customWidgets);
-
 const conversationalWidgets = useConversationalWidgets();
-const { isCsatConfigured, isNpsConfigured, getDynamicWidgets } = storeToRefs(
-  conversationalWidgets,
-);
 const widgets = useWidgets();
+
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
 
@@ -67,28 +63,45 @@ const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
 };
 
 const setDynamicWidgets = () => {
-  dynamicWidgets.value = [];
+  const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
 
-  if (isCsatConfigured.value) {
-    dynamicWidgets.value.push({ type: 'csat', uuid: '' });
+  if (conversationalWidgets.isCsatConfigured) {
+    newWidgets.push({ type: 'csat', uuid: '' });
   }
 
-  if (isNpsConfigured.value) {
-    dynamicWidgets.value.push({ type: 'nps', uuid: '' });
+  if (conversationalWidgets.isNpsConfigured) {
+    newWidgets.push({ type: 'nps', uuid: '' });
   }
 
-  if (getCustomWidgets.value.length > 0) {
-    getCustomWidgets.value.forEach((widget) => {
-      dynamicWidgets.value.push({ type: 'custom', uuid: widget.uuid });
+  const customWidgetsList = customWidgets.getCustomWidgets;
+  if (customWidgetsList.length > 0) {
+    customWidgetsList.forEach((widget) => {
+      newWidgets.push({ type: 'custom', uuid: widget.uuid });
     });
   }
 
-  dynamicWidgets.value.push({ type: 'add', uuid: '' });
+  newWidgets.push({ type: 'add', uuid: '' });
+
+  const hasChanged =
+    dynamicWidgets.value.length !== newWidgets.length ||
+    dynamicWidgets.value.some(
+      (widget, index) =>
+        widget.type !== newWidgets[index]?.type ||
+        widget.uuid !== newWidgets[index]?.uuid,
+    );
+
+  if (hasChanged) {
+    dynamicWidgets.value = newWidgets;
+  }
 };
 
-watch(currentDashboardWidgets, () => {
-  setDynamicWidgets();
-});
+watch(
+  currentDashboardWidgets,
+  () => {
+    setDynamicWidgets();
+  },
+  { deep: true },
+);
 
 onMounted(() => {
   if (dynamicWidgets.value.length === 0) {

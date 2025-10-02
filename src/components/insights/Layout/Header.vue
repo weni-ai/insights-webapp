@@ -80,6 +80,7 @@ import HumanSupportExport from '../export/HumanSupportExport.vue';
 import ConversationalExport from '../export/ConversationalExport.vue';
 import LastUpdatedText from './HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from './HeaderRefresh.vue';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import moment from 'moment';
 
@@ -123,9 +124,12 @@ export default {
     isRenderHumanSupportBtnExport() {
       return this.isHumanServiceDashboard || this.isHumanSupportDashboard;
     },
-    // TODO: change to isConversationalDashboard when the API is ready
+
     isRenderConversationalBtnExport() {
-      return false;
+      const isFeatureFlagEnabled = this.isFeatureFlagEnabled(
+        'insightsConversationsReport',
+      );
+      return this.isConversationalDashboard && isFeatureFlagEnabled;
     },
 
     isHumanServiceDashboard() {
@@ -211,6 +215,7 @@ export default {
     ...mapActions(useWidgets, {
       setCurrentExpansiveWidget: 'setCurrentExpansiveWidgetData',
     }),
+    ...mapActions(useFeatureFlag, ['isFeatureFlagEnabled']),
     ...mapActions(useDashboards, ['setCurrentDashboard']),
 
     navigateToDashboard(uuid) {

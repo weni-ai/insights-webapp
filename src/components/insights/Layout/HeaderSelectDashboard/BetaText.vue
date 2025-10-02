@@ -1,6 +1,5 @@
 <template>
   <section
-    v-if="isConversationalDashboard || isHumanSupportDashboard"
     class="beta_text_container"
     data-testid="beta-container"
   >
@@ -12,22 +11,6 @@
     </p>
   </section>
 </template>
-
-<script setup lang="ts">
-import { useDashboards } from '@/store/modules/dashboards';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
-
-const { currentDashboard } = storeToRefs(useDashboards());
-
-const isConversationalDashboard = computed(() => {
-  return currentDashboard.value.name === 'conversations_dashboard.title';
-});
-
-const isHumanSupportDashboard = computed(() => {
-  return currentDashboard.value.name === 'human_support_dashboard.title';
-});
-</script>
 
 <style lang="scss" scoped>
 .beta_text_container {

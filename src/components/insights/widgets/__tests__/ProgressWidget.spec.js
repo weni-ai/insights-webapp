@@ -28,7 +28,7 @@ const createWrapper = (props = {}) => {
       plugins: [UnnnicSystem],
       stubs: ['ProgressTable'],
       mocks: {
-        $tc: (key) => key,
+        $t: (key) => key,
       },
     },
     props: { ...defaultProps, ...props },

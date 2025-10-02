@@ -4,7 +4,7 @@
     class="modal-remove-widget"
     :modelValue="modelValue"
     :title="
-      $tc(
+      $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
         { type: type.toUpperCase() },
       )
@@ -33,7 +33,7 @@
       data-testid="modal-remove-widget-description"
     >
       {{
-        $tc(
+        $t(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
           { type: type.toUpperCase() },
         )

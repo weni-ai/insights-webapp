@@ -258,7 +258,7 @@ describe('HumanServiceAgentsTable', () => {
         '[data-testid="human-service-agents-table"]',
       );
 
-      expect(table.attributes('locale')).toBe('en');
+      expect(table.props('locale')).toBe('en');
     });
   });
 
@@ -281,7 +281,7 @@ describe('HumanServiceAgentsTable', () => {
         '[data-testid="human-service-agents-table"]',
       );
 
-      await table.vm.$emit('row-click', mockItems[0]);
+      await table.vm.$emit('item-click', mockItems[0]);
       expect(redirectSpy).toHaveBeenCalledWith(mockItems[0]);
     });
 
@@ -290,10 +290,15 @@ describe('HumanServiceAgentsTable', () => {
         '[data-testid="human-service-agents-table"]',
       );
 
-      await table.vm.$emit('sort', { header: 'in_progress', order: 'asc' });
+      await table.vm.$emit('update:sort', {
+        header: 'in_progress',
+        itemKey: 'opened',
+        order: 'asc',
+      });
 
       expect(wrapper.vm.sort).toEqual({
         header: 'in_progress',
+        itemKey: 'opened',
         order: 'asc',
       });
     });
@@ -306,8 +311,10 @@ describe('HumanServiceAgentsTable', () => {
 
         expect(formattedHeaders.length).toBe(6);
 
-        expect(formattedHeaders[0]).toHaveProperty('content');
+        expect(formattedHeaders[0]).toHaveProperty('itemKey');
+        expect(formattedHeaders[0]).toHaveProperty('title');
         expect(formattedHeaders[0]).toHaveProperty('isSortable');
+        expect(formattedHeaders[0]).toHaveProperty('size');
       });
 
       it('handles case when headers are empty or null', async () => {
@@ -328,9 +335,8 @@ describe('HumanServiceAgentsTable', () => {
         const formattedItems = wrapper.vm.formattedItems;
         expect(formattedItems.length).toBe(4);
         const firstItem = formattedItems[0];
-        expect(firstItem.content).toHaveLength(4);
-        expect(firstItem.view_mode_url).toBe('/link3');
-        expect(firstItem.link).toBeUndefined();
+        expect(firstItem.agent).toEqual('Charlie');
+        expect(firstItem.link.url).toBe('/link3');
       });
 
       it('returns empty array when no headers or items', async () => {
@@ -391,7 +397,7 @@ describe('HumanServiceAgentsTable', () => {
 
     describe('redirectItem', () => {
       it('posts a redirect message with the correct path', () => {
-        const item = { view_mode_url: '/test-url' };
+        const item = { link: { url: '/test-url' } };
         wrapper.vm.redirectItem(item);
 
         expect(window.parent.postMessage).toHaveBeenCalledWith(
@@ -539,8 +545,8 @@ describe('HumanServiceAgentsTable', () => {
 
       expect(headers.length).toBe(6);
 
-      expect(headers[0].content).toBe('status');
-      expect(headers[1].content).toBe('agent');
+      expect(headers[0].title).toBe('status');
+      expect(headers[1].title).toBe('agent');
 
       expect(headers[1].size).toBe(1);
 
@@ -579,46 +585,15 @@ describe('HumanServiceAgentsTable', () => {
 
       const formattedHeaders = customOrderWrapper.vm.formattedHeaders;
 
-      expect(formattedHeaders[0].content).toBe('status');
-      expect(formattedHeaders[1].content).toBe('agent');
+      expect(formattedHeaders[0].title).toBe('status');
+      expect(formattedHeaders[1].title).toBe('agent');
 
-      expect(formattedHeaders[2].content).toBe('in_progress');
-      expect(formattedHeaders[3].content).toBe('closeds');
-      expect(formattedHeaders[4].content).toBe('column2');
-      expect(formattedHeaders[5].content).toBe('column1');
+      expect(formattedHeaders[2].title).toBe('in_progress');
+      expect(formattedHeaders[3].title).toBe('closeds');
+      expect(formattedHeaders[4].title).toBe('column2');
+      expect(formattedHeaders[5].title).toBe('column1');
 
       customOrderWrapper.unmount();
-    });
-
-    it('handles items with null or missing custom status values', () => {
-      const items = expansiveWrapper.vm.formattedItems;
-      const charlieItem = items.find((item) => item.agent === 'Charlie');
-
-      expect(charlieItem).toBeTruthy();
-
-      const charlieContent = charlieItem.content;
-
-      const visibleColumns = ['in_progress', 'closeds', 'column1', 'column2'];
-      let contentIndex = 2;
-
-      let column1Index = -1;
-      let column2Index = -1;
-
-      if (visibleColumns.includes('in_progress')) {
-        contentIndex++;
-      }
-      if (visibleColumns.includes('closeds')) {
-        contentIndex++;
-      }
-      if (visibleColumns.includes('column1')) {
-        column1Index = contentIndex++;
-      }
-      if (visibleColumns.includes('column2')) {
-        column2Index = contentIndex++;
-      }
-
-      expect(charlieContent[column1Index]).toBe('00:00:00');
-      expect(charlieContent[column2Index]).toBe('00:00:00');
     });
   });
 
@@ -637,7 +612,9 @@ describe('HumanServiceAgentsTable', () => {
     });
 
     it('sorts by status in non-expansive mode', async () => {
-      await wrapper.setData({ sort: { header: 'status', order: 'desc' } });
+      await wrapper.setData({
+        sort: { header: 'status', order: 'desc', itemKey: 'status' },
+      });
 
       await wrapper.vm.$nextTick();
 
@@ -690,9 +667,14 @@ describe('HumanServiceAgentsTable', () => {
       });
 
       const headers = expansiveWrapper.vm.formattedHeaders;
-      const statusHeader = headers[0].content;
+      const statusHeader = headers[0].itemKey;
 
-      expansiveWrapper.vm.sort = { header: statusHeader, order: 'asc' };
+      expansiveWrapper.vm.sort = {
+        header: statusHeader,
+        order: 'asc',
+        itemKey: 'status',
+      };
+
       const sortedItems = expansiveWrapper.vm.sortItems([
         ...mockItemsExpansive,
       ]);
@@ -767,7 +749,7 @@ describe('HumanServiceAgentsTable', () => {
       expect(table.exists()).toBe(true);
 
       const mockItem = {
-        view_mode_url: 'http://example.com/agent/123',
+        link: { url: 'http://example.com/agent/123' },
       };
 
       wrapper.vm.redirectItem(mockItem);

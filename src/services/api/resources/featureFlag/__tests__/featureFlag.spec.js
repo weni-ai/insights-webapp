@@ -35,7 +35,7 @@ describe('featureFlagService', () => {
     };
 
     it('should fetch feature flags successfully', async () => {
-      http.get.mockResolvedValue({ data: mockApiResponse });
+      http.get.mockResolvedValue(mockApiResponse);
 
       const result = await featureFlagService.getAllFeatureFlags();
 
@@ -54,7 +54,7 @@ describe('featureFlagService', () => {
 
     it('should handle empty feature flags response', async () => {
       const emptyResponse = { active_features: [] };
-      http.get.mockResolvedValue({ data: emptyResponse });
+      http.get.mockResolvedValue(emptyResponse);
 
       const result = await featureFlagService.getAllFeatureFlags();
 
@@ -98,7 +98,7 @@ describe('featureFlagService', () => {
     });
 
     it('should handle malformed response gracefully', async () => {
-      const malformedResponse = { data: { unexpected_field: 'value' } };
+      const malformedResponse = { unexpected_field: 'value' };
       http.get.mockResolvedValue(malformedResponse);
 
       const result = await featureFlagService.getAllFeatureFlags();

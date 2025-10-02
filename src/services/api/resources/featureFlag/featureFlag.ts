@@ -11,12 +11,12 @@ export default {
 
     const endpoint = '/feature_flags/';
 
-    const response = await http.get(endpoint, {
+    const response: FeatureFlagResponse = await http.get(endpoint, {
       params: {
         project_uuid: project.uuid,
       },
     });
 
-    return response.data;
+    return response;
   },
 };

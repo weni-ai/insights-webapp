@@ -12,7 +12,7 @@ interface AttendantData {
 
 interface AttendantDataResult {
   agent: string;
-  status: string;
+  status: string | { status: string; label: string };
   ongoing: string;
   finished: string;
   average_girst_response_time: number;
@@ -64,7 +64,30 @@ export default {
       },
     )) as AttendantData;
 
-    const formattedResponse: AttendantData = response;
+    /* TODO: Remove handleStatus after the API is updated */
+    const handleStatus = (
+      status: string | { status: string; label: string },
+    ) => {
+      const statusLabelMapper = {
+        gray: 'offline',
+        green: 'online',
+        orange: 'custom',
+      };
+
+      if (typeof status === 'string') {
+        return status;
+      }
+
+      return statusLabelMapper[status.status];
+    };
+
+    const formattedResponse: AttendantData = {
+      ...response,
+      results: response.results.map((result) => ({
+        ...result,
+        status: handleStatus(result.status),
+      })),
+    };
 
     return formattedResponse;
   },

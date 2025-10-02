@@ -23,7 +23,7 @@ const createWrapper = (props = {}) => {
         CustomizedForm: true,
       },
       mocks: {
-        $tc: (key) => key,
+        $t: (key) => key,
       },
     },
   });

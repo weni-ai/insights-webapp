@@ -19,9 +19,16 @@
   >
     <template #body-action="{ item }">
       <DisconnectAgent
-        :agent="{ name: item.agent, email: item.agent_email }"
+        v-if="['online', 'custom'].includes(item?.status)"
+        :agent="{ name: item?.agent, email: item?.agent_email }"
         containerCenter
         @request-data="loadData"
+      />
+    </template>
+    <template #body-status="{ item }">
+      <AgentStatus
+        :status="handleStatus(item.status)"
+        :label="item.status"
       />
     </template>
   </UnnnicDataTable>
@@ -35,6 +42,7 @@ import { AttendantDataResult } from '@/services/api/resources/humanSupport/detai
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
+import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
 
 const { t } = useI18n();
 
@@ -117,6 +125,17 @@ const handleSort = (sort: { header: string; order: string }) => {
 const handlePageChange = (newPage: number) => {
   page.value = newPage;
   loadData();
+};
+
+/* TODO: Remove handleStatus after the API is updated */
+const handleStatus = (status: string) => {
+  const statusLabelMapper = {
+    online: 'green',
+    offline: 'gray',
+    custom: 'orange',
+  };
+
+  return statusLabelMapper[status];
 };
 
 const redirectItem = (item: AttendantDataResult) => {

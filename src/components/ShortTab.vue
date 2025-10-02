@@ -44,7 +44,9 @@ const activeTab = ref(props.currentTab || props.tabs[0].key);
 watch(
   () => props.currentTab,
   (newCurrentTab) => {
-    activeTab.value = newCurrentTab;
+    if (newCurrentTab && newCurrentTab !== activeTab.value) {
+      activeTab.value = newCurrentTab;
+    }
   },
 );
 

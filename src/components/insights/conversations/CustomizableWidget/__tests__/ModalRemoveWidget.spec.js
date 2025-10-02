@@ -63,7 +63,7 @@ describe('ModalRemoveWidget', () => {
           },
         },
         mocks: {
-          $tc: (key, options) => `${key} ${JSON.stringify(options)}`,
+          $t: (key, options) => `${key} ${JSON.stringify(options)}`,
         },
       },
     });

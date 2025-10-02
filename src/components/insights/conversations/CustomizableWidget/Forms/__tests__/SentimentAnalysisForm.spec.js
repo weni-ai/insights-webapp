@@ -64,7 +64,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
         SelectFlowResult: true,
       },
       mocks: {
-        $tc: (key) => key,
+        $t: (key) => key,
       },
     },
   });

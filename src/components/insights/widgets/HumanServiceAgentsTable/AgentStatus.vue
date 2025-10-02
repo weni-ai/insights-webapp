@@ -59,7 +59,7 @@ const statusClass = computed(() => {
 });
 
 const enabledDisconnectAgent = computed(() => {
-  return ['green', 'orange'].includes(props.status) && props.agent?.email;
+  return ['green', 'orange'].includes(props.status) && !!props.agent?.email;
 });
 
 const renderLabel = computed(() => {

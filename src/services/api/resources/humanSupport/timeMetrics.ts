@@ -1,5 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
+import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { createRequestQuery } from '@/utils/request';
 
@@ -26,6 +27,7 @@ export default {
   ): Promise<TimeMetricsDataResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
+    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -41,9 +43,12 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(`/monitoring/average_time_metrics/`, {
-      params: formattedParams,
-    })) as TimeMetricsDataResponse;
+    const response = (await http.get(
+      `dashboards/${currentDashboard.uuid}/monitoring/average_time_metrics/`,
+      {
+        params: formattedParams,
+      },
+    )) as TimeMetricsDataResponse;
 
     const formattedResponse: TimeMetricsDataResponse = response;
 

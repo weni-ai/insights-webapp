@@ -26,6 +26,14 @@ import { PausesDataResult } from '@/services/api/resources/humanSupport/detailed
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { formatSecondsToTime } from '@/utils/time';
+
+type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
+  custom_status: {
+    status_type: string;
+    break_time: string | number;
+  }[];
+};
 
 const { t } = useI18n();
 
@@ -41,7 +49,7 @@ const currentSort = ref<{ header: string; order: string }>({
   order: 'asc',
 });
 
-const rawItems = ref<PausesDataResult[]>([]);
+const rawItems = ref<FormattedPausesData[]>([]);
 
 const customStatusTypes = computed(() => {
   if (!rawItems.value.length) return [];
@@ -59,12 +67,6 @@ const customStatusTypes = computed(() => {
 
 const formattedHeaders = computed(() => {
   const baseHeaders = [
-    {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.status'),
-      itemKey: 'status',
-      isSortable: true,
-      size: 0.5,
-    },
     {
       title: t('human_support_dashboard.detailed_monitoring.pauses.agent'),
       itemKey: 'agent',
@@ -97,10 +99,12 @@ const formattedHeaders = computed(() => {
 
 const formattedItems = computed(() => {
   return rawItems.value.map((item) => {
-    const customStatusObj: Record<string, number> = {};
+    const customStatusObj: Record<string, string> = {};
 
     item.custom_status?.forEach((status) => {
-      customStatusObj[status.status_type] = status.break_time;
+      customStatusObj[status.status_type] = formatSecondsToTime(
+        status?.break_time as number,
+      );
     });
 
     return {

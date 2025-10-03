@@ -43,6 +43,20 @@ import service from '@/services/api/resources/humanSupport/detailedMonitoring/at
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
 import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
+import { formatSecondsToTime } from '@/utils/time';
+
+type FormattedAttendantData = Omit<
+  AttendantDataResult,
+  | 'average_girst_response_time'
+  | 'average_response_time'
+  | 'average_duration'
+  | 'time_in_service'
+> & {
+  average_girst_response_time: string;
+  average_response_time: string;
+  average_duration: string;
+  time_in_service: string;
+};
 
 const { t } = useI18n();
 
@@ -58,7 +72,7 @@ const currentSort = ref<{ header: string; order: string }>({
   order: 'desc',
 });
 
-const formattedItems = ref<AttendantDataResult[]>([]);
+const formattedItems = ref<FormattedAttendantData[]>([]);
 
 const formattedHeaders = computed(() => [
   {
@@ -165,7 +179,17 @@ const loadData = async () => {
     });
 
     if (data.results) {
-      formattedItems.value = data.results;
+      formattedItems.value = data.results.map((result) => ({
+        ...result,
+        average_girst_response_time: formatSecondsToTime(
+          result?.average_girst_response_time,
+        ),
+        average_response_time: formatSecondsToTime(
+          result?.average_response_time,
+        ),
+        average_duration: formatSecondsToTime(result?.average_duration),
+        time_in_service: formatSecondsToTime(result?.time_in_service),
+      }));
       pageTotal.value = data.count;
     } else {
       formattedItems.value = [];

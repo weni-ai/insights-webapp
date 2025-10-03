@@ -26,6 +26,11 @@ import service from '@/services/api/resources/humanSupport/detailedMonitoring/in
 import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { formatSecondsToTime } from '@/utils/time';
+
+type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
+  awaiting_time: string;
+};
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -66,7 +71,7 @@ const formattedHeaders = computed(() => [
   },
 ]);
 
-const formattedItems = ref<InAwaitingDataResult[]>([]);
+const formattedItems = ref<FormattedInAwaitingData[]>([]);
 
 const handleSort = (sort: { header: string; order: string }) => {
   currentSort.value = sort;
@@ -105,7 +110,10 @@ const loadData = async () => {
       offset: (page.value - 1) * pageInterval.value,
     });
 
-    formattedItems.value = data.results;
+    formattedItems.value = data.results.map((result) => ({
+      ...result,
+      awaiting_time: formatSecondsToTime(result?.awaiting_time),
+    }));
     pageTotal.value = data.count;
   } catch (error) {
     console.error('Error loading in-awaiting data:', error);

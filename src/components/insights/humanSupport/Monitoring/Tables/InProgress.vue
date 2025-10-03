@@ -26,6 +26,16 @@ import { InProgressDataResult } from '@/services/api/resources/humanSupport/deta
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/inProgress';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { formatSecondsToTime } from '@/utils/time';
+
+type FormattedInProgressData = Omit<
+  InProgressDataResult,
+  'duration' | 'awaiting_time' | 'first_response_time'
+> & {
+  duration: string;
+  awaiting_time: string;
+  first_response_time: string;
+};
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -40,7 +50,7 @@ const currentSort = ref<{ header: string; order: string }>({
   order: 'desc',
 });
 
-const formattedItems = ref<InProgressDataResult[]>([]);
+const formattedItems = ref<FormattedInProgressData[]>([]);
 
 const formattedHeaders = computed(() => [
   {
@@ -125,7 +135,12 @@ const loadData = async () => {
       offset,
     });
 
-    formattedItems.value = data.results;
+    formattedItems.value = data.results.map((result) => ({
+      ...result,
+      duration: formatSecondsToTime(result?.duration),
+      awaiting_time: formatSecondsToTime(result?.awaiting_time),
+      first_response_time: formatSecondsToTime(result?.first_response_time),
+    }));
 
     pageTotal.value = data.count;
   } catch (error) {

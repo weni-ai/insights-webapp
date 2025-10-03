@@ -1,38 +1,55 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { createRequestQuery } from '@/utils/request';
 
-interface AverageTimeData {
-  average: number;
-  max: number;
+interface PausesData {
+  next: string;
+  previous: string;
+  count: number;
+  results: PausesDataResult[];
 }
 
-interface TimeMetricsDataResponse {
-  average_time_is_waiting: AverageTimeData;
-  average_time_first_response: AverageTimeData;
-  average_time_chat: AverageTimeData;
+interface PausesDataResult {
+  link: {
+    url: string;
+    type: string;
+  };
+  opened: number;
+  agent: string;
+  closed: number;
+  status: {
+    status: string;
+    label: string;
+  };
+  custom_status: {
+    status_type: string;
+    break_time: number;
+  }[];
 }
 
 interface QueryParams {
   sectors?: string[];
   queues?: string[];
   tags?: string[];
+  ordering?: string;
+  limit?: number;
+  offset?: number;
+  agent?: string;
 }
 
 export default {
-  async getTimeMetricsData(
+  async getDetailedMonitoringPauses(
     queryParams: QueryParams = {},
-  ): Promise<TimeMetricsDataResponse> {
+  ): Promise<PausesData> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
-    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
+      ordering: queryParams.ordering ? queryParams.ordering : 'agent',
     };
 
     const params = createRequestQuery(queryParams);
@@ -44,16 +61,16 @@ export default {
     };
 
     const response = (await http.get(
-      `dashboards/${currentDashboard.uuid}/monitoring/average_time_metrics/`,
+      `/metrics/human-support/detailed-monitoring/status/`,
       {
         params: formattedParams,
       },
-    )) as TimeMetricsDataResponse;
+    )) as PausesData;
 
-    const formattedResponse: TimeMetricsDataResponse = response;
+    const formattedResponse: PausesData = response;
 
     return formattedResponse;
   },
 };
 
-export type { TimeMetricsDataResponse, QueryParams };
+export type { QueryParams, PausesData, PausesDataResult };

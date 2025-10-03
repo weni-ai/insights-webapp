@@ -2,16 +2,19 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import timeMetrics from '../timeMetrics';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
+import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http');
 vi.mock('@/store/modules/config');
+vi.mock('@/store/modules/dashboards');
 vi.mock('@/store/modules/humanSupport/monitoring');
 vi.mock('@/utils/request');
 
 describe('timeMetrics API', () => {
   let mockConfig;
+  let mockDashboardsStore;
   let mockMonitoringStore;
   let mockHttpResponse;
 
@@ -19,6 +22,9 @@ describe('timeMetrics API', () => {
     vi.clearAllMocks();
 
     mockConfig = { project: { uuid: 'test-uuid-123' } };
+    mockDashboardsStore = {
+      currentDashboard: { uuid: 'dashboard-uuid-456' },
+    };
     mockMonitoringStore = {
       appliedFilters: {
         sectors: [{ value: 'support' }, { value: 'sales' }],
@@ -34,6 +40,7 @@ describe('timeMetrics API', () => {
     };
 
     useConfig.mockReturnValue(mockConfig);
+    useDashboards.mockReturnValue(mockDashboardsStore);
     useHumanSupportMonitoring.mockReturnValue(mockMonitoringStore);
     createRequestQuery.mockReturnValue({});
     http.get.mockResolvedValue(mockHttpResponse);
@@ -44,7 +51,7 @@ describe('timeMetrics API', () => {
       const result = await timeMetrics.getTimeMetricsData();
 
       expect(http.get).toHaveBeenCalledWith(
-        '/monitoring/average_time_metrics/',
+        'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
         {
           params: {
             project_uuid: 'test-uuid-123',
@@ -65,7 +72,7 @@ describe('timeMetrics API', () => {
 
       expect(createRequestQuery).toHaveBeenCalledWith(queryParams);
       expect(http.get).toHaveBeenCalledWith(
-        '/monitoring/average_time_metrics/',
+        'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
         {
           params: {
             project_uuid: 'test-uuid-123',
@@ -159,7 +166,7 @@ describe('timeMetrics API', () => {
           await timeMetrics.getTimeMetricsData();
 
           expect(http.get).toHaveBeenCalledWith(
-            '/monitoring/average_time_metrics/',
+            'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
             {
               params: expect.objectContaining(expected),
             },
@@ -206,7 +213,7 @@ describe('timeMetrics API', () => {
         await timeMetrics.getTimeMetricsData(queryParams);
 
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/average_time_metrics/',
+          'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
           {
             params: {
               project_uuid: 'test-uuid-123',
@@ -230,7 +237,7 @@ describe('timeMetrics API', () => {
         await timeMetrics.getTimeMetricsData(complexQuery);
 
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/average_time_metrics/',
+          'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
           {
             params: {
               project_uuid: 'test-uuid-123',
@@ -253,7 +260,7 @@ describe('timeMetrics API', () => {
         await timeMetrics.getTimeMetricsData();
 
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/average_time_metrics/',
+          'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
           {
             params: expect.objectContaining({
               project_uuid: undefined,
@@ -275,7 +282,7 @@ describe('timeMetrics API', () => {
         await timeMetrics.getTimeMetricsData();
 
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/average_time_metrics/',
+          'dashboards/dashboard-uuid-456/monitoring/average_time_metrics/',
           {
             params: expect.objectContaining({
               sectors: [null, undefined],

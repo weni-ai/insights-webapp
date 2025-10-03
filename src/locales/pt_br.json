@@ -834,7 +834,7 @@
       },
       "in_progress": {
         "duration": "Duração",
-        "awaiting_time": "Tempo de espera",
+        "awaiting_time": "Tempo em espera",
         "first_response_time": "Tempo para 1ª resposta",
         "attendant": "Atendente",
         "sector": "Setor",

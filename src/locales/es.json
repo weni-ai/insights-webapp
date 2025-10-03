@@ -836,7 +836,7 @@
       "in_progress": {
         "duration": "Duración",
         "awaiting_time": "Tiempo de espera",
-        "first_response_time": "Tiempo de respuesta",
+        "first_response_time": "Tiempo de 1ª respuesta",
         "attendant": "Atendido",
         "sector": "Sector",
         "queue": "Cola",

@@ -818,6 +818,53 @@
     },
     "services_open_by_hour": {
       "title": "Atendimientos abiertos por hora"
+    },
+    "detailed_monitoring": {
+      "title": "Monitorización detallada",
+      "tabs": {
+        "in_awaiting": "En espera",
+        "in_progress": "En progreso",
+        "attendant": "Atendido",
+        "pauses": "Pausas"
+      },
+      "filters": {
+        "attendant": {
+          "label": "Atendido",
+          "placeholder": "Digite para filtrar"
+        }
+      },
+      "in_progress": {
+        "duration": "Duración",
+        "awaiting_time": "Tiempo en espera",
+        "first_response_time": "Tiempo de 1ª respuesta",
+        "attendant": "Atendido",
+        "sector": "Sector",
+        "queue": "Cola",
+        "contact": "Contacto"
+      },
+      "pauses": {
+        "status": "Estado",
+        "agent": "Agente",
+        "opened": "Abiertos",
+        "closed": "Cerrados"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Tiempo en espera",
+        "contact": "Contacto",
+        "sector": "Sector",
+        "queue": "Cola"
+      },
+      "attendant": {
+        "agent": "Atendente",
+        "status": "Estado",
+        "ongoing": "En curso",
+        "finished": "Finalizado",
+        "average_girst_response_time": "Tiempo medio para 1ª respuesta",
+        "average_response_time": "Tiempo medio de respuesta",
+        "average_duration": "Duração média",
+        "time_in_service": "Tempo em atendimento",
+        "action": "Acción"
+      }
     }
   }
 }

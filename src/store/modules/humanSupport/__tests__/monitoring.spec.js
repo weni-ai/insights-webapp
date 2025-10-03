@@ -2,13 +2,20 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useHumanSupportMonitoring } from '../monitoring';
 import { useDashboards } from '@/store/modules/dashboards';
+import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: vi.fn(),
 }));
 
+vi.mock('@/services/api/resources/humanSupport/timeMetrics', () => ({
+  default: {
+    getTimeMetricsData: vi.fn(),
+  },
+}));
+
 Object.defineProperty(globalThis, 'setTimeout', {
-  value: vi.fn((fn, delay) => {
+  value: vi.fn((fn) => {
     if (typeof fn === 'function') {
       fn();
     }
@@ -17,10 +24,9 @@ Object.defineProperty(globalThis, 'setTimeout', {
   writable: true,
 });
 
-const originalPromise = globalThis.Promise;
 beforeEach(() => {
   vi.clearAllMocks();
-  globalThis.setTimeout = vi.fn((fn, delay) => {
+  globalThis.setTimeout = vi.fn((fn) => {
     if (typeof fn === 'function') {
       fn();
     }
@@ -37,6 +43,8 @@ describe('useHumanSupportMonitoring store', () => {
     useDashboards.mockReturnValue({
       updateLastUpdatedRequest: mockUpdateLastUpdatedRequest,
     });
+
+    TimeMetricsService.getTimeMetricsData.mockReset();
 
     setActivePinia(createPinia());
     store = useHumanSupportMonitoring();
@@ -77,6 +85,12 @@ describe('useHumanSupportMonitoring store', () => {
   describe('loadAllData action', () => {
     beforeEach(() => {
       vi.useFakeTimers();
+
+      TimeMetricsService.getTimeMetricsData.mockResolvedValue({
+        average_time_is_waiting: { average: 100, max: 250 },
+        average_time_first_response: { average: 30, max: 60 },
+        average_time_chat: { average: 500, max: 1000 },
+      });
     });
 
     afterEach(() => {
@@ -117,6 +131,16 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.loadingTimeMetricsData).toBe(false);
       expect(store.loadingHumanSupportByHourData).toBe(false);
     });
+
+    it('should call TimeMetricsService as part of loadAllData', async () => {
+      const loadAllDataPromise = store.loadAllData();
+
+      vi.advanceTimersByTime(3000);
+      await loadAllDataPromise;
+
+      expect(TimeMetricsService.getTimeMetricsData).toHaveBeenCalledTimes(1);
+      expect(store.timeMetricsData.average_time_is_waiting.average).toBe(100);
+    });
   });
 
   describe('individual data loading', () => {
@@ -143,23 +167,32 @@ describe('useHumanSupportMonitoring store', () => {
     });
 
     it('should load time metrics data correctly', async () => {
+      const mockTimeMetricsData = {
+        average_time_is_waiting: { average: 120, max: 300 },
+        average_time_first_response: { average: 45, max: 90 },
+        average_time_chat: { average: 600, max: 1200 },
+      };
+
+      TimeMetricsService.getTimeMetricsData.mockResolvedValue(
+        mockTimeMetricsData,
+      );
+
+      expect(store.loadingTimeMetricsData).toBe(false);
+
       const loadPromise = store.loadTimeMetricsData();
 
       expect(store.loadingTimeMetricsData).toBe(true);
 
-      vi.advanceTimersByTime(3000);
       await loadPromise;
 
+      expect(TimeMetricsService.getTimeMetricsData).toHaveBeenCalledTimes(1);
       expect(store.loadingTimeMetricsData).toBe(false);
-      expect(store.timeMetricsData.average_time_is_waiting.average).toBeTypeOf(
-        'number',
+      expect(store.timeMetricsData).toEqual(mockTimeMetricsData);
+      expect(store.timeMetricsData.average_time_is_waiting.average).toBe(120);
+      expect(store.timeMetricsData.average_time_first_response.average).toBe(
+        45,
       );
-      expect(
-        store.timeMetricsData.average_time_first_response.average,
-      ).toBeTypeOf('number');
-      expect(store.timeMetricsData.average_time_chat.average).toBeTypeOf(
-        'number',
-      );
+      expect(store.timeMetricsData.average_time_chat.average).toBe(600);
     });
 
     it('should handle errors gracefully in individual loads', async () => {
@@ -187,15 +220,15 @@ describe('useHumanSupportMonitoring store', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      vi.spyOn(global, 'setTimeout').mockImplementationOnce(() => {
-        throw new Error('Time Metrics API Error');
-      });
+      const mockError = new Error('Time Metrics API Error');
+      TimeMetricsService.getTimeMetricsData.mockRejectedValue(mockError);
 
       await store.loadTimeMetricsData();
 
+      expect(TimeMetricsService.getTimeMetricsData).toHaveBeenCalledTimes(1);
       expect(consoleSpy).toHaveBeenCalledWith(
         'Error loading time metrics data:',
-        expect.any(Error),
+        mockError,
       );
       expect(store.loadingTimeMetricsData).toBe(false);
 
@@ -359,7 +392,7 @@ describe('useHumanSupportMonitoring store', () => {
         store.saveAppliedFilters();
         expect(store.hasAppliedFiltersNoChanges).toBe(true);
 
-        store.tags = [{ value: 'tag1', label: 'Tag 1' }]; // Remove one tag
+        store.tags = [{ value: 'tag1', label: 'Tag 1' }];
         expect(store.hasAppliedFiltersNoChanges).toBe(false);
       });
 

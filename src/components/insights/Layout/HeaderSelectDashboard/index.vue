@@ -32,7 +32,7 @@
         >
           {{ dashboardTitle }}
         </h1>
-        <BetaText />
+        <BetaText v-if="isRenderBetaText" />
       </section>
       <UnnnicIcon
         class="dropdown__trigger"
@@ -105,6 +105,15 @@ export default {
         this.dashboards[0].name ||
         '';
       return this.$t(title);
+    },
+
+    isRenderBetaText() {
+      const isConversational =
+        this.currentDashboard.name === 'conversations_dashboard.title';
+      const isHumanSupport =
+        this.currentDashboard.name === 'human_support_dashboard.title';
+
+      return isConversational || isHumanSupport;
     },
   },
   mounted() {

@@ -14,7 +14,7 @@
       class="agent-status-label"
       data-testid="agent-status-label"
     >
-      {{ label }}
+      {{ renderLabel }}
     </span>
     <DisconnectAgent
       v-if="enabledDisconnectAgent"
@@ -59,7 +59,11 @@ const statusClass = computed(() => {
 });
 
 const enabledDisconnectAgent = computed(() => {
-  return ['green', 'orange'].includes(props.status);
+  return ['green', 'orange'].includes(props.status) && !!props.agent?.email;
+});
+
+const renderLabel = computed(() => {
+  return props.label.slice(0, 1).toUpperCase() + props.label.slice(1);
 });
 </script>
 

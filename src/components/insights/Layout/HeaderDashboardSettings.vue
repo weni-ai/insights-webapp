@@ -1,5 +1,5 @@
 <template>
-  <UnnnicDropdown v-if="currentDashboard.is_editable">
+  <UnnnicDropdown v-if="isDashboardEditable">
     <template #trigger>
       <UnnnicButton
         type="secondary"
@@ -43,6 +43,11 @@ export default {
   },
   computed: {
     ...mapState(useDashboards, ['currentDashboard']),
+    isDashboardEditable() {
+      const isHumanSupportDashboard =
+        this.currentDashboard.name === 'human_support_dashboard.title';
+      return this.currentDashboard.is_editable && !isHumanSupportDashboard;
+    },
   },
 };
 </script>

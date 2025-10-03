@@ -1,38 +1,50 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { createRequestQuery } from '@/utils/request';
 
-interface AverageTimeData {
-  average: number;
-  max: number;
+interface InProgressData {
+  next: string;
+  previous: string;
+  count: number;
+  results: InProgressDataResult[];
 }
 
-interface TimeMetricsDataResponse {
-  average_time_is_waiting: AverageTimeData;
-  average_time_first_response: AverageTimeData;
-  average_time_chat: AverageTimeData;
+interface InProgressDataResult {
+  agent: string;
+  duration: number;
+  first_response_time: number;
+  awaiting_time: number;
+  sector: string;
+  queue: string;
+  contact: string;
+  link: {
+    url: string;
+    type: string;
+  };
 }
 
 interface QueryParams {
   sectors?: string[];
   queues?: string[];
   tags?: string[];
+  ordering?: string;
+  limit?: number;
+  offset?: number;
 }
 
 export default {
-  async getTimeMetricsData(
+  async getDetailedMonitoringInProgress(
     queryParams: QueryParams = {},
-  ): Promise<TimeMetricsDataResponse> {
+  ): Promise<InProgressData> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
-    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
+      ordering: queryParams.ordering ? queryParams.ordering : 'duration',
     };
 
     const params = createRequestQuery(queryParams);
@@ -44,16 +56,16 @@ export default {
     };
 
     const response = (await http.get(
-      `dashboards/${currentDashboard.uuid}/monitoring/average_time_metrics/`,
+      `/metrics/human-support/detailed-monitoring/on-going/`,
       {
         params: formattedParams,
       },
-    )) as TimeMetricsDataResponse;
+    )) as InProgressData;
 
-    const formattedResponse: TimeMetricsDataResponse = response;
+    const formattedResponse: InProgressData = response;
 
     return formattedResponse;
   },
 };
 
-export type { TimeMetricsDataResponse, QueryParams };
+export type { InProgressDataResult, QueryParams, InProgressData };

@@ -6,6 +6,7 @@
     <ServiceStatus data-testid="monitoring-service-status" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
+    <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
   </section>
 </template>
 
@@ -16,6 +17,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import ServiceStatus from './ServiceStatus.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
+import DetailedMonitoring from './DetailedMonitoring.vue';
 
 const isLoading = ref(false);
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;

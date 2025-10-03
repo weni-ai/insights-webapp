@@ -817,6 +817,53 @@
     },
     "services_open_by_hour": {
       "title": "Services open by hour"
+    },
+    "detailed_monitoring": {
+      "title": "Detailed monitoring",
+      "tabs": {
+        "in_awaiting": "In awaiting",
+        "in_progress": "In progress",
+        "attendant": "Attendant",
+        "pauses": "Pauses"
+      },
+      "filters": {
+        "attendant": {
+          "label": "Attendant",
+          "placeholder": "Type to filter"
+        }
+      },
+      "in_progress": {
+        "duration": "Duration",
+        "awaiting_time": "Awaiting time",
+        "first_response_time": "First response time",
+        "attendant": "Attendant",
+        "sector": "Sector",
+        "queue": "Queue",
+        "contact": "Contact"
+      },
+      "pauses": {
+        "status": "Status",
+        "agent": "Agent",
+        "opened": "Opened",
+        "closed": "Closed"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Awaiting time",
+        "contact": "Contact",
+        "sector": "Sector",
+        "queue": "Queue"
+      },
+      "attendant": {
+        "agent": "Attendant",
+        "status": "Status",
+        "ongoing": "Ongoing",
+        "finished": "Finished",
+        "average_girst_response_time": "Average first response time",
+        "average_response_time": "Average response time",
+        "average_duration": "Average duration",
+        "time_in_service": "Time in service",
+        "action": "Action"
+      }
     }
   }
 }

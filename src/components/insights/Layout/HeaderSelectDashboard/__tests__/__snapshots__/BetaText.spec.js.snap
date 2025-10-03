@@ -1,8 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`BetaText > Component structure > should match snapshot when not rendered 1`] = `<!--v-if-->`;
-
-exports[`BetaText > Component structure > should match snapshot when rendered 1`] = `
+exports[`BetaText > Snapshot > should match snapshot 1`] = `
 <section
   class="beta_text_container"
   data-testid="beta-container"

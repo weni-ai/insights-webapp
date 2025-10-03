@@ -10,7 +10,7 @@
   >
     <section class="option-select-dashboard__content">
       {{ $t(dashboard.name) }}
-      <BetaText v-if="dashboard.name === 'conversations_dashboard.title'" />
+      <BetaText v-if="isRenderBetaText" />
     </section>
 
     <UnnnicIcon
@@ -62,6 +62,13 @@ export default {
     ...mapState(useDashboards, ['currentDashboard', 'dashboardDefault']),
     isDefaultDashboard() {
       return this.dashboardDefault?.uuid === this.dashboard.uuid;
+    },
+    isRenderBetaText() {
+      const isConversational =
+        this.dashboard.name === 'conversations_dashboard.title';
+      const isHumanSupport =
+        this.dashboard.name === 'human_support_dashboard.title';
+      return isConversational || isHumanSupport;
     },
   },
 

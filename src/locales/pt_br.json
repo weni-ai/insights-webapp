@@ -864,6 +864,10 @@
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
       }
+    },
+    "analyze": {
+      "title": "Em breve: Nova Visão de Análise",
+      "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!"
     }
   }
 }

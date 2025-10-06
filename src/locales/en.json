@@ -864,6 +864,10 @@
         "time_in_service": "Time in service",
         "action": "Action"
       }
+    },
+    "analyze": {
+      "title": "Soon: New Analysis View",
+      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
     }
   }
 }

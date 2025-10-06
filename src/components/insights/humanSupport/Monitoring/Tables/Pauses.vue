@@ -16,11 +16,28 @@
     @update:sort="handleSort"
     @update:page="handlePageChange"
     @item-click="redirectItem"
-  />
+  >
+    <template
+      v-for="statusType in customStatusTypes"
+      #[`header-${statusType}`]
+      :key="`header-${statusType}`"
+    >
+      <UnnnicToolTip
+        :text="statusType"
+        side="top"
+        enabled
+        class="pauses-table-header-tooltip"
+      >
+        <span class="pauses-table-header-text">
+          {{ statusType }}
+        </span>
+      </UnnnicToolTip>
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
-import { UnnnicDataTable } from '@weni/unnnic-system';
+import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
 import { PausesDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
@@ -201,3 +218,18 @@ watch(
   { flush: 'post' },
 );
 </script>
+
+<style scoped lang="scss">
+.pauses-table-header-tooltip {
+  width: 100%;
+  display: flex;
+}
+
+.pauses-table-header-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+</style>

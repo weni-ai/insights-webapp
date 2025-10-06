@@ -86,7 +86,7 @@ const changeActiveTabName = (tab: string) => {
   flex-direction: column;
   gap: $unnnic-space-6;
 
-  border-radius: 8px;
+  border-radius: $unnnic-radius-2;
   border: 1px solid $unnnic-color-neutral-soft;
   background: $unnnic-color-background-white;
 

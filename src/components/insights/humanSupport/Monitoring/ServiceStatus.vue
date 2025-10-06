@@ -106,7 +106,12 @@ const scrollToDetailedMonitoring = () => {
 const handleCardClick = (id: CardId) => {
   if (id === 'finished') return;
 
-  setActiveDetailedTab(id as ActiveDetailedTab);
+  const status = {
+    is_awaiting: 'in_awaiting',
+    in_progress: 'in_progress',
+  };
+
+  setActiveDetailedTab(status[id] as ActiveDetailedTab);
   setTimeout(scrollToDetailedMonitoring, 100);
 };
 

@@ -5,7 +5,7 @@ import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport
 import { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/timeMetrics';
 import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/servicesOpenByHour';
 //import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
-//import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
+import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
 //import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
 
 interface Filter {
@@ -18,6 +18,11 @@ interface AppliedFilters {
   tags: Filter[];
 }
 
+interface AppliedAgentFilter {
+  value: string;
+  label: string;
+}
+
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
@@ -28,6 +33,10 @@ export const useHumanSupportMonitoring = defineStore(
       sectors: [],
       queues: [],
       tags: [],
+    });
+    const appliedAgentFilter = ref<AppliedAgentFilter>({
+      value: '',
+      label: '',
     });
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_awaiting: null,
@@ -68,6 +77,13 @@ export const useHumanSupportMonitoring = defineStore(
         sectors: [...sectors.value],
         queues: [...queues.value],
         tags: [...tags.value],
+      };
+    };
+
+    const saveAppliedAgentFilter = (value: string, label: string) => {
+      appliedAgentFilter.value = {
+        value: value,
+        label: label,
       };
     };
 
@@ -145,22 +161,10 @@ export const useHumanSupportMonitoring = defineStore(
       try {
         loadingTimeMetricsData.value = true;
         updateLastUpdatedRequest();
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        //timeMetricsData.value = await TimeMetricsService.getTimeMetricsData();
-        timeMetricsData.value = {
-          average_time_is_waiting: {
-            average: Math.floor(Math.random() * 300) + 30,
-            max: Math.floor(Math.random() * 600) + 300,
-          },
-          average_time_first_response: {
-            average: Math.floor(Math.random() * 60) + 10,
-            max: Math.floor(Math.random() * 120) + 60,
-          },
-          average_time_chat: {
-            average: Math.floor(Math.random() * 900) + 180,
-            max: Math.floor(Math.random() * 1800) + 900,
-          },
-        };
+
+        const data = await TimeMetricsService.getTimeMetricsData();
+
+        timeMetricsData.value = data;
       } catch (error) {
         console.error('Error loading time metrics data:', error);
       } finally {
@@ -225,12 +229,14 @@ export const useHumanSupportMonitoring = defineStore(
       loadingHumanSupportByHourData,
       hasAppliedFiltersNoChanges,
       servicesOpenByHourData,
+      appliedAgentFilter,
 
       loadAllData,
       loadServiceStatusData,
       loadTimeMetricsData,
       loadHumanSupportByHourData,
       saveAppliedFilters,
+      saveAppliedAgentFilter,
       clearFilters,
     };
   },

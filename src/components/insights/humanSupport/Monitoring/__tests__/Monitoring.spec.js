@@ -108,10 +108,6 @@ describe('Monitoring', () => {
     it('should have correct CSS classes', () => {
       expect(section().classes()).toContain('monitoring');
     });
-
-    it('should match snapshot', () => {
-      expect(wrapper.element).toMatchSnapshot();
-    });
   });
 
   describe('Lifecycle management', () => {

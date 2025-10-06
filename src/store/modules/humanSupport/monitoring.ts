@@ -23,6 +23,12 @@ interface AppliedAgentFilter {
   label: string;
 }
 
+export type ActiveDetailedTab =
+  | 'in_awaiting'
+  | 'in_progress'
+  | 'attendant'
+  | 'pauses';
+
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
@@ -38,6 +44,7 @@ export const useHumanSupportMonitoring = defineStore(
       value: '',
       label: '',
     });
+    const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_awaiting: null,
       in_progress: null,
@@ -85,6 +92,10 @@ export const useHumanSupportMonitoring = defineStore(
         value: value,
         label: label,
       };
+    };
+
+    const setActiveDetailedTab = (tab: ActiveDetailedTab) => {
+      activeDetailedTab.value = tab;
     };
 
     const hasAppliedFiltersNoChanges = computed(() => {
@@ -230,6 +241,7 @@ export const useHumanSupportMonitoring = defineStore(
       hasAppliedFiltersNoChanges,
       servicesOpenByHourData,
       appliedAgentFilter,
+      activeDetailedTab,
 
       loadAllData,
       loadServiceStatusData,
@@ -238,6 +250,7 @@ export const useHumanSupportMonitoring = defineStore(
       saveAppliedFilters,
       saveAppliedAgentFilter,
       clearFilters,
+      setActiveDetailedTab,
     };
   },
 );

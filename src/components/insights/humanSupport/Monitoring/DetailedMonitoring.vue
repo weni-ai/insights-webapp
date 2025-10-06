@@ -1,11 +1,14 @@
 <template>
-  <section class="detailed-monitoring">
+  <section
+    id="detailed-monitoring"
+    class="detailed-monitoring"
+  >
     <p class="detailed-monitoring__title">
       {{ $t('human_support_dashboard.detailed_monitoring.title') }}
     </p>
     <Transition name="filters-fade">
       <section
-        v-if="['attendant', 'pauses'].includes(activeTabName)"
+        v-if="['attendant', 'pauses'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
       >
         <DetailedFilters />
@@ -15,7 +18,7 @@
       <UnnnicTab
         data-testid="human-support-tab"
         :tabs="tabsKeys"
-        :activeTab="activeTabName"
+        :activeTab="activeDetailedTab"
         @change="changeActiveTabName"
       >
         <template
@@ -48,10 +51,18 @@ import InAwaiting from './Tables/InAwaiting.vue';
 import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from './Tables/Pauses.vue';
-import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import DetailedFilters from './Filters/DetailedFilters.vue';
+import {
+  ActiveDetailedTab,
+  useHumanSupportMonitoring,
+} from '@/store/modules/humanSupport/monitoring';
+import { Component } from 'vue';
 
-const tabs = {
+const tabs: Record<
+  ActiveDetailedTab,
+  { name: ActiveDetailedTab; component: Component }
+> = {
   in_awaiting: {
     name: 'in_awaiting',
     component: InAwaiting,
@@ -72,10 +83,12 @@ const tabs = {
 
 const tabsKeys = Object.keys(tabs);
 
-const activeTabName = ref('in_progress');
+const humanSupportMonitoring = useHumanSupportMonitoring();
+const { activeDetailedTab } = storeToRefs(humanSupportMonitoring);
+const { setActiveDetailedTab } = humanSupportMonitoring;
 
-const changeActiveTabName = (tab: string) => {
-  activeTabName.value = tab;
+const changeActiveTabName = (tab: ActiveDetailedTab) => {
+  setActiveDetailedTab(tab);
 };
 </script>
 

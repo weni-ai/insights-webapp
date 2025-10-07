@@ -5,7 +5,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 interface ServiceStatusDataResponse {
-  is_awaiting: number;
+  is_waiting: number;
   in_progress: number;
   finished: number;
 }

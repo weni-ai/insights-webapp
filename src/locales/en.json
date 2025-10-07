@@ -795,11 +795,11 @@
     "analysis": "Analysis",
     "support_status": {
       "title": "Support status",
-      "is_awaiting": "Awaiting",
+      "is_waiting": "Awaiting",
       "is_in_progress": "In progress",
       "is_closed": "Closed",
       "tooltips": {
-        "is_awaiting": "Number of contacts waiting for the start of the service now",
+        "is_waiting": "Number of contacts waiting for the start of the service now",
         "is_in_progress": "Number of contacts in service now",
         "is_closed": "Number of closed services today"
       }

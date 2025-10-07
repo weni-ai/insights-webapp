@@ -30,7 +30,7 @@ describe('serviceStatus API', () => {
     };
 
     mockHttpResponse = {
-      is_awaiting: 25,
+      is_waiting: 25,
       in_progress: 10,
       finished: 65,
     };
@@ -111,7 +111,7 @@ describe('serviceStatus API', () => {
 
     it('should return formatted response data', async () => {
       const customResponse = {
-        is_awaiting: 100,
+        is_waiting: 100,
         in_progress: 50,
         finished: 200,
       };
@@ -120,7 +120,7 @@ describe('serviceStatus API', () => {
       const result = await serviceStatus.getServiceStatusData();
 
       expect(result).toEqual(customResponse);
-      expect(result).toHaveProperty('is_awaiting');
+      expect(result).toHaveProperty('is_waiting');
       expect(result).toHaveProperty('in_progress');
       expect(result).toHaveProperty('finished');
     });

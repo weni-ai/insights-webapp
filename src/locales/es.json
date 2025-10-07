@@ -796,11 +796,11 @@
     "analysis": "Análisis",
     "support_status": {
       "title": "Estado de los atendimientos",
-      "is_awaiting": "En espera",
+      "is_waiting": "En espera",
       "is_in_progress": "En progreso",
       "is_closed": "Finalizado",
       "tooltips": {
-        "is_awaiting": "Número de contactos esperando el inicio del servicio ahora",
+        "is_waiting": "Número de contactos esperando el inicio del servicio ahora",
         "is_in_progress": "Número de contactos en servicio ahora",
         "is_closed": "Número de servicios finalizados hoy"
       }

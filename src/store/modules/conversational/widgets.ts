@@ -377,6 +377,13 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       );
     },
 
+    isSalesFunnelConfigured: () => {
+      return (
+        useWidgets().findWidgetBySource('conversations.sales_funnel') !==
+        undefined
+      );
+    },
+
     isNpsAiConfig: () => {
       const { findWidgetBySource } = useWidgets();
       const widgetNps = findWidgetBySource('conversations.nps');

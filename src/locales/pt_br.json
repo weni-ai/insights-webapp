@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Funil e dados de vendas",
     "custom": "Gráfico de barras horizontal",
     "no_data_available": "Nenhum dado disponível para o período de uso.",
     "widget_error": {
@@ -126,6 +127,7 @@
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
       "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
       "config_csat_or_nps_description": "Defina select_keyqual {type} você deseja acompanhar:",
+      "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -759,7 +761,7 @@
     "filters": {
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "agent": "Agente", 
+      "agent": "Agente",
       "select_agent": "Selecione o agente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",

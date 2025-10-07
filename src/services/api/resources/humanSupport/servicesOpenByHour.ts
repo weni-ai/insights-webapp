@@ -8,6 +8,11 @@ interface ServicesOpenByHourData {
   label: string;
   value: number;
 }
+
+interface ServicesOpenByHourDataResponse {
+  results: ServicesOpenByHourData[];
+}
+
 interface QueryParams {
   sectors?: string[];
   queues?: string[];
@@ -41,12 +46,16 @@ export default {
       {
         params: formattedParams,
       },
-    )) as ServicesOpenByHourData[];
+    )) as ServicesOpenByHourDataResponse;
 
-    const formattedResponse: ServicesOpenByHourData[] = response;
+    const formattedResponse: ServicesOpenByHourData[] = response.results;
 
     return formattedResponse;
   },
 };
 
-export type { ServicesOpenByHourData, QueryParams };
+export type {
+  ServicesOpenByHourDataResponse,
+  QueryParams,
+  ServicesOpenByHourData,
+};

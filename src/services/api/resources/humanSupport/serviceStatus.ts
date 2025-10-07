@@ -1,6 +1,7 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 interface ServiceStatusDataResponse {
@@ -21,6 +22,7 @@ export default {
   ): Promise<ServiceStatusDataResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
+    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -36,9 +38,12 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(`/monitoring/list_status/`, {
-      params: formattedParams,
-    })) as ServiceStatusDataResponse;
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/monitoring/list_status/`,
+      {
+        params: formattedParams,
+      },
+    )) as ServiceStatusDataResponse;
 
     const formattedResponse: ServiceStatusDataResponse = response;
 

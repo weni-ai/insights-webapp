@@ -3,15 +3,18 @@ import serviceStatus from '../serviceStatus';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http');
 vi.mock('@/store/modules/config');
 vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('@/store/modules/dashboards');
 vi.mock('@/utils/request');
 
 describe('serviceStatus API', () => {
   let mockProject;
+  let mockCurrentDashboard;
   let mockAppliedFilters;
   let mockHttpResponse;
 
@@ -19,6 +22,7 @@ describe('serviceStatus API', () => {
     vi.clearAllMocks();
 
     mockProject = { uuid: 'test-project-uuid' };
+    mockCurrentDashboard = { uuid: 'test-dashboard-uuid' };
     mockAppliedFilters = {
       sectors: [{ value: 'sector1' }, { value: 'sector2' }],
       queues: [{ value: 'queue1' }],
@@ -32,6 +36,7 @@ describe('serviceStatus API', () => {
     };
 
     useConfig.mockReturnValue({ project: mockProject });
+    useDashboards.mockReturnValue({ currentDashboard: mockCurrentDashboard });
     useHumanSupportMonitoring.mockReturnValue({
       appliedFilters: mockAppliedFilters,
     });
@@ -72,9 +77,12 @@ describe('serviceStatus API', () => {
         const result = await serviceStatus.getServiceStatusData(queryParams);
 
         expect(createRequestQuery).toHaveBeenCalledWith(queryParams);
-        expect(http.get).toHaveBeenCalledWith('/monitoring/list_status/', {
-          params: expectedParams,
-        });
+        expect(http.get).toHaveBeenCalledWith(
+          '/dashboards/test-dashboard-uuid/monitoring/list_status/',
+          {
+            params: expectedParams,
+          },
+        );
         expect(result).toEqual(mockHttpResponse);
       });
     });
@@ -87,15 +95,18 @@ describe('serviceStatus API', () => {
 
       await serviceStatus.getServiceStatusData();
 
-      expect(http.get).toHaveBeenCalledWith('/monitoring/list_status/', {
-        params: {
-          project_uuid: 'test-project-uuid',
-          sectors: [],
-          queues: [],
-          tags: [],
-          formatted: 'params',
+      expect(http.get).toHaveBeenCalledWith(
+        '/dashboards/test-dashboard-uuid/monitoring/list_status/',
+        {
+          params: {
+            project_uuid: 'test-project-uuid',
+            sectors: [],
+            queues: [],
+            tags: [],
+            formatted: 'params',
+          },
         },
-      });
+      );
     });
 
     it('should return formatted response data', async () => {
@@ -135,13 +146,16 @@ describe('serviceStatus API', () => {
 
       await serviceStatus.getServiceStatusData();
 
-      expect(http.get).toHaveBeenCalledWith('/monitoring/list_status/', {
-        params: expect.objectContaining({
-          sectors: [null, undefined, 'valid'],
-          queues: [''],
-          tags: ['tag1'],
-        }),
-      });
+      expect(http.get).toHaveBeenCalledWith(
+        '/dashboards/test-dashboard-uuid/monitoring/list_status/',
+        {
+          params: expect.objectContaining({
+            sectors: [null, undefined, 'valid'],
+            queues: [''],
+            tags: ['tag1'],
+          }),
+        },
+      );
     });
 
     describe('parameter merging', () => {
@@ -151,16 +165,19 @@ describe('serviceStatus API', () => {
 
         await serviceStatus.getServiceStatusData(queryParams);
 
-        expect(http.get).toHaveBeenCalledWith('/monitoring/list_status/', {
-          params: {
-            project_uuid: 'test-project-uuid',
-            sectors: ['sector1', 'sector2'],
-            queues: ['queue1'],
-            tags: ['tag1', 'tag2', 'tag3'],
-            date_from: '2023-01-01',
-            date_to: '2023-12-31',
+        expect(http.get).toHaveBeenCalledWith(
+          '/dashboards/test-dashboard-uuid/monitoring/list_status/',
+          {
+            params: {
+              project_uuid: 'test-project-uuid',
+              sectors: ['sector1', 'sector2'],
+              queues: ['queue1'],
+              tags: ['tag1', 'tag2', 'tag3'],
+              date_from: '2023-01-01',
+              date_to: '2023-12-31',
+            },
           },
-        });
+        );
       });
 
       it('should override applied filters when query params have same keys', async () => {
@@ -169,11 +186,14 @@ describe('serviceStatus API', () => {
 
         await serviceStatus.getServiceStatusData(queryParams);
 
-        expect(http.get).toHaveBeenCalledWith('/monitoring/list_status/', {
-          params: expect.objectContaining({
-            sectors: ['override'],
-          }),
-        });
+        expect(http.get).toHaveBeenCalledWith(
+          '/dashboards/test-dashboard-uuid/monitoring/list_status/',
+          {
+            params: expect.objectContaining({
+              sectors: ['override'],
+            }),
+          },
+        );
       });
     });
   });
@@ -181,6 +201,14 @@ describe('serviceStatus API', () => {
   describe('error handling and edge cases', () => {
     it('should handle missing project configuration', async () => {
       useConfig.mockReturnValue({ project: null });
+
+      await expect(serviceStatus.getServiceStatusData()).rejects.toThrow(
+        "Cannot read properties of null (reading 'uuid')",
+      );
+    });
+
+    it('should handle missing dashboard configuration', async () => {
+      useDashboards.mockReturnValue({ currentDashboard: null });
 
       await expect(serviceStatus.getServiceStatusData()).rejects.toThrow(
         "Cannot read properties of null (reading 'uuid')",

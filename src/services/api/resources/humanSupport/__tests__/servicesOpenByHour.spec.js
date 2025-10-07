@@ -3,15 +3,18 @@ import servicesOpenByHour from '../servicesOpenByHour';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http');
 vi.mock('@/store/modules/config');
 vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('@/store/modules/dashboards');
 vi.mock('@/utils/request');
 
 describe('servicesOpenByHour API', () => {
   let mockProject;
+  let mockCurrentDashboard;
   let mockAppliedFilters;
   let mockHttpResponse;
 
@@ -19,6 +22,7 @@ describe('servicesOpenByHour API', () => {
     vi.clearAllMocks();
 
     mockProject = { uuid: 'test-project-uuid' };
+    mockCurrentDashboard = { uuid: 'test-dashboard-uuid' };
     mockAppliedFilters = {
       sectors: [{ value: 'sector1' }, { value: 'sector2' }],
       queues: [{ value: 'queue1' }],
@@ -26,7 +30,7 @@ describe('servicesOpenByHour API', () => {
     };
 
     mockHttpResponse = {
-      data: [
+      results: [
         { label: '00:00', value: 15 },
         { label: '01:00', value: 8 },
         { label: '02:00', value: 5 },
@@ -37,6 +41,7 @@ describe('servicesOpenByHour API', () => {
     };
 
     useConfig.mockReturnValue({ project: mockProject });
+    useDashboards.mockReturnValue({ currentDashboard: mockCurrentDashboard });
     useHumanSupportMonitoring.mockReturnValue({
       appliedFilters: mockAppliedFilters,
     });
@@ -79,12 +84,12 @@ describe('servicesOpenByHour API', () => {
 
         expect(createRequestQuery).toHaveBeenCalledWith(queryParams);
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/peaks_in_human_service/',
+          'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
           {
             params: expectedParams,
           },
         );
-        expect(result).toEqual(mockHttpResponse.data);
+        expect(result).toEqual(mockHttpResponse.results);
       });
     });
 
@@ -97,7 +102,7 @@ describe('servicesOpenByHour API', () => {
       await servicesOpenByHour.getServicesOpenByHourData();
 
       expect(http.get).toHaveBeenCalledWith(
-        '/monitoring/peaks_in_human_service/',
+        'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
         {
           params: {
             project_uuid: 'test-project-uuid',
@@ -112,7 +117,7 @@ describe('servicesOpenByHour API', () => {
 
     it('should return formatted response data', async () => {
       const customResponse = {
-        data: [
+        results: [
           { label: '09:00', value: 120 },
           { label: '15:00', value: 95 },
         ],
@@ -121,7 +126,7 @@ describe('servicesOpenByHour API', () => {
 
       const result = await servicesOpenByHour.getServicesOpenByHourData();
 
-      expect(result).toEqual(customResponse.data);
+      expect(result).toEqual(customResponse.results);
       expect(Array.isArray(result)).toBe(true);
       expect(result[0]).toHaveProperty('label');
       expect(result[0]).toHaveProperty('value');
@@ -149,7 +154,7 @@ describe('servicesOpenByHour API', () => {
       await servicesOpenByHour.getServicesOpenByHourData();
 
       expect(http.get).toHaveBeenCalledWith(
-        '/monitoring/peaks_in_human_service/',
+        'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
         {
           params: expect.objectContaining({
             sectors: [null, undefined, 'valid'],
@@ -168,7 +173,7 @@ describe('servicesOpenByHour API', () => {
         await servicesOpenByHour.getServicesOpenByHourData(queryParams);
 
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/peaks_in_human_service/',
+          'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
           {
             params: {
               project_uuid: 'test-project-uuid',
@@ -189,7 +194,7 @@ describe('servicesOpenByHour API', () => {
         await servicesOpenByHour.getServicesOpenByHourData(queryParams);
 
         expect(http.get).toHaveBeenCalledWith(
-          '/monitoring/peaks_in_human_service/',
+          'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
           {
             params: expect.objectContaining({
               sectors: ['override'],
@@ -203,6 +208,14 @@ describe('servicesOpenByHour API', () => {
   describe('error handling and edge cases', () => {
     it('should handle missing project configuration', async () => {
       useConfig.mockReturnValue({ project: null });
+
+      await expect(
+        servicesOpenByHour.getServicesOpenByHourData(),
+      ).rejects.toThrow("Cannot read properties of null (reading 'uuid')");
+    });
+
+    it('should handle missing dashboard configuration', async () => {
+      useDashboards.mockReturnValue({ currentDashboard: null });
 
       await expect(
         servicesOpenByHour.getServicesOpenByHourData(),
@@ -229,8 +242,8 @@ describe('servicesOpenByHour API', () => {
       ).rejects.toThrow('Network timeout');
     });
 
-    it('should handle empty response data array', async () => {
-      const emptyResponse = { data: [] };
+    it('should handle empty response results array', async () => {
+      const emptyResponse = { results: [] };
       http.get.mockResolvedValue(emptyResponse);
 
       const result = await servicesOpenByHour.getServicesOpenByHourData();
@@ -239,8 +252,8 @@ describe('servicesOpenByHour API', () => {
       expect(Array.isArray(result)).toBe(true);
     });
 
-    it('should handle response with invalid data structure', async () => {
-      const invalidResponse = { data: null };
+    it('should handle response with invalid results structure', async () => {
+      const invalidResponse = { results: null };
       http.get.mockResolvedValue(invalidResponse);
 
       const result = await servicesOpenByHour.getServicesOpenByHourData();

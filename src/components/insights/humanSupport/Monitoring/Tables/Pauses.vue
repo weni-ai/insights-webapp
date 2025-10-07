@@ -217,6 +217,15 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupportMonitoring.refreshDetailedTabData,
+  (newValue) => {
+    if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
+      loadData();
+    }
+  },
+);
 </script>
 
 <style scoped lang="scss">

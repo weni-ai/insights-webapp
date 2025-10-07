@@ -44,6 +44,7 @@ export const useHumanSupportMonitoring = defineStore(
       value: '',
       label: '',
     });
+    const refreshDetailedTabData = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_awaiting: null,
@@ -96,6 +97,10 @@ export const useHumanSupportMonitoring = defineStore(
 
     const setActiveDetailedTab = (tab: ActiveDetailedTab) => {
       activeDetailedTab.value = tab;
+    };
+
+    const setRefreshDetailedTabData = (value: boolean) => {
+      refreshDetailedTabData.value = value;
     };
 
     const hasAppliedFiltersNoChanges = computed(() => {
@@ -214,6 +219,7 @@ export const useHumanSupportMonitoring = defineStore(
       servicesOpenByHourData,
       appliedAgentFilter,
       activeDetailedTab,
+      refreshDetailedTabData,
 
       loadAllData,
       loadServiceStatusData,
@@ -223,6 +229,7 @@ export const useHumanSupportMonitoring = defineStore(
       saveAppliedAgentFilter,
       clearFilters,
       setActiveDetailedTab,
+      setRefreshDetailedTabData,
     };
   },
 );

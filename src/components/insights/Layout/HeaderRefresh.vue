@@ -17,9 +17,13 @@ import { storeToRefs } from 'pinia';
 const useMonitoring = useHumanSupportMonitoring();
 
 const { isLoadingAllData } = storeToRefs(useMonitoring);
-const { loadAllData } = useMonitoring;
+const { loadAllData, setRefreshDetailedTabData } = useMonitoring;
 
 const refreshData = () => {
   loadAllData();
+  setRefreshDetailedTabData(true);
+  setTimeout(() => {
+    setRefreshDetailedTabData(false);
+  }, 500);
 };
 </script>

@@ -4,9 +4,9 @@ import { useDashboards } from '../dashboards';
 import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/serviceStatus';
 import { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/timeMetrics';
 import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/servicesOpenByHour';
-//import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
+import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
 import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
-//import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
+import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
 
 interface Filter {
   value: string;
@@ -23,6 +23,12 @@ interface AppliedAgentFilter {
   label: string;
 }
 
+export type ActiveDetailedTab =
+  | 'in_awaiting'
+  | 'in_progress'
+  | 'attendant'
+  | 'pauses';
+
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
@@ -38,6 +44,8 @@ export const useHumanSupportMonitoring = defineStore(
       value: '',
       label: '',
     });
+    const refreshDetailedTabData = ref<boolean>(false);
+    const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_awaiting: null,
       in_progress: null,
@@ -85,6 +93,14 @@ export const useHumanSupportMonitoring = defineStore(
         value: value,
         label: label,
       };
+    };
+
+    const setActiveDetailedTab = (tab: ActiveDetailedTab) => {
+      activeDetailedTab.value = tab;
+    };
+
+    const setRefreshDetailedTabData = (value: boolean) => {
+      refreshDetailedTabData.value = value;
     };
 
     const hasAppliedFiltersNoChanges = computed(() => {
@@ -143,13 +159,9 @@ export const useHumanSupportMonitoring = defineStore(
       try {
         loadingServiceStatusData.value = true;
         updateLastUpdatedRequest();
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        //serviceStatusData.value = await ServiceStatusService.getServiceStatusData();
-        serviceStatusData.value = {
-          is_awaiting: Math.floor(Math.random() * 100),
-          in_progress: Math.floor(Math.random() * 100),
-          finished: Math.floor(Math.random() * 100),
-        };
+        const data = await ServiceStatusService.getServiceStatusData();
+
+        serviceStatusData.value = data;
       } catch (error) {
         console.error('Error loading service status data:', error);
       } finally {
@@ -176,34 +188,10 @@ export const useHumanSupportMonitoring = defineStore(
       try {
         loadingHumanSupportByHourData.value = true;
         updateLastUpdatedRequest();
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-        //servicesOpenByHourData.value = await ServicesOpenByHourService.getServicesOpenByHourData();
-        servicesOpenByHourData.value = [
-          { label: '0h', value: Math.floor(Math.random() * 100) },
-          { label: '1h', value: Math.floor(Math.random() * 100) },
-          { label: '2h', value: Math.floor(Math.random() * 100) },
-          { label: '3h', value: Math.floor(Math.random() * 100) },
-          { label: '4h', value: Math.floor(Math.random() * 100) },
-          { label: '5h', value: Math.floor(Math.random() * 100) },
-          { label: '6h', value: Math.floor(Math.random() * 100) },
-          { label: '7h', value: Math.floor(Math.random() * 100) },
-          { label: '8h', value: Math.floor(Math.random() * 100) },
-          { label: '9h', value: Math.floor(Math.random() * 100) },
-          { label: '10h', value: Math.floor(Math.random() * 100) },
-          { label: '11h', value: Math.floor(Math.random() * 100) },
-          { label: '12h', value: Math.floor(Math.random() * 100) },
-          { label: '13h', value: Math.floor(Math.random() * 100) },
-          { label: '14h', value: Math.floor(Math.random() * 100) },
-          { label: '15h', value: Math.floor(Math.random() * 100) },
-          { label: '16h', value: Math.floor(Math.random() * 100) },
-          { label: '17h', value: Math.floor(Math.random() * 100) },
-          { label: '18h', value: Math.floor(Math.random() * 100) },
-          { label: '19h', value: Math.floor(Math.random() * 100) },
-          { label: '20h', value: Math.floor(Math.random() * 100) },
-          { label: '21h', value: Math.floor(Math.random() * 100) },
-          { label: '22h', value: Math.floor(Math.random() * 100) },
-          { label: '23h', value: Math.floor(Math.random() * 100) },
-        ];
+        const data =
+          await ServicesOpenByHourService.getServicesOpenByHourData();
+
+        servicesOpenByHourData.value = data;
       } catch (error) {
         console.error('Error loading human support by hour data:', error);
       } finally {
@@ -230,6 +218,8 @@ export const useHumanSupportMonitoring = defineStore(
       hasAppliedFiltersNoChanges,
       servicesOpenByHourData,
       appliedAgentFilter,
+      activeDetailedTab,
+      refreshDetailedTabData,
 
       loadAllData,
       loadServiceStatusData,
@@ -238,6 +228,8 @@ export const useHumanSupportMonitoring = defineStore(
       saveAppliedFilters,
       saveAppliedAgentFilter,
       clearFilters,
+      setActiveDetailedTab,
+      setRefreshDetailedTabData,
     };
   },
 );

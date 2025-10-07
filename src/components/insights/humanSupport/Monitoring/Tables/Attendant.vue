@@ -231,4 +231,13 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupportMonitoring.refreshDetailedTabData,
+  (newValue) => {
+    if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
+      loadData();
+    }
+  },
+);
 </script>

@@ -1,5 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
+import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { createRequestQuery } from '@/utils/request';
 
@@ -9,7 +10,7 @@ interface ServicesOpenByHourData {
 }
 
 interface ServicesOpenByHourDataResponse {
-  data: ServicesOpenByHourData[];
+  results: ServicesOpenByHourData[];
 }
 
 interface QueryParams {
@@ -24,6 +25,7 @@ export default {
   ): Promise<ServicesOpenByHourData[]> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupportMonitoring();
+    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -39,11 +41,14 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(`/monitoring/peaks_in_human_service/`, {
-      params: formattedParams,
-    })) as ServicesOpenByHourDataResponse;
+    const response = (await http.get(
+      `dashboards/${currentDashboard.uuid}/monitoring/peaks_in_human_service/`,
+      {
+        params: formattedParams,
+      },
+    )) as ServicesOpenByHourDataResponse;
 
-    const formattedResponse: ServicesOpenByHourData[] = response.data;
+    const formattedResponse: ServicesOpenByHourData[] = response.results;
 
     return formattedResponse;
   },

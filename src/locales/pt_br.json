@@ -335,6 +335,7 @@
   "confirmation": "Confirmação",
   "clear_fields": "Limpar campos",
   "today": "Hoje",
+  "now": "Agora",
   "date_format": "DD/MM/YYYY",
   "search": "Buscar",
   "category": "Categoria",
@@ -834,8 +835,8 @@
       },
       "in_progress": {
         "duration": "Duração",
-        "awaiting_time": "Tempo de espera",
-        "first_response_time": "Tempo de resposta",
+        "awaiting_time": "Tempo em espera",
+        "first_response_time": "Tempo para 1ª resposta",
         "attendant": "Atendente",
         "sector": "Setor",
         "queue": "Fila",
@@ -864,6 +865,10 @@
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
       }
+    },
+    "analyze": {
+      "title": "Em breve: Nova Visão de Análise",
+      "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!"
     }
   }
 }

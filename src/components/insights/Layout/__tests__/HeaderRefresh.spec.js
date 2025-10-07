@@ -49,6 +49,7 @@ describe('HeaderRefresh.vue', () => {
     monitoringStore = {
       isLoadingAllData: false,
       loadAllData: vi.fn(),
+      setRefreshDetailedTabData: vi.fn(),
     };
 
     mockStoreToRefs = {
@@ -112,12 +113,41 @@ describe('HeaderRefresh.vue', () => {
       await refreshButton.vm.$emit('click');
 
       expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(1);
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+        true,
+      );
     });
 
     it('should call loadAllData from store when refreshData is executed', () => {
       wrapper.vm.refreshData();
 
       expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(1);
+    });
+
+    it('should call setRefreshDetailedTabData with true when refreshData is executed', () => {
+      wrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+        true,
+      );
+    });
+
+    it('should call setRefreshDetailedTabData with false after timeout', async () => {
+      vi.useFakeTimers();
+
+      wrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+        true,
+      );
+
+      vi.advanceTimersByTime(500);
+
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+        false,
+      );
+
+      vi.useRealTimers();
     });
 
     it('should handle multiple refresh clicks', async () => {
@@ -128,6 +158,9 @@ describe('HeaderRefresh.vue', () => {
       await refreshButton.vm.$emit('click');
 
       expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(3);
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledTimes(
+        3,
+      );
     });
 
     it('should show disabled state when loading', async () => {
@@ -161,6 +194,12 @@ describe('HeaderRefresh.vue', () => {
     it('should access loadAllData function from store', () => {
       expect(wrapper.vm.loadAllData).toBe(monitoringStore.loadAllData);
     });
+
+    it('should access setRefreshDetailedTabData function from store', () => {
+      expect(wrapper.vm.setRefreshDetailedTabData).toBe(
+        monitoringStore.setRefreshDetailedTabData,
+      );
+    });
   });
 
   describe('Component Props and Attributes', () => {
@@ -183,6 +222,8 @@ describe('HeaderRefresh.vue', () => {
       expect(monitoringStore.isLoadingAllData).toBeDefined();
       expect(monitoringStore.loadAllData).toBeDefined();
       expect(typeof monitoringStore.loadAllData).toBe('function');
+      expect(monitoringStore.setRefreshDetailedTabData).toBeDefined();
+      expect(typeof monitoringStore.setRefreshDetailedTabData).toBe('function');
     });
 
     it('should handle loadAllData throwing an error', async () => {
@@ -214,6 +255,26 @@ describe('HeaderRefresh.vue', () => {
       useHumanSupportMonitoring.mockReturnValue(incompleteStore);
 
       expect(() => createWrapper()).not.toThrow();
+    });
+
+    it('should handle setTimeout correctly in refreshData', async () => {
+      vi.useFakeTimers();
+
+      wrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenNthCalledWith(
+        1,
+        true,
+      );
+
+      vi.advanceTimersByTime(500);
+
+      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenNthCalledWith(
+        2,
+        false,
+      );
+
+      vi.useRealTimers();
     });
   });
 });

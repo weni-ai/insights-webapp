@@ -3,6 +3,8 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useHumanSupportMonitoring } from '../monitoring';
 import { useDashboards } from '@/store/modules/dashboards';
 import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
+import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
+import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: vi.fn(),
@@ -11,6 +13,18 @@ vi.mock('@/store/modules/dashboards', () => ({
 vi.mock('@/services/api/resources/humanSupport/timeMetrics', () => ({
   default: {
     getTimeMetricsData: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/api/resources/humanSupport/serviceStatus', () => ({
+  default: {
+    getServiceStatusData: vi.fn(),
+  },
+}));
+
+vi.mock('@/services/api/resources/humanSupport/servicesOpenByHour', () => ({
+  default: {
+    getServicesOpenByHourData: vi.fn(),
   },
 }));
 
@@ -37,14 +51,31 @@ beforeEach(() => {
 describe('useHumanSupportMonitoring store', () => {
   let store;
   let mockUpdateLastUpdatedRequest;
+  let mockCurrentDashboard;
 
   beforeEach(() => {
     mockUpdateLastUpdatedRequest = vi.fn();
+    mockCurrentDashboard = { uuid: 'test-dashboard-uuid' };
+
     useDashboards.mockReturnValue({
       updateLastUpdatedRequest: mockUpdateLastUpdatedRequest,
+      currentDashboard: mockCurrentDashboard,
     });
 
     TimeMetricsService.getTimeMetricsData.mockReset();
+    ServiceStatusService.getServiceStatusData.mockReset();
+    ServicesOpenByHourService.getServicesOpenByHourData.mockReset();
+
+    ServiceStatusService.getServiceStatusData.mockResolvedValue({
+      is_awaiting: 10,
+      in_progress: 5,
+      finished: 20,
+    });
+
+    ServicesOpenByHourService.getServicesOpenByHourData.mockResolvedValue([
+      { label: '00:00', value: 5 },
+      { label: '01:00', value: 3 },
+    ]);
 
     setActivePinia(createPinia());
     store = useHumanSupportMonitoring();
@@ -79,6 +110,18 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.loadingServiceStatusData).toBe(false);
       expect(store.loadingTimeMetricsData).toBe(false);
       expect(store.loadingHumanSupportByHourData).toBe(false);
+    });
+
+    it('should initialize refresh and tab states', () => {
+      expect(store.refreshDetailedTabData).toBe(false);
+      expect(store.activeDetailedTab).toBe('in_progress');
+    });
+
+    it('should initialize applied agent filter', () => {
+      expect(store.appliedAgentFilter).toEqual({
+        value: '',
+        label: '',
+      });
     });
   });
 
@@ -157,7 +200,6 @@ describe('useHumanSupportMonitoring store', () => {
 
       expect(store.loadingServiceStatusData).toBe(true);
 
-      vi.advanceTimersByTime(3000);
       await loadPromise;
 
       expect(store.loadingServiceStatusData).toBe(false);
@@ -200,15 +242,14 @@ describe('useHumanSupportMonitoring store', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      vi.spyOn(global, 'setTimeout').mockImplementationOnce(() => {
-        throw new Error('API Error');
-      });
+      const mockError = new Error('API Error');
+      ServiceStatusService.getServiceStatusData.mockRejectedValue(mockError);
 
       await store.loadServiceStatusData();
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'Error loading service status data:',
-        expect.any(Error),
+        mockError,
       );
       expect(store.loadingServiceStatusData).toBe(false);
 
@@ -240,15 +281,16 @@ describe('useHumanSupportMonitoring store', () => {
         .spyOn(console, 'error')
         .mockImplementation(() => {});
 
-      vi.spyOn(global, 'setTimeout').mockImplementationOnce(() => {
-        throw new Error('Human Support By Hour API Error');
-      });
+      const mockError = new Error('Human Support By Hour API Error');
+      ServicesOpenByHourService.getServicesOpenByHourData.mockRejectedValue(
+        mockError,
+      );
 
       await store.loadHumanSupportByHourData();
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'Error loading human support by hour data:',
-        expect.any(Error),
+        mockError,
       );
       expect(store.loadingHumanSupportByHourData).toBe(false);
 
@@ -439,6 +481,77 @@ describe('useHumanSupportMonitoring store', () => {
         store.clearFilters();
 
         expect(store.appliedFiltersLength).toBe(0);
+      });
+    });
+  });
+
+  describe('tab and refresh management', () => {
+    describe('setActiveDetailedTab', () => {
+      it('should set active detailed tab to in_awaiting', () => {
+        store.setActiveDetailedTab('in_awaiting');
+        expect(store.activeDetailedTab).toBe('in_awaiting');
+      });
+
+      it('should set active detailed tab to attendant', () => {
+        store.setActiveDetailedTab('attendant');
+        expect(store.activeDetailedTab).toBe('attendant');
+      });
+
+      it('should set active detailed tab to pauses', () => {
+        store.setActiveDetailedTab('pauses');
+        expect(store.activeDetailedTab).toBe('pauses');
+      });
+
+      it('should set active detailed tab to in_progress', () => {
+        store.setActiveDetailedTab('in_progress');
+        expect(store.activeDetailedTab).toBe('in_progress');
+      });
+    });
+
+    describe('setRefreshDetailedTabData', () => {
+      it('should set refresh detailed tab data to true', () => {
+        store.setRefreshDetailedTabData(true);
+        expect(store.refreshDetailedTabData).toBe(true);
+      });
+
+      it('should set refresh detailed tab data to false', () => {
+        store.setRefreshDetailedTabData(false);
+        expect(store.refreshDetailedTabData).toBe(false);
+      });
+
+      it('should toggle refresh detailed tab data', () => {
+        expect(store.refreshDetailedTabData).toBe(false);
+
+        store.setRefreshDetailedTabData(true);
+        expect(store.refreshDetailedTabData).toBe(true);
+
+        store.setRefreshDetailedTabData(false);
+        expect(store.refreshDetailedTabData).toBe(false);
+      });
+    });
+
+    describe('saveAppliedAgentFilter', () => {
+      it('should save applied agent filter with value and label', () => {
+        store.saveAppliedAgentFilter('agent-123', 'Agent Name');
+
+        expect(store.appliedAgentFilter.value).toBe('agent-123');
+        expect(store.appliedAgentFilter.label).toBe('Agent Name');
+      });
+
+      it('should update existing applied agent filter', () => {
+        store.saveAppliedAgentFilter('agent-123', 'Agent Name');
+        store.saveAppliedAgentFilter('agent-456', 'Another Agent');
+
+        expect(store.appliedAgentFilter.value).toBe('agent-456');
+        expect(store.appliedAgentFilter.label).toBe('Another Agent');
+      });
+
+      it('should save empty agent filter', () => {
+        store.saveAppliedAgentFilter('agent-123', 'Agent Name');
+        store.saveAppliedAgentFilter('', '');
+
+        expect(store.appliedAgentFilter.value).toBe('');
+        expect(store.appliedAgentFilter.label).toBe('');
       });
     });
   });

@@ -19,9 +19,9 @@
   >
     <template #body-action="{ item }">
       <DisconnectAgent
-        v-if="['online', 'custom'].includes(item?.status)"
         :agent="{ name: item?.agent, email: item?.agent_email }"
         containerCenter
+        :disabled="['offline'].includes(item?.status)"
         @request-data="loadData"
       />
     </template>

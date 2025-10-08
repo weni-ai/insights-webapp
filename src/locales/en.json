@@ -742,8 +742,8 @@
       "created_on": "Date of commencement of service"
     },
     "select_data": {
-      "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",
-      "placeholder": "MM/MM/MMM",
+      "label": "Select a date or period (maximum interval of 92 days between start date and end date)",
+      "placeholder": "MM/DD/YYYY",
       "shortcuts": {
         "last_7_days": "Last 7 days",
         "last_14_days": "Last 14 days",

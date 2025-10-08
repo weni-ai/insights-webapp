@@ -26,7 +26,7 @@
         <p class="sales-funnel-widget__count-container-item-value">
           {{
             formatCurrency(
-              salesFunnelWidgetData?.total_value || 0,
+              (salesFunnelWidgetData?.total_value || 0) / 100,
               currencySymbols[salesFunnelWidgetData?.currency || 'USD'],
               i18n.global.locale,
             )
@@ -40,7 +40,7 @@
         <p class="sales-funnel-widget__count-container-item-value">
           {{
             formatCurrency(
-              salesFunnelWidgetData?.average_ticket || 0,
+              (salesFunnelWidgetData?.average_ticket || 0) / 100,
               currencySymbols[salesFunnelWidgetData?.currency || 'USD'],
               i18n.global.locale,
             )

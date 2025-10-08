@@ -19,6 +19,7 @@
         iconCenter="mode_off_on"
         size="small"
         type="tertiary"
+        :disabled="props.disabled"
         @click="handleModalClick"
       />
     </UnnnicToolTip>
@@ -73,6 +74,10 @@ const props = defineProps({
     required: true,
   },
   containerCenter: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
     type: Boolean,
     default: false,
   },
@@ -139,10 +144,6 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
 
   :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
     font-size: $unnnic-font-size-title-sm;
-  }
-  :deep(.unnnic-button--icon-on-center.unnnic-button--size-small) {
-    padding: 0;
-    width: $unnnic-font-size-title-sm;
   }
 }
 

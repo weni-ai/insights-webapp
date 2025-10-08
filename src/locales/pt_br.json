@@ -73,7 +73,7 @@
         "continue": "Continuar"
       },
       "added_topic": "Adicionado em {date} às {time}",
-      "disclaimer": "Ao adicionar assuntos, você permite que a IA classifique automaticamente as conversas com eles. Isso ajudará a IA a entender melhor as conversas e fornecer respostas mais precisas."
+      "disclaimer": "Ao adicionar novos assuntos, a IA passará a classificá-los automaticamente nas conversas futuras, ajudando a compreender melhor os diálogos e a oferecer respostas mais precisas. Conversas anteriores não serão reclassificadas."
     },
     "most_talked_about_topics": {
       "title": "Assuntos mais falados",

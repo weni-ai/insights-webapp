@@ -73,7 +73,7 @@
         "continue": "Keep adding"
       },
       "added_topic": "Added on {date} at {time}",
-      "disclaimer": "The topics you add will only be sorted in future conversations. Previous conversations will not be re-sorted."
+      "disclaimer": "When you add new topics, the AI will automatically classify them in future conversations, improving its understanding and delivering more accurate responses. Previous conversations will not be reclassified."
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",

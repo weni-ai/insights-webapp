@@ -38,7 +38,7 @@ const humanSupportMonitoring = useHumanSupportMonitoring();
 const isLoading = ref(false);
 
 const page = ref(1);
-const pageInterval = ref(2);
+const pageInterval = ref(15);
 const pageTotal = ref(0);
 
 const currentSort = ref<{ header: string; order: string }>({

@@ -47,7 +47,7 @@ export const useHumanSupportMonitoring = defineStore(
     const refreshDetailedTabData = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
-      is_awaiting: null,
+      is_waiting: null,
       in_progress: null,
       finished: null,
     });

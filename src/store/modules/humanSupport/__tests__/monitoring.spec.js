@@ -67,7 +67,7 @@ describe('useHumanSupportMonitoring store', () => {
     ServicesOpenByHourService.getServicesOpenByHourData.mockReset();
 
     ServiceStatusService.getServiceStatusData.mockResolvedValue({
-      is_awaiting: 10,
+      is_waiting: 10,
       in_progress: 5,
       finished: 20,
     });
@@ -92,7 +92,7 @@ describe('useHumanSupportMonitoring store', () => {
 
     it('should initialize service status data with null values', () => {
       expect(store.serviceStatusData).toEqual({
-        is_awaiting: null,
+        is_waiting: null,
         in_progress: null,
         finished: null,
       });
@@ -203,7 +203,7 @@ describe('useHumanSupportMonitoring store', () => {
       await loadPromise;
 
       expect(store.loadingServiceStatusData).toBe(false);
-      expect(store.serviceStatusData.is_awaiting).toBeTypeOf('number');
+      expect(store.serviceStatusData.is_waiting).toBeTypeOf('number');
       expect(store.serviceStatusData.in_progress).toBeTypeOf('number');
       expect(store.serviceStatusData.finished).toBeTypeOf('number');
     });

@@ -7,7 +7,7 @@ import ServiceStatus from '../ServiceStatus.vue';
 const mockMonitoringStore = {
   loadServiceStatusData: vi.fn(),
   serviceStatusData: {
-    value: { is_awaiting: 25, in_progress: 10, finished: 65 },
+    value: { is_waiting: 25, in_progress: 10, finished: 65 },
   },
   loadingServiceStatusData: { value: false },
 };
@@ -32,11 +32,11 @@ const i18n = createI18n({
       human_support_dashboard: {
         support_status: {
           title: 'Support Status',
-          is_awaiting: 'Awaiting',
+          is_waiting: 'Awaiting',
           is_in_progress: 'In Progress',
           is_closed: 'Closed',
           tooltips: {
-            is_awaiting: 'Conversations waiting for agent response',
+            is_waiting: 'Conversations waiting for agent response',
             is_in_progress: 'Conversations currently being handled',
             is_closed: 'Conversations that have been closed',
           },
@@ -73,7 +73,7 @@ describe('ServiceStatus', () => {
     Object.assign(mockMonitoringStore, {
       loadServiceStatusData: vi.fn(),
       serviceStatusData: {
-        value: { is_awaiting: 25, in_progress: 10, finished: 65 },
+        value: { is_waiting: 25, in_progress: 10, finished: 65 },
       },
       loadingServiceStatusData: { value: false },
     });
@@ -121,10 +121,10 @@ describe('ServiceStatus', () => {
 
       const expectedCards = [
         {
-          id: 'is_awaiting',
-          titleKey: 'human_support_dashboard.support_status.is_awaiting',
+          id: 'is_waiting',
+          titleKey: 'human_support_dashboard.support_status.is_waiting',
           tooltipKey:
-            'human_support_dashboard.support_status.tooltips.is_awaiting',
+            'human_support_dashboard.support_status.tooltips.is_waiting',
         },
         {
           id: 'in_progress',
@@ -162,10 +162,10 @@ describe('ServiceStatus', () => {
 
   describe('Card value formatting', () => {
     const valueTestCases = [
-      { cardId: 'is_awaiting', inputValue: 25, expectedOutput: '25' },
+      { cardId: 'is_waiting', inputValue: 25, expectedOutput: '25' },
       { cardId: 'in_progress', inputValue: 10, expectedOutput: '10' },
       { cardId: 'finished', inputValue: 65, expectedOutput: '65' },
-      { cardId: 'is_awaiting', inputValue: 0, expectedOutput: '0' },
+      { cardId: 'is_waiting', inputValue: 0, expectedOutput: '0' },
     ];
 
     valueTestCases.forEach(({ cardId, inputValue, expectedOutput }) => {
@@ -190,12 +190,12 @@ describe('ServiceStatus', () => {
 
     edgeCases.forEach(({ name, value, expected }) => {
       it(`should handle ${name}`, () => {
-        const testData = { is_awaiting: value };
+        const testData = { is_waiting: value };
         wrapper = createWrapper({
           serviceStatusData: { value: testData },
         });
 
-        expect(wrapper.vm.getCardValue('is_awaiting')).toBe(expected);
+        expect(wrapper.vm.getCardValue('is_waiting')).toBe(expected);
       });
     });
   });
@@ -213,11 +213,11 @@ describe('ServiceStatus', () => {
   describe('Error scenarios', () => {
     it('should handle missing store data gracefully', () => {
       wrapper = createWrapper({
-        serviceStatusData: { value: { is_awaiting: undefined } },
+        serviceStatusData: { value: { is_waiting: undefined } },
       });
 
       const vm = wrapper.vm;
-      expect(vm.getCardValue('is_awaiting')).toBe('-');
+      expect(vm.getCardValue('is_waiting')).toBe('-');
     });
 
     it('should handle empty store data', () => {
@@ -226,7 +226,7 @@ describe('ServiceStatus', () => {
       });
 
       const vm = wrapper.vm;
-      expect(vm.getCardValue('is_awaiting')).toBe('-');
+      expect(vm.getCardValue('is_waiting')).toBe('-');
       expect(vm.getCardValue('in_progress')).toBe('-');
       expect(vm.getCardValue('finished')).toBe('-');
     });
@@ -270,13 +270,13 @@ describe('ServiceStatus', () => {
       const testCases = [
         {
           serviceStatusData: {
-            value: { is_awaiting: 25, in_progress: 10, finished: 65 },
+            value: { is_waiting: 25, in_progress: 10, finished: 65 },
           },
           loadingServiceStatusData: { value: false },
         },
         {
           serviceStatusData: {
-            value: { is_awaiting: 0, in_progress: 0, finished: 0 },
+            value: { is_waiting: 0, in_progress: 0, finished: 0 },
           },
           loadingServiceStatusData: { value: false },
         },

@@ -27,8 +27,8 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       enabletimeicon="false"
       isclickable="true"
       isloading="false"
-      title="human_support_dashboard.support_status.is_awaiting"
-      tooltipinfo="human_support_dashboard.support_status.tooltips.is_awaiting"
+      title="human_support_dashboard.support_status.is_waiting"
+      tooltipinfo="human_support_dashboard.support_status.tooltips.is_waiting"
       tooltipside="top"
       value="25"
     />

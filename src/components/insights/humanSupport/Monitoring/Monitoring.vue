@@ -11,34 +11,26 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 
-import { useDashboards } from '@/store/modules/dashboards';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import ServiceStatus from './ServiceStatus.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 
-const isLoading = ref(false);
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
-const { updateLastUpdatedRequest } = useDashboards();
+const { loadAllData, setRefreshDetailedTabData } = useHumanSupportMonitoring();
 
 const loadData = async () => {
-  if (isLoading.value) {
-    return;
-  }
-
-  try {
-    isLoading.value = true;
-    updateLastUpdatedRequest();
-  } catch (error) {
-    console.error('Erro to get data:', error);
-  } finally {
-    isLoading.value = false;
-  }
+  loadAllData();
+  setRefreshDetailedTabData(true);
+  setTimeout(() => {
+    setRefreshDetailedTabData(false);
+  }, 500);
 };
 
 const startAutoRefresh = () => {
@@ -59,16 +51,12 @@ const stopAutoRefresh = () => {
 };
 
 onMounted(() => {
-  console.log('Monitoring mounted');
-
   loadData();
 
   startAutoRefresh();
 });
 
 onUnmounted(() => {
-  console.log('Monitoring unmounted');
-
   stopAutoRefresh();
 });
 </script>

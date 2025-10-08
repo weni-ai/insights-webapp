@@ -73,7 +73,7 @@
         "continue": "Continuar"
       },
       "added_topic": "Agregado el {date} a las {time}",
-      "disclaimer": "Al agregar temas, permites que la IA etiquete automáticamente las conversaciones con ellos. Esto ayudará a la IA a entender mejor las conversaciones y proporcionar respuestas más precisas."
+      "disclaimer": "Al agregar nuevos temas, la IA comenzará a clasificarlos automáticamente en las conversaciones futuras, lo que le permitirá comprender mejor los diálogos y ofrecer respuestas más precisas. Las conversaciones anteriores no serán reclasificadas."
     },
     "most_talked_about_topics": {
       "title": "Tópicos más hablados",

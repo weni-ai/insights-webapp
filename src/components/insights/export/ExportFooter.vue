@@ -44,7 +44,7 @@ import {
   UnnnicCheckbox,
   UnnnicIcon,
   UnnnicLabel,
-  UnnnicRadio
+  UnnnicRadio,
 } from '@weni/unnnic-system';
 
 type FormatType = '.csv' | '.xlsx';

@@ -12,6 +12,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue';
+import { useTimeoutFn } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import ServiceStatus from './ServiceStatus.vue';
@@ -20,6 +21,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
+let timeoutStop: (() => void) | null = null;
 
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
@@ -28,9 +30,14 @@ const { loadAllData, setRefreshDetailedTabData } = useHumanSupportMonitoring();
 const loadData = async () => {
   loadAllData();
   setRefreshDetailedTabData(true);
-  setTimeout(() => {
+
+  timeoutStop?.();
+
+  const { stop } = useTimeoutFn(() => {
     setRefreshDetailedTabData(false);
   }, 500);
+
+  timeoutStop = stop;
 };
 
 const startAutoRefresh = () => {
@@ -47,6 +54,11 @@ const stopAutoRefresh = () => {
   if (autoRefreshInterval) {
     clearInterval(autoRefreshInterval);
     autoRefreshInterval = null;
+  }
+
+  if (timeoutStop) {
+    timeoutStop();
+    timeoutStop = null;
   }
 };
 

@@ -36,6 +36,13 @@ import { ref } from 'vue';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
 import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
 
+// TODO: Remove this comment after the feature flag is implemented in STG
+/*const { isFeatureFlagEnabled } = useFeatureFlag();
+
+const isEnabled = computed(() => {
+  return isFeatureFlagEnabled('insights-new-human-dashboard');
+});*/
+
 const tabs = {
   monitoring: {
     name: 'monitoring',

@@ -1,15 +1,16 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
 import Monitoring from '../Monitoring.vue';
 
-const mockDashboardStore = {
-  updateLastUpdatedRequest: vi.fn(),
+const mockHumanSupportMonitoringStore = {
+  loadAllData: vi.fn(),
+  setRefreshDetailedTabData: vi.fn(),
 };
 
-vi.mock('@/store/modules/dashboards', () => ({
-  useDashboards: () => mockDashboardStore,
+vi.mock('@/store/modules/humanSupport/monitoring', () => ({
+  useHumanSupportMonitoring: () => mockHumanSupportMonitoringStore,
 }));
 
 vi.mock('pinia', async (importOriginal) => {
@@ -36,13 +37,14 @@ describe('Monitoring', () => {
   let wrapper;
 
   const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockDashboardStore, storeOverrides);
+    Object.assign(mockHumanSupportMonitoringStore, storeOverrides);
     return mount(Monitoring, {
       global: {
         stubs: {
           ServiceStatus: true,
           TimeMetrics: true,
           ServicesOpenByHour: true,
+          DetailedMonitoring: true,
         },
       },
     });
@@ -53,11 +55,10 @@ describe('Monitoring', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
-    vi.spyOn(console, 'log').mockImplementation(() => {});
-    vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    Object.assign(mockDashboardStore, {
-      updateLastUpdatedRequest: vi.fn(),
+    Object.assign(mockHumanSupportMonitoringStore, {
+      loadAllData: vi.fn(),
+      setRefreshDetailedTabData: vi.fn(),
     });
 
     wrapper = createWrapper();
@@ -73,7 +74,7 @@ describe('Monitoring', () => {
       expect(section().exists()).toBe(true);
     });
 
-    it('should render both child components', () => {
+    it('should render all child components', () => {
       expect(wrapper.findComponent({ name: 'ServiceStatus' }).exists()).toBe(
         true,
       );
@@ -83,6 +84,9 @@ describe('Monitoring', () => {
       expect(
         wrapper.findComponent({ name: 'ServicesOpenByHour' }).exists(),
       ).toBe(true);
+      expect(
+        wrapper.findComponent({ name: 'DetailedMonitoring' }).exists(),
+      ).toBe(true);
     });
 
     it('should have correct data-testids for child components', () => {
@@ -90,6 +94,9 @@ describe('Monitoring', () => {
       const timeMetrics = wrapper.findComponent({ name: 'TimeMetrics' });
       const servicesOpenByHour = wrapper.findComponent({
         name: 'ServicesOpenByHour',
+      });
+      const detailedMonitoring = wrapper.findComponent({
+        name: 'DetailedMonitoring',
       });
 
       expect(serviceStatus.attributes('data-testid')).toBe(
@@ -101,6 +108,9 @@ describe('Monitoring', () => {
       expect(servicesOpenByHour.attributes('data-testid')).toBe(
         'monitoring-services-open-by-hour',
       );
+      expect(detailedMonitoring.attributes('data-testid')).toBe(
+        'monitoring-detailed-monitoring',
+      );
     });
   });
 
@@ -111,147 +121,167 @@ describe('Monitoring', () => {
   });
 
   describe('Lifecycle management', () => {
-    it('should initialize with correct default values', () => {
-      const vm = wrapper.vm;
-
-      expect(vm.isLoading).toBe(false);
-      expect(vm.autoRefreshInterval).not.toBe(null);
-      expect(vm.AUTO_REFRESH_INTERVAL).toBe(60000);
+    it('should call loadAllData on mount', () => {
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        1,
+      );
     });
 
-    it('should call loadData on mount', () => {
-      expect(mockDashboardStore.updateLastUpdatedRequest).toHaveBeenCalled();
-      expect(console.log).toHaveBeenCalledWith('Monitoring mounted');
+    it('should call setRefreshDetailedTabData on mount', () => {
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenCalledWith(true);
     });
 
-    it('should start auto refresh on mount', () => {
-      const vm = wrapper.vm;
-      expect(vm.autoRefreshInterval).not.toBe(null);
+    it('should start auto refresh on mount', async () => {
+      expect(vi.getTimerCount()).toBeGreaterThan(0);
     });
 
-    it('should cleanup on unmount', () => {
-      const vm = wrapper.vm;
-      wrapper.unmount();
+    it('should cleanup interval on unmount', async () => {
+      vi.clearAllTimers();
 
-      expect(console.log).toHaveBeenCalledWith('Monitoring unmounted');
-      expect(vm.autoRefreshInterval).toBe(null);
+      const testWrapper = createWrapper();
+
+      const timersBeforeUnmount = vi.getTimerCount();
+      expect(timersBeforeUnmount).toBeGreaterThan(0);
+
+      testWrapper.unmount();
+
+      const timersAfterUnmount = vi.getTimerCount();
+      expect(timersAfterUnmount).toBeLessThan(timersBeforeUnmount);
     });
   });
 
   describe('Data loading', () => {
-    it('should handle loadData correctly', async () => {
-      const vm = wrapper.vm;
-
-      expect(vm.isLoading).toBe(false);
-
-      await vm.loadData();
-      expect(mockDashboardStore.updateLastUpdatedRequest).toHaveBeenCalled();
+    it('should call loadAllData when loading data', () => {
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        1,
+      );
     });
 
-    it('should prevent concurrent loads', async () => {
-      const vm = wrapper.vm;
-
-      vm.isLoading = true;
-      const loadResult = await vm.loadData();
-
-      expect(loadResult).toBeUndefined();
+    it('should set refresh flag to true immediately', () => {
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenCalledWith(true);
     });
 
-    it('should handle errors gracefully', async () => {
-      const vm = wrapper.vm;
-      const error = new Error('Load error');
+    it('should set refresh flag to false after 500ms', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
 
-      mockDashboardStore.updateLastUpdatedRequest.mockImplementationOnce(() => {
-        throw error;
-      });
+      const newWrapper = createWrapper();
 
-      await vm.loadData();
+      await vi.advanceTimersByTimeAsync(500);
 
-      expect(console.error).toHaveBeenCalledWith('Erro to get data:', error);
-      expect(vm.isLoading).toBe(false);
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenCalledTimes(2);
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenNthCalledWith(1, true);
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenNthCalledWith(2, false);
+
+      newWrapper.unmount();
     });
   });
 
   describe('Auto refresh functionality', () => {
-    it('should start auto refresh with correct interval', () => {
-      const vm = wrapper.vm;
+    it('should refresh data every 60 seconds', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
 
-      vm.startAutoRefresh();
+      const newWrapper = createWrapper();
 
-      expect(vm.autoRefreshInterval).not.toBe(null);
-    });
-
-    it('should execute loadData on interval', () => {
-      const vm = wrapper.vm;
-
-      const originalSetInterval = globalThis.setInterval;
-      const mockCallback = vi.fn();
-      globalThis.setInterval = vi.fn(() => {
-        mockCallback();
-        return 123;
-      });
-
-      vm.startAutoRefresh();
-
-      expect(globalThis.setInterval).toHaveBeenCalledWith(
-        expect.any(Function),
-        60000,
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        1,
       );
 
-      globalThis.setInterval = originalSetInterval;
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        2,
+      );
+
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        3,
+      );
+
+      newWrapper.unmount();
     });
 
-    it('should stop auto refresh correctly', () => {
-      const vm = wrapper.vm;
-
-      vm.startAutoRefresh();
-      expect(vm.autoRefreshInterval).not.toBe(null);
-
-      vm.stopAutoRefresh();
-      expect(vm.autoRefreshInterval).toBe(null);
-    });
-
-    it('should handle multiple stop calls gracefully', () => {
-      const vm = wrapper.vm;
-
-      expect(() => {
-        vm.stopAutoRefresh();
-        vm.stopAutoRefresh();
-      }).not.toThrow();
-    });
-
-    it('should clear existing interval before starting new one', () => {
-      const vm = wrapper.vm;
-      const originalInterval = vm.autoRefreshInterval;
-
-      vm.startAutoRefresh();
-
-      expect(vm.autoRefreshInterval).not.toBe(originalInterval);
-    });
-  });
-
-  describe('Error handling', () => {
-    it('should handle missing dashboard store gracefully', () => {
-      wrapper = createWrapper({ updateLastUpdatedRequest: null });
-
-      expect(wrapper.exists()).toBe(true);
-    });
-
-    it('should handle component unmount during loading', async () => {
-      const vm = wrapper.vm;
-
-      const loadPromise = vm.loadData();
+    it('should refresh detailed tab data flag on each auto refresh', async () => {
       wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
 
-      await loadPromise;
-      expect(vm.isLoading).toBe(false);
+      const newWrapper = createWrapper();
+
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenCalledWith(true);
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+      ).toHaveBeenCalledWith(false);
+
+      newWrapper.unmount();
+    });
+
+    it('should stop auto refresh on unmount', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
+
+      const newWrapper = createWrapper();
+
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        1,
+      );
+
+      newWrapper.unmount();
+
+      vi.clearAllMocks();
+
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(
+        mockHumanSupportMonitoringStore.loadAllData,
+      ).not.toHaveBeenCalled();
     });
   });
 
   describe('Constants and configuration', () => {
-    it('should have correct auto refresh interval', () => {
-      const vm = wrapper.vm;
-      expect(vm.AUTO_REFRESH_INTERVAL).toBe(60 * 1000);
+    it('should use 60 second auto refresh interval', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
+
+      const newWrapper = createWrapper();
+
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        1,
+      );
+
+      await vi.advanceTimersByTimeAsync(59999);
+
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        1,
+      );
+
+      await vi.advanceTimersByTimeAsync(1);
+
+      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
+        2,
+      );
+
+      newWrapper.unmount();
     });
   });
 });

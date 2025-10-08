@@ -90,24 +90,12 @@ const formattedHeaders = computed(() => {
       isSortable: true,
       size: 0.8,
     },
-    {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.opened'),
-      itemKey: 'opened',
-      isSortable: true,
-      size: 0.4,
-    },
-    {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.closed'),
-      itemKey: 'closed',
-      isSortable: true,
-      size: 0.4,
-    },
   ];
 
   const dynamicHeaders = customStatusTypes.value.map((statusType) => ({
     title: statusType,
     itemKey: statusType,
-    isSortable: true,
+    isSortable: false,
     size: 0.5,
   }));
 

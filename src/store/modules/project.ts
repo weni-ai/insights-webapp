@@ -27,9 +27,15 @@ export const useProject = defineStore('project', {
         (agent) => agent.uuid === env('NPS_AGENT_UUID'),
       ),
     hasValidSalesFunnelAgent: (state) => {
-      // TODO check if has valid sales funnel agent
+      const requiredToEnableSalesFunnel = env(
+        'ENABLE_SALES_FUNNEL_AGENTS_UUID',
+      );
 
-      return true;
+      const hasValidSalesFunnelAgent = state.agentsTeam.agents.some((agent) =>
+        requiredToEnableSalesFunnel.includes(agent.uuid),
+      );
+
+      return env('ENVIRONMENT') === 'staging' ? true : hasValidSalesFunnelAgent;
     },
   },
 

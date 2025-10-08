@@ -147,6 +147,7 @@ const actionError = computed(() => {
 });
 
 const isError = computed(() => {
+  // TODO: sales funnel error
   if (props.type === 'csat') {
     return isCsatWidgetDataError.value;
   }
@@ -631,6 +632,8 @@ watch(
       loadNpsWidgetData();
     } else if (props.type === 'custom' && props.uuid) {
       loadCustomWidgetData(props.uuid);
+    } else if (props.type === 'sales_funnel') {
+      loadSalesFunnelWidgetData();
     }
   },
   { deep: true },

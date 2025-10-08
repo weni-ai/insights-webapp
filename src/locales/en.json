@@ -120,6 +120,13 @@
         "excellent": "71 to 100: Excellent"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total orders",
+      "total_value": "Total value",
+      "average_ticket": "Average ticket",
+      "captured_leads": "Captured leads",
+      "purchases_made": "Purchases made"
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",

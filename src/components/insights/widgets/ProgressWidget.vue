@@ -8,8 +8,7 @@
     :hiddenTabs="type === 'sales_funnel'"
     @tab-change="handleTabChange"
   >
-    <!-- TODO: funnel visual -->
-    <section v-if="type === 'sales_funnel'"></section>
+    <SalesFunnelWidget v-if="type === 'sales_funnel'" />
     <slot
       v-else-if="treatedProgressItems?.length === 0"
       name="setup-widget"
@@ -110,6 +109,7 @@ import CardConversations from '@/components/insights/cards/CardConversations.vue
 import ProgressTable from '@/components/ProgressTable.vue';
 import WarningMessage from '@/components/WarningMessage.vue';
 import WidgetError from '@/components/insights/conversations/WidgetError.vue';
+import SalesFunnelWidget from '@/components/insights/widgets/SalesFunnelWidget.vue';
 
 const emit = defineEmits<{
   (e: 'tab-change', tab: Tab): void;

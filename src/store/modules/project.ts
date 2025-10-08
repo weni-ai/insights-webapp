@@ -29,7 +29,7 @@ export const useProject = defineStore('project', {
     hasValidSalesFunnelAgent: (state) => {
       // TODO check if has valid sales funnel agent
 
-      return false;
+      return true;
     },
   },
 

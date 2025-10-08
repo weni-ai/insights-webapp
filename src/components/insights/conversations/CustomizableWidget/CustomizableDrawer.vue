@@ -109,6 +109,7 @@ import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useProject } from '@/store/modules/project';
+import { WidgetType } from '@/models/types/WidgetTypes';
 
 const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
   useConversationalWidgets();
@@ -185,7 +186,17 @@ function clickWidgetOption(
   widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel',
 ) {
   if (widgetType === 'sales_funnel') {
-    // TODO: request to create widget
+    const conversationalWidgetsStore = useConversationalWidgets();
+    const createWidget = {
+      uuid: '',
+      name: 'conversations_dashboard.sales_funnel_widget.title',
+      config: {},
+      type: 'sales_funnel',
+      source: 'conversations.sales_funnel',
+      is_configurable: true,
+    };
+    conversationalWidgetsStore.newWidget = createWidget as WidgetType;
+    saveWidgetConfigs();
     return;
   }
 

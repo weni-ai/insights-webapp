@@ -6,15 +6,14 @@
       :progressItems="renderProgressItems"
       :card="renderCard"
       :footerText="renderFooterText"
-      :isLoading="
-        isLoading && (type === 'nps' ? !npsWidgetData : !csatWidgetData)
-      "
+      :isLoading="isLoading && isLoadingEmptyData"
       :isLoadingProgress="isLoading"
       :currentTab="handleCurrentTab"
       :isOnlyTab="isOnlyTab"
       :isExpanded="isExpanded"
       :isError="isError"
       :actionError="actionError"
+      :type="type"
       @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
@@ -41,6 +40,7 @@
         />
       </template>
     </ProgressWidget>
+
     <AddCustomizableWidget
       v-if="type === 'add'"
       @add="handleOpenDrawer(true)"
@@ -84,7 +84,7 @@ import { useRoute } from 'vue-router';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 const props = defineProps<{
-  type: 'csat' | 'nps' | 'add' | 'custom';
+  type: 'csat' | 'nps' | 'add' | 'sales_funnel' | 'custom';
   uuid?: string;
 }>();
 
@@ -112,6 +112,7 @@ const {
   loadNpsWidgetData,
   setCsatWidgetType,
   setNpsWidgetType,
+  loadSalesFunnelWidgetData,
 } = conversationalWidgets;
 
 const {
@@ -119,8 +120,10 @@ const {
   currentNpsWidget,
   isLoadingCsatWidgetData,
   isLoadingNpsWidgetData,
+  isLoadingSalesFunnelWidgetData,
   csatWidgetData,
   npsWidgetData,
+  salesFunnelWidgetData,
   csatWidgetType,
   npsWidgetType,
   isCsatHumanConfig,
@@ -163,6 +166,7 @@ const widgetType = computed(() => {
   const widgetTypes = {
     csat: 'csat',
     nps: 'nps',
+    sales_funnel: 'sales_funnel',
     custom: 'custom',
   };
 
@@ -173,10 +177,22 @@ const isLoading = computed(() => {
   const isLoadingTypes = {
     csat: isLoadingCsatWidgetData.value,
     nps: isLoadingNpsWidgetData.value,
+    sales_funnel: isLoadingSalesFunnelWidgetData.value,
     custom: getIsLoadingByUuid(props.uuid as string),
   };
 
   return isLoadingTypes[props.type];
+});
+
+const isLoadingEmptyData = computed(() => {
+  const dataMapper = {
+    csat: csatWidgetData.value,
+    nps: npsWidgetData.value,
+    sales_funnel: salesFunnelWidgetData.value,
+    custom: getIsLoadingByUuid(props.uuid as string),
+  };
+
+  return !dataMapper[props.type] || false;
 });
 
 const widgetData = computed(() => {
@@ -323,6 +339,10 @@ const titleWidget = computed(() => {
     return getCustomWidgetByUuid(props.uuid as string)?.name || defaultTitle;
   }
 
+  if (props.type === 'sales_funnel') {
+    return t('conversations_dashboard.sales_funnel');
+  }
+
   return defaultTitle;
 });
 
@@ -345,13 +365,17 @@ onMounted(() => {
     loadNpsWidgetData();
   }
 
+  if (props.type === 'sales_funnel') {
+    loadSalesFunnelWidgetData();
+  }
+
   if (props.type === 'custom') {
     loadCustomWidgetData(props.uuid as string);
   }
 });
 
-const actions = computed(() => [
-  {
+const actions = computed(() => {
+  const editOption = {
     icon: 'edit_square',
     text: t(
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
@@ -362,14 +386,21 @@ const actions = computed(() => [
       },
     ),
     onClick: () => handleOpenDrawer(false),
-  },
-  {
+  };
+
+  const deleteOption = {
     icon: 'delete',
     text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
     onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
-  },
-]);
+  };
+
+  if (props.type === 'sales_funnel') {
+    return [deleteOption];
+  }
+
+  return [editOption, deleteOption];
+});
 
 const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   const defaultColors = {

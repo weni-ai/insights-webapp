@@ -34,7 +34,12 @@ import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
-type ConversationalWidgetType = 'csat' | 'nps' | 'add' | 'custom';
+type ConversationalWidgetType =
+  | 'csat'
+  | 'nps'
+  | 'add'
+  | 'sales_funnel'
+  | 'custom';
 
 const customWidgets = useCustomWidgets();
 const conversationalWidgets = useConversationalWidgets();
@@ -78,6 +83,10 @@ const setDynamicWidgets = () => {
     customWidgetsList.forEach((widget) => {
       newWidgets.push({ type: 'custom', uuid: widget.uuid });
     });
+  }
+
+  if (conversationalWidgets.isSalesFunnelConfigured) {
+    newWidgets.push({ type: 'sales_funnel', uuid: '' });
   }
 
   newWidgets.push({ type: 'add', uuid: '' });

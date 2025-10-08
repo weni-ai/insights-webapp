@@ -6,7 +6,12 @@
     :title="
       $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
-        { type: type.toUpperCase() },
+        {
+          type:
+            type === 'sales_funnel'
+              ? $t('conversations_dashboard.sales_funnel')
+              : type.toUpperCase(),
+        },
       )
     "
     type="warning"
@@ -35,7 +40,12 @@
       {{
         $t(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
-          { type: type.toUpperCase() },
+          {
+            type:
+              type === 'sales_funnel'
+                ? $t('conversations_dashboard.sales_funnel')
+                : type.toUpperCase(),
+          },
         )
       }}
     </p>
@@ -48,7 +58,7 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 
 interface Props {
-  type: 'csat' | 'nps' | 'custom';
+  type: 'csat' | 'nps' | 'custom' | 'sales_funnel';
   modelValue: boolean;
   uuid?: string;
 }

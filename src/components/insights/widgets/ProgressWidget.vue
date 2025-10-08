@@ -5,10 +5,13 @@
     :isLoading="isLoading"
     :currentTab="currentTab"
     :isOnlyTab="isOnlyTab"
+    :hiddenTabs="type === 'sales_funnel'"
     @tab-change="handleTabChange"
   >
+    <!-- TODO: funnel visual -->
+    <section v-if="type === 'sales_funnel'"></section>
     <slot
-      v-if="treatedProgressItems?.length === 0"
+      v-else-if="treatedProgressItems?.length === 0"
       name="setup-widget"
     />
     <template v-else-if="!isError">
@@ -146,6 +149,7 @@ const props = defineProps<{
     buttonText: string;
     onClick: () => void;
   };
+  type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add';
 }>();
 
 const treatedProgressItems = computed(() => {

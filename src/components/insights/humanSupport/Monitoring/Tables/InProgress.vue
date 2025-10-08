@@ -45,9 +45,10 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const currentSort = ref<{ header: string; order: string }>({
+const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: 'duration',
   order: 'desc',
+  itemKey: 'duration',
 });
 
 const formattedItems = ref<FormattedInProgressData[]>([]);
@@ -98,7 +99,11 @@ const formattedHeaders = computed(() => [
   },
 ]);
 
-const handleSort = (sort: { header: string; order: string }) => {
+const handleSort = (sort: {
+  header: string;
+  itemKey: string;
+  order: string;
+}) => {
   currentSort.value = sort;
 };
 
@@ -126,8 +131,8 @@ const loadData = async () => {
     const offset = (page.value - 1) * pageInterval.value;
     const ordering =
       currentSort.value.order === 'desc'
-        ? `-${currentSort.value.header}`
-        : currentSort.value.header;
+        ? `-${currentSort.value.itemKey}`
+        : currentSort.value.itemKey;
 
     const data = await service.getDetailedMonitoringInProgress({
       ordering,

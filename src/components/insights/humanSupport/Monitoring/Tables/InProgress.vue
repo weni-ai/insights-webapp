@@ -53,51 +53,26 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 
 const formattedItems = ref<FormattedInProgressData[]>([]);
 
-const formattedHeaders = computed(() => [
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.in_progress.duration',
-    ),
-    itemKey: 'duration',
+const formattedHeaders = computed(() => {
+  const baseTranslationKey =
+    'human_support_dashboard.detailed_monitoring.in_progress';
+
+  const createHeader = (itemKey: string, translationKey?: string) => ({
+    title: t(`${baseTranslationKey}.${translationKey || itemKey}`),
+    itemKey,
     isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.in_progress.awaiting_time',
-    ),
-    itemKey: 'awaiting_time',
-    isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.in_progress.first_response_time',
-    ),
-    itemKey: 'first_response_time',
-    isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.in_progress.attendant',
-    ),
-    itemKey: 'agent',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.in_progress.sector'),
-    itemKey: 'sector',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.in_progress.queue'),
-    itemKey: 'queue',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.in_progress.contact'),
-    itemKey: 'contact',
-    isSortable: true,
-  },
-]);
+  });
+
+  return [
+    createHeader('duration'),
+    createHeader('awaiting_time'),
+    createHeader('first_response_time'),
+    createHeader('agent', 'attendant'),
+    createHeader('sector'),
+    createHeader('queue'),
+    createHeader('contact'),
+  ];
+});
 
 const handleSort = (sort: {
   header: string;

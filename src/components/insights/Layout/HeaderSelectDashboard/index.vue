@@ -117,16 +117,13 @@ export default {
       return isConversational || isHumanSupport;
     },
     enabledShowDashboards() {
-      // TODO: Remove this comment after the feature flag is implemented in STG
-      /*if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {
+      if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {
         return this.dashboards;
       }
 
       return this.dashboards.filter(
         (dashboard) => dashboard?.config?.type !== 'human_support',
       );
-      */
-      return this.dashboards;
     },
   },
   mounted() {

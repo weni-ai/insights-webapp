@@ -75,63 +75,37 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 
 const formattedItems = ref<FormattedAttendantData[]>([]);
 
-const formattedHeaders = computed(() => [
-  {
-    title: t('human_support_dashboard.detailed_monitoring.attendant.status'),
-    itemKey: 'status',
+const formattedHeaders = computed(() => {
+  const baseTranslationKey =
+    'human_support_dashboard.detailed_monitoring.attendant';
+
+  const createHeader = (
+    itemKey: string,
+    translationKey?: string,
+    overrides = {},
+  ) => ({
+    title: t(`${baseTranslationKey}.${translationKey || itemKey}`),
+    itemKey,
     isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.attendant.agent'),
-    itemKey: 'agent',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.attendant.ongoing'),
-    itemKey: 'opened',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.attendant.finished'),
-    itemKey: 'closed',
-    isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.attendant.average_girst_response_time',
-    ),
-    itemKey: 'average_girst_response_time',
-    isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.attendant.average_response_time',
-    ),
-    itemKey: 'average_response_time',
-    isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.attendant.average_duration',
-    ),
-    itemKey: 'average_duration',
-    isSortable: true,
-  },
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.attendant.time_in_service',
-    ),
-    itemKey: 'time_in_service',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.attendant.action'),
-    itemKey: 'action',
-    isSortable: false,
-    size: 0.5,
-    align: 'center',
-  },
-]);
+    ...overrides,
+  });
+
+  return [
+    createHeader('status'),
+    createHeader('agent'),
+    createHeader('opened', 'ongoing'),
+    createHeader('closed', 'finished'),
+    createHeader('average_first_response_time'),
+    createHeader('average_response_time'),
+    createHeader('average_duration'),
+    createHeader('time_in_service'),
+    createHeader('action', undefined, {
+      isSortable: false,
+      size: 0.5,
+      align: 'center',
+    }),
+  ];
+});
 
 const handleSort = (sort: {
   header: string;

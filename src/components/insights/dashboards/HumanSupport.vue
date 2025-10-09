@@ -1,5 +1,6 @@
 <template>
   <section
+    v-if="isEnabled"
     class="dashboard-human-support"
     data-testid="dashboard-human-support"
   >
@@ -32,16 +33,16 @@
 
 <script setup lang="ts">
 import { UnnnicTab } from '@weni/unnnic-system';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
 import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
-// TODO: Remove this comment after the feature flag is implemented in STG
-/*const { isFeatureFlagEnabled } = useFeatureFlag();
+const { isFeatureFlagEnabled } = useFeatureFlag();
 
 const isEnabled = computed(() => {
   return isFeatureFlagEnabled('insights-new-human-dashboard');
-});*/
+});
 
 const tabs = {
   monitoring: {

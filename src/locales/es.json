@@ -859,7 +859,7 @@
         "status": "Estado",
         "ongoing": "En curso",
         "finished": "Finalizado",
-        "average_girst_response_time": "Tiempo medio para 1ª respuesta",
+        "average_first_response_time": "Tiempo medio para 1ª respuesta",
         "average_response_time": "Tiempo medio de respuesta",
         "average_duration": "Duração média",
         "time_in_service": "Tempo em atendimento",

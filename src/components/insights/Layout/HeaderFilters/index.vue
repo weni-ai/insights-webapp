@@ -1,11 +1,11 @@
 <template>
   <section class="insights-layout-header-filters">
+    <FilterHumanSupport v-if="isHumanSupportDashboard" />
     <FilterFavoriteTemplateMessage
       v-if="
         currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates
       "
     />
-    <LastUpdatedText v-if="isHumanServiceDashboard" />
     <template v-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
@@ -24,11 +24,10 @@
       />
     </template>
     <section
-      v-else-if="currentDashboardFilters[0]"
+      v-else-if="currentDashboardFilters[0] && isRenderDynamicFilter"
       class="insights-layout-header-filters_dynamic_container"
     >
       <DynamicFilter
-        v-if="!isMetaTemplateDashboard || !emptyTemplates"
         data-testid="dynamic-filter"
         :filter="filter"
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
@@ -65,9 +64,9 @@ import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMe
 
 import DynamicFilter from './DynamicFilter.vue';
 import ModalFilters from './ModalFilters.vue';
+import FilterHumanSupport from './FilterHumanSupport.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
-import LastUpdatedText from './LastUpdatedText.vue';
 
 import { getLastNDays, getYesterdayNDays } from '@/utils/time';
 
@@ -78,8 +77,8 @@ export default {
     DynamicFilter,
     ModalFilters,
     SearchTemplateMessagesModal,
+    FilterHumanSupport,
     FilterFavoriteTemplateMessage,
-    LastUpdatedText,
   },
 
   data() {
@@ -102,6 +101,17 @@ export default {
 
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
+    },
+
+    isHumanSupportDashboard() {
+      return this.currentDashboard?.name === 'human_support_dashboard.title';
+    },
+
+    isRenderDynamicFilter() {
+      return (
+        (!this.isMetaTemplateDashboard && !this.isHumanSupportDashboard) ||
+        (!this.emptyTemplates && !this.isHumanSupportDashboard)
+      );
     },
 
     isMetaTemplateDashboard() {

@@ -1,26 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { mount } from '@vue/test-utils';
 
 import BetaText from '../BetaText.vue';
-
-const mockDashboardsStore = {
-  currentDashboard: { value: { name: 'conversations_dashboard.title' } },
-};
-
-vi.mock('@/store/modules/dashboards', () => ({
-  useDashboards: () => mockDashboardsStore,
-}));
-
-vi.mock('pinia', () => ({
-  storeToRefs: (store) => store,
-}));
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 describe('BetaText', () => {
   let wrapper;
@@ -34,67 +15,41 @@ describe('BetaText', () => {
     wrapper = createWrapper();
   });
 
-  describe('Conditional rendering', () => {
-    it('should render when dashboard is conversational', () => {
-      mockDashboardsStore.currentDashboard.value.name =
-        'conversations_dashboard.title';
-      wrapper = createWrapper();
-
+  describe('Component rendering', () => {
+    it('should render the beta container', () => {
       expect(betaContainer().exists()).toBe(true);
-      expect(betaText().exists()).toBe(true);
-      expect(betaText().text()).toBe('BETA');
     });
 
-    it('should not render when dashboard is not conversational', () => {
-      mockDashboardsStore.currentDashboard.value.name = 'other_dashboard.title';
-      wrapper = createWrapper();
+    it('should render the beta text', () => {
+      expect(betaText().exists()).toBe(true);
+    });
 
-      expect(betaContainer().exists()).toBe(false);
-      expect(betaText().exists()).toBe(false);
+    it('should display "BETA" text', () => {
+      expect(betaText().text()).toBe('BETA');
     });
   });
 
   describe('Component structure', () => {
-    it('should have correct CSS classes when rendered', () => {
-      mockDashboardsStore.currentDashboard.value.name =
-        'conversations_dashboard.title';
-      wrapper = createWrapper();
-
+    it('should have correct CSS classes on container', () => {
       expect(betaContainer().classes()).toContain('beta_text_container');
+    });
+
+    it('should have correct CSS classes on text', () => {
       expect(betaText().classes()).toContain('beta_text');
     });
 
-    it('should match snapshot when not rendered', () => {
-      mockDashboardsStore.currentDashboard.value.name = 'other_dashboard.title';
-      wrapper = createWrapper();
-
-      expect(wrapper.element).toMatchSnapshot();
+    it('should render as a section element', () => {
+      expect(betaContainer().element.tagName).toBe('SECTION');
     });
 
-    it('should match snapshot when rendered', () => {
-      mockDashboardsStore.currentDashboard.value.name =
-        'conversations_dashboard.title';
-      wrapper = createWrapper();
-
-      expect(wrapper.element).toMatchSnapshot();
+    it('should render text as a paragraph element', () => {
+      expect(betaText().element.tagName).toBe('P');
     });
   });
 
-  describe('Computed property', () => {
-    const testCases = [
-      { name: 'conversations_dashboard.title', expected: true },
-      { name: 'other_dashboard.title', expected: false },
-      { name: '', expected: false },
-      { name: null, expected: false },
-    ];
-
-    testCases.forEach(({ name, expected }) => {
-      it(`should return ${expected} for dashboard name "${name}"`, () => {
-        mockDashboardsStore.currentDashboard.value.name = name;
-        wrapper = createWrapper();
-
-        expect(wrapper.vm.isConversationalDashboard).toBe(expected);
-      });
+  describe('Snapshot', () => {
+    it('should match snapshot', () => {
+      expect(wrapper.element).toMatchSnapshot();
     });
   });
 });

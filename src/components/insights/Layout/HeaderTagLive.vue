@@ -5,14 +5,32 @@
       icon="indicator"
       scheme="aux-green-300"
     />
-    <p class="header-tag-live__text">{{ $t('today') }}</p>
+    <p class="header-tag-live__text">{{ titleText }}</p>
   </section>
 </template>
 
-<script>
-export default {
-  name: 'HeaderTagLive',
+<script setup lang="ts">
+import { UnnnicIcon } from '@weni/unnnic-system';
+import { useI18n } from 'vue-i18n';
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useDashboards } from '@/store/modules/dashboards';
+
+const { t } = useI18n();
+
+const { currentDashboard } = storeToRefs(useDashboards());
+
+const isHumanSupportDashboard = () => {
+  return currentDashboard.value?.name === 'human_support_dashboard.title';
 };
+
+const titleText = computed(() => {
+  if (isHumanSupportDashboard()) {
+    return t('now');
+  }
+
+  return t('today');
+});
 </script>
 
 <style lang="scss">

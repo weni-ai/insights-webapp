@@ -1,6 +1,9 @@
 <template>
   <section
-    class="disconnect-agent-container"
+    :class="[
+      'disconnect-agent-container',
+      { 'disconnect-agent-container--center': props.containerCenter },
+    ]"
     @click.stop
   >
     <UnnnicToolTip
@@ -16,6 +19,7 @@
         iconCenter="mode_off_on"
         size="small"
         type="tertiary"
+        :disabled="props.disabled"
         @click="handleModalClick"
       />
     </UnnnicToolTip>
@@ -68,6 +72,14 @@ const props = defineProps({
       email: '',
     }),
     required: true,
+  },
+  containerCenter: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -126,12 +138,12 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
   display: flex;
   align-items: center;
 
+  &--center {
+    justify-content: center;
+  }
+
   :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
     font-size: $unnnic-font-size-title-sm;
-  }
-  :deep(.unnnic-button--icon-on-center.unnnic-button--size-small) {
-    padding: 0;
-    width: $unnnic-font-size-title-sm;
   }
 }
 

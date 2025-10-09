@@ -5,6 +5,9 @@
       'card-conversations',
       `card-conversations--border-${props.borderRadius || 'full'}`,
       props.class,
+      {
+        'card-conversations--clickable': props.isClickable,
+      },
     ]"
     data-testid="card-conversations"
     @click="$emit('click')"
@@ -20,7 +23,7 @@
         v-if="tooltipInfo"
         enabled
         :text="tooltipInfo"
-        :side="tooltipSide || 'top '"
+        :side="tooltipSide || 'top'"
         class="card-conversations__tooltip"
         data-testid="card-conversations-tooltip"
       >
@@ -35,10 +38,30 @@
       </UnnnicToolTip>
     </section>
     <section
-      class="card-conversations__content"
+      :class="[
+        'card-conversations__content',
+        {
+          'card-conversations__content--active-gap': props.activeDescriptionGap,
+        },
+      ]"
       data-testid="card-content"
     >
-      <section class="card-conversations__value">
+      <section
+        :class="[
+          'card-conversations__value',
+          {
+            'card-conversations__value--enable-time-icon': props.enableTimeIcon,
+          },
+        ]"
+      >
+        <UnnnicIcon
+          v-if="props.enableTimeIcon"
+          icon="alarm"
+          size="sm"
+          filled
+          scheme="neutral-black"
+          data-testid="card-time-icon"
+        />
         <p
           class="card-conversations__number"
           data-testid="card-value"
@@ -82,6 +105,9 @@ interface Props {
   tooltipInfo?: string;
   isLoading?: boolean;
   tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
+  activeDescriptionGap?: boolean;
+  enableTimeIcon?: boolean;
+  isClickable?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -103,6 +129,10 @@ defineEmits<{
 
   border: 1px solid $unnnic-color-neutral-soft;
   background: #fff;
+
+  &--clickable {
+    cursor: pointer;
+  }
 
   &--border-full {
     border-radius: $unnnic-border-radius-md;
@@ -151,12 +181,20 @@ defineEmits<{
   &__content {
     display: flex;
     flex-direction: column;
+
+    &--active-gap {
+      gap: $unnnic-space-2;
+    }
   }
 
   &__value {
     display: flex;
-    align-items: end;
     gap: $unnnic-spacing-xs;
+    align-items: end;
+
+    &--enable-time-icon {
+      align-items: center;
+    }
   }
 
   &__number {

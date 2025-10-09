@@ -1,0 +1,64 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
+<section
+  class="service-status"
+  data-testid="service-status"
+  data-v-89dd32b5=""
+>
+  <p
+    class="service-status__title"
+    data-testid="service-status-title"
+    data-v-89dd32b5=""
+  >
+    human_support_dashboard.support_status.title
+  </p>
+  <section
+    class="service-status__cards"
+    data-testid="service-status-cards"
+    data-v-89dd32b5=""
+  >
+    
+    <card-conversations-stub
+      activedescriptiongap="false"
+      borderradius="full"
+      class="service-status__card"
+      data-v-89dd32b5=""
+      enabletimeicon="false"
+      isclickable="true"
+      isloading="false"
+      title="human_support_dashboard.support_status.is_waiting"
+      tooltipinfo="human_support_dashboard.support_status.tooltips.is_waiting"
+      tooltipside="top"
+      value="25"
+    />
+    <card-conversations-stub
+      activedescriptiongap="false"
+      borderradius="full"
+      class="service-status__card"
+      data-v-89dd32b5=""
+      enabletimeicon="false"
+      isclickable="true"
+      isloading="false"
+      title="human_support_dashboard.support_status.is_in_progress"
+      tooltipinfo="human_support_dashboard.support_status.tooltips.is_in_progress"
+      tooltipside="top"
+      value="10"
+    />
+    <card-conversations-stub
+      activedescriptiongap="false"
+      borderradius="full"
+      class="service-status__card"
+      data-v-89dd32b5=""
+      enabletimeicon="false"
+      isclickable="false"
+      isloading="false"
+      title="human_support_dashboard.support_status.is_closed"
+      tooltipinfo="human_support_dashboard.support_status.tooltips.is_closed"
+      tooltipside="left"
+      value="65"
+    />
+    
+  </section>
+</section>
+`;

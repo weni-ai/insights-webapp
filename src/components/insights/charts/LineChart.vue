@@ -179,9 +179,11 @@ export default {
 
 <style lang="scss" scoped>
 .line-chart {
-  box-shadow: $unnnic-shadow-level-far;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-neutral-soft;
+  background: $unnnic-color-neutral-white;
 
-  padding: $unnnic-spacing-ant;
+  padding: $unnnic-space-6;
 
   height: 100%;
   width: 100%;
@@ -189,7 +191,7 @@ export default {
   overflow: hidden;
 
   display: grid;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
 
   &__header {
     width: 100%;
@@ -198,8 +200,7 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      font-family: $unnnic-font-family-primary;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-display-2;
     }
 
     .header__see-more {
@@ -209,7 +210,6 @@ export default {
       text-underline-position: under;
     }
 
-    .header__title,
     .header__see-more {
       font-size: $unnnic-font-size-body-gt;
       color: $unnnic-color-neutral-dark;

@@ -25,6 +25,8 @@
           borderRadius="full"
           :tooltipSide="getTooltipSide(index)"
           :isLoading="isLoadingCards"
+          :isClickable="['is_waiting', 'in_progress'].includes(card.id)"
+          @click="handleCardClick(card.id)"
         />
       </template>
     </section>
@@ -35,10 +37,13 @@
 import { onMounted, computed } from 'vue';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import {
+  ActiveDetailedTab,
+  useHumanSupportMonitoring,
+} from '@/store/modules/humanSupport/monitoring';
 import { storeToRefs } from 'pinia';
 
-type CardId = 'is_awaiting' | 'in_progress' | 'finished';
+type CardId = 'is_waiting' | 'in_progress' | 'finished';
 
 interface CardData {
   id: CardId;
@@ -48,9 +53,9 @@ interface CardData {
 
 const cardDefinitions: CardData[] = [
   {
-    id: 'is_awaiting',
-    titleKey: 'human_support_dashboard.support_status.is_awaiting',
-    tooltipKey: 'human_support_dashboard.support_status.tooltips.is_awaiting',
+    id: 'is_waiting',
+    titleKey: 'human_support_dashboard.support_status.is_waiting',
+    tooltipKey: 'human_support_dashboard.support_status.tooltips.is_waiting',
   },
   {
     id: 'in_progress',
@@ -66,7 +71,7 @@ const cardDefinitions: CardData[] = [
 ];
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
-const { loadServiceStatusData } = humanSupportMonitoring;
+const { loadServiceStatusData, setActiveDetailedTab } = humanSupportMonitoring;
 const { serviceStatusData, loadingServiceStatusData } = storeToRefs(
   humanSupportMonitoring,
 );
@@ -83,6 +88,31 @@ const getTooltipSide = (index: number) => {
   if (lastIndex === index) return 'left';
 
   return 'top';
+};
+
+const scrollToDetailedMonitoring = () => {
+  const detailedMonitoringElement = document.querySelector(
+    '[id="detailed-monitoring"]',
+  );
+
+  if (detailedMonitoringElement) {
+    detailedMonitoringElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+};
+
+const handleCardClick = (id: CardId) => {
+  if (id === 'finished') return;
+
+  const status = {
+    is_waiting: 'in_awaiting',
+    in_progress: 'in_progress',
+  };
+
+  setActiveDetailedTab(status[id] as ActiveDetailedTab);
+  setTimeout(scrollToDetailedMonitoring, 100);
 };
 
 onMounted(() => {

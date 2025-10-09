@@ -28,6 +28,8 @@
           enableTimeIcon
           :tooltipSide="getTooltipSide(index)"
           :isLoading="isLoadingCards"
+          isClickable
+          @click="handleCardClick(card.id)"
         />
       </template>
     </section>
@@ -38,7 +40,10 @@
 import { onMounted, computed } from 'vue';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import {
+  ActiveDetailedTab,
+  useHumanSupportMonitoring,
+} from '@/store/modules/humanSupport/monitoring';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { formatSecondsToTime } from '@/utils/time';
@@ -79,7 +84,7 @@ const cardDefinitions: CardData[] = [
 const { t } = useI18n();
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
-const { loadTimeMetricsData } = humanSupportMonitoring;
+const { loadTimeMetricsData, setActiveDetailedTab } = humanSupportMonitoring;
 const { timeMetricsData, loadingTimeMetricsData } = storeToRefs(
   humanSupportMonitoring,
 );
@@ -105,6 +110,30 @@ const getTooltipSide = (index: number) => {
   if (lastIndex === index) return 'left';
 
   return 'top';
+};
+
+const scrollToDetailedMonitoring = () => {
+  const detailedMonitoringElement = document.querySelector(
+    '[id="detailed-monitoring"]',
+  );
+
+  if (detailedMonitoringElement) {
+    detailedMonitoringElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+  }
+};
+
+const handleCardClick = (id: CardId) => {
+  const status = {
+    average_time_is_waiting: 'in_awaiting',
+    average_time_first_response: 'in_progress',
+    average_time_chat: 'in_progress',
+  };
+
+  setActiveDetailedTab(status[id] as ActiveDetailedTab);
+  setTimeout(scrollToDetailedMonitoring, 100);
 };
 
 onMounted(() => {

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { nextTick } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
@@ -15,6 +15,13 @@ config.global.plugins = [
     },
   }),
 ];
+
+const mockIsFeatureFlagEnabled = vi.fn(() => true);
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: vi.fn(() => ({
+    isFeatureFlagEnabled: mockIsFeatureFlagEnabled,
+  })),
+}));
 
 const createWrapper = (options = {}) => {
   return shallowMount(HumanSupport, {
@@ -38,6 +45,8 @@ describe('HumanSupport.vue', () => {
   let wrapper;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    mockIsFeatureFlagEnabled.mockReturnValue(true);
     wrapper = createWrapper();
   });
 
@@ -176,6 +185,43 @@ describe('HumanSupport.vue', () => {
 
       wrapper.vm.changeActiveTabName('monitoring');
       expect(wrapper.vm.activeTabName).toBe('monitoring');
+    });
+  });
+
+  describe('Feature Flag', () => {
+    it('should render component when feature flag is enabled', async () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(true);
+      wrapper = createWrapper();
+      await nextTick();
+
+      const dashboardSection = wrapper.find(
+        '[data-testid="dashboard-human-support"]',
+      );
+
+      expect(dashboardSection.exists()).toBe(true);
+      expect(wrapper.vm.isEnabled).toBe(true);
+    });
+
+    it('should not render component when feature flag is disabled', async () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(false);
+      wrapper = createWrapper();
+      await nextTick();
+
+      const dashboardSection = wrapper.find(
+        '[data-testid="dashboard-human-support"]',
+      );
+
+      expect(dashboardSection.exists()).toBe(false);
+      expect(wrapper.vm.isEnabled).toBe(false);
+    });
+
+    it('should call isFeatureFlagEnabled with correct flag name', () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(true);
+      wrapper = createWrapper();
+
+      expect(mockIsFeatureFlagEnabled).toHaveBeenCalledWith(
+        'insights-new-human-dashboard',
+      );
     });
   });
 });

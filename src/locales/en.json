@@ -335,6 +335,7 @@
   "confirmation": "Confirmation",
   "clear_fields": "Clear fields",
   "today": "Today",
+  "now": "Now",
   "date_format": "MM/DD/YYYY",
   "search": "Search",
   "category": "Category",
@@ -794,13 +795,13 @@
     "analysis": "Analysis",
     "support_status": {
       "title": "Support status",
-      "is_awaiting": "Awaiting",
+      "is_waiting": "Awaiting",
       "is_in_progress": "In progress",
       "is_closed": "Closed",
       "tooltips": {
-        "is_awaiting": "Number of contacts waiting for the start of the service now",
-        "is_in_progress": "Number of contacts in service now",
-        "is_closed": "Number of closed services today"
+        "is_waiting": "Number of contacts waiting for the start of the support now",
+        "is_in_progress": "Number of contacts in support now",
+        "is_closed": "Number of closed supports today"
       }
     },
     "time_metrics": {
@@ -810,9 +811,9 @@
       "average_time_chat": "Average chat duration",
       "max": "Max",
       "tooltips": {
-        "average_time_is_waiting": "Average time contacts wait in the queue until the service starts",
+        "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
         "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
-        "average_time_chat": "Average total duration of the conversation, from the start of the service with the agent until it is finalized"
+        "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
       }
     },
     "services_open_by_hour": {
@@ -864,6 +865,10 @@
         "time_in_service": "Time in service",
         "action": "Action"
       }
+    },
+    "analyze": {
+      "title": "Soon: New Analysis View",
+      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
     }
   }
 }

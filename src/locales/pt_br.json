@@ -335,6 +335,7 @@
   "confirmation": "Confirmação",
   "clear_fields": "Limpar campos",
   "today": "Hoje",
+  "now": "Agora",
   "date_format": "DD/MM/YYYY",
   "search": "Buscar",
   "category": "Categoria",
@@ -794,11 +795,11 @@
     "analysis": "Análise",
     "support_status": {
       "title": "Status dos atendimentos",
-      "is_awaiting": "Em espera",
+      "is_waiting": "Em espera",
       "is_in_progress": "Em andamento",
       "is_closed": "Finalizado",
       "tooltips": {
-        "is_awaiting": "Número de contatos esperando o início do atendimento agora",
+        "is_waiting": "Número de contatos esperando o início do atendimento agora",
         "is_in_progress": "Número de contatos em atendimento agora",
         "is_closed": "Número de atendimentos finalizados hoje"
       }
@@ -864,6 +865,10 @@
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
       }
+    },
+    "analyze": {
+      "title": "Em breve: Nova Visão de Análise",
+      "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!"
     }
   }
 }

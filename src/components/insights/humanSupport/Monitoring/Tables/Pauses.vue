@@ -16,11 +16,28 @@
     @update:sort="handleSort"
     @update:page="handlePageChange"
     @item-click="redirectItem"
-  />
+  >
+    <template
+      v-for="statusType in customStatusTypes"
+      #[`header-${statusType}`]
+      :key="`header-${statusType}`"
+    >
+      <UnnnicToolTip
+        :text="statusType"
+        side="top"
+        enabled
+        class="pauses-table-header-tooltip"
+      >
+        <span class="pauses-table-header-text">
+          {{ statusType }}
+        </span>
+      </UnnnicToolTip>
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
-import { UnnnicDataTable } from '@weni/unnnic-system';
+import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
 import { PausesDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
@@ -41,12 +58,13 @@ const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
 
 const page = ref(1);
-const pageInterval = ref(12);
+const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const currentSort = ref<{ header: string; order: string }>({
+const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: 'agent',
   order: 'asc',
+  itemKey: 'agent',
 });
 
 const rawItems = ref<FormattedPausesData[]>([]);
@@ -73,24 +91,12 @@ const formattedHeaders = computed(() => {
       isSortable: true,
       size: 0.8,
     },
-    {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.opened'),
-      itemKey: 'opened',
-      isSortable: true,
-      size: 0.4,
-    },
-    {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.closed'),
-      itemKey: 'closed',
-      isSortable: true,
-      size: 0.4,
-    },
   ];
 
   const dynamicHeaders = customStatusTypes.value.map((statusType) => ({
     title: statusType,
     itemKey: statusType,
-    isSortable: true,
+    isSortable: false,
     size: 0.5,
   }));
 
@@ -118,7 +124,11 @@ const formattedItems = computed(() => {
   });
 });
 
-const handleSort = (sort: { header: string; order: string }) => {
+const handleSort = (sort: {
+  header: string;
+  itemKey: string;
+  order: string;
+}) => {
   currentSort.value = sort;
 };
 
@@ -147,8 +157,8 @@ const loadData = async () => {
     const offset = (page.value - 1) * pageInterval.value;
     const ordering =
       currentSort.value.order === 'desc'
-        ? `-${currentSort.value.header}`
-        : currentSort.value.header;
+        ? `-${currentSort.value.itemKey}`
+        : currentSort.value.itemKey;
 
     const data =
       await getDetailedMonitoringPausesService.getDetailedMonitoringPauses({
@@ -200,4 +210,28 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupportMonitoring.refreshDetailedTabData,
+  (newValue) => {
+    if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
+      loadData();
+    }
+  },
+);
 </script>
+
+<style scoped lang="scss">
+.pauses-table-header-tooltip {
+  width: 100%;
+  display: flex;
+}
+
+.pauses-table-header-text {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+}
+</style>

@@ -5,6 +5,9 @@
       'card-conversations',
       `card-conversations--border-${props.borderRadius || 'full'}`,
       props.class,
+      {
+        'card-conversations--clickable': props.isClickable,
+      },
     ]"
     data-testid="card-conversations"
     @click="$emit('click')"
@@ -104,6 +107,7 @@ interface Props {
   tooltipSide?: 'left' | 'right' | 'top' | 'bottom';
   activeDescriptionGap?: boolean;
   enableTimeIcon?: boolean;
+  isClickable?: boolean;
 }
 
 const props = defineProps<Props>();
@@ -125,6 +129,10 @@ defineEmits<{
 
   border: 1px solid $unnnic-color-neutral-soft;
   background: #fff;
+
+  &--clickable {
+    cursor: pointer;
+  }
 
   &--border-full {
     border-radius: $unnnic-border-radius-md;

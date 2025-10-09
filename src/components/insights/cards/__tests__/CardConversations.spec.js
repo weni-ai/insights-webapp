@@ -225,6 +225,48 @@ describe('CardConversations.vue', () => {
     });
   });
 
+  describe('Clickable Functionality', () => {
+    it('should apply clickable class when isClickable is true', async () => {
+      await wrapper.setProps({ isClickable: true });
+
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).toContain('card-conversations--clickable');
+    });
+
+    it('should not apply clickable class when isClickable is false', async () => {
+      await wrapper.setProps({ isClickable: false });
+
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).not.toContain('card-conversations--clickable');
+    });
+
+    it('should not apply clickable class when isClickable is not provided', () => {
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).not.toContain('card-conversations--clickable');
+    });
+
+    it('should emit click event when card is clicked', async () => {
+      await wrapper.setProps({ isClickable: true });
+
+      await wrapper.find('[data-testid="card-conversations"]').trigger('click');
+
+      expect(wrapper.emitted()).toHaveProperty('click');
+      expect(wrapper.emitted('click')).toHaveLength(1);
+    });
+
+    it('should emit click event even when isClickable is false', async () => {
+      await wrapper.setProps({ isClickable: false });
+
+      await wrapper.find('[data-testid="card-conversations"]').trigger('click');
+
+      expect(wrapper.emitted()).toHaveProperty('click');
+      expect(wrapper.emitted('click')).toHaveLength(1);
+    });
+  });
+
   describe('Complete Integration', () => {
     it('should render all elements when all props are provided', async () => {
       const props = {

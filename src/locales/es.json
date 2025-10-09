@@ -335,6 +335,7 @@
   "confirmation": "Confirmación",
   "clear_fields": "Borrar campos",
   "today": "Hoy",
+  "now": "Ahora",
   "date_format": "DD/MM/YYYY",
   "search": "Buscar",
   "category": "Categoría",
@@ -795,13 +796,13 @@
     "analysis": "Análisis",
     "support_status": {
       "title": "Estado de los atendimientos",
-      "is_awaiting": "En espera",
+      "is_waiting": "En espera",
       "is_in_progress": "En progreso",
       "is_closed": "Finalizado",
       "tooltips": {
-        "is_awaiting": "Número de contactos esperando el inicio del servicio ahora",
-        "is_in_progress": "Número de contactos en servicio ahora",
-        "is_closed": "Número de servicios finalizados hoy"
+        "is_waiting": "Número de contactos esperando el inicio del atendimiento ahora",
+        "is_in_progress": "Número de contactos en atendimiento ahora",
+        "is_closed": "Número de atendimientos finalizados hoy"
       }
     },
     "time_metrics": {
@@ -811,9 +812,9 @@
       "average_time_chat": "Duración media de la conversa",
       "max": "Máximo",
       "tooltips": {
-        "average_time_is_waiting": "Tiempo medio que los contactos esperan en la cola hasta que el servicio comience",
+        "average_time_is_waiting": "Tiempo medio que los contactos esperan en la cola hasta que el atendimiento comience",
         "average_time_first_response": "Tiempo medio hasta la primera respuesta del agente después de que se asigne la sala",
-        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del servicio con el agente hasta que se finaliza"
+        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del atendimiento con el agente hasta que se finaliza"
       }
     },
     "services_open_by_hour": {
@@ -865,6 +866,10 @@
         "time_in_service": "Tempo em atendimento",
         "action": "Acción"
       }
+    },
+    "analyze": {
+      "title": "Próximamente: Nueva Vista de Análisis",
+      "description": "Aquí podrás explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones más estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!"
     }
   }
 }

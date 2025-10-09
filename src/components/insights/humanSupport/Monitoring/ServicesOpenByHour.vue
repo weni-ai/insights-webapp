@@ -28,10 +28,10 @@ const { servicesOpenByHourData, loadingHumanSupportByHourData } = storeToRefs(
 
 const data = computed(() => {
   const formattedData = {
-    labels: servicesOpenByHourData.value.map((item) => item.label),
+    labels: servicesOpenByHourData.value?.map((item) => item?.label),
     datasets: [
       {
-        data: servicesOpenByHourData.value.map((item) => item.value),
+        data: servicesOpenByHourData.value?.map((item) => item?.value),
       },
     ],
   };

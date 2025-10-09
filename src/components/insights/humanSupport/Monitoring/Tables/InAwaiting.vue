@@ -38,12 +38,13 @@ const humanSupportMonitoring = useHumanSupportMonitoring();
 const isLoading = ref(false);
 
 const page = ref(1);
-const pageInterval = ref(2);
+const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const currentSort = ref<{ header: string; order: string }>({
+const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: 'awaiting_time',
   order: 'desc',
+  itemKey: 'awaiting_time',
 });
 
 const formattedHeaders = computed(() => [
@@ -73,7 +74,11 @@ const formattedHeaders = computed(() => [
 
 const formattedItems = ref<FormattedInAwaitingData[]>([]);
 
-const handleSort = (sort: { header: string; order: string }) => {
+const handleSort = (sort: {
+  header: string;
+  itemKey: string;
+  order: string;
+}) => {
   currentSort.value = sort;
 };
 
@@ -101,8 +106,8 @@ const loadData = async () => {
 
     const ordering =
       currentSort.value.order === 'desc'
-        ? `-${currentSort.value.header}`
-        : currentSort.value.header;
+        ? `-${currentSort.value.itemKey}`
+        : currentSort.value.itemKey;
 
     const data = await service.getDetailedMonitoringInAwaiting({
       ordering,
@@ -138,5 +143,17 @@ watch(
     loadData();
   },
   { flush: 'post' },
+);
+
+watch(
+  () => humanSupportMonitoring.refreshDetailedTabData,
+  (newValue) => {
+    if (
+      newValue &&
+      humanSupportMonitoring.activeDetailedTab === 'in_awaiting'
+    ) {
+      loadData();
+    }
+  },
 );
 </script>

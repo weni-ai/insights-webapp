@@ -19,9 +19,9 @@
   >
     <template #body-action="{ item }">
       <DisconnectAgent
-        v-if="['online', 'custom'].includes(item?.status)"
         :agent="{ name: item?.agent, email: item?.agent_email }"
         containerCenter
+        :disabled="['offline'].includes(item?.status)"
         @request-data="loadData"
       />
     </template>
@@ -64,12 +64,13 @@ const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
 
 const page = ref(1);
-const pageInterval = ref(8);
+const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const currentSort = ref<{ header: string; order: string }>({
+const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: 'status',
   order: 'desc',
+  itemKey: 'status',
 });
 
 const formattedItems = ref<FormattedAttendantData[]>([]);
@@ -132,7 +133,11 @@ const formattedHeaders = computed(() => [
   },
 ]);
 
-const handleSort = (sort: { header: string; order: string }) => {
+const handleSort = (sort: {
+  header: string;
+  itemKey: string;
+  order: string;
+}) => {
   currentSort.value = sort;
 };
 
@@ -171,8 +176,8 @@ const loadData = async () => {
     const data = await service.getDetailedMonitoringAttendant({
       ordering:
         currentSort.value.order === 'desc'
-          ? `-${currentSort.value.header}`
-          : currentSort.value.header,
+          ? `-${currentSort.value.itemKey}`
+          : currentSort.value.itemKey,
       limit: pageInterval.value,
       offset: (page.value - 1) * pageInterval.value,
       agent: humanSupportMonitoring.appliedAgentFilter.value,
@@ -230,5 +235,14 @@ watch(
     loadData();
   },
   { flush: 'post' },
+);
+
+watch(
+  () => humanSupportMonitoring.refreshDetailedTabData,
+  (newValue) => {
+    if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
+      loadData();
+    }
+  },
 );
 </script>

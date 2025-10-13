@@ -335,6 +335,7 @@
   "confirmation": "Confirmation",
   "clear_fields": "Clear fields",
   "today": "Today",
+  "now": "Now",
   "date_format": "MM/DD/YYYY",
   "search": "Search",
   "category": "Category",
@@ -787,5 +788,87 @@
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
     "error_message": "Error when disconnecting agent {agent}"
+  },
+  "human_support_dashboard": {
+    "title": "Human support",
+    "monitoring": "Monitoring",
+    "analysis": "Analysis",
+    "support_status": {
+      "title": "Support status",
+      "is_waiting": "Awaiting",
+      "is_in_progress": "In progress",
+      "is_closed": "Closed",
+      "tooltips": {
+        "is_waiting": "Number of contacts waiting for the start of the support now",
+        "is_in_progress": "Number of contacts in support now",
+        "is_closed": "Number of closed supports today"
+      }
+    },
+    "time_metrics": {
+      "title": "Time metrics now",
+      "average_time_is_waiting": "Average time in waiting",
+      "average_time_first_response": "Average time for first response",
+      "average_time_chat": "Average chat duration",
+      "max": "Max",
+      "tooltips": {
+        "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
+        "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
+        "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
+      }
+    },
+    "services_open_by_hour": {
+      "title": "Services open by hour"
+    },
+    "detailed_monitoring": {
+      "title": "Detailed monitoring",
+      "tabs": {
+        "in_awaiting": "In awaiting",
+        "in_progress": "In progress",
+        "attendant": "Attendant",
+        "pauses": "Pauses"
+      },
+      "filters": {
+        "attendant": {
+          "label": "Attendant",
+          "placeholder": "Type to filter"
+        }
+      },
+      "in_progress": {
+        "duration": "Duration",
+        "awaiting_time": "Awaiting time",
+        "first_response_time": "First response time",
+        "attendant": "Attendant",
+        "sector": "Sector",
+        "queue": "Queue",
+        "contact": "Contact"
+      },
+      "pauses": {
+        "status": "Status",
+        "agent": "Agent",
+        "opened": "Opened",
+        "closed": "Closed"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Awaiting time",
+        "contact": "Contact",
+        "sector": "Sector",
+        "queue": "Queue"
+      },
+      "attendant": {
+        "agent": "Attendant",
+        "status": "Status",
+        "ongoing": "Ongoing",
+        "finished": "Finished",
+        "average_first_response_time": "Average first response time",
+        "average_response_time": "Average response time",
+        "average_duration": "Average duration",
+        "time_in_service": "Time in service",
+        "action": "Action"
+      }
+    },
+    "analyze": {
+      "title": "Soon: New Analysis View",
+      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
+    }
   }
 }

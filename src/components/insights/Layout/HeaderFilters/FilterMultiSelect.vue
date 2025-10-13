@@ -9,10 +9,12 @@
     autocompleteClearOnFocus
     :orderedByIndex="allLabel ? true : false"
     @update:model-value="updateModelValue"
+    @on-active-change="handleOptionsActiveChange"
   />
 </template>
 
 <script>
+import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import { mapActions } from 'pinia';
 
 import { useSectors } from '@/store/modules/sectors';
@@ -23,6 +25,9 @@ import { compareEquals } from '@/utils/array';
 
 export default {
   name: 'FilterMultiSelect',
+  components: {
+    UnnnicSelectSmart,
+  },
   props: {
     modelValue: {
       type: [Object, String],
@@ -54,7 +59,7 @@ export default {
     },
   },
 
-  emits: ['update:model-value'],
+  emits: ['update:model-value', 'on-options-active-change'],
 
   data() {
     return {
@@ -117,6 +122,9 @@ export default {
 
   methods: {
     ...mapActions(useSectors, ['updateSectors']),
+    handleOptionsActiveChange(active) {
+      this.$emit('on-options-active-change', active);
+    },
     async fetchSource() {
       try {
         const response = await Projects.getProjectSource(

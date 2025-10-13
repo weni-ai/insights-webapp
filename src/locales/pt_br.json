@@ -335,6 +335,7 @@
   "confirmation": "Confirmação",
   "clear_fields": "Limpar campos",
   "today": "Hoje",
+  "now": "Agora",
   "date_format": "DD/MM/YYYY",
   "search": "Buscar",
   "category": "Categoria",
@@ -787,5 +788,87 @@
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
     "error_message": "Erro ao desconectar agente {agent}"
+  },
+  "human_support_dashboard": {
+    "title": "Atendimento humano",
+    "monitoring": "Monitoramento",
+    "analysis": "Análise",
+    "support_status": {
+      "title": "Status dos atendimentos",
+      "is_waiting": "Em espera",
+      "is_in_progress": "Em andamento",
+      "is_closed": "Finalizado",
+      "tooltips": {
+        "is_waiting": "Número de contatos esperando o início do atendimento agora",
+        "is_in_progress": "Número de contatos em atendimento agora",
+        "is_closed": "Número de atendimentos finalizados hoje"
+      }
+    },
+    "time_metrics": {
+      "title": "Métricas de tempo agora",
+      "average_time_is_waiting": "Tempo médio em espera",
+      "average_time_first_response": "Tempo médio para 1ª resposta",
+      "average_time_chat": "Duração média da conversa",
+      "max": "Máximo",
+      "tooltips": {
+        "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
+        "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",
+        "average_time_chat": "Média do tempo total da conversa, do início do atendimento com atendente até ser finalizada"
+      }
+    },
+    "services_open_by_hour": {
+      "title": "Atendimentos abertos por hora"
+    },
+    "detailed_monitoring": {
+      "title": "Monitoramento detalhado",
+      "tabs": {
+        "in_awaiting": "Em espera",
+        "in_progress": "Em andamento",
+        "attendant": "Atendente",
+        "pauses": "Pausas"
+      },
+      "filters": {
+        "attendant": {
+          "label": "Atendente",
+          "placeholder": "Digite para filtrar"
+        }
+      },
+      "in_progress": {
+        "duration": "Duração",
+        "awaiting_time": "Tempo em espera",
+        "first_response_time": "Tempo para 1ª resposta",
+        "attendant": "Atendente",
+        "sector": "Setor",
+        "queue": "Fila",
+        "contact": "Contato"
+      },
+      "pauses": {
+        "status": "Status",
+        "agent": "Agente",
+        "opened": "Abertos",
+        "closed": "Fechados"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Tempo em espera",
+        "contact": "Contato",
+        "sector": "Setor",
+        "queue": "Fila"
+      },
+      "attendant": {
+        "agent": "Atendente",
+        "status": "Status",
+        "ongoing": "Em andamento",
+        "finished": "Finalizado",
+        "average_first_response_time": "Tempo médio para 1ª resposta",
+        "average_response_time": "Tempo médio de resposta",
+        "average_duration": "Duração média", 
+        "time_in_service": "Tempo em atendimento",
+        "action": "Ação"
+      }
+    },
+    "analyze": {
+      "title": "Em breve: Nova Visão de Análise",
+      "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!"
+    }
   }
 }

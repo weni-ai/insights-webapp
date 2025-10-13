@@ -1,6 +1,5 @@
 <template>
   <section class="sales-funnel-widget">
-    <!-- TODO: empty data variation -->
     <WarningMessage
       v-if="isEmptyData"
       :title="$t('conversations_dashboard.no_data_available')"
@@ -48,7 +47,10 @@
         </p>
       </section>
     </section>
-    <UnnnicChartFunnel :data="graphData" />
+    <UnnnicChartFunnel
+      :data="graphData"
+      class="sales-funnel-widget__graph"
+    />
   </section>
 </template>
 
@@ -72,8 +74,24 @@ defineOptions({
 const { salesFunnelWidgetData } = useConversationalWidgets();
 
 const isEmptyData = computed(() => {
-  // TODO: empty data variation
-  return false;
+  const {
+    captured_leads,
+    purchases_made,
+    total_orders,
+    total_value,
+    average_ticket,
+  } = salesFunnelWidgetData || {};
+  return [
+    captured_leads?.full_value || 0,
+    purchases_made?.full_value || 0,
+    total_orders || 0,
+    total_value || 0,
+    average_ticket || 0,
+  ].every((value) => value === 0);
+});
+
+const barDisplay = computed(() => {
+  return isEmptyData.value ? 'none' : 'block';
 });
 
 const graphData = computed(() => {
@@ -110,6 +128,17 @@ const graphData = computed(() => {
 </script>
 
 <style lang="scss" scoped>
+// This deep is used to hide the graph bars if they have zero values
+:deep(.sales-funnel-widget__graph) {
+  .unnnic-chart-funnel-base-item {
+    .w-60 {
+      display: v-bind(barDisplay);
+    }
+    .w-50 {
+      display: v-bind(barDisplay);
+    }
+  }
+}
 .sales-funnel-widget {
   display: flex;
   flex-direction: column;

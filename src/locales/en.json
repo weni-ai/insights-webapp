@@ -73,7 +73,7 @@
         "continue": "Keep adding"
       },
       "added_topic": "Added on {date} at {time}",
-      "disclaimer": "The topics you add will only be sorted in future conversations. Previous conversations will not be re-sorted."
+      "disclaimer": "When you add new topics, the AI will automatically classify them in future conversations, improving its understanding and delivering more accurate responses. Previous conversations will not be reclassified."
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",
@@ -743,8 +743,8 @@
       "created_on": "Date of commencement of service"
     },
     "select_data": {
-      "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",
-      "placeholder": "MM/MM/MMM",
+      "label": "Select a date or period (maximum interval of 92 days between start date and end date)",
+      "placeholder": "MM/DD/YYYY",
       "shortcuts": {
         "last_7_days": "Last 7 days",
         "last_14_days": "Last 14 days",

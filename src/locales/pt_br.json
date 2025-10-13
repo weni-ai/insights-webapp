@@ -73,7 +73,7 @@
         "continue": "Continuar"
       },
       "added_topic": "Adicionado em {date} às {time}",
-      "disclaimer": "Ao adicionar assuntos, você permite que a IA classifique automaticamente as conversas com eles. Isso ajudará a IA a entender melhor as conversas e fornecer respostas mais precisas."
+      "disclaimer": "Ao adicionar novos assuntos, a IA passará a classificá-los automaticamente nas conversas futuras, ajudando a compreender melhor os diálogos e a oferecer respostas mais precisas. Conversas anteriores não serão reclassificadas."
     },
     "most_talked_about_topics": {
       "title": "Assuntos mais falados",
@@ -690,7 +690,7 @@
   },
   "export_data": {
     "title": "Exportar dados",
-    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto quando concluido.",
+    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto quando concluído.",
     "description": "Selecione os dados que deseja exportar. O arquivo completo será enviado para seu email após a confirmação.",
     "feedback": "Você receberá por email em breve. Lembre-se de verificar sua pasta de spam.",
     "feedback_title": "Processando exportação",

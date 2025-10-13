@@ -319,6 +319,7 @@
   "flow": "Flow",
   "flows": "Flows",
   "select": "Select",
+  "multiple_without_selects_message": "No option selected",
   "report": "Report",
   "you": "You",
   "none": "None",

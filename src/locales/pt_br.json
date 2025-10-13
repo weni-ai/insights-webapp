@@ -319,6 +319,7 @@
   "flow": "Fluxo",
   "flows": "Fluxos",
   "select": "Selecionar",
+  "multiple_without_selects_message": "Nenhuma opção selecionada",
   "report": "Relatório",
   "you": "Você",
   "none": "Nenhum",

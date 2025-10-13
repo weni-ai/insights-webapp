@@ -36,9 +36,7 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
       >
         Dashboard 1
       </h1>
-      <beta-text-stub
-        data-v-054061ac=""
-      />
+      <!--v-if-->
     </section>
     <unnnic-icon-stub
       class="dropdown__trigger"

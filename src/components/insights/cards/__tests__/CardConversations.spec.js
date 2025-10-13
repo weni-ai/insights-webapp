@@ -159,6 +159,114 @@ describe('CardConversations.vue', () => {
     });
   });
 
+  describe('Active Description Gap', () => {
+    it('should apply active gap class when activeDescriptionGap is true', async () => {
+      await wrapper.setProps({
+        activeDescriptionGap: true,
+        description: 'Test Description',
+      });
+
+      expect(wrapper.find('[data-testid="card-content"]').classes()).toContain(
+        'card-conversations__content--active-gap',
+      );
+    });
+
+    it('should not apply active gap class when activeDescriptionGap is false', async () => {
+      await wrapper.setProps({
+        activeDescriptionGap: false,
+        description: 'Test Description',
+      });
+
+      expect(
+        wrapper.find('[data-testid="card-content"]').classes(),
+      ).not.toContain('card-conversations__content--active-gap');
+    });
+
+    it('should not apply active gap class when activeDescriptionGap is not provided', () => {
+      expect(
+        wrapper.find('[data-testid="card-content"]').classes(),
+      ).not.toContain('card-conversations__content--active-gap');
+    });
+  });
+
+  describe('Enable Time Icon', () => {
+    it('should show time icon and apply value class when enableTimeIcon is true', async () => {
+      await wrapper.setProps({ enableTimeIcon: true });
+
+      const timeIcon = wrapper.find('[data-testid="card-time-icon"]');
+      const valueSection = wrapper.find('.card-conversations__value');
+
+      expect(timeIcon.exists()).toBe(true);
+      expect(valueSection.classes()).toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+    });
+
+    it('should not show time icon and not apply value class when enableTimeIcon is false', async () => {
+      await wrapper.setProps({ enableTimeIcon: false });
+
+      const timeIcon = wrapper.find('[data-testid="card-time-icon"]');
+      const valueSection = wrapper.find('.card-conversations__value');
+
+      expect(timeIcon.exists()).toBe(false);
+      expect(valueSection.classes()).not.toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+    });
+
+    it('should not show time icon and not apply value class when enableTimeIcon is not provided', () => {
+      const timeIcon = wrapper.find('[data-testid="card-time-icon"]');
+      const valueSection = wrapper.find('.card-conversations__value');
+
+      expect(timeIcon.exists()).toBe(false);
+      expect(valueSection.classes()).not.toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+    });
+  });
+
+  describe('Clickable Functionality', () => {
+    it('should apply clickable class when isClickable is true', async () => {
+      await wrapper.setProps({ isClickable: true });
+
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).toContain('card-conversations--clickable');
+    });
+
+    it('should not apply clickable class when isClickable is false', async () => {
+      await wrapper.setProps({ isClickable: false });
+
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).not.toContain('card-conversations--clickable');
+    });
+
+    it('should not apply clickable class when isClickable is not provided', () => {
+      expect(
+        wrapper.find('[data-testid="card-conversations"]').classes(),
+      ).not.toContain('card-conversations--clickable');
+    });
+
+    it('should emit click event when card is clicked', async () => {
+      await wrapper.setProps({ isClickable: true });
+
+      await wrapper.find('[data-testid="card-conversations"]').trigger('click');
+
+      expect(wrapper.emitted()).toHaveProperty('click');
+      expect(wrapper.emitted('click')).toHaveLength(1);
+    });
+
+    it('should emit click event even when isClickable is false', async () => {
+      await wrapper.setProps({ isClickable: false });
+
+      await wrapper.find('[data-testid="card-conversations"]').trigger('click');
+
+      expect(wrapper.emitted()).toHaveProperty('click');
+      expect(wrapper.emitted('click')).toHaveLength(1);
+    });
+  });
+
   describe('Complete Integration', () => {
     it('should render all elements when all props are provided', async () => {
       const props = {
@@ -168,6 +276,8 @@ describe('CardConversations.vue', () => {
         valueDescription: 'High',
         tooltipInfo: 'Complete Tooltip',
         borderRadius: 'left',
+        activeDescriptionGap: true,
+        enableTimeIcon: true,
       };
 
       await wrapper.setProps(props);
@@ -190,6 +300,15 @@ describe('CardConversations.vue', () => {
       expect(
         wrapper.find('[data-testid="card-conversations"]').classes(),
       ).toContain('card-conversations--border-left');
+      expect(wrapper.find('[data-testid="card-content"]').classes()).toContain(
+        'card-conversations__content--active-gap',
+      );
+      expect(wrapper.find('.card-conversations__value').classes()).toContain(
+        'card-conversations__value--enable-time-icon',
+      );
+      expect(wrapper.find('[data-testid="card-time-icon"]').exists()).toBe(
+        true,
+      );
     });
 
     it('should render minimal elements when only required props are provided', () => {

@@ -73,7 +73,7 @@
         "continue": "Keep adding"
       },
       "added_topic": "Added on {date} at {time}",
-      "disclaimer": "The topics you add will only be sorted in future conversations. Previous conversations will not be re-sorted."
+      "disclaimer": "When you add new topics, the AI will automatically classify them in future conversations, improving its understanding and delivering more accurate responses. Previous conversations will not be reclassified."
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",
@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Funnel and sales data",
     "custom": "Horizontal bar chart",
     "no_data_available": "No data available for the period of use.",
     "widget_error": {
@@ -119,6 +120,13 @@
         "excellent": "71 to 100: Excellent"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total orders",
+      "total_value": "Total value",
+      "average_ticket": "Average ticket",
+      "captured_leads": "Captured leads",
+      "purchases_made": "Purchases made"
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
@@ -126,6 +134,7 @@
       "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
       "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others.",
       "config_csat_or_nps_description": "Define which {type} you want to track:",
+      "sales_funnel_description": "Track your sales: total orders, average ticket, total value and conversion funnel.",
       "human_support": "Human Support",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -743,8 +752,8 @@
       "created_on": "Date of commencement of service"
     },
     "select_data": {
-      "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",
-      "placeholder": "MM/MM/MMM",
+      "label": "Select a date or period (maximum interval of 92 days between start date and end date)",
+      "placeholder": "MM/DD/YYYY",
       "shortcuts": {
         "last_7_days": "Last 7 days",
         "last_14_days": "Last 14 days",
@@ -760,7 +769,7 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Select the sector",
-      "agent": "Agent", 
+      "agent": "Agent",
       "select_agent": "Select the agent",
       "queue": "Queue",
       "select_queue": "Select the queue",
@@ -859,7 +868,7 @@
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
-        "average_girst_response_time": "Average first response time",
+        "average_first_response_time": "Average first response time",
         "average_response_time": "Average response time",
         "average_duration": "Average duration",
         "time_in_service": "Time in service",

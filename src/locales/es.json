@@ -73,7 +73,7 @@
         "continue": "Continuar"
       },
       "added_topic": "Agregado el {date} a las {time}",
-      "disclaimer": "Al agregar temas, permites que la IA etiquete automáticamente las conversaciones con ellos. Esto ayudará a la IA a entender mejor las conversaciones y proporcionar respuestas más precisas."
+      "disclaimer": "Al agregar nuevos temas, la IA comenzará a clasificarlos automáticamente en las conversaciones futuras, lo que le permitirá comprender mejor los diálogos y ofrecer respuestas más precisas. Las conversaciones anteriores no serán reclasificadas."
     },
     "most_talked_about_topics": {
       "title": "Tópicos más hablados",
@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Embudo y datos de ventas",
     "custom": "Gráfico de barras horizontal",
     "no_data_available": "No hay datos disponibles para el período de uso.",
     "widget_error": {
@@ -119,6 +120,13 @@
         "excellent": "71 a 100: Excelente"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total de pedidos",
+      "total_value": "Valor total",
+      "average_ticket": "Promedio de ticket",
+      "captured_leads": "Capturados",
+      "purchases_made": "Compras realizadas"
+    },
     "customize_your_dashboard": {
       "title": "Personaliza tu dashboard",
       "description": "Personaliza el dashboard con tus métricas clave",
@@ -126,6 +134,7 @@
       "csat_description": "La Puntuación de Satisfacción del Cliente indica el nivel de satisfacción del contacto con el servicio recibido.",
       "nps_description": "La Puntuación Neta del Promotor indica qué tan probable es que el contacto recomiende el servicio que recibió a otras personas.",
       "config_csat_or_nps_description": "Define qué {type} quieres acompañar:",
+      "sales_funnel_description": "Rastrea tus ventas: total de pedidos, ticket promedio, valor total y embudo de conversión.",
       "human_support": "Atención humana",
       "ai_support": "IA",
       "activate_agent": "Activar agente",
@@ -706,7 +715,6 @@
       "topics": "Temas",
       "csat": "CSAT",
       "nps": "NPS"
-
     },
     "field_labels": {
       "config": "Configuración",
@@ -761,7 +769,7 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Seleccione el sector",
-      "agent": "Agente", 
+      "agent": "Agente",
       "select_agent": "Seleccione el agente",
       "queue": "Cola",
       "select_queue": "Seleccione la cola",
@@ -860,7 +868,7 @@
         "status": "Estado",
         "ongoing": "En curso",
         "finished": "Finalizado",
-        "average_girst_response_time": "Tiempo medio para 1ª respuesta",
+        "average_first_response_time": "Tiempo medio para 1ª respuesta",
         "average_response_time": "Tiempo medio de respuesta",
         "average_duration": "Duração média",
         "time_in_service": "Tempo em atendimento",

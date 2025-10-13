@@ -5,10 +5,12 @@
     :isLoading="isLoading"
     :currentTab="currentTab"
     :isOnlyTab="isOnlyTab"
+    :hiddenTabs="type === 'sales_funnel'"
     @tab-change="handleTabChange"
   >
+    <SalesFunnelWidget v-if="type === 'sales_funnel'" />
     <slot
-      v-if="treatedProgressItems?.length === 0"
+      v-else-if="treatedProgressItems?.length === 0"
       name="setup-widget"
     />
     <template v-else-if="!isError">
@@ -107,6 +109,7 @@ import CardConversations from '@/components/insights/cards/CardConversations.vue
 import ProgressTable from '@/components/ProgressTable.vue';
 import WarningMessage from '@/components/WarningMessage.vue';
 import WidgetError from '@/components/insights/conversations/WidgetError.vue';
+import SalesFunnelWidget from '@/components/insights/widgets/SalesFunnelWidget.vue';
 
 const emit = defineEmits<{
   (e: 'tab-change', tab: Tab): void;
@@ -146,6 +149,7 @@ const props = defineProps<{
     buttonText: string;
     onClick: () => void;
   };
+  type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add';
 }>();
 
 const treatedProgressItems = computed(() => {

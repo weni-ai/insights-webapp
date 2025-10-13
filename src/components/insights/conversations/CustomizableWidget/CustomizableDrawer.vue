@@ -58,7 +58,9 @@
                 class="widget-list__item"
                 data-testid="add-widget-drawer-item"
                 @click="
-                  drawerWidgetType = widget.key as 'csat' | 'nps' | 'custom'
+                  clickWidgetOption(
+                    widget.key as 'csat' | 'nps' | 'custom' | 'sales_funnel',
+                  )
                 "
               >
                 <h2
@@ -106,6 +108,8 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useProject } from '@/store/modules/project';
+import { WidgetType } from '@/models/types/WidgetTypes';
 
 const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
   useConversationalWidgets();
@@ -113,11 +117,14 @@ const {
   isEnabledSaveNewWidget,
   isCsatConfigured,
   isNpsConfigured,
+  isSalesFunnelConfigured,
   isEnabledUpdateWidgetCsat,
   isEnabledUpdateWidgetNps,
   isLoadingSaveNewWidget,
   isLoadingUpdateWidget,
 } = storeToRefs(useConversationalWidgets());
+
+const { hasValidSalesFunnelAgent } = storeToRefs(useProject());
 
 const { setIsDrawerCustomizableOpen } = useConversational();
 const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
@@ -175,6 +182,27 @@ function handleSecondaryButtonClick() {
   }
 }
 
+function clickWidgetOption(
+  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel',
+) {
+  if (widgetType === 'sales_funnel') {
+    const conversationalWidgetsStore = useConversationalWidgets();
+    const createWidget = {
+      uuid: '',
+      name: 'conversations_dashboard.sales_funnel_widget.title',
+      config: {},
+      type: 'sales_funnel',
+      source: 'conversations.sales_funnel',
+      is_configurable: true,
+    };
+    conversationalWidgetsStore.newWidget = createWidget as WidgetType;
+    saveWidgetConfigs();
+    return;
+  }
+
+  drawerWidgetType.value = widgetType;
+}
+
 function returnWidgetTypeChoice() {
   closeWarningModal();
   drawerWidgetType.value = 'add';
@@ -218,6 +246,13 @@ const availableWidgets = computed(() => {
       ),
       key: 'custom',
     },
+    {
+      name: i18n.global.t('conversations_dashboard.sales_funnel'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.sales_funnel_description',
+      ),
+      key: 'sales_funnel',
+    },
   ];
 });
 
@@ -251,6 +286,7 @@ const handleTabChoice = (tabKey: 'sentiment_analysis' | 'customized') => {
     let widgets = [
       handleWidgetTypeChoice('csat'),
       handleWidgetTypeChoice('nps'),
+      handleWidgetTypeChoice('sales_funnel'),
     ];
 
     if (isCsatConfigured.value) {
@@ -259,6 +295,10 @@ const handleTabChoice = (tabKey: 'sentiment_analysis' | 'customized') => {
 
     if (isNpsConfigured.value) {
       widgets = widgets.filter((widget) => widget.key !== 'nps');
+    }
+
+    if (isSalesFunnelConfigured.value || !hasValidSalesFunnelAgent.value) {
+      widgets = widgets.filter((widget) => widget.key !== 'sales_funnel');
     }
 
     return widgets;
@@ -271,7 +311,9 @@ const handleTabChoice = (tabKey: 'sentiment_analysis' | 'customized') => {
   return [];
 };
 
-const handleWidgetTypeChoice = (widgetType: 'csat' | 'nps' | 'custom') => {
+const handleWidgetTypeChoice = (
+  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel',
+) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };
 

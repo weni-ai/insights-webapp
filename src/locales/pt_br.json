@@ -73,7 +73,7 @@
         "continue": "Continuar"
       },
       "added_topic": "Adicionado em {date} às {time}",
-      "disclaimer": "Ao adicionar assuntos, você permite que a IA classifique automaticamente as conversas com eles. Isso ajudará a IA a entender melhor as conversas e fornecer respostas mais precisas."
+      "disclaimer": "Ao adicionar novos assuntos, a IA passará a classificá-los automaticamente nas conversas futuras, ajudando a compreender melhor os diálogos e a oferecer respostas mais precisas. Conversas anteriores não serão reclassificadas."
     },
     "most_talked_about_topics": {
       "title": "Assuntos mais falados",
@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Funil e dados de vendas",
     "custom": "Gráfico de barras horizontal",
     "no_data_available": "Nenhum dado disponível para o período de uso.",
     "widget_error": {
@@ -119,6 +120,13 @@
         "excellent": "71 a 100: Excelente"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total de pedidos",
+      "total_value": "Valor total",
+      "average_ticket": "Ticket médio",
+      "captured_leads": "Leads capturados",
+      "purchases_made": "Compras realizadas"
+    },
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas métricas chave",
@@ -126,6 +134,7 @@
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
       "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
       "config_csat_or_nps_description": "Defina select_keyqual {type} você deseja acompanhar:",
+      "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -690,7 +699,7 @@
   },
   "export_data": {
     "title": "Exportar dados",
-    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto quando concluido.",
+    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto quando concluído.",
     "description": "Selecione os dados que deseja exportar. O arquivo completo será enviado para seu email após a confirmação.",
     "feedback": "Você receberá por email em breve. Lembre-se de verificar sua pasta de spam.",
     "feedback_title": "Processando exportação",
@@ -760,7 +769,7 @@
     "filters": {
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "agent": "Agente", 
+      "agent": "Agente",
       "select_agent": "Selecione o agente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",
@@ -859,7 +868,7 @@
         "status": "Status",
         "ongoing": "Em andamento",
         "finished": "Finalizado",
-        "average_girst_response_time": "Tempo médio para 1ª resposta",
+        "average_first_response_time": "Tempo médio para 1ª resposta",
         "average_response_time": "Tempo médio de resposta",
         "average_duration": "Duração média", 
         "time_in_service": "Tempo em atendimento",

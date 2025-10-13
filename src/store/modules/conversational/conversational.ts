@@ -12,7 +12,7 @@ export const useConversational = defineStore('conversational', {
   actions: {
     setIsDrawerCustomizableOpen(
       isDrawerCustomizableOpen: boolean,
-      type: 'nps' | 'csat' | 'add' | 'custom' | null,
+      type: 'nps' | 'csat' | 'add' | 'custom' | 'sales_funnel' | null,
       isNew: boolean,
     ) {
       this.isDrawerCustomizableOpen = isDrawerCustomizableOpen;

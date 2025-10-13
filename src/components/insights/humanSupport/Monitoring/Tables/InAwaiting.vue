@@ -47,30 +47,23 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   itemKey: 'awaiting_time',
 });
 
-const formattedHeaders = computed(() => [
-  {
-    title: t(
-      'human_support_dashboard.detailed_monitoring.in_awaiting.awaiting_time',
-    ),
-    itemKey: 'awaiting_time',
+const formattedHeaders = computed(() => {
+  const baseTranslationKey =
+    'human_support_dashboard.detailed_monitoring.in_awaiting';
+
+  const createHeader = (itemKey: string) => ({
+    title: t(`${baseTranslationKey}.${itemKey}`),
+    itemKey,
     isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.in_awaiting.contact'),
-    itemKey: 'contact',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.in_awaiting.sector'),
-    itemKey: 'sector',
-    isSortable: true,
-  },
-  {
-    title: t('human_support_dashboard.detailed_monitoring.in_awaiting.queue'),
-    itemKey: 'queue',
-    isSortable: true,
-  },
-]);
+  });
+
+  return [
+    createHeader('awaiting_time'),
+    createHeader('contact'),
+    createHeader('sector'),
+    createHeader('queue'),
+  ];
+});
 
 const formattedItems = ref<FormattedInAwaitingData[]>([]);
 

@@ -32,7 +32,7 @@
         >
           {{ dashboardTitle }}
         </h1>
-        <BetaText />
+        <BetaText v-if="isRenderBetaText" />
       </section>
       <UnnnicIcon
         class="dropdown__trigger"
@@ -42,7 +42,7 @@
     </template>
 
     <OptionSelectDashboard
-      v-for="dashboard of dashboards"
+      v-for="dashboard of enabledShowDashboards"
       :key="dashboard"
       data-testid="select-dashboard-item"
       :dashboard="dashboard"
@@ -74,6 +74,7 @@ import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
 import BetaText from './BetaText.vue';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -106,6 +107,24 @@ export default {
         '';
       return this.$t(title);
     },
+
+    isRenderBetaText() {
+      const isConversational =
+        this.currentDashboard.name === 'conversations_dashboard.title';
+      const isHumanSupport =
+        this.currentDashboard.name === 'human_support_dashboard.title';
+
+      return isConversational || isHumanSupport;
+    },
+    enabledShowDashboards() {
+      if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {
+        return this.dashboards;
+      }
+
+      return this.dashboards.filter(
+        (dashboard) => dashboard?.config?.type !== 'human_support',
+      );
+    },
   },
   mounted() {
     this.$nextTick(() => {
@@ -122,6 +141,7 @@ export default {
       'callTourNextStep',
     ]),
     ...mapActions(useDashboards, ['setShowDashboardConfig']),
+    ...mapActions(useFeatureFlag, ['isFeatureFlagEnabled']),
 
     handlerCreateDashboardClick() {
       this.setShowDashboardConfig(true);

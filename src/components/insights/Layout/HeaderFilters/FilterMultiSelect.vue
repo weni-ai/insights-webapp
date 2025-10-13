@@ -8,6 +8,7 @@
     autocompleteIconLeft
     autocompleteClearOnFocus
     :orderedByIndex="allLabel ? true : false"
+    :multipleWithoutSelectsMessage="$t('multiple_without_selects_message')"
     @update:model-value="updateModelValue"
     @on-active-change="handleOptionsActiveChange"
   />

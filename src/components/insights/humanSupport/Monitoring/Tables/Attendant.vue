@@ -27,7 +27,7 @@
     </template>
     <template #body-status="{ item }">
       <AgentStatus
-        :status="handleStatus(item.status)"
+        :status="item.status"
         :label="item.status"
       />
     </template>
@@ -118,17 +118,6 @@ const handleSort = (sort: {
 const handlePageChange = (newPage: number) => {
   page.value = newPage;
   loadData();
-};
-
-/* TODO: Remove handleStatus after the API is updated */
-const handleStatus = (status: string) => {
-  const statusLabelMapper = {
-    online: 'green',
-    offline: 'gray',
-    custom: 'orange',
-  };
-
-  return statusLabelMapper[status];
 };
 
 const redirectItem = (item: AttendantDataResult) => {

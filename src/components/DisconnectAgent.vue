@@ -7,8 +7,8 @@
     @click.stop
   >
     <UnnnicToolTip
-      :text="$t('disconnectAgent.tooltip')"
-      side="top"
+      :text="handleTooltipText"
+      :side="props.disabled ? 'left' : 'top'"
       class="disconnect-agent-tooltip"
       data-test-id="disconnect-agent-tooltip"
       enabled
@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { unnnicCallAlert, UnnnicButton } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import disconnectAgentApi from '@/services/api/resources/disconnectAgent';
@@ -131,6 +131,12 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
     },
   });
 };
+
+const handleTooltipText = computed(() => {
+  return props.disabled
+    ? t('disconnectAgent.tooltip_disabled')
+    : t('disconnectAgent.tooltip');
+});
 </script>
 
 <style scoped lang="scss">

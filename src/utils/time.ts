@@ -284,6 +284,10 @@ export function formatTimeStringWithDayNight(
     timeFormat = format(date, 'h:mm a');
   }
 
+  if (use24Hour) {
+    return timeFormat;
+  }
+
   return `${timeFormat} ${period}`;
 }
 

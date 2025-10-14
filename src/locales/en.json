@@ -327,7 +327,9 @@
   "metrics": "Metrics",
   "flow": "Flow",
   "flows": "Flows",
+  "custom_status": "Pause",
   "select": "Select",
+  "multiple_without_selects_message": "No option selected",
   "report": "Report",
   "you": "You",
   "none": "None",
@@ -749,7 +751,10 @@
       "queue__name": "Queue",
       "queue__uuid": "Queue UUID",
       "queue__sector__name": "Sector",
-      "created_on": "Date of commencement of service"
+      "created_on": "Date of commencement of service",
+      "duration": "Duration",
+      "awaiting_time": "Awaiting time",
+      "first_response_time": "First response time"
     },
     "select_data": {
       "label": "Select a date or period (maximum interval of 92 days between start date and end date)",
@@ -796,7 +801,8 @@
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
-    "error_message": "Error when disconnecting agent {agent}"
+    "error_message": "Error when disconnecting agent {agent}",
+    "tooltip_disabled": "This agent cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
     "title": "Human support",

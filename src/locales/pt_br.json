@@ -792,7 +792,8 @@
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
-    "error_message": "Erro ao desconectar agente {agent}"
+    "error_message": "Erro ao desconectar agente {agent}",
+    "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
   "human_support_dashboard": {
     "title": "Atendimento humano",

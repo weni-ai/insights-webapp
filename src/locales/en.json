@@ -792,7 +792,8 @@
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
-    "error_message": "Error when disconnecting agent {agent}"
+    "error_message": "Error when disconnecting agent {agent}",
+    "tooltip_disabled": "This agent cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
     "title": "Human support",

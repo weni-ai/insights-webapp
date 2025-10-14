@@ -254,9 +254,9 @@ export default {
 
             if (itemKey === 'status') {
               const statusMapper = {
-                green: 1,
-                orange: 2,
-                gray: 3,
+                online: 1,
+                custom: 2,
+                offline: 3,
               };
               valueA = statusMapper[valueA.status] || 0;
               valueB = statusMapper[valueB.status] || 0;
@@ -321,9 +321,9 @@ export default {
 
             if (itemKey === 'status') {
               const statusMapper = {
-                green: 1,
-                orange: 2,
-                gray: 3,
+                online: 1,
+                custom: 2,
+                offline: 3,
               };
               valueA = statusMapper[valueA.status] || 0;
               valueB = statusMapper[valueB.status] || 0;

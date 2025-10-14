@@ -154,6 +154,7 @@ export default {
       'setToken',
       'setProject',
       'checkEnableCreateCustomDashboards',
+      'checkEnableCsat',
     ]),
     ...mapActions(useFeatureFlag, ['getFeatureFlags']),
     ...mapActions(useProject, ['setIsCommerce']),
@@ -188,6 +189,7 @@ export default {
       initHotjar(sessionUserEmail);
 
       await this.checkEnableCreateCustomDashboards();
+      await this.checkEnableCsat();
     },
 
     handlerSetLanguage(language) {

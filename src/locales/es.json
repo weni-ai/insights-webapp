@@ -706,7 +706,6 @@
       "topics": "Temas",
       "csat": "CSAT",
       "nps": "NPS"
-
     },
     "field_labels": {
       "config": "Configuración",
@@ -761,7 +760,7 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Seleccione el sector",
-      "agent": "Agente", 
+      "agent": "Agente",
       "select_agent": "Seleccione el agente",
       "queue": "Cola",
       "select_queue": "Seleccione la cola",
@@ -870,6 +869,11 @@
     "analyze": {
       "title": "Próximamente: Nueva Vista de Análisis",
       "description": "Aquí podrás explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones más estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!"
+    },
+    "csat": {
+      "agents_ratings_general_title": "Evaluación general",
+      "agents_ratings_general_tooltip": "Esta puntuación refleja el rendimiento general del proyecto. Si se aplican filtros a este panel, la puntuación se ajustará automáticamente para mostrar el promedio general de los elementos filtrados.",
+      "agents_ratings_subtitle": "{rooms} salas • {reviews} evaluaciones"
     }
   }
 }

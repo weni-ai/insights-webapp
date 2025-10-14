@@ -33,4 +33,9 @@ export default {
     );
     return response;
   },
+  async verifyProjectCsat() {
+    const { project } = useConfig();
+    const response = await http.get(`/projects/${project.uuid}/verify_csat/`);
+    return response.data;
+  },
 };

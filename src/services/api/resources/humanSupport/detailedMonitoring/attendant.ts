@@ -12,10 +12,10 @@ interface AttendantData {
 
 interface AttendantDataResult {
   agent: string;
-  status: string | { status: string; label: string };
+  status: string;
   ongoing: string;
   finished: string;
-  average_girst_response_time: number;
+  average_first_response_time: number;
   average_response_time: number;
   average_duration: number;
   time_in_service: number;

@@ -318,7 +318,9 @@
   "metrics": "Métricas",
   "flow": "Flujo",
   "flows": "Flujo",
+  "custom_status": "Pausa",
   "select": "Seleccionar",
+  "multiple_without_selects_message": "Ninguna opción seleccionada",
   "report": "Informe",
   "you": "Usted",
   "none": "Ninguno",
@@ -740,7 +742,10 @@
       "queue__name": "Cola",
       "queue__uuid": "ID de la cola",
       "queue__sector__name": "Sector",
-      "created_on": "Fecha de inicio del servicio"
+      "created_on": "Fecha de inicio del servicio",
+      "duration": "Duración",
+      "awaiting_time": "Tiempo en espera",
+      "first_response_time": "Tiempo de 1ª respuesta"
     },
     "select_data": {
       "label": "Seleccione el período para buscar datos (máximo de 92 días entre la fecha inicial y la fecha final)",
@@ -787,7 +792,8 @@
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
-    "error_message": "Error al desconectar agente {agent}"
+    "error_message": "Error al desconectar agente {agent}",
+    "tooltip_disabled": "Este agente no puede ser desconectado porque está offline"
   },
   "human_support_dashboard": {
     "title": "Atención humana",

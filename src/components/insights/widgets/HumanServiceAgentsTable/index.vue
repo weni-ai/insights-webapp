@@ -43,7 +43,7 @@
       <template #body-status="{ item }">
         <AgentStatus
           :status="item.status.status"
-          :label="item.status.label"
+          :label="item.status.status"
           :agent="{ name: item.agent, email: item.agent_email }"
           @request-data="$emit('request-data')"
         />
@@ -156,13 +156,7 @@ export default {
       if (!this.formattedHeaders?.length || !this.items?.length) return [];
 
       const formattedItems = this.items.map((item) => {
-        const itemLabelMapper = {
-          gray: 'Offline',
-          green: 'Online',
-        };
-
-        item.status.label =
-          item.status.label || itemLabelMapper[item.status.status];
+        item.status.label = item.status.status;
 
         return item;
       });
@@ -260,9 +254,9 @@ export default {
 
             if (itemKey === 'status') {
               const statusMapper = {
-                green: 1,
-                orange: 2,
-                gray: 3,
+                online: 1,
+                custom: 2,
+                offline: 3,
               };
               valueA = statusMapper[valueA.status] || 0;
               valueB = statusMapper[valueB.status] || 0;
@@ -327,9 +321,9 @@ export default {
 
             if (itemKey === 'status') {
               const statusMapper = {
-                green: 1,
-                orange: 2,
-                gray: 3,
+                online: 1,
+                custom: 2,
+                offline: 3,
               };
               valueA = statusMapper[valueA.status] || 0;
               valueB = statusMapper[valueB.status] || 0;

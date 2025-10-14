@@ -64,30 +64,7 @@ export default {
       },
     )) as AttendantData;
 
-    /* TODO: Remove handleStatus after the API is updated */
-    const handleStatus = (
-      status: string | { status: string; label: string },
-    ) => {
-      const statusLabelMapper = {
-        gray: 'offline',
-        green: 'online',
-        orange: 'custom',
-      };
-
-      if (typeof status === 'string') {
-        return status;
-      }
-
-      return statusLabelMapper[status.status];
-    };
-
-    const formattedResponse: AttendantData = {
-      ...response,
-      results: response.results.map((result) => ({
-        ...result,
-        status: handleStatus(result.status),
-      })),
-    };
+    const formattedResponse: AttendantData = response;
 
     return formattedResponse;
   },

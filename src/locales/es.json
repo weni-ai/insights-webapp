@@ -318,6 +318,7 @@
   "metrics": "Métricas",
   "flow": "Flujo",
   "flows": "Flujo",
+  "custom_status": "Pausa",
   "select": "Seleccionar",
   "multiple_without_selects_message": "Ninguna opción seleccionada",
   "report": "Informe",

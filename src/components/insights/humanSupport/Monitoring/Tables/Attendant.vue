@@ -93,8 +93,8 @@ const formattedHeaders = computed(() => {
   return [
     createHeader('status'),
     createHeader('agent'),
-    createHeader('opened', 'ongoing'),
-    createHeader('closed', 'finished'),
+    createHeader('ongoing'),
+    createHeader('finished'),
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
@@ -158,6 +158,7 @@ const loadData = async () => {
         average_duration: formatSecondsToTime(result?.average_duration),
         time_in_service: formatSecondsToTime(result?.time_in_service),
       }));
+      console.log('formattedItems', formattedItems.value);
       pageTotal.value = data.count;
     } else {
       formattedItems.value = [];

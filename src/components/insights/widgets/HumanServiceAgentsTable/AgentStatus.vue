@@ -26,14 +26,17 @@
 
 <script setup>
 import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
+
+const { t } = useI18n();
 
 const props = defineProps({
   status: {
     type: String,
     required: true,
-    validator: (value) => ['green', 'gray', 'orange'].includes(value),
+    validator: (value) => ['online', 'offline', 'custom'].includes(value),
   },
   label: {
     type: String,
@@ -59,10 +62,14 @@ const statusClass = computed(() => {
 });
 
 const enabledDisconnectAgent = computed(() => {
-  return ['green', 'orange'].includes(props.status) && !!props.agent?.email;
+  return ['online', 'custom'].includes(props.status) && !!props.agent?.email;
 });
 
 const renderLabel = computed(() => {
+  if (props?.label?.toLowerCase() === 'custom') {
+    return t('custom_status');
+  }
+
   return props.label.slice(0, 1).toUpperCase() + props.label.slice(1);
 });
 </script>
@@ -87,19 +94,19 @@ const renderLabel = computed(() => {
 }
 
 .agent-status {
-  &.agent-status--green {
+  &.agent-status--online {
     :deep(.primary) {
       fill: $unnnic-color-aux-green-300;
     }
   }
 
-  &.agent-status--gray {
+  &.agent-status--offline {
     :deep(.primary) {
       fill: $unnnic-color-neutral-cleanest;
     }
   }
 
-  &.agent-status--orange {
+  &.agent-status--custom {
     :deep(.primary) {
       fill: $unnnic-color-aux-orange-500;
     }

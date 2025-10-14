@@ -158,7 +158,6 @@ const loadData = async () => {
         average_duration: formatSecondsToTime(result?.average_duration),
         time_in_service: formatSecondsToTime(result?.time_in_service),
       }));
-      console.log('formattedItems', formattedItems.value);
       pageTotal.value = data.count;
     } else {
       formattedItems.value = [];

@@ -742,7 +742,10 @@
       "queue__name": "Cola",
       "queue__uuid": "ID de la cola",
       "queue__sector__name": "Sector",
-      "created_on": "Fecha de inicio del servicio"
+      "created_on": "Fecha de inicio del servicio",
+      "duration": "Duración",
+      "awaiting_time": "Tiempo en espera",
+      "first_response_time": "Tiempo de 1ª respuesta"
     },
     "select_data": {
       "label": "Seleccione el período para buscar datos (máximo de 92 días entre la fecha inicial y la fecha final)",

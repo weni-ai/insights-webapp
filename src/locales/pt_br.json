@@ -741,7 +741,10 @@
       "queue__name": "Fila",
       "queue__uuid": "ID da fila",
       "queue__sector__name": "Setor",
-      "created_on": "Data de Início do atendimento"
+      "created_on": "Data de Início do atendimento",
+      "duration": "Duração",
+      "awaiting_time": "Tempo em espera",
+      "first_response_time": "Tempo para 1ª resposta"
     },
     "select_data": {
       "label": "Selecione o período para busca de dados (máximo de 92 dias entre a data inicial e a data final)",

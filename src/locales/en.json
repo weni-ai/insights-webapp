@@ -741,7 +741,10 @@
       "queue__name": "Queue",
       "queue__uuid": "Queue UUID",
       "queue__sector__name": "Sector",
-      "created_on": "Date of commencement of service"
+      "created_on": "Date of commencement of service",
+      "duration": "Duration",
+      "awaiting_time": "Awaiting time",
+      "first_response_time": "First response time"
     },
     "select_data": {
       "label": "Select a date or period (maximum interval of 92 days between start date and end date)",

@@ -368,8 +368,13 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(3);
-      expect(widgets.map((w) => w.key)).toEqual(['csat', 'nps', 'custom']);
+      expect(widgets).toHaveLength(4);
+      expect(widgets.map((w) => w.key)).toEqual([
+        'csat',
+        'nps',
+        'custom',
+        'sales_funnel',
+      ]);
     });
   });
 });

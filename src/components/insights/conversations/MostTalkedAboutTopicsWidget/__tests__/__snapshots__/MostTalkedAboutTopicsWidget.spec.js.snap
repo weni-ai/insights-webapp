@@ -11,6 +11,7 @@ exports[`MostTalkedAboutTopicsWidget > Component structure > should match snapsh
     class="most-talked-about-topics__conversation-widget"
     data-testid="topics-base-widget"
     data-v-56fece4b=""
+    hiddentabs="false"
     isloading="false"
     isonlytab="false"
     title="conversations_dashboard.most_talked_about_topics.title"

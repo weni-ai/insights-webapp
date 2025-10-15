@@ -246,11 +246,13 @@ export const useConversationalExport = defineStore('conversationalExport', {
         this.setIsRenderExportData(false);
         this.setIsRenderExportDataFeedback(true);
       } catch (error) {
-        if (error?.status === 400) {
+        if (error?.status === 400 && error?.concurrent_report) {
           defaultAlert(
             'error',
             i18n.global.t('export_data.error_pending_export'),
           );
+        } else if (error?.status === 400 && error?.error) {
+          defaultAlert('error', error?.error);
         } else {
           defaultAlert('error', i18n.global.t('export_data.error_default'));
         }

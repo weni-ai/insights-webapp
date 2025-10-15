@@ -877,6 +877,7 @@
       "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!"
     },
     "csat": {
+      "title": "CSAT",
       "agents_ratings_general_title": "Avaliação geral",
       "agents_ratings_general_tooltip": "Esta pontuação reflete o desempenho geral do projeto. Se filtros forem aplicados a este painel, a pontuação será ajustada automaticamente para mostrar a média geral dos itens filtrados.",
       "agents_ratings_subtitle": "{rooms} atendimentos • {reviews} avaliações",
@@ -886,7 +887,8 @@
         "neutral": "😐 Neutro",
         "dissatisfied": "☹️ Insatisfeito",
         "very_dissatisfied": "😡 Muito insatisfeito"
-      }
+      },
+      "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     }
   }
 }

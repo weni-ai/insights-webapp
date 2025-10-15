@@ -1,6 +1,25 @@
 <template>
   <section class="csat-ratings-widget">
-    <h1 class="csat-ratings-widget__title">CSAT</h1>
+    <section
+      v-if="!configStore.enableCsat && !isLoadingAgentsData"
+      class="csat-ratings-widget--disabled"
+    >
+      <h1 class="csat-ratings-widget__title">
+        {{ $t('human_support_dashboard.csat.title') }}
+      </h1>
+      <p class="csat-ratings-widget__disabled-text">
+        {{ $t('human_support_dashboard.csat.disabled_text') }}
+      </p>
+      <UnnnicButton
+        :text="$t('enable')"
+        type="primary"
+        size="small"
+        @click="redirectToChatsConfig"
+      />
+    </section>
+    <h1 class="csat-ratings-widget__title">
+      {{ $t('human_support_dashboard.csat.title') }}
+    </h1>
     <section class="csat-ratings-widget__content">
       <section
         ref="agentsContainerRef"
@@ -104,6 +123,9 @@ onMounted(() => {
     if (configStore.enableCsat) {
       loadAgentsData();
       loadRatingsData();
+    } else {
+      isLoadingAgentsData.value = false;
+      isLoadingRatingsData.value = false;
     }
   });
 });
@@ -178,6 +200,10 @@ const loadAgentsData = async ({
   }
 };
 
+const redirectToChatsConfig = () => {
+  // TODO redirect
+};
+
 const loadRatingsData = async ({
   silent = false,
 }: { silent?: boolean } = {}) => {
@@ -232,6 +258,7 @@ watch(
 
 <style scoped lang="scss">
 .csat-ratings-widget {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-6;
@@ -242,6 +269,27 @@ watch(
   border-radius: $unnnic-spacing-xs;
   border: 1px solid $unnnic-color-border-soft;
   background: $unnnic-color-neutral-white;
+
+  &--disabled {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    gap: $unnnic-space-3;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+  }
+
+  &__disabled-text {
+    color: $unnnic-color-neutral-cloudy;
+    font: $unnnic-font-display-4;
+  }
 
   &__title {
     color: $unnnic-color-neutral-darkest;

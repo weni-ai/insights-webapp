@@ -101,11 +101,13 @@ describe('Conversational FormExport', () => {
 
     it('should render all child components', () => {
       expect(
-        wrapper.find('[data-testid="conversational-export-filter-date"]')
+        wrapper
+          .find('[data-testid="conversational-export-filter-date"]')
           .exists(),
       ).toBe(true);
       expect(
-        wrapper.find('[data-testid="conversational-form-checkbox-component"]')
+        wrapper
+          .find('[data-testid="conversational-form-checkbox-component"]')
           .exists(),
       ).toBe(true);
       expect(

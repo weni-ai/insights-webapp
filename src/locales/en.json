@@ -158,13 +158,14 @@
       "edit_csat_or_nps": "Edit {type}",
       "remove_widget": "Remove widget",
       "modal_remove_widget": {
-        "title": "Remove {type} widget",
+        "title": "Remove widget",
         "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "success_message": "{widget} removed"
       },
       "tabs": {
-        "sentiment_analysis": "Sentiment analysis",
+        "native": "Native",
         "customized": "Customized"
       },
       "select_chart_type": "Select a chart type:",

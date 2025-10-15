@@ -11,7 +11,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
   secondarybuttonprops="[object Object]"
   showcloseicon=""
   size="sm"
-  title="conversations_dashboard.customize_your_dashboard.modal_remove_widget.title {"type":"CSAT"}"
+  title="conversations_dashboard.customize_your_dashboard.modal_remove_widget.title undefined"
   type="warning"
 >
   
@@ -20,7 +20,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
     data-testid="modal-remove-widget-description"
     data-v-1d7c4579=""
   >
-    conversations_dashboard.customize_your_dashboard.modal_remove_widget.description {"type":"CSAT"}
+    conversations_dashboard.customize_your_dashboard.modal_remove_widget.description {}
   </p>
   
 </div>

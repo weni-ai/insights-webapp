@@ -6,7 +6,6 @@
       :text="t('export_data.tooltip')"
       side="left"
       :enabled="!hasExportData"
-      forceOpen
     >
       <UnnnicButton
         type="secondary"

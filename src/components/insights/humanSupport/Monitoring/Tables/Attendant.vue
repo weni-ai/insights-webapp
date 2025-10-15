@@ -27,7 +27,7 @@
     </template>
     <template #body-status="{ item }">
       <AgentStatus
-        :status="handleStatus(item.status)"
+        :status="item.status"
         :label="item.status"
       />
     </template>
@@ -47,12 +47,12 @@ import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
-  | 'average_girst_response_time'
+  | 'average_first_response_time'
   | 'average_response_time'
   | 'average_duration'
   | 'time_in_service'
 > & {
-  average_girst_response_time: string;
+  average_first_response_time: string;
   average_response_time: string;
   average_duration: string;
   time_in_service: string;
@@ -93,8 +93,8 @@ const formattedHeaders = computed(() => {
   return [
     createHeader('status'),
     createHeader('agent'),
-    createHeader('opened', 'ongoing'),
-    createHeader('closed', 'finished'),
+    createHeader('ongoing'),
+    createHeader('finished'),
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
@@ -118,17 +118,6 @@ const handleSort = (sort: {
 const handlePageChange = (newPage: number) => {
   page.value = newPage;
   loadData();
-};
-
-/* TODO: Remove handleStatus after the API is updated */
-const handleStatus = (status: string) => {
-  const statusLabelMapper = {
-    online: 'green',
-    offline: 'gray',
-    custom: 'orange',
-  };
-
-  return statusLabelMapper[status];
 };
 
 const redirectItem = (item: AttendantDataResult) => {
@@ -160,8 +149,8 @@ const loadData = async () => {
     if (data.results) {
       formattedItems.value = data.results.map((result) => ({
         ...result,
-        average_girst_response_time: formatSecondsToTime(
-          result?.average_girst_response_time,
+        average_first_response_time: formatSecondsToTime(
+          result?.average_first_response_time,
         ),
         average_response_time: formatSecondsToTime(
           result?.average_response_time,

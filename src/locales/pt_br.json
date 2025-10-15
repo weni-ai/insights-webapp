@@ -158,13 +158,14 @@
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Remover widget",
       "modal_remove_widget": {
-        "title": "Remover widget {type}",
+        "title": "Remover widget",
         "description": "Tem certeza que deseja remover o widget {type}?",
         "remove": "Remover",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "success_message": "{widget} removido"
       },
       "tabs": {
-        "sentiment_analysis": "Análise de sentimento",
+        "native": "Nativo",
         "customized": "Personalizado"
       },
       "select_chart_type": "Selecione o tipo de gráfico:",
@@ -876,7 +877,7 @@
         "finished": "Finalizado",
         "average_first_response_time": "Tempo médio para 1ª resposta",
         "average_response_time": "Tempo médio de resposta",
-        "average_duration": "Duração média", 
+        "average_duration": "Duração média",
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
       }

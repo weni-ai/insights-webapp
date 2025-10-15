@@ -261,19 +261,19 @@ const activeTab = computed(() => {
     drawerWidgetType.value === 'add' &&
     !(isCsatConfigured.value || isNpsConfigured.value)
   ) {
-    return availableTabs.find((tab) => tab.key === 'sentiment_analysis')?.name;
+    return availableTabs.find((tab) => tab.key === 'native')?.name;
   }
 
   return availableTabs.find((tab) => tab.key === 'customized')?.name;
 });
 
 const availableTabs: {
-  key: 'sentiment_analysis' | 'customized';
+  key: 'native' | 'customized';
   name: string;
 }[] = [
   {
-    key: 'sentiment_analysis',
-    name: 'conversations_dashboard.customize_your_dashboard.tabs.sentiment_analysis',
+    key: 'native',
+    name: 'conversations_dashboard.customize_your_dashboard.tabs.native',
   },
   {
     key: 'customized',
@@ -281,8 +281,8 @@ const availableTabs: {
   },
 ];
 
-const handleTabChoice = (tabKey: 'sentiment_analysis' | 'customized') => {
-  if (tabKey === 'sentiment_analysis') {
+const handleTabChoice = (tabKey: 'native' | 'customized') => {
+  if (tabKey === 'native') {
     let widgets = [
       handleWidgetTypeChoice('csat'),
       handleWidgetTypeChoice('nps'),

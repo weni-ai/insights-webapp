@@ -51,6 +51,7 @@
       v-model="isRemoveWidgetModalOpen"
       :type="type"
       :uuid="uuid"
+      :name="titleWidget"
     />
 
     <SeeAllDrawer

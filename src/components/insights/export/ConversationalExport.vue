@@ -6,6 +6,7 @@
       :text="t('export_data.tooltip')"
       side="left"
       :enabled="!hasExportData"
+      forceOpen
     >
       <UnnnicButton
         type="secondary"
@@ -58,6 +59,7 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed } from 'vue';
 import { useConversationalExport } from '@/store/modules/export/conversational/export';
+import { UnnnicToolTip } from '@weni/unnnic-system';
 import FormExport from './Conversational/FormExport.vue';
 
 const { t } = useI18n();
@@ -121,6 +123,8 @@ onUnmounted(() => {
 }
 
 .export-data-tooltip {
-  z-index: 5;
+  :deep(.unnnic-tooltip-label) {
+    z-index: 5;
+  }
 }
 </style>

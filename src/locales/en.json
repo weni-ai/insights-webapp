@@ -879,7 +879,14 @@
     "csat": {
       "agents_ratings_general_title": "Overall assessment",
       "agents_ratings_general_tooltip": "This score reflects the project's overall performance. If filters are applied to this dashboard, the score will automatically adjust to show the overall average of the filtered items.",
-      "agents_ratings_subtitle": "{rooms} rooms • {reviews} reviews"
+      "agents_ratings_subtitle": "{rooms} rooms • {reviews} reviews",
+      "review_rating": {
+        "very_satisfied": "🤩 Very satisfied",
+        "satisfied": "😁 Satisfied",
+        "neutral": "😐 Neutral",
+        "dissatisfied": "☹️ Dissatisfied",
+        "very_dissatisfied": "😡 Very dissatisfied"
+      }
     }
   }
 }

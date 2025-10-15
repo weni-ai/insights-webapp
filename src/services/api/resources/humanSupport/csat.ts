@@ -58,7 +58,7 @@ export default {
 
     return {
       general: { rooms: 1, reviews: 1, avg_rating: 1 },
-      next: null,
+      next: 'next',
       previous: null,
       results: [
         {

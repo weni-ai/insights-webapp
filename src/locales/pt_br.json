@@ -879,7 +879,14 @@
     "csat": {
       "agents_ratings_general_title": "Avaliação geral",
       "agents_ratings_general_tooltip": "Esta pontuação reflete o desempenho geral do projeto. Se filtros forem aplicados a este painel, a pontuação será ajustada automaticamente para mostrar a média geral dos itens filtrados.",
-      "agents_ratings_subtitle": "{rooms} atendimentos • {reviews} avaliações"
+      "agents_ratings_subtitle": "{rooms} atendimentos • {reviews} avaliações",
+      "review_rating": {
+        "very_satisfied": "🤩 Muito satisfeito",
+        "satisfied": "😁 Satisfeito",
+        "neutral": "😐 Neutro",
+        "dissatisfied": "☹️ Insatisfeito",
+        "very_dissatisfied": "😡 Muito insatisfeito"
+      }
     }
   }
 }

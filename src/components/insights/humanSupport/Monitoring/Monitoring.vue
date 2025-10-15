@@ -31,16 +31,15 @@ let timeoutStop: (() => void) | null = null;
 
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
-const { loadAllData, setRefreshDetailedTabData } = useHumanSupportMonitoring();
+const { setRefreshDataMonitoring } = useHumanSupportMonitoring();
 
 const loadData = async () => {
-  loadAllData();
-  setRefreshDetailedTabData(true);
+  setRefreshDataMonitoring(true);
 
   timeoutStop?.();
 
   const { stop } = useTimeoutFn(() => {
-    setRefreshDetailedTabData(false);
+    setRefreshDataMonitoring(false);
   }, 500);
 
   timeoutStop = stop;

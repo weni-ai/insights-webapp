@@ -133,6 +133,7 @@ const {
   isNpsAiConfig,
   isCsatWidgetDataError,
   isNpsWidgetDataError,
+  isSalesFunnelWidgetDataError,
 } = storeToRefs(conversationalWidgets);
 
 const isCsatOrNps = computed(() => {
@@ -148,7 +149,6 @@ const actionError = computed(() => {
 });
 
 const isError = computed(() => {
-  // TODO: sales funnel error
   if (props.type === 'csat') {
     return isCsatWidgetDataError.value;
   }
@@ -159,6 +159,10 @@ const isError = computed(() => {
 
   if (props.type === 'custom') {
     return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
+  }
+
+  if (props.type === 'sales_funnel') {
+    return isSalesFunnelWidgetDataError.value;
   }
 
   return false;

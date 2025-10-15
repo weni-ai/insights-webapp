@@ -8,7 +8,7 @@
     :hiddenTabs="type === 'sales_funnel'"
     @tab-change="handleTabChange"
   >
-    <SalesFunnelWidget v-if="type === 'sales_funnel'" />
+    <SalesFunnelWidget v-if="type === 'sales_funnel' && !isError" />
     <slot
       v-else-if="treatedProgressItems?.length === 0"
       name="setup-widget"

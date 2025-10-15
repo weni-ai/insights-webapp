@@ -32,6 +32,7 @@ interface ConversationalWidgetsState {
   salesFunnelWidget: WidgetType | null;
   isCsatWidgetDataError: boolean;
   isNpsWidgetDataError: boolean;
+  isSalesFunnelWidgetDataError: boolean;
 }
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
@@ -55,6 +56,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     salesFunnelWidget: null,
     isCsatWidgetDataError: false,
     isNpsWidgetDataError: false,
+    isSalesFunnelWidgetDataError: false,
   }),
 
   actions: {
@@ -143,6 +145,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         this.salesFunnelWidgetData = salesFunnelData;
       } catch (error) {
         this.salesFunnelWidgetData = null;
+        this.isSalesFunnelWidgetDataError = true;
         console.error('Error loading sales funnel widget data', error);
       } finally {
         this.isLoadingSalesFunnelWidgetData = false;

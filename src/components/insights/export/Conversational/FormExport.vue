@@ -16,8 +16,8 @@
       data-testid="conversational-export-form-content"
     >
       <ExportFilterDate
-        data-testid="conversational-export-filter-date"
         v-model="date_range"
+        data-testid="conversational-export-filter-date"
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_period.placeholder')"
         :options="shortCutOptions"

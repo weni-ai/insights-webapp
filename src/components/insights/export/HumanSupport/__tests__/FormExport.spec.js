@@ -149,7 +149,8 @@ describe('HumanSupport FormExport', () => {
         wrapper.find('[data-testid="export-data-filter-date"]').exists(),
       ).toBe(true);
       expect(
-        wrapper.find('[data-testid="human-support-form-checkbox-component"]')
+        wrapper
+          .find('[data-testid="human-support-form-checkbox-component"]')
           .exists(),
       ).toBe(true);
       expect(

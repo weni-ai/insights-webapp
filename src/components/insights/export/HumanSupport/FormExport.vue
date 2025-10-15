@@ -16,8 +16,8 @@
       data-testid="export-data-form-content"
     >
       <ExportFilterDate
-        data-testid="export-data-filter-date"
         v-model="date_range"
+        data-testid="export-data-filter-date"
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_data.placeholder')"
         :options="shortCutOptions"

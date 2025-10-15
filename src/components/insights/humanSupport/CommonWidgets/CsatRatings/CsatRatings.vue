@@ -89,21 +89,29 @@ import AgentCard from './AgentCard.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useConfig } from '@/store/modules/config';
 
 import Csat from '@/services/api/resources/humanSupport/csat';
+
+import { parseQueryString } from '@/utils/request';
 
 defineOptions({
   name: 'CsatRatings',
 });
 
 onMounted(() => {
-  loadAgentsData();
-  loadRatingsData();
+  configStore.checkEnableCsat().then(() => {
+    if (configStore.enableCsat) {
+      loadAgentsData();
+      loadRatingsData();
+    }
+  });
 });
 
 const { t } = useI18n();
 
-const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupportMonitoringStore = useHumanSupportMonitoring();
+const configStore = useConfig();
 
 const agentsContainerRef = useTemplateRef<HTMLElement>('agentsContainerRef');
 
@@ -112,8 +120,8 @@ useInfiniteScroll(agentsContainerRef, async () => {
     await loadAgentsData({ silent: true, concat: true });
 });
 
-const isLoadingAgentsData = ref(false);
-const isLoadingRatingsData = ref(false);
+const isLoadingAgentsData = ref(true);
+const isLoadingRatingsData = ref(true);
 
 const agentsTotalNext = ref<string | null>(null);
 
@@ -157,9 +165,11 @@ const loadAgentsData = async ({
     isLoadingAgentsData.value = true;
   }
   try {
-    const { general, next, results } = await Csat.getTotalsMonitoring({});
+    const { general, next, results } = await Csat.getTotalsMonitoring({
+      cursor: agentsTotalNext.value,
+    });
     agentsGeneralTotals.value = general;
-    agentsTotalNext.value = next;
+    agentsTotalNext.value = parseQueryString(next)?.cursor;
     agentsData.value = concat ? agentsData.value.concat(results) : results;
   } catch (error) {
     console.log(error);
@@ -193,8 +203,9 @@ watch(activeAgentUuid, () => {
 });
 
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  () => humanSupportMonitoringStore.appliedFilters,
   () => {
+    if (!configStore.enableCsat) return;
     loadAgentsData();
     if (!activeAgentUuid.value) {
       loadRatingsData();
@@ -204,8 +215,9 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.refreshDataMonitoring,
+  () => humanSupportMonitoringStore.refreshDataMonitoring,
   (value) => {
+    if (!configStore.enableCsat) return;
     if (value) {
       agentsTotalNext.value = null;
       activeAgentUuid.value = null;

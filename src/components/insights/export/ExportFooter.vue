@@ -1,6 +1,12 @@
 <template>
-  <section class="export-footer">
-    <section class="export-footer__format">
+  <section
+    class="export-footer"
+    data-testid="export-footer"
+  >
+    <section
+      class="export-footer__format"
+      data-testid="export-footer-format"
+    >
       <UnnnicLabel :label="formatLabel" />
       <UnnnicRadio
         :data-testid="'radio-format-xlsx'"
@@ -20,8 +26,14 @@
       </UnnnicRadio>
     </section>
 
-    <section class="export-footer__terms">
-      <p class="export-footer__terms-warning">
+    <section
+      class="export-footer__terms"
+      data-testid="export-footer-terms"
+    >
+      <p
+        class="export-footer__terms-warning"
+        data-testid="export-footer-warning"
+      >
         <UnnnicIcon
           icon="alert-circle-1"
           filled
@@ -33,6 +45,7 @@
       <UnnnicCheckbox
         :modelValue="acceptTerms"
         :textRight="acceptTermsText"
+        data-testid="export-footer-accept-terms"
         @update:model-value="handleAcceptTermsChange"
       />
     </section>

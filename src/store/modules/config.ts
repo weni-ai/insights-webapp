@@ -7,6 +7,7 @@ export const useConfig = defineStore('config', {
   state: () => ({
     project: { uuid: '' },
     enableCreateCustomDashboards: false,
+    enableCsat: false,
     token: '',
   }),
 
@@ -23,6 +24,11 @@ export const useConfig = defineStore('config', {
     async checkEnableCreateCustomDashboards() {
       const enabled = await Projects.verifyProjectIndexer();
       this.enableCreateCustomDashboards = enabled;
+    },
+
+    async checkEnableCsat() {
+      const { is_enabled } = await Projects.verifyProjectCsat();
+      this.enableCsat = is_enabled;
     },
   },
 });

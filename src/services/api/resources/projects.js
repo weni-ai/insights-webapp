@@ -1,6 +1,7 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { createRequestQuery } from '@/utils/request';
+import { asyncTimeout } from '@/utils/time';
 
 export default {
   async getProjectSource(slug, queryParams = {}) {
@@ -32,5 +33,12 @@ export default {
       `/projects/${project.uuid}/verify_project_indexer/`,
     );
     return response;
+  },
+  async verifyProjectCsat() {
+    const { project } = useConfig();
+    await asyncTimeout(1000);
+    return { is_enabled: false };
+    // const response = await http.get(`/projects/${project.uuid}/verify_csat/`);
+    // return response.data;
   },
 };

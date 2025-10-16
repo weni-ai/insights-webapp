@@ -24,6 +24,7 @@ vi.mock('@/services/api', () => {
 vi.mock('@/services/api/resources/projects', () => ({
   default: {
     verifyProjectIndexer: vi.fn(),
+    verifyProjectCsat: vi.fn(() => ({ is_enabled: true })),
   },
 }));
 

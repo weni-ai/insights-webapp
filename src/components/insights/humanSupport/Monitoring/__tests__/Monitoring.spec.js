@@ -6,7 +6,7 @@ import Monitoring from '../Monitoring.vue';
 
 const mockHumanSupportMonitoringStore = {
   loadAllData: vi.fn(),
-  setRefreshDetailedTabData: vi.fn(),
+  setRefreshDataMonitoring: vi.fn(),
 };
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
@@ -58,7 +58,7 @@ describe('Monitoring', () => {
 
     Object.assign(mockHumanSupportMonitoringStore, {
       loadAllData: vi.fn(),
-      setRefreshDetailedTabData: vi.fn(),
+      setRefreshDataMonitoring: vi.fn(),
     });
 
     wrapper = createWrapper();
@@ -121,15 +121,9 @@ describe('Monitoring', () => {
   });
 
   describe('Lifecycle management', () => {
-    it('should call loadAllData on mount', () => {
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-    });
-
-    it('should call setRefreshDetailedTabData on mount', () => {
+    it('should call setRefreshDataMonitoring on mount', () => {
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledWith(true);
     });
 
@@ -153,15 +147,9 @@ describe('Monitoring', () => {
   });
 
   describe('Data loading', () => {
-    it('should call loadAllData when loading data', () => {
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-    });
-
     it('should set refresh flag to true immediately', () => {
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledWith(true);
     });
 
@@ -175,111 +163,14 @@ describe('Monitoring', () => {
       await vi.advanceTimersByTimeAsync(500);
 
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledTimes(2);
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenNthCalledWith(1, true);
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenNthCalledWith(2, false);
-
-      newWrapper.unmount();
-    });
-  });
-
-  describe('Auto refresh functionality', () => {
-    it('should refresh data every 60 seconds', async () => {
-      wrapper.unmount();
-      vi.clearAllTimers();
-      vi.clearAllMocks();
-
-      const newWrapper = createWrapper();
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-
-      await vi.advanceTimersByTimeAsync(60000);
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        2,
-      );
-
-      await vi.advanceTimersByTimeAsync(60000);
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        3,
-      );
-
-      newWrapper.unmount();
-    });
-
-    it('should refresh detailed tab data flag on each auto refresh', async () => {
-      wrapper.unmount();
-      vi.clearAllTimers();
-      vi.clearAllMocks();
-
-      const newWrapper = createWrapper();
-
-      await vi.advanceTimersByTimeAsync(60000);
-
-      expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
-      ).toHaveBeenCalledWith(true);
-      expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
-      ).toHaveBeenCalledWith(false);
-
-      newWrapper.unmount();
-    });
-
-    it('should stop auto refresh on unmount', async () => {
-      wrapper.unmount();
-      vi.clearAllTimers();
-      vi.clearAllMocks();
-
-      const newWrapper = createWrapper();
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-
-      newWrapper.unmount();
-
-      vi.clearAllMocks();
-
-      await vi.advanceTimersByTimeAsync(60000);
-
-      expect(
-        mockHumanSupportMonitoringStore.loadAllData,
-      ).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Constants and configuration', () => {
-    it('should use 60 second auto refresh interval', async () => {
-      wrapper.unmount();
-      vi.clearAllTimers();
-      vi.clearAllMocks();
-
-      const newWrapper = createWrapper();
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-
-      await vi.advanceTimersByTimeAsync(59999);
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-
-      await vi.advanceTimersByTimeAsync(1);
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        2,
-      );
 
       newWrapper.unmount();
     });

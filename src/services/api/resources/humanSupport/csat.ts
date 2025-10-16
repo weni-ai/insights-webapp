@@ -54,6 +54,8 @@ export default {
       ...params,
     };
 
+    // TODO: Remove this after testing
+
     await asyncTimeout(1000);
 
     return {
@@ -119,6 +121,8 @@ export default {
       ...formattedAppliedFilters,
       ...params,
     };
+
+    // TODO: Remove this after testing
 
     await asyncTimeout(1000);
 

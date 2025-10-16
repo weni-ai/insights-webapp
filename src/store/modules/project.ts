@@ -2,6 +2,7 @@ import Projects from '@/services/api/resources/projects';
 import NexusApi from '@/services/api/resources/nexus';
 import { parseValue } from '@/utils/object';
 import { defineStore } from 'pinia';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 import env from '@/utils/env';
 
 export const useProject = defineStore('project', {
@@ -43,9 +44,15 @@ export const useProject = defineStore('project', {
         (agent) => agent.uuid === purchaseAgentRequired,
       );
 
+      const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
+        'insightsSalesFunnel',
+      );
+
       return env('ENVIRONMENT') === 'staging'
         ? true
-        : hasValidSalesFunnelAgent && hasValidSalesFunnelAgentPurchase;
+        : hasValidSalesFunnelAgent &&
+            hasValidSalesFunnelAgentPurchase &&
+            enableFeatureFlag;
     },
   },
 

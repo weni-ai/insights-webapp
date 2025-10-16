@@ -26,6 +26,17 @@ export const useProject = defineStore('project', {
       state.agentsTeam.agents.find(
         (agent) => agent.uuid === env('NPS_AGENT_UUID'),
       ),
+    hasValidSalesFunnelAgent: (state) => {
+      const requiredToEnableSalesFunnel = env(
+        'ENABLE_SALES_FUNNEL_AGENTS_UUID',
+      );
+
+      const hasValidSalesFunnelAgent = state.agentsTeam.agents.some((agent) =>
+        requiredToEnableSalesFunnel.includes(agent.uuid),
+      );
+
+      return env('ENVIRONMENT') === 'staging' ? true : hasValidSalesFunnelAgent;
+    },
   },
 
   actions: {

@@ -93,8 +93,8 @@ const formattedHeaders = computed(() => {
   return [
     createHeader('status'),
     createHeader('agent'),
-    createHeader('opened', 'ongoing'),
-    createHeader('closed', 'finished'),
+    createHeader('ongoing'),
+    createHeader('finished'),
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),

@@ -29,8 +29,8 @@ exports[`CheckboxList > should render label and list 1`] = `
         <svg
           class="unnnic-icon unnnic-icon__size--md unnnic-icon-scheme--neutral-clean unnnic-checkbox disabled"
           data-testid="old-map-icons"
+          data-v-e3a23918=""
           data-v-f5f8c62c=""
-          data-v-fb16c4d6=""
           fill="none"
           height="40"
           viewBox="0 0 40 40"
@@ -69,8 +69,8 @@ exports[`CheckboxList > should render label and list 1`] = `
         <svg
           class="unnnic-icon unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--neutral-clean unnnic-checkbox"
           data-testid="old-map-icons"
+          data-v-e3a23918=""
           data-v-f5f8c62c=""
-          data-v-fb16c4d6=""
           fill="none"
           height="40"
           viewBox="0 0 40 40"
@@ -109,8 +109,8 @@ exports[`CheckboxList > should render label and list 1`] = `
         <svg
           class="unnnic-icon unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--brand-weni unnnic-checkbox"
           data-testid="old-map-icons"
+          data-v-e3a23918=""
           data-v-f5f8c62c=""
-          data-v-fb16c4d6=""
           fill="none"
           height="40"
           viewBox="0 0 40 40"

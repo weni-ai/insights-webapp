@@ -4,20 +4,13 @@ exports[`CheckboxList > should render label and list 1`] = `
 <ol
   data-v-2e73b81b=""
 >
-  <section
-    class="unnnic-label"
+  <p
+    class="unnnic-label__label"
     data-testid="checkbox-list-label"
     data-v-2e73b81b=""
-    data-v-a4b997a0=""
   >
-    <p
-      class="unnnic-label__label"
-      data-v-a4b997a0=""
-    >
-      Label
-    </p>
-    <!---->
-  </section>
+    Label
+  </p>
   <section
     class="checkbox-list"
     data-v-2e73b81b=""

@@ -38,6 +38,7 @@ export default {
     const { project } = useConfig();
     await asyncTimeout(1000);
     return { is_enabled: true };
+    // TODO: Remove this after testing
     // const response = await http.get(`/projects/${project.uuid}/verify_csat/`);
     // return response.data;
   },

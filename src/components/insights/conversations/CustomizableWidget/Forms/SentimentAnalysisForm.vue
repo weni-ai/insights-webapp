@@ -360,7 +360,6 @@ watch(
 
 onBeforeMount(() => {
   getFlows();
-  getAgentsTeam();
 });
 
 onMounted(async () => {

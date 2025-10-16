@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onUnmounted, watch } from 'vue';
+import { onUnmounted, watch } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useProject } from '@/store/modules/project';
 import { storeToRefs } from 'pinia';
@@ -95,14 +95,8 @@ const {
 } = customWidgets;
 
 const { customForm } = storeToRefs(customWidgets);
-const project = useProject();
-const { getAgentsTeam } = project;
-const { agentsTeam, isLoadingAgentsTeam } = storeToRefs(project);
+const { agentsTeam, isLoadingAgentsTeam } = storeToRefs(useProject());
 const { isNewDrawerCustomizable } = useConversational();
-
-onBeforeMount(() => {
-  getAgentsTeam();
-});
 
 watch(agentsTeam, () => {
   if (!isNewDrawerCustomizable) {

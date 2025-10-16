@@ -100,7 +100,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onBeforeMount, ref } from 'vue';
 import ConfigCustomizableForm from './ConfigCustomizableForm.vue';
 import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
@@ -124,7 +124,10 @@ const {
   isLoadingUpdateWidget,
 } = storeToRefs(useConversationalWidgets());
 
-const { hasValidSalesFunnelAgent } = storeToRefs(useProject());
+const projectStore = useProject();
+const { getAgentsTeam } = projectStore;
+
+const { hasValidSalesFunnelAgent } = storeToRefs(projectStore);
 
 const { setIsDrawerCustomizableOpen } = useConversational();
 const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
@@ -136,6 +139,10 @@ const { isEnabledCreateCustomForm, isLoadingSaveNewCustomWidget } =
 const { saveCustomWidget } = customWidgets;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
+
+onBeforeMount(() => {
+  getAgentsTeam();
+});
 
 function closeDrawer() {
   setIsDrawerCustomizableOpen(false, null, false);

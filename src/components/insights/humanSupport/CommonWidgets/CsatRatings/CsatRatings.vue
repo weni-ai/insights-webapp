@@ -201,7 +201,14 @@ const loadAgentsData = async ({
 };
 
 const redirectToChatsConfig = () => {
-  // TODO redirect
+  const chatsConfigLink = `settings:chats/settings`;
+  window.parent.postMessage(
+    {
+      event: 'redirect',
+      path: chatsConfigLink,
+    },
+    '*',
+  );
 };
 
 const loadRatingsData = async ({

@@ -356,6 +356,7 @@
   "rejected": "Rejected",
   "active": "Active",
   "disabled": "Disabled",
+  "enable": "Enable",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
@@ -885,6 +886,20 @@
     "analyze": {
       "title": "Soon: New Analysis View",
       "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
+    },
+    "csat": {
+      "title": "CSAT",
+      "agents_ratings_general_title": "Overall assessment",
+      "agents_ratings_general_tooltip": "This score reflects the project's overall performance. If filters are applied to this dashboard, the score will automatically adjust to show the overall average of the filtered items.",
+      "agents_ratings_subtitle": "{rooms} rooms • {reviews} reviews",
+      "review_rating": {
+        "very_satisfied": "🤩 Very satisfied",
+        "satisfied": "😁 Satisfied",
+        "neutral": "😐 Neutral",
+        "dissatisfied": "☹️ Dissatisfied",
+        "very_dissatisfied": "😡 Very dissatisfied"
+      },
+      "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
     }
   }
 }

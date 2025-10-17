@@ -5,6 +5,7 @@
   >
     <ServiceStatus data-testid="monitoring-service-status" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
+    <CsatRatings data-testid="monitoring-csat-ratings" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
   </section>
@@ -19,22 +20,26 @@ import ServiceStatus from './ServiceStatus.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
+import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
+
+defineOptions({
+  name: 'MonitoringView',
+});
 
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 let timeoutStop: (() => void) | null = null;
 
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
-const { loadAllData, setRefreshDetailedTabData } = useHumanSupportMonitoring();
+const { setRefreshDataMonitoring } = useHumanSupportMonitoring();
 
 const loadData = async () => {
-  loadAllData();
-  setRefreshDetailedTabData(true);
+  setRefreshDataMonitoring(true);
 
   timeoutStop?.();
 
   const { stop } = useTimeoutFn(() => {
-    setRefreshDetailedTabData(false);
+    setRefreshDataMonitoring(false);
   }, 500);
 
   timeoutStop = stop;

@@ -149,7 +149,7 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.refreshDetailedTabData,
+  () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (
       newValue &&

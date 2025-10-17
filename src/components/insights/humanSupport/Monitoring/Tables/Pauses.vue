@@ -47,6 +47,7 @@ import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
   custom_status: {
+    uuid: string;
     status_type: string;
     break_time: string | number;
   }[];
@@ -83,6 +84,20 @@ const customStatusTypes = computed(() => {
   return Array.from(allStatusTypes).sort();
 });
 
+const customStatusTypeToUuid = computed(() => {
+  const mapping: Record<string, string> = {};
+
+  rawItems.value.forEach((item) => {
+    item.custom_status?.forEach((status) => {
+      if (status.status_type && status.uuid) {
+        mapping[status.status_type] = status.uuid;
+      }
+    });
+  });
+
+  return mapping;
+});
+
 const formattedHeaders = computed(() => {
   const baseHeaders = [
     {
@@ -96,7 +111,7 @@ const formattedHeaders = computed(() => {
   const dynamicHeaders = customStatusTypes.value.map((statusType) => ({
     title: statusType,
     itemKey: statusType,
-    isSortable: false,
+    isSortable: true,
     size: 0.5,
   }));
 
@@ -155,10 +170,16 @@ const loadData = async () => {
     isLoading.value = true;
 
     const offset = (page.value - 1) * pageInterval.value;
+
+    const isCustomStatus = customStatusTypes.value.includes(
+      currentSort.value.itemKey,
+    );
+    const orderingKey = isCustomStatus
+      ? customStatusTypeToUuid.value[currentSort.value.itemKey] || 'agent'
+      : currentSort.value.itemKey;
+
     const ordering =
-      currentSort.value.order === 'desc'
-        ? `-${currentSort.value.itemKey}`
-        : currentSort.value.itemKey;
+      currentSort.value.order === 'desc' ? `-${orderingKey}` : orderingKey;
 
     const data =
       await getDetailedMonitoringPausesService.getDetailedMonitoringPauses({

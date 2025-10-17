@@ -1,0 +1,23 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ExportFilterDate > Component structure > should match snapshot 1`] = `
+<section
+  class="export-filter-date"
+  data-testid="export-filter-date"
+  data-v-8d4d5760=""
+>
+  <unnnic-label-stub
+    data-v-8d4d5760=""
+    label="Date Range"
+  />
+  <filter-date-stub
+    data-testid="export-filter-date-picker"
+    data-v-8d4d5760=""
+    maxdate="2024-12-31"
+    mindate="2024-01-01"
+    modelvalue="[object Object]"
+    options="[object Object],[object Object]"
+    placeholder="Select date"
+  />
+</section>
+`;

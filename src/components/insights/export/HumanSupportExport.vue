@@ -1,5 +1,8 @@
 <template>
-  <section class="modal-export-data">
+  <section
+    class="modal-export-data"
+    data-testid="modal-export-data"
+  >
     <UnnnicToolTip
       data-testid="export-data-tooltip"
       :text="t('export_data.tooltip')"
@@ -12,11 +15,12 @@
         :text="t('export_data.title')"
         :loading="isLoadingCheckExportStatus"
         :disabled="!hasExportData"
+        data-testid="export-data-button"
         @click="setIsRenderExportData(true)"
       />
     </UnnnicToolTip>
     <UnnnicModalDialog
-      data-test-id="modal-dialog"
+      data-testid="modal-dialog"
       :modelValue="isRenderExportData"
       class="finish-onboarding-modal"
       :primaryButtonProps="{
@@ -36,7 +40,7 @@
       <FormExport />
     </UnnnicModalDialog>
     <UnnnicModalDialog
-      data-test-id="modal-dialog-feedback"
+      data-testid="modal-dialog-feedback"
       :modelValue="isRenderExportDataFeedback"
       class="finish-onboarding-modal"
       :title="t('export_data.feedback_title')"
@@ -45,7 +49,10 @@
       showCloseIcon
       @update:model-value="setIsRenderExportDataFeedback(false)"
     >
-      <p class="export-data-feedback__text">
+      <p
+        class="export-data-feedback__text"
+        data-testid="export-data-feedback-text"
+      >
         {{ $t('export_data.feedback') }}
       </p>
     </UnnnicModalDialog>

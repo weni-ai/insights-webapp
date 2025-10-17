@@ -1,0 +1,116 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ExportFooter > Component structure > should match snapshot 1`] = `
+<section
+  class="export-footer"
+  data-testid="export-footer"
+  data-v-4f08a4d6=""
+>
+  <section
+    class="export-footer__format"
+    data-testid="export-footer-format"
+    data-v-4f08a4d6=""
+  >
+    <unnnic-label-stub
+      data-v-4f08a4d6=""
+      label="Format"
+    />
+    <div
+      class="unnnic-radio-container unnnic-radio-container--md"
+      data-testid="radio-format-xlsx"
+      data-v-4f08a4d6=""
+      data-v-abd1b195=""
+    >
+      <unnnic-icon-stub
+        class="unnnic-radio"
+        clickable="false"
+        data-v-abd1b195=""
+        filled="false"
+        icon="radio-selected"
+        next="false"
+        scheme="brand-weni"
+        size="md"
+      />
+      <span
+        class="label"
+        data-v-abd1b195=""
+      >
+        
+        .XLSX
+        
+      </span>
+    </div>
+    <div
+      class="unnnic-radio-container unnnic-radio-container--md"
+      data-testid="radio-format-csv"
+      data-v-4f08a4d6=""
+      data-v-abd1b195=""
+    >
+      <unnnic-icon-stub
+        class="unnnic-radio"
+        clickable="false"
+        data-v-abd1b195=""
+        filled="false"
+        icon="radio-default"
+        next="false"
+        scheme="neutral-cleanest"
+        size="md"
+      />
+      <span
+        class="label"
+        data-v-abd1b195=""
+      >
+        
+        .CSV
+        
+      </span>
+    </div>
+  </section>
+  <section
+    class="export-footer__terms"
+    data-testid="export-footer-terms"
+    data-v-4f08a4d6=""
+  >
+    <p
+      class="export-footer__terms-warning"
+      data-testid="export-footer-warning"
+      data-v-4f08a4d6=""
+    >
+      <unnnic-icon-stub
+        clickable="false"
+        data-v-4f08a4d6=""
+        filled="true"
+        icon="alert-circle-1"
+        next="true"
+        scheme="feedback-yellow"
+        size="ant"
+      />
+      Warning message
+    </p>
+    <div
+      class="unnnic-checkbox-wrapper"
+      data-testid="export-footer-accept-terms"
+      data-v-4f08a4d6=""
+      data-v-f5f8c62c=""
+    >
+      <unnnic-icon-stub
+        class="unnnic-checkbox"
+        clickable="true"
+        data-v-f5f8c62c=""
+        filled="false"
+        icon="checkbox-default"
+        next="false"
+        scheme="neutral-clean"
+        size="md"
+      />
+      <div
+        class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
+        data-testid="checkbox-text-right"
+        data-v-f5f8c62c=""
+      >
+        I accept terms
+      </div>
+    </div>
+  </section>
+</section>
+`;

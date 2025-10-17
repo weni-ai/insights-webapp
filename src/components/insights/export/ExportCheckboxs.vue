@@ -1,6 +1,12 @@
 <template>
-  <section class="form-checkboxs-data">
-    <section class="form-checkboxs-data__models">
+  <section
+    class="form-checkboxs-data"
+    data-testid="form-checkboxs-data"
+  >
+    <section
+      class="form-checkboxs-data__models"
+      data-testid="form-checkboxs-data-models"
+    >
       <template
         v-for="(modelData, modelName) in modelFields"
         :key="modelName"
@@ -8,11 +14,13 @@
         <section
           v-if="shouldRenderModel(String(modelName))"
           class="form-checkboxs-data__model"
+          :data-testid="`form-checkboxs-model-${modelName}`"
         >
           <div class="form-checkboxs-data__model-header">
             <UnnnicCheckbox
               :modelValue="isModelEnabled(String(modelName))"
               :textRight="getModelLabel(String(modelName))"
+              :data-testid="`form-checkboxs-model-checkbox-${modelName}`"
               @change="handleModelToggle(String(modelName), $event)"
             />
           </div>
@@ -23,6 +31,7 @@
               getModelFieldsList(String(modelName)).length > 0
             "
             class="form-checkboxs-data__fields"
+            :data-testid="`form-checkboxs-fields-${modelName}`"
           >
             <template
               v-for="field in getModelFieldsList(String(modelName))"
@@ -31,6 +40,7 @@
               <UnnnicCheckbox
                 :modelValue="isFieldSelected(String(modelName), field.name)"
                 :textRight="getFieldLabel(field.name)"
+                :data-testid="`form-checkboxs-field-${modelName}-${field.name}`"
                 @change="
                   handleFieldToggle(String(modelName), field.name, $event)
                 "
@@ -43,6 +53,7 @@
     <section
       v-if="isLoading"
       class="form-checkboxs-data__loading"
+      data-testid="form-checkboxs-data-loading-section"
     >
       <UnnnicSkeletonLoading
         v-for="i in 5"

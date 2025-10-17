@@ -1,13 +1,23 @@
 <template>
-  <section class="export-data-form">
+  <section
+    class="export-data-form"
+    data-testid="export-data-form"
+  >
     <header>
-      <p class="export-data-form__description">
+      <p
+        class="export-data-form__description"
+        data-testid="export-data-form-description"
+      >
         {{ $t('export_data.description') }}
       </p>
     </header>
-    <section class="export-data-form__content">
+    <section
+      class="export-data-form__content"
+      data-testid="export-data-form-content"
+    >
       <ExportFilterDate
         v-model="date_range"
+        data-testid="export-data-filter-date"
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_data.placeholder')"
         :options="shortCutOptions"
@@ -17,7 +27,10 @@
         @select-date="updateSelectDateRange"
       />
 
-      <section class="export-data-form__chats-status">
+      <section
+        class="export-data-form__chats-status"
+        data-testid="export-data-form-chats-status"
+      >
         <UnnnicRadio
           :data-testid="'radio-chats-open'"
           :modelValue="selectedChatStatus"
@@ -36,7 +49,10 @@
         </UnnnicRadio>
       </section>
 
-      <section class="export-data-form__filters">
+      <section
+        class="export-data-form__filters"
+        data-testid="export-data-form-filters"
+      >
         <section class="export-data-form__filters-container">
           <UnnnicLabel :label="$t('export_data.filters.sector')" />
           <FilterMultiSelect
@@ -92,9 +108,10 @@
         </section>
       </section>
 
-      <FormCheckbox />
+      <FormCheckbox data-testid="human-support-form-checkbox-component" />
 
       <ExportFooter
+        data-testid="human-support-export-footer"
         :selectedFormat="selectedFormat"
         :acceptTerms="accept_terms"
         :formatLabel="$t('export_data.select_format')"

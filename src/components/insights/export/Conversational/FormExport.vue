@@ -1,13 +1,23 @@
 <template>
-  <section class="conversational-export-form">
+  <section
+    class="conversational-export-form"
+    data-testid="conversational-export-form"
+  >
     <header>
-      <p class="conversational-export-form__description">
+      <p
+        class="conversational-export-form__description"
+        data-testid="conversational-export-form-description"
+      >
         {{ $t('export_data.description') }}
       </p>
     </header>
-    <section class="conversational-export-form__content">
+    <section
+      class="conversational-export-form__content"
+      data-testid="conversational-export-form-content"
+    >
       <ExportFilterDate
         v-model="date_range"
+        data-testid="conversational-export-filter-date"
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_period.placeholder')"
         :options="shortCutOptions"
@@ -17,9 +27,10 @@
         @select-date="updateSelectDateRange"
       />
 
-      <FormCheckbox />
+      <FormCheckbox data-testid="conversational-form-checkbox-component" />
 
       <ExportFooter
+        data-testid="conversational-export-footer"
         :selectedFormat="selectedFormat"
         :acceptTerms="accept_terms"
         :formatLabel="$t('export_data.select_format')"

@@ -1,5 +1,6 @@
 <template>
   <ExportCheckboxs
+    data-testid="human-support-form-checkbox"
     :modelFields="model_fields"
     :selectedFields="selected_fields"
     :enabledModels="enabled_models"

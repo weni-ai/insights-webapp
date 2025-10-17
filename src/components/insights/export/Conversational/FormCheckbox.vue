@@ -1,5 +1,6 @@
 <template>
   <ExportCheckboxs
+    data-testid="conversational-form-checkbox"
     :modelFields="translatedModelFields"
     :selectedFields="translatedSelectedFields"
     :enabledModels="translatedEnabledModels"

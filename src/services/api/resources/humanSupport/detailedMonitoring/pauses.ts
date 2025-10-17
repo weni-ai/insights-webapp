@@ -23,6 +23,7 @@ interface PausesDataResult {
     label: string;
   };
   custom_status: {
+    uuid: string;
     status_type: string;
     break_time: number;
   }[];

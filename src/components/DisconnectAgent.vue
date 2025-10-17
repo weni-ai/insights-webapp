@@ -1,11 +1,14 @@
 <template>
   <section
-    class="disconnect-agent-container"
+    :class="[
+      'disconnect-agent-container',
+      { 'disconnect-agent-container--center': props.containerCenter },
+    ]"
     @click.stop
   >
     <UnnnicToolTip
-      :text="$t('disconnectAgent.tooltip')"
-      side="top"
+      :text="handleTooltipText"
+      :side="props.disabled ? 'left' : 'top'"
       class="disconnect-agent-tooltip"
       data-test-id="disconnect-agent-tooltip"
       enabled
@@ -16,6 +19,7 @@
         iconCenter="mode_off_on"
         size="small"
         type="tertiary"
+        :disabled="props.disabled"
         @click="handleModalClick"
       />
     </UnnnicToolTip>
@@ -53,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { unnnicCallAlert, UnnnicButton } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import disconnectAgentApi from '@/services/api/resources/disconnectAgent';
@@ -68,6 +72,14 @@ const props = defineProps({
       email: '',
     }),
     required: true,
+  },
+  containerCenter: {
+    type: Boolean,
+    default: false,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -119,6 +131,12 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
     },
   });
 };
+
+const handleTooltipText = computed(() => {
+  return props.disabled
+    ? t('disconnectAgent.tooltip_disabled')
+    : t('disconnectAgent.tooltip');
+});
 </script>
 
 <style scoped lang="scss">
@@ -126,12 +144,12 @@ const defaultAlert = (type: 'success' | 'error', text: string) => {
   display: flex;
   align-items: center;
 
+  &--center {
+    justify-content: center;
+  }
+
   :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
     font-size: $unnnic-font-size-title-sm;
-  }
-  :deep(.unnnic-button--icon-on-center.unnnic-button--size-small) {
-    padding: 0;
-    width: $unnnic-font-size-title-sm;
   }
 }
 

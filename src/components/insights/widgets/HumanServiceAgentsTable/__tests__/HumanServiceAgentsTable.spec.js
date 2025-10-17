@@ -68,28 +68,32 @@ describe('HumanServiceAgentsTable', () => {
   const mockItems = [
     {
       agent: 'Alice',
-      status: { status: 'green', label: 'Online' },
+      agent_email: 'alice@example.com',
+      status: { status: 'online', label: 'Online' },
       opened: 5,
       closed: 3,
       link: { url: '/link1' },
     },
     {
       agent: 'Bob',
-      status: { status: 'gray', label: 'Offline' },
+      agent_email: '',
+      status: { status: 'offline', label: 'Offline' },
       opened: 2,
       closed: 7,
       link: { url: '/link2' },
     },
     {
       agent: 'Marcus',
-      status: { status: 'gray', label: 'Offline' },
+      agent_email: '',
+      status: { status: 'offline', label: 'Offline' },
       opened: 2,
       closed: 7,
       link: { url: '/link4' },
     },
     {
       agent: 'Charlie',
-      status: { status: 'green', label: 'Online' },
+      agent_email: 'charlie@example.com',
+      status: { status: 'online', label: 'Online' },
       opened: 8,
       closed: 6,
       link: { url: '/link3' },
@@ -99,7 +103,8 @@ describe('HumanServiceAgentsTable', () => {
   const mockItemsExpansive = [
     {
       agent: 'Alice',
-      status: { status: 'green', label: 'Online' },
+      agent_email: 'alice@example.com',
+      status: { status: 'online', label: 'Online' },
       opened: 5,
       closed: 3,
       link: { url: '/link1' },
@@ -110,7 +115,8 @@ describe('HumanServiceAgentsTable', () => {
     },
     {
       agent: 'Bob',
-      status: { status: 'gray', label: 'Offline' },
+      agent_email: '',
+      status: { status: 'offline', label: 'Offline' },
       opened: 2,
       closed: 7,
       link: { url: '/link2' },
@@ -121,7 +127,8 @@ describe('HumanServiceAgentsTable', () => {
     },
     {
       agent: 'Marcus',
-      status: { status: 'gray' },
+      agent_email: 'marcus@example.com',
+      status: { status: 'offline' },
       opened: 2,
       closed: 7,
       link: { url: '/link4' },
@@ -132,7 +139,8 @@ describe('HumanServiceAgentsTable', () => {
     },
     {
       agent: 'Charlie',
-      status: { status: 'green' },
+      agent_email: 'charlie@example.com',
+      status: { status: 'online' },
       opened: 8,
       closed: 6,
       link: { url: '/link3' },
@@ -623,18 +631,18 @@ describe('HumanServiceAgentsTable', () => {
 
       wrapper.vm.sort.header = statusHeader;
 
-      expect(wrapper.vm.formattedItems[0].status.status).toBe('gray');
-      expect(wrapper.vm.formattedItems[1].status.status).toBe('gray');
-      expect(wrapper.vm.formattedItems[2].status.status).toBe('green');
-      expect(wrapper.vm.formattedItems[3].status.status).toBe('green');
+      expect(wrapper.vm.formattedItems[0].status.status).toBe('offline');
+      expect(wrapper.vm.formattedItems[1].status.status).toBe('offline');
+      expect(wrapper.vm.formattedItems[2].status.status).toBe('online');
+      expect(wrapper.vm.formattedItems[3].status.status).toBe('online');
 
       wrapper.vm.sort.order = 'asc';
       await wrapper.vm.$nextTick();
 
-      expect(wrapper.vm.formattedItems[0].status.status).toBe('green');
-      expect(wrapper.vm.formattedItems[1].status.status).toBe('green');
-      expect(wrapper.vm.formattedItems[2].status.status).toBe('gray');
-      expect(wrapper.vm.formattedItems[3].status.status).toBe('gray');
+      expect(wrapper.vm.formattedItems[0].status.status).toBe('online');
+      expect(wrapper.vm.formattedItems[1].status.status).toBe('online');
+      expect(wrapper.vm.formattedItems[2].status.status).toBe('offline');
+      expect(wrapper.vm.formattedItems[3].status.status).toBe('offline');
     });
 
     it('sorts by status in expansive mode', () => {
@@ -679,24 +687,104 @@ describe('HumanServiceAgentsTable', () => {
         ...mockItemsExpansive,
       ]);
 
-      expect(sortedItems[0].status.status).toBe('green');
-      expect(sortedItems[1].status.status).toBe('green');
+      expect(sortedItems[0].status.status).toBe('online');
+      expect(sortedItems[1].status.status).toBe('online');
 
-      expect(sortedItems[2].status.status).toBe('gray');
-      expect(sortedItems[3].status.status).toBe('gray');
+      expect(sortedItems[2].status.status).toBe('offline');
+      expect(sortedItems[3].status.status).toBe('offline');
 
       expansiveWrapper.vm.sort.order = 'desc';
       const sortedItemsDesc = expansiveWrapper.vm.sortItems([
         ...mockItemsExpansive,
       ]);
 
-      expect(sortedItemsDesc[0].status.status).toBe('gray');
-      expect(sortedItemsDesc[1].status.status).toBe('gray');
+      expect(sortedItemsDesc[0].status.status).toBe('offline');
+      expect(sortedItemsDesc[1].status.status).toBe('offline');
 
-      expect(sortedItemsDesc[2].status.status).toBe('green');
-      expect(sortedItemsDesc[3].status.status).toBe('green');
+      expect(sortedItemsDesc[2].status.status).toBe('online');
+      expect(sortedItemsDesc[3].status.status).toBe('online');
 
       expansiveWrapper.unmount();
+    });
+  });
+
+  describe('AgentStatus integration', () => {
+    it('passes agent with email to AgentStatus component', () => {
+      wrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          headers: mockHeaders,
+          items: mockItems,
+        },
+        global: {
+          plugins: [store, i18n, UnnnicSystem],
+        },
+      });
+
+      const agentStatusComponents = wrapper.findAllComponents({
+        name: 'AgentStatus',
+      });
+
+      expect(agentStatusComponents.length).toBeGreaterThan(0);
+
+      const aliceComponent = agentStatusComponents.find((comp) => {
+        return comp.props('agent')?.name === 'Charlie';
+      });
+
+      expect(aliceComponent).toBeDefined();
+      expect(aliceComponent.props('agent')).toEqual({
+        name: 'Charlie',
+        email: 'charlie@example.com',
+      });
+      expect(aliceComponent.props('status')).toBe('online');
+    });
+
+    it('passes agent without email to AgentStatus component', () => {
+      wrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          headers: mockHeaders,
+          items: mockItems,
+        },
+        global: {
+          plugins: [store, i18n, UnnnicSystem],
+        },
+      });
+
+      const agentStatusComponents = wrapper.findAllComponents({
+        name: 'AgentStatus',
+      });
+
+      const bobComponent = agentStatusComponents.find((comp) => {
+        return comp.props('agent')?.name === 'Bob';
+      });
+
+      expect(bobComponent).toBeDefined();
+      expect(bobComponent.props('agent')).toEqual({
+        name: 'Bob',
+        email: '',
+      });
+      expect(bobComponent.props('status')).toBe('offline');
+    });
+
+    it('emits request-data when AgentStatus emits request-data', async () => {
+      wrapper = mount(HumanServiceAgentsTable, {
+        props: {
+          headers: mockHeaders,
+          items: mockItems,
+        },
+        global: {
+          plugins: [store, i18n, UnnnicSystem],
+        },
+      });
+
+      const agentStatusComponent = wrapper.findComponent({
+        name: 'AgentStatus',
+      });
+      expect(agentStatusComponent.exists()).toBe(true);
+
+      await agentStatusComponent.vm.$emit('request-data');
+
+      expect(wrapper.emitted('request-data')).toBeTruthy();
+      expect(wrapper.emitted('request-data')).toHaveLength(1);
     });
   });
 

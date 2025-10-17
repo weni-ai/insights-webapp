@@ -73,7 +73,7 @@
         "continue": "Keep adding"
       },
       "added_topic": "Added on {date} at {time}",
-      "disclaimer": "The topics you add will only be sorted in future conversations. Previous conversations will not be re-sorted."
+      "disclaimer": "When you add new topics, the AI will automatically classify them in future conversations, improving its understanding and delivering more accurate responses. Previous conversations will not be reclassified."
     },
     "most_talked_about_topics": {
       "title": "Most talked about topics",
@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Funnel and sales data",
     "custom": "Horizontal bar chart",
     "no_data_available": "No data available for the period of use.",
     "widget_error": {
@@ -119,6 +120,13 @@
         "excellent": "71 to 100: Excellent"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total orders",
+      "total_value": "Total value",
+      "average_ticket": "Average ticket",
+      "captured_leads": "Captured leads",
+      "purchases_made": "Purchases made"
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
@@ -126,6 +134,7 @@
       "csat_description": "The Customer Satisfaction Score indicates the contact level of satisfaction with the service received.",
       "nps_description": "The Net Promoter Score indicates how likely contact are to recommend the service they received to others.",
       "config_csat_or_nps_description": "Define which {type} you want to track:",
+      "sales_funnel_description": "Track your sales: total orders, average ticket, total value and conversion funnel.",
       "human_support": "Human Support",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -149,13 +158,14 @@
       "edit_csat_or_nps": "Edit {type}",
       "remove_widget": "Remove widget",
       "modal_remove_widget": {
-        "title": "Remove {type} widget",
+        "title": "Remove widget",
         "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "success_message": "{widget} removed"
       },
       "tabs": {
-        "sentiment_analysis": "Sentiment analysis",
+        "native": "Native",
         "customized": "Customized"
       },
       "select_chart_type": "Select a chart type:",
@@ -318,7 +328,9 @@
   "metrics": "Metrics",
   "flow": "Flow",
   "flows": "Flows",
+  "custom_status": "Pause",
   "select": "Select",
+  "multiple_without_selects_message": "No option selected",
   "report": "Report",
   "you": "You",
   "none": "None",
@@ -335,6 +347,7 @@
   "confirmation": "Confirmation",
   "clear_fields": "Clear fields",
   "today": "Today",
+  "now": "Now",
   "date_format": "MM/DD/YYYY",
   "search": "Search",
   "category": "Category",
@@ -739,11 +752,14 @@
       "queue__name": "Queue",
       "queue__uuid": "Queue UUID",
       "queue__sector__name": "Sector",
-      "created_on": "Date of commencement of service"
+      "created_on": "Date of commencement of service",
+      "duration": "Duration",
+      "awaiting_time": "Awaiting time",
+      "first_response_time": "First response time"
     },
     "select_data": {
-      "label": "Select the time for data search (maximum interval of 92 days between start date and end date)",
-      "placeholder": "MM/MM/MMM",
+      "label": "Select a date or period (maximum interval of 92 days between start date and end date)",
+      "placeholder": "MM/DD/YYYY",
       "shortcuts": {
         "last_7_days": "Last 7 days",
         "last_14_days": "Last 14 days",
@@ -759,7 +775,7 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Select the sector",
-      "agent": "Agent", 
+      "agent": "Agent",
       "select_agent": "Select the agent",
       "queue": "Queue",
       "select_queue": "Select the queue",
@@ -786,6 +802,89 @@
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
-    "error_message": "Error when disconnecting agent {agent}"
+    "error_message": "Error when disconnecting agent {agent}",
+    "tooltip_disabled": "This agent cannot be disconnected because it is offline"
+  },
+  "human_support_dashboard": {
+    "title": "Human support",
+    "monitoring": "Monitoring",
+    "analysis": "Analysis",
+    "support_status": {
+      "title": "Support status",
+      "is_waiting": "Awaiting",
+      "is_in_progress": "In progress",
+      "is_closed": "Closed",
+      "tooltips": {
+        "is_waiting": "Number of contacts waiting for the start of the support now",
+        "is_in_progress": "Number of contacts in support now",
+        "is_closed": "Number of closed supports today"
+      }
+    },
+    "time_metrics": {
+      "title": "Time metrics now",
+      "average_time_is_waiting": "Average time in waiting",
+      "average_time_first_response": "Average time for first response",
+      "average_time_chat": "Average chat duration",
+      "max": "Max",
+      "tooltips": {
+        "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
+        "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
+        "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
+      }
+    },
+    "services_open_by_hour": {
+      "title": "Services open by hour"
+    },
+    "detailed_monitoring": {
+      "title": "Detailed monitoring",
+      "tabs": {
+        "in_awaiting": "In awaiting",
+        "in_progress": "In progress",
+        "attendant": "Attendant",
+        "pauses": "Pauses"
+      },
+      "filters": {
+        "attendant": {
+          "label": "Attendant",
+          "placeholder": "Type to filter"
+        }
+      },
+      "in_progress": {
+        "duration": "Duration",
+        "awaiting_time": "Awaiting time",
+        "first_response_time": "First response time",
+        "attendant": "Attendant",
+        "sector": "Sector",
+        "queue": "Queue",
+        "contact": "Contact"
+      },
+      "pauses": {
+        "status": "Status",
+        "agent": "Agent",
+        "opened": "Opened",
+        "closed": "Closed"
+      },
+      "in_awaiting": {
+        "awaiting_time": "Awaiting time",
+        "contact": "Contact",
+        "sector": "Sector",
+        "queue": "Queue"
+      },
+      "attendant": {
+        "agent": "Attendant",
+        "status": "Status",
+        "ongoing": "Ongoing",
+        "finished": "Finished",
+        "average_first_response_time": "Average first response time",
+        "average_response_time": "Average response time",
+        "average_duration": "Average duration",
+        "time_in_service": "Time in service",
+        "action": "Action"
+      }
+    },
+    "analyze": {
+      "title": "Soon: New Analysis View",
+      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
+    }
   }
 }

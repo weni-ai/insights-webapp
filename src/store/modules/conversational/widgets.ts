@@ -4,6 +4,7 @@ import { useWidgets } from '../widgets';
 import {
   CsatResponse,
   NpsResponse,
+  SalesFunnelResponse,
 } from '@/services/api/resources/conversational/widgets';
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
 import WidgetService from '@/services/api/resources/widgets';
@@ -15,8 +16,10 @@ interface ConversationalWidgetsState {
   newWidget: WidgetType | null;
   csatWidgetData: CsatResponse | null;
   npsWidgetData: NpsResponse | null;
+  salesFunnelWidgetData: SalesFunnelResponse | null;
   isLoadingCsatWidgetData: boolean;
   isLoadingNpsWidgetData: boolean;
+  isLoadingSalesFunnelWidgetData: boolean;
   csatWidgetType: TypeWidget;
   npsWidgetType: TypeWidget;
   isFormAi: boolean;
@@ -26,8 +29,10 @@ interface ConversationalWidgetsState {
   isLoadingUpdateWidget: boolean;
   csatWidget: WidgetType | null;
   npsWidget: WidgetType | null;
+  salesFunnelWidget: WidgetType | null;
   isCsatWidgetDataError: boolean;
   isNpsWidgetDataError: boolean;
+  isSalesFunnelWidgetDataError: boolean;
 }
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
@@ -35,10 +40,12 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     newWidget: null,
     csatWidgetData: null,
     npsWidgetData: null,
+    salesFunnelWidgetData: null,
     isFormAi: false,
     isFormHuman: false,
     isLoadingCsatWidgetData: false,
     isLoadingNpsWidgetData: false,
+    isLoadingSalesFunnelWidgetData: false,
     csatWidgetType: 'AI' as TypeWidget,
     npsWidgetType: 'AI' as TypeWidget,
     isLoadingSaveNewWidget: false,
@@ -46,8 +53,10 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isLoadingUpdateWidget: false,
     csatWidget: null,
     npsWidget: null,
+    salesFunnelWidget: null,
     isCsatWidgetDataError: false,
     isNpsWidgetDataError: false,
+    isSalesFunnelWidgetDataError: false,
   }),
 
   actions: {
@@ -116,6 +125,32 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     setNpsWidgetType(type: TypeWidget) {
       this.npsWidgetType = type;
     },
+    async loadSalesFunnelWidgetData() {
+      this.isLoadingSalesFunnelWidgetData = true;
+      try {
+        const { findWidgetBySource } = useWidgets();
+        const widgetSalesFunnel = findWidgetBySource(
+          'conversations.sales_funnel',
+        );
+
+        if (!widgetSalesFunnel) {
+          throw new Error('Sales funnel widget not found');
+        }
+
+        const salesFunnelData =
+          await WidgetConversationalService.getSalesFunnelData({
+            widget_uuid: widgetSalesFunnel.uuid,
+          });
+
+        this.salesFunnelWidgetData = salesFunnelData;
+      } catch (error) {
+        this.salesFunnelWidgetData = null;
+        this.isSalesFunnelWidgetDataError = true;
+        console.error('Error loading sales funnel widget data', error);
+      } finally {
+        this.isLoadingSalesFunnelWidgetData = false;
+      }
+    },
     async loadCsatWidgetData() {
       this.isLoadingCsatWidgetData = true;
       try {
@@ -173,8 +208,12 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     async saveNewWidget() {
       this.isLoadingSaveNewWidget = true;
       try {
-        const type =
-          this.newWidget?.source === 'conversations.csat' ? 'csat' : 'nps';
+        const mapTypes = {
+          'conversations.csat': 'csat',
+          'conversations.nps': 'nps',
+          'conversations.sales_funnel': 'sales_funnel',
+        };
+        const type = mapTypes[this.newWidget?.source as keyof typeof mapTypes];
 
         let widget = this.newWidget;
 
@@ -198,11 +237,14 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         const { getCurrentDashboardWidgets } = useWidgets();
 
         await getCurrentDashboardWidgets();
-
+        if (type === 'nps') {
+          this.loadNpsWidgetData();
+        }
         if (type === 'csat') {
           this.loadCsatWidgetData();
-        } else {
-          this.loadNpsWidgetData();
+        }
+        if (type === 'sales_funnel') {
+          this.loadSalesFunnelWidgetData();
         }
       } catch (error) {
         console.error('Error saving new widget', error);
@@ -210,7 +252,6 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         this.isLoadingSaveNewWidget = false;
       }
     },
-
     async updateConversationalWidget(type: 'csat' | 'nps') {
       this.isLoadingUpdateWidget = true;
       try {
@@ -255,15 +296,17 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         this.isLoadingUpdateWidget = false;
       }
     },
-
-    async deleteWidget(type: 'csat' | 'nps') {
+    async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel') {
       this.isLoadingDeleteWidget = true;
       try {
         const { findWidgetBySource } = useWidgets();
-        const widget =
-          type === 'csat'
-            ? findWidgetBySource('conversations.csat')
-            : findWidgetBySource('conversations.nps');
+        const sourceMap = {
+          csat: 'conversations.csat',
+          nps: 'conversations.nps',
+          sales_funnel: 'conversations.sales_funnel',
+        };
+
+        const widget = findWidgetBySource(sourceMap[type]);
 
         if (!widget) {
           throw new Error(`${type} widget not found`);
@@ -274,10 +317,14 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         const { getCurrentDashboardWidgets } = useWidgets();
         await getCurrentDashboardWidgets();
 
+        if (type === 'sales_funnel') {
+          this.loadSalesFunnelWidgetData();
+        }
+        if (type === 'nps') {
+          this.loadNpsWidgetData();
+        }
         if (type === 'csat') {
           this.loadCsatWidgetData();
-        } else {
-          this.loadNpsWidgetData();
         }
       } catch (error) {
         console.error('Error deleting widget', error);
@@ -374,6 +421,13 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isCsatConfigured: () => {
       return (
         useWidgets().findWidgetBySource('conversations.csat') !== undefined
+      );
+    },
+
+    isSalesFunnelConfigured: () => {
+      return (
+        useWidgets().findWidgetBySource('conversations.sales_funnel') !==
+        undefined
       );
     },
 

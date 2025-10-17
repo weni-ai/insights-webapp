@@ -6,7 +6,6 @@
     :title="
       $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
-        { type: type.toUpperCase() },
       )
     "
     type="warning"
@@ -35,7 +34,9 @@
       {{
         $t(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
-          { type: type.toUpperCase() },
+          {
+            type: props.name,
+          },
         )
       }}
     </p>
@@ -46,11 +47,16 @@
 import { ref } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+import { unnnicCallAlert } from '@weni/unnnic-system';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 interface Props {
-  type: 'csat' | 'nps' | 'custom';
+  type: 'csat' | 'nps' | 'custom' | 'sales_funnel';
   modelValue: boolean;
   uuid?: string;
+  name?: string;
 }
 
 const props = defineProps<Props>();
@@ -72,6 +78,21 @@ const handleRemoveWidget = async () => {
     } else {
       await deleteWidget(props.type);
     }
+
+    unnnicCallAlert({
+      props: {
+        version: '1.1',
+        text: t(
+          'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
+          {
+            widget: props.name,
+          },
+        ),
+        type: 'success',
+        seconds: 5,
+      },
+    });
+
     emit('update:modelValue', false);
   } catch (error) {
     console.error(error);

@@ -28,6 +28,7 @@
         data-testid="base-conversation-widget-actions"
       >
         <ShortTab
+          v-if="!hiddenTabs"
           :tabs="tabs"
           :currentTab="currentTab"
           data-testid="base-conversation-widget-tabs"
@@ -99,6 +100,7 @@ const props = defineProps<{
   }[];
   currentTab?: string;
   isOnlyTab?: boolean;
+  hiddenTabs?: boolean;
 }>();
 
 const tabs = computed(() => {

@@ -284,6 +284,10 @@ export function formatTimeStringWithDayNight(
     timeFormat = format(date, 'h:mm a');
   }
 
+  if (use24Hour) {
+    return timeFormat;
+  }
+
   return `${timeFormat} ${period}`;
 }
 
@@ -324,4 +328,44 @@ export function formatDateAndTimeLocalized(
     time,
     date: formattedDate,
   };
+}
+
+/**
+ * Formats a number of seconds into a time string with consistent padding.
+ * @param seconds - The number of seconds to format. Can be null, undefined, or 0.
+ * @returns A formatted time string. Returns '-' for null/undefined, '0s' for 0.
+ *          For positive values, formats as '1h 05m 30s', '5m 30s', or '30s' depending on magnitude.
+ */
+export function formatSecondsToTime(
+  seconds: number | null | undefined,
+): string {
+  if (seconds === null || seconds === undefined) {
+    return '-';
+  }
+
+  if (seconds === 0) {
+    return '0s';
+  }
+
+  const totalSeconds = Math.floor(Math.abs(seconds));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const remainingSeconds = totalSeconds % 60;
+
+  const zeroPad = (num: number): string => String(num).padStart(2, '0');
+
+  let timeString = '';
+
+  if (hours > 0) {
+    timeString += `${hours}h `;
+    timeString += `${zeroPad(minutes)}m `;
+    timeString += `${zeroPad(remainingSeconds)}s`;
+  } else if (minutes > 0) {
+    timeString += `${minutes}m `;
+    timeString += `${zeroPad(remainingSeconds)}s`;
+  } else {
+    timeString += `${remainingSeconds}s`;
+  }
+
+  return timeString.trim();
 }

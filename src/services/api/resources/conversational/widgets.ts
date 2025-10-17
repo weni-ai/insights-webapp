@@ -24,10 +24,26 @@ interface NpsResponse {
   detractors: number;
 }
 
+interface SalesFunnelResponse {
+  captured_leads: {
+    value: number;
+    full_value: number;
+  };
+  purchases_made: {
+    value: number;
+    full_value: number;
+  };
+  total_orders: number;
+  total_value: number;
+  average_ticket: number;
+  currency: string;
+}
+
 interface WidgetQueryParams {
   start_date?: string;
   end_date?: string;
   widget_uuid: string;
+  project_uuid?: string;
 }
 
 export default {
@@ -91,6 +107,25 @@ export default {
 
     return response;
   },
+
+  async getSalesFunnelData(
+    queryParams: WidgetQueryParams,
+  ): Promise<SalesFunnelResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: queryParams.project_uuid || project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/conversations/sales_funnel/', {
+      params,
+    })) as SalesFunnelResponse;
+
+    return response;
+  },
 };
 
 export type {
@@ -99,4 +134,5 @@ export type {
   WidgetQueryParams,
   CsatResult,
   CustomWidgetResponse,
+  SalesFunnelResponse,
 };

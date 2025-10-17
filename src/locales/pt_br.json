@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Funil e dados de vendas",
     "custom": "Gráfico de barras horizontal",
     "no_data_available": "Nenhum dado disponível para o período de uso.",
     "widget_error": {
@@ -119,6 +120,13 @@
         "excellent": "71 a 100: Excelente"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total de pedidos",
+      "total_value": "Valor total",
+      "average_ticket": "Ticket médio",
+      "captured_leads": "Leads capturados",
+      "purchases_made": "Compras realizadas"
+    },
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas métricas chave",
@@ -126,6 +134,7 @@
       "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
       "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
       "config_csat_or_nps_description": "Defina select_keyqual {type} você deseja acompanhar:",
+      "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -149,13 +158,14 @@
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Remover widget",
       "modal_remove_widget": {
-        "title": "Remover widget {type}",
+        "title": "Remover widget",
         "description": "Tem certeza que deseja remover o widget {type}?",
         "remove": "Remover",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "success_message": "{widget} removido"
       },
       "tabs": {
-        "sentiment_analysis": "Análise de sentimento",
+        "native": "Nativo",
         "customized": "Personalizado"
       },
       "select_chart_type": "Selecione o tipo de gráfico:",

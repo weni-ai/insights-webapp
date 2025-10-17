@@ -27,8 +27,8 @@ vi.mock('@/utils/plugins/i18n', () => ({
             'conversations_dashboard.customize_your_dashboard.save_changes',
           'conversations_dashboard.customize_your_dashboard.return':
             'conversations_dashboard.customize_your_dashboard.return',
-          'conversations_dashboard.customize_your_dashboard.tabs.sentiment_analysis':
-            'Sentiment Analysis',
+          'conversations_dashboard.customize_your_dashboard.tabs.native':
+            'Native',
           'conversations_dashboard.customize_your_dashboard.tabs.customized':
             'Customized',
           'conversations_dashboard.customize_your_dashboard.select_chart_type':
@@ -261,9 +261,9 @@ describe('CustomizableWidget', () => {
   });
 
   describe('Tab functionality', () => {
-    it('should show sentiment_analysis tab as active when no CSAT/NPS configured', () => {
+    it('should show native tab as active when no CSAT/NPS configured', () => {
       expect(wrapper.vm.activeTab).toBe(
-        'conversations_dashboard.customize_your_dashboard.tabs.sentiment_analysis',
+        'conversations_dashboard.customize_your_dashboard.tabs.native',
       );
     });
 
@@ -275,8 +275,8 @@ describe('CustomizableWidget', () => {
       );
     });
 
-    it('should return correct widgets for sentiment_analysis tab when no widgets configured', () => {
-      const sentimentWidgets = wrapper.vm.handleTabChoice('sentiment_analysis');
+    it('should return correct widgets for native tab when no widgets configured', () => {
+      const sentimentWidgets = wrapper.vm.handleTabChoice('native');
       expect(sentimentWidgets).toHaveLength(2);
       expect(sentimentWidgets[0].key).toBe('csat');
       expect(sentimentWidgets[1].key).toBe('nps');
@@ -299,8 +299,7 @@ describe('CustomizableWidget', () => {
 
       await nextTick();
 
-      const sentimentWidgets =
-        wrapperWithCsat.vm.handleTabChoice('sentiment_analysis');
+      const sentimentWidgets = wrapperWithCsat.vm.handleTabChoice('native');
       expect(sentimentWidgets).toHaveLength(1);
       expect(sentimentWidgets[0].key).toBe('nps');
     });
@@ -322,8 +321,7 @@ describe('CustomizableWidget', () => {
 
       await nextTick();
 
-      const sentimentWidgets =
-        wrapperWithNps.vm.handleTabChoice('sentiment_analysis');
+      const sentimentWidgets = wrapperWithNps.vm.handleTabChoice('native');
       expect(sentimentWidgets).toHaveLength(1);
       expect(sentimentWidgets[0].key).toBe('csat');
     });
@@ -368,8 +366,13 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(3);
-      expect(widgets.map((w) => w.key)).toEqual(['csat', 'nps', 'custom']);
+      expect(widgets).toHaveLength(4);
+      expect(widgets.map((w) => w.key)).toEqual([
+        'csat',
+        'nps',
+        'custom',
+        'sales_funnel',
+      ]);
     });
   });
 });

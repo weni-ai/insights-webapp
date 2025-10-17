@@ -86,6 +86,7 @@
     },
     "csat": "CSAT",
     "nps": "NPS",
+    "sales_funnel": "Embudo y datos de ventas",
     "custom": "Gráfico de barras horizontal",
     "no_data_available": "No hay datos disponibles para el período de uso.",
     "widget_error": {
@@ -119,6 +120,13 @@
         "excellent": "71 a 100: Excelente"
       }
     },
+    "sales_funnel_widget": {
+      "total_orders": "Total de pedidos",
+      "total_value": "Valor total",
+      "average_ticket": "Promedio de ticket",
+      "captured_leads": "Capturados",
+      "purchases_made": "Compras realizadas"
+    },
     "customize_your_dashboard": {
       "title": "Personaliza tu dashboard",
       "description": "Personaliza el dashboard con tus métricas clave",
@@ -126,6 +134,7 @@
       "csat_description": "La Puntuación de Satisfacción del Cliente indica el nivel de satisfacción del contacto con el servicio recibido.",
       "nps_description": "La Puntuación Neta del Promotor indica qué tan probable es que el contacto recomiende el servicio que recibió a otras personas.",
       "config_csat_or_nps_description": "Define qué {type} quieres acompañar:",
+      "sales_funnel_description": "Rastrea tus ventas: total de pedidos, ticket promedio, valor total y embudo de conversión.",
       "human_support": "Atención humana",
       "ai_support": "IA",
       "activate_agent": "Activar agente",
@@ -149,13 +158,14 @@
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Eliminar widget",
       "modal_remove_widget": {
-        "title": "Eliminar widget {type}",
+        "title": "Eliminar widget",
         "description": "¿Estás seguro de querer eliminar el widget {type}?",
         "remove": "Eliminar",
-        "cancel": "Cancelar"
+        "cancel": "Cancelar",
+        "success_message": "{widget} eliminado"
       },
       "tabs": {
-        "sentiment_analysis": "Análisis de sentimiento",
+        "native": "Nativo",
         "customized": "Personalizado"
       },
       "select_chart_type": "Seleccionar un tipo de gráfico:",

@@ -67,8 +67,11 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey =
+  'human_support_dashboard.detailed_monitoring.attendant';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'status',
+  header: t(`${baseTranslationKey}.status`),
   order: 'desc',
   itemKey: 'status',
 });
@@ -76,9 +79,6 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 const formattedItems = ref<FormattedAttendantData[]>([]);
 
 const formattedHeaders = computed(() => {
-  const baseTranslationKey =
-    'human_support_dashboard.detailed_monitoring.attendant';
-
   const createHeader = (
     itemKey: string,
     translationKey?: string,

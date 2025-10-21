@@ -272,7 +272,7 @@
     "agent": "Agent",
     "created_on": "Start",
     "ended_at": "End",
-    "sector": "Industry",
+    "sector": "Sector",
     "queue": "Queue",
     "tags": "Tags"
   },
@@ -304,8 +304,8 @@
       "placeholder": "Select a queue"
     },
     "sector": {
-      "label": "Industry",
-      "placeholder": "Select an industry"
+      "label": "Sector",
+      "placeholder": "Select a sector"
     },
     "tags": {
       "label": "Tags",
@@ -751,7 +751,7 @@
       "contact__uuid": "Contact ID",
       "queue__name": "Queue",
       "queue__uuid": "Queue ID",
-      "queue__sector__name": "Industry",
+      "queue__sector__name": "Sector",
       "created_on": "Support start date",
       "duration": "Duration",
       "awaiting_time": "Awaiting time",
@@ -773,15 +773,15 @@
     "chats_open": "Include open chats during this period",
     "chats_closed": "Include closed chats during this period",
     "filters": {
-      "sector": "Industry",
-      "select_sector": "Select industry",
+      "sector": "Sector",
+      "select_sector": "Select a sector",
       "agent": "Agent",
       "select_agent": "Select an agent",
       "queue": "Queue",
       "select_queue": "Select a queue",
       "tag": "Tag",
       "select_tag": "Select a tag",
-      "all_sectors": "All industries",
+      "all_sectors": "All sectors",
       "all_agents": "All agents",
       "all_queues": "All queues",
       "all_tags": "All tags"

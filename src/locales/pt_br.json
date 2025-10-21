@@ -1,7 +1,7 @@
 {
   "human_service_dashboard": {
     "title": "Atendimento humano",
-    "peaks_in_human_service": "Pico de chats abertos por hora",
+    "peaks_in_human_service": "Chats abertos por hora",
     "closed": "Encerrados",
     "in_progress": "Em andamento",
     "response_time": "Tempo de resposta",
@@ -10,12 +10,12 @@
     "interaction_time": "Tempo de interação",
     "all_agents": "Todos os agentes",
     "tooltips": {
-      "in_progress": "Total de chats sendo atendidos no momento.",
-      "response_time": "Média de tempo que o contato espera para receber uma resposta para cada mensagem.",
-      "interaction_time": "Tempo médio de duração total dos atendimentos. ",
-      "waiting_time": "Média de tempo que contatos aguardam até o início do atendimento.",
-      "awaiting_service": "Número de contatos aguardando início do atendimento.",
-      "closeds": "Total de chats que já foram finalizados."
+      "in_progress": "Total de chats em andamento",
+      "response_time": "Tempo médio que o contato aguarda para receber uma resposta a cada mensagem",
+      "interaction_time": "Tempo médio de duração dos atendimentos",
+      "waiting_time": "Tempo médio de espera até o início do atendimento",
+      "awaiting_service": "Número de contatos aguardando o início do atendimento",
+      "closeds": "Total de chats finalizados"
     }
   },
   "conversations_dashboard": {
@@ -24,19 +24,19 @@
     "artificial_intelligence": "IA",
     "human_support": "Atendimento humano",
     "others": "Outros",
-    "unclassified": "Não classificado",
+    "unclassified": "Sem classificação",
     "header": {
       "total": "Total de conversas",
-      "resolved": "Atendido por IA",
-      "unresolved": "Não atendido",
+      "resolved": "Resoluções otimizadas",
+      "unresolved": "Outras conclusões",
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
         "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
-        "resolved": "Quando o agente demonstra competência e fornece serviço útil.",
-        "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente).",
-        "unengaged": "Conversa sem engajamento útil: A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
-        "transferred": "Inclui conversas (resolvidas ou não) que foram encaminhadas para atendimento humano."
+        "resolved": "Conversas concluídas com uma resolução clara e efetiva para o contato",
+        "unresolved": "Conversas finalizadas de outras formas, como interações rápidas, cumprimentos, abandonos ou sem resolução direta",
+        "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
+        "transferred": "Inclui conversas (resolvidas ou não) encaminhadas para atendimento humano"
       }
     },
     "form_topic": {
@@ -54,43 +54,43 @@
       "sub_topics_added": "{sub_topics} subassuntos adicionados",
       "success_save_topics_or_subtopics": "Assuntos ou subassuntos adicionados com sucesso",
       "error_save_topics_or_subtopics": "Erro ao salvar assuntos ou subassuntos",
-      "success_remove_topic": "Assunto removido com sucesso",
-      "error_remove_topic": "Erro ao remover assunto",
-      "success_remove_subtopic": "Subassunto removido com sucesso",
-      "error_remove_subtopic": "Erro ao remover subassunto",
+      "success_remove_topic": "Assunto excluído com sucesso",
+      "error_remove_topic": "Erro ao excluir assunto",
+      "success_remove_subtopic": "Subassunto excluído com sucesso",
+      "error_remove_subtopic": "Erro ao excluir subassunto",
       "remove_modal": {
-        "title_remove_topic": "Remover assunto",
-        "title_remove_sub_topic": "Remover subassunto",
-        "description_remove_topic": "Tem certeza que deseja remover o assunto {topic}? Todos os subassuntos também serão removidos, e qualquer dado previamente associado a este assunto será desclassificado e não mais acessível através desta classificação.",
-        "description_remove_sub_topic": "Tem certeza que deseja remover o subassunto {sub_topic}? Qualquer dado previamente associado a este subassunto será desclassificado e não mais acessível através desta classificação.",
-        "remove": "Remover",
+        "title_remove_topic": "Excluir subassunto",
+        "title_remove_sub_topic": "Excluir subassunto",
+        "description_remove_topic": "Tem certeza de que deseja excluir o assunto {topic}? Todos os subassuntos também serão excluídos. Os dados previamente associados a este assunto serão desvinculados desta classificação e não ficarão mais acessíveis por meio dela.",
+        "description_remove_sub_topic": "Tem certeza de que deseja excluir o subassunto {sub_topic}? Os dados previamente associados a este subassunto serão desvinculados desta classificação e não ficarão mais acessíveis por meio dela.",
+        "remove": "Excluir",
         "cancel": "Cancelar"
       },
       "cancel_modal": {
         "title": "Cancelar edição de assuntos",
-        "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
+        "description_cancel": "Tem certeza de que deseja cancelar? Todo o progresso será perdido.",
         "cancel": "Cancelar",
         "continue": "Continuar"
       },
       "added_topic": "Adicionado em {date} às {time}",
-      "disclaimer": "Ao adicionar novos assuntos, a IA passará a classificá-los automaticamente nas conversas futuras, ajudando a compreender melhor os diálogos e a oferecer respostas mais precisas. Conversas anteriores não serão reclassificadas."
+      "disclaimer": "Ao adicionar assuntos, você permite que a IA classifique automaticamente as conversas com eles. Isso ajudará a IA a entender melhor as conversas e fornecer respostas mais precisas."
     },
     "most_talked_about_topics": {
-      "title": "Assuntos mais falados",
+      "title": "Assuntos mais comuns",
       "see_all": "Ver todos",
       "subtopics": "Subassuntos",
       "no_topics": "Nenhum assunto ainda",
       "no_topics_description": "Adicione um assunto para começar a analisar as conversas",
       "add_first_topic": "Adicione seu primeiro assunto",
-      "edit_topics_and_subtopics": "Editar Assuntos e Subassuntos"
+      "edit_topics_and_subtopics": "Editar assuntos e subassuntos"
     },
     "csat": "CSAT",
     "nps": "NPS",
     "sales_funnel": "Funil e dados de vendas",
     "custom": "Gráfico de barras horizontal",
-    "no_data_available": "Nenhum dado disponível para o período de uso.",
+    "no_data_available": "Nenhum dado disponível para o período de uso",
     "widget_error": {
-      "title": "Ops, ocorreu um problema ao carregar os dados!",
+      "title": "Ops, ocorreu um erro ao carregar os dados",
       "button": "Verificar configuração do widget"
     },
     "reviews": "avaliações",
@@ -102,9 +102,9 @@
       "very_dissatisfied": "Muito insatisfeito"
     },
     "nps_widget": {
-      "promoters": "Promotores (classificados 9 ou 10)",
-      "passive": "Passivos (classificados 7 ou 8)",
-      "detractors": "Detratores (classificados 0 a 6)",
+      "promoters": "Promotores (9 ou 10)",
+      "passive": "Passivos (7 ou 8)",
+      "detractors": "Detratores (0 a 6)",
       "current_score": "Pontuação atual",
       "current_score_types": {
         "low": "Baixo",
@@ -113,7 +113,7 @@
         "excellent": "Excelente"
       },
       "tooltips": {
-        "classification": "Classificação (%Promotores - %Detratores):",
+        "classification": "Classificação (%promotores - %detratores):",
         "low": "-100 a 0: Baixo (risco reputacional)",
         "good": "1 a 30: Bom",
         "great": "31 a 70: Ótimo",
@@ -129,18 +129,18 @@
     },
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",
-      "description": "Personalize o dashboard com suas métricas chave",
+      "description": "Personalize o dashboard com suas principais métricas",
       "add_widget": "Adicionar widget",
-      "csat_description": "A Pontuação de Satisfação do Cliente indica o nível de satisfação do contato com o serviço recebido.",
-      "nps_description": "A Pontuação do Promotor Líquido indica a probabilidade de o contato recomendar o serviço que recebeu a outras pessoas.",
-      "config_csat_or_nps_description": "Defina select_keyqual {type} você deseja acompanhar:",
+      "csat_description": "A pontuação de satisfação do cliente (CSAT) mede o nível de satisfação com o serviço recebido",
+      "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
+      "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
-      "select_agent": "Selecionar agente",
+      "select_agent": "Selecione um agente",
       "select_key": "Digite a chave",
-      "set_widget_name": "Definir nome do widget",
+      "set_widget_name": "Defina o nome do widget",
       "label_widget_name": "Nome do widget",
       "widget_name_description": "Digite o nome do widget aqui",
       "your_agent_is_active": "Seu agente está ativo!",
@@ -148,31 +148,31 @@
       "save_changes": "Salvar alterações",
       "modal_attention": {
         "title_return": "Voltar para o passo anterior",
-        "description_return": "Tem certeza que deseja voltar? Todos os progressos serão perdidos.",
+        "description_return": "Tem certeza de que deseja voltar? Ao confirmar, todo o progresso será perdido.",
         "title_cancel": "Cancelar configuração",
-        "description_cancel": "Tem certeza que deseja cancelar? Todos os progressos serão perdidos.",
-        "keep_configuring": "Continuar configurando",
+        "description_cancel": "Tem certeza de que deseja cancelar? Ao confirmar, todo o progresso será perdido.",
+        "keep_configuring": "Continuar configuração",
         "return": "Voltar",
         "cancel": "Cancelar"
       },
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Remover widget",
       "modal_remove_widget": {
-        "title": "Remover widget",
-        "description": "Tem certeza que deseja remover o widget {type}?",
+        "title": "Remover widget {type}",
+        "description": "Tem certeza de que deseja remover o widget {type}?",
         "remove": "Remover",
         "cancel": "Cancelar",
         "success_message": "{widget} removido"
       },
       "tabs": {
-        "native": "Nativo",
+        "sentiment_analysis": "Análise de sentimento",
         "customized": "Personalizado"
       },
-      "select_chart_type": "Selecione o tipo de gráfico:",
-      "select_data": "Selecione os dados que você deseja acompanhar:",
+      "select_chart_type": "Selecione o tipo de gráfico",
+      "select_data": "Selecione os dados que você deseja acompanhar",
       "horizontal_bar_chart": {
         "title": "Gráfico de barras horizontal",
-        "description": "Uma visualização de dados onde as barras estão orientadas horizontalmente, com o comprimento de cada barra indicando a magnitude do seu valor correspondente."
+        "description": "Visualização com barras horizontais, em que o comprimento de cada barra indica a magnitude do valor correspondente."
       }
     },
     "setup_csat_or_nps_widget": {
@@ -185,8 +185,8 @@
     "title": "Mensagens template Meta",
     "favorites": "Favoritos",
     "add_to_favorites": "Adicionar aos favoritos",
-    "empty_templates": "Nenhum dado disponível no momento. Assim que houver atividade, aparecerá aqui!",
-    "favorite_limit_reached": "Limite de favoritos atingido. Por favor, remova algum favorito e tente novamente.",
+    "empty_templates": "Nenhum dado ainda. Assim que houver atividade, ela será exibida aqui.",
+    "favorite_limit_reached": "Limite de favoritos atingido. Remova algum favorito e tente novamente.",
     "all_data": "Todos os dados",
     "all_data_table": {
       "title": "Número de mensagens",
@@ -203,16 +203,16 @@
     },
     "active_contacts": {
       "title": "Contatos ativos",
-      "tooltip": "Contatos que interagiram com o modelo"
+      "tooltip": "Contatos que interagiram com o template"
     },
     "blocks": {
       "title": "Bloqueios"
     },
     "templates_modal": {
-      "title": "Buscar modelo",
+      "title": "Buscar template",
       "table": {
         "header": {
-          "name": "Nome do modelo",
+          "name": "Nome do template",
           "last_edited": "Última edição"
         }
       }
@@ -221,7 +221,7 @@
       "high": "Alta qualidade",
       "medium": "Média qualidade",
       "low": "Baixa qualidade",
-      "more_info_tooltip": "Saiba mais através das <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=pt_BR' target='_blank'>documentações da Meta</a>"
+      "more_info_tooltip": "Saiba mais acessando as <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines?locale=pt_BR' target='_blank'>documentações da Meta</a>"
     },
     "messages_graph": {
       "sent_messages": "Mensagens enviadas",
@@ -232,14 +232,14 @@
     "button_clicks_table": {
       "title": "Cliques nos botões",
       "header": {
-        "label": "Rótulo",
+        "label": "Texto do botão",
         "type": "Tipo",
         "total": "Total",
-        "clicks_in_relation_to_the_shot": "Cliques em relação à disparo",
+        "clicks_in_relation_to_the_shot": "Cliques em relação a disparos",
         "click_rate": "Taxa de cliques"
       },
       "button_type": {
-        "PHONE_NUMBER": "Número de telefone",
+        "PHONE_NUMBER": "Telefone",
         "URL": "Link",
         "COPY_CODE": "Copiar e colar",
         "FLOW": "Fluxo",
@@ -247,8 +247,8 @@
       }
     },
     "template": {
-      "preview": "Visualização",
-      "edit_template": "Editar modelo"
+      "preview": "Prévia",
+      "edit_template": "Editar template"
     },
     "filter": {
       "shortcut": {
@@ -271,7 +271,7 @@
     "urn": "URN",
     "agent": "Agente",
     "created_on": "Início",
-    "ended_at": "Fim",
+    "ended_at": "Término",
     "sector": "Setor",
     "queue": "Fila",
     "tags": "Tags"
@@ -283,13 +283,13 @@
       "start": "Início"
     },
     "message": {
-      "get_data_fail": "Falha ao buscar dados dos contatos que responderam a este fluxo."
+      "get_data_fail": "Erro ao buscar dados dos contatos que responderam a este fluxo"
     }
   },
   "filter": {
     "agent": {
       "label": "Agente",
-      "placeholder": "Selecione agente"
+      "placeholder": "Selecione um agente"
     },
     "contact": {
       "label": "Contato",
@@ -301,15 +301,15 @@
     },
     "queue": {
       "label": "Fila",
-      "placeholder": "Selecione fila"
+      "placeholder": "Selecione uma fila"
     },
     "sector": {
       "label": "Setor",
-      "placeholder": "Selecione setor"
+      "placeholder": "Selecione um setor"
     },
     "tags": {
       "label": "Tags",
-      "placeholder": "Selecione tag"
+      "placeholder": "Selecione uma tag"
     }
   },
   "key": "Chave",
@@ -336,11 +336,11 @@
   "none": "Nenhum",
   "currency": "Moeda",
   "funnel": "Funil",
-  "select_layout": "Selecionar o layout:",
+  "select_layout": "Selecione um layout",
   "dashboard_name": "Nome do dashboard",
   "add": "Adicionar",
   "view_more": "Ver mais",
-  "ex": "Ex:",
+  "ex": "Ex.:",
   "cancel": "Cancelar",
   "save": "Salvar",
   "delete": "Excluir",
@@ -348,7 +348,7 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "now": "Agora",
-  "date_format": "DD/MM/YYYY",
+  "date_format": "DD/MM/AAAA",
   "search": "Buscar",
   "category": "Categoria",
   "language": "Idioma",
@@ -361,28 +361,28 @@
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})"
   },
-  "save_error": "Erro ao salvar, tente novamente",
-  "get_data_error": "Erro ao buscar dados, por favor tente novamente",
-  "reset": "Resetar",
+  "save_error": "Erro ao salvar. Tente novamente.",
+  "get_data_error": "Erro ao buscar dados. Tente novamente.",
+  "reset": "Redefinir",
   "onboarding": {
     "welcome_modal": {
-      "title": "Novidade na área, conheça o Insights",
-      "text": "Estamos felizes em introduzir sua nova ferramenta para acompanhamento do sucesso da sua operação aqui na Weni 🎉",
+      "title": "Temos uma novidade: conheça o Insights",
+      "text": "Apresentamos a nova ferramenta para acompanhar o sucesso da sua operação aqui na Weni",
       "button": {
         "go": "Vamos lá",
         "ignore": "Ignorar"
       }
     },
     "complete_modal": {
-      "title": "Tour completa! 🎉",
-      "text": "Parabéns, agora você está mais perto de melhorar sua operação com base nos dados :)"
+      "title": "Tour completo!",
+      "text": "Parabéns, agora você está mais perto de melhorar sua operação com base em dados!"
     }
   },
   "widgets": {
-    "reset": "Resetar widget",
-    "info_reset": "Ao resetar, os dados configurados serão perdidos.",
-    "success_reset": "O widget foi resetado com sucesso",
-    "error_reset": "Não foi possível resetar o widget. Por favor, tente novamente",
+    "reset": "Redefinir widget",
+    "info_reset": "Ao redefinir, os dados configurados serão perdidos.",
+    "success_reset": "O widget foi redefinido com sucesso",
+    "error_reset": "Não foi possível redefinir o widget. Tente novamente.",
     "metric_error": "Erro ao buscar @.lower:metric",
     "card": {
       "error_description": "Configure novamente o @.lower:flow de origem para obter dados válidos",
@@ -391,24 +391,24 @@
     },
     "graph_funnel": {
       "title": "Funil",
-      "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto!",
+      "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto",
       "select_flows": "@:select @.lower:flows",
       "flow_executions": "Execuções do @.lower:flow",
       "error": {
-        "title": "Ops, ocorreu um problema ao carregar os dados!",
-        "description": "Por favor, tente recarregar novamente"
+        "title": "Ocorreu um problema ao carregar os dados",
+        "description": "Tente recarregar novamente"
       }
     },
     "empty_widget": {
-      "title": "Configuração necessária, personalize seu widget para começar",
+      "title": "Configuração necessária. Personalize seu widget para começar.",
       "config_btn": "Configurar"
     },
     "recurrence": {
       "title": "Recorrência",
-      "see_more": "Veja mais",
+      "see_more": "Ver mais",
       "empty_data": {
-        "title": "Nenhum dado por enquanto. Assim que houver atividade,",
-        "sub_title": "ela aparecerá aqui!"
+        "title": "Nenhum dado ainda. Assim que houver atividade,",
+        "sub_title": "ela será exibida aqui."
       }
     },
     "vtex_order": {
@@ -417,7 +417,7 @@
       "total_value": "Valor total",
       "average_ticket": "Ticket médio",
       "empty_data": {
-        "title": "Ops, não encontramos nenhum dado!",
+        "title": "Nenhum dado encontrado",
         "sub_title": "Verifique se o UTM informado está correto ou aguarde novos dados",
         "verify_btn": "Verificar UTM"
       }
@@ -434,24 +434,24 @@
       }
     },
     "treemap": {
-      "no_data": "Nenhum dado para mostrar",
-      "no_data_description": "Ainda não há conversas classificadas"
+      "no_data": "Nenhum dado para exibir",
+      "no_data_description": "Nenhuma conversa classificada ainda"
     }
   },
   "drawers": {
     "metric_saved": "@:metric salva com sucesso",
-    "reset_widget": "Resetar widget",
+    "reset_widget": "Redefinir widget",
     "clear_all_fields": "Limpar todos os campos",
     "config_gallery": {
       "title": "Galeria de widgets",
-      "description": "Escolha o tipo de widget que deseja configurar:",
+      "description": "Escolha o tipo de widget que deseja configurar",
       "options": {
         "executions": {
           "title": "Execuções",
           "description": "Visualize o total de execuções de um @.lower:flow"
         },
         "flow_result": {
-          "title": "Resultado de @.lower:flow",
+          "title": "Resultado do @.lower:flow",
           "description": "Traz um resultado de @.lower:flow e permite operações básicas"
         },
         "data_crossing": {
@@ -460,25 +460,25 @@
         },
         "funnel": {
           "title": "Funil",
-          "description": "Selecione dados para visualizar em um gráfico de funil"
+          "description": "Selecione dados para visualização em gráfico de funil"
         },
         "vtex": {
           "title": "VTEX",
-          "description": "Visualize seus dados de vendas VTEX"
+          "description": "Visualize seus dados de vendas na VTEX"
         },
         "vtex_conversions": {
           "title": "Conversão de templates",
-          "description": "Acompanhe a taxa de conversão entre mensagens de template enviadas e vendas concluídas.",
+          "description": "Acompanhe a taxa de conversão entre mensagens de template enviadas e vendas concluídas",
           "form": {
             "define_meta_data": "Definir metadados",
             "define_vtex_data": "Definir dados da VTEX",
             "input": {
               "name": {
                 "label": "Nome do widget",
-                "placeholder": "Exemplo: Vendas"
+                "placeholder": "Ex.: Vendas"
               },
               "waba": {
-                "label": "Selecionar número da conta",
+                "label": "Selecione o número da conta",
                 "placeholder": "Selecione um número de telefone"
               },
               "template": {
@@ -486,29 +486,29 @@
                 "placeholder": "Selecione uma mensagem de template"
               },
               "utm": {
-                "label": "Fornecer UTM",
-                "placeholder": "Copie da VTEX e cole aqui"
+                "label": "Insira o UTM",
+                "placeholder": "Copie o UTM da VTEX e cole-o aqui"
               }
             }
           }
         },
         "recurrence": {
           "title": "Recorrência",
-          "description": "Visualize em gráficos resultados recorrentes como pesquisas de satisfação ou CSAT"
+          "description": "Visualize resultados recorrentes em gráficos, como pesquisas de satisfação ou CSAT."
         }
       }
     },
     "config_card": {
       "title": "Definir @.lower:metric para o card",
       "name_card": {
-        "label": "Nomear card",
+        "label": "Dê um nome para o card",
         "placeholder": "@:ex @.lower:flows do projeto"
       },
       "select_origin_flow": "@:select @.lower:flow de origem",
       "result_type": "Tipo de resultado",
       "flow_result": {
         "label": "Resultado do @.lower:flow",
-        "placeholder": "Pesquise ou selecione o resultado"
+        "placeholder": "Busque ou selecione um resultado"
       },
       "operation": "Operação",
       "format": "Formatar",
@@ -517,7 +517,7 @@
       },
       "radios": {
         "executions": "Execuções",
-        "results": "Resultado de fluxo",
+        "results": "Resultado do fluxo",
         "total": "Total",
         "highest_value": "Maior valor",
         "avg": "Média",
@@ -565,8 +565,8 @@
     "last_updated_at": "Última atualização",
     "clear_filters": "Limpar filtros",
     "add_new_dashboard": "Novo dashboard",
-    "set_default_dashboard_success": "Agora o Dashboard {dashboard} é sua página inicial",
-    "set_default_dashboard_error": "Falha ao definir o Dashboard {dashboard} como página inicial",
+    "set_default_dashboard_success": "Agora o dashboard {dashboard} é sua página inicial",
+    "set_default_dashboard_error": "Erro ao definir o dashboard {dashboard} como página inicial",
     "generate_insight": {
       "title": "Gerar insight",
       "generating_insights": "Gerando insights",
@@ -575,8 +575,8 @@
         "placeholder_negative": "Como podemos melhorar?"
       },
       "feedback": {
-        "question": "O Insight fornecido foi útil?",
-        "complete": "Obrigado pelo feedback!"
+        "question": "O insight fornecido foi útil?",
+        "complete": "Agradecemos pelo feedback!"
       },
       "button": {
         "yes": "Sim",
@@ -584,33 +584,33 @@
         "send": "Enviar"
       },
       "by_ai": "por Meta Llama",
-      "error": "Lamentamos, mas infelizmente não foi possível gerar um Insight, verifique sua conexão com internet ou tente novamente mais tarde",
+      "error": "Não foi possível gerar insights. Verifique sua conexão com a internet e tente novamente mais tarde.",
       "prompt": "Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: {values}",
-      "prompt_language": "Retorne em Português brasileiro"
+      "prompt_language": "Resposta em Português brasileiro"
     }
   },
   "new_dashboard": {
     "title": "Novo dashboard",
     "create_dashboard": "Criar dashboard",
     "creating_new_dashboard": "Criando novo dashboard",
-    "dashboard_name_placeholder": "Ex: Vendas",
+    "dashboard_name_placeholder": "Ex.: Vendas",
     "alert": {
       "success": "Dashboard criado com sucesso",
-      "error": "Falha ao criar dashboard"
+      "error": "Erro ao criar dashboard"
     }
   },
   "edit_dashboard": {
     "title": "Editar dashboard",
-    "delete_dashboard": "Deletar dashboard",
-    "delete_dashboard_notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+    "delete_dashboard": "Excluir dashboard",
+    "delete_dashboard_notice": "Esta ação é irreversível. Para confirmar, digite o nome do dashboard.",
     "alert": {
       "success": "Dashboard atualizado com sucesso",
-      "error": "Falha ao atualizar dashboard"
+      "error": "Erro ao atualizar dashboard"
     }
   },
   "delete_dashboard": {
-    "title": "Deletar dashboard",
-    "notice": "Essa ação será irreversível, para confirmar a ação digite o nome do dashboard",
+    "title": "Excluir dashboard",
+    "notice": "Esta ação é irreversível. Para confirmar, digite o nome do dashboard.",
     "alert": {
       "success": "Dashboard excluído com sucesso",
       "error": "Falha ao excluir dashboard"
@@ -625,8 +625,8 @@
   "dashboard_onboarding": {
     "step": {
       "create_dashboard": {
-        "title": "Crie um Dashboard personalizado",
-        "description": "Crie quantos Dashboards quiser. Clique em <b>Novo dashboard</b> para começar"
+        "title": "Crie um dashboard personalizado",
+        "description": "Crie dashboards personalizados. Clique em <b>Novo dashboard</b> para começar."
       }
     }
   },
@@ -639,12 +639,12 @@
         },
         "select_widget_type": {
           "title": "Selecionar widget",
-          "description": "Selecione o tipo de métrica que deseja configurar, caso tenha dúvidas comece testando o Execuções",
+          "description": "Selecione o tipo de métrica que deseja configurar. Se tiver dúvidas, comece testando em Execuções.",
           "general_description": "Selecione o tipo de métrica que deseja configurar"
         },
         "set_metric": {
-          "title": "Definindo métrica",
-          "description": "Após selecionar o tipo de métrica, selecione um fluxo que traga valores relevantes para sua operação, preencha o restante e salve!"
+          "title": "Definir métrica",
+          "description": "Após selecionar o tipo de métrica, selecione um fluxo que forneça dados relevantes para sua operação. Preencha os demais campos e salve."
         }
       }
     },
@@ -652,15 +652,15 @@
       "step": {
         "define_metric": {
           "title": "Continue explorando as possibilidades",
-          "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
+          "description": "Veja seus principais dados de vendas na VTEX ou acompanhe a jornada dos seus contatos"
         },
         "select_widget_type": {
           "title": "Selecione o widget ideal",
-          "description": "Veja os principais seus principais dados de vendas VTEX ou acompanhe a jornada dos seus contatos"
+          "description": "Veja seus principais dados de vendas na VTEX ou acompanhe a jornada dos seus contatos"
         },
         "fill_metric": {
           "title": "Configure o widget",
-          "description": "Preencha os campos para configurar seu widget e obter dados valiosos!"
+          "description": "Preencha os campos para configurar seu widget e obter dados valiosos"
         }
       }
     }
@@ -673,7 +673,7 @@
     "title": "Veja o que está acontecendo em: Carrinho abandonado",
     "errors": {
       "title": "Não foi possível carregar os dados",
-      "description": "Não foi possível carregar os dados. Por favor, tente novamente mais tarde."
+      "description": "Não foi possível carregar os dados. Tente novamente mais tarde."
     },
     "titles": {
       "send-message": "Mensagens enviadas",
@@ -702,9 +702,9 @@
   },
   "export_data": {
     "title": "Exportar dados",
-    "tooltip": "A exportação está em progresso! Você poderá gerar um novo relatório para este projeto quando concluído.",
+    "tooltip": "A exportação está em andamento. Você poderá gerar um novo relatório para este projeto quando a exportação for finalizada.",
     "description": "Selecione os dados que deseja exportar. O arquivo completo será enviado para seu email após a confirmação.",
-    "feedback": "Você receberá por email em breve. Lembre-se de verificar sua pasta de spam.",
+    "feedback": "Você receberá o arquivo por email em breve. Lembre-se de verificar sua pasta de spam.",
     "feedback_title": "Processando exportação",
     "model_labels": {
       "sectors": "Setores",
@@ -723,9 +723,9 @@
       "config": "Configuração",
       "name": "Nome",
       "rooms_limit": "Limite de salas",
-      "is_delete": "Está deletado",
+      "is_delete": "Está excluído",
       "user": "Usuário",
-      "ended_at": "Data de Finalização do atendimento",
+      "ended_at": "Data de finalização do atendimento",
       "ended_by": "Finalizado por",
       "is_active": "Status",
       "is_wating": "Está aguardando",
@@ -738,7 +738,7 @@
       "contact": "Contato",
       "tags": "Tags",
       "last_name": "Sobrenome",
-      "email": "E-mail",
+      "email": "Email",
       "first_name": "Nome",
       "phone": "Telefone",
       "status": "Status",
@@ -746,19 +746,19 @@
       "human": "Atendimento humano",
       "user__first_name": "Nome do atendente",
       "user__last_name": "Sobrenome do atendente",
-      "user__email": "E-mail",
+      "user__email": "Email",
       "contact__name": "Nome do contato",
       "contact__uuid": "ID do contato",
       "queue__name": "Fila",
       "queue__uuid": "ID da fila",
       "queue__sector__name": "Setor",
-      "created_on": "Data de Início do atendimento",
+      "created_on": "Data de início do atendimento",
       "duration": "Duração",
       "awaiting_time": "Tempo em espera",
       "first_response_time": "Tempo para 1ª resposta"
     },
     "select_data": {
-      "label": "Selecione o período para busca de dados (máximo de 92 dias entre a data inicial e a data final)",
+      "label": "Selecione o período para buscar dados (máximo de 92 dias entre a data inicial e a data final)",
       "placeholder": "DD/MM/AAAA",
       "shortcuts": {
         "last_7_days": "Últimos 7 dias",
@@ -786,23 +786,23 @@
       "all_queues": "Todas as filas",
       "all_tags": "Todas as tags"
     },
-    "select_format": "Selecione o formato em que os dados serão exportados.",
-    "warning_terms": "Enquanto o exportação está sendo processada, a geração de novas exportações será bloqueada para todos os perfis no projeto. Por favor, confirme que você entende para continuar.",
+    "select_format": "Selecione o formato para exportar os dados",
+    "warning_terms": "Enquanto a exportação estiver em processamento, a geração de novas exportações ficará bloqueada para todos os perfis do projeto. Confirme para continuar.",
     "accept_terms": "Aceito os termos",
     "save_btn": "Exportar dados",
     "cancel_btn": "Cancelar",
-    "error_pending_export": "Já existe um relatório para este projeto em andamento, tente novamente mais tarde!",
-    "error_default": "Oops, aconteceu algum problema"
+    "error_pending_export": "Já existe um relatório em andamento para este projeto. Tente novamente mais tarde.",
+    "error_default": "Ops, ocorreu um erro"
   },
   "disconnectAgent": {
     "title": "Desconectar agente",
-    "description": "Tem certeza que deseja desconectar o agente {agent}?",
-    "description_confirm": "Após confirmação, o status do agente {agent} será offline.",
+    "description": "Tem certeza de que deseja desconectar o agente {agent}?",
+    "description_confirm": "Ao confirmar, o agente {agent} ficará offline.",
     "tooltip": "Desconectar agente",
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
-    "error_message": "Erro ao desconectar agente {agent}",
+    "error_message": "Erro ao desconectar o agente {agent}",
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
   "human_support_dashboard": {

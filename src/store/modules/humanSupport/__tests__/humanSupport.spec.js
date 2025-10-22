@@ -29,6 +29,10 @@ describe('useHumanSupport store', () => {
       expect(store.tags).toEqual([]);
     });
 
+    it('should initialize active tab as monitoring', () => {
+      expect(store.activeTab).toBe('monitoring');
+    });
+
     it('should initialize applied filters with empty arrays', () => {
       expect(store.appliedFilters).toEqual({
         sectors: [],
@@ -296,6 +300,36 @@ describe('useHumanSupport store', () => {
         expect(store.appliedAgentFilter.value).toBe('');
         expect(store.appliedAgentFilter.label).toBe('');
       });
+    });
+  });
+
+  describe('active tab management', () => {
+    it('should set active tab to monitoring', () => {
+      store.setActiveTab('monitoring');
+      expect(store.activeTab).toBe('monitoring');
+    });
+
+    it('should set active tab to analysis', () => {
+      store.setActiveTab('analysis');
+      expect(store.activeTab).toBe('analysis');
+    });
+
+    it('should switch between tabs correctly', () => {
+      expect(store.activeTab).toBe('monitoring');
+
+      store.setActiveTab('analysis');
+      expect(store.activeTab).toBe('analysis');
+
+      store.setActiveTab('monitoring');
+      expect(store.activeTab).toBe('monitoring');
+    });
+
+    it('should maintain tab state after multiple changes', () => {
+      store.setActiveTab('analysis');
+      store.setActiveTab('monitoring');
+      store.setActiveTab('analysis');
+
+      expect(store.activeTab).toBe('analysis');
     });
   });
 

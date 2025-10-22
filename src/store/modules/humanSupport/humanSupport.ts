@@ -23,9 +23,12 @@ export interface DateRange {
   end: string;
 }
 
+export type ActiveTab = 'monitoring' | 'analysis';
+
 export const useHumanSupport = defineStore('humanSupport', () => {
   const humanSupportMonitoring = useHumanSupportMonitoring();
   const { loadAllData: loadAllDataMonitoring } = humanSupportMonitoring;
+  const activeTab = ref<ActiveTab>('monitoring');
   const sectors = ref<Filter[]>([]);
   const queues = ref<Filter[]>([]);
   const tags = ref<Filter[]>([]);
@@ -66,6 +69,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       value: value,
       label: label,
     };
+  };
+
+  const setActiveTab = (tab: ActiveTab) => {
+    activeTab.value = tab;
   };
 
   const hasAppliedFiltersNoChanges = computed(() => {
@@ -112,6 +119,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
   });
 
   return {
+    activeTab,
     sectors,
     queues,
     tags,
@@ -121,6 +129,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     appliedFiltersLength,
     saveAppliedFilters,
     saveAppliedAgentFilter,
+    setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,
   };

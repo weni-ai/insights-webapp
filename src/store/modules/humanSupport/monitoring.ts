@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useDashboards } from '../dashboards';
 import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/serviceStatus';
 import { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/timeMetrics';
@@ -7,21 +7,6 @@ import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/se
 import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
 import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
 import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
-
-interface Filter {
-  value: string;
-  label: string;
-}
-interface AppliedFilters {
-  sectors: Filter[];
-  queues: Filter[];
-  tags: Filter[];
-}
-
-interface AppliedAgentFilter {
-  value: string;
-  label: string;
-}
 
 export type ActiveDetailedTab =
   | 'in_awaiting'
@@ -32,18 +17,6 @@ export type ActiveDetailedTab =
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
-    const sectors = ref<Filter[]>([]);
-    const queues = ref<Filter[]>([]);
-    const tags = ref<Filter[]>([]);
-    const appliedFilters = ref<AppliedFilters>({
-      sectors: [],
-      queues: [],
-      tags: [],
-    });
-    const appliedAgentFilter = ref<AppliedAgentFilter>({
-      value: '',
-      label: '',
-    });
     const refreshDetailedTabData = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
@@ -70,83 +43,12 @@ export const useHumanSupportMonitoring = defineStore(
         loadingHumanSupportByHourData.value,
     );
 
-    const appliedFiltersLength = computed(() => {
-      const sectorsLength = appliedFilters.value.sectors.length > 0 ? 1 : 0;
-      const queuesLength = appliedFilters.value.queues.length > 0 ? 1 : 0;
-      const tagsLength = appliedFilters.value.tags.length > 0 ? 1 : 0;
-
-      const filtersLength = sectorsLength + queuesLength + tagsLength;
-
-      return filtersLength;
-    });
-
-    const saveAppliedFilters = () => {
-      appliedFilters.value = {
-        sectors: [...sectors.value],
-        queues: [...queues.value],
-        tags: [...tags.value],
-      };
-    };
-
-    const saveAppliedAgentFilter = (value: string, label: string) => {
-      appliedAgentFilter.value = {
-        value: value,
-        label: label,
-      };
-    };
-
     const setActiveDetailedTab = (tab: ActiveDetailedTab) => {
       activeDetailedTab.value = tab;
     };
 
     const setRefreshDetailedTabData = (value: boolean) => {
       refreshDetailedTabData.value = value;
-    };
-
-    const hasAppliedFiltersNoChanges = computed(() => {
-      const areArraysEqual = (current: Filter[], applied: Filter[]) =>
-        current.length === applied.length &&
-        current.every((item) =>
-          applied.some((app) => app.value === item.value),
-        ) &&
-        applied.every((app) =>
-          current.some((item) => item.value === app.value),
-        );
-
-      return [
-        [sectors.value, appliedFilters.value.sectors],
-        [queues.value, appliedFilters.value.queues],
-        [tags.value, appliedFilters.value.tags],
-      ].every(([current, applied]) => areArraysEqual(current, applied));
-    });
-
-    const clearFilters = () => {
-      const isSectorEmpty = sectors.value.length === 0;
-      const isQueueEmpty = queues.value.length === 0;
-      const isTagEmpty = tags.value.length === 0;
-
-      const isAppliedFiltersEmpty =
-        appliedFilters.value.sectors.length === 0 &&
-        appliedFilters.value.queues.length === 0 &&
-        appliedFilters.value.tags.length === 0;
-
-      if (
-        isSectorEmpty &&
-        isQueueEmpty &&
-        isTagEmpty &&
-        isAppliedFiltersEmpty
-      ) {
-        return;
-      }
-
-      sectors.value = [];
-      queues.value = [];
-      tags.value = [];
-      appliedFilters.value = {
-        sectors: [],
-        queues: [],
-        tags: [],
-      };
     };
 
     const loadAllData = () => {
@@ -199,25 +101,14 @@ export const useHumanSupportMonitoring = defineStore(
       }
     };
 
-    watch(appliedFilters, () => {
-      loadAllData();
-    });
-
     return {
-      sectors,
-      queues,
-      tags,
       isLoadingAllData,
-      appliedFiltersLength,
-      appliedFilters,
       serviceStatusData,
       timeMetricsData,
       loadingServiceStatusData,
       loadingTimeMetricsData,
       loadingHumanSupportByHourData,
-      hasAppliedFiltersNoChanges,
       servicesOpenByHourData,
-      appliedAgentFilter,
       activeDetailedTab,
       refreshDetailedTabData,
 
@@ -225,9 +116,6 @@ export const useHumanSupportMonitoring = defineStore(
       loadServiceStatusData,
       loadTimeMetricsData,
       loadHumanSupportByHourData,
-      saveAppliedFilters,
-      saveAppliedAgentFilter,
-      clearFilters,
       setActiveDetailedTab,
       setRefreshDetailedTabData,
     };

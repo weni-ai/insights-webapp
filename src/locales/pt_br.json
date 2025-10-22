@@ -59,7 +59,7 @@
       "success_remove_subtopic": "Subassunto excluído com sucesso",
       "error_remove_subtopic": "Erro ao excluir subassunto",
       "remove_modal": {
-        "title_remove_topic": "Excluir subassunto",
+        "title_remove_topic": "Excluir assunto",
         "title_remove_sub_topic": "Excluir subassunto",
         "description_remove_topic": "Tem certeza de que deseja excluir o assunto {topic}? Todos os subassuntos também serão excluídos. Os dados previamente associados a este assunto serão desvinculados desta classificação e não ficarão mais acessíveis por meio dela.",
         "description_remove_sub_topic": "Tem certeza de que deseja excluir o subassunto {sub_topic}? Os dados previamente associados a este subassunto serão desvinculados desta classificação e não ficarão mais acessíveis por meio dela.",

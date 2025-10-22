@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useDashboards } from '../dashboards';
 import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/serviceStatus';
 import { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/timeMetrics';
@@ -17,7 +17,7 @@ export type ActiveDetailedTab =
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
-    const refreshDetailedTabData = ref<boolean>(false);
+    const refreshDataMonitoring = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_waiting: null,
@@ -47,8 +47,8 @@ export const useHumanSupportMonitoring = defineStore(
       activeDetailedTab.value = tab;
     };
 
-    const setRefreshDetailedTabData = (value: boolean) => {
-      refreshDetailedTabData.value = value;
+    const setRefreshDataMonitoring = (value: boolean) => {
+      refreshDataMonitoring.value = value;
     };
 
     const loadAllData = () => {
@@ -101,6 +101,10 @@ export const useHumanSupportMonitoring = defineStore(
       }
     };
 
+    watch(refreshDataMonitoring, (newValue) => {
+      if (newValue) loadAllData();
+    });
+
     return {
       isLoadingAllData,
       serviceStatusData,
@@ -110,14 +114,13 @@ export const useHumanSupportMonitoring = defineStore(
       loadingHumanSupportByHourData,
       servicesOpenByHourData,
       activeDetailedTab,
-      refreshDetailedTabData,
-
+      refreshDataMonitoring,
       loadAllData,
       loadServiceStatusData,
       loadTimeMetricsData,
       loadHumanSupportByHourData,
       setActiveDetailedTab,
-      setRefreshDetailedTabData,
+      setRefreshDataMonitoring,
     };
   },
 );

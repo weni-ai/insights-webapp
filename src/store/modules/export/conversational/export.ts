@@ -246,13 +246,16 @@ export const useConversationalExport = defineStore('conversationalExport', {
         this.setIsRenderExportData(false);
         this.setIsRenderExportDataFeedback(true);
       } catch (error) {
-        if (error?.status === 400 && error?.concurrent_report) {
+        if (error?.status === 400 && error?.data?.concurrent_report) {
           defaultAlert(
             'error',
             i18n.global.t('export_data.error_pending_export'),
           );
-        } else if (error?.status === 400 && error?.error) {
-          defaultAlert('error', error?.error);
+        } else if (
+          error?.status === 400 &&
+          error?.data?.custom_widgets.length > 0
+        ) {
+          defaultAlert('error', error?.data?.custom_widgets[0]);
         } else {
           defaultAlert('error', i18n.global.t('export_data.error_default'));
         }

@@ -179,6 +179,7 @@ const titleButton = computed(() => {
 <style lang="scss" scoped>
 .filters-dropdown {
   display: flex;
+  padding-right: $unnnic-space-1;
 
   &__dropdown {
     width: 100%;

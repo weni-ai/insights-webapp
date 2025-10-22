@@ -26,5 +26,6 @@ const handleUpdateModelValue = (value: DateRange) => {
 <style lang="scss" scoped>
 .date-filter {
   min-width: 316px;
+  padding-right: $unnnic-space-2;
 }
 </style>

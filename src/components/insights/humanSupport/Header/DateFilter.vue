@@ -1,6 +1,7 @@
 <template>
   <FilterDate
     :modelValue="appliedDateRange"
+    className="date-filter"
     :placeholder="$t('human_support.filters.date_range')"
     @update:model-value="handleUpdateModelValue"
   />
@@ -21,3 +22,9 @@ const handleUpdateModelValue = (value: DateRange) => {
   humanSupportStore.appliedDateRange = value;
 };
 </script>
+
+<style lang="scss" scoped>
+.date-filter {
+  min-width: 316px;
+}
+</style>

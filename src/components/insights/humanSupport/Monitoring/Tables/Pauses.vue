@@ -43,6 +43,7 @@ import { PausesDataResult } from '@/services/api/resources/humanSupport/detailed
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
@@ -56,6 +57,7 @@ const { t } = useI18n();
 
 const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 
 const page = ref(1);
 const pageInterval = ref(15);
@@ -165,7 +167,7 @@ const loadData = async () => {
         ordering,
         limit: pageInterval.value,
         offset,
-        agent: humanSupportMonitoring.appliedAgentFilter.value,
+        agent: humanSupport.appliedAgentFilter.value,
       });
 
     if (data.results) {
@@ -194,7 +196,7 @@ watch(currentSort, () => {
 });
 
 watch(
-  () => humanSupportMonitoring.appliedAgentFilter,
+  () => humanSupport.appliedAgentFilter,
   () => {
     page.value = 1;
     loadData();
@@ -203,7 +205,7 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  () => humanSupport.appliedFilters,
   () => {
     page.value = 1;
     loadData();

@@ -2,13 +2,13 @@ import { describe, it, expect, beforeEach, vi } from 'vitest';
 import servicesOpenByHour from '../servicesOpenByHour';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http');
 vi.mock('@/store/modules/config');
-vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('@/store/modules/humanSupport/humanSupport');
 vi.mock('@/store/modules/dashboards');
 vi.mock('@/utils/request');
 
@@ -42,7 +42,7 @@ describe('servicesOpenByHour API', () => {
 
     useConfig.mockReturnValue({ project: mockProject });
     useDashboards.mockReturnValue({ currentDashboard: mockCurrentDashboard });
-    useHumanSupportMonitoring.mockReturnValue({
+    useHumanSupport.mockReturnValue({
       appliedFilters: mockAppliedFilters,
     });
     createRequestQuery.mockReturnValue({ formatted: 'params' });
@@ -95,7 +95,7 @@ describe('servicesOpenByHour API', () => {
 
     it('should handle empty applied filters', async () => {
       const emptyFilters = { sectors: [], queues: [], tags: [] };
-      useHumanSupportMonitoring.mockReturnValue({
+      useHumanSupport.mockReturnValue({
         appliedFilters: emptyFilters,
       });
 
@@ -147,7 +147,7 @@ describe('servicesOpenByHour API', () => {
         queues: [{ value: '' }],
         tags: [{ value: 'tag1' }],
       };
-      useHumanSupportMonitoring.mockReturnValue({
+      useHumanSupport.mockReturnValue({
         appliedFilters: malformedFilters,
       });
 
@@ -223,7 +223,7 @@ describe('servicesOpenByHour API', () => {
     });
 
     it('should handle missing monitoring store', async () => {
-      useHumanSupportMonitoring.mockReturnValue({
+      useHumanSupport.mockReturnValue({
         appliedFilters: null,
       });
 

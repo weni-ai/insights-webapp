@@ -24,7 +24,7 @@
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
 import { ref, computed, onMounted } from 'vue';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 interface Attendant {
   uuid: string;
@@ -37,8 +37,7 @@ interface AttendantOption {
   label: string;
 }
 
-const humanSupportMonitoring = useHumanSupportMonitoring();
-const { saveAppliedAgentFilter } = humanSupportMonitoring;
+const { saveAppliedAgentFilter } = useHumanSupport();
 
 const currentAttendant = ref<Attendant | null>(null);
 const attendants = ref<Attendant[]>([]);

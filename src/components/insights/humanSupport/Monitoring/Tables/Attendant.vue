@@ -41,6 +41,7 @@ import { useI18n } from 'vue-i18n';
 import { AttendantDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
 import service from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
 import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
 import { formatSecondsToTime } from '@/utils/time';
@@ -62,6 +63,7 @@ const { t } = useI18n();
 
 const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 
 const page = ref(1);
 const pageInterval = ref(15);
@@ -143,7 +145,7 @@ const loadData = async () => {
           : currentSort.value.itemKey,
       limit: pageInterval.value,
       offset: (page.value - 1) * pageInterval.value,
-      agent: humanSupportMonitoring.appliedAgentFilter.value,
+      agent: humanSupport.appliedAgentFilter.value,
     });
 
     if (data.results) {
@@ -183,7 +185,7 @@ watch(currentSort, () => {
 });
 
 watch(
-  () => humanSupportMonitoring.appliedAgentFilter,
+  () => humanSupport.appliedAgentFilter,
   () => {
     page.value = 1;
     loadData();
@@ -192,7 +194,7 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  () => humanSupport.appliedFilters,
   () => {
     page.value = 1;
     loadData();

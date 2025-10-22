@@ -1,8 +1,8 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { createRequestQuery } from '@/utils/request';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 interface ServicesOpenByHourData {
   label: string;
@@ -24,7 +24,7 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<ServicesOpenByHourData[]> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
     const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {

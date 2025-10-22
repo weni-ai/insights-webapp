@@ -88,17 +88,17 @@ import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/Filter
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+const humanSupport = useHumanSupport();
 
-const humanSupportMonitoring = useHumanSupportMonitoring();
-const { clearFilters, saveAppliedFilters } = humanSupportMonitoring;
+const { clearFilters, saveAppliedFilters } = humanSupport;
 const {
   appliedFiltersLength,
   sectors,
   queues,
   tags,
   hasAppliedFiltersNoChanges,
-} = storeToRefs(humanSupportMonitoring);
+} = storeToRefs(humanSupport);
 
 const { t } = useI18n();
 

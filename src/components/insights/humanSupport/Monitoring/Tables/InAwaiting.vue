@@ -26,6 +26,8 @@ import service from '@/services/api/resources/humanSupport/detailedMonitoring/in
 import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
@@ -34,6 +36,7 @@ type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 
 const isLoading = ref(false);
 
@@ -130,7 +133,7 @@ watch(currentSort, () => {
 });
 
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  () => humanSupport.appliedFilters,
   () => {
     page.value = 1;
     loadData();

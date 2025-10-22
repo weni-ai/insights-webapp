@@ -44,6 +44,13 @@ describe('useHumanSupport store', () => {
       });
     });
 
+    it('should initialize applied date range with empty strings', () => {
+      expect(store.appliedDateRange).toEqual({
+        start: '',
+        end: '',
+      });
+    });
+
     it('should initialize appliedFiltersLength to 0', () => {
       expect(store.appliedFiltersLength).toBe(0);
     });

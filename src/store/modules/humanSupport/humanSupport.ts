@@ -18,12 +18,21 @@ interface AppliedAgentFilter {
   label: string;
 }
 
+export interface DateRange {
+  start: string;
+  end: string;
+}
+
 export const useHumanSupport = defineStore('humanSupport', () => {
   const humanSupportMonitoring = useHumanSupportMonitoring();
   const { loadAllData: loadAllDataMonitoring } = humanSupportMonitoring;
   const sectors = ref<Filter[]>([]);
   const queues = ref<Filter[]>([]);
   const tags = ref<Filter[]>([]);
+  const appliedDateRange = ref<DateRange>({
+    start: '',
+    end: '',
+  });
   const appliedFilters = ref<AppliedFilters>({
     sectors: [],
     queues: [],
@@ -106,6 +115,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     sectors,
     queues,
     tags,
+    appliedDateRange,
     appliedFilters,
     appliedAgentFilter,
     appliedFiltersLength,

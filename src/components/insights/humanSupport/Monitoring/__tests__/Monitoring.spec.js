@@ -40,7 +40,7 @@ describe('Monitoring', () => {
     return mount(Monitoring, {
       global: {
         stubs: {
-          ServiceStatus: true,
+          StatusCards: true,
           TimeMetrics: true,
           ServicesOpenByHour: true,
           DetailedMonitoring: true,
@@ -73,7 +73,7 @@ describe('Monitoring', () => {
     });
 
     it('should render all child components', () => {
-      expect(wrapper.findComponent({ name: 'ServiceStatus' }).exists()).toBe(
+      expect(wrapper.findComponent({ name: 'StatusCards' }).exists()).toBe(
         true,
       );
       expect(wrapper.findComponent({ name: 'TimeMetrics' }).exists()).toBe(
@@ -88,7 +88,7 @@ describe('Monitoring', () => {
     });
 
     it('should have correct data-testids for child components', () => {
-      const serviceStatus = wrapper.findComponent({ name: 'ServiceStatus' });
+      const statusCards = wrapper.findComponent({ name: 'StatusCards' });
       const timeMetrics = wrapper.findComponent({ name: 'TimeMetrics' });
       const servicesOpenByHour = wrapper.findComponent({
         name: 'ServicesOpenByHour',
@@ -97,8 +97,8 @@ describe('Monitoring', () => {
         name: 'DetailedMonitoring',
       });
 
-      expect(serviceStatus.attributes('data-testid')).toBe(
-        'monitoring-service-status',
+      expect(statusCards.attributes('data-testid')).toBe(
+        'monitoring-status-cards',
       );
       expect(timeMetrics.attributes('data-testid')).toBe(
         'monitoring-time-metrics',

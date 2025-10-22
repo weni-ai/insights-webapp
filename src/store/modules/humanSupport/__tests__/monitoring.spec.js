@@ -113,7 +113,7 @@ describe('useHumanSupportMonitoring store', () => {
     });
 
     it('should initialize refresh and tab states', () => {
-      expect(store.refreshDetailedTabData).toBe(false);
+      expect(store.refreshDataMonitoring).toBe(false);
       expect(store.activeDetailedTab).toBe('in_progress');
     });
 
@@ -508,25 +508,25 @@ describe('useHumanSupportMonitoring store', () => {
       });
     });
 
-    describe('setRefreshDetailedTabData', () => {
+    describe('setRefreshDataMonitoring', () => {
       it('should set refresh detailed tab data to true', () => {
-        store.setRefreshDetailedTabData(true);
-        expect(store.refreshDetailedTabData).toBe(true);
+        store.setRefreshDataMonitoring(true);
+        expect(store.refreshDataMonitoring).toBe(true);
       });
 
       it('should set refresh detailed tab data to false', () => {
-        store.setRefreshDetailedTabData(false);
-        expect(store.refreshDetailedTabData).toBe(false);
+        store.setRefreshDataMonitoring(false);
+        expect(store.refreshDataMonitoring).toBe(false);
       });
 
       it('should toggle refresh detailed tab data', () => {
-        expect(store.refreshDetailedTabData).toBe(false);
+        expect(store.refreshDataMonitoring).toBe(false);
 
-        store.setRefreshDetailedTabData(true);
-        expect(store.refreshDetailedTabData).toBe(true);
+        store.setRefreshDataMonitoring(true);
+        expect(store.refreshDataMonitoring).toBe(true);
 
-        store.setRefreshDetailedTabData(false);
-        expect(store.refreshDetailedTabData).toBe(false);
+        store.setRefreshDataMonitoring(false);
+        expect(store.refreshDataMonitoring).toBe(false);
       });
     });
 

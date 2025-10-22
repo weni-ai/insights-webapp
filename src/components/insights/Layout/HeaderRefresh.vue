@@ -19,18 +19,17 @@ import { storeToRefs } from 'pinia';
 const useMonitoring = useHumanSupportMonitoring();
 
 const { isLoadingAllData } = storeToRefs(useMonitoring);
-const { loadAllData, setRefreshDetailedTabData } = useMonitoring;
+const { setRefreshDataMonitoring } = useMonitoring;
 
 let timeoutStop: (() => void) | null = null;
 
 const refreshData = () => {
-  loadAllData();
-  setRefreshDetailedTabData(true);
+  setRefreshDataMonitoring(true);
 
   timeoutStop?.();
 
   const { stop } = useTimeoutFn(() => {
-    setRefreshDetailedTabData(false);
+    setRefreshDataMonitoring(false);
   }, 500);
 
   timeoutStop = stop;

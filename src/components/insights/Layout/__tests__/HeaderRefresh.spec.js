@@ -49,7 +49,7 @@ describe('HeaderRefresh.vue', () => {
     monitoringStore = {
       isLoadingAllData: false,
       loadAllData: vi.fn(),
-      setRefreshDetailedTabData: vi.fn(),
+      setRefreshDataMonitoring: vi.fn(),
     };
 
     mockStoreToRefs = {
@@ -112,38 +112,39 @@ describe('HeaderRefresh.vue', () => {
 
       await refreshButton.vm.$emit('click');
 
-      expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(1);
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
       );
     });
 
-    it('should call loadAllData from store when refreshData is executed', () => {
+    it('should call setRefreshDataMonitoring with true when refreshData is executed', () => {
       wrapper.vm.refreshData();
 
-      expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call setRefreshDetailedTabData with true when refreshData is executed', () => {
-      wrapper.vm.refreshData();
-
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
       );
     });
 
-    it('should call setRefreshDetailedTabData with false after timeout', async () => {
+    it('should call setRefreshDataMonitoring with true when refreshData is executed', () => {
+      wrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
+        true,
+      );
+    });
+
+    it('should call setRefreshDataMonitoring with false after timeout', async () => {
       vi.useFakeTimers();
 
       wrapper.vm.refreshData();
 
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
       );
 
       vi.advanceTimersByTime(500);
 
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledWith(
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         false,
       );
 
@@ -157,10 +158,7 @@ describe('HeaderRefresh.vue', () => {
       await refreshButton.vm.$emit('click');
       await refreshButton.vm.$emit('click');
 
-      expect(monitoringStore.loadAllData).toHaveBeenCalledTimes(3);
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenCalledTimes(
-        3,
-      );
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledTimes(3);
     });
 
     it('should show disabled state when loading', async () => {
@@ -191,13 +189,9 @@ describe('HeaderRefresh.vue', () => {
       expect(typeof wrapper.vm.refreshData).toBe('function');
     });
 
-    it('should access loadAllData function from store', () => {
-      expect(wrapper.vm.loadAllData).toBe(monitoringStore.loadAllData);
-    });
-
-    it('should access setRefreshDetailedTabData function from store', () => {
-      expect(wrapper.vm.setRefreshDetailedTabData).toBe(
-        monitoringStore.setRefreshDetailedTabData,
+    it('should access setRefreshDataMonitoring function from store', () => {
+      expect(wrapper.vm.setRefreshDataMonitoring).toBe(
+        monitoringStore.setRefreshDataMonitoring,
       );
     });
   });
@@ -222,8 +216,8 @@ describe('HeaderRefresh.vue', () => {
       expect(monitoringStore.isLoadingAllData).toBeDefined();
       expect(monitoringStore.loadAllData).toBeDefined();
       expect(typeof monitoringStore.loadAllData).toBe('function');
-      expect(monitoringStore.setRefreshDetailedTabData).toBeDefined();
-      expect(typeof monitoringStore.setRefreshDetailedTabData).toBe('function');
+      expect(monitoringStore.setRefreshDataMonitoring).toBeDefined();
+      expect(typeof monitoringStore.setRefreshDataMonitoring).toBe('function');
     });
 
     it('should handle loadAllData throwing an error', async () => {
@@ -232,7 +226,9 @@ describe('HeaderRefresh.vue', () => {
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
 
       await refreshButton.vm.$emit('click');
-      expect(monitoringStore.loadAllData).toHaveBeenCalled();
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
+        true,
+      );
     });
 
     it('should handle store reactivity changes', async () => {
@@ -262,14 +258,14 @@ describe('HeaderRefresh.vue', () => {
 
       wrapper.vm.refreshData();
 
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenNthCalledWith(
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenNthCalledWith(
         1,
         true,
       );
 
       vi.advanceTimersByTime(500);
 
-      expect(monitoringStore.setRefreshDetailedTabData).toHaveBeenNthCalledWith(
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenNthCalledWith(
         2,
         false,
       );

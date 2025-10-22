@@ -74,7 +74,7 @@ const handleChangeAttendant = (selectedOptions: AttendantOption[]) => {
 
   if (attendant) {
     currentAttendant.value = attendant;
-    saveAppliedAgentFilter(attendant.uuid, attendant.name);
+    saveAppliedAgentFilter(attendant.email, attendant.name);
   }
 };
 

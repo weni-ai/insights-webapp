@@ -38,8 +38,8 @@
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { AttendantDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
-import service from '@/services/api/resources/humanSupport/detailedMonitoring/attendant';
+import { AttendantDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
+import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';

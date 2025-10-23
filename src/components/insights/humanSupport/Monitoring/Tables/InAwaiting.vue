@@ -22,8 +22,8 @@
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import service from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
-import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
+import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
+import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';

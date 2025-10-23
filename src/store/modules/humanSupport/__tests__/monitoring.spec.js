@@ -2,9 +2,9 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useHumanSupportMonitoring } from '../monitoring';
 import { useDashboards } from '@/store/modules/dashboards';
-import TimeMetricsService from '@/services/api/resources/humanSupport/timeMetrics';
-import ServiceStatusService from '@/services/api/resources/humanSupport/serviceStatus';
-import ServicesOpenByHourService from '@/services/api/resources/humanSupport/servicesOpenByHour';
+import TimeMetricsService from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
+import ServiceStatusService from '@/services/api/resources/humanSupport/monitoring/serviceStatus';
+import ServicesOpenByHourService from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: vi.fn(),

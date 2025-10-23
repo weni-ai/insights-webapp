@@ -39,8 +39,8 @@
 <script setup lang="ts">
 import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import { PausesDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
-import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
+import { PausesDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
+import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';

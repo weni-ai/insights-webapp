@@ -817,18 +817,21 @@
       "tooltips": {
         "is_waiting": "Number of contacts waiting for the start of the support now",
         "is_in_progress": "Number of contacts in support now",
-        "is_closed": "Number of closed supports today"
+        "is_closed": "Number of closed supports today",
+        "is_closed_by_date": "Number of closed supports in the selected period"
       }
     },
     "time_metrics": {
       "title": "Time metrics now",
       "average_time_is_waiting": "Average time in waiting",
       "average_time_first_response": "Average time for first response",
+      "average_response_time": "Average response time",
       "average_time_chat": "Average chat duration",
       "max": "Max",
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
         "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
+        "average_response_time": "Average time a contact waits for a response per message",
         "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
       }
     },

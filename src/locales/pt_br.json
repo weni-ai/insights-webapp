@@ -817,18 +817,21 @@
       "tooltips": {
         "is_waiting": "Número de contatos esperando o início do atendimento agora",
         "is_in_progress": "Número de contatos em atendimento agora",
-        "is_closed": "Número de atendimentos finalizados hoje"
+        "is_closed": "Número de atendimentos finalizados hoje",
+        "is_closed_by_date": "Número de atendimentos finalizados no período selecionado"
       }
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
       "average_time_is_waiting": "Tempo médio em espera",
       "average_time_first_response": "Tempo médio para 1ª resposta",
+      "average_response_time": "Tempo médio de resposta",
       "average_time_chat": "Duração média da conversa",
       "max": "Máximo",
       "tooltips": {
         "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
         "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",
+        "average_response_time": "Média de tempo que o contato esperou por uma resposta a cada mensagem enviada",
         "average_time_chat": "Média do tempo total da conversa, do início do atendimento com atendente até ser finalizada"
       }
     },

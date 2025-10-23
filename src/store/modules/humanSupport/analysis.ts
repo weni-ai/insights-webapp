@@ -1,20 +1,20 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { ServiceStatusAnalysisDataResponse } from '@/services/api/resources/humanSupport/analysis/serviceStatus';
+import { ServiceStatusFormattedResponse } from '@/services/api/resources/humanSupport/analysis/serviceStatus';
 import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
 import ServiceStatusAnalysisService from '@/services/api/resources/humanSupport/analysis/serviceStatus';
 import ServicesOpenByHourService from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
 
-export type ActiveDetailedTab = 'closed' | 'attendant' | 'pauses';
+export type ActiveDetailedTab = 'finished' | 'attendant' | 'pauses';
 
 export const useHumanSupportAnalysis = defineStore(
   'humanSupportAnalysis',
   () => {
-    const activeDetailedTab = ref<ActiveDetailedTab>('closed');
-    const serviceStatusData = ref<ServiceStatusAnalysisDataResponse>({
-      finisheds: null,
-      average_waiting_time: null,
-      average_first_response_time: null,
+    const activeDetailedTab = ref<ActiveDetailedTab>('finished');
+    const serviceStatusData = ref<ServiceStatusFormattedResponse>({
+      finished: null,
+      average_time_is_waiting: null,
+      average_time_first_response: null,
       average_response_time: null,
       average_time_chat: null,
     });

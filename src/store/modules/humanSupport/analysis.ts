@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import { ServiceStatusFormattedResponse } from '@/services/api/resources/humanSupport/analysis/serviceStatus';
-import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
+import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/analysis/servicesOpenByHour';
 import ServiceStatusAnalysisService from '@/services/api/resources/humanSupport/analysis/serviceStatus';
-import ServicesOpenByHourService from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
+import ServicesOpenByHourAnalysisService from '@/services/api/resources/humanSupport/analysis/servicesOpenByHour';
 
 export type ActiveDetailedTab = 'finished' | 'attendant' | 'pauses';
 
@@ -54,7 +54,7 @@ export const useHumanSupportAnalysis = defineStore(
       try {
         loadingHumanSupportByHourData.value = true;
         const data =
-          await ServicesOpenByHourService.getServicesOpenByHourData();
+          await ServicesOpenByHourAnalysisService.getServicesOpenByHourAnalysisData();
 
         servicesOpenByHourData.value = data;
       } catch (error) {

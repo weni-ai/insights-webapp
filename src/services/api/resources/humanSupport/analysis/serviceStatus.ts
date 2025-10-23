@@ -5,9 +5,17 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 interface ServiceStatusAnalysisDataResponse {
-  finisheds: number;
-  average_waiting_time: number;
+  finished: number;
+  average_conversation_duration: number;
   average_first_response_time: number;
+  average_response_time: number;
+  average_waiting_time: number;
+}
+
+interface ServiceStatusFormattedResponse {
+  finished: number;
+  average_time_is_waiting: number;
+  average_time_first_response: number;
   average_response_time: number;
   average_time_chat: number;
 }
@@ -23,7 +31,7 @@ interface QueryParams {
 export default {
   async getServiceStatusAnalysisData(
     queryParams: QueryParams = {},
-  ): Promise<ServiceStatusAnalysisDataResponse> {
+  ): Promise<ServiceStatusFormattedResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupport();
     const { currentDashboard } = useDashboards();
@@ -49,10 +57,16 @@ export default {
       },
     )) as ServiceStatusAnalysisDataResponse;
 
-    const formattedResponse: ServiceStatusAnalysisDataResponse = response;
+    const formattedResponse: ServiceStatusFormattedResponse = {
+      finished: response.finished,
+      average_time_is_waiting: response.average_waiting_time,
+      average_time_first_response: response.average_first_response_time,
+      average_response_time: response.average_response_time,
+      average_time_chat: response.average_conversation_duration,
+    };
 
     return formattedResponse;
   },
 };
 
-export type { ServiceStatusAnalysisDataResponse, QueryParams };
+export type { ServiceStatusFormattedResponse, QueryParams };

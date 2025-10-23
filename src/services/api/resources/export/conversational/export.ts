@@ -26,6 +26,11 @@ interface ExportResponse {
   report_uuid?: string;
 }
 
+interface AvailableExportsResponse {
+  sections: TypeSections[];
+  custom_widgets: string[];
+}
+
 export default {
   async checkExportStatus(): Promise<ExportResponse> {
     const { project } = useConfig();
@@ -50,6 +55,21 @@ export default {
       ...exportData,
       project_uuid: project.uuid,
     })) as ExportResponse;
+
+    return response;
+  },
+
+  async getAvailableWidgets(): Promise<AvailableExportsResponse> {
+    const { project } = useConfig();
+
+    const response = (await http.get(
+      `/metrics/conversations/report/available-widgets/`,
+      {
+        params: {
+          project_uuid: project.uuid,
+        },
+      },
+    )) as AvailableExportsResponse;
 
     return response;
   },

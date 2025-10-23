@@ -1,0 +1,39 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HumanSupportExport > Component structure > should match snapshot 1`] = `
+<section
+  class="modal-export-data"
+  data-testid="modal-export-data"
+  data-v-81b4e24b=""
+>
+  <unnnic-tool-tip-stub
+    data-testid="export-data-tooltip"
+    data-v-81b4e24b=""
+    enabled="false"
+    side="left"
+    text="Tooltip text"
+  />
+  <unnnic-modal-dialog-stub
+    class="finish-onboarding-modal"
+    data-testid="modal-dialog"
+    data-v-81b4e24b=""
+    modelvalue="[object Object]"
+    primarybuttonprops="[object Object]"
+    secondarybuttonprops="[object Object]"
+    showactionsdivider=""
+    showcloseicon=""
+    size="lg"
+    title="Export Data"
+  />
+  <unnnic-modal-dialog-stub
+    class="finish-onboarding-modal"
+    data-testid="modal-dialog-feedback"
+    data-v-81b4e24b=""
+    modelvalue="[object Object]"
+    showcloseicon=""
+    size="md"
+    title="Success"
+    type="success"
+  />
+</section>
+`;

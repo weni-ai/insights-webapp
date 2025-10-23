@@ -144,25 +144,52 @@ export const useConversationalExport = defineStore('conversationalExport', {
     setCustomWidgets(customWidgets: string[]) {
       this.custom_widgets = customWidgets;
     },
-    initializeDefaultFields() {
-      const defaultFields: ConversationalModelFields = {
-        resolutions: {},
-        transferred: {},
-        topics: {
-          human: { type: 'subsection' },
-          ai: { type: 'subsection' },
-        },
-        csat: {
-          human: { type: 'subsection' },
-          ai: { type: 'subsection' },
-        },
-        nps: {
-          human: { type: 'subsection' },
-          ai: { type: 'subsection' },
-        },
+    async initializeDefaultFields() {
+      const availableWidgets = await exportApi.getAvailableWidgets();
+
+      const defaultFields: ConversationalModelFields = {};
+
+      const sectionsMap: Record<
+        string,
+        { model: string; subsection?: string }
+      > = {
+        RESOLUTIONS: { model: 'resolutions' },
+        TRANSFERRED: { model: 'transferred' },
+        TOPICS_AI: { model: 'topics', subsection: 'ai' },
+        TOPICS_HUMAN: { model: 'topics', subsection: 'human' },
+        CSAT_AI: { model: 'csat', subsection: 'ai' },
+        CSAT_HUMAN: { model: 'csat', subsection: 'human' },
+        NPS_AI: { model: 'nps', subsection: 'ai' },
+        NPS_HUMAN: { model: 'nps', subsection: 'human' },
       };
 
-      this.setModelFields({ ...defaultFields, ...this.model_fields });
+      availableWidgets.sections.forEach((section) => {
+        const mapping = sectionsMap[section];
+        if (!mapping) return;
+
+        const { model, subsection } = mapping;
+
+        if (!defaultFields[model]) {
+          defaultFields[model] = {};
+        }
+
+        if (subsection) {
+          defaultFields[model][subsection] = { type: 'subsection' };
+        }
+      });
+
+      const filteredModelFields: ConversationalModelFields = {};
+
+      Object.keys(this.model_fields).forEach((uuid) => {
+        if (
+          defaultFields[uuid] ||
+          availableWidgets.custom_widgets.includes(uuid)
+        ) {
+          filteredModelFields[uuid] = this.model_fields[uuid];
+        }
+      });
+
+      this.setModelFields({ ...defaultFields, ...filteredModelFields });
     },
     async createExport() {
       this.isLoadingCreateExport = true;
@@ -170,49 +197,38 @@ export const useConversationalExport = defineStore('conversationalExport', {
         const selectedSections: TypeSections[] = [];
         const selectedCustomWidgets: string[] = [];
 
-        if (this.enabled_models.includes('resolutions')) {
-          selectedSections.push('RESOLUTIONS');
-        }
-        if (this.enabled_models.includes('transferred')) {
-          selectedSections.push('TRANSFERRED');
-        }
+        const modelToSectionMap: Record<
+          string,
+          string | Record<string, string>
+        > = {
+          resolutions: 'RESOLUTIONS',
+          transferred: 'TRANSFERRED',
+          topics: { human: 'TOPICS_HUMAN', ai: 'TOPICS_AI' },
+          csat: { human: 'CSAT_HUMAN', ai: 'CSAT_AI' },
+          nps: { human: 'NPS_HUMAN', ai: 'NPS_AI' },
+        };
 
-        if (this.enabled_models.includes('topics')) {
-          const topicsFields = this.selected_fields.topics || [];
-          if (topicsFields.includes('human')) {
-            selectedSections.push('TOPICS_HUMAN');
-          }
-          if (topicsFields.includes('ai')) {
-            selectedSections.push('TOPICS_AI');
-          }
-        }
+        for (const model of this.enabled_models) {
+          const sectionMapping = modelToSectionMap[model];
 
-        if (this.enabled_models.includes('csat')) {
-          const csatFields = this.selected_fields.csat || [];
-          if (csatFields.includes('human')) {
-            selectedSections.push('CSAT_HUMAN');
-          }
-          if (csatFields.includes('ai')) {
-            selectedSections.push('CSAT_AI');
-          }
-        }
+          if (!sectionMapping) continue;
 
-        if (this.enabled_models.includes('nps')) {
-          const npsFields = this.selected_fields.nps || [];
-          if (npsFields.includes('human')) {
-            selectedSections.push('NPS_HUMAN');
-          }
-          if (npsFields.includes('ai')) {
-            selectedSections.push('NPS_AI');
-          }
-        }
-
-        if (this.custom_widgets.length > 0) {
-          this.custom_widgets.forEach((widget) => {
-            if (this.enabled_models.includes(widget.uuid)) {
-              selectedCustomWidgets.push(widget.uuid);
+          if (typeof sectionMapping === 'string') {
+            selectedSections.push(sectionMapping as TypeSections);
+          } else {
+            const modelFields = this.selected_fields[model] || [];
+            for (const field of modelFields) {
+              if (sectionMapping[field]) {
+                selectedSections.push(sectionMapping[field] as TypeSections);
+              }
             }
-          });
+          }
+        }
+
+        for (const widget of this.custom_widgets) {
+          if (this.enabled_models.includes(widget.uuid)) {
+            selectedCustomWidgets.push(widget.uuid);
+          }
         }
 
         const exportData: Omit<ExportRequest, 'project_uuid'> = {
@@ -230,11 +246,13 @@ export const useConversationalExport = defineStore('conversationalExport', {
         this.setIsRenderExportData(false);
         this.setIsRenderExportDataFeedback(true);
       } catch (error) {
-        if (error?.status === 400) {
+        if (error?.status === 400 && error?.data?.concurrent_report) {
           defaultAlert(
             'error',
             i18n.global.t('export_data.error_pending_export'),
           );
+        } else if (error?.status === 400 && error?.data?.error) {
+          defaultAlert('error', error?.data?.error);
         } else {
           defaultAlert('error', i18n.global.t('export_data.error_default'));
         }

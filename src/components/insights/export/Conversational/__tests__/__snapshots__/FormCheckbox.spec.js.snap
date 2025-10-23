@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Conversational FormCheckbox > Component structure > should match snapshot 1`] = `
+<export-checkboxs-stub
+  data-testid="conversational-form-checkbox"
+  enabledmodels=""
+  isloading="false"
+  modelfields="[object Object]"
+  modelfilters=""
+  selectedfields="[object Object]"
+/>
+`;

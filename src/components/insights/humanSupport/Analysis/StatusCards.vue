@@ -70,38 +70,33 @@ interface CardData {
   tooltipKey: string;
 }
 
+const baseTranslationKey = 'human_support_dashboard';
+const timeMetricsBase = `${baseTranslationKey}.time_metrics`;
+
+const createCard = (
+  id: CardId,
+  translationKey?: string,
+  overrides: Partial<CardData> = {},
+): CardData => {
+  const key = translationKey || id;
+
+  return {
+    id,
+    titleKey: `${timeMetricsBase}.${key}`,
+    tooltipKey: `${timeMetricsBase}.tooltips.${key}`,
+    ...overrides,
+  };
+};
+
 const cardDefinitions: CardData[] = [
-  {
-    id: 'average_time_is_waiting',
-    titleKey: 'human_support_dashboard.time_metrics.average_time_is_waiting',
-    tooltipKey:
-      'human_support_dashboard.time_metrics.tooltips.average_time_is_waiting',
-  },
-  {
-    id: 'average_time_first_response',
-    titleKey:
-      'human_support_dashboard.time_metrics.average_time_first_response',
-    tooltipKey:
-      'human_support_dashboard.time_metrics.tooltips.average_time_first_response',
-  },
-  {
-    id: 'average_response_time',
-    titleKey: 'human_support_dashboard.time_metrics.average_response_time',
-    tooltipKey:
-      'human_support_dashboard.time_metrics.tooltips.average_response_time',
-  },
-  {
-    id: 'average_time_chat',
-    titleKey: 'human_support_dashboard.time_metrics.average_time_chat',
-    tooltipKey:
-      'human_support_dashboard.time_metrics.tooltips.average_time_chat',
-  },
-  {
-    id: 'finished',
-    titleKey: 'human_support_dashboard.support_status.is_closed',
-    tooltipKey:
-      'human_support_dashboard.support_status.tooltips.is_closed_by_date',
-  },
+  createCard('average_time_is_waiting'),
+  createCard('average_time_first_response'),
+  createCard('average_response_time'),
+  createCard('average_time_chat'),
+  createCard('finished', undefined, {
+    titleKey: `${baseTranslationKey}.support_status.is_closed`,
+    tooltipKey: `${baseTranslationKey}.support_status.tooltips.is_closed_by_date`,
+  }),
 ];
 
 const humanSupportAnalysis = useHumanSupportAnalysis();

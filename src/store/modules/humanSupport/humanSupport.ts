@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
 import { useHumanSupportMonitoring } from './monitoring';
+import { useHumanSupportAnalysis } from './analysis';
+import { getLastNDays } from '@/utils/time';
 
 interface Filter {
   value: string;
@@ -28,13 +30,16 @@ export type ActiveTab = 'monitoring' | 'analysis';
 export const useHumanSupport = defineStore('humanSupport', () => {
   const humanSupportMonitoring = useHumanSupportMonitoring();
   const { loadAllData: loadAllDataMonitoring } = humanSupportMonitoring;
+  const humanSupportAnalysis = useHumanSupportAnalysis();
+  const { loadAllData: loadAllDataAnalysis } = humanSupportAnalysis;
   const activeTab = ref<ActiveTab>('monitoring');
   const sectors = ref<Filter[]>([]);
   const queues = ref<Filter[]>([]);
   const tags = ref<Filter[]>([]);
+  const defaultDateFormat = getLastNDays(7);
   const appliedDateRange = ref<DateRange>({
-    start: '',
-    end: '',
+    start: defaultDateFormat.start,
+    end: defaultDateFormat.end,
   });
   const appliedFilters = ref<AppliedFilters>({
     sectors: [],
@@ -115,7 +120,12 @@ export const useHumanSupport = defineStore('humanSupport', () => {
   };
 
   watch(appliedFilters, () => {
-    loadAllDataMonitoring();
+    if (activeTab.value === 'monitoring') return loadAllDataMonitoring();
+    if (activeTab.value === 'analysis') return loadAllDataAnalysis();
+  });
+
+  watch(appliedDateRange, () => {
+    if (activeTab.value === 'analysis') return loadAllDataAnalysis();
   });
 
   return {

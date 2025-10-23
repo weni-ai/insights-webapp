@@ -33,7 +33,7 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<ServiceStatusFormattedResponse> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupport();
+    const { appliedFilters, appliedDateRange } = useHumanSupport();
     const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
@@ -46,6 +46,8 @@ export default {
 
     const formattedParams = {
       project_uuid: project.uuid,
+      start_date: appliedDateRange.start,
+      end_date: appliedDateRange.end,
       ...formattedAppliedFilters,
       ...params,
     };

@@ -450,7 +450,7 @@ describe('DynamicWidget', () => {
 
       expect(alertSpy).toHaveBeenCalledWith({
         props: {
-          text: 'Error fetching data, please try again',
+          text: i18n.global.t('get_data_error'),
           type: 'error',
         },
       });

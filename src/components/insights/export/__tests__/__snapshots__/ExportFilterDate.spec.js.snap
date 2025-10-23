@@ -11,6 +11,7 @@ exports[`ExportFilterDate > Component structure > should match snapshot 1`] = `
     label="Date Range"
   />
   <filter-date-stub
+    class=""
     data-testid="export-filter-date-picker"
     data-v-8d4d5760=""
     maxdate="2024-12-31"

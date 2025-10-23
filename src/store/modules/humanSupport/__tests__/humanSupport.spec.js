@@ -2,20 +2,39 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useHumanSupport } from '../humanSupport';
 import { useHumanSupportMonitoring } from '../monitoring';
+import { useHumanSupportAnalysis } from '../analysis';
 
 vi.mock('../monitoring', () => ({
   useHumanSupportMonitoring: vi.fn(),
 }));
 
+vi.mock('../analysis', () => ({
+  useHumanSupportAnalysis: vi.fn(),
+}));
+
+vi.mock('@/utils/time', () => ({
+  getLastNDays: vi.fn(() => ({
+    start: '2024-01-01',
+    end: '2024-01-07',
+    dmFormat: '01/01 - 07/01',
+  })),
+}));
+
 describe('useHumanSupport store', () => {
   let store;
   let mockLoadAllDataMonitoring;
+  let mockLoadAllDataAnalysis;
 
   beforeEach(() => {
     mockLoadAllDataMonitoring = vi.fn();
+    mockLoadAllDataAnalysis = vi.fn();
 
     useHumanSupportMonitoring.mockReturnValue({
       loadAllData: mockLoadAllDataMonitoring,
+    });
+
+    useHumanSupportAnalysis.mockReturnValue({
+      loadAllData: mockLoadAllDataAnalysis,
     });
 
     setActivePinia(createPinia());
@@ -48,10 +67,10 @@ describe('useHumanSupport store', () => {
       });
     });
 
-    it('should initialize applied date range with empty strings', () => {
+    it('should initialize applied date range with last 7 days', () => {
       expect(store.appliedDateRange).toEqual({
-        start: '',
-        end: '',
+        start: '2024-01-01',
+        end: '2024-01-07',
       });
     });
 
@@ -334,8 +353,9 @@ describe('useHumanSupport store', () => {
   });
 
   describe('applied filters watcher', () => {
-    it('should call loadAllDataMonitoring when appliedFilters changes', async () => {
+    it('should call loadAllDataMonitoring when appliedFilters changes and tab is monitoring', async () => {
       vi.clearAllMocks();
+      store.setActiveTab('monitoring');
 
       store.appliedFilters = {
         sectors: [{ value: 'sector1', label: 'Sector 1' }],
@@ -346,6 +366,23 @@ describe('useHumanSupport store', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
+      expect(mockLoadAllDataAnalysis).not.toHaveBeenCalled();
+    });
+
+    it('should call loadAllDataAnalysis when appliedFilters changes and tab is analysis', async () => {
+      vi.clearAllMocks();
+      store.setActiveTab('analysis');
+
+      store.appliedFilters = {
+        sectors: [{ value: 'sector1', label: 'Sector 1' }],
+        queues: [],
+        tags: [],
+      };
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockLoadAllDataAnalysis).toHaveBeenCalled();
+      expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
     });
 
     it('should call loadAllDataMonitoring when saveAppliedFilters is called', async () => {
@@ -368,6 +405,51 @@ describe('useHumanSupport store', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
+    });
+  });
+
+  describe('applied date range watcher', () => {
+    it('should call loadAllDataAnalysis when appliedDateRange changes and tab is analysis', async () => {
+      vi.clearAllMocks();
+      store.setActiveTab('analysis');
+
+      store.appliedDateRange = {
+        start: '2024-01-15',
+        end: '2024-01-22',
+      };
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockLoadAllDataAnalysis).toHaveBeenCalled();
+    });
+
+    it('should not call loadAllDataMonitoring when appliedDateRange changes and tab is monitoring', async () => {
+      vi.clearAllMocks();
+      store.setActiveTab('monitoring');
+
+      store.appliedDateRange = {
+        start: '2024-01-15',
+        end: '2024-01-22',
+      };
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
+    });
+
+    it('should not call any load function when appliedDateRange changes and tab is monitoring', async () => {
+      vi.clearAllMocks();
+      store.setActiveTab('monitoring');
+
+      store.appliedDateRange = {
+        start: '2024-02-01',
+        end: '2024-02-07',
+      };
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
+      expect(mockLoadAllDataAnalysis).not.toHaveBeenCalled();
     });
   });
 });

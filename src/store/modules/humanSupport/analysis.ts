@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
-import { ServiceStatusDataResponse } from '@/services/api/resources/humanSupport/monitoring/serviceStatus';
+import { ServiceStatusAnalysisDataResponse } from '@/services/api/resources/humanSupport/analysis/serviceStatus';
 import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
-import ServiceStatusService from '@/services/api/resources/humanSupport/monitoring/serviceStatus';
+import ServiceStatusAnalysisService from '@/services/api/resources/humanSupport/analysis/serviceStatus';
 import ServicesOpenByHourService from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
 
 export type ActiveDetailedTab = 'closed' | 'attendant' | 'pauses';
@@ -11,10 +11,12 @@ export const useHumanSupportAnalysis = defineStore(
   'humanSupportAnalysis',
   () => {
     const activeDetailedTab = ref<ActiveDetailedTab>('closed');
-    const serviceStatusData = ref<ServiceStatusDataResponse>({
-      is_waiting: null,
-      in_progress: null,
-      finished: null,
+    const serviceStatusData = ref<ServiceStatusAnalysisDataResponse>({
+      finisheds: null,
+      average_waiting_time: null,
+      average_first_response_time: null,
+      average_response_time: null,
+      average_time_chat: null,
     });
     const servicesOpenByHourData = ref<ServicesOpenByHourData[]>([]);
     const loadingServiceStatusData = ref(false);
@@ -37,11 +39,12 @@ export const useHumanSupportAnalysis = defineStore(
     const loadServiceStatusData = async () => {
       try {
         loadingServiceStatusData.value = true;
-        const data = await ServiceStatusService.getServiceStatusData();
+        const data =
+          await ServiceStatusAnalysisService.getServiceStatusAnalysisData();
 
         serviceStatusData.value = data;
       } catch (error) {
-        console.error('Error loading service status data:', error);
+        console.error('Error loading service status analysis data:', error);
       } finally {
         loadingServiceStatusData.value = false;
       }

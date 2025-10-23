@@ -4,6 +4,7 @@ import { createI18n } from 'vue-i18n';
 import { config } from '@vue/test-utils';
 
 import BaseConversationWidget from '../BaseConversationWidget.vue';
+import i18n from '@/utils/plugins/i18n';
 
 config.global.plugins = [
   createI18n({
@@ -72,11 +73,11 @@ describe('BaseConversationWidget', () => {
       const tabsProps = tabs().props('tabs');
       expect(tabsProps).toHaveLength(2);
       expect(tabsProps[0]).toEqual({
-        name: 'AI',
+        name: i18n.global.t('conversations_dashboard.artificial_intelligence'),
         key: 'artificial-intelligence',
       });
       expect(tabsProps[1]).toEqual({
-        name: 'Human Support',
+        name: i18n.global.t('conversations_dashboard.human_support'),
         key: 'human-support',
       });
     });

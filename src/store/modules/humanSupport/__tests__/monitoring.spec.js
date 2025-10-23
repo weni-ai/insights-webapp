@@ -10,23 +10,29 @@ vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: vi.fn(),
 }));
 
-vi.mock('@/services/api/resources/humanSupport/timeMetrics', () => ({
+vi.mock('@/services/api/resources/humanSupport/monitoring/timeMetrics', () => ({
   default: {
     getTimeMetricsData: vi.fn(),
   },
 }));
 
-vi.mock('@/services/api/resources/humanSupport/serviceStatus', () => ({
-  default: {
-    getServiceStatusData: vi.fn(),
-  },
-}));
+vi.mock(
+  '@/services/api/resources/humanSupport/monitoring/serviceStatus',
+  () => ({
+    default: {
+      getServiceStatusData: vi.fn(),
+    },
+  }),
+);
 
-vi.mock('@/services/api/resources/humanSupport/servicesOpenByHour', () => ({
-  default: {
-    getServicesOpenByHourData: vi.fn(),
-  },
-}));
+vi.mock(
+  '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour',
+  () => ({
+    default: {
+      getServicesOpenByHourData: vi.fn(),
+    },
+  }),
+);
 
 Object.defineProperty(globalThis, 'setTimeout', {
   value: vi.fn((fn) => {

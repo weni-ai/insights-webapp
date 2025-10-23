@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import servicesOpenByHour from '../servicesOpenByHour';
+import serviceStatus from '../serviceStatus';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http');
 vi.mock('@/store/modules/config');
-vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('@/store/modules/humanSupport/humanSupport');
 vi.mock('@/store/modules/dashboards');
 vi.mock('@/utils/request');
 
-describe('servicesOpenByHour API', () => {
+describe('serviceStatus API', () => {
   let mockProject;
   let mockCurrentDashboard;
   let mockAppliedFilters;
@@ -30,26 +30,21 @@ describe('servicesOpenByHour API', () => {
     };
 
     mockHttpResponse = {
-      results: [
-        { label: '00:00', value: 15 },
-        { label: '01:00', value: 8 },
-        { label: '02:00', value: 5 },
-        { label: '08:00', value: 45 },
-        { label: '14:00', value: 78 },
-        { label: '20:00', value: 32 },
-      ],
+      is_waiting: 25,
+      in_progress: 10,
+      finished: 65,
     };
 
     useConfig.mockReturnValue({ project: mockProject });
     useDashboards.mockReturnValue({ currentDashboard: mockCurrentDashboard });
-    useHumanSupportMonitoring.mockReturnValue({
+    useHumanSupport.mockReturnValue({
       appliedFilters: mockAppliedFilters,
     });
     createRequestQuery.mockReturnValue({ formatted: 'params' });
     http.get.mockResolvedValue(mockHttpResponse);
   });
 
-  describe('getServicesOpenByHourData', () => {
+  describe('getServiceStatusData', () => {
     const testCases = [
       {
         name: 'with no query parameters',
@@ -79,30 +74,29 @@ describe('servicesOpenByHour API', () => {
       it(`should make correct API call ${name}`, async () => {
         createRequestQuery.mockReturnValue({ formatted: 'params' });
 
-        const result =
-          await servicesOpenByHour.getServicesOpenByHourData(queryParams);
+        const result = await serviceStatus.getServiceStatusData(queryParams);
 
         expect(createRequestQuery).toHaveBeenCalledWith(queryParams);
         expect(http.get).toHaveBeenCalledWith(
-          'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
+          '/dashboards/test-dashboard-uuid/monitoring/list_status/',
           {
             params: expectedParams,
           },
         );
-        expect(result).toEqual(mockHttpResponse.results);
+        expect(result).toEqual(mockHttpResponse);
       });
     });
 
     it('should handle empty applied filters', async () => {
       const emptyFilters = { sectors: [], queues: [], tags: [] };
-      useHumanSupportMonitoring.mockReturnValue({
+      useHumanSupport.mockReturnValue({
         appliedFilters: emptyFilters,
       });
 
-      await servicesOpenByHour.getServicesOpenByHourData();
+      await serviceStatus.getServiceStatusData();
 
       expect(http.get).toHaveBeenCalledWith(
-        'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
+        '/dashboards/test-dashboard-uuid/monitoring/list_status/',
         {
           params: {
             project_uuid: 'test-project-uuid',
@@ -117,28 +111,27 @@ describe('servicesOpenByHour API', () => {
 
     it('should return formatted response data', async () => {
       const customResponse = {
-        results: [
-          { label: '09:00', value: 120 },
-          { label: '15:00', value: 95 },
-        ],
+        is_waiting: 100,
+        in_progress: 50,
+        finished: 200,
       };
       http.get.mockResolvedValue(customResponse);
 
-      const result = await servicesOpenByHour.getServicesOpenByHourData();
+      const result = await serviceStatus.getServiceStatusData();
 
-      expect(result).toEqual(customResponse.results);
-      expect(Array.isArray(result)).toBe(true);
-      expect(result[0]).toHaveProperty('label');
-      expect(result[0]).toHaveProperty('value');
+      expect(result).toEqual(customResponse);
+      expect(result).toHaveProperty('is_waiting');
+      expect(result).toHaveProperty('in_progress');
+      expect(result).toHaveProperty('finished');
     });
 
     it('should propagate API errors', async () => {
       const apiError = new Error('API request failed');
       http.get.mockRejectedValue(apiError);
 
-      await expect(
-        servicesOpenByHour.getServicesOpenByHourData(),
-      ).rejects.toThrow('API request failed');
+      await expect(serviceStatus.getServiceStatusData()).rejects.toThrow(
+        'API request failed',
+      );
     });
 
     it('should handle malformed filter data gracefully', async () => {
@@ -147,14 +140,14 @@ describe('servicesOpenByHour API', () => {
         queues: [{ value: '' }],
         tags: [{ value: 'tag1' }],
       };
-      useHumanSupportMonitoring.mockReturnValue({
+      useHumanSupport.mockReturnValue({
         appliedFilters: malformedFilters,
       });
 
-      await servicesOpenByHour.getServicesOpenByHourData();
+      await serviceStatus.getServiceStatusData();
 
       expect(http.get).toHaveBeenCalledWith(
-        'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
+        '/dashboards/test-dashboard-uuid/monitoring/list_status/',
         {
           params: expect.objectContaining({
             sectors: [null, undefined, 'valid'],
@@ -170,10 +163,10 @@ describe('servicesOpenByHour API', () => {
         const queryParams = { date_from: '2023-01-01', date_to: '2023-12-31' };
         createRequestQuery.mockReturnValue(queryParams);
 
-        await servicesOpenByHour.getServicesOpenByHourData(queryParams);
+        await serviceStatus.getServiceStatusData(queryParams);
 
         expect(http.get).toHaveBeenCalledWith(
-          'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
+          '/dashboards/test-dashboard-uuid/monitoring/list_status/',
           {
             params: {
               project_uuid: 'test-project-uuid',
@@ -191,10 +184,10 @@ describe('servicesOpenByHour API', () => {
         const queryParams = { sectors: ['override'] };
         createRequestQuery.mockReturnValue(queryParams);
 
-        await servicesOpenByHour.getServicesOpenByHourData(queryParams);
+        await serviceStatus.getServiceStatusData(queryParams);
 
         expect(http.get).toHaveBeenCalledWith(
-          'dashboards/test-dashboard-uuid/monitoring/peaks_in_human_service/',
+          '/dashboards/test-dashboard-uuid/monitoring/list_status/',
           {
             params: expect.objectContaining({
               sectors: ['override'],
@@ -209,27 +202,25 @@ describe('servicesOpenByHour API', () => {
     it('should handle missing project configuration', async () => {
       useConfig.mockReturnValue({ project: null });
 
-      await expect(
-        servicesOpenByHour.getServicesOpenByHourData(),
-      ).rejects.toThrow("Cannot read properties of null (reading 'uuid')");
+      await expect(serviceStatus.getServiceStatusData()).rejects.toThrow(
+        "Cannot read properties of null (reading 'uuid')",
+      );
     });
 
     it('should handle missing dashboard configuration', async () => {
       useDashboards.mockReturnValue({ currentDashboard: null });
 
-      await expect(
-        servicesOpenByHour.getServicesOpenByHourData(),
-      ).rejects.toThrow("Cannot read properties of null (reading 'uuid')");
+      await expect(serviceStatus.getServiceStatusData()).rejects.toThrow(
+        "Cannot read properties of null (reading 'uuid')",
+      );
     });
 
     it('should handle missing monitoring store', async () => {
-      useHumanSupportMonitoring.mockReturnValue({
+      useHumanSupport.mockReturnValue({
         appliedFilters: null,
       });
 
-      await expect(
-        servicesOpenByHour.getServicesOpenByHourData(),
-      ).rejects.toThrow();
+      await expect(serviceStatus.getServiceStatusData()).rejects.toThrow();
     });
 
     it('should handle network timeouts and connection errors', async () => {
@@ -237,28 +228,9 @@ describe('servicesOpenByHour API', () => {
       networkError.code = 'NETWORK_TIMEOUT';
       http.get.mockRejectedValue(networkError);
 
-      await expect(
-        servicesOpenByHour.getServicesOpenByHourData(),
-      ).rejects.toThrow('Network timeout');
-    });
-
-    it('should handle empty response results array', async () => {
-      const emptyResponse = { results: [] };
-      http.get.mockResolvedValue(emptyResponse);
-
-      const result = await servicesOpenByHour.getServicesOpenByHourData();
-
-      expect(result).toEqual([]);
-      expect(Array.isArray(result)).toBe(true);
-    });
-
-    it('should handle response with invalid results structure', async () => {
-      const invalidResponse = { results: null };
-      http.get.mockResolvedValue(invalidResponse);
-
-      const result = await servicesOpenByHour.getServicesOpenByHourData();
-
-      expect(result).toBeNull();
+      await expect(serviceStatus.getServiceStatusData()).rejects.toThrow(
+        'Network timeout',
+      );
     });
   });
 });

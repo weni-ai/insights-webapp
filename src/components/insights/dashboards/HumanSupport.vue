@@ -7,8 +7,8 @@
     <UnnnicTab
       data-testid="human-support-tab"
       :tabs="tabsKeys"
-      :activeTab="activeTabName"
-      @change="changeActiveTabName"
+      :activeTab="activeTab"
+      @change="handleChangeTab"
     >
       <template
         v-for="[key, tab] in Object.entries(tabs)"
@@ -33,16 +33,25 @@
 
 <script setup lang="ts">
 import { UnnnicTab } from '@weni/unnnic-system';
-import { ref, computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
 import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import {
+  useHumanSupport,
+  type ActiveTab,
+} from '@/store/modules/humanSupport/humanSupport';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
 const isEnabled = computed(() => {
   return isFeatureFlagEnabled('insights-new-human-dashboard');
 });
+
+const humanSupportStore = useHumanSupport();
+const { activeTab } = storeToRefs(humanSupportStore);
+const { setActiveTab } = humanSupportStore;
 
 const tabs = {
   monitoring: {
@@ -57,10 +66,8 @@ const tabs = {
 
 const tabsKeys = Object.keys(tabs);
 
-const activeTabName = ref('monitoring');
-
-const changeActiveTabName = (tab: string) => {
-  activeTabName.value = tab;
+const handleChangeTab = (tab: string) => {
+  setActiveTab(tab as ActiveTab);
 };
 </script>
 

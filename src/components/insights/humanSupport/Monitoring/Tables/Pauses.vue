@@ -39,10 +39,11 @@
 <script setup lang="ts">
 import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import { PausesDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
-import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
+import { PausesDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
+import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
@@ -56,6 +57,7 @@ const { t } = useI18n();
 
 const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 
 const page = ref(1);
 const pageInterval = ref(15);
@@ -165,7 +167,7 @@ const loadData = async () => {
         ordering,
         limit: pageInterval.value,
         offset,
-        agent: humanSupportMonitoring.appliedAgentFilter.value,
+        agent: humanSupport.appliedAgentFilter.value,
       });
 
     if (data.results) {
@@ -194,7 +196,7 @@ watch(currentSort, () => {
 });
 
 watch(
-  () => humanSupportMonitoring.appliedAgentFilter,
+  () => humanSupport.appliedAgentFilter,
   () => {
     page.value = 1;
     loadData();
@@ -203,7 +205,7 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  () => humanSupport.appliedFilters,
   () => {
     page.value = 1;
     loadData();
@@ -212,7 +214,7 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.refreshDetailedTabData,
+  () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
       loadData();

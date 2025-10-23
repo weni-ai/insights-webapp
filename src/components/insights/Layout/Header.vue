@@ -27,9 +27,9 @@
           data-testid="insights-layout-header-tag-live"
         />
         <LastUpdatedText
-          v-if="isHumanServiceDashboard || isHumanSupportDashboard"
+          v-if="isHumanServiceDashboard || isHumanSupportMonitoringDashboard"
         />
-        <HeaderRefresh v-if="isHumanSupportDashboard" />
+        <HeaderRefresh v-if="isHumanSupportMonitoringDashboard" />
         <InsightsLayoutHeaderFilters
           v-if="currentDashboardFilters.length"
           data-testid="insights-layout-header-filters"
@@ -81,6 +81,7 @@ import ConversationalExport from '../export/ConversationalExport.vue';
 import LastUpdatedText from './HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from './HeaderRefresh.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import moment from 'moment';
 
@@ -107,6 +108,7 @@ export default {
       'appliedFilters',
       'exportData',
     ]),
+    ...mapState(useHumanSupport, ['activeTab']),
     ...mapState(useWidgets, {
       isExpansiveMode: (store) => {
         const currentExpansiveWidget = store.currentExpansiveWidget;
@@ -140,6 +142,11 @@ export default {
       return this.currentDashboard?.name === 'human_support_dashboard.title';
     },
 
+    isHumanSupportMonitoringDashboard() {
+      const isMonitoring = this.activeTab === 'monitoring';
+      return this.isHumanSupportDashboard && isMonitoring;
+    },
+
     isConversationalDashboard() {
       return this.currentDashboard?.name === 'conversations_dashboard.title';
     },
@@ -168,7 +175,7 @@ export default {
     },
 
     showTagLive() {
-      if (this.isHumanSupportDashboard) {
+      if (this.isHumanSupportMonitoringDashboard) {
         return true;
       }
 

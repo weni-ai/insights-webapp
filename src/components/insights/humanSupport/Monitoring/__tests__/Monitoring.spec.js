@@ -5,8 +5,7 @@ import { createI18n } from 'vue-i18n';
 import Monitoring from '../Monitoring.vue';
 
 const mockHumanSupportMonitoringStore = {
-  loadAllData: vi.fn(),
-  setRefreshDetailedTabData: vi.fn(),
+  setRefreshDataMonitoring: vi.fn(),
 };
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
@@ -41,7 +40,7 @@ describe('Monitoring', () => {
     return mount(Monitoring, {
       global: {
         stubs: {
-          ServiceStatus: true,
+          StatusCards: true,
           TimeMetrics: true,
           ServicesOpenByHour: true,
           DetailedMonitoring: true,
@@ -57,8 +56,7 @@ describe('Monitoring', () => {
     vi.useFakeTimers();
 
     Object.assign(mockHumanSupportMonitoringStore, {
-      loadAllData: vi.fn(),
-      setRefreshDetailedTabData: vi.fn(),
+      setRefreshDataMonitoring: vi.fn(),
     });
 
     wrapper = createWrapper();
@@ -75,7 +73,7 @@ describe('Monitoring', () => {
     });
 
     it('should render all child components', () => {
-      expect(wrapper.findComponent({ name: 'ServiceStatus' }).exists()).toBe(
+      expect(wrapper.findComponent({ name: 'StatusCards' }).exists()).toBe(
         true,
       );
       expect(wrapper.findComponent({ name: 'TimeMetrics' }).exists()).toBe(
@@ -90,7 +88,7 @@ describe('Monitoring', () => {
     });
 
     it('should have correct data-testids for child components', () => {
-      const serviceStatus = wrapper.findComponent({ name: 'ServiceStatus' });
+      const statusCards = wrapper.findComponent({ name: 'StatusCards' });
       const timeMetrics = wrapper.findComponent({ name: 'TimeMetrics' });
       const servicesOpenByHour = wrapper.findComponent({
         name: 'ServicesOpenByHour',
@@ -99,8 +97,8 @@ describe('Monitoring', () => {
         name: 'DetailedMonitoring',
       });
 
-      expect(serviceStatus.attributes('data-testid')).toBe(
-        'monitoring-service-status',
+      expect(statusCards.attributes('data-testid')).toBe(
+        'monitoring-status-cards',
       );
       expect(timeMetrics.attributes('data-testid')).toBe(
         'monitoring-time-metrics',
@@ -121,15 +119,9 @@ describe('Monitoring', () => {
   });
 
   describe('Lifecycle management', () => {
-    it('should call loadAllData on mount', () => {
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-    });
-
-    it('should call setRefreshDetailedTabData on mount', () => {
+    it('should call setRefreshDataMonitoring on mount', () => {
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledWith(true);
     });
 
@@ -153,15 +145,9 @@ describe('Monitoring', () => {
   });
 
   describe('Data loading', () => {
-    it('should call loadAllData when loading data', () => {
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
-    });
-
     it('should set refresh flag to true immediately', () => {
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledWith(true);
     });
 
@@ -175,13 +161,13 @@ describe('Monitoring', () => {
       await vi.advanceTimersByTimeAsync(500);
 
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledTimes(2);
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenNthCalledWith(1, true);
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenNthCalledWith(2, false);
 
       newWrapper.unmount();
@@ -196,26 +182,20 @@ describe('Monitoring', () => {
 
       const newWrapper = createWrapper();
 
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledTimes(1);
 
       await vi.advanceTimersByTimeAsync(60000);
 
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        2,
-      );
-
-      await vi.advanceTimersByTimeAsync(60000);
-
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        3,
-      );
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledWith(true);
 
       newWrapper.unmount();
     });
 
-    it('should refresh detailed tab data flag on each auto refresh', async () => {
+    it('should refresh data flag on each auto refresh', async () => {
       wrapper.unmount();
       vi.clearAllTimers();
       vi.clearAllMocks();
@@ -225,10 +205,10 @@ describe('Monitoring', () => {
       await vi.advanceTimersByTimeAsync(60000);
 
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledWith(true);
       expect(
-        mockHumanSupportMonitoringStore.setRefreshDetailedTabData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenCalledWith(false);
 
       newWrapper.unmount();
@@ -241,9 +221,9 @@ describe('Monitoring', () => {
 
       const newWrapper = createWrapper();
 
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledTimes(1);
 
       newWrapper.unmount();
 
@@ -252,7 +232,7 @@ describe('Monitoring', () => {
       await vi.advanceTimersByTimeAsync(60000);
 
       expect(
-        mockHumanSupportMonitoringStore.loadAllData,
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).not.toHaveBeenCalled();
     });
   });
@@ -265,21 +245,21 @@ describe('Monitoring', () => {
 
       const newWrapper = createWrapper();
 
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
+      await vi.advanceTimersByTimeAsync(600);
 
-      await vi.advanceTimersByTimeAsync(59999);
+      vi.clearAllMocks();
 
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        1,
-      );
+      await vi.advanceTimersByTimeAsync(59000);
 
-      await vi.advanceTimersByTimeAsync(1);
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).not.toHaveBeenCalled();
 
-      expect(mockHumanSupportMonitoringStore.loadAllData).toHaveBeenCalledTimes(
-        2,
-      );
+      await vi.advanceTimersByTimeAsync(1500);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalled();
 
       newWrapper.unmount();
     });

@@ -1,16 +1,20 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { nextTick } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
+import { setActivePinia, createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 import HumanSupport from '../HumanSupport.vue';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 config.global.plugins = [
   createI18n({
     legacy: false,
     messages: {
       en: {
-        Monitoring: 'Monitoring',
-        Analysis: 'Analysis',
+        human_support_dashboard: {
+          monitoring: 'Monitoring',
+          analysis: 'Analysis',
+        },
       },
     },
   }),
@@ -43,9 +47,12 @@ const createWrapper = (options = {}) => {
 
 describe('HumanSupport.vue', () => {
   let wrapper;
+  let humanSupportStore;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    setActivePinia(createPinia());
+    humanSupportStore = useHumanSupport();
     mockIsFeatureFlagEnabled.mockReturnValue(true);
     wrapper = createWrapper();
   });
@@ -85,35 +92,59 @@ describe('HumanSupport.vue', () => {
       expect(wrapper.vm.tabsKeys).toEqual(['monitoring', 'analysis']);
     });
 
-    it('should set monitoring as default active tab', () => {
-      expect(wrapper.vm.activeTabName).toBe('monitoring');
+    it('should get active tab from store', () => {
+      expect(wrapper.vm.activeTab).toBe('monitoring');
+      expect(wrapper.vm.activeTab).toBe(humanSupportStore.activeTab);
     });
   });
 
-  describe('Tab Switching', () => {
-    it('should change active tab when changeActiveTabName is called', async () => {
-      wrapper.vm.changeActiveTabName('analysis');
+  describe('Tab Switching with Store', () => {
+    it('should update store when handleChangeTab is called', async () => {
+      wrapper.vm.handleChangeTab('analysis');
       await nextTick();
 
-      expect(wrapper.vm.activeTabName).toBe('analysis');
+      expect(humanSupportStore.activeTab).toBe('analysis');
+      expect(wrapper.vm.activeTab).toBe('analysis');
     });
 
-    it('should emit change event when tab is changed', async () => {
-      const tab = wrapper.find('[data-testid="human-support-tab"]');
-      await tab.trigger('change', 'analysis');
+    it('should change active tab in store', async () => {
+      humanSupportStore.setActiveTab('analysis');
+      await nextTick();
 
-      wrapper.vm.changeActiveTabName('analysis');
-      expect(wrapper.vm.activeTabName).toBe('analysis');
+      expect(wrapper.vm.activeTab).toBe('analysis');
     });
 
     it('should handle switching between all available tabs', async () => {
       const tabs = ['monitoring', 'analysis'];
 
       for (const tabName of tabs) {
-        wrapper.vm.changeActiveTabName(tabName);
+        wrapper.vm.handleChangeTab(tabName);
         await nextTick();
-        expect(wrapper.vm.activeTabName).toBe(tabName);
+        expect(humanSupportStore.activeTab).toBe(tabName);
+        expect(wrapper.vm.activeTab).toBe(tabName);
       }
+    });
+  });
+
+  describe('Store Integration', () => {
+    it('should use activeTab from store', () => {
+      expect(wrapper.vm.activeTab).toBe(humanSupportStore.activeTab);
+    });
+
+    it('should have access to setActiveTab from store', () => {
+      expect(typeof wrapper.vm.setActiveTab).toBe('function');
+    });
+
+    it('should reflect store changes reactively', async () => {
+      humanSupportStore.setActiveTab('analysis');
+      await nextTick();
+
+      expect(wrapper.vm.activeTab).toBe('analysis');
+
+      humanSupportStore.setActiveTab('monitoring');
+      await nextTick();
+
+      expect(wrapper.vm.activeTab).toBe('monitoring');
     });
   });
 
@@ -131,40 +162,40 @@ describe('HumanSupport.vue', () => {
   });
 
   describe('Reactive Behavior', () => {
-    it('should maintain reactivity when activeTabName changes', async () => {
-      const initialTab = wrapper.vm.activeTabName;
+    it('should maintain reactivity when activeTab changes', async () => {
+      const initialTab = wrapper.vm.activeTab;
       expect(initialTab).toBe('monitoring');
 
-      wrapper.vm.changeActiveTabName('analysis');
+      wrapper.vm.handleChangeTab('analysis');
       await nextTick();
 
-      expect(wrapper.vm.activeTabName).toBe('analysis');
-      expect(wrapper.vm.activeTabName).not.toBe(initialTab);
+      expect(wrapper.vm.activeTab).toBe('analysis');
+      expect(wrapper.vm.activeTab).not.toBe(initialTab);
     });
 
     it('should handle tab change with same tab name', async () => {
-      const currentTab = wrapper.vm.activeTabName;
-      wrapper.vm.changeActiveTabName(currentTab);
+      const currentTab = wrapper.vm.activeTab;
+      wrapper.vm.handleChangeTab(currentTab);
       await nextTick();
 
-      expect(wrapper.vm.activeTabName).toBe(currentTab);
+      expect(wrapper.vm.activeTab).toBe(currentTab);
     });
   });
 
   describe('Edge Cases', () => {
-    it('should handle invalid tab name gracefully', async () => {
+    it('should handle invalid tab name', async () => {
       const invalidTab = 'invalid-tab';
-      wrapper.vm.changeActiveTabName(invalidTab);
+      wrapper.vm.handleChangeTab(invalidTab);
       await nextTick();
 
-      expect(wrapper.vm.activeTabName).toBe(invalidTab);
+      expect(humanSupportStore.activeTab).toBe(invalidTab);
     });
 
     it('should handle empty string tab name', async () => {
-      wrapper.vm.changeActiveTabName('');
+      wrapper.vm.handleChangeTab('');
       await nextTick();
 
-      expect(wrapper.vm.activeTabName).toBe('');
+      expect(humanSupportStore.activeTab).toBe('');
     });
   });
 
@@ -177,14 +208,16 @@ describe('HumanSupport.vue', () => {
       expect(tabComponent.attributes('data-testid')).toBe('human-support-tab');
     });
 
-    it('should handle tab change function properly', () => {
-      expect(wrapper.vm.activeTabName).toBe('monitoring');
+    it('should handle tab change function properly', async () => {
+      expect(wrapper.vm.activeTab).toBe('monitoring');
 
-      wrapper.vm.changeActiveTabName('analysis');
-      expect(wrapper.vm.activeTabName).toBe('analysis');
+      wrapper.vm.handleChangeTab('analysis');
+      await nextTick();
+      expect(wrapper.vm.activeTab).toBe('analysis');
 
-      wrapper.vm.changeActiveTabName('monitoring');
-      expect(wrapper.vm.activeTabName).toBe('monitoring');
+      wrapper.vm.handleChangeTab('monitoring');
+      await nextTick();
+      expect(wrapper.vm.activeTab).toBe('monitoring');
     });
   });
 

@@ -1,6 +1,6 @@
 <template>
   <UnnnicInputDatePicker
-    class="filter-date"
+    :class="['filter-date', className]"
     data-testid="filter-date"
     :modelValue="modelValue"
     :inputFormat="$t('date_format')"
@@ -26,6 +26,10 @@ export default {
     modelValue: {
       type: Object,
       default: () => {},
+    },
+    className: {
+      type: String,
+      default: '',
     },
   },
   emits: ['update:modelValue'],

@@ -3,13 +3,13 @@ import timeMetrics from '../timeMetrics';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
 
 vi.mock('@/services/api/http');
 vi.mock('@/store/modules/config');
 vi.mock('@/store/modules/dashboards');
-vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('@/store/modules/humanSupport/humanSupport');
 vi.mock('@/utils/request');
 
 describe('timeMetrics API', () => {
@@ -41,7 +41,7 @@ describe('timeMetrics API', () => {
 
     useConfig.mockReturnValue(mockConfig);
     useDashboards.mockReturnValue(mockDashboardsStore);
-    useHumanSupportMonitoring.mockReturnValue(mockMonitoringStore);
+    useHumanSupport.mockReturnValue(mockMonitoringStore);
     createRequestQuery.mockReturnValue({});
     http.get.mockResolvedValue(mockHttpResponse);
   });
@@ -159,7 +159,7 @@ describe('timeMetrics API', () => {
 
       filterScenarios.forEach(({ name, filters, expected }) => {
         it(`should correctly format ${name}`, async () => {
-          useHumanSupportMonitoring.mockReturnValue({
+          useHumanSupport.mockReturnValue({
             appliedFilters: filters,
           });
 
@@ -275,7 +275,7 @@ describe('timeMetrics API', () => {
           queues: [{ value: undefined }],
           tags: [],
         };
-        useHumanSupportMonitoring.mockReturnValue({
+        useHumanSupport.mockReturnValue({
           appliedFilters: malformedFilters,
         });
 
@@ -294,7 +294,7 @@ describe('timeMetrics API', () => {
       });
 
       it('should handle missing monitoring store data', async () => {
-        useHumanSupportMonitoring.mockReturnValue({ appliedFilters: null });
+        useHumanSupport.mockReturnValue({ appliedFilters: null });
 
         await expect(timeMetrics.getTimeMetricsData()).rejects.toThrow();
       });

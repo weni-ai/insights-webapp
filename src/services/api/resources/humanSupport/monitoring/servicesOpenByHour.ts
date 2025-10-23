@@ -1,13 +1,16 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-interface ServiceStatusDataResponse {
-  is_waiting: number;
-  in_progress: number;
-  finished: number;
+interface ServicesOpenByHourData {
+  label: string;
+  value: number;
+}
+
+interface ServicesOpenByHourDataResponse {
+  results: ServicesOpenByHourData[];
 }
 
 interface QueryParams {
@@ -17,11 +20,11 @@ interface QueryParams {
 }
 
 export default {
-  async getServiceStatusData(
+  async getServicesOpenByHourData(
     queryParams: QueryParams = {},
-  ): Promise<ServiceStatusDataResponse> {
+  ): Promise<ServicesOpenByHourData[]> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
     const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
@@ -39,16 +42,20 @@ export default {
     };
 
     const response = (await http.get(
-      `/dashboards/${currentDashboard.uuid}/monitoring/list_status/`,
+      `dashboards/${currentDashboard.uuid}/monitoring/peaks_in_human_service/`,
       {
         params: formattedParams,
       },
-    )) as ServiceStatusDataResponse;
+    )) as ServicesOpenByHourDataResponse;
 
-    const formattedResponse: ServiceStatusDataResponse = response;
+    const formattedResponse: ServicesOpenByHourData[] = response.results;
 
     return formattedResponse;
   },
 };
 
-export type { ServiceStatusDataResponse, QueryParams };
+export type {
+  ServicesOpenByHourDataResponse,
+  QueryParams,
+  ServicesOpenByHourData,
+};

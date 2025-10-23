@@ -6,6 +6,7 @@ import { nextTick } from 'vue';
 import Header from '../Header.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import moment from 'moment';
 
@@ -32,6 +33,7 @@ describe('InsightsLayoutHeader.vue', () => {
   let wrapper;
   let dashboardsStore;
   let widgetsStore;
+  let humanSupportStore;
 
   const mockCurrentDashboard = {
     uuid: 'dashboard-123',
@@ -75,6 +77,9 @@ describe('InsightsLayoutHeader.vue', () => {
         widgets: {
           currentExpansiveWidget: {},
         },
+        humanSupport: {
+          activeTab: 'monitoring',
+        },
       },
     });
 
@@ -108,6 +113,7 @@ describe('InsightsLayoutHeader.vue', () => {
     wrapper = createWrapper();
     dashboardsStore = useDashboards();
     widgetsStore = useWidgets();
+    humanSupportStore = useHumanSupport();
     vi.clearAllMocks();
   });
 
@@ -190,12 +196,14 @@ describe('InsightsLayoutHeader.vue', () => {
       );
     });
 
-    it('should render LastUpdatedText for human support dashboard', () => {
+    it('should render LastUpdatedText for human support monitoring dashboard', async () => {
       dashboardsStore.currentDashboard = {
         name: 'human_support_dashboard.title',
       };
+      humanSupportStore.activeTab = 'monitoring';
+      await nextTick();
 
-      expect(wrapper.vm.isHumanSupportDashboard).toBe(true);
+      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(true);
       expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
         true,
       );
@@ -205,12 +213,19 @@ describe('InsightsLayoutHeader.vue', () => {
       dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
 
       expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-      expect(wrapper.vm.isHumanSupportDashboard).toBe(false);
+      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
     });
 
-    it('should render HeaderRefresh for human support dashboard', () => {
+    it('should render HeaderRefresh for human support monitoring dashboard', async () => {
+      dashboardsStore.currentDashboard = {
+        name: 'human_support_dashboard.title',
+      };
+      humanSupportStore.activeTab = 'monitoring';
+      await nextTick();
+
+      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(true);
       expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
-        false,
+        true,
       );
     });
 
@@ -220,7 +235,20 @@ describe('InsightsLayoutHeader.vue', () => {
       };
 
       expect(wrapper.vm.isHumanServiceDashboard).toBe(true);
-      expect(wrapper.vm.isHumanSupportDashboard).toBe(false);
+      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
+      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
+        false,
+      );
+    });
+
+    it('should not render HeaderRefresh for human support analysis dashboard', async () => {
+      dashboardsStore.currentDashboard = {
+        name: 'human_support_dashboard.title',
+      };
+      humanSupportStore.activeTab = 'analysis';
+      await nextTick();
+
+      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
       expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
         false,
       );
@@ -230,7 +258,7 @@ describe('InsightsLayoutHeader.vue', () => {
       dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
 
       expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-      expect(wrapper.vm.isHumanSupportDashboard).toBe(false);
+      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
       expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
         false,
       );
@@ -279,6 +307,16 @@ describe('InsightsLayoutHeader.vue', () => {
         moment.mockReturnValue({
           format: vi.fn(() => '2024-01-15'),
         });
+      });
+
+      it('should return true for human support monitoring dashboard', async () => {
+        dashboardsStore.currentDashboard = {
+          name: 'human_support_dashboard.title',
+        };
+        humanSupportStore.activeTab = 'monitoring';
+        await nextTick();
+
+        expect(wrapper.vm.showTagLive).toBe(true);
       });
 
       it('should return true when no date filter query exists', () => {

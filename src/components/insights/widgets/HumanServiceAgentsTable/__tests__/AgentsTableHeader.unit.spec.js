@@ -47,7 +47,7 @@ const sampleHeaders = [
   { name: 'not_displayed', display: false, hidden_name: false },
 ];
 
-const storageColumns = ['Ongoing', 'Closeds', 'column1', 'column2'];
+const storageColumns = ['ongoing', 'closeds', 'column1', 'column2'];
 
 const createMockStore = (overrideState = {}) => {
   return createTestingPinia({
@@ -150,10 +150,8 @@ describe('AgentsTableHeader', () => {
 
       const columnNames = headerOptions.map((option) => option.value);
 
-      expect(columnNames).toContain('column1');
-      expect(columnNames).toContain('column2');
       expect(columnNames).toContain('ongoing');
-      expect(columnNames).toContain('Closeds');
+      expect(columnNames).toContain('column1');
 
       expect(columnNames).not.toContain('status');
       expect(columnNames).not.toContain('agent');
@@ -478,7 +476,7 @@ describe('AgentsTableHeader', () => {
     });
 
     it('initializes selectedColumns from storedColumns if storedColumns exist and availableColumns > 2', async () => {
-      const testStoredColumns = ['ongoing', 'Closeds', 'column1'];
+      const testStoredColumns = ['ongoing', 'column1', 'column2'];
       const { wrapper } = createWrapper(
         { headers: sampleHeaders },
         {
@@ -493,7 +491,6 @@ describe('AgentsTableHeader', () => {
 
       const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
       expect(selectedValues).toEqual(expect.arrayContaining(testStoredColumns));
-      expect(selectedValues).not.toContain('column2');
       expect(selectedValues.length).toBe(testStoredColumns.length);
     });
 

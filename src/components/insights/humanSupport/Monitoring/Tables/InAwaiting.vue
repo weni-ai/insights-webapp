@@ -86,11 +86,10 @@ const handlePageChange = (newPage: number) => {
 const redirectItem = (item: InAwaitingDataResult) => {
   if (!item?.link?.url) return;
 
-  const path = `${item.link?.url}/insights`;
   window.parent.postMessage(
     {
       event: 'redirect',
-      path,
+      path: item?.link?.url,
     },
     '*',
   );

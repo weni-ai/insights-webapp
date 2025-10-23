@@ -1,0 +1,147 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HumanSupport FormExport > Component structure > should match snapshot 1`] = `
+<section
+  class="export-data-form"
+  data-testid="export-data-form"
+  data-v-fb41bb14=""
+>
+  <header
+    data-v-fb41bb14=""
+  >
+    <p
+      class="export-data-form__description"
+      data-testid="export-data-form-description"
+      data-v-fb41bb14=""
+    >
+      export_data.description
+    </p>
+  </header>
+  <section
+    class="export-data-form__content"
+    data-testid="export-data-form-content"
+    data-v-fb41bb14=""
+  >
+    <export-filter-date-stub
+      data-testid="export-data-filter-date"
+      data-v-fb41bb14=""
+      label="export_data.select_data.label"
+      maxdate="2025-10-23"
+      modelvalue="[object Object]"
+      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+      placeholder="export_data.select_data.placeholder"
+    />
+    <section
+      class="export-data-form__chats-status"
+      data-testid="export-data-form-chats-status"
+      data-v-fb41bb14=""
+    >
+      <unnnic-radio-stub
+        data-testid="radio-chats-open"
+        data-v-fb41bb14=""
+        modelvalue="open"
+        value="open"
+      />
+      <unnnic-radio-stub
+        data-testid="radio-chats-closed"
+        data-v-fb41bb14=""
+        modelvalue="open"
+        value="closed"
+      />
+    </section>
+    <section
+      class="export-data-form__filters"
+      data-testid="export-data-form-filters"
+      data-v-fb41bb14=""
+    >
+      <section
+        class="export-data-form__filters-container"
+        data-v-fb41bb14=""
+      >
+        <unnnic-label-stub
+          data-v-fb41bb14=""
+          label="export_data.filters.sector"
+        />
+        <filter-multi-select-stub
+          alllabel="export_data.filters.all_sectors"
+          data-v-fb41bb14=""
+          keyvaluefield="uuid"
+          modelvalue="[object Object]"
+          placeholder="export_data.filters.select_sector"
+          source="sectors"
+        />
+      </section>
+      <section
+        class="export-data-form__filters-container"
+        data-v-fb41bb14=""
+      >
+        <unnnic-label-stub
+          data-v-fb41bb14=""
+          label="export_data.filters.queue"
+        />
+        <filter-multi-select-stub
+          alllabel="export_data.filters.all_queues"
+          data-v-fb41bb14=""
+          dependsonvalue="[object Object]"
+          disabled="true"
+          keyvaluefield="uuid"
+          modelvalue="[object Object]"
+          placeholder="export_data.filters.select_queue"
+          source="queues"
+        />
+      </section>
+      <section
+        class="export-data-form__filters-container"
+        data-v-fb41bb14=""
+      >
+        <unnnic-label-stub
+          data-v-fb41bb14=""
+          label="export_data.filters.agent"
+        />
+        <filter-multi-select-stub
+          alllabel="export_data.filters.all_agents"
+          data-v-fb41bb14=""
+          dependsonvalue="[object Object]"
+          disabled="true"
+          keyvaluefield="uuid"
+          modelvalue="[object Object]"
+          placeholder="export_data.filters.select_agent"
+          source="agents"
+        />
+      </section>
+      <section
+        class="export-data-form__filters-container"
+        data-v-fb41bb14=""
+      >
+        <unnnic-label-stub
+          data-v-fb41bb14=""
+          label="export_data.filters.tag"
+        />
+        <filter-multi-select-stub
+          alllabel="export_data.filters.all_tags"
+          data-v-fb41bb14=""
+          dependsonvalue="[object Object]"
+          disabled="true"
+          keyvaluefield="uuid"
+          modelvalue="[object Object]"
+          placeholder="export_data.filters.select_tag"
+          source="tags"
+        />
+      </section>
+    </section>
+    <form-checkbox-stub
+      data-testid="human-support-form-checkbox-component"
+      data-v-fb41bb14=""
+    />
+    <export-footer-stub
+      acceptterms="[object Object]"
+      accepttermstext="export_data.accept_terms"
+      data-testid="human-support-export-footer"
+      data-v-fb41bb14=""
+      formatlabel="export_data.select_format"
+      selectedformat=".xlsx"
+      warningtermstext="export_data.warning_terms"
+    />
+  </section>
+</section>
+`;

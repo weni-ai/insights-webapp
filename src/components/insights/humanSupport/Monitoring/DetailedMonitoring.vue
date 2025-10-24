@@ -52,7 +52,7 @@ import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from './Tables/Pauses.vue';
 import { storeToRefs } from 'pinia';
-import DetailedFilters from './Filters/DetailedFilters.vue';
+import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,

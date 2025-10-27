@@ -70,7 +70,7 @@ const createWrapper = (props = {}) => {
             'delete-topic',
             'update-topic-name',
             'update-topic-context',
-            'toggle-sub-topics',
+            'toggle-topics',
           ],
         },
         AddTopicButton: {

@@ -128,9 +128,8 @@ describe('Conversational FormExport', () => {
 
     it('should compute shortCutOptions with correct translations', () => {
       const options = wrapper.vm.shortCutOptions;
-      expect(options).toHaveLength(7);
-      expect(options[0].id).toBe('last-7-days');
-      expect(options[6].id).toBe('previous-month');
+      expect(options).toHaveLength(1);
+      expect(options[0].id).toBe('previous-month');
     });
   });
 
@@ -140,9 +139,18 @@ describe('Conversational FormExport', () => {
       expect(minDate).toBeNull();
     });
 
-    it('should call getMaxDate and return today for empty range', () => {
+    it('should call getMaxDate and return yesterday for empty range', () => {
       const maxDate = wrapper.vm.getMaxDate();
       expect(maxDate).toBeTruthy();
+    });
+
+    it('should return yesterday as maxDate instead of today', () => {
+      const maxDate = wrapper.vm.getMaxDate();
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayFormatted = yesterday.toISOString().split('T')[0];
+
+      expect(maxDate).toBe(yesterdayFormatted);
     });
 
     it('should calculate minDate based on selectDateRange', async () => {

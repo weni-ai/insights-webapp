@@ -12,7 +12,7 @@
       @delete-topic="handleDeleteTopic"
       @update-topic-name="updateTopicName"
       @update-topic-context="updateTopicContext"
-      @toggle-sub-topics="toggleSubTopics"
+      @toggle-topics="toggleTopics"
     />
     <section
       v-if="!isSubTopic"
@@ -149,6 +149,7 @@ const emit = defineEmits<{
   ];
   'add-sub-topic': [index: number];
   'toggle-sub-topics': [index: number];
+  'toggle-topics': [index: number];
 }>();
 
 const { t } = useI18n();
@@ -168,6 +169,11 @@ const updateTopicContext = (value: string) => {
 const toggleSubTopics = () => {
   showSubTopics.value = !showSubTopics.value;
   emit('toggle-sub-topics', props.topicIndex);
+};
+
+const toggleTopics = () => {
+  showSubTopics.value = !showSubTopics.value;
+  emit('toggle-topics', props.topicIndex);
 };
 
 const handleDeleteTopic = () => {

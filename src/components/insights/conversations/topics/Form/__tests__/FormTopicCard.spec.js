@@ -125,21 +125,21 @@ describe('FormTopicCard', () => {
 
     const titleTestCases = [
       {
-        showSubTopics: false,
+        isSubTopic: false,
         expectedText: 'conversations_dashboard.form_topic.new_topic',
       },
       {
-        showSubTopics: true,
+        isSubTopic: true,
         expectedText: 'conversations_dashboard.form_topic.new_sub_topic',
       },
     ];
 
-    titleTestCases.forEach(({ showSubTopics, expectedText }) => {
-      const displayText = showSubTopics
+    titleTestCases.forEach(({ isSubTopic, expectedText }) => {
+      const displayText = isSubTopic
         ? 'new sub-topic title'
         : 'new topic title';
-      it(`should display ${displayText} when showSubTopics is ${showSubTopics}`, () => {
-        wrapper = createWrapper({ isNew: true, showSubTopics });
+      it(`should display ${displayText} when isSubTopic is ${isSubTopic}`, () => {
+        wrapper = createWrapper({ isNew: true, isSubTopic });
 
         expect(formTitle().text()).toBe(expectedText);
       });
@@ -233,13 +233,13 @@ describe('FormTopicCard', () => {
       expect(wrapper.emitted('delete-topic')).toHaveLength(1);
     });
 
-    it('should emit toggle-sub-topics when toggle is clicked', async () => {
+    it('should emit toggle-topics when toggle is clicked', async () => {
       wrapper = createWrapper({ isNew: false, isSubTopic: false });
 
       await toggleButton().trigger('click');
 
-      expect(wrapper.emitted('toggle-sub-topics')).toBeTruthy();
-      expect(wrapper.emitted('toggle-sub-topics')).toHaveLength(1);
+      expect(wrapper.emitted('toggle-topics')).toBeTruthy();
+      expect(wrapper.emitted('toggle-topics')).toHaveLength(1);
     });
 
     it('should emit update-topic-name when name input changes', async () => {
@@ -275,7 +275,7 @@ describe('FormTopicCard', () => {
         'handleDeleteTopic',
         'updateTopicName',
         'updateTopicContext',
-        'toggleSubTopics',
+        'toggleTopics',
       ];
 
       methods.forEach((method) => {
@@ -295,8 +295,8 @@ describe('FormTopicCard', () => {
       wrapper.vm.updateTopicContext('test');
       expect(wrapper.emitted('update-topic-context')).toHaveLength(1);
 
-      wrapper.vm.toggleSubTopics();
-      expect(wrapper.emitted('toggle-sub-topics')).toHaveLength(1);
+      wrapper.vm.toggleTopics();
+      expect(wrapper.emitted('toggle-topics')).toHaveLength(1);
     });
   });
 

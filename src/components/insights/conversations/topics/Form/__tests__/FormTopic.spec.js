@@ -99,6 +99,7 @@ const createWrapper = (storeTopics = [], isLoading = false) => {
             'update-topic',
             'add-sub-topic',
             'toggle-sub-topics',
+            'toggle-topics',
           ],
         },
         UnnnicSkeletonLoading: {
@@ -206,15 +207,6 @@ describe('FormTopic', () => {
         subTopics: [],
       });
     });
-
-    it('should handle toggle-sub-topics event', () => {
-      const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-
-      wrapper.vm.handleToggleSubTopics(0);
-
-      expect(consoleSpy).toHaveBeenCalledWith('Toggled sub-topics for topic 0');
-      consoleSpy.mockRestore();
-    });
   });
 
   describe('Component methods', () => {
@@ -224,7 +216,6 @@ describe('FormTopic', () => {
         'handleDeleteTopic',
         'handleUpdateTopic',
         'handleAddSubTopic',
-        'handleToggleSubTopics',
       ];
 
       methods.forEach((method) => {

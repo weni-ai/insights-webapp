@@ -1,12 +1,12 @@
 {
   "human_service_dashboard": {
-    "title": "Live support",
+    "title": "Human support",
     "peaks_in_human_service": "Chats opened by hour",
     "closed": "Closed",
     "in_progress": "In progress",
     "response_time": "Response time",
     "waiting_time": "Wait time",
-    "awaiting_service": "Waiting live support",
+    "awaiting_service": "Waiting human support",
     "interaction_time": "Interaction time",
     "all_agents": "All agents",
     "tooltips": {
@@ -22,21 +22,21 @@
     "title": "Conversational",
     "conversations": "conversations",
     "artificial_intelligence": "AI",
-    "human_support": "Live support",
+    "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
     "header": {
-      "total": "Total conversations",
+      "total": "Total conversations",   
       "resolved": "Optimized resolutions",
       "unresolved": "Other conclusions",
       "unengaged": "Unengaged",
-      "transferred": "Transferred to live support",
+      "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
         "resolved": "Conversations closed with a clear, effective resolution for the contact",
         "unresolved": "Conversations closed for other reasons, such as quick exchanges, greetings, abandonment, or without a direct resolution",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
-        "transferred": "Includes conversations (resolved or not) transferred to live support"
+        "transferred": "Chat windows that required human support"
       }
     },
     "form_topic": {
@@ -585,7 +585,7 @@
       },
       "by_ai": "by Meta Llama",
       "error": "Couldn't generate insights. Check your internet connection and try again later.",
-      "prompt": "Analyze the performance of a live support operation results dashboard. The dashboard displays three main categories: in progress, closed, and waiting for support. Additionally, evaluate these metrics: first response, wait time, and interaction time. Identify efficiency patterns and possible bottlenecks in the support flow, and offer suggestions to optimize response time and team productivity. Data: {values}",
+      "prompt": "Analyze the performance of a human support operation results dashboard. The dashboard displays three main categories: in progress, closed, and waiting for support. Additionally, evaluate these metrics: first response, wait time, and interaction time. Identify efficiency patterns and possible bottlenecks in the support flow, and offer suggestions to optimize response time and team productivity. Data: {values}",
       "prompt_language": "Response in English"
     }
   },
@@ -714,7 +714,7 @@
       "sector_tags": "Tags",
       "contacts": "Contacts",
       "resolutions": "Conversation resolutions",
-      "transferred": "Conversations transferred to live support",
+      "transferred": "Conversations transferred to human support",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS"

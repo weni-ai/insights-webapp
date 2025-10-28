@@ -14,7 +14,7 @@
           data-testid="form-topic-card-title"
         >
           {{
-            showSubTopics
+            isSubTopic
               ? $t('conversations_dashboard.form_topic.new_sub_topic')
               : $t('conversations_dashboard.form_topic.new_topic')
           }}
@@ -72,7 +72,7 @@
           v-if="!isSubTopic"
           class="form-topic-card__item__toggle"
           data-testid="form-topic-card-toggle"
-          @click="toggleSubTopics"
+          @click="toggleTopics"
         >
           <UnnnicIcon
             :icon="
@@ -127,7 +127,7 @@ const emit = defineEmits<{
   (e: 'delete-topic'): void;
   (e: 'update-topic-name', value: string): void;
   (e: 'update-topic-context', value: string): void;
-  (e: 'toggle-sub-topics'): void;
+  (e: 'toggle-topics'): void;
 }>();
 
 const handleDeleteTopic = () => {
@@ -142,8 +142,8 @@ const updateTopicContext = (value: string) => {
   emit('update-topic-context', value);
 };
 
-const toggleSubTopics = () => {
-  emit('toggle-sub-topics');
+const toggleTopics = () => {
+  emit('toggle-topics');
 };
 </script>
 

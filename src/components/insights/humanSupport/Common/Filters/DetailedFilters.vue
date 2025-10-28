@@ -10,6 +10,7 @@
       />
       <UnnnicSelectSmart
         :data-testid="`detailed-filters-select-${filter.type}`"
+        :placeholder="$t(`human_support_dashboard.filters.common.placeholder`)"
         :modelValue="filter.selected"
         :options="filter.options"
         autocomplete
@@ -120,7 +121,6 @@ const loadFilterData = async (filterType: FilterType) => {
   }
 };
 
-// Manipula a mudança de seleção em um filtro
 const handleChange = (
   filterType: FilterType,
   selectedOptions: FilterOption[],

@@ -47,8 +47,11 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey =
+  'human_support_dashboard.detailed_monitoring.in_progress';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'duration',
+  header: t(`${baseTranslationKey}.duration`),
   order: 'desc',
   itemKey: 'duration',
 });
@@ -56,9 +59,6 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 const formattedItems = ref<FormattedInProgressData[]>([]);
 
 const formattedHeaders = computed(() => {
-  const baseTranslationKey =
-    'human_support_dashboard.detailed_monitoring.in_progress';
-
   const createHeader = (itemKey: string, translationKey?: string) => ({
     title: t(`${baseTranslationKey}.${translationKey || itemKey}`),
     itemKey,

@@ -44,16 +44,16 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey =
+  'human_support_dashboard.detailed_monitoring.in_awaiting';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'awaiting_time',
+  header: t(`${baseTranslationKey}.awaiting_time`),
   order: 'desc',
   itemKey: 'awaiting_time',
 });
 
 const formattedHeaders = computed(() => {
-  const baseTranslationKey =
-    'human_support_dashboard.detailed_monitoring.in_awaiting';
-
   const createHeader = (itemKey: string) => ({
     title: t(`${baseTranslationKey}.${itemKey}`),
     itemKey,

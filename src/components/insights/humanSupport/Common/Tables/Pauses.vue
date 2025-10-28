@@ -221,6 +221,15 @@ watch(
     }
   },
 );
+
+watch(
+  () => humanSupport.appliedDateRange,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>
 
 <style scoped lang="scss">

@@ -174,4 +174,13 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupport.appliedDateRange,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

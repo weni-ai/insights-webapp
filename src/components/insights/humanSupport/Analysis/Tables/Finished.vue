@@ -158,4 +158,13 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupport.appliedAgentFilter,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

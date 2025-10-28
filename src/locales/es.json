@@ -885,9 +885,35 @@
         "action": "Acción"
       }
     },
+    "columns": {
+      "common": {
+        "duration": "Duración",
+        "awaiting_time": "Tiempo en espera",
+        "first_response_time": "Tiempo de 1ª respuesta",
+        "response_time": "Tiempo de respuesta",
+        "agent": "Atendente",
+        "sector": "Sector",
+        "queue": "Cola",
+        "contact": "Contacto",
+        "ticket_id": "Protocolo",
+        "total_attendances": "Total de atendimientos",
+        "average_first_response_time": "Tiempo medio para 1ª respuesta",
+        "average_response_time": "Tiempo medio de respuesta",
+        "average_duration": "Duración media",
+        "time_in_service": "Tiempo en atendimiento"
+      }
+    },
     "analyze": {
       "title": "Próximamente: Nueva Vista de Análisis",
-      "description": "Aquí podrás explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones más estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!"
+      "description": "Aquí podrás explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones más estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!",
+      "detailed_analysis": {
+        "title": "Análisis detallado",
+        "tabs": {
+        "finished": "Finalizados",
+          "attendant": "Atendido",
+          "pausas": "Pausas"
+        }
+      }
     }
   }
 }

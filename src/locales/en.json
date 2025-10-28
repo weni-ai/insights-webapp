@@ -885,9 +885,35 @@
         "action": "Action"
       }
     },
+    "columns": {
+      "common": {
+        "duration": "Duration",
+        "awaiting_time": "Awaiting time",
+        "first_response_time": "First response time",
+        "response_time": "Response time",
+        "agent": "Attendant",
+        "sector": "Sector",
+        "queue": "Queue",
+        "contact": "Contact",
+        "ticket_id": "Protocol",
+        "total_attendances": "Total attendances",
+        "average_first_response_time": "Average first response time",
+        "average_response_time": "Average response time",
+        "average_duration": "Average duration",
+        "time_in_service": "Time in service"
+      }
+    },
     "analyze": {
       "title": "Soon: New Analysis View",
-      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
+      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!",
+      "detailed_analysis": {
+        "title": "Detailed analysis",
+        "tabs": {
+          "finished": "Finished",
+          "attendant": "Attendant",
+          "pauses": "Pauses"
+        }
+      }
     }
   }
 }

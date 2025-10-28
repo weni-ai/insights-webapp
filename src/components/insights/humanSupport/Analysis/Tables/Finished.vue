@@ -136,40 +136,14 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupport.appliedFilters,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
-);
-
-watch(
-  () => humanSupport.appliedDateRange,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
-);
-
-watch(
-  () => humanSupport.appliedAgentFilter,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
-);
-
-watch(
-  () => humanSupport.appliedContactFilter,
+  [
+    currentSort,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
+    () => humanSupport.appliedAgentFilter,
+    () => humanSupport.appliedContactFilter,
+  ],
   () => {
     page.value = 1;
     loadData();

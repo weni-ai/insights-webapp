@@ -192,22 +192,13 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupport.appliedAgentFilter,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
-);
-
-watch(
-  () => humanSupport.appliedFilters,
+  [
+    currentSort,
+    () => humanSupport.appliedAgentFilter,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
+  ],
   () => {
     page.value = 1;
     loadData();
@@ -222,15 +213,6 @@ watch(
       loadData();
     }
   },
-);
-
-watch(
-  () => humanSupport.appliedDateRange,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
 );
 </script>
 

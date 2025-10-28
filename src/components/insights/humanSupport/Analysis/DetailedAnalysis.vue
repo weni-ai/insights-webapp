@@ -4,7 +4,7 @@
     class="detailed-monitoring"
   >
     <p class="detailed-monitoring__title">
-      {{ $t('human_support_dashboard.detailed_monitoring.title') }}
+      {{ $t('human_support_dashboard.analyze.detailed_analysis.title') }}
     </p>
     <Transition name="filters-fade">
       <section
@@ -27,7 +27,9 @@
           :key="`tab-head-${key}`"
         >
           {{
-            $t(`human_support_dashboard.detailed_monitoring.tabs.${tab.name}`)
+            $t(
+              `human_support_dashboard.analyze.detailed_analysis.tabs.${tab.name}`,
+            )
           }}
         </template>
         <template
@@ -54,6 +56,8 @@ import {
   useHumanSupportAnalysis,
 } from '@/store/modules/humanSupport/analysis';
 import { Component } from 'vue';
+import Finished from './Tables/Finished.vue';
+import Attendant from './Tables/Attendant.vue';
 
 const tabs: Record<
   ActiveDetailedTab,
@@ -61,11 +65,11 @@ const tabs: Record<
 > = {
   finished: {
     name: 'finished',
-    component: () => {},
+    component: Finished,
   },
   attendant: {
     name: 'attendant',
-    component: () => {},
+    component: Attendant,
   },
   pauses: {
     name: 'pauses',

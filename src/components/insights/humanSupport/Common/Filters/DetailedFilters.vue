@@ -1,22 +1,24 @@
 <template>
   <section class="detailed-filters">
-    <UnnnicLabel
-      :label="
-        $t(
-          'human_support_dashboard.detailed_monitoring.filters.attendant.label',
-        )
-      "
-    />
-    <UnnnicSelectSmart
-      data-testid="detailed-filters-select-attendant"
-      :modelValue="selectedAttendant"
-      :options="attendantsOptions"
-      autocomplete
-      autocompleteClearOnFocus
-      autocompleteIconLeft
-      :isLoading="isLoadingAttendants"
-      @update:model-value="handleChangeAttendant"
-    />
+    <section
+      v-for="filter in activeFilters"
+      :key="filter.type"
+      class="detailed-filters__filter"
+    >
+      <UnnnicLabel
+        :label="$t(`human_support_dashboard.filters.${filter.type}.label`)"
+      />
+      <UnnnicSelectSmart
+        :data-testid="`detailed-filters-select-${filter.type}`"
+        :modelValue="filter.selected"
+        :options="filter.options"
+        autocomplete
+        autocompleteClearOnFocus
+        autocompleteIconLeft
+        :isLoading="filter.isLoading"
+        @update:model-value="(value) => handleChange(filter.type, value)"
+      />
+    </section>
   </section>
 </template>
 
@@ -26,67 +28,132 @@ import Projects from '@/services/api/resources/projects';
 import { ref, computed, onMounted } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-interface Attendant {
-  uuid: string;
-  name: string;
-  email: string;
+type FilterType = 'attendant' | 'contact' | 'ticket_id';
+type ComponentType = 'attendant' | 'pauses' | 'finished';
+type SourceType = 'agents' | 'contacts' | 'ticket_id';
+
+interface Props {
+  type: ComponentType;
 }
 
-interface AttendantOption {
+interface FilterItem {
+  uuid: string;
+  name: string;
+  email?: string;
+}
+
+interface FilterOption {
   value: string;
   label: string;
 }
 
+interface FilterState {
+  type: FilterType;
+  source: SourceType;
+  data: FilterItem[];
+  selected: FilterOption[];
+  isLoading: boolean;
+}
+
+const props = defineProps<Props>();
 const { saveAppliedAgentFilter } = useHumanSupport();
 
-const currentAttendant = ref<Attendant | null>(null);
-const attendants = ref<Attendant[]>([]);
-const isLoadingAttendants = ref(false);
+const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
+  attendant: ['attendant'],
+  pauses: ['attendant'],
+  finished: ['attendant', 'contact', 'ticket_id'],
+};
 
-const selectedAttendant = computed(() => {
-  if (!currentAttendant.value) {
-    return [];
+const filters = ref<Record<FilterType, FilterState>>({
+  attendant: {
+    type: 'attendant',
+    source: 'agents',
+    data: [],
+    selected: [],
+    isLoading: false,
+  },
+  contact: {
+    type: 'contact',
+    source: 'contacts',
+    data: [],
+    selected: [],
+    isLoading: false,
+  },
+  ticket_id: {
+    type: 'ticket_id',
+    source: 'ticket_id',
+    data: [],
+    selected: [],
+    isLoading: false,
+  },
+});
+
+const activeFilters = computed(() => {
+  const filterTypes = FILTER_CONFIG[props.type] || [];
+
+  return filterTypes.map((filterType) => {
+    const filter = filters.value[filterType];
+    return {
+      type: filterType,
+      selected: filter.selected,
+      options: filter.data.map((item) => ({
+        value: item.uuid,
+        label: item.name,
+      })),
+      isLoading: filter.isLoading,
+    };
+  });
+});
+
+const loadFilterData = async (filterType: FilterType) => {
+  const filter = filters.value[filterType];
+
+  try {
+    filter.isLoading = true;
+    const response = await Projects.getProjectSource(filter.source);
+    filter.data = response;
+  } catch (error) {
+    console.error(`Error loading ${filterType} data`, error);
+    filter.data = [];
+  } finally {
+    filter.isLoading = false;
   }
-  return [
-    {
-      value: currentAttendant.value.uuid,
-      label: currentAttendant.value.name,
-    },
-  ];
-});
+};
 
-const attendantsOptions = computed(() => {
-  return attendants.value.map((attendant) => ({
-    value: attendant.uuid,
-    label: attendant.name,
-  }));
-});
+// Manipula a mudança de seleção em um filtro
+const handleChange = (
+  filterType: FilterType,
+  selectedOptions: FilterOption[],
+) => {
+  const filter = filters.value[filterType];
 
-const handleChangeAttendant = (selectedOptions: AttendantOption[]) => {
   if (!selectedOptions || !selectedOptions.length) {
-    currentAttendant.value = null;
+    filter.selected = [];
     return;
   }
 
   const selected = selectedOptions[0];
-  const attendant = attendants.value.find((a) => a.uuid === selected.value);
+  const item = filter.data.find((d) => d.uuid === selected.value);
 
-  if (attendant) {
-    currentAttendant.value = attendant;
-    saveAppliedAgentFilter(attendant.uuid, attendant.name);
+  if (item) {
+    filter.selected = [
+      {
+        value: item.uuid,
+        label: item.name,
+      },
+    ];
+
+    if (filterType === 'attendant') {
+      saveAppliedAgentFilter(item.uuid, item.name);
+    }
   }
 };
 
 const loadData = async () => {
-  try {
-    isLoadingAttendants.value = true;
-    const response = await Projects.getProjectSource('agents');
-    attendants.value = response;
-  } catch (error) {
-    console.error('Error loading attendants', error);
-  } finally {
-    isLoadingAttendants.value = false;
-  }
+  const filterTypes = FILTER_CONFIG[props.type] || [];
+  await Promise.all(
+    filterTypes.map((filterType) => loadFilterData(filterType)),
+  );
 };
 
 onMounted(() => {
@@ -97,7 +164,12 @@ onMounted(() => {
 <style scoped lang="scss">
 .detailed-filters {
   display: flex;
-  flex-direction: column;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-6;
+
+  &__filter {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-1;
+  }
 }
 </style>

@@ -66,7 +66,7 @@ interface FilterState {
 
 const props = defineProps<Props>();
 const humanSupport = useHumanSupport();
-const { saveAppliedAgentFilter } = humanSupport;
+const { saveAppliedAgentFilter, saveAppliedContactFilter } = humanSupport;
 
 const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
   attendant: ['attendant'],
@@ -174,6 +174,9 @@ const handleChange = (
 
     if (filterType === 'attendant') {
       saveAppliedAgentFilter(item.uuid, item.name);
+    }
+    if (filterType === 'contact') {
+      saveAppliedContactFilter(item.uuid, item.name);
     }
   }
 };

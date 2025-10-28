@@ -15,11 +15,10 @@ interface AppliedFilters {
   tags: Filter[];
 }
 
-interface AppliedAgentFilter {
+interface AppliedDetailFilter {
   value: string;
   label: string;
 }
-
 export interface DateRange {
   start: string;
   end: string;
@@ -46,7 +45,11 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     queues: [],
     tags: [],
   });
-  const appliedAgentFilter = ref<AppliedAgentFilter>({
+  const appliedAgentFilter = ref<AppliedDetailFilter>({
+    value: '',
+    label: '',
+  });
+  const appliedContactFilter = ref<AppliedDetailFilter>({
     value: '',
     label: '',
   });
@@ -71,6 +74,13 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   const saveAppliedAgentFilter = (value: string, label: string) => {
     appliedAgentFilter.value = {
+      value: value,
+      label: label,
+    };
+  };
+
+  const saveAppliedContactFilter = (value: string, label: string) => {
+    appliedContactFilter.value = {
       value: value,
       label: label,
     };
@@ -139,6 +149,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     appliedFiltersLength,
     saveAppliedFilters,
     saveAppliedAgentFilter,
+    saveAppliedContactFilter,
     setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,

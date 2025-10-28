@@ -143,6 +143,7 @@ watch(
     () => humanSupport.appliedDateRange,
     () => humanSupport.appliedAgentFilter,
     () => humanSupport.appliedContactFilter,
+    () => humanSupport.appliedTicketIdFilter,
   ],
   () => {
     page.value = 1;

@@ -51,6 +51,10 @@ interface FilterItem {
   email?: string;
 }
 
+interface TicketIdItem {
+  ticket_id: string;
+}
+
 interface FilterOption {
   value: string;
   label: string;
@@ -59,14 +63,18 @@ interface FilterOption {
 interface FilterState {
   type: FilterType;
   source: SourceType;
-  data: FilterItem[];
+  data: FilterItem[] | TicketIdItem[];
   selected: FilterOption[];
   isLoading: boolean;
 }
 
 const props = defineProps<Props>();
 const humanSupport = useHumanSupport();
-const { saveAppliedAgentFilter, saveAppliedContactFilter } = humanSupport;
+const {
+  saveAppliedAgentFilter,
+  saveAppliedContactFilter,
+  saveAppliedTicketIdFilter,
+} = humanSupport;
 
 const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
   attendant: ['attendant'],
@@ -103,13 +111,22 @@ const activeFilters = computed(() => {
 
   return filterTypes.map((filterType) => {
     const filter = filters.value[filterType];
+
+    const options =
+      filterType === 'ticket_id'
+        ? (filter.data as TicketIdItem[]).map((item) => ({
+            value: item.ticket_id,
+            label: item.ticket_id,
+          }))
+        : (filter.data as FilterItem[]).map((item) => ({
+            value: item.uuid,
+            label: item.name,
+          }));
+
     return {
       type: filterType,
       selected: filter.selected,
-      options: filter.data.map((item) => ({
-        value: item.uuid,
-        label: item.name,
-      })),
+      options,
       isLoading: filter.isLoading,
     };
   });
@@ -155,28 +172,55 @@ const handleChange = (
   }
 
   const selected = selectedOptions[0];
-  const item = filter.data.find((d) => d.uuid === selected.value);
 
-  if (item) {
-    if (
-      filter.selected.length === 0 ||
-      filter.selected[0].value !== item.uuid
-    ) {
-      nextTick(() => {
-        filter.selected = [
-          {
-            value: item.uuid,
-            label: item.name,
-          },
-        ];
-      });
-    }
+  if (filterType === 'ticket_id') {
+    const ticketItem = (filter.data as TicketIdItem[]).find(
+      (d) => d.ticket_id === selected.value,
+    );
 
-    if (filterType === 'attendant') {
-      saveAppliedAgentFilter(item.uuid, item.name);
+    if (ticketItem) {
+      if (
+        filter.selected.length === 0 ||
+        filter.selected[0].value !== ticketItem.ticket_id
+      ) {
+        nextTick(() => {
+          filter.selected = [
+            {
+              value: ticketItem.ticket_id,
+              label: ticketItem.ticket_id,
+            },
+          ];
+        });
+      }
+
+      saveAppliedTicketIdFilter(ticketItem.ticket_id, ticketItem.ticket_id);
     }
-    if (filterType === 'contact') {
-      saveAppliedContactFilter(item.uuid, item.name);
+  } else {
+    const item = (filter.data as FilterItem[]).find(
+      (d) => d.uuid === selected.value,
+    );
+
+    if (item) {
+      if (
+        filter.selected.length === 0 ||
+        filter.selected[0].value !== item.uuid
+      ) {
+        nextTick(() => {
+          filter.selected = [
+            {
+              value: item.uuid,
+              label: item.name,
+            },
+          ];
+        });
+      }
+
+      if (filterType === 'attendant') {
+        saveAppliedAgentFilter(item.uuid, item.name);
+      }
+      if (filterType === 'contact') {
+        saveAppliedContactFilter(item.uuid, item.name);
+      }
     }
   }
 };

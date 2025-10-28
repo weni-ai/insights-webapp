@@ -53,6 +53,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     value: '',
     label: '',
   });
+  const appliedTicketIdFilter = ref<AppliedDetailFilter>({
+    value: '',
+    label: '',
+  });
 
   const appliedFiltersLength = computed(() => {
     const sectorsLength = appliedFilters.value.sectors.length > 0 ? 1 : 0;
@@ -81,6 +85,13 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   const saveAppliedContactFilter = (value: string, label: string) => {
     appliedContactFilter.value = {
+      value: value,
+      label: label,
+    };
+  };
+
+  const saveAppliedTicketIdFilter = (value: string, label: string) => {
+    appliedTicketIdFilter.value = {
       value: value,
       label: label,
     };
@@ -147,10 +158,12 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     appliedFilters,
     appliedAgentFilter,
     appliedContactFilter,
+    appliedTicketIdFilter,
     appliedFiltersLength,
     saveAppliedFilters,
     saveAppliedAgentFilter,
     saveAppliedContactFilter,
+    saveAppliedTicketIdFilter,
     setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,

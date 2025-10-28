@@ -19,6 +19,14 @@ interface AppliedDetailFilter {
   value: string;
   label: string;
 }
+
+type DetailFilterType = 'agent' | 'contact' | 'ticketId';
+
+interface AppliedDetailFilters {
+  agent: AppliedDetailFilter;
+  contact: AppliedDetailFilter;
+  ticketId: AppliedDetailFilter;
+}
 export interface DateRange {
   start: string;
   end: string;
@@ -45,17 +53,11 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     queues: [],
     tags: [],
   });
-  const appliedAgentFilter = ref<AppliedDetailFilter>({
-    value: '',
-    label: '',
-  });
-  const appliedContactFilter = ref<AppliedDetailFilter>({
-    value: '',
-    label: '',
-  });
-  const appliedTicketIdFilter = ref<AppliedDetailFilter>({
-    value: '',
-    label: '',
+
+  const appliedDetailFilters = ref<AppliedDetailFilters>({
+    agent: { value: '', label: '' },
+    contact: { value: '', label: '' },
+    ticketId: { value: '', label: '' },
   });
 
   const appliedFiltersLength = computed(() => {
@@ -76,25 +78,12 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     };
   };
 
-  const saveAppliedAgentFilter = (value: string, label: string) => {
-    appliedAgentFilter.value = {
-      value: value,
-      label: label,
-    };
-  };
-
-  const saveAppliedContactFilter = (value: string, label: string) => {
-    appliedContactFilter.value = {
-      value: value,
-      label: label,
-    };
-  };
-
-  const saveAppliedTicketIdFilter = (value: string, label: string) => {
-    appliedTicketIdFilter.value = {
-      value: value,
-      label: label,
-    };
+  const saveAppliedDetailFilter = (
+    type: DetailFilterType,
+    value: string,
+    label: string,
+  ) => {
+    appliedDetailFilters.value[type] = { value, label };
   };
 
   const setActiveTab = (tab: ActiveTab) => {
@@ -156,14 +145,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     tags,
     appliedDateRange,
     appliedFilters,
-    appliedAgentFilter,
-    appliedContactFilter,
-    appliedTicketIdFilter,
+    appliedDetailFilters,
     appliedFiltersLength,
     saveAppliedFilters,
-    saveAppliedAgentFilter,
-    saveAppliedContactFilter,
-    saveAppliedTicketIdFilter,
+    saveAppliedDetailFilter,
     setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,

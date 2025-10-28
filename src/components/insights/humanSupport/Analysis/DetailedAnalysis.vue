@@ -11,7 +11,7 @@
         v-if="['attendant', 'pauses', 'finished'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
       >
-        <DetailedFilters />
+        <DetailedFilters :type="filterType" />
       </section>
     </Transition>
     <section class="detailed-monitoring__tabs">
@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { UnnnicTab } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
@@ -87,6 +88,10 @@ const { setActiveDetailedTab } = humanSupportAnalysis;
 const changeActiveTabName = (tab: ActiveDetailedTab) => {
   setActiveDetailedTab(tab);
 };
+
+const filterType = computed(() => {
+  return activeDetailedTab.value as 'attendant' | 'pauses' | 'finished';
+});
 </script>
 
 <style scoped lang="scss">
@@ -107,8 +112,6 @@ const changeActiveTabName = (tab: ActiveDetailedTab) => {
   &__filters {
     display: flex;
     flex-direction: column;
-    flex: 0 0 calc(100% / 4);
-    max-width: calc(100% / 4);
   }
 }
 

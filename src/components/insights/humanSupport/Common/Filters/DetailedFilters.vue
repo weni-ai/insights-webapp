@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
@@ -57,7 +57,8 @@ interface FilterState {
 }
 
 const props = defineProps<Props>();
-const { saveAppliedAgentFilter } = useHumanSupport();
+const humanSupport = useHumanSupport();
+const { saveAppliedAgentFilter } = humanSupport;
 
 const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
   attendant: ['attendant'],
@@ -111,7 +112,16 @@ const loadFilterData = async (filterType: FilterType) => {
 
   try {
     filter.isLoading = true;
-    const response = await Projects.getProjectSource(filter.source);
+    const params = {
+      sectors: humanSupport.appliedFilters.sectors.map(
+        (sector) => sector.value,
+      ),
+      queues: humanSupport.appliedFilters.queues.map((queue) => queue.value),
+      tags: humanSupport.appliedFilters.tags.map((tag) => tag.value),
+      start_date: humanSupport.appliedDateRange.start,
+      end_date: humanSupport.appliedDateRange.end,
+    };
+    const response = await Projects.getProjectSource(filter.source, params);
     filter.data = response;
   } catch (error) {
     console.error(`Error loading ${filterType} data`, error);
@@ -159,6 +169,22 @@ const loadData = async () => {
 onMounted(() => {
   loadData();
 });
+
+watch(
+  () => humanSupport.appliedDateRange,
+  () => {
+    loadData();
+  },
+  { flush: 'post' },
+);
+
+watch(
+  () => humanSupport.appliedFilters,
+  () => {
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>
 
 <style scoped lang="scss">

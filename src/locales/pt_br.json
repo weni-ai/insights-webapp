@@ -36,7 +36,7 @@
         "resolved": "Conversas concluídas com uma resolução clara e efetiva para o contato",
         "unresolved": "Conversas finalizadas de outras formas, como interações rápidas, cumprimentos, abandonos ou sem resolução direta",
         "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
-        "transferred": "Inclui conversas (resolvidas ou não) encaminhadas para atendimento humano"
+        "transferred": "Inclui conversas (resolvidas ou não) transferidas para atendimento humano"
       }
     },
     "form_topic": {
@@ -348,7 +348,7 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "now": "Agora",
-  "date_format": "DD/MM/AAAA",
+  "date_format": "DD/MM/YYYY",
   "search": "Buscar",
   "category": "Categoria",
   "language": "Idioma",

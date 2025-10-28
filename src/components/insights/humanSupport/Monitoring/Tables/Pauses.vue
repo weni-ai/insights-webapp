@@ -63,8 +63,10 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey = 'human_support_dashboard.detailed_monitoring.pauses';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'agent',
+  header: t(`${baseTranslationKey}.agent`),
   order: 'asc',
   itemKey: 'agent',
 });

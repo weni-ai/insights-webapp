@@ -24,21 +24,6 @@
         />
       </template>
     </section>
-    <section
-      class="header__summary"
-      data-testid="dashboard-header-right"
-    >
-      <CardConversations
-        class="header__card"
-        :title="rightCard.title"
-        :value="rightCard.value"
-        :description="rightCard.description"
-        :tooltipInfo="rightCard.tooltipInfo"
-        :tooltipSide="'left'"
-        :isLoading="rightCard.isLoading"
-        @click="handleCardClick('transferred_to_human')"
-      />
-    </section>
   </section>
 </template>
 
@@ -73,6 +58,11 @@ const cardDefinitions = [
     titleKey: 'conversations_dashboard.header.unresolved',
     tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
   },
+  {
+    id: 'transferred_to_human',
+    titleKey: 'conversations_dashboard.header.transferred',
+    tooltipKey: 'conversations_dashboard.header.tooltips.transferred',
+  },
 ];
 
 const createInitialCardData = () => ({
@@ -88,8 +78,6 @@ const cardsData = ref(
   })),
 );
 
-const rightCardData = ref(createInitialCardData());
-
 const cards = computed(() =>
   cardDefinitions.map((def, index) => ({
     id: def.id,
@@ -100,14 +88,6 @@ const cards = computed(() =>
     isLoading: cardsData.value[index].isLoading,
   })),
 );
-
-const rightCard = computed(() => ({
-  title: t('conversations_dashboard.header.transferred'),
-  value: rightCardData.value.value,
-  description: rightCardData.value.description,
-  tooltipInfo: t('conversations_dashboard.header.tooltips.transferred'),
-  isLoading: rightCardData.value.isLoading,
-}));
 
 watch(
   () => route.query,
@@ -137,7 +117,6 @@ const loadCardData = async () => {
   cardsData.value.forEach((card) => {
     card.isLoading = true;
   });
-  rightCardData.value.isLoading = true;
 
   try {
     const response =
@@ -158,11 +137,6 @@ const loadCardData = async () => {
             'conversations_dashboard.conversations',
           )}`;
         }
-      } else if (metric.id === 'transferred_to_human') {
-        rightCardData.value.value = formatPercentage(metric.percentage);
-        rightCardData.value.description = `${formatNumber(metric.value)} ${t(
-          'conversations_dashboard.conversations',
-        )}`;
       }
     });
   } catch (error) {
@@ -173,17 +147,11 @@ const loadCardData = async () => {
       card.description = `0 ${t('conversations_dashboard.conversations')}`;
     });
 
-    rightCardData.value.value = '-';
-    rightCardData.value.description = `0 ${t(
-      'conversations_dashboard.conversations',
-    )}`;
-
     showErrorToast();
   } finally {
     cardsData.value.forEach((card) => {
       card.isLoading = false;
     });
-    rightCardData.value.isLoading = false;
   }
 };
 
@@ -222,13 +190,7 @@ $min-height: 134px;
 
   .header__cards {
     display: flex;
-    flex: 9;
-    min-height: $min-height;
-  }
-
-  .header__summary {
-    display: flex;
-    flex: 3;
+    width: 100%;
     min-height: $min-height;
   }
 

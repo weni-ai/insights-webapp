@@ -36,7 +36,6 @@
         @delete-topic="handleDeleteTopic"
         @update-topic="handleUpdateTopic"
         @add-sub-topic="handleAddSubTopic"
-        @toggle-sub-topics="handleToggleSubTopics"
       />
     </section>
 
@@ -100,10 +99,6 @@ const handleUpdateTopic = (
 
 const handleAddSubTopic = (topicIndex: number) => {
   addSubTopic(topicIndex, createNewTopic());
-};
-
-const handleToggleSubTopics = (topicIndex: number) => {
-  console.log(`Toggled sub-topics for topic ${topicIndex}`);
 };
 </script>
 

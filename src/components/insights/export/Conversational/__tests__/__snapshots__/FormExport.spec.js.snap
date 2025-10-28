@@ -26,9 +26,9 @@ exports[`Conversational FormExport > Component structure > should match snapshot
       data-testid="conversational-export-filter-date"
       data-v-0721d1b7=""
       label="export_data.select_data.label"
-      maxdate="2025-10-23"
+      maxdate="2025-10-26"
       modelvalue="[object Object]"
-      options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
+      options="[object Object]"
       placeholder="export_data.select_period.placeholder"
     />
     <form-checkbox-stub

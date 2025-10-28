@@ -141,9 +141,9 @@ watch(
     currentSort,
     () => humanSupport.appliedFilters,
     () => humanSupport.appliedDateRange,
-    () => humanSupport.appliedAgentFilter,
-    () => humanSupport.appliedContactFilter,
-    () => humanSupport.appliedTicketIdFilter,
+    () => humanSupport.appliedDetailFilters.agent,
+    () => humanSupport.appliedDetailFilters.contact,
+    () => humanSupport.appliedDetailFilters.ticketId,
   ],
   () => {
     page.value = 1;

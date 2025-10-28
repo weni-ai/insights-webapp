@@ -145,7 +145,7 @@ const loadData = async () => {
           : currentSort.value.itemKey,
       limit: pageInterval.value,
       offset: (page.value - 1) * pageInterval.value,
-      agent: humanSupport.appliedAgentFilter.value,
+      agent: humanSupport.appliedDetailFilters.agent.value,
     });
 
     if (data.results) {
@@ -182,7 +182,7 @@ onMounted(() => {
 watch(
   [
     currentSort,
-    () => humanSupport.appliedAgentFilter,
+    () => humanSupport.appliedDetailFilters.agent,
     () => humanSupport.appliedFilters,
   ],
   () => {

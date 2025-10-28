@@ -169,7 +169,7 @@ const loadData = async () => {
         ordering,
         limit: pageInterval.value,
         offset,
-        agent: humanSupport.appliedAgentFilter.value,
+        agent: humanSupport.appliedDetailFilters.agent.value,
       });
 
     if (data.results) {
@@ -195,7 +195,7 @@ onMounted(() => {
 watch(
   [
     currentSort,
-    () => humanSupport.appliedAgentFilter,
+    () => humanSupport.appliedDetailFilters.agent,
     () => humanSupport.appliedFilters,
     () => humanSupport.appliedDateRange,
   ],

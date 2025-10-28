@@ -47,9 +47,9 @@ const pageInterval = ref(15);
 const pageTotal = ref(0);
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'first_response_time',
+  header: 'agent',
   order: 'desc',
-  itemKey: 'first_response_time',
+  itemKey: 'agent',
 });
 
 const formattedItems = ref<FormattedInProgressData[]>([]);

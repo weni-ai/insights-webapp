@@ -1,6 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
 
 interface AttendantData {
@@ -40,7 +40,7 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<AttendantData> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),

@@ -1,25 +1,33 @@
 <template>
   <section class="detailed-filters">
-    <section
-      v-for="filter in activeFilters"
-      :key="filter.type"
-      class="detailed-filters__filter"
+    <TransitionGroup
+      name="filter-slide"
+      tag="div"
+      class="detailed-filters__container"
     >
-      <UnnnicLabel
-        :label="$t(`human_support_dashboard.filters.${filter.type}.label`)"
-      />
-      <UnnnicSelectSmart
-        :data-testid="`detailed-filters-select-${filter.type}`"
-        :placeholder="$t(`human_support_dashboard.filters.common.placeholder`)"
-        :modelValue="filter.selected"
-        :options="filter.options"
-        autocomplete
-        autocompleteClearOnFocus
-        autocompleteIconLeft
-        :isLoading="filter.isLoading"
-        @update:model-value="(value) => handleChange(filter.type, value)"
-      />
-    </section>
+      <section
+        v-for="filter in activeFilters"
+        :key="filter.type"
+        class="detailed-filters__filter"
+      >
+        <UnnnicLabel
+          :label="$t(`human_support_dashboard.filters.${filter.type}.label`)"
+        />
+        <UnnnicSelectSmart
+          :data-testid="`detailed-filters-select-${filter.type}`"
+          :placeholder="
+            $t(`human_support_dashboard.filters.common.placeholder`)
+          "
+          :modelValue="filter.selected"
+          :options="filter.options"
+          autocomplete
+          autocompleteClearOnFocus
+          autocompleteIconLeft
+          :isLoading="filter.isLoading"
+          @update:model-value="(value) => handleChange(filter.type, value)"
+        />
+      </section>
+    </TransitionGroup>
   </section>
 </template>
 
@@ -203,6 +211,12 @@ watch(
   display: flex;
   gap: $unnnic-space-6;
 
+  &__container {
+    display: flex;
+    gap: $unnnic-space-6;
+    flex: 1;
+  }
+
   &__filter {
     display: flex;
     flex-direction: column;
@@ -210,5 +224,21 @@ watch(
     max-width: calc(100% / 4);
     gap: $unnnic-space-1;
   }
+}
+
+.filter-slide-enter-active {
+  transition: opacity 0.3s ease;
+}
+
+.filter-slide-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.filter-slide-enter-from {
+  opacity: 0;
+}
+
+.filter-slide-leave-to {
+  opacity: 0;
 }
 </style>

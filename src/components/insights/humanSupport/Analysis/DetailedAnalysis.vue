@@ -58,6 +58,7 @@ import {
 import { Component } from 'vue';
 import Finished from './Tables/Finished.vue';
 import Attendant from './Tables/Attendant.vue';
+import Pauses from '../Common/Tables/Pauses.vue';
 
 const tabs: Record<
   ActiveDetailedTab,
@@ -73,7 +74,7 @@ const tabs: Record<
   },
   pauses: {
     name: 'pauses',
-    component: () => {},
+    component: Pauses,
   },
 };
 

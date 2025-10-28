@@ -846,12 +846,6 @@
         "attendant": "Attendant",
         "pauses": "Pauses"
       },
-      "filters": {
-        "attendant": {
-          "label": "Attendant",
-          "placeholder": "Type to filter"
-        }
-      },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
@@ -883,6 +877,20 @@
         "average_duration": "Average duration",
         "time_in_service": "Time in service",
         "action": "Action"
+      }
+    },
+    "filters": {
+      "common": {
+        "placeholder": "Type to filter"
+      },
+      "attendant": {
+        "label": "Attendant"
+      },
+      "contact": {
+        "label": "Contact"
+      },
+      "ticket_id": {
+        "label": "Protocol"
       }
     },
     "columns": {

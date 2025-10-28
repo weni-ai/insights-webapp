@@ -846,12 +846,6 @@
         "attendant": "Atendente",
         "pauses": "Pausas"
       },
-      "filters": {
-        "attendant": {
-          "label": "Atendente",
-          "placeholder": "Digite para filtrar"
-        }
-      },
       "in_progress": {
         "duration": "Duração",
         "awaiting_time": "Tempo em espera",
@@ -883,6 +877,20 @@
         "average_duration": "Duração média",
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
+      }
+    },
+    "filters": {
+      "common": {
+        "placeholder": "Digite para filtrar"
+      },
+      "attendant": {
+        "label": "Atendente"
+      },
+      "contact": {
+        "label": "Contato"
+      },
+      "ticket_id": {
+        "label": "Protocolo"
       }
     },
     "columns": {

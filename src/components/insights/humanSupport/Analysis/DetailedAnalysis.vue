@@ -8,7 +8,7 @@
     </p>
     <Transition name="filters-fade">
       <section
-        v-if="['attendant', 'pauses'].includes(activeDetailedTab)"
+        v-if="['attendant', 'pauses', 'finished'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
       >
         <DetailedFilters />

@@ -115,8 +115,6 @@ const filterType = computed(() => {
   &__filters {
     display: flex;
     flex-direction: column;
-    flex: 0 0 calc(100% / 4);
-    max-width: calc(100% / 4);
   }
 }
 

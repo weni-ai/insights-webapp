@@ -40,6 +40,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
 type ComponentType = 'attendant' | 'pauses' | 'finished';
 type SourceType = 'agents' | 'contacts' | 'ticket_id';
+type StoreFilterType = 'agent' | 'contact' | 'ticketId';
 
 interface Props {
   type: ComponentType;
@@ -70,17 +71,22 @@ interface FilterState {
 
 const props = defineProps<Props>();
 const humanSupport = useHumanSupport();
-const {
-  saveAppliedAgentFilter,
-  saveAppliedContactFilter,
-  saveAppliedTicketIdFilter,
-} = humanSupport;
+const { saveAppliedDetailFilter } = humanSupport;
 
 const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
   attendant: ['attendant'],
   pauses: ['attendant'],
   finished: ['attendant', 'contact', 'ticket_id'],
 };
+
+const FILTER_TO_STORE_MAP: Record<FilterType, StoreFilterType> = {
+  attendant: 'agent',
+  contact: 'contact',
+  ticket_id: 'ticketId',
+};
+
+const isTicketIdFilter = (filterType: FilterType): boolean =>
+  filterType === 'ticket_id';
 
 const filters = ref<Record<FilterType, FilterState>>({
   attendant: {
@@ -106,27 +112,33 @@ const filters = ref<Record<FilterType, FilterState>>({
   },
 });
 
+const mapDataToOptions = (
+  filterType: FilterType,
+  data: FilterItem[] | TicketIdItem[],
+): FilterOption[] => {
+  if (isTicketIdFilter(filterType)) {
+    return (data as TicketIdItem[]).map((item) => ({
+      value: item.ticket_id,
+      label: item.ticket_id,
+    }));
+  }
+
+  return (data as FilterItem[]).map((item) => ({
+    value: item.uuid,
+    label: item.name,
+  }));
+};
+
 const activeFilters = computed(() => {
   const filterTypes = FILTER_CONFIG[props.type] || [];
 
   return filterTypes.map((filterType) => {
     const filter = filters.value[filterType];
 
-    const options =
-      filterType === 'ticket_id'
-        ? (filter.data as TicketIdItem[]).map((item) => ({
-            value: item.ticket_id,
-            label: item.ticket_id,
-          }))
-        : (filter.data as FilterItem[]).map((item) => ({
-            value: item.uuid,
-            label: item.name,
-          }));
-
     return {
       type: filterType,
       selected: filter.selected,
-      options,
+      options: mapDataToOptions(filterType, filter.data),
       isLoading: filter.isLoading,
     };
   });
@@ -156,6 +168,35 @@ const loadFilterData = async (filterType: FilterType) => {
   }
 };
 
+const findSelectedItem = (
+  filterType: FilterType,
+  data: FilterItem[] | TicketIdItem[],
+  value: string,
+): { value: string; label: string } | null => {
+  if (isTicketIdFilter(filterType)) {
+    const item = (data as TicketIdItem[]).find((d) => d.ticket_id === value);
+    return item ? { value: item.ticket_id, label: item.ticket_id } : null;
+  }
+
+  const item = (data as FilterItem[]).find((d) => d.uuid === value);
+  return item ? { value: item.uuid, label: item.name } : null;
+};
+
+const updateFilterSelection = (
+  filter: FilterState,
+  newSelection: { value: string; label: string },
+) => {
+  const shouldUpdate =
+    filter.selected.length === 0 ||
+    filter.selected[0].value !== newSelection.value;
+
+  if (shouldUpdate) {
+    nextTick(() => {
+      filter.selected = [newSelection];
+    });
+  }
+};
+
 const handleChange = (
   filterType: FilterType,
   selectedOptions: FilterOption[],
@@ -172,56 +213,13 @@ const handleChange = (
   }
 
   const selected = selectedOptions[0];
+  const item = findSelectedItem(filterType, filter.data, selected.value);
 
-  if (filterType === 'ticket_id') {
-    const ticketItem = (filter.data as TicketIdItem[]).find(
-      (d) => d.ticket_id === selected.value,
-    );
+  if (item) {
+    updateFilterSelection(filter, item);
 
-    if (ticketItem) {
-      if (
-        filter.selected.length === 0 ||
-        filter.selected[0].value !== ticketItem.ticket_id
-      ) {
-        nextTick(() => {
-          filter.selected = [
-            {
-              value: ticketItem.ticket_id,
-              label: ticketItem.ticket_id,
-            },
-          ];
-        });
-      }
-
-      saveAppliedTicketIdFilter(ticketItem.ticket_id, ticketItem.ticket_id);
-    }
-  } else {
-    const item = (filter.data as FilterItem[]).find(
-      (d) => d.uuid === selected.value,
-    );
-
-    if (item) {
-      if (
-        filter.selected.length === 0 ||
-        filter.selected[0].value !== item.uuid
-      ) {
-        nextTick(() => {
-          filter.selected = [
-            {
-              value: item.uuid,
-              label: item.name,
-            },
-          ];
-        });
-      }
-
-      if (filterType === 'attendant') {
-        saveAppliedAgentFilter(item.uuid, item.name);
-      }
-      if (filterType === 'contact') {
-        saveAppliedContactFilter(item.uuid, item.name);
-      }
-    }
+    const storeFilterType = FILTER_TO_STORE_MAP[filterType];
+    saveAppliedDetailFilter(storeFilterType, item.value, item.label);
   }
 };
 

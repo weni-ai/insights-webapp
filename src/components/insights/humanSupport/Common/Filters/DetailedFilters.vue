@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
@@ -138,7 +138,11 @@ const handleChange = (
   const filter = filters.value[filterType];
 
   if (!selectedOptions || !selectedOptions.length) {
-    filter.selected = [];
+    if (filter.selected.length > 0) {
+      nextTick(() => {
+        filter.selected = [];
+      });
+    }
     return;
   }
 
@@ -146,12 +150,19 @@ const handleChange = (
   const item = filter.data.find((d) => d.uuid === selected.value);
 
   if (item) {
-    filter.selected = [
-      {
-        value: item.uuid,
-        label: item.name,
-      },
-    ];
+    if (
+      filter.selected.length === 0 ||
+      filter.selected[0].value !== item.uuid
+    ) {
+      nextTick(() => {
+        filter.selected = [
+          {
+            value: item.uuid,
+            label: item.name,
+          },
+        ];
+      });
+    }
 
     if (filterType === 'attendant') {
       saveAppliedAgentFilter(item.uuid, item.name);

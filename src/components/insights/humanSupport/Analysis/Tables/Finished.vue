@@ -46,8 +46,10 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey = 'human_support_dashboard.columns.common';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'agent',
+  header: t(`${baseTranslationKey}.agent`),
   order: 'desc',
   itemKey: 'agent',
 });
@@ -55,8 +57,6 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 const formattedItems = ref<FormattedInProgressData[]>([]);
 
 const formattedHeaders = computed(() => {
-  const baseTranslationKey = 'human_support_dashboard.columns.common';
-
   const createHeader = (itemKey: string, translationKey?: string) => ({
     title: t(`${baseTranslationKey}.${translationKey || itemKey}`),
     itemKey,

@@ -50,7 +50,7 @@ import { UnnnicTab } from '@weni/unnnic-system';
 import InAwaiting from './Tables/InAwaiting.vue';
 import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
-import Pauses from './Tables/Pauses.vue';
+import Pauses from '../Common/Tables/Pauses.vue';
 import { storeToRefs } from 'pinia';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {

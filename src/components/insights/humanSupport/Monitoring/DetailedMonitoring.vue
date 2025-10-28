@@ -11,7 +11,7 @@
         v-if="['attendant', 'pauses'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
       >
-        <DetailedFilters />
+        <DetailedFilters :type="filterType" />
       </section>
     </Transition>
     <section class="detailed-monitoring__tabs">
@@ -52,6 +52,7 @@ import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from '../Common/Tables/Pauses.vue';
 import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
@@ -90,6 +91,10 @@ const { setActiveDetailedTab } = humanSupportMonitoring;
 const changeActiveTabName = (tab: ActiveDetailedTab) => {
   setActiveDetailedTab(tab);
 };
+
+const filterType = computed(() => {
+  return activeDetailedTab.value as 'attendant' | 'pauses';
+});
 </script>
 
 <style scoped lang="scss">

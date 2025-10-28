@@ -146,6 +146,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     appliedDateRange,
     appliedFilters,
     appliedAgentFilter,
+    appliedContactFilter,
     appliedFiltersLength,
     saveAppliedFilters,
     saveAppliedAgentFilter,

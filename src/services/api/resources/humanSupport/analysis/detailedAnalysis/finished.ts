@@ -46,8 +46,12 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<FinishedData> {
     const { project } = useConfig();
-    const { appliedFilters, appliedDateRange, appliedAgentFilter } =
-      useHumanSupport();
+    const {
+      appliedFilters,
+      appliedDateRange,
+      appliedAgentFilter,
+      appliedContactFilter,
+    } = useHumanSupport();
     const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
@@ -55,6 +59,7 @@ export default {
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
       agent: appliedAgentFilter.value,
+      contact: appliedContactFilter.value,
       ordering: queryParams.ordering ? queryParams.ordering : 'response_time',
     };
 

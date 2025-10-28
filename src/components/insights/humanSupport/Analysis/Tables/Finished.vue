@@ -167,4 +167,13 @@ watch(
   },
   { flush: 'post' },
 );
+
+watch(
+  () => humanSupport.appliedContactFilter,
+  () => {
+    page.value = 1;
+    loadData();
+  },
+  { flush: 'post' },
+);
 </script>

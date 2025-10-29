@@ -28,7 +28,7 @@ const { useSharedStore } = await safeImport(
 const sharedStore = useSharedStore?.();
 
 export default async function mountInsightsApp({
-  containerId = 'insights-app',
+  containerId = 'app',
   initialRoute,
 } = {}) {
   let appRef = null;

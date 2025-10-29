@@ -1,7 +1,7 @@
 {
   "human_service_dashboard": {
     "title": "Human support",
-    "peaks_in_human_service": "Chats opened by hour",
+    "peaks_in_human_service": "Supports opened by hour",
     "closed": "Closed",
     "in_progress": "In progress",
     "response_time": "Response time",
@@ -12,7 +12,7 @@
     "tooltips": {
       "in_progress": "Total chats that are open",
       "response_time": "Average time a contact waits for a response per message",
-      "interaction_time": "Average chat duration",
+      "interaction_time": "Average support duration",
       "waiting_time": "Average wait time until first response",
       "awaiting_service": "Contacts waiting in queue",
       "closeds": "Total chats closed"
@@ -826,7 +826,7 @@
       "average_time_is_waiting": "Average time in waiting",
       "average_time_first_response": "Average time for first response",
       "average_response_time": "Average response time",
-      "average_time_chat": "Average chat duration",
+      "average_time_chat": "Average support duration",
       "max": "Max",
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
@@ -836,7 +836,7 @@
       }
     },
     "services_open_by_hour": {
-      "title": "Services open by hour"
+      "title": "Supports open by hour"
     },
     "detailed_monitoring": {
       "title": "Detailed monitoring",
@@ -844,7 +844,7 @@
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
         "attendant": "Attendant",
-        "pauses": "Pauses"
+        "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
@@ -919,7 +919,7 @@
         "tabs": {
           "finished": "Finished",
           "attendant": "Attendant",
-          "pauses": "Pauses"
+          "pauses": "Custom Breaks"
         }
       }
     }

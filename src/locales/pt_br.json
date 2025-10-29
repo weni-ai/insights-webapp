@@ -844,7 +844,7 @@
         "in_awaiting": "Em espera",
         "in_progress": "Em andamento",
         "attendant": "Atendente",
-        "pauses": "Pausas"
+        "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duração",
@@ -919,7 +919,7 @@
         "tabs": {
           "finished": "Finalizados",
           "attendant": "Atendente",
-          "pausas": "Pausas"
+          "pausas": "Pausas personalizadas"
         }
       }
     }

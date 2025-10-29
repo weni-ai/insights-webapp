@@ -60,10 +60,11 @@ describe('useHumanSupport store', () => {
       });
     });
 
-    it('should initialize applied agent filter', () => {
-      expect(store.appliedAgentFilter).toEqual({
-        value: '',
-        label: '',
+    it('should initialize applied detail filters', () => {
+      expect(store.appliedDetailFilters).toEqual({
+        agent: { value: '', label: '' },
+        contact: { value: '', label: '' },
+        ticketId: { value: '', label: '' },
       });
     });
 
@@ -295,29 +296,53 @@ describe('useHumanSupport store', () => {
     });
   });
 
-  describe('agent filter management', () => {
-    describe('saveAppliedAgentFilter', () => {
+  describe('detail filter management', () => {
+    describe('saveAppliedDetailFilter', () => {
       it('should save applied agent filter with value and label', () => {
-        store.saveAppliedAgentFilter('agent-123', 'Agent Name');
+        store.saveAppliedDetailFilter('agent', 'agent-123', 'Agent Name');
 
-        expect(store.appliedAgentFilter.value).toBe('agent-123');
-        expect(store.appliedAgentFilter.label).toBe('Agent Name');
+        expect(store.appliedDetailFilters.agent.value).toBe('agent-123');
+        expect(store.appliedDetailFilters.agent.label).toBe('Agent Name');
       });
 
-      it('should update existing applied agent filter', () => {
-        store.saveAppliedAgentFilter('agent-123', 'Agent Name');
-        store.saveAppliedAgentFilter('agent-456', 'Another Agent');
+      it('should save applied contact filter with value and label', () => {
+        store.saveAppliedDetailFilter('contact', 'contact-456', 'Contact Name');
 
-        expect(store.appliedAgentFilter.value).toBe('agent-456');
-        expect(store.appliedAgentFilter.label).toBe('Another Agent');
+        expect(store.appliedDetailFilters.contact.value).toBe('contact-456');
+        expect(store.appliedDetailFilters.contact.label).toBe('Contact Name');
       });
 
-      it('should save empty agent filter', () => {
-        store.saveAppliedAgentFilter('agent-123', 'Agent Name');
-        store.saveAppliedAgentFilter('', '');
+      it('should save applied ticketId filter with value and label', () => {
+        store.saveAppliedDetailFilter('ticketId', 'ticket-789', 'Ticket 789');
 
-        expect(store.appliedAgentFilter.value).toBe('');
-        expect(store.appliedAgentFilter.label).toBe('');
+        expect(store.appliedDetailFilters.ticketId.value).toBe('ticket-789');
+        expect(store.appliedDetailFilters.ticketId.label).toBe('Ticket 789');
+      });
+
+      it('should update existing applied detail filter', () => {
+        store.saveAppliedDetailFilter('agent', 'agent-123', 'Agent Name');
+        store.saveAppliedDetailFilter('agent', 'agent-456', 'Another Agent');
+
+        expect(store.appliedDetailFilters.agent.value).toBe('agent-456');
+        expect(store.appliedDetailFilters.agent.label).toBe('Another Agent');
+      });
+
+      it('should save empty detail filter', () => {
+        store.saveAppliedDetailFilter('agent', 'agent-123', 'Agent Name');
+        store.saveAppliedDetailFilter('agent', '', '');
+
+        expect(store.appliedDetailFilters.agent.value).toBe('');
+        expect(store.appliedDetailFilters.agent.label).toBe('');
+      });
+
+      it('should handle multiple detail filter types independently', () => {
+        store.saveAppliedDetailFilter('agent', 'agent-123', 'Agent Name');
+        store.saveAppliedDetailFilter('contact', 'contact-456', 'Contact Name');
+        store.saveAppliedDetailFilter('ticketId', 'ticket-789', 'Ticket 789');
+
+        expect(store.appliedDetailFilters.agent.value).toBe('agent-123');
+        expect(store.appliedDetailFilters.contact.value).toBe('contact-456');
+        expect(store.appliedDetailFilters.ticketId.value).toBe('ticket-789');
       });
     });
   });

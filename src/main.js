@@ -28,7 +28,7 @@ const { useSharedStore } = await safeImport(
 const sharedStore = useSharedStore?.();
 
 export default async function mountInsightsApp({
-  container = null,
+  containerId = 'app',
   initialRoute,
 } = {}) {
   let appRef = null;
@@ -62,7 +62,7 @@ export default async function mountInsightsApp({
     });
   }
 
-  app.mount(container || '#app');
+  app.mount(`#${containerId}`);
   appRef = app;
 
   return { app: appRef, router };

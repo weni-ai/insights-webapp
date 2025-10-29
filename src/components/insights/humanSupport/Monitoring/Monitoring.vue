@@ -3,7 +3,7 @@
     class="monitoring"
     data-testid="monitoring"
   >
-    <ServiceStatus data-testid="monitoring-service-status" />
+    <StatusCards data-testid="monitoring-status-cards" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
     <CsatRatings data-testid="monitoring-csat-ratings" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
@@ -16,7 +16,7 @@ import { onMounted, onUnmounted } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
-import ServiceStatus from './ServiceStatus.vue';
+import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';

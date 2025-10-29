@@ -214,7 +214,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
         return false;
       } finally {
         this.isSavingTopics = false;
-        this.loadTopicsDistribution();
+        this.loadFormTopics();
       }
     },
 

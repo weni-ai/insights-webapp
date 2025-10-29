@@ -22,53 +22,58 @@
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
-import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
+import { FinishedDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
+import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-
 import { formatSecondsToTime } from '@/utils/time';
 
-type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
+type FormattedInProgressData = Omit<
+  FinishedDataResult,
+  'duration' | 'awaiting_time' | 'first_response_time' | 'response_time'
+> & {
+  duration: string;
   awaiting_time: string;
+  first_response_time: string;
+  response_time: string;
 };
 
 const { t } = useI18n();
-const humanSupportMonitoring = useHumanSupportMonitoring();
 const humanSupport = useHumanSupport();
-
 const isLoading = ref(false);
 
 const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const baseTranslationKey =
-  'human_support_dashboard.detailed_monitoring.in_awaiting';
+const baseTranslationKey = 'human_support_dashboard.columns.common';
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: t(`${baseTranslationKey}.awaiting_time`),
+  header: t(`${baseTranslationKey}.agent`),
   order: 'desc',
-  itemKey: 'awaiting_time',
+  itemKey: 'agent',
 });
 
+const formattedItems = ref<FormattedInProgressData[]>([]);
+
 const formattedHeaders = computed(() => {
-  const createHeader = (itemKey: string) => ({
-    title: t(`${baseTranslationKey}.${itemKey}`),
+  const createHeader = (itemKey: string, translationKey?: string) => ({
+    title: t(`${baseTranslationKey}.${translationKey || itemKey}`),
     itemKey,
     isSortable: true,
   });
 
   return [
-    createHeader('awaiting_time'),
-    createHeader('contact'),
+    createHeader('agent'),
     createHeader('sector'),
     createHeader('queue'),
+    createHeader('awaiting_time'),
+    createHeader('first_response_time'),
+    createHeader('duration'),
+    createHeader('contact'),
+    createHeader('ticket_id'),
   ];
 });
-
-const formattedItems = ref<FormattedInAwaitingData[]>([]);
 
 const handleSort = (sort: {
   header: string;
@@ -83,13 +88,13 @@ const handlePageChange = (newPage: number) => {
   loadData();
 };
 
-const redirectItem = (item: InAwaitingDataResult) => {
+const redirectItem = (item: FinishedDataResult) => {
   if (!item?.link?.url) return;
-
+  const path = `${item.link?.url}/insights`;
   window.parent.postMessage(
     {
       event: 'redirect',
-      path: item?.link?.url,
+      path,
     },
     '*',
   );
@@ -99,24 +104,29 @@ const loadData = async () => {
   try {
     isLoading.value = true;
 
+    const offset = (page.value - 1) * pageInterval.value;
     const ordering =
       currentSort.value.order === 'desc'
         ? `-${currentSort.value.itemKey}`
         : currentSort.value.itemKey;
 
-    const data = await service.getDetailedMonitoringInAwaiting({
+    const data = await service.getDetailedAnalysisFinishedData({
       ordering,
       limit: pageInterval.value,
-      offset: (page.value - 1) * pageInterval.value,
+      offset,
     });
 
     formattedItems.value = data.results.map((result) => ({
       ...result,
+      duration: formatSecondsToTime(result?.duration),
       awaiting_time: formatSecondsToTime(result?.awaiting_time),
+      first_response_time: formatSecondsToTime(result?.first_response_time),
+      response_time: formatSecondsToTime(result?.response_time),
     }));
+
     pageTotal.value = data.count;
   } catch (error) {
-    console.error('Error loading in-awaiting data:', error);
+    console.error('Error loading in-progress data:', error);
   } finally {
     isLoading.value = false;
   }
@@ -127,23 +137,18 @@ onMounted(() => {
 });
 
 watch(
-  [currentSort, () => humanSupport.appliedFilters],
+  [
+    currentSort,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
+    () => humanSupport.appliedDetailFilters.agent,
+    () => humanSupport.appliedDetailFilters.contact,
+    () => humanSupport.appliedDetailFilters.ticketId,
+  ],
   () => {
     page.value = 1;
     loadData();
   },
   { flush: 'post' },
-);
-
-watch(
-  () => humanSupportMonitoring.refreshDataMonitoring,
-  (newValue) => {
-    if (
-      newValue &&
-      humanSupportMonitoring.activeDetailedTab === 'in_awaiting'
-    ) {
-      loadData();
-    }
-  },
 );
 </script>

@@ -1,12 +1,12 @@
 {
   "human_service_dashboard": {
-    "title": "Live support",
+    "title": "Human support",
     "peaks_in_human_service": "Chats opened by hour",
     "closed": "Closed",
     "in_progress": "In progress",
     "response_time": "Response time",
     "waiting_time": "Wait time",
-    "awaiting_service": "Waiting live support",
+    "awaiting_service": "Waiting human support",
     "interaction_time": "Interaction time",
     "all_agents": "All agents",
     "tooltips": {
@@ -22,21 +22,21 @@
     "title": "Conversational",
     "conversations": "conversations",
     "artificial_intelligence": "AI",
-    "human_support": "Live support",
+    "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
     "header": {
-      "total": "Total conversations",
+      "total": "Total conversations",   
       "resolved": "Optimized resolutions",
       "unresolved": "Other conclusions",
       "unengaged": "Unengaged",
-      "transferred": "Transferred to live support",
+      "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
         "resolved": "Conversations closed with a clear, effective resolution for the contact",
         "unresolved": "Conversations closed for other reasons, such as quick exchanges, greetings, abandonment, or without a direct resolution",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
-        "transferred": "Includes conversations (resolved or not) transferred to live support"
+        "transferred": "Chat windows that required human support"
       }
     },
     "form_topic": {
@@ -586,7 +586,7 @@
       },
       "by_ai": "by Meta Llama",
       "error": "Couldn't generate insights. Check your internet connection and try again later.",
-      "prompt": "Analyze the performance of a live support operation results dashboard. The dashboard displays three main categories: in progress, closed, and waiting for support. Additionally, evaluate these metrics: first response, wait time, and interaction time. Identify efficiency patterns and possible bottlenecks in the support flow, and offer suggestions to optimize response time and team productivity. Data: {values}",
+      "prompt": "Analyze the performance of a human support operation results dashboard. The dashboard displays three main categories: in progress, closed, and waiting for support. Additionally, evaluate these metrics: first response, wait time, and interaction time. Identify efficiency patterns and possible bottlenecks in the support flow, and offer suggestions to optimize response time and team productivity. Data: {values}",
       "prompt_language": "Response in English"
     }
   },
@@ -715,7 +715,7 @@
       "sector_tags": "Tags",
       "contacts": "Contacts",
       "resolutions": "Conversation resolutions",
-      "transferred": "Conversations transferred to live support",
+      "transferred": "Conversations transferred to human support",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS"
@@ -818,18 +818,21 @@
       "tooltips": {
         "is_waiting": "Number of contacts waiting for the start of the support now",
         "is_in_progress": "Number of contacts in support now",
-        "is_closed": "Number of closed supports today"
+        "is_closed": "Number of closed supports today",
+        "is_closed_by_date": "Number of closed supports in the selected period"
       }
     },
     "time_metrics": {
       "title": "Time metrics now",
       "average_time_is_waiting": "Average time in waiting",
       "average_time_first_response": "Average time for first response",
+      "average_response_time": "Average response time",
       "average_time_chat": "Average chat duration",
       "max": "Max",
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
         "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
+        "average_response_time": "Average time a contact waits for a response per message",
         "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
       }
     },
@@ -843,12 +846,6 @@
         "in_progress": "In progress",
         "attendant": "Attendant",
         "pauses": "Pauses"
-      },
-      "filters": {
-        "attendant": {
-          "label": "Attendant",
-          "placeholder": "Type to filter"
-        }
       },
       "in_progress": {
         "duration": "Duration",
@@ -883,9 +880,49 @@
         "action": "Action"
       }
     },
+    "filters": {
+      "common": {
+        "placeholder": "Type to filter"
+      },
+      "attendant": {
+        "label": "Attendant"
+      },
+      "contact": {
+        "label": "Contact"
+      },
+      "ticket_id": {
+        "label": "Protocol"
+      }
+    },
+    "columns": {
+      "common": {
+        "duration": "Duration",
+        "awaiting_time": "Awaiting time",
+        "first_response_time": "First response time",
+        "response_time": "Response time",
+        "agent": "Attendant",
+        "sector": "Sector",
+        "queue": "Queue",
+        "contact": "Contact",
+        "ticket_id": "Protocol",
+        "total_attendances": "Total attendances",
+        "average_first_response_time": "Average first response time",
+        "average_response_time": "Average response time",
+        "average_duration": "Average duration",
+        "time_in_service": "Time in service"
+      }
+    },
     "analyze": {
       "title": "Soon: New Analysis View",
-      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!"
+      "description": "Here you will be able to explore historical data with time filters to identify patterns and make more strategic decisions. We are preparing this new feature for you!",
+      "detailed_analysis": {
+        "title": "Detailed analysis",
+        "tabs": {
+          "finished": "Finished",
+          "attendant": "Attendant",
+          "pauses": "Pauses"
+        }
+      }
     },
     "csat": {
       "title": "CSAT",

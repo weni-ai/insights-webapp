@@ -67,30 +67,6 @@ const selectDateRange = ref({ start: '', end: '' });
 
 const shortCutOptions = computed(() => [
   {
-    name: t('export_data.select_data.shortcuts.last_7_days'),
-    id: 'last-7-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_14_days'),
-    id: 'last-14-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_30_days'),
-    id: 'last-30-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_60_days'),
-    id: 'last-60-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_90_days'),
-    id: 'last-90-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.current_month'),
-    id: 'current-month',
-  },
-  {
     name: t('export_data.select_data.shortcuts.previous_month'),
     id: 'previous-month',
   },
@@ -132,9 +108,9 @@ const getMinDate = (): string => {
 };
 
 const getMaxDate = (): string => {
-  const today = new Date();
+  const yesterday = subDays(new Date(), 1);
   const currentSelection = selectDateRange.value;
-  const defaultMax = format(today, 'yyyy-MM-dd');
+  const defaultMax = format(yesterday, 'yyyy-MM-dd');
 
   if (!currentSelection || !currentSelection.start) {
     return defaultMax;
@@ -147,7 +123,7 @@ const getMaxDate = (): string => {
     (!currentSelection.end || currentSelection.start === currentSelection.end)
   ) {
     const calculatedMax = addDays(startDate, 92);
-    if (isAfter(calculatedMax, today)) {
+    if (isAfter(calculatedMax, yesterday)) {
       return defaultMax;
     }
     return format(calculatedMax, 'yyyy-MM-dd');

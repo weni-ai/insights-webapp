@@ -16,34 +16,16 @@
     @update:sort="handleSort"
     @update:page="handlePageChange"
     @item-click="redirectItem"
-  >
-    <template #body-action="{ item }">
-      <DisconnectAgent
-        :agent="{ name: item?.agent, email: item?.agent_email }"
-        containerCenter
-        :disabled="['offline'].includes(item?.status)"
-        @request-data="loadData"
-      />
-    </template>
-    <template #body-status="{ item }">
-      <AgentStatus
-        :status="item.status"
-        :label="item.status"
-      />
-    </template>
-  </UnnnicDataTable>
+  />
 </template>
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { AttendantDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
-import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { AttendantDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/attendant';
+import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/attendant';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-import DisconnectAgent from '@/components/DisconnectAgent.vue';
-import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedAttendantData = Omit<
@@ -62,20 +44,18 @@ type FormattedAttendantData = Omit<
 const { t } = useI18n();
 
 const isLoading = ref(false);
-const humanSupportMonitoring = useHumanSupportMonitoring();
 const humanSupport = useHumanSupport();
 
 const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const baseTranslationKey =
-  'human_support_dashboard.detailed_monitoring.attendant';
+const baseTranslationKey = 'human_support_dashboard.columns.common';
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: t(`${baseTranslationKey}.status`),
+  header: t(`${baseTranslationKey}.agent`),
   order: 'desc',
-  itemKey: 'status',
+  itemKey: 'agent',
 });
 
 const formattedItems = ref<FormattedAttendantData[]>([]);
@@ -93,19 +73,12 @@ const formattedHeaders = computed(() => {
   });
 
   return [
-    createHeader('status'),
     createHeader('agent'),
-    createHeader('ongoing'),
-    createHeader('finished'),
+    createHeader('finished', 'total_attendances'),
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
     createHeader('time_in_service'),
-    createHeader('action', undefined, {
-      isSortable: false,
-      size: 0.5,
-      align: 'center',
-    }),
   ];
 });
 
@@ -138,7 +111,7 @@ const redirectItem = (item: AttendantDataResult) => {
 const loadData = async () => {
   try {
     isLoading.value = true;
-    const data = await service.getDetailedMonitoringAttendant({
+    const data = await service.getDetailedAnalysisAttendantData({
       ordering:
         currentSort.value.order === 'desc'
           ? `-${currentSort.value.itemKey}`
@@ -184,20 +157,12 @@ watch(
     currentSort,
     () => humanSupport.appliedDetailFilters.agent,
     () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
   ],
   () => {
     page.value = 1;
     loadData();
   },
   { flush: 'post' },
-);
-
-watch(
-  () => humanSupportMonitoring.refreshDataMonitoring,
-  (newValue) => {
-    if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
-      loadData();
-    }
-  },
 );
 </script>

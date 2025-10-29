@@ -116,30 +116,21 @@ describe('DashboardHeader.vue', () => {
       expect(
         wrapper.find('[data-testid="dashboard-header-left"]').exists(),
       ).toBe(true);
-      expect(
-        wrapper.find('[data-testid="dashboard-header-right"]').exists(),
-      ).toBe(true);
     });
 
-    it('should render 4 cards in left section and 1 card in right section', () => {
+    it('should render 4 cards in left section', () => {
       const leftSection = wrapper.find('[data-testid="dashboard-header-left"]');
-      const rightSection = wrapper.find(
-        '[data-testid="dashboard-header-right"]',
-      );
 
       expect(
         leftSection.findAllComponents({ name: 'CardConversations' }),
-      ).toHaveLength(3);
-      expect(
-        rightSection.findAllComponents({ name: 'CardConversations' }),
-      ).toHaveLength(1);
+      ).toHaveLength(4);
     });
   });
 
   describe('Card Definitions', () => {
     it('should have correct card definitions structure', () => {
       const vm = wrapper.vm;
-      expect(vm.cardDefinitions).toHaveLength(3);
+      expect(vm.cardDefinitions).toHaveLength(4);
 
       expect(vm.cardDefinitions[0]).toEqual({
         id: 'total_conversations',
@@ -157,6 +148,12 @@ describe('DashboardHeader.vue', () => {
         id: 'unresolved',
         titleKey: 'conversations_dashboard.header.unresolved',
         tooltipKey: 'conversations_dashboard.header.tooltips.unresolved',
+      });
+
+      expect(vm.cardDefinitions[3]).toEqual({
+        id: 'transferred_to_human',
+        titleKey: 'conversations_dashboard.header.transferred',
+        tooltipKey: 'conversations_dashboard.header.tooltips.transferred',
       });
     });
 
@@ -233,7 +230,7 @@ describe('DashboardHeader.vue', () => {
       await testWrapper.vm.$nextTick();
       await testWrapper.vm.$nextTick();
 
-      expect(vm.cardsData).toHaveLength(3);
+      expect(vm.cardsData).toHaveLength(4);
       vm.cardsData.forEach((card) => {
         expect(card.isLoading).toBe(false);
 
@@ -251,14 +248,11 @@ describe('DashboardHeader.vue', () => {
       const leftCards = wrapper
         .find('[data-testid="dashboard-header-left"]')
         .findAllComponents({ name: 'CardConversations' });
-      const rightCard = wrapper
-        .find('[data-testid="dashboard-header-right"]')
-        .findComponent({ name: 'CardConversations' });
 
       expect(leftCards[0].props('title')).toBe('Total conversations');
       expect(leftCards[1].props('title')).toBe('Resolved');
       expect(leftCards[2].props('title')).toBe('Unresolved');
-      expect(rightCard.props('title')).toBe('Transferred to human support');
+      expect(leftCards[3].props('title')).toBe('Transferred to human support');
     });
   });
 
@@ -305,11 +299,10 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('1,000');
       expect(vm.cardsData[1].value).toBe('85.00%');
       expect(vm.cardsData[2].value).toBe('10.00%');
-      expect(vm.rightCardData.value).toBe('2.50%');
+      expect(vm.cardsData[3].value).toBe('2.50%');
 
       // All cards should not be loading
       expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
-      expect(vm.rightCardData.isLoading).toBe(false);
     });
 
     it('should handle API error loading', async () => {
@@ -336,10 +329,6 @@ describe('DashboardHeader.vue', () => {
         expect(card.description).toBe('0 conversations');
         expect(card.isLoading).toBe(false);
       });
-
-      expect(vm.rightCardData.value).toBe('-');
-      expect(vm.rightCardData.description).toBe('0 conversations');
-      expect(vm.rightCardData.isLoading).toBe(false);
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'Error loading conversational header data:',
@@ -383,8 +372,8 @@ describe('DashboardHeader.vue', () => {
         ...mockData.unresolved,
         isLoading: false,
       };
-      vm.rightCardData = {
-        ...vm.rightCardData,
+      vm.cardsData[3] = {
+        ...vm.cardsData[3],
         ...mockData.transferred,
         isLoading: false,
       };
@@ -394,10 +383,9 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('48.179');
       expect(vm.cardsData[1].value).toBe('85.75%');
       expect(vm.cardsData[2].value).toBe('5.25%');
-      expect(vm.rightCardData.value).toBe('12.22%');
+      expect(vm.cardsData[3].value).toBe('12.22%');
 
       expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
-      expect(vm.rightCardData.isLoading).toBe(false);
     });
 
     it('should handle API errors with error toast and fallback values', async () => {
@@ -424,8 +412,8 @@ describe('DashboardHeader.vue', () => {
         description: '0 conversations',
         isLoading: false,
       };
-      vm.rightCardData = {
-        ...vm.rightCardData,
+      vm.cardsData[3] = {
+        ...vm.cardsData[3],
         value: '-',
         description: '0 conversations',
         isLoading: false,
@@ -438,7 +426,7 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('-');
       expect(vm.cardsData[1].value).toBe('-');
       expect(vm.cardsData[2].value).toBe('-');
-      expect(vm.rightCardData.value).toBe('-');
+      expect(vm.cardsData[3].value).toBe('-');
 
       expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
         props: {
@@ -472,8 +460,8 @@ describe('DashboardHeader.vue', () => {
         value: '5.25%',
         isLoading: false,
       };
-      vm.rightCardData = {
-        ...vm.rightCardData,
+      vm.cardsData[3] = {
+        ...vm.cardsData[3],
         value: '12.22%',
         isLoading: false,
       };
@@ -483,7 +471,7 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].value).toBe('48.179');
       expect(vm.cardsData[1].value).toBe('-');
       expect(vm.cardsData[2].value).toBe('5.25%');
-      expect(vm.rightCardData.value).toBe('12.22%');
+      expect(vm.cardsData[3].value).toBe('12.22%');
 
       consoleSpy.mockRestore();
     });
@@ -508,16 +496,14 @@ describe('DashboardHeader.vue', () => {
       const promise = vm.loadCardData();
 
       expect(vm.cardsData.every((card) => card.isLoading)).toBe(true);
-      expect(vm.rightCardData.isLoading).toBe(true);
 
       await promise;
 
       expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
-      expect(vm.rightCardData.isLoading).toBe(false);
 
       // Verify data was loaded successfully
       expect(vm.cardsData[0].value).toBe('100');
-      expect(vm.rightCardData.value).toBe('5.00%');
+      expect(vm.cardsData[3].value).toBe('5.00%');
     });
   });
 
@@ -525,8 +511,7 @@ describe('DashboardHeader.vue', () => {
     it('should reactively compute card properties', async () => {
       const vm = wrapper.vm;
 
-      expect(vm.cards).toHaveLength(3);
-      expect(vm.rightCard).toBeDefined();
+      expect(vm.cards).toHaveLength(4);
 
       vm.cards.forEach((card) => {
         expect(card).toHaveProperty('id');
@@ -557,9 +542,6 @@ describe('DashboardHeader.vue', () => {
       const leftCards = wrapper
         .find('[data-testid="dashboard-header-left"]')
         .findAllComponents({ name: 'CardConversations' });
-      const rightCard = wrapper
-        .find('[data-testid="dashboard-header-right"]')
-        .findComponent({ name: 'CardConversations' });
 
       expect(leftCards[0].props('tooltipInfo')).toBe(
         'Total number of conversations',
@@ -570,7 +552,7 @@ describe('DashboardHeader.vue', () => {
       expect(leftCards[2].props('tooltipInfo')).toBe(
         'Conversations that were not resolved',
       );
-      expect(rightCard.props('tooltipInfo')).toBe(
+      expect(leftCards[3].props('tooltipInfo')).toBe(
         'Conversations transferred to human support',
       );
     });
@@ -588,22 +570,15 @@ describe('DashboardHeader.vue', () => {
       });
     });
 
-    it('should apply correct border radius to left section cards', () => {
+    it('should apply correct border radius to all cards', () => {
       const leftCards = wrapper
         .find('[data-testid="dashboard-header-left"]')
         .findAllComponents({ name: 'CardConversations' });
 
       expect(leftCards[0].props('borderRadius')).toBe('left');
       expect(leftCards[1].props('borderRadius')).toBe('none');
-      expect(leftCards[2].props('borderRadius')).toBe('right');
-    });
-
-    it('should not apply border radius to right section card', () => {
-      const rightCard = wrapper
-        .find('[data-testid="dashboard-header-right"]')
-        .findComponent({ name: 'CardConversations' });
-
-      expect(rightCard.props('borderRadius')).toBeUndefined();
+      expect(leftCards[2].props('borderRadius')).toBe('none');
+      expect(leftCards[3].props('borderRadius')).toBe('right');
     });
   });
 
@@ -630,8 +605,7 @@ describe('DashboardHeader.vue', () => {
 
       expect(testWrapper.exists()).toBe(true);
 
-      expect(testWrapper.vm.cardsData).toHaveLength(3);
-      expect(testWrapper.vm.rightCardData).toBeDefined();
+      expect(testWrapper.vm.cardsData).toHaveLength(4);
     });
   });
 
@@ -667,18 +641,18 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[0].isLoading).toBe(false);
     });
 
-    it('should handle rightCardData mutations', async () => {
+    it('should handle mutations for all cards', async () => {
       const vm = wrapper.vm;
 
-      vm.rightCardData.value = 'right-test-value';
-      vm.rightCardData.description = 'right-test-description';
-      vm.rightCardData.isLoading = false;
+      vm.cardsData[3].value = 'transferred-test-value';
+      vm.cardsData[3].description = 'transferred-test-description';
+      vm.cardsData[3].isLoading = false;
 
       await wrapper.vm.$nextTick();
 
-      expect(vm.rightCardData.value).toBe('right-test-value');
-      expect(vm.rightCardData.description).toBe('right-test-description');
-      expect(vm.rightCardData.isLoading).toBe(false);
+      expect(vm.cardsData[3].value).toBe('transferred-test-value');
+      expect(vm.cardsData[3].description).toBe('transferred-test-description');
+      expect(vm.cardsData[3].isLoading).toBe(false);
     });
   });
 });

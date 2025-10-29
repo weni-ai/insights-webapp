@@ -1,6 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
@@ -21,7 +21,7 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<ServiceStatusDataResponse> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
     const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {

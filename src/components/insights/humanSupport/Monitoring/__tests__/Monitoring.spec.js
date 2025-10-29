@@ -5,7 +5,6 @@ import { createI18n } from 'vue-i18n';
 import Monitoring from '../Monitoring.vue';
 
 const mockHumanSupportMonitoringStore = {
-  loadAllData: vi.fn(),
   setRefreshDataMonitoring: vi.fn(),
 };
 
@@ -41,7 +40,7 @@ describe('Monitoring', () => {
     return mount(Monitoring, {
       global: {
         stubs: {
-          ServiceStatus: true,
+          StatusCards: true,
           TimeMetrics: true,
           ServicesOpenByHour: true,
           DetailedMonitoring: true,
@@ -57,7 +56,6 @@ describe('Monitoring', () => {
     vi.useFakeTimers();
 
     Object.assign(mockHumanSupportMonitoringStore, {
-      loadAllData: vi.fn(),
       setRefreshDataMonitoring: vi.fn(),
     });
 
@@ -75,7 +73,7 @@ describe('Monitoring', () => {
     });
 
     it('should render all child components', () => {
-      expect(wrapper.findComponent({ name: 'ServiceStatus' }).exists()).toBe(
+      expect(wrapper.findComponent({ name: 'StatusCards' }).exists()).toBe(
         true,
       );
       expect(wrapper.findComponent({ name: 'TimeMetrics' }).exists()).toBe(
@@ -90,7 +88,7 @@ describe('Monitoring', () => {
     });
 
     it('should have correct data-testids for child components', () => {
-      const serviceStatus = wrapper.findComponent({ name: 'ServiceStatus' });
+      const statusCards = wrapper.findComponent({ name: 'StatusCards' });
       const timeMetrics = wrapper.findComponent({ name: 'TimeMetrics' });
       const servicesOpenByHour = wrapper.findComponent({
         name: 'ServicesOpenByHour',
@@ -99,8 +97,8 @@ describe('Monitoring', () => {
         name: 'DetailedMonitoring',
       });
 
-      expect(serviceStatus.attributes('data-testid')).toBe(
-        'monitoring-service-status',
+      expect(statusCards.attributes('data-testid')).toBe(
+        'monitoring-status-cards',
       );
       expect(timeMetrics.attributes('data-testid')).toBe(
         'monitoring-time-metrics',
@@ -171,6 +169,97 @@ describe('Monitoring', () => {
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).toHaveBeenNthCalledWith(2, false);
+
+      newWrapper.unmount();
+    });
+  });
+
+  describe('Auto refresh functionality', () => {
+    it('should refresh data every 60 seconds', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
+
+      const newWrapper = createWrapper();
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledWith(true);
+
+      newWrapper.unmount();
+    });
+
+    it('should refresh data flag on each auto refresh', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
+
+      const newWrapper = createWrapper();
+
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledWith(true);
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledWith(false);
+
+      newWrapper.unmount();
+    });
+
+    it('should stop auto refresh on unmount', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
+
+      const newWrapper = createWrapper();
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalledTimes(1);
+
+      newWrapper.unmount();
+
+      vi.clearAllMocks();
+
+      await vi.advanceTimersByTimeAsync(60000);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Constants and configuration', () => {
+    it('should use 60 second auto refresh interval', async () => {
+      wrapper.unmount();
+      vi.clearAllTimers();
+      vi.clearAllMocks();
+
+      const newWrapper = createWrapper();
+
+      await vi.advanceTimersByTimeAsync(600);
+
+      vi.clearAllMocks();
+
+      await vi.advanceTimersByTimeAsync(59000);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).not.toHaveBeenCalled();
+
+      await vi.advanceTimersByTimeAsync(1500);
+
+      expect(
+        mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
+      ).toHaveBeenCalled();
 
       newWrapper.unmount();
     });

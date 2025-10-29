@@ -1,6 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
 
 interface AttendantData {
@@ -12,8 +12,7 @@ interface AttendantData {
 
 interface AttendantDataResult {
   agent: string;
-  status: string;
-  ongoing: string;
+  agent_email: string;
   finished: string;
   average_first_response_time: number;
   average_response_time: number;
@@ -33,14 +32,16 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   agent?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 export default {
-  async getDetailedMonitoringAttendant(
+  async getDetailedAnalysisAttendantData(
     queryParams: QueryParams = {},
   ): Promise<AttendantData> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters, appliedDateRange } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -53,6 +54,8 @@ export default {
 
     const formattedParams = {
       project_uuid: project.uuid,
+      start_date: appliedDateRange.start,
+      end_date: appliedDateRange.end,
       ...formattedAppliedFilters,
       ...params,
     };
@@ -70,4 +73,4 @@ export default {
   },
 };
 
-export type { QueryParams, AttendantData, AttendantDataResult };
+export type { AttendantData, AttendantDataResult, QueryParams };

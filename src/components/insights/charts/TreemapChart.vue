@@ -113,9 +113,6 @@ const createOrUpdateChart = () => {
 
                 const data = ctx.raw._data;
 
-                // Don't show text if percentage is less than 5%
-                if (data.percentage < 5) return '';
-
                 const padding = '    ';
                 const maxLabelLength = 25;
 
@@ -151,11 +148,6 @@ const createOrUpdateChart = () => {
               align: 'center',
               formatter(ctx) {
                 if (ctx.type !== 'data') return;
-
-                const data = ctx.raw._data;
-
-                // Don't show caption if percentage is less than 5%
-                if (data.percentage < 5) return '';
 
                 return `${ctx.raw.v} ${i18n.global.t('conversations_dashboard.conversations')}`;
               },

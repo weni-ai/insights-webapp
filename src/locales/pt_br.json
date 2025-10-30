@@ -919,7 +919,7 @@
         "tabs": {
           "finished": "Finalizados",
           "attendant": "Atendente",
-          "pausas": "Pausas personalizadas"
+          "pauses": "Pausas personalizadas"
         }
       }
     }

@@ -53,7 +53,7 @@ interface FilterItem {
 }
 
 interface TicketIdItem {
-  ticket_id: string;
+  protocol: string;
 }
 
 interface FilterOption {
@@ -118,8 +118,8 @@ const mapDataToOptions = (
 ): FilterOption[] => {
   if (isTicketIdFilter(filterType)) {
     return (data as TicketIdItem[]).map((item) => ({
-      value: item.ticket_id,
-      label: item.ticket_id,
+      value: item.protocol,
+      label: item.protocol,
     }));
   }
 
@@ -172,8 +172,8 @@ const findSelectedItem = (
   value: string,
 ): { value: string; label: string } | null => {
   if (isTicketIdFilter(filterType)) {
-    const item = (data as TicketIdItem[]).find((d) => d.ticket_id === value);
-    return item ? { value: item.ticket_id, label: item.ticket_id } : null;
+    const item = (data as TicketIdItem[]).find((d) => d.protocol === value);
+    return item ? { value: item.protocol, label: item.protocol } : null;
   }
 
   const item = (data as FilterItem[]).find((d) => d.uuid === value);

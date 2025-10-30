@@ -116,15 +116,19 @@ const loadData = async () => {
       offset,
     });
 
-    formattedItems.value = data.results.map((result) => ({
-      ...result,
-      duration: formatSecondsToTime(result?.duration),
-      awaiting_time: formatSecondsToTime(result?.awaiting_time),
-      first_response_time: formatSecondsToTime(result?.first_response_time),
-      response_time: formatSecondsToTime(result?.response_time),
-    }));
-
-    pageTotal.value = data.count;
+    if (data.results) {
+      formattedItems.value = data.results.map((result) => ({
+        ...result,
+        duration: formatSecondsToTime(result?.duration),
+        awaiting_time: formatSecondsToTime(result?.awaiting_time),
+        first_response_time: formatSecondsToTime(result?.first_response_time),
+        response_time: formatSecondsToTime(result?.response_time),
+      }));
+      pageTotal.value = data.count;
+    } else {
+      formattedItems.value = [];
+      pageTotal.value = 0;
+    }
   } catch (error) {
     console.error('Error loading in-progress data:', error);
   } finally {

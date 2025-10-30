@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
@@ -50,10 +50,11 @@ interface FilterItem {
   uuid: string;
   name: string;
   email?: string;
+  external_id?: string;
 }
 
 interface TicketIdItem {
-  ticket_id: string;
+  protocol: string;
 }
 
 interface FilterOption {
@@ -118,15 +119,21 @@ const mapDataToOptions = (
 ): FilterOption[] => {
   if (isTicketIdFilter(filterType)) {
     return (data as TicketIdItem[]).map((item) => ({
-      value: item.ticket_id,
-      label: item.ticket_id,
+      value: item.protocol,
+      label: item.protocol,
     }));
   }
 
-  return (data as FilterItem[]).map((item) => ({
-    value: item.uuid,
-    label: item.name,
-  }));
+  return (data as FilterItem[]).map((item) => {
+    const value =
+      filterType === 'contact' && item.external_id
+        ? item.external_id
+        : item.uuid;
+    return {
+      value,
+      label: item.name,
+    };
+  });
 };
 
 const activeFilters = computed(() => {
@@ -155,8 +162,6 @@ const loadFilterData = async (filterType: FilterType) => {
       ),
       queues: humanSupport.appliedFilters.queues.map((queue) => queue.value),
       tags: humanSupport.appliedFilters.tags.map((tag) => tag.value),
-      start_date: humanSupport.appliedDateRange.start,
-      end_date: humanSupport.appliedDateRange.end,
     };
     const response = await Projects.getProjectSource(filter.source, params);
     filter.data = response;
@@ -174,27 +179,22 @@ const findSelectedItem = (
   value: string,
 ): { value: string; label: string } | null => {
   if (isTicketIdFilter(filterType)) {
-    const item = (data as TicketIdItem[]).find((d) => d.ticket_id === value);
-    return item ? { value: item.ticket_id, label: item.ticket_id } : null;
+    const item = (data as TicketIdItem[]).find((d) => d.protocol === value);
+    return item ? { value: item.protocol, label: item.protocol } : null;
   }
 
-  const item = (data as FilterItem[]).find((d) => d.uuid === value);
-  return item ? { value: item.uuid, label: item.name } : null;
-};
+  const item = (data as FilterItem[]).find((d) => {
+    if (filterType === 'contact' && d.external_id) {
+      return d.external_id === value;
+    }
+    return d.uuid === value;
+  });
 
-const updateFilterSelection = (
-  filter: FilterState,
-  newSelection: { value: string; label: string },
-) => {
-  const shouldUpdate =
-    filter.selected.length === 0 ||
-    filter.selected[0].value !== newSelection.value;
+  if (!item) return null;
 
-  if (shouldUpdate) {
-    nextTick(() => {
-      filter.selected = [newSelection];
-    });
-  }
+  const itemValue =
+    filterType === 'contact' && item.external_id ? item.external_id : item.uuid;
+  return { value: itemValue, label: item.name };
 };
 
 const handleChange = (
@@ -202,13 +202,12 @@ const handleChange = (
   selectedOptions: FilterOption[],
 ) => {
   const filter = filters.value[filterType];
+  const storeFilterType = FILTER_TO_STORE_MAP[filterType];
 
   if (!selectedOptions || !selectedOptions.length) {
-    if (filter.selected.length > 0) {
-      nextTick(() => {
-        filter.selected = [];
-      });
-    }
+    if (filter.selected.length === 0) return;
+    filter.selected = [];
+    saveAppliedDetailFilter(storeFilterType, '', '');
     return;
   }
 
@@ -216,10 +215,22 @@ const handleChange = (
   const item = findSelectedItem(filterType, filter.data, selected.value);
 
   if (item) {
-    updateFilterSelection(filter, item);
+    const currentValue = filter.selected[0]?.value;
+    if (currentValue === item.value) return;
 
-    const storeFilterType = FILTER_TO_STORE_MAP[filterType];
-    saveAppliedDetailFilter(storeFilterType, item.value, item.label);
+    filter.selected = [item];
+
+    let valueToStore = item.value;
+    if (filterType === 'attendant') {
+      const fullItem = (filter.data as FilterItem[]).find(
+        (d) => d.uuid === item.value,
+      );
+      if (fullItem?.email) {
+        valueToStore = fullItem.email;
+      }
+    }
+
+    saveAppliedDetailFilter(storeFilterType, valueToStore, item.label);
   }
 };
 
@@ -235,7 +246,7 @@ onMounted(() => {
 });
 
 watch(
-  () => humanSupport.appliedDateRange,
+  () => humanSupport.appliedFilters,
   () => {
     loadData();
   },
@@ -243,9 +254,33 @@ watch(
 );
 
 watch(
-  () => humanSupport.appliedFilters,
-  () => {
-    loadData();
+  () => props.type,
+  async (newType, oldType) => {
+    if (newType !== 'finished') {
+      filters.value.contact.data = [];
+      filters.value.ticket_id.data = [];
+      saveAppliedDetailFilter('contact', '', '');
+      saveAppliedDetailFilter('ticketId', '', '');
+    }
+
+    if (!oldType) return;
+
+    const newFilters = FILTER_CONFIG[newType] || [];
+    const oldFilters = FILTER_CONFIG[oldType] || [];
+
+    const filtersToReset = newFilters.filter(
+      (filterType) => !oldFilters.includes(filterType),
+    );
+
+    if (filtersToReset.length === 0) return;
+
+    filtersToReset.forEach((filterType) => {
+      filters.value[filterType].selected = [];
+    });
+
+    await Promise.all(
+      filtersToReset.map((filterType) => loadFilterData(filterType)),
+    );
   },
   { flush: 'post' },
 );

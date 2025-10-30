@@ -844,7 +844,7 @@
         "in_awaiting": "En espera",
         "in_progress": "En progreso",
         "attendant": "Atendido",
-        "pauses": "Pausas"
+        "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duración",
@@ -874,8 +874,8 @@
         "finished": "Finalizado",
         "average_first_response_time": "Tiempo medio para 1ª respuesta",
         "average_response_time": "Tiempo medio de respuesta",
-        "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento",
+        "average_duration": "Duración media",
+        "time_in_service": "Tiempo en atendimiento",
         "action": "Acción"
       }
     },
@@ -884,10 +884,10 @@
         "placeholder": "Digite para filtrar"
       },
       "attendant": {
-        "label": "Atendente"
+        "label": "Agente"
       },
       "contact": {
-        "label": "Contato"
+        "label": "Contacto"
       },
       "ticket_id": {
         "label": "Protocolo"
@@ -899,7 +899,7 @@
         "awaiting_time": "Tiempo en espera",
         "first_response_time": "Tiempo de 1ª respuesta",
         "response_time": "Tiempo de respuesta",
-        "agent": "Atendente",
+        "agent": "Agente",
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto",
@@ -919,7 +919,7 @@
         "tabs": {
         "finished": "Finalizados",
           "attendant": "Atendido",
-          "pausas": "Pausas"
+          "pauses": "Pausas personalizadas"
         }
       }
     },

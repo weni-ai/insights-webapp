@@ -50,6 +50,7 @@ interface FilterItem {
   uuid: string;
   name: string;
   email?: string;
+  external_id?: string;
 }
 
 interface TicketIdItem {
@@ -123,10 +124,16 @@ const mapDataToOptions = (
     }));
   }
 
-  return (data as FilterItem[]).map((item) => ({
-    value: item.uuid,
-    label: item.name,
-  }));
+  return (data as FilterItem[]).map((item) => {
+    const value =
+      filterType === 'contact' && item.external_id
+        ? item.external_id
+        : item.uuid;
+    return {
+      value,
+      label: item.name,
+    };
+  });
 };
 
 const activeFilters = computed(() => {
@@ -176,8 +183,18 @@ const findSelectedItem = (
     return item ? { value: item.protocol, label: item.protocol } : null;
   }
 
-  const item = (data as FilterItem[]).find((d) => d.uuid === value);
-  return item ? { value: item.uuid, label: item.name } : null;
+  const item = (data as FilterItem[]).find((d) => {
+    if (filterType === 'contact' && d.external_id) {
+      return d.external_id === value;
+    }
+    return d.uuid === value;
+  });
+
+  if (!item) return null;
+
+  const itemValue =
+    filterType === 'contact' && item.external_id ? item.external_id : item.uuid;
+  return { value: itemValue, label: item.name };
 };
 
 const handleChange = (

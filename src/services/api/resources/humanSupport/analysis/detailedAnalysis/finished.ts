@@ -50,6 +50,10 @@ export default {
       useHumanSupport();
     const { currentDashboard } = useDashboards();
 
+    if (!currentDashboard) {
+      throw new Error('No dashboard selected');
+    }
+
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),

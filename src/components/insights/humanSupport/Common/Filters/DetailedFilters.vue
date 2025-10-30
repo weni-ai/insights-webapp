@@ -202,8 +202,18 @@ const handleChange = (
     if (currentValue === item.value) return;
 
     filter.selected = [item];
-    console.log('filter.selected', filter.selected);
-    saveAppliedDetailFilter(storeFilterType, item.value, item.label);
+
+    let valueToStore = item.value;
+    if (filterType === 'attendant') {
+      const fullItem = (filter.data as FilterItem[]).find(
+        (d) => d.uuid === item.value,
+      );
+      if (fullItem?.email) {
+        valueToStore = fullItem.email;
+      }
+    }
+
+    saveAppliedDetailFilter(storeFilterType, valueToStore, item.label);
   }
 };
 

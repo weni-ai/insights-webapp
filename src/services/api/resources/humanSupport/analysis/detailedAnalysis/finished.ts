@@ -60,6 +60,7 @@ export default {
       tags: appliedFilters.tags.map((tag) => tag.value),
       agent: appliedDetailFilters.agent.value,
       contact: appliedDetailFilters.contact.value,
+      ticket_id: appliedDetailFilters.ticketId.value,
       ordering: queryParams.ordering ? queryParams.ordering : 'response_time',
     };
 

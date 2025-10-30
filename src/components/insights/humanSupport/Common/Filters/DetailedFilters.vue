@@ -155,8 +155,6 @@ const loadFilterData = async (filterType: FilterType) => {
       ),
       queues: humanSupport.appliedFilters.queues.map((queue) => queue.value),
       tags: humanSupport.appliedFilters.tags.map((tag) => tag.value),
-      start_date: humanSupport.appliedDateRange.start,
-      end_date: humanSupport.appliedDateRange.end,
     };
     const response = await Projects.getProjectSource(filter.source, params);
     filter.data = response;
@@ -233,14 +231,6 @@ const loadData = async () => {
 onMounted(() => {
   loadData();
 });
-
-watch(
-  () => humanSupport.appliedDateRange,
-  () => {
-    loadData();
-  },
-  { flush: 'post' },
-);
 
 watch(
   () => humanSupport.appliedFilters,

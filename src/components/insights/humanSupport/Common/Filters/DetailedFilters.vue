@@ -34,7 +34,7 @@
 <script setup lang="ts">
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
@@ -180,21 +180,6 @@ const findSelectedItem = (
   return item ? { value: item.uuid, label: item.name } : null;
 };
 
-const updateFilterSelection = (
-  filter: FilterState,
-  newSelection: { value: string; label: string },
-) => {
-  const shouldUpdate =
-    filter.selected.length === 0 ||
-    filter.selected[0].value !== newSelection.value;
-
-  if (shouldUpdate) {
-    nextTick(() => {
-      filter.selected = [newSelection];
-    });
-  }
-};
-
 const handleChange = (
   filterType: FilterType,
   selectedOptions: FilterOption[],
@@ -203,11 +188,8 @@ const handleChange = (
   const storeFilterType = FILTER_TO_STORE_MAP[filterType];
 
   if (!selectedOptions || !selectedOptions.length) {
-    if (filter.selected.length > 0) {
-      nextTick(() => {
-        filter.selected = [];
-      });
-    }
+    if (filter.selected.length === 0) return;
+    filter.selected = [];
     saveAppliedDetailFilter(storeFilterType, '', '');
     return;
   }
@@ -216,7 +198,11 @@ const handleChange = (
   const item = findSelectedItem(filterType, filter.data, selected.value);
 
   if (item) {
-    updateFilterSelection(filter, item);
+    const currentValue = filter.selected[0]?.value;
+    if (currentValue === item.value) return;
+
+    filter.selected = [item];
+    console.log('filter.selected', filter.selected);
     saveAppliedDetailFilter(storeFilterType, item.value, item.label);
   }
 };
@@ -236,6 +222,38 @@ watch(
   () => humanSupport.appliedFilters,
   () => {
     loadData();
+  },
+  { flush: 'post' },
+);
+
+watch(
+  () => props.type,
+  async (newType, oldType) => {
+    if (newType !== 'finished') {
+      filters.value.contact.data = [];
+      filters.value.ticket_id.data = [];
+      saveAppliedDetailFilter('contact', '', '');
+      saveAppliedDetailFilter('ticketId', '', '');
+    }
+
+    if (!oldType) return;
+
+    const newFilters = FILTER_CONFIG[newType] || [];
+    const oldFilters = FILTER_CONFIG[oldType] || [];
+
+    const filtersToReset = newFilters.filter(
+      (filterType) => !oldFilters.includes(filterType),
+    );
+
+    if (filtersToReset.length === 0) return;
+
+    filtersToReset.forEach((filterType) => {
+      filters.value[filterType].selected = [];
+    });
+
+    await Promise.all(
+      filtersToReset.map((filterType) => loadFilterData(filterType)),
+    );
   },
   { flush: 'post' },
 );

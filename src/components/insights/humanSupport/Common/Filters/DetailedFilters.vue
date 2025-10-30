@@ -202,6 +202,7 @@ const handleChange = (
   selectedOptions: FilterOption[],
 ) => {
   const filter = filters.value[filterType];
+  const storeFilterType = FILTER_TO_STORE_MAP[filterType];
 
   if (!selectedOptions || !selectedOptions.length) {
     if (filter.selected.length > 0) {
@@ -209,6 +210,7 @@ const handleChange = (
         filter.selected = [];
       });
     }
+    saveAppliedDetailFilter(storeFilterType, '', '');
     return;
   }
 
@@ -217,8 +219,6 @@ const handleChange = (
 
   if (item) {
     updateFilterSelection(filter, item);
-
-    const storeFilterType = FILTER_TO_STORE_MAP[filterType];
     saveAppliedDetailFilter(storeFilterType, item.value, item.label);
   }
 };

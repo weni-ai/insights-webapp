@@ -138,7 +138,6 @@ const loadData = async () => {
       formattedItems.value = [];
       pageTotal.value = 0;
     }
-    pageTotal.value = data.count;
   } catch (error) {
     console.error('Error loading attendant data:', error);
     formattedItems.value = [];

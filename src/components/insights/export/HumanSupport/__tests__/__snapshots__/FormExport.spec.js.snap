@@ -26,7 +26,7 @@ exports[`HumanSupport FormExport > Component structure > should match snapshot 1
       data-testid="export-data-filter-date"
       data-v-fb41bb14=""
       label="export_data.select_data.label"
-      maxdate="2025-10-27"
+      maxdate="2025-10-30"
       modelvalue="[object Object]"
       options="[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]"
       placeholder="export_data.select_data.placeholder"

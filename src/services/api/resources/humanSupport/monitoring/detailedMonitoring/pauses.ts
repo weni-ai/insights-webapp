@@ -45,7 +45,7 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<PausesData> {
     const { project } = useConfig();
-    const { appliedFilters, appliedDateRange } = useHumanSupport();
+    const { appliedFilters, appliedDateRange, activeTab } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -63,13 +63,12 @@ export default {
       ...formattedAppliedFilters,
       ...params,
     };
-
-    const response = (await http.get(
-      `/metrics/human-support/detailed-monitoring/status/`,
-      {
-        params: formattedParams,
-      },
-    )) as PausesData;
+    const baseUrl = `/metrics/human-support/`;
+    const finalUrl = `detailed-monitoring/status/`;
+    const url = `${baseUrl}${activeTab === 'analysis' ? 'analysis/' + finalUrl : finalUrl}`;
+    const response = (await http.get(url, {
+      params: formattedParams,
+    })) as PausesData;
 
     const formattedResponse: PausesData = response;
 

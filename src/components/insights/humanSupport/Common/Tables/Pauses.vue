@@ -169,7 +169,7 @@ const loadData = async () => {
         ordering,
         limit: pageInterval.value,
         offset,
-        agent: humanSupport.appliedAgentFilter.value,
+        agent: humanSupport.appliedDetailFilters.agent.value,
       });
 
     if (data.results) {
@@ -192,22 +192,13 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupport.appliedAgentFilter,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
-);
-
-watch(
-  () => humanSupport.appliedFilters,
+  [
+    currentSort,
+    () => humanSupport.appliedDetailFilters.agent,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
+  ],
   () => {
     page.value = 1;
     loadData();

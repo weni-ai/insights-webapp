@@ -36,6 +36,8 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   agent?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 export default {
@@ -43,13 +45,15 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<PausesData> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupport();
+    const { appliedFilters, appliedDateRange } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
       ordering: queryParams.ordering ? queryParams.ordering : 'agent',
+      start_date: appliedDateRange.start,
+      end_date: appliedDateRange.end,
     };
 
     const params = createRequestQuery(queryParams);

@@ -126,13 +126,8 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupport.appliedFilters,
+  [currentSort, () => humanSupport.appliedFilters],
   () => {
     page.value = 1;
     loadData();

@@ -15,11 +15,18 @@ interface AppliedFilters {
   tags: Filter[];
 }
 
-interface AppliedAgentFilter {
+interface AppliedDetailFilter {
   value: string;
   label: string;
 }
 
+type DetailFilterType = 'agent' | 'contact' | 'ticketId';
+
+interface AppliedDetailFilters {
+  agent: AppliedDetailFilter;
+  contact: AppliedDetailFilter;
+  ticketId: AppliedDetailFilter;
+}
 export interface DateRange {
   start: string;
   end: string;
@@ -46,9 +53,11 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     queues: [],
     tags: [],
   });
-  const appliedAgentFilter = ref<AppliedAgentFilter>({
-    value: '',
-    label: '',
+
+  const appliedDetailFilters = ref<AppliedDetailFilters>({
+    agent: { value: '', label: '' },
+    contact: { value: '', label: '' },
+    ticketId: { value: '', label: '' },
   });
 
   const appliedFiltersLength = computed(() => {
@@ -69,11 +78,12 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     };
   };
 
-  const saveAppliedAgentFilter = (value: string, label: string) => {
-    appliedAgentFilter.value = {
-      value: value,
-      label: label,
-    };
+  const saveAppliedDetailFilter = (
+    type: DetailFilterType,
+    value: string,
+    label: string,
+  ) => {
+    appliedDetailFilters.value[type] = { value, label };
   };
 
   const setActiveTab = (tab: ActiveTab) => {
@@ -135,10 +145,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     tags,
     appliedDateRange,
     appliedFilters,
-    appliedAgentFilter,
+    appliedDetailFilters,
     appliedFiltersLength,
     saveAppliedFilters,
-    saveAppliedAgentFilter,
+    saveAppliedDetailFilter,
     setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,

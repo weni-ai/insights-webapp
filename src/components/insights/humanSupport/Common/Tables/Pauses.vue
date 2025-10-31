@@ -118,11 +118,8 @@ const formattedItems = computed(() => {
     });
 
     return {
-      status: item.status.label || item.status.status,
       link: item.link,
       agent: item.agent,
-      opened: item.opened,
-      closed: item.closed,
       ...customStatusObj,
     };
   });

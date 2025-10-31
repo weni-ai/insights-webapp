@@ -10,7 +10,7 @@
     :page="page"
     :pageTotal="pageTotal"
     :pageInterval="pageInterval"
-    data-testid="in-progress-table"
+    data-testid="finished-table"
     size="sm"
     :sort="currentSort"
     @update:sort="handleSort"
@@ -28,7 +28,7 @@ import { useI18n } from 'vue-i18n';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 
-type FormattedInProgressData = Omit<
+type FormattedFinishedData = Omit<
   FinishedDataResult,
   'duration' | 'awaiting_time' | 'first_response_time' | 'response_time'
 > & {
@@ -54,7 +54,7 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   itemKey: 'agent',
 });
 
-const formattedItems = ref<FormattedInProgressData[]>([]);
+const formattedItems = ref<FormattedFinishedData[]>([]);
 
 const formattedHeaders = computed(() => {
   const createHeader = (itemKey: string, translationKey?: string) => ({
@@ -130,7 +130,7 @@ const loadData = async () => {
       pageTotal.value = 0;
     }
   } catch (error) {
-    console.error('Error loading in-progress data:', error);
+    console.error('Error loading finished data:', error);
   } finally {
     isLoading.value = false;
   }

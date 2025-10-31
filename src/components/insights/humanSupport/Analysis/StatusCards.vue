@@ -108,7 +108,7 @@ const isLoadingCards = computed(() => loadingServiceStatusData.value);
 
 const getBorderRadius = (index: number, totalCards: number) => {
   if (index === 0) return 'left';
-  if (index === totalCards - 1) return 'right';
+  if (index === totalCards - 2) return 'right';
   return 'none';
 };
 

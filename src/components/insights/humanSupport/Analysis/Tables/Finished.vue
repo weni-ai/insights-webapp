@@ -10,7 +10,7 @@
     :page="page"
     :pageTotal="pageTotal"
     :pageInterval="pageInterval"
-    data-testid="in-progress-table"
+    data-testid="finished-table"
     size="sm"
     :sort="currentSort"
     @update:sort="handleSort"
@@ -22,24 +22,23 @@
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
-import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
+import { FinishedDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
+import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 
-type FormattedInProgressData = Omit<
-  InProgressDataResult,
-  'duration' | 'awaiting_time' | 'first_response_time'
+type FormattedFinishedData = Omit<
+  FinishedDataResult,
+  'duration' | 'awaiting_time' | 'first_response_time' | 'response_time'
 > & {
   duration: string;
   awaiting_time: string;
   first_response_time: string;
+  response_time: string;
 };
 
 const { t } = useI18n();
-const humanSupportMonitoring = useHumanSupportMonitoring();
 const humanSupport = useHumanSupport();
 const isLoading = ref(false);
 
@@ -47,16 +46,15 @@ const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
-const baseTranslationKey =
-  'human_support_dashboard.detailed_monitoring.in_progress';
+const baseTranslationKey = 'human_support_dashboard.columns.common';
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: t(`${baseTranslationKey}.duration`),
+  header: t(`${baseTranslationKey}.agent`),
   order: 'desc',
-  itemKey: 'duration',
+  itemKey: 'agent',
 });
 
-const formattedItems = ref<FormattedInProgressData[]>([]);
+const formattedItems = ref<FormattedFinishedData[]>([]);
 
 const formattedHeaders = computed(() => {
   const createHeader = (itemKey: string, translationKey?: string) => ({
@@ -66,13 +64,14 @@ const formattedHeaders = computed(() => {
   });
 
   return [
-    createHeader('duration'),
-    createHeader('awaiting_time'),
-    createHeader('first_response_time'),
-    createHeader('agent', 'attendant'),
+    createHeader('agent'),
     createHeader('sector'),
     createHeader('queue'),
+    createHeader('awaiting_time'),
+    createHeader('first_response_time'),
+    createHeader('duration'),
     createHeader('contact'),
+    createHeader('ticket_id'),
   ];
 });
 
@@ -89,7 +88,7 @@ const handlePageChange = (newPage: number) => {
   loadData();
 };
 
-const redirectItem = (item: InProgressDataResult) => {
+const redirectItem = (item: FinishedDataResult) => {
   if (!item?.link?.url) return;
   const path = `${item.link?.url}/insights`;
   window.parent.postMessage(
@@ -111,22 +110,27 @@ const loadData = async () => {
         ? `-${currentSort.value.itemKey}`
         : currentSort.value.itemKey;
 
-    const data = await service.getDetailedMonitoringInProgress({
+    const data = await service.getDetailedAnalysisFinishedData({
       ordering,
       limit: pageInterval.value,
       offset,
     });
 
-    formattedItems.value = data.results.map((result) => ({
-      ...result,
-      duration: formatSecondsToTime(result?.duration),
-      awaiting_time: formatSecondsToTime(result?.awaiting_time),
-      first_response_time: formatSecondsToTime(result?.first_response_time),
-    }));
-
-    pageTotal.value = data.count;
+    if (data.results) {
+      formattedItems.value = data.results.map((result) => ({
+        ...result,
+        duration: formatSecondsToTime(result?.duration),
+        awaiting_time: formatSecondsToTime(result?.awaiting_time),
+        first_response_time: formatSecondsToTime(result?.first_response_time),
+        response_time: formatSecondsToTime(result?.response_time),
+      }));
+      pageTotal.value = data.count;
+    } else {
+      formattedItems.value = [];
+      pageTotal.value = 0;
+    }
   } catch (error) {
-    console.error('Error loading in-progress data:', error);
+    console.error('Error loading finished data:', error);
   } finally {
     isLoading.value = false;
   }
@@ -137,23 +141,18 @@ onMounted(() => {
 });
 
 watch(
-  [currentSort, () => humanSupport.appliedFilters],
+  [
+    currentSort,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
+    () => humanSupport.appliedDetailFilters.agent,
+    () => humanSupport.appliedDetailFilters.contact,
+    () => humanSupport.appliedDetailFilters.ticketId,
+  ],
   () => {
     page.value = 1;
     loadData();
   },
   { flush: 'post' },
-);
-
-watch(
-  () => humanSupportMonitoring.refreshDataMonitoring,
-  (newValue) => {
-    if (
-      newValue &&
-      humanSupportMonitoring.activeDetailedTab === 'in_progress'
-    ) {
-      loadData();
-    }
-  },
 );
 </script>

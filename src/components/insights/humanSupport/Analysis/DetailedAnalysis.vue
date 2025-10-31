@@ -4,11 +4,11 @@
     class="detailed-monitoring"
   >
     <p class="detailed-monitoring__title">
-      {{ $t('human_support_dashboard.detailed_monitoring.title') }}
+      {{ $t('human_support_dashboard.analyze.detailed_analysis.title') }}
     </p>
     <Transition name="filters-fade">
       <section
-        v-if="['attendant', 'pauses'].includes(activeDetailedTab)"
+        v-if="['attendant', 'pauses', 'finished'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
       >
         <DetailedFilters :type="filterType" />
@@ -27,7 +27,9 @@
           :key="`tab-head-${key}`"
         >
           {{
-            $t(`human_support_dashboard.detailed_monitoring.tabs.${tab.name}`)
+            $t(
+              `human_support_dashboard.analyze.detailed_analysis.tabs.${tab.name}`,
+            )
           }}
         </template>
         <template
@@ -47,30 +49,25 @@
 
 <script setup lang="ts">
 import { UnnnicTab } from '@weni/unnnic-system';
-import InAwaiting from './Tables/InAwaiting.vue';
-import InProgress from './Tables/InProgress.vue';
-import Attendant from './Tables/Attendant.vue';
-import Pauses from '../Common/Tables/Pauses.vue';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
-  useHumanSupportMonitoring,
-} from '@/store/modules/humanSupport/monitoring';
+  useHumanSupportAnalysis,
+} from '@/store/modules/humanSupport/analysis';
 import { Component } from 'vue';
+import Finished from './Tables/Finished.vue';
+import Attendant from './Tables/Attendant.vue';
+import Pauses from '../Common/Tables/Pauses.vue';
 
 const tabs: Record<
   ActiveDetailedTab,
   { name: ActiveDetailedTab; component: Component }
 > = {
-  in_awaiting: {
-    name: 'in_awaiting',
-    component: InAwaiting,
-  },
-  in_progress: {
-    name: 'in_progress',
-    component: InProgress,
+  finished: {
+    name: 'finished',
+    component: Finished,
   },
   attendant: {
     name: 'attendant',
@@ -84,16 +81,16 @@ const tabs: Record<
 
 const tabsKeys = Object.keys(tabs);
 
-const humanSupportMonitoring = useHumanSupportMonitoring();
-const { activeDetailedTab } = storeToRefs(humanSupportMonitoring);
-const { setActiveDetailedTab } = humanSupportMonitoring;
+const humanSupportAnalysis = useHumanSupportAnalysis();
+const { activeDetailedTab } = storeToRefs(humanSupportAnalysis);
+const { setActiveDetailedTab } = humanSupportAnalysis;
 
 const changeActiveTabName = (tab: ActiveDetailedTab) => {
   setActiveDetailedTab(tab);
 };
 
 const filterType = computed(() => {
-  return activeDetailedTab.value as 'attendant' | 'pauses';
+  return activeDetailedTab.value as 'attendant' | 'pauses' | 'finished';
 });
 </script>
 

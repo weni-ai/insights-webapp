@@ -22,10 +22,12 @@
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import service from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
-import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inAwaiting';
+import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
+import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
@@ -34,6 +36,7 @@ type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 
 const isLoading = ref(false);
 
@@ -123,13 +126,8 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  [currentSort, () => humanSupport.appliedFilters],
   () => {
     page.value = 1;
     loadData();
@@ -138,7 +136,7 @@ watch(
 );
 
 watch(
-  () => humanSupportMonitoring.refreshDetailedTabData,
+  () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (
       newValue &&

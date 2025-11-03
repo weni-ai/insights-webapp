@@ -26,7 +26,7 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "header": {
-      "total": "Total conversations",   
+      "total": "Total conversations",
       "resolved": "Optimized resolutions",
       "unresolved": "Other conclusions",
       "unengaged": "Unengaged",
@@ -930,7 +930,7 @@
     "csat": {
       "title": "CSAT",
       "agents_ratings_general_title": "Overall assessment",
-      "agents_ratings_general_tooltip": "This score reflects the project's overall performance. If filters are applied to this dashboard, the score will automatically adjust to show the overall average of the filtered items.",
+      "agents_ratings_general_tooltip": "This score reflects the overall performance of the project. If filters are applied to this dashboard, the score will automatically adjust to show the average of the filtered items.",
       "agents_ratings_subtitle": "{rooms} rooms • {reviews} reviews",
       "review_rating": {
         "very_satisfied": "🤩 Very satisfied",

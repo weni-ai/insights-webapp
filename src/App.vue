@@ -137,6 +137,19 @@ export default {
     try {
       this.handlerTokenAndProjectUuid();
       this.getDashboards().then(() => {
+        const isHumanServiceDashboardRouter =
+          this.$route.name === 'humanServiceDashboard';
+
+        if (isHumanServiceDashboardRouter) {
+          const humanSeriveDashboard = this.dashboards.find(
+            (dash) => dash.config?.type === 'human_support',
+          );
+
+          if (humanSeriveDashboard) {
+            this.$router.push(`/${humanSeriveDashboard.uuid}`);
+          }
+        }
+
         this.handlerShowOnboardingModal();
       });
     } catch (error) {

@@ -127,6 +127,12 @@ export default {
         this.setIsCommerce(newProject?.type === 2);
       },
     },
+    '$route.name': {
+      deep: true,
+      handler() {
+        this.handleRedirectToHumanServiceDashboard();
+      },
+    },
   },
 
   created() {
@@ -137,19 +143,7 @@ export default {
     try {
       this.handlerTokenAndProjectUuid();
       this.getDashboards().then(() => {
-        const isHumanServiceDashboardRouter =
-          this.$route.name === 'humanServiceDashboard';
-
-        if (isHumanServiceDashboardRouter) {
-          const humanSeriveDashboard = this.dashboards.find(
-            (dash) => dash.config?.type === 'human_support',
-          );
-
-          if (humanSeriveDashboard) {
-            this.$router.push(`/${humanSeriveDashboard.uuid}`);
-          }
-        }
-
+        this.handleRedirectToHumanServiceDashboard();
         this.handlerShowOnboardingModal();
       });
     } catch (error) {
@@ -176,6 +170,21 @@ export default {
       'setShowCreateDashboardOnboarding',
       'setShowCompleteOnboardingModal',
     ]),
+
+    handleRedirectToHumanServiceDashboard() {
+      const isHumanServiceDashboardRouter =
+        this.$route.name === 'humanServiceDashboard';
+
+      if (isHumanServiceDashboardRouter) {
+        const humanSeriveDashboard = this.dashboards.find(
+          (dash) => dash.config?.type === 'human_support',
+        );
+
+        if (humanSeriveDashboard) {
+          this.$router.push(`/${humanSeriveDashboard.uuid}`);
+        }
+      }
+    },
 
     async handlerTokenAndProjectUuid() {
       const queryString = new URLSearchParams(window.location.search);

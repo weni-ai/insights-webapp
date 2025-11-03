@@ -130,6 +130,7 @@ export default {
     '$route.name': {
       deep: true,
       handler() {
+        console.log(this.$route);
         this.handleRedirectToHumanServiceDashboard();
       },
     },

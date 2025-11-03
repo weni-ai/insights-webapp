@@ -11,7 +11,7 @@
         v-if="['attendant', 'pauses'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
       >
-        <DetailedFilters />
+        <DetailedFilters :type="filterType" />
       </section>
     </Transition>
     <section class="detailed-monitoring__tabs">
@@ -50,9 +50,10 @@ import { UnnnicTab } from '@weni/unnnic-system';
 import InAwaiting from './Tables/InAwaiting.vue';
 import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
-import Pauses from './Tables/Pauses.vue';
+import Pauses from '../Common/Tables/Pauses.vue';
 import { storeToRefs } from 'pinia';
-import DetailedFilters from './Filters/DetailedFilters.vue';
+import { computed } from 'vue';
+import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,
@@ -90,6 +91,10 @@ const { setActiveDetailedTab } = humanSupportMonitoring;
 const changeActiveTabName = (tab: ActiveDetailedTab) => {
   setActiveDetailedTab(tab);
 };
+
+const filterType = computed(() => {
+  return activeDetailedTab.value as 'attendant' | 'pauses';
+});
 </script>
 
 <style scoped lang="scss">
@@ -110,8 +115,6 @@ const changeActiveTabName = (tab: ActiveDetailedTab) => {
   &__filters {
     display: flex;
     flex-direction: column;
-    flex: 0 0 calc(100% / 4);
-    max-width: calc(100% / 4);
   }
 }
 

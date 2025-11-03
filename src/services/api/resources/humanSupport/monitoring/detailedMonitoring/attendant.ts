@@ -1,23 +1,24 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
 
-interface InProgressData {
+interface AttendantData {
   next: string;
   previous: string;
   count: number;
-  results: InProgressDataResult[];
+  results: AttendantDataResult[];
 }
 
-interface InProgressDataResult {
+interface AttendantDataResult {
   agent: string;
-  duration: number;
-  first_response_time: number;
-  awaiting_time: number;
-  sector: string;
-  queue: string;
-  contact: string;
+  status: string;
+  ongoing: string;
+  finished: string;
+  average_first_response_time: number;
+  average_response_time: number;
+  average_duration: number;
+  time_in_service: number;
   link: {
     url: string;
     type: string;
@@ -31,20 +32,21 @@ interface QueryParams {
   ordering?: string;
   limit?: number;
   offset?: number;
+  agent?: string;
 }
 
 export default {
-  async getDetailedMonitoringInProgress(
+  async getDetailedMonitoringAttendant(
     queryParams: QueryParams = {},
-  ): Promise<InProgressData> {
+  ): Promise<AttendantData> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
-      ordering: queryParams.ordering ? queryParams.ordering : 'duration',
+      ordering: queryParams.ordering ? queryParams.ordering : 'status',
     };
 
     const params = createRequestQuery(queryParams);
@@ -56,16 +58,16 @@ export default {
     };
 
     const response = (await http.get(
-      `/metrics/human-support/detailed-monitoring/on-going/`,
+      `/metrics/human-support/detailed-monitoring/agents/`,
       {
         params: formattedParams,
       },
-    )) as InProgressData;
+    )) as AttendantData;
 
-    const formattedResponse: InProgressData = response;
+    const formattedResponse: AttendantData = response;
 
     return formattedResponse;
   },
 };
 
-export type { InProgressDataResult, QueryParams, InProgressData };
+export type { QueryParams, AttendantData, AttendantDataResult };

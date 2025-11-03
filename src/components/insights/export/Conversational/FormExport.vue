@@ -1,13 +1,23 @@
 <template>
-  <section class="conversational-export-form">
+  <section
+    class="conversational-export-form"
+    data-testid="conversational-export-form"
+  >
     <header>
-      <p class="conversational-export-form__description">
+      <p
+        class="conversational-export-form__description"
+        data-testid="conversational-export-form-description"
+      >
         {{ $t('export_data.description') }}
       </p>
     </header>
-    <section class="conversational-export-form__content">
+    <section
+      class="conversational-export-form__content"
+      data-testid="conversational-export-form-content"
+    >
       <ExportFilterDate
         v-model="date_range"
+        data-testid="conversational-export-filter-date"
         :label="$t('export_data.select_data.label')"
         :placeholder="$t('export_data.select_period.placeholder')"
         :options="shortCutOptions"
@@ -17,9 +27,10 @@
         @select-date="updateSelectDateRange"
       />
 
-      <FormCheckbox />
+      <FormCheckbox data-testid="conversational-form-checkbox-component" />
 
       <ExportFooter
+        data-testid="conversational-export-footer"
         :selectedFormat="selectedFormat"
         :acceptTerms="accept_terms"
         :formatLabel="$t('export_data.select_format')"
@@ -55,30 +66,6 @@ const selectedFormat = computed(() => {
 const selectDateRange = ref({ start: '', end: '' });
 
 const shortCutOptions = computed(() => [
-  {
-    name: t('export_data.select_data.shortcuts.last_7_days'),
-    id: 'last-7-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_14_days'),
-    id: 'last-14-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_30_days'),
-    id: 'last-30-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_60_days'),
-    id: 'last-60-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.last_90_days'),
-    id: 'last-90-days',
-  },
-  {
-    name: t('export_data.select_data.shortcuts.current_month'),
-    id: 'current-month',
-  },
   {
     name: t('export_data.select_data.shortcuts.previous_month'),
     id: 'previous-month',
@@ -121,9 +108,9 @@ const getMinDate = (): string => {
 };
 
 const getMaxDate = (): string => {
-  const today = new Date();
+  const yesterday = subDays(new Date(), 1);
   const currentSelection = selectDateRange.value;
-  const defaultMax = format(today, 'yyyy-MM-dd');
+  const defaultMax = format(yesterday, 'yyyy-MM-dd');
 
   if (!currentSelection || !currentSelection.start) {
     return defaultMax;
@@ -136,7 +123,7 @@ const getMaxDate = (): string => {
     (!currentSelection.end || currentSelection.start === currentSelection.end)
   ) {
     const calculatedMax = addDays(startDate, 92);
-    if (isAfter(calculatedMax, today)) {
+    if (isAfter(calculatedMax, yesterday)) {
       return defaultMax;
     }
     return format(calculatedMax, 'yyyy-MM-dd');

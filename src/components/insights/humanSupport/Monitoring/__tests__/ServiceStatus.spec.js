@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import ServiceStatus from '../ServiceStatus.vue';
+import ServiceStatus from '../StatusCards.vue';
 
 const mockMonitoringStore = {
   loadServiceStatusData: vi.fn(),

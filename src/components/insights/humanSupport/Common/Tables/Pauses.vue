@@ -39,10 +39,11 @@
 <script setup lang="ts">
 import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import { PausesDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
-import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/detailedMonitoring/pauses';
+import { PausesDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
+import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
@@ -56,13 +57,16 @@ const { t } = useI18n();
 
 const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 
 const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey = 'human_support_dashboard.detailed_monitoring.pauses';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'agent',
+  header: t(`${baseTranslationKey}.agent`),
   order: 'asc',
   itemKey: 'agent',
 });
@@ -114,11 +118,8 @@ const formattedItems = computed(() => {
     });
 
     return {
-      status: item.status.label || item.status.status,
       link: item.link,
       agent: item.agent,
-      opened: item.opened,
-      closed: item.closed,
       ...customStatusObj,
     };
   });
@@ -165,7 +166,7 @@ const loadData = async () => {
         ordering,
         limit: pageInterval.value,
         offset,
-        agent: humanSupportMonitoring.appliedAgentFilter.value,
+        agent: humanSupport.appliedDetailFilters.agent.value,
       });
 
     if (data.results) {
@@ -188,22 +189,13 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupportMonitoring.appliedAgentFilter,
-  () => {
-    page.value = 1;
-    loadData();
-  },
-  { flush: 'post' },
-);
-
-watch(
-  () => humanSupportMonitoring.appliedFilters,
+  [
+    currentSort,
+    () => humanSupport.appliedDetailFilters.agent,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDateRange,
+  ],
   () => {
     page.value = 1;
     loadData();

@@ -11,6 +11,7 @@ import DrawerConfigContentVtex from '../DrawerConfigContentVtex.vue';
 import DrawerConfigContentVtexConversions from '../DrawerConfigContentVtexConversions.vue';
 import DrawerConfigContentRecurrence from '../DrawerConfigContentRecurrence.vue';
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
+import i18n from '@/utils/plugins/i18n';
 
 const mockWidget = {
   uuid: 'test-uuid',
@@ -144,9 +145,9 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
         );
 
         const props = wrapper.vm.drawerProps;
-        expect(props.title).toBe('Define chart metrics');
+        expect(props.title).toBe(i18n.global.t('drawers.config_funnel.title'));
         expect(props.description).toBe(
-          'Select at least three flows to get the funnel chart visualization',
+          i18n.global.t('drawers.config_funnel.description'),
         );
       });
 
@@ -154,9 +155,13 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
         wrapper = createWrapper({ configType: 'executions' });
 
         const props = wrapper.vm.drawerProps;
-        expect(props.title).toBe('Execution');
+        expect(props.title).toBe(
+          i18n.global.t('drawers.config_gallery.options.executions.title'),
+        );
         expect(props.description).toBe(
-          'Visualize the total executions of a flow',
+          i18n.global.t(
+            'drawers.config_gallery.options.executions.description',
+          ),
         );
       });
     });

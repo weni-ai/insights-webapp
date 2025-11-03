@@ -1,7 +1,11 @@
 <template>
-  <section class="export-filter-date">
+  <section
+    class="export-filter-date"
+    data-testid="export-filter-date"
+  >
     <UnnnicLabel :label="label" />
     <FilterDate
+      data-testid="export-filter-date-picker"
       :modelValue="modelValue"
       :placeholder="placeholder"
       :options="options"

@@ -1,0 +1,78 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ExportCheckboxs > Component structure > should match snapshot 1`] = `
+<section
+  class="form-checkboxs-data"
+  data-testid="form-checkboxs-data"
+  data-v-b513ad74=""
+>
+  <section
+    class="form-checkboxs-data__models"
+    data-testid="form-checkboxs-data-models"
+    data-v-b513ad74=""
+  >
+    
+    
+    <section
+      class="form-checkboxs-data__model"
+      data-testid="form-checkboxs-model-user"
+      data-v-b513ad74=""
+    >
+      <div
+        class="form-checkboxs-data__model-header"
+        data-v-b513ad74=""
+      >
+        <unnnic-checkbox-stub
+          data-testid="form-checkboxs-model-checkbox-user"
+          data-v-b513ad74=""
+          modelvalue="true"
+          textright="User"
+        />
+      </div>
+      <div
+        class="form-checkboxs-data__fields"
+        data-testid="form-checkboxs-fields-user"
+        data-v-b513ad74=""
+      >
+        
+        <unnnic-checkbox-stub
+          data-testid="form-checkboxs-field-user-email"
+          data-v-b513ad74=""
+          modelvalue="true"
+          textright="Email"
+        />
+        <unnnic-checkbox-stub
+          data-testid="form-checkboxs-field-user-name"
+          data-v-b513ad74=""
+          modelvalue="false"
+          textright="Name"
+        />
+        
+      </div>
+    </section>
+    
+    
+    <section
+      class="form-checkboxs-data__model"
+      data-testid="form-checkboxs-model-contact"
+      data-v-b513ad74=""
+    >
+      <div
+        class="form-checkboxs-data__model-header"
+        data-v-b513ad74=""
+      >
+        <unnnic-checkbox-stub
+          data-testid="form-checkboxs-model-checkbox-contact"
+          data-v-b513ad74=""
+          modelvalue="false"
+          textright="Contact"
+        />
+      </div>
+      <!--v-if-->
+    </section>
+    
+    
+  </section>
+  <!--v-if-->
+</section>
+`;

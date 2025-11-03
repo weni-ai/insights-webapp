@@ -48,7 +48,6 @@ describe('HeaderRefresh.vue', () => {
 
     monitoringStore = {
       isLoadingAllData: false,
-      loadAllData: vi.fn(),
       setRefreshDataMonitoring: vi.fn(),
     };
 
@@ -111,14 +110,6 @@ describe('HeaderRefresh.vue', () => {
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
 
       await refreshButton.vm.$emit('click');
-
-      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
-        true,
-      );
-    });
-
-    it('should call setRefreshDataMonitoring with true when refreshData is executed', () => {
-      wrapper.vm.refreshData();
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
@@ -214,21 +205,8 @@ describe('HeaderRefresh.vue', () => {
   describe('Edge Cases', () => {
     it('should handle store being defined with expected properties', () => {
       expect(monitoringStore.isLoadingAllData).toBeDefined();
-      expect(monitoringStore.loadAllData).toBeDefined();
-      expect(typeof monitoringStore.loadAllData).toBe('function');
       expect(monitoringStore.setRefreshDataMonitoring).toBeDefined();
       expect(typeof monitoringStore.setRefreshDataMonitoring).toBe('function');
-    });
-
-    it('should handle loadAllData throwing an error', async () => {
-      monitoringStore.loadAllData.mockRejectedValue(new Error('Load failed'));
-
-      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
-
-      await refreshButton.vm.$emit('click');
-      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
-        true,
-      );
     });
 
     it('should handle store reactivity changes', async () => {

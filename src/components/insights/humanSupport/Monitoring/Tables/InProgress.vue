@@ -22,10 +22,11 @@
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
-import { InProgressDataResult } from '@/services/api/resources/humanSupport/detailedMonitoring/inProgress';
-import service from '@/services/api/resources/humanSupport/detailedMonitoring/inProgress';
+import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
+import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedInProgressData = Omit<
@@ -39,14 +40,18 @@ type FormattedInProgressData = Omit<
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const humanSupport = useHumanSupport();
 const isLoading = ref(false);
 
 const page = ref(1);
 const pageInterval = ref(15);
 const pageTotal = ref(0);
 
+const baseTranslationKey =
+  'human_support_dashboard.detailed_monitoring.in_progress';
+
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
-  header: 'duration',
+  header: t(`${baseTranslationKey}.duration`),
   order: 'desc',
   itemKey: 'duration',
 });
@@ -54,9 +59,6 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 const formattedItems = ref<FormattedInProgressData[]>([]);
 
 const formattedHeaders = computed(() => {
-  const baseTranslationKey =
-    'human_support_dashboard.detailed_monitoring.in_progress';
-
   const createHeader = (itemKey: string, translationKey?: string) => ({
     title: t(`${baseTranslationKey}.${translationKey || itemKey}`),
     itemKey,
@@ -134,13 +136,8 @@ onMounted(() => {
   loadData();
 });
 
-watch(currentSort, () => {
-  page.value = 1;
-  loadData();
-});
-
 watch(
-  () => humanSupportMonitoring.appliedFilters,
+  [currentSort, () => humanSupport.appliedFilters],
   () => {
     page.value = 1;
     loadData();

@@ -1,6 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { asyncTimeout } from '@/utils/time';
 
 interface QueryParams {
@@ -40,7 +40,7 @@ export default {
     params: QueryParams = {},
   ): Promise<AgentsTotalsResponse> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -108,7 +108,7 @@ export default {
 
   async getRatingsMonitoring(params: QueryParams): Promise<RatingsResponse> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),

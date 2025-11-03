@@ -108,6 +108,7 @@ import AgentCard from './AgentCard.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useConfig } from '@/store/modules/config';
 
 import Csat from '@/services/api/resources/humanSupport/csat';
@@ -133,6 +134,7 @@ onMounted(() => {
 const { t } = useI18n();
 
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
+const humanSupportStore = useHumanSupport();
 const configStore = useConfig();
 
 const agentsContainerRef = useTemplateRef<HTMLElement>('agentsContainerRef');
@@ -236,7 +238,7 @@ watch(activeAgentUuid, () => {
 });
 
 watch(
-  () => humanSupportMonitoringStore.appliedFilters,
+  () => humanSupportStore.appliedFilters,
   () => {
     if (!configStore.enableCsat) return;
     loadAgentsData();

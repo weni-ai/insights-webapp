@@ -15,6 +15,12 @@ const routes = [
     component: DynamicDashboard,
   },
   {
+    path: '/',
+    alias: '/init/humanServiceDashboard',
+    name: 'humanServiceDashboard',
+    component: DynamicDashboard,
+  },
+  {
     path: '/:dashboardUuid',
     name: 'dashboard',
     component: DynamicDashboard,

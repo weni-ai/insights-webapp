@@ -172,13 +172,15 @@ const progressItemsRatingsData = computed(() => {
     '2': t('human_support_dashboard.csat.review_rating.dissatisfied'),
     '1': t('human_support_dashboard.csat.review_rating.very_dissatisfied'),
   };
-  return Object.entries(ratingsData.value).map(([key, value]) => ({
-    label: labelMapping[key as keyof typeof labelMapping],
-    backgroundColor: '#E9D8FD',
-    color: '#805AD5',
-    value: value.value,
-    description: `${value.value} (${value.full_value})`,
-  }));
+  return Object.entries(ratingsData.value)
+    .reverse()
+    .map(([key, value]) => ({
+      label: labelMapping[key as keyof typeof labelMapping],
+      backgroundColor: '#E9D8FD',
+      color: '#805AD5',
+      value: value.value,
+      description: `${value.value} (${value.full_value})`,
+    }));
 });
 
 const loadAgentsData = async ({
@@ -271,7 +273,6 @@ watch(
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-6;
-  min-height: 500px;
   width: 100%;
   padding: $unnnic-space-6;
 

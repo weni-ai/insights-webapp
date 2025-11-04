@@ -926,5 +926,25 @@
         }
       }
     }
+  },
+  "news": {
+    "title": "Noticias y actualizaciones en Insights - Atención humana",
+    "human_support_dashboard": {
+      "monitoring": {
+        "first_text": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica gargalos y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",
+        "second_text": "Ahora puedes monitorizar el estado de los atendimientos en tiempo real:",
+        "third_text": "Monitoriza las métricas de tiempo ahora — tiempo medio y máximo en espera, tiempo para 1ª respuesta y duración — en tiempo real:",
+        "fourth_text": "La tabla de monitorización detallada permite acompañar datos en tiempo real para cada interacción y agente.",
+        "fifth_text": "Puedes monitorizar cada interacción a través de las pestañas <b>En progreso</b> y <b>En espera</b>. Haz clic en las interacciones para verlas.",
+        "sixth_text": "Las pestañas <b>Atendido</b> y <b>Pausas</b> permiten monitorizar las métricas de cada agente por interacción, así como las pausas personalizadas.",
+        "seventh_text": "En la pestaña <b>Atendido</b>, puedes hacer clic en cada agente para entrar en modo de visualización o usar el botón para desconectarlo."
+      },
+      "analysis": {
+        "first_text": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
+        "second_text": "Ahora, puedes acompañar todas las métricas de atendimiento cerrado: <b>Tiempo medio en espera</b>, <b>Tiempo medio para 1ª respuesta</b>, <b>Tiempo medio de respuesta</b> y <b>Duración media de atendimiento</b>.",
+        "third_text": "La tabla de análisis detallada permite analizar datos para cada interacción y agente.",
+        "fourth_text": "Puedes revisar cada interacción cerrada en la pestaña <b>Cerrados</b>. Las pestañas <b>Atendido</b> y <b>Pausas</b> permiten analizar las métricas de cada agente por interacción cerrada, así como las pausas personalizadas dentro del período filtrado."
+      }
+    }
   }
 }

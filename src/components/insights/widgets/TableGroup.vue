@@ -236,11 +236,12 @@ export default {
     },
     rowClick(row) {
       if (row.url_link) {
-        const [path, query] = row.url_link.split('?');
+        const url = `${row.url_link}/insights`;
+
         window.parent.postMessage(
           {
             event: 'redirect',
-            path: path + 'insights?' + query,
+            path: url,
           },
           '*',
         );

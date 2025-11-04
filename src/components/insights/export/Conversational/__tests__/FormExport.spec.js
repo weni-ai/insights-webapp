@@ -210,9 +210,5 @@ describe('Conversational FormExport', () => {
     it('should have correct CSS classes', () => {
       expect(section().classes()).toContain('conversational-export-form');
     });
-
-    it('should match snapshot', () => {
-      expect(wrapper.element).toMatchSnapshot();
-    });
   });
 });

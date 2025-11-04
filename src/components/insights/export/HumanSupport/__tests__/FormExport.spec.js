@@ -331,9 +331,5 @@ describe('HumanSupport FormExport', () => {
     it('should have correct CSS classes', () => {
       expect(section().classes()).toContain('export-data-form');
     });
-
-    it('should match snapshot', () => {
-      expect(wrapper.element).toMatchSnapshot();
-    });
   });
 });

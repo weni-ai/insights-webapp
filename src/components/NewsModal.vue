@@ -3,6 +3,7 @@
     :modelValue="modelValue"
     :title="title"
     showCloseIcon
+    @close="emit('close')"
   >
     <section>
       <template
@@ -28,7 +29,12 @@
 <script setup lang="ts">
 import { UnnnicPagination, UnnnicModalDialog } from '@weni/unnnic-system';
 import { ref } from 'vue';
-defineProps<{
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
+
+const props = defineProps<{
   modelValue: boolean;
   title: string;
   news: {

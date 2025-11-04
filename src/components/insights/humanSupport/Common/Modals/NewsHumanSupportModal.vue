@@ -3,6 +3,7 @@
     :modelValue="modelValue"
     :title="title"
     :news="news"
+    @close="handleClose"
   />
 </template>
 
@@ -17,6 +18,14 @@ const props = defineProps<{
   modelValue: boolean;
   type: 'monitoring' | 'analysis';
 }>();
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
+
+const handleClose = () => {
+  emit('close');
+};
 
 const title = ref(t('news.title'));
 const news = ref(

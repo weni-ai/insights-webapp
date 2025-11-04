@@ -7,6 +7,10 @@
     <TimeMetrics data-testid="monitoring-time-metrics" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
+    <NewsHumanSupportModal
+      :modelValue="true"
+      type="monitoring"
+    />
   </section>
 </template>
 
@@ -19,6 +23,7 @@ import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
+import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
 
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 let timeoutStop: (() => void) | null = null;

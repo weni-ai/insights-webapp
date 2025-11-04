@@ -3,6 +3,10 @@
     <StatusCards data-testid="status-cards" />
     <ServicesOpenByHour data-testid="services-open-by-hour" />
     <DetailedAnalysis data-testid="detailed-analysis" />
+    <NewsHumanSupportModal
+      :modelValue="true"
+      type="analysis"
+    />
   </section>
 </template>
 
@@ -10,6 +14,7 @@
 import StatusCards from './StatusCards.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedAnalysis from './DetailedAnalysis.vue';
+import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
 </script>
 
 <style scoped lang="scss">

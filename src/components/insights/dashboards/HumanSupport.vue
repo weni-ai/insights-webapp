@@ -15,7 +15,22 @@
         #[`tab-head-${key}`]
         :key="`tab-head-${key}`"
       >
-        {{ $t(`human_support_dashboard.${tab.name}`) }}
+        <section class="tab-head-content">
+          {{ $t(`human_support_dashboard.${tab.name}`) }}
+          <UnnnicTooltip
+            :text="$t(`human_support_dashboard.${tab.name}_tooltip`)"
+            side="top"
+            class="tab-head-content-tooltip"
+            data-test-id="tab-head-content-tooltip"
+            enabled
+          >
+            <UnnnicIcon
+              data-test-id="question_mark"
+              icon="question_mark"
+              size="avatar-nano"
+            />
+          </UnnnicTooltip>
+        </section>
       </template>
       <template
         v-for="key in Object.keys(tabs)"
@@ -56,10 +71,12 @@ const { setActiveTab } = humanSupportStore;
 const tabs = {
   monitoring: {
     name: 'monitoring',
+    tooltip: 'human_support_dashboard.monitoring_tooltip',
     component: Monitoring,
   },
   analysis: {
     name: 'analysis',
+    tooltip: 'human_support_dashboard.analysis_tooltip',
     component: Analysis,
   },
 };
@@ -79,6 +96,12 @@ const handleChangeTab = (tab: string) => {
 
   :deep(.tab-header) {
     margin-bottom: $unnnic-space-8;
+  }
+
+  .tab-head-content {
+    display: flex;
+    align-items: center;
+    gap: $unnnic-space-2;
   }
 }
 </style>

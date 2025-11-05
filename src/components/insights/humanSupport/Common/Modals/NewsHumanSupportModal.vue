@@ -1,5 +1,6 @@
 <template>
   <NewsModal
+    data-testid="news-human-support-modal"
     :modelValue="modelValue"
     :title="title"
     :news="
@@ -46,7 +47,6 @@ const emit = defineEmits<{
 }>();
 
 const handleClose = () => {
-  console.log('handleClose');
   emit('close');
 };
 

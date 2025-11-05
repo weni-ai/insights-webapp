@@ -1,27 +1,40 @@
 <template>
   <UnnnicModalDialog
+    data-testid="news-modal"
     :modelValue="modelValue"
     :title="title"
     showCloseIcon
     size="large"
     @update:model-value="emit('close')"
   >
-    <section class="news-modal__content">
-      <section class="news-modal__description">
+    <section
+      class="news-modal__content"
+      data-testid="news-modal-content"
+    >
+      <section
+        class="news-modal__description"
+        data-testid="news-modal-description"
+      >
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <p v-html="currentNewsItem.description" />
+        <p
+          data-testid="news-modal-description-text"
+          v-html="currentNewsItem.description"
+        />
         <p
           v-if="currentNewsItem.secondDescription"
+          data-testid="news-modal-description-second-text"
           v-html="currentNewsItem.secondDescription"
         />
       </section>
       <img
         class="news-modal__image"
+        data-testid="news-modal-image"
         :src="currentNewsItem.image"
         :alt="currentNewsItem.description"
       />
       <UnnnicPagination
         class="news-modal__pagination"
+        data-testid="news-modal-pagination"
         :modelValue="page"
         :max="news.length"
         :show="pageSize"

@@ -190,11 +190,13 @@ export const useWidgets = defineStore('widgets', {
         Object.keys(widgetFunnelConfig).map(fetchData),
       );
 
-      const totalValue = response.reduce((sum, item) => sum + item.title, 0);
+      const graphValues = response.map((item) => item.title);
+
+      const maxValue = Math.max(...graphValues);
 
       const formattedResponse = response
         .map((item) => {
-          const percentage = ((item.title / totalValue) * 100 || 0).toFixed(2);
+          const percentage = ((item.title / maxValue) * 100 || 0).toFixed(2);
           return {
             description: item.description,
             percentage: parseFloat(percentage), // Add percentage as a number for sorting

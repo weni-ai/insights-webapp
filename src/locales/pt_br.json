@@ -817,23 +817,29 @@
       "tooltips": {
         "is_waiting": "Número de contatos esperando o início do atendimento agora",
         "is_in_progress": "Número de contatos em atendimento agora",
-        "is_closed": "Número de atendimentos finalizados hoje"
+        "is_closed": "Número de atendimentos finalizados hoje",
+        "is_closed_by_date": "Número de atendimentos finalizados no período selecionado"
       }
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
       "average_time_is_waiting": "Tempo médio em espera",
       "average_time_first_response": "Tempo médio para 1ª resposta",
+      "average_response_time": "Tempo médio de resposta",
       "average_time_chat": "Duração média da conversa",
       "max": "Máximo",
       "tooltips": {
         "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
         "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",
+        "average_response_time": "Média de tempo que o contato esperou por uma resposta a cada mensagem enviada",
         "average_time_chat": "Média do tempo total da conversa, do início do atendimento com atendente até ser finalizada"
       }
     },
     "services_open_by_hour": {
       "title": "Atendimentos abertos por hora"
+    },
+    "services_open_by_date": {
+      "title": "Atendimentos abertos por data"
     },
     "detailed_monitoring": {
       "title": "Monitoramento detalhado",
@@ -841,13 +847,7 @@
         "in_awaiting": "Em espera",
         "in_progress": "Em andamento",
         "attendant": "Atendente",
-        "pauses": "Pausas"
-      },
-      "filters": {
-        "attendant": {
-          "label": "Atendente",
-          "placeholder": "Digite para filtrar"
-        }
+        "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duração",
@@ -882,9 +882,49 @@
         "action": "Ação"
       }
     },
+    "filters": {
+      "common": {
+        "placeholder": "Digite para filtrar"
+      },
+      "attendant": {
+        "label": "Atendente"
+      },
+      "contact": {
+        "label": "Contato"
+      },
+      "ticket_id": {
+        "label": "Protocolo"
+      }
+    },
+    "columns": {
+      "common": {
+        "duration": "Duração",
+        "awaiting_time": "Tempo em espera",
+        "first_response_time": "Tempo para 1ª resposta",
+        "response_time": "Tempo de resposta",
+        "agent": "Atendente",
+        "sector": "Setor",
+        "queue": "Fila",
+        "contact": "Contato",
+        "ticket_id": "Protocolo",
+        "total_attendances": "Total de atendimentos",
+        "average_first_response_time": "Tempo médio para 1ª resposta",
+        "average_response_time": "Tempo médio de resposta",
+        "average_duration": "Duração média",
+        "time_in_service": "Tempo em atendimento"
+      }
+    },
     "analyze": {
       "title": "Em breve: Nova Visão de Análise",
-      "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!"
+      "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!",
+      "detailed_analysis": {
+        "title": "Análise detalhada",
+        "tabs": {
+          "finished": "Finalizados",
+          "attendant": "Atendente",
+          "pauses": "Pausas personalizadas"
+        }
+      }
     }
   }
 }

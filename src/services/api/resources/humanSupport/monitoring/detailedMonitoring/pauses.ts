@@ -1,6 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
 
 interface PausesData {
@@ -36,6 +36,8 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   agent?: string;
+  start_date?: string;
+  end_date?: string;
 }
 
 export default {
@@ -43,13 +45,15 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<PausesData> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupportMonitoring();
+    const { appliedFilters, appliedDateRange, activeTab } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
       ordering: queryParams.ordering ? queryParams.ordering : 'agent',
+      start_date: appliedDateRange.start,
+      end_date: appliedDateRange.end,
     };
 
     const params = createRequestQuery(queryParams);
@@ -59,13 +63,12 @@ export default {
       ...formattedAppliedFilters,
       ...params,
     };
-
-    const response = (await http.get(
-      `/metrics/human-support/detailed-monitoring/status/`,
-      {
-        params: formattedParams,
-      },
-    )) as PausesData;
+    const baseUrl = `/metrics/human-support/`;
+    const finalUrl = `detailed-monitoring/status/`;
+    const url = `${baseUrl}${activeTab === 'analysis' ? 'analysis/' + finalUrl : finalUrl}`;
+    const response = (await http.get(url, {
+      params: formattedParams,
+    })) as PausesData;
 
     const formattedResponse: PausesData = response;
 

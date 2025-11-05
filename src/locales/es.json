@@ -817,23 +817,29 @@
       "tooltips": {
         "is_waiting": "Número de contactos esperando el inicio del atendimiento ahora",
         "is_in_progress": "Número de contactos en atendimiento ahora",
-        "is_closed": "Número de atendimientos finalizados hoy"
+        "is_closed": "Número de atendimientos finalizados hoy",
+        "is_closed_by_date": "Número de atendimientos finalizados en el período seleccionado"
       }
     },
     "time_metrics": {
       "title": "Métricas de tiempo ahora",
       "average_time_is_waiting": "Tiempo medio en espera",
       "average_time_first_response": "Tiempo medio para 1ª respuesta",
+      "average_response_time": "Tiempo medio de respuesta",
       "average_time_chat": "Duración media de la conversa",
       "max": "Máximo",
       "tooltips": {
         "average_time_is_waiting": "Tiempo medio que los contactos esperan en la cola hasta que el atendimiento comience",
         "average_time_first_response": "Tiempo medio hasta la primera respuesta del agente después de que se asigne la sala",
+        "average_response_time": "Tiempo medio que el contacto espera para recibir una respuesta a cada mensaje",
         "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del atendimiento con el agente hasta que se finaliza"
       }
     },
     "services_open_by_hour": {
       "title": "Atendimientos abiertos por hora"
+    },
+    "services_open_by_date": {
+      "title": "Atendimientos abiertos por fecha"
     },
     "detailed_monitoring": {
       "title": "Monitorización detallada",
@@ -841,13 +847,7 @@
         "in_awaiting": "En espera",
         "in_progress": "En progreso",
         "attendant": "Atendido",
-        "pauses": "Pausas"
-      },
-      "filters": {
-        "attendant": {
-          "label": "Atendido",
-          "placeholder": "Digite para filtrar"
-        }
+        "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duración",
@@ -877,14 +877,54 @@
         "finished": "Finalizado",
         "average_first_response_time": "Tiempo medio para 1ª respuesta",
         "average_response_time": "Tiempo medio de respuesta",
-        "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento",
+        "average_duration": "Duración media",
+        "time_in_service": "Tiempo en atendimiento",
         "action": "Acción"
+      }
+    },
+    "filters": {
+      "common": {
+        "placeholder": "Digite para filtrar"
+      },
+      "attendant": {
+        "label": "Agente"
+      },
+      "contact": {
+        "label": "Contacto"
+      },
+      "ticket_id": {
+        "label": "Protocolo"
+      }
+    },
+    "columns": {
+      "common": {
+        "duration": "Duración",
+        "awaiting_time": "Tiempo en espera",
+        "first_response_time": "Tiempo de 1ª respuesta",
+        "response_time": "Tiempo de respuesta",
+        "agent": "Agente",
+        "sector": "Sector",
+        "queue": "Cola",
+        "contact": "Contacto",
+        "ticket_id": "Protocolo",
+        "total_attendances": "Total de atendimientos",
+        "average_first_response_time": "Tiempo medio para 1ª respuesta",
+        "average_response_time": "Tiempo medio de respuesta",
+        "average_duration": "Duración media",
+        "time_in_service": "Tiempo en atendimiento"
       }
     },
     "analyze": {
       "title": "Próximamente: Nueva Vista de Análisis",
-      "description": "Aquí podrás explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones más estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!"
+      "description": "Aquí podrás explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones más estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!",
+      "detailed_analysis": {
+        "title": "Análisis detallado",
+        "tabs": {
+        "finished": "Finalizados",
+          "attendant": "Atendido",
+          "pauses": "Pausas personalizadas"
+        }
+      }
     }
   }
 }

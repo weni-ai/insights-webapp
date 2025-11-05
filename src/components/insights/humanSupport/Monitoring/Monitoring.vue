@@ -25,11 +25,14 @@ import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
+import { moduleStorage } from '@/utils/storage';
 
+const STORAGE_KEY = 'news_modal_monitoring_shown';
 const showNewsModal = ref(false);
 
 const handleClose = () => {
   showNewsModal.value = false;
+  moduleStorage.setItem(STORAGE_KEY, true);
 };
 
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
@@ -74,6 +77,11 @@ const stopAutoRefresh = () => {
 };
 
 onMounted(() => {
+  const hasBeenShown = moduleStorage.getItem(STORAGE_KEY, false);
+  if (!hasBeenShown) {
+    showNewsModal.value = true;
+  }
+
   loadData();
 
   startAutoRefresh();

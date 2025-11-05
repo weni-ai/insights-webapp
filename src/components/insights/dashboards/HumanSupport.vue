@@ -17,19 +17,21 @@
       >
         <section class="tab-head-content">
           {{ $t(`human_support_dashboard.${tab.name}`) }}
-          <UnnnicTooltip
+          <UnnnicToolTip
             :text="$t(`human_support_dashboard.${tab.name}_tooltip`)"
-            side="top"
+            side="right"
             class="tab-head-content-tooltip"
             data-test-id="tab-head-content-tooltip"
             enabled
           >
-            <UnnnicIcon
-              data-test-id="question_mark"
-              icon="question_mark"
-              size="avatar-nano"
-            />
-          </UnnnicTooltip>
+            <section class="tab-head-content-icon">
+              <UnnnicIcon
+                data-test-id="question_mark"
+                icon="question_mark"
+                size="xs"
+              />
+            </section>
+          </UnnnicToolTip>
         </section>
       </template>
       <template
@@ -47,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicTab } from '@weni/unnnic-system';
+import { UnnnicTab, UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
 import { computed } from 'vue';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
@@ -102,6 +104,17 @@ const handleChangeTab = (tab: string) => {
     display: flex;
     align-items: center;
     gap: $unnnic-space-2;
+  }
+
+  .tab-head-content-icon {
+    display: flex;
+    width: $unnnic-icon-size-4;
+    height: $unnnic-icon-size-4;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+    border-radius: $unnnic-radius-full;
+    border: 1px solid $unnnic-color-neutral-cloudy;
   }
 }
 </style>

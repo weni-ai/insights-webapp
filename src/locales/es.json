@@ -808,7 +808,9 @@
   "human_support_dashboard": {
     "title": "Atención humana",
     "monitoring": "Monitorización",
+    "monitoring_tooltip": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",
     "analysis": "Análisis",
+    "analysis_tooltip": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
     "support_status": {
       "title": "Estado de los atendimientos",
       "is_waiting": "En espera",

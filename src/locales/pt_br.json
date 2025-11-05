@@ -808,7 +808,9 @@
   "human_support_dashboard": {
     "title": "Atendimento humano",
     "monitoring": "Monitoramento",
+    "monitoring_tooltip": "Acompanhe em tempo real os atendimentos do dia. Identifique gargalos e tome decisões rápidas para otimizar a operação.",
     "analysis": "Análise",
+    "analysis_tooltip": "Explore o desempenho de salas encerradas em diferentes períodos de tempo. Descubra padrões, tendências e oportunidades de melhoria na sua equipe.",
     "support_status": {
       "title": "Status dos atendimentos",
       "is_waiting": "Em espera",

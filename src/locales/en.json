@@ -808,7 +808,9 @@
   "human_support_dashboard": {
     "title": "Human support",
     "monitoring": "Monitoring",
+    "monitoring_tooltip": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation.",
     "analysis": "Analysis",
+    "analysis_tooltip": "Explore closed interactions to discover patterns and trends. Identify opportunities for improvement and enhance your team's performance.",
     "support_status": {
       "title": "Support status",
       "is_waiting": "Awaiting",

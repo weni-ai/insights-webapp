@@ -166,7 +166,8 @@
       },
       "tabs": {
         "sentiment_analysis": "Sentiment analysis",
-        "customized": "Custom"
+        "customized": "Custom",
+        "native": "Native"
       },
       "select_chart_type": "Select the chart type",
       "select_data": "Select the data you want to track",

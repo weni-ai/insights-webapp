@@ -166,7 +166,8 @@
       },
       "tabs": {
         "sentiment_analysis": "Análise de sentimento",
-        "customized": "Personalizado"
+        "customized": "Personalizado",
+        "native": "Nativo"
       },
       "select_chart_type": "Selecione o tipo de gráfico",
       "select_data": "Selecione os dados que você deseja acompanhar",

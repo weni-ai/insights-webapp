@@ -166,7 +166,8 @@
       },
       "tabs": {
         "sentiment_analysis": "Análisis de opiniones",
-        "customized": "Personalizado"
+        "customized": "Personalizado",
+        "native": "Nativo"
       },
       "select_chart_type": "Selecciona el tipo de gráfico",
       "select_data": "Selecciona los datos que deseas monitorear",
@@ -920,7 +921,7 @@
       "detailed_analysis": {
         "title": "Análisis detallado",
         "tabs": {
-        "finished": "Finalizados",
+          "finished": "Finalizados",
           "attendant": "Atendido",
           "pauses": "Pausas personalizadas"
         }

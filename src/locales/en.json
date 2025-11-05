@@ -26,7 +26,7 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "header": {
-      "total": "Total conversations",   
+      "total": "Total conversations",
       "resolved": "Optimized resolutions",
       "unresolved": "Other conclusions",
       "unengaged": "Unengaged",
@@ -166,7 +166,8 @@
       },
       "tabs": {
         "sentiment_analysis": "Sentiment analysis",
-        "customized": "Custom"
+        "customized": "Custom",
+        "native": "Native"
       },
       "select_chart_type": "Select the chart type",
       "select_data": "Select the data you want to track",

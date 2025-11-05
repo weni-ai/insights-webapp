@@ -8,17 +8,15 @@ const mockHumanSupportMonitoringStore = {
   setRefreshDataMonitoring: vi.fn(),
 };
 
-const mockModuleStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-};
-
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockHumanSupportMonitoringStore,
 }));
 
 vi.mock('@/utils/storage', () => ({
-  moduleStorage: mockModuleStorage,
+  moduleStorage: {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+  },
 }));
 
 vi.mock('pinia', async (importOriginal) => {
@@ -43,6 +41,7 @@ config.global.plugins = [i18n];
 
 describe('Monitoring', () => {
   let wrapper;
+  let mockModuleStorage;
 
   const createWrapper = (storeOverrides = {}) => {
     Object.assign(mockHumanSupportMonitoringStore, storeOverrides);
@@ -61,7 +60,7 @@ describe('Monitoring', () => {
 
   const section = () => wrapper.find('[data-testid="monitoring"]');
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
     vi.useFakeTimers();
 
@@ -69,6 +68,8 @@ describe('Monitoring', () => {
       setRefreshDataMonitoring: vi.fn(),
     });
 
+    const { moduleStorage } = await import('@/utils/storage');
+    mockModuleStorage = moduleStorage;
     mockModuleStorage.getItem.mockReturnValue(false);
     mockModuleStorage.setItem.mockClear();
 

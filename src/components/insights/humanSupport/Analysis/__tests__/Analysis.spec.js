@@ -4,13 +4,11 @@ import { createI18n } from 'vue-i18n';
 
 import Analysis from '../Analysis.vue';
 
-const mockModuleStorage = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-};
-
 vi.mock('@/utils/storage', () => ({
-  moduleStorage: mockModuleStorage,
+  moduleStorage: {
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+  },
 }));
 
 const i18n = createI18n({
@@ -27,6 +25,7 @@ config.global.plugins = [i18n];
 
 describe('Analysis', () => {
   let wrapper;
+  let mockModuleStorage;
 
   const createWrapper = () => {
     return mount(Analysis, {
@@ -43,9 +42,11 @@ describe('Analysis', () => {
 
   const section = () => wrapper.find('[data-testid="status-cards"]');
 
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.clearAllMocks();
 
+    const { moduleStorage } = await import('@/utils/storage');
+    mockModuleStorage = moduleStorage;
     mockModuleStorage.getItem.mockReturnValue(false);
     mockModuleStorage.setItem.mockClear();
 
@@ -60,9 +61,9 @@ describe('Analysis', () => {
       expect(
         wrapper.findComponent({ name: 'ServicesOpenByHour' }).exists(),
       ).toBe(true);
-      expect(
-        wrapper.findComponent({ name: 'DetailedAnalysis' }).exists(),
-      ).toBe(true);
+      expect(wrapper.findComponent({ name: 'DetailedAnalysis' }).exists()).toBe(
+        true,
+      );
     });
 
     it('should have correct data-testids for child components', () => {
@@ -177,4 +178,3 @@ describe('Analysis', () => {
     });
   });
 });
-

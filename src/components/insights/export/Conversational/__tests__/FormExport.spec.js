@@ -134,41 +134,49 @@ describe('Conversational FormExport', () => {
   });
 
   describe('Date range methods', () => {
-    it('should call getMinDate and return null for empty range', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2024-06-15T12:00:00Z'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should return null for empty date range', () => {
+      wrapper.vm.selectDateRange = { start: '', end: '' };
       const minDate = wrapper.vm.getMinDate();
       expect(minDate).toBeNull();
     });
 
-    it('should call getMaxDate and return yesterday for empty range', () => {
+    it('should return yesterday for maxDate with empty range', () => {
+      wrapper.vm.selectDateRange = { start: '', end: '' };
       const maxDate = wrapper.vm.getMaxDate();
-      expect(maxDate).toBeTruthy();
+      expect(maxDate).toBe('2024-06-14');
     });
 
-    it('should return yesterday as maxDate instead of today', () => {
-      const maxDate = wrapper.vm.getMaxDate();
-      const yesterday = new Date();
-      yesterday.setDate(yesterday.getDate() - 1);
-      const yesterdayFormatted = yesterday.toISOString().split('T')[0];
-
-      expect(maxDate).toBe(yesterdayFormatted);
-    });
-
-    it('should calculate minDate based on selectDateRange', async () => {
-      wrapper.vm.selectDateRange = {
-        start: '2024-01-01',
-        end: '',
-      };
+    it('should calculate minDate 92 days before start date', () => {
+      wrapper.vm.selectDateRange = { start: '2024-06-14', end: '' };
       const minDate = wrapper.vm.getMinDate();
-      expect(minDate).toBeTruthy();
+      expect(minDate).toBe('2024-03-14');
     });
 
-    it('should calculate maxDate based on selectDateRange', async () => {
-      wrapper.vm.selectDateRange = {
-        start: '2024-01-01',
-        end: '',
-      };
+    it('should calculate maxDate 92 days after start date', () => {
+      wrapper.vm.selectDateRange = { start: '2024-03-14', end: '' };
       const maxDate = wrapper.vm.getMaxDate();
-      expect(maxDate).toBeTruthy();
+      expect(maxDate).toBe('2024-06-14');
+    });
+
+    it('should cap maxDate at yesterday if calculated date is today or future', () => {
+      wrapper.vm.selectDateRange = { start: '2024-06-01', end: '' };
+      const maxDate = wrapper.vm.getMaxDate();
+      expect(maxDate).toBe('2024-06-14');
+    });
+
+    it('should return default min when start date is invalid', () => {
+      wrapper.vm.selectDateRange = { start: 'invalid-date', end: '' };
+      const minDate = wrapper.vm.getMinDate();
+      expect(minDate).toBeNull();
     });
   });
 

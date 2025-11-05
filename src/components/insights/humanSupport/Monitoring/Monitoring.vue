@@ -8,11 +8,16 @@
     <CsatRatings data-testid="monitoring-csat-ratings" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
+    <NewsHumanSupportModal
+      :modelValue="showNewsModal"
+      type="monitoring"
+      @close="handleClose"
+    />
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
@@ -20,11 +25,21 @@ import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
+import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
+import { moduleStorage } from '@/utils/storage';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 
 defineOptions({
   name: 'MonitoringView',
 });
+
+const STORAGE_KEY = 'news_modal_monitoring_shown';
+const showNewsModal = ref(false);
+
+const handleClose = () => {
+  showNewsModal.value = false;
+  moduleStorage.setItem(STORAGE_KEY, true);
+};
 
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 let timeoutStop: (() => void) | null = null;
@@ -68,6 +83,11 @@ const stopAutoRefresh = () => {
 };
 
 onMounted(() => {
+  const hasBeenShown = moduleStorage.getItem(STORAGE_KEY, false);
+  if (!hasBeenShown) {
+    showNewsModal.value = true;
+  }
+
   loadData();
 
   startAutoRefresh();

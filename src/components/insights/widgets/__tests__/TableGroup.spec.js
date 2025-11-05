@@ -157,6 +157,56 @@ describe('TableGroup', () => {
     });
   });
 
+  describe('Row Click and Redirect', () => {
+    it('should send postMessage when row with url_link is clicked', () => {
+      const postMessageSpy = vi.spyOn(window.parent, 'postMessage');
+      const row = {
+        url_link: '/test/path',
+        field1: 'Value',
+      };
+
+      wrapper.vm.rowClick(row);
+
+      expect(postMessageSpy).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: '/test/path/insights',
+        },
+        '*',
+      );
+    });
+
+    it('should not send postMessage when row without url_link is clicked', () => {
+      const postMessageSpy = vi.spyOn(window.parent, 'postMessage');
+      const row = {
+        field1: 'Value',
+      };
+
+      wrapper.vm.rowClick(row);
+
+      expect(postMessageSpy).not.toHaveBeenCalled();
+    });
+
+    it('should trigger rowClick when table emits row-click event', async () => {
+      const postMessageSpy = vi.spyOn(window.parent, 'postMessage');
+      const table = wrapper.findComponent('[data-testid="table"]');
+      const row = {
+        url_link: '/project/123',
+        field1: 'Value',
+      };
+
+      await table.vm.$emit('row-click', row);
+
+      expect(postMessageSpy).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: '/project/123/insights',
+        },
+        '*',
+      );
+    });
+  });
+
   describe('Unmount Behavior', () => {
     it('removes the slug query parameter from the route on unmount', async () => {
       router.currentRoute.query = { slug: 'testSlug' };

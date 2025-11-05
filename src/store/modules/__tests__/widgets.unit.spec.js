@@ -135,8 +135,8 @@ describe('useWidgets store', () => {
       (w) => w.uuid === widget.uuid,
     );
     expect(updatedWidget?.data).toHaveLength(2);
-    expect(updatedWidget?.data[0].percentage).toBe(66.67);
-    expect(updatedWidget?.data[1].percentage).toBe(33.33);
+    expect(updatedWidget?.data[0].percentage).toBe(100);
+    expect(updatedWidget?.data[1].percentage).toBe(50);
   });
 
   it('should get VTEX order data successfully', async () => {

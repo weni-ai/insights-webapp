@@ -2,7 +2,13 @@
   <NewsModal
     :modelValue="modelValue"
     :title="title"
-    :news="news"
+    :news="
+      news as {
+        description: string;
+        secondDescription: string;
+        image: string;
+      }[]
+    "
     @close="handleClose"
   />
 </template>
@@ -11,6 +17,22 @@
 import NewsModal from '@/components/NewsModal.vue';
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
+// @ts-ignore
+import monitoringGif01 from '@/assets/images/news/monitoring-gif-01.gif';
+// @ts-ignore
+import monitoringGif02 from '@/assets/images/news/monitoring-gif-02.gif';
+// @ts-ignore
+import monitoringGif03 from '@/assets/images/news/monitoring-gif-03.gif';
+// @ts-ignore
+import monitoringGif04 from '@/assets/images/news/monitoring-gif-04.gif';
+// @ts-ignore
+import monitoringGif05 from '@/assets/images/news/monitoring-gif-05.gif';
+// @ts-ignore
+import analysisGif01 from '@/assets/images/news/analysis-gif-01.gif';
+// @ts-ignore
+import analysisGif02 from '@/assets/images/news/analysis-gif-02.gif';
+// @ts-ignore
+import analysisGif03 from '@/assets/images/news/analysis-gif-03.gif';
 
 const { t } = useI18n();
 
@@ -24,6 +46,7 @@ const emit = defineEmits<{
 }>();
 
 const handleClose = () => {
+  console.log('handleClose');
   emit('close');
 };
 
@@ -32,44 +55,47 @@ const news = ref(
   props.type === 'monitoring'
     ? [
         {
+          description: t('news.human_support_dashboard.monitoring.first_text'),
+          image: monitoringGif01,
+        },
+        {
+          description: t('news.human_support_dashboard.monitoring.second_text'),
+          image: monitoringGif02,
+        },
+        {
           description: t('news.human_support_dashboard.monitoring.third_text'),
-          image: 'https://via.placeholder.com/150',
+          image: monitoringGif03,
         },
         {
           description: t('news.human_support_dashboard.monitoring.fourth_text'),
-          image: 'https://via.placeholder.com/150',
-        },
-        {
-          description: t('news.human_support_dashboard.monitoring.fifth_text'),
-          image: 'https://via.placeholder.com/150',
+          secondDescription: t(
+            'news.human_support_dashboard.monitoring.fifth_text',
+          ),
+          image: monitoringGif04,
         },
         {
           description: t('news.human_support_dashboard.monitoring.sixth_text'),
-          image: 'https://via.placeholder.com/150',
-        },
-        {
-          description: t(
+          secondDescription: t(
             'news.human_support_dashboard.monitoring.seventh_text',
           ),
-          image: 'https://via.placeholder.com/150',
+          image: monitoringGif05,
         },
       ]
     : [
         {
           description: t('news.human_support_dashboard.analysis.first_text'),
-          image: 'https://via.placeholder.com/150',
+          image: analysisGif01,
         },
         {
           description: t('news.human_support_dashboard.analysis.second_text'),
-          image: 'https://via.placeholder.com/150',
+          image: analysisGif02,
         },
         {
           description: t('news.human_support_dashboard.analysis.third_text'),
-          image: 'https://via.placeholder.com/150',
-        },
-        {
-          description: t('news.human_support_dashboard.analysis.fourth_text'),
-          image: 'https://via.placeholder.com/150',
+          secondDescription: t(
+            'news.human_support_dashboard.analysis.fourth_text',
+          ),
+          image: analysisGif03,
         },
       ],
 );

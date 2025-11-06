@@ -719,7 +719,8 @@
       "transferred": "Conversations transferred to human support",
       "topics": "Topics",
       "csat": "CSAT",
-      "nps": "NPS"
+      "nps": "NPS",
+      "agent_status_logs": "Agent"
     },
     "field_labels": {
       "config": "Configuration",
@@ -754,10 +755,17 @@
       "queue__name": "Queue",
       "queue__uuid": "Queue ID",
       "queue__sector__name": "Sector",
-      "created_on": "Support start date",
+      "created_on": "Start date",
       "duration": "Duration",
       "awaiting_time": "Awaiting time",
-      "first_response_time": "First response time"
+      "first_response_time": "First response time",
+      "agent__email": "Email",
+      "agent__first_name": "Name",
+      "agent__last_name": "Last name",
+      "project__name": "Project name",
+      "project__uuid": "Project ID",
+      "status_changes": "Status changes",
+      "log_date": "Log date"
     },
     "select_data": {
       "label": "Select the date range to fetch data (maximum 92 days between start and end date)",

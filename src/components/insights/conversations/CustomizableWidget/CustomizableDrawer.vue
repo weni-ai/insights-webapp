@@ -59,7 +59,12 @@
                 data-testid="add-widget-drawer-item"
                 @click="
                   clickWidgetOption(
-                    widget.key as 'csat' | 'nps' | 'custom' | 'sales_funnel',
+                    widget.key as
+                      | 'csat'
+                      | 'nps'
+                      | 'custom'
+                      | 'sales_funnel'
+                      | 'crosstab',
                   )
                 "
               >
@@ -134,8 +139,11 @@ const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
   storeToRefs(useConversational());
 
 const customWidgets = useCustomWidgets();
-const { isEnabledCreateCustomForm, isLoadingSaveNewCustomWidget } =
-  storeToRefs(customWidgets);
+const {
+  isEnabledCreateCustomForm,
+  isLoadingSaveNewCustomWidget,
+  isEnabledSaveCrosstabForm,
+} = storeToRefs(customWidgets);
 const { saveCustomWidget } = customWidgets;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
@@ -153,8 +161,8 @@ function closeWarningModal() {
 }
 
 async function saveWidgetConfigs() {
-  if (drawerWidgetType.value === 'custom') {
-    await saveCustomWidget();
+  if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
+    await saveCustomWidget(drawerWidgetType.value as 'custom' | 'crosstab');
   } else if (isNewDrawerCustomizable.value) {
     await saveNewWidget();
   } else {
@@ -190,7 +198,7 @@ function handleSecondaryButtonClick() {
 }
 
 function clickWidgetOption(
-  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel',
+  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab',
 ) {
   if (widgetType === 'sales_funnel') {
     const conversationalWidgetsStore = useConversationalWidgets();
@@ -260,6 +268,15 @@ const availableWidgets = computed(() => {
       ),
       key: 'sales_funnel',
     },
+    {
+      name: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.crosstab.title',
+      ),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.crosstab.description',
+      ),
+      key: 'crosstab',
+    },
   ];
 });
 
@@ -312,14 +329,17 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
   }
 
   if (tabKey === 'customized') {
-    return [handleWidgetTypeChoice('custom')];
+    return [
+      handleWidgetTypeChoice('custom'),
+      handleWidgetTypeChoice('crosstab'),
+    ];
   }
 
   return [];
 };
 
 const handleWidgetTypeChoice = (
-  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel',
+  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab',
 ) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };
@@ -327,6 +347,10 @@ const handleWidgetTypeChoice = (
 const isDisabledPrimaryButton = computed(() => {
   if (drawerWidgetType.value === 'custom') {
     return !isEnabledCreateCustomForm.value;
+  }
+
+  if (drawerWidgetType.value === 'crosstab') {
+    return !isEnabledSaveCrosstabForm.value;
   }
 
   return isNewDrawerCustomizable.value

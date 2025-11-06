@@ -19,13 +19,16 @@
 <script setup lang="ts">
 import ProgressTable from '@/components/ProgressTable.vue';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
-import type { CsatResult } from '@/services/api/resources/conversational/widgets';
+import type {
+  CsatResult,
+  CrosstabResultItem,
+} from '@/services/api/resources/conversational/widgets';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 const props = defineProps<{
   modelValue: boolean;
-  data: CsatResult[];
+  data: CsatResult[] | CrosstabResultItem[];
 }>();
 
 const emit = defineEmits<{

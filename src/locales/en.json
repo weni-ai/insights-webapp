@@ -88,6 +88,7 @@
     "nps": "NPS",
     "sales_funnel": "Funnel and sales data",
     "custom": "Horizontal bar chart",
+    "crosstab": "Crosstab",
     "no_data_available": "No data available for the usage period",
     "widget_error": {
       "title": "Oops, an error occurred while loading the data",
@@ -140,6 +141,7 @@
       "activate_agent": "Activate agent",
       "select_agent": "Select an agent",
       "select_key": "Enter the key",
+      "enter_field_name": "Enter the field name",
       "set_widget_name": "Enter the widget name",
       "label_widget_name": "Widget name",
       "widget_name_description": "Enter the widget name here",
@@ -174,6 +176,16 @@
       "horizontal_bar_chart": {
         "title": "Horizontal bar chart",
         "description": "View with horizontal bars, where bar length indicates the value magnitude."
+      },
+      "crosstab": {
+        "title": "Crosstab",
+        "description": "Combine and compare two different data points to find insights.",
+        "drawer": {
+          "description": "Set a name for the widget:",
+          "disclaimer": "<b>Key:</b> a unique identifier used to track a specific event in the data flow.<br><b>Field name:</b> the name of the field for the value you want to see. If left blank, the system will use a default value.",
+          "first_data_label": "Define the <b>first</b> data you want to track:",
+          "second_data_label": "Define the <b>second</b> data you want to track:"
+        }
       }
     },
     "setup_csat_or_nps_widget": {
@@ -314,6 +326,8 @@
     }
   },
   "key": "Key",
+  "field_name": "Field name",
+  "optional": "Optional",
   "filter-by": "Period:",
   "see_more": "View more",
   "reload": "Refresh",

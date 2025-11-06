@@ -39,7 +39,8 @@ type ConversationalWidgetType =
   | 'nps'
   | 'add'
   | 'sales_funnel'
-  | 'custom';
+  | 'custom'
+  | 'crosstab';
 
 const customWidgets = useCustomWidgets();
 const conversationalWidgets = useConversationalWidgets();
@@ -81,7 +82,10 @@ const setDynamicWidgets = () => {
   const customWidgetsList = customWidgets.getCustomWidgets;
   if (customWidgetsList.length > 0) {
     customWidgetsList.forEach((widget) => {
-      newWidgets.push({ type: 'custom', uuid: widget.uuid });
+      newWidgets.push({
+        type: (widget.type?.split('.')[1] as 'custom' | 'crosstab') || 'custom',
+        uuid: widget.uuid,
+      });
     });
   }
 

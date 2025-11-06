@@ -12,8 +12,20 @@ interface CsatResult {
 interface CsatResponse {
   results: CsatResult[];
 }
+
 interface CustomWidgetResponse {
   results: CsatResult[];
+}
+
+interface CrosstabResultItem {
+  title: string;
+  total: number;
+  events: { [key: string]: { value: number } };
+}
+
+interface CrosstabWidgetResponse {
+  total_rows: number;
+  results: CrosstabResultItem[];
 }
 
 interface NpsResponse {
@@ -108,6 +120,23 @@ export default {
     return response;
   },
 
+  async getCrosstabWidgetData(queryParams: WidgetQueryParams): Promise<any> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = await http.get('/metrics/conversations/crosstab/', {
+      params,
+    });
+
+    return response;
+  },
+
   async getSalesFunnelData(
     queryParams: WidgetQueryParams,
   ): Promise<SalesFunnelResponse> {
@@ -135,4 +164,6 @@ export type {
   CsatResult,
   CustomWidgetResponse,
   SalesFunnelResponse,
+  CrosstabWidgetResponse,
+  CrosstabResultItem,
 };

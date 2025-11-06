@@ -88,6 +88,7 @@
     "nps": "NPS",
     "sales_funnel": "Funil e dados de vendas",
     "custom": "Gráfico de barras horizontal",
+    "crosstab": "Tabela cruzada",
     "no_data_available": "Nenhum dado disponível para o período de uso",
     "widget_error": {
       "title": "Ops, ocorreu um erro ao carregar os dados",
@@ -140,6 +141,7 @@
       "activate_agent": "Ativar agente",
       "select_agent": "Selecione um agente",
       "select_key": "Digite a chave",
+      "enter_field_name": "Digite o nome do campo",
       "set_widget_name": "Defina o nome do widget",
       "label_widget_name": "Nome do widget",
       "widget_name_description": "Digite o nome do widget aqui",
@@ -174,6 +176,16 @@
       "horizontal_bar_chart": {
         "title": "Gráfico de barras horizontal",
         "description": "Visualização com barras horizontais, em que o comprimento de cada barra indica a magnitude do valor correspondente."
+      },
+      "crosstab": {
+        "title": "Tabela cruzada",
+        "description": "Combine e compare dois pontos de dados diferentes para encontrar insights.",
+        "drawer": {
+          "description": "Defina o nome do widget:",
+          "disclaimer": "<b>Chave:</b> um identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> o nome do campo para o valor que você deseja ver. Se deixado em branco, o sistema utilizará um valor padrão.",
+          "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
+          "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:"
+        }
       }
     },
     "setup_csat_or_nps_widget": {
@@ -314,6 +326,8 @@
     }
   },
   "key": "Chave",
+  "field_name": "Nome do campo",
+  "optional": "Opcional",
   "filter-by": "Período:",
   "see_more": "Ver mais",
   "reload": "Recarregar",

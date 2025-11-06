@@ -85,7 +85,7 @@ import { useRoute } from 'vue-router';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 const props = defineProps<{
-  type: 'csat' | 'nps' | 'add' | 'sales_funnel' | 'custom';
+  type: 'csat' | 'nps' | 'add' | 'sales_funnel' | 'custom' | 'crosstab';
   uuid?: string;
 }>();
 
@@ -102,6 +102,7 @@ const {
   getCustomWidgetByUuid,
   getIsLoadingByUuid,
   setCustomForm,
+  setCrosstabForm,
 } = conversationalCustomWidgets;
 
 const { customWidgetDataErrorByUuid } = storeToRefs(
@@ -157,7 +158,8 @@ const isError = computed(() => {
     return isNpsWidgetDataError.value;
   }
 
-  if (props.type === 'custom') {
+  // TODO: handle crosstab error
+  if (['custom', 'crosstab'].includes(props.type)) {
     return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
   }
 
@@ -206,7 +208,8 @@ const widgetData = computed(() => {
     csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
     nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
     custom: handleCustomWidgetData(
-      getCustomWidgetByUuid(props.uuid as string)?.data || { results: [] },
+      (getCustomWidgetByUuid(props.uuid as string)
+        ?.data as CustomWidgetResponse) || { results: [] },
     ),
   };
 
@@ -323,13 +326,13 @@ const handleCurrentTab = computed(() => {
 });
 
 const isOnlyTab = computed(() => {
-  if (props.type === 'custom') return true;
+  if (['custom', 'crosstab'].includes(props.type)) return true;
 
   return false;
 });
 
 const isExpanded = computed(() => {
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     const customWidget = getCustomWidgetByUuid(props.uuid as string);
 
     return customWidget?.data?.results?.length > 5 || false;
@@ -341,7 +344,7 @@ const isExpanded = computed(() => {
 const titleWidget = computed(() => {
   const defaultTitle = widgetType.value?.toUpperCase() || '-';
 
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     return getCustomWidgetByUuid(props.uuid as string)?.name || defaultTitle;
   }
 
@@ -375,7 +378,7 @@ onMounted(() => {
     loadSalesFunnelWidgetData();
   }
 
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     loadCustomWidgetData(props.uuid as string);
   }
 });
@@ -479,17 +482,30 @@ const handleCsatWidgetData = (data: CsatResponse) => {
 };
 
 const handleOpenDrawer = (isNew: boolean) => {
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     if (!isNew) {
-      const customWidget = getCustomWidgetByUuid(props.uuid as string);
-
-      setCustomForm({
-        agent_uuid: customWidget?.config?.datalake_config?.agent_uuid,
-        agent_name: '',
-        key: customWidget?.config?.datalake_config?.key,
-        widget_uuid: customWidget?.uuid,
-        widget_name: customWidget?.name,
-      });
+      const findedCustomWidget = getCustomWidgetByUuid(
+        props.uuid as string,
+      ) as any;
+      if (props.type === 'custom') {
+        setCustomForm({
+          agent_uuid: findedCustomWidget?.config?.datalake_config?.agent_uuid,
+          agent_name: '',
+          key: findedCustomWidget?.config?.datalake_config?.key,
+          widget_uuid: findedCustomWidget?.uuid,
+          widget_name: findedCustomWidget?.name,
+        });
+      }
+      if (props.type === 'crosstab') {
+        setCrosstabForm({
+          widget_uuid: findedCustomWidget?.uuid,
+          widget_name: findedCustomWidget?.name,
+          key_a: findedCustomWidget?.config?.source_a?.key,
+          field_name_a: findedCustomWidget?.config?.source_a?.field_name,
+          key_b: findedCustomWidget?.config?.source_b?.key,
+          field_name_b: findedCustomWidget?.config?.source_b?.field_name,
+        });
+      }
     }
   }
 
@@ -630,12 +646,11 @@ watch(
   () => route.query,
   () => {
     if (props.type === 'add') return;
-
     if (props.type === 'csat') {
       loadCsatWidgetData();
     } else if (props.type === 'nps') {
       loadNpsWidgetData();
-    } else if (props.type === 'custom' && props.uuid) {
+    } else if (['custom', 'crosstab'].includes(props.type) && props.uuid) {
       loadCustomWidgetData(props.uuid);
     } else if (props.type === 'sales_funnel') {
       loadSalesFunnelWidgetData();

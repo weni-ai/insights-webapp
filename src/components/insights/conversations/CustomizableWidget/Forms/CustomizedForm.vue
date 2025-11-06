@@ -91,7 +91,7 @@ const {
   setCustomFormAgent,
   setCustomFormKey,
   setCustomFormWidgetName,
-  resetCustomForm,
+  resetForms,
 } = customWidgets;
 
 const { customForm } = storeToRefs(customWidgets);
@@ -108,7 +108,7 @@ watch(agentsTeam, () => {
 });
 
 onUnmounted(() => {
-  resetCustomForm();
+  resetForms();
 });
 
 const handleChangeAgent = (agent: any) => {

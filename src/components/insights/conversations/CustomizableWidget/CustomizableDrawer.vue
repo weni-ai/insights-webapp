@@ -173,7 +173,7 @@ async function saveWidgetConfigs() {
 }
 
 const isLoadingSaveButton = computed(() => {
-  if (drawerWidgetType.value === 'custom') {
+  if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
     return isLoadingSaveNewCustomWidget.value;
   }
 

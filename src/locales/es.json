@@ -718,7 +718,8 @@
       "transferred": "Conversaciones transferidas a soporte humano",
       "topics": "Asuntos",
       "csat": "CSAT",
-      "nps": "NPS"
+      "nps": "NPS",
+      "agent_status_logs": "Agent"
     },
     "field_labels": {
       "config": "Configuración",
@@ -753,10 +754,17 @@
       "queue__name": "Cola",
       "queue__uuid": "ID de la cola",
       "queue__sector__name": "Sector",
-      "created_on": "Fecha de inicio del servicio",
+      "created_on": "Fecha de inicio",
       "duration": "Duración",
       "awaiting_time": "Tiempo en espera",
-      "first_response_time": "Tiempo de 1ª respuesta"
+      "first_response_time": "Tiempo de 1ª respuesta",
+      "agent__email": "Email",
+      "agent__first_name": "Nombre",
+      "agent__last_name": "Apellido",
+      "project__name": "Nombre del proyecto",
+      "project__uuid": "ID del proyecto",
+      "status_changes": "Status",
+      "log_date": "Fecha de registro"
     },
     "select_data": {
       "label": "Selecciona el periodo para buscar datos (máximo de 92 días entre la fecha de inicio y fin)",

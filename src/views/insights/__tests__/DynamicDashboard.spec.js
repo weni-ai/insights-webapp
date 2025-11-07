@@ -81,8 +81,25 @@ describe('DynamicDashboard.vue', () => {
       await wrapper.vm.$nextTick();
 
       expect(resetCurrentDashboardWidgetsSpy).toHaveBeenCalled();
-      expect(resetAppliedFiltersSpy).toHaveBeenCalled();
       expect(getCurrentDashboardWidgetsSpy).toHaveBeenCalled();
+      expect(resetAppliedFiltersSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call resetAppliedFilters when switching between dashboards', async () => {
+      const resetAppliedFiltersSpy = vi.spyOn(
+        dashboardsStore,
+        'resetAppliedFilters',
+      );
+
+      dashboardsStore.currentDashboard = { uuid: 'first-uuid' };
+      await wrapper.vm.$nextTick();
+
+      expect(resetAppliedFiltersSpy).not.toHaveBeenCalled();
+
+      dashboardsStore.currentDashboard = { uuid: 'second-uuid' };
+      await wrapper.vm.$nextTick();
+
+      expect(resetAppliedFiltersSpy).toHaveBeenCalled();
     });
   });
 });

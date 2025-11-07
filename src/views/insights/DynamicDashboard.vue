@@ -113,10 +113,13 @@ const resetAppliedFilters = () => {
 
 watch(
   currentDashboardUuid,
-  async (newCurrentDashboardUuid) => {
+  async (newCurrentDashboardUuid, oldCurrentDashboardUuid) => {
     if (newCurrentDashboardUuid) {
       resetCurrentDashboardWidgets();
-      resetAppliedFilters();
+      // Only reset filters when switching between dashboards, not on initial load
+      if (oldCurrentDashboardUuid) {
+        resetAppliedFilters();
+      }
       getCurrentDashboardWidgets();
     }
   },

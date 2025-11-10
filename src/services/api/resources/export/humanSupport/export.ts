@@ -29,6 +29,7 @@ interface ExportRequest {
   users: ExportEntity;
   sector_tags: ExportEntity;
   contacts: ExportEntity;
+  agent_status_logs: ExportEntity;
 }
 
 interface ExportResponse {

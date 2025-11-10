@@ -304,26 +304,49 @@ describe('HumanSupport FormExport', () => {
   });
 
   describe('Date methods', () => {
-    it('should call getMinDate and return null for empty range', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date('2024-06-15T12:00:00Z'));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it('should return null for empty date range', () => {
+      wrapper.vm.selectDateRange = { start: '', end: '' };
       const minDate = wrapper.vm.getMinDate();
       expect(minDate).toBeNull();
     });
 
-    it('should call getMaxDate and return today for empty range', () => {
+    it('should return today for maxDate with empty range', () => {
+      wrapper.vm.selectDateRange = { start: '', end: '' };
       const maxDate = wrapper.vm.getMaxDate();
-      expect(maxDate).toBeTruthy();
+      expect(maxDate).toBe('2024-06-15');
     });
 
-    it('should calculate minDate based on selectDateRange', () => {
-      wrapper.vm.selectDateRange = { start: '2024-01-01', end: '' };
+    it('should calculate minDate 92 days before start date', () => {
+      wrapper.vm.selectDateRange = { start: '2024-06-15', end: '' };
       const minDate = wrapper.vm.getMinDate();
-      expect(minDate).toBeTruthy();
+      expect(minDate).toBe('2024-03-15');
     });
 
-    it('should calculate maxDate based on selectDateRange', () => {
-      wrapper.vm.selectDateRange = { start: '2024-01-01', end: '' };
+    it('should calculate maxDate 92 days after start date', () => {
+      wrapper.vm.selectDateRange = { start: '2024-03-15', end: '' };
       const maxDate = wrapper.vm.getMaxDate();
-      expect(maxDate).toBeTruthy();
+      expect(maxDate).toBe('2024-06-15');
+    });
+
+    it('should cap maxDate at today if calculated date is in future', () => {
+      wrapper.vm.selectDateRange = { start: '2024-06-01', end: '' };
+      const maxDate = wrapper.vm.getMaxDate();
+      expect(maxDate).toBe('2024-06-15');
+    });
+
+    it('should return default min when start date is invalid', () => {
+      wrapper.vm.selectDateRange = { start: 'invalid-date', end: '' };
+      const minDate = wrapper.vm.getMinDate();
+      expect(minDate).toBeNull();
     });
   });
 

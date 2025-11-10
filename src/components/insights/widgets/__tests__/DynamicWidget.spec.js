@@ -1,4 +1,4 @@
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { beforeEach, describe, it, vi, beforeAll, afterAll } from 'vitest';
 import { shallowMount, config, flushPromises } from '@vue/test-utils';
@@ -14,11 +14,14 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
 
-// Mock Unnnic
 vi.mock('@weni/unnnic-system', () => ({
   default: {
     unnnicCallAlert: vi.fn(),
   },
+}));
+
+vi.mock('@vueuse/core', () => ({
+  useElementVisibility: vi.fn(() => ref(true)),
 }));
 
 beforeAll(() => {
@@ -72,6 +75,10 @@ const createWrapper = (props = {}, storeState = {}) => {
       },
       reports: {
         ...storeState.reports,
+      },
+      config: {
+        isActiveRoute: true,
+        ...storeState.config,
       },
     },
   });
@@ -157,7 +164,9 @@ describe('DynamicWidget', () => {
 
     it('should not render any component for unknown widget types', () => {
       wrapper = createWrapper({ widget: { type: 'unknown_type', config: {} } });
-      expect(wrapper.html()).toBe('');
+      // Should have div wrapper but no component inside
+      expect(wrapper.html()).toContain('<div');
+      expect(wrapper.html()).toContain('<!---->');
     });
   });
 
@@ -609,20 +618,22 @@ describe('DynamicWidget', () => {
         {
           dashboards: {
             currentDashboard: { name: 'human_service_dashboard.title' },
-            appliedFilters: { created_on: { start: '2023-01-01' } },
+            appliedFilters: {},
           },
         },
       );
 
+      await nextTick();
+
       const dashboardsStore = useDashboards();
 
-      dashboardsStore.appliedFilters = {};
+      dashboardsStore.appliedFilters = { created_on: { start: '2023-01-01' } };
       await nextTick();
 
       expect(global.clearInterval).toHaveBeenCalled();
     });
 
-    it('should initialize polling on mount for human service dashboard', () => {
+    it('should initialize polling on mount for human service dashboard', async () => {
       wrapper = createWrapper(
         {},
         {
@@ -632,6 +643,8 @@ describe('DynamicWidget', () => {
           },
         },
       );
+
+      await nextTick();
 
       expect(global.setInterval).toHaveBeenCalled();
     });

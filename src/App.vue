@@ -127,6 +127,15 @@ export default {
         this.setIsCommerce(newProject?.type === 2);
       },
     },
+    'sharedStore.activeFederatedModules.insights': {
+      immediate: true,
+      deep: true,
+      handler(isActive) {
+        if (isActive === undefined) return;
+
+        this.setIsActiveRoute(isActive);
+      },
+    },
   },
 
   created() {

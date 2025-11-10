@@ -718,7 +718,8 @@
       "transferred": "Conversas transferidas para atendimento humano",
       "topics": "Assuntos",
       "csat": "CSAT",
-      "nps": "NPS"
+      "nps": "NPS",
+      "agent_status_logs": "Agent"
     },
     "field_labels": {
       "config": "Configuração",
@@ -753,10 +754,17 @@
       "queue__name": "Fila",
       "queue__uuid": "ID da fila",
       "queue__sector__name": "Setor",
-      "created_on": "Data de início do atendimento",
+      "created_on": "Data de início",
       "duration": "Duração",
       "awaiting_time": "Tempo em espera",
-      "first_response_time": "Tempo para 1ª resposta"
+      "first_response_time": "Tempo para 1ª resposta",
+      "agent__email": "Email",
+      "agent__first_name": "Nome",
+      "agent__last_name": "Sobrenome",
+      "project__name": "Nome do projeto",
+      "project__uuid": "ID do projeto",
+      "status_changes": "Status",
+      "log_date": "Data de registro"
     },
     "select_data": {
       "label": "Selecione o período para buscar dados (máximo de 92 dias entre a data inicial e a data final)",
@@ -809,7 +817,9 @@
   "human_support_dashboard": {
     "title": "Atendimento humano",
     "monitoring": "Monitoramento",
+    "monitoring_tooltip": "Acompanhe em tempo real os atendimentos do dia. Identifique gargalos e tome decisões rápidas para otimizar a operação.",
     "analysis": "Análise",
+    "analysis_tooltip": "Explore o desempenho de salas encerradas em diferentes períodos de tempo. Descubra padrões, tendências e oportunidades de melhoria na sua equipe.",
     "support_status": {
       "title": "Status dos atendimentos",
       "is_waiting": "Em espera",
@@ -925,6 +935,26 @@
           "attendant": "Atendente",
           "pauses": "Pausas personalizadas"
         }
+      }
+    }
+  },
+  "news": {
+    "title": "Notícias e atualizações no Insights - Atendimento humano",
+    "human_support_dashboard": {
+      "monitoring": {
+        "first_text": "Monitorize as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>!",
+        "second_text": "Agora você pode monitorar o status dos atendimentos em tempo real:",
+        "third_text": "Monitorize as métricas de tempo agora — tempo médio e máximo em espera, tempo para 1ª resposta e duração — em tempo real:",
+        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e agente.",
+        "fifth_text": "Você pode monitorar cada interação através das abas <b>Em andamento</b> e <b>Em espera</b>. Clique nas interações para visualizá-las.",
+        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada agente por interação, bem como as pausas personalizadas.",
+        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada agente para entrar em modo de visualização ou usar o botão para desconectá-lo."
+      },
+      "analysis": {
+        "first_text": "Explore as interações encerradas para descobrir padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
+        "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio em espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
+        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e agente.",
+        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
       }
     }
   }

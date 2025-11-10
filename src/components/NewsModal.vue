@@ -49,7 +49,7 @@ import { UnnnicPagination, UnnnicModalDialog } from '@weni/unnnic-system';
 import { computed, ref } from 'vue';
 
 const emit = defineEmits<{
-  (e: 'close'): void;
+  close: []
 }>();
 
 const props = defineProps<{

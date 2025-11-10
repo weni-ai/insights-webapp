@@ -1,5 +1,6 @@
 <template>
   <section
+    ref="monitoringRef"
     class="monitoring"
     data-testid="monitoring"
   >
@@ -17,8 +18,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
-import { useTimeoutFn } from '@vueuse/core';
+import { onMounted, onUnmounted, watch, ref, computed } from 'vue';
+import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import StatusCards from './StatusCards.vue';
@@ -47,6 +48,11 @@ let timeoutStop: (() => void) | null = null;
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
 const { setRefreshDataMonitoring } = useHumanSupportMonitoring();
+
+const monitoringRef = ref(null);
+const isVisible = useElementVisibility(monitoringRef);
+
+const shouldPoll = computed(() => isVisible.value);
 
 const loadData = async () => {
   setRefreshDataMonitoring(true);
@@ -87,15 +93,23 @@ onMounted(() => {
   if (!hasBeenShown) {
     showNewsModal.value = true;
   }
-
-  loadData();
-
-  startAutoRefresh();
 });
 
 onUnmounted(() => {
   stopAutoRefresh();
 });
+
+watch(
+  shouldPoll,
+  (newValue) => {
+    if (newValue && !autoRefreshInterval) {
+      startAutoRefresh();
+    } else if (!newValue && autoRefreshInterval) {
+      stopAutoRefresh();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style scoped lang="scss">

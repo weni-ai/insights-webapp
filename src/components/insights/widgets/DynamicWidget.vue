@@ -1,15 +1,18 @@
 <template>
-  <component
-    :is="currentComponent"
-    v-bind="componentProps"
-    v-on="componentEvents"
-  />
+  <div ref="widgetContainerRef">
+    <component
+      :is="currentComponent"
+      v-bind="componentProps"
+      v-on="componentEvents"
+    />
+  </div>
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import { useElementVisibility } from '@vueuse/core';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
@@ -40,6 +43,9 @@ const widgetsStore = useWidgets();
 const reportsStore = useReports();
 
 const { appliedFilters, currentDashboard } = storeToRefs(dashboardsStore);
+
+const widgetContainerRef = ref(null);
+const isVisible = useElementVisibility(widgetContainerRef);
 
 const { getWidgetCategory } = useWidgetTypes();
 
@@ -174,6 +180,13 @@ const initRequestDataInterval = () => {
   }
 };
 
+const stopRequestDataInterval = () => {
+  if (interval.value) {
+    clearInterval(interval.value);
+    interval.value = null;
+  }
+};
+
 watch(
   () => route.query,
   () => {
@@ -193,20 +206,31 @@ watch(
 );
 
 watch(hasDateFiltering, (newHasDateFiltering) => {
-  clearInterval(interval.value);
+  stopRequestDataInterval();
 
   if (!newHasDateFiltering && isHumanServiceDashboard.value) {
     initRequestDataInterval();
   }
 });
 
-onMounted(() => {
-  if (!hasDateFiltering.value && isHumanServiceDashboard.value) {
-    initRequestDataInterval();
-  }
-});
+watch(
+  isVisible,
+  (newValue) => {
+    if (
+      newValue &&
+      !interval.value &&
+      isHumanServiceDashboard.value &&
+      !hasDateFiltering.value
+    ) {
+      initRequestDataInterval();
+    } else if (!newValue) {
+      stopRequestDataInterval();
+    }
+  },
+  { immediate: true },
+);
 
 onUnmounted(() => {
-  clearInterval(interval.value);
+  stopRequestDataInterval();
 });
 </script>

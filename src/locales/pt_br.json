@@ -927,5 +927,25 @@
         }
       }
     }
+  },
+  "news": {
+    "title": "Notícias e atualizações no Insights - Atendimento humano",
+    "human_support_dashboard": {
+      "monitoring": {
+        "first_text": "Monitorize as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>!",
+        "second_text": "Agora você pode monitorar o status dos atendimentos em tempo real:",
+        "third_text": "Monitorize as métricas de tempo agora — tempo médio e máximo em espera, tempo para 1ª resposta e duração — em tempo real:",
+        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e agente.",
+        "fifth_text": "Você pode monitorar cada interação através das abas <b>Em andamento</b> e <b>Em espera</b>. Clique nas interações para visualizá-las.",
+        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada agente por interação, bem como as pausas personalizadas.",
+        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada agente para entrar em modo de visualização ou usar o botão para desconectá-lo."
+      },
+      "analysis": {
+        "first_text": "Explore as interações encerradas para descobrir padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
+        "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio em espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
+        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e agente.",
+        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
+      }
+    }
   }
 }

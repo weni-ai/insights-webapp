@@ -11,10 +11,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue';
+import { onMounted, onUnmounted, watch } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
+import { storeToRefs } from 'pinia';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useConfig } from '@/store/modules/config';
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
@@ -26,6 +28,8 @@ let timeoutStop: (() => void) | null = null;
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
 const { setRefreshDataMonitoring } = useHumanSupportMonitoring();
+const configStore = useConfig();
+const { isActiveRoute } = storeToRefs(configStore);
 
 const loadData = async () => {
   setRefreshDataMonitoring(true);
@@ -63,12 +67,19 @@ const stopAutoRefresh = () => {
 
 onMounted(() => {
   loadData();
-
   startAutoRefresh();
 });
 
 onUnmounted(() => {
   stopAutoRefresh();
+});
+
+watch(isActiveRoute, (newValue) => {
+  if (newValue && !autoRefreshInterval) {
+    startAutoRefresh();
+  } else if (!newValue) {
+    stopAutoRefresh();
+  }
 });
 </script>
 

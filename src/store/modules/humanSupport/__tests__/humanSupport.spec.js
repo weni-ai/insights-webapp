@@ -20,6 +20,16 @@ vi.mock('@/utils/time', () => ({
   })),
 }));
 
+vi.mock('vue-router', () => ({
+  useRouter: vi.fn(() => ({
+    currentRoute: {
+      value: {
+        query: {},
+      },
+    },
+  })),
+}));
+
 describe('useHumanSupport store', () => {
   let store;
   let mockLoadAllDataMonitoring;

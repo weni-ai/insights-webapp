@@ -1,4 +1,4 @@
-import { nextTick, ref } from 'vue';
+import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { beforeEach, describe, it, vi, beforeAll, afterAll } from 'vitest';
 import { shallowMount, config, flushPromises } from '@vue/test-utils';
@@ -18,10 +18,6 @@ vi.mock('@weni/unnnic-system', () => ({
   default: {
     unnnicCallAlert: vi.fn(),
   },
-}));
-
-vi.mock('@vueuse/core', () => ({
-  useElementVisibility: vi.fn(() => ref(true)),
 }));
 
 beforeAll(() => {
@@ -164,8 +160,7 @@ describe('DynamicWidget', () => {
 
     it('should not render any component for unknown widget types', () => {
       wrapper = createWrapper({ widget: { type: 'unknown_type', config: {} } });
-      // Should have div wrapper but no component inside
-      expect(wrapper.html()).toContain('<div');
+      // Should render empty comment when no component matches
       expect(wrapper.html()).toContain('<!---->');
     });
   });

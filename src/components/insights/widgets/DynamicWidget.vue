@@ -1,18 +1,15 @@
 <template>
-  <div ref="widgetContainerRef">
-    <component
-      :is="currentComponent"
-      v-bind="componentProps"
-      v-on="componentEvents"
-    />
-  </div>
+  <component
+    :is="currentComponent"
+    v-bind="componentProps"
+    v-on="componentEvents"
+  />
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useElementVisibility } from '@vueuse/core';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
@@ -43,9 +40,6 @@ const widgetsStore = useWidgets();
 const reportsStore = useReports();
 
 const { appliedFilters, currentDashboard } = storeToRefs(dashboardsStore);
-
-const widgetContainerRef = ref(null);
-const isVisible = useElementVisibility(widgetContainerRef);
 
 const { getWidgetCategory } = useWidgetTypes();
 
@@ -213,22 +207,11 @@ watch(hasDateFiltering, (newHasDateFiltering) => {
   }
 });
 
-watch(
-  isVisible,
-  (newValue) => {
-    if (
-      newValue &&
-      !interval.value &&
-      isHumanServiceDashboard.value &&
-      !hasDateFiltering.value
-    ) {
-      initRequestDataInterval();
-    } else if (!newValue) {
-      stopRequestDataInterval();
-    }
-  },
-  { immediate: true },
-);
+onMounted(() => {
+  if (isHumanServiceDashboard.value && !hasDateFiltering.value) {
+    initRequestDataInterval();
+  }
+});
 
 onUnmounted(() => {
   stopRequestDataInterval();

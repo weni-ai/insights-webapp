@@ -764,7 +764,11 @@
       "project__name": "Nombre del proyecto",
       "project__uuid": "ID del proyecto",
       "status_changes": "Status",
-      "log_date": "Fecha de registro"
+      "log_date": "Fecha de registro",
+      "metric__first_response_time": "Tiempo de 1ª respuesta",
+      "metric__message_response_time": "Tiempo medio de respuesta",
+      "metric__interaction_time": "Duración",
+      "metric__waiting_time": "Tiempo en espera"
     },
     "select_data": {
       "label": "Selecciona el periodo para buscar datos (máximo de 92 días entre la fecha de inicio y fin)",

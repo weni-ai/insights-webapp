@@ -5,7 +5,7 @@
   >
     <LineChart
       data-testid="services-open-by-hour-chart"
-      :title="$t('human_support_dashboard.services_open_by_date.title')"
+      :title="$t('human_support_dashboard.services_open_by_hour.title')"
       :chartData="data"
       :seeMore="false"
       :isLoading="isLoading"

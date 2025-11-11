@@ -864,9 +864,6 @@
     "services_open_by_hour": {
       "title": "Supports open by hour"
     },
-    "services_open_by_date": {
-      "title": "Supports open by date"
-    },
     "detailed_monitoring": {
       "title": "Detailed monitoring",
       "tabs": {

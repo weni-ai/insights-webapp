@@ -863,9 +863,6 @@
     "services_open_by_hour": {
       "title": "Atendimentos abertos por hora"
     },
-    "services_open_by_date": {
-      "title": "Atendimentos abertos por data"
-    },
     "detailed_monitoring": {
       "title": "Monitoramento detalhado",
       "tabs": {

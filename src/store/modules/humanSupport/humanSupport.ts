@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, inject } from 'vue';
 import { useHumanSupportMonitoring } from './monitoring';
 import { useHumanSupportAnalysis } from './analysis';
 import { getLastNDays } from '@/utils/time';
+import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
 
 interface Filter {
@@ -42,8 +43,8 @@ export const useHumanSupport = defineStore('humanSupport', () => {
   const humanSupportAnalysis = useHumanSupportAnalysis();
   const { loadAllData: loadAllDataAnalysis } = humanSupportAnalysis;
 
-  const router = useRouter();
-  const { query } = router.currentRoute.value;
+  const router = inject<Router>('router', useRouter());
+  const query = router?.currentRoute?.value?.query || {};
 
   const currentDateRange =
     typeof query.start_date === 'string' && typeof query.end_date === 'string'

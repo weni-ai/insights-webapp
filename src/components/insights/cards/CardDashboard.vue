@@ -1,6 +1,7 @@
 <template>
   <UnnnicToolTip
     :data-testid="`card-${id}-tooltip`"
+    class="card-dashboard__tooltip"
     :text="hoverTooltip"
     side="right"
     maxWidth="200px"
@@ -173,6 +174,11 @@ export default {
     .card-dashboard__button-config {
       align-self: center;
     }
+  }
+
+  &__tooltip {
+    height: 100%;
+    width: 100%;
   }
 
   .card__content {

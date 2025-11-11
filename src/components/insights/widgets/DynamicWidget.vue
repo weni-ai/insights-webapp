@@ -14,6 +14,7 @@ import { storeToRefs } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
+import { useConfig } from '@/store/modules/config';
 
 import { useWidgetTypes } from '@/composables/useWidgetTypes';
 
@@ -38,8 +39,10 @@ const route = useRoute();
 const dashboardsStore = useDashboards();
 const widgetsStore = useWidgets();
 const reportsStore = useReports();
+const configStore = useConfig();
 
 const { appliedFilters, currentDashboard } = storeToRefs(dashboardsStore);
+const { isActiveRoute } = storeToRefs(configStore);
 
 const { getWidgetCategory } = useWidgetTypes();
 
@@ -204,6 +207,14 @@ watch(hasDateFiltering, (newHasDateFiltering) => {
 
   if (!newHasDateFiltering && isHumanServiceDashboard.value) {
     initRequestDataInterval();
+  }
+});
+
+watch(isActiveRoute, (newValue) => {
+  if (newValue && !interval.value) {
+    initRequestDataInterval();
+  } else if (!newValue) {
+    stopRequestDataInterval();
   }
 });
 

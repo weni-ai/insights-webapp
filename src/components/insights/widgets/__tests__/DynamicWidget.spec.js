@@ -13,6 +13,7 @@ import DynamicTable from '../DynamicTable.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
+import { useConfig } from '@/store/modules/config';
 
 vi.mock('@weni/unnnic-system', () => ({
   default: {
@@ -73,7 +74,7 @@ const createWrapper = (props = {}, storeState = {}) => {
         ...storeState.reports,
       },
       config: {
-        isActiveRoute: true,
+        isActiveRoute: false,
         ...storeState.config,
       },
     },
@@ -618,6 +619,9 @@ describe('DynamicWidget', () => {
             currentDashboard: { name: 'human_service_dashboard.title' },
             appliedFilters: {},
           },
+          config: {
+            isActiveRoute: true,
+          },
         },
       );
 
@@ -645,6 +649,99 @@ describe('DynamicWidget', () => {
       await nextTick();
 
       expect(global.setInterval).toHaveBeenCalled();
+    });
+
+    it('should start polling when isActiveRoute changes to true', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'human_service_dashboard.title' },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: false,
+          },
+        },
+      );
+
+      vi.clearAllMocks();
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = true;
+      await nextTick();
+
+      expect(global.setInterval).toHaveBeenCalled();
+    });
+
+    it('should stop polling when isActiveRoute changes to false', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'human_service_dashboard.title' },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: true,
+          },
+        },
+      );
+
+      await nextTick();
+      wrapper.vm.interval = 123;
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = false;
+      await nextTick();
+
+      expect(global.clearInterval).toHaveBeenCalledWith(123);
+    });
+
+    it('should not start polling when isActiveRoute is true but has date filtering', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'human_service_dashboard.title' },
+            appliedFilters: { created_on: { start: '2023-01-01' } },
+          },
+          config: {
+            isActiveRoute: false,
+          },
+        },
+      );
+
+      vi.clearAllMocks();
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = true;
+      await nextTick();
+
+      expect(global.setInterval).not.toHaveBeenCalled();
+    });
+
+    it('should not start polling when isActiveRoute is true but not human service dashboard', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'other_dashboard' },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: false,
+          },
+        },
+      );
+
+      vi.clearAllMocks();
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = true;
+      await nextTick();
+
+      expect(global.setInterval).not.toHaveBeenCalled();
     });
   });
 });

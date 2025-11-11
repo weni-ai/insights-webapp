@@ -224,8 +224,14 @@ export default {
       handler(filters) {
         if (filters.length === 1) {
           const { date, ended_at } = this.$route.query;
+
           const isConversational =
             this.currentDashboard?.name === 'conversations_dashboard.title';
+
+          const isHumanSupportDashboard =
+            this.currentDashboard?.name === 'human_support_dashboard.title';
+
+          if (isHumanSupportDashboard) return;
 
           const { start, end } = isConversational
             ? getYesterdayNDays(7)
@@ -249,7 +255,9 @@ export default {
           this.setAppliedFilters({
             [filterKey]: currentFilters[filterKey] || defaultFilterValue,
           });
+          console.log('currentFilters', currentFilters);
         } else {
+          console.log('this.$route.query', this.$route.query);
           this.setAppliedFilters(this.$route.query);
         }
       },

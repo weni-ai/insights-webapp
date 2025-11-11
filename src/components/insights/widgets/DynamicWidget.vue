@@ -1,22 +1,20 @@
 <template>
-  <div ref="widgetContainerRef">
-    <component
-      :is="currentComponent"
-      v-bind="componentProps"
-      v-on="componentEvents"
-    />
-  </div>
+  <component
+    :is="currentComponent"
+    v-bind="componentProps"
+    v-on="componentEvents"
+  />
 </template>
 
 <script setup>
-import { computed, onUnmounted, ref, watch } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { useElementVisibility } from '@vueuse/core';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
+import { useConfig } from '@/store/modules/config';
 
 import { useWidgetTypes } from '@/composables/useWidgetTypes';
 
@@ -41,11 +39,10 @@ const route = useRoute();
 const dashboardsStore = useDashboards();
 const widgetsStore = useWidgets();
 const reportsStore = useReports();
+const configStore = useConfig();
 
 const { appliedFilters, currentDashboard } = storeToRefs(dashboardsStore);
-
-const widgetContainerRef = ref(null);
-const isVisible = useElementVisibility(widgetContainerRef);
+const { isActiveRoute } = storeToRefs(configStore);
 
 const { getWidgetCategory } = useWidgetTypes();
 
@@ -213,22 +210,19 @@ watch(hasDateFiltering, (newHasDateFiltering) => {
   }
 });
 
-watch(
-  isVisible,
-  (newValue) => {
-    if (
-      newValue &&
-      !interval.value &&
-      isHumanServiceDashboard.value &&
-      !hasDateFiltering.value
-    ) {
-      initRequestDataInterval();
-    } else if (!newValue) {
-      stopRequestDataInterval();
-    }
-  },
-  { immediate: true },
-);
+watch(isActiveRoute, (newValue) => {
+  if (newValue && !interval.value) {
+    initRequestDataInterval();
+  } else if (!newValue) {
+    stopRequestDataInterval();
+  }
+});
+
+onMounted(() => {
+  if (isHumanServiceDashboard.value && !hasDateFiltering.value) {
+    initRequestDataInterval();
+  }
+});
 
 onUnmounted(() => {
   stopRequestDataInterval();

@@ -27,14 +27,14 @@
     "unclassified": "Sin clasificar",
     "header": {
       "total": "Total de conversaciones",
-      "resolved": "Resoluciones optimizadas",
-      "unresolved": "Resoluciones alternativas",
+      "resolved": "Atendido por IA",
+      "unresolved": "No Atendido",
       "unengaged": "Sin participación",
       "transferred": "Transferidas a soporte humano",
       "tooltips": {
         "total": "Total de conversaciones iniciadas en este periodo. Se cuenta una conversación 24 horas después del primer mensaje del contacto.",
-        "resolved": "Conversaciones finalizadas con una resolución clara y efectiva para el contacto",
-        "unresolved": "Conversaciones finalizadas de otras maneras, como interacciones rápidas, saludos, abandono o sin resolución directa",
+        "resolved": "Cuando el agente demuestra competencia y proporciona servicio útil",
+        "unresolved": "Cuando no hubo atención efectiva (saludos, fuera de alcance, fallas del agente)",
         "unengaged": "Conversación sin participación útil. La conversación se limitó a saludos, emojis o se cerró sin una interacción relevante.",
         "transferred": "Incluye conversaciones (resueltas o no) transferidas al soporte humano"
       }
@@ -778,7 +778,11 @@
       "project__name": "Nombre del proyecto",
       "project__uuid": "ID del proyecto",
       "status_changes": "Status",
-      "log_date": "Fecha de registro"
+      "log_date": "Fecha de registro",
+      "metric__first_response_time": "Tiempo de 1ª respuesta",
+      "metric__message_response_time": "Tiempo medio de respuesta",
+      "metric__interaction_time": "Duración",
+      "metric__waiting_time": "Tiempo en espera"
     },
     "select_data": {
       "label": "Selecciona el periodo para buscar datos (máximo de 92 días entre la fecha de inicio y fin)",

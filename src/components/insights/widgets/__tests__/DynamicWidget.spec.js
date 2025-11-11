@@ -161,7 +161,6 @@ describe('DynamicWidget', () => {
 
     it('should not render any component for unknown widget types', () => {
       wrapper = createWrapper({ widget: { type: 'unknown_type', config: {} } });
-      // Should render nothing when no component matches
       expect(wrapper.html()).toBe('');
       expect(wrapper.findComponent(DynamicCard).exists()).toBe(false);
       expect(wrapper.findComponent(DynamicGraph).exists()).toBe(false);
@@ -660,14 +659,22 @@ describe('DynamicWidget', () => {
             appliedFilters: {},
           },
           config: {
-            isActiveRoute: false,
+            isActiveRoute: true,
           },
         },
       );
 
-      vi.clearAllMocks();
+      await nextTick();
+      expect(global.setInterval).toHaveBeenCalled();
 
       const configStore = useConfig();
+      configStore.isActiveRoute = false;
+      await nextTick();
+
+      expect(global.clearInterval).toHaveBeenCalled();
+
+      vi.clearAllMocks();
+
       configStore.isActiveRoute = true;
       await nextTick();
 
@@ -712,7 +719,7 @@ describe('DynamicWidget', () => {
         },
       );
 
-      vi.clearAllMocks();
+      expect(global.setInterval).not.toHaveBeenCalled();
 
       const configStore = useConfig();
       configStore.isActiveRoute = true;
@@ -735,7 +742,7 @@ describe('DynamicWidget', () => {
         },
       );
 
-      vi.clearAllMocks();
+      expect(global.setInterval).not.toHaveBeenCalled();
 
       const configStore = useConfig();
       configStore.isActiveRoute = true;

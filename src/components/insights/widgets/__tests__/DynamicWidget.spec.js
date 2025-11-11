@@ -160,8 +160,11 @@ describe('DynamicWidget', () => {
 
     it('should not render any component for unknown widget types', () => {
       wrapper = createWrapper({ widget: { type: 'unknown_type', config: {} } });
-      // Should render empty comment when no component matches
-      expect(wrapper.html()).toContain('<!---->');
+      // Should render nothing when no component matches
+      expect(wrapper.html()).toBe('');
+      expect(wrapper.findComponent(DynamicCard).exists()).toBe(false);
+      expect(wrapper.findComponent(DynamicGraph).exists()).toBe(false);
+      expect(wrapper.findComponent(DynamicTable).exists()).toBe(false);
     });
   });
 

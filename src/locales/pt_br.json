@@ -92,7 +92,8 @@
     "no_data_available": "Nenhum dado disponível para o período de uso",
     "widget_error": {
       "title": "Ops, ocorreu um erro ao carregar os dados",
-      "button": "Verificar configuração do widget"
+      "button": "Verificar configuração do widget",
+      "crosstab_description": "A chave ou o valor não foram encontrados no banco de dados."
     },
     "reviews": "avaliações",
     "csat_widget": {

@@ -12,7 +12,14 @@
 <script setup lang="ts">
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
-import { ref, computed, watch, onMounted, useTemplateRef } from 'vue';
+import {
+  ref,
+  computed,
+  watch,
+  onMounted,
+  onBeforeUnmount,
+  useTemplateRef,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
@@ -63,38 +70,34 @@ const data = ref<FilterItem[] | TicketIdItem[]>([]);
 const isLoading = ref(false);
 const nextPageUrl = ref<string | null>(null);
 const isLoadingMore = ref(false);
+const searchValue = ref('');
+const searchDebounceTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
 const isContactFilter = computed(() => props.type === 'contact');
-
 const filterLabel = computed(() =>
   t(`human_support_dashboard.filters.${props.type}.label`),
 );
 
+const mapItemToOption = (item: FilterItem | TicketIdItem): FilterOption => {
+  if (isTicketIdFilter.value) {
+    const ticketItem = item as TicketIdItem;
+    return { value: ticketItem.protocol, label: ticketItem.protocol };
+  }
+
+  const filterItem = item as FilterItem;
+  const value =
+    props.type === 'contact' && filterItem.external_id
+      ? filterItem.external_id
+      : filterItem.uuid;
+
+  return { value, label: filterItem.name };
+};
+
 const mapDataToOptions = (
   items: FilterItem[] | TicketIdItem[],
 ): FilterOption[] => {
-  if (!Array.isArray(items)) {
-    return [];
-  }
-
-  if (isTicketIdFilter.value) {
-    return (items as TicketIdItem[]).map((item) => ({
-      value: item.protocol,
-      label: item.protocol,
-    }));
-  }
-
-  return (items as FilterItem[]).map((item) => {
-    const value =
-      props.type === 'contact' && item.external_id
-        ? item.external_id
-        : item.uuid;
-    return {
-      value,
-      label: item.name,
-    };
-  });
+  return Array.isArray(items) ? items.map(mapItemToOption) : [];
 };
 
 const options = computed(() => mapDataToOptions(data.value));
@@ -116,6 +119,7 @@ const selectProps = computed(() => ({
     infiniteScroll: true,
     infiniteScrollDistance: 10,
     infiniteScrollCanLoadMore: canLoadMore,
+    disableInternalFilter: true,
   }),
 }));
 
@@ -176,44 +180,89 @@ const handleChange = (selectedOptions: FilterOption[]) => {
   }
 };
 
+const clearSearchTimer = () => {
+  if (searchDebounceTimer.value) {
+    clearTimeout(searchDebounceTimer.value);
+    searchDebounceTimer.value = null;
+  }
+};
+
+const handleSearchValueUpdate = (newSearchValue: string) => {
+  if (!isContactFilter.value) return;
+
+  clearSearchTimer();
+  searchValue.value = newSearchValue;
+
+  const trimmedSearch = newSearchValue?.trim() || '';
+
+  if (!trimmedSearch) {
+    loadData();
+    return;
+  }
+
+  searchDebounceTimer.value = setTimeout(() => {
+    loadData(trimmedSearch);
+  }, 500);
+};
+
 const selectEvents = computed(() => ({
   'update:model-value': handleChange,
   ...(isContactFilter.value && {
     'scroll-end': loadMoreData,
+    'update:search-value': handleSearchValueUpdate,
   }),
 }));
 
-const loadData = async () => {
+const resetDataState = () => {
+  data.value = [];
+  nextPageUrl.value = null;
+};
+
+const processApiResponse = (response: any, preserveNextForSearch = false) => {
+  if (Array.isArray(response)) {
+    data.value = response;
+    nextPageUrl.value = null;
+    return;
+  }
+
+  if (response?.results && Array.isArray(response.results)) {
+    data.value = response.results;
+    nextPageUrl.value =
+      preserveNextForSearch || isContactFilter.value ? response.next : null;
+    return;
+  }
+
+  resetDataState();
+};
+
+const loadData = async (search?: string) => {
   try {
     isLoading.value = true;
-    const params = props.filterParams || {};
+
+    const params = search
+      ? { ...props.filterParams, search }
+      : props.filterParams || {};
+
     const response = await Projects.getProjectSource(
       props.source,
       params,
       isContactFilter.value,
     );
 
-    if (Array.isArray(response)) {
-      data.value = response;
-      nextPageUrl.value = null;
-    } else if (response && Array.isArray(response.results)) {
-      data.value = response.results;
-      nextPageUrl.value = isContactFilter.value ? response.next : null;
-    } else {
-      data.value = [];
-      nextPageUrl.value = null;
-    }
+    processApiResponse(response, !!search);
   } catch (error) {
     console.error(`Error loading ${props.type} data`, error);
-    data.value = [];
-    nextPageUrl.value = null;
+    resetDataState();
   } finally {
     isLoading.value = false;
   }
 };
 
 const loadMoreData = async () => {
-  if (!isContactFilter.value || !nextPageUrl.value || isLoadingMore.value) {
+  const canLoad =
+    isContactFilter.value && nextPageUrl.value && !isLoadingMore.value;
+
+  if (!canLoad) {
     selectSmartRef.value?.finishInfiniteScroll();
     return;
   }
@@ -224,7 +273,7 @@ const loadMoreData = async () => {
       nextPageUrl.value,
     );
 
-    if (response && Array.isArray(response.results)) {
+    if (response?.results && Array.isArray(response.results)) {
       data.value = [...data.value, ...response.results];
       nextPageUrl.value = response.next;
     }
@@ -237,8 +286,9 @@ const loadMoreData = async () => {
 };
 
 const clearData = () => {
-  data.value = [];
-  nextPageUrl.value = null;
+  resetDataState();
+  searchValue.value = '';
+  clearSearchTimer();
   emit('update:modelValue', []);
 };
 
@@ -252,6 +302,10 @@ watch(
 
 onMounted(() => {
   loadData();
+});
+
+onBeforeUnmount(() => {
+  clearSearchTimer();
 });
 
 defineExpose({

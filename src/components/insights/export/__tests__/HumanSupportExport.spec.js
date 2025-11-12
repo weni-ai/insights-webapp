@@ -1,6 +1,7 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { ref } from 'vue';
 
 import HumanSupportExport from '../HumanSupportExport.vue';
 
@@ -19,6 +20,10 @@ const mockStore = {
 
 vi.mock('@/store/modules/export/humanSupport/export', () => ({
   useHumanSupportExport: () => mockStore,
+}));
+
+vi.mock('@vueuse/core', () => ({
+  useElementVisibility: vi.fn(() => ref(true)),
 }));
 
 vi.mock('pinia', async (importOriginal) => {

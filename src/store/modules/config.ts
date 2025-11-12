@@ -9,6 +9,7 @@ export const useConfig = defineStore('config', {
     enableCreateCustomDashboards: false,
     enableCsat: false,
     token: '',
+    isActiveRoute: false,
   }),
 
   actions: {
@@ -19,6 +20,9 @@ export const useConfig = defineStore('config', {
     setToken(token: string) {
       this.token = token;
       moduleStorage.setItem('token', token);
+    },
+    setIsActiveRoute(isActive: boolean) {
+      this.isActiveRoute = isActive;
     },
 
     async checkEnableCreateCustomDashboards() {

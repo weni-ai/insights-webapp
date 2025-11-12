@@ -107,16 +107,26 @@ const createOrUpdateChart = () => {
             labels: {
               display: true,
               align: 'left',
-              overflow: 'hidden',
+              overflow: 'fit',
               formatter(ctx: any) {
                 if (ctx.type !== 'data') return;
 
                 const data = ctx.raw._data;
+
                 const padding = '    ';
+                const maxLabelLength = 25;
+
+                // Truncate label with ellipsis if too long
+                let labelText = data.label;
+                if (labelText.length > maxLabelLength) {
+                  labelText =
+                    labelText.substring(0, maxLabelLength - 3) + '...';
+                }
+
                 // Yes, this is a workaround to add padding to the label.
                 // Each space here is 4px, so 4 spaces is 16px :)
                 return [
-                  `${padding}${data.label} (${data.percentage}%)${padding}`,
+                  `${padding}${labelText} (${data.percentage}%)${padding}`,
                   `${padding}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}${padding}`,
                 ];
               },

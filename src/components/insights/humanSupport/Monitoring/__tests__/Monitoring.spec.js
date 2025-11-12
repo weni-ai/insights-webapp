@@ -21,6 +21,7 @@ vi.mock('@vueuse/core', () => ({
     return { stop: mockTimeoutStop };
   }),
   useElementVisibility: vi.fn(() => ref(true)),
+  useInfiniteScroll: vi.fn(),
 }));
 
 vi.mock('@/utils/storage', () => ({

@@ -33,6 +33,7 @@
         :expandableDescription="`${item.subItems?.length} ${subItemsDescription || ''}`"
         :expanded="expandedItems.includes(item.label)"
         :subItems="item.subItems"
+        :tooltip="item.tooltip"
         @expand="expandItem(item.label, $event)"
       />
     </tbody>

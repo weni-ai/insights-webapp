@@ -14,6 +14,7 @@
       :isError="isError"
       :actionError="actionError"
       :type="type"
+      :uuid="uuid"
       @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
@@ -78,6 +79,7 @@ import {
   CsatResponse,
   NpsResponse,
   CustomWidgetResponse,
+  CrosstabWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { Tab } from './BaseConversationWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -211,6 +213,8 @@ const widgetData = computed(() => {
       (getCustomWidgetByUuid(props.uuid as string)
         ?.data as CustomWidgetResponse) || { results: [] },
     ),
+    crosstab: getCustomWidgetByUuid(props.uuid as string)
+      ?.data as CrosstabWidgetResponse,
   };
 
   return widgetDataTypes[props.type];
@@ -240,6 +244,10 @@ const renderProgressItems = computed(() => {
 
   if (props.type === 'custom') {
     return widgetData.value.progressItems;
+  }
+
+  if (props.type === 'crosstab') {
+    return widgetData.value;
   }
 
   return MOCK_DATA;

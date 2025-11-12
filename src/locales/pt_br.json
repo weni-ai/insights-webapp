@@ -330,6 +330,8 @@
   "optional": "Opcional",
   "filter-by": "Período:",
   "see_more": "Ver mais",
+  "see_all": "Ver todos",
+  "lines_count": "{count} linhas",
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",

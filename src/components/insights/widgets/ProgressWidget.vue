@@ -9,7 +9,10 @@
     @tab-change="handleTabChange"
   >
     <SalesFunnelWidget v-if="type === 'sales_funnel' && !isError" />
-    <CrosstabWidget v-else-if="type === 'crosstab' && !isError" />
+    <CrosstabWidget
+      v-else-if="type === 'crosstab' && !isError"
+      :widgetUuid="props.uuid"
+    />
     <slot
       v-else-if="treatedProgressItems?.length === 0"
       name="setup-widget"
@@ -119,6 +122,7 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
+  uuid?: string;
   title: string;
   card?: {
     title: string;

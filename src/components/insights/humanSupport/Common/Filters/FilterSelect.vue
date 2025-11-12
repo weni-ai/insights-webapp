@@ -1,6 +1,12 @@
 <template>
-  <section class="filter-select">
-    <UnnnicLabel :label="filterLabel" />
+  <section
+    class="filter-select"
+    :data-testid="`filter-select-${type}`"
+  >
+    <UnnnicLabel
+      :label="filterLabel"
+      :data-testid="`filter-select-label-${type}`"
+    />
     <UnnnicSelectSmart
       ref="selectSmartRef"
       v-bind="selectProps"
@@ -72,6 +78,7 @@ const nextPageUrl = ref<string | null>(null);
 const isLoadingMore = ref(false);
 const searchValue = ref('');
 const searchDebounceTimer = ref<ReturnType<typeof setTimeout> | null>(null);
+const isSelecting = ref(false);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
 const isContactFilter = computed(() => props.type === 'contact');
@@ -164,10 +171,16 @@ const findSelectedItem = (
 };
 
 const handleChange = (selectedOptions: FilterOption[]) => {
+  isSelecting.value = true;
+
   if (!selectedOptions || !selectedOptions.length) {
-    if (props.modelValue.length === 0) return;
+    if (props.modelValue.length === 0) {
+      isSelecting.value = false;
+      return;
+    }
     emit('update:modelValue', []);
     emit('change', { value: '', label: '' });
+    isSelecting.value = false;
     return;
   }
 
@@ -176,11 +189,18 @@ const handleChange = (selectedOptions: FilterOption[]) => {
 
   if (item) {
     const currentValue = props.modelValue[0]?.value;
-    if (currentValue === item.value) return;
+    if (currentValue === item.value) {
+      isSelecting.value = false;
+      return;
+    }
 
     emit('update:modelValue', [{ value: item.value, label: item.label }]);
     emit('change', item);
   }
+
+  setTimeout(() => {
+    isSelecting.value = false;
+  }, 100);
 };
 
 const clearSearchTimer = () => {
@@ -190,13 +210,25 @@ const clearSearchTimer = () => {
   }
 };
 
+const isItemLabel = (searchTerm: string): boolean => {
+  if (!searchTerm || !data.value.length) return false;
+
+  return options.value.some((option) => option.label === searchTerm);
+};
+
 const handleSearchValueUpdate = (newSearchValue: string) => {
   if (!hasInfiniteScroll.value) return;
 
+  const trimmedSearch = newSearchValue?.trim() || '';
+
+  if (trimmedSearch && isItemLabel(trimmedSearch)) {
+    return;
+  }
+
+  if (isSelecting.value) return;
+
   clearSearchTimer();
   searchValue.value = newSearchValue;
-
-  const trimmedSearch = newSearchValue?.trim() || '';
 
   if (!trimmedSearch) {
     loadData();

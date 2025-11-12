@@ -177,14 +177,6 @@ watch(
   { flush: 'post' },
 );
 
-watch(
-  () => humanSupport.appliedFilters,
-  () => {
-    // Os filtros individuais já observam filterParams e recarregam automaticamente
-  },
-  { flush: 'post' },
-);
-
 onMounted(() => {
   clearNonFinishedFilters();
 });
@@ -199,14 +191,6 @@ onMounted(() => {
     display: flex;
     gap: $unnnic-space-6;
     flex: 1;
-  }
-
-  &__filter {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 calc(100% / 4);
-    max-width: calc(100% / 4);
-    gap: $unnnic-space-1;
   }
 }
 

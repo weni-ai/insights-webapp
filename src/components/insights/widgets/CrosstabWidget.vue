@@ -4,6 +4,12 @@
       class="crosstab-widget__table"
       :style="{ alignItems: isLoading ? 'unset' : 'center' }"
     >
+      <UnnnicDisclaimer
+        v-if="isEmptyData && !isLoading"
+        class="crosstab-widget__empty-data-disclaimer"
+        iconColor="feedback-yellow"
+        :text="$t('conversations_dashboard.no_data_available')"
+      />
       <ProgressTable
         :progressItems="formattedData.slice(0, 5)"
         :isLoading="isLoading"
@@ -62,6 +68,7 @@ import SeeAllDrawer from '../conversations/CustomizableWidget/SeeAllDrawer.vue';
 import { formatPercentage } from '@/utils/numbers';
 
 import i18n from '@/utils/plugins/i18n';
+import { UnnnicDisclaimer } from '@weni/unnnic-system';
 
 const customWidgetsStore = useCustomWidgets();
 
@@ -78,6 +85,10 @@ const isLoading = computed(() => {
 });
 
 const isSeeAllDrawerOpen = ref(false);
+
+const isEmptyData = computed(() => {
+  return widgetData.value.results.every((item) => item.total === 0);
+});
 
 const widget = computed(() => {
   return getCustomWidgetByUuid(props.widgetUuid);
@@ -133,6 +144,10 @@ const formattedData = computed(() => {
   flex-direction: column;
   flex: 1 0 0;
   gap: $unnnic-space-3;
+
+  &__empty-data-disclaimer {
+    width: 100%;
+  }
 
   &__table {
     display: flex;

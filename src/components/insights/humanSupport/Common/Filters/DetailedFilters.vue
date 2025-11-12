@@ -1,14 +1,19 @@
 <template>
-  <section class="detailed-filters">
+  <section
+    class="detailed-filters"
+    :data-testid="`detailed-filters-${type}`"
+  >
     <TransitionGroup
       name="filter-slide"
       tag="div"
       class="detailed-filters__container"
+      data-testid="detailed-filters-container"
     >
       <FilterSelect
         v-for="filter in activeFilters"
         :key="filter.type"
         :ref="(el) => setFilterRef(el, filter.type)"
+        :data-testid="`detailed-filter-${filter.type}`"
         v-bind="filter.props"
         v-on="filter.events"
       />

@@ -131,6 +131,8 @@ export default {
       ...queryParams,
     };
 
+    // TODO: remove mock
+
     // const response = await http.get('/metrics/conversations/crosstab/', {
     //   params,
     // });

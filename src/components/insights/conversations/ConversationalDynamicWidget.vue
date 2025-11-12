@@ -160,7 +160,6 @@ const isError = computed(() => {
     return isNpsWidgetDataError.value;
   }
 
-  // TODO: handle crosstab error
   if (['custom', 'crosstab'].includes(props.type)) {
     return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
   }

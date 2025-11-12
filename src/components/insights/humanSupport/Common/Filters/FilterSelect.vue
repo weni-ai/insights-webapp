@@ -33,7 +33,7 @@ interface FilterItem {
 }
 
 interface TicketIdItem {
-  protocol: string;
+  ticket_id: string;
 }
 
 interface FilterOption {
@@ -75,6 +75,9 @@ const searchDebounceTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
 const isContactFilter = computed(() => props.type === 'contact');
+const hasInfiniteScroll = computed(
+  () => isContactFilter.value || isTicketIdFilter.value,
+);
 const filterLabel = computed(() =>
   t(`human_support_dashboard.filters.${props.type}.label`),
 );
@@ -82,7 +85,7 @@ const filterLabel = computed(() =>
 const mapItemToOption = (item: FilterItem | TicketIdItem): FilterOption => {
   if (isTicketIdFilter.value) {
     const ticketItem = item as TicketIdItem;
-    return { value: ticketItem.protocol, label: ticketItem.protocol };
+    return { value: ticketItem.ticket_id, label: ticketItem.ticket_id };
   }
 
   const filterItem = item as FilterItem;
@@ -103,7 +106,7 @@ const mapDataToOptions = (
 const options = computed(() => mapDataToOptions(data.value));
 
 const canLoadMore = () => {
-  return isContactFilter.value && !!nextPageUrl.value;
+  return hasInfiniteScroll.value && !!nextPageUrl.value;
 };
 
 const selectProps = computed(() => ({
@@ -115,7 +118,7 @@ const selectProps = computed(() => ({
   autocompleteClearOnFocus: true,
   autocompleteIconLeft: true,
   isLoading: isLoading.value,
-  ...(isContactFilter.value && {
+  ...(hasInfiniteScroll.value && {
     infiniteScroll: true,
     infiniteScrollDistance: 10,
     infiniteScrollCanLoadMore: canLoadMore,
@@ -132,8 +135,8 @@ const findSelectedItem = (
   }
 
   if (isTicketIdFilter.value) {
-    const item = (items as TicketIdItem[]).find((d) => d.protocol === value);
-    return item ? { value: item.protocol, label: item.protocol } : null;
+    const item = (items as TicketIdItem[]).find((d) => d.ticket_id === value);
+    return item ? { value: item.ticket_id, label: item.ticket_id } : null;
   }
 
   const item = (items as FilterItem[]).find((d) => {
@@ -188,7 +191,7 @@ const clearSearchTimer = () => {
 };
 
 const handleSearchValueUpdate = (newSearchValue: string) => {
-  if (!isContactFilter.value) return;
+  if (!hasInfiniteScroll.value) return;
 
   clearSearchTimer();
   searchValue.value = newSearchValue;
@@ -207,7 +210,7 @@ const handleSearchValueUpdate = (newSearchValue: string) => {
 
 const selectEvents = computed(() => ({
   'update:model-value': handleChange,
-  ...(isContactFilter.value && {
+  ...(hasInfiniteScroll.value && {
     'scroll-end': loadMoreData,
     'update:search-value': handleSearchValueUpdate,
   }),
@@ -228,7 +231,7 @@ const processApiResponse = (response: any, preserveNextForSearch = false) => {
   if (response?.results && Array.isArray(response.results)) {
     data.value = response.results;
     nextPageUrl.value =
-      preserveNextForSearch || isContactFilter.value ? response.next : null;
+      preserveNextForSearch || hasInfiniteScroll.value ? response.next : null;
     return;
   }
 
@@ -246,7 +249,7 @@ const loadData = async (search?: string) => {
     const response = await Projects.getProjectSource(
       props.source,
       params,
-      isContactFilter.value,
+      hasInfiniteScroll.value,
     );
 
     processApiResponse(response, !!search);
@@ -260,7 +263,7 @@ const loadData = async (search?: string) => {
 
 const loadMoreData = async () => {
   const canLoad =
-    isContactFilter.value && nextPageUrl.value && !isLoadingMore.value;
+    hasInfiniteScroll.value && nextPageUrl.value && !isLoadingMore.value;
 
   if (!canLoad) {
     selectSmartRef.value?.finishInfiniteScroll();

@@ -255,9 +255,7 @@ export default {
           this.setAppliedFilters({
             [filterKey]: currentFilters[filterKey] || defaultFilterValue,
           });
-          console.log('currentFilters', currentFilters);
         } else {
-          console.log('this.$route.query', this.$route.query);
           this.setAppliedFilters(this.$route.query);
         }
       },

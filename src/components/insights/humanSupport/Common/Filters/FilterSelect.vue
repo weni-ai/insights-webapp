@@ -2,6 +2,7 @@
   <section class="filter-select">
     <UnnnicLabel :label="filterLabel" />
     <UnnnicSelectSmart
+      ref="selectSmartRef"
       v-bind="selectProps"
       v-on="selectEvents"
     />
@@ -11,7 +12,7 @@
 <script setup lang="ts">
 import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, useTemplateRef } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
@@ -57,10 +58,14 @@ const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
 
+const selectSmartRef = useTemplateRef<any>('selectSmartRef');
 const data = ref<FilterItem[] | TicketIdItem[]>([]);
 const isLoading = ref(false);
+const nextPageUrl = ref<string | null>(null);
+const isLoadingMore = ref(false);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
+const isContactFilter = computed(() => props.type === 'contact');
 
 const filterLabel = computed(() =>
   t(`human_support_dashboard.filters.${props.type}.label`),
@@ -94,6 +99,10 @@ const mapDataToOptions = (
 
 const options = computed(() => mapDataToOptions(data.value));
 
+const canLoadMore = () => {
+  return isContactFilter.value && !!nextPageUrl.value;
+};
+
 const selectProps = computed(() => ({
   'data-testid': `detailed-filters-select-${props.type}`,
   placeholder: t('human_support_dashboard.filters.common.placeholder'),
@@ -103,6 +112,11 @@ const selectProps = computed(() => ({
   autocompleteClearOnFocus: true,
   autocompleteIconLeft: true,
   isLoading: isLoading.value,
+  ...(isContactFilter.value && {
+    infiniteScroll: true,
+    infiniteScrollDistance: 10,
+    infiniteScrollCanLoadMore: canLoadMore,
+  }),
 }));
 
 const findSelectedItem = (
@@ -164,31 +178,67 @@ const handleChange = (selectedOptions: FilterOption[]) => {
 
 const selectEvents = computed(() => ({
   'update:model-value': handleChange,
+  ...(isContactFilter.value && {
+    'scroll-end': loadMoreData,
+  }),
 }));
 
 const loadData = async () => {
   try {
     isLoading.value = true;
     const params = props.filterParams || {};
-    const response = await Projects.getProjectSource(props.source, params);
+    const response = await Projects.getProjectSource(
+      props.source,
+      params,
+      isContactFilter.value,
+    );
 
     if (Array.isArray(response)) {
       data.value = response;
+      nextPageUrl.value = null;
     } else if (response && Array.isArray(response.results)) {
       data.value = response.results;
+      nextPageUrl.value = isContactFilter.value ? response.next : null;
     } else {
       data.value = [];
+      nextPageUrl.value = null;
     }
   } catch (error) {
     console.error(`Error loading ${props.type} data`, error);
     data.value = [];
+    nextPageUrl.value = null;
   } finally {
     isLoading.value = false;
   }
 };
 
+const loadMoreData = async () => {
+  if (!isContactFilter.value || !nextPageUrl.value || isLoadingMore.value) {
+    selectSmartRef.value?.finishInfiniteScroll();
+    return;
+  }
+
+  try {
+    isLoadingMore.value = true;
+    const response = await Projects.getProjectSourcePaginated(
+      nextPageUrl.value,
+    );
+
+    if (response && Array.isArray(response.results)) {
+      data.value = [...data.value, ...response.results];
+      nextPageUrl.value = response.next;
+    }
+  } catch (error) {
+    console.error(`Error loading more ${props.type} data`, error);
+  } finally {
+    isLoadingMore.value = false;
+    selectSmartRef.value?.finishInfiniteScroll();
+  }
+};
+
 const clearData = () => {
   data.value = [];
+  nextPageUrl.value = null;
   emit('update:modelValue', []);
 };
 
@@ -206,6 +256,7 @@ onMounted(() => {
 
 defineExpose({
   loadData,
+  loadMoreData,
   clearData,
 });
 </script>

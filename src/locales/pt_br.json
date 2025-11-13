@@ -27,14 +27,14 @@
     "unclassified": "Sem classificação",
     "header": {
       "total": "Total de conversas",
-      "resolved": "Resoluções otimizadas",
-      "unresolved": "Outras conclusões",
+      "resolved": "Atendido por IA",
+      "unresolved": "Não atendido por IA",
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
         "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
-        "resolved": "Conversas concluídas com uma resolução clara e efetiva para o contato",
-        "unresolved": "Conversas finalizadas de outras formas, como interações rápidas, cumprimentos, abandonos ou sem resolução direta",
+        "resolved": "Quando o agente demonstra competência e fornece serviço útil",
+        "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente)",
         "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
         "transferred": "Inclui conversas (resolvidas ou não) transferidas para atendimento humano"
       }

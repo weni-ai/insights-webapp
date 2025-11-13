@@ -27,14 +27,14 @@
     "unclassified": "Unclassified",
     "header": {
       "total": "Total conversations",
-      "resolved": "Optimized resolutions",
-      "unresolved": "Other conclusions",
+      "resolved": "AI-Assisted",
+      "unresolved": "Not Assisted",
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
-        "resolved": "Conversations closed with a clear, effective resolution for the contact",
-        "unresolved": "Conversations closed for other reasons, such as quick exchanges, greetings, abandonment, or without a direct resolution",
+        "resolved": "When the agent demonstrates competence and provides useful service",
+        "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
         "transferred": "Chat windows that required human support"
       }

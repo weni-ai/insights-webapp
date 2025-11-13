@@ -93,7 +93,8 @@
     "widget_error": {
       "title": "Ops, ocorreu um erro ao carregar os dados",
       "button": "Verificar configuração do widget",
-      "crosstab_description": "A chave ou o valor não foram encontrados no banco de dados."
+      "crosstab_validation_title": "Problema de configuração",
+      "crosstab_validation_description": "A chave ou o valor não foram encontrados no banco de dados."
     },
     "reviews": "avaliações",
     "csat_widget": {

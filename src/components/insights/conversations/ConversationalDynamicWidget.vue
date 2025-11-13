@@ -150,11 +150,16 @@ const actionError = computed(() => {
   );
   const isValidationError = widgetErrorCode >= 400 && widgetErrorCode < 500;
   return {
-    title: t('conversations_dashboard.widget_error.title'),
+    title:
+      isCrosstabWidget && isValidationError
+        ? t('conversations_dashboard.widget_error.crosstab_validation_title')
+        : t('conversations_dashboard.widget_error.title'),
     buttonText: t('conversations_dashboard.widget_error.button'),
     description:
       isCrosstabWidget && isValidationError
-        ? t('conversations_dashboard.widget_error.crosstab_description')
+        ? t(
+            'conversations_dashboard.widget_error.crosstab_validation_description',
+          )
         : undefined,
     onClick: () => handleOpenDrawer(false),
   };

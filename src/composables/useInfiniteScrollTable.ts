@@ -3,11 +3,11 @@ import { ref, computed } from 'vue';
 interface UseInfiniteScrollTableOptions<T, R> {
   pageSize?: number;
   fetchData: (
-    page: number,
-    pageSize: number,
-    ordering: string,
+    _page: number,
+    _pageSize: number,
+    _ordering: string,
   ) => Promise<{ results: T[]; count: number }>;
-  formatResults: (results: T[]) => R[];
+  formatResults: (_results: T[]) => R[];
   onSortChange?: () => void;
 }
 

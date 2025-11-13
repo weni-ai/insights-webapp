@@ -166,7 +166,7 @@ const handleCardClick = (cardId: string) => {
   window.parent.postMessage(
     {
       event: 'redirect',
-      path: `agents-builder:supervisor?status=${statusMap[cardId]}`,
+      path: `ai-conversations:?status=${statusMap[cardId]}`,
     },
     '*',
   );

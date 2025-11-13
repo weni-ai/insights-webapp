@@ -14,13 +14,30 @@ import {
   useHumanSupport,
   type DateRange,
 } from '@/store/modules/humanSupport/humanSupport';
+import { watch } from 'vue';
+import { useRouter } from 'vue-router';
 
 const humanSupportStore = useHumanSupport();
 const { appliedDateRange } = storeToRefs(humanSupportStore);
 
+const router = useRouter();
 const handleUpdateModelValue = (value: DateRange) => {
   humanSupportStore.appliedDateRange = value;
 };
+
+watch(
+  appliedDateRange,
+  (newVal) => {
+    router.push({
+      query: {
+        ...router.currentRoute.value.query,
+        start_date: newVal.start,
+        end_date: newVal.end,
+      },
+    });
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

@@ -92,7 +92,9 @@
     "no_data_available": "No hay datos disponibles para el periodo de uso",
     "widget_error": {
       "title": "Ups, se produjo un error al cargar los datos",
-      "button": "Verificar configuración del widget"
+      "button": "Verificar configuración del widget",
+      "crosstab_validation_title": "Problema de configuración",
+      "crosstab_validation_description": "No se encontró la clave o el valor en la base de datos."
     },
     "reviews": "calificaciones",
     "csat_widget": {

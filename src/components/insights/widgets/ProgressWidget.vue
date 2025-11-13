@@ -97,6 +97,7 @@
     <template v-else>
       <WidgetError
         :title="actionError?.title"
+        :description="actionError?.description"
         :buttonText="actionError?.buttonText"
         @click="actionError?.onClick"
       />
@@ -153,6 +154,7 @@ const props = defineProps<{
   actionError?: {
     title: string;
     buttonText: string;
+    description?: string;
     onClick: () => void;
   };
   type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add' | 'crosstab';

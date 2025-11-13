@@ -92,7 +92,9 @@
     "no_data_available": "No data available for the usage period",
     "widget_error": {
       "title": "Oops, an error occurred while loading the data",
-      "button": "Check widget configuration"
+      "button": "Check widget configuration",
+      "crosstab_validation_title": "Configuration issue",
+      "crosstab_validation_description": "The key or value was not found in the database"
     },
     "reviews": "reviews",
     "csat_widget": {

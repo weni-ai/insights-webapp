@@ -144,9 +144,23 @@ const isCsatOrNps = computed(() => {
 });
 
 const actionError = computed(() => {
+  const isCrosstabWidget = props.type === 'crosstab';
+  const widgetErrorCode = Number(
+    customWidgetDataErrorByUuid.value[props.uuid as string] || 0,
+  );
+  const isValidationError = widgetErrorCode >= 400 && widgetErrorCode < 500;
   return {
-    title: t('conversations_dashboard.widget_error.title'),
+    title:
+      isCrosstabWidget && isValidationError
+        ? t('conversations_dashboard.widget_error.crosstab_validation_title')
+        : t('conversations_dashboard.widget_error.title'),
     buttonText: t('conversations_dashboard.widget_error.button'),
+    description:
+      isCrosstabWidget && isValidationError
+        ? t(
+            'conversations_dashboard.widget_error.crosstab_validation_description',
+          )
+        : undefined,
     onClick: () => handleOpenDrawer(false),
   };
 });
@@ -160,9 +174,8 @@ const isError = computed(() => {
     return isNpsWidgetDataError.value;
   }
 
-  // TODO: handle crosstab error
   if (['custom', 'crosstab'].includes(props.type)) {
-    return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
+    return !!customWidgetDataErrorByUuid.value[props.uuid as string] || false;
   }
 
   if (props.type === 'sales_funnel') {

@@ -63,7 +63,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
     isLoadingSaveNewCustomWidget: false,
     isLoadingDeleteCustomWidget: false,
     loadingByUuid: [] as string[],
-    customWidgetDataErrorByUuid: {} as Record<string, boolean>,
+    customWidgetDataErrorByUuid: {} as Record<string, boolean | number>,
   }),
 
   actions: {
@@ -204,7 +204,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
         this.updateCustomWidget(uuid, response);
         this.customWidgetDataErrorByUuid[uuid] = false;
       } catch (error) {
-        this.customWidgetDataErrorByUuid[uuid] = true;
+        this.customWidgetDataErrorByUuid[uuid] = error.status || true;
         console.error('Error loading custom widget data', error);
       } finally {
         this.loadingByUuid = this.loadingByUuid.filter((id) => id !== uuid);

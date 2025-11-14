@@ -1,5 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
+import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 interface QueryParams {
@@ -40,6 +41,7 @@ export default {
   ): Promise<AgentsTotalsResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupport();
+    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -54,7 +56,7 @@ export default {
     };
 
     const response = await http.get(
-      '/metrics/human-support/monitoring/csat/totals/',
+      `/dashboards/${currentDashboard.uuid}/monitoring/csat/totals/`,
       {
         params: formattedParams,
       },
@@ -66,6 +68,7 @@ export default {
   async getRatingsMonitoring(params: QueryParams): Promise<RatingsResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupport();
+    const { currentDashboard } = useDashboards();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -80,7 +83,7 @@ export default {
     };
 
     const response = await http.get(
-      '/metrics/human-support/monitoring/csat/ratings/',
+      `/dashboards/${currentDashboard.uuid}/monitoring/csat/ratings/`,
       {
         params: formattedParams,
       },

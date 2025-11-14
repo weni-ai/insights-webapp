@@ -9,7 +9,7 @@ interface QueryParams {
 }
 
 export interface AgentsTotalResult {
-  agent: { uuid: string; name: string; email: string };
+  agent: { name: string; email: string };
   rooms: number;
   reviews: number;
   avg_rating: number;
@@ -55,14 +55,13 @@ export default {
       ...params,
     };
 
-    const response = await http.get(
+    const response = (await http.get(
       `/dashboards/${currentDashboard.uuid}/monitoring/csat/totals/`,
       {
         params: formattedParams,
       },
-    );
-
-    return response.data;
+    )) as AgentsTotalsResponse;
+    return response;
   },
 
   async getRatingsMonitoring(params: QueryParams): Promise<RatingsResponse> {
@@ -82,13 +81,13 @@ export default {
       ...params,
     };
 
-    const response = await http.get(
+    const response = (await http.get(
       `/dashboards/${currentDashboard.uuid}/monitoring/csat/ratings/`,
       {
         params: formattedParams,
       },
-    );
+    )) as RatingsResponse;
 
-    return response.data;
+    return response;
   },
 };

@@ -31,8 +31,8 @@ export const useConfig = defineStore('config', {
     },
 
     async checkEnableCsat() {
-      const { is_enabled } = await Projects.verifyProjectCsat();
-      this.enableCsat = is_enabled;
+      const enabled = await Projects.verifyProjectCsat();
+      this.enableCsat = enabled;
     },
   },
 });

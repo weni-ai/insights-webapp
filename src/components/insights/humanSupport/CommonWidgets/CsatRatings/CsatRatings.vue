@@ -49,13 +49,13 @@
               $t('human_support_dashboard.csat.agents_ratings_general_tooltip')
             "
             :rating="agentsGeneralTotals.avg_rating"
-            :active="!activeAgentUuid"
+            :active="!activeAgentEmail"
             hiddenAvatar
-            @click="activeAgentUuid = null"
+            @click="activeAgentEmail = null"
           />
           <AgentCard
             v-for="agent in agentsData"
-            :key="agent.agent.uuid"
+            :key="agent.agent.email"
             class="csat-ratings-widget__agent-card"
             :title="agent.agent.name"
             :subtitle="
@@ -65,8 +65,8 @@
               })
             "
             :rating="agent.avg_rating"
-            :active="activeAgentUuid === agent.agent.uuid"
-            @click="activeAgentUuid = agent.agent.uuid"
+            :active="activeAgentEmail === agent.agent.email"
+            @click="activeAgentEmail = agent.agent.email"
           />
         </template>
       </section>
@@ -223,7 +223,7 @@ const loadRatingsData = async ({
   }
   try {
     const response = await Csat.getRatingsMonitoring({
-      agent_uuid: activeAgentUuid.value,
+      agent_uuid: activeAgentEmail.value,
     });
     ratingsData.value = response;
   } catch (error) {
@@ -233,9 +233,9 @@ const loadRatingsData = async ({
   }
 };
 
-const activeAgentUuid = ref<string | null>(null);
+const activeAgentEmail = ref<string | null>(null);
 
-watch(activeAgentUuid, () => {
+watch(activeAgentEmail, () => {
   loadRatingsData();
 });
 
@@ -244,9 +244,9 @@ watch(
   () => {
     if (!configStore.enableCsat) return;
     loadAgentsData();
-    if (!activeAgentUuid.value) {
+    if (!activeAgentEmail.value) {
       loadRatingsData();
-    } else activeAgentUuid.value = null;
+    } else activeAgentEmail.value = null;
   },
   { deep: true },
 );
@@ -257,11 +257,11 @@ watch(
     if (!configStore.enableCsat) return;
     if (value) {
       agentsTotalNext.value = null;
-      activeAgentUuid.value = null;
+      activeAgentEmail.value = null;
       loadAgentsData();
-      if (!activeAgentUuid.value) {
+      if (!activeAgentEmail.value) {
         loadRatingsData();
-      } else activeAgentUuid.value = null;
+      } else activeAgentEmail.value = null;
     }
   },
 );

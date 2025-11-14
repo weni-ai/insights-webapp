@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { createRouter, createMemoryHistory } from 'vue-router';
 import { useHumanSupport } from '../humanSupport';
 import { useHumanSupportMonitoring } from '../monitoring';
 import { useHumanSupportAnalysis } from '../analysis';
@@ -24,8 +25,10 @@ describe('useHumanSupport store', () => {
   let store;
   let mockLoadAllDataMonitoring;
   let mockLoadAllDataAnalysis;
+  let router;
+  let app;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockLoadAllDataMonitoring = vi.fn();
     mockLoadAllDataAnalysis = vi.fn();
 
@@ -37,7 +40,31 @@ describe('useHumanSupport store', () => {
       loadAllData: mockLoadAllDataAnalysis,
     });
 
-    setActivePinia(createPinia());
+    // Create a real router for testing
+    router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        {
+          path: '/',
+          name: 'home',
+          component: { template: '<div>Home</div>' },
+        },
+      ],
+    });
+
+    // Create a mock Vue app context
+    const { createApp } = await import('vue');
+    app = createApp({ template: '<div></div>' });
+    app.use(router);
+    
+    const pinia = createPinia();
+    app.use(pinia);
+    
+    setActivePinia(pinia);
+    
+    // Wait for router to be ready
+    await router.isReady();
+    
     store = useHumanSupport();
   });
 

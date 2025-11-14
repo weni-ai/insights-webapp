@@ -224,8 +224,14 @@ export default {
       handler(filters) {
         if (filters.length === 1) {
           const { date, ended_at } = this.$route.query;
+
           const isConversational =
             this.currentDashboard?.name === 'conversations_dashboard.title';
+
+          const isHumanSupportDashboard =
+            this.currentDashboard?.name === 'human_support_dashboard.title';
+
+          if (isHumanSupportDashboard) return;
 
           const { start, end } = isConversational
             ? getYesterdayDate()

@@ -1,7 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-import { asyncTimeout } from '@/utils/time';
 
 interface QueryParams {
   cursor?: string;
@@ -54,56 +53,14 @@ export default {
       ...params,
     };
 
-    // TODO: Remove this after testing
+    const response = await http.get(
+      '/metrics/human-support/monitoring/csat/totals/',
+      {
+        params: formattedParams,
+      },
+    );
 
-    await asyncTimeout(1000);
-
-    return {
-      general: { rooms: 1, reviews: 1, avg_rating: 1 },
-      next: '?cursor=next',
-      previous: null,
-      results: [
-        {
-          agent: { uuid: '1', name: '1', email: '1' },
-          rooms: 1,
-          reviews: 1,
-          avg_rating: 1,
-        },
-        {
-          agent: { uuid: '2', name: '2', email: '2' },
-          rooms: 1,
-          reviews: 1,
-          avg_rating: 1,
-        },
-        {
-          agent: { uuid: '3', name: '3', email: '3' },
-          rooms: 1,
-          reviews: 1,
-          avg_rating: 1,
-        },
-        {
-          agent: { uuid: '4', name: '4', email: '4' },
-          rooms: 1,
-          reviews: 1,
-          avg_rating: 1,
-        },
-        {
-          agent: { uuid: '5', name: '5', email: '5' },
-          rooms: 1,
-          reviews: 1,
-          avg_rating: 1,
-        },
-      ],
-    } as AgentsTotalsResponse;
-
-    // const response = await http.get(
-    //   '/metrics/human-support/monitoring/csat/totals/',
-    //   {
-    //     params: formattedParams,
-    //   },
-    // );
-
-    // return response.data;
+    return response.data;
   },
 
   async getRatingsMonitoring(params: QueryParams): Promise<RatingsResponse> {
@@ -122,25 +79,13 @@ export default {
       ...params,
     };
 
-    // TODO: Remove this after testing
+    const response = await http.get(
+      '/metrics/human-support/monitoring/csat/ratings/',
+      {
+        params: formattedParams,
+      },
+    );
 
-    await asyncTimeout(1000);
-
-    return {
-      '1': { value: 1, full_value: 1 },
-      '2': { value: 2, full_value: 2 },
-      '3': { value: 3, full_value: 3 },
-      '4': { value: 4, full_value: 4 },
-      '5': { value: 5, full_value: 5 },
-    } as RatingsResponse;
-
-    // const response = await http.get(
-    //   '/metrics/human-support/monitoring/csat/ratings/',
-    //   {
-    //     params: formattedParams,
-    //   },
-    // );
-
-    // return response.data;
+    return response.data;
   },
 };

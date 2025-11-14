@@ -21,7 +21,6 @@ exports[`OptionSelectDashboard > Should match the snapshot 1`] = `
     data-v-000aa0c0=""
     filled="false"
     icon="star_rate"
-    next="false"
     scheme="neutral-clean"
     size="md"
   />

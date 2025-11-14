@@ -1,41 +1,30 @@
 <template>
-  <section class="detailed-filters">
+  <section
+    class="detailed-filters"
+    :data-testid="`detailed-filters-${type}`"
+  >
     <TransitionGroup
       name="filter-slide"
       tag="div"
       class="detailed-filters__container"
+      data-testid="detailed-filters-container"
     >
-      <section
+      <FilterSelect
         v-for="filter in activeFilters"
         :key="filter.type"
-        class="detailed-filters__filter"
-      >
-        <UnnnicLabel
-          :label="$t(`human_support_dashboard.filters.${filter.type}.label`)"
-        />
-        <UnnnicSelectSmart
-          :data-testid="`detailed-filters-select-${filter.type}`"
-          :placeholder="
-            $t(`human_support_dashboard.filters.common.placeholder`)
-          "
-          :modelValue="filter.selected"
-          :options="filter.options"
-          autocomplete
-          autocompleteClearOnFocus
-          autocompleteIconLeft
-          :isLoading="filter.isLoading"
-          @update:model-value="(value) => handleChange(filter.type, value)"
-        />
-      </section>
+        :ref="(el) => setFilterRef(el, filter.type)"
+        :data-testid="`detailed-filter-${filter.type}`"
+        v-bind="filter.props"
+        v-on="filter.events"
+      />
     </TransitionGroup>
   </section>
 </template>
 
 <script setup lang="ts">
-import { UnnnicSelectSmart } from '@weni/unnnic-system';
-import Projects from '@/services/api/resources/projects';
 import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import FilterSelect from './FilterSelect.vue';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
 type ComponentType = 'attendant' | 'pauses' | 'finished';
@@ -46,17 +35,6 @@ interface Props {
   type: ComponentType;
 }
 
-interface FilterItem {
-  uuid: string;
-  name: string;
-  email?: string;
-  external_id?: string;
-}
-
-interface TicketIdItem {
-  protocol: string;
-}
-
 interface FilterOption {
   value: string;
   label: string;
@@ -65,14 +43,18 @@ interface FilterOption {
 interface FilterState {
   type: FilterType;
   source: SourceType;
-  data: FilterItem[] | TicketIdItem[];
   selected: FilterOption[];
-  isLoading: boolean;
 }
 
 const props = defineProps<Props>();
 const humanSupport = useHumanSupport();
 const { saveAppliedDetailFilter } = humanSupport;
+
+const filterRefs = ref<Record<FilterType, any>>({
+  attendant: null,
+  contact: null,
+  ticket_id: null,
+});
 
 const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
   attendant: ['attendant'],
@@ -86,54 +68,53 @@ const FILTER_TO_STORE_MAP: Record<FilterType, StoreFilterType> = {
   ticket_id: 'ticketId',
 };
 
-const isTicketIdFilter = (filterType: FilterType): boolean =>
-  filterType === 'ticket_id';
-
 const filters = ref<Record<FilterType, FilterState>>({
   attendant: {
     type: 'attendant',
     source: 'agents',
-    data: [],
     selected: [],
-    isLoading: false,
   },
   contact: {
     type: 'contact',
     source: 'contacts',
-    data: [],
     selected: [],
-    isLoading: false,
   },
   ticket_id: {
     type: 'ticket_id',
     source: 'ticket_id',
-    data: [],
     selected: [],
-    isLoading: false,
   },
 });
 
-const mapDataToOptions = (
+const setFilterRef = (el: any, filterType: FilterType) => {
+  if (el) {
+    filterRefs.value[filterType] = el;
+  }
+};
+
+const filterParams = computed(() => ({
+  sectors: humanSupport.appliedFilters.sectors.map((sector) => sector.value),
+  queues: humanSupport.appliedFilters.queues.map((queue) => queue.value),
+  tags: humanSupport.appliedFilters.tags.map((tag) => tag.value),
+}));
+
+const handleFilterChange = (
   filterType: FilterType,
-  data: FilterItem[] | TicketIdItem[],
-): FilterOption[] => {
-  if (isTicketIdFilter(filterType)) {
-    return (data as TicketIdItem[]).map((item) => ({
-      value: item.protocol,
-      label: item.protocol,
-    }));
+  payload: { value: string; label: string; email?: string },
+) => {
+  const storeFilterType = FILTER_TO_STORE_MAP[filterType];
+
+  if (!payload.value) {
+    saveAppliedDetailFilter(storeFilterType, '', '');
+    return;
   }
 
-  return (data as FilterItem[]).map((item) => {
-    const value =
-      filterType === 'contact' && item.external_id
-        ? item.external_id
-        : item.uuid;
-    return {
-      value,
-      label: item.name,
-    };
-  });
+  let valueToStore = payload.value;
+  if (filterType === 'attendant' && payload.email) {
+    valueToStore = payload.email;
+  }
+
+  saveAppliedDetailFilter(storeFilterType, valueToStore, payload.label);
 };
 
 const activeFilters = computed(() => {
@@ -144,124 +125,44 @@ const activeFilters = computed(() => {
 
     return {
       type: filterType,
-      selected: filter.selected,
-      options: mapDataToOptions(filterType, filter.data),
-      isLoading: filter.isLoading,
+      props: {
+        type: filter.type,
+        source: filter.source,
+        modelValue: filter.selected,
+        filterParams: filterParams.value,
+      },
+      events: {
+        'update:modelValue': (value: FilterOption[]) => {
+          filter.selected = value;
+        },
+        change: (payload: { value: string; label: string; email?: string }) =>
+          handleFilterChange(filterType, payload),
+      },
     };
   });
 });
 
-const loadFilterData = async (filterType: FilterType) => {
-  const filter = filters.value[filterType];
+const clearNonFinishedFilters = () => {
+  if (props.type !== 'finished') {
+    filters.value.contact.selected = [];
+    filters.value.ticket_id.selected = [];
 
-  try {
-    filter.isLoading = true;
-    const params = {
-      sectors: humanSupport.appliedFilters.sectors.map(
-        (sector) => sector.value,
-      ),
-      queues: humanSupport.appliedFilters.queues.map((queue) => queue.value),
-      tags: humanSupport.appliedFilters.tags.map((tag) => tag.value),
-    };
-    const response = await Projects.getProjectSource(filter.source, params);
-    filter.data = response;
-  } catch (error) {
-    console.error(`Error loading ${filterType} data`, error);
-    filter.data = [];
-  } finally {
-    filter.isLoading = false;
-  }
-};
-
-const findSelectedItem = (
-  filterType: FilterType,
-  data: FilterItem[] | TicketIdItem[],
-  value: string,
-): { value: string; label: string } | null => {
-  if (isTicketIdFilter(filterType)) {
-    const item = (data as TicketIdItem[]).find((d) => d.protocol === value);
-    return item ? { value: item.protocol, label: item.protocol } : null;
-  }
-
-  const item = (data as FilterItem[]).find((d) => {
-    if (filterType === 'contact' && d.external_id) {
-      return d.external_id === value;
+    if (filterRefs.value.contact) {
+      filterRefs.value.contact.clearData();
     }
-    return d.uuid === value;
-  });
-
-  if (!item) return null;
-
-  const itemValue =
-    filterType === 'contact' && item.external_id ? item.external_id : item.uuid;
-  return { value: itemValue, label: item.name };
-};
-
-const handleChange = (
-  filterType: FilterType,
-  selectedOptions: FilterOption[],
-) => {
-  const filter = filters.value[filterType];
-  const storeFilterType = FILTER_TO_STORE_MAP[filterType];
-
-  if (!selectedOptions || !selectedOptions.length) {
-    if (filter.selected.length === 0) return;
-    filter.selected = [];
-    saveAppliedDetailFilter(storeFilterType, '', '');
-    return;
-  }
-
-  const selected = selectedOptions[0];
-  const item = findSelectedItem(filterType, filter.data, selected.value);
-
-  if (item) {
-    const currentValue = filter.selected[0]?.value;
-    if (currentValue === item.value) return;
-
-    filter.selected = [item];
-
-    let valueToStore = item.value;
-    if (filterType === 'attendant') {
-      const fullItem = (filter.data as FilterItem[]).find(
-        (d) => d.uuid === item.value,
-      );
-      if (fullItem?.email) {
-        valueToStore = fullItem.email;
-      }
+    if (filterRefs.value.ticket_id) {
+      filterRefs.value.ticket_id.clearData();
     }
 
-    saveAppliedDetailFilter(storeFilterType, valueToStore, item.label);
+    saveAppliedDetailFilter('contact', '', '');
+    saveAppliedDetailFilter('ticketId', '', '');
   }
 };
-
-const loadData = async () => {
-  const filterTypes = FILTER_CONFIG[props.type] || [];
-  await Promise.all(
-    filterTypes.map((filterType) => loadFilterData(filterType)),
-  );
-};
-
-onMounted(() => {
-  loadData();
-});
-
-watch(
-  () => humanSupport.appliedFilters,
-  () => {
-    loadData();
-  },
-  { flush: 'post' },
-);
 
 watch(
   () => props.type,
   async (newType, oldType) => {
-    if (newType !== 'finished') {
-      filters.value.contact.data = [];
-      filters.value.ticket_id.data = [];
-      saveAppliedDetailFilter('contact', '', '');
-      saveAppliedDetailFilter('ticketId', '', '');
-    }
+    clearNonFinishedFilters();
 
     if (!oldType) return;
 
@@ -277,13 +178,13 @@ watch(
     filtersToReset.forEach((filterType) => {
       filters.value[filterType].selected = [];
     });
-
-    await Promise.all(
-      filtersToReset.map((filterType) => loadFilterData(filterType)),
-    );
   },
   { flush: 'post' },
 );
+
+onMounted(() => {
+  clearNonFinishedFilters();
+});
 </script>
 
 <style scoped lang="scss">
@@ -295,14 +196,6 @@ watch(
     display: flex;
     gap: $unnnic-space-6;
     flex: 1;
-  }
-
-  &__filter {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 calc(100% / 4);
-    max-width: calc(100% / 4);
-    gap: $unnnic-space-1;
   }
 }
 

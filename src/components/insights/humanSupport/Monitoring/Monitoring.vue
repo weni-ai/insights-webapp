@@ -26,9 +26,9 @@ import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
+import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
 import { moduleStorage } from '@/utils/storage';
-import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 
 defineOptions({
   name: 'MonitoringView',

@@ -932,7 +932,7 @@
       "detailed_analysis": {
         "title": "Análisis detallado",
         "tabs": {
-          "finished": "Finalizados",
+          "finished": "Finalizado",
           "attendant": "Atendido",
           "pauses": "Pausas personalizadas"
         }

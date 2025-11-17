@@ -14,14 +14,12 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
     <unnnic-label-stub
       data-v-4f08a4d6=""
       label="Format"
-      tooltip=""
-      usehtmltooltip="false"
     />
-    <section
-      class="unnnic-radio-container"
+    <div
+      class="unnnic-radio-container unnnic-radio-container--md"
       data-testid="radio-format-xlsx"
       data-v-4f08a4d6=""
-      data-v-558de5ab=""
+      data-v-abd1b195=""
     >
       <unnnic-icon-stub
         class="unnnic-radio"
@@ -36,29 +34,16 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         class="label"
         data-v-abd1b195=""
       >
-        <input
-          checked=""
-          class="unnnic-radio"
-          data-v-558de5ab=""
-          name=""
-          type="radio"
-        />
-        <p
-          class="unnnic-radio__label"
-          data-v-558de5ab=""
-        >
-           
-          
-          .XLSX
-          
-        </p>
-      </label>
-    </section>
-    <section
-      class="unnnic-radio-container"
+        
+        .XLSX
+        
+      </span>
+    </div>
+    <div
+      class="unnnic-radio-container unnnic-radio-container--md"
       data-testid="radio-format-csv"
       data-v-4f08a4d6=""
-      data-v-558de5ab=""
+      data-v-abd1b195=""
     >
       <unnnic-icon-stub
         class="unnnic-radio"
@@ -73,23 +58,11 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         class="label"
         data-v-abd1b195=""
       >
-        <input
-          class="unnnic-radio"
-          data-v-558de5ab=""
-          name=""
-          type="radio"
-        />
-        <p
-          class="unnnic-radio__label"
-          data-v-558de5ab=""
-        >
-           
-          
-          .CSV
-          
-        </p>
-      </label>
-    </section>
+        
+        .CSV
+        
+      </span>
+    </div>
   </section>
   <section
     class="export-footer__terms"
@@ -112,11 +85,11 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       />
       Warning message
     </p>
-    <section
+    <div
       class="unnnic-checkbox-wrapper"
       data-testid="export-footer-accept-terms"
       data-v-4f08a4d6=""
-      data-v-7fe6356c=""
+      data-v-f5f8c62c=""
     >
       <unnnic-icon-stub
         class="unnnic-checkbox"
@@ -132,21 +105,9 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         data-testid="checkbox-text-right"
         data-v-f5f8c62c=""
       >
-        <input
-          class="unnnic-checkbox"
-          data-v-7fe6356c=""
-          type="checkbox"
-        />
-        <p
-          class="unnnic-checkbox__label"
-          data-testid="checkbox-text-right"
-          data-v-7fe6356c=""
-        >
-          I accept terms
-        </p>
-      </label>
-      <!---->
-    </section>
+        I accept terms
+      </div>
+    </div>
   </section>
 </section>
 `;

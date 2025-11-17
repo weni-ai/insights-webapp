@@ -905,7 +905,7 @@
         "label": "Contact"
       },
       "ticket_id": {
-        "label": "Protocol"
+        "label": "Ticket ID"
       }
     },
     "columns": {
@@ -918,7 +918,7 @@
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
-        "ticket_id": "Protocol",
+        "ticket_id": "Ticket ID",
         "total_attendances": "Total attendances",
         "average_first_response_time": "Average first response time",
         "average_response_time": "Average response time",

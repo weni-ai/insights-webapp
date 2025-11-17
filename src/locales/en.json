@@ -877,21 +877,21 @@
       "tabs": {
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agent",
+        "attendant": "Agent",
         "opened": "Opened",
         "closed": "Closed"
       },
@@ -902,7 +902,7 @@
         "queue": "Queue"
       },
       "attendant": {
-        "agent": "Attendant",
+        "agent": "Agent",
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
@@ -918,7 +918,7 @@
         "placeholder": "Type to filter"
       },
       "attendant": {
-        "label": "Attendant"
+        "label": "Agent"
       },
       "contact": {
         "label": "Contact"
@@ -952,7 +952,7 @@
         "title": "Detailed analysis",
         "tabs": {
           "finished": "Finished",
-          "attendant": "Attendant",
+          "attendant": "Agent",
           "pauses": "Custom Breaks"
         }
       }

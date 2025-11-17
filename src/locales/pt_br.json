@@ -890,7 +890,7 @@
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agente",
+        "attendant": "Atendente",
         "opened": "Abertos",
         "closed": "Fechados"
       },
@@ -950,7 +950,7 @@
       "detailed_analysis": {
         "title": "Análise detalhada",
         "tabs": {
-          "finished": "Finalizados",
+          "finished": "Finalizado",
           "attendant": "Atendente",
           "pauses": "Pausas personalizadas"
         }

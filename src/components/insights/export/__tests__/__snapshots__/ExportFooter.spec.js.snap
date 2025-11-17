@@ -23,8 +23,18 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       data-v-4f08a4d6=""
       data-v-558de5ab=""
     >
-      <label
-        data-v-558de5ab=""
+      <unnnic-icon-stub
+        class="unnnic-radio"
+        clickable="false"
+        data-v-abd1b195=""
+        filled="false"
+        icon="radio-selected"
+        scheme="brand-weni"
+        size="md"
+      />
+      <span
+        class="label"
+        data-v-abd1b195=""
       >
         <input
           checked=""
@@ -50,8 +60,18 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       data-v-4f08a4d6=""
       data-v-558de5ab=""
     >
-      <label
-        data-v-558de5ab=""
+      <unnnic-icon-stub
+        class="unnnic-radio"
+        clickable="false"
+        data-v-abd1b195=""
+        filled="false"
+        icon="radio-default"
+        scheme="neutral-cleanest"
+        size="md"
+      />
+      <span
+        class="label"
+        data-v-abd1b195=""
       >
         <input
           class="unnnic-radio"
@@ -98,8 +118,19 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       data-v-4f08a4d6=""
       data-v-7fe6356c=""
     >
-      <label
-        data-v-7fe6356c=""
+      <unnnic-icon-stub
+        class="unnnic-checkbox"
+        clickable="true"
+        data-v-f5f8c62c=""
+        filled="false"
+        icon="checkbox-default"
+        scheme="neutral-clean"
+        size="md"
+      />
+      <div
+        class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
+        data-testid="checkbox-text-right"
+        data-v-f5f8c62c=""
       >
         <input
           class="unnnic-checkbox"

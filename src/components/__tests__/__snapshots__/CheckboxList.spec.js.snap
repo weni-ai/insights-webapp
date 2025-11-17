@@ -33,8 +33,16 @@ exports[`CheckboxList > should render label and list 1`] = `
         data-v-2e73b81b=""
         data-v-7fe6356c=""
       >
-        <label
-          data-v-7fe6356c=""
+        <svg
+          class="unnnic-icon unnnic-icon--size-svg-md unnnic-icon__size--md unnnic-icon-scheme--neutral-clean unnnic-checkbox disabled"
+          data-testid="custom-icon"
+          data-v-62451e85=""
+          data-v-f5f8c62c=""
+          fill="none"
+          height="40"
+          viewBox="0 0 40 40"
+          width="40"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <input
             class="unnnic-checkbox"
@@ -63,8 +71,16 @@ exports[`CheckboxList > should render label and list 1`] = `
         data-v-2e73b81b=""
         data-v-7fe6356c=""
       >
-        <label
-          data-v-7fe6356c=""
+        <svg
+          class="unnnic-icon unnnic-icon--size-svg-md unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--neutral-clean unnnic-checkbox"
+          data-testid="custom-icon"
+          data-v-62451e85=""
+          data-v-f5f8c62c=""
+          fill="none"
+          height="40"
+          viewBox="0 0 40 40"
+          width="40"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <input
             class="unnnic-checkbox"
@@ -92,8 +108,16 @@ exports[`CheckboxList > should render label and list 1`] = `
         data-v-2e73b81b=""
         data-v-7fe6356c=""
       >
-        <label
-          data-v-7fe6356c=""
+        <svg
+          class="unnnic-icon unnnic-icon--size-svg-md unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--brand-weni unnnic-checkbox"
+          data-testid="custom-icon"
+          data-v-62451e85=""
+          data-v-f5f8c62c=""
+          fill="none"
+          height="40"
+          viewBox="0 0 40 40"
+          width="40"
+          xmlns="http://www.w3.org/2000/svg"
         >
           <input
             checked=""

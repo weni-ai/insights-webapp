@@ -25,6 +25,7 @@ exports[`FormAccordion.vue > should match the snapshot 1`] = `
         data-v-085a4372=""
         filled="true"
         icon="check_circle"
+        next="false"
         scheme="neutral-soft"
         size="avatar-nano"
       />
@@ -36,6 +37,7 @@ exports[`FormAccordion.vue > should match the snapshot 1`] = `
       data-v-1f77973f=""
       filled="false"
       icon="arrow-button-down-1"
+      next="false"
       scheme="neutral-cloudy"
       size="xs"
     />

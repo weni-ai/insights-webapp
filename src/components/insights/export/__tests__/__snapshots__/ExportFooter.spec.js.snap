@@ -27,6 +27,7 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         data-v-abd1b195=""
         filled="false"
         icon="radio-selected"
+        next="false"
         scheme="brand-weni"
         size="md"
       />
@@ -51,6 +52,7 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         data-v-abd1b195=""
         filled="false"
         icon="radio-default"
+        next="false"
         scheme="neutral-cleanest"
         size="md"
       />
@@ -79,7 +81,7 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         data-v-4f08a4d6=""
         filled="true"
         icon="alert-circle-1"
-        next=""
+        next="true"
         scheme="feedback-yellow"
         size="ant"
       />
@@ -97,6 +99,7 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
         data-v-f5f8c62c=""
         filled="false"
         icon="checkbox-default"
+        next="false"
         scheme="neutral-clean"
         size="md"
       />

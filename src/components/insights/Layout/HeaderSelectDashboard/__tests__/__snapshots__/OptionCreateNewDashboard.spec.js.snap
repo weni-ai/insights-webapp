@@ -13,6 +13,7 @@ exports[`OptionCreateNewDashboard > Should match the snapshot 1`] = `
     data-v-966a3d2f=""
     filled="false"
     icon="add"
+    next="false"
     scheme="neutral-darkest"
     size="md"
   />

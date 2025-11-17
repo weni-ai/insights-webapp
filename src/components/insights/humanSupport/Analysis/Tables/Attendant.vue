@@ -51,7 +51,7 @@ const baseTranslationKey = 'human_support_dashboard.columns.common';
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: t(`${baseTranslationKey}.agent`),
-  order: 'desc',
+  order: 'asc',
   itemKey: 'agent',
 });
 

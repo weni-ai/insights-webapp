@@ -112,7 +112,7 @@ const customStatusTypes = computed(() => {
 const formattedHeaders = computed(() => {
   const baseHeaders = [
     {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.agent'),
+      title: t('human_support_dashboard.detailed_monitoring.pauses.attendant'),
       itemKey: 'agent',
       isSortable: true,
       size: 0.8,

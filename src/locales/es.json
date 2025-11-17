@@ -872,7 +872,7 @@
       },
       "pauses": {
         "status": "Estado",
-        "agent": "Agente",
+        "attendant": "Atendente",
         "opened": "Abiertos",
         "closed": "Cerrados"
       },

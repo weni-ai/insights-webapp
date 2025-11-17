@@ -872,7 +872,7 @@
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agent",
+        "attendant": "Attendant",
         "opened": "Opened",
         "closed": "Closed"
       },

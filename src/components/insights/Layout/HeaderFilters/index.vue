@@ -68,7 +68,7 @@ import FilterHumanSupport from './FilterHumanSupport.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
 
-import { getLastNDays, getYesterdayNDays } from '@/utils/time';
+import { getLastNDays, getYesterdayDate } from '@/utils/time';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
@@ -234,7 +234,7 @@ export default {
           if (isHumanSupportDashboard) return;
 
           const { start, end } = isConversational
-            ? getYesterdayNDays(7)
+            ? getYesterdayDate()
             : getLastNDays(7);
 
           const defaultFilterValue = this.isMetaTemplateDashboard

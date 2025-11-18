@@ -56,6 +56,16 @@ const createWrapper = (props = {}) => {
             },
           },
         },
+        UnnnicTextArea: {
+          template:
+            '<textarea v-bind="$attrs" @input="handleInput"></textarea>',
+          emits: ['update:model-value'],
+          methods: {
+            handleInput(event) {
+              this.$emit('update:model-value', event.target.value);
+            },
+          },
+        },
         UnnnicIcon: {
           template: '<span v-bind="$attrs"><slot /></span>',
         },
@@ -84,8 +94,6 @@ describe('FormTopicCard', () => {
     wrapper.find('[data-testid="form-topic-card-name-input"]');
   const contextInput = () =>
     wrapper.find('[data-testid="form-topic-card-context-input"]');
-  const characterCount = () =>
-    wrapper.find('[data-testid="form-topic-card-character-count"]');
   const itemTitle = () =>
     wrapper.find('[data-testid="form-topic-card-item-title"]');
   const itemDescription = () =>
@@ -165,14 +173,10 @@ describe('FormTopicCard', () => {
       expect(contextInput().attributes('modelvalue')).toBe(topicContext);
     });
 
-    it('should display correct character count', () => {
-      const contextText = 'Test context';
-      wrapper = createWrapper({
-        isNew: true,
-        topic: { ...mockTopic, context: contextText },
-      });
+    it('should have maxLength attribute set to 300', () => {
+      wrapper = createWrapper({ isNew: true });
 
-      expect(characterCount().text()).toBe(`${contextText.length}/100`);
+      expect(contextInput().attributes('maxlength')).toBe('300');
     });
   });
 

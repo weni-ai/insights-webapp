@@ -18,7 +18,7 @@
           :description="card.description"
           :tooltipInfo="card.tooltipInfo"
           :borderRadius="getBorderRadius(index, cards.length)"
-          :tooltipSide="'top'"
+          :tooltipSide="handleTooltipSide(card.id)"
           :isLoading="card.isLoading"
           @click="handleCardClick(card.id)"
         />
@@ -101,6 +101,11 @@ const getBorderRadius = (index: number, totalCards: number) => {
   if (index === 0) return 'left';
   if (index === totalCards - 1) return 'right';
   return 'none';
+};
+
+const handleTooltipSide = (cardId: string) => {
+  if (cardId === 'transferred_to_human') return 'left';
+  return 'top';
 };
 
 const showErrorToast = () => {

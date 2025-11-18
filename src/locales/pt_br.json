@@ -25,6 +25,9 @@
     "human_support": "Atendimento humano",
     "others": "Outros",
     "unclassified": "Sem classificação",
+    "info": {	
+      "description": "Os dados conversacionais mostram conversas iniciadas até 24 horas antes do horário atual. Conversas mais recentes ainda estão sendo classificadas e não são exibidas. Atualize o dashboard para atualizar a janela de dados."
+    },
     "header": {
       "total": "Total de conversas",
       "resolved": "Atendido por IA",
@@ -36,7 +39,7 @@
         "resolved": "Quando o agente demonstra competência e fornece serviço útil",
         "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente)",
         "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
-        "transferred": "Inclui conversas (resolvidas ou não) transferidas para atendimento humano"
+        "transferred": "Conversas que requerem assistência humana. Os valores podem diferir do painel de Atendimento humano, pois este conta conversas (não salas) que foram abertas e passaram pela IA. Como uma conversa pode gerar várias salas - e algumas salas podem ser abertas diretamente no atendimento humano - a comparação dos painéis não é recomendada."
       }
     },
     "form_topic": {

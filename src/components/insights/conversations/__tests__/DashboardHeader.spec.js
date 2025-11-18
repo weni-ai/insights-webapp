@@ -44,6 +44,13 @@ vi.mock('@/store/modules/dashboards', () => ({
   }),
 }));
 
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: () => ({
+    refreshDataConversational: false,
+    setIsLoadingConversationalData: vi.fn(),
+  }),
+}));
+
 vi.mock('@/composables/useWidgetFormatting', () => ({
   useWidgetFormatting: () => ({
     formatPercentage: vi.fn((value) => `${value.toFixed(2)}%`),

@@ -25,6 +25,9 @@
     "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
+    "info": {	
+      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+    },
     "header": {
       "total": "Total conversations",
       "resolved": "AI-Assisted",
@@ -36,7 +39,7 @@
         "resolved": "When the agent demonstrates competence and provides useful service",
         "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
-        "transferred": "Chat windows that required human support"
+        "transferred": "Conversations that required human assistance. Values may differ from the Human Support dashboard, as this one counts conversations (not rooms) that were opened and went through the AI. Since one conversation can generate multiple rooms - and some rooms can be opened directly in human support - comparing the dashboards is not recommended."
       }
     },
     "form_topic": {

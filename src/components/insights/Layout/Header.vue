@@ -29,10 +29,17 @@
         <LastUpdatedText
           v-if="isHumanServiceDashboard || isHumanSupportMonitoringDashboard"
         />
-        <HeaderRefresh v-if="isHumanSupportMonitoringDashboard" />
+        <HeaderRefresh
+          v-if="isHumanSupportMonitoringDashboard"
+          type="human-support"
+        />
         <InsightsLayoutHeaderFilters
           v-if="currentDashboardFilters.length"
           data-testid="insights-layout-header-filters"
+        />
+        <HeaderRefresh
+          v-if="isConversationalDashboard"
+          type="conversations"
         />
         <HeaderDashboardSettings />
         <HeaderGenerateInsightButton

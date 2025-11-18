@@ -905,7 +905,7 @@
         "label": "Contact"
       },
       "ticket_id": {
-        "label": "Protocol"
+        "label": "Ticket ID"
       }
     },
     "columns": {
@@ -914,11 +914,11 @@
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
         "response_time": "Response time",
-        "agent": "Attendant",
+        "agent": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
-        "ticket_id": "Protocol",
+        "ticket_id": "Ticket ID",
         "total_attendances": "Total attendances",
         "average_first_response_time": "Average first response time",
         "average_response_time": "Average response time",

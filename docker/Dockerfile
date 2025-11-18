@@ -70,10 +70,14 @@ COPY --from=old_css --chown=nginx:nginx /usr/share/nginx/html/insights/assets/al
 
 COPY docker-entrypoint.sh /
 
+RUN cd /usr/share/nginx/html/insights/ \
+    && /file_handler.sh css
+
+COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/insights/
+
 RUN mv /usr/share/nginx/html/insights/index.html /usr/share/nginx/html/insights/index.html.tmpl \
     && cd /usr/share/nginx/html/insights/ \
-    && ln -s /tmp/index.html \
-    && /file_handler.sh css
+    && ln -s /tmp/index.html
 
 EXPOSE 8080
 ENTRYPOINT ["/docker-entrypoint.sh"]

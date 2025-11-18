@@ -365,6 +365,11 @@
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})"
   },
+  "data_period": {
+    "label": "Data period",
+    "until": "until",
+    "range": "{start} – {end}"
+  },
   "save_error": "Error when saving. Try again.",
   "get_data_error": "Error fetching data. Try again.",
   "reset": "Reset",

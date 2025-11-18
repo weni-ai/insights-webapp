@@ -18,7 +18,7 @@
           :description="card.description"
           :tooltipInfo="card.tooltipInfo"
           :borderRadius="getBorderRadius(index, cards.length)"
-          :tooltipSide="'top'"
+          :tooltipSide="handleTooltipSide(card.id)"
           :isLoading="card.isLoading"
           @click="handleCardClick(card.id)"
         />
@@ -35,12 +35,15 @@ import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
 import { useRoute } from 'vue-router';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 const { t } = useI18n();
 
 const route = useRoute();
+
+const conversationalStore = useConversational();
 
 const cardDefinitions = [
   {
@@ -96,11 +99,28 @@ watch(
   },
 );
 
+watch(
+  () => conversationalStore.refreshDataConversational,
+  (newValue) => {
+    if (newValue) {
+      conversationalStore.setIsLoadingConversationalData('header', true);
+      loadCardData().finally(() => {
+        conversationalStore.setIsLoadingConversationalData('header', false);
+      });
+    }
+  },
+);
+
 const getBorderRadius = (index: number, totalCards: number) => {
   if (totalCards === 1) return 'full';
   if (index === 0) return 'left';
   if (index === totalCards - 1) return 'right';
   return 'none';
+};
+
+const handleTooltipSide = (cardId: string) => {
+  if (cardId === 'transferred_to_human') return 'left';
+  return 'top';
 };
 
 const showErrorToast = () => {

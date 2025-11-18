@@ -5,6 +5,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 config.global.plugins = [
   createI18n({
@@ -18,6 +19,7 @@ config.global.plugins = [
 ];
 
 vi.mock('@/store/modules/humanSupport/monitoring');
+vi.mock('@/store/modules/conversational/conversational');
 vi.mock('pinia', async () => {
   const actual = await vi.importActual('pinia');
   return {
@@ -26,8 +28,12 @@ vi.mock('pinia', async () => {
   };
 });
 
-const createWrapper = (options = {}) => {
+const createWrapper = (props = {}, options = {}) => {
   return shallowMount(HeaderRefresh, {
+    props: {
+      type: 'human-support',
+      ...props,
+    },
     global: {
       stubs: {
         UnnnicButton: true,
@@ -41,6 +47,7 @@ const createWrapper = (options = {}) => {
 describe('HeaderRefresh.vue', () => {
   let wrapper;
   let monitoringStore;
+  let conversationalStore;
   let mockStoreToRefs;
 
   beforeEach(async () => {
@@ -51,11 +58,17 @@ describe('HeaderRefresh.vue', () => {
       setRefreshDataMonitoring: vi.fn(),
     };
 
+    conversationalStore = {
+      isLoadingConversationalData: false,
+      setRefreshDataConversational: vi.fn(),
+    };
+
     mockStoreToRefs = {
       isLoadingAllData: ref(false),
     };
 
     useHumanSupportMonitoring.mockReturnValue(monitoringStore);
+    useConversational.mockReturnValue(conversationalStore);
     const { storeToRefs } = await import('pinia');
     storeToRefs.mockReturnValue(mockStoreToRefs);
 
@@ -249,6 +262,91 @@ describe('HeaderRefresh.vue', () => {
       );
 
       vi.useRealTimers();
+    });
+  });
+
+  describe('Type: conversations', () => {
+    beforeEach(() => {
+      wrapper = createWrapper({ type: 'conversations' });
+    });
+
+    it('should use conversational store for conversations type', () => {
+      expect(useConversational).toHaveBeenCalled();
+    });
+
+    it('should call setRefreshDataConversational when type is conversations', async () => {
+      wrapper.vm.refreshData();
+
+      expect(
+        conversationalStore.setRefreshDataConversational,
+      ).toHaveBeenCalledWith(true);
+    });
+
+    it('should handle loading state from conversational store', () => {
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(
+        conversationalStore.isLoadingConversationalData,
+      );
+    });
+
+    it('should set refresh to false after timeout for conversations', async () => {
+      vi.useFakeTimers();
+
+      wrapper.vm.refreshData();
+
+      expect(
+        conversationalStore.setRefreshDataConversational,
+      ).toHaveBeenCalledWith(true);
+
+      vi.advanceTimersByTime(500);
+
+      expect(
+        conversationalStore.setRefreshDataConversational,
+      ).toHaveBeenCalledWith(false);
+
+      vi.useRealTimers();
+    });
+
+    it('should be disabled when conversational data is loading', () => {
+      conversationalStore.isLoadingConversationalData = true;
+      wrapper = createWrapper({ type: 'conversations' });
+
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(true);
+    });
+  });
+
+  describe('Type Prop Validation', () => {
+    it('should accept human-support type', () => {
+      const humanSupportWrapper = createWrapper({ type: 'human-support' });
+      expect(humanSupportWrapper.vm.$props.type).toBe('human-support');
+    });
+
+    it('should accept conversations type', () => {
+      const conversationsWrapper = createWrapper({ type: 'conversations' });
+      expect(conversationsWrapper.vm.$props.type).toBe('conversations');
+    });
+
+    it('should handle refresh for human-support type', () => {
+      const humanWrapper = createWrapper({ type: 'human-support' });
+      humanWrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
+        true,
+      );
+      expect(
+        conversationalStore.setRefreshDataConversational,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('should handle refresh for conversations type', () => {
+      const convWrapper = createWrapper({ type: 'conversations' });
+      convWrapper.vm.refreshData();
+
+      expect(
+        conversationalStore.setRefreshDataConversational,
+      ).toHaveBeenCalledWith(true);
+      expect(monitoringStore.setRefreshDataMonitoring).not.toHaveBeenCalled();
     });
   });
 });

@@ -596,6 +596,20 @@ const handleTabChange = (tab: Tab) => {
   }
 };
 
+const loadDynamicWidgetData = () => {
+  if (props.type === 'add') return Promise.resolve();
+
+  if (props.type === 'csat') {
+    return loadCsatWidgetData();
+  } else if (props.type === 'nps') {
+    return loadNpsWidgetData();
+  } else if (props.type === 'custom' && props.uuid) {
+    return loadCustomWidgetData(props.uuid);
+  } else if (props.type === 'sales_funnel') {
+    return loadSalesFunnelWidgetData();
+  }
+};
+
 watch(
   csatWidgetType,
   (value, oldValue) => {
@@ -629,19 +643,21 @@ watch(
 watch(
   () => route.query,
   () => {
-    if (props.type === 'add') return;
-
-    if (props.type === 'csat') {
-      loadCsatWidgetData();
-    } else if (props.type === 'nps') {
-      loadNpsWidgetData();
-    } else if (props.type === 'custom' && props.uuid) {
-      loadCustomWidgetData(props.uuid);
-    } else if (props.type === 'sales_funnel') {
-      loadSalesFunnelWidgetData();
-    }
+    loadDynamicWidgetData();
   },
   { deep: true },
+);
+
+watch(
+  () => conversational.refreshDataConversational,
+  (newValue) => {
+    if (newValue) {
+      conversational.setIsLoadingConversationalData('dynamicWidgets', true);
+      loadDynamicWidgetData().finally(() => {
+        conversational.setIsLoadingConversationalData('dynamicWidgets', false);
+      });
+    }
+  },
 );
 
 const MOCK_DATA = [

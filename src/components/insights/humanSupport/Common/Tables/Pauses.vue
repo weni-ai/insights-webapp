@@ -5,11 +5,11 @@
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
-    height="800px"
+    height="600px"
     :headers="formattedHeaders"
     :items="formattedItems"
     :infiniteScroll="true"
-    :infiniteScrollDistance="15"
+    :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
     :hidePagination="true"
     data-testid="pauses-table"

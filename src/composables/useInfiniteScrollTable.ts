@@ -14,7 +14,7 @@ interface UseInfiniteScrollTableOptions<T, R> {
 export function useInfiniteScrollTable<T = any, R = any>(
   options: UseInfiniteScrollTableOptions<T, R>,
 ) {
-  const { pageSize = 15, fetchData, formatResults, onSortChange } = options;
+  const { pageSize = 12, fetchData, formatResults, onSortChange } = options;
 
   const isLoading = ref(false);
   const isLoadingMore = ref(false);

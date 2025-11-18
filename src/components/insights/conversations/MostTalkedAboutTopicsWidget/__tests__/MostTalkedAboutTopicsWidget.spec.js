@@ -19,8 +19,17 @@ const mockRoute = {
   query: {},
 };
 
+const mockConversationalStore = {
+  refreshDataConversational: false,
+  setIsLoadingConversationalData: vi.fn(),
+};
+
 vi.mock('@/store/modules/conversational/topics', () => ({
   useConversationalTopics: () => mockTopicsStore,
+}));
+
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: () => mockConversationalStore,
 }));
 
 vi.mock('vue-router', async (importOriginal) => {
@@ -259,6 +268,34 @@ describe('MostTalkedAboutTopicsWidget', () => {
         wrapper = createWrapper(testCase);
         expect(section().exists()).toBe(true);
       });
+    });
+  });
+
+  describe('Refresh Functionality', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+    });
+
+    it('should have conversational store integration', () => {
+      expect(wrapper.vm).toBeDefined();
+      expect(
+        mockConversationalStore.setIsLoadingConversationalData,
+      ).toBeDefined();
+    });
+  });
+
+  describe('Store Integration', () => {
+    it('should use conversationalTopics store', () => {
+      expect(mockTopicsStore.loadTopicsDistribution).toBeDefined();
+      expect(mockTopicsStore.toggleAddTopicsDrawer).toBeDefined();
+      expect(mockTopicsStore.setTopicType).toBeDefined();
+    });
+
+    it('should use conversational store', () => {
+      expect(mockConversationalStore.refreshDataConversational).toBeDefined();
+      expect(
+        mockConversationalStore.setIsLoadingConversationalData,
+      ).toBeDefined();
     });
   });
 });

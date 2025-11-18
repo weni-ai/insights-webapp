@@ -35,12 +35,15 @@ import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
 import { useRoute } from 'vue-router';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 const { t } = useI18n();
 
 const route = useRoute();
+
+const conversationalStore = useConversational();
 
 const cardDefinitions = [
   {
@@ -93,6 +96,18 @@ watch(
   () => route.query,
   () => {
     loadCardData();
+  },
+);
+
+watch(
+  () => conversationalStore.refreshDataConversational,
+  (newValue) => {
+    if (newValue) {
+      conversationalStore.setIsLoadingConversationalData('header', true);
+      loadCardData().finally(() => {
+        conversationalStore.setIsLoadingConversationalData('header', false);
+      });
+    }
   },
 );
 

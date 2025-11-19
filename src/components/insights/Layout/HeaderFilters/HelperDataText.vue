@@ -63,5 +63,6 @@ const helperText = computed(() => {
   overflow: hidden;
   color: $unnnic-color-fg-base;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

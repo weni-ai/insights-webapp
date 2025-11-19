@@ -383,6 +383,11 @@
     "last_days": "Últimos {value} días ({date})",
     "previous_month": "Mes anterior ({date})"
   },
+  "data_period": {
+    "label": "Período de datos",
+    "until": "hasta",
+    "range": "{start} – {end}"
+  },
   "save_error": "Error al guardar. Inténtalo de nuevo.",
   "get_data_error": "Error al buscar datos. Inténtalo de nuevo.",
   "reset": "Restablecer",

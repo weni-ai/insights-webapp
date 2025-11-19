@@ -41,6 +41,7 @@ vi.mock('@/store/modules/dashboards', () => ({
         __lte: '2024-01-31',
       },
     },
+    updateLastUpdatedRequest: vi.fn(),
   }),
 }));
 

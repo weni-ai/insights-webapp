@@ -36,6 +36,7 @@ import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { useDashboards } from '@/store/modules/dashboards';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
@@ -43,6 +44,7 @@ const { t } = useI18n();
 
 const route = useRoute();
 
+const dashboardsStore = useDashboards();
 const conversationalStore = useConversational();
 
 const cardDefinitions = [
@@ -95,6 +97,7 @@ const cards = computed(() =>
 watch(
   () => route.query,
   () => {
+    dashboardsStore.updateLastUpdatedRequest();
     loadCardData();
   },
 );
@@ -103,6 +106,7 @@ watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
     if (newValue) {
+      dashboardsStore.updateLastUpdatedRequest();
       conversationalStore.setIsLoadingConversationalData('header', true);
       loadCardData().finally(() => {
         conversationalStore.setIsLoadingConversationalData('header', false);
@@ -193,6 +197,7 @@ const handleCardClick = (cardId: string) => {
 };
 
 onMounted(() => {
+  dashboardsStore.updateLastUpdatedRequest();
   loadCardData();
 });
 </script>

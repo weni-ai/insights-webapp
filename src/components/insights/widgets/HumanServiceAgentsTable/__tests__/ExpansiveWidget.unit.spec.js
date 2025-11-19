@@ -2,11 +2,16 @@ import { mount, flushPromises, config } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
+import { ref } from 'vue';
 import en from '@/locales/en.json';
 
 import ExpansiveWidget from '../../ExpansiveWidget.vue';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import { useWidgets } from '@/store/modules/widgets';
+
+vi.mock('@vueuse/core', () => ({
+  useElementVisibility: vi.fn(() => ref(true)),
+}));
 
 const i18n = createI18n({
   legacy: false,
@@ -106,6 +111,10 @@ describe('ExpansiveWidget', () => {
             queue: '',
           },
           ...overrides.widgetsState,
+        },
+        config: {
+          isActiveRoute: true,
+          ...overrides.configState,
         },
       },
     });
@@ -250,7 +259,6 @@ describe('ExpansiveWidget', () => {
       expect(props.headerTitle).toBe('Test Widget');
       expect(props.headers).toHaveLength(6);
 
-      // Check first item is transformed correctly
       expect(props.items).toHaveLength(1);
       expect(props.items[0].custom_status).toEqual({
         column1: 3600,
@@ -335,6 +343,7 @@ describe('ExpansiveWidget', () => {
       });
 
       await wrapper.vm.$nextTick();
+      await flushPromises();
 
       expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 60000);
       expect(wrapper.vm.pollingInterval).toBe(123);
@@ -358,6 +367,8 @@ describe('ExpansiveWidget', () => {
       });
 
       await wrapper.vm.$nextTick();
+      await flushPromises();
+
       wrapper.unmount();
 
       expect(clearInterval).toHaveBeenCalledWith(123);

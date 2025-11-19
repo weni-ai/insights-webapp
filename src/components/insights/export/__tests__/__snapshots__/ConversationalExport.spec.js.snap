@@ -20,7 +20,7 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
       loading="[object Object]"
       size="large"
       text="Export Data"
-      type="secondary"
+      type="primary"
     />
     
     <span

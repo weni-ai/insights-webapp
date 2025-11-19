@@ -1,5 +1,6 @@
 <template>
   <section
+    ref="widgetRef"
     :class="{
       'expansive-widget': true,
     }"
@@ -16,13 +17,17 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onMounted, onUnmounted, ref } from 'vue';
+import { computed, watch, onUnmounted, ref } from 'vue';
+import { useElementVisibility } from '@vueuse/core';
 
 import { useWidgets } from '@/store/modules/widgets';
 import HumanServiceAgentsTable from './HumanServiceAgentsTable/index.vue';
 
 const POLLING_INTERVAL = 60000; // 1 minute in milliseconds
 const pollingInterval = ref<number | null>(null);
+
+const widgetRef = ref(null);
+const isVisible = useElementVisibility(widgetRef);
 
 const props = defineProps({
   widget: {
@@ -118,18 +123,38 @@ const updateWidgetData = async () => {
   }
 };
 
-onMounted(() => {
+const startPolling = () => {
+  if (pollingInterval.value) {
+    clearInterval(pollingInterval.value);
+  }
+
   pollingInterval.value = window.setInterval(() => {
     updateWidgetData();
   }, POLLING_INTERVAL);
-});
+};
 
-onUnmounted(() => {
+const stopPolling = () => {
   if (pollingInterval.value) {
     clearInterval(pollingInterval.value);
     pollingInterval.value = null;
   }
+};
+
+onUnmounted(() => {
+  stopPolling();
 });
+
+watch(
+  isVisible,
+  (newValue) => {
+    if (newValue && !pollingInterval.value) {
+      startPolling();
+    } else if (!newValue && pollingInterval.value) {
+      stopPolling();
+    }
+  },
+  { immediate: true },
+);
 
 watch(currentExpansiveWidgetFilters, () => {
   updateWidgetData();

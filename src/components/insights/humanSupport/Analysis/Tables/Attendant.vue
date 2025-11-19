@@ -2,20 +2,22 @@
   <UnnnicDataTable
     :locale="$i18n.locale"
     :isLoading="isLoading"
+    :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
-    height="100%"
+    height="600px"
     :headers="formattedHeaders"
     :items="formattedItems"
-    :page="page"
-    :pageTotal="pageTotal"
-    :pageInterval="pageInterval"
+    :infiniteScroll="true"
+    :infiniteScrollDistance="12"
+    :infiniteScrollDisabled="!hasMoreData"
+    :hidePagination="true"
     data-testid="attendant-table"
     size="sm"
     :sort="currentSort"
     @update:sort="handleSort"
-    @update:page="handlePageChange"
     @item-click="redirectItem"
+    @load-more="loadMore"
   />
 </template>
 
@@ -27,6 +29,7 @@ import { AttendantDataResult } from '@/services/api/resources/humanSupport/analy
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/attendant';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
+import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
@@ -42,23 +45,52 @@ type FormattedAttendantData = Omit<
 };
 
 const { t } = useI18n();
-
-const isLoading = ref(false);
 const humanSupport = useHumanSupport();
-
-const page = ref(1);
-const pageInterval = ref(15);
-const pageTotal = ref(0);
 
 const baseTranslationKey = 'human_support_dashboard.columns.common';
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: t(`${baseTranslationKey}.agent`),
-  order: 'desc',
+  order: 'asc',
   itemKey: 'agent',
 });
 
-const formattedItems = ref<FormattedAttendantData[]>([]);
+const formatResults = (
+  results: AttendantDataResult[],
+): FormattedAttendantData[] => {
+  return results.map((result) => ({
+    ...result,
+    average_first_response_time: formatSecondsToTime(
+      result?.average_first_response_time,
+    ),
+    average_response_time: formatSecondsToTime(result?.average_response_time),
+    average_duration: formatSecondsToTime(result?.average_duration),
+    time_in_service: formatSecondsToTime(result?.time_in_service),
+  }));
+};
+
+const fetchData = async (page: number, pageSize: number, ordering: string) => {
+  const offset = (page - 1) * pageSize;
+  return await service.getDetailedAnalysisAttendantData({
+    ordering,
+    limit: pageSize,
+    offset,
+    agent: humanSupport.appliedDetailFilters.agent.value,
+  });
+};
+
+const {
+  isLoading,
+  isLoadingMore,
+  formattedItems,
+  hasMoreData,
+  loadMoreData,
+  resetAndLoadData,
+  handleSort: handleSortChange,
+} = useInfiniteScrollTable<AttendantDataResult, FormattedAttendantData>({
+  fetchData,
+  formatResults,
+});
 
 const formattedHeaders = computed(() => {
   const createHeader = (
@@ -87,68 +119,21 @@ const handleSort = (sort: {
   itemKey: string;
   order: string;
 }) => {
-  currentSort.value = sort;
+  handleSortChange(sort, currentSort);
 };
 
-const handlePageChange = (newPage: number) => {
-  page.value = newPage;
-  loadData();
+const loadMore = () => {
+  loadMoreData(currentSort.value);
 };
 
 const redirectItem = (item: AttendantDataResult) => {
   if (!item?.link?.url) return;
-
   const path = `${item.link?.url}/insights`;
-  window.parent.postMessage(
-    {
-      event: 'redirect',
-      path,
-    },
-    '*',
-  );
-};
-
-const loadData = async () => {
-  try {
-    isLoading.value = true;
-    const data = await service.getDetailedAnalysisAttendantData({
-      ordering:
-        currentSort.value.order === 'desc'
-          ? `-${currentSort.value.itemKey}`
-          : currentSort.value.itemKey,
-      limit: pageInterval.value,
-      offset: (page.value - 1) * pageInterval.value,
-      agent: humanSupport.appliedDetailFilters.agent.value,
-    });
-
-    if (data.results) {
-      formattedItems.value = data.results.map((result) => ({
-        ...result,
-        average_first_response_time: formatSecondsToTime(
-          result?.average_first_response_time,
-        ),
-        average_response_time: formatSecondsToTime(
-          result?.average_response_time,
-        ),
-        average_duration: formatSecondsToTime(result?.average_duration),
-        time_in_service: formatSecondsToTime(result?.time_in_service),
-      }));
-      pageTotal.value = data.count;
-    } else {
-      formattedItems.value = [];
-      pageTotal.value = 0;
-    }
-  } catch (error) {
-    console.error('Error loading attendant data:', error);
-    formattedItems.value = [];
-    pageTotal.value = 0;
-  } finally {
-    isLoading.value = false;
-  }
+  window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
 onMounted(() => {
-  loadData();
+  resetAndLoadData(currentSort.value);
 });
 
 watch(
@@ -159,8 +144,7 @@ watch(
     () => humanSupport.appliedDateRange,
   ],
   () => {
-    page.value = 1;
-    loadData();
+    resetAndLoadData(currentSort.value);
   },
   { flush: 'post' },
 );

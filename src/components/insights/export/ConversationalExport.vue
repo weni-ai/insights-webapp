@@ -1,5 +1,6 @@
 <template>
   <section
+    ref="exportRef"
     class="modal-export-data"
     data-testid="modal-export-data"
   >
@@ -11,7 +12,7 @@
       :enabled="!hasExportData"
     >
       <UnnnicButton
-        type="secondary"
+        type="primary"
         size="large"
         :text="t('export_data.title')"
         :loading="isLoadingCheckExportStatus"
@@ -63,7 +64,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { onMounted, onUnmounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue';
+import { useElementVisibility } from '@vueuse/core';
 import { useConversationalExport } from '@/store/modules/export/conversational/export';
 import { UnnnicToolTip } from '@weni/unnnic-system';
 import FormExport from './Conversational/FormExport.vue';
@@ -80,6 +82,9 @@ const {
   export_data,
   isLoadingCheckExportStatus,
 } = storeToRefs(conversationalExport);
+
+const exportRef = ref(null);
+const isVisible = useElementVisibility(exportRef);
 
 const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
@@ -107,12 +112,23 @@ const stopPolling = () => {
 
 onMounted(() => {
   conversationalExport.checkExportStatus();
-  startPolling();
 });
 
 onUnmounted(() => {
   stopPolling();
 });
+
+watch(
+  isVisible,
+  (newValue) => {
+    if (newValue && !pollingInterval.value) {
+      startPolling();
+    } else if (!newValue && pollingInterval.value) {
+      stopPolling();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

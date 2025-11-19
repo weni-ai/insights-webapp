@@ -50,16 +50,7 @@ router.beforeEach((to, from, next) => {
 });
 
 router.afterEach((router) => {
-  delete router.query.next;
-  delete router.query.projectUuid;
-
-  if (isFederatedModule) {
-    window.dispatchEvent(
-      new CustomEvent('updateRoute', {
-        detail: { path: router.path, query: router.query },
-      }),
-    );
-  } else {
+  if (!isFederatedModule) {
     window.parent.postMessage(
       {
         event: 'changePathname',

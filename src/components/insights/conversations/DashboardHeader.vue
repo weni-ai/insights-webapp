@@ -18,7 +18,7 @@
           :description="card.description"
           :tooltipInfo="card.tooltipInfo"
           :borderRadius="getBorderRadius(index, cards.length)"
-          :tooltipSide="'top'"
+          :tooltipSide="handleTooltipSide(card.id)"
           :isLoading="card.isLoading"
           @click="handleCardClick(card.id)"
         />
@@ -35,12 +35,17 @@ import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
 import { useRoute } from 'vue-router';
+import { useConversational } from '@/store/modules/conversational/conversational';
+import { useDashboards } from '@/store/modules/dashboards';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 const { t } = useI18n();
 
 const route = useRoute();
+
+const dashboardsStore = useDashboards();
+const conversationalStore = useConversational();
 
 const cardDefinitions = [
   {
@@ -92,7 +97,21 @@ const cards = computed(() =>
 watch(
   () => route.query,
   () => {
+    dashboardsStore.updateLastUpdatedRequest();
     loadCardData();
+  },
+);
+
+watch(
+  () => conversationalStore.refreshDataConversational,
+  (newValue) => {
+    if (newValue) {
+      dashboardsStore.updateLastUpdatedRequest();
+      conversationalStore.setIsLoadingConversationalData('header', true);
+      loadCardData().finally(() => {
+        conversationalStore.setIsLoadingConversationalData('header', false);
+      });
+    }
   },
 );
 
@@ -101,6 +120,11 @@ const getBorderRadius = (index: number, totalCards: number) => {
   if (index === 0) return 'left';
   if (index === totalCards - 1) return 'right';
   return 'none';
+};
+
+const handleTooltipSide = (cardId: string) => {
+  if (cardId === 'transferred_to_human') return 'left';
+  return 'top';
 };
 
 const showErrorToast = () => {
@@ -166,13 +190,14 @@ const handleCardClick = (cardId: string) => {
   window.parent.postMessage(
     {
       event: 'redirect',
-      path: `agents-builder:supervisor?status=${statusMap[cardId]}`,
+      path: `ai-conversations:?status=${statusMap[cardId]}`,
     },
     '*',
   );
 };
 
 onMounted(() => {
+  dashboardsStore.updateLastUpdatedRequest();
   loadCardData();
 });
 </script>

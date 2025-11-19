@@ -2,20 +2,22 @@
   <UnnnicDataTable
     :locale="$i18n.locale"
     :isLoading="isLoading"
+    :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
-    height="100%"
+    height="600px"
     :headers="formattedHeaders"
     :items="formattedItems"
-    :page="page"
-    :pageTotal="pageTotal"
-    :pageInterval="pageInterval"
-    data-testid="in-progress-table"
+    :infiniteScroll="true"
+    :infiniteScrollDistance="12"
+    :infiniteScrollDisabled="!hasMoreData"
+    :hidePagination="true"
+    data-testid="in-awaiting-table"
     size="sm"
     :sort="currentSort"
     @update:sort="handleSort"
-    @update:page="handlePageChange"
     @item-click="redirectItem"
+    @load-more="loadMore"
   />
 </template>
 
@@ -27,8 +29,8 @@ import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/moni
 import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-
 import { formatSecondsToTime } from '@/utils/time';
+import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
@@ -38,12 +40,6 @@ const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const humanSupport = useHumanSupport();
 
-const isLoading = ref(false);
-
-const page = ref(1);
-const pageInterval = ref(15);
-const pageTotal = ref(0);
-
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_awaiting';
 
@@ -51,6 +47,37 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: t(`${baseTranslationKey}.awaiting_time`),
   order: 'desc',
   itemKey: 'awaiting_time',
+});
+
+const formatResults = (
+  results: InAwaitingDataResult[],
+): FormattedInAwaitingData[] => {
+  return results.map((result) => ({
+    ...result,
+    awaiting_time: formatSecondsToTime(result?.awaiting_time),
+  }));
+};
+
+const fetchData = async (page: number, pageSize: number, ordering: string) => {
+  const offset = (page - 1) * pageSize;
+  return await service.getDetailedMonitoringInAwaiting({
+    ordering,
+    limit: pageSize,
+    offset,
+  });
+};
+
+const {
+  isLoading,
+  isLoadingMore,
+  formattedItems,
+  hasMoreData,
+  loadMoreData,
+  resetAndLoadData,
+  handleSort: handleSortChange,
+} = useInfiniteScrollTable<InAwaitingDataResult, FormattedInAwaitingData>({
+  fetchData,
+  formatResults,
 });
 
 const formattedHeaders = computed(() => {
@@ -68,69 +95,31 @@ const formattedHeaders = computed(() => {
   ];
 });
 
-const formattedItems = ref<FormattedInAwaitingData[]>([]);
-
 const handleSort = (sort: {
   header: string;
   itemKey: string;
   order: string;
 }) => {
-  currentSort.value = sort;
+  handleSortChange(sort, currentSort);
 };
 
-const handlePageChange = (newPage: number) => {
-  page.value = newPage;
-  loadData();
+const loadMore = () => {
+  loadMoreData(currentSort.value);
 };
 
 const redirectItem = (item: InAwaitingDataResult) => {
   if (!item?.link?.url) return;
-
-  window.parent.postMessage(
-    {
-      event: 'redirect',
-      path: item?.link?.url,
-    },
-    '*',
-  );
-};
-
-const loadData = async () => {
-  try {
-    isLoading.value = true;
-
-    const ordering =
-      currentSort.value.order === 'desc'
-        ? `-${currentSort.value.itemKey}`
-        : currentSort.value.itemKey;
-
-    const data = await service.getDetailedMonitoringInAwaiting({
-      ordering,
-      limit: pageInterval.value,
-      offset: (page.value - 1) * pageInterval.value,
-    });
-
-    formattedItems.value = data.results.map((result) => ({
-      ...result,
-      awaiting_time: formatSecondsToTime(result?.awaiting_time),
-    }));
-    pageTotal.value = data.count;
-  } catch (error) {
-    console.error('Error loading in-awaiting data:', error);
-  } finally {
-    isLoading.value = false;
-  }
+  window.parent.postMessage({ event: 'redirect', path: item?.link?.url }, '*');
 };
 
 onMounted(() => {
-  loadData();
+  resetAndLoadData(currentSort.value);
 });
 
 watch(
   [currentSort, () => humanSupport.appliedFilters],
   () => {
-    page.value = 1;
-    loadData();
+    resetAndLoadData(currentSort.value);
   },
   { flush: 'post' },
 );
@@ -142,7 +131,7 @@ watch(
       newValue &&
       humanSupportMonitoring.activeDetailedTab === 'in_awaiting'
     ) {
-      loadData();
+      resetAndLoadData(currentSort.value);
     }
   },
 );

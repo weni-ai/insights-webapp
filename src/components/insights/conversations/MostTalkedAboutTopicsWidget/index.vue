@@ -75,8 +75,10 @@ import DrawerTopics from '../topics/DrawerTopics.vue';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import type { Tab } from '../BaseConversationWidget.vue';
 import { useRoute } from 'vue-router';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 const conversationalTopicsStore = useConversationalTopics();
+const conversationalStore = useConversational();
 
 const route = useRoute();
 
@@ -163,6 +165,24 @@ watch(
   () => route.query,
   () => {
     loadTopicsDistribution();
+  },
+);
+
+watch(
+  () => conversationalStore.refreshDataConversational,
+  (newValue) => {
+    if (newValue) {
+      conversationalStore.setIsLoadingConversationalData(
+        'mostTalkedAboutTopics',
+        true,
+      );
+      loadTopicsDistribution().finally(() => {
+        conversationalStore.setIsLoadingConversationalData(
+          'mostTalkedAboutTopics',
+          false,
+        );
+      });
+    }
   },
 );
 

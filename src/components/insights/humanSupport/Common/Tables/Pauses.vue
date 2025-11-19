@@ -2,20 +2,22 @@
   <UnnnicDataTable
     :locale="$i18n.locale"
     :isLoading="isLoading"
+    :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
-    height="100%"
+    height="600px"
     :headers="formattedHeaders"
     :items="formattedItems"
-    :page="page"
-    :pageTotal="pageTotal"
-    :pageInterval="pageInterval"
+    :infiniteScroll="true"
+    :infiniteScrollDistance="12"
+    :infiniteScrollDisabled="!hasMoreData"
+    :hidePagination="true"
     data-testid="pauses-table"
     size="sm"
     :sort="currentSort"
     @update:sort="handleSort"
-    @update:page="handlePageChange"
     @item-click="redirectItem"
+    @load-more="loadMore"
   >
     <template
       v-for="statusType in customStatusTypes"
@@ -45,6 +47,7 @@ import { useI18n } from 'vue-i18n';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
+import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
   custom_status: {
@@ -54,14 +57,8 @@ type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
 };
 
 const { t } = useI18n();
-
-const isLoading = ref(false);
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const humanSupport = useHumanSupport();
-
-const page = ref(1);
-const pageInterval = ref(15);
-const pageTotal = ref(0);
 
 const baseTranslationKey = 'human_support_dashboard.detailed_monitoring.pauses';
 
@@ -71,7 +68,32 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   itemKey: 'agent',
 });
 
-const rawItems = ref<FormattedPausesData[]>([]);
+const formatResults = (results: PausesDataResult[]): FormattedPausesData[] => {
+  return results as FormattedPausesData[];
+};
+
+const fetchData = async (page: number, pageSize: number, ordering: string) => {
+  const offset = (page - 1) * pageSize;
+  return await getDetailedMonitoringPausesService.getDetailedMonitoringPauses({
+    ordering,
+    limit: pageSize,
+    offset,
+    agent: humanSupport.appliedDetailFilters.agent.value,
+  });
+};
+
+const {
+  isLoading,
+  isLoadingMore,
+  formattedItems: rawItems,
+  hasMoreData,
+  loadMoreData,
+  resetAndLoadData,
+  handleSort: handleSortChange,
+} = useInfiniteScrollTable<PausesDataResult, FormattedPausesData>({
+  fetchData,
+  formatResults,
+});
 
 const customStatusTypes = computed(() => {
   if (!rawItems.value.length) return [];
@@ -90,7 +112,7 @@ const customStatusTypes = computed(() => {
 const formattedHeaders = computed(() => {
   const baseHeaders = [
     {
-      title: t('human_support_dashboard.detailed_monitoring.pauses.agent'),
+      title: t('human_support_dashboard.detailed_monitoring.pauses.attendant'),
       itemKey: 'agent',
       isSortable: true,
       size: 0.8,
@@ -130,63 +152,21 @@ const handleSort = (sort: {
   itemKey: string;
   order: string;
 }) => {
-  currentSort.value = sort;
+  handleSortChange(sort, currentSort);
 };
 
-const handlePageChange = (newPage: number) => {
-  page.value = newPage;
-  loadData();
+const loadMore = () => {
+  loadMoreData(currentSort.value);
 };
 
 const redirectItem = (item: PausesDataResult) => {
   if (!item?.link?.url) return;
-
   const path = `${item.link?.url}/insights`;
-  window.parent.postMessage(
-    {
-      event: 'redirect',
-      path,
-    },
-    '*',
-  );
-};
-
-const loadData = async () => {
-  try {
-    isLoading.value = true;
-
-    const offset = (page.value - 1) * pageInterval.value;
-    const ordering =
-      currentSort.value.order === 'desc'
-        ? `-${currentSort.value.itemKey}`
-        : currentSort.value.itemKey;
-
-    const data =
-      await getDetailedMonitoringPausesService.getDetailedMonitoringPauses({
-        ordering,
-        limit: pageInterval.value,
-        offset,
-        agent: humanSupport.appliedDetailFilters.agent.value,
-      });
-
-    if (data.results) {
-      rawItems.value = data.results;
-      pageTotal.value = data.count;
-    } else {
-      rawItems.value = [];
-      pageTotal.value = 0;
-    }
-  } catch (error) {
-    console.error('Error loading pauses data:', error);
-    rawItems.value = [];
-    pageTotal.value = 0;
-  } finally {
-    isLoading.value = false;
-  }
+  window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
 onMounted(() => {
-  loadData();
+  resetAndLoadData(currentSort.value);
 });
 
 watch(
@@ -197,8 +177,7 @@ watch(
     () => humanSupport.appliedDateRange,
   ],
   () => {
-    page.value = 1;
-    loadData();
+    resetAndLoadData(currentSort.value);
   },
   { flush: 'post' },
 );
@@ -207,7 +186,7 @@ watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
-      loadData();
+      resetAndLoadData(currentSort.value);
     }
   },
 );

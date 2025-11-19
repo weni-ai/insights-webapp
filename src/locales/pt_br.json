@@ -366,7 +366,7 @@
     "previous_month": "Mês anterior ({date})"
   },
   "data_period": {
-    "label": "Período de dados",
+    "label": "Período",
     "until": "até",
     "range": "{start} – {end}"
   },

@@ -18,56 +18,60 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       usehtmltooltip="false"
     />
     <section
-      class="unnnic-radio-container"
+      class="unnnic-radio"
       data-testid="radio-format-xlsx"
       data-v-4f08a4d6=""
-      data-v-558de5ab=""
+      data-v-7e12a100=""
     >
       <label
-        data-v-558de5ab=""
+        class="unnnic-radio__input-wrapper"
+        data-v-7e12a100=""
       >
         <input
           checked=""
-          class="unnnic-radio"
-          data-v-558de5ab=""
+          class="unnnic-radio__input"
+          data-v-7e12a100=""
           name=""
           type="radio"
         />
         <p
           class="unnnic-radio__label"
-          data-v-558de5ab=""
+          data-v-7e12a100=""
         >
            
           
           .XLSX
           
         </p>
+        <!---->
       </label>
     </section>
     <section
-      class="unnnic-radio-container"
+      class="unnnic-radio"
       data-testid="radio-format-csv"
       data-v-4f08a4d6=""
-      data-v-558de5ab=""
+      data-v-7e12a100=""
     >
       <label
-        data-v-558de5ab=""
+        class="unnnic-radio__input-wrapper"
+        data-v-7e12a100=""
       >
         <input
-          class="unnnic-radio"
-          data-v-558de5ab=""
+          class="unnnic-radio__input"
+          data-v-7e12a100=""
           name=""
           type="radio"
         />
         <p
           class="unnnic-radio__label"
-          data-v-558de5ab=""
+          data-v-7e12a100=""
         >
            
           
           .CSV
           
         </p>
+        <!---->
       </label>
     </section>
   </section>
@@ -93,23 +97,24 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       Warning message
     </p>
     <section
-      class="unnnic-checkbox-wrapper"
+      class="unnnic-checkbox"
       data-testid="export-footer-accept-terms"
+      data-v-14c8c277=""
       data-v-4f08a4d6=""
-      data-v-7fe6356c=""
     >
       <label
-        data-v-7fe6356c=""
+        class="unnnic-checkbox__input-wrapper"
+        data-v-14c8c277=""
       >
         <input
-          class="unnnic-checkbox"
-          data-v-7fe6356c=""
+          class="unnnic-checkbox__input"
+          data-v-14c8c277=""
           type="checkbox"
         />
         <p
           class="unnnic-checkbox__label"
           data-testid="checkbox-text-right"
-          data-v-7fe6356c=""
+          data-v-14c8c277=""
         >
           I accept terms
         </p>

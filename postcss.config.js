@@ -1,7 +1,7 @@
-import postcssPresetEnv from 'postcss-preset-env';
-import postcssPrefixwrap from 'postcss-prefixwrap';
+const postcssPresetEnv = require('postcss-preset-env');
+const postcssPrefixwrap = require('postcss-prefixwrap');
 
-export default {
+module.exports = {
   plugins: [
     // Plugin to support modern CSS features
     postcssPresetEnv({

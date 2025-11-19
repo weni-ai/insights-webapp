@@ -62,6 +62,11 @@ export default async function mountInsightsApp({
     });
   }
 
+  const container = document.getElementById(containerId);
+  if (container) {
+    container.classList.add('insights-webapp');
+  }
+
   app.mount(`#${containerId}`);
   appRef = app;
 

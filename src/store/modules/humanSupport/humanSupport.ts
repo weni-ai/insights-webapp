@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, inject } from 'vue';
 import { useHumanSupportMonitoring } from './monitoring';
 import { useHumanSupportAnalysis } from './analysis';
 import { getLastNDays } from '@/utils/time';
+import type { Router } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 interface Filter {
   value: string;
@@ -37,17 +39,31 @@ export type ActiveTab = 'monitoring' | 'analysis';
 export const useHumanSupport = defineStore('humanSupport', () => {
   const humanSupportMonitoring = useHumanSupportMonitoring();
   const { loadAllData: loadAllDataMonitoring } = humanSupportMonitoring;
+
   const humanSupportAnalysis = useHumanSupportAnalysis();
   const { loadAllData: loadAllDataAnalysis } = humanSupportAnalysis;
+
+  const router = inject<Router>('router', useRouter());
+  const query = router?.currentRoute?.value?.query || {};
+
+  const currentDateRange =
+    typeof query.start_date === 'string' && typeof query.end_date === 'string'
+      ? {
+          start: query.start_date,
+          end: query.end_date,
+        }
+      : getLastNDays(7);
+
   const activeTab = ref<ActiveTab>('monitoring');
   const sectors = ref<Filter[]>([]);
   const queues = ref<Filter[]>([]);
   const tags = ref<Filter[]>([]);
-  const defaultDateFormat = getLastNDays(7);
+
   const appliedDateRange = ref<DateRange>({
-    start: defaultDateFormat.start,
-    end: defaultDateFormat.end,
+    start: currentDateRange.start,
+    end: currentDateRange.end,
   });
+
   const appliedFilters = ref<AppliedFilters>({
     sectors: [],
     queues: [],
@@ -129,6 +145,14 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     };
   };
 
+  const clearAppliedDetailFilters = () => {
+    appliedDetailFilters.value = {
+      agent: { value: '', label: '' },
+      contact: { value: '', label: '' },
+      ticketId: { value: '', label: '' },
+    };
+  };
+
   watch(appliedFilters, () => {
     if (activeTab.value === 'monitoring') return loadAllDataMonitoring();
     if (activeTab.value === 'analysis') return loadAllDataAnalysis();
@@ -136,6 +160,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   watch(appliedDateRange, () => {
     if (activeTab.value === 'analysis') return loadAllDataAnalysis();
+  });
+
+  watch(activeTab, () => {
+    clearAppliedDetailFilters();
   });
 
   return {

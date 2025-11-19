@@ -13,8 +13,8 @@ import DynamicTable from '../DynamicTable.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
+import { useConfig } from '@/store/modules/config';
 
-// Mock Unnnic
 vi.mock('@weni/unnnic-system', () => ({
   default: {
     unnnicCallAlert: vi.fn(),
@@ -72,6 +72,10 @@ const createWrapper = (props = {}, storeState = {}) => {
       },
       reports: {
         ...storeState.reports,
+      },
+      config: {
+        isActiveRoute: false,
+        ...storeState.config,
       },
     },
   });
@@ -158,6 +162,9 @@ describe('DynamicWidget', () => {
     it('should not render any component for unknown widget types', () => {
       wrapper = createWrapper({ widget: { type: 'unknown_type', config: {} } });
       expect(wrapper.html()).toBe('');
+      expect(wrapper.findComponent(DynamicCard).exists()).toBe(false);
+      expect(wrapper.findComponent(DynamicGraph).exists()).toBe(false);
+      expect(wrapper.findComponent(DynamicTable).exists()).toBe(false);
     });
   });
 
@@ -609,20 +616,25 @@ describe('DynamicWidget', () => {
         {
           dashboards: {
             currentDashboard: { name: 'human_service_dashboard.title' },
-            appliedFilters: { created_on: { start: '2023-01-01' } },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: true,
           },
         },
       );
 
+      await nextTick();
+
       const dashboardsStore = useDashboards();
 
-      dashboardsStore.appliedFilters = {};
+      dashboardsStore.appliedFilters = { created_on: { start: '2023-01-01' } };
       await nextTick();
 
       expect(global.clearInterval).toHaveBeenCalled();
     });
 
-    it('should initialize polling on mount for human service dashboard', () => {
+    it('should initialize polling on mount for human service dashboard', async () => {
       wrapper = createWrapper(
         {},
         {
@@ -633,7 +645,110 @@ describe('DynamicWidget', () => {
         },
       );
 
+      await nextTick();
+
       expect(global.setInterval).toHaveBeenCalled();
+    });
+
+    it('should start polling when isActiveRoute changes to true', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'human_service_dashboard.title' },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: true,
+          },
+        },
+      );
+
+      await nextTick();
+      expect(global.setInterval).toHaveBeenCalled();
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = false;
+      await nextTick();
+
+      expect(global.clearInterval).toHaveBeenCalled();
+
+      vi.clearAllMocks();
+
+      configStore.isActiveRoute = true;
+      await nextTick();
+
+      expect(global.setInterval).toHaveBeenCalled();
+    });
+
+    it('should stop polling when isActiveRoute changes to false', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'human_service_dashboard.title' },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: true,
+          },
+        },
+      );
+
+      await nextTick();
+      wrapper.vm.interval = 123;
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = false;
+      await nextTick();
+
+      expect(global.clearInterval).toHaveBeenCalledWith(123);
+    });
+
+    it('should not start polling when isActiveRoute is true but has date filtering', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'human_service_dashboard.title' },
+            appliedFilters: { created_on: { start: '2023-01-01' } },
+          },
+          config: {
+            isActiveRoute: false,
+          },
+        },
+      );
+
+      expect(global.setInterval).not.toHaveBeenCalled();
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = true;
+      await nextTick();
+
+      expect(global.setInterval).not.toHaveBeenCalled();
+    });
+
+    it('should not start polling when isActiveRoute is true but not human service dashboard', async () => {
+      wrapper = createWrapper(
+        {},
+        {
+          dashboards: {
+            currentDashboard: { name: 'other_dashboard' },
+            appliedFilters: {},
+          },
+          config: {
+            isActiveRoute: false,
+          },
+        },
+      );
+
+      expect(global.setInterval).not.toHaveBeenCalled();
+
+      const configStore = useConfig();
+      configStore.isActiveRoute = true;
+      await nextTick();
+
+      expect(global.setInterval).not.toHaveBeenCalled();
     });
   });
 });

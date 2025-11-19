@@ -173,6 +173,10 @@ export const useHumanSupportExport = defineStore('humanSupportExport', {
             uuids: [],
             fields: this.selected_fields?.contacts || [],
           },
+          agent_status_logs: {
+            uuids: [],
+            fields: this.selected_fields?.agent_status_logs || [],
+          },
         };
 
         const response = await exportApi.createExport(exportData);

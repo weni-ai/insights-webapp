@@ -1,5 +1,6 @@
 <template>
   <section
+    ref="exportRef"
     class="modal-export-data"
     data-testid="modal-export-data"
   >
@@ -62,7 +63,8 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { onMounted, onUnmounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue';
+import { useElementVisibility } from '@vueuse/core';
 import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
 import FormExport from './HumanSupport/FormExport.vue';
 
@@ -78,6 +80,9 @@ const {
   export_data,
   isLoadingCheckExportStatus,
 } = storeToRefs(humanSupportExport);
+
+const exportRef = ref(null);
+const isVisible = useElementVisibility(exportRef);
 
 const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
@@ -105,12 +110,23 @@ const stopPolling = () => {
 
 onMounted(() => {
   humanSupportExport.checkExportStatus();
-  startPolling();
 });
 
 onUnmounted(() => {
   stopPolling();
 });
+
+watch(
+  isVisible,
+  (newValue) => {
+    if (newValue && !pollingInterval.value) {
+      startPolling();
+    } else if (!newValue && pollingInterval.value) {
+      stopPolling();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

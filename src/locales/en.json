@@ -25,18 +25,21 @@
     "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
+    "info": {	
+      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+    },
     "header": {
       "total": "Total conversations",
-      "resolved": "Optimized resolutions",
-      "unresolved": "Other conclusions",
+      "resolved": "AI-Assisted",
+      "unresolved": "Not Assisted",
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
-        "resolved": "Conversations closed with a clear, effective resolution for the contact",
-        "unresolved": "Conversations closed for other reasons, such as quick exchanges, greetings, abandonment, or without a direct resolution",
+        "resolved": "When the agent demonstrates competence and provides useful service",
+        "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
-        "transferred": "Chat windows that required human support"
+        "transferred": "Conversations that required human assistance. Values may differ from the Human Support dashboard, as this one counts conversations (not rooms) that were opened and went through the AI. Since one conversation can generate multiple rooms - and some rooms can be opened directly in human support - comparing the dashboards is not recommended."
       }
     },
     "form_topic": {
@@ -361,6 +364,11 @@
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})"
+  },
+  "data_period": {
+    "label": "Data period",
+    "until": "until",
+    "range": "{start} – {end}"
   },
   "save_error": "Error when saving. Try again.",
   "get_data_error": "Error fetching data. Try again.",
@@ -718,7 +726,8 @@
       "transferred": "Conversations transferred to human support",
       "topics": "Topics",
       "csat": "CSAT",
-      "nps": "NPS"
+      "nps": "NPS",
+      "agent_status_logs": "Agent"
     },
     "field_labels": {
       "config": "Configuration",
@@ -753,10 +762,21 @@
       "queue__name": "Queue",
       "queue__uuid": "Queue ID",
       "queue__sector__name": "Sector",
-      "created_on": "Support start date",
+      "created_on": "Start date",
       "duration": "Duration",
       "awaiting_time": "Awaiting time",
-      "first_response_time": "First response time"
+      "first_response_time": "First response time",
+      "agent__email": "Email",
+      "agent__first_name": "Name",
+      "agent__last_name": "Last name",
+      "project__name": "Project name",
+      "project__uuid": "Project ID",
+      "status_changes": "Status changes",
+      "log_date": "Log date",
+      "metric__first_response_time": "First response time",
+      "metric__message_response_time": "Average response time",
+      "metric__interaction_time": "Duration",
+      "metric__waiting_time": "Waiting time"
     },
     "select_data": {
       "label": "Select the date range to fetch data (maximum 92 days between start and end date)",
@@ -809,7 +829,9 @@
   "human_support_dashboard": {
     "title": "Human support",
     "monitoring": "Monitoring",
+    "monitoring_tooltip": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation.",
     "analysis": "Analysis",
+    "analysis_tooltip": "Explore closed interactions to discover patterns and trends. Identify opportunities for improvement and enhance your team's performance.",
     "support_status": {
       "title": "Support status",
       "is_waiting": "Awaiting",
@@ -839,29 +861,26 @@
     "services_open_by_hour": {
       "title": "Supports open by hour"
     },
-    "services_open_by_date": {
-      "title": "Supports open by date"
-    },
     "detailed_monitoring": {
       "title": "Detailed monitoring",
       "tabs": {
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agent",
+        "attendant": "Agent",
         "opened": "Opened",
         "closed": "Closed"
       },
@@ -872,7 +891,7 @@
         "queue": "Queue"
       },
       "attendant": {
-        "agent": "Attendant",
+        "agent": "Agent",
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
@@ -888,13 +907,13 @@
         "placeholder": "Type to filter"
       },
       "attendant": {
-        "label": "Attendant"
+        "label": "Agent"
       },
       "contact": {
         "label": "Contact"
       },
       "ticket_id": {
-        "label": "Protocol"
+        "label": "Ticket ID"
       }
     },
     "columns": {
@@ -903,11 +922,11 @@
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
         "response_time": "Response time",
-        "agent": "Attendant",
+        "agent": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
-        "ticket_id": "Protocol",
+        "ticket_id": "Ticket ID",
         "total_attendances": "Total attendances",
         "average_first_response_time": "Average first response time",
         "average_response_time": "Average response time",
@@ -922,9 +941,29 @@
         "title": "Detailed analysis",
         "tabs": {
           "finished": "Finished",
-          "attendant": "Attendant",
+          "attendant": "Agent",
           "pauses": "Custom Breaks"
         }
+      }
+    }
+  },
+  "news": {
+    "title": "News and updates in Insights - Human Support",
+    "human_support_dashboard": {
+      "monitoring": {
+        "first_text": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation. Discover the new <b>Monitoring</b> view!",
+        "second_text": "Now you can monitor the <b>Support</b> status of customer interactions in real time:",
+        "third_text": "Monitor <b>Time metrics now</b> — average and maximum wait times, first response time, and duration — in real time:",
+        "fourth_text": "The <b>Detailed monitoring table</b> allows you to track real-time data for each interaction and agent.",
+        "fifth_text": "You can monitor each interaction through the <b>In Progress</b> and <b>In awaiting</b> tabs. Click on the interactions to view them.",
+        "sixth_text": "The <b>Agent</b> and <b>Break</b> tabs allow you to monitor each agent's metrics by interaction, as well as custom break times.",
+        "seventh_text": "On the <b>Agent</b> tab, you can click on each agent to enter view-only mode or use the button to disconnect them."
+      },
+      "analysis": {
+        "first_text": "Explore closed interactions to discover patterns and trends. Identify opportunities for improvement and enhance your team's performance. Discover the new <b>Analysis</b> view!",
+        "second_text": "Now, you can track all closed support metrics: <b>Average Wait Time</b>, <b>Average First Response Time</b>, <b>Average Response Time</b>, and <b>Average Support Duration</b>.",
+        "third_text": "The detailed analysis table allows you to analyze data for each interaction and agent.",
+        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Agent</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
       }
     }
   }

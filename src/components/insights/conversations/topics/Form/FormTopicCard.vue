@@ -39,26 +39,18 @@
         />
 
         <section class="form-topic-card__form__context">
-          <UnnnicInput
+          <UnnnicTextArea
             :modelValue="topic.context"
             :label="$t('conversations_dashboard.form_topic.context')"
             class="form-topic-card__form__input"
             data-testid="form-topic-card-context-input"
-            :maxlength="100"
+            :maxLength="300"
+            :message="
+              $t('conversations_dashboard.form_topic.context_description')
+            "
+            size="sm"
             @update:model-value="updateTopicContext"
           />
-
-          <section class="form-topic-card__form__context__description">
-            <p class="form-topic-card__form__context__description__text">
-              {{ $t('conversations_dashboard.form_topic.context_description') }}
-            </p>
-            <p
-              class="form-topic-card__form__context__description__text"
-              data-testid="form-topic-card-character-count"
-            >
-              {{ topic.context.length }}/100
-            </p>
-          </section>
         </section>
       </form>
     </section>

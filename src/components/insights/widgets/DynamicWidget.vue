@@ -123,16 +123,16 @@ const handleRequestData = async (requestParams) => {
     isRequestingData.value = true;
     hasError.value = false;
 
-    if (requestParams.type === 'vtex_order') {
+    if (requestParams?.type === 'vtex_order') {
       await widgetsStore.getWidgetVtexOrderData({
         uuid: requestParams.uuid,
-        utm_source: requestParams.config.filter.utm,
+        utm_source: requestParams.config?.filter?.utm,
       });
-    } else if (requestParams.type === 'recurrence') {
+    } else if (requestParams?.type === 'recurrence') {
       await widgetsStore.getWidgetRecurrenceData({
         uuid: requestParams.uuid,
       });
-    } else if (requestParams.uuid && requestParams.config) {
+    } else if (requestParams?.uuid && requestParams?.config) {
       await widgetsStore.getWidgetGraphFunnelData({
         uuid: requestParams.uuid,
         widgetFunnelConfig: requestParams.config,

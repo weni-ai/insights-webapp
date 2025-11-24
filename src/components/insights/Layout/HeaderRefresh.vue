@@ -1,6 +1,7 @@
 <template>
   <UnnnicButton
     data-testid="refresh-button"
+    class="refresh-button"
     :text="$t('insights_header.refresh')"
     type="tertiary"
     iconLeft="refresh"
@@ -64,3 +65,9 @@ onUnmounted(() => {
   timeoutStop?.();
 });
 </script>
+
+<style lang="scss" scoped>
+.refresh-button {
+  height: 100%;
+}
+</style>

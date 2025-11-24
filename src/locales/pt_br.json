@@ -360,6 +360,8 @@
   "rejected": "Rejeitado",
   "active": "Ativo",
   "disabled": "Desabilitado",
+  "alert_added": "{name} adicionado",
+  "alert_edited": "{name} editado",
   "select_date": {
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",

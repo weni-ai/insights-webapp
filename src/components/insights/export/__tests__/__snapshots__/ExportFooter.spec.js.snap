@@ -15,54 +15,63 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       data-v-4f08a4d6=""
       label="Format"
     />
-    <div
-      class="unnnic-radio-container unnnic-radio-container--md"
+    <section
+      class="unnnic-radio"
       data-testid="radio-format-xlsx"
       data-v-4f08a4d6=""
-      data-v-abd1b195=""
+      data-v-7e12a100=""
     >
-      <unnnic-icon-stub
-        class="unnnic-radio"
-        clickable="false"
-        data-v-abd1b195=""
-        filled="false"
-        icon="radio-selected"
-        scheme="brand-weni"
-        size="md"
-      />
-      <span
-        class="label"
-        data-v-abd1b195=""
+      <label
+        class="unnnic-radio__input-wrapper"
+        data-v-7e12a100=""
       >
-        
-        .XLSX
-        
-      </span>
-    </div>
-    <div
-      class="unnnic-radio-container unnnic-radio-container--md"
+        <input
+          checked=""
+          class="unnnic-radio__input"
+          data-v-7e12a100=""
+          name=""
+          type="radio"
+        />
+        <p
+          class="unnnic-radio__label"
+          data-v-7e12a100=""
+        >
+           
+          
+          .XLSX
+          
+        </p>
+        <!---->
+      </label>
+    </section>
+    <section
+      class="unnnic-radio"
       data-testid="radio-format-csv"
       data-v-4f08a4d6=""
-      data-v-abd1b195=""
+      data-v-7e12a100=""
     >
-      <unnnic-icon-stub
-        class="unnnic-radio"
-        clickable="false"
-        data-v-abd1b195=""
-        filled="false"
-        icon="radio-default"
-        scheme="neutral-cleanest"
-        size="md"
-      />
-      <span
-        class="label"
-        data-v-abd1b195=""
+      <label
+        class="unnnic-radio__input-wrapper"
+        data-v-7e12a100=""
       >
-        
-        .CSV
-        
-      </span>
-    </div>
+        <input
+          class="unnnic-radio__input"
+          data-v-7e12a100=""
+          name=""
+          type="radio"
+        />
+        <p
+          class="unnnic-radio__label"
+          data-v-7e12a100=""
+        >
+           
+          
+          .CSV
+          
+        </p>
+        <!---->
+      </label>
+    </section>
   </section>
   <section
     class="export-footer__terms"
@@ -85,29 +94,31 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       />
       Warning message
     </p>
-    <div
-      class="unnnic-checkbox-wrapper"
+    <section
+      class="unnnic-checkbox"
       data-testid="export-footer-accept-terms"
       data-v-4f08a4d6=""
-      data-v-f5f8c62c=""
+      data-v-8848cfb4=""
     >
-      <unnnic-icon-stub
-        class="unnnic-checkbox"
-        clickable="true"
-        data-v-f5f8c62c=""
-        filled="false"
-        icon="checkbox-default"
-        scheme="neutral-clean"
-        size="md"
-      />
-      <div
-        class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-        data-testid="checkbox-text-right"
-        data-v-f5f8c62c=""
+      <label
+        class="unnnic-checkbox__input-wrapper"
+        data-v-8848cfb4=""
       >
-        I accept terms
-      </div>
-    </div>
+        <input
+          class="unnnic-checkbox__input"
+          data-v-8848cfb4=""
+          type="checkbox"
+        />
+        <p
+          class="unnnic-checkbox__label"
+          data-testid="checkbox-text-right"
+          data-v-8848cfb4=""
+        >
+          I accept terms
+        </p>
+      </label>
+      <!---->
+    </section>
   </section>
 </section>
 `;

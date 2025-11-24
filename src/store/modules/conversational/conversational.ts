@@ -2,9 +2,16 @@ import { defineStore } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 
+export type DrawerWidgetType =
+  | 'nps'
+  | 'csat'
+  | 'add'
+  | 'custom'
+  | 'sales_funnel'
+  | null;
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;
-  drawerWidgetType: 'nps' | 'csat' | 'add' | 'custom' | 'sales_funnel' | null;
+  drawerWidgetType: DrawerWidgetType;
   isNewDrawerCustomizable: boolean;
   refreshDataConversational: boolean;
   isloadingConversationalData: {

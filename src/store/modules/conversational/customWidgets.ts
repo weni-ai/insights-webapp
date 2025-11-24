@@ -5,6 +5,8 @@ import WidgetConversationalService, {
   CustomWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
+import { unnnicCallAlert } from '@weni/unnnic-system';
+import i18n from '@/utils/plugins/i18n';
 
 interface customForm {
   agent_uuid: string;
@@ -106,6 +108,18 @@ export const useCustomWidgets = defineStore('customWidgets', {
         const { getCurrentDashboardWidgets } = useWidgets();
 
         await getCurrentDashboardWidgets();
+
+        const alertText = this.customForm.widget_uuid
+          ? i18n.global.t('alert_edited', { name: widget.name })
+          : i18n.global.t('alert_added', { name: widget.name });
+
+        unnnicCallAlert({
+          props: {
+            text: alertText,
+            type: 'success',
+            seconds: 5,
+          },
+        });
       } catch (error) {
         console.error('Error saving new custom widget', error);
       } finally {

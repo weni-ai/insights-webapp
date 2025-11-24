@@ -14,6 +14,8 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
     <unnnic-label-stub
       data-v-4f08a4d6=""
       label="Format"
+      tooltip=""
+      usehtmltooltip="false"
     />
     <section
       class="unnnic-radio"

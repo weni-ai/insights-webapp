@@ -44,6 +44,11 @@ import TagGroup from '@/components/TagGroup.vue';
 export default {
   name: 'TableGroup',
 
+  components: {
+    // eslint-disable-next-line vue/no-unused-components
+    TagGroup,
+  },
+
   props: {
     isLoading: Boolean,
     tabs: {
@@ -110,6 +115,10 @@ export default {
       }
 
       const formatRowValue = (value) => {
+        if (value === null || value === undefined) {
+          return '-';
+        }
+
         const isDateValid = (date) => moment(date, moment.ISO_8601).isValid();
 
         if (Array.isArray(value)) {
@@ -138,9 +147,9 @@ export default {
 
       const dynamicRows = data.map((row) => {
         const content = dynamicHeaders.map((header) =>
-          formatRowValue(row[header.value]),
+          formatRowValue(row?.[header?.value]),
         );
-        return { ...row, link: undefined, url_link: row.link?.url, content };
+        return { ...row, link: undefined, url_link: row?.link?.url, content };
       });
 
       return {

@@ -41,8 +41,8 @@ describe('RadioList.vue', () => {
   });
 
   it('emits update:selected-radio event when a radio is clicked', async () => {
-    const radio1 = wrapper.get('[data-testid=radio-option1]');
-    await radio1.trigger('click');
+    const radio1 = wrapper.findComponent('[data-testid=radio-option1]');
+    await radio1.vm.$emit('update:model-value', 'option1');
 
     expect(wrapper.emitted('update:selected-radio')).toBeTruthy();
     expect(wrapper.emitted('update:selected-radio')[0]).toEqual(['option1']);

@@ -79,17 +79,17 @@
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
-import { useConversationalForms } from '@/store/modules/conversational/forms';
+import { useCustomizedWidgetForm } from '@/store/modules/conversational/customizedForm';
 import { useProject } from '@/store/modules/project';
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 const customWidgets = useCustomWidgets();
-const { setCustomFormAgent, setCustomFormKey, setCustomFormWidgetName } =
-  customWidgets;
+const { setCustomFormKey, setCustomFormWidgetName } = customWidgets;
 
-const formsStore = useConversationalForms();
+const formsStore = useCustomizedWidgetForm();
 const { customizedForm } = storeToRefs(formsStore);
+const { setCustomFormAgent } = formsStore;
 
 const { agentsTeam, isLoadingAgentsTeam } = storeToRefs(useProject());
 const { isNewDrawerCustomizable } = useConversational();
@@ -107,20 +107,12 @@ watch(agentsTeam, () => {
       (agent) => agent.uuid === customizedForm.value.agentUuid,
     );
     if (agent) {
-      formsStore.setCustomizedForm({
-        agentUuid: agent.uuid,
-        agentName: agent.name,
-      });
       setCustomFormAgent(agent.uuid, agent.name);
     }
   }
 });
 
 const handleChangeAgent = (agent: any) => {
-  formsStore.setCustomizedForm({
-    agentUuid: agent[0].value,
-    agentName: agent[0].label,
-  });
   setCustomFormAgent(agent[0].value, agent[0].label);
 };
 

@@ -76,7 +76,6 @@ export const useSentimentAnalysisForm = defineStore(
     }
 
     function setAgent(uuid: string, _name: string) {
-      // Persist apenas no formulário; o widget é atualizado abaixo
       setSentimentForm({ agentUuid: uuid });
 
       const { type, isNew } = editingContext;
@@ -84,7 +83,6 @@ export const useSentimentAnalysisForm = defineStore(
       if (type !== 'csat' && type !== 'nps') {
         return;
       }
-
       const conversationalWidgets = useConversationalWidgets();
       const { setNewWidget, setCsatWidget, setNpsWidget } =
         conversationalWidgets;

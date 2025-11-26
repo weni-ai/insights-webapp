@@ -14,7 +14,7 @@
 
     <UnnnicCheckbox
       data-testid="sentiment-analysis-form-checkbox-human-support"
-      :modelValue="humanSupport"
+      :modelValue="sentimentForm.humanSupport"
       :textRight="
         $t('conversations_dashboard.customize_your_dashboard.human_support')
       "
@@ -22,35 +22,35 @@
     />
 
     <section
-      v-if="humanSupport"
+      v-if="sentimentForm.humanSupport"
       class="sentiment-analysis-form__section"
       data-testid="sentiment-analysis-form-section-human-support"
     >
       <SelectFlow
-        v-model="flow.uuid"
+        v-model="sentimentForm.flow.uuid"
         data-testid="sentiment-analysis-form-select-flow"
         @update:model-value="handleChangeFlow"
       />
 
       <SelectFlowResult
-        v-model="flow.result"
+        v-model="sentimentForm.flow.result"
         data-testid="sentiment-analysis-form-select-flow-result"
-        :flow="flow.uuid"
-        :disabled="!flow.uuid"
+        :flow="sentimentForm.flow.uuid || ''"
+        :disabled="!sentimentForm.flow.uuid"
         @update:model-value="handleChangeFlowResult"
       />
     </section>
 
     <UnnnicCheckbox
       data-testid="sentiment-analysis-form-checkbox-ai-support"
-      :modelValue="aiSupport"
+      :modelValue="sentimentForm.aiSupport"
       :textRight="
         $t('conversations_dashboard.customize_your_dashboard.ai_support')
       "
       @change="handleChangeAiSupport"
     />
     <section
-      v-if="aiSupport"
+      v-if="sentimentForm.aiSupport"
       class="sentiment-analysis-form__section"
       data-testid="sentiment-analysis-form-section-ai-support"
     >
@@ -81,7 +81,7 @@
           />
           <UnnnicSelectSmart
             data-testid="sentiment-analysis-form-select-agent"
-            :modelValue="[{ value: agent?.uuid, label: agent?.name }]"
+            :modelValue="agentSelectModel"
             :options="[]"
             autocomplete
             autocompleteIconLeft
@@ -107,15 +107,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeMount, watch } from 'vue';
 
 import { useProject } from '@/store/modules/project';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
-import env from '@/utils/env';
-import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
-import { WidgetType, CsatOrNpsCardConfig } from '@/models/types/WidgetTypes';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps<{
@@ -124,48 +122,18 @@ const props = defineProps<{
 }>();
 
 const project = useProject();
-const { isLoadedFlows, getProjectFlows, getAgentsTeam, activateAgent } =
-  project;
+const { isLoadedFlows, getProjectFlows } = project;
 
-const conversationalWidgets = useConversationalWidgets();
-const { setNewWidget, setCsatWidget, setNpsWidget } = conversationalWidgets;
-const { currentCsatWidget, currentNpsWidget, csatWidget, npsWidget } =
-  storeToRefs(conversationalWidgets);
-
-const widget = ref<WidgetType>({
-  uuid: '',
-  name: '',
-  type: 'flow_result',
-  config: {
-    filter: {
-      flow: null,
-    },
-    op_field: null,
-    type: 'flow_result',
-    operation: 'recurrence',
-    datalake_config: {
-      type: '',
-      agent_uuid: '',
-    },
-  } as CsatOrNpsCardConfig,
-  grid_position: {
-    column_start: 0,
-    column_end: 0,
-    row_start: 0,
-    row_end: 0,
-  },
-  report: null,
-  source: '',
-  is_configurable: true,
-});
-
-const humanSupport = ref(false);
-const aiSupport = ref(false);
-
-const flow = ref({
-  uuid: null,
-  result: null,
-});
+const formsStore = useSentimentAnalysisForm();
+const { sentimentForm, isActivatingAgent } = storeToRefs(formsStore);
+const {
+  activateAgent,
+  setAgent,
+  setFlow,
+  setFlowResult,
+  setHumanSupport,
+  setAiSupport,
+} = formsStore;
 
 async function getFlows() {
   if (!isLoadedFlows) {
@@ -173,56 +141,21 @@ async function getFlows() {
   }
 }
 
-const currentWidget = computed(() => {
-  if (props.isNew) {
-    return widget.value;
-  } else {
-    return props.type === 'csat' ? csatWidget.value : npsWidget.value;
-  }
-});
-
 const agent = computed(() => {
   return props.type === 'csat' ? project.csatAgent : project.npsAgent;
 });
 
-const isActivatingAgent = ref(false);
+const agentSelectModel = computed(() => [
+  { value: agent.value?.uuid || '', label: agent.value?.name || '' },
+]);
 
 async function handleActivateAgent() {
-  isActivatingAgent.value = true;
-  await activateAgent(
-    props.type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
-  );
-
-  await getAgentsTeam();
-  isActivatingAgent.value = false;
+  await activateAgent(props.type);
 }
 
 function handleSetAgent() {
-  const type = props.type === 'csat' ? 'csat' : 'nps';
-  if (props.isNew) {
-    (widget.value.config as CsatOrNpsCardConfig).datalake_config = {
-      type: type.toUpperCase(),
-      agent_uuid:
-        type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
-    };
-    setNewWidget(widget.value);
-  } else {
-    const data = {
-      ...currentWidget.value,
-      config: {
-        ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
-        datalake_config: {
-          type,
-          agent_uuid:
-            type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
-        },
-      },
-    };
-    if (props.type === 'csat') {
-      setCsatWidget(data);
-    } else {
-      setNpsWidget(data);
-    }
+  if (agent.value) {
+    setAgent(agent.value.uuid, agent.value.name);
   }
 }
 
@@ -231,146 +164,31 @@ function handleChangeAgent() {
 }
 
 function handleChangeFlow(value: string) {
-  flow.value.uuid = value;
-  if (props.isNew) {
-    (widget.value.config as CsatOrNpsCardConfig).filter.flow = value;
-    setNewWidget(widget.value);
-  } else {
-    if (value) {
-      const data = {
-        ...currentWidget.value,
-        config: {
-          ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
-          filter: { flow: value },
-          op_field: '',
-        },
-      };
-      if (props.type === 'csat') {
-        setCsatWidget(data);
-      } else {
-        setNpsWidget(data);
-      }
-    }
-  }
+  setFlow(value);
 }
 
 function handleChangeFlowResult(value: string) {
-  flow.value.result = value;
-  if (props.isNew) {
-    (widget.value.config as CsatOrNpsCardConfig).op_field = value;
-    setNewWidget(widget.value);
-  } else {
-    if (value) {
-      const data = {
-        ...currentWidget.value,
-        config: {
-          ...currentWidget.value.config,
-          op_field: value,
-        },
-      };
-      if (props.type === 'csat') {
-        setCsatWidget(data);
-      } else {
-        setNpsWidget(data);
-      }
-    }
-  }
+  setFlowResult(value);
 }
 
 function handleChangeHumanSupport($event: boolean) {
-  humanSupport.value = $event;
-  conversationalWidgets.setIsFormHuman($event);
+  setHumanSupport($event);
 }
 
 function handleChangeAiSupport($event: boolean) {
-  aiSupport.value = $event;
-  conversationalWidgets.setIsFormAi($event);
+  setAiSupport($event);
 }
-
-function setFormDataAiSupport() {
-  if (props.type === 'csat') {
-    const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
-    if (config?.datalake_config?.agent_uuid) {
-      aiSupport.value = true;
-      conversationalWidgets.setIsFormAi(true);
-    }
-  } else {
-    const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
-    if (config?.datalake_config?.agent_uuid) {
-      aiSupport.value = true;
-      conversationalWidgets.setIsFormAi(true);
-    }
-  }
-}
-
-async function setFormDataHumanSupport() {
-  await getFlows();
-  if (props.type === 'csat') {
-    const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
-    if (config?.filter?.flow && config?.op_field) {
-      humanSupport.value = true;
-      conversationalWidgets.setIsFormHuman(true);
-      if (project?.flows?.length > 0) {
-        setFormFlow();
-      }
-    }
-  } else {
-    const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
-    if (config?.filter?.flow && config?.op_field) {
-      humanSupport.value = true;
-      conversationalWidgets.setIsFormHuman(true);
-      if (project?.flows?.length > 0) {
-        setFormFlow();
-      }
-    }
-  }
-}
-
-function setFormFlow() {
-  if (props.type === 'csat') {
-    const config = currentCsatWidget.value?.config as CsatOrNpsCardConfig;
-    flow.value = {
-      uuid: config?.filter?.flow || null,
-      result: config?.op_field || null,
-    };
-  } else {
-    const config = currentNpsWidget.value?.config as CsatOrNpsCardConfig;
-    flow.value = {
-      uuid: config?.filter?.flow || null,
-      result: config?.op_field || null,
-    };
-  }
-}
-
-watch(
-  () => project.flows,
-  () => {
-    if (!props.isNew) {
-      setFormFlow();
-    }
-  },
-);
 
 watch(
   () => agent.value,
   () => {
     handleSetAgent();
   },
+  { immediate: true },
 );
 
 onBeforeMount(() => {
   getFlows();
-});
-
-onMounted(async () => {
-  if (props.isNew) {
-    widget.value.source =
-      props.type === 'csat' ? 'conversations.csat' : 'conversations.nps';
-    setNewWidget(widget.value);
-  } else {
-    setFormDataAiSupport();
-    setFormDataHumanSupport();
-  }
 });
 </script>
 

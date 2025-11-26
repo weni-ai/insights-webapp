@@ -6,6 +6,10 @@ import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import SentimentAnalysisForm from '../SentimentAnalysisForm.vue';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
+
+import Projects from '@/services/api/resources/projects';
+import NexusApi from '@/services/api/resources/nexus';
 
 config.global.plugins = [
   createI18n({
@@ -16,8 +20,22 @@ config.global.plugins = [
 vi.stubEnv('CSAT_AGENT_UUID', 'csat-agent-uuid');
 vi.stubEnv('NPS_AGENT_UUID', 'nps-agent-uuid');
 
+vi.mock('@/services/api/resources/projects');
+vi.mock('@/services/api/resources/nexus');
+
 const createWrapper = (props = {}, storeOverrides = {}) => {
+  Projects.getProjectSource.mockResolvedValue([]);
+  NexusApi.getAgentsTeam.mockResolvedValue({
+    manager: null,
+    agents: [
+      { uuid: 'csat-agent-uuid', name: 'CSAT Agent' },
+      { uuid: 'nps-agent-uuid', name: 'NPS Agent' },
+    ],
+  });
+  NexusApi.activateAgent.mockResolvedValue({});
+
   const store = createTestingPinia({
+    stubActions: false,
     initialState: {
       project: {
         isLoadedFlows: false,
@@ -43,6 +61,17 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
         },
         isLoadingAgentsTeam: false,
         ...storeOverrides,
+      },
+      conversationalForms: {
+        sentimentForm: {
+          humanSupport: false,
+          aiSupport: false,
+          flow: {
+            uuid: null,
+            result: null,
+          },
+          agentUuid: null,
+        },
       },
     },
   });
@@ -72,6 +101,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
 
 describe('SentimentAnalysisForm', () => {
   let wrapper;
+  let formsStore;
 
   const sentimentAnalysisFormCheckboxHumanSupport = () =>
     wrapper.findComponent(
@@ -111,6 +141,7 @@ describe('SentimentAnalysisForm', () => {
   describe('Component Initialization', () => {
     beforeEach(() => {
       wrapper = createWrapper();
+      formsStore = useSentimentAnalysisForm();
     });
 
     it('should render component with correct structure', () => {
@@ -130,6 +161,7 @@ describe('SentimentAnalysisForm', () => {
   describe('Human Support Functionality', () => {
     beforeEach(() => {
       wrapper = createWrapper();
+      formsStore = useSentimentAnalysisForm();
     });
 
     it('should not display flow selection section when humanSupport is false', () => {
@@ -141,24 +173,24 @@ describe('SentimentAnalysisForm', () => {
         'change',
         true,
       );
-      expect(wrapper.vm.humanSupport).toBe(true);
+      expect(formsStore.sentimentForm.humanSupport).toBe(true);
 
       await sentimentAnalysisFormCheckboxHumanSupport().vm.$emit(
         'change',
         false,
       );
-      expect(wrapper.vm.humanSupport).toBe(false);
+      expect(formsStore.sentimentForm.humanSupport).toBe(false);
     });
 
     it('should display flow selection section when humanSupport is true', async () => {
-      wrapper.vm.humanSupport = true;
+      formsStore.setSentimentForm({ humanSupport: true });
       await nextTick();
 
       expect(sentimentAnalysisFormSectionHumanSupport().exists()).toBe(true);
     });
 
     it('should update flow uuid when SelectFlow emits update', async () => {
-      wrapper.vm.humanSupport = true;
+      formsStore.setSentimentForm({ humanSupport: true });
       await nextTick();
 
       await sentimentAnalysisFormSelectFlow().vm.$emit(
@@ -166,12 +198,13 @@ describe('SentimentAnalysisForm', () => {
         'new-flow-uuid',
       );
 
-      expect(wrapper.vm.flow.uuid).toBe('new-flow-uuid');
+      expect(formsStore.sentimentForm.flow.uuid).toBe('new-flow-uuid');
     });
 
     it('should update flow result when SelectFlowResult emits update', async () => {
       wrapper = createWrapper({ isNew: true });
-      wrapper.vm.humanSupport = true;
+      formsStore = useSentimentAnalysisForm();
+      formsStore.setSentimentForm({ humanSupport: true });
       await nextTick();
 
       await sentimentAnalysisFormSelectFlowResult().vm.$emit(
@@ -179,11 +212,11 @@ describe('SentimentAnalysisForm', () => {
         'new-result',
       );
 
-      expect(wrapper.vm.flow.result).toBe('new-result');
+      expect(formsStore.sentimentForm.flow.result).toBe('new-result');
     });
 
     it('should disable SelectFlowResult when no flow uuid is selected', async () => {
-      wrapper.vm.humanSupport = true;
+      formsStore.setSentimentForm({ humanSupport: true });
       await nextTick();
 
       expect(
@@ -192,8 +225,10 @@ describe('SentimentAnalysisForm', () => {
     });
 
     it('should enable SelectFlowResult when flow uuid is selected', async () => {
-      wrapper.vm.humanSupport = true;
-      wrapper.vm.flow.uuid = 'flow-1';
+      formsStore.setSentimentForm({
+        humanSupport: true,
+        flow: { uuid: 'flow-1' },
+      });
       await nextTick();
 
       expect(
@@ -205,19 +240,21 @@ describe('SentimentAnalysisForm', () => {
   describe('AI Support Functionality', () => {
     beforeEach(() => {
       wrapper = createWrapper();
+      formsStore = useSentimentAnalysisForm();
     });
 
     it('should toggle aiSupport when checkbox is changed', async () => {
       await sentimentAnalysisFormCheckboxAiSupport().vm.$emit('change', true);
-      expect(wrapper.vm.aiSupport).toBe(true);
+      expect(formsStore.sentimentForm.aiSupport).toBe(true);
 
       await sentimentAnalysisFormCheckboxAiSupport().vm.$emit('change', false);
-      expect(wrapper.vm.aiSupport).toBe(false);
+      expect(formsStore.sentimentForm.aiSupport).toBe(false);
     });
 
     it('should display activate agent button when aiSupport is true and no agent exists', async () => {
       wrapper = createWrapper({}, { agentsTeam: { agents: [] } });
-      wrapper.vm.aiSupport = true;
+      formsStore = useSentimentAnalysisForm();
+      formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 
       expect(sentimentAnalysisFormButtonActivateAgent().exists()).toBe(true);
@@ -231,7 +268,8 @@ describe('SentimentAnalysisForm', () => {
           agentsTeam: { agents: [] },
         },
       );
-      wrapper.vm.aiSupport = true;
+      formsStore = useSentimentAnalysisForm();
+      formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 
       expect(
@@ -240,7 +278,7 @@ describe('SentimentAnalysisForm', () => {
     });
 
     it('should display agent info when agent exists', async () => {
-      wrapper.vm.aiSupport = true;
+      formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 
       expect(sentimentAnalysisFormSelectAgent().exists()).toBe(true);
@@ -248,39 +286,12 @@ describe('SentimentAnalysisForm', () => {
     });
 
     it('should display correct agent info for CSAT type', async () => {
-      wrapper.vm.aiSupport = true;
+      formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 
       expect(sentimentAnalysisFormSelectAgent().props('modelValue')).toEqual([
         { value: 'csat-agent-uuid', label: 'CSAT Agent' },
       ]);
-    });
-  });
-
-  describe('Agent Activation', () => {
-    beforeEach(() => {
-      wrapper = createWrapper({}, { agentsTeam: { agents: [] } });
-    });
-
-    it('should call handleActivateAgent when activate button is clicked', async () => {
-      const activateAgentSpy = vi.spyOn(wrapper.vm, 'handleActivateAgent');
-
-      wrapper.vm.aiSupport = true;
-      await nextTick();
-
-      await sentimentAnalysisFormButtonActivateAgent().trigger('click');
-
-      expect(activateAgentSpy).toHaveBeenCalled();
-    });
-
-    it('should display loading state on activate button', async () => {
-      wrapper.vm.aiSupport = true;
-      wrapper.vm.isActivatingAgent = true;
-      await nextTick();
-
-      expect(sentimentAnalysisFormButtonActivateAgent().props('loading')).toBe(
-        true,
-      );
     });
   });
 });

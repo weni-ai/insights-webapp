@@ -75,7 +75,10 @@ export default {
       }
 
       const modelValueByTypeMap = {
-        string: [this.projectFlows.find((flow) => flow.value === modelValue)],
+        string: [
+          this.projectFlows.find((flow) => flow.value === modelValue) ||
+            this.flowsOptionsPlaceholder,
+        ],
         object: Array.isArray(modelValue) ? modelValue : [modelValue],
       };
 

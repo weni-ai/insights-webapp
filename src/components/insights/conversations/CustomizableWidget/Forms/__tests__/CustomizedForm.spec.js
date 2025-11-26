@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
 import { config, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
@@ -6,6 +7,7 @@ import { createI18n } from 'vue-i18n';
 import CustomizedForm from '../CustomizedForm.vue';
 import { useCustomizedWidgetForm } from '@/store/modules/conversational/customizedForm';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useProject } from '@/store/modules/project';
 
 config.global.plugins = [
   createI18n({
@@ -118,6 +120,28 @@ describe('CustomizedForm.vue', () => {
 
       const formsStore = useCustomizedWidgetForm();
       const customWidgets = useCustomWidgets();
+
+      expect(formsStore.customizedForm.agentName).toBe('Agent 1');
+      expect(customWidgets.customForm.agent_name).toBe('Agent 1');
+    });
+
+    it('resolves agent name after agentsTeam loads asynchronously', async () => {
+      wrapper = factory({
+        isNewDrawerCustomizable: false,
+        customizedFormOverrides: { agentUuid: 'agent-1', agentName: '' },
+        agents: [],
+      });
+
+      const formsStore = useCustomizedWidgetForm();
+      const customWidgets = useCustomWidgets();
+      const projectStore = useProject();
+
+      projectStore.agentsTeam = {
+        manager: null,
+        agents: [{ uuid: 'agent-1', name: 'Agent 1' }],
+      };
+
+      await nextTick();
 
       expect(formsStore.customizedForm.agentName).toBe('Agent 1');
       expect(customWidgets.customForm.agent_name).toBe('Agent 1');

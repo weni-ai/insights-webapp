@@ -6,7 +6,7 @@ import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import SentimentAnalysisForm from '../SentimentAnalysisForm.vue';
-import { useConversationalForms } from '@/store/modules/conversational/forms';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 
 import Projects from '@/services/api/resources/projects';
 import NexusApi from '@/services/api/resources/nexus';
@@ -141,7 +141,7 @@ describe('SentimentAnalysisForm', () => {
   describe('Component Initialization', () => {
     beforeEach(() => {
       wrapper = createWrapper();
-      formsStore = useConversationalForms();
+      formsStore = useSentimentAnalysisForm();
     });
 
     it('should render component with correct structure', () => {
@@ -161,7 +161,7 @@ describe('SentimentAnalysisForm', () => {
   describe('Human Support Functionality', () => {
     beforeEach(() => {
       wrapper = createWrapper();
-      formsStore = useConversationalForms();
+      formsStore = useSentimentAnalysisForm();
     });
 
     it('should not display flow selection section when humanSupport is false', () => {
@@ -203,7 +203,7 @@ describe('SentimentAnalysisForm', () => {
 
     it('should update flow result when SelectFlowResult emits update', async () => {
       wrapper = createWrapper({ isNew: true });
-      formsStore = useConversationalForms();
+      formsStore = useSentimentAnalysisForm();
       formsStore.setSentimentForm({ humanSupport: true });
       await nextTick();
 
@@ -240,7 +240,7 @@ describe('SentimentAnalysisForm', () => {
   describe('AI Support Functionality', () => {
     beforeEach(() => {
       wrapper = createWrapper();
-      formsStore = useConversationalForms();
+      formsStore = useSentimentAnalysisForm();
     });
 
     it('should toggle aiSupport when checkbox is changed', async () => {
@@ -253,7 +253,7 @@ describe('SentimentAnalysisForm', () => {
 
     it('should display activate agent button when aiSupport is true and no agent exists', async () => {
       wrapper = createWrapper({}, { agentsTeam: { agents: [] } });
-      formsStore = useConversationalForms();
+      formsStore = useSentimentAnalysisForm();
       formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 
@@ -268,7 +268,7 @@ describe('SentimentAnalysisForm', () => {
           agentsTeam: { agents: [] },
         },
       );
-      formsStore = useConversationalForms();
+      formsStore = useSentimentAnalysisForm();
       formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 

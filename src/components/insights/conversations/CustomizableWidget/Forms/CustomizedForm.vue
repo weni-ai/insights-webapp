@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch } from 'vue';
+import { computed, onBeforeMount } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useCustomizedWidgetForm } from '@/store/modules/conversational/customizedForm';
 import { useProject } from '@/store/modules/project';
@@ -92,7 +92,7 @@ const { customizedForm } = storeToRefs(formsStore);
 const { setCustomFormAgent } = formsStore;
 
 const { agentsTeam, isLoadingAgentsTeam } = storeToRefs(useProject());
-const { isNewDrawerCustomizable } = useConversational();
+const conversational = useConversational();
 
 const agentSelectModel = computed(() => [
   {
@@ -101,8 +101,8 @@ const agentSelectModel = computed(() => [
   },
 ]);
 
-watch(agentsTeam, () => {
-  if (!isNewDrawerCustomizable) {
+onBeforeMount(() => {
+  if (!conversational.isNewDrawerCustomizable) {
     const agent = agentsTeam.value.agents.find(
       (agent) => agent.uuid === customizedForm.value.agentUuid,
     );

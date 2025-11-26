@@ -112,7 +112,7 @@ export const useSentimentAnalysisForm = defineStore(
           (conversationalWidgets.currentNpsWidget as WidgetType | null);
       }
 
-      if (!currentWidget && (type === 'csat' || type === 'nps')) {
+      if (isNew && !currentWidget && (type === 'csat' || type === 'nps')) {
         currentWidget = initializeNewWidget(type) as WidgetType;
       }
 

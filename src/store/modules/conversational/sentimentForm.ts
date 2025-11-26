@@ -7,6 +7,8 @@ import { useCustomizedWidgetForm } from './customizedForm';
 import { CsatOrNpsCardConfig, WidgetType } from '@/models/types/WidgetTypes';
 import env from '@/utils/env';
 
+type SentimentType = 'csat' | 'nps';
+
 interface SentimentForm {
   humanSupport: boolean;
   aiSupport: boolean;
@@ -62,7 +64,7 @@ export const useSentimentAnalysisForm = defineStore(
       editingContext.uuid = uuid;
     }
 
-    async function activateAgent(type: 'csat' | 'nps') {
+    async function activateAgent(type: SentimentType) {
       const projectStore = useProject();
       const { activateAgent, getAgentsTeam } = projectStore;
 
@@ -83,38 +85,23 @@ export const useSentimentAnalysisForm = defineStore(
       if (type !== 'csat' && type !== 'nps') {
         return;
       }
+
+      const sentimentType = type as SentimentType;
       const conversationalWidgets = useConversationalWidgets();
       const { setNewWidget, setCsatWidget, setNpsWidget } =
         conversationalWidgets;
-      const { newWidget, csatWidget, npsWidget } = storeToRefs(
-        conversationalWidgets,
-      );
 
       const envUuid =
-        type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID');
+        sentimentType === 'csat'
+          ? env('CSAT_AGENT_UUID')
+          : env('NPS_AGENT_UUID');
 
       const datalakeConfig = {
-        type: type.toUpperCase(),
+        type: sentimentType.toUpperCase(),
         agent_uuid: envUuid,
       };
 
-      let currentWidget: WidgetType | null = null;
-
-      if (isNew) {
-        currentWidget = (newWidget.value as WidgetType) || null;
-      } else if (type === 'csat') {
-        currentWidget =
-          (csatWidget.value as WidgetType | null) ||
-          (conversationalWidgets.currentCsatWidget as WidgetType | null);
-      } else {
-        currentWidget =
-          (npsWidget.value as WidgetType | null) ||
-          (conversationalWidgets.currentNpsWidget as WidgetType | null);
-      }
-
-      if (isNew && !currentWidget && (type === 'csat' || type === 'nps')) {
-        currentWidget = initializeNewWidget(type) as WidgetType;
-      }
+      const currentWidget = getWorkingWidget(sentimentType, isNew);
 
       if (!currentWidget) {
         return;
@@ -147,30 +134,16 @@ export const useSentimentAnalysisForm = defineStore(
       });
 
       const { type, isNew } = editingContext;
+
+      if (type !== 'csat' && type !== 'nps') {
+        return;
+      }
+
+      const sentimentType = type as SentimentType;
       const conversationalWidgets = useConversationalWidgets();
       const { setNewWidget, setCsatWidget, setNpsWidget } =
         conversationalWidgets;
-      const { newWidget, csatWidget, npsWidget } = storeToRefs(
-        conversationalWidgets,
-      );
-
-      let currentWidget: WidgetType | null = null;
-
-      if (isNew) {
-        currentWidget = (newWidget.value as WidgetType) || null;
-      } else if (type === 'csat') {
-        currentWidget =
-          (csatWidget.value as WidgetType | null) ||
-          (conversationalWidgets.currentCsatWidget as WidgetType | null);
-      } else {
-        currentWidget =
-          (npsWidget.value as WidgetType | null) ||
-          (conversationalWidgets.currentNpsWidget as WidgetType | null);
-      }
-
-      if (isNew && !currentWidget && (type === 'csat' || type === 'nps')) {
-        currentWidget = initializeNewWidget(type) as WidgetType;
-      }
+      const currentWidget = getWorkingWidget(sentimentType, isNew);
 
       if (!currentWidget) {
         return;
@@ -192,7 +165,7 @@ export const useSentimentAnalysisForm = defineStore(
           },
         };
 
-        if (type === 'csat') {
+        if (sentimentType === 'csat') {
           setCsatWidget(data);
         } else {
           setNpsWidget(data);
@@ -206,9 +179,46 @@ export const useSentimentAnalysisForm = defineStore(
       });
 
       const { type, isNew } = editingContext;
+
+      if (type !== 'csat' && type !== 'nps') {
+        return;
+      }
+
+      const sentimentType = type as SentimentType;
       const conversationalWidgets = useConversationalWidgets();
       const { setNewWidget, setCsatWidget, setNpsWidget } =
         conversationalWidgets;
+      const currentWidget = getWorkingWidget(sentimentType, isNew);
+
+      if (!currentWidget) {
+        return;
+      }
+
+      if (isNew) {
+        (currentWidget.config as CsatOrNpsCardConfig).op_field = result;
+        setNewWidget(currentWidget);
+      } else {
+        const data: WidgetType = {
+          ...currentWidget,
+          config: {
+            ...(currentWidget.config as CsatOrNpsCardConfig),
+            op_field: result,
+          },
+        };
+
+        if (sentimentType === 'csat') {
+          setCsatWidget(data);
+        } else {
+          setNpsWidget(data);
+        }
+      }
+    }
+
+    function getWorkingWidget(
+      type: SentimentType,
+      isNew: boolean,
+    ): WidgetType | null {
+      const conversationalWidgets = useConversationalWidgets();
       const { newWidget, csatWidget, npsWidget } = storeToRefs(
         conversationalWidgets,
       );
@@ -227,35 +237,14 @@ export const useSentimentAnalysisForm = defineStore(
           (conversationalWidgets.currentNpsWidget as WidgetType | null);
       }
 
-      if (isNew && !currentWidget && (type === 'csat' || type === 'nps')) {
-        currentWidget = initializeNewWidget(type) as WidgetType;
+      if (isNew && !currentWidget) {
+        currentWidget = initializeNewWidget(type);
       }
 
-      if (!currentWidget) {
-        return;
-      }
-
-      if (isNew) {
-        (currentWidget.config as CsatOrNpsCardConfig).op_field = result;
-        setNewWidget(currentWidget);
-      } else {
-        const data: WidgetType = {
-          ...currentWidget,
-          config: {
-            ...(currentWidget.config as CsatOrNpsCardConfig),
-            op_field: result,
-          },
-        };
-
-        if (type === 'csat') {
-          setCsatWidget(data);
-        } else {
-          setNpsWidget(data);
-        }
-      }
+      return currentWidget;
     }
 
-    function initializeNewWidget(type: 'csat' | 'nps') {
+    function initializeNewWidget(type: SentimentType): WidgetType {
       const conversationalWidgets = useConversationalWidgets();
       const { setNewWidget } = conversationalWidgets;
       const newWidget = {

@@ -176,7 +176,6 @@ function handleChangeHumanSupport($event: boolean) {
 }
 
 function handleChangeAiSupport($event: boolean) {
-  console.log('handleChangeAiSupport', $event);
   setAiSupport($event);
 }
 
@@ -185,6 +184,7 @@ watch(
   () => {
     handleSetAgent();
   },
+  { immediate: true },
 );
 
 onBeforeMount(() => {

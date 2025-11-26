@@ -164,16 +164,10 @@ function handleChangeAgent() {
 }
 
 function handleChangeFlow(value: string) {
-  if (!value) {
-    return;
-  }
   setFlow(value);
 }
 
 function handleChangeFlowResult(value: string) {
-  if (!value) {
-    return;
-  }
   setFlowResult(value);
 }
 

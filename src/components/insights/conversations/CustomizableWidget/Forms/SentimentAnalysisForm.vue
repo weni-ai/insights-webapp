@@ -107,16 +107,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeMount, watch } from 'vue';
 
 import { useProject } from '@/store/modules/project';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
-import env from '@/utils/env';
-import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
-import { useConversationalForms } from '@/store/modules/conversational/forms';
-import { WidgetType, CsatOrNpsCardConfig } from '@/models/types/WidgetTypes';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { storeToRefs } from 'pinia';
 
 const props = defineProps<{
@@ -125,42 +122,18 @@ const props = defineProps<{
 }>();
 
 const project = useProject();
-const { isLoadedFlows, getProjectFlows, getAgentsTeam, activateAgent } =
-  project;
+const { isLoadedFlows, getProjectFlows } = project;
 
-const conversationalWidgets = useConversationalWidgets();
-const { setNewWidget, setCsatWidget, setNpsWidget } = conversationalWidgets;
-const { csatWidget, npsWidget } = storeToRefs(conversationalWidgets);
-
-const formsStore = useConversationalForms();
-const { sentimentForm } = storeToRefs(formsStore);
-
-const widget = ref<WidgetType>({
-  uuid: '',
-  name: '',
-  type: 'flow_result',
-  config: {
-    filter: {
-      flow: null,
-    },
-    op_field: null,
-    type: 'flow_result',
-    operation: 'recurrence',
-    datalake_config: {
-      type: '',
-      agent_uuid: '',
-    },
-  } as CsatOrNpsCardConfig,
-  grid_position: {
-    column_start: 0,
-    column_end: 0,
-    row_start: 0,
-    row_end: 0,
-  },
-  report: null,
-  source: '',
-  is_configurable: true,
-});
+const formsStore = useSentimentAnalysisForm();
+const { sentimentForm, isActivatingAgent } = storeToRefs(formsStore);
+const {
+  activateAgent,
+  setAgent,
+  setFlow,
+  setFlowResult,
+  setHumanSupport,
+  setAiSupport,
+} = formsStore;
 
 async function getFlows() {
   if (!isLoadedFlows) {
@@ -168,60 +141,21 @@ async function getFlows() {
   }
 }
 
-const currentWidget = computed(() => {
-  if (props.isNew) {
-    return widget.value;
-  } else {
-    return props.type === 'csat' ? csatWidget.value : npsWidget.value;
-  }
-});
-
 const agent = computed(() => {
   return props.type === 'csat' ? project.csatAgent : project.npsAgent;
 });
-
-const isActivatingAgent = ref(false);
 
 const agentSelectModel = computed(() => [
   { value: agent.value?.uuid || '', label: agent.value?.name || '' },
 ]);
 
 async function handleActivateAgent() {
-  isActivatingAgent.value = true;
-  await activateAgent(
-    props.type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
-  );
-
-  await getAgentsTeam();
-  isActivatingAgent.value = false;
+  await activateAgent(props.type);
 }
 
 function handleSetAgent() {
-  const type = props.type === 'csat' ? 'csat' : 'nps';
-  if (props.isNew) {
-    (widget.value.config as CsatOrNpsCardConfig).datalake_config = {
-      type: type.toUpperCase(),
-      agent_uuid:
-        type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
-    };
-    setNewWidget(widget.value);
-  } else {
-    const data = {
-      ...currentWidget.value,
-      config: {
-        ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
-        datalake_config: {
-          type,
-          agent_uuid:
-            type === 'csat' ? env('CSAT_AGENT_UUID') : env('NPS_AGENT_UUID'),
-        },
-      },
-    };
-    if (props.type === 'csat') {
-      setCsatWidget(data);
-    } else {
-      setNpsWidget(data);
-    }
+  if (agent.value) {
+    setAgent(agent.value.uuid, agent.value.name);
   }
 }
 
@@ -230,66 +164,20 @@ function handleChangeAgent() {
 }
 
 function handleChangeFlow(value: string) {
-  formsStore.setSentimentForm({
-    flow: { ...sentimentForm?.value?.flow, uuid: value },
-  });
-
-  if (props.isNew) {
-    (widget.value.config as CsatOrNpsCardConfig).filter.flow = value;
-    setNewWidget(widget.value);
-  } else {
-    if (value) {
-      const data = {
-        ...currentWidget.value,
-        config: {
-          ...(currentWidget?.value?.config as CsatOrNpsCardConfig),
-          filter: { flow: value },
-          op_field: '',
-        },
-      };
-      if (props.type === 'csat') {
-        setCsatWidget(data);
-      } else {
-        setNpsWidget(data);
-      }
-    }
-  }
+  setFlow(value);
 }
 
 function handleChangeFlowResult(value: string) {
-  formsStore.setSentimentForm({
-    flow: { ...sentimentForm?.value?.flow, result: value },
-  });
-
-  if (props.isNew) {
-    (widget.value.config as CsatOrNpsCardConfig).op_field = value;
-    setNewWidget(widget.value);
-  } else {
-    if (value) {
-      const data = {
-        ...currentWidget.value,
-        config: {
-          ...currentWidget.value.config,
-          op_field: value,
-        },
-      };
-      if (props.type === 'csat') {
-        setCsatWidget(data);
-      } else {
-        setNpsWidget(data);
-      }
-    }
-  }
+  setFlowResult(value);
 }
 
 function handleChangeHumanSupport($event: boolean) {
-  formsStore.setSentimentForm({ humanSupport: $event });
-  conversationalWidgets.setIsFormHuman($event);
+  setHumanSupport($event);
 }
 
 function handleChangeAiSupport($event: boolean) {
-  formsStore.setSentimentForm({ aiSupport: $event });
-  conversationalWidgets.setIsFormAi($event);
+  console.log('handleChangeAiSupport', $event);
+  setAiSupport($event);
 }
 
 watch(
@@ -301,14 +189,6 @@ watch(
 
 onBeforeMount(() => {
   getFlows();
-});
-
-onMounted(async () => {
-  if (props.isNew) {
-    widget.value.source =
-      props.type === 'csat' ? 'conversations.csat' : 'conversations.nps';
-    setNewWidget(widget.value);
-  }
 });
 </script>
 

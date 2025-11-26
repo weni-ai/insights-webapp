@@ -108,9 +108,9 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
-import { useConversationalForms } from '@/store/modules/conversational/forms';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
-import { WidgetType, CsatOrNpsCardConfig } from '@/models/types/WidgetTypes';
+import { WidgetType } from '@/models/types/WidgetTypes';
 
 const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
   useConversationalWidgets();
@@ -123,8 +123,6 @@ const {
   isEnabledUpdateWidgetNps,
   isLoadingSaveNewWidget,
   isLoadingUpdateWidget,
-  csatWidget,
-  npsWidget,
 } = storeToRefs(useConversationalWidgets());
 
 const projectStore = useProject();
@@ -141,15 +139,8 @@ const { isEnabledCreateCustomForm, isLoadingSaveNewCustomWidget } =
   storeToRefs(customWidgets);
 const { saveCustomWidget } = customWidgets;
 
-const formsStore = useConversationalForms();
-const { editingContext } = storeToRefs(formsStore);
-const {
-  setEditingContext,
-  setSentimentForm,
-  setCustomizedForm,
-  resetSentimentForm,
-  resetCustomizedForm,
-} = formsStore;
+const sentimentFormStore = useSentimentAnalysisForm();
+const { initializeForm } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
@@ -165,47 +156,6 @@ function closeWarningModal() {
   warningModalType.value = '';
 }
 
-async function loadSentimentData(type: 'csat' | 'nps') {
-  const widget = type === 'csat' ? csatWidget.value : npsWidget.value;
-  if (!widget) return;
-  const config = widget.config as CsatOrNpsCardConfig;
-
-  let humanSupport = false;
-  let aiSupport = false;
-  let flowUuid = null;
-  let flowResult = null;
-
-  if (config.filter?.flow && config.op_field) {
-    humanSupport = true;
-    flowUuid = config.filter.flow;
-    flowResult = config.op_field;
-  }
-
-  if (config.datalake_config?.agent_uuid) {
-    aiSupport = true;
-  }
-
-  setSentimentForm({
-    humanSupport,
-    aiSupport,
-    flow: {
-      uuid: flowUuid,
-      result: flowResult,
-    },
-    agentUuid: config.datalake_config?.agent_uuid || null,
-  });
-}
-
-function loadCustomData() {
-  const { customForm } = customWidgets;
-  setCustomizedForm({
-    widgetName: customForm.widget_name,
-    agentUuid: customForm.agent_uuid,
-    agentName: customForm.agent_name,
-    key: customForm.key,
-  });
-}
-
 watch(
   [isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable],
   async () => {
@@ -219,32 +169,7 @@ watch(
       uuid = customWidgets.customForm.widget_uuid;
     }
 
-    if (
-      editingContext.value.type === type &&
-      editingContext.value.isNew === isNew &&
-      editingContext.value.uuid === uuid
-    ) {
-      return;
-    }
-
-    setEditingContext(type, isNew, uuid);
-
-    if (type === 'add') {
-      resetSentimentForm();
-      resetCustomizedForm();
-      return;
-    }
-
-    if (isNew) {
-      resetSentimentForm();
-      resetCustomizedForm();
-    } else {
-      if (type === 'csat' || type === 'nps') {
-        await loadSentimentData(type);
-      } else if (type === 'custom') {
-        loadCustomData();
-      }
-    }
+    initializeForm(type, isNew, uuid);
   },
   { immediate: true },
 );
@@ -426,11 +351,15 @@ const isDisabledPrimaryButton = computed(() => {
     return !isEnabledCreateCustomForm.value;
   }
 
-  return isNewDrawerCustomizable.value
-    ? !isEnabledSaveNewWidget.value
-    : drawerWidgetType.value === 'csat'
-      ? !isEnabledUpdateWidgetCsat.value
-      : !isEnabledUpdateWidgetNps.value;
+  if (isNewDrawerCustomizable.value) {
+    return !isEnabledSaveNewWidget.value;
+  }
+
+  if (drawerWidgetType.value === 'csat') {
+    return !isEnabledUpdateWidgetCsat.value;
+  }
+
+  return !isEnabledUpdateWidgetNps.value;
 });
 </script>
 

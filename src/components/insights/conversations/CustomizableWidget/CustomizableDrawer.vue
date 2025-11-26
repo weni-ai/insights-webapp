@@ -126,7 +126,7 @@ const {
 } = storeToRefs(useConversationalWidgets());
 
 const projectStore = useProject();
-const { getAgentsTeam } = projectStore;
+const { getAgentsTeam, getProjectFlows } = projectStore;
 
 const { hasValidSalesFunnelAgent } = storeToRefs(projectStore);
 
@@ -146,6 +146,9 @@ const warningModalType = ref<'cancel' | 'return' | ''>('');
 
 onBeforeMount(() => {
   getAgentsTeam();
+  if (!projectStore.isLoadedFlows) {
+    getProjectFlows();
+  }
 });
 
 function closeDrawer() {

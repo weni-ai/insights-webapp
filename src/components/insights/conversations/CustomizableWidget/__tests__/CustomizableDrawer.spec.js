@@ -7,6 +7,7 @@ import { createI18n } from 'vue-i18n';
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 
 vi.mock('@/store/modules/project', () => ({
   useProject: () => ({
@@ -139,6 +140,39 @@ describe('CustomizableWidget', () => {
     it('should close drawer when close event is triggered', async () => {
       await drawer().vm.$emit('close');
       expect(conversationalStore.isDrawerCustomizableOpen).toBe(false);
+    });
+
+    it('should reset sentiment form when reopening the same new csat drawer after close', async () => {
+      const sentimentStore = useSentimentAnalysisForm();
+
+      conversationalStore.setIsDrawerCustomizableOpen(true, 'csat', true);
+      await nextTick();
+
+      sentimentStore.setSentimentForm({
+        humanSupport: true,
+        aiSupport: true,
+        flow: { uuid: 'flow-1', result: 'result-1' },
+        agentUuid: 'agent-1',
+      });
+
+      await drawer().vm.$emit('close');
+      await nextTick();
+
+      expect(sentimentStore.editingContext).toEqual({
+        type: '',
+        isNew: true,
+        uuid: '',
+      });
+
+      conversationalStore.setIsDrawerCustomizableOpen(true, 'csat', true);
+      await nextTick();
+
+      expect(sentimentStore.sentimentForm).toEqual({
+        humanSupport: false,
+        aiSupport: false,
+        flow: { uuid: null, result: null },
+        agentUuid: null,
+      });
     });
   });
 

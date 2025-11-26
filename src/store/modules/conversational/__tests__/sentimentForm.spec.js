@@ -66,6 +66,22 @@ describe('useSentimentAnalysisForm store', () => {
     });
   });
 
+  it('clearEditingContext resets editing context to defaults', () => {
+    const { store } = setupSentimentStore();
+
+    store.editingContext.type = 'csat';
+    store.editingContext.isNew = false;
+    store.editingContext.uuid = 'widget-uuid';
+
+    store.clearEditingContext();
+
+    expect(store.editingContext).toEqual({
+      type: '',
+      isNew: true,
+      uuid: '',
+    });
+  });
+
   it('setSentimentForm merges data', () => {
     const { store } = setupSentimentStore();
     store.setSentimentForm({

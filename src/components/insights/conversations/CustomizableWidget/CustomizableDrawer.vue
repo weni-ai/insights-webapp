@@ -140,7 +140,7 @@ const { isEnabledCreateCustomForm, isLoadingSaveNewCustomWidget } =
 const { saveCustomWidget } = customWidgets;
 
 const sentimentFormStore = useSentimentAnalysisForm();
-const { initializeForm } = sentimentFormStore;
+const { initializeForm, clearEditingContext } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
@@ -152,6 +152,7 @@ onBeforeMount(() => {
 });
 
 function closeDrawer() {
+  clearEditingContext();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 
@@ -186,7 +187,7 @@ async function saveWidgetConfigs() {
     await updateConversationalWidget(drawerWidgetType.value as 'csat' | 'nps');
   }
 
-  setIsDrawerCustomizableOpen(false, null, false);
+  closeDrawer();
 }
 
 const isLoadingSaveButton = computed(() => {
@@ -210,7 +211,7 @@ function handleSecondaryButtonClick() {
   ) {
     warningModalType.value = 'cancel';
   } else {
-    setIsDrawerCustomizableOpen(false, null, false);
+    closeDrawer();
   }
 }
 
@@ -243,6 +244,7 @@ function returnWidgetTypeChoice() {
 function cancelWidgetConfigs() {
   closeWarningModal();
   drawerWidgetType.value = 'add';
+  clearEditingContext();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 

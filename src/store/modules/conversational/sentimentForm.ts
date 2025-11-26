@@ -67,6 +67,10 @@ export const useSentimentAnalysisForm = defineStore(
       editingContext.uuid = uuid;
     }
 
+    function clearEditingContext() {
+      setEditingContext('', true, '');
+    }
+
     async function activateAgent(type: SentimentType) {
       const projectStore = useProject();
       const { activateAgent, getAgentsTeam } = projectStore;
@@ -373,6 +377,7 @@ export const useSentimentAnalysisForm = defineStore(
       setHumanSupport,
       setAiSupport,
       initializeForm,
+      clearEditingContext,
     };
   },
 );

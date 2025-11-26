@@ -112,6 +112,10 @@ export const useSentimentAnalysisForm = defineStore(
           (conversationalWidgets.currentNpsWidget as WidgetType | null);
       }
 
+      if (!currentWidget && (type === 'csat' || type === 'nps')) {
+        currentWidget = initializeNewWidget(type) as WidgetType;
+      }
+
       if (!currentWidget) {
         return;
       }
@@ -165,33 +169,7 @@ export const useSentimentAnalysisForm = defineStore(
       }
 
       if (isNew && !currentWidget && (type === 'csat' || type === 'nps')) {
-        currentWidget = {
-          uuid: '',
-          name: '',
-          type: 'flow_result',
-          config: {
-            filter: {
-              flow: null,
-            },
-            op_field: null,
-            type: 'flow_result',
-            operation: 'recurrence',
-            datalake_config: {
-              type: '',
-              agent_uuid: '',
-            },
-          } as CsatOrNpsCardConfig,
-          grid_position: {
-            column_start: 0,
-            column_end: 0,
-            row_start: 0,
-            row_end: 0,
-          },
-          report: null,
-          source: type === 'csat' ? 'conversations.csat' : 'conversations.nps',
-          is_configurable: true,
-        };
-        setNewWidget(currentWidget);
+        currentWidget = initializeNewWidget(type) as WidgetType;
       }
 
       if (!currentWidget) {
@@ -250,33 +228,7 @@ export const useSentimentAnalysisForm = defineStore(
       }
 
       if (isNew && !currentWidget && (type === 'csat' || type === 'nps')) {
-        currentWidget = {
-          uuid: '',
-          name: '',
-          type: 'flow_result',
-          config: {
-            filter: {
-              flow: null,
-            },
-            op_field: null,
-            type: 'flow_result',
-            operation: 'recurrence',
-            datalake_config: {
-              type: '',
-              agent_uuid: '',
-            },
-          } as CsatOrNpsCardConfig,
-          grid_position: {
-            column_start: 0,
-            column_end: 0,
-            row_start: 0,
-            row_end: 0,
-          },
-          report: null,
-          source: type === 'csat' ? 'conversations.csat' : 'conversations.nps',
-          is_configurable: true,
-        };
-        setNewWidget(currentWidget);
+        currentWidget = initializeNewWidget(type) as WidgetType;
       }
 
       if (!currentWidget) {
@@ -301,6 +253,39 @@ export const useSentimentAnalysisForm = defineStore(
           setNpsWidget(data);
         }
       }
+    }
+
+    function initializeNewWidget(type: 'csat' | 'nps') {
+      const conversationalWidgets = useConversationalWidgets();
+      const { setNewWidget } = conversationalWidgets;
+      const newWidget = {
+        uuid: '',
+        name: '',
+        type: 'flow_result',
+        config: {
+          filter: {
+            flow: null,
+          },
+          op_field: null,
+          type: 'flow_result',
+          operation: 'recurrence',
+          datalake_config: {
+            type: '',
+            agent_uuid: '',
+          },
+        } as CsatOrNpsCardConfig,
+        grid_position: {
+          column_start: 0,
+          column_end: 0,
+          row_start: 0,
+          row_end: 0,
+        },
+        report: null,
+        source: type === 'csat' ? 'conversations.csat' : 'conversations.nps',
+        is_configurable: true,
+      };
+      setNewWidget(newWidget as WidgetType);
+      return newWidget as WidgetType;
     }
 
     function setHumanSupport(enabled: boolean) {

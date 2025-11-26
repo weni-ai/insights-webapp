@@ -24,7 +24,7 @@
             'conversations_dashboard.customize_your_dashboard.widget_name_description',
           )
         "
-        :modelValue="getCustomForm.widget_name"
+        :modelValue="customizedForm.widgetName"
         @update:model-value="handleChangeWidgetName"
       />
     </section>
@@ -45,9 +45,7 @@
       />
       <UnnnicSelectSmart
         data-testid="customized-form-select-agent"
-        :modelValue="[
-          { value: customForm.agent_uuid, label: customForm.agent_name },
-        ]"
+        :modelValue="agentSelectModel"
         :options="
           agentsTeam.agents.map((agent) => ({
             value: agent.uuid,
@@ -71,7 +69,7 @@
         :placeholder="
           $t('conversations_dashboard.customize_your_dashboard.select_key')
         "
-        :modelValue="getCustomForm.key"
+        :modelValue="customizedForm.key"
         @update:model-value="handleChangeKey"
       />
     </section>
@@ -79,47 +77,60 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, watch } from 'vue';
+import { computed, watch } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useConversationalForms } from '@/store/modules/conversational/forms';
 import { useProject } from '@/store/modules/project';
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 const customWidgets = useCustomWidgets();
-const {
-  getCustomForm,
-  setCustomFormAgent,
-  setCustomFormKey,
-  setCustomFormWidgetName,
-  resetCustomForm,
-} = customWidgets;
+const { setCustomFormAgent, setCustomFormKey, setCustomFormWidgetName } =
+  customWidgets;
 
-const { customForm } = storeToRefs(customWidgets);
+const formsStore = useConversationalForms();
+const { customizedForm } = storeToRefs(formsStore);
+
 const { agentsTeam, isLoadingAgentsTeam } = storeToRefs(useProject());
 const { isNewDrawerCustomizable } = useConversational();
+
+const agentSelectModel = computed(() => [
+  {
+    value: customizedForm.value.agentUuid,
+    label: customizedForm.value.agentName,
+  },
+]);
 
 watch(agentsTeam, () => {
   if (!isNewDrawerCustomizable) {
     const agent = agentsTeam.value.agents.find(
-      (agent) => agent.uuid === customForm.value.agent_uuid,
+      (agent) => agent.uuid === customizedForm.value.agentUuid,
     );
-    setCustomFormAgent(agent?.uuid || '', agent?.name || '');
+    if (agent) {
+      formsStore.setCustomizedForm({
+        agentUuid: agent.uuid,
+        agentName: agent.name,
+      });
+      setCustomFormAgent(agent.uuid, agent.name);
+    }
   }
 });
 
-onUnmounted(() => {
-  resetCustomForm();
-});
-
 const handleChangeAgent = (agent: any) => {
+  formsStore.setCustomizedForm({
+    agentUuid: agent[0].value,
+    agentName: agent[0].label,
+  });
   setCustomFormAgent(agent[0].value, agent[0].label);
 };
 
 const handleChangeWidgetName = (widgetName: string) => {
+  formsStore.setCustomizedForm({ widgetName });
   setCustomFormWidgetName(widgetName);
 };
 
 const handleChangeKey = (key: string) => {
+  formsStore.setCustomizedForm({ key });
   setCustomFormKey(key);
 };
 </script>

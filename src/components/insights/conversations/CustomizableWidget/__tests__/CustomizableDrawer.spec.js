@@ -8,6 +8,17 @@ import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 
+vi.mock('@/store/modules/project', () => ({
+  useProject: () => ({
+    isLoadedFlows: true,
+    getProjectFlows: vi.fn(),
+    getAgentsTeam: vi.fn(),
+    agentsTeam: { manager: null, agents: [] },
+    isLoadingAgentsTeam: false,
+    hasValidSalesFunnelAgent: false,
+  }),
+}));
+
 vi.mock('@/utils/plugins/i18n', () => ({
   default: {
     global: {

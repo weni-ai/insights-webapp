@@ -51,11 +51,14 @@ export const useSentimentAnalysisForm = defineStore(
     }
 
     function resetSentimentForm() {
+      const conversationalWidgets = useConversationalWidgets();
       sentimentForm.humanSupport = false;
       sentimentForm.aiSupport = false;
       sentimentForm.flow.uuid = null;
       sentimentForm.flow.result = null;
       sentimentForm.agentUuid = null;
+      conversationalWidgets.setIsFormHuman(false);
+      conversationalWidgets.setIsFormAi(false);
     }
 
     function setEditingContext(type: string, isNew: boolean, uuid = '') {
@@ -311,6 +314,9 @@ export const useSentimentAnalysisForm = defineStore(
       if (config.datalake_config?.agent_uuid) {
         aiSupport = true;
       }
+
+      conversationalWidgets.setIsFormHuman(humanSupport);
+      conversationalWidgets.setIsFormAi(aiSupport);
 
       setSentimentForm({
         humanSupport,

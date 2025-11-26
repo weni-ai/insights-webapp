@@ -141,6 +141,8 @@ describe('useSentimentAnalysisForm store', () => {
 
     expect(store.sentimentForm.humanSupport).toBe(true);
     expect(store.sentimentForm.aiSupport).toBe(true);
+    expect(widgetsStore.isFormHuman).toBe(true);
+    expect(widgetsStore.isFormAi).toBe(true);
     expect(store.sentimentForm.flow).toEqual({
       uuid: 'flow-1',
       result: 'result-1',

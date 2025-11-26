@@ -329,7 +329,10 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       widgets = widgets.filter((widget) => widget.key !== 'nps');
     }
 
-    if (isSalesFunnelConfigured.value || !hasValidSalesFunnelAgent.value) {
+    const hasValidSalesFunnel =
+      hasValidSalesFunnelAgent && hasValidSalesFunnelAgent.value;
+
+    if (isSalesFunnelConfigured.value || !hasValidSalesFunnel) {
       widgets = widgets.filter((widget) => widget.key !== 'sales_funnel');
     }
 

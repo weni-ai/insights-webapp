@@ -196,6 +196,7 @@ export default {
         };
 
         if (this.isConversationalDashboard) {
+          customFilter.disableClear = false;
           customFilter.shortCutOptions = [
             {
               name: this.$t('select_date.last_7_days_conversational'),

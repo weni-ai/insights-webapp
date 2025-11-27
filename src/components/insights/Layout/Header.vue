@@ -22,14 +22,7 @@
         v-if="!isExpansiveMode"
         class="content__actions"
       >
-        <DynamicHeader
-          :dashboardType="dashboardHeaderType"
-          :showTagLive="showTagLive"
-          :hasFilters="!!currentDashboardFilters.length"
-          :isRenderInsightButton="isRenderInsightButton"
-          :isRenderHumanSupportBtnExport="isRenderHumanSupportBtnExport"
-          :isRenderConversationalBtnExport="isRenderConversationalBtnExport"
-        />
+        <DynamicHeader :dashboardType="dashboardHeaderType" />
       </section>
     </section>
     <section

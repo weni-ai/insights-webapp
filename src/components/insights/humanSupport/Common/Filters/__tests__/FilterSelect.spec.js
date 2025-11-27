@@ -201,6 +201,24 @@ describe('FilterSelect', () => {
       expect(wrapper.emitted('change')[0][0].value).toBe('ext1');
     });
 
+    it('should clear filter when clear option is selected', async () => {
+      wrapper = createWrapper();
+      await nextTick();
+
+      wrapper.vm.handleChange([
+        { value: '__CLEAR_FILTER__', label: 'Clear selection' },
+      ]);
+      await nextTick();
+
+      const updateEvents = wrapper.emitted('update:modelValue');
+      const changeEvents = wrapper.emitted('change');
+
+      expect(updateEvents[updateEvents.length - 1]).toEqual([[]]);
+      expect(changeEvents[changeEvents.length - 1]).toEqual([
+        { value: '', label: '' },
+      ]);
+    });
+
     it('should not emit if same value is selected', async () => {
       wrapper = createWrapper({
         modelValue: [{ value: '1', label: 'Agent 1' }],

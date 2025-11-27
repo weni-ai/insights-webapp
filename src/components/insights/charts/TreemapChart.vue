@@ -53,6 +53,7 @@ import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import { addColors, prepareTopData } from '@/utils/treemap';
 import i18n from '@/utils/plugins/i18n';
+import { useI18n } from 'vue-i18n';
 
 ChartJS.defaults.font.family = 'Lato, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);
@@ -69,7 +70,26 @@ const props = defineProps<{
   isLoading?: boolean;
 }>();
 
-const preparedData = computed(() => prepareTopData(props.data));
+const { locale } = useI18n();
+
+const preparedData = computed(() => {
+  const handleLabel = (label: string | undefined, uuid: string | undefined) => {
+    if (uuid?.toLowerCase() === 'other') {
+      return i18n.global.t('conversations_dashboard.unclassified');
+    }
+
+    if (uuid === undefined) {
+      return i18n.global.t('conversations_dashboard.others');
+    }
+
+    return label;
+  };
+  return prepareTopData(props.data).map((item) => ({
+    ...item,
+    label: handleLabel(item?.label, item?.uuid),
+  }));
+});
+
 const coloredData = computed(() => addColors(preparedData.value));
 
 let chart: ChartJS | null = null;
@@ -225,6 +245,12 @@ watch(
 
 watch(treemapCanvas, (newValue) => {
   if (newValue && props.data.length > 0) {
+    createOrUpdateChart();
+  }
+});
+
+watch(locale, () => {
+  if (props.data.length > 0) {
     createOrUpdateChart();
   }
 });

@@ -1,6 +1,7 @@
 <template>
   <component
     :is="currentComponent"
+    data-testid="dynamic-header"
     v-bind="componentProps"
   />
 </template>

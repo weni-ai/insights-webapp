@@ -24,7 +24,7 @@ type DashboardHeaderType =
   | 'human_support'
   | 'conversational'
   | 'metaTemplateMessage'
-  | 'default';
+  | 'custom';
 
 interface DynamicHeaderProps {
   dashboardType: DashboardHeaderType;
@@ -50,7 +50,7 @@ const componentMap: Record<DashboardHeaderType, Component> = {
   human_support: HeaderHumanSupport,
   conversational: HeaderConversational,
   metaTemplateMessage: HeaderDefault,
-  default: HeaderDefault,
+  custom: HeaderDefault,
 };
 
 const dashboardsStore = useDashboards();

@@ -8,6 +8,7 @@
     position="right"
     :minDate="minDate"
     :maxDate="maxDate"
+    :periodBaseDate="periodBaseDate"
     @select-date="selectedDates = $event"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -56,6 +57,12 @@ export default {
         return moment().subtract(1, 'days').format('YYYY-MM-DD');
       }
       return moment().format('YYYY-MM-DD');
+    },
+    periodBaseDate() {
+      if (this.isConversationalDashboard) {
+        return moment().subtract(1, 'day').format('YYYY-MM-DD');
+      }
+      return null;
     },
   },
 };

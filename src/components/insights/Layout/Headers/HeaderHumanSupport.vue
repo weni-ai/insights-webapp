@@ -16,8 +16,6 @@
     data-testid="insights-layout-header-filters"
   />
 
-  <HeaderDashboardSettings />
-
   <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
 </template>
 
@@ -27,7 +25,6 @@ import { storeToRefs } from 'pinia';
 
 import HeaderTagLive from '../HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
-import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
 import HumanSupportExport from '../../export/HumanSupportExport.vue';
 import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';

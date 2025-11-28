@@ -1,9 +1,4 @@
 <template>
-  <HeaderTagLive
-    v-if="showTagLive"
-    data-testid="insights-layout-header-tag-live"
-  />
-
   <InsightsLayoutHeaderFilters
     v-if="hasFilters"
     data-testid="insights-layout-header-filters"
@@ -11,23 +6,15 @@
 
   <HeaderRefresh type="conversations" />
 
-  <HeaderDashboardSettings />
-
   <ConversationalExport v-if="isRenderConversationalBtnExport" />
 </template>
 
 <script setup>
-import HeaderTagLive from '../HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
-import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import ConversationalExport from '../../export/ConversationalExport.vue';
 
 defineProps({
-  showTagLive: {
-    type: Boolean,
-    required: true,
-  },
   hasFilters: {
     type: Boolean,
     required: true,

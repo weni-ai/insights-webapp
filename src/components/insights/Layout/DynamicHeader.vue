@@ -32,16 +32,16 @@ interface DynamicHeaderProps {
 
 interface HeaderBaseProps {
   hasFilters: boolean;
+}
+
+interface HeaderPropsWithAllFilters extends HeaderBaseProps {
+  showTagLive: boolean;
   isRenderInsightButton: boolean;
   isRenderHumanSupportBtnExport: boolean;
   isRenderConversationalBtnExport: boolean;
 }
 
-interface HeaderPropsWithTagLive extends HeaderBaseProps {
-  showTagLive: boolean;
-}
-
-type HeaderProps = HeaderBaseProps | HeaderPropsWithTagLive;
+type HeaderProps = HeaderBaseProps | HeaderPropsWithAllFilters;
 
 const props = defineProps<DynamicHeaderProps>();
 
@@ -127,21 +127,25 @@ const currentComponent = computed<Component>(() => {
 const componentProps = computed<HeaderProps>(() => {
   const defaultProps: HeaderBaseProps = {
     hasFilters: hasFilters.value,
-    isRenderInsightButton: isRenderInsightButton.value,
-    isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
-    isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
   };
 
   const mappingProps: Partial<Record<DashboardHeaderType, HeaderProps>> = {
     human_service: {
       ...defaultProps,
       showTagLive: showTagLive.value,
+      isRenderInsightButton: isRenderInsightButton.value,
+      isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
     },
     human_support: {
       ...defaultProps,
       showTagLive: showTagLive.value,
+      isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
     },
-    conversational: defaultProps,
+    conversational: {
+      ...defaultProps,
+      isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
+    },
+    custom: defaultProps,
   };
 
   return mappingProps[props.dashboardType] || defaultProps;

@@ -43,9 +43,5 @@ defineProps({
     type: Boolean,
     required: true,
   },
-  isRenderConversationalBtnExport: {
-    type: Boolean,
-    required: true,
-  },
 });
 </script>

@@ -19,14 +19,6 @@ defineProps({
     type: Boolean,
     required: true,
   },
-  isRenderInsightButton: {
-    type: Boolean,
-    required: true,
-  },
-  isRenderHumanSupportBtnExport: {
-    type: Boolean,
-    required: true,
-  },
   isRenderConversationalBtnExport: {
     type: Boolean,
     required: true,

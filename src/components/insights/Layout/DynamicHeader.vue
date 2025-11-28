@@ -5,8 +5,8 @@
   />
 </template>
 
-<script setup>
-import { computed } from 'vue';
+<script setup lang="ts">
+import { computed, type Component } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import moment from 'moment';
@@ -19,14 +19,33 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-const props = defineProps({
-  dashboardType: {
-    type: String,
-    required: true,
-  },
-});
+type DashboardHeaderType =
+  | 'human_service'
+  | 'human_support'
+  | 'conversational'
+  | 'metaTemplateMessage'
+  | 'default';
 
-const componentMap = {
+interface DynamicHeaderProps {
+  dashboardType: DashboardHeaderType;
+}
+
+interface HeaderBaseProps {
+  hasFilters: boolean;
+  isRenderInsightButton: boolean;
+  isRenderHumanSupportBtnExport: boolean;
+  isRenderConversationalBtnExport: boolean;
+}
+
+interface HeaderPropsWithTagLive extends HeaderBaseProps {
+  showTagLive: boolean;
+}
+
+type HeaderProps = HeaderBaseProps | HeaderPropsWithTagLive;
+
+const props = defineProps<DynamicHeaderProps>();
+
+const componentMap: Record<DashboardHeaderType, Component> = {
   human_service: HeaderHumanService,
   human_support: HeaderHumanSupport,
   conversational: HeaderConversational,
@@ -101,19 +120,19 @@ const isRenderConversationalBtnExport = computed(() => {
   return isConversationalDashboard.value && isFeatureFlagEnabled;
 });
 
-const currentComponent = computed(() => {
+const currentComponent = computed<Component>(() => {
   return componentMap[props.dashboardType] || HeaderDefault;
 });
 
-const componentProps = computed(() => {
-  const defaultProps = {
+const componentProps = computed<HeaderProps>(() => {
+  const defaultProps: HeaderBaseProps = {
     hasFilters: hasFilters.value,
     isRenderInsightButton: isRenderInsightButton.value,
     isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
     isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
   };
 
-  const mappingProps = {
+  const mappingProps: Partial<Record<DashboardHeaderType, HeaderProps>> = {
     human_service: {
       ...defaultProps,
       showTagLive: showTagLive.value,

@@ -12,8 +12,7 @@ import { useRoute } from 'vue-router';
 import moment from 'moment';
 
 import HeaderHumanService from './Headers/HeaderHumanService.vue';
-import HeaderHumanSupportMonitoring from './Headers/HeaderHumanSupportMonitoring.vue';
-import HeaderHumanSupportAnalysis from './Headers/HeaderHumanSupportAnalysis.vue';
+import HeaderHumanSupport from './Headers/HeaderHumanSupport.vue';
 import HeaderConversational from './Headers/HeaderConversational.vue';
 import HeaderDefault from './Headers/HeaderDefault.vue';
 import { useDashboards } from '@/store/modules/dashboards';
@@ -29,8 +28,7 @@ const props = defineProps({
 
 const componentMap = {
   human_service: HeaderHumanService,
-  human_support_monitoring: HeaderHumanSupportMonitoring,
-  human_support_analysis: HeaderHumanSupportAnalysis,
+  human_support: HeaderHumanSupport,
   conversational: HeaderConversational,
   metaTemplateMessage: HeaderDefault,
   default: HeaderDefault,
@@ -107,25 +105,11 @@ const currentComponent = computed(() => {
   return componentMap[props.dashboardType] || HeaderDefault;
 });
 
-const componentProps = computed(() => {
-  console.log('props.dashboardType', props.dashboardType);
-  console.log('showTagLive', showTagLive.value);
-  console.log('hasFilters', hasFilters.value);
-  console.log('isRenderInsightButton', isRenderInsightButton.value);
-  console.log(
-    'isRenderHumanSupportBtnExport',
-    isRenderHumanSupportBtnExport.value,
-  );
-  console.log(
-    'isRenderConversationalBtnExport',
-    isRenderConversationalBtnExport.value,
-  );
-  return {
-    showTagLive: showTagLive.value,
-    hasFilters: hasFilters.value,
-    isRenderInsightButton: isRenderInsightButton.value,
-    isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
-    isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
-  };
-});
+const componentProps = computed(() => ({
+  showTagLive: showTagLive.value,
+  hasFilters: hasFilters.value,
+  isRenderInsightButton: isRenderInsightButton.value,
+  isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
+  isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
+}));
 </script>

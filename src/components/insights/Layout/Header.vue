@@ -58,8 +58,6 @@ import DynamicHeader from './DynamicHeader.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-import moment from 'moment';
-
 export default {
   name: 'InsightsLayoutHeader',
 
@@ -110,11 +108,6 @@ export default {
       return this.currentDashboard?.name === 'human_support_dashboard.title';
     },
 
-    isHumanSupportMonitoringDashboard() {
-      const isMonitoring = this.activeTab === 'monitoring';
-      return this.isHumanSupportDashboard && isMonitoring;
-    },
-
     isConversationalDashboard() {
       return this.currentDashboard?.name === 'conversations_dashboard.title';
     },
@@ -123,24 +116,20 @@ export default {
       const isMetaTemplateDashboard =
         this.currentDashboard?.config?.is_whatsapp_integration;
 
+      if (this.isConversationalDashboard) {
+        return 'conversational';
+      }
+
+      if (this.isHumanSupportDashboard) {
+        return 'human_support';
+      }
+
       if (isMetaTemplateDashboard) {
         return 'metaTemplateMessage';
       }
 
       if (this.isHumanServiceDashboard) {
         return 'human_service';
-      }
-
-      if (this.isHumanSupportMonitoringDashboard) {
-        return 'human_support_monitoring';
-      }
-
-      if (this.isHumanSupportDashboard) {
-        return 'human_support_analysis';
-      }
-
-      if (this.isConversationalDashboard) {
-        return 'conversational';
       }
 
       return 'default';
@@ -167,29 +156,6 @@ export default {
       }
 
       return dashboardUuid === currentDashboard.uuid ? crumbs : [];
-    },
-
-    showTagLive() {
-      if (this.isHumanSupportMonitoringDashboard) {
-        return true;
-      }
-
-      const dateFilter = this.currentDashboardFilters.find(
-        (filter) => filter.type === 'date_range',
-      );
-
-      const { query } = this.$route;
-      const today = moment().format('YYYY-MM-DD');
-
-      const filteringDateValues = Object.values(
-        this.appliedFilters[dateFilter?.name] || {},
-      );
-
-      const isFilteringToday = filteringDateValues.every(
-        (filterDate) => filterDate === today,
-      );
-
-      return !query[dateFilter?.name] || isFilteringToday;
     },
   },
 

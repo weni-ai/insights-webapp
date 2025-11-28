@@ -4,9 +4,12 @@
     data-testid="insights-layout-header-tag-live"
   />
 
-  <LastUpdatedText />
+  <LastUpdatedText v-if="isMonitoring" />
 
-  <HeaderRefresh type="human-support" />
+  <HeaderRefresh
+    v-if="isMonitoring"
+    type="human-support"
+  />
 
   <InsightsLayoutHeaderFilters
     v-if="hasFilters"
@@ -18,13 +21,17 @@
   <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import HeaderTagLive from '../HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
 import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
 import HumanSupportExport from '../../export/HumanSupportExport.vue';
 import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 defineProps({
   showTagLive: {
@@ -48,4 +55,9 @@ defineProps({
     required: true,
   },
 });
+
+const humanSupportStore = useHumanSupport();
+const { activeTab } = storeToRefs(humanSupportStore);
+
+const isMonitoring = computed(() => activeTab.value === 'monitoring');
 </script>

@@ -32,6 +32,7 @@ const componentMap = {
   human_support_monitoring: DynamicHeaderHumanSupportMonitoring,
   human_support_analysis: DynamicHeaderHumanSupportAnalysis,
   conversational: DynamicHeaderConversational,
+  metaTemplateMessage: DynamicHeaderDefault,
   default: DynamicHeaderDefault,
 };
 

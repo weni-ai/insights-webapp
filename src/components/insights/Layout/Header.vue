@@ -120,6 +120,13 @@ export default {
     },
 
     dashboardHeaderType() {
+      const isMetaTemplateDashboard =
+        this.currentDashboard?.config?.is_whatsapp_integration;
+
+      if (isMetaTemplateDashboard) {
+        return 'metaTemplateMessage';
+      }
+
       if (this.isHumanServiceDashboard) {
         return 'human_service';
       }

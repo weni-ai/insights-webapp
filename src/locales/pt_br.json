@@ -931,7 +931,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Digite para filtrar"
+        "placeholder": "Digite para filtrar",
+        "clear": "Limpar seleção"
       },
       "attendant": {
         "label": "Atendente"

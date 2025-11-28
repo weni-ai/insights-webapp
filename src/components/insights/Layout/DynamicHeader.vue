@@ -105,11 +105,26 @@ const currentComponent = computed(() => {
   return componentMap[props.dashboardType] || HeaderDefault;
 });
 
-const componentProps = computed(() => ({
-  showTagLive: showTagLive.value,
-  hasFilters: hasFilters.value,
-  isRenderInsightButton: isRenderInsightButton.value,
-  isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
-  isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
-}));
+const componentProps = computed(() => {
+  const defaultProps = {
+    hasFilters: hasFilters.value,
+    isRenderInsightButton: isRenderInsightButton.value,
+    isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
+    isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
+  };
+
+  const mappingProps = {
+    human_service: {
+      ...defaultProps,
+      showTagLive: showTagLive.value,
+    },
+    human_support: {
+      ...defaultProps,
+      showTagLive: showTagLive.value,
+    },
+    conversational: defaultProps,
+  };
+
+  return mappingProps[props.dashboardType] || defaultProps;
+});
 </script>

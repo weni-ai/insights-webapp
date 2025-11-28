@@ -85,21 +85,6 @@ export default {
       },
     }),
 
-    isRenderInsightButton() {
-      return this.isHumanServiceDashboard;
-    },
-
-    isRenderHumanSupportBtnExport() {
-      return this.isHumanServiceDashboard || this.isHumanSupportDashboard;
-    },
-
-    isRenderConversationalBtnExport() {
-      const isFeatureFlagEnabled = this.isFeatureFlagEnabled(
-        'insightsConversationsReport',
-      );
-      return this.isConversationalDashboard && isFeatureFlagEnabled;
-    },
-
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
     },
@@ -112,10 +97,11 @@ export default {
       return this.currentDashboard?.name === 'conversations_dashboard.title';
     },
 
-    dashboardHeaderType() {
-      const isMetaTemplateDashboard =
-        this.currentDashboard?.config?.is_whatsapp_integration;
+    isMetaTemplateDashboard() {
+      return this.currentDashboard?.config?.is_whatsapp_integration;
+    },
 
+    dashboardHeaderType() {
       if (this.isConversationalDashboard) {
         return 'conversational';
       }
@@ -124,7 +110,7 @@ export default {
         return 'human_support';
       }
 
-      if (isMetaTemplateDashboard) {
+      if (this.isMetaTemplateDashboard) {
         return 'metaTemplateMessage';
       }
 

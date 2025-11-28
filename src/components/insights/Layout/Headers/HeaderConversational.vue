@@ -9,19 +9,13 @@
   <ConversationalExport v-if="isRenderConversationalBtnExport" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import ConversationalExport from '../../export/ConversationalExport.vue';
 
-defineProps({
-  hasFilters: {
-    type: Boolean,
-    required: true,
-  },
-  isRenderConversationalBtnExport: {
-    type: Boolean,
-    required: true,
-  },
-});
+defineProps<{
+  hasFilters: boolean;
+  isRenderConversationalBtnExport: boolean;
+}>();
 </script>

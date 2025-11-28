@@ -30,20 +30,11 @@ import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-defineProps({
-  showTagLive: {
-    type: Boolean,
-    required: true,
-  },
-  hasFilters: {
-    type: Boolean,
-    required: true,
-  },
-  isRenderHumanSupportBtnExport: {
-    type: Boolean,
-    required: true,
-  },
-});
+defineProps<{
+  showTagLive: boolean;
+  hasFilters: boolean;
+  isRenderHumanSupportBtnExport: boolean;
+}>();
 
 const humanSupportStore = useHumanSupport();
 const { activeTab } = storeToRefs(humanSupportStore);

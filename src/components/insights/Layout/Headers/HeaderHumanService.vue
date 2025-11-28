@@ -19,29 +19,17 @@
   <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import HeaderTagLive from '../HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
 import HeaderGenerateInsightButton from '../HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
 import HumanSupportExport from '../../export/HumanSupportExport.vue';
 import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 
-defineProps({
-  showTagLive: {
-    type: Boolean,
-    required: true,
-  },
-  hasFilters: {
-    type: Boolean,
-    required: true,
-  },
-  isRenderInsightButton: {
-    type: Boolean,
-    required: true,
-  },
-  isRenderHumanSupportBtnExport: {
-    type: Boolean,
-    required: true,
-  },
-});
+defineProps<{
+  showTagLive: boolean;
+  hasFilters: boolean;
+  isRenderInsightButton: boolean;
+  isRenderHumanSupportBtnExport: boolean;
+}>();
 </script>

@@ -7,14 +7,11 @@
   <HeaderDashboardSettings />
 </template>
 
-<script setup>
+<script setup lang="ts">
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
 import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
 
-defineProps({
-  hasFilters: {
-    type: Boolean,
-    required: true,
-  },
-});
+defineProps<{
+  hasFilters: boolean;
+}>();
 </script>

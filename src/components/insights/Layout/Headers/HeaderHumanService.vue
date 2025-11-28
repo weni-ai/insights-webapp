@@ -22,12 +22,12 @@
 </template>
 
 <script setup>
-import HeaderTagLive from './HeaderTagLive.vue';
-import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
-import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
-import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
-import HumanSupportExport from '../export/HumanSupportExport.vue';
-import LastUpdatedText from './HeaderFilters/LastUpdatedText.vue';
+import HeaderTagLive from '../HeaderTagLive.vue';
+import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
+import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
+import HeaderGenerateInsightButton from '../HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
+import HumanSupportExport from '../../export/HumanSupportExport.vue';
+import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 
 defineProps({
   showTagLive: {

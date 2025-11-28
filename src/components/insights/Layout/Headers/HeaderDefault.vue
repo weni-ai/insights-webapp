@@ -13,9 +13,9 @@
 </template>
 
 <script setup>
-import HeaderTagLive from './HeaderTagLive.vue';
-import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
-import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
+import HeaderTagLive from '../HeaderTagLive.vue';
+import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
+import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
 
 defineProps({
   showTagLive: {

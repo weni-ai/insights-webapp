@@ -11,11 +11,11 @@ import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import moment from 'moment';
 
-import DynamicHeaderHumanService from './DynamicHeaderHumanService.vue';
-import DynamicHeaderHumanSupportMonitoring from './DynamicHeaderHumanSupportMonitoring.vue';
-import DynamicHeaderHumanSupportAnalysis from './DynamicHeaderHumanSupportAnalysis.vue';
-import DynamicHeaderConversational from './DynamicHeaderConversational.vue';
-import DynamicHeaderDefault from './DynamicHeaderDefault.vue';
+import HeaderHumanService from './Headers/HeaderHumanService.vue';
+import HeaderHumanSupportMonitoring from './Headers/HeaderHumanSupportMonitoring.vue';
+import HeaderHumanSupportAnalysis from './Headers/HeaderHumanSupportAnalysis.vue';
+import HeaderConversational from './Headers/HeaderConversational.vue';
+import HeaderDefault from './Headers/HeaderDefault.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
@@ -28,12 +28,12 @@ const props = defineProps({
 });
 
 const componentMap = {
-  human_service: DynamicHeaderHumanService,
-  human_support_monitoring: DynamicHeaderHumanSupportMonitoring,
-  human_support_analysis: DynamicHeaderHumanSupportAnalysis,
-  conversational: DynamicHeaderConversational,
-  metaTemplateMessage: DynamicHeaderDefault,
-  default: DynamicHeaderDefault,
+  human_service: HeaderHumanService,
+  human_support_monitoring: HeaderHumanSupportMonitoring,
+  human_support_analysis: HeaderHumanSupportAnalysis,
+  conversational: HeaderConversational,
+  metaTemplateMessage: HeaderDefault,
+  default: HeaderDefault,
 };
 
 const dashboardsStore = useDashboards();
@@ -104,14 +104,28 @@ const isRenderConversationalBtnExport = computed(() => {
 });
 
 const currentComponent = computed(() => {
-  return componentMap[props.dashboardType] || DynamicHeaderDefault;
+  return componentMap[props.dashboardType] || HeaderDefault;
 });
 
-const componentProps = computed(() => ({
-  showTagLive: showTagLive.value,
-  hasFilters: hasFilters.value,
-  isRenderInsightButton: isRenderInsightButton.value,
-  isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
-  isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
-}));
+const componentProps = computed(() => {
+  console.log('props.dashboardType', props.dashboardType);
+  console.log('showTagLive', showTagLive.value);
+  console.log('hasFilters', hasFilters.value);
+  console.log('isRenderInsightButton', isRenderInsightButton.value);
+  console.log(
+    'isRenderHumanSupportBtnExport',
+    isRenderHumanSupportBtnExport.value,
+  );
+  console.log(
+    'isRenderConversationalBtnExport',
+    isRenderConversationalBtnExport.value,
+  );
+  return {
+    showTagLive: showTagLive.value,
+    hasFilters: hasFilters.value,
+    isRenderInsightButton: isRenderInsightButton.value,
+    isRenderHumanSupportBtnExport: isRenderHumanSupportBtnExport.value,
+    isRenderConversationalBtnExport: isRenderConversationalBtnExport.value,
+  };
+});
 </script>

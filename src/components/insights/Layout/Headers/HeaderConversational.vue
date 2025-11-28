@@ -4,27 +4,24 @@
     data-testid="insights-layout-header-tag-live"
   />
 
-  <LastUpdatedText />
-
-  <HeaderRefresh type="human-support" />
-
   <InsightsLayoutHeaderFilters
     v-if="hasFilters"
     data-testid="insights-layout-header-filters"
   />
 
+  <HeaderRefresh type="conversations" />
+
   <HeaderDashboardSettings />
 
-  <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
+  <ConversationalExport v-if="isRenderConversationalBtnExport" />
 </template>
 
 <script setup>
-import HeaderTagLive from './HeaderTagLive.vue';
-import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
-import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
-import HeaderRefresh from './HeaderRefresh.vue';
-import HumanSupportExport from '../export/HumanSupportExport.vue';
-import LastUpdatedText from './HeaderFilters/LastUpdatedText.vue';
+import HeaderTagLive from '../HeaderTagLive.vue';
+import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
+import HeaderDashboardSettings from '../HeaderDashboardSettings.vue';
+import HeaderRefresh from '../HeaderRefresh.vue';
+import ConversationalExport from '../../export/ConversationalExport.vue';
 
 defineProps({
   showTagLive: {

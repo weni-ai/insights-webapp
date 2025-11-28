@@ -6,7 +6,7 @@
       'option-select-dashboard--active':
         currentDashboard.uuid === dashboard.uuid,
     }"
-    @click="setCurrentDashboard(dashboard)"
+    @click="handleSetCurrentDashboard(dashboard)"
   >
     <section class="option-select-dashboard__content">
       {{ $t(dashboard.name) }}
@@ -77,6 +77,22 @@ export default {
       'setCurrentDashboard',
       'setDefaultDashboard',
     ]),
+
+    handleSetCurrentDashboard(dashboard) {
+      const route = this.$route;
+
+      if (route.name === 'report') {
+        this.$router.push({
+          name: 'dashboard',
+          params: {
+            dashboardUuid: dashboard.uuid,
+          },
+        });
+        return;
+      }
+
+      this.setCurrentDashboard(dashboard);
+    },
 
     setStarHovered(boolean) {
       this.starHovered = boolean;

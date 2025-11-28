@@ -1,501 +1,255 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { beforeAll, afterAll, describe, it } from 'vitest';
+import { mount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { nextTick } from 'vue';
-
+import { createRouter, createWebHistory } from 'vue-router';
+import { createI18n } from 'vue-i18n';
 import Header from '../Header.vue';
-import { useDashboards } from '@/store/modules/dashboards';
-import { useWidgets } from '@/store/modules/widgets';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import i18n from '@/utils/plugins/i18n';
 
-import moment from 'moment';
+beforeAll(() => {
+  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
+  config.global.plugins.push(
+    createI18n({ legacy: false, locale: 'en', messages: { en: {} } }),
+  );
+});
 
-const mockRouter = {
-  push: vi.fn(),
-  replace: vi.fn(),
-  currentRoute: {
-    value: {
+afterAll(() => {
+  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
+});
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '/dashboard/:dashboardUuid',
       name: 'dashboard',
-      params: { dashboardUuid: 'dashboard-123' },
-      path: '/dashboard/dashboard-123',
-      query: {},
+      component: { template: '<div/>' },
     },
-  },
-};
+    {
+      path: '/dashboard/:dashboardUuid/report',
+      name: 'report',
+      component: { template: '<div/>' },
+    },
+  ],
+});
 
-vi.mock('moment', () => ({
-  default: vi.fn(() => ({
-    format: vi.fn(() => '2024-01-15'),
-  })),
-}));
+const createWrapper = (storeState = {}) =>
+  mount(Header, {
+    global: {
+      plugins: [
+        createTestingPinia({
+          initialState: {
+            dashboards: {
+              currentDashboard: { name: 'test', uuid: '123' },
+              dashboards: [{ name: 'test', uuid: '123' }],
+              dashboardDefault: { uuid: '123' },
+              currentDashboardFilters: [],
+              appliedFilters: {},
+              ...storeState.dashboards,
+            },
+            widgets: {
+              currentExpansiveWidget: {},
+              ...storeState.widgets,
+            },
+            humanSupport: {
+              activeTab: 'overview',
+              ...storeState.humanSupport,
+            },
+          },
+          stubActions: false,
+        }),
+        router,
+      ],
+      stubs: {
+        HeaderSelectDashboard: true,
+        DynamicHeader: true,
+        UnnnicBreadcrumb: true,
+        UnnnicButtonIcon: true,
+      },
+    },
+  });
 
-describe('InsightsLayoutHeader.vue', () => {
+describe('Header', () => {
   let wrapper;
-  let dashboardsStore;
-  let widgetsStore;
-  let humanSupportStore;
 
-  const mockCurrentDashboard = {
-    uuid: 'dashboard-123',
-    name: 'human_service_dashboard.title',
-    is_default: true,
-  };
-
-  const mockDashboards = [
-    mockCurrentDashboard,
-    {
-      uuid: 'dashboard-456',
-      name: 'commerce_dashboard.title',
-      is_default: false,
-    },
-  ];
-
-  const mockFilters = [
-    {
-      name: 'date_range',
-      type: 'date_range',
-      label: 'Date Range',
-    },
-    {
-      name: 'sector',
-      type: 'select',
-      label: 'Sector',
-    },
-  ];
-
-  const createWrapper = (options = {}) => {
-    const pinia = createTestingPinia({
-      createSpy: vi.fn,
-      initialState: {
-        dashboards: {
-          dashboards: mockDashboards,
-          currentDashboard: mockCurrentDashboard,
-          dashboardDefault: mockCurrentDashboard,
-          currentDashboardFilters: mockFilters,
-          appliedFilters: {},
-        },
-        widgets: {
-          currentExpansiveWidget: {},
-        },
-        humanSupport: {
-          activeTab: 'monitoring',
-        },
-      },
-    });
-
-    return mount(Header, {
-      global: {
-        plugins: [pinia],
-        mocks: {
-          $router: mockRouter,
-          $route: mockRouter.currentRoute.value,
-          $t: (key) => key,
-        },
-        stubs: {
-          UnnnicBreadcrumb: true,
-          HeaderSelectDashboard: true,
-          HeaderTagLive: true,
-          InsightsLayoutHeaderFilters: true,
-          HeaderDashboardSettings: true,
-          HeaderGenerateInsightButton: true,
-          UnnnicButtonIcon: true,
-          HumanSupportExport: true,
-          LastUpdatedText: true,
-          ConversationalExport: true,
-          HeaderRefresh: true,
-        },
-      },
-      ...options,
-    });
-  };
-
-  beforeEach(() => {
-    wrapper = createWrapper();
-    dashboardsStore = useDashboards();
-    widgetsStore = useWidgets();
-    humanSupportStore = useHumanSupport();
-    vi.clearAllMocks();
-  });
-
-  afterEach(() => {
-    if (wrapper) {
-      wrapper.unmount();
-    }
-  });
-
-  describe('Rendering', () => {
-    it('should render header when currentDashboard exists', () => {
+  describe('Component rendering', () => {
+    it('renders header when currentDashboard exists', async () => {
+      await router.push({
+        name: 'dashboard',
+        params: { dashboardUuid: '123' },
+      });
+      wrapper = createWrapper();
       expect(
         wrapper.find('[data-testid="insights-layout-header"]').exists(),
       ).toBe(true);
     });
 
-    it('should render breadcrumb when not in expansive mode', () => {
-      expect(wrapper.findComponent({ name: 'UnnnicBreadcrumb' }).exists()).toBe(
-        true,
-      );
+    it('does not render when currentDashboard is null', () => {
+      wrapper = createWrapper({ dashboards: { currentDashboard: null } });
+      expect(
+        wrapper.find('[data-testid="insights-layout-header"]').exists(),
+      ).toBe(false);
     });
 
-    it('should render header content when not in expansive mode', () => {
+    it('renders content section when not in expansive mode', async () => {
+      await router.push({
+        name: 'dashboard',
+        params: { dashboardUuid: '123' },
+      });
+      wrapper = createWrapper();
       expect(
         wrapper.find('[data-testid="insights-layout-header-content"]').exists(),
       ).toBe(true);
-      expect(
-        wrapper.findComponent({ name: 'HeaderSelectDashboard' }).exists(),
-      ).toBe(true);
     });
 
-    it('should render expansive mode content when in expansive mode', async () => {
-      widgetsStore.currentExpansiveWidget = {
-        uuid: 'widget-123',
-        name: 'Test Widget',
-      };
-      await nextTick();
-
+    it('renders expansive section when in expansive mode', () => {
+      wrapper = createWrapper({
+        widgets: { currentExpansiveWidget: { uuid: '456', name: 'Widget' } },
+      });
       expect(
         wrapper
           .find('[data-testid="insights-layout-header-expansive"]')
           .exists(),
       ).toBe(true);
-      expect(
-        wrapper
-          .find('[data-testid="insights-layout-header-expansive-title"]')
-          .text(),
-      ).toBe(wrapper.vm.$t('human_service_dashboard.all_agents'));
-    });
-
-    it('should render HeaderGenerateInsightButton for human service dashboard', () => {
-      expect(
-        wrapper
-          .findComponent(
-            '[data-testid="insights-layout-header-generate-insight-button"]',
-          )
-          .exists(),
-      ).toBe(true);
-    });
-
-    it('should render HeaderTagLive when showTagLive is true', () => {
-      expect(
-        wrapper
-          .findComponent('[data-testid="insights-layout-header-tag-live"]')
-          .exists(),
-      ).toBe(true);
-    });
-
-    it('should render InsightsLayoutHeaderFilters when filters exist', () => {
-      expect(
-        wrapper
-          .findComponent('[data-testid="insights-layout-header-filters"]')
-          .exists(),
-      ).toBe(true);
-    });
-
-    it('should render LastUpdatedText for human service dashboard', () => {
-      expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
-        true,
-      );
-    });
-
-    it('should render LastUpdatedText for human support monitoring dashboard', async () => {
-      dashboardsStore.currentDashboard = {
-        name: 'human_support_dashboard.title',
-      };
-      humanSupportStore.activeTab = 'monitoring';
-      await nextTick();
-
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(true);
-      expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
-        true,
-      );
-    });
-
-    it('should not render LastUpdatedText for other dashboards', () => {
-      dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
-
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
-    });
-
-    it('should render HeaderRefresh for human support monitoring dashboard', async () => {
-      dashboardsStore.currentDashboard = {
-        name: 'human_support_dashboard.title',
-      };
-      humanSupportStore.activeTab = 'monitoring';
-      await nextTick();
-
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(true);
-      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
-        true,
-      );
-    });
-
-    it('should not render HeaderRefresh for human service dashboard', () => {
-      dashboardsStore.currentDashboard = {
-        name: 'human_service_dashboard.title',
-      };
-
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(true);
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
-      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
-        false,
-      );
-    });
-
-    it('should not render HeaderRefresh for human support analysis dashboard', async () => {
-      dashboardsStore.currentDashboard = {
-        name: 'human_support_dashboard.title',
-      };
-      humanSupportStore.activeTab = 'analysis';
-      await nextTick();
-
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
-      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
-        false,
-      );
-    });
-
-    it('should not render HeaderRefresh for other dashboards', () => {
-      dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
-
-      expect(wrapper.vm.isHumanServiceDashboard).toBe(false);
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(false);
-      expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
-        false,
-      );
     });
   });
 
-  describe('Computed Properties', () => {
-    describe('isExpansiveMode', () => {
-      it('should return false when currentExpansiveWidget is empty', () => {
-        widgetsStore.currentExpansiveWidget = {};
-        expect(wrapper.vm.isExpansiveMode).toBe(false);
-      });
+  describe('Dashboard type detection', () => {
+    const cases = [
+      ['human_service_dashboard.title', 'human_service'],
+      ['human_support_dashboard.title', 'human_support'],
+      ['conversations_dashboard.title', 'conversational'],
+    ];
 
-      it('should return true when currentExpansiveWidget has content', () => {
-        widgetsStore.currentExpansiveWidget = { uuid: 'widget-123' };
-        expect(wrapper.vm.isExpansiveMode).toBe(true);
-      });
-    });
-
-    describe('isRenderInsightButton', () => {
-      it('should return true for human service dashboard', () => {
-        expect(wrapper.vm.isRenderInsightButton).toBe(true);
-      });
-
-      it('should return false for other dashboards', () => {
-        dashboardsStore.currentDashboard = { name: 'other_dashboard.title' };
-        expect(wrapper.vm.isRenderInsightButton).toBe(false);
-      });
-    });
-
-    describe('breadcrumbs', () => {
-      it('should return correct breadcrumbs for dashboard route', () => {
-        const breadcrumbs = wrapper.vm.breadcrumbs;
-
-        expect(breadcrumbs).toHaveLength(1);
-        expect(breadcrumbs[0]).toEqual({
-          path: 'dashboard-123',
-          routeName: 'dashboard',
-          name: `Insights ${wrapper.vm.$t('human_service_dashboard.title')}`,
-        });
-      });
-    });
-
-    describe('showTagLive', () => {
-      beforeEach(() => {
-        moment.mockReturnValue({
-          format: vi.fn(() => '2024-01-15'),
-        });
-      });
-
-      it('should return true for human support monitoring dashboard', async () => {
-        dashboardsStore.currentDashboard = {
-          name: 'human_support_dashboard.title',
-        };
-        humanSupportStore.activeTab = 'monitoring';
-        await nextTick();
-
-        expect(wrapper.vm.showTagLive).toBe(true);
-      });
-
-      it('should return true when no date filter query exists', () => {
-        wrapper.vm.$route.query = {};
-
-        expect(wrapper.vm.showTagLive).toBe(true);
-      });
-
-      it('should return true when filtering by today', () => {
-        dashboardsStore.appliedFilters = {
-          date_range: {
-            start: '2024-01-15',
-            end: '2024-01-15',
-          },
-        };
-
-        expect(wrapper.vm.showTagLive).toBe(true);
-      });
-
-      it('should return false when filtering by different date', () => {
-        wrapper.vm.$route.query = { date_range: '2024-01-14' };
-        dashboardsStore.appliedFilters = {
-          date_range: {
-            start: '2024-01-14',
-            end: '2024-01-14',
-          },
-        };
-
-        expect(wrapper.vm.showTagLive).toBe(false);
-      });
-    });
-  });
-
-  describe('Methods', () => {
-    describe('navigateToDashboard', () => {
-      it('should navigate to dashboard with correct parameters', () => {
-        wrapper.vm.navigateToDashboard('new-dashboard-uuid');
-
-        expect(mockRouter.replace).toHaveBeenCalledWith({
+    cases.forEach(([name, type]) => {
+      it(`detects ${type} for ${name}`, async () => {
+        await router.push({
           name: 'dashboard',
-          params: { dashboardUuid: 'new-dashboard-uuid' },
+          params: { dashboardUuid: '123' },
         });
-      });
-    });
-
-    describe('goToDefaultDashboard', () => {
-      it('should navigate to default dashboard', () => {
-        wrapper.vm.goToDefaultDashboard();
-
-        expect(mockRouter.replace).toHaveBeenCalledWith({
-          name: 'dashboard',
-          params: { dashboardUuid: 'dashboard-123' },
+        wrapper = createWrapper({
+          dashboards: {
+            currentDashboard: { name, uuid: '123' },
+            dashboards: [{ name, uuid: '123' }],
+          },
         });
+        await wrapper.vm.$nextTick();
+        expect(wrapper.vm.dashboardHeaderType).toBe(type);
       });
     });
 
-    describe('routeUpdateCurrentDashboard', () => {
-      it('should set current dashboard when dashboard exists in route', () => {
-        wrapper.vm.routeUpdateCurrentDashboard();
-
-        expect(dashboardsStore.setCurrentDashboard).toHaveBeenCalledWith(
-          mockCurrentDashboard,
-        );
-      });
-
-      it('should go to default dashboard when dashboard not found', () => {
-        wrapper.vm.$route.params.dashboardUuid = 'non-existent-uuid';
-        const navigateToSpy = vi.spyOn(wrapper.vm, 'navigateToDashboard');
-
-        wrapper.vm.routeUpdateCurrentDashboard();
-
-        expect(navigateToSpy).toHaveBeenCalledWith('dashboard-123');
-        expect(dashboardsStore.setCurrentDashboard).toHaveBeenCalledWith(
-          mockCurrentDashboard,
-        );
-      });
-    });
-  });
-
-  describe('Watchers', () => {
-    describe('currentDashboard watcher', () => {
-      it('should navigate to new dashboard when currentDashboard changes', async () => {
-        const newDashboard = {
-          uuid: 'new-dashboard-uuid',
-          name: 'New Dashboard',
-        };
-        const navigateToSpy = vi.spyOn(wrapper.vm, 'navigateToDashboard');
-
-        dashboardsStore.currentDashboard = newDashboard;
-        await nextTick();
-
-        expect(navigateToSpy).toHaveBeenCalledWith('new-dashboard-uuid');
-      });
-    });
-
-    describe('$route watcher', () => {
-      it('should update current dashboard when route dashboardUuid changes', () => {
-        const routeUpdateSpy = vi.spyOn(
-          wrapper.vm,
-          'routeUpdateCurrentDashboard',
-        );
-
-        wrapper.vm.$route.params.dashboardUuid = 'new-uuid';
-
-        wrapper.vm.$options.watch.$route.call(
-          wrapper.vm,
-          { params: { dashboardUuid: 'new-uuid' } },
-          { params: { dashboardUuid: 'old-uuid' } },
-        );
-
-        expect(routeUpdateSpy).toHaveBeenCalled();
-      });
-
-      it('should not update when route dashboardUuid stays the same', () => {
-        const routeUpdateSpy = vi.spyOn(
-          wrapper.vm,
-          'routeUpdateCurrentDashboard',
-        );
-
-        wrapper.vm.$options.watch.$route.call(
-          wrapper.vm,
-          { params: { dashboardUuid: 'same-uuid' } },
-          { params: { dashboardUuid: 'same-uuid' } },
-        );
-
-        expect(routeUpdateSpy).not.toHaveBeenCalled();
-      });
-    });
-  });
-
-  describe('Lifecycle', () => {
-    it('should call routeUpdateCurrentDashboard on mounted', () => {
-      const routeUpdateSpy = vi.spyOn(
-        Header.methods,
-        'routeUpdateCurrentDashboard',
-      );
-
-      createWrapper();
-
-      expect(routeUpdateSpy).toHaveBeenCalled();
-    });
-  });
-
-  describe('Events', () => {
-    it('should handle breadcrumb click', () => {
-      const breadcrumb = wrapper.findComponent({ name: 'UnnnicBreadcrumb' });
-      const eventData = { routeName: 'dashboard', routePath: '/dashboard/123' };
-
-      breadcrumb.vm.$emit('crumb-click', eventData);
-
-      expect(mockRouter.push).toHaveBeenCalledWith({
+    it('detects metaTemplateMessage for whatsapp integration', async () => {
+      await router.push({
         name: 'dashboard',
-        path: '/dashboard/123',
+        params: { dashboardUuid: '123' },
       });
+      wrapper = createWrapper({
+        dashboards: {
+          currentDashboard: {
+            name: 'test',
+            uuid: '123',
+            config: { is_whatsapp_integration: true },
+          },
+          dashboards: [
+            {
+              name: 'test',
+              uuid: '123',
+              config: { is_whatsapp_integration: true },
+            },
+          ],
+        },
+      });
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.dashboardHeaderType).toBe('metaTemplateMessage');
     });
 
-    it('should handle close expansive mode', async () => {
-      widgetsStore.currentExpansiveWidget = { uuid: 'widget-123' };
-      await nextTick();
-
-      const closeButton = wrapper.find(
-        '.insights-layout-header__expansive-close',
-      );
-      await closeButton.trigger('click');
-
-      expect(widgetsStore.setCurrentExpansiveWidgetData).toHaveBeenCalledWith(
-        {},
-      );
+    it('defaults to custom for unknown dashboard', async () => {
+      await router.push({
+        name: 'dashboard',
+        params: { dashboardUuid: '123' },
+      });
+      wrapper = createWrapper({
+        dashboards: {
+          currentDashboard: { name: 'unknown', uuid: '123' },
+          dashboards: [{ name: 'unknown', uuid: '123' }],
+        },
+      });
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.dashboardHeaderType).toBe('custom');
     });
   });
 
-  describe('Edge cases', () => {
-    it('should handle missing date filter', () => {
-      dashboardsStore.currentDashboardFilters = [
-        { name: 'sector', type: 'select' },
-      ];
-      wrapper = createWrapper();
+  describe('Expansive mode', () => {
+    it('detects expansive mode when currentExpansiveWidget exists', () => {
+      wrapper = createWrapper({
+        widgets: { currentExpansiveWidget: { uuid: '1', name: 'Test' } },
+      });
+      expect(wrapper.vm.isExpansiveMode).toBe(true);
+    });
 
-      expect(wrapper.vm.showTagLive).toBe(true);
+    it('not in expansive mode when currentExpansiveWidget is empty', () => {
+      wrapper = createWrapper({ widgets: { currentExpansiveWidget: {} } });
+      expect(wrapper.vm.isExpansiveMode).toBe(false);
+    });
+  });
+
+  describe('Breadcrumbs', () => {
+    it('generates breadcrumbs for dashboard route', async () => {
+      await router.push({
+        name: 'dashboard',
+        params: { dashboardUuid: '123' },
+      });
+      wrapper = createWrapper({
+        dashboards: {
+          currentDashboard: { name: 'test_dashboard', uuid: '123' },
+        },
+      });
+      const crumbs = wrapper.vm.breadcrumbs;
+      expect(crumbs).toHaveLength(1);
+      expect(crumbs[0].routeName).toBe('dashboard');
+    });
+
+    it('generates breadcrumbs for report route', async () => {
+      await router.push({ name: 'report', params: { dashboardUuid: '123' } });
+      wrapper = createWrapper({
+        dashboards: {
+          currentDashboard: { name: 'test_dashboard', uuid: '123' },
+        },
+      });
+      const crumbs = wrapper.vm.breadcrumbs;
+      expect(crumbs).toHaveLength(2);
+    });
+
+    it('returns empty array when dashboardUuid does not match', async () => {
+      await router.push({
+        name: 'dashboard',
+        params: { dashboardUuid: '999' },
+      });
+      wrapper = createWrapper({
+        dashboards: { currentDashboard: { name: 'test', uuid: '123' } },
+      });
+      expect(wrapper.vm.breadcrumbs).toEqual([]);
+    });
+  });
+
+  describe('Component structure', () => {
+    it('passes dashboardHeaderType to DynamicHeader', async () => {
+      await router.push({
+        name: 'dashboard',
+        params: { dashboardUuid: '123' },
+      });
+      wrapper = createWrapper({
+        dashboards: {
+          currentDashboard: {
+            name: 'human_service_dashboard.title',
+            uuid: '123',
+          },
+          dashboards: [{ name: 'human_service_dashboard.title', uuid: '123' }],
+        },
+      });
+      await wrapper.vm.$nextTick();
+      const dynamicHeader = wrapper.findComponent({ name: 'DynamicHeader' });
+      expect(dynamicHeader.props('dashboardType')).toBe('human_service');
     });
   });
 });

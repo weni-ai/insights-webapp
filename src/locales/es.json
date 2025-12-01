@@ -365,7 +365,14 @@
   "select_date": {
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
-    "previous_month": "Mes anterior ({date})"
+    "previous_month": "Mes anterior ({date})",
+    "last_7_days_conversational": "Últimos 7 días (hasta 24h atrás)",
+    "last_14_days_conversational": "Últimos 14 días (hasta 24h atrás)",
+    "last_30_days_conversational": "Últimos 30 días (hasta 24h atrás)",
+    "last_12_months_conversational": "Últimos 12 meses (hasta 24h atrás)",
+    "current_month_conversational": "Mes actual (hasta 24h atrás)",
+    "previous_month_conversational": "Mes anterior (hasta 24h atrás)",
+    "custom_conversational": "Personalizado (hasta 24h atrás)"
   },
   "data_period": {
     "label": "Período",
@@ -906,7 +913,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Digite para filtrar"
+        "placeholder": "Digite para filtrar",
+        "clear": "Limpiar selección"
       },
       "attendant": {
         "label": "Agente"

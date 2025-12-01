@@ -194,12 +194,35 @@ export default {
         };
 
         if (this.isConversationalDashboard) {
+          customFilter.disableClear = false;
           customFilter.shortCutOptions = [
             {
-              name: this.$t(
-                'template_messages_dashboard.filter.shortcut.previous_month',
-              ),
+              name: this.$t('select_date.last_7_days_conversational'),
+              id: 'last-7-days',
+            },
+            {
+              name: this.$t('select_date.last_14_days_conversational'),
+              id: 'last-14-days',
+            },
+            {
+              name: this.$t('select_date.last_30_days_conversational'),
+              id: 'last-30-days',
+            },
+            {
+              name: this.$t('select_date.last_12_months_conversational'),
+              id: 'last-12-months',
+            },
+            {
+              name: this.$t('select_date.current_month_conversational'),
+              id: 'current-month',
+            },
+            {
+              name: this.$t('select_date.previous_month_conversational'),
               id: 'previous-month',
+            },
+            {
+              name: this.$t('select_date.custom_conversational'),
+              id: 'custom',
             },
           ];
         }

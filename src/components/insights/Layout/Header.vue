@@ -22,32 +22,7 @@
         v-if="!isExpansiveMode"
         class="content__actions"
       >
-        <HeaderTagLive
-          v-if="showTagLive"
-          data-testid="insights-layout-header-tag-live"
-        />
-        <LastUpdatedText
-          v-if="isHumanServiceDashboard || isHumanSupportMonitoringDashboard"
-        />
-        <HeaderRefresh
-          v-if="isHumanSupportMonitoringDashboard"
-          type="human-support"
-        />
-        <InsightsLayoutHeaderFilters
-          v-if="currentDashboardFilters.length"
-          data-testid="insights-layout-header-filters"
-        />
-        <HeaderRefresh
-          v-if="isConversationalDashboard"
-          type="conversations"
-        />
-        <HeaderDashboardSettings />
-        <HeaderGenerateInsightButton
-          v-if="isRenderInsightButton"
-          data-testid="insights-layout-header-generate-insight-button"
-        />
-        <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
-        <ConversationalExport v-if="isRenderConversationalBtnExport" />
+        <DynamicHeader :dashboardType="dashboardHeaderType" />
       </section>
     </section>
     <section
@@ -79,32 +54,16 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
-import HeaderTagLive from './HeaderTagLive.vue';
-import InsightsLayoutHeaderFilters from './HeaderFilters/index.vue';
-import HeaderDashboardSettings from './HeaderDashboardSettings.vue';
-import HeaderGenerateInsightButton from './HeaderGenerateInsights/HeaderGenerateInsightButton.vue';
-import HumanSupportExport from '../export/HumanSupportExport.vue';
-import ConversationalExport from '../export/ConversationalExport.vue';
-import LastUpdatedText from './HeaderFilters/LastUpdatedText.vue';
-import HeaderRefresh from './HeaderRefresh.vue';
+import DynamicHeader from './DynamicHeader.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-
-import moment from 'moment';
 
 export default {
   name: 'InsightsLayoutHeader',
 
   components: {
     HeaderSelectDashboard,
-    HeaderTagLive,
-    InsightsLayoutHeaderFilters,
-    HeaderDashboardSettings,
-    HeaderGenerateInsightButton,
-    HumanSupportExport,
-    ConversationalExport,
-    LastUpdatedText,
-    HeaderRefresh,
+    DynamicHeader,
   },
   computed: {
     ...mapState(useDashboards, [
@@ -126,21 +85,6 @@ export default {
       },
     }),
 
-    isRenderInsightButton() {
-      return this.isHumanServiceDashboard;
-    },
-
-    isRenderHumanSupportBtnExport() {
-      return this.isHumanServiceDashboard || this.isHumanSupportDashboard;
-    },
-
-    isRenderConversationalBtnExport() {
-      const isFeatureFlagEnabled = this.isFeatureFlagEnabled(
-        'insightsConversationsReport',
-      );
-      return this.isConversationalDashboard && isFeatureFlagEnabled;
-    },
-
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
     },
@@ -149,13 +93,32 @@ export default {
       return this.currentDashboard?.name === 'human_support_dashboard.title';
     },
 
-    isHumanSupportMonitoringDashboard() {
-      const isMonitoring = this.activeTab === 'monitoring';
-      return this.isHumanSupportDashboard && isMonitoring;
-    },
-
     isConversationalDashboard() {
       return this.currentDashboard?.name === 'conversations_dashboard.title';
+    },
+
+    isMetaTemplateDashboard() {
+      return this.currentDashboard?.config?.is_whatsapp_integration;
+    },
+
+    dashboardHeaderType() {
+      if (this.isConversationalDashboard) {
+        return 'conversational';
+      }
+
+      if (this.isHumanSupportDashboard) {
+        return 'human_support';
+      }
+
+      if (this.isMetaTemplateDashboard) {
+        return 'metaTemplateMessage';
+      }
+
+      if (this.isHumanServiceDashboard) {
+        return 'human_service';
+      }
+
+      return 'custom';
     },
 
     breadcrumbs() {
@@ -179,29 +142,6 @@ export default {
       }
 
       return dashboardUuid === currentDashboard.uuid ? crumbs : [];
-    },
-
-    showTagLive() {
-      if (this.isHumanSupportMonitoringDashboard) {
-        return true;
-      }
-
-      const dateFilter = this.currentDashboardFilters.find(
-        (filter) => filter.type === 'date_range',
-      );
-
-      const { query } = this.$route;
-      const today = moment().format('YYYY-MM-DD');
-
-      const filteringDateValues = Object.values(
-        this.appliedFilters[dateFilter?.name] || {},
-      );
-
-      const isFilteringToday = filteringDateValues.every(
-        (filterDate) => filterDate === today,
-      );
-
-      return !query[dateFilter?.name] || isFilteringToday;
     },
   },
 

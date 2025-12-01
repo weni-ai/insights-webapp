@@ -2,9 +2,7 @@
   <section class="insights-layout-header-filters">
     <FilterHumanSupport v-if="isHumanSupportDashboard" />
     <FilterFavoriteTemplateMessage
-      v-if="
-        currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates
-      "
+      v-if="isMetaTemplateDashboard && !emptyTemplates"
     />
     <template v-if="hasManyFilters">
       <UnnnicButton

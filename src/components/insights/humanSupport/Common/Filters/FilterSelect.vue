@@ -82,6 +82,12 @@ const isSelecting = ref(false);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
 const isContactFilter = computed(() => props.type === 'contact');
+const hasClearOption = computed(
+  () =>
+    props.type === 'attendant' ||
+    props.type === 'contact' ||
+    props.type === 'ticket_id',
+);
 const hasInfiniteScroll = computed(
   () => isContactFilter.value || isTicketIdFilter.value,
 );
@@ -110,7 +116,22 @@ const mapDataToOptions = (
   return Array.isArray(items) ? items.map(mapItemToOption) : [];
 };
 
-const options = computed(() => mapDataToOptions(data.value));
+const CLEAR_FILTER_VALUE = '__CLEAR_FILTER__';
+
+const options = computed(() => {
+  const baseOptions = mapDataToOptions(data.value);
+
+  if (!hasClearOption.value) {
+    return baseOptions;
+  }
+
+  const clearOption: FilterOption = {
+    value: CLEAR_FILTER_VALUE,
+    label: t('human_support_dashboard.filters.common.clear'),
+  };
+
+  return [clearOption, ...baseOptions];
+});
 
 const canLoadMore = () => {
   return hasInfiniteScroll.value && !!nextPageUrl.value;
@@ -125,6 +146,7 @@ const selectProps = computed(() => ({
   autocompleteClearOnFocus: true,
   autocompleteIconLeft: true,
   isLoading: isLoading.value,
+  orderedByIndex: hasClearOption.value,
   ...(hasInfiniteScroll.value && {
     infiniteScroll: true,
     infiniteScrollDistance: 10,
@@ -185,6 +207,14 @@ const handleChange = (selectedOptions: FilterOption[]) => {
   }
 
   const selected = selectedOptions[0];
+
+  if (hasClearOption.value && selected.value === CLEAR_FILTER_VALUE) {
+    emit('update:modelValue', []);
+    emit('change', { value: '', label: '' });
+    isSelecting.value = false;
+    return;
+  }
+
   const item = findSelectedItem(data.value, selected.value);
 
   if (item) {

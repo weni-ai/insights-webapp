@@ -913,7 +913,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Type to filter"
+        "placeholder": "Type to filter",
+        "clear": "Clear selection"
       },
       "attendant": {
         "label": "Agent"

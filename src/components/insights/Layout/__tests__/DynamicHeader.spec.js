@@ -1,12 +1,8 @@
-import { beforeAll, afterAll, describe, it, vi } from 'vitest';
+import { beforeAll, afterAll, describe, it } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
-import { createTestingPinia } from '@pinia/testing';
-import { createRouter, createWebHistory } from 'vue-router';
 import { createI18n } from 'vue-i18n';
 import DynamicHeader from '../DynamicHeader.vue';
 import i18n from '@/utils/plugins/i18n';
-
-vi.mock('moment', () => ({ default: () => ({ format: () => '2024-01-15' }) }));
 
 beforeAll(() => {
   config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
@@ -19,30 +15,10 @@ afterAll(() => {
   config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
 });
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: [{ path: '/', component: { template: '<div/>' } }],
-});
-
-const createWrapper = (props = {}, storeState = {}) =>
+const createWrapper = (props = {}) =>
   shallowMount(DynamicHeader, {
     props: { dashboardType: 'custom', ...props },
     global: {
-      plugins: [
-        createTestingPinia({
-          initialState: {
-            dashboards: {
-              currentDashboard: { name: 'test_dashboard' },
-              currentDashboardFilters: [],
-              appliedFilters: {},
-              ...storeState.dashboards,
-            },
-            humanSupport: { activeTab: 'overview', ...storeState.humanSupport },
-          },
-          stubActions: false,
-        }),
-        router,
-      ],
       stubs: {
         HeaderHumanService: true,
         HeaderHumanSupport: true,
@@ -56,205 +32,63 @@ describe('DynamicHeader', () => {
   let wrapper;
 
   describe('Component Delegation', () => {
-    [
-      ['human_service', 'HeaderHumanService'],
-      ['human_support', 'HeaderHumanSupport'],
-      ['conversational', 'HeaderConversational'],
-      ['custom', 'HeaderDefault'],
-      ['unknown', 'HeaderDefault'],
-    ].forEach(([type, component]) => {
-      it(`renders ${component} for ${type}`, () => {
-        wrapper = createWrapper({ dashboardType: type });
-        const stub = wrapper.findComponent({ name: component });
-        expect(stub.exists()).toBe(true);
-      });
+    it('renders HeaderHumanService for human_service', () => {
+      wrapper = createWrapper({ dashboardType: 'human_service' });
+      const stub = wrapper.findComponent({ name: 'HeaderHumanService' });
+      expect(stub.exists()).toBe(true);
+    });
+
+    it('renders HeaderHumanSupport for human_support', () => {
+      wrapper = createWrapper({ dashboardType: 'human_support' });
+      const stub = wrapper.findComponent({ name: 'HeaderHumanSupport' });
+      expect(stub.exists()).toBe(true);
+    });
+
+    it('renders HeaderConversational for conversational', () => {
+      wrapper = createWrapper({ dashboardType: 'conversational' });
+      const stub = wrapper.findComponent({ name: 'HeaderConversational' });
+      expect(stub.exists()).toBe(true);
+    });
+
+    it('renders HeaderDefault for custom', () => {
+      wrapper = createWrapper({ dashboardType: 'custom' });
+      const stub = wrapper.findComponent({ name: 'HeaderDefault' });
+      expect(stub.exists()).toBe(true);
+    });
+
+    it('renders HeaderDefault for metaTemplateMessage', () => {
+      wrapper = createWrapper({ dashboardType: 'metaTemplateMessage' });
+      const stub = wrapper.findComponent({ name: 'HeaderDefault' });
+      expect(stub.exists()).toBe(true);
+    });
+
+    it('renders HeaderDefault for unknown type', () => {
+      wrapper = createWrapper({ dashboardType: 'unknown' });
+      const stub = wrapper.findComponent({ name: 'HeaderDefault' });
+      expect(stub.exists()).toBe(true);
     });
   });
 
-  describe('Props Passing', () => {
-    it('passes hasFilters correctly', () => {
-      wrapper = createWrapper(
-        {},
-        { dashboards: { currentDashboardFilters: [{ name: 'f1' }] } },
-      );
-      expect(wrapper.vm.componentProps.hasFilters).toBe(true);
-    });
-
-    it('passes all props for human_service', () => {
-      wrapper = createWrapper(
-        { dashboardType: 'human_service' },
-        {
-          dashboards: {
-            currentDashboard: { name: 'human_service_dashboard.title' },
-            currentDashboardFilters: [{ name: 'date', type: 'date_range' }],
-            appliedFilters: {
-              date: { __gte: '2024-01-15', __lte: '2024-01-15' },
-            },
-          },
-        },
-      );
-      const props = wrapper.vm.componentProps;
-      expect(props.hasFilters).toBe(true);
-      expect(props.showTagLive).toBe(true);
-      expect(props.isRenderInsightButton).toBe(true);
-      expect(props.isRenderHumanSupportBtnExport).toBe(true);
-    });
-
-    it('passes props for human_support', () => {
-      wrapper = createWrapper(
-        { dashboardType: 'human_support' },
-        {
-          dashboards: {
-            currentDashboard: { name: 'human_support_dashboard.title' },
-          },
-        },
-      );
-      expect(wrapper.vm.componentProps.isRenderHumanSupportBtnExport).toBe(
+  describe('Component rendering', () => {
+    it('renders dynamic-header testid', () => {
+      wrapper = createWrapper();
+      expect(wrapper.find('[data-testid="dynamic-header"]').exists()).toBe(
         true,
       );
     });
 
-    it('passes props for conversational', () => {
-      wrapper = createWrapper(
-        { dashboardType: 'conversational' },
-        {
-          dashboards: {
-            currentDashboard: { name: 'conversations_dashboard.title' },
-          },
-        },
-      );
-      expect(wrapper.vm.componentProps).toHaveProperty(
-        'isRenderConversationalBtnExport',
-      );
-    });
-  });
+    it('computes currentComponent correctly', () => {
+      wrapper = createWrapper({ dashboardType: 'human_service' });
+      expect(wrapper.vm.currentComponent).toBeDefined();
 
-  describe('Computed Properties', () => {
-    it('hasFilters reflects filter state', () => {
-      wrapper = createWrapper(
-        {},
-        { dashboards: { currentDashboardFilters: [{ name: 'f' }] } },
-      );
-      expect(wrapper.vm.hasFilters).toBe(true);
-      wrapper = createWrapper();
-      expect(wrapper.vm.hasFilters).toBe(false);
-    });
+      wrapper = createWrapper({ dashboardType: 'human_support' });
+      expect(wrapper.vm.currentComponent).toBeDefined();
 
-    it('showTagLive for monitoring', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          dashboards: {
-            currentDashboard: { name: 'human_support_dashboard.title' },
-          },
-          humanSupport: { activeTab: 'monitoring' },
-        },
-      );
-      expect(wrapper.vm.showTagLive).toBe(true);
-    });
+      wrapper = createWrapper({ dashboardType: 'conversational' });
+      expect(wrapper.vm.currentComponent).toBeDefined();
 
-    it('showTagLive for today filter', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          dashboards: {
-            currentDashboardFilters: [
-              { name: 'created_on', type: 'date_range' },
-            ],
-            appliedFilters: {
-              created_on: { __gte: '2024-01-15', __lte: '2024-01-15' },
-            },
-          },
-        },
-      );
-      expect(wrapper.vm.showTagLive).toBe(true);
-    });
-
-    it('showTagLive without date filter', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          dashboards: {
-            currentDashboardFilters: [{ name: 'date', type: 'date_range' }],
-          },
-        },
-      );
-      expect(wrapper.vm.showTagLive).toBe(true);
-    });
-
-    it('isRenderInsightButton for human service', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          dashboards: {
-            currentDashboard: { name: 'human_service_dashboard.title' },
-          },
-        },
-      );
-      expect(wrapper.vm.isRenderInsightButton).toBe(true);
-      wrapper = createWrapper();
-      expect(wrapper.vm.isRenderInsightButton).toBe(false);
-    });
-
-    it('isRenderHumanSupportBtnExport for dashboards', () => {
-      [
-        'human_service_dashboard.title',
-        'human_support_dashboard.title',
-      ].forEach((name) => {
-        wrapper = createWrapper(
-          {},
-          { dashboards: { currentDashboard: { name } } },
-        );
-        expect(wrapper.vm.isRenderHumanSupportBtnExport).toBe(true);
-      });
-      wrapper = createWrapper();
-      expect(wrapper.vm.isRenderHumanSupportBtnExport).toBe(false);
-    });
-
-    [true, false].forEach((enabled) => {
-      it(`isRenderConversationalBtnExport ${enabled}`, () => {
-        wrapper = createWrapper(
-          { dashboardType: 'conversational' },
-          {
-            dashboards: {
-              currentDashboard: { name: 'conversations_dashboard.title' },
-            },
-          },
-        );
-        wrapper.vm.$pinia._s.get('featureFlag').isFeatureFlagEnabled = vi.fn(
-          () => enabled,
-        );
-        expect(wrapper.vm.isRenderConversationalBtnExport).toBe(enabled);
-      });
-    });
-  });
-
-  describe('Dashboard Detection', () => {
-    [
-      ['isHumanServiceDashboard', 'human_service_dashboard.title'],
-      ['isHumanSupportDashboard', 'human_support_dashboard.title'],
-      ['isConversationalDashboard', 'conversations_dashboard.title'],
-    ].forEach(([prop, name]) => {
-      it(`detects ${name}`, () => {
-        wrapper = createWrapper(
-          {},
-          { dashboards: { currentDashboard: { name } } },
-        );
-        expect(wrapper.vm[prop]).toBe(true);
-      });
-    });
-
-    it('detects monitoring dashboard', () => {
-      wrapper = createWrapper(
-        {},
-        {
-          dashboards: {
-            currentDashboard: { name: 'human_support_dashboard.title' },
-          },
-          humanSupport: { activeTab: 'monitoring' },
-        },
-      );
-      expect(wrapper.vm.isHumanSupportMonitoringDashboard).toBe(true);
+      wrapper = createWrapper({ dashboardType: 'custom' });
+      expect(wrapper.vm.currentComponent).toBeDefined();
     });
   });
 });

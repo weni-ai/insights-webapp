@@ -2,6 +2,7 @@ import { beforeAll, afterAll, describe, it } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
+import { createRouter, createWebHistory } from 'vue-router';
 import HeaderHumanSupport from '../HeaderHumanSupport.vue';
 import i18n from '@/utils/plugins/i18n';
 
@@ -16,21 +17,27 @@ afterAll(() => {
   config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
 });
 
-const createWrapper = (props = {}, storeState = {}) =>
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [{ path: '/', component: { template: '<div/>' } }],
+});
+
+const createWrapper = (storeState = {}) =>
   shallowMount(HeaderHumanSupport, {
-    props: {
-      showTagLive: false,
-      hasFilters: false,
-      isRenderHumanSupportBtnExport: false,
-      ...props,
-    },
     global: {
       plugins: [
         createTestingPinia({
           initialState: {
-            humanSupport: { activeTab: 'overview', ...storeState.humanSupport },
+            dashboards: {
+              currentDashboardFilters: [],
+              appliedFilters: {},
+              ...storeState.dashboards,
+            },
+            humanSupport: { activeTab: 'analysis', ...storeState.humanSupport },
           },
+          stubActions: false,
         }),
+        router,
       ],
       stubs: {
         HeaderTagLive: true,
@@ -46,8 +53,17 @@ describe('HeaderHumanSupport', () => {
   let wrapper;
 
   describe('Component rendering', () => {
-    it('renders HeaderTagLive when showTagLive is true', () => {
-      wrapper = createWrapper({ showTagLive: true });
+    it('renders HumanSupportExport always', () => {
+      wrapper = createWrapper();
+      expect(
+        wrapper.findComponent({ name: 'HumanSupportExport' }).exists(),
+      ).toBe(true);
+    });
+
+    it('renders HeaderTagLive when in monitoring tab', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'monitoring' },
+      });
       expect(
         wrapper
           .find('[data-testid="insights-layout-header-tag-live"]')
@@ -55,8 +71,10 @@ describe('HeaderHumanSupport', () => {
       ).toBe(true);
     });
 
-    it('does not render HeaderTagLive when showTagLive is false', () => {
-      wrapper = createWrapper({ showTagLive: false });
+    it('does not render HeaderTagLive when in analysis tab', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'analysis' },
+      });
       expect(
         wrapper
           .find('[data-testid="insights-layout-header-tag-live"]')
@@ -65,80 +83,87 @@ describe('HeaderHumanSupport', () => {
     });
 
     it('renders filters when hasFilters is true', () => {
-      wrapper = createWrapper({ hasFilters: true });
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [{ name: 'filter1' }] },
+      });
       expect(
         wrapper.find('[data-testid="insights-layout-header-filters"]').exists(),
       ).toBe(true);
     });
 
     it('does not render filters when hasFilters is false', () => {
-      wrapper = createWrapper({ hasFilters: false });
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [] },
+      });
       expect(
         wrapper.find('[data-testid="insights-layout-header-filters"]').exists(),
       ).toBe(false);
     });
-
-    it('renders HumanSupportExport when flag is true', () => {
-      wrapper = createWrapper({ isRenderHumanSupportBtnExport: true });
-      expect(
-        wrapper.findComponent({ name: 'HumanSupportExport' }).exists(),
-      ).toBe(true);
-    });
-
-    it('does not render HumanSupportExport when flag is false', () => {
-      wrapper = createWrapper({ isRenderHumanSupportBtnExport: false });
-      expect(
-        wrapper.findComponent({ name: 'HumanSupportExport' }).exists(),
-      ).toBe(false);
-    });
   });
 
-  describe('Computed properties', () => {
-    it('isMonitoring returns true when activeTab is monitoring', () => {
-      wrapper = createWrapper(
-        {},
-        { humanSupport: { activeTab: 'monitoring' } },
-      );
-      expect(wrapper.vm.isMonitoring).toBe(true);
-    });
-
-    it('isMonitoring returns false when activeTab is not monitoring', () => {
-      wrapper = createWrapper({}, { humanSupport: { activeTab: 'overview' } });
-      expect(wrapper.vm.isMonitoring).toBe(false);
-    });
-
-    it('renders LastUpdatedText when isMonitoring is true', () => {
-      wrapper = createWrapper(
-        {},
-        { humanSupport: { activeTab: 'monitoring' } },
-      );
+  describe('Monitoring-specific rendering', () => {
+    it('renders LastUpdatedText when in monitoring tab', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'monitoring' },
+      });
       expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
         true,
       );
     });
 
-    it('does not render LastUpdatedText when isMonitoring is false', () => {
-      wrapper = createWrapper({}, { humanSupport: { activeTab: 'overview' } });
+    it('does not render LastUpdatedText when in analysis tab', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'analysis' },
+      });
       expect(wrapper.findComponent({ name: 'LastUpdatedText' }).exists()).toBe(
         false,
       );
     });
 
-    it('renders HeaderRefresh when isMonitoring is true', () => {
-      wrapper = createWrapper(
-        {},
-        { humanSupport: { activeTab: 'monitoring' } },
-      );
+    it('renders HeaderRefresh when in monitoring tab', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'monitoring' },
+      });
       const refresh = wrapper.findComponent({ name: 'HeaderRefresh' });
       expect(refresh.exists()).toBe(true);
       expect(refresh.props('type')).toBe('human-support');
     });
 
-    it('does not render HeaderRefresh when isMonitoring is false', () => {
-      wrapper = createWrapper({}, { humanSupport: { activeTab: 'overview' } });
+    it('does not render HeaderRefresh when in analysis tab', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'analysis' },
+      });
       expect(wrapper.findComponent({ name: 'HeaderRefresh' }).exists()).toBe(
         false,
       );
+    });
+  });
+
+  describe('Computed properties', () => {
+    it('isMonitoring returns true when activeTab is monitoring', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'monitoring' },
+      });
+      expect(wrapper.vm.isMonitoring).toBe(true);
+    });
+
+    it('isMonitoring returns false when activeTab is analysis', () => {
+      wrapper = createWrapper({
+        humanSupport: { activeTab: 'analysis' },
+      });
+      expect(wrapper.vm.isMonitoring).toBe(false);
+    });
+
+    it('hasFilters returns correct value', () => {
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [{ name: 'f1' }] },
+      });
+      expect(wrapper.vm.hasFilters).toBe(true);
+
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [] },
+      });
+      expect(wrapper.vm.hasFilters).toBe(false);
     });
   });
 });

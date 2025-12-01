@@ -1,6 +1,6 @@
 <template>
   <HeaderTagLive
-    v-if="showTagLive"
+    v-if="isMonitoring"
     data-testid="insights-layout-header-tag-live"
   />
 
@@ -16,7 +16,7 @@
     data-testid="insights-layout-header-filters"
   />
 
-  <HumanSupportExport v-if="isRenderHumanSupportBtnExport" />
+  <HumanSupportExport />
 </template>
 
 <script setup lang="ts">
@@ -29,15 +29,15 @@ import HumanSupportExport from '../../export/HumanSupportExport.vue';
 import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-
-defineProps<{
-  showTagLive: boolean;
-  hasFilters: boolean;
-  isRenderHumanSupportBtnExport: boolean;
-}>();
+import { useDashboards } from '@/store/modules/dashboards';
 
 const humanSupportStore = useHumanSupport();
 const { activeTab } = storeToRefs(humanSupportStore);
 
+const dashboardsStore = useDashboards();
+const { currentDashboardFilters } = storeToRefs(dashboardsStore);
+
 const isMonitoring = computed(() => activeTab.value === 'monitoring');
+
+const hasFilters = computed(() => !!currentDashboardFilters.value.length);
 </script>

@@ -1,5 +1,6 @@
 import { beforeAll, afterAll, describe, it } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
 import HeaderDefault from '../HeaderDefault.vue';
 import i18n from '@/utils/plugins/i18n';
@@ -15,10 +16,20 @@ afterAll(() => {
   config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
 });
 
-const createWrapper = (props = {}) =>
+const createWrapper = (storeState = {}) =>
   shallowMount(HeaderDefault, {
-    props: { hasFilters: false, ...props },
     global: {
+      plugins: [
+        createTestingPinia({
+          initialState: {
+            dashboards: {
+              currentDashboardFilters: [],
+              ...storeState.dashboards,
+            },
+          },
+          stubActions: false,
+        }),
+      ],
       stubs: {
         InsightsLayoutHeaderFilters: true,
         HeaderDashboardSettings: true,
@@ -38,17 +49,37 @@ describe('HeaderDefault', () => {
     });
 
     it('renders filters when hasFilters is true', () => {
-      wrapper = createWrapper({ hasFilters: true });
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [{ name: 'filter1' }] },
+      });
       expect(
         wrapper.find('[data-testid="insights-layout-header-filters"]').exists(),
       ).toBe(true);
     });
 
     it('does not render filters when hasFilters is false', () => {
-      wrapper = createWrapper({ hasFilters: false });
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [] },
+      });
       expect(
         wrapper.find('[data-testid="insights-layout-header-filters"]').exists(),
       ).toBe(false);
+    });
+  });
+
+  describe('Computed properties', () => {
+    it('hasFilters returns true when filters exist', () => {
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [{ name: 'f1' }] },
+      });
+      expect(wrapper.vm.hasFilters).toBe(true);
+    });
+
+    it('hasFilters returns false when no filters', () => {
+      wrapper = createWrapper({
+        dashboards: { currentDashboardFilters: [] },
+      });
+      expect(wrapper.vm.hasFilters).toBe(false);
     });
   });
 });

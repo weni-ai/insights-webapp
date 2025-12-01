@@ -25,18 +25,21 @@
     "human_support": "Atendimento humano",
     "others": "Outros",
     "unclassified": "Sem classificação",
+    "info": {	
+      "description": "Os dados conversacionais mostram conversas iniciadas até 24 horas antes do horário atual. Conversas mais recentes ainda estão sendo classificadas e não são exibidas. Atualize o dashboard para atualizar a janela de dados."
+    },
     "header": {
       "total": "Total de conversas",
-      "resolved": "Resoluções otimizadas",
-      "unresolved": "Outras conclusões",
+      "resolved": "Atendido por IA",
+      "unresolved": "Não atendido por IA",
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
         "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
-        "resolved": "Conversas concluídas com uma resolução clara e efetiva para o contato",
-        "unresolved": "Conversas finalizadas de outras formas, como interações rápidas, cumprimentos, abandonos ou sem resolução direta",
+        "resolved": "Quando o agente demonstra competência e fornece serviço útil",
+        "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente)",
         "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
-        "transferred": "Inclui conversas (resolvidas ou não) transferidas para atendimento humano"
+        "transferred": "Conversas que requerem assistência humana. Os valores podem diferir do painel de Atendimento humano, pois este conta conversas (não salas) que foram abertas e passaram pela IA. Como uma conversa pode gerar várias salas - e algumas salas podem ser abertas diretamente no atendimento humano - a comparação dos painéis não é recomendada."
       }
     },
     "form_topic": {
@@ -375,10 +378,17 @@
   "rejected": "Rejeitado",
   "active": "Ativo",
   "disabled": "Desabilitado",
+  "alert_added": "{name} adicionado",
+  "alert_edited": "{name} editado",
   "select_date": {
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})"
+  },
+  "data_period": {
+    "label": "Período",
+    "until": "até",
+    "range": "{start} – {end}"
   },
   "save_error": "Erro ao salvar. Tente novamente.",
   "get_data_error": "Erro ao buscar dados. Tente novamente.",
@@ -782,7 +792,11 @@
       "project__name": "Nome do projeto",
       "project__uuid": "ID do projeto",
       "status_changes": "Status",
-      "log_date": "Data de registro"
+      "log_date": "Data de registro",
+      "metric__first_response_time": "Tempo para primeira resposta",
+      "metric__message_response_time": "Tempo médio de resposta",
+      "metric__interaction_time": "Duração",
+      "metric__waiting_time": "Tempo aguardando"
     },
     "select_data": {
       "label": "Selecione o período para buscar dados (máximo de 92 dias entre a data inicial e a data final)",
@@ -867,9 +881,6 @@
     "services_open_by_hour": {
       "title": "Atendimentos abertos por hora"
     },
-    "services_open_by_date": {
-      "title": "Atendimentos abertos por data"
-    },
     "detailed_monitoring": {
       "title": "Monitoramento detalhado",
       "tabs": {
@@ -889,7 +900,7 @@
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agente",
+        "attendant": "Atendente",
         "opened": "Abertos",
         "closed": "Fechados"
       },
@@ -949,7 +960,7 @@
       "detailed_analysis": {
         "title": "Análise detalhada",
         "tabs": {
-          "finished": "Finalizados",
+          "finished": "Finalizado",
           "attendant": "Atendente",
           "pauses": "Pausas personalizadas"
         }

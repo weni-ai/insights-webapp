@@ -25,18 +25,21 @@
     "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
+    "info": {	
+      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+    },
     "header": {
       "total": "Total conversations",
-      "resolved": "Optimized resolutions",
-      "unresolved": "Other conclusions",
+      "resolved": "AI-Assisted",
+      "unresolved": "Not Assisted",
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
         "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
-        "resolved": "Conversations closed with a clear, effective resolution for the contact",
-        "unresolved": "Conversations closed for other reasons, such as quick exchanges, greetings, abandonment, or without a direct resolution",
+        "resolved": "When the agent demonstrates competence and provides useful service",
+        "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
-        "transferred": "Chat windows that required human support"
+        "transferred": "Conversations that required human assistance. Values may differ from the Human Support dashboard, as this one counts conversations (not rooms) that were opened and went through the AI. Since one conversation can generate multiple rooms - and some rooms can be opened directly in human support - comparing the dashboards is not recommended."
       }
     },
     "form_topic": {
@@ -375,10 +378,17 @@
   "rejected": "Rejected",
   "active": "Active",
   "disabled": "Disabled",
+  "alert_added": "{name} added",
+  "alert_edited": "{name} edited",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})"
+  },
+  "data_period": {
+    "label": "Data period",
+    "until": "until",
+    "range": "{start} – {end}"
   },
   "save_error": "Error when saving. Try again.",
   "get_data_error": "Error fetching data. Try again.",
@@ -782,7 +792,11 @@
       "project__name": "Project name",
       "project__uuid": "Project ID",
       "status_changes": "Status changes",
-      "log_date": "Log date"
+      "log_date": "Log date",
+      "metric__first_response_time": "First response time",
+      "metric__message_response_time": "Average response time",
+      "metric__interaction_time": "Duration",
+      "metric__waiting_time": "Waiting time"
     },
     "select_data": {
       "label": "Select the date range to fetch data (maximum 92 days between start and end date)",
@@ -867,29 +881,26 @@
     "services_open_by_hour": {
       "title": "Supports open by hour"
     },
-    "services_open_by_date": {
-      "title": "Supports open by date"
-    },
     "detailed_monitoring": {
       "title": "Detailed monitoring",
       "tabs": {
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agent",
+        "attendant": "Agent",
         "opened": "Opened",
         "closed": "Closed"
       },
@@ -900,7 +911,7 @@
         "queue": "Queue"
       },
       "attendant": {
-        "agent": "Attendant",
+        "agent": "Agent",
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
@@ -916,13 +927,13 @@
         "placeholder": "Type to filter"
       },
       "attendant": {
-        "label": "Attendant"
+        "label": "Agent"
       },
       "contact": {
         "label": "Contact"
       },
       "ticket_id": {
-        "label": "Protocol"
+        "label": "Ticket ID"
       }
     },
     "columns": {
@@ -931,11 +942,11 @@
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
         "response_time": "Response time",
-        "agent": "Attendant",
+        "agent": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
-        "ticket_id": "Protocol",
+        "ticket_id": "Ticket ID",
         "total_attendances": "Total attendances",
         "average_first_response_time": "Average first response time",
         "average_response_time": "Average response time",
@@ -950,7 +961,7 @@
         "title": "Detailed analysis",
         "tabs": {
           "finished": "Finished",
-          "attendant": "Attendant",
+          "attendant": "Agent",
           "pauses": "Custom Breaks"
         }
       }

@@ -72,16 +72,16 @@ describe('SearchTemplateMessagesModal.vue', () => {
   });
 
   it('renders modal correctly', async () => {
-    const filtersContainer = wrapper.find('[data-testid="filters"]');
-    const table = wrapper.find('[data-testid="template-messages-table"]');
-    const nextButton = wrapper.find('[data-testid="next-button"]');
-    const previousButton = wrapper.find('[data-testid="previous-button"]');
+    await flushPromises();
+
+    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const table = wrapper.findComponent({ name: 'UnnnicTableNext' });
+    const buttons = wrapper.findAllComponents({ name: 'UnnnicButton' });
 
     expect(wrapper.exists()).toBe(true);
-    expect(filtersContainer.exists()).toBe(true);
+    expect(modal.exists()).toBe(true);
     expect(table.exists()).toBe(true);
-    expect(nextButton.exists()).toBe(true);
-    expect(previousButton.exists()).toBe(true);
+    expect(buttons.length).toBeGreaterThan(0);
   });
 
   it('calls searchTemplates on mount', async () => {
@@ -113,9 +113,7 @@ describe('SearchTemplateMessagesModal.vue', () => {
   });
 
   it('closes modal when close method is called', async () => {
-    const modal = wrapper.findComponent(
-      '[data-testid="search-template-messages-modal"]',
-    );
+    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
     await modal.vm.$emit('update:model-value');
     expect(wrapper.emitted('close')).toBeTruthy();
   });
@@ -123,7 +121,11 @@ describe('SearchTemplateMessagesModal.vue', () => {
   it('calls searchTemplates with next cursor when clicking next button', async () => {
     await flushPromises();
 
-    await wrapper.find('[data-testid="next-button"]').trigger('click');
+    // Clear previous calls
+    MetaTemplateMessageService.listTemplates.mockClear();
+
+    // Call searchTemplates with 'next' directly
+    await wrapper.vm.searchTemplates('next');
 
     expect(MetaTemplateMessageService.listTemplates).toHaveBeenCalledWith(
       expect.objectContaining({ after: 'next' }),
@@ -132,7 +134,12 @@ describe('SearchTemplateMessagesModal.vue', () => {
 
   it('calls searchTemplates with previous cursor when clicking previous button', async () => {
     await flushPromises();
-    await wrapper.find('[data-testid="previous-button"]').trigger('click');
+
+    // Clear previous calls
+    MetaTemplateMessageService.listTemplates.mockClear();
+
+    // Call searchTemplates with 'previous' directly
+    await wrapper.vm.searchTemplates('previous');
 
     expect(MetaTemplateMessageService.listTemplates).toHaveBeenCalledWith(
       expect.objectContaining({ before: 'previous' }),

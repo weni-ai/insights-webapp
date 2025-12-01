@@ -19,10 +19,10 @@
 <script setup lang="ts">
 import SentimentAnalysisForm from './Forms/SentimentAnalysisForm.vue';
 import CustomizedForm from './Forms/CustomizedForm.vue';
-import CrosstabForm from './Forms/CrosstabForm.vue';
+import { DrawerWidgetType } from '@/store/modules/conversational/conversational';
 
 defineProps<{
-  type: 'csat' | 'nps' | 'custom' | 'crosstab';
+  type: DrawerWidgetType;
   isNew: boolean;
 }>();
 </script>

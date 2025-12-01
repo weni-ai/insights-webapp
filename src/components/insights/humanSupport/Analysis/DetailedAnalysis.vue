@@ -2,19 +2,27 @@
   <section
     id="detailed-monitoring"
     class="detailed-monitoring"
+    data-testid="detailed-analysis"
   >
-    <p class="detailed-monitoring__title">
+    <p
+      class="detailed-monitoring__title"
+      data-testid="detailed-analysis-title"
+    >
       {{ $t('human_support_dashboard.analyze.detailed_analysis.title') }}
     </p>
     <Transition name="filters-fade">
       <section
         v-if="['attendant', 'pauses', 'finished'].includes(activeDetailedTab)"
         class="detailed-monitoring__filters"
+        data-testid="detailed-analysis-filters"
       >
         <DetailedFilters :type="filterType" />
       </section>
     </Transition>
-    <section class="detailed-monitoring__tabs">
+    <section
+      class="detailed-monitoring__tabs"
+      data-testid="detailed-analysis-tabs"
+    >
       <UnnnicTab
         data-testid="human-support-tab"
         :tabs="tabsKeys"

@@ -1,5 +1,7 @@
 <template>
   <section class="dashboard-conversational">
+    <Info class="dashboard-conversational__info" />
+
     <DashboardHeader class="dashboard-conversational__header" />
 
     <MostTalkedAboutTopicsWidget
@@ -33,6 +35,7 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import Info from '@/components/insights/conversations/Info.vue';
 
 type ConversationalWidgetType =
   | 'csat'

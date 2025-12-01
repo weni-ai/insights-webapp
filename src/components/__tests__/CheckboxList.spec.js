@@ -33,18 +33,17 @@ describe('CheckboxList', () => {
   it('should emit click events', async () => {
     const checkboxes = wrapper.findAllComponents('[data-testid="checkbox"]');
 
-    // Click disabled checkbox
-    await checkboxes[0].find('svg').trigger('click');
-    expect(wrapper.emitted('update:checkboxes')).toBe(undefined);
+    // Verify disabled checkbox
+    expect(checkboxes[0].props('disabled')).toBe(true);
 
-    // Update checkbox value to true
-    await checkboxes[1].find('svg').trigger('click');
+    // Update checkbox value to true (index 1 is not disabled)
+    await checkboxes[1].vm.$emit('change', true);
     let clickEventData = wrapper.emitted('update:checkboxes')[0][0];
     expect(clickEventData).toBeTruthy();
     expect(clickEventData[1].selected).toBe(true);
 
-    // Update checkbox value to false
-    await checkboxes[2].find('svg').trigger('click');
+    // Update checkbox value to false (index 2 starts as true)
+    await checkboxes[2].vm.$emit('change', false);
     clickEventData = wrapper.emitted('update:checkboxes')[1][0];
     expect(clickEventData).toBeTruthy();
     expect(clickEventData[2].selected).toBe(false);

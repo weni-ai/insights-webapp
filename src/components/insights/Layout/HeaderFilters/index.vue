@@ -33,6 +33,7 @@
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
         @update:model-value="updateFilter"
       />
+      <HelperDataText v-if="isConversationalDashboard" />
     </section>
     <ModalFilters
       data-testid="modal-filters"
@@ -67,8 +68,9 @@ import ModalFilters from './ModalFilters.vue';
 import FilterHumanSupport from './FilterHumanSupport.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
+import HelperDataText from './HelperDataText.vue';
 
-import { getLastNDays, getYesterdayNDays } from '@/utils/time';
+import { getLastNDays, getYesterdayDate } from '@/utils/time';
 
 export default {
   name: 'InsightsLayoutHeaderFilters',
@@ -79,6 +81,7 @@ export default {
     SearchTemplateMessagesModal,
     FilterHumanSupport,
     FilterFavoriteTemplateMessage,
+    HelperDataText,
   },
 
   data() {
@@ -105,6 +108,10 @@ export default {
 
     isHumanSupportDashboard() {
       return this.currentDashboard?.name === 'human_support_dashboard.title';
+    },
+
+    isConversationalDashboard() {
+      return this.currentDashboard?.name === 'conversations_dashboard.title';
     },
 
     isRenderDynamicFilter() {
@@ -188,7 +195,7 @@ export default {
           disableClear: true,
         };
 
-        if (this.currentDashboard?.name === 'conversations_dashboard.title') {
+        if (this.isConversationalDashboard) {
           customFilter.shortCutOptions = [
             {
               name: this.$t(
@@ -224,11 +231,14 @@ export default {
       handler(filters) {
         if (filters.length === 1) {
           const { date, ended_at } = this.$route.query;
-          const isConversational =
-            this.currentDashboard?.name === 'conversations_dashboard.title';
 
-          const { start, end } = isConversational
-            ? getYesterdayNDays(7)
+          const isHumanSupportDashboard =
+            this.currentDashboard?.name === 'human_support_dashboard.title';
+
+          if (isHumanSupportDashboard) return;
+
+          const { start, end } = this.isConversationalDashboard
+            ? getYesterdayDate()
             : getLastNDays(7);
 
           const defaultFilterValue = this.isMetaTemplateDashboard
@@ -302,6 +312,9 @@ export default {
 
   &_dynamic_container {
     width: 19.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-1;
   }
 }
 </style>

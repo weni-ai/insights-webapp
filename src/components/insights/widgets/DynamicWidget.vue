@@ -14,6 +14,7 @@ import { storeToRefs } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
+import { useConfig } from '@/store/modules/config';
 
 import { useWidgetTypes } from '@/composables/useWidgetTypes';
 
@@ -38,8 +39,10 @@ const route = useRoute();
 const dashboardsStore = useDashboards();
 const widgetsStore = useWidgets();
 const reportsStore = useReports();
+const configStore = useConfig();
 
 const { appliedFilters, currentDashboard } = storeToRefs(dashboardsStore);
+const { isActiveRoute } = storeToRefs(configStore);
 
 const { getWidgetCategory } = useWidgetTypes();
 
@@ -120,16 +123,16 @@ const handleRequestData = async (requestParams) => {
     isRequestingData.value = true;
     hasError.value = false;
 
-    if (requestParams.type === 'vtex_order') {
+    if (requestParams?.type === 'vtex_order') {
       await widgetsStore.getWidgetVtexOrderData({
         uuid: requestParams.uuid,
-        utm_source: requestParams.config.filter.utm,
+        utm_source: requestParams.config?.filter?.utm,
       });
-    } else if (requestParams.type === 'recurrence') {
+    } else if (requestParams?.type === 'recurrence') {
       await widgetsStore.getWidgetRecurrenceData({
         uuid: requestParams.uuid,
       });
-    } else if (requestParams.uuid && requestParams.config) {
+    } else if (requestParams?.uuid && requestParams?.config) {
       await widgetsStore.getWidgetGraphFunnelData({
         uuid: requestParams.uuid,
         widgetFunnelConfig: requestParams.config,
@@ -174,6 +177,13 @@ const initRequestDataInterval = () => {
   }
 };
 
+const stopRequestDataInterval = () => {
+  if (interval.value) {
+    clearInterval(interval.value);
+    interval.value = null;
+  }
+};
+
 watch(
   () => route.query,
   () => {
@@ -193,20 +203,28 @@ watch(
 );
 
 watch(hasDateFiltering, (newHasDateFiltering) => {
-  clearInterval(interval.value);
+  stopRequestDataInterval();
 
   if (!newHasDateFiltering && isHumanServiceDashboard.value) {
     initRequestDataInterval();
   }
 });
 
+watch(isActiveRoute, (newValue) => {
+  if (newValue && !interval.value) {
+    initRequestDataInterval();
+  } else if (!newValue) {
+    stopRequestDataInterval();
+  }
+});
+
 onMounted(() => {
-  if (!hasDateFiltering.value && isHumanServiceDashboard.value) {
+  if (isHumanServiceDashboard.value && !hasDateFiltering.value) {
     initRequestDataInterval();
   }
 });
 
 onUnmounted(() => {
-  clearInterval(interval.value);
+  stopRequestDataInterval();
 });
 </script>

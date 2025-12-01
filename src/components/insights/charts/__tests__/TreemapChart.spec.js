@@ -5,24 +5,24 @@ import { createI18n } from 'vue-i18n';
 
 import TreemapChart from '../TreemapChart.vue';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        widgets: {
-          treemap: {
-            no_data: 'No data available',
-          },
-        },
-        conversations_dashboard: {
-          conversations: 'conversations',
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      widgets: {
+        treemap: {
+          no_data: 'No data available',
         },
       },
+      conversations_dashboard: {
+        conversations: 'conversations',
+      },
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n];
 
 vi.mock('chart.js', () => {
   const Chart = vi.fn().mockImplementation(() => ({
@@ -264,5 +264,20 @@ describe('TreemapChart', () => {
       tooltipItems: [{ element: { height: 100 } }],
     });
     expect(caretPadding).toBe(50);
+  });
+
+  it('should recreate chart when locale changes', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const initialCalls = Chart.mock.calls.length;
+    expect(initialCalls).toBeGreaterThan(0);
+
+    i18n.global.locale.value = 'pt-br';
+    await nextTick();
+
+    expect(Chart.mock.calls.length).toBeGreaterThan(initialCalls);
   });
 });

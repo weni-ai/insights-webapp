@@ -37,24 +37,6 @@ jobs:
           fi
           echo "image_latest=${{ secrets.REGISTRY_ECR }}/insights:latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
           echo "image_tag_latest=latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
-      
-      - name: Download webapp secret
-        uses: actions/checkout@master
-        with:
-          ref: main
-          repository: "weni-ai/webapp-secret"
-          token: "${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}"
-          path: ./webapp-secret/  
-
-      - name: Set variables
-        id: extra_build_args
-        run: |
-          {
-            echo 'BUILD_ENV_ARGS<<EOFenv'
-            cat webapp-secret/insights/${{ steps.setup.outputs.MANIFESTS_ENVIRONMENT }}/env || exit 1
-            echo EOFenv
-          } | tee -a "$GITHUB_OUTPUT"
-          rm -rf webapp-secret
 
   call-workflow:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
@@ -74,4 +56,5 @@ jobs:
       target_repository_branch: main
       target_application: insights-webapp
       target_patch_file: deployment.json
+      kludge_webapp_secret_enable: true
     secrets: inherit

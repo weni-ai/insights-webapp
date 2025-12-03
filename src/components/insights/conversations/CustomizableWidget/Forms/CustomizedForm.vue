@@ -52,8 +52,7 @@
             label: agent.name,
           }))
         "
-        autocomplete
-        autocompleteIconLeft
+        disableInternalFilter
         selectFirst
         :isLoading="isLoadingAgentsTeam"
         @update:model-value="handleChangeAgent"

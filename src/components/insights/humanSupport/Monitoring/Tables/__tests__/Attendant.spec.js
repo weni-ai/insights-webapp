@@ -33,7 +33,9 @@ vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant',
   () => ({
     default: {
-      getDetailedMonitoringAttendant: vi.fn().mockResolvedValue({ results: [] }),
+      getDetailedMonitoringAttendant: vi
+        .fn()
+        .mockResolvedValue({ results: [] }),
     },
   }),
 );
@@ -116,7 +118,7 @@ describe('Attendant', () => {
       const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
       expect(table.props('clickable')).toBe(true);
       expect(table.props('fixedHeaders')).toBe(true);
-      expect(table.props('height')).toBe('600px');
+      expect(table.props('height')).toBe('500px');
       expect(table.props('infiniteScroll')).toBe(true);
       expect(table.props('hidePagination')).toBe(true);
       expect(table.props('size')).toBe('sm');
@@ -137,7 +139,11 @@ describe('Attendant', () => {
 
   describe('Event handlers', () => {
     it('handles sort changes', () => {
-      wrapper.vm.handleSort({ header: 'Status', itemKey: 'status', order: 'asc' });
+      wrapper.vm.handleSort({
+        header: 'Status',
+        itemKey: 'status',
+        order: 'asc',
+      });
       expect(mockInfiniteScroll.handleSort).toHaveBeenCalled();
     });
 
@@ -191,4 +197,3 @@ describe('Attendant', () => {
     });
   });
 });
-

@@ -33,7 +33,9 @@ vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress',
   () => ({
     default: {
-      getDetailedMonitoringInProgress: vi.fn().mockResolvedValue({ results: [] }),
+      getDetailedMonitoringInProgress: vi
+        .fn()
+        .mockResolvedValue({ results: [] }),
     },
   }),
 );
@@ -109,7 +111,7 @@ describe('InProgress', () => {
       const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
       expect(table.props('clickable')).toBe(true);
       expect(table.props('fixedHeaders')).toBe(true);
-      expect(table.props('height')).toBe('600px');
+      expect(table.props('height')).toBe('500px');
     });
   });
 
@@ -184,4 +186,3 @@ describe('InProgress', () => {
     });
   });
 });
-

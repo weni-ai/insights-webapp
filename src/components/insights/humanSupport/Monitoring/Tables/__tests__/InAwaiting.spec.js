@@ -33,7 +33,9 @@ vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting',
   () => ({
     default: {
-      getDetailedMonitoringInAwaiting: vi.fn().mockResolvedValue({ results: [] }),
+      getDetailedMonitoringInAwaiting: vi
+        .fn()
+        .mockResolvedValue({ results: [] }),
     },
   }),
 );
@@ -106,7 +108,7 @@ describe('InAwaiting', () => {
       const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
       expect(table.props('clickable')).toBe(true);
       expect(table.props('fixedHeaders')).toBe(true);
-      expect(table.props('height')).toBe('600px');
+      expect(table.props('height')).toBe('500px');
     });
   });
 
@@ -180,4 +182,3 @@ describe('InAwaiting', () => {
     });
   });
 });
-

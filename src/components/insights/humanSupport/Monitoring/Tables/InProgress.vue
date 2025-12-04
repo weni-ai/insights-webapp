@@ -5,7 +5,7 @@
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
-    height="600px"
+    height="500px"
     :headers="formattedHeaders"
     :items="formattedItems"
     :infiniteScroll="true"

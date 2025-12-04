@@ -64,6 +64,10 @@ const progressBarStyles = computed(() => ({
 
   &__tooltip {
     display: unset;
+
+    :deep(.unnnic-tooltip-label) {
+      text-align: start;
+    }
   }
 
   &__bar {

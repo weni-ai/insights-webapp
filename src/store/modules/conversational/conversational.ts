@@ -8,6 +8,7 @@ export type DrawerWidgetType =
   | 'add'
   | 'custom'
   | 'sales_funnel'
+  | 'crosstab'
   | null;
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;

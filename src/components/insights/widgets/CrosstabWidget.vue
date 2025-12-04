@@ -142,6 +142,7 @@ const formattedData = computed(() => {
 .crosstab-widget {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   flex: 1 0 0;
   gap: $unnnic-space-3;
 

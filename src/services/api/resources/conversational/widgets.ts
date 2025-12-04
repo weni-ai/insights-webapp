@@ -131,91 +131,9 @@ export default {
       ...queryParams,
     };
 
-    // TODO: remove mock
-
-    // const response = await http.get('/metrics/conversations/crosstab/', {
-    //   params,
-    // });
-
-    await asyncTimeout(5000);
-
-    const response = {
-      total_rows: 6,
-      results: [
-        {
-          title: 'Delivery1',
-          total: 6000,
-          events: {
-            satisfied: {
-              value: 85.0, // percentage
-            },
-            dissatisfied: {
-              value: 15.0, // percentage
-            },
-          },
-        },
-        {
-          title: 'Delivery2',
-          total: 6000,
-          events: {
-            satisfied: {
-              value: 80.0, // percentage
-            },
-            dissatisfied: {
-              value: 20.0, // percentage
-            },
-          },
-        },
-        {
-          title: 'Delivery3',
-          total: 6000,
-          events: {
-            satisfied: {
-              value: 75.5, // percentage
-            },
-            dissatisfied: {
-              value: 24.5, // percentage
-            },
-          },
-        },
-        {
-          title: 'Delivery4',
-          total: 6000,
-          events: {
-            satisfied: {
-              value: 85.0, // percentage
-            },
-            dissatisfied: {
-              value: 15.0, // percentage
-            },
-          },
-        },
-        {
-          title: 'Delivery5',
-          total: 6000,
-          events: {
-            satisfied: {
-              value: 85.0, // percentage
-            },
-            dissatisfied: {
-              value: 15.0, // percentage
-            },
-          },
-        },
-        {
-          title: 'Delivery6',
-          total: 6000,
-          events: {
-            satisfied: {
-              value: 85.0, // percentage
-            },
-            dissatisfied: {
-              value: 15.0, // percentage
-            },
-          },
-        },
-      ],
-    };
+    const response = await http.get('/metrics/conversations/crosstab/', {
+      params,
+    });
 
     return response;
   },

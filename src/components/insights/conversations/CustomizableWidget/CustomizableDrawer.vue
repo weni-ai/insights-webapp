@@ -105,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeMount, ref } from 'vue';
+import { computed, onBeforeMount, ref, watch } from 'vue';
 import ConfigCustomizableForm from './ConfigCustomizableForm.vue';
 import ModalAttention from './ModalAttention.vue';
 import i18n from '@/utils/plugins/i18n';
@@ -113,6 +113,7 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
 import { WidgetType } from '@/models/types/WidgetTypes';
 
@@ -130,7 +131,7 @@ const {
 } = storeToRefs(useConversationalWidgets());
 
 const projectStore = useProject();
-const { getAgentsTeam } = projectStore;
+const { getAgentsTeam, getProjectFlows } = projectStore;
 
 const { hasValidSalesFunnelAgent } = storeToRefs(projectStore);
 
@@ -146,19 +147,44 @@ const {
 } = storeToRefs(customWidgets);
 const { saveCustomWidget } = customWidgets;
 
+const sentimentFormStore = useSentimentAnalysisForm();
+const { initializeForm, clearEditingContext } = sentimentFormStore;
+
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 
 onBeforeMount(() => {
   getAgentsTeam();
+  if (!projectStore.isLoadedFlows) {
+    getProjectFlows();
+  }
 });
 
 function closeDrawer() {
+  clearEditingContext();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 
 function closeWarningModal() {
   warningModalType.value = '';
 }
+
+watch(
+  [isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable],
+  async () => {
+    if (!isDrawerCustomizableOpen.value) return;
+
+    const type = drawerWidgetType.value;
+    const isNew = isNewDrawerCustomizable.value;
+    let uuid = '';
+
+    if (type === 'custom') {
+      uuid = customWidgets.customForm.widget_uuid;
+    }
+
+    initializeForm(type, isNew, uuid);
+  },
+  { immediate: true },
+);
 
 async function saveWidgetConfigs() {
   if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
@@ -169,7 +195,7 @@ async function saveWidgetConfigs() {
     await updateConversationalWidget(drawerWidgetType.value as 'csat' | 'nps');
   }
 
-  setIsDrawerCustomizableOpen(false, null, false);
+  closeDrawer();
 }
 
 const isLoadingSaveButton = computed(() => {
@@ -193,7 +219,7 @@ function handleSecondaryButtonClick() {
   ) {
     warningModalType.value = 'cancel';
   } else {
-    setIsDrawerCustomizableOpen(false, null, false);
+    closeDrawer();
   }
 }
 
@@ -226,6 +252,7 @@ function returnWidgetTypeChoice() {
 function cancelWidgetConfigs() {
   closeWarningModal();
   drawerWidgetType.value = 'add';
+  clearEditingContext();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 
@@ -321,7 +348,10 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       widgets = widgets.filter((widget) => widget.key !== 'nps');
     }
 
-    if (isSalesFunnelConfigured.value || !hasValidSalesFunnelAgent.value) {
+    const hasValidSalesFunnel =
+      hasValidSalesFunnelAgent && hasValidSalesFunnelAgent.value;
+
+    if (isSalesFunnelConfigured.value || !hasValidSalesFunnel) {
       widgets = widgets.filter((widget) => widget.key !== 'sales_funnel');
     }
 
@@ -353,11 +383,15 @@ const isDisabledPrimaryButton = computed(() => {
     return !isEnabledSaveCrosstabForm.value;
   }
 
-  return isNewDrawerCustomizable.value
-    ? !isEnabledSaveNewWidget.value
-    : drawerWidgetType.value === 'csat'
-      ? !isEnabledUpdateWidgetCsat.value
-      : !isEnabledUpdateWidgetNps.value;
+  if (isNewDrawerCustomizable.value) {
+    return !isEnabledSaveNewWidget.value;
+  }
+
+  if (drawerWidgetType.value === 'csat') {
+    return !isEnabledUpdateWidgetCsat.value;
+  }
+
+  return !isEnabledUpdateWidgetNps.value;
 });
 </script>
 

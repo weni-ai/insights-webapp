@@ -383,7 +383,14 @@
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
-    "previous_month": "Previous month ({date})"
+    "previous_month": "Previous month ({date})",
+    "last_7_days_conversational": "Last 7 days (up to 24h ago)",
+    "last_14_days_conversational": "Last 14 days (up to 24h ago)",
+    "last_30_days_conversational": "Last 30 days (up to 24h ago)",
+    "last_12_months_conversational": "Last 12 months (up to 24h ago)",
+    "current_month_conversational": "Current month (up to 24h ago)",
+    "previous_month_conversational": "Previous month (up to 24h ago)",
+    "custom_conversational": "Custom (up to 24h ago)"
   },
   "data_period": {
     "label": "Data period",
@@ -924,7 +931,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Type to filter"
+        "placeholder": "Type to filter",
+        "clear": "Clear selection"
       },
       "attendant": {
         "label": "Agent"

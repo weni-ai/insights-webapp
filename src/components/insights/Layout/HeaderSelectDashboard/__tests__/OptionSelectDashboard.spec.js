@@ -23,7 +23,11 @@ describe('OptionSelectDashboard', () => {
     },
   });
 
-  const createWrapper = (props) => {
+  const mockRouter = {
+    push: vi.fn(),
+  };
+
+  const createWrapper = (props, routeName = 'dashboard') => {
     return mount(OptionSelectDashboard, {
       props,
       global: {
@@ -34,6 +38,8 @@ describe('OptionSelectDashboard', () => {
         },
         mocks: {
           $t: (msg) => msg,
+          $route: { name: routeName },
+          $router: mockRouter,
         },
       },
     });
@@ -42,6 +48,8 @@ describe('OptionSelectDashboard', () => {
   let starIcon;
 
   beforeEach(() => {
+    vi.clearAllMocks();
+    mockRouter.push.mockClear();
     wrapper = createWrapper({ dashboard: dashboard1 });
     starIcon = wrapper.findComponent('[data-testid=star-icon]');
   });
@@ -56,22 +64,56 @@ describe('OptionSelectDashboard', () => {
       expect(optionSelectDashboard.text()).toContain('Dashboard 1');
     });
 
-    it('Should set the current dashboard when an option is clicked', async () => {
-      wrapper = createWrapper({
-        dashboard: dashboard2,
-      });
+    it('Should set the current dashboard when an option is clicked on a non-report route', async () => {
+      wrapper = createWrapper(
+        {
+          dashboard: dashboard2,
+        },
+        'dashboard',
+      );
 
       const dashboardsStore = useDashboards();
 
-      dashboardsStore.setCurrentDashboard = (dash) =>
-        (dashboardsStore.currentDashboard = dash);
+      dashboardsStore.setCurrentDashboard = vi.fn((dash) => {
+        dashboardsStore.currentDashboard = dash;
+      });
 
       const optionSelectDashboard = wrapper.findComponent(
         '[data-testid=option-select-dashboard]',
       );
       await optionSelectDashboard.trigger('click');
 
+      expect(dashboardsStore.setCurrentDashboard).toHaveBeenCalledWith(
+        dashboard2,
+      );
       expect(dashboardsStore.currentDashboard.uuid).toBe('2');
+    });
+
+    it('Should navigate to dashboard route when clicking on option while in report route', async () => {
+      wrapper = createWrapper(
+        {
+          dashboard: dashboard2,
+        },
+        'report',
+      );
+
+      const dashboardsStore = useDashboards();
+      dashboardsStore.setCurrentDashboard = vi.fn();
+
+      mockRouter.push.mockClear();
+
+      const optionSelectDashboard = wrapper.findComponent(
+        '[data-testid=option-select-dashboard]',
+      );
+      await optionSelectDashboard.trigger('click');
+
+      expect(mockRouter.push).toHaveBeenCalledWith({
+        name: 'dashboard',
+        params: {
+          dashboardUuid: dashboard2.uuid,
+        },
+      });
+      expect(dashboardsStore.setCurrentDashboard).not.toHaveBeenCalled();
     });
 
     it('Should have a star_rate icon', () => {

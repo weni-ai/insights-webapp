@@ -3,6 +3,7 @@ import { WidgetType } from '@/models/types/WidgetTypes';
 import WidgetService from '@/services/api/resources/widgets';
 import WidgetConversationalService, {
   CustomWidgetResponse,
+  CrosstabWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
 import { unnnicCallAlert } from '@weni/unnnic-system';
@@ -16,6 +17,15 @@ interface customForm {
   widget_name: string;
 }
 
+interface crosstabForm {
+  widget_uuid: string;
+  widget_name: string;
+  key_a: string;
+  field_name_a: string;
+  key_b: string;
+  field_name_b: string;
+}
+
 interface customWidget extends WidgetType {
   data: CustomWidgetResponse;
   config: {
@@ -26,9 +36,17 @@ interface customWidget extends WidgetType {
   };
 }
 
+interface crosstabWidget extends WidgetType {
+  data: CrosstabWidgetResponse;
+  config: {
+    source_a: { key: string; field_name: string };
+    source_b: { key: string; field_name: string };
+  };
+}
+
 export const useCustomWidgets = defineStore('customWidgets', {
   state: () => ({
-    customWidgets: [] as customWidget[],
+    customWidgets: [] as Array<customWidget | crosstabWidget>,
     customForm: {
       agent_uuid: '',
       agent_name: '',
@@ -36,10 +54,18 @@ export const useCustomWidgets = defineStore('customWidgets', {
       widget_uuid: '',
       widget_name: '',
     } as customForm,
+    crosstabForm: {
+      widget_uuid: '',
+      widget_name: '',
+      key_a: '',
+      field_name_a: '',
+      key_b: '',
+      field_name_b: '',
+    } as crosstabForm,
     isLoadingSaveNewCustomWidget: false,
     isLoadingDeleteCustomWidget: false,
     loadingByUuid: [] as string[],
-    customWidgetDataErrorByUuid: {} as Record<string, boolean>,
+    customWidgetDataErrorByUuid: {} as Record<string, boolean | number>,
   }),
 
   actions: {
@@ -54,14 +80,18 @@ export const useCustomWidgets = defineStore('customWidgets', {
     setCustomForm(customForm: customForm) {
       this.customForm = customForm;
     },
-    resetCustomForm() {
+    setCrosstabForm(crosstabForm: crosstabForm) {
+      this.crosstabForm = crosstabForm;
+    },
+    resetForms() {
       this.customForm = {} as customForm;
+      this.crosstabForm = {} as crosstabForm;
     },
     setCustomFormAgent(agent_uuid: string, agent_name: string) {
       this.customForm.agent_uuid = agent_uuid;
       this.customForm.agent_name = agent_name;
     },
-    getCustomWidgetByUuid(uuid: string): customWidget | null {
+    getCustomWidgetByUuid(uuid: string): customWidget | crosstabWidget | null {
       return this.customWidgets.find((widget) => widget.uuid === uuid) || null;
     },
     getIsLoadingByUuid(uuid: string): boolean {
@@ -73,37 +103,63 @@ export const useCustomWidgets = defineStore('customWidgets', {
     setCustomFormWidgetName(widget_name: string) {
       this.customForm.widget_name = widget_name;
     },
-    async saveCustomWidget() {
-      this.isLoadingSaveNewCustomWidget = true;
-      try {
-        const widget = {
-          source: 'conversations.custom',
-          config: {
-            datalake_config: {
-              type: 'CUSTOM',
-              key: this.customForm.key,
-              agent_uuid: this.customForm.agent_uuid,
-            },
+    _mountCustomWidgetBody() {
+      return {
+        uuid: this.customForm.widget_uuid || undefined,
+        source: 'conversations.custom',
+        config: {
+          datalake_config: {
+            type: 'CUSTOM',
+            key: this.customForm.key,
+            agent_uuid: this.customForm.agent_uuid,
           },
-          position: [],
-          report: null,
-          is_configurable: true,
-          name: this.customForm.widget_name,
-          type: 'custom_widget',
-        };
+        },
+        position: [],
+        report: null,
+        is_configurable: true,
+        name: this.customForm.widget_name,
+        type: 'custom_widget',
+      };
+    },
+    _mountCrosstabWidgetBody() {
+      return {
+        uuid: this.crosstabForm.widget_uuid || undefined,
+        name: this.crosstabForm.widget_name,
+        position: [],
+        report: null,
+        is_configurable: true,
+        type: 'conversations.crosstab',
+        source: 'conversations.crosstab',
+        config: {
+          source_a: {
+            key: this.crosstabForm.key_a,
+            field_name: this.crosstabForm.field_name_a,
+          },
+          source_b: {
+            key: this.crosstabForm.key_b,
+            field_name: this.crosstabForm.field_name_b,
+          },
+        },
+      };
+    },
+    async saveCustomWidget(widgetType: 'custom' | 'crosstab') {
+      this.isLoadingSaveNewCustomWidget = true;
+      const widgetBodyMap = {
+        custom: this._mountCustomWidgetBody(),
+        crosstab: this._mountCrosstabWidgetBody(),
+      };
+      try {
+        const widget = widgetBodyMap[widgetType as keyof typeof widgetBodyMap];
 
-        if (this.customForm.widget_uuid) {
+        if (widget.uuid) {
           await WidgetService.updateWidget({
-            widget: {
-              ...widget,
-              uuid: this.customForm.widget_uuid,
-            },
+            widget,
           });
         } else {
           await WidgetService.saveNewWidget(widget);
         }
 
-        this.resetCustomForm();
+        this.resetForms();
 
         const { getCurrentDashboardWidgets } = useWidgets();
 
@@ -142,16 +198,27 @@ export const useCustomWidgets = defineStore('customWidgets', {
     async loadCustomWidgetData(uuid: string) {
       if (this.loadingByUuid.includes(uuid)) return;
 
+      const widget = this.getCustomWidgetByUuid(uuid);
+
+      if (!widget) return;
+
       this.loadingByUuid.push(uuid);
 
       try {
-        const response = await WidgetConversationalService.getCustomWidgetData({
+        const sourceMap = {
+          'conversations.custom':
+            WidgetConversationalService.getCustomWidgetData,
+          'conversations.crosstab':
+            WidgetConversationalService.getCrosstabWidgetData,
+        };
+        const dataRequest = sourceMap[widget.source as keyof typeof sourceMap];
+        const response = await dataRequest({
           widget_uuid: uuid,
         });
         this.updateCustomWidget(uuid, response);
         this.customWidgetDataErrorByUuid[uuid] = false;
       } catch (error) {
-        this.customWidgetDataErrorByUuid[uuid] = true;
+        this.customWidgetDataErrorByUuid[uuid] = error.status || true;
         console.error('Error loading custom widget data', error);
       } finally {
         this.loadingByUuid = this.loadingByUuid.filter((id) => id !== uuid);
@@ -164,5 +231,9 @@ export const useCustomWidgets = defineStore('customWidgets', {
     isEnabledCreateCustomForm: (state) =>
       state.customForm.agent_uuid?.trim() !== '' &&
       state.customForm.key?.trim() !== '',
+    isEnabledSaveCrosstabForm: (state) =>
+      state.crosstabForm.widget_name?.trim() !== '' &&
+      state.crosstabForm.key_a?.trim() !== '' &&
+      state.crosstabForm.key_b?.trim() !== '',
   },
 });

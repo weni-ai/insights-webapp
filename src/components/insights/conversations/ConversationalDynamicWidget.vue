@@ -14,6 +14,7 @@
       :isError="isError"
       :actionError="actionError"
       :type="type"
+      :uuid="uuid"
       @open-expanded="handleOpenExpanded"
       @tab-change="handleTabChange"
     >
@@ -78,6 +79,7 @@ import {
   CsatResponse,
   NpsResponse,
   CustomWidgetResponse,
+  CrosstabWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import { Tab } from './BaseConversationWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -85,7 +87,7 @@ import { useRoute } from 'vue-router';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 
 const props = defineProps<{
-  type: 'csat' | 'nps' | 'add' | 'sales_funnel' | 'custom';
+  type: 'csat' | 'nps' | 'add' | 'sales_funnel' | 'custom' | 'crosstab';
   uuid?: string;
 }>();
 
@@ -102,6 +104,7 @@ const {
   getCustomWidgetByUuid,
   getIsLoadingByUuid,
   setCustomForm,
+  setCrosstabForm,
 } = conversationalCustomWidgets;
 
 const { customWidgetDataErrorByUuid } = storeToRefs(
@@ -141,9 +144,23 @@ const isCsatOrNps = computed(() => {
 });
 
 const actionError = computed(() => {
+  const isCrosstabWidget = props.type === 'crosstab';
+  const widgetErrorCode = Number(
+    customWidgetDataErrorByUuid.value[props.uuid as string] || 0,
+  );
+  const isValidationError = widgetErrorCode >= 400 && widgetErrorCode < 500;
   return {
-    title: t('conversations_dashboard.widget_error.title'),
+    title:
+      isCrosstabWidget && isValidationError
+        ? t('conversations_dashboard.widget_error.crosstab_validation_title')
+        : t('conversations_dashboard.widget_error.title'),
     buttonText: t('conversations_dashboard.widget_error.button'),
+    description:
+      isCrosstabWidget && isValidationError
+        ? t(
+            'conversations_dashboard.widget_error.crosstab_validation_description',
+          )
+        : undefined,
     onClick: () => handleOpenDrawer(false),
   };
 });
@@ -157,8 +174,8 @@ const isError = computed(() => {
     return isNpsWidgetDataError.value;
   }
 
-  if (props.type === 'custom') {
-    return customWidgetDataErrorByUuid.value[props.uuid as string] || false;
+  if (['custom', 'crosstab'].includes(props.type)) {
+    return !!customWidgetDataErrorByUuid.value[props.uuid as string] || false;
   }
 
   if (props.type === 'sales_funnel') {
@@ -206,8 +223,11 @@ const widgetData = computed(() => {
     csat: handleCsatWidgetData(currentCsatWidget.value?.data || null),
     nps: handleNpsWidgetData(currentNpsWidget.value?.data || null),
     custom: handleCustomWidgetData(
-      getCustomWidgetByUuid(props.uuid as string)?.data || { results: [] },
+      (getCustomWidgetByUuid(props.uuid as string)
+        ?.data as CustomWidgetResponse) || { results: [] },
     ),
+    crosstab: getCustomWidgetByUuid(props.uuid as string)
+      ?.data as CrosstabWidgetResponse,
   };
 
   return widgetDataTypes[props.type];
@@ -237,6 +257,10 @@ const renderProgressItems = computed(() => {
 
   if (props.type === 'custom') {
     return widgetData.value.progressItems;
+  }
+
+  if (props.type === 'crosstab') {
+    return widgetData.value;
   }
 
   return MOCK_DATA;
@@ -323,13 +347,13 @@ const handleCurrentTab = computed(() => {
 });
 
 const isOnlyTab = computed(() => {
-  if (props.type === 'custom') return true;
+  if (['custom', 'crosstab'].includes(props.type)) return true;
 
   return false;
 });
 
 const isExpanded = computed(() => {
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     const customWidget = getCustomWidgetByUuid(props.uuid as string);
 
     return customWidget?.data?.results?.length > 5 || false;
@@ -341,7 +365,7 @@ const isExpanded = computed(() => {
 const titleWidget = computed(() => {
   const defaultTitle = widgetType.value?.toUpperCase() || '-';
 
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     return getCustomWidgetByUuid(props.uuid as string)?.name || defaultTitle;
   }
 
@@ -375,7 +399,7 @@ onMounted(() => {
     loadSalesFunnelWidgetData();
   }
 
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     loadCustomWidgetData(props.uuid as string);
   }
 });
@@ -479,17 +503,30 @@ const handleCsatWidgetData = (data: CsatResponse) => {
 };
 
 const handleOpenDrawer = (isNew: boolean) => {
-  if (props.type === 'custom') {
+  if (['custom', 'crosstab'].includes(props.type)) {
     if (!isNew) {
-      const customWidget = getCustomWidgetByUuid(props.uuid as string);
-
-      setCustomForm({
-        agent_uuid: customWidget?.config?.datalake_config?.agent_uuid,
-        agent_name: '',
-        key: customWidget?.config?.datalake_config?.key,
-        widget_uuid: customWidget?.uuid,
-        widget_name: customWidget?.name,
-      });
+      const findedCustomWidget = getCustomWidgetByUuid(
+        props.uuid as string,
+      ) as any;
+      if (props.type === 'custom') {
+        setCustomForm({
+          agent_uuid: findedCustomWidget?.config?.datalake_config?.agent_uuid,
+          agent_name: '',
+          key: findedCustomWidget?.config?.datalake_config?.key,
+          widget_uuid: findedCustomWidget?.uuid,
+          widget_name: findedCustomWidget?.name,
+        });
+      }
+      if (props.type === 'crosstab') {
+        setCrosstabForm({
+          widget_uuid: findedCustomWidget?.uuid,
+          widget_name: findedCustomWidget?.name,
+          key_a: findedCustomWidget?.config?.source_a?.key,
+          field_name_a: findedCustomWidget?.config?.source_a?.field_name,
+          key_b: findedCustomWidget?.config?.source_b?.key,
+          field_name_b: findedCustomWidget?.config?.source_b?.field_name,
+        });
+      }
     }
   }
 

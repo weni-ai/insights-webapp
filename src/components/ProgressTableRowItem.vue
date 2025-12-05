@@ -46,6 +46,7 @@
           :progress="value"
           :backgroundColor="backgroundColor"
           :color="color"
+          :tooltip="tooltip"
           data-testid="progress-table-row-item-progress"
         />
       </td>
@@ -83,6 +84,7 @@ export interface BaseProgressTableRowItem {
   description: string;
   backgroundColor?: string;
   color?: string;
+  tooltip?: string;
 }
 
 export interface ProgressTableRowItem extends BaseProgressTableRowItem {

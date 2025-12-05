@@ -10,6 +10,7 @@
     :isExpandable="isExpandable"
     :expandableDescription="expandableDescription"
     :expanded="expanded"
+    :tooltip="tooltip"
     @expand="emit('expand', $event)"
   >
     <template

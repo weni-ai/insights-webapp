@@ -20,6 +20,11 @@ exports[`WidgetError > Component structure > should match snapshot 1`] = `
   >
     Error Title
   </p>
+  <p
+    class="widget-error__description"
+    data-testid="widget-error-description"
+    data-v-ad848305=""
+  />
   <unnnic-button-stub
     data-testid="widget-error-button"
     data-v-ad848305=""

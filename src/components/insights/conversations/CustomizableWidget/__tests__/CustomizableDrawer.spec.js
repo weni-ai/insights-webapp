@@ -45,6 +45,8 @@ vi.mock('@/utils/plugins/i18n', () => ({
             'Customized',
           'conversations_dashboard.customize_your_dashboard.select_chart_type':
             'Select chart type',
+          'conversations_dashboard.customize_your_dashboard.crosstab.title':
+            'Crosstab',
           cancel: 'cancel',
         };
         return translations[key] || key;
@@ -261,7 +263,7 @@ describe('CustomizableWidget', () => {
     });
 
     it('should render correct number of available widgets when no CSAT/NPS configured', () => {
-      expect(drawerItems()).toHaveLength(3);
+      expect(drawerItems()).toHaveLength(4);
     });
 
     it('should set type when widget is selected', async () => {
@@ -373,9 +375,11 @@ describe('CustomizableWidget', () => {
 
     it('should return custom for customized tab', () => {
       const customizedWidgets = wrapper.vm.handleTabChoice('customized');
-      expect(customizedWidgets).toHaveLength(1);
+      expect(customizedWidgets).toHaveLength(2);
       expect(customizedWidgets[0].key).toBe('custom');
       expect(customizedWidgets[0].name).toBe('Horizontal Bar Chart');
+      expect(customizedWidgets[1].key).toBe('crosstab');
+      expect(customizedWidgets[1].name).toBe('Crosstab');
     });
 
     it('should return empty array for unknown tab', () => {
@@ -411,12 +415,13 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(4);
+      expect(widgets).toHaveLength(5);
       expect(widgets.map((w) => w.key)).toEqual([
         'csat',
         'nps',
         'custom',
         'sales_funnel',
+        'crosstab',
       ]);
     });
   });

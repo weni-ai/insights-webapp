@@ -1,9 +1,6 @@
 <template>
   <section class="crosstab-widget">
-    <section
-      class="crosstab-widget__table"
-      :style="{ alignItems: isLoading ? 'unset' : 'center' }"
-    >
+    <section class="crosstab-widget__table">
       <UnnnicDisclaimer
         v-if="isEmptyData && !isLoading"
         class="crosstab-widget__empty-data-disclaimer"

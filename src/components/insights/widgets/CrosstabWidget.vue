@@ -1,9 +1,6 @@
 <template>
   <section class="crosstab-widget">
-    <section
-      class="crosstab-widget__table"
-      :style="{ alignItems: isLoading ? 'unset' : 'center' }"
-    >
+    <section class="crosstab-widget__table">
       <UnnnicDisclaimer
         v-if="isEmptyData && !isLoading"
         class="crosstab-widget__empty-data-disclaimer"
@@ -84,6 +81,10 @@ const isLoading = computed(() => {
   return getIsLoadingByUuid(props.widgetUuid);
 });
 
+const tableAlignItems = computed(() => {
+  return isLoading.value ? 'unset' : 'center';
+});
+
 const isSeeAllDrawerOpen = ref(false);
 
 const isEmptyData = computed(() => {
@@ -153,7 +154,7 @@ const formattedData = computed(() => {
   &__table {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: v-bind(tableAlignItems);
     gap: $unnnic-space-4;
 
     &-legend {

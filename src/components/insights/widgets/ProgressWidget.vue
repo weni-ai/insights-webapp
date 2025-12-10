@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 import BaseConversationWidget, {
   Tab,
 } from '@/components/insights/conversations/BaseConversationWidget.vue';

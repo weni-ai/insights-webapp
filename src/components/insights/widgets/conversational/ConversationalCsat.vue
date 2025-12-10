@@ -3,7 +3,6 @@
     :title="titleWidget"
     :actions="actions"
     :progressItems="progressItems"
-    :card="card"
     :footerText="footerText"
     :isLoading="isLoading && isLoadingEmptyData"
     :isLoadingProgress="isLoading"
@@ -114,8 +113,6 @@ const progressItems = computed(() => {
   }
   return widgetData.value.progressItems;
 });
-
-const card = computed(() => widgetData.value.card);
 
 const footerText = computed(() => {
   return `${widgetData.value.reviews} ${t('conversations_dashboard.reviews')}`;

@@ -17,6 +17,7 @@
     </p>
 
     <p
+      v-if="description"
       class="widget-error__description"
       data-testid="widget-error-description"
     >

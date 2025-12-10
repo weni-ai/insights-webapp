@@ -84,6 +84,10 @@ const isLoading = computed(() => {
   return getIsLoadingByUuid(props.widgetUuid);
 });
 
+const tableAlignItems = computed(() => {
+  return isLoading.value ? 'unset' : 'center';
+});
+
 const isSeeAllDrawerOpen = ref(false);
 
 const isEmptyData = computed(() => {
@@ -153,7 +157,7 @@ const formattedData = computed(() => {
   &__table {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: v-bind(tableAlignItems);
     gap: $unnnic-space-4;
 
     &-legend {

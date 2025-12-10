@@ -112,7 +112,7 @@ const widgetData = computed(() => {
   );
 });
 
-const progressItems = computed(() => widgetData.value);
+const progressItems = computed(() => []);
 
 const currentTab = computed(() => 'artificial-intelligence');
 

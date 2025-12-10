@@ -313,7 +313,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         this.isLoadingUpdateWidget = false;
       }
     },
-    async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel') {
+    async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel' | 'crosstab') {
       this.isLoadingDeleteWidget = true;
       try {
         const { findWidgetBySource } = useWidgets();
@@ -321,6 +321,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           csat: 'conversations.csat',
           nps: 'conversations.nps',
           sales_funnel: 'conversations.sales_funnel',
+          crosstab: 'conversations.crosstab',
         };
 
         const widget = findWidgetBySource(sourceMap[type]);

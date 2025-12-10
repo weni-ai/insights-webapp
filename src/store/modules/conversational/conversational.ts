@@ -8,6 +8,7 @@ export type DrawerWidgetType =
   | 'add'
   | 'custom'
   | 'sales_funnel'
+  | 'crosstab'
   | null;
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;
@@ -24,7 +25,13 @@ interface ConversationalState {
 export const useConversational = defineStore('conversational', {
   state: (): ConversationalState => ({
     isDrawerCustomizableOpen: false,
-    drawerWidgetType: null as 'nps' | 'csat' | 'add' | 'custom' | null,
+    drawerWidgetType: null as
+      | 'nps'
+      | 'csat'
+      | 'add'
+      | 'custom'
+      | 'crosstab'
+      | null,
     isNewDrawerCustomizable: false,
     refreshDataConversational: false,
     isloadingConversationalData: {
@@ -37,7 +44,14 @@ export const useConversational = defineStore('conversational', {
   actions: {
     setIsDrawerCustomizableOpen(
       isDrawerCustomizableOpen: boolean,
-      type: 'nps' | 'csat' | 'add' | 'custom' | 'sales_funnel' | null,
+      type:
+        | 'nps'
+        | 'csat'
+        | 'add'
+        | 'custom'
+        | 'sales_funnel'
+        | 'crosstab'
+        | null,
       isNew: boolean,
     ) {
       this.isDrawerCustomizableOpen = isDrawerCustomizableOpen;

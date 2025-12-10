@@ -53,7 +53,7 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 interface Props {
-  type: 'csat' | 'nps' | 'custom' | 'sales_funnel';
+  type: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab';
   modelValue: boolean;
   uuid?: string;
   name?: string;

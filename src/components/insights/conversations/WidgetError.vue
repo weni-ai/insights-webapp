@@ -16,6 +16,14 @@
       {{ title }}
     </p>
 
+    <p
+      v-if="description"
+      class="widget-error__description"
+      data-testid="widget-error-description"
+    >
+      {{ description }}
+    </p>
+
     <UnnnicButton
       :text="buttonText"
       type="warning"
@@ -28,6 +36,7 @@
 <script setup lang="ts">
 defineProps<{
   title: string;
+  description?: string;
   buttonText: string;
 }>();
 
@@ -48,6 +57,11 @@ const handleClick = () => {
   justify-content: center;
   gap: 10px;
   min-height: 400px;
+
+  &__description {
+    font: $unnnic-font-body;
+    color: $unnnic-color-neutral-cloudy;
+  }
 
   &__title {
     color: $unnnic-color-neutral-darkest;

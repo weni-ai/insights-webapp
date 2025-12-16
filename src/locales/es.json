@@ -91,10 +91,13 @@
     "nps": "NPS",
     "sales_funnel": "Embudo y datos de ventas",
     "custom": "Gráfico de barras horizontal",
+    "crosstab": "Tabla cruzada",
     "no_data_available": "No hay datos disponibles para el periodo de uso",
     "widget_error": {
       "title": "Ups, se produjo un error al cargar los datos",
-      "button": "Verificar configuración del widget"
+      "button": "Verificar configuración del widget",
+      "crosstab_validation_title": "Problema de configuración",
+      "crosstab_validation_description": "No se encontró la clave o el valor en la base de datos."
     },
     "reviews": "calificaciones",
     "csat_widget": {
@@ -143,6 +146,7 @@
       "activate_agent": "Activar agente",
       "select_agent": "Selecciona un agente",
       "select_key": "Ingresa la clave",
+      "enter_field_name": "Ingresa el nombre del campo",
       "set_widget_name": "Define el nombre del widget",
       "label_widget_name": "Nombre del widget",
       "widget_name_description": "Ingresa el nombre del widget aquí",
@@ -177,6 +181,16 @@
       "horizontal_bar_chart": {
         "title": "Gráfico de barras horizontal",
         "description": "Vista de datos de barras horizontales en la que la longitud de cada barra indica la magnitud del valor correspondiente."
+      },
+      "crosstab": {
+        "title": "Tabla cruzada",
+        "description": "Combina y compara dos puntos de datos diferentes para encontrar insights.",
+        "drawer": {
+          "description": "Define el nombre del widget:",
+          "disclaimer": "<b>Clave:</b> un identificador único utilizado para rastrear un evento específico en el flujo de datos.<br><b>Nombre del campo:</b> el nombre del campo para el valor que deseas ver. Si se deja en blanco, el sistema utilizará un valor predeterminado.",
+          "first_data_label": "Define el <b>primer</b> dato que deseas rastrear:",
+          "second_data_label": "Define el <b>segundo</b> dato que deseas rastrear:"
+        }
       }
     },
     "setup_csat_or_nps_widget": {
@@ -317,8 +331,12 @@
     }
   },
   "key": "Clave",
+  "field_name": "Nombre del campo",
+  "optional": "Opcional",
   "filter-by": "Periodo:",
   "see_more": "Mostrar más",
+  "see_all": "Ver todos",
+  "lines_count": "{count} líneas",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes online",
@@ -360,10 +378,19 @@
   "rejected": "Rechazado",
   "active": "Activo",
   "disabled": "Inactivo",
+  "alert_added": "{name} agregado",
+  "alert_edited": "{name} editado",
   "select_date": {
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
-    "previous_month": "Mes anterior ({date})"
+    "previous_month": "Mes anterior ({date})",
+    "last_7_days_conversational": "Últimos 7 días (hasta 24h atrás)",
+    "last_14_days_conversational": "Últimos 14 días (hasta 24h atrás)",
+    "last_30_days_conversational": "Últimos 30 días (hasta 24h atrás)",
+    "last_12_months_conversational": "Últimos 12 meses (hasta 24h atrás)",
+    "current_month_conversational": "Mes actual (hasta 24h atrás)",
+    "previous_month_conversational": "Mes anterior (hasta 24h atrás)",
+    "custom_conversational": "Personalizado (hasta 24h atrás)"
   },
   "data_period": {
     "label": "Período",
@@ -904,7 +931,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Digite para filtrar"
+        "placeholder": "Digite para filtrar",
+        "clear": "Limpiar selección"
       },
       "attendant": {
         "label": "Agente"

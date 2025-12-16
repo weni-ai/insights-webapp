@@ -36,12 +36,16 @@ export const useProject = defineStore('project', {
         'ENABLE_SALES_FUNNEL_PURCHASE_AGENT_UUID',
       );
 
-      const hasValidSalesFunnelAgent = state.agentsTeam.agents.some((agent) =>
-        requiredToEnableSalesFunnelLead.includes(agent.uuid),
+      if (!requiredToEnableSalesFunnelLead || !purchaseAgentRequired) {
+        return false;
+      }
+
+      const hasValidSalesFunnelAgent = state?.agentsTeam?.agents?.some(
+        (agent) => requiredToEnableSalesFunnelLead.includes(agent?.uuid),
       );
 
-      const hasValidSalesFunnelAgentPurchase = state.agentsTeam.agents.some(
-        (agent) => agent.uuid === purchaseAgentRequired,
+      const hasValidSalesFunnelAgentPurchase = state?.agentsTeam?.agents?.some(
+        (agent) => agent?.uuid === purchaseAgentRequired,
       );
 
       const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(

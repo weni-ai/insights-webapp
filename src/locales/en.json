@@ -91,10 +91,13 @@
     "nps": "NPS",
     "sales_funnel": "Funnel and sales data",
     "custom": "Horizontal bar chart",
+    "crosstab": "Crosstab",
     "no_data_available": "No data available for the usage period",
     "widget_error": {
       "title": "Oops, an error occurred while loading the data",
-      "button": "Check widget configuration"
+      "button": "Check widget configuration",
+      "crosstab_validation_title": "Configuration issue",
+      "crosstab_validation_description": "The key or value was not found in the database"
     },
     "reviews": "reviews",
     "csat_widget": {
@@ -143,6 +146,7 @@
       "activate_agent": "Activate agent",
       "select_agent": "Select an agent",
       "select_key": "Enter the key",
+      "enter_field_name": "Enter the field name",
       "set_widget_name": "Enter the widget name",
       "label_widget_name": "Widget name",
       "widget_name_description": "Enter the widget name here",
@@ -177,6 +181,16 @@
       "horizontal_bar_chart": {
         "title": "Horizontal bar chart",
         "description": "View with horizontal bars, where bar length indicates the value magnitude."
+      },
+      "crosstab": {
+        "title": "Crosstab",
+        "description": "Combine and compare two different data points to find insights.",
+        "drawer": {
+          "description": "Set a name for the widget:",
+          "disclaimer": "<b>Key:</b> a unique identifier used to track a specific event in the data flow.<br><b>Field name:</b> the name of the field for the value you want to see. If left blank, the system will use a default value.",
+          "first_data_label": "Define the <b>first</b> data you want to track:",
+          "second_data_label": "Define the <b>second</b> data you want to track:"
+        }
       }
     },
     "setup_csat_or_nps_widget": {
@@ -317,8 +331,12 @@
     }
   },
   "key": "Key",
+  "field_name": "Field name",
+  "optional": "Optional",
   "filter-by": "Period:",
   "see_more": "View more",
+  "see_all": "See all",
+  "lines_count": "{count} lines",
   "reload": "Refresh",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -360,10 +378,19 @@
   "rejected": "Rejected",
   "active": "Active",
   "disabled": "Disabled",
+  "alert_added": "{name} added",
+  "alert_edited": "{name} edited",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
-    "previous_month": "Previous month ({date})"
+    "previous_month": "Previous month ({date})",
+    "last_7_days_conversational": "Last 7 days (up to 24h ago)",
+    "last_14_days_conversational": "Last 14 days (up to 24h ago)",
+    "last_30_days_conversational": "Last 30 days (up to 24h ago)",
+    "last_12_months_conversational": "Last 12 months (up to 24h ago)",
+    "current_month_conversational": "Current month (up to 24h ago)",
+    "previous_month_conversational": "Previous month (up to 24h ago)",
+    "custom_conversational": "Custom (up to 24h ago)"
   },
   "data_period": {
     "label": "Data period",
@@ -904,7 +931,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Type to filter"
+        "placeholder": "Type to filter",
+        "clear": "Clear selection"
       },
       "attendant": {
         "label": "Agent"

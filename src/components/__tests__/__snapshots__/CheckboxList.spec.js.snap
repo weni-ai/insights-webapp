@@ -4,13 +4,20 @@ exports[`CheckboxList > should render label and list 1`] = `
 <ol
   data-v-2e73b81b=""
 >
-  <p
-    class="unnnic-label__label"
+  <section
+    class="unnnic-label"
     data-testid="checkbox-list-label"
     data-v-2e73b81b=""
+    data-v-a4b997a0=""
   >
-    Label
-  </p>
+    <p
+      class="unnnic-label__label"
+      data-v-a4b997a0=""
+    >
+      Label
+    </p>
+    <!---->
+  </section>
   <section
     class="checkbox-list"
     data-v-2e73b81b=""
@@ -20,127 +27,93 @@ exports[`CheckboxList > should render label and list 1`] = `
       class="checkbox-list__checkbox"
       data-v-2e73b81b=""
     >
-      <div
-        class="unnnic-checkbox-wrapper"
+      <section
+        class="unnnic-checkbox"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-f5f8c62c=""
+        data-v-8848cfb4=""
       >
-        <svg
-          class="unnnic-icon unnnic-icon--size-svg-md unnnic-icon__size--md unnnic-icon-scheme--neutral-clean unnnic-checkbox disabled"
-          data-testid="custom-icon"
-          data-v-62451e85=""
-          data-v-f5f8c62c=""
-          fill="none"
-          height="40"
-          viewBox="0 0 40 40"
-          width="40"
-          xmlns="http://www.w3.org/2000/svg"
+        <label
+          class="unnnic-checkbox__input-wrapper unnnic-checkbox__input-wrapper--disabled"
+          data-v-8848cfb4=""
         >
-          <rect
-            class="primary"
-            fill="#3B414D"
-            height="30"
-            rx="4"
-            width="30"
-            x="5"
-            y="5.00049"
+          <input
+            class="unnnic-checkbox__input"
+            data-v-8848cfb4=""
+            disabled=""
+            type="checkbox"
           />
-        </svg>
-        <div
-          class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-          data-testid="checkbox-text-right"
-          data-v-f5f8c62c=""
-        >
-          Check 1
-        </div>
-      </div>
+          <p
+            class="unnnic-checkbox__label unnnic-checkbox__label--disabled"
+            data-testid="checkbox-text-right"
+            data-v-8848cfb4=""
+          >
+            Check 1
+          </p>
+        </label>
+        <!---->
+      </section>
     </li>
     <li
       class="checkbox-list__checkbox"
       data-v-2e73b81b=""
     >
-      <div
-        class="unnnic-checkbox-wrapper"
+      <section
+        class="unnnic-checkbox"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-f5f8c62c=""
+        data-v-8848cfb4=""
       >
-        <svg
-          class="unnnic-icon unnnic-icon--size-svg-md unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--neutral-clean unnnic-checkbox"
-          data-testid="custom-icon"
-          data-v-62451e85=""
-          data-v-f5f8c62c=""
-          fill="none"
-          height="40"
-          viewBox="0 0 40 40"
-          width="40"
-          xmlns="http://www.w3.org/2000/svg"
+        <label
+          class="unnnic-checkbox__input-wrapper"
+          data-v-8848cfb4=""
         >
-          <rect
-            class="primary-stroke"
-            height="29"
-            rx="3.5"
-            stroke="#3B414D"
-            width="29"
-            x="5.5"
-            y="5.50049"
+          <input
+            class="unnnic-checkbox__input"
+            data-v-8848cfb4=""
+            type="checkbox"
           />
-        </svg>
-        <div
-          class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-          data-testid="checkbox-text-right"
-          data-v-f5f8c62c=""
-        >
-          Check 2
-        </div>
-      </div>
+          <p
+            class="unnnic-checkbox__label"
+            data-testid="checkbox-text-right"
+            data-v-8848cfb4=""
+          >
+            Check 2
+          </p>
+        </label>
+        <!---->
+      </section>
     </li>
     <li
       class="checkbox-list__checkbox"
       data-v-2e73b81b=""
     >
-      <div
-        class="unnnic-checkbox-wrapper"
+      <section
+        class="unnnic-checkbox"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-f5f8c62c=""
+        data-v-8848cfb4=""
       >
-        <svg
-          class="unnnic-icon unnnic-icon--size-svg-md unnnic-icon__size--md unnnic--clickable unnnic-icon-scheme--brand-weni unnnic-checkbox"
-          data-testid="custom-icon"
-          data-v-62451e85=""
-          data-v-f5f8c62c=""
-          fill="none"
-          height="40"
-          viewBox="0 0 40 40"
-          width="40"
-          xmlns="http://www.w3.org/2000/svg"
+        <label
+          class="unnnic-checkbox__input-wrapper"
+          data-v-8848cfb4=""
         >
-          <rect
-            class="primary"
-            fill="#3B414D"
-            height="30"
-            rx="4"
-            width="30"
-            x="5"
-            y="5.00049"
+          <input
+            checked=""
+            class="unnnic-checkbox__input"
+            data-v-8848cfb4=""
+            type="checkbox"
           />
-          <path
-            clip-rule="evenodd"
-            d="M13.0626 19.6981L17.0001 23.9295L26.9376 13.2504L28.2501 14.6608L17.0001 26.7504L11.7501 21.1086L13.0626 19.6981Z"
-            fill="white"
-            fill-rule="evenodd"
-          />
-        </svg>
-        <div
-          class="unnnic-checkbox__label unnnic-checkbox__label__right unnnic-checkbox__label__md"
-          data-testid="checkbox-text-right"
-          data-v-f5f8c62c=""
-        >
-          Check 3
-        </div>
-      </div>
+          <p
+            class="unnnic-checkbox__label"
+            data-testid="checkbox-text-right"
+            data-v-8848cfb4=""
+          >
+            Check 3
+          </p>
+        </label>
+        <!---->
+      </section>
     </li>
     
   </section>

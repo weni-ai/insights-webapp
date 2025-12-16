@@ -5,7 +5,7 @@
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
-    height="600px"
+    height="500px"
     :headers="formattedHeaders"
     :items="formattedItems"
     :infiniteScroll="true"
@@ -110,12 +110,16 @@ const customStatusTypes = computed(() => {
 });
 
 const formattedHeaders = computed(() => {
+  const isEmpty = rawItems?.value?.every(
+    (item) => item.custom_status?.length === 0,
+  );
+
   const baseHeaders = [
     {
       title: t('human_support_dashboard.detailed_monitoring.pauses.attendant'),
       itemKey: 'agent',
       isSortable: true,
-      size: 0.8,
+      size: isEmpty ? 1.0 : 0.8,
     },
   ];
 

@@ -127,13 +127,6 @@ export default {
         this.setIsCommerce(newProject?.type === 2);
       },
     },
-    '$route.name': {
-      deep: true,
-      handler() {
-        console.log(this.$route);
-        this.handleRedirectToHumanServiceDashboard();
-      },
-    },
     'sharedStore.activeFederatedModules.insights': {
       immediate: true,
       deep: true,
@@ -141,6 +134,12 @@ export default {
         if (isActive === undefined) return;
 
         this.setIsActiveRoute(isActive);
+      },
+    },
+    '$route.name': {
+      deep: true,
+      handler() {
+        this.handleRedirectToHumanServiceDashboard();
       },
     },
   },

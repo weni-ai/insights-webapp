@@ -59,6 +59,21 @@ interface WidgetQueryParams {
   project_uuid?: string;
 }
 
+// eslint-disable-next-line no-unused-vars
+enum AvailableWidget {
+  // eslint-disable-next-line no-unused-vars
+  SALES_FUNNEL = 'SALES_FUNNEL',
+}
+
+interface AvailableWidgetsQueryParams {
+  project_uuid?: string;
+  type?: 'NATIVE' | 'CUSTOM';
+}
+
+interface AvailableWidgetsResponse {
+  available_widgets: AvailableWidget[];
+}
+
 export default {
   async getCsatData(
     type: 'HUMAN' | 'AI',
@@ -156,7 +171,29 @@ export default {
 
     return response;
   },
+
+  async getAvailableWidgets(
+    queryParams: AvailableWidgetsQueryParams,
+  ): Promise<AvailableWidgetsResponse> {
+    const { project } = useConfig();
+
+    const params = {
+      project_uuid: queryParams.project_uuid || project.uuid,
+      ...(queryParams.type && { type: queryParams.type }),
+    };
+
+    const response = (await http.get(
+      '/metrics/conversations/available-widgets/',
+      {
+        params,
+      },
+    )) as AvailableWidgetsResponse;
+
+    return response;
+  },
 };
+
+export { AvailableWidget };
 
 export type {
   CsatResponse,
@@ -167,4 +204,6 @@ export type {
   SalesFunnelResponse,
   CrosstabWidgetResponse,
   CrosstabResultItem,
+  AvailableWidgetsQueryParams,
+  AvailableWidgetsResponse,
 };

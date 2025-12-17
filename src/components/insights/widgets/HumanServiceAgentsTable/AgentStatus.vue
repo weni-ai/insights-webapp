@@ -66,11 +66,7 @@ const enabledDisconnectAgent = computed(() => {
 });
 
 const renderLabel = computed(() => {
-  if (props?.label?.toLowerCase() === 'custom') {
-    return t('custom_status');
-  }
-
-  return props.label.slice(0, 1).toUpperCase() + props.label.slice(1);
+  return props?.label?.slice(0, 1).toUpperCase() + props?.label?.slice(1) || '';
 });
 </script>
 

@@ -202,20 +202,22 @@ describe('AgentStatus', () => {
       expect(icon.classes()).toContain('agent-status--custom');
     });
 
-    it('translates custom label correctly', () => {
-      wrapper = mountAgentStatus({ status: 'custom', label: 'custom' });
+    it('renders label without transformation', () => {
+      wrapper = mountAgentStatus({ status: 'custom', label: 'Em pausa' });
 
       const label = wrapper.find('[data-testid="agent-status-label"]');
       expect(label.exists()).toBe(true);
-      expect(wrapper.vm.renderLabel).toBe('Pause');
+      expect(wrapper.vm.renderLabel).toBe('Em pausa');
+      expect(label.text()).toBe('Em pausa');
     });
 
-    it('capitalizes non-custom labels correctly', () => {
-      wrapper = mountAgentStatus({ status: 'online', label: 'online' });
+    it('renders label as provided for standard statuses', () => {
+      wrapper = mountAgentStatus({ status: 'online', label: 'Disponível' });
 
       const label = wrapper.find('[data-testid="agent-status-label"]');
       expect(label.exists()).toBe(true);
-      expect(wrapper.vm.renderLabel).toBe('Online');
+      expect(wrapper.vm.renderLabel).toBe('Disponível');
+      expect(label.text()).toBe('Disponível');
     });
   });
 
@@ -236,21 +238,21 @@ describe('AgentStatus', () => {
     });
 
     it('renders with multiple status changes and label updates', async () => {
-      wrapper = mountAgentStatus({ status: 'online', label: 'Online' });
+      wrapper = mountAgentStatus({ status: 'online', label: 'Disponível' });
 
       let icon = wrapper.find('[data-testid="agent-status-icon"]');
       let label = wrapper.find('[data-testid="agent-status-label"]');
 
       expect(icon.classes()).toContain('agent-status--online');
-      expect(label.text()).toBe('Online');
+      expect(label.text()).toBe('Disponível');
 
-      await wrapper.setProps({ status: 'offline', label: 'Offline' });
+      await wrapper.setProps({ status: 'offline', label: 'Indisponível' });
 
       icon = wrapper.find('[data-testid="agent-status-icon"]');
       label = wrapper.find('[data-testid="agent-status-label"]');
 
       expect(icon.classes()).toContain('agent-status--offline');
-      expect(label.text()).toBe('Offline');
+      expect(label.text()).toBe('Indisponível');
 
       await wrapper.setProps({ label: '' });
 

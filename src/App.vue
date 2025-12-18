@@ -136,6 +136,12 @@ export default {
         this.setIsActiveRoute(isActive);
       },
     },
+    '$route.name': {
+      deep: true,
+      handler() {
+        this.handleRedirectToHumanServiceDashboard();
+      },
+    },
   },
 
   created() {
@@ -146,6 +152,7 @@ export default {
     try {
       this.handlerTokenAndProjectUuid();
       this.getDashboards().then(() => {
+        this.handleRedirectToHumanServiceDashboard();
         this.handlerShowOnboardingModal();
       });
     } catch (error) {
@@ -172,6 +179,21 @@ export default {
       'setShowCreateDashboardOnboarding',
       'setShowCompleteOnboardingModal',
     ]),
+
+    handleRedirectToHumanServiceDashboard() {
+      const isHumanServiceDashboardRouter =
+        this.$route.name === 'humanServiceDashboard';
+
+      if (isHumanServiceDashboardRouter) {
+        const humanSeriveDashboard = this.dashboards.find(
+          (dash) => dash.config?.type === 'human_support',
+        );
+
+        if (humanSeriveDashboard) {
+          this.$router.push(`/${humanSeriveDashboard.uuid}`);
+        }
+      }
+    },
 
     async handlerTokenAndProjectUuid() {
       const queryString = new URLSearchParams(window.location.search);

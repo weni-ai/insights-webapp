@@ -109,6 +109,9 @@ describe('App', () => {
             locale: 'en',
           },
           ...options.mocks,
+          $route: {
+            name: 'home',
+          },
         },
         stubs: {
           RouterView: mockComponents.RouterView,

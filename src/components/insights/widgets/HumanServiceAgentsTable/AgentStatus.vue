@@ -26,11 +26,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useI18n } from 'vue-i18n';
 
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
-
-const { t } = useI18n();
 
 const props = defineProps({
   status: {
@@ -66,11 +63,7 @@ const enabledDisconnectAgent = computed(() => {
 });
 
 const renderLabel = computed(() => {
-  if (props?.label?.toLowerCase() === 'custom') {
-    return t('custom_status');
-  }
-
-  return props.label.slice(0, 1).toUpperCase() + props.label.slice(1);
+  return props?.label?.slice(0, 1).toUpperCase() + props?.label?.slice(1) || '';
 });
 </script>
 

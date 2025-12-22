@@ -25,6 +25,9 @@
     "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
+    "info": {
+      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+    },
     "header": {
       "total": "Total conversations",
       "resolved": "AI-Assisted",
@@ -36,7 +39,7 @@
         "resolved": "When the agent demonstrates competence and provides useful service",
         "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
-        "transferred": "Chat windows that required human support"
+        "transferred": "Conversations that required human assistance. Values may differ from the Human Support dashboard, as this one counts conversations (not rooms) that were opened and went through the AI. Since one conversation can generate multiple rooms - and some rooms can be opened directly in human support - comparing the dashboards is not recommended."
       }
     },
     "form_topic": {
@@ -88,10 +91,13 @@
     "nps": "NPS",
     "sales_funnel": "Funnel and sales data",
     "custom": "Horizontal bar chart",
+    "crosstab": "Crosstab",
     "no_data_available": "No data available for the usage period",
     "widget_error": {
       "title": "Oops, an error occurred while loading the data",
-      "button": "Check widget configuration"
+      "button": "Check widget configuration",
+      "crosstab_validation_title": "Configuration issue",
+      "crosstab_validation_description": "The key or value was not found in the database"
     },
     "reviews": "reviews",
     "csat_widget": {
@@ -140,6 +146,7 @@
       "activate_agent": "Activate agent",
       "select_agent": "Select an agent",
       "select_key": "Enter the key",
+      "enter_field_name": "Enter the field name",
       "set_widget_name": "Enter the widget name",
       "label_widget_name": "Widget name",
       "widget_name_description": "Enter the widget name here",
@@ -174,6 +181,16 @@
       "horizontal_bar_chart": {
         "title": "Horizontal bar chart",
         "description": "View with horizontal bars, where bar length indicates the value magnitude."
+      },
+      "crosstab": {
+        "title": "Crosstab",
+        "description": "Combine and compare two different data points to find insights.",
+        "drawer": {
+          "description": "Set a name for the widget:",
+          "disclaimer": "<b>Key:</b> a unique identifier used to track a specific event in the data flow.<br><b>Field name:</b> the name of the field for the value you want to see. If left blank, the system will use a default value.",
+          "first_data_label": "Define the <b>first</b> data you want to track:",
+          "second_data_label": "Define the <b>second</b> data you want to track:"
+        }
       }
     },
     "setup_csat_or_nps_widget": {
@@ -314,8 +331,12 @@
     }
   },
   "key": "Key",
+  "field_name": "Field name",
+  "optional": "Optional",
   "filter-by": "Period:",
   "see_more": "View more",
+  "see_all": "See all",
+  "lines_count": "{count} lines",
   "reload": "Refresh",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -329,7 +350,6 @@
   "metrics": "Metrics",
   "flow": "Flow",
   "flows": "Flows",
-  "custom_status": "Pause",
   "select": "Select",
   "multiple_without_selects_message": "No option selected",
   "report": "Report",
@@ -358,10 +378,24 @@
   "active": "Active",
   "disabled": "Disabled",
   "enable": "Enable",
+  "alert_added": "{name} added",
+  "alert_edited": "{name} edited",
   "select_date": {
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
-    "previous_month": "Previous month ({date})"
+    "previous_month": "Previous month ({date})",
+    "last_7_days_conversational": "Last 7 days (up to 24h ago)",
+    "last_14_days_conversational": "Last 14 days (up to 24h ago)",
+    "last_30_days_conversational": "Last 30 days (up to 24h ago)",
+    "last_12_months_conversational": "Last 12 months (up to 24h ago)",
+    "current_month_conversational": "Current month (up to 24h ago)",
+    "previous_month_conversational": "Previous month (up to 24h ago)",
+    "custom_conversational": "Custom (up to 24h ago)"
+  },
+  "data_period": {
+    "label": "Data period",
+    "until": "until",
+    "range": "{start} – {end}"
   },
   "save_error": "Error when saving. Try again.",
   "get_data_error": "Error fetching data. Try again.",
@@ -859,21 +893,21 @@
       "tabs": {
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
-        "attendant": "Attendant",
+        "attendant": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
       },
       "pauses": {
         "status": "Status",
-        "agent": "Agent",
+        "attendant": "Agent",
         "opened": "Opened",
         "closed": "Closed"
       },
@@ -884,7 +918,7 @@
         "queue": "Queue"
       },
       "attendant": {
-        "agent": "Attendant",
+        "agent": "Agent",
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
@@ -897,16 +931,17 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Type to filter"
+        "placeholder": "Type to filter",
+        "clear": "Clear selection"
       },
       "attendant": {
-        "label": "Attendant"
+        "label": "Agent"
       },
       "contact": {
         "label": "Contact"
       },
       "ticket_id": {
-        "label": "Protocol"
+        "label": "Ticket ID"
       }
     },
     "columns": {
@@ -915,11 +950,11 @@
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
         "response_time": "Response time",
-        "agent": "Attendant",
+        "agent": "Agent",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
-        "ticket_id": "Protocol",
+        "ticket_id": "Ticket ID",
         "total_attendances": "Total attendances",
         "average_first_response_time": "Average first response time",
         "average_response_time": "Average response time",
@@ -934,7 +969,7 @@
         "title": "Detailed analysis",
         "tabs": {
           "finished": "Finished",
-          "attendant": "Attendant",
+          "attendant": "Agent",
           "pauses": "Custom Breaks"
         }
       }

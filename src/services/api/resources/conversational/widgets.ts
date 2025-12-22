@@ -1,6 +1,7 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { asyncTimeout } from '@/utils/time';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
 
@@ -12,8 +13,20 @@ interface CsatResult {
 interface CsatResponse {
   results: CsatResult[];
 }
+
 interface CustomWidgetResponse {
   results: CsatResult[];
+}
+
+interface CrosstabResultItem {
+  title: string;
+  total: number;
+  events: { [key: string]: { value: number } };
+}
+
+interface CrosstabWidgetResponse {
+  total_rows: number;
+  results: CrosstabResultItem[];
 }
 
 interface NpsResponse {
@@ -44,6 +57,21 @@ interface WidgetQueryParams {
   end_date?: string;
   widget_uuid: string;
   project_uuid?: string;
+}
+
+// eslint-disable-next-line no-unused-vars
+enum AvailableWidget {
+  // eslint-disable-next-line no-unused-vars
+  SALES_FUNNEL = 'SALES_FUNNEL',
+}
+
+interface AvailableWidgetsQueryParams {
+  project_uuid?: string;
+  type?: 'NATIVE' | 'CUSTOM';
+}
+
+interface AvailableWidgetsResponse {
+  available_widgets: AvailableWidget[];
 }
 
 export default {
@@ -108,6 +136,23 @@ export default {
     return response;
   },
 
+  async getCrosstabWidgetData(queryParams: WidgetQueryParams): Promise<any> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = await http.get('/metrics/conversations/crosstab/', {
+      params,
+    });
+
+    return response;
+  },
+
   async getSalesFunnelData(
     queryParams: WidgetQueryParams,
   ): Promise<SalesFunnelResponse> {
@@ -126,7 +171,29 @@ export default {
 
     return response;
   },
+
+  async getAvailableWidgets(
+    queryParams: AvailableWidgetsQueryParams,
+  ): Promise<AvailableWidgetsResponse> {
+    const { project } = useConfig();
+
+    const params = {
+      project_uuid: queryParams.project_uuid || project.uuid,
+      ...(queryParams.type && { type: queryParams.type }),
+    };
+
+    const response = (await http.get(
+      '/metrics/conversations/available-widgets/',
+      {
+        params,
+      },
+    )) as AvailableWidgetsResponse;
+
+    return response;
+  },
 };
+
+export { AvailableWidget };
 
 export type {
   CsatResponse,
@@ -135,4 +202,8 @@ export type {
   CsatResult,
   CustomWidgetResponse,
   SalesFunnelResponse,
+  CrosstabWidgetResponse,
+  CrosstabResultItem,
+  AvailableWidgetsQueryParams,
+  AvailableWidgetsResponse,
 };

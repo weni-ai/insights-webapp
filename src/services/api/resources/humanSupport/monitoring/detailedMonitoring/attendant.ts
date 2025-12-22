@@ -19,6 +19,7 @@ interface AttendantDataResult {
   average_response_time: number;
   average_duration: number;
   time_in_service: number;
+  status_label?: string;
   link: {
     url: string;
     type: string;

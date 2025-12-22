@@ -6,12 +6,12 @@ exports[`FormAccordion.vue > should match the snapshot 1`] = `
   data-test-id="form-accordion"
   data-testid="collapse"
   data-v-085a4372=""
-  data-v-1f77973f=""
+  data-v-4c30fa39=""
 >
   <div
     class="unnnic-collapse__header"
     data-testid="collapse-header"
-    data-v-1f77973f=""
+    data-v-4c30fa39=""
   >
     
     
@@ -25,7 +25,6 @@ exports[`FormAccordion.vue > should match the snapshot 1`] = `
         data-v-085a4372=""
         filled="true"
         icon="check_circle"
-        next="false"
         scheme="neutral-soft"
         size="avatar-nano"
       />
@@ -34,17 +33,16 @@ exports[`FormAccordion.vue > should match the snapshot 1`] = `
     
     <unnnic-icon-stub
       clickable="false"
-      data-v-1f77973f=""
+      data-v-4c30fa39=""
       filled="false"
       icon="arrow-button-down-1"
-      next="false"
       scheme="neutral-cloudy"
-      size="xs"
+      size="ant"
     />
   </div>
   <div
     class="unnnic-collapse__body"
-    data-v-1f77973f=""
+    data-v-4c30fa39=""
     style="display: none;"
   >
     

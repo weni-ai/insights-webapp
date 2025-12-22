@@ -9,6 +9,8 @@ import {
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
 import WidgetService from '@/services/api/resources/widgets';
 import { CsatOrNpsCardConfig, WidgetType } from '@/models/types/WidgetTypes';
+import i18n from '@/utils/plugins/i18n';
+import { unnnicCallAlert } from '@weni/unnnic-system';
 
 type TypeWidget = 'HUMAN' | 'AI';
 
@@ -246,6 +248,14 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         if (type === 'sales_funnel') {
           this.loadSalesFunnelWidgetData();
         }
+
+        unnnicCallAlert({
+          props: {
+            text: i18n.global.t('alert_added', { name: type?.toUpperCase() }),
+            type: 'success',
+            seconds: 5,
+          },
+        });
       } catch (error) {
         console.error('Error saving new widget', error);
       } finally {
@@ -290,13 +300,20 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         } else {
           this.loadNpsWidgetData();
         }
+        unnnicCallAlert({
+          props: {
+            text: i18n.global.t('alert_edited', { name: type?.toUpperCase() }),
+            type: 'success',
+            seconds: 5,
+          },
+        });
       } catch (error) {
         console.error('Error updating widget', error);
       } finally {
         this.isLoadingUpdateWidget = false;
       }
     },
-    async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel') {
+    async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel' | 'crosstab') {
       this.isLoadingDeleteWidget = true;
       try {
         const { findWidgetBySource } = useWidgets();
@@ -304,6 +321,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           csat: 'conversations.csat',
           nps: 'conversations.nps',
           sales_funnel: 'conversations.sales_funnel',
+          crosstab: 'conversations.crosstab',
         };
 
         const widget = findWidgetBySource(sourceMap[type]);

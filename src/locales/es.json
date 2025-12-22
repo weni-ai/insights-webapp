@@ -25,6 +25,9 @@
     "human_support": "Soporte humano",
     "others": "Otros",
     "unclassified": "Sin clasificar",
+    "info": {	
+      "description": "Los datos conversacionales muestran conversas iniciadas hasta 24 horas antes de la hora actual. Las conversas más recientes aún están siendo clasificadas y no se muestran. Actualiza el tablero para actualizar la ventana de datos."
+    },
     "header": {
       "total": "Total de conversaciones",
       "resolved": "Atendido por IA",
@@ -36,7 +39,7 @@
         "resolved": "Cuando el agente demuestra competencia y proporciona servicio útil",
         "unresolved": "Cuando no hubo atención efectiva (saludos, fuera de alcance, fallas del agente)",
         "unengaged": "Conversación sin participación útil. La conversación se limitó a saludos, emojis o se cerró sin una interacción relevante.",
-        "transferred": "Incluye conversaciones (resueltas o no) transferidas al soporte humano"
+        "transferred": "Conversas que requieren ayuda humana. Los valores pueden diferir del tablero de Soporte humano, ya que este cuenta conversaciones (no salas) que se abrieron y pasaron por la IA. Como una conversa puede generar múltiples salas - y algunas salas pueden abrirse directamente en soporte humano - la comparación de los tableros no es recomendada."
       }
     },
     "form_topic": {
@@ -88,10 +91,13 @@
     "nps": "NPS",
     "sales_funnel": "Embudo y datos de ventas",
     "custom": "Gráfico de barras horizontal",
+    "crosstab": "Tabla cruzada",
     "no_data_available": "No hay datos disponibles para el periodo de uso",
     "widget_error": {
       "title": "Ups, se produjo un error al cargar los datos",
-      "button": "Verificar configuración del widget"
+      "button": "Verificar configuración del widget",
+      "crosstab_validation_title": "Problema de configuración",
+      "crosstab_validation_description": "No se encontró la clave o el valor en la base de datos."
     },
     "reviews": "calificaciones",
     "csat_widget": {
@@ -140,6 +146,7 @@
       "activate_agent": "Activar agente",
       "select_agent": "Selecciona un agente",
       "select_key": "Ingresa la clave",
+      "enter_field_name": "Ingresa el nombre del campo",
       "set_widget_name": "Define el nombre del widget",
       "label_widget_name": "Nombre del widget",
       "widget_name_description": "Ingresa el nombre del widget aquí",
@@ -174,6 +181,16 @@
       "horizontal_bar_chart": {
         "title": "Gráfico de barras horizontal",
         "description": "Vista de datos de barras horizontales en la que la longitud de cada barra indica la magnitud del valor correspondiente."
+      },
+      "crosstab": {
+        "title": "Tabla cruzada",
+        "description": "Combina y compara dos puntos de datos diferentes para encontrar insights.",
+        "drawer": {
+          "description": "Define el nombre del widget:",
+          "disclaimer": "<b>Clave:</b> un identificador único utilizado para rastrear un evento específico en el flujo de datos.<br><b>Nombre del campo:</b> el nombre del campo para el valor que deseas ver. Si se deja en blanco, el sistema utilizará un valor predeterminado.",
+          "first_data_label": "Define el <b>primer</b> dato que deseas rastrear:",
+          "second_data_label": "Define el <b>segundo</b> dato que deseas rastrear:"
+        }
       }
     },
     "setup_csat_or_nps_widget": {
@@ -314,8 +331,12 @@
     }
   },
   "key": "Clave",
+  "field_name": "Nombre del campo",
+  "optional": "Opcional",
   "filter-by": "Periodo:",
   "see_more": "Mostrar más",
+  "see_all": "Ver todos",
+  "lines_count": "{count} líneas",
   "reload": "Recargar",
   "agent": "Agente",
   "online_agents": "Agentes online",
@@ -329,7 +350,6 @@
   "metrics": "Métricas",
   "flow": "Flujo",
   "flows": "Flujos",
-  "custom_status": "Pausa",
   "select": "Seleccionar",
   "multiple_without_selects_message": "Ninguna opción seleccionada",
   "report": "Informe",
@@ -357,10 +377,24 @@
   "rejected": "Rechazado",
   "active": "Activo",
   "disabled": "Inactivo",
+  "alert_added": "{name} agregado",
+  "alert_edited": "{name} editado",
   "select_date": {
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
-    "previous_month": "Mes anterior ({date})"
+    "previous_month": "Mes anterior ({date})",
+    "last_7_days_conversational": "Últimos 7 días (hasta 24h atrás)",
+    "last_14_days_conversational": "Últimos 14 días (hasta 24h atrás)",
+    "last_30_days_conversational": "Últimos 30 días (hasta 24h atrás)",
+    "last_12_months_conversational": "Últimos 12 meses (hasta 24h atrás)",
+    "current_month_conversational": "Mes actual (hasta 24h atrás)",
+    "previous_month_conversational": "Mes anterior (hasta 24h atrás)",
+    "custom_conversational": "Personalizado (hasta 24h atrás)"
+  },
+  "data_period": {
+    "label": "Período",
+    "until": "hasta",
+    "range": "{start} – {end}"
   },
   "save_error": "Error al guardar. Inténtalo de nuevo.",
   "get_data_error": "Error al buscar datos. Inténtalo de nuevo.",
@@ -872,7 +906,7 @@
       },
       "pauses": {
         "status": "Estado",
-        "agent": "Agente",
+        "attendant": "Atendente",
         "opened": "Abiertos",
         "closed": "Cerrados"
       },
@@ -896,7 +930,8 @@
     },
     "filters": {
       "common": {
-        "placeholder": "Digite para filtrar"
+        "placeholder": "Digite para filtrar",
+        "clear": "Limpiar selección"
       },
       "attendant": {
         "label": "Agente"
@@ -932,7 +967,7 @@
       "detailed_analysis": {
         "title": "Análisis detallado",
         "tabs": {
-          "finished": "Finalizados",
+          "finished": "Finalizado",
           "attendant": "Atendido",
           "pauses": "Pausas personalizadas"
         }

@@ -27,32 +27,12 @@ export const useProject = defineStore('project', {
       state.agentsTeam.agents.find(
         (agent) => agent.uuid === env('NPS_AGENT_UUID'),
       ),
-    hasValidSalesFunnelAgent: (state) => {
-      const requiredToEnableSalesFunnelLead = env(
-        'ENABLE_SALES_FUNNEL_AGENTS_UUID',
-      );
-
-      const purchaseAgentRequired = env(
-        'ENABLE_SALES_FUNNEL_PURCHASE_AGENT_UUID',
-      );
-
-      const hasValidSalesFunnelAgent = state.agentsTeam.agents.some((agent) =>
-        requiredToEnableSalesFunnelLead.includes(agent.uuid),
-      );
-
-      const hasValidSalesFunnelAgentPurchase = state.agentsTeam.agents.some(
-        (agent) => agent.uuid === purchaseAgentRequired,
-      );
-
+    hasValidSalesFunnelAgent: () => {
       const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
         'insightsSalesFunnel',
       );
 
-      return env('ENVIRONMENT') === 'staging'
-        ? true
-        : hasValidSalesFunnelAgent &&
-            hasValidSalesFunnelAgentPurchase &&
-            enableFeatureFlag;
+      return enableFeatureFlag;
     },
   },
 

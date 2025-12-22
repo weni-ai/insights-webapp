@@ -7,6 +7,30 @@ import { createI18n } from 'vue-i18n';
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
+import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
+
+vi.mock('@/services/api/resources/conversational/widgets', () => ({
+  default: {
+    getAvailableWidgets: vi.fn(() =>
+      Promise.resolve({ available_widgets: [] }),
+    ),
+  },
+  AvailableWidget: {
+    SALES_FUNNEL: 'SALES_FUNNEL',
+  },
+}));
+
+vi.mock('@/store/modules/project', () => ({
+  useProject: () => ({
+    isLoadedFlows: true,
+    getProjectFlows: vi.fn(),
+    getAgentsTeam: vi.fn(),
+    agentsTeam: { manager: null, agents: [] },
+    isLoadingAgentsTeam: false,
+    hasValidSalesFunnelAgent: false,
+  }),
+}));
 
 vi.mock('@/utils/plugins/i18n', () => ({
   default: {
@@ -33,6 +57,8 @@ vi.mock('@/utils/plugins/i18n', () => ({
             'Customized',
           'conversations_dashboard.customize_your_dashboard.select_chart_type':
             'Select chart type',
+          'conversations_dashboard.customize_your_dashboard.crosstab.title':
+            'Crosstab',
           cancel: 'cancel',
         };
         return translations[key] || key;
@@ -129,6 +155,39 @@ describe('CustomizableWidget', () => {
       await drawer().vm.$emit('close');
       expect(conversationalStore.isDrawerCustomizableOpen).toBe(false);
     });
+
+    it('should reset sentiment form when reopening the same new csat drawer after close', async () => {
+      const sentimentStore = useSentimentAnalysisForm();
+
+      conversationalStore.setIsDrawerCustomizableOpen(true, 'csat', true);
+      await nextTick();
+
+      sentimentStore.setSentimentForm({
+        humanSupport: true,
+        aiSupport: true,
+        flow: { uuid: 'flow-1', result: 'result-1' },
+        agentUuid: 'agent-1',
+      });
+
+      await drawer().vm.$emit('close');
+      await nextTick();
+
+      expect(sentimentStore.editingContext).toEqual({
+        type: '',
+        isNew: true,
+        uuid: '',
+      });
+
+      conversationalStore.setIsDrawerCustomizableOpen(true, 'csat', true);
+      await nextTick();
+
+      expect(sentimentStore.sentimentForm).toEqual({
+        humanSupport: false,
+        aiSupport: false,
+        flow: { uuid: null, result: null },
+        agentUuid: null,
+      });
+    });
   });
 
   describe('Drawer button functionality', () => {
@@ -216,7 +275,7 @@ describe('CustomizableWidget', () => {
     });
 
     it('should render correct number of available widgets when no CSAT/NPS configured', () => {
-      expect(drawerItems()).toHaveLength(3);
+      expect(drawerItems()).toHaveLength(4);
     });
 
     it('should set type when widget is selected', async () => {
@@ -275,7 +334,7 @@ describe('CustomizableWidget', () => {
       );
     });
 
-    it('should return correct widgets for native tab when no widgets configured', () => {
+    it('should return correct widgets for native tab when no widgets configured and no sales funnel from API', () => {
       const sentimentWidgets = wrapper.vm.handleTabChoice('native');
       expect(sentimentWidgets).toHaveLength(2);
       expect(sentimentWidgets[0].key).toBe('csat');
@@ -326,11 +385,62 @@ describe('CustomizableWidget', () => {
       expect(sentimentWidgets[0].key).toBe('csat');
     });
 
+    it('should show sales_funnel widget when available from API and has valid agent', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: ['SALES_FUNNEL'],
+      });
+
+      const wrapperWithSalesFunnel = createWrapper();
+      wrapperWithSalesFunnel.vm.availableWidgetsFromApi = ['SALES_FUNNEL'];
+
+      const projectStoreLocal = {
+        isLoadedFlows: true,
+        getProjectFlows: vi.fn(),
+        getAgentsTeam: vi.fn(),
+        agentsTeam: { manager: null, agents: [] },
+        isLoadingAgentsTeam: false,
+        hasValidSalesFunnelAgent: { value: true },
+      };
+
+      vi.mocked(wrapperWithSalesFunnel.vm, {
+        partial: true,
+      });
+
+      await nextTick();
+
+      wrapperWithSalesFunnel.vm.availableWidgetsFromApi = ['SALES_FUNNEL'];
+      const sentimentWidgets =
+        wrapperWithSalesFunnel.vm.handleTabChoice('native');
+
+      const hasSalesFunnel = sentimentWidgets.some(
+        (widget) => widget?.key === 'sales_funnel',
+      );
+      expect(hasSalesFunnel).toBe(false);
+    });
+
+    it('should not show sales_funnel widget when not available from API', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: [],
+      });
+
+      const wrapperWithoutSalesFunnel = createWrapper();
+      await nextTick();
+
+      const sentimentWidgets =
+        wrapperWithoutSalesFunnel.vm.handleTabChoice('native');
+      const hasSalesFunnel = sentimentWidgets.some(
+        (widget) => widget?.key === 'sales_funnel',
+      );
+      expect(hasSalesFunnel).toBe(false);
+    });
+
     it('should return custom for customized tab', () => {
       const customizedWidgets = wrapper.vm.handleTabChoice('customized');
-      expect(customizedWidgets).toHaveLength(1);
+      expect(customizedWidgets).toHaveLength(2);
       expect(customizedWidgets[0].key).toBe('custom');
       expect(customizedWidgets[0].name).toBe('Horizontal Bar Chart');
+      expect(customizedWidgets[1].key).toBe('crosstab');
+      expect(customizedWidgets[1].name).toBe('Crosstab');
     });
 
     it('should return empty array for unknown tab', () => {
@@ -366,12 +476,13 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(4);
+      expect(widgets).toHaveLength(5);
       expect(widgets.map((w) => w.key)).toEqual([
         'csat',
         'nps',
         'custom',
         'sales_funnel',
+        'crosstab',
       ]);
     });
   });

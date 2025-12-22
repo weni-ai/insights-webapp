@@ -41,6 +41,14 @@ vi.mock('@/store/modules/dashboards', () => ({
         __lte: '2024-01-31',
       },
     },
+    updateLastUpdatedRequest: vi.fn(),
+  }),
+}));
+
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: () => ({
+    refreshDataConversational: false,
+    setIsLoadingConversationalData: vi.fn(),
   }),
 }));
 

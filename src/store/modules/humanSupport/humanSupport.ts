@@ -145,6 +145,14 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     };
   };
 
+  const clearAppliedDetailFilters = () => {
+    appliedDetailFilters.value = {
+      agent: { value: '', label: '' },
+      contact: { value: '', label: '' },
+      ticketId: { value: '', label: '' },
+    };
+  };
+
   watch(appliedFilters, () => {
     if (activeTab.value === 'monitoring') return loadAllDataMonitoring();
     if (activeTab.value === 'analysis') return loadAllDataAnalysis();
@@ -152,6 +160,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   watch(appliedDateRange, () => {
     if (activeTab.value === 'analysis') return loadAllDataAnalysis();
+  });
+
+  watch(activeTab, () => {
+    clearAppliedDetailFilters();
   });
 
   return {

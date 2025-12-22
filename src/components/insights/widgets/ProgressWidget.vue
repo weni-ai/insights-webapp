@@ -5,10 +5,14 @@
     :isLoading="isLoading"
     :currentTab="currentTab"
     :isOnlyTab="isOnlyTab"
-    :hiddenTabs="type === 'sales_funnel'"
+    :hiddenTabs="['sales_funnel', 'crosstab'].includes(type)"
     @tab-change="handleTabChange"
   >
     <SalesFunnelWidget v-if="type === 'sales_funnel' && !isError" />
+    <CrosstabWidget
+      v-else-if="type === 'crosstab' && !isError"
+      :widgetUuid="props.uuid"
+    />
     <slot
       v-else-if="treatedProgressItems?.length === 0"
       name="setup-widget"
@@ -93,6 +97,7 @@
     <template v-else>
       <WidgetError
         :title="actionError?.title"
+        :description="actionError?.description"
         :buttonText="actionError?.buttonText"
         @click="actionError?.onClick"
       />
@@ -101,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps } from 'vue';
+import { computed } from 'vue';
 import BaseConversationWidget, {
   Tab,
 } from '@/components/insights/conversations/BaseConversationWidget.vue';
@@ -110,13 +115,15 @@ import ProgressTable from '@/components/ProgressTable.vue';
 import WarningMessage from '@/components/WarningMessage.vue';
 import WidgetError from '@/components/insights/conversations/WidgetError.vue';
 import SalesFunnelWidget from '@/components/insights/widgets/SalesFunnelWidget.vue';
+import CrosstabWidget from './CrosstabWidget.vue';
 
 const emit = defineEmits<{
-  (e: 'tab-change', tab: Tab): void;
-  (e: 'open-expanded'): void;
+  'tab-change': [tab: Tab];
+  'open-expanded': [];
 }>();
 
 const props = defineProps<{
+  uuid?: string;
   title: string;
   card?: {
     title: string;
@@ -147,9 +154,10 @@ const props = defineProps<{
   actionError?: {
     title: string;
     buttonText: string;
+    description?: string;
     onClick: () => void;
   };
-  type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add';
+  type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add' | 'crosstab';
 }>();
 
 const treatedProgressItems = computed(() => {

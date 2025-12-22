@@ -2,9 +2,7 @@
   <section class="insights-layout-header-filters">
     <FilterHumanSupport v-if="isHumanSupportDashboard" />
     <FilterFavoriteTemplateMessage
-      v-if="
-        currentDashboard?.config?.is_whatsapp_integration && !emptyTemplates
-      "
+      v-if="isMetaTemplateDashboard && !emptyTemplates"
     />
     <template v-if="hasManyFilters">
       <UnnnicButton
@@ -33,6 +31,7 @@
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
         @update:model-value="updateFilter"
       />
+      <HelperDataText v-if="isConversationalDashboard" />
     </section>
     <ModalFilters
       data-testid="modal-filters"
@@ -67,6 +66,7 @@ import ModalFilters from './ModalFilters.vue';
 import FilterHumanSupport from './FilterHumanSupport.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
+import HelperDataText from './HelperDataText.vue';
 
 import { getLastNDays, getYesterdayDate } from '@/utils/time';
 
@@ -79,6 +79,7 @@ export default {
     SearchTemplateMessagesModal,
     FilterHumanSupport,
     FilterFavoriteTemplateMessage,
+    HelperDataText,
   },
 
   data() {
@@ -105,6 +106,10 @@ export default {
 
     isHumanSupportDashboard() {
       return this.currentDashboard?.name === 'human_support_dashboard.title';
+    },
+
+    isConversationalDashboard() {
+      return this.currentDashboard?.name === 'conversations_dashboard.title';
     },
 
     isRenderDynamicFilter() {
@@ -188,13 +193,36 @@ export default {
           disableClear: true,
         };
 
-        if (this.currentDashboard?.name === 'conversations_dashboard.title') {
+        if (this.isConversationalDashboard) {
+          customFilter.disableClear = false;
           customFilter.shortCutOptions = [
             {
-              name: this.$t(
-                'template_messages_dashboard.filter.shortcut.previous_month',
-              ),
+              name: this.$t('select_date.last_7_days_conversational'),
+              id: 'last-7-days',
+            },
+            {
+              name: this.$t('select_date.last_14_days_conversational'),
+              id: 'last-14-days',
+            },
+            {
+              name: this.$t('select_date.last_30_days_conversational'),
+              id: 'last-30-days',
+            },
+            {
+              name: this.$t('select_date.last_12_months_conversational'),
+              id: 'last-12-months',
+            },
+            {
+              name: this.$t('select_date.current_month_conversational'),
+              id: 'current-month',
+            },
+            {
+              name: this.$t('select_date.previous_month_conversational'),
               id: 'previous-month',
+            },
+            {
+              name: this.$t('select_date.custom_conversational'),
+              id: 'custom',
             },
           ];
         }
@@ -225,15 +253,12 @@ export default {
         if (filters.length === 1) {
           const { date, ended_at } = this.$route.query;
 
-          const isConversational =
-            this.currentDashboard?.name === 'conversations_dashboard.title';
-
           const isHumanSupportDashboard =
             this.currentDashboard?.name === 'human_support_dashboard.title';
 
           if (isHumanSupportDashboard) return;
 
-          const { start, end } = isConversational
+          const { start, end } = this.isConversationalDashboard
             ? getYesterdayDate()
             : getLastNDays(7);
 
@@ -308,6 +333,9 @@ export default {
 
   &_dynamic_container {
     width: 19.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-1;
   }
 }
 </style>

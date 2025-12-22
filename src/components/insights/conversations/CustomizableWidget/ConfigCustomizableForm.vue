@@ -6,22 +6,24 @@
     >
       {{ $t(`conversations_dashboard.${type}`) }}
     </h2>
-
     <SentimentAnalysisForm
       v-if="type === 'csat' || type === 'nps'"
       :type="type"
       :isNew="isNew"
     />
     <CustomizedForm v-if="type === 'custom'" />
+    <CrosstabForm v-if="type === 'crosstab'" />
   </section>
 </template>
 
 <script setup lang="ts">
 import SentimentAnalysisForm from './Forms/SentimentAnalysisForm.vue';
 import CustomizedForm from './Forms/CustomizedForm.vue';
+import CrosstabForm from './Forms/CrosstabForm.vue';
+import { DrawerWidgetType } from '@/store/modules/conversational/conversational';
 
 defineProps<{
-  type: 'csat' | 'nps' | 'custom';
+  type: DrawerWidgetType;
   isNew: boolean;
 }>();
 </script>
@@ -30,7 +32,7 @@ defineProps<{
 .config-customizable-form {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-5;
 
   &__title {
     color: $unnnic-color-neutral-black;

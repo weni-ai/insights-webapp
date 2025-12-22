@@ -21,8 +21,6 @@ ARG FIREBASE_CONFIG
 ARG HOTJAR_ID
 ARG ENVIRONMENT
 ARG CHATS_API_URL
-ARG ENABLE_SALES_FUNNEL_AGENTS_UUID
-ARG ENABLE_SALES_FUNNEL_PURCHASE_AGENT_UUID
 
 # Set them as environment variables
 ENV PUBLIC_PATH_URL=${PUBLIC_PATH_URL}
@@ -36,8 +34,6 @@ ENV FIREBASE_CONFIG=${FIREBASE_CONFIG}
 ENV HOTJAR_ID=${HOTJAR_ID}
 ENV ENVIRONMENT=${ENVIRONMENT}
 ENV CHATS_API_URL=${CHATS_API_URL}
-ENV ENABLE_SALES_FUNNEL_AGENTS_UUID=${ENABLE_SALES_FUNNEL_AGENTS_UUID}
-ENV ENABLE_SALES_FUNNEL_PURCHASE_AGENT_UUID=${ENABLE_SALES_FUNNEL_PURCHASE_AGENT_UUID}
 
 RUN apk add --no-cache \
     git \
@@ -70,10 +66,14 @@ COPY --from=old_css --chown=nginx:nginx /usr/share/nginx/html/insights/assets/al
 
 COPY docker-entrypoint.sh /
 
+RUN cd /usr/share/nginx/html/insights/ \
+    && /file_handler.sh css
+
+COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html/insights/
+
 RUN mv /usr/share/nginx/html/insights/index.html /usr/share/nginx/html/insights/index.html.tmpl \
     && cd /usr/share/nginx/html/insights/ \
-    && ln -s /tmp/index.html \
-    && /file_handler.sh css
+    && ln -s /tmp/index.html
 
 EXPOSE 8080
 ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -105,7 +105,9 @@ const widgetData = computed(() => {
 });
 
 const getTooltip = (events: Record<string, { value: number }>) => {
-  return Object.keys(events)
+  const eventsKeys = Object.keys(events);
+  if (!eventsKeys.length) return '';
+  return eventsKeys
     .map(
       (key) =>
         `${key.charAt(0).toUpperCase() + key.slice(1)}: ${formatPercentage(events[key].value, i18n.global.locale)}`,
@@ -130,9 +132,9 @@ const formattedData = computed(() => {
     return {
       label: item.title,
       color: '#3182CE',
-      backgroundColor: '#E5812A',
+      backgroundColor: eventsKeys.length ? '#E5812A' : '#ECEEF2',
       description: `${item.total}`,
-      value: item.events[eventsKeys[0]].value,
+      value: item.events[eventsKeys[0]]?.value || 0,
       tooltip: getTooltip(item.events),
     };
   });

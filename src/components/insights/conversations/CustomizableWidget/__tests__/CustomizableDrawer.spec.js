@@ -8,6 +8,18 @@ import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
+import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
+
+vi.mock('@/services/api/resources/conversational/widgets', () => ({
+  default: {
+    getAvailableWidgets: vi.fn(() =>
+      Promise.resolve({ available_widgets: [] }),
+    ),
+  },
+  AvailableWidget: {
+    SALES_FUNNEL: 'SALES_FUNNEL',
+  },
+}));
 
 vi.mock('@/store/modules/project', () => ({
   useProject: () => ({
@@ -322,7 +334,7 @@ describe('CustomizableWidget', () => {
       );
     });
 
-    it('should return correct widgets for native tab when no widgets configured', () => {
+    it('should return correct widgets for native tab when no widgets configured and no sales funnel from API', () => {
       const sentimentWidgets = wrapper.vm.handleTabChoice('native');
       expect(sentimentWidgets).toHaveLength(2);
       expect(sentimentWidgets[0].key).toBe('csat');
@@ -371,6 +383,55 @@ describe('CustomizableWidget', () => {
       const sentimentWidgets = wrapperWithNps.vm.handleTabChoice('native');
       expect(sentimentWidgets).toHaveLength(1);
       expect(sentimentWidgets[0].key).toBe('csat');
+    });
+
+    it('should show sales_funnel widget when available from API and has valid agent', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: ['SALES_FUNNEL'],
+      });
+
+      const wrapperWithSalesFunnel = createWrapper();
+      wrapperWithSalesFunnel.vm.availableWidgetsFromApi = ['SALES_FUNNEL'];
+
+      const projectStoreLocal = {
+        isLoadedFlows: true,
+        getProjectFlows: vi.fn(),
+        getAgentsTeam: vi.fn(),
+        agentsTeam: { manager: null, agents: [] },
+        isLoadingAgentsTeam: false,
+        hasValidSalesFunnelAgent: { value: true },
+      };
+
+      vi.mocked(wrapperWithSalesFunnel.vm, {
+        partial: true,
+      });
+
+      await nextTick();
+
+      wrapperWithSalesFunnel.vm.availableWidgetsFromApi = ['SALES_FUNNEL'];
+      const sentimentWidgets =
+        wrapperWithSalesFunnel.vm.handleTabChoice('native');
+
+      const hasSalesFunnel = sentimentWidgets.some(
+        (widget) => widget?.key === 'sales_funnel',
+      );
+      expect(hasSalesFunnel).toBe(false);
+    });
+
+    it('should not show sales_funnel widget when not available from API', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: [],
+      });
+
+      const wrapperWithoutSalesFunnel = createWrapper();
+      await nextTick();
+
+      const sentimentWidgets =
+        wrapperWithoutSalesFunnel.vm.handleTabChoice('native');
+      const hasSalesFunnel = sentimentWidgets.some(
+        (widget) => widget?.key === 'sales_funnel',
+      );
+      expect(hasSalesFunnel).toBe(false);
     });
 
     it('should return custom for customized tab', () => {

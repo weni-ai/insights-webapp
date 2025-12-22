@@ -30,7 +30,7 @@
     <template #body-status="{ item }">
       <AgentStatus
         :status="item.status"
-        :label="item.status"
+        :label="getStatusLabel(item.status, item?.status_label)"
       />
     </template>
   </UnnnicDataTable>
@@ -140,6 +140,13 @@ const formattedHeaders = computed(() => {
     }),
   ];
 });
+
+const getStatusLabel = (status: string, statusLabel?: string) => {
+  if (status === 'custom') {
+    return statusLabel || status;
+  }
+  return status;
+};
 
 const handleSort = (sort: {
   header: string;

@@ -116,6 +116,9 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
 import { WidgetType } from '@/models/types/WidgetTypes';
+import WidgetConversationalService, {
+  AvailableWidget,
+} from '@/services/api/resources/conversational/widgets';
 
 const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
   useConversationalWidgets();
@@ -151,13 +154,22 @@ const sentimentFormStore = useSentimentAnalysisForm();
 const { initializeForm, clearEditingContext } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
+const availableWidgetsFromApi = ref<AvailableWidget[]>([]);
 
 onBeforeMount(() => {
   getAgentsTeam();
   if (!projectStore.isLoadedFlows) {
     getProjectFlows();
   }
+  getAvailableWidgets();
 });
+
+async function getAvailableWidgets() {
+  const response = await WidgetConversationalService.getAvailableWidgets({
+    type: 'NATIVE' as 'NATIVE' | 'CUSTOM',
+  });
+  availableWidgetsFromApi.value = response.available_widgets;
+}
 
 function closeDrawer() {
   clearEditingContext();
@@ -351,7 +363,14 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
     const hasValidSalesFunnel =
       hasValidSalesFunnelAgent && hasValidSalesFunnelAgent.value;
 
-    if (isSalesFunnelConfigured.value || !hasValidSalesFunnel) {
+    const isSalesFunnelAvailableFromApi =
+      availableWidgetsFromApi.value.includes(AvailableWidget.SALES_FUNNEL);
+
+    if (
+      isSalesFunnelConfigured.value ||
+      !hasValidSalesFunnel ||
+      !isSalesFunnelAvailableFromApi
+    ) {
       widgets = widgets.filter((widget) => widget.key !== 'sales_funnel');
     }
 

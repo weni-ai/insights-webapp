@@ -197,6 +197,7 @@ $dropdownFixedWidth: 314px;
     align-items: center;
 
     .unnnic-dropdown__content {
+      z-index: 9999;
       margin-top: $unnnic-spacing-nano;
 
       left: 0;

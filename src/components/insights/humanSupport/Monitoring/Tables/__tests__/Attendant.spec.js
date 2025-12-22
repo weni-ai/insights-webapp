@@ -196,4 +196,31 @@ describe('Attendant', () => {
       expect(mockInfiniteScroll.resetAndLoadData).not.toHaveBeenCalled();
     });
   });
+
+  describe('Status label logic', () => {
+    it('returns custom statusLabel when status is "custom" and statusLabel is provided', () => {
+      const result = wrapper.vm.getStatusLabel('custom', 'Em pausa');
+      expect(result).toBe('Em pausa');
+    });
+
+    it('returns "custom" when status is "custom" but no statusLabel is provided', () => {
+      const result = wrapper.vm.getStatusLabel('custom');
+      expect(result).toBe('custom');
+    });
+
+    it('returns "custom" when status is "custom" and statusLabel is empty string', () => {
+      const result = wrapper.vm.getStatusLabel('custom', '');
+      expect(result).toBe('custom');
+    });
+
+    it('returns the original status when status is not "custom"', () => {
+      const result = wrapper.vm.getStatusLabel('online');
+      expect(result).toBe('online');
+    });
+
+    it('returns the original status when status is not "custom" even if statusLabel is provided', () => {
+      const result = wrapper.vm.getStatusLabel('offline', 'Custom Label');
+      expect(result).toBe('offline');
+    });
+  });
 });

@@ -7,7 +7,15 @@
       v-if="!isError"
       class="card-vtex-order__header"
     >
-      <h1 class="header__title">{{ $t('widgets.vtex_order.title') }}</h1>
+      <h1 class="header__title">
+        {{
+          $t(
+            widget.name === 'vtex_orders'
+              ? 'widgets.vtex_order.title'
+              : widget.name,
+          )
+        }}
+      </h1>
       <UnnnicButton
         size="small"
         type="tertiary"

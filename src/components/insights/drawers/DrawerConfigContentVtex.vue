@@ -1,12 +1,13 @@
 <template>
   <section class="content-vtex">
     <UnnnicInput
-      v-model="widgetName"
+      :modelValue="widgetName"
       :label="$t('drawers.config_gallery.options.vtex.form.name.label')"
       :placeholder="
         $t('drawers.config_gallery.options.vtex.form.name.placeholder')
       "
       data-testid="widget-name-input"
+      @update:model-value="updateWidgetName"
     />
     <UnnnicInput
       :modelValue="utmValue"
@@ -97,15 +98,15 @@ export default {
   },
 
   methods: {
-    updateWidgetData(utm) {
+    updateWidgetData() {
       this.$emit('update:model-value', {
         ...this.modelValue,
-        name: this.widgetName ? this.widgetName : 'vtex_orders',
+        name: this.widgetName?.trim() || 'vtex_orders',
         config: {
           ...this.modelValue.config,
           ...this.defaultConfigVtex,
           filter: {
-            utm,
+            utm: this.utmValue,
           },
         },
       });
@@ -113,7 +114,12 @@ export default {
 
     updateUtm(utm) {
       this.utmValue = utm;
-      this.updateWidgetData(utm);
+      this.updateWidgetData();
+    },
+
+    updateWidgetName(name) {
+      this.widgetName = name;
+      this.updateWidgetData();
     },
 
     resetWidget() {

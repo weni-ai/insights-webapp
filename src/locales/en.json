@@ -25,7 +25,7 @@
     "human_support": "Human support",
     "others": "Other",
     "unclassified": "Unclassified",
-    "info": {	
+    "info": {
       "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
     },
     "header": {
@@ -499,7 +499,17 @@
         },
         "vtex": {
           "title": "VTEX",
-          "description": "View your sales data on VTEX"
+          "description": "View your sales data on VTEX",
+          "form": {
+            "name": {
+              "label": "Widget name",
+              "placeholder": "Enter widget name here"
+            },
+            "utm": {
+              "label": "UTM",
+              "placeholder": "Paste or type UTM here"
+            }
+          }
         },
         "vtex_conversions": {
           "title": "Template conversion",

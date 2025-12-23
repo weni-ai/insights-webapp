@@ -49,10 +49,11 @@ describe('DrawerConfigContentVtex', () => {
 
   it('sets utmValue correctly and emits update:model-value', async () => {
     const newUtmValue = 'new_test_utm';
-    wrapper.vm.utmValue = newUtmValue;
+    const input = wrapper.findComponent('[data-testid="utm-input"]');
+    await input.vm.$emit('update:model-value', newUtmValue);
 
     expect(wrapper.emitted('update:model-value')).toBeTruthy();
-    expect(wrapper.emitted('update:model-value')[0][0].config.filter.utm).toBe(
+    expect(wrapper.emitted('update:model-value')[1][0].config.filter.utm).toBe(
       newUtmValue,
     );
   });
@@ -96,15 +97,15 @@ describe('DrawerConfigContentVtex', () => {
   });
 
   it('renders correctly with default modelValue', () => {
-    const customWrapper = createWrapper();
+    const customWrapper = createWrapper({});
     expect(customWrapper.vm.utmValue).toBe('');
     expect(customWrapper.vm.isDisableResetWidget).toBe(false);
   });
 
   it('emits update:model-value with defaultConfigVtex when utmValue is updated', async () => {
-    const customWrapper = createWrapper();
+    const customWrapper = createWrapper({});
     const newUtmValue = 'new-utm-value';
-    customWrapper.vm.utmValue = newUtmValue;
+    await customWrapper.vm.updateUtm(newUtmValue);
 
     expect(customWrapper.emitted('update:model-value')).toBeTruthy();
     const emittedValue = customWrapper.emitted('update:model-value')[0][0];
@@ -115,7 +116,7 @@ describe('DrawerConfigContentVtex', () => {
   });
 
   it('emits reset-widget correctly when resetWidget is called', async () => {
-    const customWrapper = createWrapper();
+    const customWrapper = createWrapper({});
     await customWrapper
       .findComponent({ name: 'UnnnicButton' })
       .trigger('click');
@@ -125,7 +126,7 @@ describe('DrawerConfigContentVtex', () => {
   });
 
   it('renders with default props and behaves correctly when no modelValue is provided', async () => {
-    const customWrapper = createWrapper();
+    const customWrapper = createWrapper({});
 
     expect(customWrapper.exists()).toBeTruthy();
     expect(customWrapper.vm.modelValue).toEqual({});
@@ -173,27 +174,19 @@ describe('DrawerConfigContentVtex', () => {
     expect(emittedValue.type).toBe('vtex_order');
   });
 
-  it('renders UnnnicLabel with the correct label', () => {
-    const labelComponent = wrapper.findComponent({ name: 'UnnnicLabel' });
-
-    expect(labelComponent.exists()).toBe(true);
-
-    expect(labelComponent.props('label')).toBe('UTM');
-  });
-
   it('renders UnnnicInput and updates utmValue correctly', async () => {
     const inputComponent = wrapper
-      .findComponent({ name: 'UnnnicInput' })
+      .find('[data-testid="utm-input"]')
       .findComponent('input');
 
     expect(inputComponent.exists()).toBe(true);
 
     expect(inputComponent.props('modelValue')).toBe('test_utm');
 
-    await inputComponent.setValue('updated_utm_value');
+    await inputComponent.vm.$emit('update:model-value', 'updated_utm_value');
 
     expect(wrapper.emitted('update:model-value')).toBeTruthy();
-    const emittedValue = wrapper.emitted('update:model-value')[0][0];
+    const emittedValue = wrapper.emitted('update:model-value')[1][0];
     expect(emittedValue.config.filter.utm).toBe('updated_utm_value');
   });
 });

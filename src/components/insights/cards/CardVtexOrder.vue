@@ -112,7 +112,7 @@ export default {
 
       return keyValues.map((key) => ({
         label: i18n.global.t(`widgets.vtex_order.${key}`),
-        icon: this.widget.config[key].icon || 'local_activity',
+        icon: this.widget?.config?.[key]?.icon || 'local_activity',
         value: this.data[key] || '',
       }));
     },

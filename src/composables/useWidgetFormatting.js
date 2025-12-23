@@ -1,5 +1,6 @@
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
+import { isNumber } from 'lodash';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { formatSecondsToHumanString } from '@/utils/time';
@@ -126,21 +127,18 @@ export function useWidgetFormatting() {
    */
   const formatVtexData = (vtexData) => {
     const { total_value, average_ticket, orders } = vtexData;
-    const existOrders = orders !== '';
-    const existTotalValue = total_value !== '';
-    const existAverageTicketValue = average_ticket !== '';
+    const existOrders = isNumber(orders);
+    const existTotalValue = isNumber(total_value);
+    const existAverageTicketValue = isNumber(average_ticket);
 
     const numbersNormalization = (value) => formatCurrencyValue(value);
 
     return {
-      ...vtexData,
-      orders: existOrders ? formatNumberValue(orders) : orders,
-      total_value: existTotalValue
-        ? numbersNormalization(total_value)
-        : total_value,
+      orders: existOrders ? formatNumberValue(orders) : '',
+      total_value: existTotalValue ? numbersNormalization(total_value) : '',
       average_ticket: existAverageTicketValue
         ? numbersNormalization(average_ticket)
-        : average_ticket,
+        : '',
     };
   };
 

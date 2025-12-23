@@ -343,10 +343,10 @@ export default {
     },
 
     createVtexWidget() {
-      const { config } = this.config;
+      const { config, name } = this.config;
 
       return {
-        name: 'vtex_orders',
+        name,
         source: 'orders',
         type: 'vtex_order',
         config,

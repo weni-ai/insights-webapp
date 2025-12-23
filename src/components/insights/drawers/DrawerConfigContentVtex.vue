@@ -1,7 +1,23 @@
 <template>
   <section class="content-vtex">
-    <UnnnicLabel label="UTM" />
-    <UnnnicInput v-model="utmValue" />
+    <UnnnicInput
+      :modelValue="widgetName"
+      :label="$t('drawers.config_gallery.options.vtex.form.name.label')"
+      :placeholder="
+        $t('drawers.config_gallery.options.vtex.form.name.placeholder')
+      "
+      data-testid="widget-name-input"
+      @update:model-value="updateWidgetName"
+    />
+    <UnnnicInput
+      :modelValue="utmValue"
+      :label="$t('drawers.config_gallery.options.vtex.form.utm.label')"
+      :placeholder="
+        $t('drawers.config_gallery.options.vtex.form.utm.placeholder')
+      "
+      data-testid="utm-input"
+      @update:model-value="updateUtm"
+    />
     <UnnnicButton
       class="clear-button"
       :text="$t('drawers.reset_widget')"
@@ -19,7 +35,7 @@ export default {
   props: {
     modelValue: {
       type: Object,
-      default: () => ({}),
+      required: true,
     },
   },
 
@@ -31,6 +47,9 @@ export default {
 
   data() {
     return {
+      widgetName: '',
+      utmValue: '',
+      validForm: false,
       defaultConfigVtex: {
         orders: {
           icon: 'local_activity',
@@ -46,38 +65,73 @@ export default {
   },
 
   computed: {
-    utmValue: {
-      get() {
-        return this.modelValue.config?.filter?.utm || '';
-      },
-      set(value) {
-        this.updateUtm(value);
-      },
-    },
-
     isDisableResetWidget() {
-      const isEmptyWidget = this.modelValue.type === 'empty_column';
+      const isEmptyWidget = this.modelValue?.type === 'empty_column';
 
       return isEmptyWidget;
     },
   },
 
+  watch: {
+    validForm: {
+      immediate: true,
+      handler() {
+        this.emitValidForm();
+      },
+    },
+    widgetName: {
+      handler() {
+        this.updateValidForm();
+      },
+    },
+    utmValue: {
+      handler() {
+        this.updateValidForm();
+      },
+    },
+  },
+
+  mounted() {
+    this.widgetName =
+      this.modelValue.name === 'vtex_orders' ? '' : this.modelValue.name;
+    this.utmValue = this.modelValue.config?.filter?.utm || '';
+  },
+
   methods: {
-    updateUtm(value) {
+    updateWidgetData() {
       this.$emit('update:model-value', {
         ...this.modelValue,
+        name: this.widgetName?.trim() || 'vtex_orders',
         config: {
           ...this.modelValue.config,
           ...this.defaultConfigVtex,
           filter: {
-            utm: value,
+            utm: this.utmValue,
           },
         },
       });
     },
 
+    updateUtm(utm) {
+      this.utmValue = utm;
+      this.updateWidgetData();
+    },
+
+    updateWidgetName(name) {
+      this.widgetName = name;
+      this.updateWidgetData();
+    },
+
     resetWidget() {
       this.$emit('reset-widget');
+    },
+
+    updateValidForm() {
+      this.validForm = !!this.utmValue.trim();
+    },
+
+    emitValidForm() {
+      this.$emit('update-disable-primary-button', !this.validForm);
     },
   },
 };
@@ -86,10 +140,6 @@ export default {
 <style lang="scss" scoped>
 .content-vtex {
   display: grid;
-  gap: $unnnic-spacing-nano;
-
-  .clear-button {
-    margin-top: $unnnic-spacing-nano;
-  }
+  gap: $unnnic-space-4;
 }
 </style>

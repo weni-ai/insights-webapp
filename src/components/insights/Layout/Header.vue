@@ -169,7 +169,6 @@ export default {
     ...mapActions(useWidgets, {
       setCurrentExpansiveWidget: 'setCurrentExpansiveWidgetData',
     }),
-    ...mapActions(useFeatureFlag, ['isFeatureFlagEnabled']),
     ...mapActions(useDashboards, ['setCurrentDashboard']),
 
     navigateToDashboard(uuid) {

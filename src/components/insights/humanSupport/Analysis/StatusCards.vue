@@ -40,6 +40,8 @@
           :borderRadius="getBorderRadius(index, cardDefinitions.length)"
           :tooltipSide="getTooltipSide(index)"
           :isLoading="isLoadingCards"
+          enableTimeIcon
+          activeDescriptionGap
         />
       </template>
     </section>

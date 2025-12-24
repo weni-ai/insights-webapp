@@ -55,7 +55,6 @@ import { useWidgets } from '@/store/modules/widgets';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 export default {
@@ -169,7 +168,6 @@ export default {
     ...mapActions(useWidgets, {
       setCurrentExpansiveWidget: 'setCurrentExpansiveWidgetData',
     }),
-    ...mapActions(useFeatureFlag, ['isFeatureFlagEnabled']),
     ...mapActions(useDashboards, ['setCurrentDashboard']),
 
     navigateToDashboard(uuid) {

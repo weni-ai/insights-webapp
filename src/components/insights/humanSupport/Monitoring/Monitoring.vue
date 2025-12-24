@@ -6,6 +6,7 @@
   >
     <StatusCards data-testid="monitoring-status-cards" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
+    <CsatRatings data-testid="monitoring-csat-ratings" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
     <NewsHumanSupportModal
@@ -25,8 +26,13 @@ import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
+import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
 import { moduleStorage } from '@/utils/storage';
+
+defineOptions({
+  name: 'MonitoringView',
+});
 
 const STORAGE_KEY = 'news_modal_monitoring_shown';
 const showNewsModal = ref(false);

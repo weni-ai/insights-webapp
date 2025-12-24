@@ -13,6 +13,12 @@ vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockHumanSupportMonitoringStore,
 }));
 
+vi.mock('@/services/api/resources/projects', () => ({
+  default: {
+    verifyProjectCsat: vi.fn(() => ({ is_enabled: true })),
+  },
+}));
+
 const mockTimeoutStop = vi.fn();
 
 vi.mock('@vueuse/core', () => ({
@@ -21,6 +27,7 @@ vi.mock('@vueuse/core', () => ({
     return { stop: mockTimeoutStop };
   }),
   useElementVisibility: vi.fn(() => ref(true)),
+  useInfiniteScroll: vi.fn(),
 }));
 
 vi.mock('@/utils/storage', () => ({

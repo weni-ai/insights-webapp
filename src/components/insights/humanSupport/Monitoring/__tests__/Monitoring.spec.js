@@ -171,11 +171,11 @@ describe('Monitoring', () => {
 
       const newWrapper = createWrapper();
 
-      await vi.advanceTimersByTimeAsync(60000);
+      await vi.advanceTimersByTimeAsync(15000);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       newWrapper.unmount();
     });
@@ -187,24 +187,24 @@ describe('Monitoring', () => {
 
       const newWrapper = createWrapper();
 
-      await vi.advanceTimersByTimeAsync(60000);
+      await vi.advanceTimersByTimeAsync(15000);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       await vi.advanceTimersByTimeAsync(500);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(false);
+      ).toHaveBeenCalledWith(false, true);
 
       newWrapper.unmount();
     });
   });
 
   describe('Auto refresh functionality', () => {
-    it('should refresh data every 60 seconds', async () => {
+    it('should refresh data every 15 seconds with silent mode', async () => {
       wrapper.unmount();
       vi.clearAllTimers();
       vi.clearAllMocks();
@@ -215,33 +215,33 @@ describe('Monitoring', () => {
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
       ).not.toHaveBeenCalled();
 
-      await vi.advanceTimersByTimeAsync(60000);
+      await vi.advanceTimersByTimeAsync(15000);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       newWrapper.unmount();
     });
 
-    it('should refresh data flag on each auto refresh', async () => {
+    it('should refresh data flag on each auto refresh with silent mode', async () => {
       wrapper.unmount();
       vi.clearAllTimers();
       vi.clearAllMocks();
 
       const newWrapper = createWrapper();
 
-      await vi.advanceTimersByTimeAsync(60000);
+      await vi.advanceTimersByTimeAsync(15000);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       await vi.advanceTimersByTimeAsync(500);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(false);
+      ).toHaveBeenCalledWith(false, true);
 
       newWrapper.unmount();
     });
@@ -258,7 +258,7 @@ describe('Monitoring', () => {
       ).not.toHaveBeenCalled();
 
       newWrapper.unmount();
-      await vi.advanceTimersByTimeAsync(60000);
+      await vi.advanceTimersByTimeAsync(15000);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
@@ -267,14 +267,14 @@ describe('Monitoring', () => {
   });
 
   describe('Constants and configuration', () => {
-    it('should use 60 second auto refresh interval', async () => {
+    it('should use 15 second auto refresh interval', async () => {
       wrapper.unmount();
       vi.clearAllTimers();
       vi.clearAllMocks();
 
       const newWrapper = createWrapper();
 
-      await vi.advanceTimersByTimeAsync(59000);
+      await vi.advanceTimersByTimeAsync(14000);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
@@ -284,7 +284,7 @@ describe('Monitoring', () => {
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       newWrapper.unmount();
     });

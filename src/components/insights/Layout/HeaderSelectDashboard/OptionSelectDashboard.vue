@@ -66,9 +66,7 @@ export default {
     isRenderBetaText() {
       const isConversational =
         this.dashboard.name === 'conversations_dashboard.title';
-      const isHumanSupport =
-        this.dashboard.name === 'human_support_dashboard.title';
-      return isConversational || isHumanSupport;
+      return isConversational;
     },
   },
 

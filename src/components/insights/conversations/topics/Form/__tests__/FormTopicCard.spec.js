@@ -134,11 +134,11 @@ describe('FormTopicCard', () => {
     const titleTestCases = [
       {
         isSubTopic: false,
-        expectedText: 'conversations_dashboard.form_topic.new_topic',
+        expectedText: 'New Topic',
       },
       {
         isSubTopic: true,
-        expectedText: 'conversations_dashboard.form_topic.new_sub_topic',
+        expectedText: 'New Sub-topic',
       },
     ];
 

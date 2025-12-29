@@ -146,9 +146,7 @@ describe('FormTopic', () => {
 
     it('should render add topic button with correct text', () => {
       expect(formTopicAddButton().exists()).toBe(true);
-      expect(formTopicAddButton().text()).toBe(
-        'conversations_dashboard.form_topic.add_topic',
-      );
+      expect(formTopicAddButton().text()).toBe('Add Topic');
     });
   });
 

@@ -45,9 +45,6 @@ describe('HeaderGenerateInsightModal.vue', () => {
           UnnnicIcon: true,
           Transition: true,
         },
-        mocks: {
-          $t: (key) => key,
-        },
       },
       props: {
         show: true,
@@ -161,7 +158,7 @@ describe('HeaderGenerateInsightModal.vue', () => {
 
     await wrapper.vm.generateInsight();
     expect(wrapper.vm.generatedInsight).toBe(
-      wrapper.vm.$t('insights_header.generate_insight.error'),
+      "Couldn't generate insights. Check your internet connection and try again later.",
     );
     expect(wrapper.vm.generateInsightError).toBe(true);
   });

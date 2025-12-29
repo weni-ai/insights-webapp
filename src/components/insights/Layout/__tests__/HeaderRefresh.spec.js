@@ -126,29 +126,33 @@ describe('HeaderRefresh.vue', () => {
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
+        false,
       );
     });
 
-    it('should call setRefreshDataMonitoring with true when refreshData is executed', () => {
+    it('should call setRefreshDataMonitoring with true and silent false when refreshData is executed', () => {
       wrapper.vm.refreshData();
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
+        false,
       );
     });
 
-    it('should call setRefreshDataMonitoring with false after timeout', async () => {
+    it('should call setRefreshDataMonitoring with false and silent false after timeout', async () => {
       vi.useFakeTimers();
 
       wrapper.vm.refreshData();
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
+        false,
       );
 
       vi.advanceTimersByTime(500);
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
+        false,
         false,
       );
 
@@ -163,6 +167,10 @@ describe('HeaderRefresh.vue', () => {
       await refreshButton.vm.$emit('click');
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledTimes(3);
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
+        true,
+        false,
+      );
     });
 
     it('should show disabled state when loading', async () => {
@@ -252,12 +260,14 @@ describe('HeaderRefresh.vue', () => {
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenNthCalledWith(
         1,
         true,
+        false,
       );
 
       vi.advanceTimersByTime(500);
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenNthCalledWith(
         2,
+        false,
         false,
       );
 
@@ -333,6 +343,7 @@ describe('HeaderRefresh.vue', () => {
 
       expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
         true,
+        false,
       );
       expect(
         conversationalStore.setRefreshDataConversational,
@@ -347,6 +358,117 @@ describe('HeaderRefresh.vue', () => {
         conversationalStore.setRefreshDataConversational,
       ).toHaveBeenCalledWith(true);
       expect(monitoringStore.setRefreshDataMonitoring).not.toHaveBeenCalled();
+    });
+
+    it('should always use non-silent refresh for manual button clicks', () => {
+      const humanWrapper = createWrapper({ type: 'human-support' });
+      humanWrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenCalledWith(
+        true,
+        false,
+      );
+    });
+  });
+
+  describe('Silent Refresh Behavior', () => {
+    it('should never pass silent=true when refreshing manually', () => {
+      wrapper.vm.refreshData();
+
+      const calls = monitoringStore.setRefreshDataMonitoring.mock.calls;
+      calls.forEach((call) => {
+        expect(call[1]).toBe(false);
+      });
+    });
+
+    it('should pass silent=false on both true and false refresh calls', async () => {
+      vi.useFakeTimers();
+
+      wrapper.vm.refreshData();
+
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenNthCalledWith(
+        1,
+        true,
+        false,
+      );
+
+      vi.advanceTimersByTime(500);
+
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenNthCalledWith(
+        2,
+        false,
+        false,
+      );
+
+      vi.useRealTimers();
+    });
+
+    it('should maintain silent=false across multiple sequential refreshes', async () => {
+      vi.useFakeTimers();
+
+      wrapper.vm.refreshData();
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenLastCalledWith(
+        true,
+        false,
+      );
+
+      vi.advanceTimersByTime(500);
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenLastCalledWith(
+        false,
+        false,
+      );
+
+      wrapper.vm.refreshData();
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenLastCalledWith(
+        true,
+        false,
+      );
+
+      vi.advanceTimersByTime(500);
+      expect(monitoringStore.setRefreshDataMonitoring).toHaveBeenLastCalledWith(
+        false,
+        false,
+      );
+
+      vi.useRealTimers();
+    });
+
+    it('should distinguish manual refresh from auto-refresh by using silent=false', () => {
+      wrapper.vm.refreshData();
+
+      const lastCall =
+        monitoringStore.setRefreshDataMonitoring.mock.calls[
+          monitoringStore.setRefreshDataMonitoring.mock.calls.length - 1
+        ];
+
+      expect(lastCall).toEqual([true, false]);
+    });
+
+    it('should use silent=false even when button is clicked rapidly', async () => {
+      vi.useFakeTimers();
+
+      wrapper.vm.refreshData();
+      wrapper.vm.refreshData();
+      wrapper.vm.refreshData();
+
+      const calls = monitoringStore.setRefreshDataMonitoring.mock.calls;
+      calls.forEach((call) => {
+        expect(call[1]).toBe(false);
+      });
+
+      vi.useRealTimers();
+    });
+
+    it('should pass correct parameters signature (value, silent)', () => {
+      wrapper.vm.refreshData();
+
+      const calls = monitoringStore.setRefreshDataMonitoring.mock.calls;
+
+      calls.forEach((call) => {
+        expect(call).toHaveLength(2);
+        expect(typeof call[0]).toBe('boolean');
+        expect(typeof call[1]).toBe('boolean');
+      });
     });
   });
 });

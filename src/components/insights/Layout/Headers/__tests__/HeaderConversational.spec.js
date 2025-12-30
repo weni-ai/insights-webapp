@@ -1,4 +1,4 @@
-import { beforeAll, afterAll, describe, it, vi } from 'vitest';
+import { beforeAll, afterAll, describe, it } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createI18n } from 'vue-i18n';
@@ -74,30 +74,11 @@ describe('HeaderConversational', () => {
       ).toBe(false);
     });
 
-    it('renders ConversationalExport when feature flag is enabled', async () => {
+    it('renders ConversationalExport always', () => {
       wrapper = createWrapper();
-      const featureFlagStore = wrapper.vm.$pinia._s.get('featureFlag');
-      featureFlagStore.isFeatureFlagEnabled = vi.fn(() => true);
-
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.isRenderConversationalBtnExport).toBe(true);
       expect(
         wrapper.findComponent({ name: 'ConversationalExport' }).exists(),
       ).toBe(true);
-    });
-
-    it('does not render ConversationalExport when feature flag is disabled', async () => {
-      wrapper = createWrapper();
-      const featureFlagStore = wrapper.vm.$pinia._s.get('featureFlag');
-      featureFlagStore.isFeatureFlagEnabled = vi.fn(() => false);
-
-      await wrapper.vm.$nextTick();
-
-      expect(wrapper.vm.isRenderConversationalBtnExport).toBe(false);
-      expect(
-        wrapper.findComponent({ name: 'ConversationalExport' }).exists(),
-      ).toBe(false);
     });
   });
 

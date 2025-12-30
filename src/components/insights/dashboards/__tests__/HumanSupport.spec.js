@@ -23,6 +23,13 @@ config.global.plugins = [
 ];
 
 const mockIsFeatureFlagEnabled = vi.fn(() => true);
+
+vi.mock('@/services/api/resources/projects', () => ({
+  default: {
+    verifyProjectCsat: vi.fn(() => ({ is_enabled: true })),
+  },
+}));
+
 vi.mock('@/store/modules/featureFlag', () => ({
   useFeatureFlag: vi.fn(() => ({
     isFeatureFlagEnabled: mockIsFeatureFlagEnabled,

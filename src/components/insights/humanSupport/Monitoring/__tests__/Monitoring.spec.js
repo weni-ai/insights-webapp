@@ -13,6 +13,12 @@ vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockHumanSupportMonitoringStore,
 }));
 
+vi.mock('@/services/api/resources/projects', () => ({
+  default: {
+    verifyProjectCsat: vi.fn(() => ({ is_enabled: true })),
+  },
+}));
+
 const mockTimeoutStop = vi.fn();
 
 vi.mock('@vueuse/core', () => ({

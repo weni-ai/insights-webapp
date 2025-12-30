@@ -6,8 +6,11 @@
   >
     <StatusCards data-testid="monitoring-status-cards" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
-    <CsatRatings data-testid="monitoring-csat-ratings" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
+    <CsatRatings
+      v-if="isFeatureFlagEnabled('insightsCSAT')"
+      data-testid="monitoring-csat-ratings"
+    />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
     <NewsHumanSupportModal
       :modelValue="showNewsModal"
@@ -22,13 +25,18 @@ import { onMounted, onUnmounted, watch, ref, computed } from 'vue';
 import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
+
 import { moduleStorage } from '@/utils/storage';
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
 
 defineOptions({
   name: 'MonitoringView',

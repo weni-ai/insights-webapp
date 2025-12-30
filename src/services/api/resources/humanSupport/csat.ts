@@ -5,7 +5,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 interface QueryParams {
   cursor?: string;
-  agent_uuid?: string;
+  agent_email?: string;
 }
 
 export interface AgentsTotalResult {

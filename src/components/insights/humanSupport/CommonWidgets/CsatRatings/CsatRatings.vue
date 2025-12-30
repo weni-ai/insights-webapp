@@ -223,7 +223,7 @@ const loadRatingsData = async ({
   }
   try {
     const response = await Csat.getRatingsMonitoring({
-      agent_uuid: activeAgentEmail.value,
+      agent_email: activeAgentEmail.value,
     });
     ratingsData.value = response;
   } catch (error) {

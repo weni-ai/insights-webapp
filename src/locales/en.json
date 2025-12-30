@@ -500,7 +500,17 @@
         },
         "vtex": {
           "title": "VTEX",
-          "description": "View your sales data on VTEX"
+          "description": "View your sales data on VTEX",
+          "form": {
+            "name": {
+              "label": "Widget name",
+              "placeholder": "Enter widget name here"
+            },
+            "utm": {
+              "label": "UTM",
+              "placeholder": "Paste or type UTM here"
+            }
+          }
         },
         "vtex_conversions": {
           "title": "Template conversion",

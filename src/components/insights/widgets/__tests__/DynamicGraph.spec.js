@@ -1,40 +1,29 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  it,
-  vi,
-  beforeAll,
-  afterAll,
-} from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
+import { afterEach, beforeEach, describe, it, vi, afterAll } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
-import i18n from '@/utils/plugins/i18n';
 
 import DynamicGraph from '../DynamicGraph.vue';
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '@/components/insights/charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
 
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
-
 afterAll(() => {
   vi.restoreAllMocks();
 });
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key) => key,
-    locale: 'en-US',
-  }),
-}));
+vi.mock('vue-i18n', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useI18n: () => ({
+      t: (key) => key,
+      locale: 'en-US',
+    }),
+  };
+});
 
 const router = createRouter({
   history: createWebHistory(),

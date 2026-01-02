@@ -1,22 +1,10 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { mount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
-import en from '@/locales/en.json';
+import { mount } from '@vue/test-utils';
 import MultipleLineChart from '../MultipleLineChart.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockData = [
   {
-    group: 'template_messages_dashboard.messages_graph.sent_messages',
+    group: 'Sent messages',
     data: [
       { label: '24/11', value: 10 },
       { label: '25/11', value: 20 },
@@ -29,7 +17,7 @@ const mockData = [
     total: 86,
   },
   {
-    group: 'template_messages_dashboard.messages_graph.delivered_messages',
+    group: 'Delivered messages',
     data: [
       { label: '24/11', value: 5 },
       { label: '25/11', value: 5 },
@@ -42,7 +30,7 @@ const mockData = [
     total: 20,
   },
   {
-    group: 'template_messages_dashboard.messages_graph.read_messages',
+    group: 'Read messages',
     data: [
       { label: '24/11', value: 1 },
       { label: '25/11', value: 2 },
@@ -55,7 +43,7 @@ const mockData = [
     total: 10,
   },
   {
-    group: 'template_messages_dashboard.messages_graph.clicks',
+    group: 'Clicks',
     data: [
       { label: '24/11', value: 1 },
       { label: '25/11', value: 1 },

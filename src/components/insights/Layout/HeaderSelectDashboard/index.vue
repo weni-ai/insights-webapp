@@ -111,10 +111,8 @@ export default {
     isRenderBetaText() {
       const isConversational =
         this.currentDashboard.name === 'conversations_dashboard.title';
-      const isHumanSupport =
-        this.currentDashboard.name === 'human_support_dashboard.title';
 
-      return isConversational || isHumanSupport;
+      return isConversational;
     },
     enabledShowDashboards() {
       if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {

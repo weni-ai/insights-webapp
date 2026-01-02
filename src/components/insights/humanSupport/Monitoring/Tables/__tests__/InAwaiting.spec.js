@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import InAwaiting from '../InAwaiting.vue';
 
@@ -39,27 +38,6 @@ vi.mock(
     },
   }),
 );
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      human_support_dashboard: {
-        detailed_monitoring: {
-          in_awaiting: {
-            awaiting_time: 'Awaiting Time',
-            contact: 'Contact',
-            sector: 'Sector',
-            queue: 'Queue',
-          },
-        },
-      },
-    },
-  },
-});
-
-config.global.plugins = [i18n];
 
 describe('InAwaiting', () => {
   let wrapper;

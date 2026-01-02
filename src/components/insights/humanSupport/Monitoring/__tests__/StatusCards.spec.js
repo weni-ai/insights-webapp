@@ -87,9 +87,7 @@ describe('ServiceStatus', () => {
 
     it('should render title', () => {
       expect(title().exists()).toBe(true);
-      expect(title().text()).toBe(
-        'human_support_dashboard.support_status.title',
-      );
+      expect(title().text()).toBe('Support Status');
     });
 
     it('should render cards container', () => {

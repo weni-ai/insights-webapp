@@ -11,7 +11,6 @@ import DrawerConfigContentVtex from '../DrawerConfigContentVtex.vue';
 import DrawerConfigContentVtexConversions from '../DrawerConfigContentVtexConversions.vue';
 import DrawerConfigContentRecurrence from '../DrawerConfigContentRecurrence.vue';
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
-import i18n from '@/utils/plugins/i18n';
 
 const mockWidget = {
   uuid: 'test-uuid',
@@ -75,9 +74,7 @@ const createWrapper = (props = {}, storeState = {}) => {
     },
     global: {
       plugins: [store],
-      mocks: {
-        $t: (key) => key,
-      },
+      mocks: {},
       stubs: {
         UnnnicDrawer: {
           template: '<div><slot name="content" /></div>',
@@ -145,9 +142,9 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
         );
 
         const props = wrapper.vm.drawerProps;
-        expect(props.title).toBe(i18n.global.t('drawers.config_funnel.title'));
+        expect(props.title).toBe('Set metrics for the chart');
         expect(props.description).toBe(
-          i18n.global.t('drawers.config_funnel.description'),
+          'Select at least three flows to fetch the funnel chart view',
         );
       });
 
@@ -155,14 +152,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
         wrapper = createWrapper({ configType: 'executions' });
 
         const props = wrapper.vm.drawerProps;
-        expect(props.title).toBe(
-          i18n.global.t('drawers.config_gallery.options.executions.title'),
-        );
-        expect(props.description).toBe(
-          i18n.global.t(
-            'drawers.config_gallery.options.executions.description',
-          ),
-        );
+        expect(props.title).toBe('Runs');
+        expect(props.description).toBe('View the total runs of a flow');
       });
     });
 

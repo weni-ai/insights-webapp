@@ -176,9 +176,7 @@ describe('ServicesOpenByHour', () => {
     it('should pass correct props to LineChart', () => {
       const chartComponent = wrapper.findComponent({ name: 'LineChart' });
 
-      expect(chartComponent.props('title')).toBe(
-        'human_support_dashboard.services_open_by_hour.title',
-      );
+      expect(chartComponent.props('title')).toBe('Services Open by Hour');
       expect(chartComponent.props('seeMore')).toBe(false);
       expect(chartComponent.props('isLoading')).toBe(false);
       expect(chartComponent.props('chartData')).toEqual({

@@ -85,7 +85,7 @@ describe('HeaderRefresh.vue', () => {
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
       const props = refreshButton.props();
 
-      expect(props.text).toBe('insights_header.refresh');
+      expect(props.text).toBe('Refresh');
       expect(props.type).toBe('tertiary');
       expect(props.iconLeft).toBe('refresh');
       expect(refreshButton.attributes('data-testid')).toBe('refresh-button');

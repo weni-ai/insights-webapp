@@ -119,8 +119,13 @@ const loadMore = () => {
 
 const redirectItem = (item: InProgressDataResult) => {
   if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
-  window.parent.postMessage({ event: 'redirect', path }, '*');
+
+  const url = item.link.url;
+  const hasQuery = url.includes('?');
+
+  const newPath = hasQuery ? url.replace('?', '/insights?') : `${url}/insights`;
+
+  window.parent.postMessage({ event: 'redirect', path: newPath }, '*');
 };
 
 onMounted(() => {

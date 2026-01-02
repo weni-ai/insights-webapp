@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -31,6 +31,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
 
 type FormattedInProgressData = Omit<
   InProgressDataResult,
@@ -43,6 +44,7 @@ type FormattedInProgressData = Omit<
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey =
@@ -85,6 +87,10 @@ const {
 } = useInfiniteScrollTable<InProgressDataResult, FormattedInProgressData>({
   fetchData,
   formatResults,
+});
+
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
 });
 
 const formattedHeaders = computed(() => {

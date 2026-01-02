@@ -32,9 +32,9 @@ const { setRefreshDataConversational } = conversationalStore;
 
 let timeoutStop: (() => void) | null = null;
 
-const handleRefreshData = (value: boolean) => {
+const handleRefreshData = (value: boolean, silent = false) => {
   if (props.type === 'human-support') {
-    setRefreshDataMonitoring(value);
+    setRefreshDataMonitoring(value, silent);
   } else if (props.type === 'conversations') {
     setRefreshDataConversational(value);
   }
@@ -50,12 +50,12 @@ const isLoading = computed(() => {
 });
 
 const refreshData = () => {
-  handleRefreshData(true);
+  handleRefreshData(true, false);
 
   timeoutStop?.();
 
   const { stop } = useTimeoutFn(() => {
-    handleRefreshData(false);
+    handleRefreshData(false, false);
   }, 500);
 
   timeoutStop = stop;

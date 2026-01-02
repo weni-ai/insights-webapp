@@ -175,7 +175,7 @@ describe('Monitoring', () => {
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       newWrapper.unmount();
     });
@@ -191,20 +191,20 @@ describe('Monitoring', () => {
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       await vi.advanceTimersByTimeAsync(500);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(false);
+      ).toHaveBeenCalledWith(false, true);
 
       newWrapper.unmount();
     });
   });
 
   describe('Auto refresh functionality', () => {
-    it('should refresh data every 60 seconds', async () => {
+    it('should refresh data every 60 seconds with silent mode', async () => {
       wrapper.unmount();
       vi.clearAllTimers();
       vi.clearAllMocks();
@@ -219,12 +219,12 @@ describe('Monitoring', () => {
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       newWrapper.unmount();
     });
 
-    it('should refresh data flag on each auto refresh', async () => {
+    it('should refresh data flag on each auto refresh with silent mode', async () => {
       wrapper.unmount();
       vi.clearAllTimers();
       vi.clearAllMocks();
@@ -235,13 +235,13 @@ describe('Monitoring', () => {
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       await vi.advanceTimersByTimeAsync(500);
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(false);
+      ).toHaveBeenCalledWith(false, true);
 
       newWrapper.unmount();
     });
@@ -284,7 +284,7 @@ describe('Monitoring', () => {
 
       expect(
         mockHumanSupportMonitoringStore.setRefreshDataMonitoring,
-      ).toHaveBeenCalledWith(true);
+      ).toHaveBeenCalledWith(true, true);
 
       newWrapper.unmount();
     });

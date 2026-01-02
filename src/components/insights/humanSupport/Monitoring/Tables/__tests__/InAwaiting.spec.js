@@ -54,6 +54,7 @@ describe('InAwaiting', () => {
               },
               humanSupportMonitoring: {
                 refreshDataMonitoring: false,
+                isSilentRefresh: false,
                 activeDetailedTab: 'in_awaiting',
                 ...storeState.humanSupportMonitoring,
               },

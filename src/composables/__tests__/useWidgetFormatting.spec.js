@@ -29,16 +29,20 @@ vi.mock('@/utils/numbers', () => ({
   }),
 }));
 
-// Mock vue-i18n
+// Mock vue-i18n with importOriginal to keep createI18n
 const mockT = vi.fn((key) => key);
 const mockLocale = { value: 'en-US' };
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: mockT,
-    locale: mockLocale,
-  }),
-}));
+vi.mock('vue-i18n', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useI18n: () => ({
+      t: mockT,
+      locale: mockLocale,
+    }),
+  };
+});
 
 // Mock time utility
 vi.mock('@/utils/time', () => ({

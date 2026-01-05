@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import TimeMetrics from '../TimeMetrics.vue';
 
@@ -45,34 +44,6 @@ vi.mock('pinia', async (importOriginal) => {
   };
 });
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      human_support_dashboard: {
-        time_metrics: {
-          title: 'Time Metrics',
-          max: 'Max',
-          average_time_is_waiting: 'Average waiting time',
-          average_time_first_response: 'Average first response time',
-          average_time_chat: 'Average chat duration',
-          tooltips: {
-            average_time_is_waiting: 'Average time users wait for support',
-            average_time_first_response:
-              'Average time for first agent response',
-            average_time_chat: 'Average duration of chat conversations',
-          },
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
-
 describe('TimeMetrics', () => {
   let wrapper;
 
@@ -114,7 +85,7 @@ describe('TimeMetrics', () => {
 
     it('should render title', () => {
       expect(title().exists()).toBe(true);
-      expect(title().text()).toBe('human_support_dashboard.time_metrics.title');
+      expect(title().text()).toBe('Time metrics now');
     });
 
     it('should render cards container', () => {

@@ -1,24 +1,17 @@
-import { beforeAll, afterAll, describe, it, vi } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
+import { describe, it, vi } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
 import { createRouter, createWebHistory } from 'vue-router';
 import HeaderHumanService from '../HeaderHumanService.vue';
-import i18n from '@/utils/plugins/i18n';
 
-vi.mock('moment', () => ({
-  default: () => ({ format: () => '2024-01-15' }),
-}));
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-  config.global.plugins.push(
-    createI18n({ legacy: false, locale: 'en', messages: { en: {} } }),
-  );
-});
-
-afterAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
+vi.mock('moment', async (importOriginal) => {
+  const actual = await importOriginal();
+  const momentInstance = () => ({ format: () => '2024-01-15' });
+  momentInstance.locale = actual.default.locale;
+  return {
+    ...actual,
+    default: momentInstance,
+  };
 });
 
 const router = createRouter({
@@ -95,9 +88,7 @@ describe('HeaderHumanService', () => {
     it('renders HeaderTagLive when filtering by today', () => {
       wrapper = createWrapper({
         dashboards: {
-          currentDashboardFilters: [
-            { name: 'created_on', type: 'date_range' },
-          ],
+          currentDashboardFilters: [{ name: 'created_on', type: 'date_range' }],
           appliedFilters: {
             created_on: { __gte: '2024-01-15', __lte: '2024-01-15' },
           },
@@ -156,9 +147,7 @@ describe('HeaderHumanService', () => {
     it('showTagLive returns true when filtering by today', () => {
       wrapper = createWrapper({
         dashboards: {
-          currentDashboardFilters: [
-            { name: 'created_on', type: 'date_range' },
-          ],
+          currentDashboardFilters: [{ name: 'created_on', type: 'date_range' }],
           appliedFilters: {
             created_on: { __gte: '2024-01-15', __lte: '2024-01-15' },
           },

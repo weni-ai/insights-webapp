@@ -16,7 +16,7 @@ exports[`OptionCreateNewDashboard > Should match the snapshot 1`] = `
     scheme="neutral-darkest"
     size="md"
   />
-   New dashboard
+   insights_header.add_new_dashboard
   
 </a>
 `;

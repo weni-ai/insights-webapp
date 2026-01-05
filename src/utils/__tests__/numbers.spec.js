@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 import {
   formatValue,
@@ -9,12 +9,6 @@ import {
   getPercentageOf,
   formatToPercent,
 } from '@/utils/numbers';
-
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key, options) => `Translated: ${key} ${JSON.stringify(options)}`,
-  }),
-}));
 
 describe('Number Utilities', () => {
   describe('formatValue', () => {

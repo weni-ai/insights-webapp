@@ -1,30 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { nextTick, ref } from 'vue';
-import { createI18n } from 'vue-i18n';
 import DetailedMonitoring from '../DetailedMonitoring.vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        human_support_dashboard: {
-          detailed_monitoring: {
-            title: 'Detailed Monitoring',
-            tabs: {
-              in_awaiting: 'In Awaiting',
-              in_progress: 'In Progress',
-              attendant: 'Attendant',
-              pauses: 'Pauses',
-            },
-          },
-        },
-      },
-    },
-  }),
-];
 
 const activeDetailedTabRef = ref('in_awaiting');
 
@@ -151,6 +128,4 @@ describe('DetailedMonitoring', () => {
       expect(wrapper.vm.filterType).toBe('pauses');
     });
   });
-
 });
-

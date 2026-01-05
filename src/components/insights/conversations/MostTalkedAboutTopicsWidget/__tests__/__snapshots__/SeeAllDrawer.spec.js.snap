@@ -6,7 +6,7 @@ exports[`SeeAllDrawer > Component structure > should match snapshot 1`] = `
   data-testid="topics-see-all-drawer"
   modelvalue="true"
   size="lg"
-  title="conversations_dashboard.most_talked_about_topics.title"
+  title="Most Talked About Topics"
 >
   
   <progress-table-stub
@@ -14,7 +14,7 @@ exports[`SeeAllDrawer > Component structure > should match snapshot 1`] = `
     expandeditems="Technology"
     isloading="false"
     progressitems="[object Object],[object Object],[object Object]"
-    subitemsdescription="conversations_dashboard.most_talked_about_topics.subtopics"
+    subitemsdescription="Subtopics"
   />
   
 </div>

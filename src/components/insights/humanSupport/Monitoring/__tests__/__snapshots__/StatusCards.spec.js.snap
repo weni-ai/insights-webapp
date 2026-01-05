@@ -11,7 +11,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
     data-testid="service-status-title"
     data-v-139ebc7e=""
   >
-    human_support_dashboard.support_status.title
+    Support Status
   </p>
   <section
     class="service-status__cards"
@@ -27,8 +27,8 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       enabletimeicon="false"
       isclickable="true"
       isloading="false"
-      title="human_support_dashboard.support_status.is_waiting"
-      tooltipinfo="human_support_dashboard.support_status.tooltips.is_waiting"
+      title="Awaiting"
+      tooltipinfo="Conversations waiting for agent response"
       tooltipside="top"
       value="25"
     />
@@ -40,8 +40,8 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       enabletimeicon="false"
       isclickable="true"
       isloading="false"
-      title="human_support_dashboard.support_status.is_in_progress"
-      tooltipinfo="human_support_dashboard.support_status.tooltips.is_in_progress"
+      title="In Progress"
+      tooltipinfo="Conversations currently being handled"
       tooltipside="top"
       value="10"
     />
@@ -53,8 +53,8 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       enabletimeicon="false"
       isclickable="false"
       isloading="false"
-      title="human_support_dashboard.support_status.is_closed"
-      tooltipinfo="human_support_dashboard.support_status.tooltips.is_closed"
+      title="Closed"
+      tooltipinfo="Conversations that have been closed"
       tooltipside="left"
       value="65"
     />

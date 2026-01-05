@@ -31,7 +31,12 @@
           scheme="neutral-cloudy"
         />
         <section class="label__infos">
-          <p class="infos__title">{{ label }}</p>
+          <p
+            class="infos__title"
+            :title="label"
+          >
+            {{ label }}
+          </p>
           <p
             v-if="isExpandable"
             class="infos__description"

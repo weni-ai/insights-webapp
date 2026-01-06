@@ -42,7 +42,7 @@ export default {
   computed: {
     ...mapState(useDashboards, ['currentDashboard']),
     isHumanServiceDashboard() {
-      return this.currentDashboard?.name === 'human_service_dashboard.title';
+      return this.currentDashboard?.name === 'human_support_dashboard.title';
     },
     isConversationalDashboard() {
       return this.currentDashboard?.name === 'conversations_dashboard.title';

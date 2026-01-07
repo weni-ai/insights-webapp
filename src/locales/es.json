@@ -982,6 +982,20 @@
           "pauses": "Pausas personalizadas"
         }
       }
+    },
+    "csat": {
+      "title": "CSAT",
+      "agents_ratings_general_title": "Evaluación general",
+      "agents_ratings_general_tooltip": "Esta puntuación refleja la performance general del proyecto. Si se aplican filtros a este dashboard, la puntuación se ajustará automáticamente para mostrar la media general de los elementos filtrados.",
+      "agents_ratings_subtitle": "{rooms} salas • {reviews} evaluaciones",
+      "review_rating": {
+        "very_satisfied": "🤩 Muy satisfecho",
+        "satisfied": "😁 Satisfecho",
+        "neutral": "😐 Neutral",
+        "dissatisfied": "☹️ Insatisfecho",
+        "very_dissatisfied": "😡 Muy insatisfecho"
+      },
+      "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
     }
   },
   "news": {

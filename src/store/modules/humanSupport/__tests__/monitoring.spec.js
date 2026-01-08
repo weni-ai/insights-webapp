@@ -118,6 +118,10 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.refreshDataMonitoring).toBe(false);
       expect(store.activeDetailedTab).toBe('in_progress');
     });
+
+    it('should initialize isSilentRefresh state', () => {
+      expect(store.isSilentRefresh).toBe(false);
+    });
   });
 
   describe('loadAllData action', () => {
@@ -201,6 +205,30 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.serviceStatusData.is_waiting).toBeTypeOf('number');
       expect(store.serviceStatusData.in_progress).toBeTypeOf('number');
       expect(store.serviceStatusData.finished).toBeTypeOf('number');
+    });
+
+    it('should not set loading state when silent refresh is true', async () => {
+      store.setRefreshDataMonitoring(true, true);
+
+      const loadPromise = store.loadServiceStatusData();
+
+      expect(store.loadingServiceStatusData).toBe(false);
+
+      await loadPromise;
+
+      expect(store.loadingServiceStatusData).toBe(false);
+    });
+
+    it('should set loading state when silent refresh is false', async () => {
+      store.setRefreshDataMonitoring(true, false);
+
+      const loadPromise = store.loadServiceStatusData();
+
+      expect(store.loadingServiceStatusData).toBe(true);
+
+      await loadPromise;
+
+      expect(store.loadingServiceStatusData).toBe(false);
     });
 
     it('should load time metrics data correctly', async () => {
@@ -328,6 +356,27 @@ describe('useHumanSupportMonitoring store', () => {
       expect(store.refreshDataMonitoring).toBe(false);
       expect(ServiceStatusService.getServiceStatusData).not.toHaveBeenCalled();
       expect(TimeMetricsService.getTimeMetricsData).not.toHaveBeenCalled();
+    });
+
+    it('should set isSilentRefresh to true when silent parameter is true', () => {
+      store.setRefreshDataMonitoring(true, true);
+
+      expect(store.refreshDataMonitoring).toBe(true);
+      expect(store.isSilentRefresh).toBe(true);
+    });
+
+    it('should set isSilentRefresh to false when silent parameter is false', () => {
+      store.setRefreshDataMonitoring(true, false);
+
+      expect(store.refreshDataMonitoring).toBe(true);
+      expect(store.isSilentRefresh).toBe(false);
+    });
+
+    it('should default isSilentRefresh to false when silent parameter is not provided', () => {
+      store.setRefreshDataMonitoring(true);
+
+      expect(store.refreshDataMonitoring).toBe(true);
+      expect(store.isSilentRefresh).toBe(false);
     });
   });
 

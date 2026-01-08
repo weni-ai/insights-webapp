@@ -79,6 +79,7 @@ describe('InProgress', () => {
               },
               humanSupportMonitoring: {
                 refreshDataMonitoring: false,
+                isSilentRefresh: false,
                 activeDetailedTab: 'in_progress',
                 ...storeState.humanSupportMonitoring,
               },

@@ -79,6 +79,7 @@ describe('Pauses', () => {
               },
               humanSupportMonitoring: {
                 refreshDataMonitoring: false,
+                isSilentRefresh: false,
                 activeDetailedTab: 'pauses',
                 ...storeState.humanSupportMonitoring,
               },

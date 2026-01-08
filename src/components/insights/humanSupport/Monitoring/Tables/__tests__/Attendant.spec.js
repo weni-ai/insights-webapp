@@ -82,6 +82,7 @@ describe('Attendant', () => {
               },
               humanSupportMonitoring: {
                 refreshDataMonitoring: false,
+                isSilentRefresh: false,
                 activeDetailedTab: 'attendant',
                 ...storeState.humanSupportMonitoring,
               },

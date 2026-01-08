@@ -31,22 +31,22 @@ exports[`CheckboxList > should render label and list 1`] = `
         class="unnnic-checkbox"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-8848cfb4=""
+        data-v-e4ce5120=""
       >
         <label
           class="unnnic-checkbox__input-wrapper unnnic-checkbox__input-wrapper--disabled"
-          data-v-8848cfb4=""
+          data-v-e4ce5120=""
         >
           <input
             class="unnnic-checkbox__input"
-            data-v-8848cfb4=""
+            data-v-e4ce5120=""
             disabled=""
             type="checkbox"
           />
           <p
             class="unnnic-checkbox__label unnnic-checkbox__label--disabled"
             data-testid="checkbox-text-right"
-            data-v-8848cfb4=""
+            data-v-e4ce5120=""
           >
             Check 1
           </p>
@@ -62,21 +62,21 @@ exports[`CheckboxList > should render label and list 1`] = `
         class="unnnic-checkbox"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-8848cfb4=""
+        data-v-e4ce5120=""
       >
         <label
           class="unnnic-checkbox__input-wrapper"
-          data-v-8848cfb4=""
+          data-v-e4ce5120=""
         >
           <input
             class="unnnic-checkbox__input"
-            data-v-8848cfb4=""
+            data-v-e4ce5120=""
             type="checkbox"
           />
           <p
             class="unnnic-checkbox__label"
             data-testid="checkbox-text-right"
-            data-v-8848cfb4=""
+            data-v-e4ce5120=""
           >
             Check 2
           </p>
@@ -92,22 +92,22 @@ exports[`CheckboxList > should render label and list 1`] = `
         class="unnnic-checkbox"
         data-testid="checkbox"
         data-v-2e73b81b=""
-        data-v-8848cfb4=""
+        data-v-e4ce5120=""
       >
         <label
           class="unnnic-checkbox__input-wrapper"
-          data-v-8848cfb4=""
+          data-v-e4ce5120=""
         >
           <input
             checked=""
             class="unnnic-checkbox__input"
-            data-v-8848cfb4=""
+            data-v-e4ce5120=""
             type="checkbox"
           />
           <p
             class="unnnic-checkbox__label"
             data-testid="checkbox-text-right"
-            data-v-8848cfb4=""
+            data-v-e4ce5120=""
           >
             Check 3
           </p>

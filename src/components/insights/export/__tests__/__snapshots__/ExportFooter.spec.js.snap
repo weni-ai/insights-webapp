@@ -20,23 +20,23 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
     <section
       class="unnnic-radio"
       data-testid="radio-format-xlsx"
+      data-v-2121c2c4=""
       data-v-4f08a4d6=""
-      data-v-7e12a100=""
     >
       <label
         class="unnnic-radio__input-wrapper"
-        data-v-7e12a100=""
+        data-v-2121c2c4=""
       >
         <input
           checked=""
           class="unnnic-radio__input"
-          data-v-7e12a100=""
+          data-v-2121c2c4=""
           name=""
           type="radio"
         />
         <p
           class="unnnic-radio__label"
-          data-v-7e12a100=""
+          data-v-2121c2c4=""
         >
            
           
@@ -49,22 +49,22 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
     <section
       class="unnnic-radio"
       data-testid="radio-format-csv"
+      data-v-2121c2c4=""
       data-v-4f08a4d6=""
-      data-v-7e12a100=""
     >
       <label
         class="unnnic-radio__input-wrapper"
-        data-v-7e12a100=""
+        data-v-2121c2c4=""
       >
         <input
           class="unnnic-radio__input"
-          data-v-7e12a100=""
+          data-v-2121c2c4=""
           name=""
           type="radio"
         />
         <p
           class="unnnic-radio__label"
-          data-v-7e12a100=""
+          data-v-2121c2c4=""
         >
            
           
@@ -100,21 +100,21 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
       class="unnnic-checkbox"
       data-testid="export-footer-accept-terms"
       data-v-4f08a4d6=""
-      data-v-8848cfb4=""
+      data-v-e4ce5120=""
     >
       <label
         class="unnnic-checkbox__input-wrapper"
-        data-v-8848cfb4=""
+        data-v-e4ce5120=""
       >
         <input
           class="unnnic-checkbox__input"
-          data-v-8848cfb4=""
+          data-v-e4ce5120=""
           type="checkbox"
         />
         <p
           class="unnnic-checkbox__label"
           data-testid="checkbox-text-right"
-          data-v-8848cfb4=""
+          data-v-e4ce5120=""
         >
           I accept terms
         </p>

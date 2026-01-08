@@ -271,15 +271,8 @@ describe('HumanSupport.vue', () => {
     });
 
     it('should render tooltip container for each tab', () => {
-      const tooltips = wrapper.findAll(
-        '[data-test-id="tab-head-content-tooltip"]',
-      );
+      const tooltips = wrapper.findAll('[data-testid="tooltip-trigger"]');
       expect(tooltips.length).toBe(2);
-    });
-
-    it('should have tab tooltip class', () => {
-      const tooltipContainers = wrapper.findAll('.tab-head-content-tooltip');
-      expect(tooltipContainers.length).toBe(2);
     });
 
     it('should render tab head content for monitoring', () => {

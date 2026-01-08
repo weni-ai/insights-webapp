@@ -100,7 +100,7 @@ describe('ConversationalExport', () => {
     });
 
     it('should render tooltip', () => {
-      const tooltip = wrapper.find('[data-testid="export-data-tooltip"]');
+      const tooltip = wrapper.find('[data-testid="tooltip-trigger"]');
       expect(tooltip.exists()).toBe(true);
     });
   });

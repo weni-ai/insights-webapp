@@ -25,12 +25,14 @@
       </section>
     </section>
     <p class="agent-card__rating">
-      {{ props.rating }}
+      {{ formatNumber(props.rating, $i18n.locale) }}
     </p>
   </section>
 </template>
 
 <script setup lang="ts">
+import { formatNumber } from '@/utils/numbers';
+
 defineOptions({
   name: 'AgentCard',
 });
@@ -39,7 +41,7 @@ interface AgentCardProps {
   title: string;
   subtitle: string;
   tooltip?: string;
-  rating?: number | string;
+  rating?: number;
   hiddenAvatar?: boolean;
   active?: boolean;
 }

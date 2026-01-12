@@ -114,10 +114,17 @@ import { useConfig } from '@/store/modules/config';
 import Csat from '@/services/api/resources/humanSupport/csat';
 
 import { parseQueryString } from '@/utils/request';
+import { formatPercentage } from '@/utils/numbers';
 
 defineOptions({
   name: 'CsatRatings',
 });
+
+interface Props {
+  type: 'monitoring' | 'analysis';
+}
+
+const props = defineProps<Props>();
 
 onMounted(() => {
   configStore.checkEnableCsat().then(() => {
@@ -131,7 +138,7 @@ onMounted(() => {
   });
 });
 
-const { t } = useI18n();
+const { t, locale: localeI18n } = useI18n();
 
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 const humanSupportStore = useHumanSupport();
@@ -179,7 +186,7 @@ const progressItemsRatingsData = computed(() => {
       backgroundColor: '#E9D8FD',
       color: '#805AD5',
       value: value.value,
-      description: `${value.value} (${value.full_value})`,
+      description: `${formatPercentage(value.value, localeI18n.value)} (${value.full_value})`,
     }));
 });
 
@@ -191,7 +198,12 @@ const loadAgentsData = async ({
     isLoadingAgentsData.value = true;
   }
   try {
-    const { general, next, results } = await Csat.getTotalsMonitoring({
+    const getTotalsFunction =
+      props.type === 'monitoring'
+        ? Csat.getTotalsMonitoring
+        : Csat.getTotalsAnalysis;
+
+    const { general, next, results } = await getTotalsFunction({
       cursor: agentsTotalNext.value,
     });
     agentsGeneralTotals.value = general;
@@ -201,6 +213,29 @@ const loadAgentsData = async ({
     console.log(error);
   } finally {
     isLoadingAgentsData.value = false;
+  }
+};
+
+const loadRatingsData = async ({
+  silent = false,
+}: { silent?: boolean } = {}) => {
+  if (!silent) {
+    isLoadingRatingsData.value = true;
+  }
+  try {
+    const getRatingsFunction =
+      props.type === 'monitoring'
+        ? Csat.getRatingsMonitoring
+        : Csat.getRatingsAnalysis;
+
+    const response = await getRatingsFunction({
+      agent_email: activeAgentEmail.value,
+    });
+    ratingsData.value = response;
+  } catch (error) {
+    console.log(error);
+  } finally {
+    isLoadingRatingsData.value = false;
   }
 };
 
@@ -215,24 +250,6 @@ const redirectToChatsConfig = () => {
   );
 };
 
-const loadRatingsData = async ({
-  silent = false,
-}: { silent?: boolean } = {}) => {
-  if (!silent) {
-    isLoadingRatingsData.value = true;
-  }
-  try {
-    const response = await Csat.getRatingsMonitoring({
-      agent_email: activeAgentEmail.value,
-    });
-    ratingsData.value = response;
-  } catch (error) {
-    console.log(error);
-  } finally {
-    isLoadingRatingsData.value = false;
-  }
-};
-
 const activeAgentEmail = ref<string | null>(null);
 
 watch(activeAgentEmail, () => {
@@ -240,7 +257,7 @@ watch(activeAgentEmail, () => {
 });
 
 watch(
-  () => humanSupportStore.appliedFilters,
+  () => [humanSupportStore.appliedFilters, humanSupportStore.appliedDateRange],
   () => {
     if (!configStore.enableCsat) return;
     loadAgentsData();

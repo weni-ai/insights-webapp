@@ -9,6 +9,7 @@
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
     <CsatRatings
       v-if="isFeatureFlagEnabled('insightsCSAT')"
+      type="monitoring"
       data-testid="monitoring-csat-ratings"
     />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />

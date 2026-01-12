@@ -20,7 +20,7 @@ interface CustomWidgetResponse {
 interface CrosstabResultItem {
   title: string;
   total: number;
-  events: { [key: string]: { value: number } };
+  events: { [key: string]: { value: number; full_value: number } };
 }
 
 interface CrosstabWidgetResponse {

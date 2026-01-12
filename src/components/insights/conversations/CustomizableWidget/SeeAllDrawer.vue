@@ -25,7 +25,7 @@ import type {
   CrosstabResultItem,
 } from '@/services/api/resources/conversational/widgets';
 
-import i18n from '@/utils/plugins/i18n';
+import { getWidgetCrosstabTooltip } from '@/utils/widget';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
@@ -43,24 +43,6 @@ const emit = defineEmits<{
 const defaultColor = '#3182CE';
 const defaultBackgroundColor = props.isCrosstab ? '#E5812A' : '#BEE3F8';
 
-const getTooltip = (
-  events: Record<string, { value: number; full_value: number }>,
-) => {
-  const eventsKeys = Object.keys(events);
-  if (!eventsKeys.length) return '';
-  return eventsKeys
-    .map((key) => {
-      const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-      const percentage = formatPercentage(
-        events[key].value,
-        i18n.global.locale,
-      );
-      const total = formatNumber(events[key].full_value, i18n.global.locale);
-      return `${capitalizedKey}: ${percentage} (${total})`;
-    })
-    .join('<br>');
-};
-
 const formattedCrosstabData = computed(() => {
   return (props.data as CrosstabResultItem[]).map((item) => {
     const eventsKeys = Object.keys(item.events);
@@ -70,7 +52,7 @@ const formattedCrosstabData = computed(() => {
       backgroundColor: eventsKeys.length ? '#E5812A' : '#ECEEF2',
       description: `${item.total}`,
       value: item.events[eventsKeys[0]]?.value || 0,
-      tooltip: getTooltip(item.events),
+      tooltip: getWidgetCrosstabTooltip(item.events),
     };
   });
 });

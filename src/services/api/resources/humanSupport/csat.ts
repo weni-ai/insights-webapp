@@ -64,6 +64,34 @@ export default {
     return response;
   },
 
+  async getTotalsAnalysis(params: QueryParams): Promise<AgentsTotalsResponse> {
+    const { project } = useConfig();
+    const { appliedFilters, appliedDateRange } = useHumanSupport();
+    const { currentDashboard } = useDashboards();
+
+    const formattedAppliedFilters = {
+      sectors: appliedFilters.sectors.map((sector) => sector.value),
+      queues: appliedFilters.queues.map((queue) => queue.value),
+      tags: appliedFilters.tags.map((tag) => tag.value),
+    };
+
+    const formattedParams = {
+      project_uuid: project.uuid,
+      start_date: appliedDateRange.start,
+      end_date: appliedDateRange.end,
+      ...formattedAppliedFilters,
+      ...params,
+    };
+
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/analysis/csat/totals/`,
+      {
+        params: formattedParams,
+      },
+    )) as AgentsTotalsResponse;
+    return response;
+  },
+
   async getRatingsMonitoring(params: QueryParams): Promise<RatingsResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useHumanSupport();
@@ -83,6 +111,35 @@ export default {
 
     const response = (await http.get(
       `/dashboards/${currentDashboard.uuid}/monitoring/csat/ratings/`,
+      {
+        params: formattedParams,
+      },
+    )) as RatingsResponse;
+
+    return response;
+  },
+
+  async getRatingsAnalysis(params: QueryParams) {
+    const { project } = useConfig();
+    const { appliedFilters, appliedDateRange } = useHumanSupport();
+    const { currentDashboard } = useDashboards();
+
+    const formattedAppliedFilters = {
+      sectors: appliedFilters.sectors.map((sector) => sector.value),
+      queues: appliedFilters.queues.map((queue) => queue.value),
+      tags: appliedFilters.tags.map((tag) => tag.value),
+    };
+
+    const formattedParams = {
+      project_uuid: project.uuid,
+      start_date: appliedDateRange.start,
+      end_date: appliedDateRange.end,
+      ...formattedAppliedFilters,
+      ...params,
+    };
+
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/analysis/csat/ratings/`,
       {
         params: formattedParams,
       },

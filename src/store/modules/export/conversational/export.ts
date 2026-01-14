@@ -154,7 +154,6 @@ export const useConversationalExport = defineStore('conversationalExport', {
         { model: string; subsection?: string }
       > = {
         RESOLUTIONS: { model: 'resolutions' },
-        TRANSFERRED: { model: 'transferred' },
         TOPICS_AI: { model: 'topics', subsection: 'ai' },
         TOPICS_HUMAN: { model: 'topics', subsection: 'human' },
         CSAT_AI: { model: 'csat', subsection: 'ai' },
@@ -202,7 +201,6 @@ export const useConversationalExport = defineStore('conversationalExport', {
           string | Record<string, string>
         > = {
           resolutions: 'RESOLUTIONS',
-          transferred: 'TRANSFERRED',
           topics: { human: 'TOPICS_HUMAN', ai: 'TOPICS_AI' },
           csat: { human: 'CSAT_HUMAN', ai: 'CSAT_AI' },
           nps: { human: 'NPS_HUMAN', ai: 'NPS_AI' },

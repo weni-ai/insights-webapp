@@ -133,11 +133,15 @@ onMounted(() => {
 });
 
 watch(
-  [currentSort, () => humanSupport.appliedFilters],
+  [
+    currentSort,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDetailFilters.contactInput,
+  ],
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post' },
+  { flush: 'post', deep: true },
 );
 
 watch(

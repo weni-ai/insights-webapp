@@ -1,18 +1,9 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  it,
-  vi,
-  beforeAll,
-  afterAll,
-} from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
+import { afterEach, beforeEach, describe, it, vi, afterAll } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
-import i18n from '@/utils/plugins/i18n';
 
 import DynamicCard from '../DynamicCard.vue';
 import CardDashboard from '@/components/insights/cards/CardDashboard.vue';
@@ -20,12 +11,6 @@ import CardEmpty from '@/components/insights/cards/CardEmpty.vue';
 import CardVtexOrder from '@/components/insights/cards/CardVtexOrder.vue';
 import CardVtexConversions from '@/components/insights/cards/CardVtexConversions.vue';
 import CardRecurrence from '@/components/insights/cards/CardRecurrence.vue';
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
 
 afterAll(() => {
   vi.restoreAllMocks();
@@ -43,12 +28,16 @@ vi.mock('@/utils/currency', () => ({
   },
 }));
 
-vi.mock('vue-i18n', () => ({
-  useI18n: () => ({
-    t: (key) => key,
-    locale: 'en-US',
-  }),
-}));
+vi.mock('vue-i18n', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useI18n: () => ({
+      t: (key) => key,
+      locale: 'en-US',
+    }),
+  };
+});
 
 const router = createRouter({
   history: createWebHistory(),

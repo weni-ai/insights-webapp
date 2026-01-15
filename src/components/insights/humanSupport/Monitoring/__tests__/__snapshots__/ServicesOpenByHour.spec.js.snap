@@ -12,7 +12,7 @@ exports[`ServicesOpenByHour > Component rendering > should match snapshot 1`] = 
     data-v-5e3726dc=""
     isloading="false"
     seemore="false"
-    title="human_support_dashboard.services_open_by_hour.title"
+    title="Services Open by Hour"
   />
 </section>
 `;

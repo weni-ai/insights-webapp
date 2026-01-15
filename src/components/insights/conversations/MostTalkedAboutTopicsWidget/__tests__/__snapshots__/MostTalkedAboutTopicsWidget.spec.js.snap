@@ -14,7 +14,7 @@ exports[`MostTalkedAboutTopicsWidget > Component structure > should match snapsh
     hiddentabs="false"
     isloading="false"
     isonlytab="false"
-    title="conversations_dashboard.most_talked_about_topics.title"
+    title="Most Talked About Topics"
   />
   <!--v-if-->
   <drawer-topics-stub

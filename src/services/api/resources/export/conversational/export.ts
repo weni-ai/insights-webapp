@@ -3,7 +3,6 @@ import { useConfig } from '@/store/modules/config';
 
 type TypeSections =
   | 'RESOLUTIONS'
-  | 'TRANSFERRED'
   | 'TOPICS_AI'
   | 'TOPICS_HUMAN'
   | 'CSAT_AI'

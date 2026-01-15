@@ -105,6 +105,10 @@ export const useHumanSupportMonitoring = defineStore(
       if (newValue) loadAllData();
     });
 
+    watch(refreshDataMonitoring, (value) => {
+      if (value) loadAllData();
+    });
+
     return {
       isLoadingAllData,
       serviceStatusData,

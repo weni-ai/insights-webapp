@@ -119,8 +119,13 @@ const loadMore = () => {
 
 const redirectItem = (item: FinishedDataResult) => {
   if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
-  window.parent.postMessage({ event: 'redirect', path }, '*');
+  let url = item.link.url;
+
+  if (url.startsWith('chats:/')) {
+    url = url.replace('chats:/', 'chats:');
+  }
+
+  window.parent.postMessage({ event: 'redirect', path: url }, '*');
 };
 
 onMounted(() => {

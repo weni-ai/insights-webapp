@@ -99,22 +99,22 @@ exports[`ExportFooter > Component structure > should match snapshot 1`] = `
     <section
       class="unnnic-checkbox"
       data-testid="export-footer-accept-terms"
+      data-v-14c8c277=""
       data-v-4f08a4d6=""
-      data-v-8848cfb4=""
     >
       <label
         class="unnnic-checkbox__input-wrapper"
-        data-v-8848cfb4=""
+        data-v-14c8c277=""
       >
         <input
           class="unnnic-checkbox__input"
-          data-v-8848cfb4=""
+          data-v-14c8c277=""
           type="checkbox"
         />
         <p
           class="unnnic-checkbox__label"
           data-testid="checkbox-text-right"
-          data-v-8848cfb4=""
+          data-v-14c8c277=""
         >
           I accept terms
         </p>

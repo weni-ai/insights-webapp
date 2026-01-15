@@ -9,7 +9,6 @@
       :modelValue="modelValue"
       iconLeft="search"
       :placeholder="placeholder"
-      size="sm"
       @update:model-value="handleInput"
     />
   </section>

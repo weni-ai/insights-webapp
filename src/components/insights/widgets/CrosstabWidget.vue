@@ -62,10 +62,8 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import ProgressTable from '@/components/ProgressTable.vue';
 import SeeAllDrawer from '../conversations/CustomizableWidget/SeeAllDrawer.vue';
 
-import { formatNumber, formatPercentage } from '@/utils/numbers';
-
-import i18n from '@/utils/plugins/i18n';
 import { UnnnicDisclaimer } from '@weni/unnnic-system';
+import { getWidgetCrosstabTooltip } from '@/utils/widget';
 
 const customWidgetsStore = useCustomWidgets();
 
@@ -104,24 +102,6 @@ const widgetData = computed(() => {
   );
 });
 
-const getTooltip = (
-  events: Record<string, { value: number; full_value: number }>,
-) => {
-  const eventsKeys = Object.keys(events);
-  if (!eventsKeys.length) return '';
-  return eventsKeys
-    .map((key) => {
-      const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
-      const percentage = formatPercentage(
-        events[key].value,
-        i18n.global.locale,
-      );
-      const total = formatNumber(events[key].full_value, i18n.global.locale);
-      return `${capitalizedKey}: ${percentage} (${total})`;
-    })
-    .join('<br>');
-};
-
 const legendItems = computed(() => {
   if (!widgetData.value.results.length) return [];
   const eventsKeys = Object.keys(widgetData.value.results[0].events);
@@ -142,7 +122,7 @@ const formattedData = computed(() => {
       backgroundColor: eventsKeys.length ? '#E5812A' : '#ECEEF2',
       description: `${item.total}`,
       value: item.events[eventsKeys[0]]?.value || 0,
-      tooltip: getTooltip(item.events),
+      tooltip: getWidgetCrosstabTooltip(item.events),
     };
   });
 });

@@ -8,7 +8,11 @@
     </p>
     <Transition name="filters-fade">
       <section
-        v-if="['attendant', 'pauses'].includes(activeDetailedTab)"
+        v-if="
+          ['attendant', 'pauses', 'in_awaiting', 'in_progress'].includes(
+            activeDetailedTab,
+          )
+        "
         class="detailed-monitoring__filters"
       >
         <DetailedFilters :type="filterType" />
@@ -93,7 +97,11 @@ const changeActiveTabName = (tab: ActiveDetailedTab) => {
 };
 
 const filterType = computed(() => {
-  return activeDetailedTab.value as 'attendant' | 'pauses';
+  return activeDetailedTab.value as
+    | 'attendant'
+    | 'pauses'
+    | 'in_awaiting'
+    | 'in_progress';
 });
 </script>
 

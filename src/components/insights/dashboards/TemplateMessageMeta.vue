@@ -12,31 +12,41 @@
   </section>
 
   <section class="template-message-meta-dashboard__tabs">
-    <p
-      :class="{
-        'template-message-meta-dashboard__tab': true,
-        'template-message-meta-dashboard__tab--active': viewTab === 'home',
-      }"
-      @click="viewTab = 'home'"
-    >
-      {{ $t('template_messages_dashboard.all_data') }}
-    </p>
-    <template v-if="templatePreview.name">
-      <UnnnicIcon
-        icon="arrow-right-1-1"
-        size="sm"
-      />
+    <section class="template-message-meta-dashboard__tabs-container">
       <p
         :class="{
           'template-message-meta-dashboard__tab': true,
-          'template-message-meta-dashboard__tab--active':
-            viewTab === 'template',
+          'template-message-meta-dashboard__tab--active': viewTab === 'home',
         }"
-        @click="viewTab = 'template'"
+        @click="viewTab = 'home'"
       >
-        {{ templatePreview.name }}
+        {{ $t('template_messages_dashboard.all_data') }}
       </p>
-    </template>
+      <template v-if="templatePreview.name">
+        <UnnnicIcon
+          icon="arrow-right-1-1"
+          size="sm"
+        />
+        <p
+          :class="{
+            'template-message-meta-dashboard__tab': true,
+            'template-message-meta-dashboard__tab--active':
+              viewTab === 'template',
+          }"
+          @click="viewTab = 'template'"
+        >
+          {{ templatePreview.name }}
+        </p>
+      </template>
+    </section>
+    <UnnnicSelectSmart
+      v-if="viewTab === 'template'"
+      v-model="selectedApiOptions"
+      :options="[
+        { label: 'Data source: Cloud API', value: 'cloud_api' },
+        { label: 'Data source: MM Lite API', value: 'mm_lite_api' },
+      ]"
+    />
   </section>
   <template v-if="viewTab === 'home'">
     <h1 class="template-message-meta-dashboard__categories-title">
@@ -159,6 +169,10 @@ const lastOpenTemplates = ref(
 const initialLoading = ref(false);
 
 const viewTab = ref('home');
+
+const selectedApiOptions = ref([
+  { label: 'Data source: Cloud API', value: 'cloud_api' },
+]);
 
 onUnmounted(() => {
   metaTemplateMessageStore.setSelectedTemplateUuid('');
@@ -487,14 +501,20 @@ const unfavoriteTemplate = async () => {
 .template-message-meta-dashboard {
   display: grid;
   grid-template-columns: 2.5fr 9.5fr;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   height: 100%;
 
   &__tabs {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-sm;
+    justify-content: space-between;
     margin-bottom: $unnnic-spacing-md;
+
+    &-container {
+      display: flex;
+      align-items: center;
+      gap: $unnnic-space-4;
+    }
   }
 
   &__tab {
@@ -575,7 +595,7 @@ const unfavoriteTemplate = async () => {
           'line-chart line-chart'
           'button-clicks-table button-clicks-table';
 
-        gap: $unnnic-spacing-sm;
+        gap: $unnnic-space-4;
 
         .line-chart {
           grid-area: line-chart;

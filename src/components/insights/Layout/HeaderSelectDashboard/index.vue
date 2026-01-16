@@ -26,7 +26,7 @@
         />
         <section
           data-testid="dropdown-trigger"
-          class="dropdown__trigger"
+          class="header-select-dashboard__title"
         >
           <h1
             data-testid="dashboard-title"
@@ -38,7 +38,6 @@
           <BetaText v-if="isRenderBetaText" />
         </section>
         <UnnnicIcon
-          class="dropdown__trigger"
           data-testid="expand-icon"
           icon="expand_more"
         />
@@ -178,6 +177,13 @@ $dropdownFixedWidth: 314px;
 
 .header-select-dashboard {
   display: flex;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: $unnnic-spacing-nano;
+    cursor: pointer;
+  }
 
   &__trigger {
     display: flex;

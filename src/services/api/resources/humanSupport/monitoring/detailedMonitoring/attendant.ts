@@ -66,7 +66,14 @@ export default {
       },
     )) as AttendantData;
 
-    const formattedResponse: AttendantData = response;
+    const formattedResponse: AttendantData = {
+      ...response,
+      results:
+        response?.results?.map((result) => ({
+          ...result,
+          agent: result?.agent?.trim().length > 0 ? result?.agent : '',
+        })) || [],
+    };
 
     return formattedResponse;
   },

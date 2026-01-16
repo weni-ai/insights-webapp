@@ -3,42 +3,46 @@
     class="header-select-dashboard"
     position="bottom-right"
     data-onboarding-id="select-dashboard"
+    :open="openDropdown"
+    useOpenProp
+    @update:open="handlerOpenDropdown"
   >
     <template #trigger>
-      <UnnnicAvatarIcon
-        v-if="$route.name === 'dashboard'"
-        data-testid="dashboard-icon"
-        icon="monitoring"
-        scheme="aux-purple-500"
-      />
-      <UnnnicIcon
-        v-else
-        data-testid="back-icon"
-        class="header-select-dashboard__arrow-back"
-        icon="arrow_back"
-        scheme="neutral-darkest"
-        clickable
-        @click.stop="$router.back"
-      />
-      <section
-        data-testid="dropdown-trigger"
-        class="dropdown__trigger"
-        @mouseup="callTourNextStep('dashboard-onboarding-tour')"
-      >
-        <h1
-          data-testid="dashboard-title"
-          class="trigger__title"
-          :title="dashboardTitle"
+      <section class="header-select-dashboard__trigger">
+        <UnnnicAvatarIcon
+          v-if="$route.name === 'dashboard'"
+          data-testid="dashboard-icon"
+          icon="monitoring"
+          scheme="aux-purple-500"
+        />
+        <UnnnicIcon
+          v-else
+          data-testid="back-icon"
+          class="header-select-dashboard__arrow-back"
+          icon="arrow_back"
+          scheme="neutral-darkest"
+          clickable
+          @click.stop="$router.back"
+        />
+        <section
+          data-testid="dropdown-trigger"
+          class="dropdown__trigger"
         >
-          {{ dashboardTitle }}
-        </h1>
-        <BetaText v-if="isRenderBetaText" />
+          <h1
+            data-testid="dashboard-title"
+            class="trigger__title"
+            :title="dashboardTitle"
+          >
+            {{ dashboardTitle }}
+          </h1>
+          <BetaText v-if="isRenderBetaText" />
+        </section>
+        <UnnnicIcon
+          class="dropdown__trigger"
+          data-testid="expand-icon"
+          icon="expand_more"
+        />
       </section>
-      <UnnnicIcon
-        class="dropdown__trigger"
-        data-testid="expand-icon"
-        icon="expand_more"
-      />
     </template>
 
     <OptionSelectDashboard
@@ -84,6 +88,12 @@ export default {
     OptionCreateNewDashboard,
     DrawerDashboardConfig,
     BetaText,
+  },
+
+  data() {
+    return {
+      openDropdown: false,
+    };
   },
 
   computed: {
@@ -145,6 +155,12 @@ export default {
       this.setShowDashboardConfig(true);
       this.callTourNextStep('dashboard-onboarding-tour');
     },
+    handlerOpenDropdown(open) {
+      this.openDropdown = open !== undefined ? open : !this.openDropdown;
+      if (this.openDropdown) {
+        this.callTourNextStep('dashboard-onboarding-tour');
+      }
+    },
   },
 };
 </script>
@@ -163,11 +179,10 @@ $dropdownFixedWidth: 314px;
 .header-select-dashboard {
   display: flex;
 
-  .dropdown__trigger {
+  &__trigger {
     display: flex;
     align-items: center;
     gap: $unnnic-spacing-nano;
-
     cursor: pointer;
 
     .trigger__title {

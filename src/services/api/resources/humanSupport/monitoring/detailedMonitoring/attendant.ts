@@ -15,6 +15,7 @@ interface AttendantDataResult {
   status: string;
   ongoing: string;
   finished: string;
+  agent_email: string;
   average_first_response_time: number;
   average_response_time: number;
   average_duration: number;

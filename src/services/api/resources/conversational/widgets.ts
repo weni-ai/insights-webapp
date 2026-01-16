@@ -1,7 +1,6 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
-import { asyncTimeout } from '@/utils/time';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
 
@@ -21,7 +20,7 @@ interface CustomWidgetResponse {
 interface CrosstabResultItem {
   title: string;
   total: number;
-  events: { [key: string]: { value: number } };
+  events: { [key: string]: { value: number; full_value: number } };
 }
 
 interface CrosstabWidgetResponse {
@@ -146,11 +145,16 @@ export default {
       ...queryParams,
     };
 
-    const response = await http.get('/metrics/conversations/crosstab/', {
+    const response = (await http.get('/metrics/conversations/crosstab/', {
       params,
-    });
+    })) as CrosstabWidgetResponse;
 
-    return response;
+    const sortedResponse = {
+      total_rows: response.total_rows,
+      results: response.results?.sort((a, b) => b.total - a.total) || [],
+    };
+
+    return sortedResponse;
   },
 
   async getSalesFunnelData(

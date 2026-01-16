@@ -24,6 +24,9 @@ export default createI18n({
   locale: 'en',
   fallbackLocale: 'en',
   messages,
+  globalInjection: true, // Enable $t in templates
   silentTranslationWarn: true,
   silentFallbackWarn: true,
+  missingWarn: false,
+  fallbackWarn: false,
 });

@@ -25,7 +25,7 @@
     "human_support": "Atendimento humano",
     "others": "Outros",
     "unclassified": "Sem classificação",
-    "info": {	
+    "info": {
       "description": "Os dados conversacionais mostram conversas iniciadas até 24 horas antes do horário atual. Conversas mais recentes ainda estão sendo classificadas e não são exibidas. Atualize o dashboard para atualizar a janela de dados."
     },
     "header": {
@@ -499,7 +499,17 @@
         },
         "vtex": {
           "title": "VTEX",
-          "description": "Visualize seus dados de vendas na VTEX"
+          "description": "Visualize seus dados de vendas na VTEX",
+          "form": {
+            "name": {
+              "label": "Nome do widget",
+              "placeholder": "Insira o nome do widget aqui"
+            },
+            "utm": {
+              "label": "UTM",
+              "placeholder": "Copie o UTM da VTEX e cole-o aqui"
+            }
+          }
         },
         "vtex_conversions": {
           "title": "Conversão de templates",
@@ -749,7 +759,6 @@
       "sector_tags": "Tags",
       "contacts": "Contatos",
       "resolutions": "Resoluções de conversas",
-      "transferred": "Conversas transferidas para atendimento humano",
       "topics": "Assuntos",
       "csat": "CSAT",
       "nps": "NPS",
@@ -972,6 +981,20 @@
           "pauses": "Pausas personalizadas"
         }
       }
+    },
+    "csat": {
+      "title": "CSAT",
+      "agents_ratings_general_title": "Avaliação geral",
+      "agents_ratings_general_tooltip": "Esta pontuação reflete a performance geral do projeto. Se filtros forem aplicados a este dashboard, a pontuação se ajustará automaticamente para mostrar a média geral dos itens filtrados.",
+      "agents_ratings_subtitle": "{rooms} atendimentos • {reviews} avaliações",
+      "review_rating": {
+        "very_satisfied": "🤩 Muito satisfeito",
+        "satisfied": "😁 Satisfeito",
+        "neutral": "😐 Neutro",
+        "dissatisfied": "☹️ Insatisfeito",
+        "very_dissatisfied": "😡 Muito insatisfeito"
+      },
+      "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     }
   },
   "news": {

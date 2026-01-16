@@ -154,6 +154,7 @@ export default {
       this.drawerConfigType = '';
 
       if (handleTourNextStep) this.callTourNextStep('widgets-onboarding-tour');
+      else this.callTourPreviousStep({ tour: 'widgets-onboarding-tour' });
 
       this.$emit('close');
     },

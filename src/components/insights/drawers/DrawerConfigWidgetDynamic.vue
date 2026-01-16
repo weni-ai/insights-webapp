@@ -19,7 +19,7 @@
     :loadingPrimaryButton="isLoadingUpdateConfig"
     :withoutOverlay="showModalResetWidget"
     @primary-button-click="updateWidgetConfig"
-    @secondary-button-click="internalClose"
+    @secondary-button-click="$emit('back')"
     @close="$emit('close')"
     @back="configType ? $emit('back') : $emit('close')"
   >
@@ -412,8 +412,6 @@ export default {
     ]),
 
     internalClose() {
-      this.$refs.unnnicDrawer.close();
-
       this.callTourPreviousStep({
         tour: 'widgets-onboarding-tour',
         qtdSteps: ['card', 'empty_column'].includes(this.widget.type) ? 2 : 1,

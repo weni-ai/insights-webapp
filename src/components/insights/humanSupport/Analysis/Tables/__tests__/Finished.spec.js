@@ -148,7 +148,41 @@ describe('Finished', () => {
       window.parent.postMessage = mockPostMessage;
       wrapper.vm.redirectItem({ link: { url: '/test' } });
       expect(mockPostMessage).toHaveBeenCalledWith(
-        { event: 'redirect', path: '/test/insights' },
+        { event: 'redirect', path: '/test' },
+        '*',
+      );
+    });
+
+    it('removes slash after chats: protocol', () => {
+      const mockPostMessage = vi.fn();
+      window.parent.postMessage = mockPostMessage;
+      wrapper.vm.redirectItem({
+        link: {
+          url: 'chats:/closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
+      });
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: 'chats:closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
+        '*',
+      );
+    });
+
+    it('does not modify url when chats: has no slash', () => {
+      const mockPostMessage = vi.fn();
+      window.parent.postMessage = mockPostMessage;
+      wrapper.vm.redirectItem({
+        link: {
+          url: 'chats:closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
+      });
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: 'chats:closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
         '*',
       );
     });

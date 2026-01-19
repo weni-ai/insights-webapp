@@ -42,10 +42,7 @@
     <UnnnicSelectSmart
       v-if="viewTab === 'template'"
       v-model="selectedApiOptions"
-      :options="[
-        { label: 'Data source: Cloud API', value: 'cloud_api' },
-        { label: 'Data source: MM Lite API', value: 'mm_lite_api' },
-      ]"
+      :options="dataSourceOptions"
     />
   </section>
   <template v-if="viewTab === 'home'">
@@ -170,8 +167,28 @@ const initialLoading = ref(false);
 
 const viewTab = ref('home');
 
+const dataSourceOptions = [
+  {
+    label: i18n.global.t('template_messages_dashboard.data_source', {
+      source: 'Cloud API',
+    }),
+    value: 'cloud_api',
+  },
+  {
+    label: i18n.global.t('template_messages_dashboard.data_source', {
+      source: 'MM Lite API',
+    }),
+    value: 'mm_lite_api',
+  },
+];
+
 const selectedApiOptions = ref([
-  { label: 'Data source: Cloud API', value: 'cloud_api' },
+  {
+    label: i18n.global.t('template_messages_dashboard.data_source', {
+      source: 'Cloud API',
+    }),
+    value: 'cloud_api',
+  },
 ]);
 
 onUnmounted(() => {
@@ -355,6 +372,7 @@ const getButtonClicksData = async () => {
       template_id: selectedTemplateUuid.value,
       date_start: appliedFilters.value?.date?._start,
       date_end: appliedFilters.value?.date?._end,
+      source: selectedApiOptions.value[0].value,
     };
 
     const response =
@@ -381,6 +399,7 @@ const getMessagesAnalytics = async () => {
       template_id: selectedTemplateUuid.value,
       start_date: appliedFilters.value?.date?._start,
       end_date: appliedFilters.value?.date?._end,
+      source: selectedApiOptions.value[0].value,
     };
 
     const response =
@@ -430,7 +449,7 @@ const getSelectedTemplateData = (
 
 const appliedFilters = computed(() => dashboardsStore.appliedFilters);
 
-watch(appliedFilters, () => {
+watch([appliedFilters, selectedApiOptions], () => {
   const isLoadedPreview = Object.keys(templatePreview.value).length > 0;
   getCategoriesMetrics();
   if (selectedTemplateUuid.value)

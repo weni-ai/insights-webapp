@@ -91,9 +91,9 @@ describe('useConversationalExport', () => {
       },
       {
         method: 'setSections',
-        args: [['RESOLUTIONS', 'TRANSFERRED']],
+        args: [['RESOLUTIONS']],
         key: 'sections',
-        expected: ['RESOLUTIONS', 'TRANSFERRED'],
+        expected: ['RESOLUTIONS'],
       },
     ];
 

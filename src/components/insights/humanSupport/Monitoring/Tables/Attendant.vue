@@ -83,6 +83,7 @@ const formatResults = (
 ): FormattedAttendantData[] => {
   return results.map((result) => ({
     ...result,
+    agent: result?.agent || result?.agent_email || '',
     average_first_response_time: formatSecondsToTime(
       result?.average_first_response_time,
     ),

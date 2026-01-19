@@ -224,4 +224,95 @@ describe('Attendant', () => {
       expect(result).toBe('offline');
     });
   });
+
+  describe('Agent fallback logic', () => {
+    it('uses agent when it has a value', () => {
+      const mockData = [
+        {
+          agent: 'John Doe',
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('John Doe');
+    });
+
+    it('uses agent_email when agent is empty string', () => {
+      const mockData = [
+        {
+          agent: '',
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('john@example.com');
+    });
+
+    it('uses agent_email when agent is null', () => {
+      const mockData = [
+        {
+          agent: null,
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('john@example.com');
+    });
+
+    it('uses agent_email when agent is undefined', () => {
+      const mockData = [
+        {
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('john@example.com');
+    });
+
+    it('returns empty string when both agent and agent_email are empty', () => {
+      const mockData = [
+        {
+          agent: '',
+          agent_email: '',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('');
+    });
+
+    it('returns empty string when both agent and agent_email are null/undefined', () => {
+      const mockData = [
+        {
+          agent: null,
+          agent_email: null,
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('');
+    });
+  });
 });

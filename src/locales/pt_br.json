@@ -206,6 +206,7 @@
     "empty_templates": "Nenhum dado ainda. Assim que houver atividade, ela será exibida aqui.",
     "favorite_limit_reached": "Limite de favoritos atingido. Remova algum favorito e tente novamente.",
     "all_data": "Todos os dados",
+    "data_source": "Fonte de dados: {source}",
     "all_data_table": {
       "title": "Número de mensagens",
       "header": {

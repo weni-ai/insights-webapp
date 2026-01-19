@@ -172,13 +172,13 @@ const dataSourceOptions = [
     label: i18n.global.t('template_messages_dashboard.data_source', {
       source: 'Cloud API',
     }),
-    value: 'cloud_api',
+    value: 'CLOUD_API',
   },
   {
     label: i18n.global.t('template_messages_dashboard.data_source', {
       source: 'MM Lite API',
     }),
-    value: 'mm_lite_api',
+    value: 'MARKETING_MESSAGES_LITE_API',
   },
 ];
 
@@ -372,7 +372,7 @@ const getButtonClicksData = async () => {
       template_id: selectedTemplateUuid.value,
       date_start: appliedFilters.value?.date?._start,
       date_end: appliedFilters.value?.date?._end,
-      source: selectedApiOptions.value[0].value,
+      product_type: selectedApiOptions.value[0].value,
     };
 
     const response =
@@ -399,7 +399,7 @@ const getMessagesAnalytics = async () => {
       template_id: selectedTemplateUuid.value,
       start_date: appliedFilters.value?.date?._start,
       end_date: appliedFilters.value?.date?._end,
-      source: selectedApiOptions.value[0].value,
+      product_type: selectedApiOptions.value[0].value,
     };
 
     const response =

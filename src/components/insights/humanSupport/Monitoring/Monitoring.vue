@@ -63,13 +63,13 @@ const isVisible = useElementVisibility(monitoringRef);
 
 const shouldPoll = computed(() => isVisible.value);
 
-const loadData = async () => {
-  setRefreshDataMonitoring(true);
+const loadData = async (silent = false) => {
+  setRefreshDataMonitoring(true, silent);
 
   timeoutStop?.();
 
   const { stop } = useTimeoutFn(() => {
-    setRefreshDataMonitoring(false);
+    setRefreshDataMonitoring(false, silent);
   }, 500);
 
   timeoutStop = stop;
@@ -81,7 +81,7 @@ const startAutoRefresh = () => {
   }
 
   autoRefreshInterval = setInterval(() => {
-    loadData();
+    loadData(true);
   }, AUTO_REFRESH_INTERVAL);
 };
 

@@ -18,6 +18,7 @@ export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
     const refreshDataMonitoring = ref<boolean>(false);
+    const isSilentRefresh = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_waiting: null,
@@ -47,8 +48,9 @@ export const useHumanSupportMonitoring = defineStore(
       activeDetailedTab.value = tab;
     };
 
-    const setRefreshDataMonitoring = (value: boolean) => {
+    const setRefreshDataMonitoring = (value: boolean, silent = false) => {
       refreshDataMonitoring.value = value;
+      isSilentRefresh.value = silent;
     };
 
     const loadAllData = () => {
@@ -59,7 +61,9 @@ export const useHumanSupportMonitoring = defineStore(
 
     const loadServiceStatusData = async () => {
       try {
-        loadingServiceStatusData.value = true;
+        if (!isSilentRefresh.value) {
+          loadingServiceStatusData.value = true;
+        }
         updateLastUpdatedRequest();
         const data = await ServiceStatusService.getServiceStatusData();
 
@@ -67,13 +71,17 @@ export const useHumanSupportMonitoring = defineStore(
       } catch (error) {
         console.error('Error loading service status data:', error);
       } finally {
-        loadingServiceStatusData.value = false;
+        if (!isSilentRefresh.value) {
+          loadingServiceStatusData.value = false;
+        }
       }
     };
 
     const loadTimeMetricsData = async () => {
       try {
-        loadingTimeMetricsData.value = true;
+        if (!isSilentRefresh.value) {
+          loadingTimeMetricsData.value = true;
+        }
         updateLastUpdatedRequest();
 
         const data = await TimeMetricsService.getTimeMetricsData();
@@ -82,13 +90,17 @@ export const useHumanSupportMonitoring = defineStore(
       } catch (error) {
         console.error('Error loading time metrics data:', error);
       } finally {
-        loadingTimeMetricsData.value = false;
+        if (!isSilentRefresh.value) {
+          loadingTimeMetricsData.value = false;
+        }
       }
     };
 
     const loadHumanSupportByHourData = async () => {
       try {
-        loadingHumanSupportByHourData.value = true;
+        if (!isSilentRefresh.value) {
+          loadingHumanSupportByHourData.value = true;
+        }
         updateLastUpdatedRequest();
         const data =
           await ServicesOpenByHourService.getServicesOpenByHourData();
@@ -97,7 +109,9 @@ export const useHumanSupportMonitoring = defineStore(
       } catch (error) {
         console.error('Error loading human support by hour data:', error);
       } finally {
-        loadingHumanSupportByHourData.value = false;
+        if (!isSilentRefresh.value) {
+          loadingHumanSupportByHourData.value = false;
+        }
       }
     };
 
@@ -119,6 +133,7 @@ export const useHumanSupportMonitoring = defineStore(
       servicesOpenByHourData,
       activeDetailedTab,
       refreshDataMonitoring,
+      isSilentRefresh,
       loadAllData,
       loadServiceStatusData,
       loadTimeMetricsData,

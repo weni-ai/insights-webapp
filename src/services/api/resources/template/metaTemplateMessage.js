@@ -113,9 +113,17 @@ export default {
     template_id,
     start_date,
     end_date,
+    product_type,
   }) {
     const url = '/metrics/meta/whatsapp-message-templates/messages-analytics/';
-    const params = { waba_id, project_uuid, template_id, start_date, end_date };
+    const params = {
+      waba_id,
+      project_uuid,
+      template_id,
+      start_date,
+      end_date,
+      product_type,
+    };
 
     const { data } = await http.get(url, { params });
 
@@ -149,9 +157,17 @@ export default {
     template_id,
     date_start,
     date_end,
+    product_type,
   }) {
     const url = '/metrics/meta/whatsapp-message-templates/buttons-analytics/';
-    const params = { waba_id, project_uuid, template_id, date_start, date_end };
+    const params = {
+      waba_id,
+      project_uuid,
+      template_id,
+      date_start,
+      date_end,
+      product_type,
+    };
 
     const { data } = await http.get(url, { params });
 

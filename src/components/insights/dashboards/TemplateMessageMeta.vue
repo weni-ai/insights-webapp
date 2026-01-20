@@ -42,6 +42,7 @@
     <UnnnicSelectSmart
       v-if="viewTab === 'template'"
       v-model="selectedApiOptions"
+      class="template-message-meta-dashboard__api-select"
       :options="dataSourceOptions"
     />
   </section>
@@ -528,6 +529,10 @@ const unfavoriteTemplate = async () => {
     align-items: center;
     justify-content: space-between;
     margin-bottom: $unnnic-spacing-md;
+
+    :deep(.template-message-meta-dashboard__api-select) {
+      min-width: 250px;
+    }
 
     &-container {
       display: flex;

@@ -187,7 +187,7 @@ const selectedApiOptions = ref([
     label: i18n.global.t('template_messages_dashboard.data_source', {
       source: 'Cloud API',
     }),
-    value: 'cloud_api',
+    value: 'CLOUD_API',
   },
 ]);
 

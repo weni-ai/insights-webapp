@@ -28,6 +28,7 @@ interface QueryParams {
   ordering?: string;
   limit?: number;
   offset?: number;
+  contact?: string;
 }
 
 export default {
@@ -35,7 +36,7 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<InAwaitingData> {
     const { project } = useConfig();
-    const { appliedFilters } = useHumanSupport();
+    const { appliedFilters, appliedDetailFilters } = useHumanSupport();
 
     const formattedAppliedFilters = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
@@ -46,11 +47,15 @@ export default {
 
     const params = createRequestQuery(queryParams);
 
-    const formattedParams = {
+    const formattedParams: Record<string, any> = {
       project_uuid: project.uuid,
       ...formattedAppliedFilters,
       ...params,
     };
+
+    if (appliedDetailFilters.contactInput?.value) {
+      formattedParams.contact = appliedDetailFilters.contactInput.value;
+    }
 
     const response = (await http.get(
       `/metrics/human-support/detailed-monitoring/awaiting/`,

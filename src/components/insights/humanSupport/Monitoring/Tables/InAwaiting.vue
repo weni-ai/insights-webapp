@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -31,6 +31,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
@@ -38,6 +39,7 @@ type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey =
@@ -80,6 +82,10 @@ const {
   formatResults,
 });
 
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
+});
+
 const formattedHeaders = computed(() => {
   const createHeader = (itemKey: string) => ({
     title: t(`${baseTranslationKey}.${itemKey}`),
@@ -117,11 +123,15 @@ onMounted(() => {
 });
 
 watch(
-  [currentSort, () => humanSupport.appliedFilters],
+  [
+    currentSort,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDetailFilters.contactInput,
+  ],
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post' },
+  { flush: 'post', deep: true },
 );
 
 watch(

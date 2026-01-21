@@ -3,21 +3,33 @@
     class="detailed-filters"
     :data-testid="`detailed-filters-${type}`"
   >
-    <TransitionGroup
-      name="filter-slide"
-      tag="div"
+    <section
       class="detailed-filters__container"
       data-testid="detailed-filters-container"
     >
-      <FilterSelect
-        v-for="filter in activeFilters"
-        :key="filter.type"
-        :ref="(el) => setFilterRef(el, filter.type)"
-        :data-testid="`detailed-filter-${filter.type}`"
-        v-bind="filter.props"
-        v-on="filter.events"
-      />
-    </TransitionGroup>
+      <TransitionGroup name="filter-slide">
+        <FilterInput
+          v-for="filter in activeFilters.filter(
+            (f) => f.component === 'FilterInput',
+          )"
+          :key="filter.type"
+          :ref="(el) => setFilterRef(el, filter.type)"
+          :data-testid="`detailed-filter-${filter.type}`"
+          v-bind="filter.props"
+          v-on="filter.events"
+        />
+        <FilterSelect
+          v-for="filter in activeFilters.filter(
+            (f) => f.component === 'FilterSelect',
+          )"
+          :key="filter.type"
+          :ref="(el) => setFilterRef(el, filter.type)"
+          :data-testid="`detailed-filter-${filter.type}`"
+          v-bind="filter.props"
+          v-on="filter.events"
+        />
+      </TransitionGroup>
+    </section>
   </section>
 </template>
 
@@ -25,11 +37,17 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import FilterSelect from './FilterSelect.vue';
+import FilterInput from './FilterInput.vue';
 
-type FilterType = 'attendant' | 'contact' | 'ticket_id';
-type ComponentType = 'attendant' | 'pauses' | 'finished';
+type FilterType = 'attendant' | 'contact' | 'ticket_id' | 'contact_input';
+type ComponentType =
+  | 'attendant'
+  | 'pauses'
+  | 'finished'
+  | 'in_awaiting'
+  | 'in_progress';
 type SourceType = 'agents' | 'contacts' | 'ticket_id';
-type StoreFilterType = 'agent' | 'contact' | 'ticketId';
+type StoreFilterType = 'agent' | 'contact' | 'ticketId' | 'contactInput';
 
 interface Props {
   type: ComponentType;
@@ -42,8 +60,16 @@ interface FilterOption {
 
 interface FilterState {
   type: FilterType;
-  source: SourceType;
-  selected: FilterOption[];
+  source?: SourceType;
+  selected: FilterOption[] | string;
+  isInput?: boolean;
+}
+
+interface ActiveFilter {
+  type: FilterType;
+  component: 'FilterInput' | 'FilterSelect';
+  props: any;
+  events: any;
 }
 
 const props = defineProps<Props>();
@@ -54,18 +80,22 @@ const filterRefs = ref<Record<FilterType, any>>({
   attendant: null,
   contact: null,
   ticket_id: null,
+  contact_input: null,
 });
 
 const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
   attendant: ['attendant'],
   pauses: ['attendant'],
   finished: ['attendant', 'contact', 'ticket_id'],
+  in_awaiting: ['contact_input'],
+  in_progress: ['contact_input'],
 };
 
 const FILTER_TO_STORE_MAP: Record<FilterType, StoreFilterType> = {
   attendant: 'agent',
   contact: 'contact',
   ticket_id: 'ticketId',
+  contact_input: 'contactInput',
 };
 
 const filters = ref<Record<FilterType, FilterState>>({
@@ -73,16 +103,24 @@ const filters = ref<Record<FilterType, FilterState>>({
     type: 'attendant',
     source: 'agents',
     selected: [],
+    isInput: false,
   },
   contact: {
     type: 'contact',
     source: 'contacts',
     selected: [],
+    isInput: false,
   },
   ticket_id: {
     type: 'ticket_id',
     source: 'ticket_id',
     selected: [],
+    isInput: false,
+  },
+  contact_input: {
+    type: 'contact_input',
+    selected: '',
+    isInput: true,
   },
 });
 
@@ -100,9 +138,14 @@ const filterParams = computed(() => ({
 
 const handleFilterChange = (
   filterType: FilterType,
-  payload: { value: string; label: string; email?: string },
+  payload: { value: string; label: string; email?: string } | string,
 ) => {
   const storeFilterType = FILTER_TO_STORE_MAP[filterType];
+
+  if (typeof payload === 'string') {
+    saveAppliedDetailFilter(storeFilterType, payload, payload);
+    return;
+  }
 
   if (!payload.value) {
     saveAppliedDetailFilter(storeFilterType, '', '');
@@ -117,18 +160,36 @@ const handleFilterChange = (
   saveAppliedDetailFilter(storeFilterType, valueToStore, payload.label);
 };
 
-const activeFilters = computed(() => {
+const activeFilters = computed<ActiveFilter[]>(() => {
   const filterTypes = FILTER_CONFIG[props.type] || [];
 
-  return filterTypes.map((filterType) => {
+  return filterTypes.map((filterType): ActiveFilter => {
     const filter = filters.value[filterType];
+
+    if (filter.isInput) {
+      return {
+        type: filterType,
+        component: 'FilterInput',
+        props: {
+          type: 'contact',
+          modelValue: filter.selected as string,
+        },
+        events: {
+          'update:modelValue': (value: string) => {
+            filter.selected = value;
+          },
+          change: (value: string) => handleFilterChange(filterType, value),
+        },
+      };
+    }
 
     return {
       type: filterType,
+      component: 'FilterSelect',
       props: {
         type: filter.type,
         source: filter.source,
-        modelValue: filter.selected,
+        modelValue: filter.selected as FilterOption[],
         filterParams: filterParams.value,
       },
       events: {
@@ -156,6 +217,16 @@ const clearNonFinishedFilters = () => {
 
     saveAppliedDetailFilter('contact', '', '');
     saveAppliedDetailFilter('ticketId', '', '');
+  }
+
+  if (props.type !== 'in_awaiting' && props.type !== 'in_progress') {
+    filters.value.contact_input.selected = '';
+
+    if (filterRefs.value.contact_input) {
+      filterRefs.value.contact_input.clearData();
+    }
+
+    saveAppliedDetailFilter('contactInput', '', '');
   }
 };
 
@@ -200,18 +271,25 @@ onMounted(() => {
 }
 
 .filter-slide-enter-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .filter-slide-leave-active {
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
+  position: absolute;
 }
 
 .filter-slide-enter-from {
   opacity: 0;
+  transform: translateX(-10px);
 }
 
 .filter-slide-leave-to {
   opacity: 0;
+  transform: translateX(10px);
+}
+
+.filter-slide-move {
+  transition: transform 0.3s ease;
 }
 </style>

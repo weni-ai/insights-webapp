@@ -46,6 +46,19 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
             clearData: vi.fn(),
           },
         },
+        FilterInput: {
+          template: `
+            <div 
+              :data-testid="\`mock-filter-input-\${type}\`"
+              @input="$emit('change', $event.target.value)"
+            ></div>
+          `,
+          props: ['type', 'modelValue'],
+          emits: ['update:modelValue', 'change'],
+          methods: {
+            clearData: vi.fn(),
+          },
+        },
         TransitionGroup: false,
       },
       mocks: {
@@ -96,6 +109,20 @@ describe('DetailedFilters', () => {
       expect(getFilterSelect('attendant').exists()).toBe(true);
       expect(getFilterSelect('contact').exists()).toBe(true);
       expect(getFilterSelect('ticket_id').exists()).toBe(true);
+    });
+
+    it('should render contact input filter for in_awaiting type', () => {
+      wrapper = createWrapper({ type: 'in_awaiting' });
+
+      const filterInput = wrapper.find('[data-testid="detailed-filter-contact_input"]');
+      expect(filterInput.exists()).toBe(true);
+    });
+
+    it('should render contact input filter for in_progress type', () => {
+      wrapper = createWrapper({ type: 'in_progress' });
+
+      const filterInput = wrapper.find('[data-testid="detailed-filter-contact_input"]');
+      expect(filterInput.exists()).toBe(true);
     });
   });
 
@@ -207,6 +234,34 @@ describe('DetailedFilters', () => {
         'contact',
         'contact-1',
         'Contact 1',
+      );
+    });
+
+    it('should handle contact input filter change with string value', async () => {
+      wrapper = createWrapper({ type: 'in_awaiting' });
+      const humanSupportStore = useHumanSupport();
+
+      wrapper.vm.handleFilterChange('contact_input', 'search text');
+      await nextTick();
+
+      expect(humanSupportStore.saveAppliedDetailFilter).toHaveBeenCalledWith(
+        'contactInput',
+        'search text',
+        'search text',
+      );
+    });
+
+    it('should handle empty contact input filter', async () => {
+      wrapper = createWrapper({ type: 'in_progress' });
+      const humanSupportStore = useHumanSupport();
+
+      wrapper.vm.handleFilterChange('contact_input', '');
+      await nextTick();
+
+      expect(humanSupportStore.saveAppliedDetailFilter).toHaveBeenCalledWith(
+        'contactInput',
+        '',
+        '',
       );
     });
   });
@@ -329,13 +384,51 @@ describe('DetailedFilters', () => {
       wrapper = createWrapper({ type: 'finished' });
       const humanSupportStore = useHumanSupport();
 
-      const callsBefore =
-        humanSupportStore.saveAppliedDetailFilter.mock.calls.length;
       wrapper.vm.clearNonFinishedFilters();
 
-      expect(humanSupportStore.saveAppliedDetailFilter.mock.calls.length).toBe(
-        callsBefore,
+      expect(humanSupportStore.saveAppliedDetailFilter).toHaveBeenCalledWith(
+        'contactInput',
+        '',
+        '',
       );
+      expect(humanSupportStore.saveAppliedDetailFilter).not.toHaveBeenCalledWith(
+        'contact',
+        '',
+        '',
+      );
+      expect(humanSupportStore.saveAppliedDetailFilter).not.toHaveBeenCalledWith(
+        'ticketId',
+        '',
+        '',
+      );
+    });
+
+    it('should clear contact input filter when changing from in_awaiting to attendant', async () => {
+      wrapper = createWrapper({ type: 'in_awaiting' });
+      const humanSupportStore = useHumanSupport();
+
+      wrapper.vm.filters.contact_input.selected = 'search text';
+
+      await wrapper.setProps({ type: 'attendant' });
+      await nextTick();
+
+      expect(wrapper.vm.filters.contact_input.selected).toBe('');
+      expect(humanSupportStore.saveAppliedDetailFilter).toHaveBeenCalledWith(
+        'contactInput',
+        '',
+        '',
+      );
+    });
+
+    it('should not clear contact input filter when staying in in_awaiting or in_progress', async () => {
+      wrapper = createWrapper({ type: 'in_awaiting' });
+
+      wrapper.vm.filters.contact_input.selected = 'search text';
+
+      await wrapper.setProps({ type: 'in_progress' });
+      await nextTick();
+
+      expect(wrapper.vm.filters.contact_input.selected).toBe('search text');
     });
   });
 });

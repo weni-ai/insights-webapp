@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -40,14 +40,16 @@
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, onMounted, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { AttendantDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
-import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
+import service, {
+  type AttendantDataResult,
+} from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
 import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
@@ -64,6 +66,7 @@ type FormattedAttendantData = Omit<
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey =
@@ -111,6 +114,10 @@ const {
 } = useInfiniteScrollTable<AttendantDataResult, FormattedAttendantData>({
   fetchData,
   formatResults,
+});
+
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
 });
 
 const formattedHeaders = computed(() => {

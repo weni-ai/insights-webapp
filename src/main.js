@@ -43,7 +43,7 @@ export default async function mountInsightsApp({
   app.use(pinia);
   app.use(router);
   app.use(i18n);
-  app.use(Unnnic);
+  app.use(Unnnic, { teleportTarget: `#${containerId}` });
 
   if (isFederatedModule && initialRoute) await router.replace(initialRoute);
 

@@ -11,7 +11,7 @@
     :disabledSecondaryButton="loadingRequest"
     wide
     @primary-button-click="dashboard ? updateDashboard() : createDashboard()"
-    @secondary-button-click="$refs.unnnicDrawer.close()"
+    @secondary-button-click="close"
     @close="close"
   >
     <template #content>

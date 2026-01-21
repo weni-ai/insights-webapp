@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -48,6 +48,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
   custom_status: {
@@ -58,6 +59,7 @@ type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey = 'human_support_dashboard.detailed_monitoring.pauses';
@@ -93,6 +95,10 @@ const {
 } = useInfiniteScrollTable<PausesDataResult, FormattedPausesData>({
   fetchData,
   formatResults,
+});
+
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
 });
 
 const customStatusTypes = computed(() => {

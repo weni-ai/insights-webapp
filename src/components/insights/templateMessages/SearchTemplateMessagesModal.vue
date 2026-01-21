@@ -51,17 +51,23 @@
     </section>
 
     <section class="search-template-messages-modal__table-container">
-      <UnnnicTableNext
-        class="search-template-messages-modal__table"
+      <UnnnicDataTable
         :headers="tableHeaders"
-        :rows="templateMessages"
-        :paginationInterval="5"
+        :items="templateMessages"
+        clickable
+        hidePagination
+        :pageInterval="5"
         :paginationTotal="5"
         :pagination="1"
         :isLoading="loadingTemplateMessages"
         data-testid="template-messages-table"
-        @row-click="rowClick"
-      />
+        :locale="i18n.global.locale"
+        @item-click="rowClick"
+      >
+        <template #body-status="{ item }">
+          <QualityTemplateMessageFlag :status="item.status" />
+        </template>
+      </UnnnicDataTable>
       <section class="search-template-messages-modal__table-pagination">
         <UnnnicButton
           type="tertiary"
@@ -91,7 +97,7 @@ export default {
 </script>
 
 <script setup>
-import { markRaw, reactive, ref, onMounted, computed } from 'vue';
+import { reactive, ref, onMounted, computed } from 'vue';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
@@ -134,14 +140,15 @@ const filters = reactive({
 
 const tableHeaders = [
   {
-    content: i18n.global.t(
+    title: i18n.global.t(
       'template_messages_dashboard.templates_modal.table.header.name',
     ),
+    itemKey: 'name',
     size: 3,
   },
-  { content: i18n.global.t('category') },
-  { content: i18n.global.t('language') },
-  { content: i18n.global.t('status') },
+  { title: i18n.global.t('category'), itemKey: 'category' },
+  { title: i18n.global.t('language'), itemKey: 'language' },
+  { title: i18n.global.t('status'), itemKey: 'status' },
 ];
 
 const sourceRequest = (source) => {
@@ -191,19 +198,7 @@ const searchTemplates = async (cursorKey) => {
 
     tablePagination.previous = previous;
 
-    templateMessages.value = results.map((template) => ({
-      ...template,
-      content: [
-        template.name,
-        template.category,
-        template.language,
-        {
-          component: markRaw(QualityTemplateMessageFlag),
-          props: { status: template.status },
-          events: {},
-        },
-      ],
-    }));
+    templateMessages.value = results;
   } catch (error) {
     console.log(error);
   } finally {
@@ -221,16 +216,6 @@ onMounted(() => searchTemplates());
 
 <style lang="scss" scoped>
 .search-template-messages-modal {
-  :deep(.unnnic-modal-dialog__container) {
-    width: 1000px;
-  }
-  :deep(.search-template-messages-modal__table) {
-    :hover.unnnic-table-next__body-row {
-      cursor: pointer;
-      background-color: $unnnic-color-neutral-lightest;
-      font-weight: $unnnic-font-weight-bold;
-    }
-  }
   &__filters-container {
     display: flex;
     gap: $unnnic-spacing-xs;

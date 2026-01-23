@@ -175,6 +175,19 @@ const redirectItem = (item: PausesDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
+
 watch(
   [
     currentSort,
@@ -183,7 +196,7 @@ watch(
     () => humanSupport.appliedDateRange,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
   { immediate: true },
 );
@@ -192,7 +205,7 @@ watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

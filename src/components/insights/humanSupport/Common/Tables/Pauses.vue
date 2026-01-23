@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { PausesDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
@@ -175,10 +175,6 @@ const redirectItem = (item: PausesDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
-
 watch(
   [
     currentSort,
@@ -189,7 +185,7 @@ watch(
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 
 watch(

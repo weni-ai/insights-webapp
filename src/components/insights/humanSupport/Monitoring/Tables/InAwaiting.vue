@@ -118,6 +118,19 @@ const redirectItem = (item: InAwaitingDataResult) => {
   window.parent.postMessage({ event: 'redirect', path: item?.link?.url }, '*');
 };
 
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
+
 watch(
   [
     currentSort,
@@ -125,7 +138,7 @@ watch(
     () => humanSupport.appliedDetailFilters.contactInput,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
   { immediate: true, deep: true },
 );
@@ -137,7 +150,7 @@ watch(
       newValue &&
       humanSupportMonitoring.activeDetailedTab === 'in_awaiting'
     ) {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

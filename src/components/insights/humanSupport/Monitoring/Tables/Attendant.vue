@@ -174,6 +174,19 @@ const redirectItem = (item: AttendantDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
+
 watch(
   [
     currentSort,
@@ -181,7 +194,7 @@ watch(
     () => humanSupport.appliedFilters,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
   { immediate: true },
 );
@@ -190,7 +203,7 @@ watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

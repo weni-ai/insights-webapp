@@ -189,6 +189,38 @@ describe('Attendant', () => {
       await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
     });
+
+    it('prevents multiple simultaneous requests', async () => {
+      vi.clearAllMocks();
+      
+      // Mock resetAndLoadData to simulate async behavior
+      let resolveRequest;
+      const requestPromise = new Promise((resolve) => {
+        resolveRequest = resolve;
+      });
+      mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
+      
+      // Trigger multiple changes rapidly
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      
+      await wrapper.vm.$nextTick();
+      
+      // Should only call once
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+      
+      // Resolve the request
+      resolveRequest();
+      await requestPromise;
+      await wrapper.vm.$nextTick();
+      
+      // Now a new request can be made
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      await wrapper.vm.$nextTick();
+      
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
+    });
   });
 
   describe('Monitoring refresh', () => {

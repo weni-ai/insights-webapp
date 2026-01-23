@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
@@ -118,10 +118,6 @@ const redirectItem = (item: InAwaitingDataResult) => {
   window.parent.postMessage({ event: 'redirect', path: item?.link?.url }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
-
 watch(
   [
     currentSort,
@@ -131,7 +127,7 @@ watch(
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post', deep: true },
+  { immediate: true, deep: true },
 );
 
 watch(

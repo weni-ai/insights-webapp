@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
@@ -118,9 +118,18 @@ const redirectItem = (item: InAwaitingDataResult) => {
   window.parent.postMessage({ event: 'redirect', path: item?.link?.url }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
 
 watch(
   [
@@ -129,9 +138,9 @@ watch(
     () => humanSupport.appliedDetailFilters.contactInput,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
-  { flush: 'post', deep: true },
+  { immediate: true, deep: true },
 );
 
 watch(
@@ -141,7 +150,7 @@ watch(
       newValue &&
       humanSupportMonitoring.activeDetailedTab === 'in_awaiting'
     ) {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

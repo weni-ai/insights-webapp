@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { FinishedDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
@@ -128,10 +128,6 @@ const redirectItem = (item: FinishedDataResult) => {
   window.parent.postMessage({ event: 'redirect', path: url }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
-
 watch(
   [
     currentSort,
@@ -144,6 +140,6 @@ watch(
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 </script>

@@ -47,14 +47,17 @@ export default {
     const { project } = useConfig();
     const { appliedFilters, appliedDateRange, activeTab } = useHumanSupport();
 
-    const formattedAppliedFilters = {
+    const formattedAppliedFilters: Record<string, any> = {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
       ordering: queryParams.ordering ? queryParams.ordering : 'agent',
-      start_date: appliedDateRange.start,
-      end_date: appliedDateRange.end,
     };
+
+    if (activeTab === 'analysis') {
+      formattedAppliedFilters.start_date = appliedDateRange.start;
+      formattedAppliedFilters.end_date = appliedDateRange.end;
+    }
 
     const params = createRequestQuery(queryParams);
 

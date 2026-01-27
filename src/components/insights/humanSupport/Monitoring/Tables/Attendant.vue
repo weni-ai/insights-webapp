@@ -74,7 +74,7 @@ const baseTranslationKey =
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: t(`${baseTranslationKey}.status`),
-  order: 'desc',
+  order: 'asc',
   itemKey: 'status',
 });
 

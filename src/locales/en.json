@@ -604,6 +604,7 @@
     "select_origin_flow": "@:select source @.lower:flow"
   },
   "insights_header": {
+    "auto_refresh": "Auto refresh: {status}",
     "refresh": "Refresh",
     "filters": "Filters",
     "filtrate": "Filter",
@@ -1018,5 +1019,7 @@
         "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Agent</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
       }
     }
-  }
+  },
+  "on": "on",
+  "off": "off"
 }

@@ -603,6 +603,7 @@
     "select_origin_flow": "@:select @.lower:flow de origen"
   },
   "insights_header": {
+    "auto_refresh": "Actualización automática: {status}",
     "refresh": "Actualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
@@ -1017,5 +1018,7 @@
         "fourth_text": "Puedes revisar cada interacción cerrada en la pestaña <b>Cerrados</b>. Las pestañas <b>Atendido</b> y <b>Pausas</b> permiten analizar las métricas de cada agente por interacción cerrada, así como las pausas personalizadas dentro del período filtrado."
       }
     }
-  }
+  },
+  "on": "on",
+  "off": "off"
 }

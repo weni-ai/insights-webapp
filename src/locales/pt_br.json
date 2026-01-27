@@ -603,6 +603,7 @@
     "select_origin_flow": "@:select @.lower:flow de origem"
   },
   "insights_header": {
+    "auto_refresh": "Atualização automática: {status}",
     "refresh": "Atualizar",
     "filters": "Filtros",
     "filtrate": "Filtrar",
@@ -1017,5 +1018,7 @@
         "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
       }
     }
-  }
+  },
+  "on": "on",
+  "off": "off"
 }

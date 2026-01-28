@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, computed, ref } from 'vue';
+import { onUnmounted, computed } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
 import { UnnnicButton } from '@weni/unnnic-system';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
@@ -49,8 +49,6 @@ const isLoading = computed(() => {
   return false;
 });
 
-const newUpdatesAvailable = ref(false);
-
 const refreshData = () => {
   handleRefreshData(true, false);
 
@@ -61,8 +59,6 @@ const refreshData = () => {
   }, 500);
 
   timeoutStop = stop;
-
-  newUpdatesAvailable.value = false;
 };
 
 onUnmounted(() => {

@@ -67,8 +67,10 @@ export default async function mountInsightsApp({
     container.classList.add('insights-webapp');
   }
 
+  console.log({ before: app });
   app.mount(`#${containerId}`);
   appRef = app;
+  console.log({ after: app });
 
   return { app: appRef, router };
 }

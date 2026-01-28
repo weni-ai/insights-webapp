@@ -111,7 +111,9 @@ const formattedHeaders = computed(() => {
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
-    createHeader('time_in_service'),
+    createHeader('time_in_service', undefined, {
+      isSortable: false,
+    }),
   ];
 });
 

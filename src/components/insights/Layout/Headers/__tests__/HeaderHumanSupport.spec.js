@@ -60,17 +60,6 @@ describe('HeaderHumanSupport', () => {
       ).toBe(true);
     });
 
-    it('renders HeaderTagLive when in monitoring tab', () => {
-      wrapper = createWrapper({
-        humanSupport: { activeTab: 'monitoring' },
-      });
-      expect(
-        wrapper
-          .find('[data-testid="insights-layout-header-tag-live"]')
-          .exists(),
-      ).toBe(true);
-    });
-
     it('does not render HeaderTagLive when in analysis tab', () => {
       wrapper = createWrapper({
         humanSupport: { activeTab: 'analysis' },

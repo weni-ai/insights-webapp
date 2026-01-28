@@ -43,7 +43,7 @@ export default async function mountInsightsApp({
   app.use(pinia);
   app.use(router);
   app.use(i18n);
-  app.use(Unnnic);
+  app.use(Unnnic, { teleportTarget: `#${containerId}` });
 
   if (isFederatedModule && initialRoute) await router.replace(initialRoute);
 
@@ -67,8 +67,10 @@ export default async function mountInsightsApp({
     container.classList.add('insights-webapp');
   }
 
+  console.log({ before: app });
   app.mount(`#${containerId}`);
   appRef = app;
+  console.log({ after: app });
 
   return { app: appRef, router };
 }

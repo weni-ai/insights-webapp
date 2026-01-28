@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 import RadioList from '@/components/RadioList.vue';
-
+import { UnnnicToolTip } from '@weni/unnnic-system';
 describe('RadioList.vue', () => {
   const radios = [
     { value: 'option1', label: 'Option 1', tooltip: 'Tooltip option 1' },
@@ -69,9 +69,9 @@ describe('RadioList.vue', () => {
   });
 
   it('should show tooltip if radio item have it key', () => {
-    const tooltipOption1 = wrapper.find('[data-testid=radio-option1-tooltip]');
+    const tooltipOption1 = wrapper.findComponent(UnnnicToolTip);
 
     expect(tooltipOption1.exists()).toBeTruthy();
-    expect(wrapper.text()).toContain(radios[0].tooltip);
+    expect(tooltipOption1.props().text).toContain(radios[0].tooltip);
   });
 });

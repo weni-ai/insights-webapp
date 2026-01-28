@@ -16,9 +16,7 @@
     <template #content>
       <UnnnicDisclaimer
         class="drawer-topics-disclaimer"
-        :text="$t('conversations_dashboard.form_topic.disclaimer')"
-        icon="alert-circle-1"
-        iconColor="feedback-blue"
+        :description="$t('conversations_dashboard.form_topic.disclaimer')"
       />
       <FormTopic data-testid="drawer-topics-form" />
     </template>

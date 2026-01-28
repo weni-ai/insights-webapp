@@ -3,6 +3,7 @@ import { shallowMount, config } from '@vue/test-utils';
 import i18n from '@/utils/plugins/i18n';
 import Unnnic from '@weni/unnnic-system';
 import WelcomeOnboardingModal from '@/components/WelcomeOnboardingModal.vue';
+import { UnnnicModalDialog } from '@weni/unnnic-system';
 
 beforeAll(() => {
   config.global.plugins = config.global.plugins.filter(
@@ -24,9 +25,6 @@ const createWrapper = (props = {}) => {
     },
     global: {
       plugins: [Unnnic],
-      stubs: {
-        UnnnicModalDialog: Unnnic.unnnicModalDialog,
-      },
     },
   });
 };
@@ -45,12 +43,13 @@ describe('WelcomeOnboardingModal.vue', () => {
 
   describe('Rendering and Props', () => {
     it('renders UnnnicModalDialog', () => {
-      const modalDialog = wrapper.find('[data-test-id="modal-dialog"]');
+      const modalDialog = wrapper.findComponent(UnnnicModalDialog);
 
       expect(modalDialog.exists()).toBe(true);
     });
 
     it('displays the modal title, image, and content correctly', () => {
+      console.log(wrapper.html());
       expect(wrapper.vm.$t('onboarding.welcome_modal.title')).toBeDefined();
       expect(wrapper.vm.$t('onboarding.welcome_modal.text')).toBeDefined();
       expect(wrapper.html()).toContain('welcome-onboarding-modal');

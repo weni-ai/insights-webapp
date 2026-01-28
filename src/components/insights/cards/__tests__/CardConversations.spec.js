@@ -5,6 +5,7 @@ import CardConversations from '../CardConversations.vue';
 
 import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import { UnnnicToolTip } from '@weni/unnnic-system';
 
 const i18n = createI18n({
   legacy: false,
@@ -104,9 +105,7 @@ describe('CardConversations.vue', () => {
     it('should render tooltip when tooltipInfo is provided', async () => {
       await wrapper.setProps({ tooltipInfo: 'Test Tooltip' });
 
-      expect(
-        wrapper.find('[data-testid="card-conversations-tooltip"]').exists(),
-      ).toBe(true);
+      expect(wrapper.findComponent(UnnnicToolTip).exists()).toBe(true);
       expect(
         wrapper.find('[data-testid="card-conversations-info-icon"]').exists(),
       ).toBe(true);
@@ -294,9 +293,7 @@ describe('CardConversations.vue', () => {
       expect(
         wrapper.find('[data-testid="card-value-description"]').text(),
       ).toBe(props.valueDescription);
-      expect(
-        wrapper.find('[data-testid="card-conversations-tooltip"]').exists(),
-      ).toBe(true);
+      expect(wrapper.findComponent(UnnnicToolTip).exists()).toBe(true);
       expect(
         wrapper.find('[data-testid="card-conversations"]').classes(),
       ).toContain('card-conversations--border-left');

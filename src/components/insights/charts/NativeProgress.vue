@@ -1,23 +1,25 @@
 <template>
-  <UnnnicToolTip
-    class="native-progress__tooltip"
-    enableHtml
-    :enabled="!!tooltip"
-    :text="tooltip"
-    side="top"
-  >
-    <section
-      class="native-progress"
-      :style="containerStyles"
-      data-testid="native-progress"
+  <div class="native-progress">
+    <UnnnicToolTip
+      class="native-progress__tooltip"
+      enableHtml
+      :enabled="!!tooltip"
+      :text="tooltip"
+      side="top"
     >
       <section
-        class="native-progress__bar"
-        :style="progressBarStyles"
-        data-testid="native-progress-bar"
-      />
-    </section>
-  </UnnnicToolTip>
+        class="native-progress"
+        :style="containerStyles"
+        data-testid="native-progress"
+      >
+        <section
+          class="native-progress__bar"
+          :style="progressBarStyles"
+          data-testid="native-progress-bar"
+        />
+      </section>
+    </UnnnicToolTip>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -61,14 +63,7 @@ const progressBarStyles = computed(() => ({
   border-radius: $unnnic-border-radius-sm;
   overflow: hidden;
   position: relative;
-
-  &__tooltip {
-    display: unset;
-
-    :deep(.unnnic-tooltip-label) {
-      text-align: start;
-    }
-  }
+  display: grid;
 
   &__bar {
     height: 100%;

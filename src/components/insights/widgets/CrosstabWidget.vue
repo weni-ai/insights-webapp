@@ -3,9 +3,9 @@
     <section class="crosstab-widget__table">
       <UnnnicDisclaimer
         v-if="isEmptyData && !isLoading"
+        type="attention"
         class="crosstab-widget__empty-data-disclaimer"
-        iconColor="feedback-yellow"
-        :text="$t('conversations_dashboard.no_data_available')"
+        :description="$t('conversations_dashboard.no_data_available')"
       />
       <ProgressTable
         :progressItems="formattedData.slice(0, 5)"
@@ -62,7 +62,6 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import ProgressTable from '@/components/ProgressTable.vue';
 import SeeAllDrawer from '../conversations/CustomizableWidget/SeeAllDrawer.vue';
 
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
 import { getWidgetCrosstabTooltip } from '@/utils/widget';
 
 const customWidgetsStore = useCustomWidgets();

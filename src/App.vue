@@ -313,8 +313,10 @@ export default {
 </style>
 
 <style>
-/* This is necessary to prevent the alert from being behind some screen items such as svgs */
-.alert-container {
-  z-index: 99999999;
+/* This is necessary to prevent being behind some screen items such as svgs, tour popover and alerts */
+.alert-container,
+.unnnic-tour__mask,
+.unnnic-tour__popover {
+  z-index: 99999999 !important;
 }
 </style>

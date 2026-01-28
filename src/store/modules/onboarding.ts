@@ -89,13 +89,14 @@ export const useOnboarding = defineStore('onboarding', {
           .click();
       }
 
-      await asyncTimeout(300).then(() => {
+      await asyncTimeout(500).then(() => {
         this.setOnboardingRef({
           key: 'widget-gallery',
           ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
         });
       });
     },
+
     async beforeOpenGaleryEmptyConfig() {
       const galeryDrawer = document.querySelector(
         '[data-onboarding-id="drawer-graph-empty"]',
@@ -106,7 +107,7 @@ export const useOnboarding = defineStore('onboarding', {
           .click();
       }
 
-      await asyncTimeout(300).then(() => {
+      await asyncTimeout(500).then(() => {
         this.setOnboardingRef({
           key: 'widget-gallery',
           ref: document.querySelector('[data-onboarding-id="widget-gallery"]'),
@@ -126,9 +127,7 @@ export const useOnboarding = defineStore('onboarding', {
       await asyncTimeout(600).then(() => {
         this.setOnboardingRef({
           key: 'drawer-graph-empty',
-          ref: document.querySelector(
-            '[data-onboarding-id="drawer-graph-empty"]',
-          )?.children?.[1],
+          ref: document.querySelector('.unnnic-drawer__container'),
         });
       });
     },
@@ -136,9 +135,7 @@ export const useOnboarding = defineStore('onboarding', {
       await asyncTimeout(600).then(() => {
         this.setOnboardingRef({
           key: 'drawer-card-metric-config',
-          ref: document.querySelector(
-            '[data-onboarding-id="drawer-card-metric-config"]',
-          )?.children?.[1],
+          ref: document.querySelector('.unnnic-drawer__container'),
         });
       });
     },

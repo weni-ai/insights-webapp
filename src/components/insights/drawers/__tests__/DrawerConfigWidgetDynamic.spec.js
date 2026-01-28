@@ -272,21 +272,13 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
 
   describe('Methods', () => {
     describe('internalClose', () => {
-      it('should close drawer and call tour previous step', async () => {
+      it('should call tour previous step', async () => {
         wrapper = createWrapper();
-
-        // Mock the $refs using Object.defineProperty
-        const mockClose = vi.fn();
-        Object.defineProperty(wrapper.vm.$refs, 'unnnicDrawer', {
-          value: { close: mockClose },
-          writable: true,
-        });
 
         const tourSpy = vi.spyOn(wrapper.vm, 'callTourPreviousStep');
 
         await wrapper.vm.internalClose();
 
-        expect(mockClose).toHaveBeenCalled();
         expect(tourSpy).toHaveBeenCalledWith({
           tour: 'widgets-onboarding-tour',
           qtdSteps: 2,

@@ -75,7 +75,7 @@ describe('SearchTemplateMessagesModal.vue', () => {
     await flushPromises();
 
     const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-    const table = wrapper.findComponent({ name: 'UnnnicTableNext' });
+    const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
     const buttons = wrapper.findAllComponents({ name: 'UnnnicButton' });
 
     expect(wrapper.exists()).toBe(true);

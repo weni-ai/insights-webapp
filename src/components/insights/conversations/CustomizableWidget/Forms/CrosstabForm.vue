@@ -24,16 +24,17 @@
 
     <hr class="crosstab-form__divider" />
 
-    <UnnnicDisclaimer
-      class="crosstab-form__disclaimer"
-      icon="info"
-      iconColor="color-gray-400"
-      :text="
-        $t(
-          'conversations_dashboard.customize_your_dashboard.crosstab.drawer.disclaimer',
-        )
-      "
-    />
+    <UnnnicDisclaimer class="crosstab-form__disclaimer">
+      <template #description>
+        <p
+          v-html="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.crosstab.drawer.disclaimer',
+            )
+          "
+        />
+      </template>
+    </UnnnicDisclaimer>
 
     <!-- option1 -->
     <section class="crosstab-form__container">

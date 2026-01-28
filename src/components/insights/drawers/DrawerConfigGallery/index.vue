@@ -49,7 +49,6 @@ import { useConfig } from '@/store/modules/config';
 import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
-import env from '@/utils/env';
 import { clearDeepValues } from '@/utils/object.js';
 
 export default {
@@ -155,6 +154,7 @@ export default {
       this.drawerConfigType = '';
 
       if (handleTourNextStep) this.callTourNextStep('widgets-onboarding-tour');
+      else this.callTourPreviousStep({ tour: 'widgets-onboarding-tour' });
 
       this.$emit('close');
     },
@@ -173,13 +173,7 @@ export default {
     },
 
     handleShowDrawerConfigWidget() {
-      if (this.$refs.unnnicDrawer) {
-        this.$refs.unnnicDrawer.transitionClose(() => {
-          this.showDrawerConfigWidget = true;
-        });
-      } else {
-        this.showDrawerConfigWidget = true;
-      }
+      this.showDrawerConfigWidget = true;
     },
 
     cleanCurrentWidget() {

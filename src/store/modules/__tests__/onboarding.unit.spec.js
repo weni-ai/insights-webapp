@@ -130,7 +130,7 @@ describe('useOnboarding store', () => {
 
     await store.beforeOpenWidgetMetricConfig();
     expect(document.querySelector).toHaveBeenCalledWith(
-      '[data-onboarding-id="drawer-card-metric-config"]',
+      '.unnnic-drawer__container',
     );
   });
 });

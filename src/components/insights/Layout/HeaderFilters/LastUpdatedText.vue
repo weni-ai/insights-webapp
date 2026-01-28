@@ -8,16 +8,12 @@
     <UnnnicToolTip
       enabled
       side="top"
-      :text="
-        autoRefresh
-          ? $t('insights_header.auto_refresh_on')
-          : $t('insights_header.auto_refresh_off')
-      "
+      :text="autoRefreshLabelTooltipText"
     >
       <p class="insights-layout-header-filters_last-updated-at_text">
         {{
           $t('insights_header.auto_refresh', {
-            status: autoRefresh ? $t('on') : $t('off'),
+            status: autoRefreshLabelText,
           })
         }}
         - {{ $t('insights_header.last_updated_at') }} {{ formattedTime }}
@@ -35,11 +31,23 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 
 import { formatTimeStringWithDayNight } from '@/utils/time';
 
+import i18n from '@/utils/plugins/i18n';
+
 const dashboardsStore = useDashboards();
 const lastUpdatedAt = computed(() => dashboardsStore.lastUpdatedAt);
 
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 const { autoRefresh } = storeToRefs(humanSupportMonitoringStore);
+
+const autoRefreshLabelTooltipText = computed(() => {
+  return autoRefresh.value
+    ? i18n.global.t('insights_header.auto_refresh_on')
+    : i18n.global.t('insights_header.auto_refresh_off');
+});
+
+const autoRefreshLabelText = computed(() => {
+  return autoRefresh.value ? i18n.global.t('on') : i18n.global.t('off');
+});
 
 const playPauseIcon = computed(() => {
   return autoRefresh.value

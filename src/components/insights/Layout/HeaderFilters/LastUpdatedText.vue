@@ -48,7 +48,10 @@ const autoRefreshLabelTooltipText = computed(() => {
 });
 
 const autoRefreshLabelText = computed(() => {
-  return autoRefresh.value ? i18n.global.t('on') : i18n.global.t('paused');
+  const text = autoRefresh.value
+    ? i18n.global.t('on')
+    : i18n.global.t('paused');
+  return text.toLowerCase();
 });
 
 const playPauseIcon = computed(() => {

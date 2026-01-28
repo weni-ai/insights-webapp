@@ -605,7 +605,7 @@
   },
   "insights_header": {
     "auto_refresh": "Auto refresh: {status}",
-    "auto_refresh_on": "This dashboard updates every minute. Use the Refresh button to update now or the Pause button to stop automatic updates.",
+    "auto_refresh_on": "This dashboard updates every minute. Use the Refresh button to update now or the Pause button to pause automatic updates.",
     "auto_refresh_off": "To update the dashboard, use the Refresh button. You can resume auto-refresh using the Play button.",
     "auto_refresh_alert": "Auto-refresh is currently {status}!",
     "refresh": "Refresh",

@@ -131,10 +131,12 @@ describe('Attendant', () => {
       const headers = wrapper.vm.formattedHeaders;
       expect(headers).toHaveLength(9);
       expect(headers[0].itemKey).toBe('status');
+      expect(headers[7].itemKey).toBe('time_in_service');
+      expect(headers[7].isSortable).toBe(false);
       expect(headers[8].itemKey).toBe('action');
       expect(headers[8].isSortable).toBe(false);
       expect(headers[8].align).toBe('center');
-      expect(headers.slice(0, 8).every((h) => h.isSortable)).toBe(true);
+      expect(headers.slice(0, 7).every((h) => h.isSortable)).toBe(true);
     });
   });
 

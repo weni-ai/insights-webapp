@@ -126,6 +126,7 @@ watch(
 
 watch(autoRefresh, () => {
   if (autoRefresh.value) {
+    loadData();
     startAutoRefresh();
   } else {
     stopAutoRefresh();

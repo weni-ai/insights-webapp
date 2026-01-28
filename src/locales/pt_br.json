@@ -1023,5 +1023,6 @@
     }
   },
   "on": "Ativa",
-  "off": "Desativada"
+  "off": "Desativada",
+  "paused": "Pausada"
 }

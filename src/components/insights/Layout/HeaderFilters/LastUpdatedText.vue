@@ -33,6 +33,8 @@ import { formatTimeStringWithDayNight } from '@/utils/time';
 
 import i18n from '@/utils/plugins/i18n';
 
+import { UnnnicCallAlert } from '@weni/unnnic-system';
+
 const dashboardsStore = useDashboards();
 const lastUpdatedAt = computed(() => dashboardsStore.lastUpdatedAt);
 
@@ -46,7 +48,7 @@ const autoRefreshLabelTooltipText = computed(() => {
 });
 
 const autoRefreshLabelText = computed(() => {
-  return autoRefresh.value ? i18n.global.t('on') : i18n.global.t('off');
+  return autoRefresh.value ? i18n.global.t('on') : i18n.global.t('paused');
 });
 
 const playPauseIcon = computed(() => {
@@ -57,6 +59,16 @@ const playPauseIcon = computed(() => {
 
 const toggleAutoRefresh = () => {
   autoRefresh.value = !autoRefresh.value;
+
+  UnnnicCallAlert({
+    props: {
+      text: i18n.global.t('insights_header.auto_refresh_alert', {
+        status: autoRefreshLabelText.value,
+      }),
+      type: 'success',
+    },
+    seconds: 5,
+  });
 };
 
 const formattedTime = computed(() => {

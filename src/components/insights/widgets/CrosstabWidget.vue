@@ -62,7 +62,6 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import ProgressTable from '@/components/ProgressTable.vue';
 import SeeAllDrawer from '../conversations/CustomizableWidget/SeeAllDrawer.vue';
 
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
 import { getWidgetCrosstabTooltip } from '@/utils/widget';
 
 const customWidgetsStore = useCustomWidgets();
@@ -104,8 +103,13 @@ const widgetData = computed(() => {
 
 const legendItems = computed(() => {
   if (!widgetData.value.results.length) return [];
-  const eventsKeys = Object.keys(widgetData.value.results[0].events);
-  return eventsKeys.map((key, index) => {
+  const allEventsKeys = [
+    ...new Set(
+      widgetData.value.results.flatMap((item) => Object.keys(item.events)),
+    ),
+  ];
+  const limitLegendItems = allEventsKeys.slice(0, 2);
+  return limitLegendItems.map((key, index) => {
     return {
       title: `${key.charAt(0).toUpperCase() + key.slice(1)}`,
       color: index === 0 ? '#3182CE' : '#E5812A',

@@ -1022,6 +1022,6 @@
       }
     }
   },
-  "on": "on",
-  "off": "off"
+  "on": "Activa",
+  "off": "Inactiva"
 }

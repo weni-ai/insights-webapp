@@ -1,11 +1,7 @@
 <template>
   <section class="insights-layout-header-filters_last-updated-at">
     <UnnnicButton
-      :iconCenter="
-        autoRefresh
-          ? 'material-symbols:pause-rounded'
-          : 'material-symbols:play-arrow-rounded'
-      "
+      :iconCenter="playPauseIcon"
       type="tertiary"
       @click="toggleAutoRefresh"
     />
@@ -44,6 +40,12 @@ const lastUpdatedAt = computed(() => dashboardsStore.lastUpdatedAt);
 
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 const { autoRefresh } = storeToRefs(humanSupportMonitoringStore);
+
+const playPauseIcon = computed(() => {
+  return autoRefresh.value
+    ? 'material-symbols:pause-rounded'
+    : 'material-symbols:play-arrow-rounded';
+});
 
 const toggleAutoRefresh = () => {
   autoRefresh.value = !autoRefresh.value;

@@ -604,7 +604,10 @@
   },
   "insights_header": {
     "auto_refresh": "Atualização automática: {status}",
+    "auto_refresh_on": "Este dashboard é atualizado a cada minuto. Use o botão Atualizar para atualizar agora ou o botão Pausar para parar as atualizações automáticas.",
+    "auto_refresh_off": "Para atualizar o dashboard, use o botão Atualizar. Você pode retomar a atualização automática usando o botão Reproduzir.",
     "refresh": "Atualizar",
+    "refresh_button_tooltip": "Novas atualizações estão disponíveis. Clique em Atualizar para aplicá-las.",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "dynamic_columns": "Colunas personalizáveis",

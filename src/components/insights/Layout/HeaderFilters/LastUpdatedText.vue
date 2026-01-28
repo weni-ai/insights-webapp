@@ -9,14 +9,24 @@
       type="tertiary"
       @click="toggleAutoRefresh"
     />
-    <p class="insights-layout-header-filters_last-updated-at_text">
-      {{
-        $t('insights_header.auto_refresh', {
-          status: autoRefresh ? $t('on') : $t('off'),
-        })
-      }}
-      - {{ $t('insights_header.last_updated_at') }} {{ formattedTime }}
-    </p>
+    <UnnnicToolTip
+      enabled
+      side="top"
+      :text="
+        autoRefresh
+          ? $t('insights_header.auto_refresh_on')
+          : $t('insights_header.auto_refresh_off')
+      "
+    >
+      <p class="insights-layout-header-filters_last-updated-at_text">
+        {{
+          $t('insights_header.auto_refresh', {
+            status: autoRefresh ? $t('on') : $t('off'),
+          })
+        }}
+        - {{ $t('insights_header.last_updated_at') }} {{ formattedTime }}
+      </p>
+    </UnnnicToolTip>
   </section>
 </template>
 

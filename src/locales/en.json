@@ -605,7 +605,10 @@
   },
   "insights_header": {
     "auto_refresh": "Auto refresh: {status}",
+    "auto_refresh_on": "This dashboard updates every minute. Use the Refresh button to update now or the Pause button to stop automatic updates.",
+    "auto_refresh_off": "To update the dashboard, use the Refresh button. You can resume auto-refresh using the Play button.",
     "refresh": "Refresh",
+    "refresh_button_tooltip": "New updates are available. Click Refresh to apply them.",
     "filters": "Filters",
     "filtrate": "Filter",
     "dynamic_columns": "Customizable columns",

@@ -17,7 +17,7 @@ export type ActiveDetailedTab =
 export const useHumanSupportMonitoring = defineStore(
   'humanSupportMonitoring',
   () => {
-    const autoRefresh = ref<boolean>(false);
+    const autoRefresh = ref<boolean>(true);
     const refreshDataMonitoring = ref<boolean>(false);
     const isSilentRefresh = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');

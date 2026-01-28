@@ -1024,7 +1024,7 @@
       }
     }
   },
-  "on": "on",
-  "off": "off",
+  "on": "On",
+  "off": "Off",
   "paused": "Paused"
 }

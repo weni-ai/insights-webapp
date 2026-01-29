@@ -9,44 +9,50 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
     class="header-select-dashboard"
     data-onboarding-id="select-dashboard"
     data-v-054061ac=""
+    open="false"
     position="bottom-right"
+    useopenprop=""
   >
     
-    <unnnic-icon-stub
-      class="header-select-dashboard__arrow-back"
-      clickable="true"
-      data-testid="back-icon"
-      data-v-054061ac=""
-      filled="false"
-      icon="arrow_back"
-      scheme="neutral-darkest"
-      size="md"
-    />
     <section
-      class="dropdown__trigger"
-      data-testid="dropdown-trigger"
+      class="header-select-dashboard__trigger"
       data-v-054061ac=""
     >
-      <h1
-        class="trigger__title"
-        data-testid="dashboard-title"
+      <unnnic-icon-stub
+        class="header-select-dashboard__arrow-back"
+        clickable="true"
+        data-testid="back-icon"
         data-v-054061ac=""
-        title="Dashboard 1"
+        filled="false"
+        icon="arrow_back"
+        scheme="neutral-darkest"
+        size="md"
+      />
+      <section
+        class="header-select-dashboard__title"
+        data-testid="dropdown-trigger"
+        data-v-054061ac=""
       >
-        Dashboard 1
-      </h1>
-      <!--v-if-->
+        <h1
+          class="trigger__title"
+          data-testid="dashboard-title"
+          data-v-054061ac=""
+          title="Dashboard 1"
+        >
+          Dashboard 1
+        </h1>
+        <!--v-if-->
+      </section>
+      <unnnic-icon-stub
+        clickable="false"
+        data-testid="expand-icon"
+        data-v-054061ac=""
+        filled="false"
+        icon="expand_more"
+        scheme="neutral-darkest"
+        size="md"
+      />
     </section>
-    <unnnic-icon-stub
-      class="dropdown__trigger"
-      clickable="false"
-      data-testid="expand-icon"
-      data-v-054061ac=""
-      filled="false"
-      icon="expand_more"
-      scheme="neutral-darkest"
-      size="md"
-    />
     
     
     

@@ -6,12 +6,19 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
   data-testid="modal-export-data"
   data-v-b7434839=""
 >
+  
+  
+  
+  
   <div
-    class="export-data-tooltip"
-    data-testid="export-data-tooltip"
-    data-v-8c61d974=""
-    data-v-b7434839=""
+    class="unnnic-tooltip-trigger"
+    data-grace-area-trigger=""
+    data-state="closed"
+    data-testid="tooltip-trigger"
+    data-v-03fa3548=""
   >
+    
+    
     
     <unnnic-button-stub
       data-testid="export-data-button"
@@ -23,23 +30,15 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
       type="primary"
     />
     
-    <span
-      class="unnnic-tooltip-label unnnic-tooltip-label-left"
-      data-testid="tooltip-label"
-      data-v-8c61d974=""
-      style="display: none; left: -8px; top: 0px;"
-    >
-      
-      
-      Tooltip text 
-      <br
-        data-v-8c61d974=""
-      />
-      
-      
-      <!---->
-    </span>
+    
+    
   </div>
+  <!--teleport start-->
+  <!--teleport end-->
+  
+  
+  
+  
   <unnnic-modal-dialog-stub
     class="finish-onboarding-modal"
     data-testid="modal-dialog"

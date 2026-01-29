@@ -4,6 +4,7 @@ import { mount } from '@vue/test-utils';
 import CardDashboard from '../CardDashboard.vue';
 import CardTitleError from '../CardTitleError.vue';
 import IconLoading from '@/components/IconLoading.vue';
+import { UnnnicToolTip } from '@weni/unnnic-system';
 
 const emojis = {
   smile: { skins: [{ native: '😄' }] },
@@ -132,10 +133,8 @@ describe('CardDashboard', () => {
 
   it('should show the correct tooltip text if tooltip props has exists', async () => {
     await wrapper.setProps({ tooltip: 'tooltip' });
-    const tooltip = wrapper.findComponent(
-      '[data-testid="content-desciption-tooltip"]',
-    );
+    const tooltip = wrapper.findAllComponents(UnnnicToolTip)[1];
     expect(tooltip.exists()).toBe(true);
-    expect(tooltip.text()).include('tooltip');
+    expect(tooltip.props().text).toBe('tooltip');
   });
 });

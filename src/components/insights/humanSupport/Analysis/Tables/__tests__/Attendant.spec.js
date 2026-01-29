@@ -122,7 +122,9 @@ describe('Attendant', () => {
       expect(headers[0].itemKey).toBe('agent');
       expect(headers[1].itemKey).toBe('finished');
       expect(headers[1].title).toBe('Total');
-      expect(headers.every((h) => h.isSortable)).toBe(true);
+      expect(headers[5].itemKey).toBe('time_in_service');
+      expect(headers[5].isSortable).toBe(false);
+      expect(headers.slice(0, 5).every((h) => h.isSortable)).toBe(true);
     });
   });
 

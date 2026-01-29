@@ -603,7 +603,12 @@
     "select_origin_flow": "@:select @.lower:flow de origem"
   },
   "insights_header": {
+    "auto_refresh": "Atualização automática: {status}",
+    "auto_refresh_on": "Este dashboard é atualizado a cada minuto. Use o botão Atualizar para atualizar agora ou o botão Pausar para pausar as atualizações automáticas.",
+    "auto_refresh_off": "Para atualizar o dashboard, use o botão Atualizar. Você pode retomar a atualização automática usando o botão Reproduzir.",
+    "auto_refresh_alert": "A atualização automática está {status}!",
     "refresh": "Atualizar",
+    "refresh_button_tooltip": "Novas atualizações estão disponíveis. Clique em Atualizar para aplicá-las.",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "dynamic_columns": "Colunas personalizáveis",
@@ -1017,5 +1022,8 @@
         "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
       }
     }
-  }
+  },
+  "on": "Ativa",
+  "off": "Desativada",
+  "paused": "Pausada"
 }

@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import service, {
   type AttendantDataResult,
@@ -74,7 +74,7 @@ const baseTranslationKey =
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: t(`${baseTranslationKey}.status`),
-  order: 'desc',
+  order: 'asc',
   itemKey: 'status',
 });
 
@@ -140,7 +140,9 @@ const formattedHeaders = computed(() => {
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
-    createHeader('time_in_service'),
+    createHeader('time_in_service', undefined, {
+      isSortable: false,
+    }),
     createHeader('action', undefined, {
       isSortable: false,
       size: 0.5,
@@ -174,9 +176,18 @@ const redirectItem = (item: AttendantDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
 
 watch(
   [
@@ -185,16 +196,16 @@ watch(
     () => humanSupport.appliedFilters,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 
 watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

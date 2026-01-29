@@ -1,9 +1,4 @@
 <template>
-  <HeaderTagLive
-    v-if="isMonitoring"
-    data-testid="insights-layout-header-tag-live"
-  />
-
   <LastUpdatedText v-if="isMonitoring" />
 
   <HeaderRefresh
@@ -23,11 +18,11 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 
-import HeaderTagLive from '../HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
 import HumanSupportExport from '../../export/HumanSupportExport.vue';
 import LastUpdatedText from '../HeaderFilters/LastUpdatedText.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
+
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
 

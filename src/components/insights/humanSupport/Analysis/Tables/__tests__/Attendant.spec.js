@@ -122,7 +122,9 @@ describe('Attendant', () => {
       expect(headers[0].itemKey).toBe('agent');
       expect(headers[1].itemKey).toBe('finished');
       expect(headers[1].title).toBe('Total');
-      expect(headers.every((h) => h.isSortable)).toBe(true);
+      expect(headers[5].itemKey).toBe('time_in_service');
+      expect(headers[5].isSortable).toBe(false);
+      expect(headers.slice(0, 5).every((h) => h.isSortable)).toBe(true);
     });
   });
 
@@ -158,6 +160,20 @@ describe('Attendant', () => {
 
   describe('Lifecycle', () => {
     it('loads data on mount', () => {
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('loads data only once on mount (no double request)', () => {
+      vi.clearAllMocks();
+      const newWrapper = createWrapper();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+    });
+
+    it('reloads data when filters change after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedFilters = { test: 'value' };
+      await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
     });
   });

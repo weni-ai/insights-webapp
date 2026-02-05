@@ -48,7 +48,7 @@ export default {
 
     return {
       count: 9, // count de filas
-      next: null,
+      next: 'true',
       previous: null,
       results: [
         {

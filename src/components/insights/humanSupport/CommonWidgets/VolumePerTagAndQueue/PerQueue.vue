@@ -4,7 +4,7 @@
     :items="formattedItems.slice(0, 5)"
     :tabs="tabs"
     :currentTab="currentTab"
-    :isLoading="isLoadingItems"
+    :isLoading="isLoadingItems && showVisualLoading"
     :countText="footerText"
     :showSeeAllButton="itemsCount > 5"
     @tab-change="handleTabChange"
@@ -14,6 +14,9 @@
     v-model="openSeeAllDrawer"
     :items="formattedItems"
     :title="seeAllDrawerTitle"
+    enableInfiniteScroll
+    :infiniteScrollCanLoadMore="!isLoadingItems && itemsNext"
+    @scroll-end="handleInfiniteScroll"
   />
 </template>
 
@@ -82,6 +85,7 @@ const itemsPrevious = ref<string | null>(null);
 const itemsCount = ref(0);
 const items = ref([]);
 const isLoadingItems = ref(false);
+const showVisualLoading = ref(true);
 
 const formattedItems = computed(() => {
   if (props.showConfig) return itemsMock;
@@ -120,6 +124,10 @@ interface GetItemsOptions {
   limit?: number;
 }
 
+const handleInfiniteScroll = async () => {
+  await getItems({ silent: true, concat: true, limit: 20 });
+};
+
 const getItems = async ({
   silent = false,
   concat = false,
@@ -128,8 +136,8 @@ const getItems = async ({
   if (props.showConfig) return;
 
   try {
-    isLoadingItems.value = !silent;
-
+    isLoadingItems.value = true;
+    showVisualLoading.value = !silent;
     const getDataRequest =
       props.context === 'monitoring'
         ? volumePerQueueService.getVolumePerQueueMonitoring
@@ -147,6 +155,7 @@ const getItems = async ({
     console.log(error);
   } finally {
     isLoadingItems.value = false;
+    showVisualLoading.value = true;
   }
 };
 

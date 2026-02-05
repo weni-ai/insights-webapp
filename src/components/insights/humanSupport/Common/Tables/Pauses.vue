@@ -35,6 +35,9 @@
         </span>
       </UnnnicToolTip>
     </template>
+    <template #body-agent="{ item }">
+      {{ item.agent || item.agent_email }}
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -49,6 +52,10 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
+
+defineOptions({
+  name: 'AgentsPausesTable',
+});
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
   custom_status: {
@@ -152,6 +159,7 @@ const formattedItems = computed(() => {
     return {
       link: item.link,
       agent: item.agent,
+      agent_email: item.agent_email,
       ...customStatusObj,
     };
   });

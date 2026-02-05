@@ -192,7 +192,7 @@ const handleExpand = () => {
         display: -webkit-box;
         max-width: 120px;
         -webkit-box-orient: vertical;
-        -webkit-line-clamp: 1;
+        line-clamp: 1;
       }
 
       .infos__description {

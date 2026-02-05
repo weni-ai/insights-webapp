@@ -343,6 +343,7 @@
   "online_agents": "Online agents",
   "chats_per_agents": "Chats per agent",
   "closeds": "Closed",
+  "finished": "Finished",
   "in_progress": "In progress",
   "waiting": "Waiting",
   "in-service": "In progress",
@@ -1002,6 +1003,18 @@
         "very_dissatisfied": "😡 Very dissatisfied"
       },
       "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
+    },
+    "volume_per_queue": {
+      "title": "Volume per queue",
+      "monitoring_count": "{count} queues with chats {status}",
+      "analysis_count": "{count} queues with finished chats"
+    },
+    "volume_per_tag": {
+      "title": "Volume per tag",
+      "count": {
+        "ongoing": "{count} tags in use",
+        "closed": "{count} assigned tags"
+      }
     }
   },
   "news": {

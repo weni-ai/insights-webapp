@@ -82,6 +82,7 @@ describe('Attendant', () => {
               },
               humanSupportMonitoring: {
                 refreshDataMonitoring: false,
+                isSilentRefresh: false,
                 activeDetailedTab: 'attendant',
                 ...storeState.humanSupportMonitoring,
               },
@@ -130,10 +131,12 @@ describe('Attendant', () => {
       const headers = wrapper.vm.formattedHeaders;
       expect(headers).toHaveLength(9);
       expect(headers[0].itemKey).toBe('status');
+      expect(headers[7].itemKey).toBe('time_in_service');
+      expect(headers[7].isSortable).toBe(false);
       expect(headers[8].itemKey).toBe('action');
       expect(headers[8].isSortable).toBe(false);
       expect(headers[8].align).toBe('center');
-      expect(headers.slice(0, 8).every((h) => h.isSortable)).toBe(true);
+      expect(headers.slice(0, 7).every((h) => h.isSortable)).toBe(true);
     });
   });
 
@@ -173,6 +176,52 @@ describe('Attendant', () => {
   describe('Lifecycle', () => {
     it('loads data on mount', () => {
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('loads data only once on mount (no double request)', () => {
+      vi.clearAllMocks();
+      const newWrapper = createWrapper();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+    });
+
+    it('reloads data when filters change after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedFilters = { test: 'value' };
+      await wrapper.vm.$nextTick();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('prevents multiple simultaneous requests', async () => {
+      vi.clearAllMocks();
+      
+      // Mock resetAndLoadData to simulate async behavior
+      let resolveRequest;
+      const requestPromise = new Promise((resolve) => {
+        resolveRequest = resolve;
+      });
+      mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
+      
+      // Trigger multiple changes rapidly
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      
+      await wrapper.vm.$nextTick();
+      
+      // Should only call once
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+      
+      // Resolve the request
+      resolveRequest();
+      await requestPromise;
+      await wrapper.vm.$nextTick();
+      
+      // Now a new request can be made
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      await wrapper.vm.$nextTick();
+      
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -221,6 +270,97 @@ describe('Attendant', () => {
     it('returns the original status when status is not "custom" even if statusLabel is provided', () => {
       const result = wrapper.vm.getStatusLabel('offline', 'Custom Label');
       expect(result).toBe('offline');
+    });
+  });
+
+  describe('Agent fallback logic', () => {
+    it('uses agent when it has a value', () => {
+      const mockData = [
+        {
+          agent: 'John Doe',
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('John Doe');
+    });
+
+    it('uses agent_email when agent is empty string', () => {
+      const mockData = [
+        {
+          agent: '',
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('john@example.com');
+    });
+
+    it('uses agent_email when agent is null', () => {
+      const mockData = [
+        {
+          agent: null,
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('john@example.com');
+    });
+
+    it('uses agent_email when agent is undefined', () => {
+      const mockData = [
+        {
+          agent_email: 'john@example.com',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('john@example.com');
+    });
+
+    it('returns empty string when both agent and agent_email are empty', () => {
+      const mockData = [
+        {
+          agent: '',
+          agent_email: '',
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('');
+    });
+
+    it('returns empty string when both agent and agent_email are null/undefined', () => {
+      const mockData = [
+        {
+          agent: null,
+          agent_email: null,
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('');
     });
   });
 });

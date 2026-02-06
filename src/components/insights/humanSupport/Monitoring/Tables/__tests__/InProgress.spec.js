@@ -79,6 +79,7 @@ describe('InProgress', () => {
               },
               humanSupportMonitoring: {
                 refreshDataMonitoring: false,
+                isSilentRefresh: false,
                 activeDetailedTab: 'in_progress',
                 ...storeState.humanSupportMonitoring,
               },
@@ -162,6 +163,47 @@ describe('InProgress', () => {
   describe('Lifecycle', () => {
     it('loads data on mount', () => {
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('loads data only once on mount (no double request)', () => {
+      vi.clearAllMocks();
+      const newWrapper = createWrapper();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+    });
+
+    it('reloads data when filters change after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedFilters = { test: 'value' };
+      await wrapper.vm.$nextTick();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('prevents multiple simultaneous requests', async () => {
+      vi.clearAllMocks();
+      
+      let resolveRequest;
+      const requestPromise = new Promise((resolve) => {
+        resolveRequest = resolve;
+      });
+      mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
+      
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      
+      await wrapper.vm.$nextTick();
+      
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+      
+      resolveRequest();
+      await requestPromise;
+      await wrapper.vm.$nextTick();
+      
+      wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
+      await wrapper.vm.$nextTick();
+      
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
     });
   });
 

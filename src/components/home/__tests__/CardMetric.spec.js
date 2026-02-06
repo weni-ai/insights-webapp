@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import CardMetric from '@/components/home/CardMetric.vue';
 import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import { UnnnicToolTip } from '@weni/unnnic-system';
 
 const i18n = createI18n({
   legacy: false,
@@ -58,7 +59,9 @@ describe('CardMetric', () => {
 
     it('renders tooltip and info icon when tooltipInfo is provided', async () => {
       await wrapper.setProps({ tooltipInfo: 'Test tooltip' });
-      const tooltip = wrapper.findComponent('[data-test-id="metric-tooltip"]');
+      await wrapper.vm.$nextTick();
+
+      const tooltip = wrapper.findComponent(UnnnicToolTip);
       const infoIcon = wrapper.findComponent('[data-test-id="info-icon"]');
 
       expect(tooltip.exists()).toBeTruthy();

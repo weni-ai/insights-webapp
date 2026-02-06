@@ -148,7 +148,41 @@ describe('Finished', () => {
       window.parent.postMessage = mockPostMessage;
       wrapper.vm.redirectItem({ link: { url: '/test' } });
       expect(mockPostMessage).toHaveBeenCalledWith(
-        { event: 'redirect', path: '/test/insights' },
+        { event: 'redirect', path: '/test' },
+        '*',
+      );
+    });
+
+    it('removes slash after chats: protocol', () => {
+      const mockPostMessage = vi.fn();
+      window.parent.postMessage = mockPostMessage;
+      wrapper.vm.redirectItem({
+        link: {
+          url: 'chats:/closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
+      });
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: 'chats:closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
+        '*',
+      );
+    });
+
+    it('does not modify url when chats: has no slash', () => {
+      const mockPostMessage = vi.fn();
+      window.parent.postMessage = mockPostMessage;
+      wrapper.vm.redirectItem({
+        link: {
+          url: 'chats:closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
+      });
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: 'chats:closed-chats/516833fb-559e-48ba-9e37-9c3f9f487a03',
+        },
         '*',
       );
     });
@@ -163,6 +197,20 @@ describe('Finished', () => {
 
   describe('Lifecycle', () => {
     it('loads data on mount', () => {
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('loads data only once on mount (no double request)', () => {
+      vi.clearAllMocks();
+      const newWrapper = createWrapper();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+    });
+
+    it('reloads data when filters change after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedFilters = { test: 'value' };
+      await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
     });
   });

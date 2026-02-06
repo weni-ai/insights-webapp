@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { FinishedDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
@@ -119,13 +119,14 @@ const loadMore = () => {
 
 const redirectItem = (item: FinishedDataResult) => {
   if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
-  window.parent.postMessage({ event: 'redirect', path }, '*');
-};
+  let url = item.link.url;
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
+  if (url.startsWith('chats:/')) {
+    url = url.replace('chats:/', 'chats:');
+  }
+
+  window.parent.postMessage({ event: 'redirect', path: url }, '*');
+};
 
 watch(
   [
@@ -139,6 +140,6 @@ watch(
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 </script>

@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -35,12 +35,15 @@
         </span>
       </UnnnicToolTip>
     </template>
+    <template #body-agent="{ item }">
+      {{ item.agent || item.agent_email }}
+    </template>
   </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
 import { UnnnicDataTable, UnnnicToolTip } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { PausesDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import getDetailedMonitoringPausesService from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/pauses';
 import { useI18n } from 'vue-i18n';
@@ -48,6 +51,11 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
+
+defineOptions({
+  name: 'AgentsPausesTable',
+});
 
 type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
   custom_status: {
@@ -58,6 +66,7 @@ type FormattedPausesData = Omit<PausesDataResult, 'custom_status'> & {
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey = 'human_support_dashboard.detailed_monitoring.pauses';
@@ -93,6 +102,10 @@ const {
 } = useInfiniteScrollTable<PausesDataResult, FormattedPausesData>({
   fetchData,
   formatResults,
+});
+
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
 });
 
 const customStatusTypes = computed(() => {
@@ -146,6 +159,7 @@ const formattedItems = computed(() => {
     return {
       link: item.link,
       agent: item.agent,
+      agent_email: item.agent_email,
       ...customStatusObj,
     };
   });
@@ -169,9 +183,18 @@ const redirectItem = (item: PausesDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
 
 watch(
   [
@@ -181,16 +204,16 @@ watch(
     () => humanSupport.appliedDateRange,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 
 watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

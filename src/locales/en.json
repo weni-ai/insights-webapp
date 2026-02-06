@@ -206,6 +206,7 @@
     "empty_templates": "No data yet. Once there's activity, it will be displayed here.",
     "favorite_limit_reached": "Favorite limit reached. Remove a favorite and try again.",
     "all_data": "All data",
+    "data_source": "Data source: {source}",
     "all_data_table": {
       "title": "Number of messages",
       "header": {
@@ -603,7 +604,12 @@
     "select_origin_flow": "@:select source @.lower:flow"
   },
   "insights_header": {
+    "auto_refresh": "Auto refresh: {status}",
+    "auto_refresh_on": "This dashboard updates every minute. Use the Refresh button to update now or the Pause button to pause automatic updates.",
+    "auto_refresh_off": "To update the dashboard, use the Refresh button. You can resume auto-refresh using the Play button.",
+    "auto_refresh_alert": "Auto-refresh is currently {status}!",
     "refresh": "Refresh",
+    "refresh_button_tooltip": "New updates are available. Click Refresh to apply them.",
     "filters": "Filters",
     "filtrate": "Filter",
     "dynamic_columns": "Customizable columns",
@@ -1017,5 +1023,8 @@
         "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Agent</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
       }
     }
-  }
+  },
+  "on": "On",
+  "off": "Off",
+  "paused": "Paused"
 }

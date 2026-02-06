@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { InAwaitingDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting';
 import { useI18n } from 'vue-i18n';
@@ -31,6 +31,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
@@ -38,6 +39,7 @@ type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey =
@@ -80,6 +82,10 @@ const {
   formatResults,
 });
 
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
+});
+
 const formattedHeaders = computed(() => {
   const createHeader = (itemKey: string) => ({
     title: t(`${baseTranslationKey}.${itemKey}`),
@@ -112,16 +118,29 @@ const redirectItem = (item: InAwaitingDataResult) => {
   window.parent.postMessage({ event: 'redirect', path: item?.link?.url }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
 
 watch(
-  [currentSort, () => humanSupport.appliedFilters],
+  [
+    currentSort,
+    () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDetailFilters.contactInput,
+  ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true, deep: true },
 );
 
 watch(
@@ -131,7 +150,7 @@ watch(
       newValue &&
       humanSupportMonitoring.activeDetailedTab === 'in_awaiting'
     ) {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

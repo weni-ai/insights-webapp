@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, watch, ref, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
@@ -56,20 +57,23 @@ let timeoutStop: (() => void) | null = null;
 
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
 
-const { setRefreshDataMonitoring } = useHumanSupportMonitoring();
+const humanSupportMonitoringStore = useHumanSupportMonitoring();
+
+const { setRefreshDataMonitoring } = humanSupportMonitoringStore;
+const { autoRefresh } = storeToRefs(humanSupportMonitoringStore);
 
 const monitoringRef = ref(null);
 const isVisible = useElementVisibility(monitoringRef);
 
 const shouldPoll = computed(() => isVisible.value);
 
-const loadData = async () => {
-  setRefreshDataMonitoring(true);
+const loadData = async (silent = false) => {
+  setRefreshDataMonitoring(true, silent);
 
   timeoutStop?.();
 
   const { stop } = useTimeoutFn(() => {
-    setRefreshDataMonitoring(false);
+    setRefreshDataMonitoring(false, silent);
   }, 500);
 
   timeoutStop = stop;
@@ -81,7 +85,7 @@ const startAutoRefresh = () => {
   }
 
   autoRefreshInterval = setInterval(() => {
-    loadData();
+    loadData(true);
   }, AUTO_REFRESH_INTERVAL);
 };
 
@@ -119,6 +123,15 @@ watch(
   },
   { immediate: true },
 );
+
+watch(autoRefresh, () => {
+  if (autoRefresh.value) {
+    loadData();
+    startAutoRefresh();
+  } else {
+    stopAutoRefresh();
+  }
+});
 </script>
 
 <style scoped lang="scss">

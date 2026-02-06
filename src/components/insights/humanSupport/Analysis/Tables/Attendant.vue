@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { AttendantDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/attendant';
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/attendant';
@@ -60,6 +60,7 @@ const formatResults = (
 ): FormattedAttendantData[] => {
   return results.map((result) => ({
     ...result,
+    agent: result?.agent || result?.agent_email || '',
     average_first_response_time: formatSecondsToTime(
       result?.average_first_response_time,
     ),
@@ -110,7 +111,9 @@ const formattedHeaders = computed(() => {
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
-    createHeader('time_in_service'),
+    createHeader('time_in_service', undefined, {
+      isSortable: false,
+    }),
   ];
 });
 
@@ -132,10 +135,6 @@ const redirectItem = (item: AttendantDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
-
 watch(
   [
     currentSort,
@@ -146,6 +145,6 @@ watch(
   () => {
     resetAndLoadData(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 </script>

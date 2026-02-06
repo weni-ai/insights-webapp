@@ -82,18 +82,14 @@ describe('DetailedMonitoring', () => {
       expect(wrapper.find('.detailed-monitoring__filters').exists()).toBe(true);
     });
 
-    it('hides filters for in_awaiting tab', () => {
+    it('shows filters for in_awaiting tab', () => {
       wrapper = createWrapper('in_awaiting');
-      expect(wrapper.find('.detailed-monitoring__filters').exists()).toBe(
-        false,
-      );
+      expect(wrapper.find('.detailed-monitoring__filters').exists()).toBe(true);
     });
 
-    it('hides filters for in_progress tab', () => {
+    it('shows filters for in_progress tab', () => {
       wrapper = createWrapper('in_progress');
-      expect(wrapper.find('.detailed-monitoring__filters').exists()).toBe(
-        false,
-      );
+      expect(wrapper.find('.detailed-monitoring__filters').exists()).toBe(true);
     });
   });
 
@@ -126,6 +122,16 @@ describe('DetailedMonitoring', () => {
     it('computes filterType for pauses', () => {
       wrapper = createWrapper('pauses');
       expect(wrapper.vm.filterType).toBe('pauses');
+    });
+
+    it('computes filterType for in_awaiting', () => {
+      wrapper = createWrapper('in_awaiting');
+      expect(wrapper.vm.filterType).toBe('in_awaiting');
+    });
+
+    it('computes filterType for in_progress', () => {
+      wrapper = createWrapper('in_progress');
+      expect(wrapper.vm.filterType).toBe('in_progress');
     });
   });
 });

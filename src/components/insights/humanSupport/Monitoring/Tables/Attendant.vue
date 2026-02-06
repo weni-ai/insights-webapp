@@ -1,7 +1,7 @@
 <template>
   <UnnnicDataTable
     :locale="$i18n.locale"
-    :isLoading="isLoading"
+    :isLoading="isLoadingVisible"
     :isLoadingMore="isLoadingMore"
     clickable
     fixedHeaders
@@ -38,16 +38,18 @@
 
 <script setup lang="ts">
 import { UnnnicDataTable } from '@weni/unnnic-system';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { AttendantDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
-import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
+import service, {
+  type AttendantDataResult,
+} from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
 import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { storeToRefs } from 'pinia';
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
@@ -64,6 +66,7 @@ type FormattedAttendantData = Omit<
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
+const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const baseTranslationKey =
@@ -71,7 +74,7 @@ const baseTranslationKey =
 
 const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   header: t(`${baseTranslationKey}.status`),
-  order: 'desc',
+  order: 'asc',
   itemKey: 'status',
 });
 
@@ -80,6 +83,7 @@ const formatResults = (
 ): FormattedAttendantData[] => {
   return results.map((result) => ({
     ...result,
+    agent: result?.agent || result?.agent_email || '',
     average_first_response_time: formatSecondsToTime(
       result?.average_first_response_time,
     ),
@@ -112,6 +116,10 @@ const {
   formatResults,
 });
 
+const isLoadingVisible = computed(() => {
+  return isLoading.value && !isSilentRefresh.value;
+});
+
 const formattedHeaders = computed(() => {
   const createHeader = (
     itemKey: string,
@@ -132,7 +140,9 @@ const formattedHeaders = computed(() => {
     createHeader('average_first_response_time'),
     createHeader('average_response_time'),
     createHeader('average_duration'),
-    createHeader('time_in_service'),
+    createHeader('time_in_service', undefined, {
+      isSortable: false,
+    }),
     createHeader('action', undefined, {
       isSortable: false,
       size: 0.5,
@@ -166,9 +176,18 @@ const redirectItem = (item: AttendantDataResult) => {
   window.parent.postMessage({ event: 'redirect', path }, '*');
 };
 
-onMounted(() => {
-  resetAndLoadData(currentSort.value);
-});
+const isRequestPending = ref(false);
+
+const loadDataSafely = async (sortValue: typeof currentSort.value) => {
+  if (isRequestPending.value) return;
+
+  try {
+    isRequestPending.value = true;
+    await resetAndLoadData(sortValue);
+  } finally {
+    isRequestPending.value = false;
+  }
+};
 
 watch(
   [
@@ -177,16 +196,16 @@ watch(
     () => humanSupport.appliedFilters,
   ],
   () => {
-    resetAndLoadData(currentSort.value);
+    loadDataSafely(currentSort.value);
   },
-  { flush: 'post' },
+  { immediate: true },
 );
 
 watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
-      resetAndLoadData(currentSort.value);
+      loadDataSafely(currentSort.value);
     }
   },
 );

@@ -206,6 +206,7 @@
     "empty_templates": "Aún no hay datos disponibles. Cuando haya alguna actividad se mostrará aquí.",
     "favorite_limit_reached": "Límite de favoritos alcanzado. Elimina algún favorito e inténtalo de nuevo.",
     "all_data": "Todos los datos",
+    "data_source": "Fuente de datos: {source}",
     "all_data_table": {
       "title": "Número de mensajes",
       "header": {
@@ -602,7 +603,12 @@
     "select_origin_flow": "@:select @.lower:flow de origen"
   },
   "insights_header": {
+    "auto_refresh": "Actualización automática: {status}",
+    "auto_refresh_on": "Este dashboard se actualiza cada minuto. Usa el botón Actualizar para actualizar ahora o el botón Pausar para detener las actualizaciones automáticas.",
+    "auto_refresh_off": "Para actualizar el dashboard, usa el botón Actualizar. Puedes reanudar la actualización automática usando el botón Reproducir.",
+    "auto_refresh_alert": "La actualización automática está {status}!",
     "refresh": "Actualizar",
+    "refresh_button_tooltip": "Hay actualizaciones disponibles. Haz clic en Actualizar para aplicarlas.",
     "filters": "Filtros",
     "filtrate": "Filtrar",
     "dynamic_columns": "Columnas personalizables",
@@ -1016,5 +1022,8 @@
         "fourth_text": "Puedes revisar cada interacción cerrada en la pestaña <b>Cerrados</b>. Las pestañas <b>Atendido</b> y <b>Pausas</b> permiten analizar las métricas de cada agente por interacción cerrada, así como las pausas personalizadas dentro del período filtrado."
       }
     }
-  }
+  },
+  "on": "Activa",
+  "off": "Inactiva",
+  "paused": "Pausada"
 }

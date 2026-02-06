@@ -1,86 +1,90 @@
 <template>
-  <UnnnicToolTip
-    :data-testid="`card-${id}-tooltip`"
-    :text="hoverTooltip"
-    side="right"
-    maxWidth="200px"
-    :enabled="!!hoverTooltip"
-  >
-    <CardBase
-      class="card-dashboard"
-      :class="{
-        loading: isLoading,
-        'not-configured': !configured,
-        clickable,
-      }"
+  <div class="card-dashboard-container">
+    <UnnnicToolTip
+      :data-testid="`card-${id}-tooltip`"
+      :text="hoverTooltip"
+      side="right"
+      maxWidth="200px"
+      :enabled="!!hoverTooltip"
     >
-      <section class="card__content">
-        <template v-if="showMetricError">
-          <CardTitleError />
-          <p class="content__error">
-            {{ $t('widgets.card.error_description') }}
-          </p>
-        </template>
-
-        <section
-          v-else
-          class="content-metric"
-        >
-          <section class="content-metric__container">
-            <p
-              v-if="friendlyEmoji"
-              class="content-metric__friendly-id"
-              data-testid="card-dashboard-friendly-id"
-            >
-              {{ friendlyEmoji }}
+      <CardBase
+        class="card-dashboard"
+        :class="{
+          loading: isLoading,
+          'not-configured': !configured,
+          clickable,
+        }"
+      >
+        <section class="card__content">
+          <template v-if="showMetricError">
+            <CardTitleError />
+            <p class="content__error">
+              {{ $t('widgets.card.error_description') }}
             </p>
-            <IconLoading v-if="isLoading" />
-            <h1
-              v-else
-              class="content-metric__value"
-              :title="configured ? metric : '0'"
-              data-testid="card-dashboard-metric-value"
-            >
-              {{ configured ? metric : '0' }}
-            </h1>
-          </section>
-          <UnnnicButton
-            v-if="configurable || !configured"
-            class="card-dashboard__button-config"
-            data-testid="card-dashboard-button-config"
-            type="tertiary"
-            iconCenter="tune"
-            @click.stop="$emit('open-config')"
-          />
-        </section>
-        <section class="content-description">
-          <p
-            v-if="!showMetricError"
-            class="content-description__text"
-            data-testid="card-dashboard-content-description"
-            :title="
-              configured ? $t(description) : $t('widgets.card.metric_empty')
-            "
+          </template>
+
+          <section
+            v-else
+            class="content-metric"
           >
-            {{ configured ? $t(description) : $t('widgets.card.metric_empty') }}
-          </p>
-          <UnnnicToolTip
-            v-if="tooltip"
-            enabled
-            :text="tooltip"
-            side="right"
-            class="content-description__tooltip"
-            data-testid="content-desciption-tooltip"
-          >
-            <UnnnicIcon
-              icon="info"
-              size="avatar-nano"
+            <section class="content-metric__container">
+              <p
+                v-if="friendlyEmoji"
+                class="content-metric__friendly-id"
+                data-testid="card-dashboard-friendly-id"
+              >
+                {{ friendlyEmoji }}
+              </p>
+              <IconLoading v-if="isLoading" />
+              <h1
+                v-else
+                class="content-metric__value"
+                :title="configured ? metric : '0'"
+                data-testid="card-dashboard-metric-value"
+              >
+                {{ configured ? metric : '0' }}
+              </h1>
+            </section>
+            <UnnnicButton
+              v-if="configurable || !configured"
+              class="card-dashboard__button-config"
+              data-testid="card-dashboard-button-config"
+              type="tertiary"
+              iconCenter="tune"
+              @click.stop="$emit('open-config')"
             />
-          </UnnnicToolTip>
+          </section>
+          <section class="content-description">
+            <p
+              v-if="!showMetricError"
+              class="content-description__text"
+              data-testid="card-dashboard-content-description"
+              :title="
+                configured ? $t(description) : $t('widgets.card.metric_empty')
+              "
+            >
+              {{
+                configured ? $t(description) : $t('widgets.card.metric_empty')
+              }}
+            </p>
+            <UnnnicToolTip
+              v-if="tooltip"
+              enabled
+              :text="tooltip"
+              side="right"
+              class="content-description__tooltip"
+              data-testid="content-desciption-tooltip"
+            >
+              <UnnnicIcon
+                icon="info"
+                size="avatar-nano"
+              />
+            </UnnnicToolTip>
+          </section>
         </section>
-      </section>
-    </CardBase>
-  </UnnnicToolTip>
+      </CardBase>
+    </UnnnicToolTip>
+  </div>
 </template>
 
 <script>
@@ -158,6 +162,10 @@ export default {
   gap: $unnnic-spacing-xs;
 
   overflow: hidden;
+
+  &-container {
+    display: grid;
+  }
 
   &.clickable:not(.loading):hover {
     background-color: $unnnic-color-weni-50;

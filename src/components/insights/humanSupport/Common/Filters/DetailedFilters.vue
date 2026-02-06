@@ -55,8 +55,16 @@ interface Props {
 
 interface FilterState {
   type: FilterType;
-  source: SourceType;
+  source?: SourceType;
   selected: string;
+  isInput?: boolean;
+}
+
+interface ActiveFilter {
+  type: FilterType;
+  component: 'FilterInput' | 'FilterSelect';
+  props: any;
+  events: any;
 }
 
 const props = defineProps<Props>();
@@ -100,6 +108,11 @@ const filters = ref<Record<FilterType, FilterState>>({
     type: 'ticket_id',
     source: 'ticket_id',
     selected: '',
+  },
+  contact_input: {
+    type: 'contact_input',
+    selected: '',
+    isInput: true,
   },
 });
 
@@ -168,7 +181,7 @@ const activeFilters = computed<ActiveFilter[]>(() => {
       props: {
         type: filter.type,
         source: filter.source,
-        modelValue: filter.selected as FilterOption[],
+        modelValue: filter.selected,
         filterParams: filterParams.value,
       },
       events: {

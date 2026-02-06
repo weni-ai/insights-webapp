@@ -76,8 +76,6 @@ export default {
     const lineChart = ref(null);
     const { width, height } = useElementSize(lineChart);
 
-    console.log('colorTeal600', colorTeal600, colorGray950);
-
     return {
       lineChart,
       chartWidth: width,

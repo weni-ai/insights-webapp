@@ -337,3 +337,9 @@ defineExpose({
   gap: $unnnic-space-1;
 }
 </style>
+
+<style lang="scss">
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
+}
+</style>

@@ -160,11 +160,11 @@ export default {
   gap: $unnnic-spacing-sm;
 
   :deep(.unnnic-avatar-icon.aux-red-500) {
-    background: #fff3f6;
+    background: $unnnic-color-aux-red-100;
   }
 
   :deep(.material-symbols-rounded.unnnic-icon-scheme--aux-red-500) {
-    color: rgba(247, 25, 99, 1);
+    color: $unnnic-color-aux-red-600;
   }
 
   &--not-data {
@@ -187,7 +187,7 @@ export default {
     .header__title {
       padding: $unnnic-spacing-nano 0;
 
-      color: #f71963;
+      color: $unnnic-color-aux-red-600;
       font-family: $unnnic-font-family-primary;
       font-size: $unnnic-font-size-title-sm;
       font-weight: $unnnic-font-weight-bold;

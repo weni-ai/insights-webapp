@@ -50,6 +50,7 @@ import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 import { Tooltip } from 'chart.js';
+import { colorTeal600, colorGray950 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
   name: 'LineChart',
@@ -75,6 +76,8 @@ export default {
     const lineChart = ref(null);
     const { width, height } = useElementSize(lineChart);
 
+    console.log('colorTeal600', colorTeal600, colorGray950);
+
     return {
       lineChart,
       chartWidth: width,
@@ -86,7 +89,7 @@ export default {
     mergedData() {
       const configData = {
         fill: true,
-        borderColor: '#00A49F',
+        borderColor: colorTeal600,
         pointRadius: 0,
         hoverRadius: 3,
         pointStyle: 'circle',
@@ -103,7 +106,7 @@ export default {
             chartArea.bottom,
           );
 
-          gradient.addColorStop(0, '#00A49F');
+          gradient.addColorStop(0, colorTeal600);
           gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
           return gradient;
@@ -119,8 +122,8 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: '#00A49F',
-        hoverBackgroundColor: '#00A49F',
+        backgroundColor: colorTeal600,
+        hoverBackgroundColor: colorTeal600,
         pointStyle: false,
         layout: {
           padding: 10,
@@ -145,7 +148,7 @@ export default {
         plugins: {
           tooltip: {
             enabled: true,
-            backgroundColor: '#272B33',
+            backgroundColor: colorGray950,
             displayColors: false,
             font: {
               size: '16',

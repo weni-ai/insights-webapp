@@ -64,12 +64,20 @@ import { Tooltip } from 'chart.js';
 import { getPercentageOf } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import weniLoading from '@/assets/images/weni-loading.svg';
+import {
+  colorPurple300,
+  colorGreen300,
+  colorBlue300,
+  colorOrange300,
+  colorGray300,
+  colorGray800,
+} from '@weni/unnnic-system/tokens/colors';
 
 const colorsMapper = {
-  'aux-purple-300': '#B794F4',
-  'aux-green-300': '#68D391',
-  'aux-blue-300': '#63B3ED',
-  'aux-orange-300': '#F6AD55',
+  'aux-purple-300': colorPurple300,
+  'aux-green-300': colorGreen300,
+  'aux-blue-300': colorBlue300,
+  'aux-orange-300': colorOrange300,
 };
 
 const props = defineProps({
@@ -111,13 +119,13 @@ const options = computed(() => ({
       suggestedMin: 0,
       display: true,
       ticks: {
-        color: '#9CACCC',
+        color: colorGray300,
       },
     },
     x: {
       ticks: {
         padding: -1,
-        color: '#9CACCC',
+        color: colorGray300,
       },
       grid: {
         display: true,
@@ -127,7 +135,7 @@ const options = computed(() => ({
   plugins: {
     tooltip: {
       enabled: true,
-      backgroundColor: '#272B33',
+      backgroundColor: colorGray800,
       displayColors: false,
       font: {
         size: '16',

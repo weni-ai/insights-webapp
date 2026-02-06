@@ -91,6 +91,13 @@ import CardBase from './CardBase.vue';
 
 import i18n from '@/utils/plugins/i18n';
 import { formatPercentage, formatValue } from '@/utils/numbers';
+import {
+  colorPurple300,
+  colorGreen300,
+  colorBlue300,
+  colorOrange300,
+  colorRed600,
+} from '@weni/unnnic-system/tokens/colors';
 
 const props = defineProps({
   widget: {
@@ -117,7 +124,13 @@ const metaData = computed(() => {
   const graphData = props.data?.graph_data;
   if (!graphData) return [];
   const keysOrdend = ['sent', 'delivered', 'read', 'clicked', 'orders'];
-  const colors = ['#B794F4', '#68D391', '#63B3ED', '#F6AD55', '#F71963'];
+  const colors = [
+    colorPurple300,
+    colorGreen300,
+    colorBlue300,
+    colorOrange300,
+    colorRed600,
+  ];
   return keysOrdend.map((key, index) => ({
     title:
       key === 'sent'

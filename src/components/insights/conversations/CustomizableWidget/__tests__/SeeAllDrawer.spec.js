@@ -116,24 +116,24 @@ describe('SeeAllDrawer', () => {
           label: 'Satisfied',
           value: 75.5,
           description: '75.5% (302)',
-          backgroundColor: '#BEE3F8',
-          color: '#3182CE',
+          backgroundColor: '#E5EEF9', // colorBlue100
+          color: '#3182CE', // colorBlue500
           subItems: [],
         },
         {
           label: 'Neutral',
           value: 15.2,
           description: '15.2% (61)',
-          backgroundColor: '#BEE3F8',
-          color: '#3182CE',
+          backgroundColor: '#E5EEF9', // colorBlue100
+          color: '#3182CE', // colorBlue500
           subItems: [],
         },
         {
           label: 'Unsatisfied',
           value: 9.3,
           description: '9.3% (37)',
-          backgroundColor: '#BEE3F8',
-          color: '#3182CE',
+          backgroundColor: '#E5EEF9', // colorBlue100
+          color: '#3182CE', // colorBlue500
           subItems: [],
         },
       ];

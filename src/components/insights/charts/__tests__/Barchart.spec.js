@@ -68,6 +68,8 @@ describe('BarChart', () => {
       '#0D5453', // colorTeal900
     );
 
-    expect(chartOptions.plugins.datalabels.color(inactiveContext)).toBe('#fff');
+    expect(chartOptions.plugins.datalabels.color(inactiveContext)).toBe(
+      '#FFFFFF',
+    ); // colorWhite
   });
 });

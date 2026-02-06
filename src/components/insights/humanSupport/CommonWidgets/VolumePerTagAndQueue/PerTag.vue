@@ -22,9 +22,13 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import BarList from '../BarList/index.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
+
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 import type { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue';
 
@@ -42,6 +46,14 @@ interface PerTagProps {
   context: 'monitoring' | 'analysis';
   showConfig?: boolean;
 }
+
+const humanSupportStore = useHumanSupport();
+const humanSupportMonitoringStore = useHumanSupportMonitoring();
+
+const { appliedFilters } = storeToRefs(humanSupportStore);
+const { refreshDataMonitoring, autoRefresh } = storeToRefs(
+  humanSupportMonitoringStore,
+);
 
 const props = withDefaults(defineProps<PerTagProps>(), {
   showConfig: false,
@@ -165,12 +177,18 @@ onMounted(() => {
   getItems({ silent: false, concat: false });
 });
 
-watch(currentTab, () => {
-  items.value = [];
+watch([currentTab, appliedFilters], () => {
   itemsNext.value = null;
   itemsPrevious.value = null;
-  itemsCount.value = 0;
   getItems({ silent: false, concat: false });
+});
+
+watch(refreshDataMonitoring, () => {
+  if (refreshDataMonitoring.value && autoRefresh.value) {
+    itemsNext.value = null;
+    itemsPrevious.value = null;
+    getItems({ silent: true, concat: false });
+  }
 });
 </script>
 

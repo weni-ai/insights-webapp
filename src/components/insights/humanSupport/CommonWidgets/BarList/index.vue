@@ -5,7 +5,8 @@
     :currentTab="props.currentTab"
     @tab-change="handleTabChange"
   >
-    <!-- TODO: setup/empty data -->
+    <template v-if="showConfig"> TODO: setup </template>
+    <template v-if="emptyData && !props.isLoading"> TODO: empty data </template>
     <template v-if="props.isLoading">
       <UnnnicSkeletonLoading
         v-for="i in 5"

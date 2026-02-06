@@ -22,6 +22,10 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 import BarList from '../BarList/index.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
@@ -42,6 +46,14 @@ interface PerQueueProps {
   context: 'monitoring' | 'analysis';
   showConfig?: boolean;
 }
+
+const humanSupportStore = useHumanSupport();
+const humanSupportMonitoringStore = useHumanSupportMonitoring();
+
+const { appliedFilters } = storeToRefs(humanSupportStore);
+const { refreshDataMonitoring, autoRefresh } = storeToRefs(
+  humanSupportMonitoringStore,
+);
 
 const props = withDefaults(defineProps<PerQueueProps>(), {
   showConfig: false,
@@ -170,16 +182,22 @@ const seeAllDrawerTitle = computed(() => {
   return `${t('human_support_dashboard.volume_per_queue.title')} - ${statusLabel}`;
 });
 
-onMounted(() => {
-  getItems({ silent: false, concat: false });
+onMounted(async () => {
+  await getItems({ silent: false, concat: false });
 });
 
-watch(currentTab, () => {
-  items.value = [];
+watch([currentTab, appliedFilters], async () => {
   itemsNext.value = null;
   itemsPrevious.value = null;
-  itemsCount.value = 0;
-  getItems({ silent: false, concat: false });
+  await getItems({ silent: false, concat: false });
+});
+
+watch(refreshDataMonitoring, async () => {
+  if (refreshDataMonitoring.value && autoRefresh.value) {
+    itemsNext.value = null;
+    itemsPrevious.value = null;
+    await getItems({ silent: true, concat: false });
+  }
 });
 </script>
 

@@ -2,7 +2,6 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-import { asyncTimeout } from '@/utils/time';
 
 interface QueryParams {
   cursor?: string;
@@ -43,150 +42,13 @@ export default {
       ...params,
     };
 
-    // TODO: remove mock
-    await asyncTimeout(5000);
-
-    return {
-      count: 9, // count de filas
-      next: 'true',
-      previous: null,
-      results: [
-        {
-          sector_name: 'setor 0',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 1',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 2',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 0',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 1',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 2',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 0',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 1',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 2',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-      ],
-    };
-
-    // const response = (await http.get(
-    //   `/dashboards/${currentDashboard.uuid}/monitoring/queue_volume/`,
-    //   {
-    //     params: formattedParams,
-    //   },
-    // )) as VolumePerQueueResponse;
-    // return response;
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/monitoring/queue_volume/`,
+      {
+        params: formattedParams,
+      },
+    )) as VolumePerQueueResponse;
+    return response;
   },
 
   async getVolumePerQueueAnalysis(
@@ -209,149 +71,13 @@ export default {
       ...formattedAppliedFilters,
       ...params,
     };
-    // TODO: remove mock
-    await asyncTimeout(5000);
 
-    return {
-      count: 9, // count de filas
-      next: null,
-      previous: null,
-      results: [
-        {
-          sector_name: 'setor 0',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 1',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 2',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 0',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 1',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 2',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 0',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 1',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-        {
-          sector_name: 'setor 2',
-          total_queues: 2,
-          queues: [
-            {
-              queue_name: 'fila 1',
-              value: 10,
-            },
-            {
-              queue_name: 'fila 2',
-              value: 10,
-            },
-          ],
-        },
-      ],
-    };
-
-    // const response = (await http.get(
-    //   `/dashboards/${currentDashboard.uuid}/analysis/queue_volume/`,
-    //   {
-    //     params: formattedParams,
-    //   },
-    // )) as VolumePerQueueResponse;
-    // return response;
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/analysis/queue_volume/`,
+      {
+        params: formattedParams,
+      },
+    )) as VolumePerQueueResponse;
+    return response;
   },
 };

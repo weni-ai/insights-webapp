@@ -2,7 +2,6 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-import { asyncTimeout } from '@/utils/time';
 
 interface QueryParams {
   cursor?: string;
@@ -43,35 +42,13 @@ export default {
       ...params,
     };
 
-    // TODO: remove mock
-    await asyncTimeout(5000);
-
-    const results = Array.from({ length: 9 }).map((_, index) => {
-      return {
-        sector_name: `setor ${index}`,
-        total_tags: 2,
-        tags: [
-          {
-            tag_name: `tag ${index}`,
-            value: 10,
-          },
-        ],
-      };
-    });
-    return {
-      count: 9, // count de tags
-      next: null,
-      previous: null,
-      results,
-    };
-
-    // const response = (await http.get(
-    //   `/dashboards/${currentDashboard.uuid}/monitoring/queue_volume/`,
-    //   {
-    //     params: formattedParams,
-    //   },
-    // )) as VolumePerTagsResponse;
-    // return response;
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/monitoring/tags_volume/`,
+      {
+        params: formattedParams,
+      },
+    )) as VolumePerTagsResponse;
+    return response;
   },
 
   async getVolumePerTagsAnalysis(
@@ -95,34 +72,12 @@ export default {
       ...params,
     };
 
-    // TODO: remove mock
-    await asyncTimeout(5000);
-
-    const results = Array.from({ length: 9 }).map((_, index) => {
-      return {
-        sector_name: `setor ${index}`,
-        total_tags: 2,
-        tags: [
-          {
-            tag_name: `tag ${index}`,
-            value: 10,
-          },
-        ],
-      };
-    });
-    return {
-      count: 9, // count de tags
-      next: null,
-      previous: null,
-      results,
-    };
-
-    // const response = (await http.get(
-    //   `/dashboards/${currentDashboard.uuid}/analysis/queue_volume/`,
-    //   {
-    //     params: formattedParams,
-    //   },
-    // )) as VolumePerTagsResponse;
-    // return response;
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/analysis/tags_volume/`,
+      {
+        params: formattedParams,
+      },
+    )) as VolumePerTagsResponse;
+    return response;
   },
 };

@@ -62,6 +62,7 @@ onMounted(async () => {
   display: flex;
   width: 100%;
   gap: $unnnic-space-6;
+  min-height: 503px;
   &__container {
     display: flex;
     flex: 1;

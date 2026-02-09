@@ -63,7 +63,6 @@ describe('FlowResultContactListModal.vue', () => {
   it('renders the modal with correct title', async () => {
     await wrapper.vm.$nextTick();
     const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-    console.log('modal =>', modal.html());
     expect(modal.exists()).toBe(true);
     // Check that title prop exists and contains either the translation key or the actual label
     expect(modal.props('title')).toBeDefined();

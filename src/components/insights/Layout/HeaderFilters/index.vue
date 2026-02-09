@@ -31,7 +31,6 @@
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
         @update:model-value="updateFilter"
       />
-      <HelperDataText v-if="isConversationalDashboard" />
     </section>
     <ModalFilters
       data-testid="modal-filters"
@@ -66,7 +65,6 @@ import ModalFilters from './ModalFilters.vue';
 import FilterHumanSupport from './FilterHumanSupport.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
-import HelperDataText from './HelperDataText.vue';
 
 import { getLastNDays, getYesterdayDate } from '@/utils/time';
 
@@ -79,7 +77,6 @@ export default {
     SearchTemplateMessagesModal,
     FilterHumanSupport,
     FilterFavoriteTemplateMessage,
-    HelperDataText,
   },
 
   data() {

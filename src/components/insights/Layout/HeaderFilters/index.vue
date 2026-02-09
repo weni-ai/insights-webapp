@@ -123,6 +123,10 @@ export default {
       return this.currentDashboard?.config?.is_whatsapp_integration;
     },
 
+    yesterdayFormatted() {
+      return getYesterdayDate().dmFormat;
+    },
+
     hasManyFilters() {
       return this.currentDashboardFilters?.length > 1;
     },
@@ -194,34 +198,53 @@ export default {
         };
 
         if (this.isConversationalDashboard) {
+          const dateParam = { date: this.yesterdayFormatted };
           customFilter.disableClear = false;
           customFilter.shortCutOptions = [
             {
-              name: this.$t('select_date.last_7_days_conversational'),
+              name: this.$t(
+                'select_date.last_7_days_conversational',
+                dateParam,
+              ),
               id: 'last-7-days',
             },
             {
-              name: this.$t('select_date.last_14_days_conversational'),
+              name: this.$t(
+                'select_date.last_14_days_conversational',
+                dateParam,
+              ),
               id: 'last-14-days',
             },
             {
-              name: this.$t('select_date.last_30_days_conversational'),
+              name: this.$t(
+                'select_date.last_30_days_conversational',
+                dateParam,
+              ),
               id: 'last-30-days',
             },
             {
-              name: this.$t('select_date.last_12_months_conversational'),
+              name: this.$t(
+                'select_date.last_12_months_conversational',
+                dateParam,
+              ),
               id: 'last-12-months',
             },
             {
-              name: this.$t('select_date.current_month_conversational'),
+              name: this.$t(
+                'select_date.current_month_conversational',
+                dateParam,
+              ),
               id: 'current-month',
             },
             {
-              name: this.$t('select_date.previous_month_conversational'),
+              name: this.$t(
+                'select_date.previous_month_conversational',
+                dateParam,
+              ),
               id: 'previous-month',
             },
             {
-              name: this.$t('select_date.custom_conversational'),
+              name: this.$t('select_date.custom_conversational', dateParam),
               id: 'custom',
             },
           ];

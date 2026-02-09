@@ -59,6 +59,7 @@ import {
   useHumanSupport,
   type ActiveTab,
 } from '@/store/modules/humanSupport/humanSupport';
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
@@ -67,7 +68,10 @@ const isEnabled = computed(() => {
 });
 
 const humanSupportStore = useHumanSupport();
+const humanSupportMonitoringStore = useHumanSupportMonitoring();
+
 const { activeTab } = storeToRefs(humanSupportStore);
+const { autoRefresh } = storeToRefs(humanSupportMonitoringStore);
 const { setActiveTab } = humanSupportStore;
 
 const tabs = {
@@ -85,8 +89,11 @@ const tabs = {
 
 const tabsKeys = Object.keys(tabs);
 
-const handleChangeTab = (tab: string) => {
-  setActiveTab(tab as ActiveTab);
+const handleChangeTab = (tab: ActiveTab) => {
+  setActiveTab(tab);
+  if (tab === 'monitoring') {
+    autoRefresh.value = true;
+  }
 };
 </script>
 

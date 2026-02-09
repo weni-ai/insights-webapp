@@ -54,6 +54,7 @@ describe('HeaderRefresh.vue', () => {
     setActivePinia(createPinia());
 
     monitoringStore = {
+      autoRefresh: false,
       isLoadingAllData: false,
       setRefreshDataMonitoring: vi.fn(),
     };
@@ -65,6 +66,7 @@ describe('HeaderRefresh.vue', () => {
 
     mockStoreToRefs = {
       isLoadingAllData: ref(false),
+      autoRefresh: ref(false),
     };
 
     useHumanSupportMonitoring.mockReturnValue(monitoringStore);

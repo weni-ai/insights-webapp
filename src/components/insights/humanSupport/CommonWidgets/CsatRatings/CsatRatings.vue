@@ -115,6 +115,10 @@ import Csat from '@/services/api/resources/humanSupport/csat';
 
 import { parseQueryString } from '@/utils/request';
 import { formatPercentage } from '@/utils/numbers';
+import {
+  colorPurple100,
+  colorPurple500,
+} from '@weni/unnnic-system/tokens/colors';
 
 defineOptions({
   name: 'CsatRatings',
@@ -183,8 +187,8 @@ const progressItemsRatingsData = computed(() => {
     .reverse()
     .map(([key, value]) => ({
       label: labelMapping[key as keyof typeof labelMapping],
-      backgroundColor: '#E9D8FD',
-      color: '#805AD5',
+      backgroundColor: colorPurple100,
+      color: colorPurple500,
       value: value.value,
       description: `${formatPercentage(value.value, localeI18n.value)} (${value.full_value})`,
     }));

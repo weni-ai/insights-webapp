@@ -66,6 +66,10 @@ import {
   formatCurrency,
 } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
+import {
+  colorOrange500,
+  colorOrange200,
+} from '@weni/unnnic-system/tokens/colors';
 
 defineOptions({
   name: 'SalesFunnelWidget',
@@ -107,7 +111,7 @@ const graphData = computed(() => {
     description: i18n.global.t(
       'conversations_dashboard.sales_funnel_widget.captured_leads',
     ),
-    color: '#E5812A',
+    color: colorOrange500,
   };
   const purchasesData = {
     title: formatPercentage(
@@ -121,7 +125,7 @@ const graphData = computed(() => {
     description: i18n.global.t(
       'conversations_dashboard.sales_funnel_widget.purchases_made',
     ),
-    color: '#F1C080',
+    color: colorOrange200,
   };
   return [leadsData, purchasesData];
 });

@@ -26,7 +26,7 @@
     "others": "Otros",
     "unclassified": "Sin clasificar",
     "info": {
-      "description": "Los datos conversacionales muestran conversas iniciadas hasta 24 horas antes de la hora actual. Las conversas más recientes aún están siendo clasificadas y no se muestran. Actualiza el tablero para actualizar la ventana de datos."
+      "description": "Los datos conversacionales incluyen ventanas cerradas hasta las 23h59m59s del día de inicio. Las conversaciones del día actual aún están siendo procesadas y se mostrarán después de que el período se cierre."
     },
     "header": {
       "total": "Total de conversaciones",
@@ -35,7 +35,7 @@
       "unengaged": "Sin participación",
       "transferred": "Transferidas a soporte humano",
       "tooltips": {
-        "total": "Total de conversaciones iniciadas en este periodo. Se cuenta una conversación 24 horas después del primer mensaje del contacto.",
+        "total": "Total de conversaciones iniciadas en el período. Una conversa se cuenta desde el primer mensaje del contacto hasta las 23h59m59s del día de inicio.",
         "resolved": "Cuando el agente demuestra competencia y proporciona servicio útil",
         "unresolved": "Cuando no hubo atención efectiva (saludos, fuera de alcance, fallas del agente)",
         "unengaged": "Conversación sin participación útil. La conversación se limitó a saludos, emojis o se cerró sin una interacción relevante.",
@@ -384,13 +384,13 @@
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
     "previous_month": "Mes anterior ({date})",
-    "last_7_days_conversational": "Últimos 7 días (hasta 24h atrás)",
-    "last_14_days_conversational": "Últimos 14 días (hasta 24h atrás)",
-    "last_30_days_conversational": "Últimos 30 días (hasta 24h atrás)",
-    "last_12_months_conversational": "Últimos 12 meses (hasta 24h atrás)",
-    "current_month_conversational": "Mes actual (hasta 24h atrás)",
-    "previous_month_conversational": "Mes anterior (hasta 24h atrás)",
-    "custom_conversational": "Personalizado (hasta 24h atrás)"
+    "last_7_days_conversational": "Últimos 7 días (hasta {date})",
+    "last_14_days_conversational": "Últimos 14 días (hasta {date})",
+    "last_30_days_conversational": "Últimos 30 días (hasta {date})",
+    "last_12_months_conversational": "Últimos 12 meses (hasta {date})",
+    "current_month_conversational": "Mes actual (hasta {date})",
+    "previous_month_conversational": "Mes anterior (hasta {date})",
+    "custom_conversational": "Personalizado (hasta {date})"
   },
   "data_period": {
     "label": "Período",

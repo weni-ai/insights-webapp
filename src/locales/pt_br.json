@@ -35,7 +35,7 @@
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
-        "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
+        "total": "Total de conversas iniciadas no período. Uma conversa é contabilizada desde a primeira mensagem do contato até às 23h59 do mesmo dia. Mensagens enviadas após este horário iniciam uma nova janela de conversa.",
         "resolved": "Quando o agente demonstra competência e fornece serviço útil",
         "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente)",
         "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",

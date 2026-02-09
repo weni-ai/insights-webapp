@@ -35,7 +35,7 @@
       "unengaged": "Sin participación",
       "transferred": "Transferidas a soporte humano",
       "tooltips": {
-        "total": "Total de conversaciones iniciadas en este periodo. Se cuenta una conversación 24 horas después del primer mensaje del contacto.",
+        "total": "Total de conversaciones iniciadas en el período. Una conversa se cuenta desde el primer mensaje del contacto hasta las 23h59m59s del día de inicio.",
         "resolved": "Cuando el agente demuestra competencia y proporciona servicio útil",
         "unresolved": "Cuando no hubo atención efectiva (saludos, fuera de alcance, fallas del agente)",
         "unengaged": "Conversación sin participación útil. La conversación se limitó a saludos, emojis o se cerró sin una interacción relevante.",

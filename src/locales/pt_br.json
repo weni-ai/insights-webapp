@@ -343,6 +343,7 @@
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
   "closeds": "Encerrados",
+  "finished": "Finalizado",
   "in_progress": "Em andamento",
   "waiting": "Aguardando",
   "in-service": "Em atendimento",
@@ -1001,6 +1002,18 @@
         "very_dissatisfied": "😡 Muito insatisfeito"
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
+    },
+    "volume_per_queue": {
+      "title": "Volume por fila",
+      "monitoring_count": "{count} filas com chats {status}",
+      "analysis_count": "{count} filas com chats finalizados"
+    },
+    "volume_per_tag": {
+      "title": "Volume por tags",
+      "count": {
+        "ongoing": "{count} tags em uso",
+        "closed": "{count} tags atribuídas"
+      }
     }
   },
   "news": {

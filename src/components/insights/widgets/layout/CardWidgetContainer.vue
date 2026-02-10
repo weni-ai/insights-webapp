@@ -9,7 +9,10 @@
     class="card-widget-container"
     v-bind="$attrs"
   >
-    <section class="card-widget-container__header">
+    <section
+      v-if="!props.hideHeader"
+      class="card-widget-container__header"
+    >
       <p class="header__title">
         {{ props.title }}
       </p>
@@ -76,6 +79,7 @@ export type CardWidgetContainerProps = {
   actions?: CardWidgetContainerAction[];
   currentTab?: string;
   hiddenTabs?: boolean;
+  hideHeader?: boolean;
   tabs?: { name: string; key: string }[];
 };
 
@@ -86,6 +90,7 @@ const props = withDefaults(defineProps<CardWidgetContainerProps>(), {
   tabs: () => [],
   currentTab: '',
   hiddenTabs: false,
+  hideHeader: false,
 });
 
 const emit = defineEmits<{

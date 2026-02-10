@@ -1007,13 +1007,34 @@
     "volume_per_queue": {
       "title": "Volume per queue",
       "monitoring_count": "{count} queues with chats {status}",
-      "analysis_count": "{count} queues with finished chats"
+      "analysis_count": "{count} queues with finished chats",
+      "setup_description": "Create queues by sector to monitor more data.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No queues have chats waiting for support",
+          "ongoing": "No queues have chats in progress",
+          "closed": "No chats were finished today"
+        },
+        "analysis": {
+          "closed": "No chats were finished during the selected period"
+        }
+      }
     },
     "volume_per_tag": {
       "title": "Volume per tag",
+      "setup_description": "Add tags to sectors to monitor more data.",
       "count": {
         "ongoing": "{count} tags in use",
         "closed": "{count} assigned tags"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "No tags are being used on chats in progress",
+          "closed": "No tags were assigned to chats finished today"
+        },
+        "analysis": {
+          "closed": "No tags were assigned to chats finished during the selected period"
+        }
       }
     }
   },

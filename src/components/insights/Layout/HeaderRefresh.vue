@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, computed, ref, onMounted, watch } from 'vue';
+import { onUnmounted, computed, ref, watch } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
 import { UnnnicButton } from '@weni/unnnic-system';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';

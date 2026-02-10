@@ -119,6 +119,7 @@ import {
   colorPurple100,
   colorPurple500,
 } from '@weni/unnnic-system/tokens/colors';
+import { redirectToChatsConfig } from '@/utils/redirect';
 
 defineOptions({
   name: 'CsatRatings',
@@ -241,17 +242,6 @@ const loadRatingsData = async ({
   } finally {
     isLoadingRatingsData.value = false;
   }
-};
-
-const redirectToChatsConfig = () => {
-  const chatsConfigLink = `settingsChats:r/init`;
-  window.parent.postMessage(
-    {
-      event: 'redirect',
-      path: chatsConfigLink,
-    },
-    '*',
-  );
 };
 
 const activeAgentEmail = ref<string | null>(null);

@@ -10,7 +10,7 @@
       :placeholder="t('human_support_dashboard.filters.common.placeholder')"
       :modelValue="props.modelValue"
       :options="options"
-      :enableSearch="hasInfiniteScroll"
+      :enableSearch="hasSearch"
       :search="searchValue"
       itemLabel="label"
       itemValue="value"
@@ -90,6 +90,10 @@ const isSelecting = ref(false);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
 const isContactFilter = computed(() => props.type === 'contact');
+const isAgentFilter = computed(() => props.type === 'attendant');
+const hasSearch = computed(
+  () => isContactFilter.value || isTicketIdFilter.value || isAgentFilter.value,
+);
 const hasInfiniteScroll = computed(
   () => isContactFilter.value || isTicketIdFilter.value,
 );
@@ -202,7 +206,7 @@ const isItemLabel = (searchTerm: string): boolean => {
 };
 
 const handleSearchUpdate = (newSearchValue: string) => {
-  if (!hasInfiniteScroll.value) return;
+  if (!hasSearch.value) return;
 
   const trimmedSearch = newSearchValue?.trim() || '';
 
@@ -259,7 +263,7 @@ const loadData = async (search?: string) => {
     const response = await Projects.getProjectSource(
       props.source,
       params,
-      hasInfiniteScroll.value,
+      hasSearch.value,
     );
 
     processApiResponse(response, !!search);

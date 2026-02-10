@@ -1006,13 +1006,34 @@
     "volume_per_queue": {
       "title": "Volume por fila",
       "monitoring_count": "{count} filas com chats {status}",
-      "analysis_count": "{count} filas com chats finalizados"
+      "analysis_count": "{count} filas com chats finalizados",
+      "setup_description": "Crie filas por setor para monitorar mais dados.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Não há filas com chats esperando suporte",
+          "ongoing": "Não há filas com chats em progresso",
+          "closed": "Não há chats finalizados hoje"
+        },
+        "analysis": {
+          "closed": "Não há chats finalizados no período selecionado"
+        }
+      }
     },
     "volume_per_tag": {
-      "title": "Volume por tags",
+      "title": "Volume por tag",
+      "setup_description": "Adicione tags a setores para monitorar mais dados.",
       "count": {
         "ongoing": "{count} tags em uso",
         "closed": "{count} tags atribuídas"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "Não há tags em uso em chats em progresso",
+          "closed": "Não há tags atribuídas a chats finalizados hoje"
+        },
+        "analysis": {
+          "closed": "Não há tags atribuídas a chats finalizados no período selecionado"
+        }
       }
     }
   },

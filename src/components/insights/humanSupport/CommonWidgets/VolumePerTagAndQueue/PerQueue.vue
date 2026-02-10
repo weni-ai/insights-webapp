@@ -7,10 +7,15 @@
     itemKey="queues"
     itemLabelKey="queue_name"
     :formatFooterText="formatFooterText"
+    :formatEmptyDataText="formatEmptyDataText"
     seeAllTitleKey="human_support_dashboard.volume_per_queue.title"
+    :setupDescription="
+      t('human_support_dashboard.volume_per_queue.setup_description')
+    "
     :fetchMethod="fetchMethod"
     :context="props.context"
     :showConfig="props.showConfig"
+    @click:setup="redirectToChatsConfig"
   />
 </template>
 
@@ -20,9 +25,11 @@ import { computed } from 'vue';
 import VolumeBarListWidget from './VolumeBarListWidget.vue';
 import type { VolumeBarListTabItem, WidgetContext } from './types';
 
-import i18n from '@/utils/plugins/i18n';
 import volumePerQueueService from '@/services/api/resources/humanSupport/volumePerQueue';
 
+import { redirectToChatsConfig } from '@/utils/redirect';
+
+import i18n from '@/utils/plugins/i18n';
 const { t } = i18n.global;
 
 defineOptions({
@@ -76,6 +83,11 @@ const formatFooterText = (
     count,
   });
 };
+
+const formatEmptyDataText = (context: WidgetContext, currentTab?: string) =>
+  t(
+    `human_support_dashboard.volume_per_queue.empty_data.${context}.${currentTab}`,
+  );
 
 const fetchMethod = (ctx: WidgetContext) =>
   ctx === 'monitoring'

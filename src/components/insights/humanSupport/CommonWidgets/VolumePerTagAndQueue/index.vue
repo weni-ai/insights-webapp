@@ -1,6 +1,11 @@
 <template>
+  <UnnnicSkeletonLoading
+    v-if="!configLoaded"
+    width="100%"
+    height="503px"
+  />
   <section
-    v-if="configLoaded"
+    v-else
     class="volume-per-tag-and-queue"
   >
     <div class="volume-per-tag-and-queue__container">

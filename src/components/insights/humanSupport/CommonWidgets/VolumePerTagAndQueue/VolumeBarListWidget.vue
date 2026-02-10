@@ -7,8 +7,13 @@
     :isLoading="isLoadingItems && showVisualLoading"
     :countText="footerText"
     :showSeeAllButton="itemsCount > 5"
+    :showConfig="props.showConfig"
+    :emptyDataText="emptyDataText"
+    :setupTitle="props.setupTitle"
+    :setupDescription="props.setupDescription"
     @tab-change="handleTabChange"
     @see-all="handleSeeAll"
+    @click:setup="emit('click:setup')"
   />
   <SeeAllDrawer
     v-model="openSeeAllDrawer"
@@ -38,6 +43,7 @@ import type {
   VolumeBarListTabItem,
   WidgetContext,
 } from './types';
+
 import i18n from '@/utils/plugins/i18n';
 
 const { t } = i18n.global;
@@ -45,6 +51,10 @@ const { t } = i18n.global;
 defineOptions({
   name: 'VolumeBarListWidget',
 });
+
+const emit = defineEmits<{
+  'click:setup': [];
+}>();
 
 interface VolumeBarListWidgetProps {
   titleKey: string;
@@ -59,10 +69,16 @@ interface VolumeBarListWidgetProps {
     _count: number,
     _statusLabel?: string,
   ) => string;
+  formatEmptyDataText: (
+    _context: WidgetContext,
+    _currentTab?: string,
+  ) => string;
   seeAllTitleKey: string;
   fetchMethod: (_context: WidgetContext) => VolumeBarListFetchMethod;
   context: WidgetContext;
   showConfig?: boolean;
+  setupTitle?: string;
+  setupDescription?: string;
 }
 
 const humanSupportStore = useHumanSupport();
@@ -75,6 +91,8 @@ const { refreshDataMonitoring, autoRefresh } = storeToRefs(
 
 const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   showConfig: false,
+  setupTitle: '',
+  setupDescription: '',
 });
 
 const itemsMock = computed<ProgressTableRowItem[]>(() =>
@@ -140,6 +158,12 @@ const footerText = computed(() => {
     count,
     statusLabel,
   );
+});
+
+const emptyDataText = computed(() => {
+  if (props.showConfig) return '';
+
+  return props.formatEmptyDataText(props.context, currentTab.value);
 });
 
 interface GetItemsOptions {

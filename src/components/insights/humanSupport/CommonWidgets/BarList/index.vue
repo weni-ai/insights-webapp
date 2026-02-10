@@ -23,7 +23,11 @@
         </section>
       </template>
       <template v-if="emptyData && !props.isLoading">
-        <UnnnicDisclaimer :description="props.emptyDataText" />
+        <UnnnicDisclaimer>
+          <template #description>
+            <p class="bar-list__empty-data-text">{{ props.emptyDataText }}</p>
+          </template>
+        </UnnnicDisclaimer>
       </template>
       <template v-if="props.isLoading">
         <UnnnicSkeletonLoading
@@ -141,6 +145,10 @@ const handleTabChange = (tab: string) => {
       font: $unnnic-font-emphasis;
       color: $unnnic-color-fg-base;
     }
+  }
+  &__empty-data-text {
+    font: $unnnic-font-action;
+    color: $unnnic-color-fg-emphasized;
   }
   &__table-container {
     flex: 1;

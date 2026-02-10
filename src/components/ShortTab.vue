@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits, watch } from 'vue';
+import { ref, watch } from 'vue';
 interface Tab {
   name: string;
   key: string;
@@ -37,7 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   currentTab: '',
 });
 const emit = defineEmits<{
-  (_e: 'tab-change', tab: string): void;
+  'tab-change': [tab: string];
 }>();
 const activeTab = ref(props.currentTab || props.tabs[0].key);
 
@@ -62,48 +62,46 @@ const switchTab = (key: string) => {
 .short-tab {
   &__tabs {
     display: flex;
-    gap: $unnnic-spacing-nano;
-    background-color: $unnnic-color-background-grass;
-    border-radius: $unnnic-border-radius-pill;
-    padding: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
+    background-color: $unnnic-color-bg-soft;
+    border-radius: $unnnic-radius-2;
+    padding: $unnnic-space-1;
     align-items: center;
   }
 
   &__tab {
     border: none;
-    border-radius: $unnnic-border-radius-pill;
+    border-radius: $unnnic-radius-1;
 
-    padding: $unnnic-spacing-nano $unnnic-spacing-ant;
+    padding: $unnnic-space-2 $unnnic-space-4;
 
     flex: 1;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
     justify-content: center;
     white-space: nowrap;
     align-items: center;
 
-    background-color: $unnnic-color-background-grass;
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-md;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+    background-color: $unnnic-color-bg-soft;
+    color: $unnnic-color-gray-500;
+    font: $unnnic-font-caption-1;
 
     cursor: pointer;
 
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: $unnnic-color-neutral-light;
-      color: $unnnic-color-neutral-dark;
+      background-color: $unnnic-color-bg-soft;
+      color: $unnnic-color-fg-emphasized;
     }
 
     &--active {
-      background-color: $unnnic-color-neutral-white;
-      color: $unnnic-color-neutral-dark;
+      background-color: $unnnic-color-bg-base;
+      border: 1px solid $unnnic-color-border-soft;
+      color: $unnnic-color-fg-emphasized;
 
       &:hover {
-        background-color: $unnnic-color-neutral-white;
-        color: $unnnic-color-neutral-dark;
+        background-color: $unnnic-color-bg-base;
+        color: $unnnic-color-fg-emphasized;
       }
     }
   }

@@ -3,20 +3,28 @@
     class="filter-select"
     :data-testid="`filter-select-${type}`"
   >
-    <UnnnicLabel
+    <UnnnicSelect
+      ref="selectRef"
+      :data-testid="`detailed-filters-select-${props.type}`"
       :label="filterLabel"
-      :data-testid="`filter-select-label-${type}`"
-    />
-    <UnnnicSelectSmart
-      ref="selectSmartRef"
-      v-bind="selectProps"
-      v-on="selectEvents"
+      :placeholder="t('human_support_dashboard.filters.common.placeholder')"
+      :modelValue="props.modelValue"
+      :options="options"
+      :enableSearch="hasInfiniteScroll"
+      :search="searchValue"
+      itemLabel="label"
+      itemValue="value"
+      :infiniteScroll="hasInfiniteScroll"
+      :infiniteScrollDistance="10"
+      :infiniteScrollCanLoadMore="canLoadMore"
+      @update:model-value="handleChange"
+      @update:search="handleSearchUpdate"
+      @scroll-end="loadMoreData"
     />
   </section>
 </template>
 
 <script setup lang="ts">
-import { UnnnicSelectSmart } from '@weni/unnnic-system';
 import Projects from '@/services/api/resources/projects';
 import {
   ref,
@@ -50,7 +58,7 @@ interface FilterOption {
 interface Props {
   type: FilterType;
   source: SourceType;
-  modelValue: FilterOption[];
+  modelValue: string;
   filterParams?: {
     sectors?: string[];
     queues?: string[];
@@ -59,7 +67,7 @@ interface Props {
 }
 
 interface Emits {
-  (_e: 'update:modelValue', _value: FilterOption[]): void;
+  (_e: 'update:modelValue', _value: string): void;
   (
     _e: 'change',
     _payload: { value: string; label: string; email?: string },
@@ -71,7 +79,7 @@ const emit = defineEmits<Emits>();
 
 const { t } = useI18n();
 
-const selectSmartRef = useTemplateRef<any>('selectSmartRef');
+const selectRef = useTemplateRef<any>('selectRef');
 const data = ref<FilterItem[] | TicketIdItem[]>([]);
 const isLoading = ref(false);
 const nextPageUrl = ref<string | null>(null);
@@ -82,12 +90,6 @@ const isSelecting = ref(false);
 
 const isTicketIdFilter = computed(() => props.type === 'ticket_id');
 const isContactFilter = computed(() => props.type === 'contact');
-const hasClearOption = computed(
-  () =>
-    props.type === 'attendant' ||
-    props.type === 'contact' ||
-    props.type === 'ticket_id',
-);
 const hasInfiniteScroll = computed(
   () => isContactFilter.value || isTicketIdFilter.value,
 );
@@ -110,50 +112,13 @@ const mapItemToOption = (item: FilterItem | TicketIdItem): FilterOption => {
   return { value, label: filterItem.name };
 };
 
-const mapDataToOptions = (
-  items: FilterItem[] | TicketIdItem[],
-): FilterOption[] => {
-  return Array.isArray(items) ? items.map(mapItemToOption) : [];
-};
-
-const CLEAR_FILTER_VALUE = '__CLEAR_FILTER__';
-
 const options = computed(() => {
-  const baseOptions = mapDataToOptions(data.value);
-
-  if (!hasClearOption.value) {
-    return baseOptions;
-  }
-
-  const clearOption: FilterOption = {
-    value: CLEAR_FILTER_VALUE,
-    label: t('human_support_dashboard.filters.common.clear'),
-  };
-
-  return [clearOption, ...baseOptions];
+  return Array.isArray(data.value) ? data.value.map(mapItemToOption) : [];
 });
 
 const canLoadMore = () => {
-  return hasInfiniteScroll.value && !!nextPageUrl.value;
+  return hasInfiniteScroll.value && !!nextPageUrl.value && !isLoadingMore.value;
 };
-
-const selectProps = computed(() => ({
-  'data-testid': `detailed-filters-select-${props.type}`,
-  placeholder: t('human_support_dashboard.filters.common.placeholder'),
-  modelValue: props.modelValue,
-  options: options.value,
-  autocomplete: true,
-  autocompleteClearOnFocus: true,
-  autocompleteIconLeft: true,
-  isLoading: isLoading.value,
-  orderedByIndex: hasClearOption.value,
-  ...(hasInfiniteScroll.value && {
-    infiniteScroll: true,
-    infiniteScrollDistance: 10,
-    infiniteScrollCanLoadMore: canLoadMore,
-    disableInternalFilter: true,
-  }),
-}));
 
 const findSelectedItem = (
   items: FilterItem[] | TicketIdItem[],
@@ -192,39 +157,29 @@ const findSelectedItem = (
   return result;
 };
 
-const handleChange = (selectedOptions: FilterOption[]) => {
+const handleChange = (selectedValue: string) => {
   isSelecting.value = true;
 
-  if (!selectedOptions || !selectedOptions.length) {
-    if (props.modelValue.length === 0) {
+  if (!selectedValue) {
+    if (!props.modelValue) {
       isSelecting.value = false;
       return;
     }
-    emit('update:modelValue', []);
+    emit('update:modelValue', '');
     emit('change', { value: '', label: '' });
     isSelecting.value = false;
     return;
   }
 
-  const selected = selectedOptions[0];
-
-  if (hasClearOption.value && selected.value === CLEAR_FILTER_VALUE) {
-    emit('update:modelValue', []);
-    emit('change', { value: '', label: '' });
-    isSelecting.value = false;
-    return;
-  }
-
-  const item = findSelectedItem(data.value, selected.value);
+  const item = findSelectedItem(data.value, selectedValue);
 
   if (item) {
-    const currentValue = props.modelValue[0]?.value;
-    if (currentValue === item.value) {
+    if (props.modelValue === item.value) {
       isSelecting.value = false;
       return;
     }
 
-    emit('update:modelValue', [{ value: item.value, label: item.label }]);
+    emit('update:modelValue', item.value);
     emit('change', item);
   }
 
@@ -246,12 +201,13 @@ const isItemLabel = (searchTerm: string): boolean => {
   return options.value.some((option) => option.label === searchTerm);
 };
 
-const handleSearchValueUpdate = (newSearchValue: string) => {
+const handleSearchUpdate = (newSearchValue: string) => {
   if (!hasInfiniteScroll.value) return;
 
   const trimmedSearch = newSearchValue?.trim() || '';
 
   if (trimmedSearch && isItemLabel(trimmedSearch)) {
+    searchValue.value = newSearchValue;
     return;
   }
 
@@ -269,14 +225,6 @@ const handleSearchValueUpdate = (newSearchValue: string) => {
     loadData(trimmedSearch);
   }, 500);
 };
-
-const selectEvents = computed(() => ({
-  'update:model-value': handleChange,
-  ...(hasInfiniteScroll.value && {
-    'scroll-end': loadMoreData,
-    'update:search-value': handleSearchValueUpdate,
-  }),
-}));
 
 const resetDataState = () => {
   data.value = [];
@@ -328,7 +276,7 @@ const loadMoreData = async () => {
     hasInfiniteScroll.value && nextPageUrl.value && !isLoadingMore.value;
 
   if (!canLoad) {
-    selectSmartRef.value?.finishInfiniteScroll();
+    selectRef.value?.finishInfiniteScroll();
     return;
   }
 
@@ -346,7 +294,7 @@ const loadMoreData = async () => {
     console.error(`Error loading more ${props.type} data`, error);
   } finally {
     isLoadingMore.value = false;
-    selectSmartRef.value?.finishInfiniteScroll();
+    selectRef.value?.finishInfiniteScroll();
   }
 };
 
@@ -354,7 +302,7 @@ const clearData = () => {
   resetDataState();
   searchValue.value = '';
   clearSearchTimer();
-  emit('update:modelValue', []);
+  emit('update:modelValue', '');
 };
 
 watch(
@@ -387,5 +335,11 @@ defineExpose({
   flex: 0 0 calc(100% / 4);
   max-width: calc(100% / 4);
   gap: $unnnic-space-1;
+}
+</style>
+
+<style lang="scss">
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
 }
 </style>

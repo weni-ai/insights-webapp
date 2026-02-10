@@ -32,19 +32,18 @@ const createWrapper = (props = {}, options = {}) => {
     props: {
       type: 'attendant',
       source: 'agents',
-      modelValue: [],
+      modelValue: '',
       ...props,
     },
     global: {
       stubs: {
-        UnnnicSelectSmart: {
-          template: '<div data-testid="mock-select-smart"></div>',
-          props: ['modelValue', 'options', 'isLoading'],
+        UnnnicSelect: {
+          template: '<div data-testid="mock-select"></div>',
+          props: ['modelValue', 'options', 'search', 'enableSearch'],
           methods: {
             finishInfiniteScroll: vi.fn(),
           },
         },
-        UnnnicLabel: true,
       },
       mocks: {
         $t: (key) => key,
@@ -53,9 +52,9 @@ const createWrapper = (props = {}, options = {}) => {
     ...options,
   });
 
-  // Mock the selectSmartRef
-  if (wrapper.vm.selectSmartRef) {
-    wrapper.vm.selectSmartRef = {
+  // Mock the selectRef
+  if (wrapper.vm.selectRef) {
+    wrapper.vm.selectRef = {
       finishInfiniteScroll: vi.fn(),
     };
   }
@@ -160,7 +159,7 @@ describe('FilterSelect', () => {
     });
 
     it('should emit change event when option is selected', async () => {
-      wrapper.vm.handleChange([{ value: '1', label: 'Agent 1' }]);
+      wrapper.vm.handleChange('1');
       await nextTick();
 
       expect(wrapper.emitted('update:modelValue')).toBeTruthy();
@@ -169,19 +168,19 @@ describe('FilterSelect', () => {
 
     it('should emit clear event when selection is cleared', async () => {
       wrapper = createWrapper({
-        modelValue: [{ value: '1', label: 'Agent 1' }],
+        modelValue: '1',
       });
       await nextTick();
 
-      wrapper.vm.handleChange([]);
+      wrapper.vm.handleChange('');
       await nextTick();
 
-      expect(wrapper.emitted('update:modelValue')[0]).toEqual([[]]);
+      expect(wrapper.emitted('update:modelValue')[0]).toEqual(['']);
       expect(wrapper.emitted('change')[0]).toEqual([{ value: '', label: '' }]);
     });
 
     it('should handle attendant selection with email', async () => {
-      wrapper.vm.handleChange([{ value: '1', label: 'Agent 1' }]);
+      wrapper.vm.handleChange('1');
       await nextTick();
 
       const emitted = wrapper.emitted('change')[0][0];
@@ -195,38 +194,20 @@ describe('FilterSelect', () => {
       wrapper = createWrapper({ type: 'contact', source: 'contacts' });
       await nextTick();
 
-      wrapper.vm.handleChange([{ value: 'ext1', label: 'Contact 1' }]);
+      wrapper.vm.handleChange('ext1');
       await nextTick();
 
       expect(wrapper.emitted('change')[0][0].value).toBe('ext1');
     });
 
-    it('should clear filter when clear option is selected', async () => {
-      wrapper = createWrapper();
-      await nextTick();
-
-      wrapper.vm.handleChange([
-        { value: '__CLEAR_FILTER__', label: 'Clear selection' },
-      ]);
-      await nextTick();
-
-      const updateEvents = wrapper.emitted('update:modelValue');
-      const changeEvents = wrapper.emitted('change');
-
-      expect(updateEvents[updateEvents.length - 1]).toEqual([[]]);
-      expect(changeEvents[changeEvents.length - 1]).toEqual([
-        { value: '', label: '' },
-      ]);
-    });
-
     it('should not emit if same value is selected', async () => {
       wrapper = createWrapper({
-        modelValue: [{ value: '1', label: 'Agent 1' }],
+        modelValue: '1',
       });
       await nextTick();
 
       const emitCountBefore = wrapper.emitted('change')?.length || 0;
-      wrapper.vm.handleChange([{ value: '1', label: 'Agent 1' }]);
+      wrapper.vm.handleChange('1');
       await nextTick();
 
       const emitCountAfter = wrapper.emitted('change')?.length || 0;
@@ -241,7 +222,7 @@ describe('FilterSelect', () => {
         .mockResolvedValue(mockContactResponse);
       wrapper = createWrapper({ type: 'contact', source: 'contacts' });
 
-      wrapper.vm.selectSmartRef = {
+      wrapper.vm.selectRef = {
         finishInfiniteScroll: vi.fn(),
       };
 
@@ -307,7 +288,7 @@ describe('FilterSelect', () => {
     });
 
     it('should debounce search input', async () => {
-      wrapper.vm.handleSearchValueUpdate('test search');
+      wrapper.vm.handleSearchUpdate('test search');
 
       expect(Projects.getProjectSource).toHaveBeenCalledTimes(1); // Initial load
 
@@ -323,10 +304,10 @@ describe('FilterSelect', () => {
     });
 
     it('should cancel previous search timer on new input', async () => {
-      wrapper.vm.handleSearchValueUpdate('first');
+      wrapper.vm.handleSearchUpdate('first');
       vi.advanceTimersByTime(300);
 
-      wrapper.vm.handleSearchValueUpdate('second');
+      wrapper.vm.handleSearchUpdate('second');
       vi.advanceTimersByTime(500);
       await nextTick();
 
@@ -338,7 +319,7 @@ describe('FilterSelect', () => {
     });
 
     it('should not search when value matches existing label', async () => {
-      wrapper.vm.handleSearchValueUpdate('Contact 1');
+      wrapper.vm.handleSearchUpdate('Contact 1');
 
       vi.advanceTimersByTime(500);
       await nextTick();
@@ -347,7 +328,7 @@ describe('FilterSelect', () => {
     });
 
     it('should reload data when search is cleared', async () => {
-      wrapper.vm.handleSearchValueUpdate('');
+      wrapper.vm.handleSearchUpdate('');
       await nextTick();
 
       expect(Projects.getProjectSource).toHaveBeenCalled();
@@ -357,7 +338,7 @@ describe('FilterSelect', () => {
       wrapper = createWrapper();
       const callCount = Projects.getProjectSource.mock.calls.length;
 
-      wrapper.vm.handleSearchValueUpdate('test');
+      wrapper.vm.handleSearchUpdate('test');
       vi.advanceTimersByTime(500);
 
       expect(Projects.getProjectSource).toHaveBeenCalledTimes(callCount);
@@ -386,7 +367,7 @@ describe('FilterSelect', () => {
       wrapper = createWrapper({ type: 'contact', source: 'contacts' });
       await nextTick();
 
-      wrapper.vm.handleSearchValueUpdate('test');
+      wrapper.vm.handleSearchUpdate('test');
 
       wrapper.unmount();
 

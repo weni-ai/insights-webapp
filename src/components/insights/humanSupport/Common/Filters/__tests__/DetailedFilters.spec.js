@@ -160,14 +160,10 @@ describe('DetailedFilters', () => {
     it('should update filter selected value on change', async () => {
       wrapper = createWrapper({ type: 'attendant' });
 
-      wrapper.vm.filters.attendant.selected = [
-        { value: 'a1', label: 'Agent 1' },
-      ];
+      wrapper.vm.filters.attendant.selected = 'a1';
       await nextTick();
 
-      expect(wrapper.vm.filters.attendant.selected).toEqual([
-        { value: 'a1', label: 'Agent 1' },
-      ]);
+      expect(wrapper.vm.filters.attendant.selected).toEqual('a1');
     });
 
     it('should call saveAppliedDetailFilter when filter changes', async () => {
@@ -270,18 +266,14 @@ describe('DetailedFilters', () => {
     it('should clear contact and ticket_id filters when changing from finished to attendant', async () => {
       wrapper = createWrapper({ type: 'finished' });
 
-      wrapper.vm.filters.contact.selected = [
-        { value: 'c1', label: 'Contact 1' },
-      ];
-      wrapper.vm.filters.ticket_id.selected = [
-        { value: 't1', label: 'Ticket 1' },
-      ];
+      wrapper.vm.filters.contact.selected = 'c1';
+      wrapper.vm.filters.ticket_id.selected = 't1';
 
       await wrapper.setProps({ type: 'attendant' });
       await nextTick();
 
-      expect(wrapper.vm.filters.contact.selected).toEqual([]);
-      expect(wrapper.vm.filters.ticket_id.selected).toEqual([]);
+      expect(wrapper.vm.filters.contact.selected).toEqual('');
+      expect(wrapper.vm.filters.ticket_id.selected).toEqual('');
     });
 
     it('should call saveAppliedDetailFilter to clear non-finished filters', async () => {
@@ -306,30 +298,24 @@ describe('DetailedFilters', () => {
     it('should reset new filters when switching between types', async () => {
       wrapper = createWrapper({ type: 'attendant' });
 
-      wrapper.vm.filters.attendant.selected = [
-        { value: 'a1', label: 'Agent 1' },
-      ];
+      wrapper.vm.filters.attendant.selected = 'a1';
 
       await wrapper.setProps({ type: 'finished' });
       await nextTick();
 
-      expect(wrapper.vm.filters.contact.selected).toEqual([]);
-      expect(wrapper.vm.filters.ticket_id.selected).toEqual([]);
+      expect(wrapper.vm.filters.contact.selected).toEqual('');
+      expect(wrapper.vm.filters.ticket_id.selected).toEqual('');
     });
 
     it('should not reset filters when changing within same filter set', async () => {
       wrapper = createWrapper({ type: 'attendant' });
 
-      wrapper.vm.filters.attendant.selected = [
-        { value: 'a1', label: 'Agent 1' },
-      ];
+      wrapper.vm.filters.attendant.selected = 'a1';
 
       await wrapper.setProps({ type: 'pauses' });
       await nextTick();
 
-      expect(wrapper.vm.filters.attendant.selected).toEqual([
-        { value: 'a1', label: 'Agent 1' },
-      ]);
+      expect(wrapper.vm.filters.attendant.selected).toEqual('a1');
     });
   });
 

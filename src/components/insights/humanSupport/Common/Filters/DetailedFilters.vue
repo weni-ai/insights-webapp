@@ -53,15 +53,10 @@ interface Props {
   type: ComponentType;
 }
 
-interface FilterOption {
-  value: string;
-  label: string;
-}
-
 interface FilterState {
   type: FilterType;
   source?: SourceType;
-  selected: FilterOption[] | string;
+  selected: string;
   isInput?: boolean;
 }
 
@@ -102,20 +97,17 @@ const filters = ref<Record<FilterType, FilterState>>({
   attendant: {
     type: 'attendant',
     source: 'agents',
-    selected: [],
-    isInput: false,
+    selected: '',
   },
   contact: {
     type: 'contact',
     source: 'contacts',
-    selected: [],
-    isInput: false,
+    selected: '',
   },
   ticket_id: {
     type: 'ticket_id',
     source: 'ticket_id',
-    selected: [],
-    isInput: false,
+    selected: '',
   },
   contact_input: {
     type: 'contact_input',
@@ -189,11 +181,11 @@ const activeFilters = computed<ActiveFilter[]>(() => {
       props: {
         type: filter.type,
         source: filter.source,
-        modelValue: filter.selected as FilterOption[],
+        modelValue: filter.selected,
         filterParams: filterParams.value,
       },
       events: {
-        'update:modelValue': (value: FilterOption[]) => {
+        'update:modelValue': (value: string) => {
           filter.selected = value;
         },
         change: (payload: { value: string; label: string; email?: string }) =>
@@ -205,8 +197,8 @@ const activeFilters = computed<ActiveFilter[]>(() => {
 
 const clearNonFinishedFilters = () => {
   if (props.type !== 'finished') {
-    filters.value.contact.selected = [];
-    filters.value.ticket_id.selected = [];
+    filters.value.contact.selected = '';
+    filters.value.ticket_id.selected = '';
 
     if (filterRefs.value.contact) {
       filterRefs.value.contact.clearData();
@@ -247,7 +239,7 @@ watch(
     if (filtersToReset.length === 0) return;
 
     filtersToReset.forEach((filterType) => {
-      filters.value[filterType].selected = [];
+      filters.value[filterType].selected = '';
     });
   },
   { flush: 'post' },

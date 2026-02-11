@@ -26,7 +26,7 @@
     "others": "Otros",
     "unclassified": "Sin clasificar",
     "info": {
-      "description": "Los datos conversacionales incluyen ventanas cerradas hasta las 23h59m59s del día de inicio. Las conversaciones del día actual aún están siendo procesadas y se mostrarán después de que el período se cierre."
+      "description": "A partir del 11/02/2026, los datos conversacionales incluyen ventanas cerradas hasta las 23h59m59s del día de inicio, considerando el timezone configurado en el proyecto. Las conversaciones del día actual aún están siendo procesadas y se mostrarán después de que el período se cierre."
     },
     "header": {
       "total": "Total de conversaciones",
@@ -35,7 +35,7 @@
       "unengaged": "Sin participación",
       "transferred": "Transferidas a soporte humano",
       "tooltips": {
-        "total": "Total de conversaciones iniciadas en el período. Una conversa se cuenta desde el primer mensaje del contacto hasta las 23h59m59s del día de inicio.",
+        "total": "Total de conversas encerradas en el período. Una conversa se cuenta desde el primer mensaje del contacto hasta las 23h59m59s del día de inicio. Mensagens enviadas después de este horário iniciam uma nova janela de conversa no dia seguinte.",
         "resolved": "Cuando el agente demuestra competencia y proporciona servicio útil",
         "unresolved": "Cuando no hubo atención efectiva (saludos, fuera de alcance, fallas del agente)",
         "unengaged": "Conversación sin participación útil. La conversación se limitó a saludos, emojis o se cerró sin una interacción relevante.",

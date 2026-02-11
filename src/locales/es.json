@@ -941,6 +941,11 @@
         "average_duration": "Duración media",
         "time_in_service": "Tiempo en atendimiento",
         "action": "Acción"
+      },
+      "agents_count": {
+        "online": "{count} en línea",
+        "on_break": "{count} en pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {

@@ -34,18 +34,7 @@
             }}
           </UnnnicTabsTrigger>
           <template #right>
-            <section class="detailed-monitoring__agents-count">
-              <UnnnicIcon
-                icon="add-1"
-                size="sm"
-                scheme="fg-base"
-              />
-              <UnnnicIcon
-                icon="help"
-                size="sm"
-                scheme="fg-base"
-              />
-            </section>
+            <AgentsCount v-if="showAgentsCount" />
           </template>
         </UnnnicTabsList>
         <UnnnicTabsContent
@@ -66,18 +55,20 @@
 </template>
 
 <script setup lang="ts">
+import { computed, Component } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import InAwaiting from './Tables/InAwaiting.vue';
 import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from '../Common/Tables/Pauses.vue';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import AgentsCount from './AgentsCount.vue';
+
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,
 } from '@/store/modules/humanSupport/monitoring';
-import { Component } from 'vue';
 
 const tabs: Record<
   ActiveDetailedTab,
@@ -110,6 +101,10 @@ const { setActiveDetailedTab } = humanSupportMonitoring;
 const changeActiveTabName = (tab: ActiveDetailedTab) => {
   setActiveDetailedTab(tab);
 };
+
+const showAgentsCount = computed(() => {
+  return activeDetailedTab.value === 'attendant';
+});
 
 const filterType = computed(() => {
   return activeDetailedTab.value as

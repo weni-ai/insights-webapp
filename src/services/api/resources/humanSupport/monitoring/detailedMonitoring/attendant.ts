@@ -27,6 +27,12 @@ interface AttendantDataResult {
   };
 }
 
+interface AgentsCountByStatusResponse {
+  online: number;
+  on_break: number;
+  offline: number;
+}
+
 interface QueryParams {
   sectors?: string[];
   queues?: string[];
@@ -35,6 +41,7 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   agent?: string;
+  status?: ('online' | 'on_break' | 'offline')[];
 }
 
 export default {
@@ -76,6 +83,35 @@ export default {
     };
 
     return formattedResponse;
+  },
+  async getAgentsCountByStatus(
+    queryParams: QueryParams = {},
+  ): Promise<AgentsCountByStatusResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useHumanSupport();
+
+    const formattedAppliedFilters = {
+      sectors: appliedFilters.sectors.map((sector) => sector.value),
+      queues: appliedFilters.queues.map((queue) => queue.value),
+      tags: appliedFilters.tags.map((tag) => tag.value),
+    };
+
+    const params = createRequestQuery(queryParams);
+
+    const formattedParams = {
+      project_uuid: project.uuid,
+      ...formattedAppliedFilters,
+      ...params,
+    };
+
+    const response = (await http.get(
+      `/metrics/human-support/detailed-monitoring/agents_totals/`,
+      {
+        params: formattedParams,
+      },
+    )) as AgentsCountByStatusResponse;
+
+    return response;
   },
 };
 

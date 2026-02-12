@@ -107,7 +107,7 @@ describe('FilterSelect', () => {
       expect(Projects.getProjectSource).toHaveBeenCalledWith(
         'agents',
         {},
-        false,
+        true,
       );
     });
 
@@ -334,14 +334,41 @@ describe('FilterSelect', () => {
       expect(Projects.getProjectSource).toHaveBeenCalled();
     });
 
-    it('should not search for attendant filter', () => {
+    it('should search for attendant filter by name', async () => {
+      Projects.getProjectSource = vi
+        .fn()
+        .mockResolvedValue(mockApiResponse);
       wrapper = createWrapper();
+      await nextTick();
+
       const callCount = Projects.getProjectSource.mock.calls.length;
 
-      wrapper.vm.handleSearchUpdate('test');
+      wrapper.vm.handleSearchUpdate('Agent 1');
       vi.advanceTimersByTime(500);
+      await nextTick();
 
       expect(Projects.getProjectSource).toHaveBeenCalledTimes(callCount);
+    });
+
+    it('should debounce search for attendant filter', async () => {
+      Projects.getProjectSource = vi
+        .fn()
+        .mockResolvedValue(mockApiResponse);
+      wrapper = createWrapper();
+      await nextTick();
+
+      const callCount = Projects.getProjectSource.mock.calls.length;
+
+      wrapper.vm.handleSearchUpdate('test agent');
+      vi.advanceTimersByTime(500);
+      await nextTick();
+
+      expect(Projects.getProjectSource).toHaveBeenCalledTimes(callCount + 1);
+      expect(Projects.getProjectSource).toHaveBeenLastCalledWith(
+        'agents',
+        expect.objectContaining({ search: 'test agent' }),
+        true,
+      );
     });
   });
 

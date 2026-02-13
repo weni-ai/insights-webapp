@@ -1026,5 +1026,21 @@
   },
   "on": "On",
   "off": "Off",
-  "paused": "Paused"
+  "paused": "Paused",
+  "data_feedback": {
+    "title": "Share your experience with the Conversational AI Dashboard",
+    "description": "Considering your experience with this dashboard, please indicate how much you agree with the statements below:",
+    "q1": "I trust the data presented in this dashboard.",
+    "q2": "The data in this dashboard helps me make decisions.",
+    "q3": "With this dashboard, I can understand the impact (ROI) of AI conversations on business results.",
+    "textarea_label": "What could we improve in this dashboard? (optional)",
+    "textarea_placeholder": "Share suggestions to improve data clarity, trust, or usefulness.",
+    "strongly_agree": "Strongly agree",
+    "partially_agree": "Partially agree",
+    "neutral": "Neutral",
+    "partially_disagree": "Partially disagree",
+    "strongly_disagree": "Strongly disagree",
+    "postpone": "Postpone",
+    "submit": "Submit feedback"
+  }
 }

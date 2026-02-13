@@ -10,14 +10,21 @@
         </UnnnicDialogTitle>
       </UnnnicDialogHeader>
 
-      <div class="feedback-modal__body">
-        <p class="feedback-modal__description">
+      <div
+        class="feedback-modal__body"
+        data-testid="feedback-modal-body"
+      >
+        <p
+          class="feedback-modal__description"
+          data-testid="feedback-modal-description"
+        >
           {{ t('data_feedback.description') }}
         </p>
 
         <UnnnicRadioGroup
           v-model="trustData"
           :label="t('data_feedback.q1')"
+          data-testid="feedback-radio-trust"
         >
           <UnnnicRadio
             v-for="option in likertOptions"
@@ -30,6 +37,7 @@
         <UnnnicRadioGroup
           v-model="helpDecisions"
           :label="t('data_feedback.q2')"
+          data-testid="feedback-radio-decisions"
         >
           <UnnnicRadio
             v-for="option in likertOptions"
@@ -42,6 +50,7 @@
         <UnnnicRadioGroup
           v-model="understandImpact"
           :label="t('data_feedback.q3')"
+          data-testid="feedback-radio-impact"
         >
           <UnnnicRadio
             v-for="option in likertOptions"
@@ -56,6 +65,7 @@
           :label="t('data_feedback.textarea_label')"
           :placeholder="t('data_feedback.textarea_placeholder')"
           :maxLength="1000"
+          data-testid="feedback-textarea"
         />
       </div>
 
@@ -64,6 +74,7 @@
           <UnnnicButton
             :text="t('data_feedback.postpone')"
             type="tertiary"
+            data-testid="feedback-postpone-button"
           />
         </UnnnicDialogClose>
 
@@ -71,6 +82,7 @@
           :text="t('data_feedback.submit')"
           type="primary"
           :disabled="!isFormValid"
+          data-testid="feedback-submit-button"
           @click="handleSubmit"
         />
       </UnnnicDialogFooter>

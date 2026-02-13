@@ -1025,5 +1025,21 @@
   },
   "on": "Activa",
   "off": "Inactiva",
-  "paused": "Pausada"
+  "paused": "Pausada",
+  "data_feedback": {
+    "title": "Comparte tu experiencia con el Dashboard de IA Conversacional",
+    "description": "Considerando tu experiencia con este dashboard, indica cuánto estás de acuerdo con las afirmaciones a continuación:",
+    "q1": "Confío en los datos presentados en este dashboard.",
+    "q2": "Los datos de este dashboard me ayudan a tomar decisiones.",
+    "q3": "Con este dashboard, puedo entender el impacto (ROI) de las conversaciones de IA en los resultados del negocio.",
+    "textarea_label": "¿Qué podríamos mejorar en este dashboard? (opcional)",
+    "textarea_placeholder": "Comparte sugerencias para mejorar la claridad, confianza o utilidad de los datos.",
+    "strongly_agree": "Totalmente de acuerdo",
+    "partially_agree": "Parcialmente de acuerdo",
+    "neutral": "Neutral",
+    "partially_disagree": "Parcialmente en desacuerdo",
+    "strongly_disagree": "Totalmente en desacuerdo",
+    "postpone": "Posponer",
+    "submit": "Enviar feedback"
+  }
 }

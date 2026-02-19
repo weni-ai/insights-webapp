@@ -4,7 +4,7 @@
     data-testid="services-open-by-hour"
   >
     <SetupWidget
-      v-if="isHovered"
+      v-if="showSetup"
       v-bind="setupProps"
       @click:action="handleSetupAction"
     />
@@ -33,6 +33,10 @@ import LineChart from '@/components/insights/charts/LineChart.vue';
 import SetupWidget from '@/components/insights/Layout/SetupWidget.vue';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useProject } from '@/store/modules/project';
+
+const project = useProject();
+const { hasChatsSectors } = storeToRefs(project);
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { loadHumanSupportByHourData } = humanSupportMonitoring;
@@ -60,9 +64,9 @@ const isLoading = computed(() => {
 
 const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer');
 const { isOutside } = useMouseInElement(chartContainerRef);
-const isHovered = computed(() => !isOutside.value);
-
-// TODO: check if setup?
+const showSetup = computed(() => {
+  return !isOutside.value && !hasChatsSectors.value;
+});
 
 // TODO: add props
 const setupProps = computed(() => ({

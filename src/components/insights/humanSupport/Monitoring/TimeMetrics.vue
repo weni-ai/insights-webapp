@@ -1,8 +1,13 @@
 <template>
   <section
+    ref="timeMetrics"
     class="time-metrics"
     data-testid="time-metrics"
   >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
     <p
       class="time-metrics__title"
       data-testid="time-metrics-title"
@@ -37,16 +42,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, useTemplateRef } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
+import { useMouseInElement } from '@vueuse/core';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,
 } from '@/store/modules/humanSupport/monitoring';
-import { storeToRefs } from 'pinia';
-import { useI18n } from 'vue-i18n';
+import { useProject } from '@/store/modules/project';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
 import { formatSecondsToTime } from '@/utils/time';
+import { monitoringTimeMetricsMock } from './mocks';
 
 type CardId =
   | 'average_time_is_waiting'
@@ -58,6 +70,19 @@ interface CardData {
   titleKey: string;
   tooltipKey: string;
 }
+
+const project = useProject();
+const { hasChatsSectors } = storeToRefs(project);
+
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
+
+const timeMetricsRef = useTemplateRef<HTMLDivElement>('timeMetrics');
+const { isOutside } = useMouseInElement(timeMetricsRef);
+
+const showSetup = computed(() => {
+  return !hasChatsSectors.value && !isOutside.value;
+});
 
 const cardDefinitions: CardData[] = [
   {
@@ -89,15 +114,22 @@ const { timeMetricsData, loadingTimeMetricsData } = storeToRefs(
   humanSupportMonitoring,
 );
 
+const widgetData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return monitoringTimeMetricsMock;
+  }
+  return timeMetricsData.value;
+});
+
 const isLoadingCards = computed(() => loadingTimeMetricsData.value);
 
 const getCardValue = (id: CardId) => {
-  const data = timeMetricsData.value[id];
+  const data = widgetData.value[id];
   return formatSecondsToTime(data?.average);
 };
 
 const getCardSubValue = (id: CardId) => {
-  const data = timeMetricsData.value[id];
+  const data = widgetData.value[id];
   if (data?.max !== null && data?.max !== undefined) {
     return `${t('human_support_dashboard.time_metrics.max')}: ${formatSecondsToTime(data.max)}`;
   }
@@ -145,6 +177,7 @@ onMounted(() => {
 $min-height: 134px;
 
 .time-metrics {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-3;

@@ -4,6 +4,10 @@
     class="monitoring"
     data-testid="monitoring"
   >
+    <UnnnicDisclaimer
+      v-if="!hasChatsSectors"
+      :description="$t('human_support_dashboard.setup.disclaimer')"
+    />
     <StatusCards data-testid="monitoring-status-cards" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
@@ -28,6 +32,7 @@ import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useProject } from '@/store/modules/project';
 
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
@@ -43,6 +48,9 @@ const { isFeatureFlagEnabled } = useFeatureFlag();
 defineOptions({
   name: 'MonitoringView',
 });
+
+const projectStore = useProject();
+const { hasChatsSectors } = storeToRefs(projectStore);
 
 const STORAGE_KEY = 'news_modal_monitoring_shown';
 const showNewsModal = ref(false);

@@ -5,6 +5,8 @@ import { useHumanSupportAnalysis } from './analysis';
 import { getLastNDays } from '@/utils/time';
 import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
+import i18n from '@/utils/plugins/i18n';
+import { redirectToChatsConfig } from '@/utils/redirect';
 
 interface Filter {
   value: string;
@@ -169,6 +171,15 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     clearAppliedDetailFilters();
   });
 
+  const widgetSetupProps = computed(() => ({
+    title: i18n.global.t('human_support_dashboard.setup.title'),
+    description: i18n.global.t('human_support_dashboard.setup.description'),
+    actionButtonProps: {
+      text: i18n.global.t('human_support_dashboard.setup.action_text'),
+    },
+    actionClick: redirectToChatsConfig,
+  }));
+
   return {
     activeTab,
     sectors,
@@ -183,5 +194,6 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,
+    widgetSetupProps,
   };
 });

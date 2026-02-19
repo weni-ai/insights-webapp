@@ -13,7 +13,7 @@
       type="primary"
       size="small"
       v-bind="actionButtonProps"
-      @click="emit('click:action')"
+      @click="props.actionClick"
     />
   </section>
 </template>
@@ -23,6 +23,7 @@ interface SetupWidgetProps {
   title: string;
   description?: string;
   actionButtonProps?: Record<string, any>;
+  actionClick: Function;
 }
 
 const props = withDefaults(defineProps<SetupWidgetProps>(), {
@@ -32,11 +33,8 @@ const props = withDefaults(defineProps<SetupWidgetProps>(), {
     type: 'primary',
     size: 'small',
   }),
+  actionClick: () => {},
 });
-
-const emit = defineEmits<{
-  'click:action': [];
-}>();
 </script>
 
 <style scoped lang="scss">

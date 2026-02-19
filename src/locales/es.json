@@ -1001,6 +1001,12 @@
         "very_dissatisfied": "😡 Muy insatisfecho"
       },
       "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
+    },
+    "setup": {
+      "title": "No sector creado",
+      "description": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real.",
+      "action_text": "Crear sector",
+      "disclaimer": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real."
     }
   },
   "news": {

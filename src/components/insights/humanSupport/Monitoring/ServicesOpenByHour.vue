@@ -3,21 +3,36 @@
     class="services-open-by-hour"
     data-testid="services-open-by-hour"
   >
-    <LineChart
-      data-testid="services-open-by-hour-chart"
-      :title="$t('human_support_dashboard.services_open_by_hour.title')"
-      :chartData="data"
-      :seeMore="false"
-      :isLoading="isLoading"
+    <SetupWidget
+      v-if="isHovered"
+      v-bind="setupProps"
+      @click:action="handleSetupAction"
     />
+
+    <section
+      ref="chartContainer"
+      class="services-open-by-hour__chart"
+    >
+      <LineChart
+        data-testid="services-open-by-hour-chart"
+        :title="$t('human_support_dashboard.services_open_by_hour.title')"
+        :chartData="data"
+        :seeMore="false"
+        :isLoading="isLoading"
+      />
+    </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
-import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
-import LineChart from '@/components/insights/charts/LineChart.vue';
+import { onMounted, computed, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useMouseInElement } from '@vueuse/core';
+
+import LineChart from '@/components/insights/charts/LineChart.vue';
+import SetupWidget from '@/components/insights/Layout/SetupWidget.vue';
+
+import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { loadHumanSupportByHourData } = humanSupportMonitoring;
@@ -43,6 +58,25 @@ const isLoading = computed(() => {
   return loadingHumanSupportByHourData.value;
 });
 
+const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer');
+const { isOutside } = useMouseInElement(chartContainerRef);
+const isHovered = computed(() => !isOutside.value);
+
+// TODO: check if setup?
+
+// TODO: add props
+const setupProps = computed(() => ({
+  title: 'title test',
+  description: 'desc test',
+  actionButtonProps: {
+    text: 'action text test',
+  },
+}));
+
+const handleSetupAction = () => {
+  console.log('handleSetupAction');
+};
+
 onMounted(() => {
   loadHumanSupportByHourData();
 });
@@ -50,9 +84,7 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .services-open-by-hour {
-  display: flex;
-  flex-direction: column;
-  gap: $unnnic-space-3;
+  position: relative;
   max-height: 250px;
 }
 </style>

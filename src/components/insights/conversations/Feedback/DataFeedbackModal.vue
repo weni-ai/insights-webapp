@@ -126,6 +126,7 @@ const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
   (_e: 'postpone'): void;
   (_e: 'submitted'): void;
+  (_e: 'submit-error'): void;
 }>();
 
 const scoreMap: Record<string, string> = {
@@ -202,8 +203,9 @@ async function handleSubmit() {
 
     emit('submitted');
     emit('update:modelValue', false);
-  } catch (error) {
-    console.error('Failed to submit feedback:', error);
+  } catch {
+    emit('update:modelValue', false);
+    emit('submit-error');
   } finally {
     isSubmitting.value = false;
   }

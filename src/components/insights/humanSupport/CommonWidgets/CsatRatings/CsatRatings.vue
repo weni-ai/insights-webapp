@@ -42,20 +42,20 @@
             "
             :subtitle="
               $t('human_support_dashboard.csat.agents_ratings_subtitle', {
-                rooms: agentsGeneralTotals.rooms,
-                reviews: agentsGeneralTotals.reviews,
+                rooms: widgetGeneralTotals.rooms,
+                reviews: widgetGeneralTotals.reviews,
               })
             "
             :tooltip="
               $t('human_support_dashboard.csat.agents_ratings_general_tooltip')
             "
-            :rating="agentsGeneralTotals.avg_rating"
+            :rating="widgetGeneralTotals.avg_rating"
             :active="!activeAgentEmail"
             hiddenAvatar
             @click="activeAgentEmail = null"
           />
           <AgentCard
-            v-for="agent in agentsData"
+            v-for="agent in widgetAgentsData"
             :key="agent.agent.email"
             class="csat-ratings-widget__agent-card"
             :title="agent.agent.name"
@@ -118,8 +118,20 @@ import { useProject } from '@/store/modules/project';
 import Csat from '@/services/api/resources/humanSupport/csat';
 
 import { parseQueryString } from '@/utils/request';
-import { formatPercentage } from '@/utils/numbers';
+import { formatNumber, formatPercentage } from '@/utils/numbers';
 import { redirectToChatsConfig } from '@/utils/redirect';
+
+import {
+  monitoringCsatTotalsMock,
+  monitoringCsatAgentsMock,
+  monitoringCsatRatingsMock,
+} from '@/components/insights/humanSupport/Monitoring/mocks';
+
+import {
+  analysisCsatTotalsMock,
+  analysisCsatAgentsMock,
+  analysisCsatRatingsMock,
+} from '@/components/insights/humanSupport/Analysis/mocks';
 
 defineOptions({
   name: 'CsatRatings',
@@ -179,13 +191,41 @@ const agentsGeneralTotals = ref<AgentsTotalsResponse['general']>({
   avg_rating: 0,
 });
 
+const widgetGeneralTotals = computed(() => {
+  if (!hasChatsSectors.value) {
+    return props.type === 'monitoring'
+      ? monitoringCsatTotalsMock
+      : analysisCsatTotalsMock;
+  }
+  return agentsGeneralTotals.value;
+});
+
 const agentsData = ref<AgentsTotalsResponse['results']>([]);
+
+const widgetAgentsData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return props.type === 'monitoring'
+      ? monitoringCsatAgentsMock
+      : analysisCsatAgentsMock;
+  }
+  return agentsData.value;
+});
+
 const ratingsData = ref<RatingsResponse>({
   '5': { value: 0, full_value: 0 },
   '4': { value: 0, full_value: 0 },
   '3': { value: 0, full_value: 0 },
   '2': { value: 0, full_value: 0 },
   '1': { value: 0, full_value: 0 },
+});
+
+const widgetRatingsData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return props.type === 'monitoring'
+      ? monitoringCsatRatingsMock
+      : analysisCsatRatingsMock;
+  }
+  return ratingsData.value;
 });
 
 const progressItemsRatingsData = computed(() => {
@@ -196,14 +236,14 @@ const progressItemsRatingsData = computed(() => {
     '2': t('human_support_dashboard.csat.review_rating.dissatisfied'),
     '1': t('human_support_dashboard.csat.review_rating.very_dissatisfied'),
   };
-  return Object.entries(ratingsData.value)
+  return Object.entries(widgetRatingsData.value)
     .reverse()
     .map(([key, value]) => ({
       label: labelMapping[key as keyof typeof labelMapping],
       backgroundColor: '#E9D8FD',
       color: '#805AD5',
       value: value.value,
-      description: `${formatPercentage(value.value, localeI18n.value)} (${value.full_value})`,
+      description: `${formatPercentage(value.value, localeI18n.value)} (${formatNumber(value.full_value)})`,
     }));
 });
 

@@ -109,8 +109,52 @@ const monitoringPeaksInHumanServiceMock = [
   },
 ];
 
+const monitoringCsatTotalsMock = {
+  rooms: 82,
+  reviews: 40,
+  avg_rating: 4.35,
+};
+
+const monitoringCsatAgentsMock = [
+  {
+    agent: { name: 'Ana Costa', email: 'ana.costa@email.com' },
+    rooms: 9,
+    reviews: 9,
+    avg_rating: 4.9,
+  },
+  {
+    agent: { name: 'Bruno Lima', email: 'bruno.lima@email.com' },
+    rooms: 9,
+    reviews: 9,
+    avg_rating: 4.6,
+  },
+  {
+    agent: { name: 'Camila Rocha', email: 'camila.rocha@email.com' },
+    rooms: 8,
+    reviews: 7,
+    avg_rating: 4.1,
+  },
+  {
+    agent: { name: 'Diego Alves', email: 'diego.alves@email.com' },
+    rooms: 8,
+    reviews: 6,
+    avg_rating: 4.0,
+  },
+];
+
+const monitoringCsatRatingsMock = {
+  '5': { value: 50, full_value: 20 },
+  '4': { value: 27.5, full_value: 11 },
+  '3': { value: 12.5, full_value: 5 },
+  '2': { value: 7.5, full_value: 3 },
+  '1': { value: 2.5, full_value: 1 },
+};
+
 export {
   monitoringStatusCardsMock,
   monitoringTimeMetricsMock,
   monitoringPeaksInHumanServiceMock,
+  monitoringCsatTotalsMock,
+  monitoringCsatAgentsMock,
+  monitoringCsatRatingsMock,
 };

@@ -1,6 +1,8 @@
 import { ref } from 'vue';
 import feedbackApi from '@/services/api/resources/conversational/feedback';
 import { moduleStorage } from '@/utils/storage';
+import { UnnnicToastManager } from '@weni/unnnic-system';
+import i18n from '@/utils/plugins/i18n';
 
 const STORAGE_KEY = 'data_feedback_state';
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
@@ -90,6 +92,8 @@ export function useFeedbackSurvey() {
     }
   }
 
+  const t = (key: string) => i18n.global.t(key);
+
   function onPostpone(): void {
     shouldShowModal.value = false;
 
@@ -104,11 +108,33 @@ export function useFeedbackSurvey() {
       firstShownTodayAt: state.firstShownTodayAt ?? new Date().toISOString(),
       lastPostponedDate: today,
     });
+
+    UnnnicToastManager.info(t('data_feedback.toast_postponed'), '', {
+      button: {
+        text: t('data_feedback.toast_postponed_respond'),
+        action: () => {
+          shouldShowModal.value = true;
+        },
+      },
+    });
   }
 
   function onSubmitted(): void {
     shouldShowModal.value = false;
     moduleStorage.removeItem(STORAGE_KEY);
+
+    UnnnicToastManager.success(t('data_feedback.toast_success'));
+  }
+
+  function onSubmitError(): void {
+    UnnnicToastManager.error(t('data_feedback.toast_error'), '', {
+      button: {
+        text: t('data_feedback.toast_error_retry'),
+        action: () => {
+          shouldShowModal.value = true;
+        },
+      },
+    });
   }
 
   return {
@@ -117,5 +143,6 @@ export function useFeedbackSurvey() {
     checkSurvey,
     onPostpone,
     onSubmitted,
+    onSubmitError,
   };
 }

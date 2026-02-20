@@ -28,6 +28,7 @@
       :surveyUuid="surveyUuid"
       @postpone="onPostpone"
       @submitted="onSubmitted"
+      @submit-error="onSubmitError"
     />
   </section>
 </template>
@@ -50,8 +51,14 @@ import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 const { isFeatureFlagEnabled } = useFeatureFlag();
 const { activeFeatures } = storeToRefs(useFeatureFlag());
 
-const { shouldShowModal, surveyUuid, checkSurvey, onPostpone, onSubmitted } =
-  useFeedbackSurvey();
+const {
+  shouldShowModal,
+  surveyUuid,
+  checkSurvey,
+  onPostpone,
+  onSubmitted,
+  onSubmitError,
+} = useFeedbackSurvey();
 
 type ConversationalWidgetType =
   | 'csat'

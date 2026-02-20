@@ -1041,6 +1041,11 @@
     "partially_disagree": "Partially disagree",
     "strongly_disagree": "Strongly disagree",
     "postpone": "Postpone",
-    "submit": "Submit feedback"
+    "submit": "Submit feedback",
+    "toast_success": "Feedback sent successfully. Thank you!",
+    "toast_error": "We couldn't send your feedback.",
+    "toast_error_retry": "Try again",
+    "toast_postponed": "Feedback postponed. You can respond later.",
+    "toast_postponed_respond": "Respond now"
   }
 }

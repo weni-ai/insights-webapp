@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
+import { useConversationalTopics } from './topics';
+import { useConversationalWidgets } from './widgets';
+import { useCustomWidgets } from './customWidgets';
 
 export type DrawerWidgetType =
   | 'nps'
@@ -15,6 +18,7 @@ interface ConversationalState {
   drawerWidgetType: DrawerWidgetType;
   isNewDrawerCustomizable: boolean;
   refreshDataConversational: boolean;
+  isConfigurationLoaded: boolean;
   isloadingConversationalData: {
     header: boolean;
     mostTalkedAboutTopics: boolean;
@@ -34,6 +38,7 @@ export const useConversational = defineStore('conversational', {
       | null,
     isNewDrawerCustomizable: false,
     refreshDataConversational: false,
+    isConfigurationLoaded: false,
     isloadingConversationalData: {
       header: false,
       mostTalkedAboutTopics: false,
@@ -67,6 +72,9 @@ export const useConversational = defineStore('conversational', {
     ) {
       this.isloadingConversationalData[key] = value;
     },
+    setConfigurationLoaded(value: boolean) {
+      this.isConfigurationLoaded = value;
+    },
   },
   getters: {
     appliedFilters: () => {
@@ -94,6 +102,24 @@ export const useConversational = defineStore('conversational', {
       return Object.values(state.isloadingConversationalData).some(
         (value) => value,
       );
+    },
+
+    shouldUseMock: (state) => {
+      if (!state.isConfigurationLoaded) return false;
+
+      const { hasExistingTopics } = useConversationalTopics();
+      const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =
+        useConversationalWidgets();
+      const { getCustomWidgets } = useCustomWidgets();
+
+      const hasAnyConfiguration =
+        hasExistingTopics ||
+        isCsatConfigured ||
+        isNpsConfigured ||
+        isSalesFunnelConfigured ||
+        getCustomWidgets.length > 0;
+
+      return !hasAnyConfiguration;
     },
   },
 });

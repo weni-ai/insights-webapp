@@ -8,7 +8,7 @@
       v-bind="widgetSetupProps"
     />
     <BlurSetupWidget
-      v-if="!configStore.enableCsat && !isLoadingAgentsData"
+      v-else-if="showEnableCsat"
       :title="$t('human_support_dashboard.csat.title')"
       :description="$t('human_support_dashboard.csat.disabled_text')"
       :actionButtonProps="{
@@ -171,6 +171,14 @@ const { isOutside } = useMouseInElement(csatRatingsRef);
 
 const showSetup = computed(() => {
   return !hasChatsSectors.value && !isOutside.value;
+});
+
+const showEnableCsat = computed(() => {
+  return (
+    !configStore.enableCsat &&
+    !isLoadingAgentsData.value &&
+    hasChatsSectors.value
+  );
 });
 
 const agentsContainerRef = useTemplateRef<HTMLElement>('agentsContainerRef');

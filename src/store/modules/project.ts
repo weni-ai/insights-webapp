@@ -82,9 +82,8 @@ export const useProject = defineStore('project', {
       }
     },
     async checkHasChatsSectors() {
-      // TODO: enable this after test
-      // const response = await Projects.getProjectSource('sectors');
-      // this.hasChatsSectors = response.length > 0;
+      const response = await Projects.getProjectSource('sectors');
+      this.hasChatsSectors = response.length > 0;
     },
   },
 });

@@ -1,6 +1,7 @@
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { MOCK_CSAT_DATA, MOCK_NPS_DATA, MOCK_SALES_FUNNEL_DATA } from './mocks';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
 
@@ -76,8 +77,11 @@ interface AvailableWidgetsResponse {
 export default {
   async getCsatData(
     type: 'HUMAN' | 'AI',
-    queryParams: WidgetQueryParams,
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { mock?: boolean } = { mock: false },
   ): Promise<CsatResponse> {
+    if (options.mock) return MOCK_CSAT_DATA;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -97,8 +101,11 @@ export default {
 
   async getNpsData(
     type: 'HUMAN' | 'AI',
-    queryParams: WidgetQueryParams,
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { mock?: boolean } = { mock: false },
   ): Promise<NpsResponse> {
+    if (options.mock) return MOCK_NPS_DATA;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -158,8 +165,11 @@ export default {
   },
 
   async getSalesFunnelData(
-    queryParams: WidgetQueryParams,
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { mock?: boolean } = { mock: false },
   ): Promise<SalesFunnelResponse> {
+    if (options.mock) return MOCK_SALES_FUNNEL_DATA;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 

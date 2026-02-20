@@ -7,6 +7,7 @@
     <StatusCards data-testid="monitoring-status-cards" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
+    <VolumePerTagAndQueueWidget context="monitoring" />
     <CsatRatings
       v-if="isFeatureFlagEnabled('insightsCSAT')"
       type="monitoring"
@@ -35,6 +36,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
+import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 
 import { moduleStorage } from '@/utils/storage';
 

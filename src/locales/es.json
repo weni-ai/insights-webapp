@@ -343,6 +343,7 @@
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
   "closeds": "Cerrados",
+  "finished": "Finalizado",
   "in_progress": "En curso",
   "waiting": "Esperando",
   "in-service": "Servicio en curso",
@@ -1001,6 +1002,39 @@
         "very_dissatisfied": "😡 Muy insatisfecho"
       },
       "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
+    },
+    "volume_per_queue": {
+      "title": "Volumen por cola",
+      "monitoring_count": "{count} colas con chats {status}",
+      "analysis_count": "{count} colas con chats finalizados",
+      "setup_description": "Crea colas por sector para monitorear más datos.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No hay colas con chats esperando soporte",
+          "ongoing": "No hay colas con chats en progreso",
+          "closed": "No hay chats finalizados hoy"
+        },
+        "analysis": {
+          "closed": "No hay chats finalizados en el período seleccionado"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volumen por tag",
+      "setup_description": "Añade tags a sectores para monitorear más datos.",
+      "count": {
+        "ongoing": "{count} tags en uso",
+        "closed": "{count} tags asignadas"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "No hay tags en uso en chats en progreso",
+          "closed": "No hay tags asignadas a chats finalizados hoy"
+        },
+        "analysis": {
+          "closed": "No hay tags asignadas a chats finalizados en el período seleccionado"
+        }
+      }
     }
   },
   "news": {

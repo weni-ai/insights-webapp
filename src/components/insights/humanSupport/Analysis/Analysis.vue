@@ -2,6 +2,7 @@
   <section class="analysis">
     <StatusCards data-testid="status-cards" />
     <ServicesOpenByHour data-testid="services-open-by-hour" />
+    <VolumePerTagAndQueueWidget context="analysis" />
     <CsatRatings
       v-if="isFeatureFlagEnabled('insightsCSAT')"
       type="analysis"
@@ -24,6 +25,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedAnalysis from './DetailedAnalysis.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
+import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 

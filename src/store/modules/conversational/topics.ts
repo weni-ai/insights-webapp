@@ -20,6 +20,7 @@ export interface ConversationalTopicsState {
   isAddTopicsDrawerOpen: boolean;
   isLoadingTopics: boolean;
   isLoadingTopicsDistribution: boolean;
+  isTopicsDistributionMock: boolean;
   isSavingTopics: boolean;
   isOpenModal: boolean;
   modalType: string;
@@ -32,6 +33,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
     topicsDistribution: [],
     topicType: 'AI',
     isLoadingTopicsDistribution: false,
+    isTopicsDistributionMock: false,
     isAddTopicsDrawerOpen: false,
     isLoadingTopics: false,
     isSavingTopics: false,
@@ -246,12 +248,16 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
     async loadTopicsDistribution() {
       this.isLoadingTopicsDistribution = true;
       try {
+        const useMock = !this.hasExistingTopics;
         const response =
           await topicsService.getConversationalTopicsDistribution(
             this.topicType,
+            {},
+            { mock: useMock },
           );
 
         this.topicsDistribution = response.topics;
+        this.isTopicsDistributionMock = useMock;
       } catch (error) {
         console.error('Error loading topics distribution:', error);
       } finally {

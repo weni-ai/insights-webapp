@@ -18,6 +18,7 @@ export const useProject = defineStore('project', {
     isLoadingAgentsTeam: false,
     hasSectorsConfigured: null,
     hasTagsConfigured: null,
+    hasChatsSectors: false,
   }),
 
   getters: {
@@ -91,6 +92,10 @@ export const useProject = defineStore('project', {
       if (this.hasTagsConfigured !== null) return;
       const response = await Projects.getProjectSource('tags', { limit: 1 });
       this.hasTagsConfigured = response.length > 0;
+    },
+    async checkHasChatsSectors() {
+      const response = await Projects.getProjectSource('sectors');
+      this.hasChatsSectors = response.length > 0;
     },
   },
 });

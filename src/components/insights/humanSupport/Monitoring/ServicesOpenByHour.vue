@@ -3,10 +3,9 @@
     class="services-open-by-hour"
     data-testid="services-open-by-hour"
   >
-    <SetupWidget
-      v-if="isHovered"
-      v-bind="setupProps"
-      @click:action="handleSetupAction"
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
     />
 
     <section
@@ -30,9 +29,19 @@ import { storeToRefs } from 'pinia';
 import { useMouseInElement } from '@vueuse/core';
 
 import LineChart from '@/components/insights/charts/LineChart.vue';
-import SetupWidget from '@/components/insights/Layout/SetupWidget.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useProject } from '@/store/modules/project';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
+import { monitoringPeaksInHumanServiceMock } from './mocks';
+
+const project = useProject();
+const { hasChatsSectors } = storeToRefs(project);
+
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { loadHumanSupportByHourData } = humanSupportMonitoring;
@@ -41,12 +50,19 @@ const { servicesOpenByHourData, loadingHumanSupportByHourData } = storeToRefs(
   humanSupportMonitoring,
 );
 
+const widgetData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return monitoringPeaksInHumanServiceMock;
+  }
+  return servicesOpenByHourData.value;
+});
+
 const data = computed(() => {
   const formattedData = {
-    labels: servicesOpenByHourData.value?.map((item) => item?.label),
+    labels: widgetData.value?.map((item) => item?.label),
     datasets: [
       {
-        data: servicesOpenByHourData.value?.map((item) => item?.value),
+        data: widgetData.value?.map((item) => item?.value),
       },
     ],
   };
@@ -60,22 +76,9 @@ const isLoading = computed(() => {
 
 const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer');
 const { isOutside } = useMouseInElement(chartContainerRef);
-const isHovered = computed(() => !isOutside.value);
-
-// TODO: check if setup?
-
-// TODO: add props
-const setupProps = computed(() => ({
-  title: 'title test',
-  description: 'desc test',
-  actionButtonProps: {
-    text: 'action text test',
-  },
-}));
-
-const handleSetupAction = () => {
-  console.log('handleSetupAction');
-};
+const showSetup = computed(() => {
+  return !isOutside.value && !hasChatsSectors.value;
+});
 
 onMounted(() => {
   loadHumanSupportByHourData();

@@ -1035,6 +1035,12 @@
           "closed": "No hay tags asignadas a chats finalizados en el período seleccionado"
         }
       }
+    },
+    "setup": {
+      "title": "No sector creado",
+      "description": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real.",
+      "action_text": "Crear sector",
+      "disclaimer": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real."
     }
   },
   "news": {

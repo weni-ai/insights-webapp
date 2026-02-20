@@ -3,6 +3,7 @@
     :modelValue="appliedDateRange"
     className="date-filter"
     :placeholder="$t('human_support.filters.date_range')"
+    :disabled="!hasChatsSectors"
     @update:model-value="handleUpdateModelValue"
   />
 </template>
@@ -16,6 +17,10 @@ import {
 } from '@/store/modules/humanSupport/humanSupport';
 import { watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useProject } from '@/store/modules/project';
+
+const projectStore = useProject();
+const { hasChatsSectors } = storeToRefs(projectStore);
 
 const humanSupportStore = useHumanSupport();
 const { appliedDateRange } = storeToRefs(humanSupportStore);

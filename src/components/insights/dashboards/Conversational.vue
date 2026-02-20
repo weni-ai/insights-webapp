@@ -24,7 +24,11 @@
     <CustomizableDrawer />
     <DataFeedbackModal
       v-if="isFeatureFlagEnabled('insightsDataFeedback')"
-      v-model="isDataFeedbackModalOpen"
+      v-model="shouldShowModal"
+      :surveyUuid="surveyUuid"
+      @postpone="onPostpone"
+      @submitted="onSubmitted"
+      @submit-error="onSubmitError"
     />
   </section>
 </template>
@@ -42,8 +46,19 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import Info from '@/components/insights/conversations/Info.vue';
 import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
+const { activeFeatures } = storeToRefs(useFeatureFlag());
+
+const {
+  shouldShowModal,
+  surveyUuid,
+  checkSurvey,
+  onPostpone,
+  onSubmitted,
+  onSubmitError,
+} = useFeedbackSurvey();
 
 type ConversationalWidgetType =
   | 'csat'
@@ -52,8 +67,6 @@ type ConversationalWidgetType =
   | 'sales_funnel'
   | 'custom'
   | 'crosstab';
-
-const isDataFeedbackModalOpen = ref(true);
 
 const customWidgets = useCustomWidgets();
 const conversationalWidgets = useConversationalWidgets();
@@ -132,6 +145,15 @@ watch(
 onMounted(() => {
   if (dynamicWidgets.value.length === 0) {
     setDynamicWidgets();
+  }
+  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+    checkSurvey();
+  }
+});
+
+watch(activeFeatures, () => {
+  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+    checkSurvey();
   }
 });
 

@@ -31,7 +31,6 @@
         :modelValue="appliedFilters[currentDashboardFilters[0].name]"
         @update:model-value="updateFilter"
       />
-      <HelperDataText v-if="isConversationalDashboard" />
     </section>
     <ModalFilters
       data-testid="modal-filters"
@@ -66,7 +65,6 @@ import ModalFilters from './ModalFilters.vue';
 import FilterHumanSupport from './FilterHumanSupport.vue';
 import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
-import HelperDataText from './HelperDataText.vue';
 
 import { getLastNDays, getYesterdayDate } from '@/utils/time';
 
@@ -79,7 +77,6 @@ export default {
     SearchTemplateMessagesModal,
     FilterHumanSupport,
     FilterFavoriteTemplateMessage,
-    HelperDataText,
   },
 
   data() {
@@ -123,6 +120,10 @@ export default {
       return this.currentDashboard?.config?.is_whatsapp_integration;
     },
 
+    yesterdayFormatted() {
+      return getYesterdayDate().dmFormat;
+    },
+
     hasManyFilters() {
       return this.currentDashboardFilters?.length > 1;
     },
@@ -142,50 +143,21 @@ export default {
       const filter = this.currentDashboardFilters[0];
 
       if (filter.type === 'date_range') {
-        const shortCutOptions = [
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.last_7_days',
-            ),
-            id: 'last-7-days',
-          },
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.last_14_days',
-            ),
-            id: 'last-14-days',
-          },
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.last_30_days',
-            ),
-            id: 'last-30-days',
-          },
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.last_60_days',
-            ),
-            id: 'last-60-days',
-          },
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.last_90_days',
-            ),
-            id: 'last-90-days',
-          },
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.current_month',
-            ),
-            id: 'current-month',
-          },
-          {
-            name: this.$t(
-              'template_messages_dashboard.filter.shortcut.previous_month',
-            ),
-            id: 'previous-month',
-          },
+        const templateShortcuts = [
+          { key: 'last_7_days', id: 'last-7-days' },
+          { key: 'last_14_days', id: 'last-14-days' },
+          { key: 'last_30_days', id: 'last-30-days' },
+          { key: 'last_60_days', id: 'last-60-days' },
+          { key: 'last_90_days', id: 'last-90-days' },
+          { key: 'current_month', id: 'current-month' },
+          { key: 'previous_month', id: 'previous-month' },
         ];
+
+        const shortCutOptions = templateShortcuts.map(({ key, id }) => ({
+          name: this.$t(`template_messages_dashboard.filter.shortcut.${key}`),
+          id,
+        }));
+
         let customFilter = {
           ...filter,
           next: true,
@@ -194,37 +166,24 @@ export default {
         };
 
         if (this.isConversationalDashboard) {
-          customFilter.disableClear = false;
-          customFilter.shortCutOptions = [
-            {
-              name: this.$t('select_date.last_7_days_conversational'),
-              id: 'last-7-days',
-            },
-            {
-              name: this.$t('select_date.last_14_days_conversational'),
-              id: 'last-14-days',
-            },
-            {
-              name: this.$t('select_date.last_30_days_conversational'),
-              id: 'last-30-days',
-            },
-            {
-              name: this.$t('select_date.last_12_months_conversational'),
-              id: 'last-12-months',
-            },
-            {
-              name: this.$t('select_date.current_month_conversational'),
-              id: 'current-month',
-            },
-            {
-              name: this.$t('select_date.previous_month_conversational'),
-              id: 'previous-month',
-            },
-            {
-              name: this.$t('select_date.custom_conversational'),
-              id: 'custom',
-            },
+          const dateParam = { date: this.yesterdayFormatted };
+          const conversationalShortcuts = [
+            { key: 'last_7_days_conversational', id: 'last-7-days' },
+            { key: 'last_14_days_conversational', id: 'last-14-days' },
+            { key: 'last_30_days_conversational', id: 'last-30-days' },
+            { key: 'last_12_months_conversational', id: 'last-12-months' },
+            { key: 'current_month_conversational', id: 'current-month' },
+            { key: 'previous_month_conversational', id: 'previous-month' },
+            { key: 'custom_conversational', id: 'custom' },
           ];
+
+          customFilter.disableClear = false;
+          customFilter.shortCutOptions = conversationalShortcuts.map(
+            ({ key, id }) => ({
+              name: this.$t(`select_date.${key}`, dateParam),
+              id,
+            }),
+          );
         }
 
         return customFilter;

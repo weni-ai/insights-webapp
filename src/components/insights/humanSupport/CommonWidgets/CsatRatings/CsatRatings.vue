@@ -1,22 +1,23 @@
 <template>
-  <section class="csat-ratings-widget">
-    <section
-      v-if="!configStore.enableCsat && !isLoadingAgentsData"
-      class="csat-ratings-widget--disabled"
-    >
-      <h1 class="csat-ratings-widget__title">
-        {{ $t('human_support_dashboard.csat.title') }}
-      </h1>
-      <p class="csat-ratings-widget__disabled-text">
-        {{ $t('human_support_dashboard.csat.disabled_text') }}
-      </p>
-      <UnnnicButton
-        :text="$t('enable')"
-        type="primary"
-        size="small"
-        @click="redirectToChatsConfig"
-      />
-    </section>
+  <section
+    ref="csatRatings"
+    class="csat-ratings-widget"
+  >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
+    <BlurSetupWidget
+      v-else-if="showEnableCsat"
+      :title="$t('human_support_dashboard.csat.title')"
+      :description="$t('human_support_dashboard.csat.disabled_text')"
+      :actionButtonProps="{
+        text: $t('enable'),
+        type: 'primary',
+        size: 'small',
+      }"
+      :actionClick="redirectToChatsConfig"
+    />
     <h1 class="csat-ratings-widget__title">
       {{ $t('human_support_dashboard.csat.title') }}
     </h1>
@@ -41,20 +42,20 @@
             "
             :subtitle="
               $t('human_support_dashboard.csat.agents_ratings_subtitle', {
-                rooms: agentsGeneralTotals.rooms,
-                reviews: agentsGeneralTotals.reviews,
+                rooms: widgetGeneralTotals.rooms,
+                reviews: widgetGeneralTotals.reviews,
               })
             "
             :tooltip="
               $t('human_support_dashboard.csat.agents_ratings_general_tooltip')
             "
-            :rating="agentsGeneralTotals.avg_rating"
+            :rating="widgetGeneralTotals.avg_rating"
             :active="!activeAgentEmail"
             hiddenAvatar
             @click="activeAgentEmail = null"
           />
           <AgentCard
-            v-for="agent in agentsData"
+            v-for="agent in widgetAgentsData"
             :key="agent.agent.email"
             class="csat-ratings-widget__agent-card"
             :title="agent.agent.name"
@@ -96,8 +97,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
-import { useInfiniteScroll } from '@vueuse/core';
+import { useInfiniteScroll, useMouseInElement } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 
 import type {
   AgentsTotalsResponse,
@@ -106,15 +108,30 @@ import type {
 
 import AgentCard from './AgentCard.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useConfig } from '@/store/modules/config';
+import { useProject } from '@/store/modules/project';
 
 import Csat from '@/services/api/resources/humanSupport/csat';
 
 import { parseQueryString } from '@/utils/request';
-import { formatPercentage } from '@/utils/numbers';
+import { formatNumber, formatPercentage } from '@/utils/numbers';
+import { redirectToChatsConfig } from '@/utils/redirect';
+
+import {
+  monitoringCsatTotalsMock,
+  monitoringCsatAgentsMock,
+  monitoringCsatRatingsMock,
+} from '@/components/insights/humanSupport/Monitoring/mocks';
+
+import {
+  analysisCsatTotalsMock,
+  analysisCsatAgentsMock,
+  analysisCsatRatingsMock,
+} from '@/components/insights/humanSupport/Analysis/mocks';
 
 defineOptions({
   name: 'CsatRatings',
@@ -143,6 +160,26 @@ const { t, locale: localeI18n } = useI18n();
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 const humanSupportStore = useHumanSupport();
 const configStore = useConfig();
+const projectStore = useProject();
+
+const { hasChatsSectors } = storeToRefs(projectStore);
+const { widgetSetupProps, appliedFilters, appliedDateRange } =
+  storeToRefs(humanSupportStore);
+
+const csatRatingsRef = useTemplateRef<HTMLElement>('csatRatings');
+const { isOutside } = useMouseInElement(csatRatingsRef);
+
+const showSetup = computed(() => {
+  return !hasChatsSectors.value && !isOutside.value;
+});
+
+const showEnableCsat = computed(() => {
+  return (
+    !configStore.enableCsat &&
+    !isLoadingAgentsData.value &&
+    hasChatsSectors.value
+  );
+});
 
 const agentsContainerRef = useTemplateRef<HTMLElement>('agentsContainerRef');
 
@@ -162,13 +199,41 @@ const agentsGeneralTotals = ref<AgentsTotalsResponse['general']>({
   avg_rating: 0,
 });
 
+const widgetGeneralTotals = computed(() => {
+  if (!hasChatsSectors.value) {
+    return props.type === 'monitoring'
+      ? monitoringCsatTotalsMock
+      : analysisCsatTotalsMock;
+  }
+  return agentsGeneralTotals.value;
+});
+
 const agentsData = ref<AgentsTotalsResponse['results']>([]);
+
+const widgetAgentsData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return props.type === 'monitoring'
+      ? monitoringCsatAgentsMock
+      : analysisCsatAgentsMock;
+  }
+  return agentsData.value;
+});
+
 const ratingsData = ref<RatingsResponse>({
   '5': { value: 0, full_value: 0 },
   '4': { value: 0, full_value: 0 },
   '3': { value: 0, full_value: 0 },
   '2': { value: 0, full_value: 0 },
   '1': { value: 0, full_value: 0 },
+});
+
+const widgetRatingsData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return props.type === 'monitoring'
+      ? monitoringCsatRatingsMock
+      : analysisCsatRatingsMock;
+  }
+  return ratingsData.value;
 });
 
 const progressItemsRatingsData = computed(() => {
@@ -179,14 +244,14 @@ const progressItemsRatingsData = computed(() => {
     '2': t('human_support_dashboard.csat.review_rating.dissatisfied'),
     '1': t('human_support_dashboard.csat.review_rating.very_dissatisfied'),
   };
-  return Object.entries(ratingsData.value)
+  return Object.entries(widgetRatingsData.value)
     .reverse()
     .map(([key, value]) => ({
       label: labelMapping[key as keyof typeof labelMapping],
       backgroundColor: '#E9D8FD',
       color: '#805AD5',
       value: value.value,
-      description: `${formatPercentage(value.value, localeI18n.value)} (${value.full_value})`,
+      description: `${formatPercentage(value.value, localeI18n.value)} (${formatNumber(value.full_value)})`,
     }));
 });
 
@@ -239,17 +304,6 @@ const loadRatingsData = async ({
   }
 };
 
-const redirectToChatsConfig = () => {
-  const chatsConfigLink = `settingsChats:r/init`;
-  window.parent.postMessage(
-    {
-      event: 'redirect',
-      path: chatsConfigLink,
-    },
-    '*',
-  );
-};
-
 const activeAgentEmail = ref<string | null>(null);
 
 watch(activeAgentEmail, () => {
@@ -257,7 +311,7 @@ watch(activeAgentEmail, () => {
 });
 
 watch(
-  () => [humanSupportStore.appliedFilters, humanSupportStore.appliedDateRange],
+  () => [appliedFilters.value, appliedDateRange.value],
   () => {
     if (!configStore.enableCsat) return;
     loadAgentsData();
@@ -296,27 +350,6 @@ watch(
   border-radius: $unnnic-spacing-xs;
   border: 1px solid $unnnic-color-border-soft;
   background: $unnnic-color-neutral-white;
-
-  &--disabled {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    gap: $unnnic-space-3;
-    z-index: 1;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-  }
-
-  &__disabled-text {
-    color: $unnnic-color-neutral-cloudy;
-    font: $unnnic-font-display-4;
-  }
 
   &__title {
     color: $unnnic-color-neutral-darkest;

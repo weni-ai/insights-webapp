@@ -16,6 +16,7 @@ export const useProject = defineStore('project', {
       agents: [],
     },
     isLoadingAgentsTeam: false,
+    hasChatsSectors: false,
   }),
 
   getters: {
@@ -79,6 +80,10 @@ export const useProject = defineStore('project', {
       } catch (error) {
         console.error('Error activating agent', error);
       }
+    },
+    async checkHasChatsSectors() {
+      const response = await Projects.getProjectSource('sectors');
+      this.hasChatsSectors = response.length > 0;
     },
   },
 });

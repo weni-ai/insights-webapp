@@ -1,8 +1,13 @@
 <template>
   <section
     id="detailed-monitoring"
+    ref="detailedMonitoring"
     class="detailed-monitoring"
   >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
     <p class="detailed-monitoring__title">
       {{ $t('human_support_dashboard.detailed_monitoring.title') }}
     </p>
@@ -50,19 +55,38 @@
 </template>
 
 <script setup lang="ts">
+import { computed, Component, useTemplateRef } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useMouseInElement } from '@vueuse/core';
+
 import { UnnnicTab } from '@weni/unnnic-system';
 import InAwaiting from './Tables/InAwaiting.vue';
 import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from '../Common/Tables/Pauses.vue';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,
 } from '@/store/modules/humanSupport/monitoring';
-import { Component } from 'vue';
+import { useProject } from '@/store/modules/project';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
+const project = useProject();
+const { hasChatsSectors } = storeToRefs(project);
+
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
+
+const detailedMonitoringRef =
+  useTemplateRef<HTMLDivElement>('detailedMonitoring');
+const { isOutside } = useMouseInElement(detailedMonitoringRef);
+
+const showSetup = computed(() => {
+  return !hasChatsSectors.value && !isOutside.value;
+});
 
 const tabs: Record<
   ActiveDetailedTab,
@@ -107,6 +131,7 @@ const filterType = computed(() => {
 
 <style scoped lang="scss">
 .detailed-monitoring {
+  position: relative;
   display: flex;
   padding: $unnnic-space-6;
   flex-direction: column;

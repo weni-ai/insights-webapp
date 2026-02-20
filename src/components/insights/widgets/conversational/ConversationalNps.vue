@@ -63,6 +63,7 @@ const { t } = useI18n();
 const route = useRoute();
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
+const { shouldUseMock } = storeToRefs(conversational);
 
 const conversationalWidgets = useConversationalWidgets();
 const { loadNpsWidgetData, setNpsWidgetType } = conversationalWidgets;
@@ -102,10 +103,15 @@ const tabName = computed(() => {
 });
 
 const widgetData = computed(() => {
-  return handleNpsWidgetData(currentNpsWidget.value?.data || null);
+  const data = shouldUseMock.value
+    ? npsWidgetData.value
+    : currentNpsWidget.value?.data || null;
+  return handleNpsWidgetData(data);
 });
 
 const progressItems = computed(() => {
+  if (shouldUseMock.value) return widgetData.value.progressItems;
+
   if (
     (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) ||
     (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value)
@@ -137,6 +143,8 @@ const currentTab = computed(() => {
 });
 
 const actions = computed(() => {
+  if (shouldUseMock.value) return [];
+
   const editOption = {
     icon: 'edit_square',
     text: t(

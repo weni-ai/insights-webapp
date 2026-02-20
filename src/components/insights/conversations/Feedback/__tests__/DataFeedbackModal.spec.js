@@ -4,6 +4,26 @@ import { createI18n } from 'vue-i18n';
 
 import DataFeedbackModal from '../DataFeedbackModal.vue';
 
+vi.mock('@/services/api/resources/conversational/feedback', () => ({
+  default: {
+    submitFeedback: vi.fn().mockResolvedValue({ uuid: 'response-uuid' }),
+  },
+  DashboardType: { CONVERSATIONAL: 'CONVERSATIONAL' },
+  FormType: { SCORE_1_5: 'SCORE_1_5', TEXT: 'TEXT' },
+  Reference: {
+    TRUST: 'TRUST',
+    MAKE_DECISION: 'MAKE_DECISION',
+    ROI: 'ROI',
+    COMMENT: 'COMMENT',
+  },
+}));
+
+vi.mock('@/store/modules/dashboards', () => ({
+  useDashboards: () => ({ currentDashboard: { uuid: 'dash-uuid' } }),
+}));
+
+import feedbackApi from '@/services/api/resources/conversational/feedback';
+
 config.global.plugins = [
   createI18n({
     legacy: false,
@@ -42,7 +62,7 @@ const unnnicStubs = {
 
 const createWrapper = (props = {}) => {
   return shallowMount(DataFeedbackModal, {
-    props: { modelValue: true, ...props },
+    props: { modelValue: true, surveyUuid: 'survey-123', ...props },
     global: { stubs: unnnicStubs },
   });
 };
@@ -76,10 +96,7 @@ describe('DataFeedbackModal', () => {
   const fillAllRadioGroups = async () => {
     await findRadioTrust().vm.$emit('update:modelValue', 'strongly_agree');
     await findRadioDecisions().vm.$emit('update:modelValue', 'neutral');
-    await findRadioImpact().vm.$emit(
-      'update:modelValue',
-      'partially_disagree',
-    );
+    await findRadioImpact().vm.$emit('update:modelValue', 'partially_disagree');
   };
 
   describe('Initial render', () => {
@@ -132,32 +149,57 @@ describe('DataFeedbackModal', () => {
   });
 
   describe('Submit', () => {
-    it('should log feedback data and emit close on submit', async () => {
-      const consoleSpy = vi.spyOn(console, 'log');
-
+    it('should call feedbackApi.submitFeedback with correct payload and emit submitted', async () => {
       await fillAllRadioGroups();
       await findTextarea().vm.$emit('update:modelValue', 'Great dashboard');
       await findSubmitButton().vm.$emit('click');
+      await vi.dynamicImportSettled();
 
-      expect(consoleSpy).toHaveBeenCalledWith('Feedback submitted:', {
-        trustData: 'strongly_agree',
-        helpDecisions: 'neutral',
-        understandImpact: 'partially_disagree',
-        suggestions: 'Great dashboard',
+      expect(feedbackApi.submitFeedback).toHaveBeenCalledWith({
+        type: 'CONVERSATIONAL',
+        dashboard: 'dash-uuid',
+        survey: 'survey-123',
+        answers: [
+          { reference: 'TRUST', answer: '5', type: 'SCORE_1_5' },
+          { reference: 'MAKE_DECISION', answer: '3', type: 'SCORE_1_5' },
+          { reference: 'ROI', answer: '2', type: 'SCORE_1_5' },
+          { reference: 'COMMENT', answer: 'Great dashboard', type: 'TEXT' },
+        ],
       });
+
+      expect(wrapper.emitted('submitted')).toHaveLength(1);
       expect(wrapper.emitted('update:modelValue')).toContainEqual([false]);
     });
 
-    it('should submit with empty suggestions when textarea is not filled', async () => {
-      const consoleSpy = vi.spyOn(console, 'log');
+    it('should submit with empty comment when textarea is not filled', async () => {
+      await fillAllRadioGroups();
+      await findSubmitButton().vm.$emit('click');
+      await vi.dynamicImportSettled();
+
+      expect(feedbackApi.submitFeedback).toHaveBeenCalledWith(
+        expect.objectContaining({
+          answers: expect.arrayContaining([
+            { reference: 'COMMENT', answer: '', type: 'TEXT' },
+          ]),
+        }),
+      );
+    });
+
+    it('should not emit submitted when API call fails', async () => {
+      feedbackApi.submitFeedback.mockRejectedValueOnce(new Error('fail'));
 
       await fillAllRadioGroups();
       await findSubmitButton().vm.$emit('click');
+      await vi.dynamicImportSettled();
 
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Feedback submitted:',
-        expect.objectContaining({ suggestions: '' }),
-      );
+      expect(wrapper.emitted('submitted')).toBeUndefined();
+    });
+  });
+
+  describe('Postpone', () => {
+    it('should emit postpone when postpone button is clicked', async () => {
+      await findPostponeButton().vm.$emit('click');
+      expect(wrapper.emitted('postpone')).toHaveLength(1);
     });
   });
 

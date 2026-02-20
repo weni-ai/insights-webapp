@@ -112,11 +112,9 @@ interface Props {
   modelValue: boolean;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
-const emit = defineEmits<{
-  (_e: 'update:modelValue', _value: boolean): void;
-}>();
+const emit = defineEmits<(_e: 'update:modelValue', _value: boolean) => void>();
 
 const likertOptions = [
   { value: 'strongly_agree', labelKey: 'data_feedback.strongly_agree' },

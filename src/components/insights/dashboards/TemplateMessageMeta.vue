@@ -40,7 +40,7 @@
       </template>
     </section>
     <UnnnicSelectSmart
-      v-if="viewTab === 'template'"
+      v-if="showDataSourceSelect"
       v-model="selectedApiOptions"
       class="template-message-meta-dashboard__api-select"
       :options="dataSourceOptions"
@@ -154,9 +154,9 @@ const waba_id = computed(
   () => dashboardsStore.currentDashboard.config?.waba_id,
 );
 
-const app_uuid = computed(
-  () => dashboardsStore.currentDashboard.config?.app_uuid,
-);
+const isMMLiteActive = computed(() => {
+  return dashboardsStore.currentDashboard?.config?.is_mm_lite_active;
+});
 
 const project_uuid = computed(() => configStore.project?.uuid);
 
@@ -167,6 +167,13 @@ const lastOpenTemplates = ref(
 const initialLoading = ref(false);
 
 const viewTab = ref('home');
+
+const showDataSourceSelect = computed(() => {
+  return (
+    viewTab.value === 'template' &&
+    templatePreview.value.category === 'MARKETING'
+  );
+});
 
 const dataSourceOptions = [
   {
@@ -184,12 +191,7 @@ const dataSourceOptions = [
 ];
 
 const selectedApiOptions = ref([
-  {
-    label: i18n.global.t('template_messages_dashboard.data_source', {
-      source: 'Cloud API',
-    }),
-    value: 'CLOUD_API',
-  },
+  dataSourceOptions[isMMLiteActive.value ? 1 : 0],
 ]);
 
 onUnmounted(() => {
@@ -284,7 +286,7 @@ const getCategoriesMetrics = async () => {
   try {
     isLoadingCategoriesMetrics.value = true;
     const response = await MetaTemplateMessageService.getCategoriesMetrics({
-      app_uuid: app_uuid.value,
+      waba_id: waba_id.value,
       project_uuid: project_uuid.value,
       start: appliedFilters.value?.date?._start,
       end: appliedFilters.value?.date?._end,
@@ -293,7 +295,15 @@ const getCategoriesMetrics = async () => {
     if (response?.templates) {
       const keys = Object.keys(categoriesMetrics.value);
       keys.forEach((key) => {
-        categoriesMetrics.value[key] = response.templates[key] || 0;
+        const isMarketing = key === 'MARKETING';
+
+        if (isMarketing) {
+          categoriesMetrics.value[key] =
+            (response.templates.MARKETING || 0) +
+            (response.templates.MARKETING_LITE || 0);
+        } else {
+          categoriesMetrics.value[key] = response.templates[key] || 0;
+        }
       });
     }
   } catch (error) {
@@ -373,7 +383,10 @@ const getButtonClicksData = async () => {
       template_id: selectedTemplateUuid.value,
       date_start: appliedFilters.value?.date?._start,
       date_end: appliedFilters.value?.date?._end,
-      product_type: selectedApiOptions.value[0].value,
+      product_type:
+        templatePreview.value.category === 'MARKETING'
+          ? selectedApiOptions.value[0].value
+          : undefined,
     };
 
     const response =
@@ -400,7 +413,10 @@ const getMessagesAnalytics = async () => {
       template_id: selectedTemplateUuid.value,
       start_date: appliedFilters.value?.date?._start,
       end_date: appliedFilters.value?.date?._end,
-      product_type: selectedApiOptions.value[0].value,
+      product_type:
+        templatePreview.value.category === 'MARKETING'
+          ? selectedApiOptions.value[0].value
+          : undefined,
     };
 
     const response =
@@ -440,10 +456,10 @@ const formattedMessagesAnalyticsData = computed(() => {
   });
 });
 
-const getSelectedTemplateData = (
+const getSelectedTemplateData = async (
   { ignorePreview } = { ignorePreview: false },
 ) => {
-  if (!ignorePreview) getTemplatePreview();
+  if (!ignorePreview) await getTemplatePreview();
   getButtonClicksData();
   getMessagesAnalytics();
 };

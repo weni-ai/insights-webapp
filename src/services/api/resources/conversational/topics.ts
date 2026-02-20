@@ -2,6 +2,7 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { createRequestQuery } from '@/utils/request';
+import { MOCK_TOPICS_DISTRIBUTION } from './mocks';
 
 interface topicDistributionMetric {
   uuid: string;
@@ -52,7 +53,10 @@ export default {
   async getConversationalTopicsDistribution(
     type: 'HUMAN' | 'AI',
     queryParams: QueryParams = {},
+    options: { mock?: boolean } = { mock: false },
   ): Promise<ConversationalTopicsDistribution> {
+    if (options.mock) return MOCK_TOPICS_DISTRIBUTION;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 

@@ -40,7 +40,7 @@
       </template>
     </section>
     <UnnnicSelectSmart
-      v-if="viewTab === 'template'"
+      v-if="showDataSourceSelect"
       v-model="selectedApiOptions"
       class="template-message-meta-dashboard__api-select"
       :options="dataSourceOptions"
@@ -168,6 +168,13 @@ const initialLoading = ref(false);
 
 const viewTab = ref('home');
 
+const showDataSourceSelect = computed(() => {
+  return (
+    viewTab.value === 'template' &&
+    templatePreview.value.category === 'MARKETING'
+  );
+});
+
 const dataSourceOptions = [
   {
     label: i18n.global.t('template_messages_dashboard.data_source', {
@@ -183,14 +190,7 @@ const dataSourceOptions = [
   },
 ];
 
-const selectedApiOptions = ref([
-  {
-    label: i18n.global.t('template_messages_dashboard.data_source', {
-      source: 'Cloud API',
-    }),
-    value: 'CLOUD_API',
-  },
-]);
+const selectedApiOptions = ref([dataSourceOptions[0]]);
 
 onUnmounted(() => {
   metaTemplateMessageStore.setSelectedTemplateUuid('');
@@ -373,7 +373,10 @@ const getButtonClicksData = async () => {
       template_id: selectedTemplateUuid.value,
       date_start: appliedFilters.value?.date?._start,
       date_end: appliedFilters.value?.date?._end,
-      product_type: selectedApiOptions.value[0].value,
+      product_type:
+        templatePreview.value.category === 'MARKETING'
+          ? selectedApiOptions.value[0].value
+          : undefined,
     };
 
     const response =
@@ -400,7 +403,10 @@ const getMessagesAnalytics = async () => {
       template_id: selectedTemplateUuid.value,
       start_date: appliedFilters.value?.date?._start,
       end_date: appliedFilters.value?.date?._end,
-      product_type: selectedApiOptions.value[0].value,
+      product_type:
+        templatePreview.value.category === 'MARKETING'
+          ? selectedApiOptions.value[0].value
+          : undefined,
     };
 
     const response =
@@ -440,10 +446,10 @@ const formattedMessagesAnalyticsData = computed(() => {
   });
 });
 
-const getSelectedTemplateData = (
+const getSelectedTemplateData = async (
   { ignorePreview } = { ignorePreview: false },
 ) => {
-  if (!ignorePreview) getTemplatePreview();
+  if (!ignorePreview) await getTemplatePreview();
   getButtonClicksData();
   getMessagesAnalytics();
 };

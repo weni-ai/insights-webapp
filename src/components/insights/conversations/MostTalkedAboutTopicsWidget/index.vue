@@ -44,21 +44,6 @@
       />
     </BaseConversationWidget>
 
-    <AddWidget
-      v-if="!hasExistingTopics && !isLoadingTopicsDistribution"
-      :title="$t('conversations_dashboard.most_talked_about_topics.no_topics')"
-      :description="
-        $t(
-          'conversations_dashboard.most_talked_about_topics.no_topics_description',
-        )
-      "
-      :actionText="
-        $t('conversations_dashboard.most_talked_about_topics.add_first_topic')
-      "
-      data-testid="topics-add-widget"
-      @action="toggleAddTopicsDrawer"
-    />
-
     <DrawerTopics data-testid="topics-drawer" />
   </section>
 </template>
@@ -69,64 +54,24 @@ import { storeToRefs } from 'pinia';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
-import AddWidget from '../AddWidget.vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import DrawerTopics from '../topics/DrawerTopics.vue';
-import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import type { Tab } from '../BaseConversationWidget.vue';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { MOCK_TOPICS_DISTRIBUTION } from '@/services/api/resources/conversational/mocks';
 
 const conversationalTopicsStore = useConversationalTopics();
 const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 
 const route = useRoute();
-
-const MOCK_DATA: topicDistributionMetric[] = [
-  {
-    label: 'Entrega atrasada',
-    value: 6973,
-    percentage: 29,
-    uuid: '',
-  },
-  {
-    label: 'Produto defeituoso',
-    value: 5500,
-    percentage: 23,
-    uuid: '',
-  },
-  {
-    label: 'Dúvidas sobre preço',
-    value: 1600,
-    percentage: 16,
-    uuid: '',
-  },
-  {
-    label: 'Cancelamento',
-    value: 1400,
-    percentage: 14,
-    uuid: '',
-  },
-  {
-    label: 'Unclassified',
-    value: 1000,
-    percentage: 13,
-    uuid: '',
-  },
-  {
-    label: 'Outros',
-    value: 500,
-    percentage: 5,
-    uuid: '',
-  },
-];
 
 const {
   topicsDistributionCount,
   topicsDistribution,
   isLoadingTopicsDistribution,
   topicType,
-  hasExistingTopics,
 } = storeToRefs(conversationalTopicsStore);
 
 const { loadTopicsDistribution, toggleAddTopicsDrawer, setTopicType } =
@@ -144,7 +89,7 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
 };
 
 const treemapData = computed(() => {
-  if (!hasExistingTopics.value) return MOCK_DATA;
+  if (shouldUseMock.value) return MOCK_TOPICS_DISTRIBUTION.topics;
 
   if (topicsDistributionCount.value === 0) return [];
 

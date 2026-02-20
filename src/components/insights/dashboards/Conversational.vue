@@ -48,6 +48,7 @@ import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
+const { activeFeatures } = storeToRefs(useFeatureFlag());
 
 const { shouldShowModal, surveyUuid, checkSurvey, onPostpone, onSubmitted } =
   useFeedbackSurvey();
@@ -138,7 +139,12 @@ onMounted(() => {
   if (dynamicWidgets.value.length === 0) {
     setDynamicWidgets();
   }
+  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+    checkSurvey();
+  }
+});
 
+watch(activeFeatures, () => {
   if (isFeatureFlagEnabled('insightsDataFeedback')) {
     checkSurvey();
   }

@@ -22,6 +22,10 @@
     />
 
     <CustomizableDrawer />
+    <DataFeedbackModal
+      v-if="isFeatureFlagEnabled('insightsDataFeedback')"
+      v-model="isDataFeedbackModalOpen"
+    />
   </section>
 </template>
 
@@ -36,6 +40,10 @@ import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import Info from '@/components/insights/conversations/Info.vue';
+import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
 
 type ConversationalWidgetType =
   | 'csat'
@@ -44,6 +52,8 @@ type ConversationalWidgetType =
   | 'sales_funnel'
   | 'custom'
   | 'crosstab';
+
+const isDataFeedbackModalOpen = ref(true);
 
 const customWidgets = useCustomWidgets();
 const conversationalWidgets = useConversationalWidgets();

@@ -154,10 +154,6 @@ const waba_id = computed(
   () => dashboardsStore.currentDashboard.config?.waba_id,
 );
 
-const app_uuid = computed(
-  () => dashboardsStore.currentDashboard.config?.app_uuid,
-);
-
 const isMMLiteActive = computed(() => {
   return dashboardsStore.currentDashboard?.config?.is_mm_lite_active;
 });
@@ -290,7 +286,7 @@ const getCategoriesMetrics = async () => {
   try {
     isLoadingCategoriesMetrics.value = true;
     const response = await MetaTemplateMessageService.getCategoriesMetrics({
-      app_uuid: app_uuid.value,
+      waba_id: waba_id.value,
       project_uuid: project_uuid.value,
       start: appliedFilters.value?.date?._start,
       end: appliedFilters.value?.date?._end,

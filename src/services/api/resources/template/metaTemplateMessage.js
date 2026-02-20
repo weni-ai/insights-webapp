@@ -204,12 +204,12 @@ export default {
     return response;
   },
 
-  async getCategoriesMetrics({ app_uuid, project_uuid, start, end }) {
+  async getCategoriesMetrics({ waba_id, project_uuid, start, end }) {
     const url =
       '/metrics/meta/whatsapp-message-templates/conversations-by-category/';
     const params = {
-      app_uuid,
-      project_uuid,
+      waba_id,
+      project: project_uuid,
       start_date: start,
       end_date: end,
     };
@@ -218,6 +218,6 @@ export default {
       params,
     });
 
-    return response.data;
+    return response;
   },
 };

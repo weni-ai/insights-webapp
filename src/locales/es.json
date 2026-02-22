@@ -103,7 +103,7 @@
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",
       "satisfied": "Satisfecho",
-      "neutral": "Neutral",
+      "neutral": "Neutro",
       "dissatisfied": "Insatisfecho",
       "very_dissatisfied": "Muy insatisfecho"
     },
@@ -259,7 +259,7 @@
       },
       "button_type": {
         "PHONE_NUMBER": "Teléfono",
-        "URL": "Link",
+        "URL": "Enlace",
         "COPY_CODE": "Copiar y pegar",
         "FLOW": "Flujo",
         "QUICK_REPLY": "Respuesta rápida"
@@ -293,7 +293,7 @@
     "ended_at": "Fin",
     "sector": "Sector",
     "queue": "Cola",
-    "tags": "Tags"
+    "tags": "Etiquetas"
   },
   "contact_list_modal": {
     "title": "Lista de contactos de {label}",
@@ -327,7 +327,7 @@
       "placeholder": "Selecciona un sector"
     },
     "tags": {
-      "label": "Tags",
+      "label": "Etiquetas",
       "placeholder": "Selecciona una tag"
     }
   },
@@ -378,6 +378,7 @@
   "rejected": "Rechazado",
   "active": "Activo",
   "disabled": "Inactivo",
+  "enable": "Enable",
   "alert_added": "{name} agregado",
   "alert_edited": "{name} editado",
   "select_date": {
@@ -762,7 +763,7 @@
       "queues": "Colas",
       "rooms": "Salas",
       "users": "Agentes",
-      "sector_tags": "Tags",
+      "sector_tags": "Etiquetas",
       "contacts": "Contactos",
       "resolutions": "Resoluciones de conversaciones",
       "topics": "Asuntos",
@@ -778,26 +779,26 @@
       "user": "Usuario",
       "ended_at": "Fecha de fin del servicio",
       "ended_by": "Finalizado por",
-      "is_active": "Status",
+      "is_active": "Estado",
       "is_wating": "Está esperando",
       "protocol": "Protocolo",
       "urn": "URN del contacto",
-      "full_transfer_history": "Historial completo de transferencias",
       "transfer_history": "Historial de transferencias",
+      "full_transfer_history": "Historial completo de transferencias",
       "service_chat": "Chat de servicio",
       "custom_fields": "Campos personalizados",
       "contact": "Contacto",
-      "tags": "Tags",
+      "tags": "Etiquetas",
       "last_name": "Apellido",
-      "email": "Email",
+      "email": "Correo electrónico",
       "first_name": "Nombre",
       "phone": "Teléfono",
-      "status": "Status",
+      "status": "Estado",
       "ai": "IA",
       "human": "Soporte humano",
       "user__first_name": "Nombre del representante",
       "user__last_name": "Apellido del representante",
-      "user__email": "Email",
+      "user__email": "Correo electrónico",
       "contact__name": "Nombre del contacto",
       "contact__uuid": "ID del contacto",
       "queue__name": "Cola",
@@ -841,7 +842,7 @@
       "select_agent": "Selecciona el agente",
       "queue": "Cola",
       "select_queue": "Selecciona la cola",
-      "tag": "Tag",
+      "tag": "Etiqueta",
       "select_tag": "Selecciona la tag",
       "all_sectors": "Todos los sectores",
       "all_agents": "Todos los agentes",

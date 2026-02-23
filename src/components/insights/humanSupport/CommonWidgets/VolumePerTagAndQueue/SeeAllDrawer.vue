@@ -4,6 +4,7 @@
     data-testid="see-all-drawer"
     :modelValue="true"
     :title="title"
+    closeIcon="close"
     size="lg"
     @close="emit('update:modelValue', false)"
   >

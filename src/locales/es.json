@@ -346,6 +346,7 @@
   "finished": "Finalizado",
   "in_progress": "En curso",
   "waiting": "Esperando",
+  "awaiting": "En espera",
   "in-service": "Servicio en curso",
   "status": "Status",
   "metric": "Métrica",
@@ -1005,8 +1006,8 @@
     },
     "volume_per_queue": {
       "title": "Volumen por cola",
-      "monitoring_count": "{count} colas con chats {status}",
-      "analysis_count": "{count} colas con chats finalizados",
+      "monitoring_count": "{count} cola con chats {status} | {count} colas con chats {status}",
+      "analysis_count": "{count} cola con chats finalizados | {count} colas con chats finalizados",
       "setup_description": "Crea colas por sector para monitorear más datos.",
       "empty_data": {
         "monitoring": {
@@ -1023,8 +1024,8 @@
       "title": "Volumen por tag",
       "setup_description": "Añade tags a sectores para monitorear más datos.",
       "count": {
-        "ongoing": "{count} tags en uso",
-        "closed": "{count} tags asignadas"
+        "ongoing": "{count} tag en uso | {count} tags en uso",
+        "closed": "{count} tag asignada | {count} tags asignadas"
       },
       "empty_data": {
         "monitoring": {

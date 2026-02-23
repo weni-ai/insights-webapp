@@ -30,7 +30,7 @@ import volumePerQueueService from '@/services/api/resources/humanSupport/volumeP
 import { redirectToChatsConfig } from '@/utils/redirect';
 
 import i18n from '@/utils/plugins/i18n';
-const { t } = i18n.global;
+const { t, tc } = i18n.global;
 
 defineOptions({
   name: 'PerQueue',
@@ -48,7 +48,7 @@ const props = withDefaults(defineProps<PerQueueProps>(), {
 const tabs = (ctx: WidgetContext): VolumeBarListTabItem[] => {
   if (ctx === 'monitoring') {
     return [
-      { name: t('waiting'), key: 'waiting' },
+      { name: t('awaiting'), key: 'waiting' },
       { name: t('in_progress'), key: 'ongoing' },
       { name: t('finished'), key: 'closed' },
     ];
@@ -73,13 +73,18 @@ const formatFooterText = (
   count: number,
   statusLabel?: string,
 ) => {
+  if (count === 0) return '';
   if (ctx === 'monitoring' && statusLabel) {
-    return t('human_support_dashboard.volume_per_queue.monitoring_count', {
+    return tc(
+      'human_support_dashboard.volume_per_queue.monitoring_count',
       count,
-      status: statusLabel.toLocaleLowerCase(),
-    });
+      {
+        count,
+        status: statusLabel.toLocaleLowerCase(),
+      },
+    );
   }
-  return t('human_support_dashboard.volume_per_queue.analysis_count', {
+  return tc('human_support_dashboard.volume_per_queue.analysis_count', count, {
     count,
   });
 };

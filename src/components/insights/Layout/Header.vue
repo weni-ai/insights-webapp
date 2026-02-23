@@ -128,7 +128,7 @@ export default {
         {
           path: currentDashboard.uuid,
           routeName: 'dashboard',
-          name: `Insights ${this.$t(currentDashboard.name || '')}`,
+          name: `Analytics ${this.$t(currentDashboard.name || '')}`,
         },
       ];
 

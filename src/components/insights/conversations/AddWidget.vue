@@ -41,7 +41,7 @@ defineProps<{
 
   border-radius: $unnnic-border-radius-md;
   border: $unnnic-border-width-thinner dashed $unnnic-color-neutral-soft;
-  background: #ffffffcc;
+  background: rgba(255, 255, 255, 0.8);
 
   backdrop-filter: blur(5px);
 }

@@ -158,6 +158,10 @@ const app_uuid = computed(
   () => dashboardsStore.currentDashboard.config?.app_uuid,
 );
 
+const isMMLiteActive = computed(() => {
+  return dashboardsStore.currentDashboard?.config?.is_mm_lite_active;
+});
+
 const project_uuid = computed(() => configStore.project?.uuid);
 
 const lastOpenTemplates = ref(
@@ -190,7 +194,9 @@ const dataSourceOptions = [
   },
 ];
 
-const selectedApiOptions = ref([dataSourceOptions[0]]);
+const selectedApiOptions = ref([
+  dataSourceOptions[isMMLiteActive.value ? 1 : 0],
+]);
 
 onUnmounted(() => {
   metaTemplateMessageStore.setSelectedTemplateUuid('');

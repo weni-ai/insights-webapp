@@ -91,7 +91,6 @@ export function useInfiniteScrollTable<T = any, R = any>(
   ) => {
     currentSort.value = sort;
     onSortChange?.();
-    resetAndLoadData(sort);
   };
 
   return {

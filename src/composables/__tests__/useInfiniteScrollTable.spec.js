@@ -165,18 +165,18 @@ describe('useInfiniteScrollTable', () => {
   });
 
   describe('handleSort', () => {
-    it('updates currentSort and calls resetAndLoadData', async () => {
+    it('updates currentSort and calls onSortChange without triggering fetch', () => {
       const currentSort = { value: { itemKey: 'id', order: 'asc' } };
       const newSort = { header: 'Name', itemKey: 'name', order: 'desc' };
 
-      await composable.handleSort(newSort, currentSort);
+      composable.handleSort(newSort, currentSort);
 
       expect(currentSort.value).toEqual(newSort);
       expect(mockOnSortChange).toHaveBeenCalled();
-      expect(mockFetchData).toHaveBeenCalledWith(1, 12, '-name');
+      expect(mockFetchData).not.toHaveBeenCalled();
     });
 
-    it('works without onSortChange callback', async () => {
+    it('works without onSortChange callback', () => {
       const noCallbackComposable = useInfiniteScrollTable({
         fetchData: mockFetchData,
         formatResults: mockFormatResults,
@@ -185,10 +185,10 @@ describe('useInfiniteScrollTable', () => {
       const currentSort = { value: { itemKey: 'id', order: 'asc' } };
       const newSort = { header: 'Name', itemKey: 'name', order: 'asc' };
 
-      await noCallbackComposable.handleSort(newSort, currentSort);
+      noCallbackComposable.handleSort(newSort, currentSort);
 
       expect(currentSort.value).toEqual(newSort);
-      expect(mockFetchData).toHaveBeenCalled();
+      expect(mockFetchData).not.toHaveBeenCalled();
     });
   });
 

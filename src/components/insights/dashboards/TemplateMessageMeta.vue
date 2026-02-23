@@ -293,7 +293,15 @@ const getCategoriesMetrics = async () => {
     if (response?.templates) {
       const keys = Object.keys(categoriesMetrics.value);
       keys.forEach((key) => {
-        categoriesMetrics.value[key] = response.templates[key] || 0;
+        const isMarketing = key === 'MARKETING';
+
+        if (isMarketing) {
+          categoriesMetrics.value[key] =
+            (response.templates.MARKETING || 0) +
+            (response.templates.MARKETING_LITE || 0);
+        } else {
+          categoriesMetrics.value[key] = response.templates[key] || 0;
+        }
       });
     }
   } catch (error) {

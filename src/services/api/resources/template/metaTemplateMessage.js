@@ -95,6 +95,8 @@ export default {
 
     const is_favorite = response.is_favorite;
 
+    const category = response.category;
+
     return {
       title: safeTitle,
       image,
@@ -104,6 +106,7 @@ export default {
       name,
       buttons,
       is_favorite,
+      category,
     };
   },
 

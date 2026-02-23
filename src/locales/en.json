@@ -346,6 +346,7 @@
   "finished": "Finished",
   "in_progress": "In progress",
   "waiting": "Waiting",
+  "awaiting": "Awaiting",
   "in-service": "In progress",
   "status": "Status",
   "metric": "Metric",
@@ -1006,8 +1007,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count} queues with chats {status}",
-      "analysis_count": "{count} queues with finished chats",
+      "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
+      "analysis_count": "{count} queue with finished chats | {count} queues with finished chats",
       "setup_description": "Create queues by sector to monitor more data.",
       "empty_data": {
         "monitoring": {
@@ -1024,8 +1025,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to sectors to monitor more data.",
       "count": {
-        "ongoing": "{count} tags in use",
-        "closed": "{count} assigned tags"
+        "ongoing": "{count} tag in use | {count} tags in use",
+        "closed": "{count} assigned tag | {count} assigned tags"
       },
       "empty_data": {
         "monitoring": {

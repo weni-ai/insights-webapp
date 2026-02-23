@@ -31,7 +31,7 @@ import { redirectToChatsConfig } from '@/utils/redirect';
 
 import i18n from '@/utils/plugins/i18n';
 
-const { t } = i18n.global;
+const { t, tc } = i18n.global;
 
 defineOptions({
   name: 'PerTag',
@@ -71,10 +71,16 @@ const formatFooterText = (
   _ctx: WidgetContext,
   currentTab: string,
   count: number,
-) =>
-  t(`human_support_dashboard.volume_per_tag.count.${currentTab}`, {
+) => {
+  if (count === 0) return '';
+  return tc(
+    `human_support_dashboard.volume_per_tag.count.${currentTab}`,
     count,
-  });
+    {
+      count,
+    },
+  );
+};
 
 const formatEmptyDataText = (context: WidgetContext, currentTab: string) =>
   t(

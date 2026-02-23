@@ -45,6 +45,7 @@ import type {
 } from './types';
 
 import i18n from '@/utils/plugins/i18n';
+import { orderBy } from '@/utils/array';
 
 const { t } = i18n.global;
 
@@ -84,7 +85,7 @@ interface VolumeBarListWidgetProps {
 const humanSupportStore = useHumanSupport();
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 
-const { appliedFilters } = storeToRefs(humanSupportStore);
+const { appliedFilters, appliedDateRange } = storeToRefs(humanSupportStore);
 const { refreshDataMonitoring, autoRefresh } = storeToRefs(
   humanSupportMonitoringStore,
 );
@@ -132,7 +133,7 @@ const formattedItems = computed(() => {
   const { itemKey, itemLabelKey, mock } = props;
   return items.value.flatMap((item) => {
     const subitems = item[itemKey] ?? [];
-    return subitems.map(
+    const formattedSubitems = subitems.map(
       (subitem: { queue_name?: string; tag_name?: string; value: number }) => ({
         label: subitem[itemLabelKey] ?? '',
         subtitle: item.sector_name,
@@ -142,6 +143,7 @@ const formattedItems = computed(() => {
         backgroundColor: mock.backgroundColor,
       }),
     );
+    return orderBy(formattedSubitems, ['value', 'label'], ['desc', 'asc']);
   });
 });
 
@@ -230,7 +232,7 @@ watch(
   },
 );
 
-watch([currentTab, appliedFilters], async () => {
+watch([currentTab, appliedFilters, appliedDateRange], async () => {
   itemsNext.value = null;
   itemsPrevious.value = null;
   await getItems({ silent: false, concat: false });

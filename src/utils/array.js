@@ -1,3 +1,9 @@
+import { orderBy as lodashOrderBy } from 'lodash';
+
+export function orderBy(array, keys, orders) {
+  return lodashOrderBy(array, keys, orders);
+}
+
 export function sortByKey(arr, key, order = 'asc') {
   const compareString = arr.every((item) => typeof item[key] === 'string');
 

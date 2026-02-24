@@ -133,6 +133,11 @@ const waitForDashboardWidgets = () =>
 const initializeConfiguration = async () => {
   await Promise.all([waitForDashboardWidgets(), topicsStore.loadFormTopics()]);
   conversational.setConfigurationLoaded(true);
+
+  if (conversational.shouldUseMock) {
+    customWidgets.injectMockWidgets();
+  }
+
   setDynamicWidgets();
 };
 
@@ -152,6 +157,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   dynamicWidgets.value = [];
+  customWidgets.clearMockWidgets();
   conversational.setConfigurationLoaded(false);
 });
 </script>

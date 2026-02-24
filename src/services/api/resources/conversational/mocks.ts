@@ -1,4 +1,5 @@
 import type { ConversationalTopicsDistribution } from './topics';
+import type { FormattedMetric } from './header';
 import type { CsatResponse, NpsResponse, SalesFunnelResponse } from './widgets';
 
 export const MOCK_TOPICS_DISTRIBUTION: ConversationalTopicsDistribution = {
@@ -41,6 +42,13 @@ export const MOCK_TOPICS_DISTRIBUTION: ConversationalTopicsDistribution = {
     },
   ],
 };
+
+export const MOCK_HEADER_DATA: FormattedMetric[] = [
+  { id: 'total_conversations', value: 24300, percentage: 100 },
+  { id: 'resolved', value: 15795, percentage: 65 },
+  { id: 'unresolved', value: 4860, percentage: 20 },
+  { id: 'transferred_to_human', value: 3645, percentage: 15 },
+];
 
 export const MOCK_CSAT_DATA: CsatResponse = {
   results: [

@@ -22,6 +22,14 @@
     />
 
     <CustomizableDrawer />
+    <DataFeedbackModal
+      v-if="isFeatureFlagEnabled('insightsDataFeedback')"
+      v-model="shouldShowModal"
+      :surveyUuid="surveyUuid"
+      @postpone="onPostpone"
+      @submitted="onSubmitted"
+      @submit-error="onSubmitError"
+    />
   </section>
 </template>
 
@@ -38,6 +46,21 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import Info from '@/components/insights/conversations/Info.vue';
+import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
+const { activeFeatures } = storeToRefs(useFeatureFlag());
+
+const {
+  shouldShowModal,
+  surveyUuid,
+  checkSurvey,
+  onPostpone,
+  onSubmitted,
+  onSubmitError,
+} = useFeedbackSurvey();
 
 type ConversationalWidgetType =
   | 'csat'
@@ -153,6 +176,15 @@ watch(
 
 onMounted(() => {
   initializeConfiguration();
+  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+    checkSurvey();
+  }
+});
+
+watch(activeFeatures, () => {
+  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+    checkSurvey();
+  }
 });
 
 onUnmounted(() => {

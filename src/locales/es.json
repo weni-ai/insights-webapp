@@ -404,7 +404,7 @@
   "reset": "Restablecer",
   "onboarding": {
     "welcome_modal": {
-      "title": "Nueva funcionalidad: explora Insights",
+      "title": "Nueva funcionalidad: explora Analytics",
       "text": "Esta nueva herramienta te permite monitorear el éxito de tu operación aquí en Weni",
       "button": {
         "go": "Empezar",
@@ -1045,7 +1045,7 @@
     }
   },
   "news": {
-    "title": "Noticias y actualizaciones en Insights - Atención humana",
+    "title": "Noticias y actualizaciones en Analytics - Atención humana",
     "human_support_dashboard": {
       "monitoring": {
         "first_text": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica gargalos y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",

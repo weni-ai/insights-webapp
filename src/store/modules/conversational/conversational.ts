@@ -110,14 +110,14 @@ export const useConversational = defineStore('conversational', {
       const { hasExistingTopics } = useConversationalTopics();
       const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =
         useConversationalWidgets();
-      const { getCustomWidgets } = useCustomWidgets();
+      const { getRealCustomWidgets } = useCustomWidgets();
 
       const hasAnyConfiguration =
         hasExistingTopics ||
         isCsatConfigured ||
         isNpsConfigured ||
         isSalesFunnelConfigured ||
-        getCustomWidgets.length > 0;
+        getRealCustomWidgets.length > 0;
 
       return !hasAnyConfiguration;
     },

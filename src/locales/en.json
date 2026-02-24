@@ -26,7 +26,8 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
-      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window.",
+      "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
     },
     "header": {
       "total": "Total conversations",

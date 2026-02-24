@@ -26,7 +26,8 @@
     "others": "Otros",
     "unclassified": "Sin clasificar",
     "info": {
-      "description": "Los datos conversacionales muestran conversas iniciadas hasta 24 horas antes de la hora actual. Las conversas más recientes aún están siendo clasificadas y no se muestran. Actualiza el tablero para actualizar la ventana de datos."
+      "description": "Los datos conversacionales muestran conversas iniciadas hasta 24 horas antes de la hora actual. Las conversas más recientes aún están siendo clasificadas y no se muestran. Actualiza el tablero para actualizar la ventana de datos.",
+      "mock_description": "Estos números son solo para fines de demostración. Una vez que se configure el primer widget, los datos reales se mostrarán aquí."
     },
     "header": {
       "total": "Total de conversaciones",

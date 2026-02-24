@@ -41,7 +41,7 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   agent?: string;
-  status?: ('online' | 'on_break' | 'offline')[];
+  status?: string[];
 }
 
 export default {

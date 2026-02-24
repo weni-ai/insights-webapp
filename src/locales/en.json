@@ -962,6 +962,9 @@
       },
       "ticket_id": {
         "label": "Ticket ID"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {

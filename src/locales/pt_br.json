@@ -961,6 +961,9 @@
       },
       "ticket_id": {
         "label": "Protocolo"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {

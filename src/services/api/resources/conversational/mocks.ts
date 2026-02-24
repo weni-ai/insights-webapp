@@ -1,6 +1,12 @@
 import type { ConversationalTopicsDistribution } from './topics';
 import type { FormattedMetric } from './header';
-import type { CsatResponse, NpsResponse, SalesFunnelResponse } from './widgets';
+import type {
+  CsatResponse,
+  NpsResponse,
+  SalesFunnelResponse,
+  CustomWidgetResponse,
+  CrosstabWidgetResponse,
+} from './widgets';
 
 export const MOCK_TOPICS_DISTRIBUTION: ConversationalTopicsDistribution = {
   topics: [
@@ -75,4 +81,61 @@ export const MOCK_SALES_FUNNEL_DATA: SalesFunnelResponse = {
   total_value: 47500,
   average_ticket: 123.7,
   currency: 'BRL',
+};
+
+export const MOCK_CUSTOM_WIDGET_DATA = {
+  results: [
+    { label: 'Delivered', value: 55, full_value: 8470 },
+    { label: 'Awaiting payment', value: 15, full_value: 2310 },
+    { label: 'In preparation', value: 12, full_value: 1848 },
+    { label: 'Payment confirmed', value: 10, full_value: 1540 },
+    { label: 'In transit', value: 8, full_value: 1232 },
+    { label: 'Returned', value: 5, full_value: 770 },
+  ],
+} as unknown as CustomWidgetResponse;
+
+export const MOCK_CROSSTAB_WIDGET_DATA: CrosstabWidgetResponse = {
+  total_rows: 9,
+  results: [
+    {
+      title: 'Order status',
+      total: 6000,
+      events: {
+        satisfied: { value: 72, full_value: 4320 },
+        dissatisfied: { value: 28, full_value: 1680 },
+      },
+    },
+    {
+      title: 'Product inquiries',
+      total: 5520,
+      events: {
+        satisfied: { value: 65, full_value: 3588 },
+        dissatisfied: { value: 35, full_value: 1932 },
+      },
+    },
+    {
+      title: 'Payments',
+      total: 5200,
+      events: {
+        satisfied: { value: 60, full_value: 3120 },
+        dissatisfied: { value: 40, full_value: 2080 },
+      },
+    },
+    {
+      title: 'Technical support',
+      total: 4000,
+      events: {
+        satisfied: { value: 40, full_value: 1600 },
+        dissatisfied: { value: 60, full_value: 2400 },
+      },
+    },
+    {
+      title: 'Shipping info',
+      total: 1200,
+      events: {
+        satisfied: { value: 58, full_value: 696 },
+        dissatisfied: { value: 42, full_value: 504 },
+      },
+    },
+  ],
 };

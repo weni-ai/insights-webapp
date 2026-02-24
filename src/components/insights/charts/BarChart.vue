@@ -49,6 +49,12 @@ import { useElementSize } from '@vueuse/core';
 import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
+import {
+  colorTeal600,
+  colorTeal500,
+  colorTeal900,
+  colorWhite,
+} from '@weni/unnnic-system/tokens/colors';
 
 export default {
   name: 'BarChart',
@@ -91,13 +97,13 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: '#00A49F',
-        hoverBackgroundColor: '#00DED2',
+        backgroundColor: colorTeal600,
+        hoverBackgroundColor: colorTeal500,
         plugins: {
           tooltip: false,
           datalabels: {
             color: function (context) {
-              return context.active ? '#003234' : '#fff';
+              return context.active ? colorTeal900 : colorWhite;
             },
             anchor: 'end',
             align: 'start',

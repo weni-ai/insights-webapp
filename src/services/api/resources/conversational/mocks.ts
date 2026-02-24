@@ -7,47 +7,52 @@ import type {
   CustomWidgetResponse,
   CrosstabWidgetResponse,
 } from './widgets';
+import i18n from '@/utils/plugins/i18n';
 
-export const MOCK_TOPICS_DISTRIBUTION: ConversationalTopicsDistribution = {
-  topics: [
-    {
-      label: 'Entrega atrasada',
-      value: 6973,
-      percentage: 29,
-      uuid: '',
-    },
-    {
-      label: 'Produto defeituoso',
-      value: 5500,
-      percentage: 23,
-      uuid: '',
-    },
-    {
-      label: 'Dúvidas sobre preço',
-      value: 1600,
-      percentage: 16,
-      uuid: '',
-    },
-    {
-      label: 'Cancelamento',
-      value: 1400,
-      percentage: 14,
-      uuid: '',
-    },
-    {
-      label: 'Unclassified',
-      value: 1000,
-      percentage: 13,
-      uuid: '',
-    },
-    {
-      label: 'Outros',
-      value: 500,
-      percentage: 5,
-      uuid: '',
-    },
-  ],
-};
+const t = (key: string) => i18n.global.t(key);
+const mockKey = (path: string) => `conversations_dashboard.mock.${path}`;
+
+export const getMockTopicsDistribution =
+  (): ConversationalTopicsDistribution => ({
+    topics: [
+      {
+        label: t(mockKey('topics.delayed_delivery')),
+        value: 6973,
+        percentage: 29,
+        uuid: '',
+      },
+      {
+        label: t(mockKey('topics.defective_product')),
+        value: 5500,
+        percentage: 23,
+        uuid: '',
+      },
+      {
+        label: t(mockKey('topics.price_questions')),
+        value: 1600,
+        percentage: 16,
+        uuid: '',
+      },
+      {
+        label: t(mockKey('topics.cancellation')),
+        value: 1400,
+        percentage: 14,
+        uuid: '',
+      },
+      {
+        label: t(mockKey('topics.unclassified')),
+        value: 1000,
+        percentage: 13,
+        uuid: '',
+      },
+      {
+        label: t(mockKey('topics.others')),
+        value: 500,
+        percentage: 5,
+        uuid: '',
+      },
+    ],
+  });
 
 export const MOCK_HEADER_DATA: FormattedMetric[] = [
   { id: 'total_conversations', value: 24300, percentage: 100 },
@@ -83,59 +88,114 @@ export const MOCK_SALES_FUNNEL_DATA: SalesFunnelResponse = {
   currency: 'BRL',
 };
 
-export const MOCK_CUSTOM_WIDGET_DATA = {
-  results: [
-    { label: 'Delivered', value: 55, full_value: 8470 },
-    { label: 'Awaiting payment', value: 15, full_value: 2310 },
-    { label: 'In preparation', value: 12, full_value: 1848 },
-    { label: 'Payment confirmed', value: 10, full_value: 1540 },
-    { label: 'In transit', value: 8, full_value: 1232 },
-    { label: 'Returned', value: 5, full_value: 770 },
-  ],
-} as unknown as CustomWidgetResponse;
+export const getMockCustomWidgetData = () =>
+  ({
+    results: [
+      {
+        label: t(mockKey('custom_labels.delivered')),
+        value: 55,
+        full_value: 8470,
+      },
+      {
+        label: t(mockKey('custom_labels.awaiting_payment')),
+        value: 15,
+        full_value: 2310,
+      },
+      {
+        label: t(mockKey('custom_labels.in_preparation')),
+        value: 12,
+        full_value: 1848,
+      },
+      {
+        label: t(mockKey('custom_labels.payment_confirmed')),
+        value: 10,
+        full_value: 1540,
+      },
+      {
+        label: t(mockKey('custom_labels.in_transit')),
+        value: 8,
+        full_value: 1232,
+      },
+      {
+        label: t(mockKey('custom_labels.returned')),
+        value: 5,
+        full_value: 770,
+      },
+    ],
+  }) as unknown as CustomWidgetResponse;
 
-export const MOCK_CROSSTAB_WIDGET_DATA: CrosstabWidgetResponse = {
+export const getMockCrosstabWidgetData = (): CrosstabWidgetResponse => ({
   total_rows: 9,
   results: [
     {
-      title: 'Order status',
+      title: t(mockKey('crosstab_labels.order_status')),
       total: 6000,
       events: {
-        satisfied: { value: 72, full_value: 4320 },
-        dissatisfied: { value: 28, full_value: 1680 },
+        [t(mockKey('crosstab_labels.satisfied'))]: {
+          value: 72,
+          full_value: 4320,
+        },
+        [t(mockKey('crosstab_labels.dissatisfied'))]: {
+          value: 28,
+          full_value: 1680,
+        },
       },
     },
     {
-      title: 'Product inquiries',
+      title: t(mockKey('crosstab_labels.product_inquiries')),
       total: 5520,
       events: {
-        satisfied: { value: 65, full_value: 3588 },
-        dissatisfied: { value: 35, full_value: 1932 },
+        [t(mockKey('crosstab_labels.satisfied'))]: {
+          value: 65,
+          full_value: 3588,
+        },
+        [t(mockKey('crosstab_labels.dissatisfied'))]: {
+          value: 35,
+          full_value: 1932,
+        },
       },
     },
     {
-      title: 'Payments',
+      title: t(mockKey('crosstab_labels.payments')),
       total: 5200,
       events: {
-        satisfied: { value: 60, full_value: 3120 },
-        dissatisfied: { value: 40, full_value: 2080 },
+        [t(mockKey('crosstab_labels.satisfied'))]: {
+          value: 60,
+          full_value: 3120,
+        },
+        [t(mockKey('crosstab_labels.dissatisfied'))]: {
+          value: 40,
+          full_value: 2080,
+        },
       },
     },
     {
-      title: 'Technical support',
+      title: t(mockKey('crosstab_labels.technical_support')),
       total: 4000,
       events: {
-        satisfied: { value: 40, full_value: 1600 },
-        dissatisfied: { value: 60, full_value: 2400 },
+        [t(mockKey('crosstab_labels.satisfied'))]: {
+          value: 40,
+          full_value: 1600,
+        },
+        [t(mockKey('crosstab_labels.dissatisfied'))]: {
+          value: 60,
+          full_value: 2400,
+        },
       },
     },
     {
-      title: 'Shipping info',
+      title: t(mockKey('crosstab_labels.shipping_info')),
       total: 1200,
       events: {
-        satisfied: { value: 58, full_value: 696 },
-        dissatisfied: { value: 42, full_value: 504 },
+        [t(mockKey('crosstab_labels.satisfied'))]: {
+          value: 58,
+          full_value: 696,
+        },
+        [t(mockKey('crosstab_labels.dissatisfied'))]: {
+          value: 42,
+          full_value: 504,
+        },
       },
     },
   ],
-};
+});

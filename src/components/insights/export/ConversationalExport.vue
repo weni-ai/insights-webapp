@@ -16,7 +16,7 @@
         size="large"
         :text="t('export_data.title')"
         :loading="isLoadingCheckExportStatus"
-        :disabled="!hasExportData"
+        :disabled="!hasExportData || shouldUseMock"
         data-testid="export-data-button"
         @click="setIsRenderExportData(true)"
       />
@@ -67,10 +67,13 @@ import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed, watch } from 'vue';
 import { useElementVisibility } from '@vueuse/core';
 import { useConversationalExport } from '@/store/modules/export/conversational/export';
+import { useConversational } from '@/store/modules/conversational/conversational';
 import { UnnnicToolTip } from '@weni/unnnic-system';
 import FormExport from './Conversational/FormExport.vue';
 
 const { t } = useI18n();
+const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 const conversationalExport = useConversationalExport();
 const { setIsRenderExportData, setIsRenderExportDataFeedback, createExport } =
   conversationalExport;

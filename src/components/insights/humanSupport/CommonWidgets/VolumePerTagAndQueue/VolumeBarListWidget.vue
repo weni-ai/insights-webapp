@@ -131,9 +131,10 @@ const showVisualLoading = ref(true);
 const formattedItems = computed(() => {
   if (props.showConfig) return itemsMock.value;
   const { itemKey, itemLabelKey, mock } = props;
-  return items.value.flatMap((item) => {
+
+  const toOrderItems = items.value.flatMap((item) => {
     const subitems = item[itemKey] ?? [];
-    const formattedSubitems = subitems.map(
+    return subitems.map(
       (subitem: { queue_name?: string; tag_name?: string; value: number }) => ({
         label: subitem[itemLabelKey] ?? '',
         subtitle: item.sector_name,
@@ -143,8 +144,9 @@ const formattedItems = computed(() => {
         backgroundColor: mock.backgroundColor,
       }),
     );
-    return orderBy(formattedSubitems, ['value', 'label'], ['desc', 'asc']);
   });
+
+  return orderBy(toOrderItems, ['value', 'label'], ['desc', 'asc']);
 });
 
 const footerText = computed(() => {

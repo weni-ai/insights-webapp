@@ -71,7 +71,7 @@ import DrawerTopics from '../topics/DrawerTopics.vue';
 import type { Tab } from '../BaseConversationWidget.vue';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
-import { MOCK_TOPICS_DISTRIBUTION } from '@/services/api/resources/conversational/mocks';
+import { getMockTopicsDistribution } from '@/services/api/resources/conversational/mocks';
 
 const conversationalTopicsStore = useConversationalTopics();
 const conversationalStore = useConversational();
@@ -101,7 +101,7 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
 };
 
 const treemapData = computed(() => {
-  if (shouldUseMock.value) return MOCK_TOPICS_DISTRIBUTION.topics;
+  if (shouldUseMock.value) return getMockTopicsDistribution().topics;
 
   if (topicsDistributionCount.value === 0) return [];
 

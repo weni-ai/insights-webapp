@@ -6,8 +6,8 @@ import WidgetConversationalService, {
   CrosstabWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
 import {
-  MOCK_CUSTOM_WIDGET_DATA,
-  MOCK_CROSSTAB_WIDGET_DATA,
+  getMockCustomWidgetData,
+  getMockCrosstabWidgetData,
 } from '@/services/api/resources/conversational/mocks';
 import { useWidgets } from '@/store/modules/widgets';
 import { unnnicCallAlert } from '@weni/unnnic-system';
@@ -175,7 +175,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
           ),
           source: 'conversations.custom',
           type: 'conversations.custom',
-          data: MOCK_CUSTOM_WIDGET_DATA,
+          data: getMockCustomWidgetData(),
           config: { datalake_config: { agent_uuid: '', key: '' } },
         } as unknown as customWidget,
         {
@@ -186,7 +186,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
           ),
           source: 'conversations.crosstab',
           type: 'conversations.crosstab',
-          data: MOCK_CROSSTAB_WIDGET_DATA,
+          data: getMockCrosstabWidgetData(),
           config: {
             source_a: { key: '', field_name: '' },
             source_b: { key: '', field_name: '' },

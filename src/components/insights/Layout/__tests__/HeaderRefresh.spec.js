@@ -67,6 +67,7 @@ describe('HeaderRefresh.vue', () => {
     mockStoreToRefs = {
       isLoadingAllData: ref(false),
       autoRefresh: ref(false),
+      shouldUseMock: ref(false),
     };
 
     useHumanSupportMonitoring.mockReturnValue(monitoringStore);
@@ -471,6 +472,31 @@ describe('HeaderRefresh.vue', () => {
         expect(typeof call[0]).toBe('boolean');
         expect(typeof call[1]).toBe('boolean');
       });
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(async () => {
+      mockStoreToRefs = {
+        isLoadingAllData: ref(false),
+        autoRefresh: ref(false),
+        shouldUseMock: ref(true),
+      };
+
+      const { storeToRefs } = await import('pinia');
+      storeToRefs.mockReturnValue(mockStoreToRefs);
+    });
+
+    it('should be disabled for conversations type when shouldUseMock is true', () => {
+      wrapper = createWrapper({ type: 'conversations' });
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(true);
+    });
+
+    it('should not be disabled for human-support type even when shouldUseMock is true', () => {
+      wrapper = createWrapper({ type: 'human-support' });
+      const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
+      expect(refreshButton.props('disabled')).toBe(false);
     });
   });
 });

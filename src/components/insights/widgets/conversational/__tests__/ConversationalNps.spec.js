@@ -28,6 +28,7 @@ const mockConversationalStore = {
   refreshDataConversational: false,
   setIsDrawerCustomizableOpen: vi.fn(),
   setIsLoadingConversationalData: vi.fn(),
+  shouldUseMock: { value: false },
 };
 
 const mockRoute = { query: {} };
@@ -238,6 +239,39 @@ describe('ConversationalNps', () => {
 
     it('formats footer text', () => {
       expect(wrapper.vm.footerText).toContain('reviews');
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockWidgetsStore.npsWidgetData.value = {
+        score: 72,
+        total_responses: 500,
+        promoters: 60,
+        passives: 25,
+        detractors: 15,
+        results: [],
+      };
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
+
+    it('should return empty actions in mock mode', () => {
+      expect(wrapper.vm.actions).toEqual([]);
+    });
+
+    it('should return progress items from mock data', () => {
+      expect(wrapper.vm.progressItems.length).toBeGreaterThan(0);
+    });
+
+    it('should pass empty actions to ProgressWidget', () => {
+      const widget = wrapper.findComponent({ name: 'ProgressWidget' });
+      expect(widget.props('actions')).toEqual([]);
     });
   });
 });

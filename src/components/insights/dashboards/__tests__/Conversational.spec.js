@@ -7,6 +7,8 @@ import { createI18n } from 'vue-i18n';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useConversational } from '@/store/modules/conversational/conversational';
+import { useConversationalTopics } from '@/store/modules/conversational/topics';
 
 config.global.plugins = [
   createI18n({
@@ -17,12 +19,16 @@ config.global.plugins = [
 vi.mock('@/store/modules/conversational/widgets');
 vi.mock('@/store/modules/widgets');
 vi.mock('@/store/modules/conversational/customWidgets');
+vi.mock('@/store/modules/conversational/conversational');
+vi.mock('@/store/modules/conversational/topics');
 
 describe('Conversational.vue', () => {
   let wrapper;
   let conversationalWidgetsStore;
   let widgetsStore;
   let customWidgetsStore;
+  let conversationalStore;
+  let topicsStore;
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -30,19 +36,35 @@ describe('Conversational.vue', () => {
     conversationalWidgetsStore = {
       isCsatConfigured: false,
       isNpsConfigured: false,
+      isSalesFunnelConfigured: false,
     };
     useConversationalWidgets.mockReturnValue(conversationalWidgetsStore);
 
     widgetsStore = {
       isLoadingCurrentDashboardWidgets: ref(false),
       currentDashboardWidgets: ref([]),
+      getCurrentDashboardWidgets: vi.fn().mockResolvedValue([]),
     };
     useWidgets.mockReturnValue(widgetsStore);
 
     customWidgetsStore = {
       getCustomWidgets: [],
+      injectMockWidgets: vi.fn(),
+      clearMockWidgets: vi.fn(),
     };
     useCustomWidgets.mockReturnValue(customWidgetsStore);
+
+    conversationalStore = {
+      shouldUseMock: false,
+      isConfigurationLoaded: ref(true),
+      setConfigurationLoaded: vi.fn(),
+    };
+    useConversational.mockReturnValue(conversationalStore);
+
+    topicsStore = {
+      loadFormTopics: vi.fn().mockResolvedValue(undefined),
+    };
+    useConversationalTopics.mockReturnValue(topicsStore);
 
     wrapper = shallowMount(Conversational, {
       global: {
@@ -51,6 +73,7 @@ describe('Conversational.vue', () => {
           MostTalkedAboutTopicsWidget: true,
           ConversationalDynamicWidget: true,
           CustomizableDrawer: true,
+          Info: true,
         },
       },
     });
@@ -246,6 +269,55 @@ describe('Conversational.vue', () => {
       ]);
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
       expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(async () => {
+      conversationalStore.shouldUseMock = true;
+      conversationalStore.isConfigurationLoaded = ref(true);
+
+      conversationalWidgetsStore.isCsatConfigured = false;
+      conversationalWidgetsStore.isNpsConfigured = false;
+      conversationalWidgetsStore.isSalesFunnelConfigured = false;
+
+      customWidgetsStore.getCustomWidgets = [];
+
+      widgetsStore.isLoadingCurrentDashboardWidgets = ref(false);
+      widgetsStore.currentDashboardWidgets = ref([]);
+
+      wrapper = shallowMount(Conversational, {
+        global: {
+          stubs: {
+            DashboardHeader: true,
+            MostTalkedAboutTopicsWidget: true,
+            ConversationalDynamicWidget: true,
+            CustomizableDrawer: true,
+            Info: true,
+          },
+        },
+      });
+
+      await nextTick();
+      await nextTick();
+    });
+
+    it('should call injectMockWidgets when shouldUseMock is true', () => {
+      expect(customWidgetsStore.injectMockWidgets).toHaveBeenCalled();
+    });
+
+    it('should include csat, nps, and sales_funnel widgets in mock mode', async () => {
+      await nextTick();
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('csat');
+      expect(types).toContain('nps');
+      expect(types).toContain('sales_funnel');
+    });
+
+    it('should include add widget at the end in mock mode', async () => {
+      await nextTick();
+      const widgets = wrapper.vm.orderedDynamicWidgets;
+      expect(widgets[widgets.length - 1].type).toBe('add');
     });
   });
 });

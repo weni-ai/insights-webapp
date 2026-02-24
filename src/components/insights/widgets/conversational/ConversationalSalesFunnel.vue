@@ -32,6 +32,7 @@ const { t } = useI18n();
 const route = useRoute();
 const conversational = useConversational();
 const conversationalWidgets = useConversationalWidgets();
+const { shouldUseMock } = storeToRefs(conversational);
 
 const { loadSalesFunnelWidgetData } = conversationalWidgets;
 const { isLoadingSalesFunnelWidgetData, isSalesFunnelWidgetDataError } =
@@ -51,14 +52,18 @@ const actionError = computed(() => ({
   onClick: () => (isRemoveWidgetModalOpen.value = true),
 }));
 
-const actions = computed(() => [
-  {
-    icon: 'delete',
-    text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
-    onClick: () => (isRemoveWidgetModalOpen.value = true),
-    scheme: 'aux-red-500',
-  },
-]);
+const actions = computed(() => {
+  if (shouldUseMock.value) return [];
+
+  return [
+    {
+      icon: 'delete',
+      text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
+      onClick: () => (isRemoveWidgetModalOpen.value = true),
+      scheme: 'aux-red-500',
+    },
+  ];
+});
 
 onMounted(() => {
   loadSalesFunnelWidgetData();

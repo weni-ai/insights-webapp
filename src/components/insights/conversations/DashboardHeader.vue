@@ -34,9 +34,11 @@ import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
+import { MOCK_HEADER_DATA } from '@/services/api/resources/conversational/mocks';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useDashboards } from '@/store/modules/dashboards';
+import { storeToRefs } from 'pinia';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
@@ -46,6 +48,7 @@ const route = useRoute();
 
 const dashboardsStore = useDashboards();
 const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 
 const cardDefinitions = [
   {
@@ -103,6 +106,15 @@ watch(
 );
 
 watch(
+  () => shouldUseMock.value,
+  (newValue) => {
+    if (newValue) {
+      loadCardData();
+    }
+  },
+);
+
+watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
     if (newValue) {
@@ -137,32 +149,38 @@ const showErrorToast = () => {
   });
 };
 
+const applyMetrics = (metrics: typeof MOCK_HEADER_DATA) => {
+  metrics.forEach((metric) => {
+    const cardToUpdate = cardsData.value.find((card) => card.id === metric.id);
+
+    if (cardToUpdate) {
+      if (metric.id === 'total_conversations') {
+        cardToUpdate.value = formatNumber(metric.value);
+        cardToUpdate.description = null;
+      } else {
+        cardToUpdate.value = formatPercentage(metric.percentage);
+        cardToUpdate.description = `${formatNumber(metric.value)} ${t(
+          'conversations_dashboard.conversations',
+        )}`;
+      }
+    }
+  });
+};
+
 const loadCardData = async () => {
   cardsData.value.forEach((card) => {
     card.isLoading = true;
   });
 
   try {
+    if (shouldUseMock.value) {
+      applyMetrics(MOCK_HEADER_DATA);
+      return;
+    }
+
     const response =
       await conversationalHeaderApi.getConversationalHeaderTotals();
-
-    response.forEach((metric) => {
-      const cardToUpdate = cardsData.value.find(
-        (card) => card.id === metric.id,
-      );
-
-      if (cardToUpdate) {
-        if (metric.id === 'total_conversations') {
-          cardToUpdate.value = formatNumber(metric.value);
-          cardToUpdate.description = null;
-        } else {
-          cardToUpdate.value = formatPercentage(metric.percentage);
-          cardToUpdate.description = `${formatNumber(metric.value)} ${t(
-            'conversations_dashboard.conversations',
-          )}`;
-        }
-      }
-    });
+    applyMetrics(response);
   } catch (error) {
     console.error('Error loading conversational header data:', error);
 

@@ -13,13 +13,22 @@
       class="dashboard-conversational__info__description"
       data-testid="info-description"
     >
-      {{ $t('conversations_dashboard.info.description') }}
+      {{
+        shouldUseMock
+          ? $t('conversations_dashboard.info.mock_description')
+          : $t('conversations_dashboard.info.description')
+      }}
     </p>
   </section>
 </template>
 
 <script setup lang="ts">
 import { UnnnicIcon } from '@weni/unnnic-system';
+import { storeToRefs } from 'pinia';
+import { useConversational } from '@/store/modules/conversational/conversational';
+
+const conversational = useConversational();
+const { shouldUseMock } = storeToRefs(conversational);
 </script>
 
 <style scoped lang="scss">

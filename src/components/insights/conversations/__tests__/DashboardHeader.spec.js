@@ -45,12 +45,18 @@ vi.mock('@/store/modules/dashboards', () => ({
   }),
 }));
 
-vi.mock('@/store/modules/conversational/conversational', () => ({
-  useConversational: () => ({
-    refreshDataConversational: false,
-    setIsLoadingConversationalData: vi.fn(),
-  }),
-}));
+const { ref: vueRef } = require('vue');
+const mockShouldUseMock = vueRef(false);
+
+vi.mock('@/store/modules/conversational/conversational', () => {
+  return {
+    useConversational: () => ({
+      refreshDataConversational: false,
+      setIsLoadingConversationalData: vi.fn(),
+      shouldUseMock: mockShouldUseMock,
+    }),
+  };
+});
 
 vi.mock('@/composables/useWidgetFormatting', () => ({
   useWidgetFormatting: () => ({
@@ -661,6 +667,48 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[3].value).toBe('transferred-test-value');
       expect(vm.cardsData[3].description).toBe('transferred-test-description');
       expect(vm.cardsData[3].isLoading).toBe(false);
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      mockShouldUseMock.value = true;
+    });
+
+    afterEach(() => {
+      mockShouldUseMock.value = false;
+    });
+
+    it('should use mock data instead of calling API', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
+
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+      await vm.loadCardData();
+
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('should populate cards with mock header data', async () => {
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+      await vm.loadCardData();
+
+      const hasValues = vm.cardsData.some((card) => card.value !== '-');
+      expect(hasValues).toBe(true);
+    });
+
+    it('should not be loading after mock data is applied', async () => {
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+      await vm.loadCardData();
+
+      expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
     });
   });
 });

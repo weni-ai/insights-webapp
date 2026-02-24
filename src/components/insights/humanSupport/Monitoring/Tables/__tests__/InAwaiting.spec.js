@@ -111,6 +111,24 @@ describe('InAwaiting', () => {
       expect(mockInfiniteScroll.handleSort).toHaveBeenCalled();
     });
 
+    it('triggers only one data load when sort changes (no double request)', async () => {
+      vi.clearAllMocks();
+
+      mockInfiniteScroll.handleSort.mockImplementation((sort, currentSort) => {
+        currentSort.value = sort;
+      });
+
+      wrapper.vm.handleSort({
+        header: 'Awaiting Time',
+        itemKey: 'awaiting_time',
+        order: 'desc',
+      });
+
+      await wrapper.vm.$nextTick();
+
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
+    });
+
     it('handles load more', () => {
       wrapper.vm.loadMore();
       expect(mockInfiniteScroll.loadMoreData).toHaveBeenCalled();

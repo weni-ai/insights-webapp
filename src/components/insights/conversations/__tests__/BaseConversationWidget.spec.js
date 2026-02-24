@@ -167,7 +167,6 @@ describe('BaseConversationWidget', () => {
     });
 
     it('should render dropdown when actions are provided', () => {
-      console.log('wrapper.html()', wrapper.html());
       expect(dropdown().exists()).toBe(true);
     });
 

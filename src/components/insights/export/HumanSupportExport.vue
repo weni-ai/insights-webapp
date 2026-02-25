@@ -91,7 +91,11 @@ const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
 
 const disableExport = computed(() => {
-  return !hasChatsSectors.value || !hasExportData.value;
+  if (!hasChatsSectors.value) {
+    return true;
+  }
+
+  return !hasExportData.value;
 });
 
 const hasExportData = computed(() => {

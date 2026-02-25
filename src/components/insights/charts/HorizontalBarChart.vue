@@ -58,6 +58,13 @@ import { deepMerge } from '@/utils/object';
 
 import { useElementSize } from '@vueuse/core';
 import { ref } from 'vue';
+import {
+  colorTeal600,
+  colorTeal500,
+  colorTeal100,
+  colorGray500,
+  colorGray300,
+} from '@weni/unnnic-system/tokens/colors';
 
 export default {
   name: 'HorizontalBarChart',
@@ -143,8 +150,8 @@ export default {
             },
           },
         },
-        backgroundColor: '#00A49F',
-        hoverBackgroundColor: '#00DED2',
+        backgroundColor: colorTeal600,
+        hoverBackgroundColor: colorTeal500,
         plugins: {
           datalabels: {
             display: false,
@@ -153,7 +160,7 @@ export default {
             datalabelsSuffix: this.datalabelsSuffix,
           },
           horizontalBackgroundColorPlugin: {
-            backgroundColor: '#C6FFF7',
+            backgroundColor: colorTeal100,
           },
           tooltip: {
             enabled: true,
@@ -229,7 +236,7 @@ export default {
 
             ctx.textBaseline = 'middle';
             ctx.font = 'bold 16px Lato';
-            ctx.fillStyle = '#4E5666';
+            ctx.fillStyle = colorGray500;
 
             // chartLeftMargin is the margin between the chart and the left edge of the chart area (labels space)
             // 4px is the margin between the chart and the text
@@ -252,7 +259,7 @@ export default {
             };
 
             ctx.font = 'normal 14px Lato';
-            ctx.fillStyle = '#67738B';
+            ctx.fillStyle = colorGray300;
 
             ctx.fillText(
               `| ${fullValues[index]}`,

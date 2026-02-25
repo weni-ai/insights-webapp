@@ -20,6 +20,7 @@ const mockConversationalStore = {
   refreshDataConversational: false,
   setIsDrawerCustomizableOpen: vi.fn(),
   setIsLoadingConversationalData: vi.fn(),
+  shouldUseMock: { value: false },
 };
 
 const mockRoute = { query: {} };
@@ -205,6 +206,40 @@ describe('ConversationalCsat', () => {
 
     it('formats footer text', () => {
       expect(wrapper.vm.footerText).toContain('reviews');
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockWidgetsStore.csatWidgetData.value = {
+        results: [
+          { label: '5', value: 40, full_value: 400 },
+          { label: '4', value: 30, full_value: 300 },
+          { label: '3', value: 15, full_value: 150 },
+          { label: '2', value: 10, full_value: 100 },
+          { label: '1', value: 5, full_value: 50 },
+        ],
+      };
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
+
+    it('should return empty actions in mock mode', () => {
+      expect(wrapper.vm.actions).toEqual([]);
+    });
+
+    it('should return progress items from mock data', () => {
+      expect(wrapper.vm.progressItems.length).toBeGreaterThan(0);
+    });
+
+    it('should pass empty actions to ProgressWidget', () => {
+      const widget = wrapper.findComponent({ name: 'ProgressWidget' });
+      expect(widget.props('actions')).toEqual([]);
     });
   });
 });

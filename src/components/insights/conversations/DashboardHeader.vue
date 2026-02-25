@@ -34,9 +34,11 @@ import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
+import { MOCK_HEADER_DATA } from '@/services/api/resources/conversational/mocks';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useDashboards } from '@/store/modules/dashboards';
+import { storeToRefs } from 'pinia';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
@@ -46,6 +48,7 @@ const route = useRoute();
 
 const dashboardsStore = useDashboards();
 const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 
 const cardDefinitions = [
   {
@@ -83,7 +86,30 @@ const cardsData = ref(
   })),
 );
 
-const cards = computed(() =>
+const mockCards = computed(() => {
+  const formatMetric = (def: (typeof cardDefinitions)[0]) => {
+    const metric = MOCK_HEADER_DATA.find((m) => m.id === def.id);
+    if (!metric) return { value: '-', description: null };
+
+    if (metric.id === 'total_conversations') {
+      return { value: formatNumber(metric.value), description: null };
+    }
+    return {
+      value: formatPercentage(metric.percentage),
+      description: `${formatNumber(metric.value)} ${t('conversations_dashboard.conversations')}`,
+    };
+  };
+
+  return cardDefinitions.map((def) => ({
+    id: def.id,
+    title: t(def.titleKey),
+    tooltipInfo: t(def.tooltipKey),
+    isLoading: false,
+    ...formatMetric(def),
+  }));
+});
+
+const apiCards = computed(() =>
   cardDefinitions.map((def, index) => ({
     id: def.id,
     title: t(def.titleKey),
@@ -94,9 +120,14 @@ const cards = computed(() =>
   })),
 );
 
+const cards = computed(() =>
+  shouldUseMock.value ? mockCards.value : apiCards.value,
+);
+
 watch(
   () => route.query,
   () => {
+    if (shouldUseMock.value) return;
     dashboardsStore.updateLastUpdatedRequest();
     loadCardData();
   },
@@ -105,7 +136,7 @@ watch(
 watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
-    if (newValue) {
+    if (newValue && !shouldUseMock.value) {
       dashboardsStore.updateLastUpdatedRequest();
       conversationalStore.setIsLoadingConversationalData('header', true);
       loadCardData().finally(() => {
@@ -137,6 +168,24 @@ const showErrorToast = () => {
   });
 };
 
+const applyMetrics = (metrics: typeof MOCK_HEADER_DATA) => {
+  metrics.forEach((metric) => {
+    const cardToUpdate = cardsData.value.find((card) => card.id === metric.id);
+
+    if (cardToUpdate) {
+      if (metric.id === 'total_conversations') {
+        cardToUpdate.value = formatNumber(metric.value);
+        cardToUpdate.description = null;
+      } else {
+        cardToUpdate.value = formatPercentage(metric.percentage);
+        cardToUpdate.description = `${formatNumber(metric.value)} ${t(
+          'conversations_dashboard.conversations',
+        )}`;
+      }
+    }
+  });
+};
+
 const loadCardData = async () => {
   cardsData.value.forEach((card) => {
     card.isLoading = true;
@@ -145,24 +194,7 @@ const loadCardData = async () => {
   try {
     const response =
       await conversationalHeaderApi.getConversationalHeaderTotals();
-
-    response.forEach((metric) => {
-      const cardToUpdate = cardsData.value.find(
-        (card) => card.id === metric.id,
-      );
-
-      if (cardToUpdate) {
-        if (metric.id === 'total_conversations') {
-          cardToUpdate.value = formatNumber(metric.value);
-          cardToUpdate.description = null;
-        } else {
-          cardToUpdate.value = formatPercentage(metric.percentage);
-          cardToUpdate.description = `${formatNumber(metric.value)} ${t(
-            'conversations_dashboard.conversations',
-          )}`;
-        }
-      }
-    });
+    applyMetrics(response);
   } catch (error) {
     console.error('Error loading conversational header data:', error);
 
@@ -197,6 +229,7 @@ const handleCardClick = (cardId: string) => {
 };
 
 onMounted(() => {
+  if (shouldUseMock.value) return;
   dashboardsStore.updateLastUpdatedRequest();
   loadCardData();
 });

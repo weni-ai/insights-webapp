@@ -1,8 +1,24 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { ref } from 'vue';
 
 import Info from '../Info.vue';
+
+const shouldUseMockRef = ref(false);
+
+const mockConversationalStore = {
+  shouldUseMock: shouldUseMockRef,
+};
+
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: () => mockConversationalStore,
+}));
+
+vi.mock('pinia', async (importOriginal) => ({
+  ...(await importOriginal()),
+  storeToRefs: (store) => store,
+}));
 
 const i18n = createI18n({
   legacy: false,
@@ -197,6 +213,38 @@ describe('Info.vue', () => {
 
     it('should be a presentational component', () => {
       expect(wrapper.vm.$options.emits).toBeUndefined();
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      shouldUseMockRef.value = true;
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      shouldUseMockRef.value = false;
+    });
+
+    it('should display mock description when shouldUseMock is true', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).toBe(
+        'conversations_dashboard.info.mock_description',
+      );
+    });
+  });
+
+  describe('Normal mode (shouldUseMock = false)', () => {
+    beforeEach(() => {
+      shouldUseMockRef.value = false;
+      wrapper = createWrapper();
+    });
+
+    it('should display normal description when shouldUseMock is false', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).toBe(
+        'conversations_dashboard.info.description',
+      );
     });
   });
 });

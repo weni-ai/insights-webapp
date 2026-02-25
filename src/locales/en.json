@@ -26,7 +26,37 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
-      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window.",
+      "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
+    },
+    "mock": {
+      "custom_widget_title": "Order status",
+      "crosstab_widget_title": "Satisfaction by conversation category",
+      "topics": {
+        "delayed_delivery": "Delayed delivery",
+        "defective_product": "Defective product",
+        "price_questions": "Price questions",
+        "cancellation": "Cancellation",
+        "unclassified": "Unclassified",
+        "others": "Others"
+      },
+      "custom_labels": {
+        "delivered": "Delivered",
+        "awaiting_payment": "Awaiting payment",
+        "in_preparation": "In preparation",
+        "payment_confirmed": "Payment confirmed",
+        "in_transit": "In transit",
+        "returned": "Returned"
+      },
+      "crosstab_labels": {
+        "order_status": "Order status",
+        "product_inquiries": "Product inquiries",
+        "payments": "Payments",
+        "technical_support": "Technical support",
+        "shipping_info": "Shipping info",
+        "satisfied": "Satisfied",
+        "dissatisfied": "Dissatisfied"
+      }
     },
     "header": {
       "total": "Total conversations",
@@ -137,6 +167,7 @@
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
       "add_widget": "Add widget",
+      "add_first_widget": "Add your first widget",
       "csat_description": "Customer Satisfaction Score (CSAT) measures how satisfied contacts are with the service they received",
       "nps_description": "Net Promoter Score (NPS) measures how likely contacts are to recommend your service",
       "config_csat_or_nps_description": "Set which {type} you want to track",

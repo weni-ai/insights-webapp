@@ -14,7 +14,7 @@
       :text="$t('insights_header.refresh')"
       type="tertiary"
       iconLeft="refresh"
-      :disabled="isLoading"
+      :disabled="isLoading || isDisabledByMock"
       @click="refreshData"
     />
   </UnnnicToolTip>
@@ -25,7 +25,7 @@
     :text="$t('insights_header.refresh')"
     type="tertiary"
     iconLeft="refresh"
-    :disabled="isLoading"
+    :disabled="isLoading || isDisabledByMock"
     @click="refreshData"
   />
 </template>
@@ -50,6 +50,7 @@ const { isLoadingAllData, autoRefresh } = storeToRefs(useMonitoring);
 const { setRefreshDataMonitoring } = useMonitoring;
 
 const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 const { setRefreshDataConversational } = conversationalStore;
 
 let timeoutStop: (() => void) | null = null;
@@ -61,6 +62,10 @@ const handleRefreshData = (value: boolean, silent = false) => {
     setRefreshDataConversational(value);
   }
 };
+
+const isDisabledByMock = computed(
+  () => props.type === 'conversations' && shouldUseMock.value,
+);
 
 const isLoading = computed(() => {
   if (props.type === 'human-support') {

@@ -679,36 +679,53 @@ describe('DashboardHeader.vue', () => {
       mockShouldUseMock.value = false;
     });
 
-    it('should use mock data instead of calling API', async () => {
+    it('should not call API on mount when shouldUseMock is true', async () => {
       const conversationalHeaderApi = await import(
         '@/services/api/resources/conversational/header'
       );
       conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
 
-      const testWrapper = createWrapper();
-      const vm = testWrapper.vm;
-      await vm.loadCardData();
+      createWrapper();
+      await new Promise((r) => setTimeout(r, 50));
 
       expect(
         conversationalHeaderApi.default.getConversationalHeaderTotals,
       ).not.toHaveBeenCalled();
     });
 
-    it('should populate cards with mock header data', async () => {
+    it('should render mock cards with formatted values directly', () => {
       const testWrapper = createWrapper();
       const vm = testWrapper.vm;
-      await vm.loadCardData();
 
-      const hasValues = vm.cardsData.some((card) => card.value !== '-');
-      expect(hasValues).toBe(true);
+      expect(vm.cards).toHaveLength(4);
+      vm.cards.forEach((card) => {
+        expect(card.isLoading).toBe(false);
+        expect(card.value).not.toBe('-');
+      });
     });
 
-    it('should not be loading after mock data is applied', async () => {
+    it('should render total_conversations with formatted number', () => {
       const testWrapper = createWrapper();
       const vm = testWrapper.vm;
-      await vm.loadCardData();
 
-      expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
+      const totalCard = vm.cards.find((c) => c.id === 'total_conversations');
+      expect(totalCard.value).toBe('24,300');
+      expect(totalCard.description).toBeNull();
+    });
+
+    it('should render percentage cards with formatted percentage', () => {
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+
+      const resolved = vm.cards.find((c) => c.id === 'resolved');
+      expect(resolved.value).toBe('65.00%');
+      expect(resolved.description).toContain('conversations');
+
+      const unresolved = vm.cards.find((c) => c.id === 'unresolved');
+      expect(unresolved.value).toBe('20.00%');
+
+      const transferred = vm.cards.find((c) => c.id === 'transferred_to_human');
+      expect(transferred.value).toBe('15.00%');
     });
   });
 });

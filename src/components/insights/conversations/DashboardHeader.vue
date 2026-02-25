@@ -86,7 +86,30 @@ const cardsData = ref(
   })),
 );
 
-const cards = computed(() =>
+const mockCards = computed(() => {
+  const formatMetric = (def: (typeof cardDefinitions)[0]) => {
+    const metric = MOCK_HEADER_DATA.find((m) => m.id === def.id);
+    if (!metric) return { value: '-', description: null };
+
+    if (metric.id === 'total_conversations') {
+      return { value: formatNumber(metric.value), description: null };
+    }
+    return {
+      value: formatPercentage(metric.percentage),
+      description: `${formatNumber(metric.value)} ${t('conversations_dashboard.conversations')}`,
+    };
+  };
+
+  return cardDefinitions.map((def) => ({
+    id: def.id,
+    title: t(def.titleKey),
+    tooltipInfo: t(def.tooltipKey),
+    isLoading: false,
+    ...formatMetric(def),
+  }));
+});
+
+const apiCards = computed(() =>
   cardDefinitions.map((def, index) => ({
     id: def.id,
     title: t(def.titleKey),
@@ -97,27 +120,23 @@ const cards = computed(() =>
   })),
 );
 
+const cards = computed(() =>
+  shouldUseMock.value ? mockCards.value : apiCards.value,
+);
+
 watch(
   () => route.query,
   () => {
+    if (shouldUseMock.value) return;
     dashboardsStore.updateLastUpdatedRequest();
     loadCardData();
   },
 );
 
 watch(
-  () => shouldUseMock.value,
-  (newValue) => {
-    if (newValue) {
-      loadCardData();
-    }
-  },
-);
-
-watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
-    if (newValue) {
+    if (newValue && !shouldUseMock.value) {
       dashboardsStore.updateLastUpdatedRequest();
       conversationalStore.setIsLoadingConversationalData('header', true);
       loadCardData().finally(() => {
@@ -173,11 +192,6 @@ const loadCardData = async () => {
   });
 
   try {
-    if (shouldUseMock.value) {
-      applyMetrics(MOCK_HEADER_DATA);
-      return;
-    }
-
     const response =
       await conversationalHeaderApi.getConversationalHeaderTotals();
     applyMetrics(response);
@@ -215,6 +229,7 @@ const handleCardClick = (cardId: string) => {
 };
 
 onMounted(() => {
+  if (shouldUseMock.value) return;
   dashboardsStore.updateLastUpdatedRequest();
   loadCardData();
 });

@@ -167,6 +167,7 @@
       "title": "Personaliza tu dashboard",
       "description": "Personaliza el dashboard con tus métricas clave",
       "add_widget": "Agregar widget",
+      "add_first_widget": "Agrega tu primer widget",
       "csat_description": "El Índice de Satisfacción del Cliente (CSAT) indica el nivel de satisfacción del contacto con el servicio recibido",
       "nps_description": "El Índice Neto de Recomendación (NPS) indica la probabilidad de que el contacto recomiende el servicio recibido a otras personas",
       "config_csat_or_nps_description": "Define cuál {type} deseas monitorear:",

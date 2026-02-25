@@ -167,6 +167,7 @@
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
       "add_widget": "Add widget",
+      "add_first_widget": "Add your first widget",
       "csat_description": "Customer Satisfaction Score (CSAT) measures how satisfied contacts are with the service they received",
       "nps_description": "Net Promoter Score (NPS) measures how likely contacts are to recommend your service",
       "config_csat_or_nps_description": "Set which {type} you want to track",

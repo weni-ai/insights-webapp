@@ -269,6 +269,56 @@ const analysisDetailedAnalysisFinishedMock = [
   },
 ];
 
+const analysisVolumePerQueueMock = [
+  {
+    sector_name: 'Logistics',
+    queues: [{ queue_name: 'Order status', value: 5100 }],
+  },
+  {
+    sector_name: 'After-Saçes',
+    queues: [{ queue_name: 'Returns', value: 6000 }],
+  },
+  {
+    sector_name: 'Pre-Sales',
+    queues: [{ queue_name: 'Product inquiry', value: 1980 }],
+  },
+  {
+    sector_name: 'Finance',
+    queues: [{ queue_name: 'Payments', value: 3450 }],
+  },
+  {
+    sector_name: 'Customer relations',
+    queues: [{ queue_name: 'Complaints', value: 1062 }],
+  },
+];
+
+const analysisVolumePerQueueMockItemsCount = 7;
+
+const analysisVolumePerTagMock = [
+  {
+    sector_name: 'Campaigns',
+    tags: [{ tag_name: 'BlackFriday', value: 7000 }],
+  },
+  {
+    sector_name: 'Logistics',
+    tags: [{ tag_name: 'CarrierDelay', value: 4500 }],
+  },
+  {
+    sector_name: 'Financial',
+    tags: [{ tag_name: 'Refund', value: 3100 }],
+  },
+  {
+    sector_name: 'Retention',
+    tags: [{ tag_name: 'VIPCustomer', value: 2000 }],
+  },
+  {
+    sector_name: 'Conversion',
+    tags: [{ tag_name: 'AbandonedCart', value: 800 }],
+  },
+];
+
+const analysisVolumePerTagMockItemsCount = 10;
+
 export {
   analysisStatusCardsMock,
   analysisPeaksInHumanServiceMock,
@@ -276,4 +326,8 @@ export {
   analysisCsatAgentsMock,
   analysisCsatRatingsMock,
   analysisDetailedAnalysisFinishedMock,
+  analysisVolumePerQueueMock,
+  analysisVolumePerTagMock,
+  analysisVolumePerQueueMockItemsCount,
+  analysisVolumePerTagMockItemsCount,
 };

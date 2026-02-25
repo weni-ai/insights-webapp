@@ -54,7 +54,7 @@ const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -99,7 +99,7 @@ const {
 });
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return formatResults(monitoringDetailedMonitoringInProgressMock);
   }
   return formattedItems.value;

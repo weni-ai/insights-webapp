@@ -72,7 +72,7 @@ interface CardData {
 }
 
 const project = useProject();
-const { hasChatsSectors } = storeToRefs(project);
+const { hasSectorsConfigured } = storeToRefs(project);
 
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
@@ -81,7 +81,7 @@ const timeMetricsRef = useTemplateRef<HTMLDivElement>('timeMetrics');
 const { isOutside } = useMouseInElement(timeMetricsRef);
 
 const showSetup = computed(() => {
-  return !hasChatsSectors.value && !isOutside.value;
+  return !hasSectorsConfigured.value && !isOutside.value;
 });
 
 const cardDefinitions: CardData[] = [
@@ -115,7 +115,7 @@ const { timeMetricsData, loadingTimeMetricsData } = storeToRefs(
 );
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return monitoringTimeMetricsMock;
   }
   return timeMetricsData.value;

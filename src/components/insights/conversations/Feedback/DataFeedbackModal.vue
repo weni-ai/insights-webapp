@@ -75,13 +75,14 @@
             :text="t('data_feedback.postpone')"
             type="tertiary"
             data-testid="feedback-postpone-button"
+            @click="handlePostpone"
           />
         </UnnnicDialogClose>
 
         <UnnnicButton
           :text="t('data_feedback.submit')"
           type="primary"
-          :disabled="!isFormValid"
+          :disabled="!isFormValid || isSubmitting"
           data-testid="feedback-submit-button"
           @click="handleSubmit"
         />
@@ -105,16 +106,36 @@ import {
   UnnnicRadio,
   UnnnicTextArea,
 } from '@weni/unnnic-system';
+import { useDashboards } from '@/store/modules/dashboards';
+import feedbackApi, {
+  DashboardType,
+  FormType,
+  Reference,
+} from '@/services/api/resources/conversational/feedback';
 
 const { t } = useI18n();
 
 interface Props {
   modelValue: boolean;
+  surveyUuid: string;
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
-const emit = defineEmits<(_e: 'update:modelValue', _value: boolean) => void>();
+const emit = defineEmits<{
+  (_e: 'update:modelValue', _value: boolean): void;
+  (_e: 'postpone'): void;
+  (_e: 'submitted'): void;
+  (_e: 'submit-error'): void;
+}>();
+
+const scoreMap: Record<string, string> = {
+  strongly_agree: '5',
+  partially_agree: '4',
+  neutral: '3',
+  partially_disagree: '2',
+  strongly_disagree: '1',
+};
 
 const likertOptions = [
   { value: 'strongly_agree', labelKey: 'data_feedback.strongly_agree' },
@@ -134,22 +155,60 @@ const trustData = ref<string>('');
 const helpDecisions = ref<string>('');
 const understandImpact = ref<string>('');
 const suggestions = ref<string>('');
+const isSubmitting = ref(false);
 
 const isFormValid = computed(
   () => !!trustData.value && !!helpDecisions.value && !!understandImpact.value,
 );
 
-function handleSubmit() {
-  const feedbackData = {
-    trustData: trustData.value,
-    helpDecisions: helpDecisions.value,
-    understandImpact: understandImpact.value,
-    suggestions: suggestions.value,
-  };
+function handlePostpone() {
+  emit('postpone');
+}
 
-  console.log('Feedback submitted:', feedbackData);
+async function handleSubmit() {
+  if (isSubmitting.value) return;
 
-  emit('update:modelValue', false);
+  const { currentDashboard } = useDashboards();
+
+  isSubmitting.value = true;
+
+  try {
+    await feedbackApi.submitFeedback({
+      type: DashboardType.CONVERSATIONAL,
+      dashboard: currentDashboard.uuid,
+      survey: props.surveyUuid,
+      answers: [
+        {
+          reference: Reference.TRUST,
+          answer: scoreMap[trustData.value],
+          type: FormType.SCORE_1_5,
+        },
+        {
+          reference: Reference.MAKE_DECISION,
+          answer: scoreMap[helpDecisions.value],
+          type: FormType.SCORE_1_5,
+        },
+        {
+          reference: Reference.ROI,
+          answer: scoreMap[understandImpact.value],
+          type: FormType.SCORE_1_5,
+        },
+        {
+          reference: Reference.COMMENT,
+          answer: suggestions.value,
+          type: FormType.TEXT,
+        },
+      ],
+    });
+
+    emit('submitted');
+    emit('update:modelValue', false);
+  } catch {
+    emit('update:modelValue', false);
+    emit('submit-error');
+  } finally {
+    isSubmitting.value = false;
+  }
 }
 </script>
 

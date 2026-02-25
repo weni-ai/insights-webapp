@@ -1040,6 +1040,11 @@
     "partially_disagree": "Parcialmente en desacuerdo",
     "strongly_disagree": "Totalmente en desacuerdo",
     "postpone": "Posponer",
-    "submit": "Enviar feedback"
+    "submit": "Enviar feedback",
+    "toast_success": "Feedback enviado con éxito. ¡Gracias!",
+    "toast_error": "No pudimos enviar tu feedback.",
+    "toast_error_retry": "Intentar de nuevo",
+    "toast_postponed": "Feedback pospuesto. Podrás responder después.",
+    "toast_postponed_respond": "Responder ahora"
   }
 }

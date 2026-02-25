@@ -1040,6 +1040,11 @@
     "partially_disagree": "Discordo parcialmente",
     "strongly_disagree": "Discordo totalmente",
     "postpone": "Adiar",
-    "submit": "Enviar feedback"
+    "submit": "Enviar feedback",
+    "toast_success": "Feedback enviado com sucesso. Obrigado!",
+    "toast_error": "Não conseguimos enviar seu feedback.",
+    "toast_error_retry": "Tentar novamente",
+    "toast_postponed": "Feedback adiado. Você poderá responder depois.",
+    "toast_postponed_respond": "Responder agora"
   }
 }

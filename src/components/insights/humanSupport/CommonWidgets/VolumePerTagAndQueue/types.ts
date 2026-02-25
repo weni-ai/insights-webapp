@@ -5,13 +5,6 @@ export interface VolumeBarListTabItem {
   key: string;
 }
 
-export interface VolumeBarListMockConfig {
-  labelPrefix: string;
-  subtitle: string;
-  color: string;
-  backgroundColor: string;
-}
-
 export type VolumeBarListFetchMethod = (_params: {
   cursor: string | null;
   limit: number;

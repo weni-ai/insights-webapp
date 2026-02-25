@@ -12,6 +12,7 @@
     :expandableDescription="expandableDescription"
     :expanded="expanded"
     :tooltip="tooltip"
+    :maxValue="maxValue"
     @expand="emit('expand', $event)"
   >
     <template

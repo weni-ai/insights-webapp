@@ -61,6 +61,7 @@
           :backgroundColor="backgroundColor"
           :color="color"
           :tooltip="tooltip"
+          :maxProgressValue="maxValue"
           data-testid="progress-table-row-item-progress"
         />
       </td>
@@ -100,6 +101,7 @@ export interface BaseProgressTableRowItem {
   backgroundColor?: string;
   color?: string;
   tooltip?: string;
+  maxValue?: number;
 }
 
 export interface ProgressTableRowItem extends BaseProgressTableRowItem {

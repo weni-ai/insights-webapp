@@ -193,7 +193,7 @@ onMounted(() => {
     }
 
     &:hover .most-talked-about-topics__add-widget {
-      opacity: 0.8;
+      opacity: 1;
     }
   }
 }

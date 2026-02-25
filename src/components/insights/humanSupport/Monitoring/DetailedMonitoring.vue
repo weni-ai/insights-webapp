@@ -75,7 +75,7 @@ import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 const project = useProject();
-const { hasChatsSectors } = storeToRefs(project);
+const { hasSectorsConfigured } = storeToRefs(project);
 
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
@@ -85,7 +85,7 @@ const detailedMonitoringRef =
 const { isOutside } = useMouseInElement(detailedMonitoringRef);
 
 const showSetup = computed(() => {
-  return !hasChatsSectors.value && !isOutside.value;
+  return !hasSectorsConfigured.value && !isOutside.value;
 });
 
 const tabs: Record<

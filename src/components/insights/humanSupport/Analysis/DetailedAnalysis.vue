@@ -79,7 +79,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useMouseInElement } from '@vueuse/core';
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
 
@@ -87,7 +87,7 @@ const detailedAnalysisRef = useTemplateRef<HTMLDivElement>('detailedAnalysis');
 const { isOutside } = useMouseInElement(detailedAnalysisRef);
 
 const showSetup = computed(() => {
-  return !hasChatsSectors.value && !isOutside.value;
+  return !hasSectorsConfigured.value && !isOutside.value;
 });
 
 const tabs: Record<

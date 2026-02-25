@@ -151,7 +151,7 @@ export default {
   async mounted() {
     try {
       await this.handlerTokenAndProjectUuid();
-      this.checkHasChatsSectors();
+      this.checkHasSectorsConfigured();
       this.getDashboards().then(() => {
         this.handleRedirectToHumanServiceDashboard();
         this.handlerShowOnboardingModal();
@@ -173,7 +173,11 @@ export default {
       'checkEnableCreateCustomDashboards',
     ]),
     ...mapActions(useFeatureFlag, ['getFeatureFlags']),
-    ...mapActions(useProject, ['setIsCommerce', 'checkHasChatsSectors']),
+    ...mapActions(useProject, [
+      'setIsCommerce',
+      'checkHasSectorsConfigured',
+      'checkHasTagsConfigured',
+    ]),
     ...mapActions(useUser, ['setEmail']),
     ...mapActions(useOnboarding, [
       'setOnboardingRef',

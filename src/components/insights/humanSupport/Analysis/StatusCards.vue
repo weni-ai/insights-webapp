@@ -86,7 +86,7 @@ interface CardData {
 }
 
 const project = useProject();
-const { hasChatsSectors } = storeToRefs(project);
+const { hasSectorsConfigured } = storeToRefs(project);
 
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
@@ -95,11 +95,11 @@ const statusCardsRef = useTemplateRef<HTMLDivElement>('statusCards');
 const { isOutside } = useMouseInElement(statusCardsRef);
 
 const showSetup = computed(() => {
-  return !hasChatsSectors.value && !isOutside.value;
+  return !hasSectorsConfigured.value && !isOutside.value;
 });
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return analysisStatusCardsMock;
   }
   return serviceStatusData.value;

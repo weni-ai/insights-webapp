@@ -26,6 +26,12 @@ import type {
 } from '@/services/api/resources/conversational/widgets';
 
 import { getWidgetCrosstabTooltip } from '@/utils/widget';
+import {
+  colorBlue500,
+  colorBlue100,
+  colorOrange500,
+  colorGray50,
+} from '@weni/unnnic-system/tokens/colors';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 
@@ -40,16 +46,16 @@ const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
 }>();
 
-const defaultColor = '#3182CE';
-const defaultBackgroundColor = props.isCrosstab ? '#E5812A' : '#BEE3F8';
+const defaultColor = colorBlue500;
+const defaultBackgroundColor = props.isCrosstab ? colorOrange500 : colorBlue100;
 
 const formattedCrosstabData = computed(() => {
   return (props.data as CrosstabResultItem[]).map((item) => {
     const eventsKeys = Object.keys(item.events);
     return {
       label: item.title,
-      color: '#3182CE',
-      backgroundColor: eventsKeys.length ? '#E5812A' : '#ECEEF2',
+      color: colorBlue500,
+      backgroundColor: eventsKeys.length ? colorOrange500 : colorGray50,
       description: `${item.total}`,
       value: item.events[eventsKeys[0]]?.value || 0,
       tooltip: getWidgetCrosstabTooltip(item.events),

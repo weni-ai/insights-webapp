@@ -1,8 +1,13 @@
 <template>
   <section
+    ref="statusCards"
     class="status-cards"
     data-testid="status-cards"
   >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
     <section class="status-cards__finished">
       <template
         v-for="(card, index) in cardDefinitions.filter(
@@ -49,15 +54,23 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, useTemplateRef } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useMouseInElement } from '@vueuse/core';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
-import { storeToRefs } from 'pinia';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
+import { useProject } from '@/store/modules/project';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import {
   ActiveDetailedTab,
   useHumanSupportAnalysis,
 } from '@/store/modules/humanSupport/analysis';
+
 import { formatSecondsToTime } from '@/utils/time';
+import { analysisStatusCardsMock } from './mocks';
+import { formatNumber } from '@/utils/numbers';
 
 type CardId =
   | 'average_time_is_waiting'
@@ -71,6 +84,26 @@ interface CardData {
   titleKey: string;
   tooltipKey: string;
 }
+
+const project = useProject();
+const { hasChatsSectors } = storeToRefs(project);
+
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
+
+const statusCardsRef = useTemplateRef<HTMLDivElement>('statusCards');
+const { isOutside } = useMouseInElement(statusCardsRef);
+
+const showSetup = computed(() => {
+  return !hasChatsSectors.value && !isOutside.value;
+});
+
+const widgetData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return analysisStatusCardsMock;
+  }
+  return serviceStatusData.value;
+});
 
 const baseTranslationKey = 'human_support_dashboard';
 const timeMetricsBase = `${baseTranslationKey}.time_metrics`;
@@ -123,10 +156,10 @@ const getCardValue = (id: CardId) => {
       'average_time_chat',
     ].includes(id)
   ) {
-    return formatSecondsToTime(serviceStatusData.value[id]);
+    return formatSecondsToTime(widgetData.value[id]);
   }
 
-  return serviceStatusData.value[id]?.toString() || '-';
+  return formatNumber(widgetData.value[id]) || '-';
 };
 
 const getTooltipSide = (index: number) => {
@@ -170,6 +203,7 @@ onMounted(() => {
 $min-height: 112px;
 
 .status-cards {
+  position: relative;
   display: flex;
   gap: $unnnic-space-3;
 

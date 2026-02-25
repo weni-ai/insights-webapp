@@ -9,6 +9,7 @@
     :minDate="minDate"
     :maxDate="maxDate"
     :periodBaseDate="periodBaseDate"
+    :disabled="disabled"
     @select-date="selectedDates = $event"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -31,6 +32,10 @@ export default {
     className: {
       type: String,
       default: '',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['update:modelValue'],

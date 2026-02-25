@@ -14,6 +14,7 @@
           type="secondary"
           iconLeft="filter_list"
           :text="titleButton"
+          :disabled="!hasChatsSectors"
         />
       </template>
 
@@ -89,8 +90,14 @@ import { UnnnicButton, UnnnicDropdown, UnnnicLabel } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
+
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
+
+const projectStore = useProject();
+const { hasChatsSectors } = storeToRefs(projectStore);
 
 const humanSupport = useHumanSupport();
 const { clearFilters, saveAppliedFilters } = humanSupport;

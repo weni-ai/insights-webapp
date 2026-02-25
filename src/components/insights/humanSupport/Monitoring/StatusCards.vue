@@ -1,8 +1,13 @@
 <template>
   <section
+    ref="statusCards"
     class="service-status"
     data-testid="service-status"
   >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
     <p
       class="service-status__title"
       data-testid="service-status-title"
@@ -34,14 +39,34 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, useTemplateRef } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useMouseInElement } from '@vueuse/core';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,
 } from '@/store/modules/humanSupport/monitoring';
-import { storeToRefs } from 'pinia';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
+
+import { monitoringStatusCardsMock } from './mocks';
+
+const project = useProject();
+const { hasChatsSectors } = storeToRefs(project);
+
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
+
+const statusCardsRef = useTemplateRef<HTMLDivElement>('statusCards');
+const { isOutside } = useMouseInElement(statusCardsRef);
+
+const showSetup = computed(() => {
+  return !hasChatsSectors.value && !isOutside.value;
+});
 
 type CardId = 'is_waiting' | 'in_progress' | 'finished';
 
@@ -78,8 +103,15 @@ const { serviceStatusData, loadingServiceStatusData } = storeToRefs(
 
 const isLoadingCards = computed(() => loadingServiceStatusData.value);
 
+const widgetData = computed(() => {
+  if (!hasChatsSectors.value) {
+    return monitoringStatusCardsMock;
+  }
+  return serviceStatusData.value;
+});
+
 const getCardValue = (id: CardId) => {
-  return serviceStatusData.value[id]?.toString() || '-';
+  return widgetData.value[id]?.toString() || '-';
 };
 
 const getTooltipSide = (index: number) => {
@@ -124,6 +156,7 @@ onMounted(() => {
 $min-height: 112px;
 
 .service-status {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-3;

@@ -1,5 +1,21 @@
 import i18n from '@/utils/plugins/i18n';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
+import {
+  colorTeal100,
+  colorTeal300,
+  colorPurple100,
+  colorPurple300,
+  colorBlue100,
+  colorBlue300,
+  colorGreen100,
+  colorGreen300,
+  colorOrange100,
+  colorOrange300,
+  colorRed100,
+  colorRed300,
+  colorGray100,
+  colorGray200,
+} from '@weni/unnnic-system/tokens/colors';
 
 /**
  * Sorts, limits to 5 items, and groups the rest under "Others".
@@ -40,32 +56,32 @@ interface DataWithColor extends topicDistributionMetric {
 
 const COLOR_PALETTE = {
   position: [
-    '#C6FFF7', // color-weni-100
-    '#E9D8FD', // color-aux-purple-100
-    '#BEE3F8', // color-aux-blue-100
-    '#C6F6D5', // color-aux-green-100
-    '#FEEBC8', // color-aux-orange-100
+    colorTeal100,
+    colorPurple100,
+    colorBlue100,
+    colorGreen100,
+    colorOrange100,
   ],
   positionHover: [
-    '#4DFBEA', // color-weni-300
-    '#B794F4', // color-aux-purple-300
-    '#63B3ED', // color-aux-blue-300
-    '#68D391', // color-aux-green-300
-    '#F6AD55', // color-aux-orange-300
+    colorTeal300,
+    colorPurple300,
+    colorBlue300,
+    colorGreen300,
+    colorOrange300,
   ],
   special: {
     others: {
-      normal: '#E2E6ED', // color-neutral-soft
-      hover: '#D0D3D9', // color-neutral-cleanest
+      normal: colorGray100,
+      hover: colorGray200,
     },
     unclassified: {
-      normal: '#FED7D7', // color-aux-red-100
-      hover: '#FC8181', // color-aux-red-300
+      normal: colorRed100,
+      hover: colorRed300,
     },
   },
   fallback: {
-    normal: '#E2E6ED', // color-neutral-soft
-    hover: '#D0D3D9', // color-neutral-cleanest
+    normal: colorGray100,
+    hover: colorGray200,
   },
 };
 

@@ -167,6 +167,7 @@
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas principais métricas",
       "add_widget": "Adicionar widget",
+      "add_first_widget": "Adicione seu primeiro widget",
       "csat_description": "A pontuação de satisfação do cliente (CSAT) mede o nível de satisfação com o serviço recebido",
       "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",

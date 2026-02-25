@@ -61,6 +61,8 @@ interface FilterState {
   isInput?: boolean;
   isMultiSelect?: boolean;
   component: any;
+  itemValue?: string;
+  itemLabel?: string;
 }
 
 const props = defineProps<Props>();
@@ -134,6 +136,8 @@ const filters = ref<Record<FilterType, FilterState>>({
     source: 'custom_status',
     isMultiSelect: true,
     component: FilterMultiSelect,
+    itemValue: 'name',
+    itemLabel: 'name',
   },
 });
 
@@ -184,6 +188,8 @@ const activeFilters = computed(() => {
       modelValue: filter.selected,
       source: filter.source,
       filterParams: filterParams.value,
+      itemValue: filter.itemValue,
+      itemLabel: filter.itemLabel,
     };
 
     const events = {

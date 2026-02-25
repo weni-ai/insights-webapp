@@ -26,6 +26,8 @@ interface Props {
   type: string;
   label: string;
   source: string;
+  itemValue: string;
+  itemLabel: string;
 }
 
 const props = defineProps<Props>();
@@ -60,14 +62,14 @@ const filterLabel = computed(() =>
   t(`human_support_dashboard.filters.${props.type}.label`),
 );
 
-const loadedOptions = ref<{ value: string; label: string }[]>([]);
+const loadedOptions = ref<{ [key: string]: unknown }[]>([]);
 
 const loadOptions = async () => {
   try {
     const response = await Projects.getProjectSource(props.source);
     loadedOptions.value = response.map((item: any) => ({
-      value: item.value,
-      label: item.label,
+      value: item[props.itemValue],
+      label: item[props.itemLabel],
     }));
   } catch (error) {
     console.error('Error loading options', error);

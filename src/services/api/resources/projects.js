@@ -30,7 +30,9 @@ export default {
         })),
       };
     }
-
+    if (Array.isArray(response)) {
+      return response;
+    }
     const sources = response.results.map((source) => {
       return {
         uuid: source.uuid,

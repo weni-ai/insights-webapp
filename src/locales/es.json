@@ -944,7 +944,7 @@
       },
       "agents_count": {
         "online": "{count} en línea",
-        "on_break": "{count} en pausa",
+        "custom_breaks": "{count} en pausa",
         "offline": "{count} offline"
       }
     },

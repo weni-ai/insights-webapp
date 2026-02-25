@@ -29,7 +29,7 @@ interface AttendantDataResult {
 
 interface AgentsCountByStatusResponse {
   online: number;
-  on_break: number;
+  custom_breaks: number;
   offline: number;
 }
 

@@ -33,7 +33,7 @@ import { useProject } from '@/store/modules/project';
 import { analysisPeaksInHumanServiceMock } from './mocks';
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
@@ -43,7 +43,7 @@ const servicesOpenByHourRef =
 const { isOutside } = useMouseInElement(servicesOpenByHourRef);
 
 const showSetup = computed(() => {
-  return !isOutside.value && !hasChatsSectors.value;
+  return !isOutside.value && !hasSectorsConfigured.value;
 });
 
 const humanSupportAnalysis = useHumanSupportAnalysis();
@@ -53,7 +53,7 @@ const { servicesOpenByHourData, loadingHumanSupportByHourData } =
   storeToRefs(humanSupportAnalysis);
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return analysisPeaksInHumanServiceMock;
   }
   return servicesOpenByHourData.value;

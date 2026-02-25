@@ -1,7 +1,7 @@
 <template>
   <section class="analysis">
     <UnnnicDisclaimer
-      v-if="!hasChatsSectors"
+      v-if="!hasSectorsConfigured"
       :description="$t('human_support_dashboard.setup.disclaimer')"
     />
     <StatusCards data-testid="status-cards" />
@@ -45,7 +45,7 @@ defineOptions({
 });
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 

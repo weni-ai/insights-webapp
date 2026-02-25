@@ -14,7 +14,7 @@
           type="secondary"
           iconLeft="filter_list"
           :text="titleButton"
-          :disabled="!hasChatsSectors"
+          :disabled="!hasSectorsConfigured"
         />
       </template>
 
@@ -97,7 +97,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useProject } from '@/store/modules/project';
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const humanSupport = useHumanSupport();
 const { clearFilters, saveAppliedFilters } = humanSupport;

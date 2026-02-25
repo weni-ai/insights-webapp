@@ -71,7 +71,7 @@ import FormExport from './HumanSupport/FormExport.vue';
 
 const { t } = useI18n();
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 const humanSupportExport = useHumanSupportExport();
 const { setIsRenderExportData, setIsRenderExportDataFeedback, createExport } =
   humanSupportExport;
@@ -91,7 +91,7 @@ const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
 
 const disableExport = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return true;
   }
 

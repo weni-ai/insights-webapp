@@ -943,6 +943,11 @@
         "average_duration": "Duração média",
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
+      },
+      "agents_count": {
+        "online": "{count} online",
+        "custom_breaks": "{count} em pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -958,6 +963,9 @@
       },
       "ticket_id": {
         "label": "Protocolo"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {

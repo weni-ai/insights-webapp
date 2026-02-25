@@ -99,7 +99,8 @@ const fetchData = async (page: number, pageSize: number, ordering: string) => {
     ordering,
     limit: pageSize,
     offset,
-    agent: humanSupport.appliedDetailFilters.agent.value,
+    agent: humanSupport.appliedDetailFilters.agent.value as string,
+    status: humanSupport.appliedDetailFilters.status.value as string[],
   });
 };
 
@@ -193,12 +194,13 @@ watch(
   [
     currentSort,
     () => humanSupport.appliedDetailFilters.agent,
+    () => humanSupport.appliedDetailFilters.status,
     () => humanSupport.appliedFilters,
   ],
   () => {
     loadDataSafely(currentSort.value);
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 );
 
 watch(

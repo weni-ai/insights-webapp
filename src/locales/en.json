@@ -974,6 +974,11 @@
         "average_duration": "Average duration",
         "time_in_service": "Time in service",
         "action": "Action"
+      },
+      "agents_count": {
+        "online": "{count} online",
+        "custom_breaks": "{count} on break",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -989,6 +994,9 @@
       },
       "ticket_id": {
         "label": "Ticket ID"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {

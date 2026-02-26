@@ -35,7 +35,7 @@ describe('StatusCards', () => {
     store = createTestingPinia({
       initialState: {
         project: {
-          hasChatsSectors: true,
+          hasSectorsConfigured: true,
         },
         humanSupportAnalysis: {
           serviceStatusData: mockServiceStatusData,

@@ -14,11 +14,12 @@ const defaultTimeMetricsData = {
 const mockMonitoringStore = {
   $id: 'humanSupportMonitoring',
   loadTimeMetricsData: vi.fn(),
+  setActiveDetailedTab: vi.fn(),
   timeMetricsData: { value: { ...defaultTimeMetricsData } },
   loadingTimeMetricsData: { value: false },
 };
 
-const hasChatsSectorsRef = ref(true);
+const hasSectorsConfiguredRef = ref(true);
 const widgetSetupPropsRef = ref({});
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
@@ -55,7 +56,7 @@ vi.mock('pinia', async (importOriginal) => {
         };
       }
       if (store?.$id === 'project') {
-        return { hasChatsSectors: hasChatsSectorsRef };
+        return { hasSectorsConfigured: hasSectorsConfiguredRef };
       }
       if (store?.$id === 'humanSupport') {
         return { widgetSetupProps: widgetSetupPropsRef };
@@ -79,7 +80,7 @@ describe('TimeMetrics', () => {
         plugins: [
           createTestingPinia({
             initialState: {
-              project: { hasChatsSectors: true },
+              project: { hasSectorsConfigured: true },
             },
           }),
         ],
@@ -98,6 +99,7 @@ describe('TimeMetrics', () => {
     vi.clearAllMocks();
     Object.assign(mockMonitoringStore, {
       loadTimeMetricsData: vi.fn(),
+      setActiveDetailedTab: vi.fn(),
       timeMetricsData: {
         value: {
           average_time_is_waiting: {

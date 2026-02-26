@@ -4,7 +4,7 @@ import { nextTick, ref } from 'vue';
 import DetailedMonitoring from '../DetailedMonitoring.vue';
 
 const activeDetailedTabRef = ref('in_awaiting');
-const hasChatsSectorsRef = ref(true);
+const hasSectorsConfiguredRef = ref(true);
 const widgetSetupPropsRef = ref({});
 const isOutsideRef = ref(false);
 
@@ -31,7 +31,7 @@ vi.mock('pinia', async (importOriginal) => {
         return { activeDetailedTab: activeDetailedTabRef };
       }
       if (store?.$id === 'project') {
-        return { hasChatsSectors: hasChatsSectorsRef };
+        return { hasSectorsConfigured: hasSectorsConfiguredRef };
       }
       if (store?.$id === 'humanSupport') {
         return { widgetSetupProps: widgetSetupPropsRef };

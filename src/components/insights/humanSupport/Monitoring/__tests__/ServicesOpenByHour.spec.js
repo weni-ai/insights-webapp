@@ -22,7 +22,7 @@ const mockMonitoringStore = {
   loadingHumanSupportByHourData: { value: false },
 };
 
-const hasChatsSectorsRef = ref(true);
+const hasSectorsConfiguredRef = ref(true);
 const widgetSetupPropsRef = ref({});
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
@@ -42,7 +42,7 @@ vi.mock('pinia', async (importOriginal) => {
         };
       }
       if (store?.$id === 'project') {
-        return { hasChatsSectors: hasChatsSectorsRef };
+        return { hasSectorsConfigured: hasSectorsConfiguredRef };
       }
       if (store?.$id === 'humanSupport') {
         return { widgetSetupProps: widgetSetupPropsRef };
@@ -89,7 +89,7 @@ describe('ServicesOpenByHour', () => {
         plugins: [
           createTestingPinia({
             initialState: {
-              project: { hasChatsSectors: true },
+              project: { hasSectorsConfigured: true },
             },
           }),
         ],

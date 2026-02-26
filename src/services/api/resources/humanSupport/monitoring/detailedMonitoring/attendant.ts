@@ -42,6 +42,7 @@ interface QueryParams {
   offset?: number;
   agent?: string;
   status?: string[];
+  custom_status?: string[];
 }
 
 export default {

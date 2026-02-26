@@ -31,7 +31,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       title="Awaiting"
       tooltipinfo="Conversations waiting for agent response"
       tooltipside="top"
-      value="14"
+      value="25"
     />
     <card-conversations-stub
       activedescriptiongap="false"
@@ -44,7 +44,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       title="In Progress"
       tooltipinfo="Conversations currently being handled"
       tooltipside="top"
-      value="32"
+      value="10"
     />
     <card-conversations-stub
       activedescriptiongap="false"
@@ -57,7 +57,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       title="Closed"
       tooltipinfo="Conversations that have been closed"
       tooltipside="left"
-      value="82"
+      value="65"
     />
     
   </section>

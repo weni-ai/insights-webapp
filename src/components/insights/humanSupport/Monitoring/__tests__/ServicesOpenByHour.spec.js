@@ -1,23 +1,29 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { createTestingPinia } from '@pinia/testing';
+import { ref } from 'vue';
 
 import ServicesOpenByHour from '../ServicesOpenByHour.vue';
 
+const defaultMockData = [
+  { label: '00:00', value: 15 },
+  { label: '01:00', value: 8 },
+  { label: '02:00', value: 5 },
+  { label: '08:00', value: 45 },
+  { label: '14:00', value: 78 },
+  { label: '20:00', value: 32 },
+];
+
 const mockMonitoringStore = {
+  $id: 'humanSupportMonitoring',
   loadHumanSupportByHourData: vi.fn(),
-  servicesOpenByHourData: {
-    value: [
-      { label: '00:00', value: 15 },
-      { label: '01:00', value: 8 },
-      { label: '02:00', value: 5 },
-      { label: '08:00', value: 45 },
-      { label: '14:00', value: 78 },
-      { label: '20:00', value: 32 },
-    ],
-  },
+  servicesOpenByHourData: { value: [...defaultMockData] },
   loadingHumanSupportByHourData: { value: false },
 };
+
+const hasChatsSectorsRef = ref(true);
+const widgetSetupPropsRef = ref({});
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockMonitoringStore,
@@ -27,9 +33,28 @@ vi.mock('pinia', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    storeToRefs: (store) => store,
+    storeToRefs: (store) => {
+      if (store?.$id === 'humanSupportMonitoring') {
+        return {
+          servicesOpenByHourData: mockMonitoringStore.servicesOpenByHourData,
+          loadingHumanSupportByHourData:
+            mockMonitoringStore.loadingHumanSupportByHourData,
+        };
+      }
+      if (store?.$id === 'project') {
+        return { hasChatsSectors: hasChatsSectorsRef };
+      }
+      if (store?.$id === 'humanSupport') {
+        return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      return actual.storeToRefs(store);
+    },
   };
 });
+
+vi.mock('@vueuse/core', () => ({
+  useMouseInElement: () => ({ isOutside: { value: false } }),
+}));
 
 global.console = {
   ...console,
@@ -61,6 +86,13 @@ describe('ServicesOpenByHour', () => {
     Object.assign(mockMonitoringStore, storeOverrides);
     return mount(ServicesOpenByHour, {
       global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              project: { hasChatsSectors: true },
+            },
+          }),
+        ],
         stubs: {
           LineChart: true,
         },

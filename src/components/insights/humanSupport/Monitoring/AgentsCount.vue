@@ -76,8 +76,16 @@ const counts = ref({
 const loadCounts = async () => {
   try {
     isLoadingCounts.value = true;
+    const statusFilter = appliedDetailFilters.value.status.value as string[];
+    const onlineOfflineFilter = statusFilter.filter(
+      (status) => status === 'online' || status === 'offline',
+    );
+    const customBreaksFilter = statusFilter.filter(
+      (status) => status !== 'online' && status !== 'offline',
+    );
     const response = await attendantService.getAgentsCountByStatus({
-      status: activeTags.value,
+      status: onlineOfflineFilter,
+      custom_status: customBreaksFilter,
     });
     counts.value = {
       online: response.online || 0,

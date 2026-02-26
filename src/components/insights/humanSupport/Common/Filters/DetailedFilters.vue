@@ -257,7 +257,9 @@ watch(
     if (filtersToReset.length === 0) return;
 
     filtersToReset.forEach((filterType) => {
-      filters.value[filterType].selected = '';
+      const filter = filters.value[filterType];
+      if (filter.isMultiSelect) filter.selected = [];
+      else filter.selected = '';
     });
   },
   { flush: 'post' },

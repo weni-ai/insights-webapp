@@ -8,20 +8,9 @@
       data-testid="detailed-filters-container"
     >
       <TransitionGroup name="filter-slide">
-        <FilterInput
-          v-for="filter in activeFilters.filter(
-            (f) => f.component === 'FilterInput',
-          )"
-          :key="filter.type"
-          :ref="(el) => setFilterRef(el, filter.type)"
-          :data-testid="`detailed-filter-${filter.type}`"
-          v-bind="filter.props"
-          v-on="filter.events"
-        />
-        <FilterSelect
-          v-for="filter in activeFilters.filter(
-            (f) => f.component === 'FilterSelect',
-          )"
+        <component
+          :is="filter.component"
+          v-for="filter in activeFilters"
           :key="filter.type"
           :ref="(el) => setFilterRef(el, filter.type)"
           :data-testid="`detailed-filter-${filter.type}`"
@@ -38,33 +27,42 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import FilterSelect from './FilterSelect.vue';
 import FilterInput from './FilterInput.vue';
+import FilterMultiSelect from './FilterMultiSelect.vue';
 
-type FilterType = 'attendant' | 'contact' | 'ticket_id' | 'contact_input';
+type FilterType =
+  | 'status'
+  | 'attendant'
+  | 'contact'
+  | 'ticket_id'
+  | 'contact_input';
 type ComponentType =
   | 'attendant'
   | 'pauses'
   | 'finished'
   | 'in_awaiting'
   | 'in_progress';
-type SourceType = 'agents' | 'contacts' | 'ticket_id';
-type StoreFilterType = 'agent' | 'contact' | 'ticketId' | 'contactInput';
+type SourceType = 'agents' | 'contacts' | 'ticket_id' | 'custom_status';
+type StoreFilterType =
+  | 'status'
+  | 'agent'
+  | 'contact'
+  | 'ticketId'
+  | 'contactInput';
 
 interface Props {
+  mode: 'monitoring' | 'analysis';
   type: ComponentType;
 }
 
 interface FilterState {
   type: FilterType;
   source?: SourceType;
-  selected: string;
+  selected: string | string[];
   isInput?: boolean;
-}
-
-interface ActiveFilter {
-  type: FilterType;
-  component: 'FilterInput' | 'FilterSelect';
-  props: any;
-  events: any;
+  isMultiSelect?: boolean;
+  component: any;
+  itemValue?: string;
+  itemLabel?: string;
 }
 
 const props = defineProps<Props>();
@@ -76,21 +74,35 @@ const filterRefs = ref<Record<FilterType, any>>({
   contact: null,
   ticket_id: null,
   contact_input: null,
+  status: null,
 });
 
-const FILTER_CONFIG: Record<ComponentType, FilterType[]> = {
-  attendant: ['attendant'],
+const FILTER_CONFIG_MONITORING = {
+  attendant: ['status', 'attendant'],
   pauses: ['attendant'],
-  finished: ['attendant', 'contact', 'ticket_id'],
   in_awaiting: ['contact_input'],
   in_progress: ['contact_input'],
 };
+
+const FILTER_CONFIG_ANALYSIS = {
+  attendant: ['attendant'],
+  pauses: ['attendant'],
+  finished: ['attendant', 'contact', 'ticket_id'],
+};
+
+const filterConfig = computed(() => {
+  if (props.mode === 'monitoring') {
+    return FILTER_CONFIG_MONITORING;
+  }
+  return FILTER_CONFIG_ANALYSIS;
+});
 
 const FILTER_TO_STORE_MAP: Record<FilterType, StoreFilterType> = {
   attendant: 'agent',
   contact: 'contact',
   ticket_id: 'ticketId',
   contact_input: 'contactInput',
+  status: 'status',
 };
 
 const filters = ref<Record<FilterType, FilterState>>({
@@ -98,21 +110,34 @@ const filters = ref<Record<FilterType, FilterState>>({
     type: 'attendant',
     source: 'agents',
     selected: '',
+    component: FilterSelect,
   },
   contact: {
     type: 'contact',
     source: 'contacts',
     selected: '',
+    component: FilterSelect,
   },
   ticket_id: {
     type: 'ticket_id',
     source: 'ticket_id',
     selected: '',
+    component: FilterSelect,
   },
   contact_input: {
-    type: 'contact_input',
+    type: 'contact',
     selected: '',
     isInput: true,
+    component: FilterInput,
+  },
+  status: {
+    type: 'status',
+    selected: [],
+    source: 'custom_status',
+    isMultiSelect: true,
+    component: FilterMultiSelect,
+    itemValue: 'name',
+    itemLabel: 'name',
   },
 });
 
@@ -130,7 +155,7 @@ const filterParams = computed(() => ({
 
 const handleFilterChange = (
   filterType: FilterType,
-  payload: { value: string; label: string; email?: string } | string,
+  payload: { value: any; label: string; email?: string } | string,
 ) => {
   const storeFilterType = FILTER_TO_STORE_MAP[filterType];
 
@@ -152,50 +177,43 @@ const handleFilterChange = (
   saveAppliedDetailFilter(storeFilterType, valueToStore, payload.label);
 };
 
-const activeFilters = computed<ActiveFilter[]>(() => {
-  const filterTypes = FILTER_CONFIG[props.type] || [];
+const activeFilters = computed(() => {
+  const filterTypes = filterConfig.value[props.type] || [];
 
-  return filterTypes.map((filterType): ActiveFilter => {
+  return filterTypes.map((filterType) => {
     const filter = filters.value[filterType];
 
-    if (filter.isInput) {
-      return {
-        type: filterType,
-        component: 'FilterInput',
-        props: {
-          type: 'contact',
-          modelValue: filter.selected as string,
-        },
-        events: {
-          'update:modelValue': (value: string) => {
-            filter.selected = value;
-          },
-          change: (value: string) => handleFilterChange(filterType, value),
-        },
-      };
-    }
+    const props = {
+      type: filter.type,
+      modelValue: filter.selected,
+      source: filter.source,
+      filterParams: filterParams.value,
+      itemValue: filter.itemValue,
+      itemLabel: filter.itemLabel,
+    };
+
+    const events = {
+      'update:modelValue': (value: string) => {
+        filter.selected = value;
+      },
+      change: (value: string) => handleFilterChange(filterType, value),
+    };
 
     return {
       type: filterType,
-      component: 'FilterSelect',
-      props: {
-        type: filter.type,
-        source: filter.source,
-        modelValue: filter.selected,
-        filterParams: filterParams.value,
-      },
-      events: {
-        'update:modelValue': (value: string) => {
-          filter.selected = value;
-        },
-        change: (payload: { value: string; label: string; email?: string }) =>
-          handleFilterChange(filterType, payload),
-      },
+      component: filter.component,
+      props,
+      events,
     };
   });
 });
 
 const clearNonFinishedFilters = () => {
+  if (props.type === 'attendant') {
+    filters.value.status.selected = [];
+
+    saveAppliedDetailFilter('status', [] as string[], '');
+  }
   if (props.type !== 'finished') {
     filters.value.contact.selected = '';
     filters.value.ticket_id.selected = '';
@@ -229,8 +247,8 @@ watch(
 
     if (!oldType) return;
 
-    const newFilters = FILTER_CONFIG[newType] || [];
-    const oldFilters = FILTER_CONFIG[oldType] || [];
+    const newFilters = filterConfig.value[newType] || [];
+    const oldFilters = filterConfig.value[oldType] || [];
 
     const filtersToReset = newFilters.filter(
       (filterType) => !oldFilters.includes(filterType),
@@ -239,7 +257,9 @@ watch(
     if (filtersToReset.length === 0) return;
 
     filtersToReset.forEach((filterType) => {
-      filters.value[filterType].selected = '';
+      const filter = filters.value[filterType];
+      if (filter.isMultiSelect) filter.selected = [];
+      else filter.selected = '';
     });
   },
   { flush: 'post' },

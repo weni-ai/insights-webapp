@@ -9,7 +9,7 @@
       />
     </template>
     <UnnnicTag
-      v-for="tag in tags"
+      v-for="tag in activeTags"
       v-else
       :key="tag"
       :text="
@@ -24,6 +24,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import { watchDebounced } from '@vueuse/core';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
@@ -33,41 +34,82 @@ import attendantService from '@/services/api/resources/humanSupport/monitoring/d
 import { storeToRefs } from 'pinia';
 
 const humanSupportStore = useHumanSupport();
-const { appliedFilters } = storeToRefs(humanSupportStore);
+const { appliedFilters, appliedDetailFilters } = storeToRefs(humanSupportStore);
 
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 const { refreshDataMonitoring } = storeToRefs(humanSupportMonitoringStore);
 
-const tags = ['online', 'on_break', 'offline'];
+const tags = ['online', 'custom_breaks', 'offline'];
+
+const activeTags = ref<string[]>(tags);
+
+const getActiveTags = (): string[] => {
+  const { status } = appliedDetailFilters.value;
+  if (status.value.length === 0) return tags;
+
+  const enabledTags = [];
+
+  const statusValues = status.value as string[];
+
+  if (statusValues.includes('online')) enabledTags.push('online');
+  if (statusValues.includes('offline')) enabledTags.push('offline');
+
+  const hasCustomStatus = statusValues.some(
+    (status) => status !== 'online' && status !== 'offline',
+  );
+
+  if (hasCustomStatus) enabledTags.push('custom_breaks');
+
+  return enabledTags;
+};
 
 const tagsColorsTokens = {
   online: 'green-200',
-  on_break: 'orange-200',
+  custom_breaks: 'orange-200',
   offline: 'gray-100',
 };
 
 const isLoadingCounts = ref(false);
 const counts = ref({
   online: 0,
-  on_break: 0,
+  custom_breaks: 0,
   offline: 0,
 });
 
 const loadCounts = async () => {
   try {
     isLoadingCounts.value = true;
-    const response = await attendantService.getAgentsCountByStatus();
+    const statusFilter = appliedDetailFilters.value.status.value as string[];
+    const onlineOfflineFilter = statusFilter.filter(
+      (status) => status === 'online' || status === 'offline',
+    );
+    const customBreaksFilter = statusFilter.filter(
+      (status) => status !== 'online' && status !== 'offline',
+    );
+    const response = await attendantService.getAgentsCountByStatus({
+      status: onlineOfflineFilter,
+      custom_status: customBreaksFilter,
+    });
     counts.value = {
       online: response.online || 0,
-      on_break: response.on_break || 0,
+      custom_breaks: response.custom_breaks || 0,
       offline: response.offline || 0,
     };
   } catch (error) {
-    console.log(error);
+    console.log('Error loading agents count:', error);
   } finally {
     isLoadingCounts.value = false;
   }
 };
+
+watchDebounced(
+  () => appliedDetailFilters.value.status,
+  () => {
+    activeTags.value = getActiveTags();
+    loadCounts();
+  },
+  { deep: true, debounce: 700 },
+);
 
 watch(
   [() => appliedFilters.value, () => refreshDataMonitoring.value],

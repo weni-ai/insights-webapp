@@ -40,6 +40,7 @@
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { watchDebounced } from '@vueuse/core';
 import service, {
   type AttendantDataResult,
 } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
@@ -95,11 +96,25 @@ const formatResults = (
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {
   const offset = (page - 1) * pageSize;
+
+  const statusFilter = humanSupport.appliedDetailFilters.status
+    .value as string[];
+
+  const onlineOnfflineStatus = statusFilter?.filter(
+    (status) => status === 'online' || status === 'offline',
+  );
+
+  const customStatusFilter = statusFilter?.filter(
+    (status) => status !== 'online' && status !== 'offline',
+  );
+
   return await service.getDetailedMonitoringAttendant({
     ordering,
     limit: pageSize,
     offset,
-    agent: humanSupport.appliedDetailFilters.agent.value,
+    agent: humanSupport.appliedDetailFilters.agent.value as string,
+    status: onlineOnfflineStatus,
+    custom_status: customStatusFilter,
   });
 };
 
@@ -189,6 +204,14 @@ const loadDataSafely = async (sortValue: typeof currentSort.value) => {
   }
 };
 
+watchDebounced(
+  () => humanSupport.appliedDetailFilters.status,
+  async () => {
+    await resetAndLoadData(currentSort.value);
+  },
+  { deep: true, debounce: 700 },
+);
+
 watch(
   [
     currentSort,
@@ -198,7 +221,7 @@ watch(
   () => {
     loadDataSafely(currentSort.value);
   },
-  { immediate: true },
+  { immediate: true, deep: true },
 );
 
 watch(

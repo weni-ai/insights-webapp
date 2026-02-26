@@ -945,7 +945,7 @@
       },
       "agents_count": {
         "online": "{count} online",
-        "on_break": "{count} on break",
+        "custom_breaks": "{count} on break",
         "offline": "{count} offline"
       }
     },
@@ -962,6 +962,9 @@
       },
       "ticket_id": {
         "label": "Ticket ID"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {

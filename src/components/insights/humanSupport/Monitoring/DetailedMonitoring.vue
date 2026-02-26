@@ -15,7 +15,10 @@
         "
         class="detailed-monitoring__filters"
       >
-        <DetailedFilters :type="filterType" />
+        <DetailedFilters
+          :type="filterType"
+          mode="monitoring"
+        />
       </section>
     </Transition>
     <section class="detailed-monitoring__tabs">

@@ -18,17 +18,23 @@ interface AppliedFilters {
 }
 
 interface AppliedDetailFilter {
-  value: string;
-  label: string;
+  value: string | string[];
+  label?: string;
 }
 
-type DetailFilterType = 'agent' | 'contact' | 'ticketId' | 'contactInput';
+type DetailFilterType =
+  | 'status'
+  | 'agent'
+  | 'contact'
+  | 'ticketId'
+  | 'contactInput';
 
 interface AppliedDetailFilters {
   agent: AppliedDetailFilter;
   contact: AppliedDetailFilter;
   ticketId: AppliedDetailFilter;
   contactInput: AppliedDetailFilter;
+  status: AppliedDetailFilter;
 }
 export interface DateRange {
   start: string;
@@ -76,6 +82,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     contact: { value: '', label: '' },
     ticketId: { value: '', label: '' },
     contactInput: { value: '', label: '' },
+    status: { value: [], label: '' },
   });
 
   const appliedFiltersLength = computed(() => {
@@ -98,7 +105,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   const saveAppliedDetailFilter = (
     type: DetailFilterType,
-    value: string,
+    value: string | string[],
     label: string,
   ) => {
     appliedDetailFilters.value[type] = { value, label };
@@ -153,6 +160,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       contact: { value: '', label: '' },
       ticketId: { value: '', label: '' },
       contactInput: { value: '', label: '' },
+      status: { value: [], label: '' },
     };
   };
 

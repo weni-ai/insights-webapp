@@ -29,7 +29,7 @@ interface AttendantDataResult {
 
 interface AgentsCountByStatusResponse {
   online: number;
-  on_break: number;
+  custom_breaks: number;
   offline: number;
 }
 
@@ -41,7 +41,8 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   agent?: string;
-  status?: ('online' | 'on_break' | 'offline')[];
+  status?: string[];
+  custom_status?: string[];
 }
 
 export default {

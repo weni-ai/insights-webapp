@@ -16,7 +16,10 @@
         class="detailed-monitoring__filters"
         data-testid="detailed-analysis-filters"
       >
-        <DetailedFilters :type="filterType" />
+        <DetailedFilters
+          :type="filterType"
+          mode="analysis"
+        />
       </section>
     </Transition>
     <section

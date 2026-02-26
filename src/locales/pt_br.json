@@ -944,7 +944,7 @@
       },
       "agents_count": {
         "online": "{count} online",
-        "on_break": "{count} em pausa",
+        "custom_breaks": "{count} em pausa",
         "offline": "{count} offline"
       }
     },
@@ -961,6 +961,9 @@
       },
       "ticket_id": {
         "label": "Protocolo"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {

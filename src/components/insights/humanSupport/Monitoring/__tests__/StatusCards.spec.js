@@ -1,16 +1,26 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { createTestingPinia } from '@pinia/testing';
+import { ref } from 'vue';
 
 import ServiceStatus from '../StatusCards.vue';
 
+const defaultServiceStatusData = {
+  is_waiting: 25,
+  in_progress: 10,
+  finished: 65,
+};
+
 const mockMonitoringStore = {
+  $id: 'humanSupportMonitoring',
   loadServiceStatusData: vi.fn(),
-  serviceStatusData: {
-    value: { is_waiting: 25, in_progress: 10, finished: 65 },
-  },
+  serviceStatusData: { value: { ...defaultServiceStatusData } },
   loadingServiceStatusData: { value: false },
 };
+
+const hasChatsSectorsRef = ref(true);
+const widgetSetupPropsRef = ref({});
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockMonitoringStore,
@@ -20,9 +30,28 @@ vi.mock('pinia', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    storeToRefs: (store) => store,
+    storeToRefs: (store) => {
+      if (store?.$id === 'humanSupportMonitoring') {
+        return {
+          serviceStatusData: mockMonitoringStore.serviceStatusData,
+          loadingServiceStatusData:
+            mockMonitoringStore.loadingServiceStatusData,
+        };
+      }
+      if (store?.$id === 'project') {
+        return { hasChatsSectors: hasChatsSectorsRef };
+      }
+      if (store?.$id === 'humanSupport') {
+        return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      return actual.storeToRefs(store);
+    },
   };
 });
+
+vi.mock('@vueuse/core', () => ({
+  useMouseInElement: () => ({ isOutside: { value: false } }),
+}));
 
 const i18n = createI18n({
   legacy: false,
@@ -57,6 +86,13 @@ describe('ServiceStatus', () => {
     Object.assign(mockMonitoringStore, storeOverrides);
     return mount(ServiceStatus, {
       global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              project: { hasChatsSectors: true },
+            },
+          }),
+        ],
         stubs: {
           CardConversations: true,
         },
@@ -72,9 +108,7 @@ describe('ServiceStatus', () => {
     vi.clearAllMocks();
     Object.assign(mockMonitoringStore, {
       loadServiceStatusData: vi.fn(),
-      serviceStatusData: {
-        value: { is_waiting: 25, in_progress: 10, finished: 65 },
-      },
+      serviceStatusData: { value: { ...defaultServiceStatusData } },
       loadingServiceStatusData: { value: false },
     });
     wrapper = createWrapper();

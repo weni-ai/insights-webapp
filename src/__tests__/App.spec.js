@@ -1,8 +1,9 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 
 import App from '@/App.vue';
+
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useOnboarding } from '@/store/modules/onboarding';
@@ -23,6 +24,7 @@ vi.mock('@/services/api', () => {
 
 vi.mock('@/services/api/resources/projects', () => ({
   default: {
+    getProjectSource: vi.fn(),
     verifyProjectIndexer: vi.fn(),
     verifyProjectCsat: vi.fn(() => ({ is_enabled: true })),
   },
@@ -442,7 +444,7 @@ describe('App', () => {
     it('should show InsightsLayout when dashboards exist and not loading', async () => {
       dashboardsStore.isLoadingDashboards = false;
       dashboardsStore.dashboards = [{ id: 1, name: 'Test Dashboard' }];
-      await wrapper.vm.$nextTick();
+      await flushPromises();
 
       expect(
         wrapper.findComponent('[data-testid="insights-layout"]').exists(),
@@ -453,7 +455,7 @@ describe('App', () => {
       dashboardsStore.isLoadingDashboards = false;
       dashboardsStore.dashboards = [{ id: 1 }];
       dashboardsStore.isLoadingCurrentDashboardFilters = true;
-      await wrapper.vm.$nextTick();
+      await flushPromises();
 
       expect(
         wrapper.findComponent('[data-testid="icon-loading"]').exists(),
@@ -464,7 +466,7 @@ describe('App', () => {
       dashboardsStore.isLoadingDashboards = false;
       dashboardsStore.dashboards = [{ id: 1 }];
       dashboardsStore.isLoadingCurrentDashboardFilters = false;
-      await wrapper.vm.$nextTick();
+      await flushPromises();
 
       expect(wrapper.findComponent({ name: 'RouterView' }).exists()).toBe(true);
     });

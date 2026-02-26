@@ -1,19 +1,25 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
+import { createTestingPinia } from '@pinia/testing';
+import { ref } from 'vue';
 
 import TimeMetrics from '../TimeMetrics.vue';
 
+const defaultTimeMetricsData = {
+  average_time_is_waiting: { average: 120, max: 300 },
+  average_time_first_response: { average: 45, max: 90 },
+  average_time_chat: { average: 600, max: 1200 },
+};
+
 const mockMonitoringStore = {
+  $id: 'humanSupportMonitoring',
   loadTimeMetricsData: vi.fn(),
-  timeMetricsData: {
-    value: {
-      average_time_is_waiting: { average: 120, max: 300 },
-      average_time_first_response: { average: 45, max: 90 },
-      average_time_chat: { average: 600, max: 1200 },
-    },
-  },
+  timeMetricsData: { value: { ...defaultTimeMetricsData } },
   loadingTimeMetricsData: { value: false },
 };
+
+const hasChatsSectorsRef = ref(true);
+const widgetSetupPropsRef = ref({});
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockMonitoringStore,
@@ -34,15 +40,34 @@ vi.mock('@/utils/time', () => ({
       .toString()
       .padStart(2, '0')}s`;
   }),
+  getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
 }));
 
 vi.mock('pinia', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    storeToRefs: (store) => store,
+    storeToRefs: (store) => {
+      if (store?.$id === 'humanSupportMonitoring') {
+        return {
+          timeMetricsData: mockMonitoringStore.timeMetricsData,
+          loadingTimeMetricsData: mockMonitoringStore.loadingTimeMetricsData,
+        };
+      }
+      if (store?.$id === 'project') {
+        return { hasChatsSectors: hasChatsSectorsRef };
+      }
+      if (store?.$id === 'humanSupport') {
+        return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      return actual.storeToRefs(store);
+    },
   };
 });
+
+vi.mock('@vueuse/core', () => ({
+  useMouseInElement: () => ({ isOutside: { value: false } }),
+}));
 
 describe('TimeMetrics', () => {
   let wrapper;
@@ -51,6 +76,13 @@ describe('TimeMetrics', () => {
     Object.assign(mockMonitoringStore, storeOverrides);
     return mount(TimeMetrics, {
       global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              project: { hasChatsSectors: true },
+            },
+          }),
+        ],
         stubs: {
           CardConversations: true,
         },
@@ -68,9 +100,13 @@ describe('TimeMetrics', () => {
       loadTimeMetricsData: vi.fn(),
       timeMetricsData: {
         value: {
-          average_time_is_waiting: { average: 120, max: 300 },
-          average_time_first_response: { average: 45, max: 90 },
-          average_time_chat: { average: 600, max: 1200 },
+          average_time_is_waiting: {
+            ...defaultTimeMetricsData.average_time_is_waiting,
+          },
+          average_time_first_response: {
+            ...defaultTimeMetricsData.average_time_first_response,
+          },
+          average_time_chat: { ...defaultTimeMetricsData.average_time_chat },
         },
       },
       loadingTimeMetricsData: { value: false },

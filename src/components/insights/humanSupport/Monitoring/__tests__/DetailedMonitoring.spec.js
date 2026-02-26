@@ -4,8 +4,12 @@ import { nextTick, ref } from 'vue';
 import DetailedMonitoring from '../DetailedMonitoring.vue';
 
 const activeDetailedTabRef = ref('in_awaiting');
+const hasChatsSectorsRef = ref(true);
+const widgetSetupPropsRef = ref({});
+const isOutsideRef = ref(false);
 
 const mockStore = {
+  $id: 'humanSupportMonitoring',
   get activeDetailedTab() {
     return activeDetailedTabRef.value;
   },
@@ -18,9 +22,27 @@ vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockStore,
 }));
 
-vi.mock('pinia', async (importOriginal) => ({
-  ...(await importOriginal()),
-  storeToRefs: (store) => ({ activeDetailedTab: activeDetailedTabRef }),
+vi.mock('pinia', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    storeToRefs: (store) => {
+      if (store?.$id === 'humanSupportMonitoring') {
+        return { activeDetailedTab: activeDetailedTabRef };
+      }
+      if (store?.$id === 'project') {
+        return { hasChatsSectors: hasChatsSectorsRef };
+      }
+      if (store?.$id === 'humanSupport') {
+        return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      return actual.storeToRefs(store);
+    },
+  };
+});
+
+vi.mock('@vueuse/core', () => ({
+  useMouseInElement: () => ({ isOutside: isOutsideRef }),
 }));
 
 const createWrapper = (initialTab = 'in_awaiting') => {

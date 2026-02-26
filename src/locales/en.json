@@ -942,6 +942,11 @@
         "average_duration": "Average duration",
         "time_in_service": "Time in service",
         "action": "Action"
+      },
+      "agents_count": {
+        "online": "{count} online",
+        "on_break": "{count} on break",
+        "offline": "{count} offline"
       }
     },
     "filters": {

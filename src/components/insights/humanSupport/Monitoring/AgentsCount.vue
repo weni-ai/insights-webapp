@@ -96,7 +96,7 @@ const loadCounts = async () => {
       offline: response.offline || 0,
     };
   } catch (error) {
-    console.log(error);
+    console.log('Error loading agents count:', error);
   } finally {
     isLoadingCounts.value = false;
   }

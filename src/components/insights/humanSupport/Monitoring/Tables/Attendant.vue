@@ -95,12 +95,25 @@ const formatResults = (
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {
   const offset = (page - 1) * pageSize;
+
+  const statusFilter = humanSupport.appliedDetailFilters.status
+    .value as string[];
+
+  const onlineOnfflineStatus = statusFilter?.filter(
+    (status) => status === 'online' || status === 'offline',
+  );
+
+  const customStatusFilter = statusFilter?.filter(
+    (status) => status !== 'online' && status !== 'offline',
+  );
+
   return await service.getDetailedMonitoringAttendant({
     ordering,
     limit: pageSize,
     offset,
     agent: humanSupport.appliedDetailFilters.agent.value as string,
-    status: humanSupport.appliedDetailFilters.status.value as string[],
+    status: onlineOnfflineStatus,
+    custom_status: customStatusFilter,
   });
 };
 

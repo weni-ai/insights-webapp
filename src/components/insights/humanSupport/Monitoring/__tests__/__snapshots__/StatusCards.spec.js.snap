@@ -6,6 +6,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
   data-testid="service-status"
   data-v-139ebc7e=""
 >
+  <!--v-if-->
   <p
     class="service-status__title"
     data-testid="service-status-title"
@@ -30,7 +31,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       title="Awaiting"
       tooltipinfo="Conversations waiting for agent response"
       tooltipside="top"
-      value="25"
+      value="14"
     />
     <card-conversations-stub
       activedescriptiongap="false"
@@ -43,7 +44,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       title="In Progress"
       tooltipinfo="Conversations currently being handled"
       tooltipside="top"
-      value="10"
+      value="32"
     />
     <card-conversations-stub
       activedescriptiongap="false"
@@ -56,7 +57,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       title="Closed"
       tooltipinfo="Conversations that have been closed"
       tooltipside="left"
-      value="65"
+      value="82"
     />
     
   </section>

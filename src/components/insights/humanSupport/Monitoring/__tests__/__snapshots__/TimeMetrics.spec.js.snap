@@ -6,6 +6,7 @@ exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
   data-testid="time-metrics"
   data-v-3fd5bf3d=""
 >
+  <!--v-if-->
   <p
     class="time-metrics__title"
     data-testid="time-metrics-title"
@@ -24,42 +25,42 @@ exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
       borderradius="full"
       class="time-metrics__card"
       data-v-3fd5bf3d=""
-      description="Max: 5m 00s"
+      description="Max: 1m 45s"
       enabletimeicon="true"
       isclickable="true"
       isloading="false"
       title="Average time in waiting"
       tooltipinfo="Average time contacts wait in the queue until the support starts"
       tooltipside="top"
-      value="2m 00s"
+      value="40s"
     />
     <card-conversations-stub
       activedescriptiongap="true"
       borderradius="full"
       class="time-metrics__card"
       data-v-3fd5bf3d=""
-      description="Max: 1m 30s"
+      description="Max: 2m 23s"
       enabletimeicon="true"
       isclickable="true"
       isloading="false"
       title="Average time for first response"
       tooltipinfo="Average time until the first message from the agent after the room is assigned"
       tooltipside="top"
-      value="45s"
+      value="1m 12s"
     />
     <card-conversations-stub
       activedescriptiongap="true"
       borderradius="full"
       class="time-metrics__card"
       data-v-3fd5bf3d=""
-      description="Max: 20m 00s"
+      description="Max: 40m 23s"
       enabletimeicon="true"
       isclickable="true"
       isloading="false"
       title="Average support duration"
       tooltipinfo="Average total duration of the conversation, from the start of the support with the agent until it is finalized"
       tooltipside="left"
-      value="10m 00s"
+      value="28m 30s"
     />
     
   </section>

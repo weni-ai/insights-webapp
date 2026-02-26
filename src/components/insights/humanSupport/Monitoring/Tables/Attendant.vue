@@ -40,6 +40,7 @@
 import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { watchDebounced } from '@vueuse/core';
 import service, {
   type AttendantDataResult,
 } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
@@ -203,11 +204,18 @@ const loadDataSafely = async (sortValue: typeof currentSort.value) => {
   }
 };
 
+watchDebounced(
+  () => humanSupport.appliedDetailFilters.status,
+  async () => {
+    await resetAndLoadData(currentSort.value);
+  },
+  { deep: true, debounce: 700 },
+);
+
 watch(
   [
     currentSort,
     () => humanSupport.appliedDetailFilters.agent,
-    () => humanSupport.appliedDetailFilters.status,
     () => humanSupport.appliedFilters,
   ],
   () => {

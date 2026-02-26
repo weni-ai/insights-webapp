@@ -2,7 +2,7 @@
   <section class="agents-count">
     <template v-if="isLoadingCounts">
       <UnnnicSkeletonLoading
-        v-for="i in activeTags.length"
+        v-for="i in 3"
         :key="i"
         width="65px"
         height="30px"
@@ -23,7 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { ref, watch } from 'vue';
+import { watchDebounced } from '@vueuse/core';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
@@ -40,7 +41,9 @@ const { refreshDataMonitoring } = storeToRefs(humanSupportMonitoringStore);
 
 const tags = ['online', 'custom_breaks', 'offline'];
 
-const activeTags = computed(() => {
+const activeTags = ref<string[]>(tags);
+
+const getActiveTags = (): string[] => {
   const { status } = appliedDetailFilters.value;
   if (status.value.length === 0) return tags;
 
@@ -58,7 +61,7 @@ const activeTags = computed(() => {
   if (hasCustomStatus) enabledTags.push('custom_breaks');
 
   return enabledTags;
-});
+};
 
 const tagsColorsTokens = {
   online: 'green-200',
@@ -99,12 +102,17 @@ const loadCounts = async () => {
   }
 };
 
+watchDebounced(
+  () => appliedDetailFilters.value.status,
+  () => {
+    activeTags.value = getActiveTags();
+    loadCounts();
+  },
+  { deep: true, debounce: 700 },
+);
+
 watch(
-  [
-    () => appliedFilters.value,
-    () => refreshDataMonitoring.value,
-    () => activeTags.value,
-  ],
+  [() => appliedFilters.value, () => refreshDataMonitoring.value],
   () => {
     loadCounts();
   },

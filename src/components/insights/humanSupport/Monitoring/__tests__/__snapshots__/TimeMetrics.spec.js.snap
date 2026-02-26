@@ -6,6 +6,7 @@ exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
   data-testid="time-metrics"
   data-v-3fd5bf3d=""
 >
+  <!--v-if-->
   <p
     class="time-metrics__title"
     data-testid="time-metrics-title"

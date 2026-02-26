@@ -9,6 +9,7 @@
     :minDate="minDate"
     :maxDate="maxDate"
     :periodBaseDate="periodBaseDate"
+    disableClear
     @select-date="selectedDates = $event"
     @update:model-value="$emit('update:modelValue', $event)"
   />

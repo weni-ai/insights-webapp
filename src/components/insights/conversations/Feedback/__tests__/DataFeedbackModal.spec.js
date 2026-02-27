@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { config, shallowMount, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
 import DataFeedbackModal from '../DataFeedbackModal.vue';
@@ -52,7 +52,11 @@ const unnnicStubs = {
     props: ['modelValue', 'label'],
     emits: ['update:modelValue'],
   },
-  UnnnicRadio: { template: '<div></div>', props: ['value', 'label'] },
+  UnnnicRadio: {
+    template: '<div v-bind="$attrs"></div>',
+    props: ['value', 'label'],
+    inheritAttrs: false,
+  },
   UnnnicTextArea: {
     template: '<div data-testid="feedback-textarea"></div>',
     props: ['modelValue', 'label', 'placeholder', 'maxLength'],
@@ -110,6 +114,26 @@ describe('DataFeedbackModal', () => {
       expect(findTextarea().exists()).toBe(true);
       expect(findSubmitButton().exists()).toBe(true);
       expect(findPostponeButton().exists()).toBe(true);
+    });
+
+    it('should render likert options from strongly_disagree to strongly_agree', () => {
+      const mounted = mount(DataFeedbackModal, {
+        props: { modelValue: true, surveyUuid: 'survey-123' },
+        global: { stubs: unnnicStubs },
+      });
+      const radios = mounted
+        .find('[data-testid="feedback-radio-trust"]')
+        .findAll('[data-testid^="radio-option-"]');
+      const values = radios.map((el) =>
+        el.attributes('data-testid').replace('radio-option-', ''),
+      );
+      expect(values).toEqual([
+        'strongly_disagree',
+        'partially_disagree',
+        'neutral',
+        'partially_agree',
+        'strongly_agree',
+      ]);
     });
 
     it('should pass open prop to dialog', () => {

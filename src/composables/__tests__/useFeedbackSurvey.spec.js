@@ -3,7 +3,9 @@ import { useFeedbackSurvey } from '../useFeedbackSurvey';
 import { moduleStorage } from '@/utils/storage';
 
 const STORAGE_KEY = 'data_feedback_state';
+const ACCESS_STORAGE_KEY = 'data_feedback_first_access';
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+const FORTY_FIVE_DAYS_MS = 45 * 24 * 60 * 60 * 1000;
 
 const mockCheckSurvey = vi.fn();
 
@@ -27,6 +29,15 @@ const activeSurvey = {
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+const recentAccessDate = () => new Date(Date.now() - 1000).toISOString();
+
+function mockStoragePerKey(overrides = {}) {
+  moduleStorage.getItem.mockImplementation((key, defaultVal) => {
+    if (key in overrides) return overrides[key];
+    return defaultVal ?? null;
+  });
+}
+
 describe('useFeedbackSurvey', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -36,14 +47,93 @@ describe('useFeedbackSurvey', () => {
   });
 
   describe('checkSurvey', () => {
-    it('should show modal when survey is active and no postpone state', async () => {
+    it('should show modal when survey is active, has prior access, and no postpone state', async () => {
       mockCheckSurvey.mockResolvedValue(activeSurvey);
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: recentAccessDate(),
+      });
 
       const { shouldShowModal, surveyUuid, checkSurvey } = useFeedbackSurvey();
       await checkSurvey();
 
       expect(shouldShowModal.value).toBe(true);
       expect(surveyUuid.value).toBe('survey-1');
+    });
+
+    it('should not show modal on first access (no prior access recorded)', async () => {
+      mockCheckSurvey.mockResolvedValue(activeSurvey);
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: null,
+      });
+
+      const { shouldShowModal, checkSurvey } = useFeedbackSurvey();
+      await checkSurvey();
+
+      expect(shouldShowModal.value).toBe(false);
+    });
+
+    it('should record access on first visit', async () => {
+      mockCheckSurvey.mockResolvedValue(activeSurvey);
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: null,
+      });
+
+      const { checkSurvey } = useFeedbackSurvey();
+      await checkSurvey();
+
+      expect(moduleStorage.setItem).toHaveBeenCalledWith(
+        ACCESS_STORAGE_KEY,
+        expect.any(String),
+      );
+    });
+
+    it('should not show modal when prior access is older than 45 days', async () => {
+      mockCheckSurvey.mockResolvedValue(activeSurvey);
+      const oldDate = new Date(
+        Date.now() - FORTY_FIVE_DAYS_MS - 1,
+      ).toISOString();
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: oldDate,
+      });
+
+      const { shouldShowModal, checkSurvey } = useFeedbackSurvey();
+      await checkSurvey();
+
+      expect(shouldShowModal.value).toBe(false);
+    });
+
+    it('should reset access timestamp when prior access is older than 45 days', async () => {
+      mockCheckSurvey.mockResolvedValue(activeSurvey);
+      const oldDate = new Date(
+        Date.now() - FORTY_FIVE_DAYS_MS - 1,
+      ).toISOString();
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: oldDate,
+      });
+
+      const { checkSurvey } = useFeedbackSurvey();
+      await checkSurvey();
+
+      expect(moduleStorage.setItem).toHaveBeenCalledWith(
+        ACCESS_STORAGE_KEY,
+        expect.any(String),
+      );
+    });
+
+    it('should not overwrite access timestamp when it is within 45 days', async () => {
+      mockCheckSurvey.mockResolvedValue(activeSurvey);
+      const recent = recentAccessDate();
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: recent,
+      });
+
+      const { checkSurvey } = useFeedbackSurvey();
+      await checkSurvey();
+
+      expect(moduleStorage.setItem).not.toHaveBeenCalledWith(
+        ACCESS_STORAGE_KEY,
+        expect.any(String),
+      );
     });
 
     it('should not show modal when survey is inactive', async () => {
@@ -72,13 +162,16 @@ describe('useFeedbackSurvey', () => {
 
     it('should not show modal when postponed twice today', async () => {
       mockCheckSurvey.mockResolvedValue(activeSurvey);
-      moduleStorage.getItem.mockReturnValue({
-        lastPostponedDate: today(),
-        postponeCountToday: 2,
-        firstShownTodayAt: new Date(
-          Date.now() - TWO_HOURS_MS - 1,
-        ).toISOString(),
-        lastPostponedAt: new Date().toISOString(),
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: recentAccessDate(),
+        [STORAGE_KEY]: {
+          lastPostponedDate: today(),
+          postponeCountToday: 2,
+          firstShownTodayAt: new Date(
+            Date.now() - TWO_HOURS_MS - 1,
+          ).toISOString(),
+          lastPostponedAt: new Date().toISOString(),
+        },
       });
 
       const { shouldShowModal, checkSurvey } = useFeedbackSurvey();
@@ -89,11 +182,14 @@ describe('useFeedbackSurvey', () => {
 
     it('should not show modal when less than 2h since first shown today', async () => {
       mockCheckSurvey.mockResolvedValue(activeSurvey);
-      moduleStorage.getItem.mockReturnValue({
-        lastPostponedDate: today(),
-        postponeCountToday: 1,
-        firstShownTodayAt: new Date().toISOString(),
-        lastPostponedAt: new Date().toISOString(),
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: recentAccessDate(),
+        [STORAGE_KEY]: {
+          lastPostponedDate: today(),
+          postponeCountToday: 1,
+          firstShownTodayAt: new Date().toISOString(),
+          lastPostponedAt: new Date().toISOString(),
+        },
       });
 
       const { shouldShowModal, checkSurvey } = useFeedbackSurvey();
@@ -104,13 +200,16 @@ describe('useFeedbackSurvey', () => {
 
     it('should show modal when 2h+ elapsed and postpone count < 2', async () => {
       mockCheckSurvey.mockResolvedValue(activeSurvey);
-      moduleStorage.getItem.mockReturnValue({
-        lastPostponedDate: today(),
-        postponeCountToday: 1,
-        firstShownTodayAt: new Date(
-          Date.now() - TWO_HOURS_MS - 1,
-        ).toISOString(),
-        lastPostponedAt: new Date().toISOString(),
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: recentAccessDate(),
+        [STORAGE_KEY]: {
+          lastPostponedDate: today(),
+          postponeCountToday: 1,
+          firstShownTodayAt: new Date(
+            Date.now() - TWO_HOURS_MS - 1,
+          ).toISOString(),
+          lastPostponedAt: new Date().toISOString(),
+        },
       });
 
       const { shouldShowModal, checkSurvey } = useFeedbackSurvey();
@@ -121,11 +220,14 @@ describe('useFeedbackSurvey', () => {
 
     it('should reset state and show when lastPostponedDate is a different day', async () => {
       mockCheckSurvey.mockResolvedValue(activeSurvey);
-      moduleStorage.getItem.mockReturnValue({
-        lastPostponedDate: '2020-01-01',
-        postponeCountToday: 2,
-        firstShownTodayAt: null,
-        lastPostponedAt: null,
+      mockStoragePerKey({
+        [ACCESS_STORAGE_KEY]: recentAccessDate(),
+        [STORAGE_KEY]: {
+          lastPostponedDate: '2020-01-01',
+          postponeCountToday: 2,
+          firstShownTodayAt: null,
+          lastPostponedAt: null,
+        },
       });
 
       const { shouldShowModal, checkSurvey } = useFeedbackSurvey();

@@ -5,7 +5,9 @@ import { UnnnicToastManager } from '@weni/unnnic-system';
 import i18n from '@/utils/plugins/i18n';
 
 const STORAGE_KEY = 'data_feedback_state';
+const ACCESS_STORAGE_KEY = 'data_feedback_first_access';
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+const FORTY_FIVE_DAYS_MS = 45 * 24 * 60 * 60 * 1000;
 
 interface FeedbackStorageState {
   lastPostponedAt: string | null;
@@ -56,6 +58,34 @@ function canShowBasedOnPostpone(state: FeedbackStorageState): boolean {
   return true;
 }
 
+function hasRecentPriorAccess(): boolean {
+  const storedAt: string | null = moduleStorage.getItem(
+    ACCESS_STORAGE_KEY,
+    null,
+  );
+
+  if (!storedAt) {
+    return false;
+  }
+
+  const elapsed = Date.now() - new Date(storedAt).getTime();
+  return elapsed <= FORTY_FIVE_DAYS_MS;
+}
+
+function recordAccess(): void {
+  const storedAt: string | null = moduleStorage.getItem(
+    ACCESS_STORAGE_KEY,
+    null,
+  );
+
+  if (
+    !storedAt ||
+    Date.now() - new Date(storedAt).getTime() > FORTY_FIVE_DAYS_MS
+  ) {
+    moduleStorage.setItem(ACCESS_STORAGE_KEY, new Date().toISOString());
+  }
+}
+
 export function useFeedbackSurvey() {
   const shouldShowModal = ref(false);
   const surveyUuid = ref('');
@@ -65,6 +95,14 @@ export function useFeedbackSurvey() {
       const response = await feedbackApi.checkSurvey();
 
       if (!response.is_active || response.user_answered) {
+        shouldShowModal.value = false;
+        return;
+      }
+
+      const hasPriorAccess = hasRecentPriorAccess();
+      recordAccess();
+
+      if (!hasPriorAccess) {
         shouldShowModal.value = false;
         return;
       }

@@ -4,6 +4,9 @@
     :tabs="tabs"
     :defaultTab="defaultTab"
     :mock="mock"
+    :mockItemsCount="mockItemsCount"
+    barColor="#E5812A"
+    barBackgroundColor="#FBEED9"
     itemKey="queues"
     itemLabelKey="queue_name"
     :formatFooterText="formatFooterText"
@@ -23,6 +26,7 @@
 import { computed } from 'vue';
 
 import VolumeBarListWidget from './VolumeBarListWidget.vue';
+
 import type { VolumeBarListTabItem, WidgetContext } from './types';
 
 import volumePerQueueService from '@/services/api/resources/humanSupport/volumePerQueue';
@@ -31,6 +35,15 @@ import { redirectToChatsConfig } from '@/utils/redirect';
 
 import i18n from '@/utils/plugins/i18n';
 const { t, tc } = i18n.global;
+
+import {
+  monitoringVolumePerQueueMock,
+  monitoringVolumePerQueueMockItemsCount,
+} from '../../Monitoring/mocks';
+import {
+  analysisVolumePerQueueMock,
+  analysisVolumePerQueueMockItemsCount,
+} from '../../Analysis/mocks';
 
 defineOptions({
   name: 'PerQueue',
@@ -60,12 +73,19 @@ const defaultTab = computed(() =>
   props.context === 'monitoring' ? 'ongoing' : 'closed',
 );
 
-const mock = {
-  labelPrefix: 'Queue',
-  subtitle: 'Queue sector',
-  color: '#E5812A',
-  backgroundColor: '#FBEED9',
-};
+const mock = computed(() => {
+  if (props.context === 'monitoring') {
+    return monitoringVolumePerQueueMock;
+  }
+  return analysisVolumePerQueueMock;
+});
+
+const mockItemsCount = computed(() => {
+  if (props.context === 'monitoring') {
+    return monitoringVolumePerQueueMockItemsCount;
+  }
+  return analysisVolumePerQueueMockItemsCount;
+});
 
 const formatFooterText = (
   ctx: WidgetContext,

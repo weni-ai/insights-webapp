@@ -4,7 +4,7 @@
   <HeaderRefresh
     v-if="isMonitoring"
     type="human-support"
-    :forceDisabled="!hasChatsSectors"
+    :forceDisabled="!hasSectorsConfigured"
   />
 
   <InsightsLayoutHeaderFilters
@@ -29,7 +29,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useProject } from '@/store/modules/project';
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const humanSupportStore = useHumanSupport();
 const { activeTab } = storeToRefs(humanSupportStore);

@@ -38,7 +38,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { monitoringPeaksInHumanServiceMock } from './mocks';
 
 const project = useProject();
-const { hasChatsSectors } = storeToRefs(project);
+const { hasSectorsConfigured } = storeToRefs(project);
 
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
@@ -51,7 +51,7 @@ const { servicesOpenByHourData, loadingHumanSupportByHourData } = storeToRefs(
 );
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return monitoringPeaksInHumanServiceMock;
   }
   return servicesOpenByHourData.value;
@@ -77,7 +77,7 @@ const isLoading = computed(() => {
 const chartContainerRef = useTemplateRef<HTMLDivElement>('chartContainer');
 const { isOutside } = useMouseInElement(chartContainerRef);
 const showSetup = computed(() => {
-  return !isOutside.value && !hasChatsSectors.value;
+  return !isOutside.value && !hasSectorsConfigured.value;
 });
 
 onMounted(() => {

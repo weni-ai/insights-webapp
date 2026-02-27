@@ -94,7 +94,7 @@ const {
 });
 
 const widgetData = computed(() => {
-  if (!projectStore.hasChatsSectors) {
+  if (!projectStore.hasSectorsConfigured) {
     return formatResults(analysisDetailedAnalysisFinishedMock);
   }
   return formattedItems.value;

@@ -168,7 +168,7 @@ const humanSupportStore = useHumanSupport();
 const configStore = useConfig();
 const projectStore = useProject();
 
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 const { widgetSetupProps, appliedFilters, appliedDateRange } =
   storeToRefs(humanSupportStore);
 
@@ -176,14 +176,14 @@ const csatRatingsRef = useTemplateRef<HTMLElement>('csatRatings');
 const { isOutside } = useMouseInElement(csatRatingsRef);
 
 const showSetup = computed(() => {
-  return !hasChatsSectors.value && !isOutside.value;
+  return !hasSectorsConfigured.value && !isOutside.value;
 });
 
 const showEnableCsat = computed(() => {
   return (
     !configStore.enableCsat &&
     !isLoadingAgentsData.value &&
-    hasChatsSectors.value
+    hasSectorsConfigured.value
   );
 });
 
@@ -206,7 +206,7 @@ const agentsGeneralTotals = ref<AgentsTotalsResponse['general']>({
 });
 
 const widgetGeneralTotals = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return props.type === 'monitoring'
       ? monitoringCsatTotalsMock
       : analysisCsatTotalsMock;
@@ -217,7 +217,7 @@ const widgetGeneralTotals = computed(() => {
 const agentsData = ref<AgentsTotalsResponse['results']>([]);
 
 const widgetAgentsData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return props.type === 'monitoring'
       ? monitoringCsatAgentsMock
       : analysisCsatAgentsMock;
@@ -234,7 +234,7 @@ const ratingsData = ref<RatingsResponse>({
 });
 
 const widgetRatingsData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return props.type === 'monitoring'
       ? monitoringCsatRatingsMock
       : analysisCsatRatingsMock;

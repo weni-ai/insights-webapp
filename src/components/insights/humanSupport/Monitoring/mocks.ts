@@ -293,6 +293,56 @@ const monitoringDetailedMonitoringInProgressMock = [
   },
 ];
 
+const monitoringVolumePerQueueMock = [
+  {
+    sector_name: 'Logistics',
+    queues: [{ queue_name: 'Tracking', value: 12 }],
+  },
+  {
+    sector_name: 'After-Saçes',
+    queues: [{ queue_name: 'Returns', value: 8 }],
+  },
+  {
+    sector_name: 'Pre-Sales',
+    queues: [{ queue_name: 'Product inquiry', value: 7 }],
+  },
+  {
+    sector_name: 'Finance',
+    queues: [{ queue_name: 'Payments', value: 3 }],
+  },
+  {
+    sector_name: 'Retention',
+    queues: [{ queue_name: 'VIP support', value: 2 }],
+  },
+];
+
+const monitoringVolumePerQueueMockItemsCount = 8;
+
+const monitoringVolumePerTagMock = [
+  {
+    sector_name: 'Logistics',
+    tags: [{ tag_name: 'ShippingDelay', value: 10 }],
+  },
+  {
+    sector_name: 'Doubts',
+    tags: [{ tag_name: 'SizeGuide', value: 6 }],
+  },
+  {
+    sector_name: 'Pre-Sales',
+    tags: [{ tag_name: 'PromoCode', value: 5 }],
+  },
+  {
+    sector_name: 'After-Sales',
+    tags: [{ tag_name: 'DefectiveItem', value: 4 }],
+  },
+  {
+    sector_name: 'Logistics',
+    tags: [{ tag_name: 'AddressChange', value: 3 }],
+  },
+];
+
+const monitoringVolumePerTagMockItemsCount = 8;
+
 export {
   monitoringStatusCardsMock,
   monitoringTimeMetricsMock,
@@ -301,4 +351,8 @@ export {
   monitoringCsatAgentsMock,
   monitoringCsatRatingsMock,
   monitoringDetailedMonitoringInProgressMock,
+  monitoringVolumePerQueueMock,
+  monitoringVolumePerTagMock,
+  monitoringVolumePerQueueMockItemsCount,
+  monitoringVolumePerTagMockItemsCount,
 };

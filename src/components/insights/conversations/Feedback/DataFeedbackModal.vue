@@ -31,6 +31,7 @@
             :key="option.value"
             :value="option.value"
             :label="t(option.labelKey)"
+            :data-testid="`radio-option-${option.value}`"
           />
         </UnnnicRadioGroup>
 
@@ -44,6 +45,7 @@
             :key="option.value"
             :value="option.value"
             :label="t(option.labelKey)"
+            :data-testid="`radio-option-${option.value}`"
           />
         </UnnnicRadioGroup>
 
@@ -57,6 +59,7 @@
             :key="option.value"
             :value="option.value"
             :label="t(option.labelKey)"
+            :data-testid="`radio-option-${option.value}`"
           />
         </UnnnicRadioGroup>
 
@@ -138,17 +141,17 @@ const scoreMap: Record<string, string> = {
 };
 
 const likertOptions = [
-  { value: 'strongly_agree', labelKey: 'data_feedback.strongly_agree' },
-  { value: 'partially_agree', labelKey: 'data_feedback.partially_agree' },
-  { value: 'neutral', labelKey: 'data_feedback.neutral' },
-  {
-    value: 'partially_disagree',
-    labelKey: 'data_feedback.partially_disagree',
-  },
   {
     value: 'strongly_disagree',
     labelKey: 'data_feedback.strongly_disagree',
   },
+  {
+    value: 'partially_disagree',
+    labelKey: 'data_feedback.partially_disagree',
+  },
+  { value: 'neutral', labelKey: 'data_feedback.neutral' },
+  { value: 'partially_agree', labelKey: 'data_feedback.partially_agree' },
+  { value: 'strongly_agree', labelKey: 'data_feedback.strongly_agree' },
 ];
 
 const trustData = ref<string>('');
@@ -219,6 +222,12 @@ async function handleSubmit() {
     flex-direction: column;
     gap: $unnnic-space-6;
     padding: $unnnic-space-6;
+
+    .unnnic-radio {
+      justify-content: center;
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   &__description {

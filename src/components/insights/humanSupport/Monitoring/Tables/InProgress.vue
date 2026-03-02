@@ -87,6 +87,7 @@ const {
 } = useInfiniteScrollTable<InProgressDataResult, FormattedInProgressData>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
 });
 
 const isLoadingVisible = computed(() => {
@@ -138,7 +139,7 @@ const isRequestPending = ref(false);
 
 const loadDataSafely = async (sortValue: typeof currentSort.value) => {
   if (isRequestPending.value) return;
-  
+
   try {
     isRequestPending.value = true;
     await resetAndLoadData(sortValue);

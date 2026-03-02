@@ -52,6 +52,10 @@ import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
 
+defineOptions({
+  name: 'AttendantTable',
+});
+
 type FormattedAttendantData = Omit<
   AttendantDataResult,
   | 'average_first_response_time'
@@ -129,6 +133,7 @@ const {
 } = useInfiniteScrollTable<AttendantDataResult, FormattedAttendantData>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
 });
 
 const isLoadingVisible = computed(() => {

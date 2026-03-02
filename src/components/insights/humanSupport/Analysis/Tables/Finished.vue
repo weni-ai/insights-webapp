@@ -84,6 +84,7 @@ const {
 } = useInfiniteScrollTable<FinishedDataResult, FormattedFinishedData>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
 });
 
 const formattedHeaders = computed(() => {

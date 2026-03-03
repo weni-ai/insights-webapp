@@ -56,10 +56,6 @@ defineOptions({
   name: 'AnalysisFinishedTable',
 });
 
-defineOptions({
-  name: 'FinishedTable',
-});
-
 const { t } = useI18n();
 const humanSupport = useHumanSupport();
 const projectStore = useProject();

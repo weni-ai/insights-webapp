@@ -25,6 +25,7 @@
         :key="item.label"
         data-testid="progress-table-item"
         :label="item.label"
+        :subtitle="item.subtitle"
         :value="item.value"
         :description="item.description"
         :backgroundColor="item.backgroundColor"

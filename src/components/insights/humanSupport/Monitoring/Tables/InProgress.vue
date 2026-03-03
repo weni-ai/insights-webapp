@@ -18,7 +18,24 @@
     @update:sort="handleSort"
     @item-click="redirectItem"
     @load-more="loadMore"
-  />
+  >
+    <template #body-first_response_time="{ item }">
+      <p
+        v-if="item.first_response_time === null"
+        class="italic-text"
+      >
+        {{ $t('human_support_dashboard.common.no_response') }}
+      </p>
+
+      <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
+    </template>
+    <template #body-duration="{ item }">
+      {{ formatSecondsToTime(item.duration) }}
+    </template>
+    <template #body-awaiting_time="{ item }">
+      {{ formatSecondsToTime(item.awaiting_time) }}
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
@@ -33,15 +50,6 @@ import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
 
-type FormattedInProgressData = Omit<
-  InProgressDataResult,
-  'duration' | 'awaiting_time' | 'first_response_time'
-> & {
-  duration: string;
-  awaiting_time: string;
-  first_response_time: string;
-};
-
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
@@ -55,17 +63,6 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   order: 'desc',
   itemKey: 'duration',
 });
-
-const formatResults = (
-  results: InProgressDataResult[],
-): FormattedInProgressData[] => {
-  return results.map((result) => ({
-    ...result,
-    duration: formatSecondsToTime(result?.duration),
-    awaiting_time: formatSecondsToTime(result?.awaiting_time),
-    first_response_time: formatSecondsToTime(result?.first_response_time),
-  }));
-};
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {
   const offset = (page - 1) * pageSize;
@@ -84,9 +81,9 @@ const {
   loadMoreData,
   resetAndLoadData,
   handleSort: handleSortChange,
-} = useInfiniteScrollTable<InProgressDataResult, FormattedInProgressData>({
+} = useInfiniteScrollTable<InProgressDataResult, InProgressDataResult>({
   fetchData,
-  formatResults,
+  formatResults: (results) => results,
   sort: currentSort.value,
 });
 
@@ -172,3 +169,9 @@ watch(
   },
 );
 </script>
+
+<style lang="scss" scoped>
+.italic-text {
+  font-style: italic;
+}
+</style>

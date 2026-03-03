@@ -1081,6 +1081,9 @@
       "description": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real.",
       "action_text": "Crear sector",
       "disclaimer": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real."
+    },
+    "common": {
+      "no_response": "Sin respuesta"
     }
   },
   "news": {

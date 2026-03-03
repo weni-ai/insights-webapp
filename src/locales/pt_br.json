@@ -1051,6 +1051,9 @@
       "description": "Crie um setor para este projeto e comece a monitorizar os dados do seu time de suporte em tempo real.",
       "action_text": "Criar setor",
       "disclaimer": "Estes números são apenas para fins de demonstração. Assim que seu projeto tiver um setor configurado e começar a receber conversas, seus dados reais serão exibidos aqui."
+    },
+    "common": {
+      "no_response": "Sem resposta"
     }
   },
   "news": {

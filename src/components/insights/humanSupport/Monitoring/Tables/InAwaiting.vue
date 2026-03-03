@@ -80,6 +80,7 @@ const {
 } = useInfiniteScrollTable<InAwaitingDataResult, FormattedInAwaitingData>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
 });
 
 const isLoadingVisible = computed(() => {

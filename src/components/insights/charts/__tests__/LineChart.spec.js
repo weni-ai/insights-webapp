@@ -95,7 +95,7 @@ describe('LineChart', () => {
       const { chartOptions } = wrapper.vm;
       const tooltipConfig = chartOptions.plugins.tooltip;
       expect(tooltipConfig.enabled).toBe(true);
-      expect(tooltipConfig.backgroundColor).toBe('#272B33');
+      expect(tooltipConfig.backgroundColor).toBe('#23262E'); // colorGray950
       expect(tooltipConfig.displayColors).toBe(false);
     });
 

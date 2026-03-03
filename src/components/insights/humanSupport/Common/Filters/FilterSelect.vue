@@ -14,6 +14,7 @@
       :search="searchValue"
       itemLabel="label"
       itemValue="value"
+      clearable
       :infiniteScroll="hasInfiniteScroll"
       :infiniteScrollDistance="10"
       :infiniteScrollCanLoadMore="canLoadMore"

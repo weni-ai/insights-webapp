@@ -366,7 +366,7 @@ export default {
     height: 9rem;
     background: linear-gradient(
       359deg,
-      #3b414d 0.54%,
+      $unnnic-color-neutral-dark 0.54%,
       rgba(59, 65, 77, 0.8) 62.61%,
       rgba(59, 65, 77, 0) 91.82%
     );

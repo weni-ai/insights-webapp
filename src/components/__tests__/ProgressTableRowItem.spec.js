@@ -150,8 +150,8 @@ describe('ProgressTableRowItem.vue', () => {
         name: 'NativeProgress',
       });
 
-      expect(nativeProgress.props('color')).toBe('#007bff');
-      expect(nativeProgress.props('backgroundColor')).toBe('#e9ecef');
+      expect(nativeProgress.props('color')).toBe('#3182CE'); // colorBlue500
+      expect(nativeProgress.props('backgroundColor')).toBe('#F6F7F9'); // colorGray50
     });
   });
 

@@ -56,15 +56,15 @@ describe('useHumanSupport store', () => {
     const { createApp } = await import('vue');
     app = createApp({ template: '<div></div>' });
     app.use(router);
-    
+
     const pinia = createPinia();
     app.use(pinia);
-    
+
     setActivePinia(pinia);
-    
+
     // Wait for router to be ready
     await router.isReady();
-    
+
     store = useHumanSupport();
   });
 
@@ -92,6 +92,7 @@ describe('useHumanSupport store', () => {
         agent: { value: '', label: '' },
         contact: { value: '', label: '' },
         ticketId: { value: '', label: '' },
+        status: { value: [], label: '' },
         contactInput: { value: '', label: '' },
       });
     });
@@ -374,22 +375,36 @@ describe('useHumanSupport store', () => {
       });
 
       it('should save applied contactInput filter with value and label', () => {
-        store.saveAppliedDetailFilter('contactInput', 'search text', 'search text');
+        store.saveAppliedDetailFilter(
+          'contactInput',
+          'search text',
+          'search text',
+        );
 
-        expect(store.appliedDetailFilters.contactInput.value).toBe('search text');
-        expect(store.appliedDetailFilters.contactInput.label).toBe('search text');
+        expect(store.appliedDetailFilters.contactInput.value).toBe(
+          'search text',
+        );
+        expect(store.appliedDetailFilters.contactInput.label).toBe(
+          'search text',
+        );
       });
 
       it('should handle all detail filter types independently', () => {
         store.saveAppliedDetailFilter('agent', 'agent-123', 'Agent Name');
         store.saveAppliedDetailFilter('contact', 'contact-456', 'Contact Name');
         store.saveAppliedDetailFilter('ticketId', 'ticket-789', 'Ticket 789');
-        store.saveAppliedDetailFilter('contactInput', 'search text', 'search text');
+        store.saveAppliedDetailFilter(
+          'contactInput',
+          'search text',
+          'search text',
+        );
 
         expect(store.appliedDetailFilters.agent.value).toBe('agent-123');
         expect(store.appliedDetailFilters.contact.value).toBe('contact-456');
         expect(store.appliedDetailFilters.ticketId.value).toBe('ticket-789');
-        expect(store.appliedDetailFilters.contactInput.value).toBe('search text');
+        expect(store.appliedDetailFilters.contactInput.value).toBe(
+          'search text',
+        );
       });
     });
   });

@@ -1010,6 +1010,9 @@
         "very_dissatisfied": "😡 Very dissatisfied"
       },
       "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
+    },
+    "common": {
+      "no_response": "No response"
     }
   },
   "news": {

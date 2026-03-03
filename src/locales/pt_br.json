@@ -1009,6 +1009,9 @@
         "very_dissatisfied": "😡 Muito insatisfeito"
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
+    },
+    "common": {
+      "no_response": "Sem resposta"
     }
   },
   "news": {

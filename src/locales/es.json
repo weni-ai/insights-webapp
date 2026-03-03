@@ -1009,6 +1009,9 @@
         "very_dissatisfied": "😡 Muy insatisfecho"
       },
       "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
+    },
+    "common": {
+      "no_response": "Sin respuesta"
     }
   },
   "news": {

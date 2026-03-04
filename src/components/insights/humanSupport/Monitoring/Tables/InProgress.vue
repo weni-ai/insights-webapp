@@ -35,6 +35,9 @@
     <template #body-awaiting_time="{ item }">
       {{ formatSecondsToTime(item.awaiting_time) }}
     </template>
+    <template #body-agent="{ item }">
+      {{ item.agent || item.agent_email }}
+    </template>
   </UnnnicDataTable>
 </template>
 

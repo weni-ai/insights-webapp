@@ -1013,6 +1013,9 @@
       },
       "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
     },
+    "common": {
+      "no_response": "No response"
+    },
     "volume_per_queue": {
       "title": "Volume per queue",
       "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",

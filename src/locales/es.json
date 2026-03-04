@@ -1012,6 +1012,9 @@
       },
       "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
     },
+    "common": {
+      "no_response": "Sin respuesta"
+    },
     "volume_per_queue": {
       "title": "Volumen por cola",
       "monitoring_count": "{count} cola con chats {status} | {count} colas con chats {status}",

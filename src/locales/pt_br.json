@@ -1012,6 +1012,9 @@
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     },
+    "common": {
+      "no_response": "Sem resposta"
+    },
     "volume_per_queue": {
       "title": "Volume por fila",
       "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",

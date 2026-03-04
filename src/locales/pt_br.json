@@ -343,8 +343,10 @@
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
   "closeds": "Encerrados",
+  "finished": "Finalizado",
   "in_progress": "Em andamento",
   "waiting": "Aguardando",
+  "awaiting": "Em espera",
   "in-service": "Em atendimento",
   "status": "Status",
   "metric": "Métrica",
@@ -1012,6 +1014,39 @@
     },
     "common": {
       "no_response": "Sem resposta"
+    },
+    "volume_per_queue": {
+      "title": "Volume por fila",
+      "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",
+      "analysis_count": "{count} fila com chats finalizados | {count} filas com chats finalizados",
+      "setup_description": "Crie filas por setor para monitorar mais dados.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Não há filas com chats aguardando suporte",
+          "ongoing": "Não há filas com chats em progresso",
+          "closed": "Não há chats finalizados hoje"
+        },
+        "analysis": {
+          "closed": "Não há chats finalizados no período selecionado"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volume por tag",
+      "setup_description": "Adicione tags a setores para monitorar mais dados.",
+      "count": {
+        "ongoing": "{count} tag em uso | {count} tags em uso",
+        "closed": "{count} tag atribuída | {count} tags atribuídas"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "Não há tags em uso em chats em andamento",
+          "closed": "Não há tags atribuídas a chats finalizados hoje"
+        },
+        "analysis": {
+          "closed": "Não há tags atribuídas a chats finalizados no período selecionado"
+        }
+      }
     }
   },
   "news": {

@@ -56,7 +56,7 @@ import { useProject } from '@/store/modules/project';
 import { monitoringStatusCardsMock } from './mocks';
 
 const project = useProject();
-const { hasChatsSectors } = storeToRefs(project);
+const { hasSectorsConfigured } = storeToRefs(project);
 
 const humanSupport = useHumanSupport();
 const { widgetSetupProps } = storeToRefs(humanSupport);
@@ -65,7 +65,7 @@ const statusCardsRef = useTemplateRef<HTMLDivElement>('statusCards');
 const { isOutside } = useMouseInElement(statusCardsRef);
 
 const showSetup = computed(() => {
-  return !hasChatsSectors.value && !isOutside.value;
+  return !hasSectorsConfigured.value && !isOutside.value;
 });
 
 type CardId = 'is_waiting' | 'in_progress' | 'finished';
@@ -104,7 +104,7 @@ const { serviceStatusData, loadingServiceStatusData } = storeToRefs(
 const isLoadingCards = computed(() => loadingServiceStatusData.value);
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return monitoringStatusCardsMock;
   }
   return serviceStatusData.value;

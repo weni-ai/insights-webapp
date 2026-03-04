@@ -5,7 +5,7 @@
     data-testid="monitoring"
   >
     <UnnnicDisclaimer
-      v-if="!hasChatsSectors"
+      v-if="!hasSectorsConfigured"
       :description="$t('human_support_dashboard.setup.disclaimer')"
     />
     <StatusCards data-testid="monitoring-status-cards" />
@@ -52,7 +52,7 @@ defineOptions({
 });
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const STORAGE_KEY = 'news_modal_monitoring_shown';
 const showNewsModal = ref(false);

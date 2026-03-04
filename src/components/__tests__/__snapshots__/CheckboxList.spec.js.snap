@@ -8,11 +8,11 @@ exports[`CheckboxList > should render label and list 1`] = `
     class="unnnic-label"
     data-testid="checkbox-list-label"
     data-v-2e73b81b=""
-    data-v-b52fcb11=""
+    data-v-a4b997a0=""
   >
     <p
       class="unnnic-label__label"
-      data-v-b52fcb11=""
+      data-v-a4b997a0=""
     >
       Label
     </p>

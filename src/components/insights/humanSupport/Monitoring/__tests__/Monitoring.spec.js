@@ -1,13 +1,19 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { createTestingPinia } from '@pinia/testing';
 import { ref } from 'vue';
 
 import Monitoring from '../Monitoring.vue';
 
+const autoRefreshRef = ref(false);
 const mockHumanSupportMonitoringStore = {
+  $id: 'humanSupportMonitoring',
   setRefreshDataMonitoring: vi.fn(),
+  autoRefresh: autoRefreshRef,
 };
+const hasSectorsConfiguredRef = ref(true);
+const hasTagsConfiguredRef = ref(false);
 
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockHumanSupportMonitoringStore,
@@ -28,6 +34,7 @@ vi.mock('@vueuse/core', () => ({
   }),
   useElementVisibility: vi.fn(() => ref(true)),
   useInfiniteScroll: vi.fn(),
+  useMouseInElement: vi.fn(() => ({ isOutside: ref(false) })),
 }));
 
 vi.mock('@/utils/storage', () => ({
@@ -41,7 +48,18 @@ vi.mock('pinia', async (importOriginal) => {
   const actual = await importOriginal();
   return {
     ...actual,
-    storeToRefs: (store) => store,
+    storeToRefs: (store) => {
+      if (store?.$id === 'humanSupportMonitoring') {
+        return { autoRefresh: autoRefreshRef };
+      }
+      if (store?.$id === 'project') {
+        return {
+          hasSectorsConfigured: hasSectorsConfiguredRef,
+          hasTagsConfigured: hasTagsConfiguredRef,
+        };
+      }
+      return actual.storeToRefs(store);
+    },
   };
 });
 
@@ -65,6 +83,13 @@ describe('Monitoring', () => {
     Object.assign(mockHumanSupportMonitoringStore, storeOverrides);
     return mount(Monitoring, {
       global: {
+        plugins: [
+          createTestingPinia({
+            initialState: {
+              project: { hasSectorsConfigured: true },
+            },
+          }),
+        ],
         stubs: {
           StatusCards: true,
           TimeMetrics: true,

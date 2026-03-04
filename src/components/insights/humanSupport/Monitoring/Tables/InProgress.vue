@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="formattedItems"
+    :items="widgetData"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -22,16 +22,22 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicDataTable } from '@weni/unnnic-system';
 import { computed, ref, watch } from 'vue';
-import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
-import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
+import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
+
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
+
 import { formatSecondsToTime } from '@/utils/time';
+
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
-import { storeToRefs } from 'pinia';
+
+import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
+import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
+
+import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
 
 type FormattedInProgressData = Omit<
   InProgressDataResult,
@@ -46,6 +52,9 @@ const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
+
+const projectStore = useProject();
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -88,6 +97,13 @@ const {
   fetchData,
   formatResults,
   sort: currentSort.value,
+});
+
+const widgetData = computed(() => {
+  if (!hasSectorsConfigured.value) {
+    return formatResults(monitoringDetailedMonitoringInProgressMock);
+  }
+  return formattedItems.value;
 });
 
 const isLoadingVisible = computed(() => {

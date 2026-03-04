@@ -1012,6 +1012,12 @@
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     },
+    "setup": {
+      "title": "Nenhum setor criado",
+      "description": "Crie um setor para este projeto e comece a monitorizar os dados do seu time de suporte em tempo real.",
+      "action_text": "Criar setor",
+      "disclaimer": "Estes números são apenas para fins de demonstração. Assim que seu projeto tiver um setor configurado e começar a receber conversas, seus dados reais serão exibidos aqui."
+    },
     "volume_per_queue": {
       "title": "Volume por fila",
       "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",

@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="formattedItems"
+    :items="widgetData"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -28,8 +28,10 @@ import { FinishedDataResult } from '@/services/api/resources/humanSupport/analys
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { analysisDetailedAnalysisFinishedMock } from '../mocks';
 
 type FormattedFinishedData = Omit<
   FinishedDataResult,
@@ -41,8 +43,13 @@ type FormattedFinishedData = Omit<
   response_time: string;
 };
 
+defineOptions({
+  name: 'FinishedTable',
+});
+
 const { t } = useI18n();
 const humanSupport = useHumanSupport();
+const projectStore = useProject();
 
 const baseTranslationKey = 'human_support_dashboard.columns.common';
 
@@ -85,6 +92,13 @@ const {
   fetchData,
   formatResults,
   sort: currentSort.value,
+});
+
+const widgetData = computed(() => {
+  if (!projectStore.hasSectorsConfigured) {
+    return formatResults(analysisDetailedAnalysisFinishedMock);
+  }
+  return formattedItems.value;
 });
 
 const formattedHeaders = computed(() => {

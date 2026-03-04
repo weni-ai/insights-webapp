@@ -112,16 +112,20 @@ describe('DetailedFilters', () => {
     });
 
     it('should render contact input filter for in_awaiting type', () => {
-      wrapper = createWrapper({ type: 'in_awaiting' });
+      wrapper = createWrapper({ type: 'in_awaiting', mode: 'monitoring' });
 
-      const filterInput = wrapper.find('[data-testid="detailed-filter-contact_input"]');
+      const filterInput = wrapper.find(
+        '[data-testid="detailed-filter-contact_input"]',
+      );
       expect(filterInput.exists()).toBe(true);
     });
 
     it('should render contact input filter for in_progress type', () => {
-      wrapper = createWrapper({ type: 'in_progress' });
+      wrapper = createWrapper({ type: 'in_progress', mode: 'monitoring' });
 
-      const filterInput = wrapper.find('[data-testid="detailed-filter-contact_input"]');
+      const filterInput = wrapper.find(
+        '[data-testid="detailed-filter-contact_input"]',
+      );
       expect(filterInput.exists()).toBe(true);
     });
   });
@@ -377,16 +381,12 @@ describe('DetailedFilters', () => {
         '',
         '',
       );
-      expect(humanSupportStore.saveAppliedDetailFilter).not.toHaveBeenCalledWith(
-        'contact',
-        '',
-        '',
-      );
-      expect(humanSupportStore.saveAppliedDetailFilter).not.toHaveBeenCalledWith(
-        'ticketId',
-        '',
-        '',
-      );
+      expect(
+        humanSupportStore.saveAppliedDetailFilter,
+      ).not.toHaveBeenCalledWith('contact', '', '');
+      expect(
+        humanSupportStore.saveAppliedDetailFilter,
+      ).not.toHaveBeenCalledWith('ticketId', '', '');
     });
 
     it('should clear contact input filter when changing from in_awaiting to attendant', async () => {

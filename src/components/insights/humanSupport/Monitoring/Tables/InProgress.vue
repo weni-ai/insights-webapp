@@ -54,7 +54,7 @@ const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
 
 const projectStore = useProject();
-const { hasChatsSectors } = storeToRefs(projectStore);
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -96,10 +96,11 @@ const {
 } = useInfiniteScrollTable<InProgressDataResult, FormattedInProgressData>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
 });
 
 const widgetData = computed(() => {
-  if (!hasChatsSectors.value) {
+  if (!hasSectorsConfigured.value) {
     return formatResults(monitoringDetailedMonitoringInProgressMock);
   }
   return formattedItems.value;
@@ -154,6 +155,7 @@ const isRequestPending = ref(false);
 
 const loadDataSafely = async (sortValue: typeof currentSort.value) => {
   if (isRequestPending.value) return;
+
   try {
     isRequestPending.value = true;
     await resetAndLoadData(sortValue);

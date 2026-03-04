@@ -16,7 +16,8 @@ export const useProject = defineStore('project', {
       agents: [],
     },
     isLoadingAgentsTeam: false,
-    hasChatsSectors: false,
+    hasSectorsConfigured: null,
+    hasTagsConfigured: null,
   }),
 
   getters: {
@@ -81,9 +82,15 @@ export const useProject = defineStore('project', {
         console.error('Error activating agent', error);
       }
     },
-    async checkHasChatsSectors() {
-      const response = await Projects.getProjectSource('sectors');
-      this.hasChatsSectors = response.length > 0;
+    async checkHasSectorsConfigured() {
+      if (this.hasSectorsConfigured !== null) return;
+      const response = await Projects.getProjectSource('sectors', { limit: 1 });
+      this.hasSectorsConfigured = response.length > 0;
+    },
+    async checkHasTagsConfigured() {
+      if (this.hasTagsConfigured !== null) return;
+      const response = await Projects.getProjectSource('tags', { limit: 1 });
+      this.hasTagsConfigured = response.length > 0;
     },
   },
 });

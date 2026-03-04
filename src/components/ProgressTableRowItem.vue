@@ -31,12 +31,21 @@
           scheme="neutral-cloudy"
         />
         <section class="label__infos">
-          <p
-            class="infos__title"
-            :title="label"
-          >
-            {{ label }}
-          </p>
+          <section class="infos__title-container">
+            <p
+              class="infos__title"
+              :title="label"
+            >
+              {{ label }}
+            </p>
+            <p
+              v-if="props.subtitle"
+              class="infos__subtitle"
+              :title="props.subtitle"
+            >
+              {{ props.subtitle }}
+            </p>
+          </section>
           <p
             v-if="isExpandable"
             class="infos__description"
@@ -52,6 +61,7 @@
           :backgroundColor="backgroundColor"
           :color="color"
           :tooltip="tooltip"
+          :maxProgressValue="maxValue"
           data-testid="progress-table-row-item-progress"
         />
       </td>
@@ -85,11 +95,13 @@ import NativeProgress from './insights/charts/NativeProgress.vue';
 
 export interface BaseProgressTableRowItem {
   label: string;
+  subtitle?: string;
   value: number;
   description: string;
   backgroundColor?: string;
   color?: string;
   tooltip?: string;
+  maxValue?: number;
 }
 
 export interface ProgressTableRowItem extends BaseProgressTableRowItem {
@@ -167,6 +179,22 @@ const handleExpand = () => {
         line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
 
         width: 200px;
+
+        &-container {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+
+      .infos__subtitle {
+        overflow: hidden;
+        color: $unnnic-color-fg-base;
+        font: $unnnic-font-caption-2;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        max-width: 120px;
+        -webkit-box-orient: vertical;
+        line-clamp: 1;
       }
 
       .infos__description {

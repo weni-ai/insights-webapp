@@ -4,6 +4,7 @@
     data-testid="progress-table-row-item-main"
     :label="label"
     :value="value"
+    :subtitle="subtitle"
     :description="description"
     :color="color"
     :backgroundColor="backgroundColor"
@@ -11,6 +12,7 @@
     :expandableDescription="expandableDescription"
     :expanded="expanded"
     :tooltip="tooltip"
+    :maxValue="maxValue"
     @expand="emit('expand', $event)"
   >
     <template

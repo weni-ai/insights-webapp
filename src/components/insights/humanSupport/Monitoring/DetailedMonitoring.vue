@@ -72,7 +72,6 @@ import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from '../Common/Tables/Pauses.vue';
 import AgentsCount from './AgentsCount.vue';
-
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
 

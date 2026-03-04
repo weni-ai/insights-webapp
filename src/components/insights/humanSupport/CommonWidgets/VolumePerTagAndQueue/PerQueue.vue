@@ -119,5 +119,3 @@ const fetchMethod = (ctx: WidgetContext) =>
     ? volumePerQueueService.getVolumePerQueueMonitoring
     : volumePerQueueService.getVolumePerQueueAnalysis;
 </script>
-
-<style scoped lang="scss"></style>

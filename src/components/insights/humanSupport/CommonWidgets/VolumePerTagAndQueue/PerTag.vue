@@ -108,5 +108,3 @@ const fetchMethod = (ctx: WidgetContext) =>
     ? volumePerTagService.getVolumePerTagsMonitoring
     : volumePerTagService.getVolumePerTagsAnalysis;
 </script>
-
-<style scoped lang="scss"></style>

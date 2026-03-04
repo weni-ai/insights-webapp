@@ -254,5 +254,3 @@ watch(refreshDataMonitoring, async () => {
   }
 });
 </script>
-
-<style scoped lang="scss"></style>

@@ -42,6 +42,13 @@
 
 <script>
 import IconLoading from '@/components/IconLoading.vue';
+import {
+  colorYellow300,
+  colorOrange300,
+  colorPurple300,
+  colorBlue300,
+  colorGreen300,
+} from '@weni/unnnic-system/tokens/colors';
 
 export default {
   name: 'FunnelChart',
@@ -62,11 +69,11 @@ export default {
   computed: {
     formattedChartData() {
       const arrayColors = [
-        '#F6E05E',
-        '#F6AD55',
-        '#B794F4',
-        '#63B3ED',
-        '#68D391',
+        colorYellow300,
+        colorOrange300,
+        colorPurple300,
+        colorBlue300,
+        colorGreen300,
       ];
 
       if (!Array.isArray(this.chartData)) return [];

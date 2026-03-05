@@ -343,8 +343,10 @@
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
   "closeds": "Cerrados",
+  "finished": "Finalizado",
   "in_progress": "En curso",
   "waiting": "Esperando",
+  "awaiting": "En espera",
   "in-service": "Servicio en curso",
   "status": "Status",
   "metric": "Métrica",
@@ -941,6 +943,11 @@
         "average_duration": "Duración media",
         "time_in_service": "Tiempo en atendimiento",
         "action": "Acción"
+      },
+      "agents_count": {
+        "online": "{count} en línea",
+        "custom_breaks": "{count} en pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -956,6 +963,9 @@
       },
       "ticket_id": {
         "label": "Protocolo"
+      },
+      "status": {
+        "label": "Estado"
       }
     },
     "columns": {
@@ -1001,6 +1011,42 @@
         "very_dissatisfied": "😡 Muy insatisfecho"
       },
       "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
+    },
+    "common": {
+      "no_response": "Sin respuesta"
+    },
+    "volume_per_queue": {
+      "title": "Volumen por cola",
+      "monitoring_count": "{count} cola con chats {status} | {count} colas con chats {status}",
+      "analysis_count": "{count} cola con chats finalizados | {count} colas con chats finalizados",
+      "setup_description": "Crea colas por sector para monitorear más datos.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No hay colas con chats esperando soporte",
+          "ongoing": "No hay colas con chats en progreso",
+          "closed": "No hay chats finalizados hoy"
+        },
+        "analysis": {
+          "closed": "No hay chats finalizados en el período seleccionado"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volumen por tag",
+      "setup_description": "Añade tags a sectores para monitorear más datos.",
+      "count": {
+        "ongoing": "{count} tag en uso | {count} tags en uso",
+        "closed": "{count} tag asignada | {count} tags asignadas"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "No hay tags en uso en chats en progreso",
+          "closed": "No hay tags asignadas a chats finalizados hoy"
+        },
+        "analysis": {
+          "closed": "No hay tags asignadas a chats finalizados en el período seleccionado"
+        }
+      }
     }
   },
   "news": {
@@ -1025,5 +1071,26 @@
   },
   "on": "Activa",
   "off": "Inactiva",
-  "paused": "Pausada"
+  "paused": "Pausada",
+  "data_feedback": {
+    "title": "Comparte tu experiencia con el Dashboard de IA Conversacional",
+    "description": "Considerando tu experiencia con este dashboard, indica cuánto estás de acuerdo con las afirmaciones a continuación:",
+    "q1": "Confío en los datos presentados en este dashboard.",
+    "q2": "Los datos de este dashboard me ayudan a tomar decisiones.",
+    "q3": "Con este dashboard, puedo entender el impacto (ROI) de las conversaciones de IA en los resultados del negocio.",
+    "textarea_label": "¿Qué podríamos mejorar en este dashboard? (opcional)",
+    "textarea_placeholder": "Comparte sugerencias para mejorar la claridad, confianza o utilidad de los datos.",
+    "strongly_agree": "Totalmente de acuerdo",
+    "partially_agree": "Parcialmente de acuerdo",
+    "neutral": "Neutral",
+    "partially_disagree": "Parcialmente en desacuerdo",
+    "strongly_disagree": "Totalmente en desacuerdo",
+    "postpone": "Posponer",
+    "submit": "Enviar feedback",
+    "toast_success": "Feedback enviado con éxito. ¡Gracias!",
+    "toast_error": "No pudimos enviar tu feedback.",
+    "toast_error_retry": "Intentar de nuevo",
+    "toast_postponed": "Feedback pospuesto. Podrás responder después.",
+    "toast_postponed_respond": "Responder ahora"
+  }
 }

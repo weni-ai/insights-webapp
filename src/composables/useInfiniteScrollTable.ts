@@ -9,12 +9,19 @@ interface UseInfiniteScrollTableOptions<T, R> {
   ) => Promise<{ results: T[]; count: number }>;
   formatResults: (_results: T[]) => R[];
   onSortChange?: () => void;
+  sort?: { itemKey: string; order: string };
 }
 
 export function useInfiniteScrollTable<T = any, R = any>(
   options: UseInfiniteScrollTableOptions<T, R>,
 ) {
-  const { pageSize = 12, fetchData, formatResults, onSortChange } = options;
+  const {
+    pageSize = 12,
+    fetchData,
+    formatResults,
+    onSortChange,
+    sort,
+  } = options;
 
   const isLoading = ref(false);
   const isLoadingMore = ref(false);
@@ -27,8 +34,12 @@ export function useInfiniteScrollTable<T = any, R = any>(
     () => formattedItems.value.length < totalCount.value,
   );
 
-  const buildOrdering = (sort: { itemKey: string; order: string }) => {
-    return sort.order === 'desc' ? `-${sort.itemKey}` : sort.itemKey;
+  const buildOrdering = (
+    buildSort: { itemKey: string; order: string } = sort,
+  ) => {
+    return buildSort.order === 'desc'
+      ? `-${buildSort.itemKey}`
+      : buildSort.itemKey;
   };
 
   const loadMoreData = async (currentSort: {
@@ -91,7 +102,6 @@ export function useInfiniteScrollTable<T = any, R = any>(
   ) => {
     currentSort.value = sort;
     onSortChange?.();
-    resetAndLoadData(sort);
   };
 
   return {

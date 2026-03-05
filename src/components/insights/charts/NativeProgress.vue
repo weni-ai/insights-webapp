@@ -25,6 +25,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { UnnnicToolTip } from '@weni/unnnic-system';
+import {
+  colorBlue500,
+  colorGray50,
+} from '@weni/unnnic-system/tokens/colors';
 
 interface Props {
   progress: number;
@@ -32,18 +36,25 @@ interface Props {
   backgroundColor?: string;
   height?: number;
   tooltip?: string;
+  maxProgressValue?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   progress: 0,
-  color: '#007bff',
-  backgroundColor: '#e9ecef',
+  color: colorBlue500,
+  backgroundColor: colorGray50,
   height: 8,
   tooltip: '',
+  maxProgressValue: 100,
 });
 
 const normalizedProgress = computed(() => {
-  return Math.max(0, Math.min(100, props.progress));
+  const progress = Math.max(
+    0,
+    Math.min(props.maxProgressValue, props.progress),
+  );
+  if (props.maxProgressValue <= 0) return 0;
+  return Math.min(100, (progress / props.maxProgressValue) * 100);
 });
 
 const containerStyles = computed(() => ({

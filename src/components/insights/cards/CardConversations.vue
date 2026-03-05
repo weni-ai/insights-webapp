@@ -128,7 +128,7 @@ defineEmits<{
   align-self: stretch;
 
   border: 1px solid $unnnic-color-neutral-soft;
-  background: #fff;
+  background: $unnnic-color-neutral-white;
 
   &--clickable {
     cursor: pointer;

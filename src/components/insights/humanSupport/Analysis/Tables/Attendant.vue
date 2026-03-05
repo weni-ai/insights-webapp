@@ -76,7 +76,7 @@ const fetchData = async (page: number, pageSize: number, ordering: string) => {
     ordering,
     limit: pageSize,
     offset,
-    agent: humanSupport.appliedDetailFilters.agent.value,
+    agent: humanSupport.appliedDetailFilters.agent.value as string,
   });
 };
 
@@ -91,6 +91,7 @@ const {
 } = useInfiniteScrollTable<AttendantDataResult, FormattedAttendantData>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
 });
 
 const formattedHeaders = computed(() => {

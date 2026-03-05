@@ -13,9 +13,10 @@
         </h1>
       </section>
       <section v-if="!isExpansive">
-        <UnnnicButtonIcon
+        <UnnnicButton
           size="small"
-          icon="expand_content"
+          iconCenter="expand_content"
+          type="secondary"
           data-testid="expand-button"
           @click.prevent.stop="$emit('seeMore')"
         />

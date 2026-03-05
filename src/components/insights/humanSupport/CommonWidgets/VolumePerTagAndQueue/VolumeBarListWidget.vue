@@ -46,6 +46,7 @@ import type {
 
 import i18n from '@/utils/plugins/i18n';
 import { orderBy } from '@/utils/array';
+import { formatNumber } from '@/utils/numbers';
 
 const { t } = i18n.global;
 
@@ -141,7 +142,7 @@ const formattedItems = computed(() => {
         label: subitem[itemLabelKey] ?? '',
         subtitle: item.sector_name,
         value: subitem.value,
-        description: `${subitem.value}`,
+        description: `${formatNumber(subitem.value)}`,
         color: props.barColor,
         backgroundColor: props.barBackgroundColor,
       }),

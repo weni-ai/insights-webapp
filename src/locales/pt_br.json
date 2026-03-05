@@ -1092,5 +1092,6 @@
     "toast_error_retry": "Tentar novamente",
     "toast_postponed": "Feedback adiado. Você poderá responder depois.",
     "toast_postponed_respond": "Responder agora"
-  }
+  },
+  "without_results": "Nenhum resultado encontrado"
 }

@@ -193,6 +193,10 @@ export default {
       this.callTourPreviousStep({
         tour: 'widgets-onboarding-tour',
       });
+
+      if (!this.galleryOptions.length) {
+        this.$emit('close');
+      }
     },
   },
 };

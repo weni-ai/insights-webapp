@@ -105,7 +105,7 @@ export default {
     ...mapState(useWidgets, ['currentExpansiveWidgetFilters']),
     ...mapState(useDashboards, ['appliedFilters']),
     hasExpansiveWidgetFilteringDates() {
-      return !!this.currentExpansiveWidgetFilters.date.start;
+      return !!this.currentExpansiveWidgetFilters.date?.start;
     },
     formattedHeaders() {
       const shownHeaders = this.headers?.filter(

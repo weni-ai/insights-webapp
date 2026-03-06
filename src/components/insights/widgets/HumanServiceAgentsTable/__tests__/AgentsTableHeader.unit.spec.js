@@ -47,7 +47,7 @@ const sampleHeaders = [
   { name: 'not_displayed', display: false, hidden_name: false },
 ];
 
-const storageColumns = ['ongoing', 'closeds', 'column1', 'column2'];
+const storageColumns = ['Ongoing', 'Closeds', 'column1', 'column2'];
 
 const createMockStore = (overrideState = {}) => {
   return createTestingPinia({
@@ -88,7 +88,7 @@ const createWrapper = (props = {}, overrideState = {}) => {
         plugins: [store],
         stubs: {
           UnnnicLabel: true,
-          UnnnicSelectSmart: true,
+          UnnnicMultiSelect: true,
           UnnnicButton: true,
           FilterSelect: true,
         },
@@ -150,7 +150,7 @@ describe('AgentsTableHeader', () => {
 
       const columnNames = headerOptions.map((option) => option.value);
 
-      expect(columnNames).toContain('ongoing');
+      expect(columnNames).toContain('Ongoing');
       expect(columnNames).toContain('column1');
 
       expect(columnNames).not.toContain('status');
@@ -190,10 +190,7 @@ describe('AgentsTableHeader', () => {
         'setVisibleColumns',
       );
 
-      const columns = [
-        { value: 'column1', label: 'Column 1', key: 'column1' },
-        { value: 'column2', label: 'Column 2', key: 'column2' },
-      ];
+      const columns = ['column1', 'column2'];
 
       await wrapper.vm.handleVisibleColumnsUpdate(columns);
 
@@ -217,7 +214,7 @@ describe('AgentsTableHeader', () => {
         'setVisibleColumns',
       );
 
-      const columns = [{ value: 'column1', label: 'Column 1' }];
+      const columns = ['column1'];
 
       await wrapper.vm.handleVisibleColumnsUpdate(columns);
 
@@ -233,7 +230,7 @@ describe('AgentsTableHeader', () => {
         },
       );
 
-      const columns = [{ value: 'column1', label: 'Column 1' }];
+      const columns = ['column1'];
 
       const agentsColumnsFilterStore = useAgentsColumnsFilter();
 
@@ -395,9 +392,7 @@ describe('AgentsTableHeader', () => {
       expect(spySetVisibleColumns).toHaveBeenCalled();
       const expectedColumns = ['new_column1', 'new_column2', 'new_column3'];
       expect(spySetVisibleColumns).toHaveBeenCalledWith(expectedColumns);
-      expect(wrapper.vm.selectedColumns.map((c) => c.value)).toEqual(
-        expectedColumns,
-      );
+      expect(wrapper.vm.selectedColumns).toEqual(expectedColumns);
     });
 
     it('does NOT initialize selectedColumns when headerOptions change if storedColumns is NOT empty', async () => {
@@ -476,7 +471,7 @@ describe('AgentsTableHeader', () => {
     });
 
     it('initializes selectedColumns from storedColumns if storedColumns exist and availableColumns > 2', async () => {
-      const testStoredColumns = ['ongoing', 'column1', 'column2'];
+      const testStoredColumns = ['Ongoing', 'column1', 'column2'];
       const { wrapper } = createWrapper(
         { headers: sampleHeaders },
         {
@@ -489,12 +484,13 @@ describe('AgentsTableHeader', () => {
 
       await wrapper.vm.$nextTick();
 
-      const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
-      expect(selectedValues).toEqual(expect.arrayContaining(testStoredColumns));
-      expect(selectedValues.length).toBe(testStoredColumns.length);
+      expect(wrapper.vm.selectedColumns).toEqual(
+        expect.arrayContaining(testStoredColumns),
+      );
+      expect(wrapper.vm.selectedColumns.length).toBe(testStoredColumns.length);
     });
 
-    it('initializes selectedColumns from storedColumns (as objects) if storedColumns exist and availableColumns <= 2', () => {
+    it('initializes selectedColumns from storedColumns if storedColumns exist and availableColumns <= 2', () => {
       const testStoredColumns = ['in_progress', 'closeds'];
       const fewHeaders = [
         { name: 'status', display: true, hidden_name: false },
@@ -513,15 +509,10 @@ describe('AgentsTableHeader', () => {
         },
       );
 
-      const selectedValues = wrapper.vm.selectedColumns.map((col) => col.value);
-      const selectedLabels = wrapper.vm.selectedColumns.map((col) => col.label);
-
-      expect(selectedValues).toEqual(expect.arrayContaining(testStoredColumns));
-      expect(selectedValues.length).toBe(testStoredColumns.length);
-      testStoredColumns.forEach((colName) => {
-        expect(selectedValues).toContain(colName);
-        expect(selectedLabels).toContain(colName);
-      });
+      expect(wrapper.vm.selectedColumns).toEqual(
+        expect.arrayContaining(testStoredColumns),
+      );
+      expect(wrapper.vm.selectedColumns.length).toBe(testStoredColumns.length);
     });
 
     it('does NOT initialize selectedColumns if storedColumns is empty on mount (relies on watcher)', () => {

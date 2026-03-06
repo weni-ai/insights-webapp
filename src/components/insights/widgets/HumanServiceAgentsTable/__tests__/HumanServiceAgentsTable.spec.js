@@ -177,10 +177,10 @@ describe('HumanServiceAgentsTable', () => {
         stubs: {
           AgentsTableHeader: true,
           UnnnicTableNext: true,
-          UnnnicButtonIcon: {
+          UnnnicButton: {
             template:
-              '<button data-testid="expand-button" @click="$emit(\'click\')">{{icon}}</button>',
-            props: ['icon', 'size'],
+              '<button data-testid="expand-button" @click="$emit(\'click\', $event)">{{iconCenter}}</button>',
+            props: ['iconCenter', 'size', 'type'],
             emits: ['click'],
           },
           AgentStatus: true,
@@ -525,10 +525,10 @@ describe('HumanServiceAgentsTable', () => {
         global: {
           plugins: [i18n, UnnnicSystem, expansiveStore],
           stubs: {
-            UnnnicButtonIcon: {
+            UnnnicButton: {
               template:
-                '<button data-testid="expand-button" @click="$emit(\'click\')">{{icon}}</button>',
-              props: ['icon', 'size'],
+                '<button data-testid="expand-button" @click="$emit(\'click\', $event)">{{iconCenter}}</button>',
+              props: ['iconCenter', 'size', 'type'],
               emits: ['click'],
             },
             UnnnicTableNext: true,
@@ -580,7 +580,7 @@ describe('HumanServiceAgentsTable', () => {
         global: {
           plugins: [i18n, UnnnicSystem, customOrderStore],
           stubs: {
-            UnnnicButtonIcon: true,
+            UnnnicButton: true,
             UnnnicTableNext: true,
             AgentsTableHeader: true,
             AgentStatus: true,
@@ -663,7 +663,7 @@ describe('HumanServiceAgentsTable', () => {
         global: {
           plugins: [i18n, UnnnicSystem, expansiveStore],
           stubs: {
-            UnnnicButtonIcon: true,
+            UnnnicButton: true,
             UnnnicTableNext: true,
             AgentsTableHeader: true,
             AgentStatus: true,

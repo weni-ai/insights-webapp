@@ -80,6 +80,7 @@ export const useWidgets = defineStore('widgets', {
       this.currentExpansiveWidgetFilters = {
         sector: '',
         queue: '',
+        date: { start: '', end: '' },
       };
     },
 

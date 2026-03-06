@@ -127,10 +127,16 @@ const createWrapper = (props = {}, piniaOptions = {}) => {
           props: ['modelValue', 'placeholder'],
           emits: ['update:modelValue'],
         },
-        UnnnicSelectSmart: {
+        UnnnicSelect: {
           template:
-            '<select v-model="modelValue" data-testid="unnnic-select-smart"><option v-for="option in options" :key="option.value" :value="option">{{ option.label }}</option></select>',
-          props: ['modelValue', 'options', 'placeholder'],
+            '<select v-model="modelValue" data-testid="unnnic-select"><option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option></select>',
+          props: [
+            'modelValue',
+            'options',
+            'placeholder',
+            'itemLabel',
+            'itemValue',
+          ],
           emits: ['update:modelValue'],
         },
         UnnnicButton: {
@@ -194,7 +200,7 @@ describe('DrawerDashboardConfig', () => {
       await wrapper.vm.$nextTick();
 
       expect(wrapper.vm.dashboardForm.name).toBe('Test Dashboard');
-      expect(wrapper.vm.dashboardForm.currency[0]?.value).toBe('USD');
+      expect(wrapper.vm.dashboardForm.currency).toBe('USD');
     });
   });
 
@@ -205,7 +211,7 @@ describe('DrawerDashboardConfig', () => {
       expect(wrapper.vm.isValidConfig).toBe(false);
 
       wrapper.vm.dashboardForm.name = 'Test Dashboard';
-      wrapper.vm.dashboardForm.currency = [{ label: 'USD', value: 'USD' }];
+      wrapper.vm.dashboardForm.currency = 'USD';
       expect(wrapper.vm.isValidConfig).toBe(true);
     });
 
@@ -225,15 +231,15 @@ describe('DrawerDashboardConfig', () => {
       const wrapper = createWrapper();
 
       wrapper.vm.dashboardForm.name = '';
-      wrapper.vm.dashboardForm.currency = [];
+      wrapper.vm.dashboardForm.currency = '';
       expect(wrapper.vm.isValidConfig).toBe(false);
 
       wrapper.vm.dashboardForm.name = 'Test';
-      wrapper.vm.dashboardForm.currency = [];
+      wrapper.vm.dashboardForm.currency = '';
       expect(wrapper.vm.isValidConfig).toBe(false);
 
       wrapper.vm.dashboardForm.name = '';
-      wrapper.vm.dashboardForm.currency = [{ label: 'USD', value: 'USD' }];
+      wrapper.vm.dashboardForm.currency = 'USD';
       expect(wrapper.vm.isValidConfig).toBe(false);
     });
   });
@@ -290,7 +296,7 @@ describe('DrawerDashboardConfig', () => {
 
       const wrapper = createWrapper();
       wrapper.vm.dashboardForm.name = 'New Dashboard';
-      wrapper.vm.dashboardForm.currency = [{ label: 'USD', value: 'USD' }];
+      wrapper.vm.dashboardForm.currency = 'USD';
       wrapper.vm.dashboardForm.layout = 2;
 
       await wrapper.vm.createDashboard();
@@ -310,7 +316,7 @@ describe('DrawerDashboardConfig', () => {
       const createDashboardSpy = vi.spyOn(wrapper.vm, 'createDashboard');
 
       wrapper.vm.dashboardForm.name = 'Test Dashboard';
-      wrapper.vm.dashboardForm.currency = [{ label: 'USD', value: 'USD' }];
+      wrapper.vm.dashboardForm.currency = 'USD';
 
       await wrapper.find('[data-testid="primary-button"]').trigger('click');
 
@@ -424,7 +430,7 @@ describe('DrawerDashboardConfig', () => {
 
       const wrapper = createWrapper({ dashboard: mockDashboard });
 
-      expect(wrapper.vm.dashboardForm.currency).toEqual([]);
+      expect(wrapper.vm.dashboardForm.currency).toBe('');
     });
 
     it('should handle dashboard without config', () => {
@@ -435,7 +441,7 @@ describe('DrawerDashboardConfig', () => {
 
       const wrapper = createWrapper({ dashboard: mockDashboard });
 
-      expect(wrapper.vm.dashboardForm.currency).toEqual([]);
+      expect(wrapper.vm.dashboardForm.currency).toBe('');
       expect(wrapper.vm.dashboardForm.name).toBe('Test Dashboard');
     });
   });

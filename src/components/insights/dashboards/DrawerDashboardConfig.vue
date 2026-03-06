@@ -28,10 +28,12 @@
         </section>
         <section class="config-form__input">
           <UnnnicLabel :label="$t('currency')" />
-          <UnnnicSelectSmart
+          <UnnnicSelect
             v-model="dashboardForm.currency"
             :options="currencyOptions"
             :placeholder="$t('select')"
+            itemLabel="label"
+            itemValue="value"
           />
         </section>
         <UnnnicButton
@@ -94,7 +96,7 @@ export default {
       dashboardForm: {
         name: '',
         layout: 1,
-        currency: [],
+        currency: '',
       },
       currencyOptions: [
         { label: this.$t('currency_options.BRL'), value: 'BRL' },
@@ -114,9 +116,7 @@ export default {
 
     isValidConfig() {
       const commonValidations = !!(
-        this.dashboardForm.name.trim() &&
-        this.dashboardForm.currency.length &&
-        this.dashboardForm.currency[0].value
+        this.dashboardForm.name.trim() && this.dashboardForm.currency
       );
 
       if (!this.dashboard) {
@@ -136,7 +136,7 @@ export default {
       const currencyOption = this.currencyOptions.find(
         (currency) => currency.value === this.dashboard.config?.currency_type,
       );
-      this.dashboardForm.currency = currencyOption ? [currencyOption] : [];
+      this.dashboardForm.currency = currencyOption?.value || '';
       this.dashboardForm.name = this.dashboard.name;
     },
     handleLayoutSelected(value) {
@@ -172,7 +172,7 @@ export default {
       Dashboards.createFlowsDashboard({
         dashboardName: this.dashboardForm.name,
         funnelAmount: this.dashboardForm.layout,
-        currencyType: this.dashboardForm.currency[0].value,
+        currencyType: this.dashboardForm.currency,
       })
         .then((response) => {
           const { dashboard } = response;
@@ -206,7 +206,7 @@ export default {
       Dashboards.updateFlowsDashboard({
         dashboardUuid: this.dashboard.uuid,
         dashboardName: this.dashboardForm.name,
-        currencyType: this.dashboardForm.currency[0].value,
+        currencyType: this.dashboardForm.currency,
       })
         ?.then((response) => {
           let updatedDashboard;
@@ -278,10 +278,7 @@ export default {
   }
 }
 
-// Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow
-:deep(.unnnic-select-smart__options.active) {
-  position: fixed;
-  left: auto;
-  right: auto;
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
 }
 </style>

@@ -1,12 +1,12 @@
 <template>
-  <UnnnicSelectSmart
-    :modelValue="treatedModelValue"
+  <UnnnicSelect
+    :modelValue="modelValue"
     :options="options"
-    autocomplete
-    autocompleteIconLeft
-    autocompleteClearOnFocus
+    enableSearch
     :placeholder="placeholder"
-    @update:model-value="$emit('update:model-value', $event[0].value)"
+    itemLabel="label"
+    itemValue="value"
+    @update:model-value="$emit('update:model-value', $event)"
   />
 </template>
 
@@ -63,21 +63,6 @@ export default {
     };
   },
 
-  computed: {
-    treatedModelValue() {
-      const { modelValue, options } = this;
-
-      if (typeof modelValue === 'string') {
-        const modelValueObj =
-          options.find((option) => option.value === modelValue) || options[0];
-
-        return [modelValueObj];
-      }
-
-      return modelValue || [options[0]];
-    },
-  },
-
   watch: {
     dependsOnValue: {
       immediate: true,
@@ -123,3 +108,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
+}
+</style>

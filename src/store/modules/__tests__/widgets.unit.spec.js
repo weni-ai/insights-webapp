@@ -249,6 +249,7 @@ describe('useWidgets store', () => {
     expect(store.currentExpansiveWidgetFilters).toEqual({
       sector: '',
       queue: '',
+      date: { start: '', end: '' },
     });
   });
 

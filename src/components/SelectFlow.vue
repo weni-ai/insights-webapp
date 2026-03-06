@@ -4,13 +4,14 @@
       data-testid="select-flow-label"
       :label="$t('drawers.config_card.select_origin_flow')"
     />
-    <UnnnicSelectSmart
+    <UnnnicSelect
       v-bind="$attrs"
       v-model="flow"
       :options="flowsOptions"
-      autocomplete
-      autocompleteIconLeft
-      autocompleteClearOnFocus
+      enableSearch
+      :placeholder="$t('drawers.config_funnel.select_flow')"
+      itemLabel="label"
+      itemValue="value"
     />
   </section>
 </template>
@@ -32,12 +33,8 @@ export default {
 
   data() {
     return {
-      flowsOptionsPlaceholder: {
-        value: '',
-        label: this.$t('drawers.config_funnel.select_flow'),
-      },
       flowsOptions: [],
-      flow: [],
+      flow: '',
     };
   },
 
@@ -49,19 +46,19 @@ export default {
 
   watch: {
     flow(newFlow) {
-      this.$emit('update:model-value', newFlow?.[0]?.value);
+      this.$emit('update:model-value', newFlow || '');
     },
     modelValue() {
       this.treatModelValue();
     },
     projectFlows() {
-      this.flowsOptions = [this.flowsOptionsPlaceholder, ...this.projectFlows];
+      this.flowsOptions = [...this.projectFlows];
       this.treatModelValue();
     },
   },
 
   created() {
-    this.flowsOptions = [this.flowsOptionsPlaceholder, ...this.projectFlows];
+    this.flowsOptions = [...this.projectFlows];
     this.treatModelValue();
   },
 
@@ -70,20 +67,33 @@ export default {
       const { modelValue } = this;
 
       if (!modelValue || (Array.isArray(modelValue) && !modelValue.length)) {
-        this.flow = [this.flowsOptionsPlaceholder];
+        this.flow = '';
         return;
       }
 
-      const modelValueByTypeMap = {
-        string: [
-          this.projectFlows.find((flow) => flow.value === modelValue) ||
-            this.flowsOptionsPlaceholder,
-        ],
-        object: Array.isArray(modelValue) ? modelValue : [modelValue],
-      };
+      if (typeof modelValue === 'string') {
+        this.flow = modelValue;
+        return;
+      }
 
-      this.flow = modelValueByTypeMap[typeof modelValue] || [];
+      if (Array.isArray(modelValue) && modelValue.length) {
+        this.flow = modelValue[0]?.value || '';
+        return;
+      }
+
+      if (typeof modelValue === 'object') {
+        this.flow = modelValue.value || '';
+        return;
+      }
+
+      this.flow = '';
     },
   },
 };
 </script>
+
+<style lang="scss">
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
+}
+</style>

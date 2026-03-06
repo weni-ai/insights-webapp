@@ -13,15 +13,14 @@
       data-testid="dynamic-columns-filter"
     >
       <UnnnicLabel :label="$t('insights_header.dynamic_columns')" />
-      <UnnnicSelectSmart
+      <UnnnicMultiSelect
+        v-model="selectedColumns"
         data-testid="columns-select"
-        :modelValue="selectedColumns"
         :options="headerOptions"
-        multiple
-        autocomplete
-        autocompleteIconLeft
-        autocompleteClearOnFocus
+        enableSearch
         :placeholder="$t('insights_header.placeholder_dynamic_columns')"
+        itemLabel="label"
+        itemValue="value"
         @update:model-value="handleVisibleColumnsUpdate"
       />
     </section>
@@ -107,19 +106,17 @@ onMounted(() => {
 
   const availableColumns = headerOptions.value;
   if (storedColumns.length > 0 && availableColumns.length > 2) {
-    const filteredColumns = availableColumns.filter((opt) =>
-      storedColumns.includes(opt.value),
-    );
-    handleVisibleColumnsUpdate(filteredColumns);
+    const filteredValues = availableColumns
+      .filter((opt) => storedColumns.includes(opt.value))
+      .map((opt) => opt.value);
+    handleVisibleColumnsUpdate(filteredValues);
   } else if (storedColumns.length > 0) {
-    handleVisibleColumnsUpdate(
-      storedColumns.map((opt) => ({ value: opt, label: opt })),
-    );
+    handleVisibleColumnsUpdate([...storedColumns]);
   }
 });
 
 const hasDateFilter = computed(() => {
-  return !!widgetsStore.currentExpansiveWidgetFilters.date.start;
+  return !!widgetsStore.currentExpansiveWidgetFilters.date?.start;
 });
 
 const headerOptions = computed(() => {
@@ -132,12 +129,11 @@ const headerOptions = computed(() => {
         !['status', 'agent'].includes(header.name),
     )
     .map((header) => ({
-      value: i18n.global.t(header.name?.toLowerCase()),
+      value: header.name,
       label:
         hasDateFilter.value && header.value === 'opened'
           ? i18n.global.t('table_dynamic_by_filter.chats_in_period')
           : i18n.global.t(header.name),
-      key: header.name,
     }));
 });
 
@@ -149,10 +145,8 @@ const handleVisibleColumnsUpdate = (value) => {
   if (!agentsColumnsFilterStore.hasInitialized || !Array.isArray(value)) return;
 
   if (agentsColumnsFilterStore.visibleColumns.length / value.length < 3) {
-    const columnNames = value.map((option) => option.key);
     selectedColumns.value = value;
-
-    agentsColumnsFilterStore.setVisibleColumns(columnNames);
+    agentsColumnsFilterStore.setVisibleColumns([...value]);
   }
 };
 
@@ -194,7 +188,7 @@ const refreshData = () => {
 watch(headerOptions, () => {
   const storedColumns = agentsColumnsFilterStore.visibleColumns || [];
   if (storedColumns.length === 0 && headerOptions.value.length > 2) {
-    handleVisibleColumnsUpdate(headerOptions.value);
+    handleVisibleColumnsUpdate(headerOptions.value.map((opt) => opt.value));
   }
 });
 
@@ -228,5 +222,9 @@ watch(selectedQueue, () => {
   align-items: end;
   width: 100%;
   gap: 1rem;
+}
+
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
 }
 </style>

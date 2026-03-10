@@ -26,6 +26,27 @@ interface crosstabForm {
   field_name_b: string;
 }
 
+interface absoluteNumbersFormChildren {
+  name: string;
+  parent?: string;
+  config: {
+    index: number;
+    agent_uuid: string;
+    key: string;
+    operation: string;
+    currency: {
+      is_active: boolean;
+      code: string | null;
+    };
+  };
+}
+
+interface absoluteNumbersForm {
+  widget_uuid: string;
+  name: string;
+  children: absoluteNumbersFormChildren[];
+}
+
 interface customWidget extends WidgetType {
   data: CustomWidgetResponse;
   config: {
@@ -62,6 +83,11 @@ export const useCustomWidgets = defineStore('customWidgets', {
       key_b: '',
       field_name_b: '',
     } as crosstabForm,
+    absoluteNumbersForm: {
+      widget_uuid: '',
+      name: '',
+      children: [],
+    } as absoluteNumbersForm,
     isLoadingSaveNewCustomWidget: false,
     isLoadingDeleteCustomWidget: false,
     loadingByUuid: [] as string[],
@@ -86,6 +112,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
     resetForms() {
       this.customForm = {} as customForm;
       this.crosstabForm = {} as crosstabForm;
+      this.absoluteNumbersForm = {} as absoluteNumbersForm;
     },
     setCustomFormAgent(agent_uuid: string, agent_name: string) {
       this.customForm.agent_uuid = agent_uuid;
@@ -235,5 +262,9 @@ export const useCustomWidgets = defineStore('customWidgets', {
       state.crosstabForm.widget_name?.trim() !== '' &&
       state.crosstabForm.key_a?.trim() !== '' &&
       state.crosstabForm.key_b?.trim() !== '',
+    isEnabledSaveAbsoluteNumbersForm: (state) => {
+      return state.absoluteNumbersForm.name?.trim() !== '';
+      // TODO: Implement validation for absolute numbers form
+    },
   },
 });

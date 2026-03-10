@@ -115,6 +115,7 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { WidgetType } from '@/models/types/WidgetTypes';
 import WidgetConversationalService, {
   AvailableWidget,
@@ -147,7 +148,9 @@ const {
   isEnabledCreateCustomForm,
   isLoadingSaveNewCustomWidget,
   isEnabledSaveCrosstabForm,
+  isEnabledSaveAbsoluteNumbersForm,
 } = storeToRefs(customWidgets);
+
 const { saveCustomWidget } = customWidgets;
 
 const sentimentFormStore = useSentimentAnalysisForm();
@@ -155,6 +158,8 @@ const { initializeForm, clearEditingContext } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 const availableWidgetsFromApi = ref<AvailableWidget[]>([]);
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
 
 onBeforeMount(() => {
   getAgentsTeam();
@@ -316,6 +321,13 @@ const availableWidgets = computed(() => {
       ),
       key: 'crosstab',
     },
+    {
+      name: i18n.global.t('conversations_dashboard.absolute_numbers'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.absolute_numbers_description',
+      ),
+      key: 'absolute_numbers',
+    },
   ];
 });
 
@@ -378,17 +390,33 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
   }
 
   if (tabKey === 'customized') {
-    return [
+    const isAbsoluteNumbersEnabled = isFeatureFlagEnabled(
+      'insightsAbsoluteNumbersWidget',
+    );
+
+    const widgets = [
       handleWidgetTypeChoice('custom'),
       handleWidgetTypeChoice('crosstab'),
     ];
+
+    if (isAbsoluteNumbersEnabled) {
+      widgets.push(handleWidgetTypeChoice('absolute_numbers'));
+    }
+
+    return widgets;
   }
 
   return [];
 };
 
 const handleWidgetTypeChoice = (
-  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab',
+  widgetType:
+    | 'csat'
+    | 'nps'
+    | 'custom'
+    | 'sales_funnel'
+    | 'crosstab'
+    | 'absolute_numbers',
 ) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };
@@ -402,12 +430,16 @@ const isDisabledPrimaryButton = computed(() => {
     return !isEnabledSaveCrosstabForm.value;
   }
 
-  if (isNewDrawerCustomizable.value) {
-    return !isEnabledSaveNewWidget.value;
+  if (drawerWidgetType.value === 'absolute_numbers') {
+    return !isEnabledSaveAbsoluteNumbersForm.value;
   }
 
   if (drawerWidgetType.value === 'csat') {
     return !isEnabledUpdateWidgetCsat.value;
+  }
+
+  if (isNewDrawerCustomizable.value) {
+    return !isEnabledSaveNewWidget.value;
   }
 
   return !isEnabledUpdateWidgetNps.value;

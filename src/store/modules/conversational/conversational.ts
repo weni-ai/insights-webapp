@@ -9,6 +9,7 @@ export type DrawerWidgetType =
   | 'custom'
   | 'sales_funnel'
   | 'crosstab'
+  | 'absolute_numbers'
   | null;
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;
@@ -31,6 +32,7 @@ export const useConversational = defineStore('conversational', {
       | 'add'
       | 'custom'
       | 'crosstab'
+      | 'absolute_numbers'
       | null,
     isNewDrawerCustomizable: false,
     refreshDataConversational: false,

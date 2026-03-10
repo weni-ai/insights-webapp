@@ -26,7 +26,7 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
-      "description": "As of 11/02/2026, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed."
+      "description": "As of 01/03/2026, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed."
     },
     "header": {
       "total": "Total conversations",

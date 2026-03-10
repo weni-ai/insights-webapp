@@ -13,13 +13,33 @@
       class="dashboard-conversational__info__description"
       data-testid="info-description"
     >
-      {{ $t('conversations_dashboard.info.description') }}
+      {{
+        $t('conversations_dashboard.info.description', { date: formattedDate })
+      }}
     </p>
   </section>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { format, type Locale } from 'date-fns';
+import { es, enUS, ptBR } from 'date-fns/locale';
 import { UnnnicIcon } from '@weni/unnnic-system';
+
+const { locale } = useI18n();
+
+const localeMap: Record<string, Locale> = {
+  'pt-br': ptBR,
+  en: enUS,
+  es,
+};
+
+const formattedDate = computed(() => {
+  const referenceDate = new Date(2026, 3, 11);
+  const dateFnsLocale = localeMap[locale.value.toLowerCase()] || enUS;
+  return format(referenceDate, 'P', { locale: dateFnsLocale });
+});
 </script>
 
 <style scoped lang="scss">

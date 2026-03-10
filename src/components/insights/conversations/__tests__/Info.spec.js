@@ -1,36 +1,50 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
 import Info from '../Info.vue';
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        info: {
-          description:
-            'This dashboard provides insights into conversational data',
-        },
+const messages = {
+  en: {
+    conversations_dashboard: {
+      info: {
+        description:
+          'As of {date}, conversational data includes closed windows',
       },
     },
   },
-  fallbackWarn: false,
-  missingWarn: false,
-});
+  'pt-br': {
+    conversations_dashboard: {
+      info: {
+        description:
+          'A partir de {date}, os dados conversacionais contemplam janelas encerradas',
+      },
+    },
+  },
+  es: {
+    conversations_dashboard: {
+      info: {
+        description:
+          'A partir del {date}, los datos conversacionales incluyen ventanas cerradas',
+      },
+    },
+  },
+};
 
-config.global.plugins = [i18n];
+const createWrapper = (locale = 'en') => {
+  const i18n = createI18n({
+    legacy: false,
+    locale,
+    messages,
+    fallbackWarn: false,
+    missingWarn: false,
+  });
 
-const createWrapper = () => {
   return mount(Info, {
     global: {
+      plugins: [i18n],
       stubs: {
         UnnnicIcon: true,
-      },
-      mocks: {
-        $t: (key) => key,
       },
     },
   });
@@ -72,11 +86,27 @@ describe('Info.vue', () => {
   });
 
   describe('Content and Translation', () => {
-    it('should use correct translation key for description', () => {
+    it('should interpolate the formatted date into the description', () => {
       const description = wrapper.find('[data-testid="info-description"]');
-      expect(description.text()).toBe(
-        'conversations_dashboard.info.description',
-      );
+      expect(description.text()).toContain('03/01/2026');
+    });
+
+    it('should format date as MM/dd/yyyy for en locale', () => {
+      const enWrapper = createWrapper('en');
+      const text = enWrapper.find('[data-testid="info-description"]').text();
+      expect(text).toContain('03/01/2026');
+    });
+
+    it('should format date as dd/MM/yyyy for pt-br locale', () => {
+      const ptWrapper = createWrapper('pt-br');
+      const text = ptWrapper.find('[data-testid="info-description"]').text();
+      expect(text).toContain('01/03/2026');
+    });
+
+    it('should format date as dd/MM/yyyy for es locale', () => {
+      const esWrapper = createWrapper('es');
+      const text = esWrapper.find('[data-testid="info-description"]').text();
+      expect(text).toContain('01/03/2026');
     });
   });
 

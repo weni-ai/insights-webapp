@@ -169,6 +169,65 @@ export const useCustomWidgets = defineStore('customWidgets', {
         },
       };
     },
+    _mountAbsoluteNumbersWidgetBody() {
+      return {
+        uuid: this.absoluteNumbersForm.widget_uuid || undefined,
+        name: this.absoluteNumbersForm.name,
+        type: 'absolute_numbers',
+        source: 'conversations.absolute_numbers',
+        position: [],
+      };
+    },
+    _mountAbsoluteNumbersWidgetBodyChildren(parent: string) {
+      return this.absoluteNumbersForm.children.map((child, index) => ({
+        name: child.name,
+        parent,
+        type: 'absolute_numbers_child',
+        source: 'conversations.absolute_numbers_child',
+        config: { ...child.config, index: index + 1 },
+      }));
+    },
+    async saveAbsoluteNumbers() {
+      this.isLoadingSaveNewAbsoluteNumbersWidget = true;
+      try {
+        const widget = this._mountAbsoluteNumbersWidgetBody();
+        if (widget.uuid) {
+          await WidgetService.updateWidget({
+            widget,
+          });
+        } else {
+          const createdWidget = (await WidgetService.saveNewWidget(
+            widget,
+          )) as unknown as WidgetType;
+
+          const children = this._mountAbsoluteNumbersWidgetBodyChildren(
+            createdWidget.uuid,
+          );
+
+          const childrenRequests = children.map((child) =>
+            WidgetService.saveNewWidget(child),
+          );
+
+          await Promise.all(childrenRequests);
+        }
+
+        const alertText = this.absoluteNumbersForm.widget_uuid
+          ? i18n.global.t('alert_edited', { name: widget.name })
+          : i18n.global.t('alert_added', { name: widget.name });
+
+        unnnicCallAlert({
+          props: {
+            text: alertText,
+            type: 'success',
+            seconds: 5,
+          },
+        });
+      } catch (error) {
+        console.error('Error saving absolute numbers widget', error);
+      } finally {
+        this.isLoadingSaveNewAbsoluteNumbersWidget = false;
+      }
+    },
     async saveCustomWidget(widgetType: 'custom' | 'crosstab') {
       this.isLoadingSaveNewCustomWidget = true;
       const widgetBodyMap = {

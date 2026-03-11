@@ -151,7 +151,7 @@ const {
   isEnabledSaveAbsoluteNumbersForm,
 } = storeToRefs(customWidgets);
 
-const { saveCustomWidget } = customWidgets;
+const { saveCustomWidget, saveAbsoluteNumbers } = customWidgets;
 
 const sentimentFormStore = useSentimentAnalysisForm();
 const { initializeForm, clearEditingContext } = sentimentFormStore;
@@ -204,7 +204,9 @@ watch(
 );
 
 async function saveWidgetConfigs() {
-  if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
+  if (drawerWidgetType.value === 'absolute_numbers') {
+    await saveAbsoluteNumbers();
+  } else if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
     await saveCustomWidget(drawerWidgetType.value as 'custom' | 'crosstab');
   } else if (isNewDrawerCustomizable.value) {
     await saveNewWidget();

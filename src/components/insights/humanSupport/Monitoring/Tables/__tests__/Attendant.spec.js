@@ -189,6 +189,85 @@ describe('Attendant', () => {
       wrapper.vm.redirectItem({});
       expect(mockPostMessage).not.toHaveBeenCalled();
     });
+
+    describe('Middle click (auxclick)', () => {
+      const createMockRow = (items) => {
+        const tbody = document.createElement('tbody');
+        items.forEach(() => {
+          const row = document.createElement('tr');
+          row.className =
+            'unnnic-data-table__body-row unnnic-data-table__body-row--clickable';
+          tbody.appendChild(row);
+        });
+        return tbody;
+      };
+
+      it('opens in new tab on middle click of a valid row', () => {
+        const mockPostMessage = vi.fn();
+        window.parent.postMessage = mockPostMessage;
+
+        const items = [{ link: { url: '/test' } }];
+        mockInfiniteScroll.formattedItems.value = items;
+
+        const tbody = createMockRow(items);
+        const mockEvent = {
+          button: 1,
+          target: tbody.children[0],
+          preventDefault: vi.fn(),
+        };
+
+        wrapper.vm.handleAuxClick(mockEvent);
+
+        expect(mockPostMessage).toHaveBeenCalledWith(
+          { event: 'redirect', path: '/test/insights', newTab: true },
+          '*',
+        );
+        expect(mockEvent.preventDefault).toHaveBeenCalled();
+      });
+
+      it('does not redirect on non-middle click', () => {
+        const mockPostMessage = vi.fn();
+        window.parent.postMessage = mockPostMessage;
+
+        wrapper.vm.handleAuxClick({ button: 0 });
+
+        expect(mockPostMessage).not.toHaveBeenCalled();
+      });
+
+      it('does not redirect when clicking outside a data row', () => {
+        const mockPostMessage = vi.fn();
+        window.parent.postMessage = mockPostMessage;
+
+        const mockEvent = {
+          button: 1,
+          target: document.createElement('div'),
+          preventDefault: vi.fn(),
+        };
+
+        wrapper.vm.handleAuxClick(mockEvent);
+
+        expect(mockPostMessage).not.toHaveBeenCalled();
+      });
+
+      it('does not redirect when item has no link', () => {
+        const mockPostMessage = vi.fn();
+        window.parent.postMessage = mockPostMessage;
+
+        const items = [{}];
+        mockInfiniteScroll.formattedItems.value = items;
+
+        const tbody = createMockRow(items);
+        const mockEvent = {
+          button: 1,
+          target: tbody.children[0],
+          preventDefault: vi.fn(),
+        };
+
+        wrapper.vm.handleAuxClick(mockEvent);
+
+        expect(mockPostMessage).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe('Lifecycle', () => {

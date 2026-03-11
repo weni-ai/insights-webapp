@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @auxclick="handleAuxClick"
     @load-more="loadMore"
   />
 </template>
@@ -130,10 +131,40 @@ const loadMore = () => {
   loadMoreData(currentSort.value);
 };
 
+const getRedirectPath = (item: AttendantDataResult): string | null => {
+  if (!item?.link?.url) return null;
+  return `${item.link.url}/insights`;
+};
+
 const redirectItem = (item: AttendantDataResult) => {
-  if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
+  const path = getRedirectPath(item);
+  if (!path) return;
+
   window.parent.postMessage({ event: 'redirect', path }, '*');
+};
+
+const handleAuxClick = (event: MouseEvent) => {
+  if (event.button !== 1) return;
+
+  const target = event.target as HTMLElement;
+  const row = target.closest('.unnnic-data-table__body-row--clickable');
+  if (!row) return;
+
+  const tbody = row.closest('tbody');
+  if (!tbody) return;
+
+  const clickableRows = Array.from(
+    tbody.querySelectorAll('.unnnic-data-table__body-row--clickable'),
+  );
+  const rowIndex = clickableRows.indexOf(row);
+  if (rowIndex < 0 || rowIndex >= formattedItems.value.length) return;
+
+  const item = formattedItems.value[rowIndex];
+  const path = getRedirectPath(item as AttendantDataResult);
+  if (!path) return;
+
+  event.preventDefault();
+  window.parent.postMessage({ event: 'redirect', path, newTab: true }, '*');
 };
 
 watch(

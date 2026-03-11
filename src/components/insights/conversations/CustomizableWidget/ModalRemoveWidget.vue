@@ -27,19 +27,21 @@
     size="sm"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <p
-      class="modal-remove-widget__description"
-      data-testid="modal-remove-widget-description"
-    >
-      {{
-        $t(
-          'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
-          {
-            type: props.name,
-          },
-        )
-      }}
-    </p>
+    <slot name="description">
+      <p
+        class="modal-remove-widget__description"
+        data-testid="modal-remove-widget-description"
+      >
+        {{
+          $t(
+            'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
+            {
+              type: props.name,
+            },
+          )
+        }}
+      </p>
+    </slot>
   </UnnnicModalDialog>
 </template>
 
@@ -53,7 +55,13 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 interface Props {
-  type: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab';
+  type:
+    | 'csat'
+    | 'nps'
+    | 'custom'
+    | 'sales_funnel'
+    | 'crosstab'
+    | 'absolute_numbers';
   modelValue: boolean;
   uuid?: string;
   name?: string;
@@ -73,7 +81,7 @@ const isLoading = ref(false);
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
-    if (props.type === 'custom') {
+    if (props.type === 'custom' || props.type === 'absolute_numbers') {
       await deleteCustomWidget(props.uuid);
     } else {
       await deleteWidget(props.type);

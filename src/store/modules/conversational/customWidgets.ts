@@ -173,7 +173,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       return {
         uuid: this.absoluteNumbersForm.widget_uuid || undefined,
         name: this.absoluteNumbersForm.name,
-        type: 'absolute_numbers',
+        type: 'conversations.absolute_numbers',
         source: 'conversations.absolute_numbers',
         position: [],
       };
@@ -182,7 +182,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       return this.absoluteNumbersForm.children.map((child, index) => ({
         name: child.name,
         parent,
-        type: 'absolute_numbers_child',
+        type: 'conversations.absolute_numbers_child',
         source: 'conversations.absolute_numbers_child',
         config: { ...child.config, index: index + 1 },
       }));
@@ -192,9 +192,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       try {
         const widget = this._mountAbsoluteNumbersWidgetBody();
         if (widget.uuid) {
-          await WidgetService.updateWidget({
-            widget,
-          });
+          // TODO: Implement update widget
         } else {
           const createdWidget = (await WidgetService.saveNewWidget(
             widget,
@@ -209,6 +207,12 @@ export const useCustomWidgets = defineStore('customWidgets', {
           );
 
           await Promise.all(childrenRequests);
+
+          this.resetForms();
+
+          const { getCurrentDashboardWidgets } = useWidgets();
+
+          await getCurrentDashboardWidgets();
         }
 
         const alertText = this.absoluteNumbersForm.widget_uuid

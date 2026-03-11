@@ -231,7 +231,7 @@ const handleAddChild = () => {
 };
 
 const disabledAddChildButton = computed(() => {
-  return absoluteNumbersForm.value.children.length >= 6;
+  return absoluteNumbersForm.value.children?.length >= 6;
 });
 </script>
 

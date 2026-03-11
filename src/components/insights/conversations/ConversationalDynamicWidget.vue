@@ -15,6 +15,7 @@ import ConversationalNps from '@/components/insights/widgets/conversational/Conv
 import ConversationalCustom from '@/components/insights/widgets/conversational/ConversationalCustom.vue';
 import ConversationalCrosstab from '@/components/insights/widgets/conversational/ConversationalCrosstab.vue';
 import ConversationalSalesFunnel from '@/components/insights/widgets/conversational/ConversationalSalesFunnel.vue';
+import ConversationalAbsoluteNumbers from '@/components/insights/widgets/conversational/ConversacionalAbsoluteNumbers/index.vue';
 import ConversationalAdd from '@/components/insights/widgets/conversational/ConversationalAdd.vue';
 
 type ConversationalWidgetType =
@@ -23,7 +24,8 @@ type ConversationalWidgetType =
   | 'add'
   | 'sales_funnel'
   | 'custom'
-  | 'crosstab';
+  | 'crosstab'
+  | 'absolute_numbers';
 
 interface Props {
   type: ConversationalWidgetType;
@@ -38,6 +40,7 @@ const componentMap: Record<ConversationalWidgetType, Component> = {
   custom: ConversationalCustom,
   crosstab: ConversationalCrosstab,
   sales_funnel: ConversationalSalesFunnel,
+  absolute_numbers: ConversationalAbsoluteNumbers,
   add: ConversationalAdd,
 };
 

@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 import ShortTab from '@/components/ShortTab.vue';
 import i18n from '@/utils/plugins/i18n';
 
@@ -149,18 +149,14 @@ const handleTabChange = (tab: Tab) => {
     align-items: center;
 
     .header__title {
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-bold;
-      font-style: normal;
-      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+      color: $unnnic-color-fg-emphasized;
+      font: $unnnic-font-display-2;
 
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       max-width: 500px;
-      margin-right: $unnnic-spacing-xs;
+      margin-right: $unnnic-space-2;
     }
 
     .header__actions {

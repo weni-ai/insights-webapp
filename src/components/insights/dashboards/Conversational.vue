@@ -20,7 +20,6 @@
         ),
       }"
     />
-
     <CustomizableDrawer />
     <DataFeedbackModal
       v-if="isFeatureFlagEnabled('insightsDataFeedback')"
@@ -66,7 +65,8 @@ type ConversationalWidgetType =
   | 'add'
   | 'sales_funnel'
   | 'custom'
-  | 'crosstab';
+  | 'crosstab'
+  | 'absolute_numbers';
 
 const customWidgets = useCustomWidgets();
 const conversationalWidgets = useConversationalWidgets();
@@ -109,7 +109,11 @@ const setDynamicWidgets = () => {
   if (customWidgetsList.length > 0) {
     customWidgetsList.forEach((widget) => {
       newWidgets.push({
-        type: (widget.type?.split('.')[1] as 'custom' | 'crosstab') || 'custom',
+        type:
+          (widget.type?.split('.')[1] as
+            | 'custom'
+            | 'crosstab'
+            | 'absolute_numbers') || 'custom',
         uuid: widget.uuid,
       });
     });

@@ -193,6 +193,7 @@ const handleCsatWidgetData = (data: CsatResponse) => {
       .map((result) => ({
         text: formattedData[result.label],
         value: result.value,
+        full_value: result.full_value,
         color: defaultColors.color,
         backgroundColor: defaultColors.backgroundColor,
       })),

@@ -24,20 +24,27 @@
         :uuid="child.uuid"
         :title="child.name"
         :currency="child.config.currency.code ?? ''"
+        @edit="handleOpenEditDrawer()"
       />
-      <NewMetric v-if="children.length < 6" />
+      <NewMetric
+        v-if="children.length < 6"
+        @click="handleOpenEditDrawer({ addNewChild: true })"
+      />
     </section>
   </CardWidgetContainer>
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { cloneDeep } from 'lodash';
 
 import CardWidgetContainer from '@/components/insights/widgets/layout/CardWidgetContainer.vue';
 import AbsoluteNumbersMetric from './AbsoluteNumbersMetric.vue';
 import NewMetric from './NewMetric.vue';
 
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useConversational } from '@/store/modules/conversational/conversational';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -61,6 +68,10 @@ onMounted(async () => {
 
 const customWidgetsStore = useCustomWidgets();
 const { getCustomWidgetByUuid } = customWidgetsStore;
+const { absoluteNumbersForm } = storeToRefs(customWidgetsStore);
+
+const conversational = useConversational();
+const { setIsDrawerCustomizableOpen } = conversational;
 
 const widget = computed(() => {
   return getCustomWidgetByUuid(props.uuid);
@@ -88,7 +99,7 @@ const actions = computed(() => {
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
       { type: '' },
     ),
-    onClick: () => {}, // TODO: Implement edit action
+    onClick: () => handleOpenEditDrawer(),
   };
 
   const deleteOption = {
@@ -100,6 +111,33 @@ const actions = computed(() => {
 
   return [editOption, deleteOption];
 });
+
+const handleOpenEditDrawer = (
+  { addNewChild = false }: { addNewChild?: boolean } = { addNewChild: false },
+) => {
+  absoluteNumbersForm.value = {
+    widget_uuid: widget.value?.uuid,
+    name: widget.value?.name,
+    children: cloneDeep(children.value),
+  };
+  if (addNewChild) {
+    absoluteNumbersForm.value.children.push({
+      name: '',
+      parent: '',
+      config: {
+        index: absoluteNumbersForm.value.children.length + 1,
+        agent_uuid: '',
+        key: '',
+        operation: '',
+        currency: {
+          is_active: false,
+          code: null,
+        },
+      },
+    });
+  }
+  setIsDrawerCustomizableOpen(true, 'absolute_numbers', false);
+};
 </script>
 
 <style lang="scss" scoped>

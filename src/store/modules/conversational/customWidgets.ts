@@ -180,6 +180,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
     },
     _mountAbsoluteNumbersWidgetBodyChildren(parent: string) {
       return this.absoluteNumbersForm.children.map((child, index) => ({
+        uuid: child.uuid || undefined,
         name: child.name,
         parent,
         type: 'conversations.absolute_numbers_child',
@@ -187,33 +188,48 @@ export const useCustomWidgets = defineStore('customWidgets', {
         config: { ...child.config, index: index + 1 },
       }));
     },
+    _makeAbsoluteNumbersChildRequest(children) {
+      const childrenRequests = children.map((child) => {
+        if (child.uuid) {
+          return WidgetService.updateWidget({
+            widget: child,
+          });
+        } else {
+          return WidgetService.saveNewWidget(child);
+        }
+      });
+      return childrenRequests;
+    },
     async saveAbsoluteNumbers() {
       this.isLoadingSaveNewAbsoluteNumbersWidget = true;
       try {
         const widget = this._mountAbsoluteNumbersWidgetBody();
+
         if (widget.uuid) {
-          // TODO: Implement update widget
+          await WidgetService.updateWidget({
+            widget,
+          });
         } else {
           const createdWidget = (await WidgetService.saveNewWidget(
             widget,
           )) as unknown as WidgetType;
-
-          const children = this._mountAbsoluteNumbersWidgetBodyChildren(
-            createdWidget.uuid,
-          );
-
-          const childrenRequests = children.map((child) =>
-            WidgetService.saveNewWidget(child),
-          );
-
-          await Promise.all(childrenRequests);
-
-          this.resetForms();
-
-          const { getCurrentDashboardWidgets } = useWidgets();
-
-          await getCurrentDashboardWidgets();
+          widget.uuid = createdWidget.uuid;
         }
+
+        const children = this._mountAbsoluteNumbersWidgetBodyChildren(
+          widget.uuid,
+        );
+
+        const childrenRequests =
+          this._makeAbsoluteNumbersChildRequest(children);
+
+        await Promise.all(childrenRequests);
+
+        this.resetForms();
+
+        const { getCurrentDashboardWidgets } = useWidgets();
+
+        await getCurrentDashboardWidgets();
 
         const alertText = this.absoluteNumbersForm.widget_uuid
           ? i18n.global.t('alert_edited', { name: widget.name })
@@ -232,6 +248,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
         this.isLoadingSaveNewAbsoluteNumbersWidget = false;
       }
     },
+
     async saveCustomWidget(widgetType: 'custom' | 'crosstab') {
       this.isLoadingSaveNewCustomWidget = true;
       const widgetBodyMap = {

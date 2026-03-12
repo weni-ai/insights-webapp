@@ -45,6 +45,9 @@ interface Props {
 const props = defineProps<Props>();
 const route = useRoute();
 const { t } = i18n.global;
+const emit = defineEmits<{
+  edit: [uuid: string];
+}>();
 
 const conversationalStore = useConversational();
 
@@ -78,7 +81,7 @@ const actions = computed(() => {
       'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
       { type: '' },
     ),
-    onClick: () => {}, // TODO: Implement edit action
+    onClick: () => emit('edit', props.uuid),
   };
 
   const deleteOption = {

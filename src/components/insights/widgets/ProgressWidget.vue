@@ -117,6 +117,8 @@ import WidgetError from '@/components/insights/conversations/WidgetError.vue';
 import SalesFunnelWidget from '@/components/insights/widgets/SalesFunnelWidget.vue';
 import CrosstabWidget from './CrosstabWidget.vue';
 
+import { formatPercentage, formatNumber } from '@/utils/numbers';
+
 const emit = defineEmits<{
   'tab-change': [tab: Tab];
   'open-expanded': [];
@@ -135,6 +137,7 @@ const props = defineProps<{
   progressItems: {
     text: string;
     value: number;
+    full_value?: number;
     backgroundColor?: string;
     color?: string;
   }[];
@@ -161,13 +164,20 @@ const props = defineProps<{
 }>();
 
 const treatedProgressItems = computed(() => {
-  return props.progressItems?.map((item) => ({
-    label: item.text,
-    description: `${item.value}%`,
-    value: item.value,
-    backgroundColor: item.backgroundColor,
-    color: item.color,
-  }));
+  return props.progressItems?.map((item) => {
+    const percentage = formatPercentage(item.value);
+    const description =
+      item.full_value !== undefined
+        ? `${percentage} (${formatNumber(item.full_value)})`
+        : `${percentage}`;
+    return {
+      label: item.text,
+      description: description,
+      value: item.value,
+      backgroundColor: item.backgroundColor,
+      color: item.color,
+    };
+  });
 });
 
 const handleTabChange = (tab: Tab) => {

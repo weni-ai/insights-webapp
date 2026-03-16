@@ -1,8 +1,14 @@
 import http from '@/services/api/http';
+import http2 from '@/services/api/http2';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
+
+interface ValueWithFullValue {
+  value: number;
+  full_value: number;
+}
 
 interface CsatResult {
   label: CsatLabel;
@@ -31,20 +37,14 @@ interface CrosstabWidgetResponse {
 interface NpsResponse {
   score: number;
   total_responses: number;
-  promoters: number;
-  passives: number;
-  detractors: number;
+  promoters: ValueWithFullValue;
+  passives: ValueWithFullValue;
+  detractors: ValueWithFullValue;
 }
 
 interface SalesFunnelResponse {
-  captured_leads: {
-    value: number;
-    full_value: number;
-  };
-  purchases_made: {
-    value: number;
-    full_value: number;
-  };
+  captured_leads: ValueWithFullValue;
+  purchases_made: ValueWithFullValue;
   total_orders: number;
   total_value: number;
   average_ticket: number;
@@ -130,7 +130,7 @@ export default {
       ...queryParams,
     };
 
-    const response = (await http.get('/metrics/conversations/nps/', {
+    const response = (await http2.get('/metrics/conversations/nps/', {
       params,
     })) as NpsResponse;
 

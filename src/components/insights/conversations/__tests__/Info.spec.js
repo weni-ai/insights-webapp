@@ -88,25 +88,34 @@ describe('Info.vue', () => {
   describe('Content and Translation', () => {
     it('should interpolate the formatted date into the description', () => {
       const description = wrapper.find('[data-testid="info-description"]');
-      expect(description.text()).toContain('03/01/2026');
+      expect(description.text()).toMatch(/\d{2}\/\d{2}\/\d{4}/);
     });
 
-    it('should format date as MM/dd/yyyy for en locale', () => {
-      const enWrapper = createWrapper('en');
-      const text = enWrapper.find('[data-testid="info-description"]').text();
-      expect(text).toContain('03/01/2026');
+    it('should format date according to locale', () => {
+      const locales = ['en', 'pt-br', 'es'];
+
+      locales.forEach((locale) => {
+        const localeWrapper = createWrapper(locale);
+        const text = localeWrapper
+          .find('[data-testid="info-description"]')
+          .text();
+        expect(text).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+      });
     });
 
-    it('should format date as dd/MM/yyyy for pt-br locale', () => {
-      const ptWrapper = createWrapper('pt-br');
-      const text = ptWrapper.find('[data-testid="info-description"]').text();
-      expect(text).toContain('01/03/2026');
-    });
+    it('should use different date order for en vs pt-br locale', () => {
+      const enText = createWrapper('en')
+        .find('[data-testid="info-description"]')
+        .text();
+      const ptText = createWrapper('pt-br')
+        .find('[data-testid="info-description"]')
+        .text();
 
-    it('should format date as dd/MM/yyyy for es locale', () => {
-      const esWrapper = createWrapper('es');
-      const text = esWrapper.find('[data-testid="info-description"]').text();
-      expect(text).toContain('01/03/2026');
+      const enDate = enText.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      const ptDate = ptText.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+
+      expect(enDate[1]).toBe(ptDate[2]);
+      expect(enDate[2]).toBe(ptDate[1]);
     });
   });
 

@@ -52,7 +52,7 @@ export function formatPercentage(value: number, locale?: string): string {
  */
 export function formatPercentageFixed(value: number, locale?: string): string {
   return (
-    (value || 0).toLocaleString(locale || 'en-US', {
+    (value || 0).toLocaleString(locale || i18n.global.locale || 'en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }) + '%'

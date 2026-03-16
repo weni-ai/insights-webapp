@@ -147,6 +147,7 @@ const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   return {
     progressItems: orderByValue?.slice(0, 5)?.map((result) => ({
       text: result?.label,
+      full_value: result?.full_value,
       value: result?.value,
       color: defaultColors.color,
       backgroundColor: defaultColors.backgroundColor,

@@ -242,7 +242,8 @@ const handleNpsWidgetData = (data: NpsResponse) => {
     card,
     progressItems: Object.entries(colors).map(([key, value]) => ({
       text: formattedData[key],
-      value: data?.[key],
+      value: data?.[key]?.value,
+      full_value: data?.[key]?.full_value,
       color: value.color,
       backgroundColor: value.backgroundColor,
     })),

@@ -13,9 +13,11 @@
       v-if="!props.hideHeader"
       class="card-widget-container__header"
     >
-      <p class="header__title">
-        {{ props.title }}
-      </p>
+      <slot name="header-title">
+        <p class="header__title">
+          {{ props.title }}
+        </p>
+      </slot>
       <section class="header__actions">
         <ShortTab
           v-if="!hiddenTabs && props.tabs.length > 0"

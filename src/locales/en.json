@@ -122,6 +122,7 @@
     "sales_funnel": "Funnel and sales data",
     "custom": "Horizontal bar chart",
     "crosstab": "Crosstab",
+    "absolute_numbers": "Absolute numbers",
     "no_data_available": "No data available for the usage period",
     "widget_error": {
       "title": "Oops, an error occurred while loading the data",
@@ -172,6 +173,7 @@
       "nps_description": "Net Promoter Score (NPS) measures how likely contacts are to recommend your service",
       "config_csat_or_nps_description": "Set which {type} you want to track",
       "sales_funnel_description": "Track your sales: total orders, average ticket, total value and conversion funnel.",
+      "absolute_numbers_description": "Highlight a single key metric, displaying its exact value for quick, straightforward viewing.",
       "human_support": "Human support",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -221,6 +223,45 @@
           "disclaimer": "<b>Key:</b> a unique identifier used to track a specific event in the data flow.<br><b>Field name:</b> the name of the field for the value you want to see. If left blank, the system will use a default value.",
           "first_data_label": "Define the <b>first</b> data you want to track:",
           "second_data_label": "Define the <b>second</b> data you want to track:"
+        }
+      },
+      "absolute_numbers": {
+        "drawer": {
+          "description": "Set a name for the widget:",
+          "child_description": "Select the metric you want to view:",
+          "add_child": "Add metric",
+          "metric_name": {
+            "label": "Metric name",
+            "placeholder": "Enter the metric name here"
+          },
+          "select_agent": {
+            "label": "Select an agent",
+            "placeholder": "Select or search"
+          },
+          "key": {
+            "label": "Key",
+            "placeholder": "Enter the selected agent key here",
+            "hint": " A unique identifier used to track a specific event in the data flow."
+          },
+          "value_field_name": {
+            "label": "Event metadata (@.lower:optional)",
+            "placeholder": "Enter the event metadata here",
+            "hint": "Metadata's field name for performing operations. If left blank, the system will use the default field (value)."
+          },
+          "currency": {
+            "switch": "Value with currency"
+          },
+          "operation": {
+            "label": "Operation",
+            "placeholder": "Select or search",
+            "options": {
+              "sum": "Sum",
+              "average": "Average",
+              "highest": "Highest",
+              "lowest": "Lowest",
+              "total": "Total"
+            }
+          }
         }
       }
     },

@@ -98,9 +98,11 @@ export const useWidgets = defineStore('widgets', {
         const { addCustomWidgets } = useConversationalExport();
 
         const customWidgets = widgets.filter((widget) =>
-          ['conversations.custom', 'conversations.crosstab'].includes(
-            widget.source as string,
-          ),
+          [
+            'conversations.custom',
+            'conversations.crosstab',
+            'conversations.absolute_numbers',
+          ].includes(widget.source as string),
         );
 
         setCustomWidgets(customWidgets);

@@ -209,7 +209,13 @@
           },
           "key": {
             "label": "Key",
-            "placeholder": "Enter the selected agent key here"
+            "placeholder": "Enter the selected agent key here",
+            "hint": " A unique identifier used to track a specific event in the data flow."
+          },
+          "value_field_name": {
+            "label": "Event metadata (@.lower:optional)",
+            "placeholder": "Enter the event metadata here",
+            "hint": "Metadata's field name for performing operations. If left blank, the system will use the default field (value)."
           },
           "currency": {
             "switch": "Value with currency"

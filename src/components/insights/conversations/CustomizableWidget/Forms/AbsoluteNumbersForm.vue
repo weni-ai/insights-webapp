@@ -77,6 +77,29 @@
               'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.key.placeholder',
             )
           "
+          :message="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.key.hint',
+            )
+          "
+        />
+        <UnnnicInput
+          v-model="child.config.value_field_name"
+          :label="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.value_field_name.label',
+            )
+          "
+          :placeholder="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.value_field_name.placeholder',
+            )
+          "
+          :message="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.value_field_name.hint',
+            )
+          "
         />
         <UnnnicCheckbox
           v-model="child.config.currency.is_active"
@@ -119,7 +142,7 @@
           'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.add_child',
         )
       "
-      type="tertiary"
+      type="secondary"
       :disabled="disabledAddChildButton"
       @click="handleAddChild"
     />
@@ -222,6 +245,7 @@ const handleAddChild = () => {
       agent_uuid: '',
       key: '',
       operation: '',
+      value_field_name: '',
       currency: {
         is_active: false,
         code: null,

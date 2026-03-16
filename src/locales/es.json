@@ -209,7 +209,13 @@
           },
           "key": {
             "label": "Clave",
-            "placeholder": "Ingresa la clave del agente aquí"
+            "placeholder": "Ingresa la clave del agente aquí",
+            "hint": "Un identificador único utilizado para rastrear un evento específico en el flujo de datos."
+          },
+          "value_field_name": {
+            "label": "Metadatos del evento (@.lower:optional)",
+            "placeholder": "Ingresa los metadatos del evento aquí",
+            "hint": "Nombre del campo de los metadatos del evento para realizar operaciones. Si se deja en blanco, el sistema usará el campo predeterminado (value)."
           },
           "currency": {
             "switch": "Valor con moneda"

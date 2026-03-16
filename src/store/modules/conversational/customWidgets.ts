@@ -34,6 +34,7 @@ interface absoluteNumbersFormChildren {
     agent_uuid: string;
     key: string;
     operation: string;
+    value_field_name: string;
     currency: {
       is_active: boolean;
       code: string | null;

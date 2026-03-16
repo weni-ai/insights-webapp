@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash-es';
 
 import CardWidgetContainer from '@/components/insights/widgets/layout/CardWidgetContainer.vue';
 import AbsoluteNumbersMetric from './AbsoluteNumbersMetric.vue';
@@ -129,6 +129,7 @@ const handleOpenEditDrawer = (
         agent_uuid: '',
         key: '',
         operation: '',
+        value_field_name: '',
         currency: {
           is_active: false,
           code: null,

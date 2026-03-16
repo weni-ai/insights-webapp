@@ -114,6 +114,7 @@
           v-if="child.config.currency.is_active"
           v-model="child.config.currency.code"
           :options="currencies"
+          optionsLines="4"
           itemLabel="label"
           itemValue="value"
         />

@@ -231,6 +231,15 @@
               "total": "Total"
             }
           }
+        },
+        "remove_modal": {
+          "description": "Tem certeza de que deseja deletar o widget {widget_name}?",
+          "info": "O widget {widget_name} será deletado com todas as métricas adicionadas."
+        },
+        "remove_child_modal": {
+          "title": "Deletar métrica",
+          "description": "Tem certeza de que deseja deletar a métrica {metric_name}?",
+          "info": "O widget {widget_name} não será deletado. Apenas a métrica {metric_name}."
         }
       }
     },

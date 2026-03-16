@@ -19,6 +19,40 @@
         {{ formattedValue }}
       </p>
     </section>
+    <ModalRemoveWidget
+      v-if="isRemoveWidgetModalOpen"
+      v-model="isRemoveWidgetModalOpen"
+      class="modal-remove-metric"
+      type="absolute_numbers_child"
+      size="md"
+      :uuid="uuid"
+      :title="
+        $t(
+          'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_child_modal.title',
+        )
+      "
+    >
+      <template #description>
+        <section class="modal-remove-metric__description">
+          <p class="modal-remove-metric__description__title">
+            {{
+              $t(
+                'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_child_modal.description',
+                { metric_name: title },
+              )
+            }}
+          </p>
+          <p class="modal-remove-metric__description__info">
+            {{
+              $t(
+                'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_child_modal.info',
+                { widget_name: parentName, metric_name: title },
+              )
+            }}
+          </p>
+        </section>
+      </template>
+    </ModalRemoveWidget>
   </CardWidgetContainer>
 </template>
 
@@ -28,6 +62,7 @@ import { useRoute } from 'vue-router';
 
 import CardWidgetContainer from '../../layout/CardWidgetContainer.vue';
 import WidgetService from '@/services/api/resources/conversational/widgets';
+import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
 
 import { useConversational } from '@/store/modules/conversational/conversational';
 
@@ -40,6 +75,7 @@ interface Props {
   uuid: string;
   title: string;
   currency: string;
+  parentName: string;
 }
 
 const props = defineProps<Props>();
@@ -51,6 +87,7 @@ const emit = defineEmits<{
 
 const conversationalStore = useConversational();
 
+const isRemoveWidgetModalOpen = ref<boolean>(false);
 const metricValue = ref<number>(0);
 const isLoading = ref<boolean>(false);
 const formattedValue = computed(() => {
@@ -87,7 +124,7 @@ const actions = computed(() => {
   const deleteOption = {
     icon: 'delete',
     text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
-    onClick: () => {}, // TODO: Implement delete action
+    onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
   };
 
@@ -136,6 +173,13 @@ watch(
   &__value {
     font: $unnnic-font-display-1;
     color: $unnnic-color-fg-emphasized;
+  }
+}
+.modal-remove-metric {
+  &__description {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-4;
   }
 }
 </style>

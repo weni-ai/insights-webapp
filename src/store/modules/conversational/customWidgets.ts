@@ -405,8 +405,18 @@ export const useCustomWidgets = defineStore('customWidgets', {
       state.crosstabForm.key_a?.trim() !== '' &&
       state.crosstabForm.key_b?.trim() !== '',
     isEnabledSaveAbsoluteNumbersForm: (state) => {
-      return state.absoluteNumbersForm.name?.trim() !== '';
-      // TODO: Implement validation for absolute numbers form
+      const validWidgetName = state.absoluteNumbersForm.name?.trim() !== '';
+      const validChildren = state.absoluteNumbersForm.children.every(
+        (child) => {
+          return (
+            child.name?.trim() !== '' &&
+            child.config.agent_uuid?.trim() !== '' &&
+            child.config.key?.trim() !== '' &&
+            child.config.operation?.trim() !== ''
+          );
+        },
+      );
+      return validWidgetName && validChildren;
     },
   },
 });

@@ -24,6 +24,7 @@
         :uuid="child.uuid"
         :title="child.name"
         :currency="child.config.currency.code ?? ''"
+        :parentName="widget?.name"
         @edit="handleOpenEditDrawer()"
       />
       <NewMetric
@@ -32,6 +33,35 @@
       />
     </section>
   </CardWidgetContainer>
+  <ModalRemoveWidget
+    v-if="isRemoveWidgetModalOpen"
+    v-model="isRemoveWidgetModalOpen"
+    class="modal-remove-widget"
+    type="absolute_numbers"
+    size="md"
+    :uuid="widget?.uuid"
+  >
+    <template #description>
+      <section class="modal-remove-widget__description">
+        <p class="modal-remove-widget__description__title">
+          {{
+            $t(
+              'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_modal.description',
+              { widget_name: widget?.name },
+            )
+          }}
+        </p>
+        <p class="modal-remove-widget__description__info">
+          {{
+            $t(
+              'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_modal.info',
+              { widget_name: widget?.name },
+            )
+          }}
+        </p>
+      </section>
+    </template>
+  </ModalRemoveWidget>
 </template>
 
 <script setup lang="ts">
@@ -42,6 +72,7 @@ import { cloneDeep } from 'lodash-es';
 import CardWidgetContainer from '@/components/insights/widgets/layout/CardWidgetContainer.vue';
 import AbsoluteNumbersMetric from './AbsoluteNumbersMetric.vue';
 import NewMetric from './NewMetric.vue';
+import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
 
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -92,6 +123,7 @@ const loadChildren = async () => {
   }
 };
 
+const isRemoveWidgetModalOpen = ref<boolean>(false);
 const actions = computed(() => {
   const editOption = {
     icon: 'edit_square',
@@ -105,7 +137,7 @@ const actions = computed(() => {
   const deleteOption = {
     icon: 'delete',
     text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
-    onClick: () => {}, // TODO: Implement delete action
+    onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
   };
 
@@ -160,6 +192,13 @@ const handleOpenEditDrawer = (
     grid-template-rows: repeat(3, 1fr);
     gap: $unnnic-space-6;
     flex: 1;
+  }
+}
+.modal-remove-widget {
+  &__description {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-4;
   }
 }
 </style>

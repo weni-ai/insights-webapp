@@ -4,6 +4,7 @@
     class="modal-remove-widget"
     :modelValue="modelValue"
     :title="
+      title ??
       $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
       )
@@ -24,7 +25,7 @@
       onClick: () => emit('update:modelValue', false),
     }"
     showCloseIcon
-    size="sm"
+    :size="size ?? 'sm'"
     @update:model-value="emit('update:modelValue', $event)"
   >
     <slot name="description">
@@ -61,10 +62,13 @@ interface Props {
     | 'custom'
     | 'sales_funnel'
     | 'crosstab'
-    | 'absolute_numbers';
+    | 'absolute_numbers'
+    | 'absolute_numbers_child';
   modelValue: boolean;
   uuid?: string;
   name?: string;
+  title?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const props = defineProps<Props>();
@@ -81,7 +85,11 @@ const isLoading = ref(false);
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
-    if (props.type === 'custom' || props.type === 'absolute_numbers') {
+    if (
+      props.type === 'custom' ||
+      props.type === 'absolute_numbers' ||
+      props.type === 'absolute_numbers_child'
+    ) {
       await deleteCustomWidget(props.uuid);
     } else {
       await deleteWidget(props.type);

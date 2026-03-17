@@ -26,7 +26,7 @@
           {{
             formatCurrency(
               (salesFunnelWidgetData?.total_value || 0) / 100,
-              currencySymbols[salesFunnelWidgetData?.currency || 'USD'],
+              salesFunnelWidgetData?.currency || 'USD',
               i18n.global.locale,
             )
           }}
@@ -40,7 +40,7 @@
           {{
             formatCurrency(
               (salesFunnelWidgetData?.average_ticket || 0) / 100,
-              currencySymbols[salesFunnelWidgetData?.currency || 'USD'],
+              salesFunnelWidgetData?.currency || 'USD',
               i18n.global.locale,
             )
           }}
@@ -59,7 +59,6 @@ import { computed } from 'vue';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { UnnnicChartFunnel } from '@weni/unnnic-system';
 import WarningMessage from '@/components/WarningMessage.vue';
-import { currencySymbols } from '@/utils/currency';
 import {
   formatPercentage,
   formatNumber,

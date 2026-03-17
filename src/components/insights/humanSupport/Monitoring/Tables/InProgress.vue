@@ -101,7 +101,7 @@ const {
 
 const widgetData = computed(() => {
   if (!hasSectorsConfigured.value) {
-    return formatResults(monitoringDetailedMonitoringInProgressMock);
+    return monitoringDetailedMonitoringInProgressMock;
   }
   return formattedItems.value;
 });

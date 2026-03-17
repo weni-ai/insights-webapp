@@ -1,27 +1,36 @@
 <template>
   <UnnnicSkeletonLoading
     v-if="isLoading"
+    data-testid="absolute-numbers-metric-skeleton"
     :width="`100%`"
     height="100%"
   />
   <CardWidgetContainer
     v-else
+    data-testid="absolute-numbers-metric-card"
     :actions="actions"
     class="absolute-numbers-metric"
   >
     <template #header-title>
-      <p class="absolute-numbers-metric__title">
+      <p
+        class="absolute-numbers-metric__title"
+        data-testid="absolute-numbers-metric-title"
+      >
         {{ title }}
       </p>
     </template>
     <section class="absolute-numbers-metric__content">
-      <p class="absolute-numbers-metric__value">
+      <p
+        class="absolute-numbers-metric__value"
+        data-testid="absolute-numbers-metric-value"
+      >
         {{ formattedValue }}
       </p>
     </section>
     <ModalRemoveWidget
       v-if="isRemoveWidgetModalOpen"
       v-model="isRemoveWidgetModalOpen"
+      data-testid="absolute-numbers-metric-remove-modal"
       class="modal-remove-metric"
       type="absolute_numbers_child"
       size="md"

@@ -48,6 +48,7 @@
         />
         <UnnnicSelect
           v-model="child.config.agent_uuid"
+          :data-testid="`absolute-numbers-agent-select-${index}`"
           :options="agentsTeam.agents"
           itemLabel="name"
           itemValue="uuid"
@@ -103,6 +104,7 @@
         />
         <UnnnicCheckbox
           v-model="child.config.currency.is_active"
+          :data-testid="`absolute-numbers-currency-checkbox-${index}`"
           :label="
             $t(
               'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.currency.switch',
@@ -138,6 +140,7 @@
       <hr class="absolute-numbers-form__divider" />
     </template>
     <UnnnicButton
+      data-testid="absolute-numbers-add-child"
       :text="
         $t(
           'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.add_child',

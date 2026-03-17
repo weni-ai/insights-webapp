@@ -21,7 +21,7 @@
   cursor: pointer;
 
   :deep(.unnnic-icon) {
-    font-size: 48px;
+    font-size: $unnnic-space-12;
   }
 }
 </style>

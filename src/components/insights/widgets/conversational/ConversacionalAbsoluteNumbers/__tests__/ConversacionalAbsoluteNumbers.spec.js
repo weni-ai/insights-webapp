@@ -1,10 +1,12 @@
 /* eslint-disable vue/one-component-per-file, vue/require-prop-types */
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
-import { defineComponent, nextTick } from 'vue';
 import { createTestingPinia } from '@pinia/testing';
+import { createI18n } from 'vue-i18n';
+import { nextTick } from 'vue';
 
 import ConversationalAbsoluteNumbers from '../index.vue';
+import NewMetric from '../NewMetric.vue';
 import WidgetService from '@/services/api/resources/conversational/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -12,16 +14,39 @@ import { useConversational } from '@/store/modules/conversational/conversational
 vi.mock('@/services/api/resources/conversational/widgets', () => ({
   default: {
     getAbsoluteNumbersChildren: vi.fn(),
+    getAbsoluteNumbersChildrenValue: vi.fn(),
   },
 }));
+
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal();
+  return { ...actual, useRoute: () => ({ query: {} }) };
+});
 
 vi.mock('@/utils/plugins/i18n', () => ({
   default: {
     global: {
-      t: (key, params) => (params ? `${key}:${JSON.stringify(params)}` : key),
+      t: (key) => key,
     },
   },
 }));
+
+vi.mock('@/utils/numbers', () => ({
+  formatNumber: vi.fn((v) => String(v ?? 0)),
+  formatCurrency: vi.fn((v) => String(v ?? 0)),
+}));
+
+vi.mock('@/utils/currency', () => ({
+  currencySymbols: { BRL: 'R$', USD: '$' },
+}));
+
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return { ...actual, unnnicCallAlert: vi.fn() };
+});
+
+const makeI18n = () =>
+  createI18n({ legacy: false, locale: 'en', messages: { en: {} } });
 
 const mockChild = (uuid, name, currencyCode = '') => ({
   uuid,
@@ -35,22 +60,6 @@ const mockChild = (uuid, name, currencyCode = '') => ({
     value_field_name: '',
     currency: { is_active: !!currencyCode, code: currencyCode || null },
   },
-});
-
-const CardWidgetContainerStub = defineComponent({
-  name: 'CardWidgetContainer',
-  inheritAttrs: true,
-  props: {
-    actions: { type: Array, default: () => [] },
-    title: { type: String, default: '' },
-    hiddenTabs: Boolean,
-  },
-  template: `
-    <div>
-      <slot name="header-title" />
-      <slot />
-    </div>
-  `,
 });
 
 function createPinia() {
@@ -75,11 +84,12 @@ function createPinia() {
         },
       },
       conversational: {},
+      conversationalWidgets: {},
     },
   });
 }
 
-function mountIndex(
+function mountComponent(
   props = { uuid: 'widget-uuid-1' },
   apiResults = [mockChild('c1', 'M1'), mockChild('c2', 'M2')],
 ) {
@@ -90,35 +100,8 @@ function mountIndex(
   return mount(ConversationalAbsoluteNumbers, {
     props,
     global: {
-      plugins: [createPinia()],
-      stubs: {
-        UnnnicSkeletonLoading: defineComponent({
-          name: 'UnnnicSkeletonLoading',
-          inheritAttrs: true,
-          template: '<div />',
-        }),
-        CardWidgetContainer: CardWidgetContainerStub,
-        AbsoluteNumbersMetric: defineComponent({
-          name: 'AbsoluteNumbersMetric',
-          props: ['uuid', 'title', 'currency', 'parentName'],
-          emits: ['edit'],
-          template: '<div />',
-        }),
-        NewMetric: defineComponent({
-          name: 'NewMetric',
-          template: '<button type="button" data-testid="new-metric-stub" />',
-        }),
-        ModalRemoveWidget: defineComponent({
-          name: 'ModalRemoveWidget',
-          inheritAttrs: true,
-          props: ['modelValue', 'uuid', 'type', 'size'],
-          template: '<div />',
-        }),
-      },
-      mocks: {
-        $t: (key, params) =>
-          params ? `${key}:${JSON.stringify(params)}` : key,
-      },
+      plugins: [createPinia(), makeI18n()],
+      mocks: { $t: (key) => key },
     },
   });
 }
@@ -126,10 +109,13 @@ function mountIndex(
 describe('ConversationalAbsoluteNumbers', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    WidgetService.getAbsoluteNumbersChildrenValue.mockResolvedValue({
+      value: 42,
+    });
   });
 
   it('calls getAbsoluteNumbersChildren with widget uuid on mount', async () => {
-    mountIndex({ uuid: 'my-widget-id' });
+    mountComponent({ uuid: 'my-widget-id' });
     await flushPromises();
     expect(WidgetService.getAbsoluteNumbersChildren).toHaveBeenCalledWith(
       'my-widget-id',
@@ -145,7 +131,7 @@ describe('ConversationalAbsoluteNumbers', () => {
       p.then(() => ({ results: [] })),
     );
 
-    const wrapper = mountIndex();
+    const wrapper = mountComponent();
     await nextTick();
 
     expect(
@@ -171,7 +157,7 @@ describe('ConversationalAbsoluteNumbers', () => {
   });
 
   it('renders one AbsoluteNumbersMetric per child with correct props', async () => {
-    const wrapper = mountIndex(undefined, [
+    const wrapper = mountComponent(undefined, [
       mockChild('child-a', 'Metric A', 'BRL'),
       mockChild('child-b', 'Metric B', ''),
     ]);
@@ -195,20 +181,18 @@ describe('ConversationalAbsoluteNumbers', () => {
   });
 
   it('renders NewMetric when fewer than 6 children', async () => {
-    const wrapper = mountIndex(undefined, [mockChild('c1', 'M1')]);
+    const wrapper = mountComponent(undefined, [mockChild('c1', 'M1')]);
     await flushPromises();
-    expect(wrapper.find('[data-testid="new-metric-stub"]').exists()).toBe(true);
+    expect(wrapper.findComponent(NewMetric).exists()).toBe(true);
   });
 
   it('does not render NewMetric when there are 6 children', async () => {
     const six = Array.from({ length: 6 }, (_, i) =>
       mockChild(`c${i}`, `M${i}`),
     );
-    const wrapper = mountIndex(undefined, six);
+    const wrapper = mountComponent(undefined, six);
     await flushPromises();
-    expect(wrapper.find('[data-testid="new-metric-stub"]').exists()).toBe(
-      false,
-    );
+    expect(wrapper.findComponent(NewMetric).exists()).toBe(false);
   });
 
   it('edit action fills form and opens customizable drawer', async () => {
@@ -220,28 +204,15 @@ describe('ConversationalAbsoluteNumbers', () => {
     const wrapper = mount(ConversationalAbsoluteNumbers, {
       props: { uuid: 'widget-uuid-1' },
       global: {
-        plugins: [pinia],
-        stubs: {
-          UnnnicSkeletonLoading: defineComponent({
-            name: 'UnnnicSkeletonLoading',
-            inheritAttrs: true,
-            template: '<div />',
-          }),
-          CardWidgetContainer: CardWidgetContainerStub,
-          AbsoluteNumbersMetric: true,
-          NewMetric: true,
-          ModalRemoveWidget: true,
-        },
-        mocks: {
-          $t: (k, p) => (p ? `${k}` : k),
-        },
+        plugins: [pinia, makeI18n()],
+        mocks: { $t: (k) => k },
       },
     });
 
     await flushPromises();
 
-    const conversational = useConversational();
-    const customWidgets = useCustomWidgets();
+    const conversational = useConversational(pinia);
+    const customWidgets = useCustomWidgets(pinia);
 
     const card = wrapper.findComponent(
       '[data-testid="conversational-absolute-numbers-card"]',
@@ -259,7 +230,7 @@ describe('ConversationalAbsoluteNumbers', () => {
   });
 
   it('opens remove modal when delete action runs', async () => {
-    const wrapper = mountIndex(undefined, []);
+    const wrapper = mountComponent(undefined, []);
     await flushPromises();
 
     const card = wrapper.findComponent(
@@ -268,9 +239,7 @@ describe('ConversationalAbsoluteNumbers', () => {
     card.props('actions')[1].onClick();
     await nextTick();
 
-    const modal = wrapper.findComponent(
-      '[data-testid="conversational-absolute-numbers-remove-modal"]',
-    );
+    const modal = wrapper.findComponent({ name: 'ModalRemoveWidget' });
     expect(modal.exists()).toBe(true);
     expect(modal.props('uuid')).toBe('widget-uuid-1');
     expect(modal.props('type')).toBe('absolute_numbers');
@@ -285,32 +254,17 @@ describe('ConversationalAbsoluteNumbers', () => {
     const wrapper = mount(ConversationalAbsoluteNumbers, {
       props: { uuid: 'widget-uuid-1' },
       global: {
-        plugins: [pinia],
-        stubs: {
-          UnnnicSkeletonLoading: defineComponent({
-            name: 'UnnnicSkeletonLoading',
-            inheritAttrs: true,
-            template: '<div />',
-          }),
-          CardWidgetContainer: CardWidgetContainerStub,
-          AbsoluteNumbersMetric: true,
-          NewMetric: defineComponent({
-            name: 'NewMetric',
-            template:
-              '<button data-testid="new-metric-click" @click="$emit(\'click\')" />',
-          }),
-          ModalRemoveWidget: true,
-        },
+        plugins: [pinia, makeI18n()],
         mocks: { $t: (k) => k },
       },
     });
 
     await flushPromises();
 
-    const conversational = useConversational();
-    const customWidgets = useCustomWidgets();
+    const conversational = useConversational(pinia);
+    const customWidgets = useCustomWidgets(pinia);
 
-    await wrapper.find('[data-testid="new-metric-click"]').trigger('click');
+    await wrapper.findComponent(NewMetric).trigger('click');
 
     expect(customWidgets.absoluteNumbersForm.children).toHaveLength(2);
     expect(customWidgets.absoluteNumbersForm.children[1]).toMatchObject({

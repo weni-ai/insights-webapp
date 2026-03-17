@@ -9,7 +9,7 @@ interface FinishedDataResult {
   sector: string;
   queue: string;
   awaiting_time: number;
-  first_response_time: number;
+  first_response_time: number | null;
   response_time: number;
   duration: number;
   contact: string;

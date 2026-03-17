@@ -1,23 +1,31 @@
 <template>
   <UnnnicSkeletonLoading
     v-if="isLoadingChildren"
+    data-testid="conversational-absolute-numbers-skeleton"
     :width="`100%`"
     height="100%"
   />
   <CardWidgetContainer
     v-else
+    data-testid="conversational-absolute-numbers-card"
     hiddenTabs
     :title="widget?.name"
     :actions="actions"
     class="conversational-absolute-numbers"
   >
     <template #header-title>
-      <p class="conversational-absolute-numbers__title">
+      <p
+        class="conversational-absolute-numbers__title"
+        data-testid="conversational-absolute-numbers-title"
+      >
         {{ widget?.name }}
       </p>
     </template>
 
-    <section class="conversational-absolute-numbers__content">
+    <section
+      class="conversational-absolute-numbers__content"
+      data-testid="conversational-absolute-numbers-content"
+    >
       <AbsoluteNumbersMetric
         v-for="child in children"
         :key="child.uuid"
@@ -36,6 +44,7 @@
   <ModalRemoveWidget
     v-if="isRemoveWidgetModalOpen"
     v-model="isRemoveWidgetModalOpen"
+    data-testid="conversational-absolute-numbers-remove-modal"
     class="modal-remove-widget"
     type="absolute_numbers"
     size="md"

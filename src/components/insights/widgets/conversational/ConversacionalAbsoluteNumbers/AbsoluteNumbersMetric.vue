@@ -67,7 +67,6 @@ import ModalRemoveWidget from '@/components/insights/conversations/CustomizableW
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 import { formatCurrency, formatNumber } from '@/utils/numbers';
-import { currencySymbols } from '@/utils/currency';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -92,7 +91,7 @@ const metricValue = ref<number>(0);
 const isLoading = ref<boolean>(false);
 const formattedValue = computed(() => {
   if (props.currency) {
-    return formatCurrency(metricValue.value, currencySymbols[props.currency]);
+    return formatCurrency(metricValue.value, props.currency || 'USD');
   }
   return formatNumber(metricValue.value);
 });

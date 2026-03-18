@@ -80,13 +80,13 @@
         </section>
 
         <section class="export-data-form__filters-container">
-          <UnnnicLabel :label="$t('export_data.filters.agent')" />
+          <UnnnicLabel :label="$t('export_data.filters.representative')" />
           <FilterMultiSelect
             v-model="agents"
-            :placeholder="$t('export_data.filters.select_agent')"
+            :placeholder="$t('export_data.filters.select_representative')"
             source="agents"
             keyValueField="uuid"
-            :allLabel="$t('export_data.filters.all_agents')"
+            :allLabel="$t('export_data.filters.all_representatives')"
             :disabled="!hasSectorsSelected"
             :dependsOnValue="dependsOnValueAgents"
             @update:model-value="updateAgents"

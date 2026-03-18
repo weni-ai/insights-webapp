@@ -763,14 +763,14 @@
       "sectors": "Setores",
       "queues": "Filas",
       "rooms": "Salas",
-      "users": "Agentes",
+      "users": "Atendentes",
       "sector_tags": "Tags",
       "contacts": "Contatos",
       "resolutions": "Resoluções de conversas",
       "topics": "Assuntos",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Agent"
+      "agent_status_logs": "Atendente"
     },
     "field_labels": {
       "config": "Configuração",
@@ -839,14 +839,14 @@
     "filters": {
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "agent": "Agente",
-      "select_agent": "Selecione o agente",
+      "representative": "Atendente",
+      "select_representative": "Selecione o atendente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",
       "tag": "Tag",
       "select_tag": "Selecione a tag",
       "all_sectors": "Todos os setores",
-      "all_agents": "Todos os agentes",
+      "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
       "all_tags": "Todas as tags"
     },

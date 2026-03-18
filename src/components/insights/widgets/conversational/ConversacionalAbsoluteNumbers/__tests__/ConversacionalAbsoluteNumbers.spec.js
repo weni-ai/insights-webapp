@@ -167,16 +167,20 @@ describe('ConversationalAbsoluteNumbers', () => {
       name: 'AbsoluteNumbersMetric',
     });
     expect(metrics).toHaveLength(2);
-    expect(metrics[0].props()).toMatchObject({
+    expect(metrics[0].props('metric')).toMatchObject({
       uuid: 'child-a',
-      title: 'Metric A',
-      currency: 'BRL',
-      parentName: 'Absolute numbers widget',
+      name: 'Metric A',
+      config: expect.objectContaining({
+        currency: expect.objectContaining({ code: 'BRL' }),
+      }),
     });
-    expect(metrics[1].props()).toMatchObject({
+    expect(metrics[0].props('parentName')).toBe('Absolute numbers widget');
+    expect(metrics[1].props('metric')).toMatchObject({
       uuid: 'child-b',
-      title: 'Metric B',
-      currency: '',
+      name: 'Metric B',
+      config: expect.objectContaining({
+        currency: expect.objectContaining({ code: null }),
+      }),
     });
   });
 

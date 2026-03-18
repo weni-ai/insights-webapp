@@ -32,13 +32,30 @@ vi.mock('@/utils/plugins/i18n', () => ({
 
 vi.mock('@/utils/numbers', () => ({
   formatNumber: vi.fn((v) => `fmt-num(${v})`),
-  formatCurrency: vi.fn((v, currency) => `fmt-cur(${currency}${v})`),
+  formatCurrency: vi.fn((v, currency) => `fmt-cur(${currency}:${v})`),
 }));
 
+function makeMetric(uuid, name, currencyCode = null) {
+  return {
+    uuid,
+    name,
+    parent: '',
+    config: {
+      index: 1,
+      agent_uuid: '',
+      key: '',
+      operation: '',
+      value_field_name: '',
+      currency: {
+        is_active: !!currencyCode,
+        code: currencyCode,
+      },
+    },
+  };
+}
+
 const defaultProps = {
-  uuid: 'metric-uuid-1',
-  title: 'Tickets',
-  currency: '',
+  metric: makeMetric('metric-uuid-1', 'Tickets', null),
   parentName: 'Dashboard widget',
 };
 
@@ -56,6 +73,18 @@ const CardWidgetContainerStub = defineComponent({
   `,
 });
 
+const RemoveMetricModalStub = defineComponent({
+  name: 'RemoveMetricModal',
+  inheritAttrs: true,
+  props: {
+    modelValue: { type: Boolean, default: false },
+    metric: { type: Object, default: () => ({}) },
+    parentName: { type: String, default: '' },
+  },
+  template:
+    '<div v-if="modelValue" data-testid="absolute-numbers-metric-remove-modal" />',
+});
+
 function createWrapper(props = {}, piniaOptions = {}) {
   const pinia = createTestingPinia({
     stubActions: false,
@@ -68,7 +97,11 @@ function createWrapper(props = {}, piniaOptions = {}) {
   });
 
   return shallowMount(AbsoluteNumbersMetric, {
-    props: { ...defaultProps, ...props },
+    props: {
+      ...defaultProps,
+      ...props,
+      metric: props.metric ?? defaultProps.metric,
+    },
     global: {
       plugins: [pinia],
       stubs: {
@@ -78,12 +111,7 @@ function createWrapper(props = {}, piniaOptions = {}) {
           template: '<div />',
         }),
         CardWidgetContainer: CardWidgetContainerStub,
-        ModalRemoveWidget: defineComponent({
-          name: 'ModalRemoveWidget',
-          inheritAttrs: true,
-          props: ['modelValue', 'uuid', 'title', 'type', 'size'],
-          template: '<div />',
-        }),
+        RemoveMetricModal: RemoveMetricModalStub,
       },
       mocks: {
         $t: (key, params) =>
@@ -133,7 +161,7 @@ describe('AbsoluteNumbersMetric', () => {
   });
 
   it('fetches value with widget uuid on mount', async () => {
-    createWrapper({ uuid: 'my-child-uuid' });
+    createWrapper({ metric: makeMetric('my-child-uuid', 'X', null) });
     await flushPromises();
     expect(WidgetService.getAbsoluteNumbersChildrenValue).toHaveBeenCalledWith(
       'my-child-uuid',
@@ -141,7 +169,9 @@ describe('AbsoluteNumbersMetric', () => {
   });
 
   it('displays formatNumber when currency is empty', async () => {
-    const wrapper = createWrapper({ currency: '' });
+    const wrapper = createWrapper({
+      metric: makeMetric('metric-uuid-1', 'Tickets', null),
+    });
     await flushPromises();
     expect(formatNumber).toHaveBeenCalledWith(42);
     expect(
@@ -150,12 +180,14 @@ describe('AbsoluteNumbersMetric', () => {
   });
 
   it('displays formatCurrency when currency code is set', async () => {
-    const wrapper = createWrapper({ currency: 'BRL' });
+    const wrapper = createWrapper({
+      metric: makeMetric('metric-uuid-1', 'Tickets', 'BRL'),
+    });
     await flushPromises();
-    expect(formatCurrency).toHaveBeenCalledWith(42, 'R$ ');
+    expect(formatCurrency).toHaveBeenCalledWith(42, 'BRL');
     expect(
       wrapper.find('[data-testid="absolute-numbers-metric-value"]').text(),
-    ).toBe('fmt-cur(R$ 42)');
+    ).toBe('fmt-cur(BRL:42)');
   });
 
   it('emits edit with uuid when edit action runs', async () => {
@@ -186,8 +218,8 @@ describe('AbsoluteNumbersMetric', () => {
       '[data-testid="absolute-numbers-metric-remove-modal"]',
     );
     expect(modal.exists()).toBe(true);
-    expect(modal.props('uuid')).toBe('metric-uuid-1');
-    expect(modal.props('type')).toBe('absolute_numbers_child');
+    expect(modal.props('metric').uuid).toBe('metric-uuid-1');
+    expect(modal.props('parentName')).toBe('Dashboard widget');
   });
 
   it('passes two actions to CardWidgetContainer', async () => {

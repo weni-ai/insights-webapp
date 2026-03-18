@@ -992,21 +992,21 @@
       "tabs": {
         "in_awaiting": "En espera",
         "in_progress": "En progreso",
-        "attendant": "Atendente",
+        "attendant": "Representante",
         "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duración",
         "awaiting_time": "Tiempo en espera",
         "first_response_time": "Tiempo de 1ª respuesta",
-        "attendant": "Atendente",
+        "attendant": "Representante",
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto"
       },
       "pauses": {
         "status": "Estado",
-        "attendant": "Atendente",
+        "attendant": "Representante",
         "opened": "Abiertos",
         "closed": "Cerrados"
       },
@@ -1017,7 +1017,7 @@
         "queue": "Cola"
       },
       "attendant": {
-        "agent": "Atendente",
+        "agent": "Representante",
         "status": "Estado",
         "ongoing": "En curso",
         "finished": "Finalizado",
@@ -1057,7 +1057,7 @@
         "awaiting_time": "Tiempo en espera",
         "first_response_time": "Tiempo de 1ª respuesta",
         "response_time": "Tiempo de respuesta",
-        "agent": "Agente",
+        "agent": "Representante",
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto",

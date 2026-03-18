@@ -16,7 +16,9 @@
       {{
         shouldUseMock
           ? $t('conversations_dashboard.info.mock_description')
-          : $t('conversations_dashboard.info.description', { date: formattedDate })
+          : $t('conversations_dashboard.info.description', {
+              date: formattedDate,
+            })
       }}
     </p>
   </section>

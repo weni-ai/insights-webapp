@@ -5,8 +5,8 @@
     :defaultTab="defaultTab"
     :mock="mock"
     :mockItemsCount="mockItemsCount"
-    barColor="#E5812A"
-    barBackgroundColor="#FBEED9"
+    :barColor="colorOrange500"
+    :barBackgroundColor="colorOrange100"
     itemKey="queues"
     itemLabelKey="queue_name"
     :formatFooterText="formatFooterText"
@@ -32,6 +32,11 @@ import type { VolumeBarListTabItem, WidgetContext } from './types';
 import volumePerQueueService from '@/services/api/resources/humanSupport/volumePerQueue';
 
 import { redirectToChatsConfig } from '@/utils/redirect';
+
+import {
+  colorOrange500,
+  colorOrange100,
+} from '@weni/unnnic-system/tokens/colors';
 
 import i18n from '@/utils/plugins/i18n';
 const { t, tc } = i18n.global;

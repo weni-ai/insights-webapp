@@ -1096,6 +1096,15 @@
       },
       "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
     },
+    "setup": {
+      "title": "No sector created",
+      "description": "Create a sector for this project and start monitoring your team's support data in real time.",
+      "action_text": "Create sector",
+      "disclaimer": "These numbers are for demonstration purposes only. Once your project has a sector configured and begins receiving conversations, your real data will be displayed here."
+    },
+    "common": {
+      "no_response": "No response"
+    },
     "volume_per_queue": {
       "title": "Volume per queue",
       "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
@@ -1128,15 +1137,6 @@
           "closed": "No tags were assigned to chats finished during the selected period"
         }
       }
-    },
-    "setup": {
-      "title": "No sector created",
-      "description": "Create a sector for this project and start monitoring your team's support data in real time.",
-      "action_text": "Create sector",
-      "disclaimer": "These numbers are for demonstration purposes only. Once your project has a sector configured and begins receiving conversations, your real data will be displayed here."
-    },
-    "common": {
-      "no_response": "No response"
     }
   },
   "news": {

@@ -860,15 +860,15 @@
     "error_default": "Oops, something went wrong"
   },
   "disconnectAgent": {
-    "title": "Disconnect agent",
-    "description": "Are you sure you want to disconnect the agent {agent}?",
+    "title": "Disconnect representative",
+    "description": "Are you sure you want to disconnect the representative {agent}?",
     "description_confirm": "Representative {agent} will be offline after confirmation",
-    "tooltip": "Disconnect agent",
+    "tooltip": "Disconnect representative",
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
     "error_message": "Error disconnecting representative {agent}",
-    "tooltip_disabled": "This agent cannot be disconnected because it is offline"
+    "tooltip_disabled": "This representative cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
     "title": "Human support",

@@ -307,8 +307,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agente",
-      "placeholder": "Selecione um agente"
+      "label": "Atendente",
+      "placeholder": "Selecione um atendente"
     },
     "contact": {
       "label": "Contato",
@@ -341,7 +341,7 @@
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",
-  "chats_per_agents": "Chats por agente",
+  "chats_per_agents": "Chats por atendente",
   "closeds": "Encerrados",
   "finished": "Finalizado",
   "in_progress": "Em andamento",
@@ -859,14 +859,14 @@
     "error_default": "Ops, ocorreu um erro"
   },
   "disconnectAgent": {
-    "title": "Desconectar agente",
-    "description": "Tem certeza de que deseja desconectar o agente {agent}?",
-    "description_confirm": "Ao confirmar, o agente {agent} ficará offline.",
-    "tooltip": "Desconectar agente",
+    "title": "Desconectar atendente",
+    "description": "Tem certeza de que deseja desconectar o atendente {agent}?",
+    "description_confirm": "Ao confirmar, o atendente {agent} ficará offline.",
+    "tooltip": "Desconectar atendente",
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
-    "error_message": "Erro ao desconectar o agente {agent}",
+    "error_message": "Erro ao desconectar o atendente {agent}",
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
   "human_support_dashboard": {
@@ -1062,16 +1062,16 @@
         "first_text": "Monitorize as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>!",
         "second_text": "Agora você pode monitorar o status dos atendimentos em tempo real:",
         "third_text": "Monitorize as métricas de tempo agora — tempo médio e máximo em espera, tempo para 1ª resposta e duração — em tempo real:",
-        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e agente.",
+        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e atendente.",
         "fifth_text": "Você pode monitorar cada interação através das abas <b>Em andamento</b> e <b>Em espera</b>. Clique nas interações para visualizá-las.",
-        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada agente por interação, bem como as pausas personalizadas.",
-        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada agente para entrar em modo de visualização ou usar o botão para desconectá-lo."
+        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada atendente por interação, bem como as pausas personalizadas.",
+        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada atendente para entrar em modo de visualização ou usar o botão para desconectá-lo."
       },
       "analysis": {
         "first_text": "Explore as interações encerradas para descobrir padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
         "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio em espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
-        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e agente.",
-        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
+        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e atendente.",
+        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada atendente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
       }
     }
   },

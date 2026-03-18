@@ -6,6 +6,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
   data-testid="service-status"
   data-v-139ebc7e=""
 >
+  <!--v-if-->
   <p
     class="service-status__title"
     data-testid="service-status-title"

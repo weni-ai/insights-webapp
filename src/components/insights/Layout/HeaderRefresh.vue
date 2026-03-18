@@ -14,7 +14,7 @@
       :text="$t('insights_header.refresh')"
       type="tertiary"
       iconLeft="refresh"
-      :disabled="isLoading || isDisabledByMock"
+      :disabled="isLoading || isDisabledByMock || forceDisabled"
       @click="refreshData"
     />
   </UnnnicToolTip>
@@ -25,7 +25,7 @@
     :text="$t('insights_header.refresh')"
     type="tertiary"
     iconLeft="refresh"
-    :disabled="isLoading || isDisabledByMock"
+    :disabled="isLoading || isDisabledByMock || forceDisabled"
     @click="refreshData"
   />
 </template>
@@ -42,6 +42,7 @@ const ONE_MINUTE_MS = 1000 * 60;
 
 const props = defineProps<{
   type: 'human-support' | 'conversations';
+  forceDisabled?: boolean;
 }>();
 
 const useMonitoring = useHumanSupportMonitoring();

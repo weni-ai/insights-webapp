@@ -20,14 +20,6 @@ vi.mock('@/utils/time', () => ({
   formatSecondsToHumanString: vi.fn((seconds) => `${seconds} seconds`),
 }));
 
-vi.mock('@/utils/currency', () => ({
-  currencySymbols: {
-    USD: '$',
-    EUR: '€',
-    BRL: 'R$',
-  },
-}));
-
 vi.mock('vue-i18n', async (importOriginal) => {
   const actual = await importOriginal();
   return {
@@ -209,8 +201,8 @@ describe('DynamicCard', () => {
 
         const result = wrapper.vm.widgetVtexData;
         expect(result.orders).toBe('4');
-        expect(result.total_value).toBe('$ 1,000.50');
-        expect(result.average_ticket).toBe('$ 250.75');
+        expect(result.total_value).toBe('$1,000.50');
+        expect(result.average_ticket).toBe('$250.75');
       });
 
       it('should handle empty VTEX order data', () => {
@@ -261,8 +253,8 @@ describe('DynamicCard', () => {
         });
 
         const result = wrapper.vm.widgetVtexConversionsData;
-        expect(result.utm_data.accumulated_total).toBe('$ 5,000.00');
-        expect(result.utm_data.medium_ticket).toBe('$ 125.50');
+        expect(result.utm_data.accumulated_total).toBe('$5,000.00');
+        expect(result.utm_data.medium_ticket).toBe('$125.50');
         expect(result.graph_data).toEqual(mockData.graph_data);
       });
 
@@ -333,7 +325,7 @@ describe('DynamicCard', () => {
           data: { value: 1234.56 },
         };
         const result = wrapper.vm.getWidgetFormattedData(widget);
-        expect(result).toBe('$ 1,234.56');
+        expect(result).toBe('$1,234.56');
       });
 
       it('should format regular number data correctly', () => {
@@ -707,7 +699,7 @@ describe('DynamicCard', () => {
 
       const props = wrapper.vm.widgetProps;
       expect(props.isLoadingData).toBe(true);
-      expect(props.data.utm_data.accumulated_total).toBe('$ 1,000.00');
+      expect(props.data.utm_data.accumulated_total).toBe('$1,000.00');
     });
   });
 });

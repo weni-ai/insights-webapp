@@ -159,4 +159,57 @@ describe('DrawerConfigGallery.vue', () => {
 
     expect(vtexConversionsForm.exists()).toBe(true);
   });
+
+  describe('goToGallery', () => {
+    it('should emit close when widget has no gallery options', async () => {
+      const vtexStore = createTestingPinia({
+        initialState: {
+          config: {
+            project: { uuid: '95fa43d6-d91a-48d4-bbe8-256d93bf5254' },
+          },
+          project: {
+            isLoadedFlows: true,
+            flows: [],
+            getProjectFlows: vi.fn(),
+          },
+          widgets: {
+            currentWidgetEditing: { type: 'vtex_order', config: {} },
+            updateCurrentWidgetEditing: vi.fn(),
+          },
+          onboarding: {
+            onboardingRefs: {},
+            showConfigWidgetOnboarding: false,
+          },
+        },
+      });
+
+      const vtexWrapper = mount(DrawerConfigGallery, {
+        global: {
+          plugins: [vtexStore],
+          components: { GalleryOption, DrawerConfigWidgetDynamic },
+          stubs: { DrawerConfigContentVtexConversions: true },
+        },
+        props: { modelValue: true },
+      });
+
+      vtexWrapper.vm.goToGallery();
+      await vtexWrapper.vm.$nextTick();
+
+      expect(vtexWrapper.vm.showDrawerConfigWidget).toBe(false);
+      expect(vtexWrapper.vm.drawerConfigType).toBe('');
+      expect(vtexWrapper.emitted('close')).toBeTruthy();
+    });
+
+    it('should not emit close when widget has gallery options', async () => {
+      wrapper.vm.showDrawerConfigWidget = true;
+      wrapper.vm.drawerConfigType = 'funnel';
+
+      wrapper.vm.goToGallery();
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.vm.showDrawerConfigWidget).toBe(false);
+      expect(wrapper.vm.drawerConfigType).toBe('');
+      expect(wrapper.emitted('close')).toBeFalsy();
+    });
+  });
 });

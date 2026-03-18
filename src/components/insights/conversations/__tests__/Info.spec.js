@@ -26,6 +26,7 @@ const messages = {
       info: {
         description:
           'As of {date}, conversational data includes closed windows',
+        mock_description: 'Mock mode: conversational data is being simulated',
       },
     },
   },
@@ -34,6 +35,8 @@ const messages = {
       info: {
         description:
           'A partir de {date}, os dados conversacionais contemplam janelas encerradas',
+        mock_description:
+          'Modo mock: os dados conversacionais estão sendo simulados',
       },
     },
   },
@@ -42,6 +45,8 @@ const messages = {
       info: {
         description:
           'A partir del {date}, los datos conversacionales incluyen ventanas cerradas',
+        mock_description:
+          'Modo mock: los datos conversacionales están siendo simulados',
       },
     },
   },
@@ -70,6 +75,7 @@ describe('Info.vue', () => {
   let wrapper;
 
   beforeEach(() => {
+    shouldUseMockRef.value = false;
     wrapper = createWrapper();
   });
 
@@ -268,8 +274,13 @@ describe('Info.vue', () => {
     it('should display mock description when shouldUseMock is true', () => {
       const description = wrapper.find('[data-testid="info-description"]');
       expect(description.text()).toBe(
-        'conversations_dashboard.info.mock_description',
+        'Mock mode: conversational data is being simulated',
       );
+    });
+
+    it('should not display a date in mock mode', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).not.toMatch(/\d{2}\/\d{2}\/\d{4}/);
     });
   });
 
@@ -279,7 +290,7 @@ describe('Info.vue', () => {
       wrapper = createWrapper();
     });
 
-    it('should display normal description when shouldUseMock is false', () => {
+    it('should display normal description with date when shouldUseMock is false', () => {
       const description = wrapper.find('[data-testid="info-description"]');
       expect(description.text()).toMatch(/\d{2}\/\d{2}\/\d{4}/);
       expect(description.text()).toContain('conversational data');

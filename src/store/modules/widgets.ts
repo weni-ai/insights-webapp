@@ -7,6 +7,7 @@ import { defineStore } from 'pinia';
 import { useConversationalWidgets } from './conversational/widgets';
 import { useCustomWidgets } from './conversational/customWidgets';
 import { useConversationalExport } from './export/conversational/export';
+import { useConversational } from './conversational/conversational';
 
 export const useWidgets = defineStore('widgets', {
   state: () => ({
@@ -86,43 +87,49 @@ export const useWidgets = defineStore('widgets', {
 
     async getCurrentDashboardWidgets() {
       this.setLoadingCurrentDashboardWidgets(true);
+      const conversational = useConversational();
 
-      const widgets = await Dashboards.getDashboardWidgets(
-        useDashboards().currentDashboard.uuid,
-      );
-      this.setCurrentDashboardWidgets(widgets);
-
-      if (widgets?.length > 0) {
-        const { setCsatWidget, setNpsWidget } = useConversationalWidgets();
-        const { setCustomWidgets } = useCustomWidgets();
-        const { addCustomWidgets } = useConversationalExport();
-
-        const customWidgets = widgets.filter((widget) =>
-          [
-            'conversations.custom',
-            'conversations.crosstab',
-            'conversations.absolute_numbers',
-          ].includes(widget.source as string),
+      try {
+        const widgets = await Dashboards.getDashboardWidgets(
+          useDashboards().currentDashboard.uuid,
         );
+        this.setCurrentDashboardWidgets(widgets);
 
-        setCustomWidgets(customWidgets);
-        addCustomWidgets(customWidgets);
+        if (widgets?.length > 0) {
+          const { setCsatWidget, setNpsWidget } = useConversationalWidgets();
+          const { setCustomWidgets } = useCustomWidgets();
+          const { addCustomWidgets } = useConversationalExport();
 
-        const csatWidget = widgets.find(
-          (widget) => widget.source === 'conversations.csat',
-        );
-        const npsWidget = widgets.find(
-          (widget) => widget.source === 'conversations.nps',
-        );
-        if (csatWidget) {
-          setCsatWidget(csatWidget);
+          const customWidgets = widgets.filter((widget) =>
+            ['conversations.custom', 'conversations.crosstab'].includes(
+              widget.source as string,
+            ),
+          );
+
+          setCustomWidgets(customWidgets);
+          addCustomWidgets(customWidgets);
+
+          const csatWidget = widgets.find(
+            (widget) => widget.source === 'conversations.csat',
+          );
+          const npsWidget = widgets.find(
+            (widget) => widget.source === 'conversations.nps',
+          );
+          if (csatWidget) {
+            setCsatWidget(csatWidget);
+          }
+          if (npsWidget) {
+            setNpsWidget(npsWidget);
+          }
         }
-        if (npsWidget) {
-          setNpsWidget(npsWidget);
-        }
+
+        conversational.setEndpointError('widgets', false);
+      } catch (error) {
+        conversational.setEndpointError('widgets', true);
+        console.error('Error loading dashboard widgets:', error);
+      } finally {
+        this.setLoadingCurrentDashboardWidgets(false);
       }
-
-      this.setLoadingCurrentDashboardWidgets(false);
     },
 
     async getCurrentDashboardWidgetData(widget) {

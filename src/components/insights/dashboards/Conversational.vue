@@ -165,6 +165,13 @@ const initializeConfiguration = async () => {
     customWidgets.injectMockWidgets();
   }
 
+  if (
+    isFeatureFlagEnabled('insightsDataFeedback') &&
+    !conversational.shouldUseMock
+  ) {
+    checkSurvey();
+  }
+
   setDynamicWidgets();
 };
 
@@ -178,15 +185,25 @@ watch(
   { deep: true },
 );
 
+watch(
+  () => conversational.hasEndpointErrors,
+  (hasErrors) => {
+    if (hasErrors && isConfigurationLoaded.value) {
+      customWidgets.clearMockWidgets();
+      setDynamicWidgets();
+    }
+  },
+);
+
 onMounted(() => {
   initializeConfiguration();
-  if (isFeatureFlagEnabled('insightsDataFeedback')) {
-    checkSurvey();
-  }
 });
 
 watch(activeFeatures, () => {
-  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+  if (
+    isFeatureFlagEnabled('insightsDataFeedback') &&
+    !conversational.shouldUseMock
+  ) {
     checkSurvey();
   }
 });

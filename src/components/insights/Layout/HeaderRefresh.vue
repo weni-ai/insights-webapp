@@ -14,7 +14,7 @@
       :text="$t('insights_header.refresh')"
       type="tertiary"
       iconLeft="refresh"
-      :disabled="forceDisabled || isLoading || isDisabledByMock"
+      :disabled="isLoading || isDisabledByMock || forceDisabled"
       @click="refreshData"
     />
   </UnnnicToolTip>
@@ -25,7 +25,7 @@
     :text="$t('insights_header.refresh')"
     type="tertiary"
     iconLeft="refresh"
-    :disabled="forceDisabled || isLoading || isDisabledByMock"
+    :disabled="isLoading || isDisabledByMock || forceDisabled"
     @click="refreshData"
   />
 </template>

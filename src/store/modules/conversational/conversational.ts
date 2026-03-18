@@ -14,6 +14,8 @@ export type DrawerWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | null;
+type EndpointErrorKey = 'topics' | 'header' | 'widgets';
+
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;
   drawerWidgetType: DrawerWidgetType;
@@ -25,6 +27,7 @@ interface ConversationalState {
     mostTalkedAboutTopics: boolean;
     dynamicWidgets: boolean;
   };
+  endpointErrors: Record<EndpointErrorKey, boolean>;
 }
 
 export const useConversational = defineStore('conversational', {
@@ -38,6 +41,11 @@ export const useConversational = defineStore('conversational', {
       header: false,
       mostTalkedAboutTopics: false,
       dynamicWidgets: false,
+    },
+    endpointErrors: {
+      topics: false,
+      header: false,
+      widgets: false,
     },
   }),
 
@@ -62,6 +70,9 @@ export const useConversational = defineStore('conversational', {
     },
     setConfigurationLoaded(value: boolean) {
       this.isConfigurationLoaded = value;
+    },
+    setEndpointError(key: EndpointErrorKey, value: boolean) {
+      this.endpointErrors[key] = value;
     },
   },
   getters: {
@@ -92,8 +103,14 @@ export const useConversational = defineStore('conversational', {
       );
     },
 
+    hasEndpointErrors: (state) =>
+      Object.values(state.endpointErrors).some(Boolean),
+
     shouldUseMock: (state) => {
       if (!state.isConfigurationLoaded) return false;
+
+      const hasErrors = Object.values(state.endpointErrors).some(Boolean);
+      if (hasErrors) return false;
 
       const { hasExistingTopics } = useConversationalTopics();
       const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =

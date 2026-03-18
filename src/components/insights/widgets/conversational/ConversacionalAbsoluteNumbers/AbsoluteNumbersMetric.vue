@@ -1,58 +1,38 @@
 <template>
   <UnnnicSkeletonLoading
     v-if="isLoading"
+    data-testid="absolute-numbers-metric-skeleton"
     :width="`100%`"
     height="100%"
   />
   <CardWidgetContainer
     v-else
+    data-testid="absolute-numbers-metric-card"
     :actions="actions"
     class="absolute-numbers-metric"
   >
     <template #header-title>
-      <p class="absolute-numbers-metric__title">
-        {{ title }}
+      <p
+        class="absolute-numbers-metric__title"
+        data-testid="absolute-numbers-metric-title"
+      >
+        {{ metric.name }}
       </p>
     </template>
     <section class="absolute-numbers-metric__content">
-      <p class="absolute-numbers-metric__value">
+      <p
+        class="absolute-numbers-metric__value"
+        data-testid="absolute-numbers-metric-value"
+      >
         {{ formattedValue }}
       </p>
     </section>
-    <ModalRemoveWidget
+    <RemoveMetricModal
       v-if="isRemoveWidgetModalOpen"
       v-model="isRemoveWidgetModalOpen"
-      class="modal-remove-metric"
-      type="absolute_numbers_child"
-      size="md"
-      :uuid="uuid"
-      :title="
-        $t(
-          'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_child_modal.title',
-        )
-      "
-    >
-      <template #description>
-        <section class="modal-remove-metric__description">
-          <p class="modal-remove-metric__description__title">
-            {{
-              $t(
-                'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_child_modal.description',
-                { metric_name: title },
-              )
-            }}
-          </p>
-          <p class="modal-remove-metric__description__info">
-            {{
-              $t(
-                'conversations_dashboard.customize_your_dashboard.absolute_numbers.remove_child_modal.info',
-                { widget_name: parentName, metric_name: title },
-              )
-            }}
-          </p>
-        </section>
-      </template>
-    </ModalRemoveWidget>
+      :metric="metric"
+      :parentName="parentName"
+    />
   </CardWidgetContainer>
 </template>
 
@@ -61,8 +41,10 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 import CardWidgetContainer from '../../layout/CardWidgetContainer.vue';
-import WidgetService from '@/services/api/resources/conversational/widgets';
-import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
+import WidgetService, {
+  AbsoluteNumbersChildrenItem,
+} from '@/services/api/resources/conversational/widgets';
+import RemoveMetricModal from './RemoveMetricModal.vue';
 
 import { useConversational } from '@/store/modules/conversational/conversational';
 
@@ -71,9 +53,7 @@ import { formatCurrency, formatNumber } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 
 interface Props {
-  uuid: string;
-  title: string;
-  currency: string;
+  metric: AbsoluteNumbersChildrenItem;
   parentName: string;
 }
 
@@ -90,8 +70,8 @@ const isRemoveWidgetModalOpen = ref<boolean>(false);
 const metricValue = ref<number>(0);
 const isLoading = ref<boolean>(false);
 const formattedValue = computed(() => {
-  if (props.currency) {
-    return formatCurrency(metricValue.value, props.currency || 'USD');
+  if (props.metric.config.currency.code) {
+    return formatCurrency(metricValue.value, props.metric.config.currency.code);
   }
   return formatNumber(metricValue.value);
 });
@@ -100,7 +80,7 @@ const getChildrenValue = async () => {
   try {
     isLoading.value = true;
     const response = await WidgetService.getAbsoluteNumbersChildrenValue(
-      props.uuid,
+      props.metric.uuid,
     );
     metricValue.value = response.value;
   } catch (error) {
@@ -113,16 +93,13 @@ const getChildrenValue = async () => {
 const actions = computed(() => {
   const editOption = {
     icon: 'edit_square',
-    text: t(
-      'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: '' },
-    ),
-    onClick: () => emit('edit', props.uuid),
+    text: t('edit_metric', { type: '' }),
+    onClick: () => emit('edit', props.metric.uuid),
   };
 
   const deleteOption = {
     icon: 'delete',
-    text: t('conversations_dashboard.customize_your_dashboard.remove_widget'),
+    text: t('remove_metric'),
     onClick: () => (isRemoveWidgetModalOpen.value = true),
     scheme: 'aux-red-500',
   };

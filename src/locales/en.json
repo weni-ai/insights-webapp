@@ -228,7 +228,6 @@
       "absolute_numbers": {
         "drawer": {
           "description": "Set a name for the widget:",
-          "child_description": "Select the metric you want to view:",
           "add_child": "Add metric",
           "metric_name": {
             "label": "Metric name",
@@ -268,7 +267,7 @@
           "info": "The {widget_name} widget will be deleted with all added metrics."
         },
         "remove_child_modal": {
-          "title": "Delete metric",
+          "title": "Remove metric",
           "description": "Are you sure you want to delete the {metric_name}?",
           "info": "The {widget_name} widget will not be deleted. Only the {metric_name}."
         }
@@ -431,6 +430,9 @@
   "in-service": "In progress",
   "status": "Status",
   "metric": "Metric",
+  "edit_metric": "Edit metric",
+  "remove_metric": "Remove metric",
+  "edit_widget": "Edit widget",
   "metrics": "Metrics",
   "flow": "Flow",
   "flows": "Flows",

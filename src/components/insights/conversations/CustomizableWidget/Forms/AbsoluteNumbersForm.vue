@@ -21,18 +21,27 @@
       />
     </section>
     <hr class="absolute-numbers-form__divider" />
-    <template
+    <section
       v-for="(child, index) in absoluteNumbersForm.children"
+      ref="absoluteNumbersFormChildren"
       :key="`absolute-numbers-form-child-${index}`"
     >
-      <section class="absolute-numbers-form__container">
-        <p class="absolute-numbers-form__description">
-          {{
-            $t(
-              'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.child_description',
-            )
-          }}
-        </p>
+      <section
+        :ref="`absolute-numbers-form-child-${child.uuid || 'new-child'}`"
+        class="absolute-numbers-form__child-form"
+      >
+        <section class="absolute-numbers-form__child-form__container">
+          <p class="absolute-numbers-form__child-form__title">
+            {{ $t('metric') }}
+          </p>
+          <UnnnicIcon
+            icon="delete"
+            clickable
+            size="ant"
+            scheme="fg-emphasized"
+            @click="handleDeleteChild(index)"
+          />
+        </section>
         <UnnnicInput
           v-model="child.name"
           :label="
@@ -48,6 +57,7 @@
         />
         <UnnnicSelect
           v-model="child.config.agent_uuid"
+          :data-testid="`absolute-numbers-agent-select-${index}`"
           :options="agentsTeam.agents"
           itemLabel="name"
           itemValue="uuid"
@@ -103,6 +113,7 @@
         />
         <UnnnicCheckbox
           v-model="child.config.currency.is_active"
+          :data-testid="`absolute-numbers-currency-checkbox-${index}`"
           :label="
             $t(
               'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.currency.switch',
@@ -136,8 +147,9 @@
         />
       </section>
       <hr class="absolute-numbers-form__divider" />
-    </template>
+    </section>
     <UnnnicButton
+      data-testid="absolute-numbers-add-child"
       :text="
         $t(
           'conversations_dashboard.customize_your_dashboard.absolute_numbers.drawer.add_child',
@@ -148,14 +160,32 @@
       @click="handleAddChild"
     />
   </section>
+  <RemoveMetricModal
+    v-if="isRemoveWidgetModalOpen"
+    v-model="isRemoveWidgetModalOpen"
+    :metric="removeMetric"
+    :parentName="absoluteNumbersForm.name"
+    @success="removeMetricForm(removeMetricIndex)"
+  />
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import {
+  computed,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch,
+  useTemplateRef,
+} from 'vue';
 import { storeToRefs } from 'pinia';
+
+import RemoveMetricModal from '@/components/insights/widgets/conversational/ConversacionalAbsoluteNumbers/RemoveMetricModal.vue';
 
 import { useProject } from '@/store/modules/project';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import type { absoluteNumbersFormChildren } from '@/store/modules/conversational/customWidgets';
 
 import i18n from '@/utils/plugins/i18n';
 
@@ -165,13 +195,19 @@ const project = useProject();
 const { agentsTeam } = storeToRefs(project);
 
 const customWidgets = useCustomWidgets();
-const { absoluteNumbersForm } = storeToRefs(customWidgets);
+const { absoluteNumbersForm, absoluteNumbersFormChildToScroll } =
+  storeToRefs(customWidgets);
 
 const { t } = i18n.global;
 
 onMounted(() => {
   if (absoluteNumbersForm.value.children.length === 0) {
     handleAddChild();
+  }
+  if (absoluteNumbersFormChildToScroll.value) {
+    nextTick(() => {
+      scrollToChild(absoluteNumbersFormChildToScroll.value);
+    });
   }
 });
 
@@ -181,9 +217,40 @@ onUnmounted(() => {
     name: '',
     children: [],
   };
+  absoluteNumbersFormChildToScroll.value = null;
 });
 
+const absoluteNumbersFormChildrenRefs = useTemplateRef<HTMLElement[]>(
+  'absoluteNumbersFormChildren',
+);
+
+const scrollToChild = (key: string) => {
+  let childIndex = -1;
+
+  if (key === 'new-child') {
+    childIndex = absoluteNumbersForm.value.children.length - 1;
+  } else {
+    childIndex = absoluteNumbersForm.value.children.findIndex(
+      (child) => child.uuid === key,
+    );
+  }
+  const child = absoluteNumbersFormChildrenRefs.value[childIndex];
+  if (child) {
+    child.scrollIntoView({ behavior: 'instant', block: 'center' });
+  }
+};
+
+const isRemoveWidgetModalOpen = ref<boolean>(false);
+const removeMetric = ref<absoluteNumbersFormChildren | null>(null);
+const removeMetricIndex = ref<number>(-1);
 const searchAgent = ref<Record<number, string>>({});
+
+watch(isRemoveWidgetModalOpen, (newValue) => {
+  if (!newValue) {
+    removeMetric.value = null;
+    removeMetricIndex.value = -1;
+  }
+});
 
 const currencies = computed(() => {
   return [
@@ -255,6 +322,21 @@ const handleAddChild = () => {
   });
 };
 
+const handleDeleteChild = (index: number) => {
+  const child = absoluteNumbersForm.value.children[index];
+  if (child.uuid) {
+    removeMetricIndex.value = index;
+    removeMetric.value = child;
+    isRemoveWidgetModalOpen.value = true;
+  } else {
+    removeMetricForm(index);
+  }
+};
+
+const removeMetricForm = (index: number) => {
+  absoluteNumbersForm.value.children.splice(index, 1);
+};
+
 const disabledAddChildButton = computed(() => {
   return absoluteNumbersForm.value.children?.length >= 6;
 });
@@ -273,9 +355,23 @@ const disabledAddChildButton = computed(() => {
     gap: $unnnic-space-3;
   }
 
-  &__description {
-    font: $unnnic-font-body;
-    color: $unnnic-color-fg-base;
+  &__child-form {
+    display: flex;
+    flex-direction: column;
+    padding: $unnnic-space-4;
+    gap: $unnnic-space-4;
+    border-radius: $unnnic-radius-2;
+    border: 1px solid $unnnic-color-border-soft;
+
+    &__container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    &__title {
+      font: $unnnic-font-display-3;
+      color: $unnnic-color-fg-emphasized;
+    }
   }
 
   &__divider {

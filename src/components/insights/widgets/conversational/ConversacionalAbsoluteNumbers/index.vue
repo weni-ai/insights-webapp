@@ -1,41 +1,53 @@
 <template>
   <UnnnicSkeletonLoading
     v-if="isLoadingChildren"
+    data-testid="conversational-absolute-numbers-skeleton"
     :width="`100%`"
     height="100%"
   />
   <CardWidgetContainer
     v-else
+    data-testid="conversational-absolute-numbers-card"
     hiddenTabs
     :title="widget?.name"
     :actions="actions"
     class="conversational-absolute-numbers"
   >
     <template #header-title>
-      <p class="conversational-absolute-numbers__title">
+      <p
+        class="conversational-absolute-numbers__title"
+        data-testid="conversational-absolute-numbers-title"
+      >
         {{ widget?.name }}
       </p>
     </template>
 
-    <section class="conversational-absolute-numbers__content">
+    <section
+      class="conversational-absolute-numbers__content"
+      data-testid="conversational-absolute-numbers-content"
+    >
       <AbsoluteNumbersMetric
         v-for="child in children"
         :key="child.uuid"
-        :uuid="child.uuid"
-        :title="child.name"
-        :currency="child.config.currency.code ?? ''"
+        :metric="child"
         :parentName="widget?.name"
-        @edit="handleOpenEditDrawer()"
+        @edit="handleOpenEditDrawer({ scrollToChild: child.uuid })"
       />
       <NewMetric
         v-if="children.length < 6"
-        @click="handleOpenEditDrawer({ addNewChild: true })"
+        @click="
+          handleOpenEditDrawer({
+            addNewChild: true,
+            scrollToChild: 'new-child',
+          })
+        "
       />
     </section>
   </CardWidgetContainer>
   <ModalRemoveWidget
     v-if="isRemoveWidgetModalOpen"
     v-model="isRemoveWidgetModalOpen"
+    data-testid="conversational-absolute-numbers-remove-modal"
     class="modal-remove-widget"
     type="absolute_numbers"
     size="md"
@@ -99,7 +111,8 @@ onMounted(async () => {
 
 const customWidgetsStore = useCustomWidgets();
 const { getCustomWidgetByUuid } = customWidgetsStore;
-const { absoluteNumbersForm } = storeToRefs(customWidgetsStore);
+const { absoluteNumbersForm, absoluteNumbersFormChildToScroll } =
+  storeToRefs(customWidgetsStore);
 
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
@@ -127,10 +140,7 @@ const isRemoveWidgetModalOpen = ref<boolean>(false);
 const actions = computed(() => {
   const editOption = {
     icon: 'edit_square',
-    text: t(
-      'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: '' },
-    ),
+    text: t('edit_widget'),
     onClick: () => handleOpenEditDrawer(),
   };
 
@@ -144,8 +154,15 @@ const actions = computed(() => {
   return [editOption, deleteOption];
 });
 
+interface HandleOpenEditDrawerProps {
+  addNewChild?: boolean;
+  scrollToChild?: string;
+}
 const handleOpenEditDrawer = (
-  { addNewChild = false }: { addNewChild?: boolean } = { addNewChild: false },
+  { addNewChild = false, scrollToChild = '' }: HandleOpenEditDrawerProps = {
+    addNewChild: false,
+    scrollToChild: '',
+  },
 ) => {
   absoluteNumbersForm.value = {
     widget_uuid: widget.value?.uuid,
@@ -168,6 +185,9 @@ const handleOpenEditDrawer = (
         },
       },
     });
+  }
+  if (scrollToChild) {
+    absoluteNumbersFormChildToScroll.value = scrollToChild;
   }
   setIsDrawerCustomizableOpen(true, 'absolute_numbers', false);
 };

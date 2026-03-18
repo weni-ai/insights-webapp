@@ -3,6 +3,7 @@ import i18n from '@/utils/plugins/i18n';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import topicsService from '@/services/api/resources/conversational/topics';
 import { checkIsEmptyValuesAndNewTopics, defaultAlert } from '@/utils/topics';
+import { useConversational } from './conversational';
 
 export interface Topic {
   uuid?: string;
@@ -220,6 +221,7 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
 
     async loadFormTopics() {
       this.isLoadingTopics = true;
+      const conversational = useConversational();
       try {
         const response = await topicsService.getConversationalFormTopics();
         this.topics = response.map((topic) => ({
@@ -236,7 +238,9 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
             isNew: false,
           })),
         }));
+        conversational.setEndpointError('topics', false);
       } catch (error) {
+        conversational.setEndpointError('topics', true);
         console.error('Error loading topics:', error);
       } finally {
         this.isLoadingTopics = false;

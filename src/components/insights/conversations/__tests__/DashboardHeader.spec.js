@@ -53,6 +53,7 @@ vi.mock('@/store/modules/conversational/conversational', () => {
     useConversational: () => ({
       refreshDataConversational: false,
       setIsLoadingConversationalData: vi.fn(),
+      setEndpointError: vi.fn(),
       shouldUseMock: mockShouldUseMock,
     }),
   };

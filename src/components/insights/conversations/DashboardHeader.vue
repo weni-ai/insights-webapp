@@ -195,15 +195,18 @@ const loadCardData = async () => {
     const response =
       await conversationalHeaderApi.getConversationalHeaderTotals();
     applyMetrics(response);
+    conversationalStore.setEndpointError('header', false);
   } catch (error) {
+    conversationalStore.setEndpointError('header', true);
     console.error('Error loading conversational header data:', error);
 
     cardsData.value.forEach((card) => {
       card.value = '-';
       card.description = `0 ${t('conversations_dashboard.conversations')}`;
     });
-
-    showErrorToast();
+    if (!conversationalStore.shouldUseMock) {
+      showErrorToast();
+    }
   } finally {
     cardsData.value.forEach((card) => {
       card.isLoading = false;

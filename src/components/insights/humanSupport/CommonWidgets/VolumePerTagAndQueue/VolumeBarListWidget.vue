@@ -6,7 +6,7 @@
     :currentTab="currentTab"
     :isLoading="isLoadingItems && showVisualLoading"
     :countText="footerText"
-    :showSeeAllButton="itemsCount > 5"
+    :showSeeAllButton="activeItemsCount > 5"
     :showConfig="props.showConfig"
     :emptyDataText="emptyDataText"
     :setupTitle="props.setupTitle"
@@ -31,6 +31,7 @@ import { storeToRefs } from 'pinia';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useProject } from '@/store/modules/project';
 
 import BarList from '../BarList/index.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
@@ -39,15 +40,18 @@ import type { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue
 
 import type {
   VolumeBarListFetchMethod,
-  VolumeBarListMockConfig,
   VolumeBarListTabItem,
   WidgetContext,
 } from './types';
 
 import i18n from '@/utils/plugins/i18n';
 import { orderBy } from '@/utils/array';
+import { formatNumber } from '@/utils/numbers';
 
 const { t } = i18n.global;
+
+const projectStore = useProject();
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 defineOptions({
   name: 'VolumeBarListWidget',
@@ -61,7 +65,10 @@ interface VolumeBarListWidgetProps {
   titleKey: string;
   tabs: (_context: WidgetContext) => VolumeBarListTabItem[];
   defaultTab: string;
-  mock: VolumeBarListMockConfig;
+  mock: Item[];
+  mockItemsCount: number;
+  barColor?: string;
+  barBackgroundColor?: string;
   itemKey: 'queues' | 'tags';
   itemLabelKey: 'queue_name' | 'tag_name';
   formatFooterText: (
@@ -94,18 +101,9 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   showConfig: false,
   setupTitle: '',
   setupDescription: '',
+  barColor: '#3182CE',
+  barBackgroundColor: '#E5EEF9',
 });
-
-const itemsMock = computed<ProgressTableRowItem[]>(() =>
-  Array.from({ length: 5 }, (_, index) => ({
-    label: `${props.mock.labelPrefix} ${index + 1}`,
-    subtitle: props.mock.subtitle,
-    value: (index + 1) * 10,
-    description: `${(index + 1) * 10}`,
-    color: props.mock.color,
-    backgroundColor: props.mock.backgroundColor,
-  })).reverse(),
-);
 
 const tabsList = computed(() => props.tabs(props.context));
 
@@ -124,29 +122,38 @@ interface Item {
 const itemsNext = ref<string | null>(null);
 const itemsPrevious = ref<string | null>(null);
 const itemsCount = ref(0);
+const activeItemsCount = computed(() => {
+  if (!hasSectorsConfigured.value) return props.mockItemsCount;
+  return itemsCount.value;
+});
 const items = ref<Item[]>([]);
 const isLoadingItems = ref(false);
 const showVisualLoading = ref(true);
 
 const formattedItems = computed(() => {
-  if (props.showConfig) return itemsMock.value;
-  const { itemKey, itemLabelKey, mock } = props;
+  const { itemKey, itemLabelKey } = props;
 
-  const toOrderItems = items.value.flatMap((item) => {
+  const toFormatItems = hasSectorsConfigured.value ? items.value : props.mock;
+
+  const toOrderItems: ProgressTableRowItem[] = toFormatItems.flatMap((item) => {
     const subitems = item[itemKey] ?? [];
     return subitems.map(
       (subitem: { queue_name?: string; tag_name?: string; value: number }) => ({
         label: subitem[itemLabelKey] ?? '',
         subtitle: item.sector_name,
         value: subitem.value,
-        description: `${subitem.value}`,
-        color: mock.color,
-        backgroundColor: mock.backgroundColor,
+        description: `${formatNumber(subitem.value)}`,
+        color: props.barColor,
+        backgroundColor: props.barBackgroundColor,
       }),
     );
   });
 
-  return orderBy(toOrderItems, ['value', 'label'], ['desc', 'asc']);
+  return orderBy(
+    toOrderItems,
+    ['value', 'label'],
+    ['desc', 'asc'],
+  ) as ProgressTableRowItem[];
 });
 
 const footerText = computed(() => {
@@ -155,7 +162,7 @@ const footerText = computed(() => {
   )?.name;
   const count = props.showConfig
     ? formattedItems.value.length
-    : itemsCount.value;
+    : activeItemsCount.value;
   return props.formatFooterText(
     props.context,
     currentTab.value,
@@ -185,7 +192,7 @@ const getItems = async ({
   concat = false,
   limit = 5,
 }: GetItemsOptions) => {
-  if (props.showConfig) return;
+  if (props.showConfig || !hasSectorsConfigured.value) return;
 
   try {
     isLoadingItems.value = true;

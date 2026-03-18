@@ -6,6 +6,7 @@ import StatusCards from '../StatusCards.vue';
 
 vi.mock('@/utils/time', () => ({
   formatSecondsToTime: vi.fn((seconds) => `${seconds}s`),
+  getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
 }));
 
 const i18n = createI18n({
@@ -33,6 +34,9 @@ describe('StatusCards', () => {
   const createWrapper = (initialState = {}) => {
     store = createTestingPinia({
       initialState: {
+        project: {
+          hasSectorsConfigured: true,
+        },
         humanSupportAnalysis: {
           serviceStatusData: mockServiceStatusData,
           loadingServiceStatusData: false,
@@ -111,7 +115,7 @@ describe('StatusCards', () => {
       expect(cards[4].props('value')).toBe('180s');
     });
 
-    it('should display dash for null values', () => {
+    it('should display formatted value for null (formatNumber returns "0")', () => {
       wrapper = createWrapper({
         serviceStatusData: {
           ...mockServiceStatusData,
@@ -120,7 +124,7 @@ describe('StatusCards', () => {
       });
       const cards = wrapper.findAllComponents({ name: 'CardConversations' });
       const finishedCard = cards[0];
-      expect(finishedCard.props('value')).toBe('-');
+      expect(finishedCard.props('value')).toBe('0');
     });
   });
 

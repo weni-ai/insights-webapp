@@ -45,17 +45,18 @@ vi.mock('@/store/modules/dashboards', () => ({
   }),
 }));
 
-const { ref: vueRef } = require('vue');
+const { ref: vueRef, reactive } = require('vue');
 const mockShouldUseMock = vueRef(false);
 
 vi.mock('@/store/modules/conversational/conversational', () => {
   return {
-    useConversational: () => ({
-      refreshDataConversational: false,
-      setIsLoadingConversationalData: vi.fn(),
-      setEndpointError: vi.fn(),
-      shouldUseMock: mockShouldUseMock,
-    }),
+    useConversational: () =>
+      reactive({
+        refreshDataConversational: false,
+        setIsLoadingConversationalData: vi.fn(),
+        setEndpointError: vi.fn(),
+        shouldUseMock: mockShouldUseMock,
+      }),
   };
 });
 

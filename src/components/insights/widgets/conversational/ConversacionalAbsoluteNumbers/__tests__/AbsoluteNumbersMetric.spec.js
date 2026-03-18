@@ -32,11 +32,7 @@ vi.mock('@/utils/plugins/i18n', () => ({
 
 vi.mock('@/utils/numbers', () => ({
   formatNumber: vi.fn((v) => `fmt-num(${v})`),
-  formatCurrency: vi.fn((v, sym) => `fmt-cur(${sym}${v})`),
-}));
-
-vi.mock('@/utils/currency', () => ({
-  currencySymbols: { BRL: 'R$ ', USD: '$' },
+  formatCurrency: vi.fn((v, currency) => `fmt-cur(${currency}${v})`),
 }));
 
 const defaultProps = {

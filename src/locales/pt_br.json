@@ -197,7 +197,6 @@
       "absolute_numbers": {
         "drawer": {
           "description": "Defina o nome do widget:",
-          "child_description": "Selecione a métrica que você deseja ver:",
           "add_child": "Adicionar métrica",
           "metric_name": {
             "label": "Nome da métrica",
@@ -237,7 +236,7 @@
           "info": "O widget {widget_name} será deletado com todas as métricas adicionadas."
         },
         "remove_child_modal": {
-          "title": "Deletar métrica",
+          "title": "Remover métrica",
           "description": "Tem certeza de que deseja deletar a métrica {metric_name}?",
           "info": "O widget {widget_name} não será deletado. Apenas a métrica {metric_name}."
         }
@@ -400,6 +399,9 @@
   "in-service": "Em atendimento",
   "status": "Status",
   "metric": "Métrica",
+  "edit_metric": "Editar métrica",
+  "remove_metric": "Remover métrica",
+  "edit_widget": "Editar widget",
   "metrics": "Métricas",
   "flow": "Fluxo",
   "flows": "Fluxos",

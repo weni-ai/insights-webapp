@@ -75,6 +75,7 @@ const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
+  (_e: 'success'): void;
 }>();
 
 const { deleteWidget } = useConversationalWidgets();
@@ -97,7 +98,6 @@ const handleRemoveWidget = async () => {
 
     unnnicCallAlert({
       props: {
-        version: '1.1',
         text: t(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
           {
@@ -110,6 +110,7 @@ const handleRemoveWidget = async () => {
     });
 
     emit('update:modelValue', false);
+    emit('success');
   } catch (error) {
     console.error(error);
   } finally {

@@ -29,15 +29,18 @@
       <AbsoluteNumbersMetric
         v-for="child in children"
         :key="child.uuid"
-        :uuid="child.uuid"
-        :title="child.name"
-        :currency="child.config.currency.code ?? ''"
+        :metric="child"
         :parentName="widget?.name"
-        @edit="handleOpenEditDrawer()"
+        @edit="handleOpenEditDrawer({ scrollToChild: child.uuid })"
       />
       <NewMetric
         v-if="children.length < 6"
-        @click="handleOpenEditDrawer({ addNewChild: true })"
+        @click="
+          handleOpenEditDrawer({
+            addNewChild: true,
+            scrollToChild: 'new-child',
+          })
+        "
       />
     </section>
   </CardWidgetContainer>
@@ -108,7 +111,8 @@ onMounted(async () => {
 
 const customWidgetsStore = useCustomWidgets();
 const { getCustomWidgetByUuid } = customWidgetsStore;
-const { absoluteNumbersForm } = storeToRefs(customWidgetsStore);
+const { absoluteNumbersForm, absoluteNumbersFormChildToScroll } =
+  storeToRefs(customWidgetsStore);
 
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
@@ -136,10 +140,7 @@ const isRemoveWidgetModalOpen = ref<boolean>(false);
 const actions = computed(() => {
   const editOption = {
     icon: 'edit_square',
-    text: t(
-      'conversations_dashboard.customize_your_dashboard.edit_csat_or_nps',
-      { type: '' },
-    ),
+    text: t('edit_widget'),
     onClick: () => handleOpenEditDrawer(),
   };
 
@@ -153,8 +154,15 @@ const actions = computed(() => {
   return [editOption, deleteOption];
 });
 
+interface HandleOpenEditDrawerProps {
+  addNewChild?: boolean;
+  scrollToChild?: string;
+}
 const handleOpenEditDrawer = (
-  { addNewChild = false }: { addNewChild?: boolean } = { addNewChild: false },
+  { addNewChild = false, scrollToChild = '' }: HandleOpenEditDrawerProps = {
+    addNewChild: false,
+    scrollToChild: '',
+  },
 ) => {
   absoluteNumbersForm.value = {
     widget_uuid: widget.value?.uuid,
@@ -177,6 +185,9 @@ const handleOpenEditDrawer = (
         },
       },
     });
+  }
+  if (scrollToChild) {
+    absoluteNumbersFormChildToScroll.value = scrollToChild;
   }
   setIsDrawerCustomizableOpen(true, 'absolute_numbers', false);
 };

@@ -26,7 +26,8 @@ interface crosstabForm {
   field_name_b: string;
 }
 
-interface absoluteNumbersFormChildren {
+export interface absoluteNumbersFormChildren {
+  uuid?: string;
   name: string;
   parent?: string;
   config: {
@@ -84,6 +85,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       key_b: '',
       field_name_b: '',
     } as crosstabForm,
+    absoluteNumbersFormChildToScroll: null as string | null,
     absoluteNumbersForm: {
       widget_uuid: '',
       name: '',

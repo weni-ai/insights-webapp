@@ -197,7 +197,6 @@
       "absolute_numbers": {
         "drawer": {
           "description": "Define el nombre del widget:",
-          "child_description": "Selecciona la métrica que deseas ver:",
           "add_child": "Agregar métrica",
           "metric_name": {
             "label": "Nombre de la métrica",
@@ -400,6 +399,9 @@
   "in-service": "Servicio en curso",
   "status": "Status",
   "metric": "Métrica",
+  "edit_metric": "Editar métrica",
+  "remove_metric": "Eliminar métrica",
+  "edit_widget": "Editar widget",
   "metrics": "Métricas",
   "flow": "Flujo",
   "flows": "Flujos",

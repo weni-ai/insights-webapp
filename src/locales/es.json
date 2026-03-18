@@ -846,14 +846,14 @@
       "sectors": "Sectores",
       "queues": "Colas",
       "rooms": "Salas",
-      "users": "Agentes",
+      "users": "Representantes",
       "sector_tags": "Tags",
       "contacts": "Contactos",
       "resolutions": "Resoluciones de conversaciones",
       "topics": "Asuntos",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Agent"
+      "agent_status_logs": "Representante"
     },
     "field_labels": {
       "config": "Configuración",
@@ -922,14 +922,14 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Selecciona el sector",
-      "agent": "Agente",
-      "select_agent": "Selecciona el agente",
+      "representative": "Representante",
+      "select_representative": "Selecciona el representante",
       "queue": "Cola",
       "select_queue": "Selecciona la cola",
       "tag": "Tag",
       "select_tag": "Selecciona la tag",
       "all_sectors": "Todos los sectores",
-      "all_agents": "Todos los agentes",
+      "all_representatives": "Todos los representantes",
       "all_queues": "Todas las colas",
       "all_tags": "Todas las tags"
     },
@@ -979,9 +979,9 @@
       "max": "Máximo",
       "tooltips": {
         "average_time_is_waiting": "Tiempo medio que los contactos esperan en la cola hasta que el atendimiento comience",
-        "average_time_first_response": "Tiempo medio hasta la primera respuesta del agente después de que se asigne la sala",
+        "average_time_first_response": "Tiempo medio hasta la primera respuesta del representante después de que se asigne la sala",
         "average_response_time": "Tiempo medio que el contacto espera para recibir una respuesta a cada mensaje",
-        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del atendimiento con el agente hasta que se finaliza"
+        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del atendimiento con el representante hasta que se finaliza"
       }
     },
     "services_open_by_hour": {
@@ -992,14 +992,14 @@
       "tabs": {
         "in_awaiting": "En espera",
         "in_progress": "En progreso",
-        "attendant": "Atendido",
+        "attendant": "Atendente",
         "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duración",
         "awaiting_time": "Tiempo en espera",
         "first_response_time": "Tiempo de 1ª respuesta",
-        "attendant": "Atendido",
+        "attendant": "Atendente",
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto"

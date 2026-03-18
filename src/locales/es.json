@@ -26,7 +26,7 @@
     "others": "Otros",
     "unclassified": "Sin clasificar",
     "info": {
-      "description": "Los datos conversacionales muestran conversas iniciadas hasta 24 horas antes de la hora actual. Las conversas más recientes aún están siendo clasificadas y no se muestran. Actualiza el tablero para actualizar la ventana de datos.",
+      "description": "A partir del {date}, los datos conversacionales incluyen ventanas cerradas hasta las 23h59m59s del día de inicio, considerando el timezone configurado en el proyecto. Las conversaciones del día actual aún están siendo procesadas y se mostrarán después de que el período se cierre.",
       "mock_description": "Estos números son solo para fines de demostración. Una vez que se configure el primer widget, los datos reales se mostrarán aquí."
     },
     "mock": {
@@ -65,7 +65,7 @@
       "unengaged": "Sin participación",
       "transferred": "Transferidas a soporte humano",
       "tooltips": {
-        "total": "Total de conversaciones iniciadas en este periodo. Se cuenta una conversación 24 horas después del primer mensaje del contacto.",
+        "total": "Total de conversas encerradas en el período. Una conversa se cuenta desde el primer mensaje del contacto hasta las 23h59m59s del día de inicio. Mensagens enviadas después de este horário iniciam uma nova janela de conversa no dia seguinte.",
         "resolved": "Cuando el agente demuestra competencia y proporciona servicio útil",
         "unresolved": "Cuando no hubo atención efectiva (saludos, fuera de alcance, fallas del agente)",
         "unengaged": "Conversación sin participación útil. La conversación se limitó a saludos, emojis o se cerró sin una interacción relevante.",
@@ -374,8 +374,10 @@
   "online_agents": "Agentes online",
   "chats_per_agents": "Chats por agente",
   "closeds": "Cerrados",
+  "finished": "Finalizado",
   "in_progress": "En curso",
   "waiting": "Esperando",
+  "awaiting": "En espera",
   "in-service": "Servicio en curso",
   "status": "Status",
   "metric": "Métrica",
@@ -415,13 +417,13 @@
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
     "previous_month": "Mes anterior ({date})",
-    "last_7_days_conversational": "Últimos 7 días (hasta 24h atrás)",
-    "last_14_days_conversational": "Últimos 14 días (hasta 24h atrás)",
-    "last_30_days_conversational": "Últimos 30 días (hasta 24h atrás)",
-    "last_12_months_conversational": "Últimos 12 meses (hasta 24h atrás)",
-    "current_month_conversational": "Mes actual (hasta 24h atrás)",
-    "previous_month_conversational": "Mes anterior (hasta 24h atrás)",
-    "custom_conversational": "Personalizado (hasta 24h atrás)"
+    "last_7_days_conversational": "Últimos 7 días (hasta {date})",
+    "last_14_days_conversational": "Últimos 14 días (hasta {date})",
+    "last_30_days_conversational": "Últimos 30 días (hasta {date})",
+    "last_12_months_conversational": "Últimos 12 meses (hasta {date})",
+    "current_month_conversational": "Mes actual (hasta {date})",
+    "previous_month_conversational": "Mes anterior (hasta {date})",
+    "custom_conversational": "Personalizado (hasta {date})"
   },
   "data_period": {
     "label": "Período",
@@ -972,6 +974,11 @@
         "average_duration": "Duración media",
         "time_in_service": "Tiempo en atendimiento",
         "action": "Acción"
+      },
+      "agents_count": {
+        "online": "{count} en línea",
+        "custom_breaks": "{count} en pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -987,6 +994,9 @@
       },
       "ticket_id": {
         "label": "Protocolo"
+      },
+      "status": {
+        "label": "Estado"
       }
     },
     "columns": {
@@ -1032,6 +1042,42 @@
         "very_dissatisfied": "😡 Muy insatisfecho"
       },
       "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
+    },
+    "common": {
+      "no_response": "Sin respuesta"
+    },
+    "volume_per_queue": {
+      "title": "Volumen por cola",
+      "monitoring_count": "{count} cola con chats {status} | {count} colas con chats {status}",
+      "analysis_count": "{count} cola con chats finalizados | {count} colas con chats finalizados",
+      "setup_description": "Crea colas por sector para monitorear más datos.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No hay colas con chats esperando soporte",
+          "ongoing": "No hay colas con chats en progreso",
+          "closed": "No hay chats finalizados hoy"
+        },
+        "analysis": {
+          "closed": "No hay chats finalizados en el período seleccionado"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volumen por tag",
+      "setup_description": "Añade tags a sectores para monitorear más datos.",
+      "count": {
+        "ongoing": "{count} tag en uso | {count} tags en uso",
+        "closed": "{count} tag asignada | {count} tags asignadas"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "No hay tags en uso en chats en progreso",
+          "closed": "No hay tags asignadas a chats finalizados hoy"
+        },
+        "analysis": {
+          "closed": "No hay tags asignadas a chats finalizados en el período seleccionado"
+        }
+      }
     }
   },
   "news": {
@@ -1056,5 +1102,27 @@
   },
   "on": "Activa",
   "off": "Inactiva",
-  "paused": "Pausada"
+  "paused": "Pausada",
+  "data_feedback": {
+    "title": "Comparte tu experiencia con el Dashboard de IA Conversacional",
+    "description": "Considerando tu experiencia con este dashboard, indica cuánto estás de acuerdo con las afirmaciones a continuación:",
+    "q1": "Confío en los datos presentados en este dashboard.",
+    "q2": "Los datos de este dashboard me ayudan a tomar decisiones.",
+    "q3": "Con este dashboard, puedo entender el impacto (ROI) de las conversaciones de IA en los resultados del negocio.",
+    "textarea_label": "¿Qué podríamos mejorar en este dashboard? (opcional)",
+    "textarea_placeholder": "Comparte sugerencias para mejorar la claridad, confianza o utilidad de los datos.",
+    "strongly_agree": "Totalmente de acuerdo",
+    "partially_agree": "Parcialmente de acuerdo",
+    "neutral": "Neutral",
+    "partially_disagree": "Parcialmente en desacuerdo",
+    "strongly_disagree": "Totalmente en desacuerdo",
+    "postpone": "Posponer",
+    "submit": "Enviar feedback",
+    "toast_success": "Feedback enviado con éxito. ¡Gracias!",
+    "toast_error": "No pudimos enviar tu feedback.",
+    "toast_error_retry": "Intentar de nuevo",
+    "toast_postponed": "Feedback pospuesto. Podrás responder después.",
+    "toast_postponed_respond": "Responder ahora"
+  },
+  "without_results": "No se encontró ningún resultado"
 }

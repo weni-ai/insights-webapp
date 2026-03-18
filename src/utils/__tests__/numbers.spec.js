@@ -96,37 +96,46 @@ describe('Number Utilities', () => {
   });
 
   describe('formatCurrency', () => {
-    it('formats currency with USD symbol correctly', () => {
-      expect(formatCurrency(1234.567, '$')).toBe('$ 1,234.57');
+    it('formats currency with USD code correctly', () => {
+      expect(formatCurrency(1234.567, 'USD')).toBe('$1,234.57');
     });
 
-    it('formats currency with EUR symbol correctly', () => {
-      expect(formatCurrency(1234.567, '€')).toBe('€ 1,234.57');
+    it('formats currency with EUR code correctly', () => {
+      expect(formatCurrency(1234.567, 'EUR')).toBe('€1,234.57');
+    });
+
+    it('formats currency with COP code correctly', () => {
+      expect(formatCurrency(1234.567, 'COP')).toBe('COP\u00a01,234.57');
     });
 
     it('handles zero values', () => {
-      expect(formatCurrency(0, '$')).toBe('$ 0.00');
+      expect(formatCurrency(0, 'USD')).toBe('$0.00');
     });
 
     it('handles null/undefined values', () => {
-      expect(formatCurrency(null, '$')).toBe('$ 0.00');
-      expect(formatCurrency(undefined, '$')).toBe('$ 0.00');
+      expect(formatCurrency(null, 'USD')).toBe('$0.00');
+      expect(formatCurrency(undefined, 'USD')).toBe('$0.00');
     });
 
     it('uses custom locale when provided', () => {
-      expect(formatCurrency(1234.567, '$', 'pt-BR')).toBe('$ 1.234,57');
+      expect(formatCurrency(1234.567, 'USD', 'pt-BR')).toBe('US$\u00a01.234,57');
     });
 
     it('handles large numbers', () => {
-      expect(formatCurrency(1234567.89, '$')).toBe('$ 1,234,567.89');
+      expect(formatCurrency(1234567.89, 'USD')).toBe('$1,234,567.89');
     });
 
     it('handles small decimal numbers', () => {
-      expect(formatCurrency(0.01, '$')).toBe('$ 0.01');
+      expect(formatCurrency(0.01, 'USD')).toBe('$0.01');
     });
 
     it('handles negative numbers', () => {
-      expect(formatCurrency(-100.5, '$')).toBe('$ -100.50');
+      expect(formatCurrency(-100.5, 'USD')).toBe('-$100.50');
+    });
+
+    it('falls back to USD when currency code is not provided', () => {
+      expect(formatCurrency(100, null)).toBe('$100.00');
+      expect(formatCurrency(100, undefined)).toBe('$100.00');
     });
   });
 

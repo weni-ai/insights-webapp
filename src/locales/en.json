@@ -26,7 +26,7 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
-      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window.",
+      "description": "As of {date}, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed.",
       "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
     },
     "mock": {
@@ -65,7 +65,7 @@
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
-        "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
+        "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
         "resolved": "When the agent demonstrates competence and provides useful service",
         "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
@@ -374,8 +374,10 @@
   "online_agents": "Online agents",
   "chats_per_agents": "Chats per agent",
   "closeds": "Closed",
+  "finished": "Finished",
   "in_progress": "In progress",
   "waiting": "Waiting",
+  "awaiting": "Awaiting",
   "in-service": "In progress",
   "status": "Status",
   "metric": "Metric",
@@ -416,13 +418,13 @@
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})",
-    "last_7_days_conversational": "Last 7 days (up to 24h ago)",
-    "last_14_days_conversational": "Last 14 days (up to 24h ago)",
-    "last_30_days_conversational": "Last 30 days (up to 24h ago)",
-    "last_12_months_conversational": "Last 12 months (up to 24h ago)",
-    "current_month_conversational": "Current month (up to 24h ago)",
-    "previous_month_conversational": "Previous month (up to 24h ago)",
-    "custom_conversational": "Custom (up to 24h ago)"
+    "last_7_days_conversational": "Last 7 days (up to {date})",
+    "last_14_days_conversational": "Last 14 days (up to {date})",
+    "last_30_days_conversational": "Last 30 days (up to {date})",
+    "last_12_months_conversational": "Last 12 months (up to {date})",
+    "current_month_conversational": "Current month (up to {date})",
+    "previous_month_conversational": "Previous month (up to {date})",
+    "custom_conversational": "Custom (up to {date})"
   },
   "data_period": {
     "label": "Data period",
@@ -973,6 +975,11 @@
         "average_duration": "Average duration",
         "time_in_service": "Time in service",
         "action": "Action"
+      },
+      "agents_count": {
+        "online": "{count} online",
+        "custom_breaks": "{count} on break",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -988,6 +995,9 @@
       },
       "ticket_id": {
         "label": "Ticket ID"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {
@@ -1033,6 +1043,42 @@
         "very_dissatisfied": "😡 Very dissatisfied"
       },
       "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
+    },
+    "common": {
+      "no_response": "No response"
+    },
+    "volume_per_queue": {
+      "title": "Volume per queue",
+      "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
+      "analysis_count": "{count} queue with finished chats | {count} queues with finished chats",
+      "setup_description": "Create queues by sector to monitor more data.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No queues have chats waiting for support",
+          "ongoing": "No queues have chats in progress",
+          "closed": "No chats were finished today"
+        },
+        "analysis": {
+          "closed": "No chats were finished during the selected period"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volume per tag",
+      "setup_description": "Add tags to sectors to monitor more data.",
+      "count": {
+        "ongoing": "{count} tag in use | {count} tags in use",
+        "closed": "{count} assigned tag | {count} assigned tags"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "No tags are being used on chats in progress",
+          "closed": "No tags were assigned to chats finished today"
+        },
+        "analysis": {
+          "closed": "No tags were assigned to chats finished during the selected period"
+        }
+      }
     }
   },
   "news": {
@@ -1057,5 +1103,27 @@
   },
   "on": "On",
   "off": "Off",
-  "paused": "Paused"
+  "paused": "Paused",
+  "data_feedback": {
+    "title": "Share your experience with the Conversational AI Dashboard",
+    "description": "Considering your experience with this dashboard, please indicate how much you agree with the statements below:",
+    "q1": "I trust the data presented in this dashboard.",
+    "q2": "The data in this dashboard helps me make decisions.",
+    "q3": "With this dashboard, I can understand the impact (ROI) of AI conversations on business results.",
+    "textarea_label": "What could we improve in this dashboard? (optional)",
+    "textarea_placeholder": "Share suggestions to improve data clarity, trust, or usefulness.",
+    "strongly_agree": "Strongly agree",
+    "partially_agree": "Partially agree",
+    "neutral": "Neutral",
+    "partially_disagree": "Partially disagree",
+    "strongly_disagree": "Strongly disagree",
+    "postpone": "Postpone",
+    "submit": "Submit feedback",
+    "toast_success": "Feedback sent successfully. Thank you!",
+    "toast_error": "We couldn't send your feedback.",
+    "toast_error_retry": "Try again",
+    "toast_postponed": "Feedback postponed. You can respond later.",
+    "toast_postponed_respond": "Respond now"
+  },
+  "without_results": "No results found"
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import { ref } from 'vue';
 
@@ -20,33 +20,52 @@ vi.mock('pinia', async (importOriginal) => ({
   storeToRefs: (store) => store,
 }));
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        info: {
-          description:
-            'This dashboard provides insights into conversational data',
-        },
+const messages = {
+  en: {
+    conversations_dashboard: {
+      info: {
+        description:
+          'As of {date}, conversational data includes closed windows',
+        mock_description: 'Mock mode: conversational data is being simulated',
       },
     },
   },
-  fallbackWarn: false,
-  missingWarn: false,
-});
+  'pt-br': {
+    conversations_dashboard: {
+      info: {
+        description:
+          'A partir de {date}, os dados conversacionais contemplam janelas encerradas',
+        mock_description:
+          'Modo mock: os dados conversacionais estão sendo simulados',
+      },
+    },
+  },
+  es: {
+    conversations_dashboard: {
+      info: {
+        description:
+          'A partir del {date}, los datos conversacionales incluyen ventanas cerradas',
+        mock_description:
+          'Modo mock: los datos conversacionales están siendo simulados',
+      },
+    },
+  },
+};
 
-config.global.plugins = [i18n];
+const createWrapper = (locale = 'en') => {
+  const i18n = createI18n({
+    legacy: false,
+    locale,
+    messages,
+    fallbackWarn: false,
+    missingWarn: false,
+  });
 
-const createWrapper = () => {
   return mount(Info, {
     global: {
+      plugins: [i18n],
       stubs: {
         UnnnicIcon: true,
-      },
-      mocks: {
-        $t: (key) => key,
       },
     },
   });
@@ -56,6 +75,7 @@ describe('Info.vue', () => {
   let wrapper;
 
   beforeEach(() => {
+    shouldUseMockRef.value = false;
     wrapper = createWrapper();
   });
 
@@ -88,11 +108,36 @@ describe('Info.vue', () => {
   });
 
   describe('Content and Translation', () => {
-    it('should use correct translation key for description', () => {
+    it('should interpolate the formatted date into the description', () => {
       const description = wrapper.find('[data-testid="info-description"]');
-      expect(description.text()).toBe(
-        'conversations_dashboard.info.description',
-      );
+      expect(description.text()).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    });
+
+    it('should format date according to locale', () => {
+      const locales = ['en', 'pt-br', 'es'];
+
+      locales.forEach((locale) => {
+        const localeWrapper = createWrapper(locale);
+        const text = localeWrapper
+          .find('[data-testid="info-description"]')
+          .text();
+        expect(text).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+      });
+    });
+
+    it('should use different date order for en vs pt-br locale', () => {
+      const enText = createWrapper('en')
+        .find('[data-testid="info-description"]')
+        .text();
+      const ptText = createWrapper('pt-br')
+        .find('[data-testid="info-description"]')
+        .text();
+
+      const enDate = enText.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+      const ptDate = ptText.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+
+      expect(enDate[1]).toBe(ptDate[2]);
+      expect(enDate[2]).toBe(ptDate[1]);
     });
   });
 
@@ -229,8 +274,13 @@ describe('Info.vue', () => {
     it('should display mock description when shouldUseMock is true', () => {
       const description = wrapper.find('[data-testid="info-description"]');
       expect(description.text()).toBe(
-        'conversations_dashboard.info.mock_description',
+        'Mock mode: conversational data is being simulated',
       );
+    });
+
+    it('should not display a date in mock mode', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).not.toMatch(/\d{2}\/\d{2}\/\d{4}/);
     });
   });
 
@@ -240,10 +290,15 @@ describe('Info.vue', () => {
       wrapper = createWrapper();
     });
 
-    it('should display normal description when shouldUseMock is false', () => {
+    it('should display normal description with date when shouldUseMock is false', () => {
       const description = wrapper.find('[data-testid="info-description"]');
-      expect(description.text()).toBe(
-        'conversations_dashboard.info.description',
+      expect(description.text()).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    });
+
+    it('should not display mock text in normal mode', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).not.toBe(
+        'Mock mode: conversational data is being simulated',
       );
     });
   });

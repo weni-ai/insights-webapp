@@ -22,6 +22,7 @@ exports[`ProgressTable > Component Structure > should match snapshot 1`] = `
       expanded="false"
       isexpandable="false"
       label="Task 1"
+      maxvalue="100"
       value="75"
     />
     <progress-item-stub
@@ -34,6 +35,7 @@ exports[`ProgressTable > Component Structure > should match snapshot 1`] = `
       expanded="false"
       isexpandable="true"
       label="Task 2"
+      maxvalue="100"
       subitems="[object Object],[object Object]"
       value="50"
     />
@@ -45,6 +47,7 @@ exports[`ProgressTable > Component Structure > should match snapshot 1`] = `
       expanded="false"
       isexpandable="true"
       label="Task 3"
+      maxvalue="100"
       subitems="[object Object],[object Object],[object Object]"
       value="100"
     />

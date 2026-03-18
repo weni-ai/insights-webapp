@@ -11,12 +11,12 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
   
   
   <div
-    class="unnnic-tooltip-trigger"
+    class="unnnic-tooltip-trigger unnnic-tooltip export-data-tooltip"
     data-grace-area-trigger=""
     data-state="closed"
     data-testid="tooltip-trigger"
     data-v-03fa3548=""
-    data-v-6b3dd1c1=""
+    data-v-2e8bb3f0=""
   >
     
     

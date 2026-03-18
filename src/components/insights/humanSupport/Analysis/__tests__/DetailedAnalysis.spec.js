@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import { createTestingPinia } from '@pinia/testing';
@@ -47,7 +47,7 @@ describe('DetailedAnalysis', () => {
 
   describe('Component Structure', () => {
     it('should render main section with correct class and id', () => {
-      const section = wrapper.find('#detailed-monitoring');
+      const section = wrapper.find('#detailed-analysis');
       expect(section.exists()).toBe(true);
       expect(section.classes()).toContain('detailed-monitoring');
     });
@@ -114,4 +114,3 @@ describe('DetailedAnalysis', () => {
     });
   });
 });
-

@@ -27,7 +27,7 @@ export function formatNumber(value: number, locale?: string): string {
   if (value === -Infinity) return '-∞';
   if (Number.isNaN(value)) return 'NaN';
 
-  return (value || 0).toLocaleString(locale || 'en-US');
+  return (value || 0).toLocaleString(locale || i18n.global.locale || 'en-US');
 }
 
 /**

@@ -288,7 +288,7 @@
   "table_group": {
     "contact": "Contact",
     "urn": "URN",
-    "agent": "Agent",
+    "agent": "Representative",
     "created_on": "Start",
     "ended_at": "End",
     "sector": "Sector",
@@ -307,8 +307,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agent",
-      "placeholder": "Select an agent"
+      "label": "Representative",
+      "placeholder": "Select a representative"
     },
     "contact": {
       "label": "Contact",
@@ -340,8 +340,8 @@
   "lines_count": "{count} lines",
   "reload": "Refresh",
   "agent": "Agent",
-  "online_agents": "Online agents",
-  "chats_per_agents": "Chats per agent",
+  "online_agents": "Online representatives",
+  "chats_per_agents": "Chats per representative",
   "closeds": "Closed",
   "finished": "Finished",
   "in_progress": "In progress",
@@ -862,12 +862,12 @@
   "disconnectAgent": {
     "title": "Disconnect agent",
     "description": "Are you sure you want to disconnect the agent {agent}?",
-    "description_confirm": "Agent {agent} will be offline after confirmation",
+    "description_confirm": "Representative {agent} will be offline after confirmation",
     "tooltip": "Disconnect agent",
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
-    "error_message": "Error disconnecting agent {agent}",
+    "error_message": "Error disconnecting representative {agent}",
     "tooltip_disabled": "This agent cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
@@ -957,7 +957,7 @@
         "clear": "Clear selection"
       },
       "attendant": {
-        "label": "Agent"
+        "label": "Representative"
       },
       "contact": {
         "label": "Contact"
@@ -1059,14 +1059,14 @@
         "third_text": "Monitor <b>Time metrics now</b> — average and maximum wait times, first response time, and duration — in real time:",
         "fourth_text": "The <b>Detailed monitoring table</b> allows you to track real-time data for each interaction and agent.",
         "fifth_text": "You can monitor each interaction through the <b>In Progress</b> and <b>In awaiting</b> tabs. Click on the interactions to view them.",
-        "sixth_text": "The <b>Agent</b> and <b>Break</b> tabs allow you to monitor each agent's metrics by interaction, as well as custom break times.",
-        "seventh_text": "On the <b>Agent</b> tab, you can click on each agent to enter view-only mode or use the button to disconnect them."
+        "sixth_text": "The <b>Representative</b> and <b>Break</b> tabs allow you to monitor each agent's metrics by interaction, as well as custom break times.",
+        "seventh_text": "On the <b>Representative</b> tab, you can click on each representative to enter view-only mode or use the button to disconnect them."
       },
       "analysis": {
         "first_text": "Explore closed interactions to discover patterns and trends. Identify opportunities for improvement and enhance your team's performance. Discover the new <b>Analysis</b> view!",
         "second_text": "Now, you can track all closed support metrics: <b>Average Wait Time</b>, <b>Average First Response Time</b>, <b>Average Response Time</b>, and <b>Average Support Duration</b>.",
-        "third_text": "The detailed analysis table allows you to analyze data for each interaction and agent.",
-        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Agent</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
+        "third_text": "The detailed analysis table allows you to analyze data for each interaction and representative.",
+        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Representative</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
       }
     }
   },

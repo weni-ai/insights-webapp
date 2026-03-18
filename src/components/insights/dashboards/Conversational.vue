@@ -181,6 +181,16 @@ watch(
   { deep: true },
 );
 
+watch(
+  () => conversational.hasEndpointErrors,
+  (hasErrors) => {
+    if (hasErrors && isConfigurationLoaded.value) {
+      customWidgets.clearMockWidgets();
+      setDynamicWidgets();
+    }
+  },
+);
+
 onMounted(() => {
   initializeConfiguration();
 });

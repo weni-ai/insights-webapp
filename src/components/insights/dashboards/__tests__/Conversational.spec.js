@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { nextTick, ref } from 'vue';
+import { nextTick, ref, reactive } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import Conversational from '../Conversational.vue';
@@ -54,11 +54,14 @@ describe('Conversational.vue', () => {
     };
     useCustomWidgets.mockReturnValue(customWidgetsStore);
 
-    conversationalStore = {
+    conversationalStore = reactive({
       shouldUseMock: false,
+      hasEndpointErrors: false,
+      endpointErrors: { topics: false, header: false, widgets: false },
       isConfigurationLoaded: ref(true),
       setConfigurationLoaded: vi.fn(),
-    };
+      setEndpointError: vi.fn(),
+    });
     useConversational.mockReturnValue(conversationalStore);
 
     topicsStore = {
@@ -318,6 +321,79 @@ describe('Conversational.vue', () => {
       await nextTick();
       const widgets = wrapper.vm.orderedDynamicWidgets;
       expect(widgets[widgets.length - 1].type).toBe('add');
+    });
+  });
+
+  describe('Endpoint error clears mocks reactively', () => {
+    beforeEach(async () => {
+      conversationalStore.shouldUseMock = true;
+      conversationalStore.hasEndpointErrors = false;
+      conversationalStore.isConfigurationLoaded = ref(true);
+
+      conversationalWidgetsStore.isCsatConfigured = false;
+      conversationalWidgetsStore.isNpsConfigured = false;
+      conversationalWidgetsStore.isSalesFunnelConfigured = false;
+
+      customWidgetsStore.getCustomWidgets = [];
+
+      widgetsStore.isLoadingCurrentDashboardWidgets = ref(false);
+      widgetsStore.currentDashboardWidgets = ref([]);
+
+      wrapper = shallowMount(Conversational, {
+        global: {
+          stubs: {
+            DashboardHeader: true,
+            MostTalkedAboutTopicsWidget: true,
+            ConversationalDynamicWidget: true,
+            CustomizableDrawer: true,
+            Info: true,
+          },
+        },
+      });
+
+      await nextTick();
+      await nextTick();
+    });
+
+    it('should show mock widgets initially when no errors', () => {
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('csat');
+      expect(types).toContain('nps');
+      expect(types).toContain('sales_funnel');
+    });
+
+    it('should clear mocks and remove mock widgets when an endpoint error is detected', async () => {
+      customWidgetsStore.clearMockWidgets.mockClear();
+
+      conversationalStore.shouldUseMock = false;
+      conversationalStore.hasEndpointErrors = true;
+
+      await nextTick();
+      await nextTick();
+
+      expect(customWidgetsStore.clearMockWidgets).toHaveBeenCalled();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).not.toContain('csat');
+      expect(types).not.toContain('nps');
+      expect(types).not.toContain('sales_funnel');
+      expect(types).toContain('add');
+    });
+
+    it('should keep only configured widgets after endpoint error', async () => {
+      conversationalWidgetsStore.isCsatConfigured = true;
+
+      conversationalStore.shouldUseMock = false;
+      conversationalStore.hasEndpointErrors = true;
+
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('csat');
+      expect(types).not.toContain('nps');
+      expect(types).not.toContain('sales_funnel');
+      expect(types).toContain('add');
     });
   });
 });

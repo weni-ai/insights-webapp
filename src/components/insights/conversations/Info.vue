@@ -14,7 +14,11 @@
       data-testid="info-description"
     >
       {{
-        $t('conversations_dashboard.info.description', { date: formattedDate })
+        shouldUseMock
+          ? $t('conversations_dashboard.info.mock_description')
+          : $t('conversations_dashboard.info.description', {
+              date: formattedDate,
+            })
       }}
     </p>
   </section>
@@ -26,6 +30,11 @@ import { useI18n } from 'vue-i18n';
 import { format, type Locale } from 'date-fns';
 import { es, enUS, ptBR } from 'date-fns/locale';
 import { UnnnicIcon } from '@weni/unnnic-system';
+import { storeToRefs } from 'pinia';
+import { useConversational } from '@/store/modules/conversational/conversational';
+
+const conversational = useConversational();
+const { shouldUseMock } = storeToRefs(conversational);
 
 const { locale } = useI18n();
 

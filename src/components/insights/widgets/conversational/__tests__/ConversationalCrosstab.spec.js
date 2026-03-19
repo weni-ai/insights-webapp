@@ -18,6 +18,7 @@ const mockConversationalStore = {
   refreshDataConversational: false,
   setIsDrawerCustomizableOpen: vi.fn(),
   setIsLoadingConversationalData: vi.fn(),
+  shouldUseMock: { value: false },
 };
 
 const mockRoute = { query: {} };
@@ -209,6 +210,40 @@ describe('ConversationalCrosstab', () => {
 
     it('uses AI tab', () => {
       expect(wrapper.vm.currentTab).toBe('artificial-intelligence');
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockConversationalStore.refreshDataConversational = false;
+      mockCustomWidgetsStore.customWidgetDataErrorByUuid = { value: {} };
+      mockCustomWidgetsStore.getCustomWidgetByUuid.mockReturnValue({
+        name: 'Mock Crosstab',
+        data: { results: [], total_rows: 0 },
+      });
+      mockCustomWidgetsStore.getIsLoadingByUuid.mockReturnValue(false);
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
+
+    it('should return empty actions in mock mode', () => {
+      expect(wrapper.vm.actions).toEqual([]);
+    });
+
+    it('should pass empty actions to ProgressWidget', () => {
+      const widget = wrapper.findComponent({ name: 'ProgressWidget' });
+      expect(widget.props('actions')).toEqual([]);
+    });
+
+    it('should not load data on mount when in mock mode', () => {
+      expect(
+        mockCustomWidgetsStore.loadCustomWidgetData,
+      ).not.toHaveBeenCalled();
     });
   });
 });

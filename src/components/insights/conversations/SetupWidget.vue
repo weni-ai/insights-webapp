@@ -55,9 +55,7 @@ defineProps<{
 
   &__title {
     color: $unnnic-color-neutral-darkest;
-    font-size: $unnnic-font-size-title-sm;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+    font: $unnnic-font-display-2;
   }
 
   &__description {
@@ -66,9 +64,7 @@ defineProps<{
     max-width: 600px;
 
     color: $unnnic-color-neutral-cloudy;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    font: $unnnic-font-emphasis;
     text-align: center;
   }
 }

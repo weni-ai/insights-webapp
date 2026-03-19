@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ref as vueRef, reactive } from 'vue';
 import { mount, config } from '@vue/test-utils';
 
 import DashboardHeader from '../DashboardHeader.vue';
@@ -45,7 +46,6 @@ vi.mock('@/store/modules/dashboards', () => ({
   }),
 }));
 
-const { ref: vueRef, reactive } = require('vue');
 const mockShouldUseMock = vueRef(false);
 
 vi.mock('@/store/modules/conversational/conversational', () => {

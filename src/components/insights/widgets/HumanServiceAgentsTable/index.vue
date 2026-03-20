@@ -370,7 +370,7 @@ export default {
 <style lang="scss" scoped>
 .widget-human-service-agents {
   border: 1px solid $unnnic-color-gray-2;
-  box-shadow: $unnnic-shadow-2;
+  box-shadow: $unnnic-shadow-1;
 
   padding: $unnnic-space-4;
 

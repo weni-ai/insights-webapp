@@ -297,7 +297,7 @@ export default {
   right: 0;
   z-index: 999;
 
-  box-shadow: $unnnic-shadow-2;
+  box-shadow: $unnnic-shadow-1;
   border-radius: $unnnic-radius-1;
   padding: $unnnic-space-6;
 

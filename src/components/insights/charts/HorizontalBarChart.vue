@@ -293,7 +293,7 @@ export default {
 
 <style lang="scss" scoped>
 .bar-chart {
-  box-shadow: $unnnic-shadow-2;
+  box-shadow: $unnnic-shadow-1;
 
   padding: $unnnic-space-3;
 

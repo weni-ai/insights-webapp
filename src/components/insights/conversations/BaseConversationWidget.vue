@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, computed } from 'vue';
+import { computed } from 'vue';
 import ShortTab from '@/components/ShortTab.vue';
 import i18n from '@/utils/plugins/i18n';
 

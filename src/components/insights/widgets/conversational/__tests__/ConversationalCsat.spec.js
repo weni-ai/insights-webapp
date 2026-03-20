@@ -157,6 +157,23 @@ describe('ConversationalCsat', () => {
       wrapper = createWrapper();
       expect(mockWidgetsStore.setCsatWidgetType).toHaveBeenCalledWith('HUMAN');
     });
+
+    it('switches to AI when HUMAN has no config', () => {
+      mockWidgetsStore.csatWidgetType.value = 'HUMAN';
+      mockWidgetsStore.isCsatHumanConfig.value = false;
+      mockWidgetsStore.isCsatAiConfig.value = true;
+      wrapper = createWrapper();
+      expect(mockWidgetsStore.setCsatWidgetType).toHaveBeenCalledWith('AI');
+    });
+
+    it('forces AI tab in mock mode regardless of config', () => {
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockWidgetsStore.csatWidgetType.value = 'HUMAN';
+      mockWidgetsStore.isCsatAiConfig.value = false;
+      wrapper = createWrapper();
+      expect(mockWidgetsStore.setCsatWidgetType).toHaveBeenCalledWith('AI');
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
   });
 
   describe('Actions', () => {

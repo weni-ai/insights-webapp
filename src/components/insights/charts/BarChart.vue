@@ -50,10 +50,10 @@ import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 import {
-  colorTeal600,
-  colorTeal500,
-  colorTeal900,
-  colorWhite,
+  colorTeal8,
+  colorTeal7,
+  colorTeal12,
+  colorGray0,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -97,13 +97,13 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: colorTeal600,
-        hoverBackgroundColor: colorTeal500,
+        backgroundColor: colorTeal8,
+        hoverBackgroundColor: colorTeal7,
         plugins: {
           tooltip: false,
           datalabels: {
             color: function (context) {
-              return context.active ? colorTeal900 : colorWhite;
+              return context.active ? colorTeal12 : colorGray0;
             },
             anchor: 'end',
             align: 'start',

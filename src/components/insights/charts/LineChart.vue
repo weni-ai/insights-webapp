@@ -50,7 +50,7 @@ import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 import { Tooltip } from 'chart.js';
-import { colorTeal600, colorGray950 } from '@weni/unnnic-system/tokens/colors';
+import { colorTeal8, colorGray12 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
   name: 'LineChart',
@@ -87,7 +87,7 @@ export default {
     mergedData() {
       const configData = {
         fill: true,
-        borderColor: colorTeal600,
+        borderColor: colorTeal8,
         pointRadius: 0,
         hoverRadius: 3,
         pointStyle: 'circle',
@@ -104,7 +104,7 @@ export default {
             chartArea.bottom,
           );
 
-          gradient.addColorStop(0, colorTeal600);
+          gradient.addColorStop(0, colorTeal8);
           gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
           return gradient;
@@ -120,8 +120,8 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: colorTeal600,
-        hoverBackgroundColor: colorTeal600,
+        backgroundColor: colorTeal8,
+        hoverBackgroundColor: colorTeal8,
         pointStyle: false,
         layout: {
           padding: 10,
@@ -146,7 +146,7 @@ export default {
         plugins: {
           tooltip: {
             enabled: true,
-            backgroundColor: colorGray950,
+            backgroundColor: colorGray12,
             displayColors: false,
             font: {
               size: '16',

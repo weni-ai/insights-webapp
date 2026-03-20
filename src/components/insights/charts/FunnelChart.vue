@@ -43,11 +43,11 @@
 <script>
 import IconLoading from '@/components/IconLoading.vue';
 import {
-  colorYellow300,
-  colorOrange300,
-  colorPurple300,
-  colorBlue300,
-  colorGreen300,
+  colorYellow4,
+  colorOrange4,
+  colorPurple4,
+  colorBlue5,
+  colorGreen4,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -69,11 +69,11 @@ export default {
   computed: {
     formattedChartData() {
       const arrayColors = [
-        colorYellow300,
-        colorOrange300,
-        colorPurple300,
-        colorBlue300,
-        colorGreen300,
+        colorYellow4,
+        colorOrange4,
+        colorPurple4,
+        colorBlue5,
+        colorGreen4,
       ];
 
       if (!Array.isArray(this.chartData)) return [];

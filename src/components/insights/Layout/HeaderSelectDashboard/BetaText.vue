@@ -15,19 +15,19 @@
 <style lang="scss" scoped>
 .beta_text_container {
   display: flex;
-  padding: 0 $unnnic-spacing-nano;
+  padding: 0 $unnnic-space-1;
   justify-content: center;
   align-items: center;
   gap: 10px;
 
-  border-radius: $unnnic-border-radius-sm;
-  background: $unnnic-color-weni-50;
+  border-radius: $unnnic-radius-1;
+  background: $unnnic-color-teal-1;
 }
 .beta_text {
-  color: $unnnic-color-weni-600;
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-md;
+  color: $unnnic-color-teal-8;
+  font-family: $unnnic-font-family;
+  font-size: 12px;
   font-weight: $unnnic-font-weight-bold;
-  line-height: $unnnic-line-height-md + $unnnic-font-size-body-md;
+  line-height: 8px + 12px;
 }
 </style>

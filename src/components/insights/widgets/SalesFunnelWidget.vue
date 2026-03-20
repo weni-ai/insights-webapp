@@ -151,8 +151,8 @@ const graphData = computed(() => {
     padding: $unnnic-space-6;
     width: 100%;
 
-    border-radius: $unnnic-border-radius-md;
-    border: 1px solid $unnnic-color-neutral-soft;
+    border-radius: $unnnic-radius-2;
+    border: 1px solid $unnnic-color-gray-2;
     background: $unnnic-color-bg-base;
 
     &-item {

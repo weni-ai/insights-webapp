@@ -195,21 +195,21 @@ const getFieldLabel = (fieldName: string): string => {
 .form-checkboxs-data {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__models {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-md;
+    gap: $unnnic-space-6;
   }
 
   &__model {
     &-header {
-      margin-bottom: $unnnic-spacing-xs;
+      margin-bottom: $unnnic-space-2;
 
       :deep(.unnnic-checkbox) {
         font-weight: $unnnic-font-weight-bold;
-        color: $unnnic-color-neutral-darkest;
+        color: $unnnic-color-gray-12;
       }
     }
   }
@@ -217,20 +217,20 @@ const getFieldLabel = (fieldName: string): string => {
   &__fields {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-xs;
-    padding-left: $unnnic-spacing-md;
-    margin-left: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
+    padding-left: $unnnic-space-6;
+    margin-left: $unnnic-space-2;
 
     :deep(.unnnic-checkbox) {
-      font-size: $unnnic-font-size-body-md;
-      color: $unnnic-color-neutral-dark;
+      font-size: 12px;
+      color: $unnnic-color-gray-10;
     }
   }
 
   &__loading {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 }
 </style>

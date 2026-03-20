@@ -56,24 +56,24 @@ export default {
 $dropdownFixedWidth: 165px;
 :deep(.unnnic-dropdown__trigger) {
   .unnnic-dropdown__content {
-    margin-top: $unnnic-spacing-nano;
+    margin-top: $unnnic-space-1;
     right: 0;
     width: $dropdownFixedWidth;
-    padding: $unnnic-spacing-xs;
-    gap: $unnnic-spacing-nano;
+    padding: $unnnic-space-2;
+    gap: $unnnic-space-1;
 
     .unnnic-dropdown-item {
-      border-radius: $unnnic-border-radius-sm;
+      border-radius: $unnnic-radius-1;
 
-      padding: $unnnic-spacing-xs;
+      padding: $unnnic-space-2;
 
       display: flex;
       align-items: center;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
 
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
+      color: $unnnic-color-gray-12;
+      font-family: $unnnic-font-family;
+      font-size: 14px;
 
       &::before {
         content: none;

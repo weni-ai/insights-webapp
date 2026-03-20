@@ -26,27 +26,27 @@ export default {
 
 <style scoped lang="scss">
 .insights-card {
-  background-color: $unnnic-color-neutral-lightest;
-  padding: $unnnic-spacing-sm;
-  border-radius: $unnnic-spacing-nano;
+  background-color: $unnnic-color-gray-1;
+  padding: $unnnic-space-4;
+  border-radius: $unnnic-space-1;
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
   justify-content: center;
   cursor: pointer;
   border: none;
   text-align: left;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
-    font-size: $unnnic-font-size-body-lg;
+    color: $unnnic-color-gray-12;
+    font-size: $unnnic-font-size;
     font-weight: $unnnic-font-weight-bold;
   }
 
   &__description {
-    color: $unnnic-color-neutral-dark;
-    font-size: $unnnic-font-size-body-gt;
-    font-family: $unnnic-font-family-secondary;
+    color: $unnnic-color-gray-10;
+    font-size: 14px;
+    font-family: $unnnic-font-family;
     position: relative;
     white-space: nowrap;
     width: 22em;

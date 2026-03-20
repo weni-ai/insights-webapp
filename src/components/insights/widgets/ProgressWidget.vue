@@ -200,21 +200,21 @@ const isWarningMessage = computed(() => {
 .progress-widget {
   width: 100%;
   display: flex;
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   flex: 1 0 0;
   align-self: stretch;
 
-  border-radius: $unnnic-spacing-xs;
-  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-neutral-white;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &__content {
     .content__card {
       display: flex;
-      min-height: calc(114px + $unnnic-spacing-sm);
-      padding-bottom: $unnnic-spacing-sm;
+      min-height: calc(114px + $unnnic-space-4);
+      padding-bottom: $unnnic-space-4;
     }
   }
 
@@ -230,12 +230,12 @@ const isWarningMessage = computed(() => {
     }
 
     .footer__text {
-      color: $unnnic-color-neutral-clean;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
+      color: $unnnic-color-gray-5;
+      font-family: $unnnic-font-family;
+      font-size: 14px;
       font-weight: $unnnic-font-weight-regular;
       font-style: normal;
-      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+      line-height: 14px + 8px;
     }
 
     &-button {
@@ -246,7 +246,7 @@ const isWarningMessage = computed(() => {
   &__skeleton-container {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
   }
 }
 </style>

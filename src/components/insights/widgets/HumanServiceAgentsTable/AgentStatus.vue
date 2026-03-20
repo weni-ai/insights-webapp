@@ -71,19 +71,19 @@ const renderLabel = computed(() => {
 .agent-status-container {
   display: flex;
   align-items: center;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 }
 
 .agent-status-label {
-  font-family: $unnnic-font-family-secondary;
-  color: $unnnic-color-neutral-dark;
+  font-family: $unnnic-font-family;
+  color: $unnnic-color-gray-10;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  font-size: $unnnic-font-size-body-gt;
+  font-size: 14px;
   font-style: normal;
   font-weight: $unnnic-font-weight-regular;
-  line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  line-height: 14px + 8px;
 }
 
 .agent-status {
@@ -95,13 +95,13 @@ const renderLabel = computed(() => {
 
   &.agent-status--offline {
     :deep(.primary) {
-      fill: $unnnic-color-neutral-cleanest;
+      fill: $unnnic-color-gray-4;
     }
   }
 
   &.agent-status--custom {
     :deep(.primary) {
-      fill: $unnnic-color-aux-orange-500;
+      fill: $unnnic-color-orange-7;
     }
   }
 }

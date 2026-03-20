@@ -60,16 +60,16 @@ export default {
 
 <style lang="scss" scoped>
 .form-accordion {
-  border-radius: $unnnic-border-radius-sm;
-  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+  border-radius: $unnnic-radius-1;
+  border: 1px solid $unnnic-color-gray-2;
 
   &--active.highlighted {
-    background-color: $unnnic-color-weni-50;
-    border: 1px solid $unnnic-color-weni-500;
+    background-color: $unnnic-color-teal-1;
+    border: 1px solid $unnnic-color-teal-7;
   }
 
   :deep(.unnnic-collapse__header) {
-    padding: $unnnic-spacing-ant;
+    padding: $unnnic-space-3;
   }
 
   :deep(.unnnic-collapse__body) {
@@ -77,19 +77,19 @@ export default {
     padding: 0;
     box-sizing: border-box;
 
-    margin-top: - calc($unnnic-spacing-ant + $unnnic-spacing-nano);
-    padding: $unnnic-spacing-xs $unnnic-spacing-ant 0;
+    margin-top: - calc($unnnic-space-3 + $unnnic-space-1);
+    padding: $unnnic-space-2 $unnnic-space-3 0;
   }
 
   &__header {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
 
-    color: $unnnic-color-neutral-dark;
-    font-size: $unnnic-font-size-body-gt;
+    color: $unnnic-color-gray-10;
+    font-size: 14px;
     font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-line-height-small * 5.5;
+    line-height: 4px * 5.5;
   }
 }
 </style>

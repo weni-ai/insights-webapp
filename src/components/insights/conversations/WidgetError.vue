@@ -60,16 +60,16 @@ const handleClick = () => {
 
   &__description {
     font: $unnnic-font-body;
-    color: $unnnic-color-neutral-cloudy;
+    color: $unnnic-color-gray-7;
   }
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
-    font-family: $unnnic-font-family-secondary;
+    color: $unnnic-color-gray-12;
+    font-family: $unnnic-font-family;
     text-align: center;
-    font-size: $unnnic-font-size-title-sm;
-    font-weight: $unnnic-font-weight-black;
-    line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 20px + 8px;
   }
 }
 </style>

@@ -206,7 +206,7 @@ export default {
 .drawer-config-gallery {
   &__options {
     display: grid;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
   }
 }
 </style>

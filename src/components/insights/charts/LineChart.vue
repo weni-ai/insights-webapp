@@ -181,8 +181,8 @@ export default {
 <style lang="scss" scoped>
 .line-chart {
   border-radius: $unnnic-space-2;
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-neutral-white;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   padding: $unnnic-space-6;
 
@@ -212,8 +212,8 @@ export default {
     }
 
     .header__see-more {
-      font-size: $unnnic-font-size-body-gt;
-      color: $unnnic-color-neutral-dark;
+      font-size: 14px;
+      color: $unnnic-color-gray-10;
     }
   }
 

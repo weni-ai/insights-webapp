@@ -124,9 +124,9 @@ export default {
 
 <style lang="scss" scoped>
 .bar-chart {
-  box-shadow: $unnnic-shadow-level-far;
+  box-shadow: $unnnic-shadow-2;
 
-  padding: $unnnic-spacing-ant;
+  padding: $unnnic-space-3;
 
   height: 100%;
   width: 100%;
@@ -134,7 +134,7 @@ export default {
   overflow: hidden;
 
   display: grid;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
 
   &__header {
     width: 100%;
@@ -143,7 +143,7 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      font-family: $unnnic-font-family-primary;
+      font-family: $unnnic-font-family;
       font-weight: $unnnic-font-weight-bold;
     }
 
@@ -156,8 +156,8 @@ export default {
 
     .header__title,
     .header__see-more {
-      font-size: $unnnic-font-size-body-gt;
-      color: $unnnic-color-neutral-dark;
+      font-size: 14px;
+      color: $unnnic-color-gray-10;
     }
   }
 

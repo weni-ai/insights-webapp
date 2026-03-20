@@ -157,25 +157,25 @@ const toggleTopics = () => {
 
       :deep(.unnnic-button--icon-on-center.unnnic-button--size-small) {
         padding: 0;
-        width: $unnnic-icon-size-ant;
-        height: $unnnic-icon-size-ant;
+        width: $unnnic-icon-size-5;
+        height: $unnnic-icon-size-5;
       }
 
       &__title {
-        color: $unnnic-color-neutral-darkest;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-lg;
+        color: $unnnic-color-gray-12;
+        font-family: $unnnic-font-family;
+        font-size: $unnnic-font-size;
         font-style: normal;
         font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+        line-height: $unnnic-font-size + 8px;
       }
 
       &__delete-button {
         :deep(.unnnic-icon__size--md) {
-          width: $unnnic-icon-size-ant;
-          height: $unnnic-icon-size-ant;
-          min-width: $unnnic-icon-size-ant;
-          min-height: $unnnic-icon-size-ant;
+          width: $unnnic-icon-size-5;
+          height: $unnnic-icon-size-5;
+          min-width: $unnnic-icon-size-5;
+          min-height: $unnnic-icon-size-5;
         }
       }
     }
@@ -183,21 +183,21 @@ const toggleTopics = () => {
     &__form {
       display: flex;
       flex-direction: column;
-      gap: $unnnic-spacing-xs;
+      gap: $unnnic-space-2;
       width: 100%;
     }
 
     &__input {
       width: 100%;
       :deep(.unnnic-form__label) {
-        margin: 0 0 $unnnic-spacing-nano 0;
+        margin: 0 0 $unnnic-space-1 0;
       }
     }
 
     &__context {
       display: flex;
       flex-direction: column;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
 
       &__description {
         display: flex;
@@ -205,12 +205,12 @@ const toggleTopics = () => {
         align-items: center;
 
         &__text {
-          color: $unnnic-color-neutral-cloudy;
-          font-family: $unnnic-font-family-secondary;
-          font-size: $unnnic-font-size-body-md;
+          color: $unnnic-color-gray-7;
+          font-family: $unnnic-font-family;
+          font-size: 12px;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
-          line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+          line-height: 12px + 8px;
         }
       }
     }
@@ -224,20 +224,20 @@ const toggleTopics = () => {
     &__content {
       display: flex;
       align-items: center;
-      gap: $unnnic-spacing-sm;
+      gap: $unnnic-space-4;
 
       &__container {
         display: flex;
         flex-direction: column;
-        gap: $unnnic-spacing-nano;
+        gap: $unnnic-space-1;
 
         &__title {
-          color: $unnnic-color-neutral-darkest;
-          font-family: $unnnic-font-family-secondary;
-          font-size: $unnnic-font-size-body-lg;
+          color: $unnnic-color-gray-12;
+          font-family: $unnnic-font-family;
+          font-size: $unnnic-font-size;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
-          line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+          line-height: $unnnic-font-size + 8px;
         }
 
         &__description {
@@ -246,12 +246,12 @@ const toggleTopics = () => {
           -webkit-line-clamp: 1;
           text-overflow: ellipsis;
           overflow: hidden;
-          color: $unnnic-color-neutral-cloudy;
-          font-family: $unnnic-font-family-secondary;
-          font-size: $unnnic-font-size-body-gt;
+          color: $unnnic-color-gray-7;
+          font-family: $unnnic-font-family;
+          font-size: 14px;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
-          line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+          line-height: 14px + 8px;
         }
       }
     }

@@ -204,39 +204,39 @@ export default {
 <style lang="scss" scoped>
 .insights-layout-header {
   display: grid;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__content {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
 
     .content__actions {
       display: flex;
-      gap: $unnnic-spacing-ant;
+      gap: $unnnic-space-3;
     }
   }
   &__expansive {
     border-radius: 0.5rem 0.5rem 0rem 0rem;
-    background: $unnnic-color-neutral-white;
+    background: $unnnic-color-gray-0;
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: $unnnic-spacing-xs $unnnic-spacing-md;
+    padding: $unnnic-space-2 $unnnic-space-6;
 
     &-title {
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-black;
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-primary;
-      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+      font-size: 20px;
+      font-weight: 900;
+      color: $unnnic-color-gray-12;
+      font-family: $unnnic-font-family;
+      line-height: 20px + 8px;
     }
 
     &-close {
-      background-color: $unnnic-color-neutral-white;
+      background-color: $unnnic-color-gray-0;
     }
   }
 }

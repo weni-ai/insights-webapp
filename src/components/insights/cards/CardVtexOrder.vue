@@ -152,24 +152,24 @@ export default {
   min-height: 310px;
   height: 100%;
 
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   :deep(.unnnic-avatar-icon.aux-red-500) {
-    background: $unnnic-color-aux-red-100;
+    background: $unnnic-color-red-2;
   }
 
   :deep(.material-symbols-rounded.unnnic-icon-scheme--aux-red-500) {
-    color: $unnnic-color-aux-red-600;
+    color: $unnnic-color-red-8;
   }
 
   &--not-data {
     .card-vtex-order__header .header__title {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
     }
   }
 
@@ -185,13 +185,13 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      padding: $unnnic-spacing-nano 0;
+      padding: $unnnic-space-1 0;
 
-      color: $unnnic-color-aux-red-600;
-      font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-sm;
+      color: $unnnic-color-red-8;
+      font-family: $unnnic-font-family;
+      font-size: 20px;
       font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-line-height-small * 7.5;
+      line-height: 4px * 7.5;
     }
   }
 
@@ -208,39 +208,39 @@ export default {
       height: 100%;
       width: 100%;
       display: grid;
-      row-gap: $unnnic-spacing-awesome;
+      row-gap: $unnnic-space-20;
       align-items: center;
     }
 
     .content__orders {
       display: flex;
       align-items: flex-start;
-      gap: $unnnic-spacing-xs;
+      gap: $unnnic-space-2;
 
       &__container-item {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
-        gap: $unnnic-spacing-nano;
+        gap: $unnnic-space-1;
         flex: 1 0 0;
 
         &-value {
-          color: $unnnic-color-neutral-darkest;
+          color: $unnnic-color-gray-12;
           text-align: right;
 
-          font-family: $unnnic-font-family-primary;
-          font-size: $unnnic-font-size-title-lg;
+          font-family: $unnnic-font-family;
+          font-size: 32px;
           font-style: normal;
           font-weight: $unnnic-font-weight-bold;
           line-height: 2.5rem;
         }
 
         &-text {
-          color: $unnnic-color-neutral-darkest;
+          color: $unnnic-color-gray-12;
 
-          font-family: $unnnic-font-family-secondary;
-          font-size: $unnnic-font-size-body-lg;
+          font-family: $unnnic-font-family;
+          font-size: $unnnic-font-size;
           font-style: normal;
           font-weight: $unnnic-font-weight-regular;
           line-height: 1.5rem;
@@ -255,14 +255,14 @@ export default {
       align-items: center;
 
       .not-configured__text {
-        color: $unnnic-color-neutral-cloudy;
-        font-size: $unnnic-font-size-body-lg;
+        color: $unnnic-color-gray-7;
+        font-size: $unnnic-font-size;
         text-align: center;
-        line-height: $unnnic-line-height-small * 6;
+        line-height: 4px * 6;
 
         &--bold {
           font-weight: $unnnic-font-weight-bold;
-          padding-bottom: $unnnic-spacing-sm;
+          padding-bottom: $unnnic-space-4;
         }
       }
     }

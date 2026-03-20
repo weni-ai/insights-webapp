@@ -122,10 +122,10 @@ export default {
 <style lang="scss" scoped>
 .content-recurrence {
   display: grid;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 
   .clear-button {
-    margin-top: $unnnic-spacing-nano;
+    margin-top: $unnnic-space-1;
   }
 }
 </style>

@@ -69,8 +69,8 @@ describe('NativeProgress.vue', () => {
 
   describe('Default Props', () => {
     const defaultValues = [
-      { prop: 'color', expected: '#3182CE' }, // colorBlue500
-      { prop: 'backgroundColor', expected: '#F6F7F9' }, // colorGray50
+      { prop: 'color', expected: '#3993F4' }, // colorBlue500
+      { prop: 'backgroundColor', expected: '#F5F5F5' }, // colorGray50
       { prop: 'height', expected: 8 },
     ];
 

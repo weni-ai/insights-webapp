@@ -83,13 +83,13 @@ const updateCurrentDate = (option) => {
 <style lang="scss" scoped>
 .filter-date {
   :deep(.input) {
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
 
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
+    font-family: $unnnic-font-family;
+    font-size: 14px;
     font-style: normal;
     font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-line-height-large * 1.375;
+    line-height: 16px * 1.375;
   }
 
   :deep(.dropdown) {
@@ -98,16 +98,16 @@ const updateCurrentDate = (option) => {
 
   :deep(.unnnic-select-smart-option--selectable) {
     &:hover {
-      color: $unnnic-color-weni-600;
+      color: $unnnic-color-teal-8;
       font-weight: $unnnic-font-weight-bold;
     }
 
-    color: $unnnic-color-neutral-darkest;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
+    color: $unnnic-color-gray-12;
+    font-family: $unnnic-font-family;
+    font-size: 14px;
     font-style: normal;
     font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-line-height-large * 1.375;
+    line-height: 16px * 1.375;
   }
 }
 </style>

@@ -268,12 +268,12 @@ watch(locale, () => {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
 
     height: 100%;
 
     .loading__skeleton {
-      border-radius: $unnnic-border-radius-md;
+      border-radius: $unnnic-radius-2;
       height: 100%;
       width: 100%;
 
@@ -309,23 +309,23 @@ watch(locale, () => {
 
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
     justify-content: center;
     align-items: center;
 
     .no-data__title {
-      font-size: $unnnic-font-size-title-sm;
-      font-family: $unnnic-font-family-secondary;
+      font-size: 20px;
+      font-family: $unnnic-font-family;
       font-weight: $unnnic-font-weight-bold;
-      color: $unnnic-color-neutral-darkest;
-      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+      color: $unnnic-color-gray-12;
+      line-height: 20px + 8px;
     }
 
     .no-data__description {
-      font-size: $unnnic-font-size-body-lg;
-      font-family: $unnnic-font-family-secondary;
-      color: $unnnic-color-neutral-cloudy;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+      font-size: $unnnic-font-size;
+      font-family: $unnnic-font-family;
+      color: $unnnic-color-gray-7;
+      line-height: $unnnic-font-size + 8px;
     }
   }
 

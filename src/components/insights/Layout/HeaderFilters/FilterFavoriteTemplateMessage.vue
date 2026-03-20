@@ -73,10 +73,10 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   align-items: center;
 
   &__label {
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
-    color: $unnnic-color-neutral-cloudy;
+    font-family: $unnnic-font-family;
+    font-size: 14px;
+    line-height: 14px + 8px;
+    color: $unnnic-color-gray-7;
   }
 }
 </style>

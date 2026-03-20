@@ -121,7 +121,7 @@ const handleChangeTab = (tab: ActiveTab) => {
     align-items: center;
     aspect-ratio: 1/1;
     border-radius: $unnnic-radius-full;
-    border: 1px solid $unnnic-color-neutral-cloudy;
+    border: 1px solid $unnnic-color-gray-7;
   }
 }
 </style>

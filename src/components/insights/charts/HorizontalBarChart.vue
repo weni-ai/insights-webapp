@@ -293,9 +293,9 @@ export default {
 
 <style lang="scss" scoped>
 .bar-chart {
-  box-shadow: $unnnic-shadow-level-far;
+  box-shadow: $unnnic-shadow-2;
 
-  padding: $unnnic-spacing-ant;
+  padding: $unnnic-space-3;
 
   height: 100%;
   width: 100%;
@@ -304,7 +304,7 @@ export default {
 
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
 
   &__header {
     width: 100%;
@@ -313,19 +313,19 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      font-size: $unnnic-font-size-title-sm;
-      font-family: $unnnic-font-family-primary;
+      font-size: 20px;
+      font-family: $unnnic-font-family;
       font-weight: $unnnic-font-weight-bold;
-      color: $unnnic-color-neutral-dark;
+      color: $unnnic-color-gray-10;
     }
 
     .header__see-more {
-      font-size: $unnnic-font-size-body-gt;
+      font-size: 14px;
       font-family: Lato;
       font-weight: $unnnic-font-weight-bold;
       text-decoration-line: underline;
       text-underline-position: under;
-      color: $unnnic-color-neutral-dark;
+      color: $unnnic-color-gray-10;
     }
   }
 

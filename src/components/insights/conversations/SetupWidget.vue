@@ -46,7 +46,7 @@ defineProps<{
 
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
   justify-content: center;
   align-items: center;
 
@@ -54,16 +54,16 @@ defineProps<{
   height: 100%;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
     font: $unnnic-font-display-2;
   }
 
   &__description {
-    padding: 0 $unnnic-spacing-sm;
+    padding: 0 $unnnic-space-4;
 
     max-width: 600px;
 
-    color: $unnnic-color-neutral-cloudy;
+    color: $unnnic-color-gray-7;
     font: $unnnic-font-emphasis;
     text-align: center;
   }

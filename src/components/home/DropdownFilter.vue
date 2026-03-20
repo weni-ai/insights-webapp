@@ -90,25 +90,25 @@ const handleItemAction = (action: () => void, name: string) => {
     }
 
     :deep(.unnnic-dropdown__content) {
-      width: $unnnic-avatar-size-sm * 4;
+      width: 40px * 4;
     }
   }
 
   &__title {
-    margin-right: $unnnic-spacing-nano;
-    color: $unnnic-color-neutral-darkest;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
+    margin-right: $unnnic-space-1;
+    color: $unnnic-color-gray-12;
+    font-family: $unnnic-font-family;
+    font-size: 14px;
     font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    line-height: 14px + 8px;
   }
 
   &__option {
     display: flex;
-    padding: $unnnic-spacing-sm;
+    padding: $unnnic-space-4;
     flex-direction: column;
     align-items: flex-start;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
     border-bottom: 1px solid $unnnic-color-background-sky;
 
     &::before {
@@ -118,10 +118,10 @@ const handleItemAction = (action: () => void, name: string) => {
     cursor: pointer;
     white-space: nowrap;
 
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-md;
+    font-family: $unnnic-font-family;
+    font-size: 12px;
     font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+    line-height: 12px + 8px;
 
     &:last-child {
       border-bottom: none;
@@ -132,7 +132,7 @@ const handleItemAction = (action: () => void, name: string) => {
     }
 
     &:hover {
-      border-radius: $unnnic-spacing-nano;
+      border-radius: $unnnic-space-1;
       background-color: $unnnic-color-background-sky;
     }
   }

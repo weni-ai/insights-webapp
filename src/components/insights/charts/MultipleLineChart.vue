@@ -155,10 +155,10 @@ const plugins = computed(() => [Tooltip]);
 .multiple-line-chart {
   display: flex;
   flex-direction: column;
-  padding: $unnnic-spacing-md;
-  border-radius: $unnnic-border-radius-sm;
-  border: 1px solid $unnnic-color-neutral-soft;
-  gap: $unnnic-spacing-sm;
+  padding: $unnnic-space-6;
+  border-radius: $unnnic-radius-1;
+  border: 1px solid $unnnic-color-gray-2;
+  gap: $unnnic-space-4;
   width: 100%;
   min-height: 280px;
 
@@ -182,31 +182,31 @@ const plugins = computed(() => [Tooltip]);
     &-label {
       display: flex;
       align-items: center;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-lg;
-      color: $unnnic-color-neutral-dark;
-      line-height: $unnnic-line-height-large + $unnnic-line-height-medium;
+      font-family: $unnnic-font-family;
+      font-size: $unnnic-font-size;
+      color: $unnnic-color-gray-10;
+      line-height: 16px + 8px;
     }
     &-total {
       display: flex;
-      margin-left: $unnnic-spacing-ant;
-      margin-top: $unnnic-spacing-xs;
-      gap: $unnnic-spacing-xs;
+      margin-left: $unnnic-space-3;
+      margin-top: $unnnic-space-2;
+      gap: $unnnic-space-2;
       align-items: flex-end;
       &-value {
-        font-family: $unnnic-font-family-primary;
-        font-size: $unnnic-font-size-title-md;
-        color: $unnnic-color-neutral-dark;
+        font-family: $unnnic-font-family;
+        font-size: 24px;
+        color: $unnnic-color-gray-10;
         font-style: normal;
         font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-line-height-large * 2;
+        line-height: 16px * 2;
       }
       &-percentage {
-        font-family: $unnnic-font-family-primary;
-        font-size: $unnnic-font-size-body-lg;
-        color: $unnnic-color-neutral-cloudy;
+        font-family: $unnnic-font-family;
+        font-size: $unnnic-font-size;
+        color: $unnnic-color-gray-7;
         font-style: normal;
-        line-height: $unnnic-line-height-large + $unnnic-line-height-medium;
+        line-height: 16px + 8px;
       }
     }
   }

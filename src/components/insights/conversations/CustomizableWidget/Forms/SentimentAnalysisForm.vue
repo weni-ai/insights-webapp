@@ -197,22 +197,22 @@ onBeforeMount(() => {
 .sentiment-analysis-form__section {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 }
 
 .sentiment-analysis-form {
   &__section {
     :deep(.unnnic-label__label) {
       margin: 0;
-      margin-bottom: $unnnic-spacing-nano;
+      margin-bottom: $unnnic-space-1;
     }
   }
 
   &__agent-active {
-    color: $unnnic-color-neutral-cloudy;
-    font-size: $unnnic-font-size-body-md;
-    font-family: $unnnic-font-family-secondary;
-    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+    color: $unnnic-color-gray-7;
+    font-size: 12px;
+    font-family: $unnnic-font-family;
+    line-height: 12px + 8px;
   }
 }
 </style>

@@ -19,17 +19,17 @@ export default {
 
 <style lang="scss" scoped>
 .option-create-new-dashboard {
-  padding: $unnnic-spacing-xs;
+  padding: $unnnic-space-2;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 
-  border-top: $unnnic-border-width-thinner solid $unnnic-color-neutral-light;
+  border-top: 1px solid $unnnic-color-gray-1;
 
-  color: $unnnic-color-neutral-darkest;
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-gt;
+  color: $unnnic-color-gray-12;
+  font-family: $unnnic-font-family;
+  font-size: 14px;
 }
 </style>

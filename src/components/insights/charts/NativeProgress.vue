@@ -68,7 +68,7 @@ const progressBarStyles = computed(() => ({
 <style scoped lang="scss">
 .native-progress {
   width: 100%;
-  border-radius: $unnnic-border-radius-sm;
+  border-radius: $unnnic-radius-1;
   overflow: hidden;
   position: relative;
   display: grid;

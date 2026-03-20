@@ -115,14 +115,14 @@ export default {
     align-items: center;
     justify-content: center;
 
-    color: $unnnic-color-neutral-cloudy;
-    font-size: $unnnic-font-size-body-lg;
+    color: $unnnic-color-gray-7;
+    font-size: $unnnic-font-size;
     text-align: center;
-    line-height: $unnnic-line-height-small * 6;
+    line-height: 4px * 6;
 
     &-description {
       font-weight: $unnnic-font-weight-bold;
-      padding-bottom: $unnnic-spacing-sm;
+      padding-bottom: $unnnic-space-4;
     }
   }
 
@@ -137,7 +137,7 @@ export default {
       bottom: -1px;
       width: 100%;
       height: 1px;
-      background-color: $unnnic-color-neutral-soft;
+      background-color: $unnnic-color-gray-2;
       z-index: 1;
     }
 

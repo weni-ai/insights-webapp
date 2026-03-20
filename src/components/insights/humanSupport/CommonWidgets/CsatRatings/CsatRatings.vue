@@ -350,12 +350,12 @@ watch(
   width: 100%;
   padding: $unnnic-space-6;
 
-  border-radius: $unnnic-spacing-xs;
-  border: 1px solid $unnnic-color-border-soft;
-  background: $unnnic-color-neutral-white;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-border-base;
+  background: $unnnic-color-gray-0;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
     font: $unnnic-font-display-2;
   }
 

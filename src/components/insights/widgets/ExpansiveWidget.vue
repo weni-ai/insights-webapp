@@ -169,14 +169,14 @@ watch(currentExpansiveWidgetFilters, () => {
 
   display: grid;
 
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   & > [class*='chart'] {
-    border-radius: $unnnic-spacing-nano;
-    border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+    border-radius: $unnnic-space-1;
+    border: 1px solid $unnnic-color-gray-2;
 
     :deep([class*='title']) {
-      font-size: $unnnic-font-size-body-lg;
+      font-size: $unnnic-font-size;
     }
   }
 }

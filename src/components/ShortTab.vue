@@ -63,7 +63,7 @@ const switchTab = (key: string) => {
   &__tabs {
     display: flex;
     gap: $unnnic-space-1;
-    background-color: $unnnic-color-bg-soft;
+    background-color: $unnnic-color-bg-base-soft;
     border-radius: $unnnic-radius-2;
     padding: $unnnic-space-1;
     align-items: center;
@@ -81,8 +81,8 @@ const switchTab = (key: string) => {
     white-space: nowrap;
     align-items: center;
 
-    background-color: $unnnic-color-bg-soft;
-    color: $unnnic-color-gray-500;
+    background-color: $unnnic-color-bg-base-soft;
+    color: $unnnic-color-gray-7;
     font: $unnnic-font-caption-1;
 
     cursor: pointer;
@@ -90,13 +90,13 @@ const switchTab = (key: string) => {
     transition: all 0.3s ease;
 
     &:hover {
-      background-color: $unnnic-color-bg-soft;
+      background-color: $unnnic-color-bg-base-soft;
       color: $unnnic-color-fg-emphasized;
     }
 
     &--active {
       background-color: $unnnic-color-bg-base;
-      border: 1px solid $unnnic-color-border-soft;
+      border: 1px solid $unnnic-color-border-base;
       color: $unnnic-color-fg-emphasized;
 
       &:hover {

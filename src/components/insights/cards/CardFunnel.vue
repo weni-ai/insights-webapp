@@ -106,16 +106,16 @@ export default {
   height: 100%;
   width: 100%;
 
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &--not-configured {
     .card-funnel__header .header__title {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
     }
   }
 
@@ -125,16 +125,16 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-bottom: $unnnic-spacing-md;
+    padding-bottom: $unnnic-space-6;
 
     .header__title {
-      padding: $unnnic-spacing-nano 0;
+      padding: $unnnic-space-1 0;
 
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-sm;
+      color: $unnnic-color-gray-12;
+      font-family: $unnnic-font-family;
+      font-size: 20px;
       font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-line-height-small * 7.5;
+      line-height: 4px * 7.5;
     }
   }
 
@@ -152,13 +152,13 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: $unnnic-spacing-sm;
+      gap: $unnnic-space-4;
 
       .not-configured__text {
-        color: $unnnic-color-neutral-cloudy;
-        font-size: $unnnic-font-size-body-lg;
+        color: $unnnic-color-gray-7;
+        font-size: $unnnic-font-size;
         text-align: center;
-        line-height: $unnnic-line-height-small * 6;
+        line-height: 4px * 6;
       }
     }
   }

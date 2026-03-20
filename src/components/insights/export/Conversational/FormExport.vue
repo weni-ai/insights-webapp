@@ -153,24 +153,24 @@ const updateAcceptTerms = (value: boolean) => {
 .conversational-export-form {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
-  background: $unnnic-color-neutral-white;
+  gap: $unnnic-space-4;
+  background: $unnnic-color-gray-0;
 
   &__content {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
     :deep(.unnnic-label__label) {
       margin: 0;
     }
   }
 
   &__description {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
+    color: $unnnic-color-gray-7;
+    font-family: $unnnic-font-family;
+    font-size: 14px;
     font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    line-height: 14px + 8px;
   }
 }
 </style>

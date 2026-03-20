@@ -170,7 +170,7 @@ onMounted(() => {
 .most-talked-about-topics {
   position: relative;
 
-  padding-bottom: $unnnic-spacing-sm;
+  padding-bottom: $unnnic-space-4;
 
   overflow: hidden;
 
@@ -180,7 +180,7 @@ onMounted(() => {
   &__conversation-widget {
     height: 100%;
 
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
   }
 
   &__add-widget {

@@ -149,8 +149,8 @@ defineEmits(['open-config']);
 .vtex-conversions-widget {
   display: flex;
   flex-direction: column;
-  padding: $unnnic-spacing-md;
-  gap: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
+  gap: $unnnic-space-6;
 
   &__loading {
     display: flex;
@@ -164,18 +164,18 @@ defineEmits(['open-config']);
     justify-content: space-between;
   }
   &__title {
-    color: $unnnic-color-neutral-darkest;
-    font-family: $unnnic-font-family-primary;
-    font-size: $unnnic-font-size-body-lg;
+    color: $unnnic-color-gray-12;
+    font-family: $unnnic-font-family;
+    font-size: $unnnic-font-size;
     font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
+    line-height: $unnnic-font-size + 8px;
   }
 
   &__vtex {
     &-container {
       display: flex;
       align-items: flex-start;
-      gap: $unnnic-spacing-md;
+      gap: $unnnic-space-6;
       align-self: stretch;
     }
     &-data {
@@ -183,24 +183,24 @@ defineEmits(['open-config']);
       flex-direction: column;
       width: 100%;
       &-value {
-        color: $unnnic-color-neutral-darkest;
-        font-family: $unnnic-font-family-primary;
-        font-size: $unnnic-font-size-body-lg;
+        color: $unnnic-color-gray-12;
+        font-family: $unnnic-font-family;
+        font-size: $unnnic-font-size;
         font-style: normal;
         font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
+        line-height: $unnnic-font-size + 8px;
       }
       &-label {
-        color: $unnnic-color-neutral-cloudy;
+        color: $unnnic-color-gray-7;
 
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-md;
-        line-height: $unnnic-font-size-body-md + $unnnic-line-height-medium;
+        font-family: $unnnic-font-family;
+        font-size: 12px;
+        line-height: 12px + 8px;
       }
       &-divider {
-        background: $unnnic-color-neutral-light;
+        background: $unnnic-color-gray-1;
         height: 100%;
-        border: 1px solid $unnnic-color-neutral-light;
+        border: 1px solid $unnnic-color-gray-1;
       }
     }
   }
@@ -224,7 +224,7 @@ defineEmits(['open-config']);
           bottom: 0;
           right: 0;
           width: calc(100%);
-          border-bottom: 1px solid $unnnic-color-neutral-soft;
+          border-bottom: 1px solid $unnnic-color-gray-2;
         }
       }
     }
@@ -237,14 +237,14 @@ defineEmits(['open-config']);
     align-items: center;
     justify-content: center;
 
-    color: $unnnic-color-neutral-cloudy;
-    font-size: $unnnic-font-size-body-lg;
+    color: $unnnic-color-gray-7;
+    font-size: $unnnic-font-size;
     text-align: center;
-    line-height: $unnnic-line-height-small * 6;
+    line-height: 4px * 6;
 
     &-description {
       font-weight: $unnnic-font-weight-bold;
-      padding-bottom: $unnnic-spacing-sm;
+      padding-bottom: $unnnic-space-4;
     }
   }
 }

@@ -179,7 +179,7 @@ $tag-size: 28px;
     position: relative;
     display: flex;
     flex-wrap: wrap;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
     flex: 1;
 
     align-self: flex-start;
@@ -199,18 +199,18 @@ $tag-size: 28px;
       }
 
       &.tag-group__tags__tag--selected {
-        outline: $unnnic-border-width-thinner solid $unnnic-color-neutral-clean;
-        outline-offset: -$unnnic-border-width-thinner;
+        outline: 1px solid $unnnic-color-gray-5;
+        outline-offset: -1px;
       }
     }
   }
 
   &__remaining-children {
     position: absolute;
-    padding-left: $unnnic-spacing-xs;
+    padding-left: $unnnic-space-2;
 
-    color: $unnnic-color-neutral-dark;
-    font-size: $unnnic-font-size-body-md;
+    color: $unnnic-color-gray-10;
+    font-size: 12px;
 
     line-height: 20px;
     margin-right: -16px;

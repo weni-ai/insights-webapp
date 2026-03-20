@@ -262,19 +262,19 @@ export default {
 
 .config-form {
   display: grid;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   &__input-hint {
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-md;
+    font-family: $unnnic-font-family;
+    font-size: 12px;
     font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-line-height-large * 1.25; // 20px
-    margin-top: $unnnic-spacing-nano;
+    line-height: 16px * 1.25; // 20px
+    margin-top: $unnnic-space-1;
   }
 
   &__layout {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
   }
 }
 

@@ -65,7 +65,7 @@ describe('BarChart', () => {
     const inactiveContext = { active: false };
 
     expect(chartOptions.plugins.datalabels.color(activeContext)).toBe(
-      '#0D5453', // colorTeal900
+      '#0D504D', // colorTeal900
     );
 
     expect(chartOptions.plugins.datalabels.color(inactiveContext)).toBe(

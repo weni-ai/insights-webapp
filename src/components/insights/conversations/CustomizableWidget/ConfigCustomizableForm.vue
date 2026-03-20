@@ -35,14 +35,14 @@ defineProps<{
   gap: $unnnic-space-5;
 
   &__title {
-    color: $unnnic-color-neutral-black;
+    color: $unnnic-color-gray-13;
     font-weight: $unnnic-font-weight-bold;
   }
 
   &__title {
-    font-size: $unnnic-font-size-body-lg;
-    font-family: $unnnic-font-family-secondary;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    font-size: $unnnic-font-size;
+    font-family: $unnnic-font-family;
+    line-height: $unnnic-font-size + 8px;
   }
 }
 </style>

@@ -176,7 +176,7 @@ export default {
 
   :deep(.unnnic-label__label),
   :deep(.unnnic-form__label) {
-    margin: 0 0 $unnnic-spacing-nano;
+    margin: 0 0 $unnnic-space-1;
   }
 }
 </style>

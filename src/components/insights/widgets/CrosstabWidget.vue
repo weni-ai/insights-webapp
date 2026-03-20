@@ -160,7 +160,7 @@ const formattedData = computed(() => {
         &__color {
           width: $unnnic-space-6;
           height: $unnnic-space-2;
-          border-radius: $unnnic-border-radius-pill;
+          border-radius: $unnnic-radius-full;
         }
         &__label {
           color: $unnnic-color-fg-emphasized;
@@ -176,7 +176,7 @@ const formattedData = computed(() => {
 
     &__count {
       font: $unnnic-font-body;
-      color: $unnnic-color-neutral-clean;
+      color: $unnnic-color-gray-5;
     }
     &__see-more {
       font: $unnnic-font-display-4;

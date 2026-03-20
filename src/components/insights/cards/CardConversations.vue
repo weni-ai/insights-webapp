@@ -120,30 +120,30 @@ defineEmits<{
 <style scoped lang="scss">
 .card-conversations {
   display: flex;
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
   flex-direction: column;
   align-items: flex-start;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
   flex: 1 0 0;
   align-self: stretch;
 
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-neutral-white;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &--clickable {
     cursor: pointer;
   }
 
   &--border-full {
-    border-radius: $unnnic-border-radius-md;
+    border-radius: $unnnic-radius-2;
   }
 
   &--border-left {
-    border-radius: $unnnic-border-radius-md 0 0 $unnnic-border-radius-md;
+    border-radius: $unnnic-radius-2 0 0 $unnnic-radius-2;
   }
 
   &--border-right {
-    border-radius: 0 $unnnic-border-radius-md $unnnic-border-radius-md 0;
+    border-radius: 0 $unnnic-radius-2 $unnnic-radius-2 0;
     border-left: none;
   }
 
@@ -156,7 +156,7 @@ defineEmits<{
     display: flex;
     width: 100%;
     align-items: center;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &__text {
@@ -165,13 +165,9 @@ defineEmits<{
     -webkit-line-clamp: 1;
     flex: 1 0 0;
     overflow: hidden;
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
     text-overflow: ellipsis;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-lg;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    font: $unnnic-font-display-4;
   }
 
   &__info-icon {
@@ -189,7 +185,7 @@ defineEmits<{
 
   &__value {
     display: flex;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
     align-items: end;
 
     &--enable-time-icon {
@@ -198,30 +194,18 @@ defineEmits<{
   }
 
   &__number {
-    color: $unnnic-color-neutral-black;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-title-md;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
+    color: $unnnic-color-gray-13;
+    font: $unnnic-font-display-1;
   }
 
   &__value-description {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-lg;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-display-3;
   }
 
   &__description {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-md;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-caption-2;
   }
 
   &__skeleton {

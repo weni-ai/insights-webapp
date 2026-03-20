@@ -297,18 +297,18 @@ export default {
   right: 0;
   z-index: 999;
 
-  box-shadow: $unnnic-shadow-level-far;
-  border-radius: $unnnic-border-radius-sm;
-  padding: $unnnic-spacing-md;
+  box-shadow: $unnnic-shadow-2;
+  border-radius: $unnnic-radius-1;
+  padding: $unnnic-space-6;
 
   width: 32vw;
   height: 75vh;
 
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
-  background: $unnnic-color-neutral-darkest;
+  background: $unnnic-color-gray-12;
 
   cursor: default;
 
@@ -316,17 +316,15 @@ export default {
     display: flex;
     align-items: start;
     justify-content: space-between;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
 
     .header__title {
       display: flex;
       align-items: center;
-      gap: $unnnic-spacing-xs;
+      gap: $unnnic-space-2;
 
-      color: $unnnic-color-weni-300;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-bold;
+      color: $unnnic-color-teal-5;
+      font: $unnnic-font-display-2;
     }
 
     .header__close-button {
@@ -336,7 +334,7 @@ export default {
       width: 38px;
       height: 38px;
 
-      padding: $unnnic-spacing-nano;
+      padding: $unnnic-space-1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -350,8 +348,8 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     overflow-y: overlay;
-    padding-right: $unnnic-spacing-ant;
-    margin-right: -$unnnic-spacing-ant;
+    padding-right: $unnnic-space-3;
+    margin-right: -$unnnic-space-3;
 
     &::-webkit-scrollbar {
       width: 0;
@@ -366,12 +364,12 @@ export default {
     height: 9rem;
     background: linear-gradient(
       359deg,
-      $unnnic-color-neutral-dark 0.54%,
+      $unnnic-color-gray-10 0.54%,
       rgba(59, 65, 77, 0.8) 62.61%,
       rgba(59, 65, 77, 0) 91.82%
     );
     pointer-events: none;
-    border-radius: $unnnic-border-radius-sm;
+    border-radius: $unnnic-radius-1;
   }
 }
 </style>

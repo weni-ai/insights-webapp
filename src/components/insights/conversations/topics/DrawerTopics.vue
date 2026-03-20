@@ -80,6 +80,6 @@ onMounted(() => {
 }
 
 .drawer-topics-disclaimer {
-  margin-bottom: $unnnic-spacing-sm;
+  margin-bottom: $unnnic-space-4;
 }
 </style>

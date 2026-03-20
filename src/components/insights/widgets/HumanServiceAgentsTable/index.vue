@@ -369,34 +369,31 @@ export default {
 
 <style lang="scss" scoped>
 .widget-human-service-agents {
-  border: 1px solid $unnnic-color-neutral-soft;
-  box-shadow: $unnnic-shadow-level-far;
+  border: 1px solid $unnnic-color-gray-2;
+  box-shadow: $unnnic-shadow-2;
 
-  padding: $unnnic-spacing-sm;
+  padding: $unnnic-space-4;
 
   height: 100%;
 
-  background-color: $unnnic-color-background-snow;
-  border-radius: $unnnic-border-radius-sm;
+  background-color: $unnnic-color-gray-0;
+  border-radius: $unnnic-radius-1;
 
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   overflow: auto;
 
   &__header {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-stack-xs;
+    gap: $unnnic-space-2;
     justify-content: space-between;
 
     .header__title {
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size;
-      color: $unnnic-color-neutral-darkest;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-font-size-title-md;
+      font: $unnnic-font-display-3;
+      color: $unnnic-color-gray-12;
     }
   }
 
@@ -406,16 +403,16 @@ export default {
 
     :hover.unnnic-table-next__body-row {
       cursor: pointer;
-      background-color: $unnnic-color-neutral-lightest;
+      background-color: $unnnic-color-gray-1;
       font-weight: $unnnic-font-weight-bold;
     }
 
     span[data-testid='arrow-asc-icon'] {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
     }
 
     span[data-testid='arrow-desc-icon'] {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
     }
   }
 

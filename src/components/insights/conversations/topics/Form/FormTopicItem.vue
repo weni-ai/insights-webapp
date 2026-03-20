@@ -234,21 +234,21 @@ const handleFormatDate = (date: string) => {
 <style lang="scss" scoped>
 .form-topic-item {
   display: flex;
-  padding: $unnnic-spacing-sm;
+  padding: $unnnic-space-4;
   flex-direction: column;
   align-items: flex-start;
 
   &-gap {
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &-xs-gap {
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
   }
 
   align-self: stretch;
-  border-radius: $unnnic-spacing-xs;
-  border: 1px solid $unnnic-color-neutral-soft;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-gray-2;
 
   &__footer {
     display: flex;
@@ -258,9 +258,9 @@ const handleFormatDate = (date: string) => {
     &__divider {
       width: 100%;
       height: 1px;
-      margin-top: $unnnic-spacing-sm;
-      margin-bottom: $unnnic-spacing-sm;
-      background-color: $unnnic-color-neutral-soft;
+      margin-top: $unnnic-space-4;
+      margin-bottom: $unnnic-space-4;
+      background-color: $unnnic-color-gray-2;
     }
 
     &__sub_topics {
@@ -270,16 +270,12 @@ const handleFormatDate = (date: string) => {
       cursor: pointer;
 
       &__title {
-        color: $unnnic-color-neutral-cloudy;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-gt;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+        color: $unnnic-color-gray-7;
+        font: $unnnic-font-body;
       }
 
       &-padding-bottom {
-        padding-bottom: $unnnic-spacing-xs;
+        padding-bottom: $unnnic-space-2;
       }
     }
   }
@@ -295,19 +291,16 @@ const handleFormatDate = (date: string) => {
     align-items: end;
     justify-content: end;
     width: 100%;
-    padding-bottom: $unnnic-spacing-sm;
+    padding-bottom: $unnnic-space-4;
 
     &__title {
       overflow: hidden;
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
       text-align: right;
       text-overflow: ellipsis;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-md;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+      font: $unnnic-font-caption-2;
       font-style: italic;
-      padding-right: $unnnic-spacing-nano;
+      padding-right: $unnnic-space-1;
     }
   }
 }

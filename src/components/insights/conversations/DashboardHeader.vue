@@ -245,7 +245,7 @@ $min-height: 134px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   width: 100%;
 

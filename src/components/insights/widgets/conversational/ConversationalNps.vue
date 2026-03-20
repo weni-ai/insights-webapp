@@ -59,12 +59,12 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import type { NpsResponse } from '@/services/api/resources/conversational/widgets';
 import { Tab } from '@/components/insights/conversations/BaseConversationWidget.vue';
 import {
-  colorGreen500,
-  colorGreen100,
-  colorOrange600,
-  colorOrange100,
-  colorRed500,
-  colorRed100,
+  colorGreen8,
+  colorGreen1,
+  colorOrange8,
+  colorOrange2,
+  colorRed9,
+  colorRed2,
 } from '@weni/unnnic-system/tokens/colors';
 
 const { t } = useI18n();
@@ -175,16 +175,16 @@ const actions = computed(() => {
 const handleNpsWidgetData = (data: NpsResponse) => {
   const colors = {
     promoters: {
-      color: colorGreen500,
-      backgroundColor: colorGreen100,
+      color: colorGreen8,
+      backgroundColor: colorGreen1,
     },
     passives: {
-      color: colorOrange600,
-      backgroundColor: colorOrange100,
+      color: colorOrange8,
+      backgroundColor: colorOrange2,
     },
     detractors: {
-      color: colorRed500,
-      backgroundColor: colorRed100,
+      color: colorRed9,
+      backgroundColor: colorRed2,
     },
   };
 

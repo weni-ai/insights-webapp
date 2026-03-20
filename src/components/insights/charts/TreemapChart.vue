@@ -54,10 +54,7 @@ import type { topicDistributionMetric } from '@/services/api/resources/conversat
 import { addColors, prepareTopData } from '@/utils/treemap';
 import i18n from '@/utils/plugins/i18n';
 import { useI18n } from 'vue-i18n';
-import {
-  colorGray700,
-  colorGray800,
-} from '@weni/unnnic-system/tokens/colors';
+import { colorGray11 } from '@weni/unnnic-system/tokens/colors';
 
 ChartJS.defaults.font.family = 'Lato, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);
@@ -154,8 +151,8 @@ const createOrUpdateChart = () => {
                   `${padding}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}${padding}`,
                 ];
               },
-              color: colorGray700,
-              hoverColor: colorGray700,
+              color: colorGray11,
+              hoverColor: colorGray11,
               font: [
                 {
                   size: 16,
@@ -191,7 +188,7 @@ const createOrUpdateChart = () => {
           },
           tooltip: {
             enabled: true,
-            backgroundColor: colorGray800,
+            backgroundColor: colorGray11,
             displayColors: false,
             position: 'nearest',
             caretPadding: (ctx: any) => {
@@ -271,12 +268,12 @@ watch(locale, () => {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
 
     height: 100%;
 
     .loading__skeleton {
-      border-radius: $unnnic-border-radius-md;
+      border-radius: $unnnic-radius-2;
       height: 100%;
       width: 100%;
 
@@ -312,23 +309,18 @@ watch(locale, () => {
 
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
     justify-content: center;
     align-items: center;
 
     .no-data__title {
-      font-size: $unnnic-font-size-title-sm;
-      font-family: $unnnic-font-family-secondary;
-      font-weight: $unnnic-font-weight-bold;
-      color: $unnnic-color-neutral-darkest;
-      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+      font: $unnnic-font-display-2;
+      color: $unnnic-color-gray-12;
     }
 
     .no-data__description {
-      font-size: $unnnic-font-size-body-lg;
-      font-family: $unnnic-font-family-secondary;
-      color: $unnnic-color-neutral-cloudy;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+      font: $unnnic-font-display-4;
+      color: $unnnic-color-gray-7;
     }
   }
 

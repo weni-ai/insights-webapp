@@ -65,19 +65,19 @@ import { getPercentageOf } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import weniLoading from '@/assets/images/weni-loading.svg';
 import {
-  colorPurple300,
-  colorGreen300,
-  colorBlue300,
-  colorOrange300,
-  colorGray300,
-  colorGray800,
+  colorPurple4,
+  colorGreen4,
+  colorBlue5,
+  colorOrange4,
+  colorGray5,
+  colorGray11,
 } from '@weni/unnnic-system/tokens/colors';
 
 const colorsMapper = {
-  'aux-purple-300': colorPurple300,
-  'aux-green-300': colorGreen300,
-  'aux-blue-300': colorBlue300,
-  'aux-orange-300': colorOrange300,
+  'aux-purple-300': colorPurple4,
+  'aux-green-300': colorGreen4,
+  'aux-blue-300': colorBlue5,
+  'aux-orange-300': colorOrange4,
 };
 
 const props = defineProps({
@@ -119,13 +119,13 @@ const options = computed(() => ({
       suggestedMin: 0,
       display: true,
       ticks: {
-        color: colorGray300,
+        color: colorGray5,
       },
     },
     x: {
       ticks: {
         padding: -1,
-        color: colorGray300,
+        color: colorGray5,
       },
       grid: {
         display: true,
@@ -135,7 +135,7 @@ const options = computed(() => ({
   plugins: {
     tooltip: {
       enabled: true,
-      backgroundColor: colorGray800,
+      backgroundColor: colorGray11,
       displayColors: false,
       font: {
         size: '16',
@@ -155,10 +155,10 @@ const plugins = computed(() => [Tooltip]);
 .multiple-line-chart {
   display: flex;
   flex-direction: column;
-  padding: $unnnic-spacing-md;
-  border-radius: $unnnic-border-radius-sm;
-  border: 1px solid $unnnic-color-neutral-soft;
-  gap: $unnnic-spacing-sm;
+  padding: $unnnic-space-6;
+  border-radius: $unnnic-radius-1;
+  border: 1px solid $unnnic-color-gray-2;
+  gap: $unnnic-space-4;
   width: 100%;
   min-height: 280px;
 
@@ -182,31 +182,22 @@ const plugins = computed(() => [Tooltip]);
     &-label {
       display: flex;
       align-items: center;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-lg;
-      color: $unnnic-color-neutral-dark;
-      line-height: $unnnic-line-height-large + $unnnic-line-height-medium;
+      font: $unnnic-font-display-4;
+      color: $unnnic-color-gray-10;
     }
     &-total {
       display: flex;
-      margin-left: $unnnic-spacing-ant;
-      margin-top: $unnnic-spacing-xs;
-      gap: $unnnic-spacing-xs;
+      margin-left: $unnnic-space-3;
+      margin-top: $unnnic-space-2;
+      gap: $unnnic-space-2;
       align-items: flex-end;
       &-value {
-        font-family: $unnnic-font-family-primary;
-        font-size: $unnnic-font-size-title-md;
-        color: $unnnic-color-neutral-dark;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-line-height-large * 2;
+        font: $unnnic-font-display-1;
+        color: $unnnic-color-gray-10;
       }
       &-percentage {
-        font-family: $unnnic-font-family-primary;
-        font-size: $unnnic-font-size-body-lg;
-        color: $unnnic-color-neutral-cloudy;
-        font-style: normal;
-        line-height: $unnnic-line-height-large + $unnnic-line-height-medium;
+        font: $unnnic-font-display-4;
+        color: $unnnic-color-gray-7;
       }
     }
   }

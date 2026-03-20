@@ -16,10 +16,7 @@
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import AddCustomizableWidget from '@/components/insights/conversations/CustomizableWidget/AddCustomizableWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
-import {
-  colorPurple500,
-  colorPurple100,
-} from '@weni/unnnic-system/tokens/colors';
+import { colorPurple9, colorPurple2 } from '@weni/unnnic-system/tokens/colors';
 
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
@@ -32,32 +29,32 @@ const MOCK_DATA = [
   {
     text: '🤩 Very satisfied',
     value: 57,
-    color: colorPurple500,
-    backgroundColor: colorPurple100,
+    color: colorPurple9,
+    backgroundColor: colorPurple2,
   },
   {
     text: '😁 Satisfied',
     value: 25,
-    color: colorPurple500,
-    backgroundColor: colorPurple100,
+    color: colorPurple9,
+    backgroundColor: colorPurple2,
   },
   {
     text: '😐 Neutral',
     value: 12,
-    color: colorPurple500,
-    backgroundColor: colorPurple100,
+    color: colorPurple9,
+    backgroundColor: colorPurple2,
   },
   {
     text: '☹️ Dissatisfied',
     value: 5,
-    color: colorPurple500,
-    backgroundColor: colorPurple100,
+    color: colorPurple9,
+    backgroundColor: colorPurple2,
   },
   {
     text: '😡 Very dissatisfied',
     value: 1,
-    color: colorPurple500,
-    backgroundColor: colorPurple100,
+    color: colorPurple9,
+    backgroundColor: colorPurple2,
   },
 ];
 </script>

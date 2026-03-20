@@ -270,7 +270,7 @@ export default {
 
     :hover.unnnic-table-next__body-row {
       cursor: pointer;
-      background-color: $unnnic-color-neutral-lightest;
+      background-color: $unnnic-color-gray-1;
       font-weight: $unnnic-font-weight-bold;
     }
   }

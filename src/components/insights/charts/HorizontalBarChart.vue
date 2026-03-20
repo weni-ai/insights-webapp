@@ -59,11 +59,11 @@ import { deepMerge } from '@/utils/object';
 import { useElementSize } from '@vueuse/core';
 import { ref } from 'vue';
 import {
-  colorTeal600,
-  colorTeal500,
-  colorTeal100,
-  colorGray500,
-  colorGray300,
+  colorTeal8,
+  colorTeal7,
+  colorTeal2,
+  colorGray9,
+  colorGray5,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -150,8 +150,8 @@ export default {
             },
           },
         },
-        backgroundColor: colorTeal600,
-        hoverBackgroundColor: colorTeal500,
+        backgroundColor: colorTeal8,
+        hoverBackgroundColor: colorTeal7,
         plugins: {
           datalabels: {
             display: false,
@@ -160,7 +160,7 @@ export default {
             datalabelsSuffix: this.datalabelsSuffix,
           },
           horizontalBackgroundColorPlugin: {
-            backgroundColor: colorTeal100,
+            backgroundColor: colorTeal2,
           },
           tooltip: {
             enabled: true,
@@ -236,7 +236,7 @@ export default {
 
             ctx.textBaseline = 'middle';
             ctx.font = 'bold 16px Lato';
-            ctx.fillStyle = colorGray500;
+            ctx.fillStyle = colorGray9;
 
             // chartLeftMargin is the margin between the chart and the left edge of the chart area (labels space)
             // 4px is the margin between the chart and the text
@@ -259,7 +259,7 @@ export default {
             };
 
             ctx.font = 'normal 14px Lato';
-            ctx.fillStyle = colorGray300;
+            ctx.fillStyle = colorGray5;
 
             ctx.fillText(
               `| ${fullValues[index]}`,
@@ -293,9 +293,9 @@ export default {
 
 <style lang="scss" scoped>
 .bar-chart {
-  box-shadow: $unnnic-shadow-level-far;
+  box-shadow: $unnnic-shadow-2;
 
-  padding: $unnnic-spacing-ant;
+  padding: $unnnic-space-3;
 
   height: 100%;
   width: 100%;
@@ -304,7 +304,7 @@ export default {
 
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
 
   &__header {
     width: 100%;
@@ -313,19 +313,15 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      font-size: $unnnic-font-size-title-sm;
-      font-family: $unnnic-font-family-primary;
-      font-weight: $unnnic-font-weight-bold;
-      color: $unnnic-color-neutral-dark;
+      font: $unnnic-font-display-2;
+      color: $unnnic-color-gray-10;
     }
 
     .header__see-more {
-      font-size: $unnnic-font-size-body-gt;
-      font-family: Lato;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-action;
       text-decoration-line: underline;
       text-underline-position: under;
-      color: $unnnic-color-neutral-dark;
+      color: $unnnic-color-gray-10;
     }
   }
 

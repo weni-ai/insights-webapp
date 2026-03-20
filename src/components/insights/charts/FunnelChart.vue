@@ -43,11 +43,11 @@
 <script>
 import IconLoading from '@/components/IconLoading.vue';
 import {
-  colorYellow300,
-  colorOrange300,
-  colorPurple300,
-  colorBlue300,
-  colorGreen300,
+  colorYellow4,
+  colorOrange4,
+  colorPurple4,
+  colorBlue5,
+  colorGreen4,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -69,11 +69,11 @@ export default {
   computed: {
     formattedChartData() {
       const arrayColors = [
-        colorYellow300,
-        colorOrange300,
-        colorPurple300,
-        colorBlue300,
-        colorGreen300,
+        colorYellow4,
+        colorOrange4,
+        colorPurple4,
+        colorBlue5,
+        colorGreen4,
       ];
 
       if (!Array.isArray(this.chartData)) return [];
@@ -115,14 +115,13 @@ export default {
     align-items: center;
     justify-content: center;
 
-    color: $unnnic-color-neutral-cloudy;
-    font-size: $unnnic-font-size-body-lg;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-display-4;
     text-align: center;
-    line-height: $unnnic-line-height-small * 6;
 
     &-description {
       font-weight: $unnnic-font-weight-bold;
-      padding-bottom: $unnnic-spacing-sm;
+      padding-bottom: $unnnic-space-4;
     }
   }
 
@@ -137,7 +136,7 @@ export default {
       bottom: -1px;
       width: 100%;
       height: 1px;
-      background-color: $unnnic-color-neutral-soft;
+      background-color: $unnnic-color-gray-2;
       z-index: 1;
     }
 

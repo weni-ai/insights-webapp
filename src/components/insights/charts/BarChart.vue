@@ -50,10 +50,10 @@ import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 import {
-  colorTeal600,
-  colorTeal500,
-  colorTeal900,
-  colorWhite,
+  colorTeal8,
+  colorTeal7,
+  colorTeal12,
+  colorGray0,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -97,13 +97,13 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: colorTeal600,
-        hoverBackgroundColor: colorTeal500,
+        backgroundColor: colorTeal8,
+        hoverBackgroundColor: colorTeal7,
         plugins: {
           tooltip: false,
           datalabels: {
             color: function (context) {
-              return context.active ? colorTeal900 : colorWhite;
+              return context.active ? colorTeal12 : colorGray0;
             },
             anchor: 'end',
             align: 'start',
@@ -124,9 +124,9 @@ export default {
 
 <style lang="scss" scoped>
 .bar-chart {
-  box-shadow: $unnnic-shadow-level-far;
+  box-shadow: $unnnic-shadow-2;
 
-  padding: $unnnic-spacing-ant;
+  padding: $unnnic-space-3;
 
   height: 100%;
   width: 100%;
@@ -134,7 +134,7 @@ export default {
   overflow: hidden;
 
   display: grid;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
 
   &__header {
     width: 100%;
@@ -142,22 +142,15 @@ export default {
     display: flex;
     justify-content: space-between;
 
-    .header__title {
-      font-family: $unnnic-font-family-primary;
-      font-weight: $unnnic-font-weight-bold;
-    }
-
     .header__see-more {
-      font-family: Lato;
-      font-weight: $unnnic-font-weight-bold;
       text-decoration-line: underline;
       text-underline-position: under;
     }
 
     .header__title,
     .header__see-more {
-      font-size: $unnnic-font-size-body-gt;
-      color: $unnnic-color-neutral-dark;
+      font: $unnnic-font-action;
+      color: $unnnic-color-gray-10;
     }
   }
 

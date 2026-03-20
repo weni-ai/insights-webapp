@@ -337,44 +337,41 @@ const getMaxDate = (): string => {
 .export-data-form {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
-  background: $unnnic-color-neutral-white;
+  gap: $unnnic-space-4;
+  background: $unnnic-color-gray-0;
 
   &__content {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
     :deep(.unnnic-label__label) {
       margin: 0;
     }
   }
 
   &__description {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-body;
   }
 
   &__filters-container {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-nano;
-    flex: 1 1 calc(50% - #{$unnnic-spacing-sm / 2});
+    gap: $unnnic-space-1;
+    flex: 1 1 calc(50% - #{$unnnic-space-4 / 2});
     min-width: 0;
   }
 
   &__filters {
     display: flex;
     flex-wrap: wrap;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &__chats-status {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 }
 </style>

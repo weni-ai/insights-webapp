@@ -152,14 +152,14 @@ export default {
 
 <style scoped lang="scss">
 .card-dashboard {
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
   width: 100%;
   height: 100%;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
 
   overflow: hidden;
 
@@ -168,14 +168,14 @@ export default {
   }
 
   &.clickable:not(.loading):hover {
-    background-color: $unnnic-color-weni-50;
+    background-color: $unnnic-color-teal-1;
 
     cursor: pointer;
   }
 
   &.not-configured {
     .card__content {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
     }
 
     .card-dashboard__button-config {
@@ -185,13 +185,12 @@ export default {
 
   .card__content {
     width: 100%;
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
     display: grid;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
 
     .content-error {
-      font-size: $unnnic-font-size-body-gt;
-      line-height: $unnnic-line-height-medium * 3;
+      font: $unnnic-font-body;
     }
     .content-metric {
       display: flex;
@@ -200,19 +199,18 @@ export default {
       &__container {
         display: flex;
         align-items: center;
-        gap: $unnnic-spacing-ant;
+        gap: $unnnic-space-3;
         overflow: hidden;
         white-space: nowrap;
       }
       &__friendly-id {
-        font-size: $unnnic-font-size-title-md;
-        padding-bottom: $unnnic-spacing-nano * 1.5;
+        font: $unnnic-font-display-1;
+        font-weight: $unnnic-font-weight-regular;
+        padding-bottom: $unnnic-space-1 * 1.5;
       }
       &__value {
-        font-family: $unnnic-font-family-primary;
-        font-size: $unnnic-font-size-title-lg;
-        line-height: $unnnic-line-height-large * 3;
-        font-weight: $unnnic-font-weight-bold;
+        font: $unnnic-font-display-1;
+        font-size: 32px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -221,18 +219,17 @@ export default {
     .content-description {
       display: flex;
       align-items: center;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
       flex-wrap: wrap;
       overflow: hidden;
       &__text {
-        font-size: $unnnic-font-size-body-lg;
-        line-height: $unnnic-line-height-medium * 3;
+        font: $unnnic-font-display-4;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
       &__tooltip {
-        margin-top: $unnnic-spacing-nano;
+        margin-top: $unnnic-space-1;
       }
     }
   }

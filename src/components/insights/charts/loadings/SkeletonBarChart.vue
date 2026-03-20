@@ -47,12 +47,12 @@ const totalBars = computed(() => parseInt(props.width / BAR_WIDTH) || 36);
   height: 100%;
   display: flex;
   justify-content: center;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
   &__bar {
     display: flex;
     flex-direction: column;
     justify-content: end;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
     max-height: 100%;
   }
 }

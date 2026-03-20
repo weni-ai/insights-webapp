@@ -140,11 +140,8 @@ watch(
 }
 
 .export-data-feedback__text {
-  font-family: $unnnic-font-family-secondary;
-  color: $unnnic-color-neutral-cloudy;
-  font-size: $unnnic-font-size-body-gt;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  font: $unnnic-font-body;
+  color: $unnnic-color-gray-7;
 }
 
 .export-data-tooltip {

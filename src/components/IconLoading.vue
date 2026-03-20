@@ -13,7 +13,7 @@ export default {
 
 <style lang="scss" scoped>
 .unnnic-icon-loading.icon-loading {
-  font-size: $unnnic-font-size-body-lg * 3;
-  color: $unnnic-color-neutral-clean;
+  font-size: $unnnic-font-size * 3;
+  color: $unnnic-color-gray-5;
 }
 </style>

@@ -117,7 +117,7 @@ const handleTabChange = (tab: string) => {
   align-self: stretch;
 
   border-radius: $unnnic-radius-2;
-  border: 1px solid $unnnic-color-border-soft;
+  border: 1px solid $unnnic-color-border-base;
   background: $unnnic-color-bg-base;
 
   &__header {
@@ -126,7 +126,7 @@ const handleTabChange = (tab: string) => {
     align-items: center;
 
     .header__title {
-      color: $unnnic-color-neutral-darkest;
+      color: $unnnic-color-gray-12;
       font: $unnnic-font-display-3;
 
       overflow: hidden;

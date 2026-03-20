@@ -149,9 +149,9 @@ export default {
 
 <style lang="scss" scoped>
 .divider {
-  margin-top: $unnnic-spacing-md;
+  margin-top: $unnnic-space-6;
   height: 1px;
-  background-color: $unnnic-color-neutral-light;
+  background-color: $unnnic-color-gray-1;
   width: 100%;
 }
 
@@ -159,20 +159,16 @@ export default {
   min-height: 310px;
   height: 100%;
 
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__link {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-body-sm * 3;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-action;
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: none;
@@ -183,7 +179,7 @@ export default {
 
   &--not-data {
     .card-recurrence__header .header__title {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-gray-7;
     }
   }
 
@@ -199,12 +195,9 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      padding: $unnnic-spacing-nano 0;
+      padding: $unnnic-space-1 0;
 
-      font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-line-height-small * 7.5;
+      font: $unnnic-font-display-2;
     }
   }
 
@@ -221,25 +214,25 @@ export default {
       height: 100%;
       display: grid;
       grid-template-rows: repeat(5, 1fr);
-      gap: $unnnic-spacing-sm;
-      background-color: $unnnic-color-neutral-white;
-      padding: $unnnic-spacing-sm;
+      gap: $unnnic-space-4;
+      background-color: $unnnic-color-gray-0;
+      padding: $unnnic-space-4;
 
       &-group {
         cursor: pointer;
-        min-height: $unnnic-avatar-size-sm;
+        min-height: 40px;
         display: flex;
         flex-direction: column;
         justify-content: center;
 
         &:empty {
-          background: $unnnic-color-neutral-lightest;
-          border-radius: $unnnic-border-radius-sm;
+          background: $unnnic-color-gray-1;
+          border-radius: $unnnic-radius-1;
         }
 
         &:not(:last-child) {
-          border-bottom: 1px solid $unnnic-color-neutral-light;
-          padding-bottom: $unnnic-spacing-sm;
+          border-bottom: 1px solid $unnnic-color-gray-1;
+          padding-bottom: $unnnic-space-4;
         }
       }
 
@@ -276,12 +269,8 @@ export default {
           max-width: 100%;
           display: inline-block;
 
-          color: $unnnic-color-neutral-cloudy;
-          font-family: $unnnic-font-family-secondary;
-          font-size: $unnnic-font-size-body-lg;
-          font-style: normal;
-          font-weight: $unnnic-font-weight-regular;
-          line-height: $unnnic-font-size-body-sm * 3;
+          color: $unnnic-color-gray-7;
+          font: $unnnic-font-display-4;
         }
       }
     }
@@ -293,10 +282,9 @@ export default {
       align-items: center;
 
       .not-configured__text {
-        color: $unnnic-color-neutral-cloudy;
-        font-size: $unnnic-font-size-body-lg;
+        color: $unnnic-color-gray-7;
+        font: $unnnic-font-display-4;
         text-align: center;
-        line-height: $unnnic-line-height-small * 6;
       }
     }
   }
@@ -322,19 +310,18 @@ export default {
       .bar
   ) {
     border-radius: 37.5rem;
-    background-color: $unnnic-color-weni-600;
+    background-color: $unnnic-color-teal-8;
   }
 
   :deep(
     .unnnic-progress-bar.primary .progress-bar-container .progress-container
   ) {
-    background-color: $unnnic-color-weni-100;
+    background-color: $unnnic-color-teal-2;
   }
 
   :deep(.unnnic-progress-bar.primary .progress-bar-container .percentage) {
-    font-size: $unnnic-font-size-body-lg;
-    line-height: $unnnic-font-size-body-lg * 2;
-    min-width: $unnnic-spacing-lg;
+    font: $unnnic-font-display-4;
+    min-width: $unnnic-space-8;
   }
 }
 </style>

@@ -271,8 +271,12 @@ const handleTabChange = (tab: Tab) => {
 };
 
 onMounted(() => {
-  if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
+  if (shouldUseMock.value) {
+    setNpsWidgetType('AI');
+  } else if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
     setNpsWidgetType('HUMAN');
+  } else if (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value) {
+    setNpsWidgetType('AI');
   }
   loadNpsWidgetData();
 });

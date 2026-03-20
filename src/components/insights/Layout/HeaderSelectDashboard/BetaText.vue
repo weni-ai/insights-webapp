@@ -25,9 +25,6 @@
 }
 .beta_text {
   color: $unnnic-color-teal-8;
-  font-family: $unnnic-font-family;
-  font-size: 12px;
-  font-weight: $unnnic-font-weight-bold;
-  line-height: 8px + 12px;
+  font: $unnnic-font-caption-1;
 }
 </style>

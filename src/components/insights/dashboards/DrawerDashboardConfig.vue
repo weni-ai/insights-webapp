@@ -264,10 +264,7 @@ export default {
   display: grid;
   gap: $unnnic-space-4;
   &__input-hint {
-    font-family: $unnnic-font-family;
-    font-size: 12px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 16px * 1.25; // 20px
+    font: $unnnic-font-caption-2;
     margin-top: $unnnic-space-1;
   }
 

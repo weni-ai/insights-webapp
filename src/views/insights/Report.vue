@@ -96,7 +96,7 @@ export default {
     border: 1px solid $unnnic-color-gray-2;
 
     :deep([class*='title']) {
-      font-size: $unnnic-font-size;
+      font: $unnnic-font-display-4;
     }
   }
 }

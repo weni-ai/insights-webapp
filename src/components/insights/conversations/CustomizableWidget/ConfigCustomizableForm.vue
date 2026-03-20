@@ -36,13 +36,7 @@ defineProps<{
 
   &__title {
     color: $unnnic-color-gray-13;
-    font-weight: $unnnic-font-weight-bold;
-  }
-
-  &__title {
-    font-size: $unnnic-font-size;
-    font-family: $unnnic-font-family;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-3;
   }
 }
 </style>

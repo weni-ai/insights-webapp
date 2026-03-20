@@ -29,7 +29,6 @@ export default {
   border-top: 1px solid $unnnic-color-gray-1;
 
   color: $unnnic-color-gray-12;
-  font-family: $unnnic-font-family;
-  font-size: 14px;
+  font: $unnnic-font-body;
 }
 </style>

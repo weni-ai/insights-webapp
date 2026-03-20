@@ -57,12 +57,7 @@ const paginationCssToken = computed(() =>
 
   &__title {
     color: $unnnic-color-gray-10;
-
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 16px + 8px;
+    font: $unnnic-font-display-3;
   }
 
   &__table {

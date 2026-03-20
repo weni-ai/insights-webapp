@@ -36,10 +36,7 @@ const getStatusLabel = () => {
 .quality-template-message-flag {
   display: flex;
   &__text {
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 22px;
+    font: $unnnic-font-action;
   }
   .info {
     margin-top: $unnnic-space-1;

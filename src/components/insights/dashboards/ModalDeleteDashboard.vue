@@ -118,9 +118,6 @@ export default {
 
 <style lang="scss" scoped>
 .delete-notice {
-  font-family: $unnnic-font-family;
-  font-size: 14px;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: 16px * 1.375;
+  font: $unnnic-font-body;
 }
 </style>

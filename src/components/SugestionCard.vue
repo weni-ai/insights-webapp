@@ -39,14 +39,12 @@ export default {
 
   &__title {
     color: $unnnic-color-gray-12;
-    font-size: $unnnic-font-size;
-    font-weight: $unnnic-font-weight-bold;
+    font: $unnnic-font-display-3;
   }
 
   &__description {
     color: $unnnic-color-gray-10;
-    font-size: 14px;
-    font-family: $unnnic-font-family;
+    font: $unnnic-font-body;
     position: relative;
     white-space: nowrap;
     width: 22em;

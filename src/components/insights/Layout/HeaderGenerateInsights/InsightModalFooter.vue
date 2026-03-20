@@ -170,17 +170,13 @@ export default {
   .footer__description {
     color: $unnnic-color-gray-5;
     text-align: right;
-    font-size: 12px;
+    font: $unnnic-font-caption-2;
   }
 
   .feedback_sent {
     text-align: start;
     color: $unnnic-color-gray-0;
-
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
+    font: $unnnic-font-display-3;
   }
 
   .footer__feedback {
@@ -198,10 +194,8 @@ export default {
     &__text {
       display: flex;
       align-items: flex-start;
-      font-family: $unnnic-font-family;
+      font: $unnnic-font-body;
       color: $unnnic-color-gray-5;
-      font-weight: $unnnic-font-weight-regular;
-      font-size: 14px;
     }
 
     &__container__btns {
@@ -231,10 +225,7 @@ export default {
 
       color: $unnnic-color-gray-5;
 
-      font-family: $unnnic-font-family;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-regular;
+      font: $unnnic-font-body;
 
       &:focus {
         border-radius: 0.25rem;

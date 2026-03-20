@@ -148,8 +148,7 @@ export default {
   gap: $unnnic-space-1;
 
   color: $unnnic-color-gray-12;
-  font-family: $unnnic-font-family;
-  font-size: 14px;
+  font: $unnnic-font-body;
 
   &__content {
     display: flex;

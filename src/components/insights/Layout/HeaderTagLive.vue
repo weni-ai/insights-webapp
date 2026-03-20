@@ -66,7 +66,7 @@ const titleText = computed(() => {
   &__text {
     margin: 0;
 
-    font-size: 14px;
+    font: $unnnic-font-body;
   }
 }
 </style>

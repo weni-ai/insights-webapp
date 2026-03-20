@@ -190,8 +190,7 @@ export default {
     gap: $unnnic-space-1;
 
     .content-error {
-      font-size: 14px;
-      line-height: 8px * 3;
+      font: $unnnic-font-body;
     }
     .content-metric {
       display: flex;
@@ -205,14 +204,13 @@ export default {
         white-space: nowrap;
       }
       &__friendly-id {
-        font-size: 24px;
+        font: $unnnic-font-display-1;
+        font-weight: $unnnic-font-weight-regular;
         padding-bottom: $unnnic-space-1 * 1.5;
       }
       &__value {
-        font-family: $unnnic-font-family;
+        font: $unnnic-font-display-1;
         font-size: 32px;
-        line-height: 16px * 3;
-        font-weight: $unnnic-font-weight-bold;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -225,8 +223,7 @@ export default {
       flex-wrap: wrap;
       overflow: hidden;
       &__text {
-        font-size: $unnnic-font-size;
-        line-height: 8px * 3;
+        font: $unnnic-font-display-4;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

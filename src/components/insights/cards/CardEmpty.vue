@@ -68,9 +68,8 @@ export default {
       .not-configured__text {
         padding-bottom: $unnnic-space-4;
         color: $unnnic-color-gray-7;
-        font-size: $unnnic-font-size;
+        font: $unnnic-font-display-4;
         text-align: center;
-        line-height: 4px * 6;
       }
     }
   }

@@ -217,11 +217,8 @@ onMounted(() => {
 
     &-title {
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      font-size: $unnnic-font-size;
-      font-style: normal;
+      font: $unnnic-font-display-3;
       font-weight: 900;
-      line-height: $unnnic-font-size + 8px;
     }
   }
 
@@ -250,19 +247,11 @@ onMounted(() => {
     }
     &-title {
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: 14px + 8px;
+      font: $unnnic-font-action;
     }
     &-description {
       color: $unnnic-color-gray-7;
-      font-family: $unnnic-font-family;
-      font-size: 14px;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: 14px + 8px;
+      font: $unnnic-font-body;
     }
   }
 }
@@ -279,10 +268,7 @@ onMounted(() => {
   gap: $unnnic-space-4;
   &_title {
     color: $unnnic-color-gray-7;
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
   }
 }
 </style>

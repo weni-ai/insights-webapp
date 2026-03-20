@@ -71,8 +71,7 @@ export default {
 
   color: $unnnic-color-teal-5;
 
-  font-family: $unnnic-font-family;
-  font-size: 14px;
+  font: $unnnic-font-body;
 
   cursor: pointer;
 }

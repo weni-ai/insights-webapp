@@ -168,11 +168,7 @@ export default {
 
   &__link {
     color: $unnnic-color-gray-7;
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 8px * 3;
+    font: $unnnic-font-action;
     text-decoration-line: underline;
     text-decoration-style: solid;
     text-decoration-skip-ink: none;
@@ -201,10 +197,7 @@ export default {
     .header__title {
       padding: $unnnic-space-1 0;
 
-      font-family: $unnnic-font-family;
-      font-size: 20px;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: 4px * 7.5;
+      font: $unnnic-font-display-2;
     }
   }
 
@@ -277,11 +270,7 @@ export default {
           display: inline-block;
 
           color: $unnnic-color-gray-7;
-          font-family: $unnnic-font-family;
-          font-size: $unnnic-font-size;
-          font-style: normal;
-          font-weight: $unnnic-font-weight-regular;
-          line-height: 8px * 3;
+          font: $unnnic-font-display-4;
         }
       }
     }
@@ -294,9 +283,8 @@ export default {
 
       .not-configured__text {
         color: $unnnic-color-gray-7;
-        font-size: $unnnic-font-size;
+        font: $unnnic-font-display-4;
         text-align: center;
-        line-height: 4px * 6;
       }
     }
   }
@@ -332,8 +320,7 @@ export default {
   }
 
   :deep(.unnnic-progress-bar.primary .progress-bar-container .percentage) {
-    font-size: $unnnic-font-size;
-    line-height: $unnnic-font-size * 2;
+    font: $unnnic-font-display-4;
     min-width: $unnnic-space-8;
   }
 }

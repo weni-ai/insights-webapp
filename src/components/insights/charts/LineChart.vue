@@ -205,14 +205,9 @@ export default {
     }
 
     .header__see-more {
-      font-family: Lato;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-action;
       text-decoration-line: underline;
       text-underline-position: under;
-    }
-
-    .header__see-more {
-      font-size: 14px;
       color: $unnnic-color-gray-10;
     }
   }

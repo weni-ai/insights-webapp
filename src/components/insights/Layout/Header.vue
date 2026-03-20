@@ -228,11 +228,9 @@ export default {
     padding: $unnnic-space-2 $unnnic-space-6;
 
     &-title {
-      font-size: 20px;
+      font: $unnnic-font-display-2;
       font-weight: 900;
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      line-height: 20px + 8px;
     }
 
     &-close {

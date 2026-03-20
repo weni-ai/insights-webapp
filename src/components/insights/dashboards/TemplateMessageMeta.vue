@@ -559,10 +559,7 @@ const unfavoriteTemplate = async () => {
 
   &__tab {
     cursor: pointer;
-    font-family: $unnnic-font-family;
-    font-weight: $unnnic-font-weight-regular;
-    font-size: 14px;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
     text-decoration: underline solid;
     color: $unnnic-color-gray-7;
 
@@ -579,10 +576,7 @@ const unfavoriteTemplate = async () => {
     overflow: auto;
     height: 100%;
     &-title {
-      font-family: $unnnic-font-family;
-      font-weight: $unnnic-font-weight-bold;
-      font-size: $unnnic-font-size;
-      line-height: $unnnic-font-size + 8px;
+      font: $unnnic-font-display-3;
       color: $unnnic-color-gray-10;
       margin-bottom: 10px;
     }
@@ -603,9 +597,7 @@ const unfavoriteTemplate = async () => {
     &-text {
       color: $unnnic-color-gray-7;
       text-align: center;
-      font-family: $unnnic-font-family;
-      font-size: $unnnic-font-size;
-      line-height: $unnnic-font-size + 8px;
+      font: $unnnic-font-display-4;
     }
   }
 

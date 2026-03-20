@@ -418,10 +418,7 @@ const isDisabledPrimaryButton = computed(() => {
 .add-widget-drawer {
   &__section-title {
     color: $unnnic-color-gray-7;
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-4;
   }
 
   &__section {
@@ -450,16 +447,12 @@ const isDisabledPrimaryButton = computed(() => {
 
       .item__title {
         color: $unnnic-color-gray-12;
-        font-family: $unnnic-font-family;
-        font-size: $unnnic-font-size;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size + 8px;
+        font: $unnnic-font-display-3;
       }
 
       .item__description {
         color: $unnnic-color-gray-7;
-        font-size: 14px;
-        line-height: 14px + 8px;
+        font: $unnnic-font-body;
       }
     }
   }

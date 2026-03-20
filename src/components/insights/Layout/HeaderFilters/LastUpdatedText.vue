@@ -88,11 +88,7 @@ const formattedTime = computed(() => {
   gap: $unnnic-space-05;
 
   &_text {
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
     color: $unnnic-color-gray-7;
   }
 }

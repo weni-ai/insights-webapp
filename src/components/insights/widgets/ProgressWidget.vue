@@ -231,11 +231,7 @@ const isWarningMessage = computed(() => {
 
     .footer__text {
       color: $unnnic-color-gray-5;
-      font-family: $unnnic-font-family;
-      font-size: 14px;
-      font-weight: $unnnic-font-weight-regular;
-      font-style: normal;
-      line-height: 14px + 8px;
+      font: $unnnic-font-body;
     }
 
     &-button {

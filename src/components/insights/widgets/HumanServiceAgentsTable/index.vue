@@ -391,11 +391,8 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      font-family: $unnnic-font-family;
-      font-size: $unnnic-font-size;
+      font: $unnnic-font-display-3;
       color: $unnnic-color-gray-12;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: 24px;
     }
   }
 

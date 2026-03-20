@@ -75,15 +75,10 @@ const renderLabel = computed(() => {
 }
 
 .agent-status-label {
-  font-family: $unnnic-font-family;
+  font: $unnnic-font-body;
   color: $unnnic-color-gray-10;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  font-size: 14px;
-  font-style: normal;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: 14px + 8px;
 }
 
 .agent-status {

@@ -324,9 +324,7 @@ export default {
       gap: $unnnic-space-2;
 
       color: $unnnic-color-teal-5;
-      font-family: $unnnic-font-family;
-      font-size: 20px;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-display-2;
     }
 
     .header__close-button {

@@ -137,11 +137,7 @@ defineProps({
   }
 
   &__title {
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
     color: $unnnic-color-gray-10;
     margin: 0;
   }
@@ -152,11 +148,7 @@ defineProps({
 
   &__value {
     color: $unnnic-color-gray-12;
-    font-family: $unnnic-font-family;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 24px + 8px;
+    font: $unnnic-font-display-1;
     display: flex;
     align-items: baseline;
     gap: $unnnic-space-2;

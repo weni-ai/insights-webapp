@@ -84,12 +84,7 @@ const updateCurrentDate = (option) => {
 .filter-date {
   :deep(.input) {
     color: $unnnic-color-gray-12;
-
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 16px * 1.375;
+    font: $unnnic-font-body;
   }
 
   :deep(.dropdown) {
@@ -103,11 +98,7 @@ const updateCurrentDate = (option) => {
     }
 
     color: $unnnic-color-gray-12;
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 16px * 1.375;
+    font: $unnnic-font-body;
   }
 }
 </style>

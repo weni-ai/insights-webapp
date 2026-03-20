@@ -314,18 +314,13 @@ watch(locale, () => {
     align-items: center;
 
     .no-data__title {
-      font-size: 20px;
-      font-family: $unnnic-font-family;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-display-2;
       color: $unnnic-color-gray-12;
-      line-height: 20px + 8px;
     }
 
     .no-data__description {
-      font-size: $unnnic-font-size;
-      font-family: $unnnic-font-family;
+      font: $unnnic-font-display-4;
       color: $unnnic-color-gray-7;
-      line-height: $unnnic-font-size + 8px;
     }
   }
 

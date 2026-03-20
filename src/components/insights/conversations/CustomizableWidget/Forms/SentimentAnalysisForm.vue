@@ -210,9 +210,7 @@ onBeforeMount(() => {
 
   &__agent-active {
     color: $unnnic-color-gray-7;
-    font-size: 12px;
-    font-family: $unnnic-font-family;
-    line-height: 12px + 8px;
+    font: $unnnic-font-caption-2;
   }
 }
 </style>

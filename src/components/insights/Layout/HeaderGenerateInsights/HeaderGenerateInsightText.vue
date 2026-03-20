@@ -84,7 +84,7 @@ export default {
     text-align: start;
 
     color: $unnnic-color-gray-5;
-    font-size: 14px;
+    font: $unnnic-font-body;
 
     @keyframes wave {
       0%,
@@ -120,9 +120,8 @@ export default {
   &__generated {
     text-align: start;
     color: $unnnic-color-gray-0;
-    font-size: $unnnic-font-size;
+    font: $unnnic-font-display-4;
     font-weight: 300;
-    line-height: 16px * 1.4;
   }
 }
 </style>

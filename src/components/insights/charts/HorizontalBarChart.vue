@@ -313,16 +313,12 @@ export default {
     justify-content: space-between;
 
     .header__title {
-      font-size: 20px;
-      font-family: $unnnic-font-family;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-display-2;
       color: $unnnic-color-gray-10;
     }
 
     .header__see-more {
-      font-size: 14px;
-      font-family: Lato;
-      font-weight: $unnnic-font-weight-bold;
+      font: $unnnic-font-action;
       text-decoration-line: underline;
       text-underline-position: under;
       color: $unnnic-color-gray-10;

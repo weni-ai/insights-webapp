@@ -146,10 +146,7 @@ watch(
 }
 
 .export-data-feedback__text {
-  font-family: $unnnic-font-family;
+  font: $unnnic-font-body;
   color: $unnnic-color-gray-7;
-  font-size: 14px;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: 14px + 8px;
 }
 </style>

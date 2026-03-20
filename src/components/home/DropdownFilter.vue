@@ -97,10 +97,7 @@ const handleItemAction = (action: () => void, name: string) => {
   &__title {
     margin-right: $unnnic-space-1;
     color: $unnnic-color-gray-12;
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
   }
 
   &__option {
@@ -118,10 +115,7 @@ const handleItemAction = (action: () => void, name: string) => {
     cursor: pointer;
     white-space: nowrap;
 
-    font-family: $unnnic-font-family;
-    font-size: 12px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 12px + 8px;
+    font: $unnnic-font-caption-2;
 
     &:last-child {
       border-bottom: none;

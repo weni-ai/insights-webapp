@@ -173,10 +173,7 @@ const handleExpand = () => {
         text-overflow: ellipsis;
 
         color: $unnnic-color-gray-12;
-        font-family: $unnnic-font-family;
-        font-size: $unnnic-font-size;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: $unnnic-font-size + 8px;
+        font: $unnnic-font-display-4;
 
         width: 200px;
 
@@ -200,9 +197,7 @@ const handleExpand = () => {
       .infos__description {
         white-space: nowrap;
         color: $unnnic-color-gray-7;
-        font-family: $unnnic-font-family;
-        font-size: 12px;
-        line-height: 12px + 8px;
+        font: $unnnic-font-caption-2;
       }
     }
   }
@@ -220,10 +215,7 @@ const handleExpand = () => {
 
     text-align: end;
     color: $unnnic-color-gray-10;
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-3;
     min-width: 55px;
   }
 

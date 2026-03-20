@@ -182,10 +182,8 @@ const plugins = computed(() => [Tooltip]);
     &-label {
       display: flex;
       align-items: center;
-      font-family: $unnnic-font-family;
-      font-size: $unnnic-font-size;
+      font: $unnnic-font-display-4;
       color: $unnnic-color-gray-10;
-      line-height: 16px + 8px;
     }
     &-total {
       display: flex;
@@ -194,19 +192,12 @@ const plugins = computed(() => [Tooltip]);
       gap: $unnnic-space-2;
       align-items: flex-end;
       &-value {
-        font-family: $unnnic-font-family;
-        font-size: 24px;
+        font: $unnnic-font-display-1;
         color: $unnnic-color-gray-10;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: 16px * 2;
       }
       &-percentage {
-        font-family: $unnnic-font-family;
-        font-size: $unnnic-font-size;
+        font: $unnnic-font-display-4;
         color: $unnnic-color-gray-7;
-        font-style: normal;
-        line-height: 16px + 8px;
       }
     }
   }

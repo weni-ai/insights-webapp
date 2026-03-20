@@ -72,8 +72,7 @@ $dropdownFixedWidth: 165px;
       gap: $unnnic-space-1;
 
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      font-size: 14px;
+      font: $unnnic-font-body;
 
       &::before {
         content: none;

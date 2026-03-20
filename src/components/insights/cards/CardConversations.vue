@@ -167,11 +167,7 @@ defineEmits<{
     overflow: hidden;
     color: $unnnic-color-gray-12;
     text-overflow: ellipsis;
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-4;
   }
 
   &__info-icon {
@@ -199,29 +195,17 @@ defineEmits<{
 
   &__number {
     color: $unnnic-color-gray-13;
-    font-family: $unnnic-font-family;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 24px + 8px;
+    font: $unnnic-font-display-1;
   }
 
   &__value-description {
     color: $unnnic-color-gray-7;
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-3;
   }
 
   &__description {
     color: $unnnic-color-gray-7;
-    font-family: $unnnic-font-family;
-    font-size: 12px;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 12px + 8px;
+    font: $unnnic-font-caption-2;
   }
 
   &__skeleton {

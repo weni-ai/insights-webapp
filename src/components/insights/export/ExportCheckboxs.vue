@@ -222,7 +222,7 @@ const getFieldLabel = (fieldName: string): string => {
     margin-left: $unnnic-space-2;
 
     :deep(.unnnic-checkbox) {
-      font-size: 12px;
+      font: $unnnic-font-caption-2;
       color: $unnnic-color-gray-10;
     }
   }

@@ -351,10 +351,7 @@ const getMaxDate = (): string => {
 
   &__description {
     color: $unnnic-color-gray-7;
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
   }
 
   &__filters-container {

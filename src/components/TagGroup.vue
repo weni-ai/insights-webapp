@@ -210,9 +210,7 @@ $tag-size: 28px;
     padding-left: $unnnic-space-2;
 
     color: $unnnic-color-gray-10;
-    font-size: 12px;
-
-    line-height: 20px;
+    font: $unnnic-font-caption-2;
     margin-right: -16px;
 
     top: calc($tag-size / 2);

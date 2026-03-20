@@ -115,10 +115,7 @@ const handleAcceptTermsChange = (value: boolean): void => {
     gap: $unnnic-space-2;
 
     color: $unnnic-color-gray-10;
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 14px + 8px;
+    font: $unnnic-font-body;
   }
 }
 </style>

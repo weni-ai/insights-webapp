@@ -201,9 +201,7 @@ const getButtonIcon = (buttonType) => {
       align-items: end;
       color: $unnnic-color-gray-10;
 
-      font-family: $unnnic-font-family;
-      font-size: 14px;
-      line-height: 14px + 8px;
+      font: $unnnic-font-body;
 
       &__name {
         margin-right: auto;
@@ -277,10 +275,7 @@ const getButtonIcon = (buttonType) => {
   }
 
   &__preview-label {
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-3;
   }
 }
 </style>

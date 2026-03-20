@@ -109,7 +109,7 @@ const handleRemoveWidget = async () => {
   gap: $unnnic-space-6;
 
   &__description {
-    font-size: 14px;
+    font: $unnnic-font-body;
     color: $unnnic-color-gray-7;
   }
 

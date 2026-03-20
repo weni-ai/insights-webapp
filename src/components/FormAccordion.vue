@@ -87,9 +87,7 @@ export default {
     gap: $unnnic-space-1;
 
     color: $unnnic-color-gray-10;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 4px * 5.5;
+    font: $unnnic-font-action;
   }
 }
 </style>

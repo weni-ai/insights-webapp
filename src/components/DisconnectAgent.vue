@@ -161,11 +161,7 @@ const handleTooltipText = computed(() => {
 
   &__text {
     color: $unnnic-color-gray-7;
-
-    font-family: $unnnic-font-family;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 8px + 14px;
+    font: $unnnic-font-body;
   }
 }
 </style>

@@ -165,10 +165,7 @@ defineEmits(['open-config']);
   }
   &__title {
     color: $unnnic-color-gray-12;
-    font-family: $unnnic-font-family;
-    font-size: $unnnic-font-size;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size + 8px;
+    font: $unnnic-font-display-3;
   }
 
   &__vtex {
@@ -184,18 +181,11 @@ defineEmits(['open-config']);
       width: 100%;
       &-value {
         color: $unnnic-color-gray-12;
-        font-family: $unnnic-font-family;
-        font-size: $unnnic-font-size;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size + 8px;
+        font: $unnnic-font-display-3;
       }
       &-label {
         color: $unnnic-color-gray-7;
-
-        font-family: $unnnic-font-family;
-        font-size: 12px;
-        line-height: 12px + 8px;
+        font: $unnnic-font-caption-2;
       }
       &-divider {
         background: $unnnic-color-gray-1;
@@ -238,9 +228,8 @@ defineEmits(['open-config']);
     justify-content: center;
 
     color: $unnnic-color-gray-7;
-    font-size: $unnnic-font-size;
+    font: $unnnic-font-display-4;
     text-align: center;
-    line-height: 4px * 6;
 
     &-description {
       font-weight: $unnnic-font-weight-bold;

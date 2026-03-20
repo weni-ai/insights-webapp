@@ -142,21 +142,14 @@ export default {
     display: flex;
     justify-content: space-between;
 
-    .header__title {
-      font-family: $unnnic-font-family;
-      font-weight: $unnnic-font-weight-bold;
-    }
-
     .header__see-more {
-      font-family: Lato;
-      font-weight: $unnnic-font-weight-bold;
       text-decoration-line: underline;
       text-underline-position: under;
     }
 
     .header__title,
     .header__see-more {
-      font-size: 14px;
+      font: $unnnic-font-action;
       color: $unnnic-color-gray-10;
     }
   }

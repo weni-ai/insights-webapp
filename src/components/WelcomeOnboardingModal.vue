@@ -60,23 +60,18 @@ const ignoreOnboarding = () => {
   }
 
   &__title {
-    font-size: 20px;
+    font: $unnnic-font-display-2;
     font-weight: 900;
-    line-height: 16px * 1.75;
     color: $unnnic-color-gray-12;
   }
 
   &__version {
-    font-size: 12px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 16px * 1.25;
+    font: $unnnic-font-caption-2;
     color: $unnnic-color-gray-12;
   }
 
   &__info {
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: 16px * 1.375;
+    font: $unnnic-font-body;
     color: $unnnic-color-gray-7;
     margin-top: $unnnic-space-2;
   }

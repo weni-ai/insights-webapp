@@ -195,10 +195,7 @@ $dropdownFixedWidth: 314px;
       margin: $unnnic-space-1 0;
 
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      font-size: 20px;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: 16px * 2;
+      font: $unnnic-font-display-2;
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -150,11 +150,7 @@ const handleTabChange = (tab: Tab) => {
 
     .header__title {
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      font-size: 20px;
-      font-weight: $unnnic-font-weight-bold;
-      font-style: normal;
-      line-height: 20px + 8px;
+      font: $unnnic-font-display-2;
 
       overflow: hidden;
       text-overflow: ellipsis;
@@ -191,9 +187,7 @@ const handleTabChange = (tab: Tab) => {
           gap: $unnnic-space-2;
 
           .action__text {
-            font-family: $unnnic-font-family;
-            font-size: 12px;
-            line-height: 12px + 8px;
+            font: $unnnic-font-caption-2;
             white-space: nowrap;
           }
 

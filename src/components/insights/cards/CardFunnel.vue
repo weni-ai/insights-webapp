@@ -131,10 +131,7 @@ export default {
       padding: $unnnic-space-1 0;
 
       color: $unnnic-color-gray-12;
-      font-family: $unnnic-font-family;
-      font-size: 20px;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: 4px * 7.5;
+      font: $unnnic-font-display-2;
     }
   }
 
@@ -156,9 +153,8 @@ export default {
 
       .not-configured__text {
         color: $unnnic-color-gray-7;
-        font-size: $unnnic-font-size;
+        font: $unnnic-font-display-4;
         text-align: center;
-        line-height: 4px * 6;
       }
     }
   }

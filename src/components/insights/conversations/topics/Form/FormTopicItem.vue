@@ -271,11 +271,7 @@ const handleFormatDate = (date: string) => {
 
       &__title {
         color: $unnnic-color-gray-7;
-        font-family: $unnnic-font-family;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: 14px + 8px;
+        font: $unnnic-font-body;
       }
 
       &-padding-bottom {
@@ -302,10 +298,7 @@ const handleFormatDate = (date: string) => {
       color: $unnnic-color-gray-7;
       text-align: right;
       text-overflow: ellipsis;
-      font-family: $unnnic-font-family;
-      font-size: 12px;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: 12px + 8px;
+      font: $unnnic-font-caption-2;
       font-style: italic;
       padding-right: $unnnic-space-1;
     }

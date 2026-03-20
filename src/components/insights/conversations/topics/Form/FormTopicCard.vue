@@ -163,11 +163,7 @@ const toggleTopics = () => {
 
       &__title {
         color: $unnnic-color-gray-12;
-        font-family: $unnnic-font-family;
-        font-size: $unnnic-font-size;
-        font-style: normal;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size + 8px;
+        font: $unnnic-font-display-3;
       }
 
       &__delete-button {
@@ -206,11 +202,7 @@ const toggleTopics = () => {
 
         &__text {
           color: $unnnic-color-gray-7;
-          font-family: $unnnic-font-family;
-          font-size: 12px;
-          font-style: normal;
-          font-weight: $unnnic-font-weight-regular;
-          line-height: 12px + 8px;
+          font: $unnnic-font-caption-2;
         }
       }
     }
@@ -233,11 +225,7 @@ const toggleTopics = () => {
 
         &__title {
           color: $unnnic-color-gray-12;
-          font-family: $unnnic-font-family;
-          font-size: $unnnic-font-size;
-          font-style: normal;
-          font-weight: $unnnic-font-weight-regular;
-          line-height: $unnnic-font-size + 8px;
+          font: $unnnic-font-display-4;
         }
 
         &__description {
@@ -247,11 +235,7 @@ const toggleTopics = () => {
           text-overflow: ellipsis;
           overflow: hidden;
           color: $unnnic-color-gray-7;
-          font-family: $unnnic-font-family;
-          font-size: 14px;
-          font-style: normal;
-          font-weight: $unnnic-font-weight-regular;
-          line-height: 14px + 8px;
+          font: $unnnic-font-body;
         }
       }
     }

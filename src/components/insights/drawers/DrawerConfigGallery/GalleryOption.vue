@@ -58,14 +58,11 @@ export default {
 
   &__title {
     color: $unnnic-color-gray-12;
-    font-size: $unnnic-font-size;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 4px * 6;
+    font: $unnnic-font-display-3;
   }
   &__description {
     color: $unnnic-color-gray-7;
-    font-size: 14px;
-    line-height: 4px * 5.5;
+    font: $unnnic-font-body;
     text-align: start;
   }
 }

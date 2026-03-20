@@ -134,10 +134,7 @@ import {
 import { formatPercentage, formatNumber } from '@/utils/numbers';
 import { redirectToChatsConfig } from '@/utils/redirect';
 
-import {
-  colorPurple100,
-  colorPurple500,
-} from '@weni/unnnic-system/tokens/colors';
+import { colorPurple2, colorPurple9 } from '@weni/unnnic-system/tokens/colors';
 
 defineOptions({
   name: 'CsatRatings',
@@ -254,8 +251,8 @@ const progressItemsRatingsData = computed(() => {
     .reverse()
     .map(([key, value]) => ({
       label: labelMapping[key as keyof typeof labelMapping],
-      backgroundColor: colorPurple100,
-      color: colorPurple500,
+      backgroundColor: colorPurple2,
+      color: colorPurple9,
       value: value.value,
       description: `${formatPercentage(value.value, localeI18n.value)} (${formatNumber(value.full_value)})`,
     }));

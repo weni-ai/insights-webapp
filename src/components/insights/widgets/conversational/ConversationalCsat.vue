@@ -221,8 +221,12 @@ const handleTabChange = (tab: Tab) => {
 };
 
 onMounted(() => {
-  if (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) {
+  if (shouldUseMock.value) {
+    setCsatWidgetType('AI');
+  } else if (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) {
     setCsatWidgetType('HUMAN');
+  } else if (csatWidgetType.value === 'HUMAN' && !isCsatHumanConfig.value) {
+    setCsatWidgetType('AI');
   }
   loadCsatWidgetData();
 });

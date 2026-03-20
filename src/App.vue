@@ -23,10 +23,7 @@
       class="loading-container"
       data-testid="loading-container-dashboards"
     >
-      <img
-        src="./assets/images/weni-loading.svg"
-        width="64"
-      />
+      <UnnnicIconLoading size="xl" />
     </section>
     <InsightsLayout
       v-else-if="dashboards.length"

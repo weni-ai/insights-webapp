@@ -38,6 +38,8 @@ interface ConversationalWidgetsState {
   isSalesFunnelWidgetDataError: boolean;
 }
 
+let salesFunnelAbortController: AbortController | null = null;
+
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
   state: (): ConversationalWidgetsState => ({
     newWidget: null,
@@ -129,6 +131,12 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       this.npsWidgetType = type;
     },
     async loadSalesFunnelWidgetData() {
+      if (salesFunnelAbortController) {
+        salesFunnelAbortController.abort();
+      }
+      salesFunnelAbortController = new AbortController();
+      const { signal } = salesFunnelAbortController;
+
       this.isLoadingSalesFunnelWidgetData = true;
       try {
         const { shouldUseMock } = useConversational();
@@ -152,17 +160,21 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         }
 
         const salesFunnelData =
-          await WidgetConversationalService.getSalesFunnelData({
-            widget_uuid: widgetSalesFunnel.uuid,
-          });
+          await WidgetConversationalService.getSalesFunnelData(
+            { widget_uuid: widgetSalesFunnel.uuid },
+            { signal },
+          );
 
         this.salesFunnelWidgetData = salesFunnelData;
       } catch (error) {
+        if (signal.aborted) return;
         this.salesFunnelWidgetData = null;
         this.isSalesFunnelWidgetDataError = true;
         console.error('Error loading sales funnel widget data', error);
       } finally {
-        this.isLoadingSalesFunnelWidgetData = false;
+        if (!signal.aborted) {
+          this.isLoadingSalesFunnelWidgetData = false;
+        }
       }
     },
     async loadCsatWidgetData() {

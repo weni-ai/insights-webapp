@@ -38,10 +38,12 @@ import { storeToRefs } from 'pinia';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
-import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { useConversational } from '@/store/modules/conversational/conversational';
+import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
+import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import Info from '@/components/insights/conversations/Info.vue';
 import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
@@ -69,18 +71,21 @@ type ConversationalWidgetType =
   | 'absolute_numbers';
 
 const customWidgets = useCustomWidgets();
-const conversationalWidgets = useConversationalWidgets();
 const widgets = useWidgets();
+const conversational = useConversational();
+const conversationalWidgets = useConversationalWidgets();
+const topicsStore = useConversationalTopics();
 
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
+const { isConfigurationLoaded } = storeToRefs(conversational);
 
 const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
   [],
 );
 
 const orderedDynamicWidgets = computed(() => {
-  if (isLoadingCurrentDashboardWidgets.value) {
+  if (isLoadingCurrentDashboardWidgets.value || !isConfigurationLoaded.value) {
     return [];
   }
 
@@ -96,12 +101,12 @@ const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
 
 const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
+  const useMock = conversational.shouldUseMock;
 
-  if (conversationalWidgets.isCsatConfigured) {
+  if (useMock || conversationalWidgets.isCsatConfigured) {
     newWidgets.push({ type: 'csat', uuid: '' });
   }
-
-  if (conversationalWidgets.isNpsConfigured) {
+  if (useMock || conversationalWidgets.isNpsConfigured) {
     newWidgets.push({ type: 'nps', uuid: '' });
   }
 
@@ -119,7 +124,7 @@ const setDynamicWidgets = () => {
     });
   }
 
-  if (conversationalWidgets.isSalesFunnelConfigured) {
+  if (useMock || conversationalWidgets.isSalesFunnelConfigured) {
     newWidgets.push({ type: 'sales_funnel', uuid: '' });
   }
 
@@ -138,31 +143,75 @@ const setDynamicWidgets = () => {
   }
 };
 
+const waitForDashboardWidgets = () =>
+  new Promise<void>((resolve) => {
+    if (!isLoadingCurrentDashboardWidgets.value) {
+      resolve();
+      return;
+    }
+    const stop = watch(isLoadingCurrentDashboardWidgets, (loading) => {
+      if (!loading) {
+        stop();
+        resolve();
+      }
+    });
+  });
+
+const initializeConfiguration = async () => {
+  await Promise.all([waitForDashboardWidgets(), topicsStore.loadFormTopics()]);
+  conversational.setConfigurationLoaded(true);
+
+  if (conversational.shouldUseMock) {
+    customWidgets.injectMockWidgets();
+  }
+
+  if (
+    isFeatureFlagEnabled('insightsDataFeedback') &&
+    !conversational.shouldUseMock
+  ) {
+    checkSurvey();
+  }
+
+  setDynamicWidgets();
+};
+
 watch(
   currentDashboardWidgets,
   () => {
-    setDynamicWidgets();
+    if (isConfigurationLoaded.value) {
+      setDynamicWidgets();
+    }
   },
   { deep: true },
 );
 
+watch(
+  () => conversational.hasEndpointErrors,
+  (hasErrors) => {
+    if (hasErrors && isConfigurationLoaded.value) {
+      customWidgets.clearMockWidgets();
+      setDynamicWidgets();
+    }
+  },
+);
+
 onMounted(() => {
-  if (dynamicWidgets.value.length === 0) {
-    setDynamicWidgets();
-  }
-  if (isFeatureFlagEnabled('insightsDataFeedback')) {
-    checkSurvey();
-  }
+  initializeConfiguration();
 });
 
 watch(activeFeatures, () => {
-  if (isFeatureFlagEnabled('insightsDataFeedback')) {
+  if (
+    isFeatureFlagEnabled('insightsDataFeedback') &&
+    !conversational.shouldUseMock
+  ) {
     checkSurvey();
   }
 });
 
 onUnmounted(() => {
   dynamicWidgets.value = [];
+  customWidgets.clearMockWidgets();
+  conversational.setConfigurationLoaded(false);
 });
 </script>
 

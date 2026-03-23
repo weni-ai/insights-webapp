@@ -1,6 +1,9 @@
 import { defineStore } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
+import { useConversationalTopics } from './topics';
+import { useConversationalWidgets } from './widgets';
+import { useCustomWidgets } from './customWidgets';
 
 export type DrawerWidgetType =
   | 'nps'
@@ -11,16 +14,20 @@ export type DrawerWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | null;
+type EndpointErrorKey = 'topics' | 'header' | 'widgets';
+
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;
   drawerWidgetType: DrawerWidgetType;
   isNewDrawerCustomizable: boolean;
   refreshDataConversational: boolean;
+  isConfigurationLoaded: boolean;
   isloadingConversationalData: {
     header: boolean;
     mostTalkedAboutTopics: boolean;
     dynamicWidgets: boolean;
   };
+  endpointErrors: Record<EndpointErrorKey, boolean>;
 }
 
 export const useConversational = defineStore('conversational', {
@@ -29,10 +36,16 @@ export const useConversational = defineStore('conversational', {
     drawerWidgetType: null as DrawerWidgetType,
     isNewDrawerCustomizable: false,
     refreshDataConversational: false,
+    isConfigurationLoaded: false,
     isloadingConversationalData: {
       header: false,
       mostTalkedAboutTopics: false,
       dynamicWidgets: false,
+    },
+    endpointErrors: {
+      topics: false,
+      header: false,
+      widgets: false,
     },
   }),
 
@@ -54,6 +67,12 @@ export const useConversational = defineStore('conversational', {
       value: boolean,
     ) {
       this.isloadingConversationalData[key] = value;
+    },
+    setConfigurationLoaded(value: boolean) {
+      this.isConfigurationLoaded = value;
+    },
+    setEndpointError(key: EndpointErrorKey, value: boolean) {
+      this.endpointErrors[key] = value;
     },
   },
   getters: {
@@ -82,6 +101,30 @@ export const useConversational = defineStore('conversational', {
       return Object.values(state.isloadingConversationalData).some(
         (value) => value,
       );
+    },
+
+    hasEndpointErrors: (state) =>
+      Object.values(state.endpointErrors).some(Boolean),
+
+    shouldUseMock: (state) => {
+      if (!state.isConfigurationLoaded) return false;
+
+      const hasErrors = Object.values(state.endpointErrors).some(Boolean);
+      if (hasErrors) return false;
+
+      const { hasExistingTopics } = useConversationalTopics();
+      const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =
+        useConversationalWidgets();
+      const { getRealCustomWidgets } = useCustomWidgets();
+
+      const hasAnyConfiguration =
+        hasExistingTopics ||
+        isCsatConfigured ||
+        isNpsConfigured ||
+        isSalesFunnelConfigured ||
+        getRealCustomWidgets.length > 0;
+
+      return !hasAnyConfiguration;
     },
   },
 });

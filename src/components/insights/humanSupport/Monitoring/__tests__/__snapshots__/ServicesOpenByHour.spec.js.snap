@@ -6,13 +6,19 @@ exports[`ServicesOpenByHour > Component rendering > should match snapshot 1`] = 
   data-testid="services-open-by-hour"
   data-v-5e3726dc=""
 >
-  <line-chart-stub
-    chartdata="[object Object]"
-    data-testid="services-open-by-hour-chart"
+  <!--v-if-->
+  <section
+    class="services-open-by-hour__chart"
     data-v-5e3726dc=""
-    isloading="false"
-    seemore="false"
-    title="Services Open by Hour"
-  />
+  >
+    <line-chart-stub
+      chartdata="[object Object]"
+      data-testid="services-open-by-hour-chart"
+      data-v-5e3726dc=""
+      isloading="false"
+      seemore="false"
+      title="Services Open by Hour"
+    />
+  </section>
 </section>
 `;

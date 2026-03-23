@@ -4,6 +4,7 @@
     :tabs="tabs"
     :defaultTab="defaultTab"
     :mock="mock"
+    :mockItemsCount="mockItemsCount"
     itemKey="tags"
     itemLabelKey="tag_name"
     :formatFooterText="formatFooterText"
@@ -30,8 +31,16 @@ import volumePerTagService from '@/services/api/resources/humanSupport/volumePer
 import { redirectToChatsConfig } from '@/utils/redirect';
 
 import i18n from '@/utils/plugins/i18n';
-
 const { t, tc } = i18n.global;
+
+import {
+  monitoringVolumePerTagMock,
+  monitoringVolumePerTagMockItemsCount,
+} from '../../Monitoring/mocks';
+import {
+  analysisVolumePerTagMock,
+  analysisVolumePerTagMockItemsCount,
+} from '../../Analysis/mocks';
 
 defineOptions({
   name: 'PerTag',
@@ -60,12 +69,19 @@ const defaultTab = computed(() =>
   props.context === 'monitoring' ? 'ongoing' : 'closed',
 );
 
-const mock = {
-  labelPrefix: 'Tag',
-  subtitle: 'Tag sector',
-  color: '#3182CE',
-  backgroundColor: '#E5EEF9',
-};
+const mock = computed(() => {
+  if (props.context === 'monitoring') {
+    return monitoringVolumePerTagMock;
+  }
+  return analysisVolumePerTagMock;
+});
+
+const mockItemsCount = computed(() => {
+  if (props.context === 'monitoring') {
+    return monitoringVolumePerTagMockItemsCount;
+  }
+  return analysisVolumePerTagMockItemsCount;
+});
 
 const formatFooterText = (
   _ctx: WidgetContext,

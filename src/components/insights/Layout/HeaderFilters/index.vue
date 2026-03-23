@@ -79,6 +79,13 @@ export default {
     FilterFavoriteTemplateMessage,
   },
 
+  props: {
+    forceDisabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
   data() {
     return {
       filterModalOpened: false,

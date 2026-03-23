@@ -5,7 +5,7 @@
     :isLoading="isLoading"
     :currentTab="currentTab"
     :isOnlyTab="isOnlyTab"
-    :hiddenTabs="['sales_funnel', 'crosstab'].includes(type)"
+    :hiddenTabs="hiddenTabs || ['sales_funnel', 'crosstab'].includes(type)"
     @tab-change="handleTabChange"
   >
     <SalesFunnelWidget v-if="type === 'sales_funnel' && !isError" />
@@ -161,6 +161,7 @@ const props = defineProps<{
     onClick: () => void;
   };
   type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add' | 'crosstab';
+  hiddenTabs?: boolean;
 }>();
 
 const treatedProgressItems = computed(() => {

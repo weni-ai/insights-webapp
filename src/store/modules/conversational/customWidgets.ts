@@ -194,7 +194,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
         name: child.name,
         parent,
         type: 'conversations.absolute_numbers_child',
-        source: 'conversations.absolute_numbers_child',
+        source: 'conversations.absolute_numbers.child',
         config: { ...child.config, index: index + 1 },
       }));
     },

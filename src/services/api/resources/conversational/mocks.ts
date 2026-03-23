@@ -74,9 +74,9 @@ export const MOCK_CSAT_DATA: CsatResponse = {
 export const MOCK_NPS_DATA: NpsResponse = {
   score: 62,
   total_responses: 1000,
-  promoters: 68,
-  passives: 20,
-  detractors: 12,
+  promoters: { value: 68, full_value: 680 },
+  passives: { value: 20, full_value: 200 },
+  detractors: { value: 12, full_value: 120 },
 };
 
 export const MOCK_SALES_FUNNEL_DATA: SalesFunnelResponse = {

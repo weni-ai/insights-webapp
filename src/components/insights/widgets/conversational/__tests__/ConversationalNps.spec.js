@@ -9,9 +9,9 @@ const mockWidgetsStore = {
     data: {
       score: 0,
       total_responses: 0,
-      promoters: 0,
-      passives: 0,
-      detractors: 0,
+      promoters: { value: 0, full_value: 0 },
+      passives: { value: 0, full_value: 0 },
+      detractors: { value: 0, full_value: 0 },
     },
   }),
   isLoadingNpsWidgetData: ref(false),
@@ -120,9 +120,9 @@ describe('ConversationalNps', () => {
       data: {
         score: 0,
         total_responses: 0,
-        promoters: 0,
-        passives: 0,
-        detractors: 0,
+        promoters: { value: 0, full_value: 0 },
+        passives: { value: 0, full_value: 0 },
+        detractors: { value: 0, full_value: 0 },
       },
     };
     mockWidgetsStore.isLoadingNpsWidgetData.value = false;
@@ -182,6 +182,23 @@ describe('ConversationalNps', () => {
       mockWidgetsStore.isNpsAiConfig.value = false;
       wrapper = createWrapper();
       expect(mockWidgetsStore.setNpsWidgetType).toHaveBeenCalledWith('HUMAN');
+    });
+
+    it('switches to AI when HUMAN has no config', () => {
+      mockWidgetsStore.npsWidgetType.value = 'HUMAN';
+      mockWidgetsStore.isNpsHumanConfig.value = false;
+      mockWidgetsStore.isNpsAiConfig.value = true;
+      wrapper = createWrapper();
+      expect(mockWidgetsStore.setNpsWidgetType).toHaveBeenCalledWith('AI');
+    });
+
+    it('forces AI tab in mock mode regardless of config', () => {
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockWidgetsStore.npsWidgetType.value = 'HUMAN';
+      mockWidgetsStore.isNpsAiConfig.value = false;
+      wrapper = createWrapper();
+      expect(mockWidgetsStore.setNpsWidgetType).toHaveBeenCalledWith('AI');
+      mockConversationalStore.shouldUseMock = { value: false };
     });
   });
 
@@ -249,10 +266,9 @@ describe('ConversationalNps', () => {
       mockWidgetsStore.npsWidgetData.value = {
         score: 72,
         total_responses: 500,
-        promoters: 60,
-        passives: 25,
-        detractors: 15,
-        results: [],
+        promoters: { value: 60, full_value: 300 },
+        passives: { value: 25, full_value: 125 },
+        detractors: { value: 15, full_value: 75 },
       };
       wrapper = createWrapper();
     });

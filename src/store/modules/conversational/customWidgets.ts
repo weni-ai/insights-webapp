@@ -179,56 +179,6 @@ export const useCustomWidgets = defineStore('customWidgets', {
         },
       };
     },
-    injectMockWidgets() {
-      const hasMockCustom = this.customWidgets.some(
-        (w) => w.uuid === MOCK_CUSTOM_UUID,
-      );
-      if (hasMockCustom) return;
-
-      const mockBase = {
-        grid_position: {
-          column_start: 0,
-          column_end: 0,
-          row_start: 0,
-          row_end: 0,
-        },
-        report: null,
-        is_configurable: false,
-      };
-
-      this.customWidgets.push(
-        {
-          ...mockBase,
-          uuid: MOCK_CUSTOM_UUID,
-          name: i18n.global.t(
-            'conversations_dashboard.mock.custom_widget_title',
-          ),
-          source: 'conversations.custom',
-          type: 'conversations.custom',
-          data: getMockCustomWidgetData(),
-          config: { datalake_config: { agent_uuid: '', key: '' } },
-        } as unknown as customWidget,
-        {
-          ...mockBase,
-          uuid: MOCK_CROSSTAB_UUID,
-          name: i18n.global.t(
-            'conversations_dashboard.mock.crosstab_widget_title',
-          ),
-          source: 'conversations.crosstab',
-          type: 'conversations.crosstab',
-          data: getMockCrosstabWidgetData(),
-          config: {
-            source_a: { key: '', field_name: '' },
-            source_b: { key: '', field_name: '' },
-          },
-        } as unknown as crosstabWidget,
-      );
-    },
-    clearMockWidgets() {
-      this.customWidgets = this.customWidgets.filter(
-        (w) => w.uuid !== MOCK_CUSTOM_UUID && w.uuid !== MOCK_CROSSTAB_UUID,
-      );
-    },
     _mountAbsoluteNumbersWidgetBody() {
       return {
         uuid: this.absoluteNumbersForm.widget_uuid || undefined,
@@ -308,7 +258,56 @@ export const useCustomWidgets = defineStore('customWidgets', {
         this.isLoadingSaveNewAbsoluteNumbersWidget = false;
       }
     },
+    injectMockWidgets() {
+      const hasMockCustom = this.customWidgets.some(
+        (w) => w.uuid === MOCK_CUSTOM_UUID,
+      );
+      if (hasMockCustom) return;
 
+      const mockBase = {
+        grid_position: {
+          column_start: 0,
+          column_end: 0,
+          row_start: 0,
+          row_end: 0,
+        },
+        report: null,
+        is_configurable: false,
+      };
+
+      this.customWidgets.push(
+        {
+          ...mockBase,
+          uuid: MOCK_CUSTOM_UUID,
+          name: i18n.global.t(
+            'conversations_dashboard.mock.custom_widget_title',
+          ),
+          source: 'conversations.custom',
+          type: 'conversations.custom',
+          data: getMockCustomWidgetData(),
+          config: { datalake_config: { agent_uuid: '', key: '' } },
+        } as unknown as customWidget,
+        {
+          ...mockBase,
+          uuid: MOCK_CROSSTAB_UUID,
+          name: i18n.global.t(
+            'conversations_dashboard.mock.crosstab_widget_title',
+          ),
+          source: 'conversations.crosstab',
+          type: 'conversations.crosstab',
+          data: getMockCrosstabWidgetData(),
+          config: {
+            source_a: { key: '', field_name: '' },
+            source_b: { key: '', field_name: '' },
+          },
+        } as unknown as crosstabWidget,
+      );
+    },
+    clearMockWidgets() {
+      this.customWidgets = this.customWidgets.filter(
+        (w) => w.uuid !== MOCK_CUSTOM_UUID && w.uuid !== MOCK_CROSSTAB_UUID,
+      );
+    },
     async saveCustomWidget(widgetType: 'custom' | 'crosstab') {
       this.isLoadingSaveNewCustomWidget = true;
       const widgetBodyMap = {

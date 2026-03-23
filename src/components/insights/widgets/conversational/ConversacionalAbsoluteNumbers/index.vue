@@ -27,7 +27,7 @@
       data-testid="conversational-absolute-numbers-content"
     >
       <AbsoluteNumbersMetric
-        v-for="child in children"
+        v-for="child in orderedChildren"
         :key="child.uuid"
         :metric="child"
         :parentName="widget?.name"
@@ -123,6 +123,12 @@ const widget = computed(() => {
 
 const isLoadingChildren = ref<boolean>(false);
 const children = ref<AbsoluteNumbersChildrenItem[]>([]);
+
+const orderedChildren = computed(() => {
+  return children.value
+    .slice(0)
+    .sort((a, b) => a.config.index - b.config.index);
+});
 
 const loadChildren = async () => {
   try {

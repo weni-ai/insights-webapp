@@ -16,7 +16,10 @@
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import AddCustomizableWidget from '@/components/insights/conversations/CustomizableWidget/AddCustomizableWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
-import { colorPurple9, colorPurple2 } from '@weni/unnnic-system/tokens/colors';
+import {
+  colorBgPurpleStrong,
+  colorBgPurplePlain,
+} from '@weni/unnnic-system/tokens/colors';
 
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
@@ -29,32 +32,32 @@ const MOCK_DATA = [
   {
     text: '🤩 Very satisfied',
     value: 57,
-    color: colorPurple9,
-    backgroundColor: colorPurple2,
+    color: colorBgPurpleStrong,
+    backgroundColor: colorBgPurplePlain,
   },
   {
     text: '😁 Satisfied',
     value: 25,
-    color: colorPurple9,
-    backgroundColor: colorPurple2,
+    color: colorBgPurpleStrong,
+    backgroundColor: colorBgPurplePlain,
   },
   {
     text: '😐 Neutral',
     value: 12,
-    color: colorPurple9,
-    backgroundColor: colorPurple2,
+    color: colorBgPurpleStrong,
+    backgroundColor: colorBgPurplePlain,
   },
   {
     text: '☹️ Dissatisfied',
     value: 5,
-    color: colorPurple9,
-    backgroundColor: colorPurple2,
+    color: colorBgPurpleStrong,
+    backgroundColor: colorBgPurplePlain,
   },
   {
     text: '😡 Very dissatisfied',
     value: 1,
-    color: colorPurple9,
-    backgroundColor: colorPurple2,
+    color: colorBgPurpleStrong,
+    backgroundColor: colorBgPurplePlain,
   },
 ];
 </script>

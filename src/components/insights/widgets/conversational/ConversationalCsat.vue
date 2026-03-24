@@ -57,7 +57,10 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { useConversational } from '@/store/modules/conversational/conversational';
 import type { CsatResponse } from '@/services/api/resources/conversational/widgets';
 import { Tab } from '@/components/insights/conversations/BaseConversationWidget.vue';
-import { colorPurple9, colorPurple2 } from '@weni/unnnic-system/tokens/colors';
+import {
+  colorBgPurpleStrong,
+  colorBgPurplePlain,
+} from '@weni/unnnic-system/tokens/colors';
 
 const { t } = useI18n();
 const route = useRoute();
@@ -165,8 +168,8 @@ const actions = computed(() => {
 
 const handleCsatWidgetData = (data: CsatResponse) => {
   const defaultColors = {
-    color: colorPurple9,
-    backgroundColor: colorPurple2,
+    color: colorBgPurpleStrong,
+    backgroundColor: colorBgPurplePlain,
   };
 
   const formattedData = {

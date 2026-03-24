@@ -4,6 +4,7 @@
   <HeaderRefresh
     v-if="isMonitoring"
     type="human-support"
+    :forceDisabled="!hasSectorsConfigured"
   />
 
   <InsightsLayoutHeaderFilters
@@ -25,6 +26,10 @@ import HeaderRefresh from '../HeaderRefresh.vue';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
+import { useProject } from '@/store/modules/project';
+
+const projectStore = useProject();
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const humanSupportStore = useHumanSupport();
 const { activeTab } = storeToRefs(humanSupportStore);

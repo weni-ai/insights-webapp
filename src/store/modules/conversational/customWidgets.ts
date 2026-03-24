@@ -5,9 +5,16 @@ import WidgetConversationalService, {
   CustomWidgetResponse,
   CrosstabWidgetResponse,
 } from '@/services/api/resources/conversational/widgets';
+import {
+  getMockCustomWidgetData,
+  getMockCrosstabWidgetData,
+} from '@/services/api/resources/conversational/mocks';
 import { useWidgets } from '@/store/modules/widgets';
 import { unnnicCallAlert } from '@weni/unnnic-system';
 import i18n from '@/utils/plugins/i18n';
+
+export const MOCK_CUSTOM_UUID = 'mock-custom';
+export const MOCK_CROSSTAB_UUID = 'mock-crosstab';
 
 interface customForm {
   agent_uuid: string;
@@ -142,6 +149,56 @@ export const useCustomWidgets = defineStore('customWidgets', {
         },
       };
     },
+    injectMockWidgets() {
+      const hasMockCustom = this.customWidgets.some(
+        (w) => w.uuid === MOCK_CUSTOM_UUID,
+      );
+      if (hasMockCustom) return;
+
+      const mockBase = {
+        grid_position: {
+          column_start: 0,
+          column_end: 0,
+          row_start: 0,
+          row_end: 0,
+        },
+        report: null,
+        is_configurable: false,
+      };
+
+      this.customWidgets.push(
+        {
+          ...mockBase,
+          uuid: MOCK_CUSTOM_UUID,
+          name: i18n.global.t(
+            'conversations_dashboard.mock.custom_widget_title',
+          ),
+          source: 'conversations.custom',
+          type: 'conversations.custom',
+          data: getMockCustomWidgetData(),
+          config: { datalake_config: { agent_uuid: '', key: '' } },
+        } as unknown as customWidget,
+        {
+          ...mockBase,
+          uuid: MOCK_CROSSTAB_UUID,
+          name: i18n.global.t(
+            'conversations_dashboard.mock.crosstab_widget_title',
+          ),
+          source: 'conversations.crosstab',
+          type: 'conversations.crosstab',
+          data: getMockCrosstabWidgetData(),
+          config: {
+            source_a: { key: '', field_name: '' },
+            source_b: { key: '', field_name: '' },
+          },
+        } as unknown as crosstabWidget,
+      );
+    },
+    clearMockWidgets() {
+      this.customWidgets = this.customWidgets.filter(
+        (w) => w.uuid !== MOCK_CUSTOM_UUID && w.uuid !== MOCK_CROSSTAB_UUID,
+      );
+    },
     async saveCustomWidget(widgetType: 'custom' | 'crosstab') {
       this.isLoadingSaveNewCustomWidget = true;
       const widgetBodyMap = {
@@ -227,6 +284,10 @@ export const useCustomWidgets = defineStore('customWidgets', {
   },
   getters: {
     getCustomWidgets: (state) => state.customWidgets,
+    getRealCustomWidgets: (state) =>
+      state.customWidgets.filter(
+        (w) => w.uuid !== MOCK_CUSTOM_UUID && w.uuid !== MOCK_CROSSTAB_UUID,
+      ),
     getCustomForm: (state) => state.customForm,
     isEnabledCreateCustomForm: (state) =>
       state.customForm.agent_uuid?.trim() !== '' &&

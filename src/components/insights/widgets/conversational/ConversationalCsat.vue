@@ -66,6 +66,7 @@ const { t } = useI18n();
 const route = useRoute();
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
+const { shouldUseMock } = storeToRefs(conversational);
 
 const conversationalWidgets = useConversationalWidgets();
 const { loadCsatWidgetData, setCsatWidgetType } = conversationalWidgets;
@@ -105,10 +106,15 @@ const tabName = computed(() => {
 });
 
 const widgetData = computed(() => {
-  return handleCsatWidgetData(currentCsatWidget.value?.data || null);
+  const data = shouldUseMock.value
+    ? csatWidgetData.value
+    : currentCsatWidget.value?.data || null;
+  return handleCsatWidgetData(data);
 });
 
 const progressItems = computed(() => {
+  if (shouldUseMock.value) return widgetData.value.progressItems;
+
   if (
     (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) ||
     (csatWidgetType.value === 'HUMAN' && !isCsatHumanConfig.value)
@@ -139,6 +145,8 @@ const currentTab = computed(() => {
 });
 
 const actions = computed(() => {
+  if (shouldUseMock.value) return [];
+
   const editOption = {
     icon: 'edit_square',
     text: t(
@@ -193,6 +201,7 @@ const handleCsatWidgetData = (data: CsatResponse) => {
       .map((result) => ({
         text: formattedData[result.label],
         value: result.value,
+        full_value: result.full_value,
         color: defaultColors.color,
         backgroundColor: defaultColors.backgroundColor,
       })),
@@ -212,8 +221,12 @@ const handleTabChange = (tab: Tab) => {
 };
 
 onMounted(() => {
-  if (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) {
+  if (shouldUseMock.value) {
+    setCsatWidgetType('AI');
+  } else if (csatWidgetType.value === 'AI' && !isCsatAiConfig.value) {
     setCsatWidgetType('HUMAN');
+  } else if (csatWidgetType.value === 'HUMAN' && !isCsatHumanConfig.value) {
+    setCsatWidgetType('AI');
   }
   loadCsatWidgetData();
 });

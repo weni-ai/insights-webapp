@@ -65,6 +65,7 @@ const {
 } = customWidgetsStore;
 
 const { customWidgetDataErrorByUuid } = storeToRefs(customWidgetsStore);
+const { shouldUseMock } = storeToRefs(conversational);
 
 const isSeeAllDrawerOpen = ref(false);
 const isRemoveWidgetModalOpen = ref(false);
@@ -122,6 +123,8 @@ const isExpanded = computed(() => {
 });
 
 const actions = computed(() => {
+  if (shouldUseMock.value) return [];
+
   const editOption = {
     icon: 'edit_square',
     text: t(
@@ -162,13 +165,17 @@ const handleOpenExpanded = () => {
 };
 
 onMounted(() => {
-  loadCustomWidgetData(props.uuid);
+  if (!shouldUseMock.value) {
+    loadCustomWidgetData(props.uuid);
+  }
 });
 
 watch(
   () => route.query,
   () => {
-    loadCustomWidgetData(props.uuid);
+    if (!shouldUseMock.value) {
+      loadCustomWidgetData(props.uuid);
+    }
   },
   { deep: true },
 );
@@ -176,7 +183,7 @@ watch(
 watch(
   () => conversational.refreshDataConversational,
   (newValue) => {
-    if (newValue) {
+    if (newValue && !shouldUseMock.value) {
       conversational.setIsLoadingConversationalData('dynamicWidgets', true);
       loadCustomWidgetData(props.uuid).finally(() => {
         conversational.setIsLoadingConversationalData('dynamicWidgets', false);

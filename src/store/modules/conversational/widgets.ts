@@ -11,6 +11,7 @@ import WidgetService from '@/services/api/resources/widgets';
 import { CsatOrNpsCardConfig, WidgetType } from '@/models/types/WidgetTypes';
 import i18n from '@/utils/plugins/i18n';
 import { unnnicCallAlert } from '@weni/unnnic-system';
+import { useConversational } from './conversational';
 
 type TypeWidget = 'HUMAN' | 'AI';
 
@@ -36,6 +37,8 @@ interface ConversationalWidgetsState {
   isNpsWidgetDataError: boolean;
   isSalesFunnelWidgetDataError: boolean;
 }
+
+let salesFunnelAbortController: AbortController | null = null;
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
   state: (): ConversationalWidgetsState => ({
@@ -128,8 +131,25 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       this.npsWidgetType = type;
     },
     async loadSalesFunnelWidgetData() {
+      if (salesFunnelAbortController) {
+        salesFunnelAbortController.abort();
+      }
+      salesFunnelAbortController = new AbortController();
+      const { signal } = salesFunnelAbortController;
+
       this.isLoadingSalesFunnelWidgetData = true;
       try {
+        const { shouldUseMock } = useConversational();
+
+        if (shouldUseMock) {
+          const mockData = await WidgetConversationalService.getSalesFunnelData(
+            {},
+            { mock: true },
+          );
+          this.salesFunnelWidgetData = mockData;
+          return;
+        }
+
         const { findWidgetBySource } = useWidgets();
         const widgetSalesFunnel = findWidgetBySource(
           'conversations.sales_funnel',
@@ -140,22 +160,38 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         }
 
         const salesFunnelData =
-          await WidgetConversationalService.getSalesFunnelData({
-            widget_uuid: widgetSalesFunnel.uuid,
-          });
+          await WidgetConversationalService.getSalesFunnelData(
+            { widget_uuid: widgetSalesFunnel.uuid },
+            { signal },
+          );
 
         this.salesFunnelWidgetData = salesFunnelData;
       } catch (error) {
+        if (signal.aborted) return;
         this.salesFunnelWidgetData = null;
         this.isSalesFunnelWidgetDataError = true;
         console.error('Error loading sales funnel widget data', error);
       } finally {
-        this.isLoadingSalesFunnelWidgetData = false;
+        if (!signal.aborted) {
+          this.isLoadingSalesFunnelWidgetData = false;
+        }
       }
     },
     async loadCsatWidgetData() {
       this.isLoadingCsatWidgetData = true;
       try {
+        const { shouldUseMock } = useConversational();
+
+        if (shouldUseMock) {
+          const mockData = await WidgetConversationalService.getCsatData(
+            this.csatWidgetType,
+            {},
+            { mock: true },
+          );
+          this.setCsatWidgetData(mockData);
+          return;
+        }
+
         const { findWidgetBySource } = useWidgets();
         const widgetCsat = findWidgetBySource('conversations.csat');
 
@@ -165,9 +201,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         const csatData = await WidgetConversationalService.getCsatData(
           this.csatWidgetType,
-          {
-            widget_uuid: widgetCsat.uuid,
-          },
+          { widget_uuid: widgetCsat.uuid },
         );
 
         this.setCsatWidgetData(csatData);
@@ -183,6 +217,18 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     async loadNpsWidgetData() {
       this.isLoadingNpsWidgetData = true;
       try {
+        const { shouldUseMock } = useConversational();
+
+        if (shouldUseMock) {
+          const mockData = await WidgetConversationalService.getNpsData(
+            this.npsWidgetType,
+            {},
+            { mock: true },
+          );
+          this.setNpsWidgetData(mockData);
+          return;
+        }
+
         const { findWidgetBySource } = useWidgets();
         const widgetNps = findWidgetBySource('conversations.nps');
 
@@ -192,9 +238,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         const npsData = await WidgetConversationalService.getNpsData(
           this.npsWidgetType,
-          {
-            widget_uuid: widgetNps.uuid,
-          },
+          { widget_uuid: widgetNps.uuid },
         );
 
         this.setNpsWidgetData(npsData);

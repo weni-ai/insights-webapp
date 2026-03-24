@@ -101,5 +101,34 @@ describe('DynamicDashboard.vue', () => {
 
       expect(resetAppliedFiltersSpy).toHaveBeenCalled();
     });
+
+    it('should reset currentWidgetEditing when switching between dashboards', async () => {
+      const updateCurrentWidgetEditingSpy = vi.spyOn(
+        widgetsStore,
+        'updateCurrentWidgetEditing',
+      );
+
+      dashboardsStore.currentDashboard = { uuid: 'first-uuid' };
+      await wrapper.vm.$nextTick();
+
+      expect(updateCurrentWidgetEditingSpy).not.toHaveBeenCalled();
+
+      dashboardsStore.currentDashboard = { uuid: 'second-uuid' };
+      await wrapper.vm.$nextTick();
+
+      expect(updateCurrentWidgetEditingSpy).toHaveBeenCalledWith(null);
+    });
+
+    it('should not reset currentWidgetEditing on initial dashboard load', async () => {
+      const updateCurrentWidgetEditingSpy = vi.spyOn(
+        widgetsStore,
+        'updateCurrentWidgetEditing',
+      );
+
+      dashboardsStore.currentDashboard = { uuid: 'initial-uuid' };
+      await wrapper.vm.$nextTick();
+
+      expect(updateCurrentWidgetEditingSpy).not.toHaveBeenCalled();
+    });
   });
 });

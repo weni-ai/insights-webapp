@@ -26,8 +26,8 @@
 import { computed } from 'vue';
 import { UnnnicToolTip } from '@weni/unnnic-system';
 import {
-  colorBlueStrong,
-  colorBaseSoft,
+  colorBgBlueStrong,
+  colorBgBaseSoft,
 } from '@weni/unnnic-system/tokens/colors';
 
 interface Props {
@@ -41,8 +41,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   progress: 0,
-  color: colorBlueStrong,
-  backgroundColor: colorBaseSoft,
+  color: colorBgBlueStrong,
+  backgroundColor: colorBgBaseSoft,
   height: 8,
   tooltip: '',
   maxProgressValue: 100,

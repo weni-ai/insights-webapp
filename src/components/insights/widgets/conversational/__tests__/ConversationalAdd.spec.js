@@ -66,8 +66,8 @@ describe('ConversationalAdd', () => {
       expect(mockData).toHaveLength(5);
       expect(mockData[0].text).toContain('🤩');
       expect(mockData[0].value).toBe(57);
-      expect(mockData[0].color).toBe('#9C56F3'); // colorPurple500
-      expect(mockData[0].backgroundColor).toBe('#F5EAFE'); // colorPurple100
+      expect(mockData[0].color).toBe('#AD71F8'); // colorBgPurpleStrong
+      expect(mockData[0].backgroundColor).toBe('#EDDCFE'); // colorBgPurplePlain
     });
   });
 });

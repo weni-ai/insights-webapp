@@ -174,22 +174,22 @@ describe('Treemap Utilities', () => {
         label: 'Item 1',
         value: 100,
         percentage: 40,
-        color: '#CFF8F4', // colorTeal100
-        hoverColor: '#ABF2EB', // colorTeal300
+        color: '#ABF2EB', // colorBgTealPlain
+        hoverColor: '#01A29B', // colorBgTealStrong
       });
       expect(result[1]).toMatchObject({
         label: 'Item 2',
         value: 80,
         percentage: 32,
-        color: '#F5EAFE', // colorPurple100
-        hoverColor: '#E5CFFE', // colorPurple300
+        color: '#EDDCFE', // colorBgPurplePlain
+        hoverColor: '#AD71F8', // colorBgPurpleStrong
       });
       expect(result[2]).toMatchObject({
         label: 'Item 3',
         value: 70,
         percentage: 28,
-        color: '#E1F3FF', // colorBlue100
-        hoverColor: '#97CFFE', // colorBlue300
+        color: '#CBE9FF', // colorBgBluePlain
+        hoverColor: '#3993F4', // colorBgBlueStrong
       });
     });
 
@@ -202,8 +202,8 @@ describe('Treemap Utilities', () => {
       const result = addColors(data);
 
       expect(result[0]).toMatchObject({
-        color: '#CFF8F4', // position color
-        hoverColor: '#ABF2EB',
+        color: '#ABF2EB', // position color
+        hoverColor: '#01A29B',
       });
       expect(result[1]).toMatchObject({
         label: 'Others',
@@ -221,13 +221,13 @@ describe('Treemap Utilities', () => {
       const result = addColors(data);
 
       expect(result[0]).toMatchObject({
-        color: '#CFF8F4', // position color
-        hoverColor: '#ABF2EB',
+        color: '#ABF2EB', // position color
+        hoverColor: '#01A29B',
       });
       expect(result[1]).toMatchObject({
         label: 'Unclassified',
-        color: '#FFEDEA', // special unclassified color (colorRed100)
-        hoverColor: '#FFD0C7', // colorRed300
+        color: '#FFDFD9', // special unclassified color (colorRed100)
+        hoverColor: '#EC3727', // colorRed300
       });
     });
 
@@ -266,11 +266,11 @@ describe('Treemap Utilities', () => {
       const result = addColors(data);
 
       const expectedColors = [
-        { color: '#CFF8F4', hoverColor: '#ABF2EB' }, // teal
-        { color: '#F5EAFE', hoverColor: '#E5CFFE' }, // purple
-        { color: '#E1F3FF', hoverColor: '#97CFFE' }, // blue
-        { color: '#E9FCE3', hoverColor: '#97EF86' }, // green
-        { color: '#FFEDCD', hoverColor: '#FED392' }, // orange
+        { color: '#ABF2EB', hoverColor: '#01A29B' }, // teal
+        { color: '#EDDCFE', hoverColor: '#AD71F8' }, // purple
+        { color: '#CBE9FF', hoverColor: '#3993F4' }, // blue
+        { color: '#AFF79E', hoverColor: '#08A822' }, // green
+        { color: '#FFE0AE', hoverColor: '#E57001' }, // orange
       ];
 
       result.forEach((item, index) => {
@@ -300,8 +300,8 @@ describe('Treemap Utilities', () => {
         value: 100,
         percentage: 50,
         customProperty: 'custom value',
-        color: '#CFF8F4',
-        hoverColor: '#ABF2EB',
+        color: '#ABF2EB',
+        hoverColor: '#01A29B',
       });
     });
 
@@ -340,11 +340,11 @@ describe('Treemap Utilities', () => {
       });
 
       // Verify first 5 items have position colors
-      expect(coloredData[0].color).toBe('#CFF8F4');
-      expect(coloredData[1].color).toBe('#F5EAFE');
-      expect(coloredData[2].color).toBe('#E1F3FF');
-      expect(coloredData[3].color).toBe('#E9FCE3');
-      expect(coloredData[4].color).toBe('#FFEDCD');
+      expect(coloredData[0].color).toBe('#ABF2EB');
+      expect(coloredData[1].color).toBe('#EDDCFE');
+      expect(coloredData[2].color).toBe('#CBE9FF');
+      expect(coloredData[3].color).toBe('#AFF79E');
+      expect(coloredData[4].color).toBe('#FFE0AE');
     });
 
     it('should handle mixed special and regular items', () => {
@@ -362,15 +362,15 @@ describe('Treemap Utilities', () => {
       expect(coloredData).toHaveLength(5);
       expect(coloredData[0]).toMatchObject({
         label: 'Regular 1',
-        color: '#CFF8F4', // position 0 color
+        color: '#ABF2EB', // position 0 color
       });
       expect(coloredData[1]).toMatchObject({
         label: 'Unclassified',
-        color: '#FFEDEA', // special unclassified color (colorRed100)
+        color: '#FFDFD9', // special unclassified color (colorBgRedPlain)
       });
       expect(coloredData[2]).toMatchObject({
         label: 'Regular 2',
-        color: '#E1F3FF', // position 2 color
+        color: '#CBE9FF', // position 2 color
       });
     });
   });
@@ -445,8 +445,8 @@ describe('Treemap Utilities', () => {
 
       const coloredData = addColors(data);
 
-      expect(coloredData[0].color).toBe('#CFF8F4'); // position color
-      expect(coloredData[1].color).toBe('#F5EAFE'); // position color
+      expect(coloredData[0].color).toBe('#ABF2EB'); // position color
+      expect(coloredData[1].color).toBe('#EDDCFE'); // position color
       expect(coloredData[2].color).toBe('#EBEBEB'); // special color (colorGray100)
     });
   });

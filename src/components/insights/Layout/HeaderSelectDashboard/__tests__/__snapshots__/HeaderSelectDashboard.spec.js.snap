@@ -49,7 +49,7 @@ exports[`HeaderSelectDashboard > Should match the snapshot 1`] = `
         data-v-054061ac=""
         filled="false"
         icon="expand_more"
-        scheme="neutral-darkest"
+        scheme="fg-emphasized"
         size="md"
       />
     </section>

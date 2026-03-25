@@ -64,9 +64,9 @@ import SeeAllDrawer from '../conversations/CustomizableWidget/SeeAllDrawer.vue';
 
 import { getWidgetCrosstabTooltip } from '@/utils/widget';
 import {
-  colorBlue8,
-  colorOrange7,
-  colorGray1,
+  colorBgBlueStrong,
+  colorBgOrangeStrong,
+  colorBgBaseSoft,
 } from '@weni/unnnic-system/tokens/colors';
 
 const customWidgetsStore = useCustomWidgets();
@@ -112,7 +112,7 @@ const legendItems = computed(() => {
   return eventsKeys.map((key, index) => {
     return {
       title: `${key.charAt(0).toUpperCase() + key.slice(1)}`,
-      color: index === 0 ? colorBlue8 : colorOrange7,
+      color: index === 0 ? colorBgBlueStrong : colorBgOrangeStrong,
     };
   });
 });
@@ -122,8 +122,10 @@ const formattedData = computed(() => {
     const eventsKeys = Object.keys(item.events);
     return {
       label: item.title,
-      color: colorBlue8,
-      backgroundColor: eventsKeys.length ? colorOrange7 : colorGray1,
+      color: colorBgBlueStrong,
+      backgroundColor: eventsKeys.length
+        ? colorBgOrangeStrong
+        : colorBgBaseSoft,
       description: `${item.total}`,
       value: item.events[eventsKeys[0]]?.value || 0,
       tooltip: getWidgetCrosstabTooltip(item.events),

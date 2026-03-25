@@ -9,9 +9,9 @@ const mockWidgetsStore = {
     data: {
       score: 0,
       total_responses: 0,
-      promoters: 0,
-      passives: 0,
-      detractors: 0,
+      promoters: { value: 0, full_value: 0 },
+      passives: { value: 0, full_value: 0 },
+      detractors: { value: 0, full_value: 0 },
     },
   }),
   isLoadingNpsWidgetData: ref(false),
@@ -28,6 +28,7 @@ const mockConversationalStore = {
   refreshDataConversational: false,
   setIsDrawerCustomizableOpen: vi.fn(),
   setIsLoadingConversationalData: vi.fn(),
+  shouldUseMock: { value: false },
 };
 
 const mockRoute = { query: {} };
@@ -119,9 +120,9 @@ describe('ConversationalNps', () => {
       data: {
         score: 0,
         total_responses: 0,
-        promoters: 0,
-        passives: 0,
-        detractors: 0,
+        promoters: { value: 0, full_value: 0 },
+        passives: { value: 0, full_value: 0 },
+        detractors: { value: 0, full_value: 0 },
       },
     };
     mockWidgetsStore.isLoadingNpsWidgetData.value = false;
@@ -182,6 +183,23 @@ describe('ConversationalNps', () => {
       wrapper = createWrapper();
       expect(mockWidgetsStore.setNpsWidgetType).toHaveBeenCalledWith('HUMAN');
     });
+
+    it('switches to AI when HUMAN has no config', () => {
+      mockWidgetsStore.npsWidgetType.value = 'HUMAN';
+      mockWidgetsStore.isNpsHumanConfig.value = false;
+      mockWidgetsStore.isNpsAiConfig.value = true;
+      wrapper = createWrapper();
+      expect(mockWidgetsStore.setNpsWidgetType).toHaveBeenCalledWith('AI');
+    });
+
+    it('forces AI tab in mock mode regardless of config', () => {
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockWidgetsStore.npsWidgetType.value = 'HUMAN';
+      mockWidgetsStore.isNpsAiConfig.value = false;
+      wrapper = createWrapper();
+      expect(mockWidgetsStore.setNpsWidgetType).toHaveBeenCalledWith('AI');
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
   });
 
   describe('Actions', () => {
@@ -238,6 +256,38 @@ describe('ConversationalNps', () => {
 
     it('formats footer text', () => {
       expect(wrapper.vm.footerText).toContain('reviews');
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockWidgetsStore.npsWidgetData.value = {
+        score: 72,
+        total_responses: 500,
+        promoters: { value: 60, full_value: 300 },
+        passives: { value: 25, full_value: 125 },
+        detractors: { value: 15, full_value: 75 },
+      };
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
+
+    it('should return empty actions in mock mode', () => {
+      expect(wrapper.vm.actions).toEqual([]);
+    });
+
+    it('should return progress items from mock data', () => {
+      expect(wrapper.vm.progressItems.length).toBeGreaterThan(0);
+    });
+
+    it('should pass empty actions to ProgressWidget', () => {
+      const widget = wrapper.findComponent({ name: 'ProgressWidget' });
+      expect(widget.props('actions')).toEqual([]);
     });
   });
 });

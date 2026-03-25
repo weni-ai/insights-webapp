@@ -26,7 +26,37 @@
     "others": "Outros",
     "unclassified": "Sem classificação",
     "info": {
-      "description": "A partir de {date}, os dados conversacionais contemplam janelas encerradas até às 23h59m59s do dia de início, considerando o timezone configurado no projeto. Conversas do dia atual ainda estão em processamento e serão exibidas após o fechamento do período."
+      "description": "A partir de {date}, os dados conversacionais contemplam janelas encerradas até às 23h59m59s do dia de início, considerando o timezone configurado no projeto. Conversas do dia atual ainda estão em processamento e serão exibidas após o fechamento do período.",
+      "mock_description": "Estes números são apenas para fins de demonstração. Assim que o primeiro widget for configurado, os dados reais serão exibidos aqui."
+    },
+    "mock": {
+      "custom_widget_title": "Status do pedido",
+      "crosstab_widget_title": "Satisfação por categoria de conversa",
+      "topics": {
+        "delayed_delivery": "Entrega atrasada",
+        "defective_product": "Produto defeituoso",
+        "price_questions": "Dúvidas sobre preço",
+        "cancellation": "Cancelamento",
+        "unclassified": "Não classificado",
+        "others": "Outros"
+      },
+      "custom_labels": {
+        "delivered": "Entregue",
+        "awaiting_payment": "Aguardando pagamento",
+        "in_preparation": "Em preparação",
+        "payment_confirmed": "Pagamento confirmado",
+        "in_transit": "Em trânsito",
+        "returned": "Devolvido"
+      },
+      "crosstab_labels": {
+        "order_status": "Status do pedido",
+        "product_inquiries": "Dúvidas sobre produtos",
+        "payments": "Pagamentos",
+        "technical_support": "Suporte técnico",
+        "shipping_info": "Informações de envio",
+        "satisfied": "Satisfeito",
+        "dissatisfied": "Insatisfeito"
+      }
     },
     "header": {
       "total": "Total de conversas",
@@ -137,6 +167,7 @@
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas principais métricas",
       "add_widget": "Adicionar widget",
+      "add_first_widget": "Adicione seu primeiro widget",
       "csat_description": "A pontuação de satisfação do cliente (CSAT) mede o nível de satisfação com o serviço recebido",
       "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",

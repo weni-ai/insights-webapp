@@ -1,8 +1,24 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { ref } from 'vue';
 
 import Info from '../Info.vue';
+
+const shouldUseMockRef = ref(false);
+
+const mockConversationalStore = {
+  shouldUseMock: shouldUseMockRef,
+};
+
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: () => mockConversationalStore,
+}));
+
+vi.mock('pinia', async (importOriginal) => ({
+  ...(await importOriginal()),
+  storeToRefs: (store) => store,
+}));
 
 const messages = {
   en: {
@@ -10,6 +26,7 @@ const messages = {
       info: {
         description:
           'As of {date}, conversational data includes closed windows',
+        mock_description: 'Mock mode: conversational data is being simulated',
       },
     },
   },
@@ -18,6 +35,8 @@ const messages = {
       info: {
         description:
           'A partir de {date}, os dados conversacionais contemplam janelas encerradas',
+        mock_description:
+          'Modo mock: os dados conversacionais estão sendo simulados',
       },
     },
   },
@@ -26,6 +45,8 @@ const messages = {
       info: {
         description:
           'A partir del {date}, los datos conversacionales incluyen ventanas cerradas',
+        mock_description:
+          'Modo mock: los datos conversacionales están siendo simulados',
       },
     },
   },
@@ -54,6 +75,7 @@ describe('Info.vue', () => {
   let wrapper;
 
   beforeEach(() => {
+    shouldUseMockRef.value = false;
     wrapper = createWrapper();
   });
 
@@ -236,6 +258,48 @@ describe('Info.vue', () => {
 
     it('should be a presentational component', () => {
       expect(wrapper.vm.$options.emits).toBeUndefined();
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      shouldUseMockRef.value = true;
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      shouldUseMockRef.value = false;
+    });
+
+    it('should display mock description when shouldUseMock is true', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).toBe(
+        'Mock mode: conversational data is being simulated',
+      );
+    });
+
+    it('should not display a date in mock mode', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).not.toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    });
+  });
+
+  describe('Normal mode (shouldUseMock = false)', () => {
+    beforeEach(() => {
+      shouldUseMockRef.value = false;
+      wrapper = createWrapper();
+    });
+
+    it('should display normal description with date when shouldUseMock is false', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).toMatch(/\d{2}\/\d{2}\/\d{4}/);
+    });
+
+    it('should not display mock text in normal mode', () => {
+      const description = wrapper.find('[data-testid="info-description"]');
+      expect(description.text()).not.toBe(
+        'Mock mode: conversational data is being simulated',
+      );
     });
   });
 });

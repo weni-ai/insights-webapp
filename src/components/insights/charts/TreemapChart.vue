@@ -56,7 +56,7 @@ import i18n from '@/utils/plugins/i18n';
 import { useI18n } from 'vue-i18n';
 import { colorGray11 } from '@weni/unnnic-system/tokens/colors';
 
-ChartJS.defaults.font.family = 'Lato, sans-serif';
+ChartJS.defaults.font.family = 'Inter, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);
 
 const treemapCanvas = ref<HTMLCanvasElement | null>(null);
@@ -156,11 +156,11 @@ const createOrUpdateChart = () => {
               font: [
                 {
                   size: 16,
-                  family: 'Lato, sans-serif',
+                  family: 'Inter, sans-serif',
                   lineHeight: '26px',
                   weight: 'bold',
                 },
-                { size: 14, family: 'Lato, sans-serif', lineHeight: '24px' },
+                { size: 14, family: 'Inter, sans-serif', lineHeight: '24px' },
               ],
               position: 'middle',
             },
@@ -199,10 +199,10 @@ const createOrUpdateChart = () => {
             mode: 'index',
             titleFont: {
               size: 12,
-              family: 'Lato, sans-serif',
+              family: 'Inter, sans-serif',
               weight: 'bold',
             },
-            bodyFont: { size: 12, family: 'Lato, sans-serif' },
+            bodyFont: { size: 12, family: 'Inter, sans-serif' },
             yAlign: 'bottom',
             callbacks: {
               title: function (ctx: any) {

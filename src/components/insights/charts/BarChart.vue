@@ -50,8 +50,8 @@ import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 import {
-  colorTeal8,
-  colorTeal7,
+  colorBgTealStrong,
+  colorBgTealPlain,
   colorTeal12,
   colorGray0,
 } from '@weni/unnnic-system/tokens/colors';
@@ -97,8 +97,8 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: colorTeal8,
-        hoverBackgroundColor: colorTeal7,
+        backgroundColor: colorBgTealStrong,
+        hoverBackgroundColor: colorBgTealPlain,
         plugins: {
           tooltip: false,
           datalabels: {

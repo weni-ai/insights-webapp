@@ -65,19 +65,19 @@ import { getPercentageOf } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import weniLoading from '@/assets/images/weni-loading.svg';
 import {
-  colorPurple4,
-  colorGreen4,
-  colorBlue5,
-  colorOrange4,
+  colorPurplePlain,
+  colorGreenPlain,
+  colorBluePlain,
+  colorOrangePlain,
   colorGray5,
   colorGray11,
 } from '@weni/unnnic-system/tokens/colors';
 
 const colorsMapper = {
-  'aux-purple-300': colorPurple4,
-  'aux-green-300': colorGreen4,
-  'aux-blue-300': colorBlue5,
-  'aux-orange-300': colorOrange4,
+  'aux-purple-300': colorPurplePlain,
+  'aux-green-300': colorGreenPlain,
+  'aux-blue-300': colorBluePlain,
+  'aux-orange-300': colorOrangePlain,
 };
 
 const props = defineProps({

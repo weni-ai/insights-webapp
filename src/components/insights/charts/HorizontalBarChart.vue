@@ -59,11 +59,10 @@ import { deepMerge } from '@/utils/object';
 import { useElementSize } from '@vueuse/core';
 import { ref } from 'vue';
 import {
-  colorTeal8,
-  colorTeal7,
-  colorTeal2,
-  colorGray9,
-  colorGray5,
+  colorBgTealStrong,
+  colorBgTealPlain,
+  colorGray8,
+  colorGray3,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -150,8 +149,8 @@ export default {
             },
           },
         },
-        backgroundColor: colorTeal8,
-        hoverBackgroundColor: colorTeal7,
+        backgroundColor: colorBgTealStrong,
+        hoverBackgroundColor: colorBgTealPlain,
         plugins: {
           datalabels: {
             display: false,
@@ -160,7 +159,7 @@ export default {
             datalabelsSuffix: this.datalabelsSuffix,
           },
           horizontalBackgroundColorPlugin: {
-            backgroundColor: colorTeal2,
+            backgroundColor: colorBgTealPlain,
           },
           tooltip: {
             enabled: true,
@@ -235,8 +234,8 @@ export default {
             const { data, fullValues } = datasets[0];
 
             ctx.textBaseline = 'middle';
-            ctx.font = 'bold 16px Lato';
-            ctx.fillStyle = colorGray9;
+            ctx.font = 'bold 16px Inter';
+            ctx.fillStyle = colorGray8;
 
             // chartLeftMargin is the margin between the chart and the left edge of the chart area (labels space)
             // 4px is the margin between the chart and the text
@@ -258,8 +257,8 @@ export default {
               5: 60,
             };
 
-            ctx.font = 'normal 14px Lato';
-            ctx.fillStyle = colorGray5;
+            ctx.font = 'normal 14px Inter';
+            ctx.fillStyle = colorGray3;
 
             ctx.fillText(
               `| ${fullValues[index]}`,

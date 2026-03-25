@@ -319,7 +319,7 @@
   "table_group": {
     "contact": "Contact",
     "urn": "URN",
-    "agent": "Agent",
+    "agent": "Representative",
     "created_on": "Start",
     "ended_at": "End",
     "sector": "Sector",
@@ -338,8 +338,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agent",
-      "placeholder": "Select an agent"
+      "label": "Representative",
+      "placeholder": "Select a representative"
     },
     "contact": {
       "label": "Contact",
@@ -371,8 +371,8 @@
   "lines_count": "{count} lines",
   "reload": "Refresh",
   "agent": "Agent",
-  "online_agents": "Online agents",
-  "chats_per_agents": "Chats per agent",
+  "online_agents": "Online representatives",
+  "chats_per_agents": "Chats per representative",
   "closeds": "Closed",
   "finished": "Finished",
   "in_progress": "In progress",
@@ -795,14 +795,14 @@
       "sectors": "Industries",
       "queues": "Queues",
       "rooms": "Rooms",
-      "users": "Agents",
+      "users": "Representatives",
       "sector_tags": "Tags",
       "contacts": "Contacts",
       "resolutions": "Conversation resolutions",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Agent"
+      "agent_status_logs": "Representative"
     },
     "field_labels": {
       "config": "Configuration",
@@ -871,14 +871,14 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Select a sector",
-      "agent": "Agent",
-      "select_agent": "Select an agent",
+      "representative": "Representative",
+      "select_representative": "Select a representative",
       "queue": "Queue",
       "select_queue": "Select a queue",
       "tag": "Tag",
       "select_tag": "Select a tag",
       "all_sectors": "All sectors",
-      "all_agents": "All agents",
+      "all_representatives": "All representatives",
       "all_queues": "All queues",
       "all_tags": "All tags"
     },
@@ -891,15 +891,15 @@
     "error_default": "Oops, something went wrong"
   },
   "disconnectAgent": {
-    "title": "Disconnect agent",
-    "description": "Are you sure you want to disconnect the agent {agent}?",
-    "description_confirm": "Agent {agent} will be offline after confirmation",
-    "tooltip": "Disconnect agent",
+    "title": "Disconnect representative",
+    "description": "Are you sure you want to disconnect the representative {agent}?",
+    "description_confirm": "Representative {agent} will be offline after confirmation",
+    "tooltip": "Disconnect representative",
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
-    "error_message": "Error disconnecting agent {agent}",
-    "tooltip_disabled": "This agent cannot be disconnected because it is offline"
+    "error_message": "Error disconnecting representative {agent}",
+    "tooltip_disabled": "This representative cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
     "title": "Human support",
@@ -928,9 +928,9 @@
       "max": "Max",
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
-        "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
+        "average_time_first_response": "Average time until the first message from the representative after the room is assigned",
         "average_response_time": "Average time a contact waits for a response per message",
-        "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
+        "average_time_chat": "Average total duration of the conversation, from the start of the support with the representative until it is finalized"
       }
     },
     "services_open_by_hour": {
@@ -941,21 +941,21 @@
       "tabs": {
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
-        "attendant": "Agent",
+        "attendant": "Representative",
         "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
-        "attendant": "Agent",
+        "attendant": "Representative",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
       },
       "pauses": {
         "status": "Status",
-        "attendant": "Agent",
+        "attendant": "Representative",
         "opened": "Opened",
         "closed": "Closed"
       },
@@ -966,7 +966,7 @@
         "queue": "Queue"
       },
       "attendant": {
-        "agent": "Agent",
+        "agent": "Representative",
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
@@ -988,7 +988,7 @@
         "clear": "Clear selection"
       },
       "attendant": {
-        "label": "Agent"
+        "label": "Representative"
       },
       "contact": {
         "label": "Contact"
@@ -1006,7 +1006,7 @@
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
         "response_time": "Response time",
-        "agent": "Agent",
+        "agent": "Representative",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
@@ -1025,7 +1025,7 @@
         "title": "Detailed analysis",
         "tabs": {
           "finished": "Finished",
-          "attendant": "Agent",
+          "attendant": "Representative",
           "pauses": "Custom Breaks"
         }
       }
@@ -1094,16 +1094,16 @@
         "first_text": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation. Discover the new <b>Monitoring</b> view!",
         "second_text": "Now you can monitor the <b>Support</b> status of customer interactions in real time:",
         "third_text": "Monitor <b>Time metrics now</b> — average and maximum wait times, first response time, and duration — in real time:",
-        "fourth_text": "The <b>Detailed monitoring table</b> allows you to track real-time data for each interaction and agent.",
+        "fourth_text": "The <b>Detailed monitoring table</b> allows you to track real-time data for each interaction and representative.",
         "fifth_text": "You can monitor each interaction through the <b>In Progress</b> and <b>In awaiting</b> tabs. Click on the interactions to view them.",
-        "sixth_text": "The <b>Agent</b> and <b>Break</b> tabs allow you to monitor each agent's metrics by interaction, as well as custom break times.",
-        "seventh_text": "On the <b>Agent</b> tab, you can click on each agent to enter view-only mode or use the button to disconnect them."
+        "sixth_text": "The <b>Representative</b> and <b>Break</b> tabs allow you to monitor each representative's metrics by interaction, as well as custom break times.",
+        "seventh_text": "On the <b>Representative</b> tab, you can click on each representative to enter view-only mode or use the button to disconnect them."
       },
       "analysis": {
         "first_text": "Explore closed interactions to discover patterns and trends. Identify opportunities for improvement and enhance your team's performance. Discover the new <b>Analysis</b> view!",
         "second_text": "Now, you can track all closed support metrics: <b>Average Wait Time</b>, <b>Average First Response Time</b>, <b>Average Response Time</b>, and <b>Average Support Duration</b>.",
-        "third_text": "The detailed analysis table allows you to analyze data for each interaction and agent.",
-        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Agent</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
+        "third_text": "The detailed analysis table allows you to analyze data for each interaction and representative.",
+        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Representative</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each representative by closed interaction, as well as the custom breaks within the filtered period."
       }
     }
   },

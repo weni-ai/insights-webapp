@@ -50,7 +50,10 @@ import { ref } from 'vue';
 
 import { deepMerge } from '@/utils/object';
 import { Tooltip } from 'chart.js';
-import { colorTeal8, colorGray12 } from '@weni/unnnic-system/tokens/colors';
+import {
+  colorBgTealStrong,
+  colorGray12,
+} from '@weni/unnnic-system/tokens/colors';
 
 export default {
   name: 'LineChart',
@@ -87,7 +90,7 @@ export default {
     mergedData() {
       const configData = {
         fill: true,
-        borderColor: colorTeal8,
+        borderColor: colorBgTealStrong,
         pointRadius: 0,
         hoverRadius: 3,
         pointStyle: 'circle',
@@ -104,7 +107,7 @@ export default {
             chartArea.bottom,
           );
 
-          gradient.addColorStop(0, colorTeal8);
+          gradient.addColorStop(0, colorBgTealStrong);
           gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
           return gradient;

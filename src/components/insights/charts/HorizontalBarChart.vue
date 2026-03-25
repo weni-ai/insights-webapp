@@ -61,8 +61,8 @@ import { ref } from 'vue';
 import {
   colorBgTealStrong,
   colorBgTealPlain,
-  colorGray8,
-  colorGray3,
+  colorFgMuted,
+  colorBorderBase,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -235,7 +235,7 @@ export default {
 
             ctx.textBaseline = 'middle';
             ctx.font = 'bold 16px Inter';
-            ctx.fillStyle = colorGray8;
+            ctx.fillStyle = colorFgMuted;
 
             // chartLeftMargin is the margin between the chart and the left edge of the chart area (labels space)
             // 4px is the margin between the chart and the text
@@ -258,7 +258,7 @@ export default {
             };
 
             ctx.font = 'normal 14px Inter';
-            ctx.fillStyle = colorGray3;
+            ctx.fillStyle = colorBorderBase;
 
             ctx.fillText(
               `| ${fullValues[index]}`,

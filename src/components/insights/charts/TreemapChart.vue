@@ -54,7 +54,7 @@ import type { topicDistributionMetric } from '@/services/api/resources/conversat
 import { addColors, prepareTopData } from '@/utils/treemap';
 import i18n from '@/utils/plugins/i18n';
 import { useI18n } from 'vue-i18n';
-import { colorGray11 } from '@weni/unnnic-system/tokens/colors';
+import { colorFgBase } from '@weni/unnnic-system/tokens/colors';
 
 ChartJS.defaults.font.family = 'Inter, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);
@@ -151,8 +151,8 @@ const createOrUpdateChart = () => {
                   `${padding}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}${padding}`,
                 ];
               },
-              color: colorGray11,
-              hoverColor: colorGray11,
+              color: colorFgBase,
+              hoverColor: colorFgBase,
               font: [
                 {
                   size: 16,
@@ -188,7 +188,7 @@ const createOrUpdateChart = () => {
           },
           tooltip: {
             enabled: true,
-            backgroundColor: colorGray11,
+            backgroundColor: colorFgBase,
             displayColors: false,
             position: 'nearest',
             caretPadding: (ctx: any) => {

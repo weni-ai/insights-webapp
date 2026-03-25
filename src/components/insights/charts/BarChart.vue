@@ -53,7 +53,7 @@ import {
   colorBgTealStrong,
   colorBgTealPlain,
   colorTeal12,
-  colorGray0,
+  colorFgInverted,
 } from '@weni/unnnic-system/tokens/colors';
 
 export default {
@@ -103,7 +103,7 @@ export default {
           tooltip: false,
           datalabels: {
             color: function (context) {
-              return context.active ? colorTeal12 : colorGray0;
+              return context.active ? colorTeal12 : colorFgInverted;
             },
             anchor: 'end',
             align: 'start',

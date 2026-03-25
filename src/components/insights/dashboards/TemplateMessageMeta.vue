@@ -563,7 +563,7 @@ const unfavoriteTemplate = async () => {
     cursor: pointer;
     font: $unnnic-font-body;
     text-decoration: underline solid;
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
 
     &--active {
       color: $unnnic-color-gray-10;
@@ -597,7 +597,7 @@ const unfavoriteTemplate = async () => {
       max-height: 202px;
     }
     &-text {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
       text-align: center;
       font: $unnnic-font-display-4;
     }

@@ -123,8 +123,8 @@ export default {
     },
     chartOptions() {
       return {
-        backgroundColor: colorTeal8,
-        hoverBackgroundColor: colorTeal8,
+        backgroundColor: colorBgTealStrong,
+        hoverBackgroundColor: colorBgTealStrong,
         pointStyle: false,
         layout: {
           padding: 10,

@@ -63,7 +63,7 @@ defineProps<{
 
     max-width: 600px;
 
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-emphasis;
     text-align: center;
   }

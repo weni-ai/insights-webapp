@@ -78,6 +78,7 @@
               <UnnnicIcon
                 icon="info"
                 size="avatar-nano"
+                scheme="fg-muted"
               />
             </UnnnicToolTip>
           </section>
@@ -175,7 +176,7 @@ export default {
 
   &.not-configured {
     .card__content {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
 
     .card-dashboard__button-config {

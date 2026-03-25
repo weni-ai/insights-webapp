@@ -196,7 +196,7 @@ const handleExpand = () => {
 
       .infos__description {
         white-space: nowrap;
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-caption-2;
       }
     }

@@ -67,7 +67,7 @@ export default {
 
       .not-configured__text {
         padding-bottom: $unnnic-space-4;
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-display-4;
         text-align: center;
       }

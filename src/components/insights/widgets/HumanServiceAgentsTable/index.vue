@@ -408,11 +408,11 @@ export default {
     }
 
     span[data-testid='arrow-asc-icon'] {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
 
     span[data-testid='arrow-desc-icon'] {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
   }
 

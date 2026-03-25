@@ -34,7 +34,7 @@
             <UnnnicIcon
               icon="more_vert"
               size="ant"
-              scheme="neutral-cloudy"
+              scheme="fg-muted"
             />
           </template>
 

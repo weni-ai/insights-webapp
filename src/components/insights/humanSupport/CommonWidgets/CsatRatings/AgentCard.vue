@@ -17,7 +17,7 @@
               icon="info"
               size="sm"
               filled
-              scheme="neutral-cleanest"
+              scheme="fg-muted"
             />
           </UnnnicToolTip>
         </section>

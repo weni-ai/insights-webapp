@@ -270,7 +270,7 @@ const handleFormatDate = (date: string) => {
       cursor: pointer;
 
       &__title {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-body;
       }
 
@@ -295,7 +295,7 @@ const handleFormatDate = (date: string) => {
 
     &__title {
       overflow: hidden;
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
       text-align: right;
       text-overflow: ellipsis;
       font: $unnnic-font-caption-2;

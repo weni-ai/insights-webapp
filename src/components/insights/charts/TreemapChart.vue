@@ -320,7 +320,7 @@ watch(locale, () => {
 
     .no-data__description {
       font: $unnnic-font-display-4;
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
   }
 

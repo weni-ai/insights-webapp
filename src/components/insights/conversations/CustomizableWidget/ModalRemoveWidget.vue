@@ -110,7 +110,7 @@ const handleRemoveWidget = async () => {
 
   &__description {
     font: $unnnic-font-body;
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
   }
 
   :deep(.unnnic-modal-dialog__container__content) {

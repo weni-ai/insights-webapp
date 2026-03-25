@@ -33,7 +33,7 @@
           icon="info"
           size="sm"
           filled
-          scheme="neutral-cleanest"
+          scheme="fg-muted"
         />
       </UnnnicToolTip>
     </section>
@@ -199,12 +199,12 @@ defineEmits<{
   }
 
   &__value-description {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-display-3;
   }
 
   &__description {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-caption-2;
   }
 

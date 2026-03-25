@@ -69,8 +69,8 @@ import {
   colorGreenPlain,
   colorBluePlain,
   colorOrangePlain,
-  colorGray5,
-  colorGray11,
+  colorFgMuted,
+  colorGray12,
 } from '@weni/unnnic-system/tokens/colors';
 
 const colorsMapper = {
@@ -119,13 +119,13 @@ const options = computed(() => ({
       suggestedMin: 0,
       display: true,
       ticks: {
-        color: colorGray5,
+        color: colorFgMuted,
       },
     },
     x: {
       ticks: {
         padding: -1,
-        color: colorGray5,
+        color: colorFgMuted,
       },
       grid: {
         display: true,
@@ -135,7 +135,7 @@ const options = computed(() => ({
   plugins: {
     tooltip: {
       enabled: true,
-      backgroundColor: colorGray11,
+      backgroundColor: colorGray12,
       displayColors: false,
       font: {
         size: '16',
@@ -197,7 +197,7 @@ const plugins = computed(() => [Tooltip]);
       }
       &-percentage {
         font: $unnnic-font-display-4;
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
       }
     }
   }

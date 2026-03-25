@@ -246,7 +246,7 @@ const getButtonIcon = (buttonType) => {
     }
 
     &-hint {
-      color: $unnnic-color-gray-5;
+      color: $unnnic-color-fg-muted;
       text-align: right;
       font-family: $unnnic-font-family;
       font-size: 9.355px;

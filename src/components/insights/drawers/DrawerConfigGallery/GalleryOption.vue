@@ -61,7 +61,7 @@ export default {
     font: $unnnic-font-display-3;
   }
   &__description {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-body;
     text-align: start;
   }

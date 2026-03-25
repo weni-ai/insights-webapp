@@ -147,6 +147,6 @@ watch(
 
 .export-data-feedback__text {
   font: $unnnic-font-body;
-  color: $unnnic-color-gray-7;
+  color: $unnnic-color-fg-muted;
 }
 </style>

@@ -74,7 +74,7 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
 
   &__label {
     font: $unnnic-font-body;
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
   }
 }
 </style>

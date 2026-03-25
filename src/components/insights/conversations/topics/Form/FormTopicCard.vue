@@ -201,7 +201,7 @@ const toggleTopics = () => {
         align-items: center;
 
         &__text {
-          color: $unnnic-color-gray-7;
+          color: $unnnic-color-fg-muted;
           font: $unnnic-font-caption-2;
         }
       }
@@ -234,7 +234,7 @@ const toggleTopics = () => {
           -webkit-line-clamp: 1;
           text-overflow: ellipsis;
           overflow: hidden;
-          color: $unnnic-color-gray-7;
+          color: $unnnic-color-fg-muted;
           font: $unnnic-font-body;
         }
       }

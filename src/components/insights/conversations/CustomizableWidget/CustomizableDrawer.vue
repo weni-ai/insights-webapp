@@ -417,7 +417,7 @@ const isDisabledPrimaryButton = computed(() => {
 <style scoped lang="scss">
 .add-widget-drawer {
   &__section-title {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-display-4;
   }
 
@@ -451,7 +451,7 @@ const isDisabledPrimaryButton = computed(() => {
       }
 
       .item__description {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-body;
       }
     }

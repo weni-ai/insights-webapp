@@ -209,7 +209,7 @@ onBeforeMount(() => {
   }
 
   &__agent-active {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-caption-2;
   }
 }

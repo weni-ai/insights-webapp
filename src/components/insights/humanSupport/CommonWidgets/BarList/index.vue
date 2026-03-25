@@ -156,7 +156,7 @@ const handleTabChange = (tab: string) => {
 
     &__count {
       font: $unnnic-font-body;
-      color: $unnnic-color-gray-5;
+      color: $unnnic-color-fg-muted;
     }
     &__see-more {
       font: $unnnic-font-display-4;

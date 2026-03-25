@@ -350,7 +350,7 @@ const getMaxDate = (): string => {
   }
 
   &__description {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-body;
   }
 

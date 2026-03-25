@@ -184,7 +184,7 @@ defineEmits(['open-config']);
         font: $unnnic-font-display-3;
       }
       &-label {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-caption-2;
       }
       &-divider {
@@ -227,7 +227,7 @@ defineEmits(['open-config']);
     align-items: center;
     justify-content: center;
 
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-display-4;
     text-align: center;
 

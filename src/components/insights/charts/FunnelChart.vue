@@ -115,7 +115,7 @@ export default {
     align-items: center;
     justify-content: center;
 
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-display-4;
     text-align: center;
 

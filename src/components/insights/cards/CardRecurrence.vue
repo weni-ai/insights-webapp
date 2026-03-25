@@ -167,7 +167,7 @@ export default {
   gap: $unnnic-space-4;
 
   &__link {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-action;
     text-decoration-line: underline;
     text-decoration-style: solid;
@@ -179,7 +179,7 @@ export default {
 
   &--not-data {
     .card-recurrence__header .header__title {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
   }
 
@@ -269,7 +269,7 @@ export default {
           max-width: 100%;
           display: inline-block;
 
-          color: $unnnic-color-gray-7;
+          color: $unnnic-color-fg-muted;
           font: $unnnic-font-display-4;
         }
       }
@@ -282,7 +282,7 @@ export default {
       align-items: center;
 
       .not-configured__text {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-display-4;
         text-align: center;
       }

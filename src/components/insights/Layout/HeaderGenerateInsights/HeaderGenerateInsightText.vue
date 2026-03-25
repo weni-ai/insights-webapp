@@ -83,7 +83,7 @@ export default {
   &__generating {
     text-align: start;
 
-    color: $unnnic-color-gray-5;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-body;
 
     @keyframes wave {

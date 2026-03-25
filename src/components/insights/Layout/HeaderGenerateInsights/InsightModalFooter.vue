@@ -168,7 +168,7 @@ export default {
   max-height: 100%;
 
   .footer__description {
-    color: $unnnic-color-gray-5;
+    color: $unnnic-color-fg-muted;
     text-align: right;
     font: $unnnic-font-caption-2;
   }
@@ -195,7 +195,7 @@ export default {
       display: flex;
       align-items: flex-start;
       font: $unnnic-font-body;
-      color: $unnnic-color-gray-5;
+      color: $unnnic-color-fg-muted;
     }
 
     &__container__btns {
@@ -220,10 +220,10 @@ export default {
       align-self: stretch;
 
       &::placeholder {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
       }
 
-      color: $unnnic-color-gray-5;
+      color: $unnnic-color-fg-muted;
 
       font: $unnnic-font-body;
 
@@ -256,7 +256,7 @@ export default {
       }
 
       &:disabled {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         border: 1px solid $unnnic-color-gray-10;
         background: $unnnic-color-gray-12;
       }
@@ -268,7 +268,7 @@ export default {
   border-radius: $unnnic-radius-1;
   border: 1px solid $unnnic-color-gray-10;
   background: $unnnic-color-gray-12;
-  color: $unnnic-color-gray-5;
+  color: $unnnic-color-fg-muted;
   &:active,
   &:hover {
     background-color: inherit;
@@ -276,11 +276,11 @@ export default {
   }
 
   :deep(.material-symbols-rounded.unnnic-icon-scheme--neutral-dark) {
-    color: $unnnic-color-gray-5;
+    color: $unnnic-color-fg-muted;
   }
 
   &:deep(.unnnic-button__label) {
-    color: $unnnic-color-gray-5;
+    color: $unnnic-color-fg-muted;
   }
 
   &-active {

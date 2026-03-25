@@ -169,7 +169,7 @@ export default {
 
   &--not-data {
     .card-vtex-order__header .header__title {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
   }
 
@@ -244,7 +244,7 @@ export default {
       align-items: center;
 
       .not-configured__text {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-display-4;
         text-align: center;
 

@@ -22,7 +22,7 @@
         <UnnnicIcon
           size="lg"
           icon="filter_alt"
-          scheme="neutral-cloudy"
+          scheme="fg-muted"
         />
         <p class="not-configured__text">
           {{ $t('widgets.graph_funnel.not_configured_description') }}
@@ -115,7 +115,7 @@ export default {
 
   &--not-configured {
     .card-funnel__header .header__title {
-      color: $unnnic-color-gray-7;
+      color: $unnnic-color-fg-muted;
     }
   }
 
@@ -152,7 +152,7 @@ export default {
       gap: $unnnic-space-4;
 
       .not-configured__text {
-        color: $unnnic-color-gray-7;
+        color: $unnnic-color-fg-muted;
         font: $unnnic-font-display-4;
         text-align: center;
       }

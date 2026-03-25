@@ -47,6 +47,10 @@ import type {
 import i18n from '@/utils/plugins/i18n';
 import { orderBy } from '@/utils/array';
 import { formatNumber } from '@/utils/numbers';
+import {
+  colorBgBluePlain,
+  colorBgBlueStrong,
+} from '@weni/unnnic-system/tokens/colors';
 
 const { t } = i18n.global;
 
@@ -101,8 +105,8 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   showConfig: false,
   setupTitle: '',
   setupDescription: '',
-  barColor: '#3182CE',
-  barBackgroundColor: '#E5EEF9',
+  barColor: colorBgBlueStrong,
+  barBackgroundColor: colorBgBluePlain,
 });
 
 const tabsList = computed(() => props.tabs(props.context));

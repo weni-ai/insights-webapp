@@ -26,7 +26,37 @@
     "others": "Outros",
     "unclassified": "Sem classificação",
     "info": {
-      "description": "Os dados conversacionais mostram conversas iniciadas até 24 horas antes do horário atual. Conversas mais recentes ainda estão sendo classificadas e não são exibidas. Atualize o dashboard para atualizar a janela de dados."
+      "description": "A partir de {date}, os dados conversacionais contemplam janelas encerradas até às 23h59m59s do dia de início, considerando o timezone configurado no projeto. Conversas do dia atual ainda estão em processamento e serão exibidas após o fechamento do período.",
+      "mock_description": "Estes números são apenas para fins de demonstração. Assim que o primeiro widget for configurado, os dados reais serão exibidos aqui."
+    },
+    "mock": {
+      "custom_widget_title": "Status do pedido",
+      "crosstab_widget_title": "Satisfação por categoria de conversa",
+      "topics": {
+        "delayed_delivery": "Entrega atrasada",
+        "defective_product": "Produto defeituoso",
+        "price_questions": "Dúvidas sobre preço",
+        "cancellation": "Cancelamento",
+        "unclassified": "Não classificado",
+        "others": "Outros"
+      },
+      "custom_labels": {
+        "delivered": "Entregue",
+        "awaiting_payment": "Aguardando pagamento",
+        "in_preparation": "Em preparação",
+        "payment_confirmed": "Pagamento confirmado",
+        "in_transit": "Em trânsito",
+        "returned": "Devolvido"
+      },
+      "crosstab_labels": {
+        "order_status": "Status do pedido",
+        "product_inquiries": "Dúvidas sobre produtos",
+        "payments": "Pagamentos",
+        "technical_support": "Suporte técnico",
+        "shipping_info": "Informações de envio",
+        "satisfied": "Satisfeito",
+        "dissatisfied": "Insatisfeito"
+      }
     },
     "header": {
       "total": "Total de conversas",
@@ -35,7 +65,7 @@
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para atendimento humano",
       "tooltips": {
-        "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
+        "total": "Total de conversas encerradas no período. Uma conversa é contabilizada desde a primeira mensagem do contato até as 23h59m59s do mesmo dia. Mensagens enviadas após este horário iniciam uma nova janela de conversa no dia seguinte.",
         "resolved": "Quando o agente demonstra competência e fornece serviço útil",
         "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente)",
         "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
@@ -137,6 +167,7 @@
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas principais métricas",
       "add_widget": "Adicionar widget",
+      "add_first_widget": "Adicione seu primeiro widget",
       "csat_description": "A pontuação de satisfação do cliente (CSAT) mede o nível de satisfação com o serviço recebido",
       "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
@@ -288,7 +319,7 @@
   "table_group": {
     "contact": "Contato",
     "urn": "URN",
-    "agent": "Agente",
+    "agent": "Representante",
     "created_on": "Início",
     "ended_at": "Término",
     "sector": "Setor",
@@ -307,8 +338,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agente",
-      "placeholder": "Selecione um agente"
+      "label": "Atendente",
+      "placeholder": "Selecione um atendente"
     },
     "contact": {
       "label": "Contato",
@@ -341,10 +372,12 @@
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",
-  "chats_per_agents": "Chats por agente",
+  "chats_per_agents": "Chats por atendente",
   "closeds": "Encerrados",
+  "finished": "Finalizado",
   "in_progress": "Em andamento",
   "waiting": "Aguardando",
+  "awaiting": "Em espera",
   "in-service": "Em atendimento",
   "status": "Status",
   "metric": "Métrica",
@@ -384,13 +417,13 @@
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})",
-    "last_7_days_conversational": "Últimos 7 dias (até 24h atrás)",
-    "last_14_days_conversational": "Últimos 14 dias (até 24h atrás)",
-    "last_30_days_conversational": "Últimos 30 dias (até 24h atrás)",
-    "last_12_months_conversational": "Últimos 12 meses (até 24h atrás)",
-    "current_month_conversational": "Mês atual (até 24h atrás)",
-    "previous_month_conversational": "Mês anterior (até 24h atrás)",
-    "custom_conversational": "Personalizado (até 24h atrás)"
+    "last_7_days_conversational": "Últimos 7 dias (até {date})",
+    "last_14_days_conversational": "Últimos 14 dias (até {date})",
+    "last_30_days_conversational": "Últimos 30 dias (até {date})",
+    "last_12_months_conversational": "Últimos 12 meses (até {date})",
+    "current_month_conversational": "Mês atual (até {date})",
+    "previous_month_conversational": "Mês anterior (até {date})",
+    "custom_conversational": "Personalizado (até {date})"
   },
   "data_period": {
     "label": "Período",
@@ -761,14 +794,14 @@
       "sectors": "Setores",
       "queues": "Filas",
       "rooms": "Salas",
-      "users": "Agentes",
+      "users": "Atendentes",
       "sector_tags": "Tags",
       "contacts": "Contatos",
       "resolutions": "Resoluções de conversas",
       "topics": "Assuntos",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Agent"
+      "agent_status_logs": "Atendente"
     },
     "field_labels": {
       "config": "Configuração",
@@ -837,14 +870,14 @@
     "filters": {
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "agent": "Agente",
-      "select_agent": "Selecione o agente",
+      "representative": "Atendente",
+      "select_representative": "Selecione o atendente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",
       "tag": "Tag",
       "select_tag": "Selecione a tag",
       "all_sectors": "Todos os setores",
-      "all_agents": "Todos os agentes",
+      "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
       "all_tags": "Todas as tags"
     },
@@ -857,14 +890,14 @@
     "error_default": "Ops, ocorreu um erro"
   },
   "disconnectAgent": {
-    "title": "Desconectar agente",
-    "description": "Tem certeza de que deseja desconectar o agente {agent}?",
-    "description_confirm": "Ao confirmar, o agente {agent} ficará offline.",
-    "tooltip": "Desconectar agente",
+    "title": "Desconectar atendente",
+    "description": "Tem certeza de que deseja desconectar o atendente {agent}?",
+    "description_confirm": "Ao confirmar, o atendente {agent} ficará offline.",
+    "tooltip": "Desconectar atendente",
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
     "sucess_message": "{agent} está offline!",
-    "error_message": "Erro ao desconectar o agente {agent}",
+    "error_message": "Erro ao desconectar o atendente {agent}",
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
   "human_support_dashboard": {
@@ -941,6 +974,11 @@
         "average_duration": "Duração média",
         "time_in_service": "Tempo em atendimento",
         "action": "Ação"
+      },
+      "agents_count": {
+        "online": "{count} online",
+        "custom_breaks": "{count} em pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -956,6 +994,9 @@
       },
       "ticket_id": {
         "label": "Protocolo"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {
@@ -1001,6 +1042,48 @@
         "very_dissatisfied": "😡 Muito insatisfeito"
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
+    },
+    "setup": {
+      "title": "Nenhum setor criado",
+      "description": "Crie um setor para este projeto e comece a monitorizar os dados do seu time de suporte em tempo real.",
+      "action_text": "Criar setor",
+      "disclaimer": "Estes números são apenas para fins de demonstração. Assim que seu projeto tiver um setor configurado e começar a receber conversas, seus dados reais serão exibidos aqui."
+    },
+    "common": {
+      "no_response": "Sem resposta"
+    },
+    "volume_per_queue": {
+      "title": "Volume por fila",
+      "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",
+      "analysis_count": "{count} fila com chats finalizados | {count} filas com chats finalizados",
+      "setup_description": "Crie filas por setor para monitorar mais dados.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Não há filas com chats aguardando suporte",
+          "ongoing": "Não há filas com chats em progresso",
+          "closed": "Não há chats finalizados hoje"
+        },
+        "analysis": {
+          "closed": "Não há chats finalizados no período selecionado"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volume por tag",
+      "setup_description": "Adicione tags a setores para monitorar mais dados.",
+      "count": {
+        "ongoing": "{count} tag em uso | {count} tags em uso",
+        "closed": "{count} tag atribuída | {count} tags atribuídas"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "Não há tags em uso em chats em andamento",
+          "closed": "Não há tags atribuídas a chats finalizados hoje"
+        },
+        "analysis": {
+          "closed": "Não há tags atribuídas a chats finalizados no período selecionado"
+        }
+      }
     }
   },
   "news": {
@@ -1010,20 +1093,42 @@
         "first_text": "Monitorize as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>!",
         "second_text": "Agora você pode monitorar o status dos atendimentos em tempo real:",
         "third_text": "Monitorize as métricas de tempo agora — tempo médio e máximo em espera, tempo para 1ª resposta e duração — em tempo real:",
-        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e agente.",
+        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e atendente.",
         "fifth_text": "Você pode monitorar cada interação através das abas <b>Em andamento</b> e <b>Em espera</b>. Clique nas interações para visualizá-las.",
-        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada agente por interação, bem como as pausas personalizadas.",
-        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada agente para entrar em modo de visualização ou usar o botão para desconectá-lo."
+        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada atendente por interação, bem como as pausas personalizadas.",
+        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada atendente para entrar em modo de visualização ou usar o botão para desconectá-lo."
       },
       "analysis": {
         "first_text": "Explore as interações encerradas para descobrir padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
         "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio em espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
-        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e agente.",
-        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
+        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e atendente.",
+        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada atendente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
       }
     }
   },
   "on": "Ativa",
   "off": "Desativada",
-  "paused": "Pausada"
+  "paused": "Pausada",
+  "data_feedback": {
+    "title": "Compartilhe sua experiência com o Dashboard de IA Conversacional",
+    "description": "Considerando sua experiência com este dashboard, indique o quanto você concorda com as afirmações abaixo:",
+    "q1": "Eu confio nos dados apresentados neste dashboard.",
+    "q2": "Os dados deste dashboard me ajudam a tomar decisões.",
+    "q3": "Com este dashboard, consigo entender o impacto (ROI) das conversas de IA nos resultados do negócio.",
+    "textarea_label": "O que poderíamos melhorar neste dashboard? (opcional)",
+    "textarea_placeholder": "Compartilhe sugestões para melhorar a clareza, confiança ou utilidade dos dados.",
+    "strongly_agree": "Concordo totalmente",
+    "partially_agree": "Concordo parcialmente",
+    "neutral": "Neutro",
+    "partially_disagree": "Discordo parcialmente",
+    "strongly_disagree": "Discordo totalmente",
+    "postpone": "Adiar",
+    "submit": "Enviar feedback",
+    "toast_success": "Feedback enviado com sucesso. Obrigado!",
+    "toast_error": "Não conseguimos enviar seu feedback.",
+    "toast_error_retry": "Tentar novamente",
+    "toast_postponed": "Feedback adiado. Você poderá responder depois.",
+    "toast_postponed_respond": "Responder agora"
+  },
+  "without_results": "Nenhum resultado encontrado"
 }

@@ -1,21 +1,15 @@
 <template>
   <section
     class="most-talked-about-topics"
+    :class="{ 'most-talked-about-topics--mock-hover': shouldUseMock }"
     data-testid="most-talked-about-topics"
   >
     <BaseConversationWidget
       class="most-talked-about-topics__conversation-widget"
       data-testid="topics-base-widget"
       :title="$t('conversations_dashboard.most_talked_about_topics.title')"
-      :actions="[
-        {
-          icon: 'edit_square',
-          text: $t(
-            'conversations_dashboard.most_talked_about_topics.edit_topics_and_subtopics',
-          ),
-          onClick: toggleAddTopicsDrawer,
-        },
-      ]"
+      :actions="shouldUseMock ? [] : actions"
+      :hiddenTabs="shouldUseMock"
       @tab-change="handleTabChange"
     >
       <TreemapChart
@@ -26,7 +20,7 @@
       />
 
       <UnnnicButton
-        v-if="treemapData.length > 0"
+        v-if="treemapData.length > 0 && !shouldUseMock"
         type="tertiary"
         size="small"
         :disabled="isLoadingTopicsDistribution"
@@ -45,7 +39,8 @@
     </BaseConversationWidget>
 
     <AddWidget
-      v-if="!hasExistingTopics && !isLoadingTopicsDistribution"
+      v-if="showAddWidget"
+      class="most-talked-about-topics__add-widget"
       :title="$t('conversations_dashboard.most_talked_about_topics.no_topics')"
       :description="
         $t(
@@ -66,67 +61,29 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
 import AddWidget from '../AddWidget.vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import DrawerTopics from '../topics/DrawerTopics.vue';
-import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import type { Tab } from '../BaseConversationWidget.vue';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { getMockTopicsDistribution } from '@/services/api/resources/conversational/mocks';
 
 const conversationalTopicsStore = useConversationalTopics();
 const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 
 const route = useRoute();
-
-const MOCK_DATA: topicDistributionMetric[] = [
-  {
-    label: 'Entrega atrasada',
-    value: 6973,
-    percentage: 29,
-    uuid: '',
-  },
-  {
-    label: 'Produto defeituoso',
-    value: 5500,
-    percentage: 23,
-    uuid: '',
-  },
-  {
-    label: 'Dúvidas sobre preço',
-    value: 1600,
-    percentage: 16,
-    uuid: '',
-  },
-  {
-    label: 'Cancelamento',
-    value: 1400,
-    percentage: 14,
-    uuid: '',
-  },
-  {
-    label: 'Unclassified',
-    value: 1000,
-    percentage: 13,
-    uuid: '',
-  },
-  {
-    label: 'Outros',
-    value: 500,
-    percentage: 5,
-    uuid: '',
-  },
-];
 
 const {
   topicsDistributionCount,
   topicsDistribution,
   isLoadingTopicsDistribution,
   topicType,
-  hasExistingTopics,
 } = storeToRefs(conversationalTopicsStore);
 
 const { loadTopicsDistribution, toggleAddTopicsDrawer, setTopicType } =
@@ -144,13 +101,31 @@ const handleSeeAllDrawer = (expandedItem?: string) => {
 };
 
 const treemapData = computed(() => {
-  if (!hasExistingTopics.value) return MOCK_DATA;
+  if (shouldUseMock.value) return getMockTopicsDistribution().topics;
 
   if (topicsDistributionCount.value === 0) return [];
 
   return [...topicsDistribution.value].sort(
     (a, b) => b?.percentage - a?.percentage,
   );
+});
+
+const { t } = useI18n();
+
+const actions = computed(() => [
+  {
+    icon: 'edit_square',
+    text: t(
+      'conversations_dashboard.most_talked_about_topics.edit_topics_and_subtopics',
+    ),
+    onClick: toggleAddTopicsDrawer,
+  },
+]);
+
+const showAddWidget = computed(() => {
+  if (isLoadingTopicsDistribution.value) return false;
+  if (shouldUseMock.value) return true;
+  return treemapData.value.length === 0;
 });
 
 const handleTabChange = (tab: Tab) => {
@@ -195,7 +170,7 @@ onMounted(() => {
 .most-talked-about-topics {
   position: relative;
 
-  padding-bottom: $unnnic-spacing-sm;
+  padding-bottom: $unnnic-space-4;
 
   overflow: hidden;
 
@@ -205,7 +180,21 @@ onMounted(() => {
   &__conversation-widget {
     height: 100%;
 
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
+  }
+
+  &__add-widget {
+    transition: opacity 0.2s ease;
+  }
+
+  &--mock-hover {
+    .most-talked-about-topics__add-widget {
+      opacity: 0;
+    }
+
+    &:hover .most-talked-about-topics__add-widget {
+      opacity: 1;
+    }
   }
 }
 </style>

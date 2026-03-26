@@ -26,7 +26,37 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
-      "description": "The conversational data shows conversations initiated up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window."
+      "description": "As of {date}, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed.",
+      "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
+    },
+    "mock": {
+      "custom_widget_title": "Order status",
+      "crosstab_widget_title": "Satisfaction by conversation category",
+      "topics": {
+        "delayed_delivery": "Delayed delivery",
+        "defective_product": "Defective product",
+        "price_questions": "Price questions",
+        "cancellation": "Cancellation",
+        "unclassified": "Unclassified",
+        "others": "Others"
+      },
+      "custom_labels": {
+        "delivered": "Delivered",
+        "awaiting_payment": "Awaiting payment",
+        "in_preparation": "In preparation",
+        "payment_confirmed": "Payment confirmed",
+        "in_transit": "In transit",
+        "returned": "Returned"
+      },
+      "crosstab_labels": {
+        "order_status": "Order status",
+        "product_inquiries": "Product inquiries",
+        "payments": "Payments",
+        "technical_support": "Technical support",
+        "shipping_info": "Shipping info",
+        "satisfied": "Satisfied",
+        "dissatisfied": "Dissatisfied"
+      }
     },
     "header": {
       "total": "Total conversations",
@@ -35,7 +65,7 @@
       "unengaged": "Unengaged",
       "transferred": "Transferred to human support",
       "tooltips": {
-        "total": "Total conversations started in the period. A conversation is counted 24 hours after the contact's first message.",
+        "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
         "resolved": "When the agent demonstrates competence and provides useful service",
         "unresolved": "When there was no effective assistance (greetings only, out of scope, agent failures)",
         "unengaged": "Conversation with minimal engagement. This includes greetings or emojis only, or cases closed without interaction.",
@@ -137,6 +167,7 @@
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
       "add_widget": "Add widget",
+      "add_first_widget": "Add your first widget",
       "csat_description": "Customer Satisfaction Score (CSAT) measures how satisfied contacts are with the service they received",
       "nps_description": "Net Promoter Score (NPS) measures how likely contacts are to recommend your service",
       "config_csat_or_nps_description": "Set which {type} you want to track",
@@ -288,7 +319,7 @@
   "table_group": {
     "contact": "Contact",
     "urn": "URN",
-    "agent": "Agent",
+    "agent": "Representative",
     "created_on": "Start",
     "ended_at": "End",
     "sector": "Sector",
@@ -307,8 +338,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agent",
-      "placeholder": "Select an agent"
+      "label": "Representative",
+      "placeholder": "Select a representative"
     },
     "contact": {
       "label": "Contact",
@@ -340,11 +371,13 @@
   "lines_count": "{count} lines",
   "reload": "Refresh",
   "agent": "Agent",
-  "online_agents": "Online agents",
-  "chats_per_agents": "Chats per agent",
+  "online_agents": "Online representatives",
+  "chats_per_agents": "Chats per representative",
   "closeds": "Closed",
+  "finished": "Finished",
   "in_progress": "In progress",
   "waiting": "Waiting",
+  "awaiting": "Awaiting",
   "in-service": "In progress",
   "status": "Status",
   "metric": "Metric",
@@ -385,13 +418,13 @@
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})",
-    "last_7_days_conversational": "Last 7 days (up to 24h ago)",
-    "last_14_days_conversational": "Last 14 days (up to 24h ago)",
-    "last_30_days_conversational": "Last 30 days (up to 24h ago)",
-    "last_12_months_conversational": "Last 12 months (up to 24h ago)",
-    "current_month_conversational": "Current month (up to 24h ago)",
-    "previous_month_conversational": "Previous month (up to 24h ago)",
-    "custom_conversational": "Custom (up to 24h ago)"
+    "last_7_days_conversational": "Last 7 days (up to {date})",
+    "last_14_days_conversational": "Last 14 days (up to {date})",
+    "last_30_days_conversational": "Last 30 days (up to {date})",
+    "last_12_months_conversational": "Last 12 months (up to {date})",
+    "current_month_conversational": "Current month (up to {date})",
+    "previous_month_conversational": "Previous month (up to {date})",
+    "custom_conversational": "Custom (up to {date})"
   },
   "data_period": {
     "label": "Data period",
@@ -762,14 +795,14 @@
       "sectors": "Industries",
       "queues": "Queues",
       "rooms": "Rooms",
-      "users": "Agents",
+      "users": "Representatives",
       "sector_tags": "Tags",
       "contacts": "Contacts",
       "resolutions": "Conversation resolutions",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Agent"
+      "agent_status_logs": "Representative"
     },
     "field_labels": {
       "config": "Configuration",
@@ -838,14 +871,14 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Select a sector",
-      "agent": "Agent",
-      "select_agent": "Select an agent",
+      "representative": "Representative",
+      "select_representative": "Select a representative",
       "queue": "Queue",
       "select_queue": "Select a queue",
       "tag": "Tag",
       "select_tag": "Select a tag",
       "all_sectors": "All sectors",
-      "all_agents": "All agents",
+      "all_representatives": "All representatives",
       "all_queues": "All queues",
       "all_tags": "All tags"
     },
@@ -858,15 +891,15 @@
     "error_default": "Oops, something went wrong"
   },
   "disconnectAgent": {
-    "title": "Disconnect agent",
-    "description": "Are you sure you want to disconnect the agent {agent}?",
-    "description_confirm": "Agent {agent} will be offline after confirmation",
-    "tooltip": "Disconnect agent",
+    "title": "Disconnect representative",
+    "description": "Are you sure you want to disconnect the representative {agent}?",
+    "description_confirm": "Representative {agent} will be offline after confirmation",
+    "tooltip": "Disconnect representative",
     "save_btn": "Disconnect",
     "cancel_btn": "Cancel",
     "sucess_message": "{agent} is offline!",
-    "error_message": "Error disconnecting agent {agent}",
-    "tooltip_disabled": "This agent cannot be disconnected because it is offline"
+    "error_message": "Error disconnecting representative {agent}",
+    "tooltip_disabled": "This representative cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
     "title": "Human support",
@@ -895,9 +928,9 @@
       "max": "Max",
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in the queue until the support starts",
-        "average_time_first_response": "Average time until the first message from the agent after the room is assigned",
+        "average_time_first_response": "Average time until the first message from the representative after the room is assigned",
         "average_response_time": "Average time a contact waits for a response per message",
-        "average_time_chat": "Average total duration of the conversation, from the start of the support with the agent until it is finalized"
+        "average_time_chat": "Average total duration of the conversation, from the start of the support with the representative until it is finalized"
       }
     },
     "services_open_by_hour": {
@@ -908,21 +941,21 @@
       "tabs": {
         "in_awaiting": "In awaiting",
         "in_progress": "In progress",
-        "attendant": "Agent",
+        "attendant": "Representative",
         "pauses": "Custom Breaks"
       },
       "in_progress": {
         "duration": "Duration",
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
-        "attendant": "Agent",
+        "attendant": "Representative",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact"
       },
       "pauses": {
         "status": "Status",
-        "attendant": "Agent",
+        "attendant": "Representative",
         "opened": "Opened",
         "closed": "Closed"
       },
@@ -933,7 +966,7 @@
         "queue": "Queue"
       },
       "attendant": {
-        "agent": "Agent",
+        "agent": "Representative",
         "status": "Status",
         "ongoing": "Ongoing",
         "finished": "Finished",
@@ -942,6 +975,11 @@
         "average_duration": "Average duration",
         "time_in_service": "Time in service",
         "action": "Action"
+      },
+      "agents_count": {
+        "online": "{count} online",
+        "custom_breaks": "{count} on break",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -950,13 +988,16 @@
         "clear": "Clear selection"
       },
       "attendant": {
-        "label": "Agent"
+        "label": "Representative"
       },
       "contact": {
         "label": "Contact"
       },
       "ticket_id": {
         "label": "Ticket ID"
+      },
+      "status": {
+        "label": "Status"
       }
     },
     "columns": {
@@ -965,7 +1006,7 @@
         "awaiting_time": "Awaiting time",
         "first_response_time": "First response time",
         "response_time": "Response time",
-        "agent": "Agent",
+        "agent": "Representative",
         "sector": "Sector",
         "queue": "Queue",
         "contact": "Contact",
@@ -984,7 +1025,7 @@
         "title": "Detailed analysis",
         "tabs": {
           "finished": "Finished",
-          "attendant": "Agent",
+          "attendant": "Representative",
           "pauses": "Custom Breaks"
         }
       }
@@ -1002,6 +1043,48 @@
         "very_dissatisfied": "😡 Very dissatisfied"
       },
       "disabled_text": "Enable CSAT to track overall ratings, by department, queue, and agent."
+    },
+    "setup": {
+      "title": "No sector created",
+      "description": "Create a sector for this project and start monitoring your team's support data in real time.",
+      "action_text": "Create sector",
+      "disclaimer": "These numbers are for demonstration purposes only. Once your project has a sector configured and begins receiving conversations, your real data will be displayed here."
+    },
+    "common": {
+      "no_response": "No response"
+    },
+    "volume_per_queue": {
+      "title": "Volume per queue",
+      "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
+      "analysis_count": "{count} queue with finished chats | {count} queues with finished chats",
+      "setup_description": "Create queues by sector to monitor more data.",
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No queues have chats waiting for support",
+          "ongoing": "No queues have chats in progress",
+          "closed": "No chats were finished today"
+        },
+        "analysis": {
+          "closed": "No chats were finished during the selected period"
+        }
+      }
+    },
+    "volume_per_tag": {
+      "title": "Volume per tag",
+      "setup_description": "Add tags to sectors to monitor more data.",
+      "count": {
+        "ongoing": "{count} tag in use | {count} tags in use",
+        "closed": "{count} assigned tag | {count} assigned tags"
+      },
+      "empty_data": {
+        "monitoring": {
+          "ongoing": "No tags are being used on chats in progress",
+          "closed": "No tags were assigned to chats finished today"
+        },
+        "analysis": {
+          "closed": "No tags were assigned to chats finished during the selected period"
+        }
+      }
     }
   },
   "news": {
@@ -1011,20 +1094,42 @@
         "first_text": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation. Discover the new <b>Monitoring</b> view!",
         "second_text": "Now you can monitor the <b>Support</b> status of customer interactions in real time:",
         "third_text": "Monitor <b>Time metrics now</b> — average and maximum wait times, first response time, and duration — in real time:",
-        "fourth_text": "The <b>Detailed monitoring table</b> allows you to track real-time data for each interaction and agent.",
+        "fourth_text": "The <b>Detailed monitoring table</b> allows you to track real-time data for each interaction and representative.",
         "fifth_text": "You can monitor each interaction through the <b>In Progress</b> and <b>In awaiting</b> tabs. Click on the interactions to view them.",
-        "sixth_text": "The <b>Agent</b> and <b>Break</b> tabs allow you to monitor each agent's metrics by interaction, as well as custom break times.",
-        "seventh_text": "On the <b>Agent</b> tab, you can click on each agent to enter view-only mode or use the button to disconnect them."
+        "sixth_text": "The <b>Representative</b> and <b>Break</b> tabs allow you to monitor each representative's metrics by interaction, as well as custom break times.",
+        "seventh_text": "On the <b>Representative</b> tab, you can click on each representative to enter view-only mode or use the button to disconnect them."
       },
       "analysis": {
         "first_text": "Explore closed interactions to discover patterns and trends. Identify opportunities for improvement and enhance your team's performance. Discover the new <b>Analysis</b> view!",
         "second_text": "Now, you can track all closed support metrics: <b>Average Wait Time</b>, <b>Average First Response Time</b>, <b>Average Response Time</b>, and <b>Average Support Duration</b>.",
-        "third_text": "The detailed analysis table allows you to analyze data for each interaction and agent.",
-        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Agent</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each agent by closed interaction, as well as the custom breaks within the filtered period."
+        "third_text": "The detailed analysis table allows you to analyze data for each interaction and representative.",
+        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Representative</b> and <b>Breaks</b> tabs allow you to analyze the metrics of each representative by closed interaction, as well as the custom breaks within the filtered period."
       }
     }
   },
   "on": "On",
   "off": "Off",
-  "paused": "Paused"
+  "paused": "Paused",
+  "data_feedback": {
+    "title": "Share your experience with the Conversational AI Dashboard",
+    "description": "Considering your experience with this dashboard, please indicate how much you agree with the statements below:",
+    "q1": "I trust the data presented in this dashboard.",
+    "q2": "The data in this dashboard helps me make decisions.",
+    "q3": "With this dashboard, I can understand the impact (ROI) of AI conversations on business results.",
+    "textarea_label": "What could we improve in this dashboard? (optional)",
+    "textarea_placeholder": "Share suggestions to improve data clarity, trust, or usefulness.",
+    "strongly_agree": "Strongly agree",
+    "partially_agree": "Partially agree",
+    "neutral": "Neutral",
+    "partially_disagree": "Partially disagree",
+    "strongly_disagree": "Strongly disagree",
+    "postpone": "Postpone",
+    "submit": "Submit feedback",
+    "toast_success": "Feedback sent successfully. Thank you!",
+    "toast_error": "We couldn't send your feedback.",
+    "toast_error_retry": "Try again",
+    "toast_postponed": "Feedback postponed. You can respond later.",
+    "toast_postponed_respond": "Respond now"
+  },
+  "without_results": "No results found"
 }

@@ -5,6 +5,8 @@ import { useHumanSupportAnalysis } from './analysis';
 import { getLastNDays } from '@/utils/time';
 import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
+import i18n from '@/utils/plugins/i18n';
+import { redirectToChatsConfig } from '@/utils/redirect';
 
 interface Filter {
   value: string;
@@ -18,17 +20,23 @@ interface AppliedFilters {
 }
 
 interface AppliedDetailFilter {
-  value: string;
-  label: string;
+  value: string | string[];
+  label?: string;
 }
 
-type DetailFilterType = 'agent' | 'contact' | 'ticketId' | 'contactInput';
+type DetailFilterType =
+  | 'status'
+  | 'agent'
+  | 'contact'
+  | 'ticketId'
+  | 'contactInput';
 
 interface AppliedDetailFilters {
   agent: AppliedDetailFilter;
   contact: AppliedDetailFilter;
   ticketId: AppliedDetailFilter;
   contactInput: AppliedDetailFilter;
+  status: AppliedDetailFilter;
 }
 export interface DateRange {
   start: string;
@@ -76,6 +84,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     contact: { value: '', label: '' },
     ticketId: { value: '', label: '' },
     contactInput: { value: '', label: '' },
+    status: { value: [], label: '' },
   });
 
   const appliedFiltersLength = computed(() => {
@@ -98,7 +107,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   const saveAppliedDetailFilter = (
     type: DetailFilterType,
-    value: string,
+    value: string | string[],
     label: string,
   ) => {
     appliedDetailFilters.value[type] = { value, label };
@@ -153,6 +162,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       contact: { value: '', label: '' },
       ticketId: { value: '', label: '' },
       contactInput: { value: '', label: '' },
+      status: { value: [], label: '' },
     };
   };
 
@@ -169,6 +179,15 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     clearAppliedDetailFilters();
   });
 
+  const widgetSetupProps = computed(() => ({
+    title: i18n.global.t('human_support_dashboard.setup.title'),
+    description: i18n.global.t('human_support_dashboard.setup.description'),
+    actionButtonProps: {
+      text: i18n.global.t('human_support_dashboard.setup.action_text'),
+    },
+    actionClick: redirectToChatsConfig,
+  }));
+
   return {
     activeTab,
     sectors,
@@ -183,5 +202,6 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     setActiveTab,
     clearFilters,
     hasAppliedFiltersNoChanges,
+    widgetSetupProps,
   };
 });

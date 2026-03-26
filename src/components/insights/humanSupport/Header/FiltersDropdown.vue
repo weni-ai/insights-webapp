@@ -14,6 +14,7 @@
           type="secondary"
           iconLeft="filter_list"
           :text="titleButton"
+          :disabled="!hasSectorsConfigured"
         />
       </template>
 
@@ -89,8 +90,14 @@ import { UnnnicButton, UnnnicDropdown, UnnnicLabel } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
+
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
+
+const projectStore = useProject();
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const humanSupport = useHumanSupport();
 const { clearFilters, saveAppliedFilters } = humanSupport;
@@ -189,7 +196,7 @@ const titleButton = computed(() => {
     width: 400px;
     display: flex;
     flex-wrap: wrap;
-    gap: $unnnic-spacing-md;
+    gap: $unnnic-space-6;
     padding: $unnnic-space-3 $unnnic-space-2;
   }
 
@@ -197,14 +204,14 @@ const titleButton = computed(() => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
   }
 
   &__footer {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
 
     &-button {
       width: 100%;

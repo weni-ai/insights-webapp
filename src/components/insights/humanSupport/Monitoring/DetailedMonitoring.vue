@@ -1,8 +1,13 @@
 <template>
   <section
     id="detailed-monitoring"
+    ref="detailedMonitoring"
     class="detailed-monitoring"
   >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
     <p class="detailed-monitoring__title">
       {{ $t('human_support_dashboard.detailed_monitoring.title') }}
     </p>
@@ -15,54 +20,81 @@
         "
         class="detailed-monitoring__filters"
       >
-        <DetailedFilters :type="filterType" />
+        <DetailedFilters
+          :type="filterType"
+          mode="monitoring"
+        />
       </section>
     </Transition>
     <section class="detailed-monitoring__tabs">
-      <UnnnicTab
-        data-testid="human-support-tab"
-        :tabs="tabsKeys"
-        :activeTab="activeDetailedTab"
-        @change="changeActiveTabName"
+      <UnnnicTabs
+        :modelValue="activeDetailedTab"
+        @update:model-value="changeActiveTabName"
       >
-        <template
-          v-for="[key, tab] in Object.entries(tabs)"
-          #[`tab-head-${key}`]
-          :key="`tab-head-${key}`"
+        <UnnnicTabsList>
+          <UnnnicTabsTrigger
+            v-for="[key, tab] in Object.entries(tabs)"
+            :key="key"
+            :value="key"
+          >
+            {{
+              $t(`human_support_dashboard.detailed_monitoring.tabs.${tab.name}`)
+            }}
+          </UnnnicTabsTrigger>
+          <template #right>
+            <AgentsCount v-if="showAgentsCount" />
+          </template>
+        </UnnnicTabsList>
+        <UnnnicTabsContent
+          v-for="key in tabsKeys"
+          :key="key"
+          :value="key"
         >
-          {{
-            $t(`human_support_dashboard.detailed_monitoring.tabs.${tab.name}`)
-          }}
-        </template>
-        <template
-          v-for="key in Object.keys(tabs)"
-          #[`tab-panel-${key}`]
-          :key="`tab-panel-${key}`"
-        >
-          <component
-            :is="tabs[key].component"
-            :data-testid="`tab-panel-${key}`"
-          />
-        </template>
-      </UnnnicTab>
+          <section class="detailed-monitoring__tabs-content">
+            <component
+              :is="tabs[key].component"
+              :data-testid="`tab-panel-${key}`"
+            />
+          </section>
+        </UnnnicTabsContent>
+      </UnnnicTabs>
     </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import { UnnnicTab } from '@weni/unnnic-system';
+import { computed, Component, useTemplateRef } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useMouseInElement } from '@vueuse/core';
+
 import InAwaiting from './Tables/InAwaiting.vue';
 import InProgress from './Tables/InProgress.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from '../Common/Tables/Pauses.vue';
-import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import AgentsCount from './AgentsCount.vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
 import {
   ActiveDetailedTab,
   useHumanSupportMonitoring,
 } from '@/store/modules/humanSupport/monitoring';
-import { Component } from 'vue';
+import { useProject } from '@/store/modules/project';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+
+const project = useProject();
+const { hasSectorsConfigured } = storeToRefs(project);
+
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
+
+const detailedMonitoringRef =
+  useTemplateRef<HTMLDivElement>('detailedMonitoring');
+const { isOutside } = useMouseInElement(detailedMonitoringRef);
+
+const showSetup = computed(() => {
+  return !hasSectorsConfigured.value && !isOutside.value;
+});
 
 const tabs: Record<
   ActiveDetailedTab,
@@ -96,6 +128,10 @@ const changeActiveTabName = (tab: ActiveDetailedTab) => {
   setActiveDetailedTab(tab);
 };
 
+const showAgentsCount = computed(() => {
+  return activeDetailedTab.value === 'attendant';
+});
+
 const filterType = computed(() => {
   return activeDetailedTab.value as
     | 'attendant'
@@ -107,14 +143,15 @@ const filterType = computed(() => {
 
 <style scoped lang="scss">
 .detailed-monitoring {
+  position: relative;
   display: flex;
   padding: $unnnic-space-6;
   flex-direction: column;
   gap: $unnnic-space-6;
 
   border-radius: $unnnic-radius-2;
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-background-white;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &__title {
     font: $unnnic-font-display-2;
@@ -123,6 +160,9 @@ const filterType = computed(() => {
   &__filters {
     display: flex;
     flex-direction: column;
+  }
+  &__tabs-content {
+    margin-top: $unnnic-space-8;
   }
 }
 

@@ -23,10 +23,7 @@
       class="loading-container"
       data-testid="loading-container-dashboards"
     >
-      <img
-        src="./assets/images/weni-loading.svg"
-        width="64"
-      />
+      <UnnnicIconLoading size="xl" />
     </section>
     <InsightsLayout
       v-else-if="dashboards.length"
@@ -150,7 +147,8 @@ export default {
 
   async mounted() {
     try {
-      this.handlerTokenAndProjectUuid();
+      await this.handlerTokenAndProjectUuid();
+      this.checkHasSectorsConfigured();
       this.getDashboards().then(() => {
         this.handleRedirectToHumanServiceDashboard();
         this.handlerShowOnboardingModal();
@@ -172,7 +170,11 @@ export default {
       'checkEnableCreateCustomDashboards',
     ]),
     ...mapActions(useFeatureFlag, ['getFeatureFlags']),
-    ...mapActions(useProject, ['setIsCommerce']),
+    ...mapActions(useProject, [
+      'setIsCommerce',
+      'checkHasSectorsConfigured',
+      'checkHasTagsConfigured',
+    ]),
     ...mapActions(useUser, ['setEmail']),
     ...mapActions(useOnboarding, [
       'setOnboardingRef',

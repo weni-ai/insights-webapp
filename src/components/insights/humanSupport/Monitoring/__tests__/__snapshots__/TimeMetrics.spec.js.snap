@@ -6,6 +6,7 @@ exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
   data-testid="time-metrics"
   data-v-3fd5bf3d=""
 >
+  <!--v-if-->
   <p
     class="time-metrics__title"
     data-testid="time-metrics-title"
@@ -43,7 +44,7 @@ exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
       isclickable="true"
       isloading="false"
       title="Average time for first response"
-      tooltipinfo="Average time until the first message from the agent after the room is assigned"
+      tooltipinfo="Average time until the first message from the representative after the room is assigned"
       tooltipside="top"
       value="45s"
     />
@@ -57,7 +58,7 @@ exports[`TimeMetrics > Component structure > should match snapshot 1`] = `
       isclickable="true"
       isloading="false"
       title="Average support duration"
-      tooltipinfo="Average total duration of the conversation, from the start of the support with the agent until it is finalized"
+      tooltipinfo="Average total duration of the conversation, from the start of the support with the representative until it is finalized"
       tooltipside="left"
       value="10m 00s"
     />

@@ -5,7 +5,7 @@
     :isLoading="isLoading"
     :currentTab="currentTab"
     :isOnlyTab="isOnlyTab"
-    :hiddenTabs="['sales_funnel', 'crosstab'].includes(type)"
+    :hiddenTabs="hiddenTabs || ['sales_funnel', 'crosstab'].includes(type)"
     @tab-change="handleTabChange"
   >
     <SalesFunnelWidget v-if="type === 'sales_funnel' && !isError" />
@@ -117,6 +117,8 @@ import WidgetError from '@/components/insights/conversations/WidgetError.vue';
 import SalesFunnelWidget from '@/components/insights/widgets/SalesFunnelWidget.vue';
 import CrosstabWidget from './CrosstabWidget.vue';
 
+import { formatPercentage, formatNumber } from '@/utils/numbers';
+
 const emit = defineEmits<{
   'tab-change': [tab: Tab];
   'open-expanded': [];
@@ -135,6 +137,7 @@ const props = defineProps<{
   progressItems: {
     text: string;
     value: number;
+    full_value?: number;
     backgroundColor?: string;
     color?: string;
   }[];
@@ -158,16 +161,24 @@ const props = defineProps<{
     onClick: () => void;
   };
   type?: 'csat' | 'nps' | 'sales_funnel' | 'custom' | 'add' | 'crosstab';
+  hiddenTabs?: boolean;
 }>();
 
 const treatedProgressItems = computed(() => {
-  return props.progressItems?.map((item) => ({
-    label: item.text,
-    description: `${item.value}%`,
-    value: item.value,
-    backgroundColor: item.backgroundColor,
-    color: item.color,
-  }));
+  return props.progressItems?.map((item) => {
+    const percentage = formatPercentage(item.value);
+    const description =
+      item.full_value !== undefined
+        ? `${percentage} (${formatNumber(item.full_value)})`
+        : `${percentage}`;
+    return {
+      label: item.text,
+      description: description,
+      value: item.value,
+      backgroundColor: item.backgroundColor,
+      color: item.color,
+    };
+  });
 });
 
 const handleTabChange = (tab: Tab) => {
@@ -189,21 +200,21 @@ const isWarningMessage = computed(() => {
 .progress-widget {
   width: 100%;
   display: flex;
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   flex: 1 0 0;
   align-self: stretch;
 
-  border-radius: $unnnic-spacing-xs;
-  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-neutral-white;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &__content {
     .content__card {
       display: flex;
-      min-height: calc(114px + $unnnic-spacing-sm);
-      padding-bottom: $unnnic-spacing-sm;
+      min-height: calc(114px + $unnnic-space-4);
+      padding-bottom: $unnnic-space-4;
     }
   }
 
@@ -219,12 +230,8 @@ const isWarningMessage = computed(() => {
     }
 
     .footer__text {
-      color: $unnnic-color-neutral-clean;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
-      font-weight: $unnnic-font-weight-regular;
-      font-style: normal;
-      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+      color: $unnnic-color-fg-muted;
+      font: $unnnic-font-body;
     }
 
     &-button {
@@ -235,7 +242,7 @@ const isWarningMessage = computed(() => {
   &__skeleton-container {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
   }
 }
 </style>

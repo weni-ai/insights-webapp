@@ -95,54 +95,50 @@ defineProps({
 
 <style lang="scss" scoped>
 .metric-card {
-  background: $unnnic-color-neutral-white;
-  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-  padding: $unnnic-spacing-sm;
+  background: $unnnic-color-gray-0;
+  border: 1px solid $unnnic-color-gray-2;
+  padding: $unnnic-space-4;
   border-radius: 0;
   margin: -1px 0 0 -1px;
 
-  border-right: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-  border-left: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-  border-bottom: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+  border-right: 1px solid $unnnic-color-gray-2;
+  border-left: 1px solid $unnnic-color-gray-2;
+  border-bottom: 1px solid $unnnic-color-gray-2;
 
   &--left-column {
     &.metric-card--first-row {
-      border-top-left-radius: $unnnic-border-radius-md;
+      border-top-left-radius: $unnnic-radius-2;
     }
 
     &.metric-card--last-row {
-      border-bottom-left-radius: $unnnic-border-radius-md;
+      border-bottom-left-radius: $unnnic-radius-2;
     }
   }
 
   &--right-column {
     &.metric-card--first-row {
-      border-top-right-radius: $unnnic-border-radius-md;
+      border-top-right-radius: $unnnic-radius-2;
     }
 
     &.metric-card--last-row {
-      border-bottom-right-radius: $unnnic-border-radius-md;
+      border-bottom-right-radius: $unnnic-radius-2;
     }
   }
 
   &__header {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-xs;
-    margin-bottom: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
+    margin-bottom: $unnnic-space-2;
 
     :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
-      font-size: $unnnic-font-size-body-gt;
+      font-size: 14px;
     }
   }
 
   &__title {
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
-    color: $unnnic-color-neutral-dark;
+    font: $unnnic-font-body;
+    color: $unnnic-color-gray-10;
     margin: 0;
   }
 
@@ -151,15 +147,11 @@ defineProps({
   }
 
   &__value {
-    color: $unnnic-color-neutral-darkest;
-    font-family: $unnnic-font-family-primary;
-    font-size: $unnnic-font-size-title-md;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-title-md + $unnnic-line-height-md;
+    color: $unnnic-color-gray-12;
+    font: $unnnic-font-display-1;
     display: flex;
     align-items: baseline;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
   }
 }
 </style>

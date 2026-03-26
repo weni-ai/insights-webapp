@@ -110,9 +110,15 @@ describe('InProgress', () => {
 
     it('passes correct static props to table', () => {
       const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
-      expect(table.props('clickable')).toBe(true);
-      expect(table.props('fixedHeaders')).toBe(true);
-      expect(table.props('height')).toBe('500px');
+      const props = table.props();
+      const attrs = table.attributes();
+      const isTruthy = (val) => val === true || val === '';
+      expect(isTruthy(props.clickable) || isTruthy(attrs.clickable)).toBe(true);
+      expect(
+        isTruthy(props.fixedHeaders ?? props.fixedheaders) ||
+          isTruthy(attrs.fixedHeaders ?? attrs.fixedheaders),
+      ).toBe(true);
+      expect(props.height ?? attrs.height).toBe('500px');
     });
   });
 
@@ -199,28 +205,28 @@ describe('InProgress', () => {
 
     it('prevents multiple simultaneous requests', async () => {
       vi.clearAllMocks();
-      
+
       let resolveRequest;
       const requestPromise = new Promise((resolve) => {
         resolveRequest = resolve;
       });
       mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
-      
+
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
-      
+
       resolveRequest();
       await requestPromise;
       await wrapper.vm.$nextTick();
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
     });
   });

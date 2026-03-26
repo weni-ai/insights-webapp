@@ -4,7 +4,6 @@ import { isNumber } from 'lodash';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { formatSecondsToHumanString } from '@/utils/time';
-import { currencySymbols } from '@/utils/currency';
 import {
   formatCurrency,
   formatPercentageFixed,
@@ -30,9 +29,8 @@ export function useWidgetFormatting() {
     value,
     localeValue = locale.value || 'en-US',
   ) => {
-    const symbol =
-      currencySymbols[currentDashboard.value?.config?.currency_type];
-    return formatCurrency(value, symbol, localeValue);
+    const currencyCode = currentDashboard.value?.config?.currency_type || 'USD';
+    return formatCurrency(value, currencyCode, localeValue);
   };
 
   /**

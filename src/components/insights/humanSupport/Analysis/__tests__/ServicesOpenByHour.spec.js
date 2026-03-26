@@ -26,6 +26,9 @@ describe('ServicesOpenByHour', () => {
   const createWrapper = (initialState = {}) => {
     store = createTestingPinia({
       initialState: {
+        project: {
+          hasSectorsConfigured: true,
+        },
         humanSupportAnalysis: {
           servicesOpenByHourData: mockData,
           loadingHumanSupportByHourData: false,

@@ -36,26 +36,23 @@ const getStatusLabel = () => {
 .quality-template-message-flag {
   display: flex;
   &__text {
-    font-family: $unnnic-font-family-secondary;
-    font-size: 14px;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: 22px;
+    font: $unnnic-font-action;
   }
   .info {
-    margin-top: $unnnic-spacing-nano;
-    margin-left: $unnnic-spacing-nano;
+    margin-top: $unnnic-space-1;
+    margin-left: $unnnic-space-1;
   }
   &--approved {
-    color: $unnnic-color-aux-green-500;
+    color: $unnnic-color-green-7;
   }
   &--pending {
-    color: $unnnic-color-aux-orange-500;
+    color: $unnnic-color-orange-7;
   }
   &--rejected {
-    color: $unnnic-color-aux-red-500;
+    color: $unnnic-color-red-7;
   }
   &--disabled {
-    color: $unnnic-color-aux-red-500;
+    color: $unnnic-color-red-7;
   }
 }
 </style>

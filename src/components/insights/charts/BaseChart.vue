@@ -120,7 +120,7 @@ export default {
 
   created() {
     const pluginsToRegister = [...defaultPlugins, ...this.plugins];
-    ChartJS.defaults.font.family = 'Lato, sans-serif';
+    ChartJS.defaults.font.family = 'Inter, sans-serif';
     ChartJS.register(...pluginsToRegister);
   },
 

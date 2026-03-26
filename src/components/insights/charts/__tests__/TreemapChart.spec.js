@@ -29,7 +29,7 @@ vi.mock('chart.js', () => {
     destroy: vi.fn(),
   }));
   Chart.defaults = {
-    font: { family: 'Lato, sans-serif' },
+    font: { family: 'Inter, sans-serif' },
   };
   Chart.register = vi.fn();
 

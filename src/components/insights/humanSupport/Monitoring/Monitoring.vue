@@ -4,9 +4,14 @@
     class="monitoring"
     data-testid="monitoring"
   >
+    <UnnnicDisclaimer
+      v-if="!hasSectorsConfigured"
+      :description="$t('human_support_dashboard.setup.disclaimer')"
+    />
     <StatusCards data-testid="monitoring-status-cards" />
     <TimeMetrics data-testid="monitoring-time-metrics" />
     <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
+    <VolumePerTagAndQueueWidget context="monitoring" />
     <CsatRatings
       v-if="isFeatureFlagEnabled('insightsCSAT')"
       type="monitoring"
@@ -28,6 +33,7 @@ import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useProject } from '@/store/modules/project';
 
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
@@ -35,6 +41,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
+import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 
 import { moduleStorage } from '@/utils/storage';
 
@@ -43,6 +50,9 @@ const { isFeatureFlagEnabled } = useFeatureFlag();
 defineOptions({
   name: 'MonitoringView',
 });
+
+const projectStore = useProject();
+const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const STORAGE_KEY = 'news_modal_monitoring_shown';
 const showNewsModal = ref(false);

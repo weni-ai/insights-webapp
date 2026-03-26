@@ -216,12 +216,9 @@ onMounted(() => {
     width: 100%;
 
     &-title {
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-lg;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-black;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+      color: $unnnic-color-gray-12;
+      font: $unnnic-font-display-3;
+      font-weight: 900;
     }
   }
 
@@ -231,7 +228,7 @@ onMounted(() => {
     align-items: center;
     height: 100%;
     width: 100%;
-    padding-top: $unnnic-spacing-md;
+    padding-top: $unnnic-space-6;
   }
 
   &__error {
@@ -239,30 +236,22 @@ onMounted(() => {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: $unnnic-border-radius-md;
-    border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-    opacity: $unnnic-opacity-level-darkest;
-    background: $unnnic-color-neutral-white;
-    margin-top: $unnnic-spacing-sm;
-    padding: $unnnic-spacing-lg;
+    border-radius: $unnnic-radius-2;
+    border: 1px solid $unnnic-color-gray-2;
+    opacity: 0.8;
+    background: $unnnic-color-gray-0;
+    margin-top: $unnnic-space-4;
+    padding: $unnnic-space-8;
     &-icon {
-      margin-bottom: $unnnic-spacing-sm;
+      margin-bottom: $unnnic-space-4;
     }
     &-title {
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+      color: $unnnic-color-gray-12;
+      font: $unnnic-font-action;
     }
     &-description {
-      color: $unnnic-color-neutral-cloudy;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
-      font-style: normal;
-      font-weight: $unnnic-font-weight-regular;
-      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+      color: $unnnic-color-gray-7;
+      font: $unnnic-font-body;
     }
   }
 }
@@ -270,19 +259,16 @@ onMounted(() => {
 .metrics-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(250px, 1fr));
-  padding: $unnnic-spacing-sm 1px;
+  padding: $unnnic-space-4 1px;
 }
 
 .filter-type {
   display: flex;
   align-items: center;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   &_title {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-body;
   }
 }
 </style>

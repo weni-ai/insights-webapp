@@ -43,12 +43,12 @@ export default {
   min-height: 310px;
   height: 100%;
 
-  padding: $unnnic-spacing-sm;
+  padding: $unnnic-space-4;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__content {
     overflow: hidden;
@@ -66,11 +66,10 @@ export default {
       align-items: center;
 
       .not-configured__text {
-        padding-bottom: $unnnic-spacing-sm;
-        color: $unnnic-color-neutral-cloudy;
-        font-size: $unnnic-font-size-body-lg;
+        padding-bottom: $unnnic-space-4;
+        color: $unnnic-color-fg-muted;
+        font: $unnnic-font-display-4;
         text-align: center;
-        line-height: $unnnic-line-height-small * 6;
       }
     }
   }

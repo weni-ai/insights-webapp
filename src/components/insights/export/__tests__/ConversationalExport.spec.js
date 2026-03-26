@@ -18,8 +18,18 @@ const mockStore = {
   checkExportStatus: vi.fn(),
 };
 
+const shouldUseMockRef = ref(false);
+
+const mockConversationalStore = {
+  shouldUseMock: shouldUseMockRef,
+};
+
 vi.mock('@/store/modules/export/conversational/export', () => ({
   useConversationalExport: () => mockStore,
+}));
+
+vi.mock('@/store/modules/conversational/conversational', () => ({
+  useConversational: () => mockConversationalStore,
 }));
 
 vi.mock('@vueuse/core', () => ({
@@ -76,6 +86,7 @@ describe('ConversationalExport', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.clearAllMocks();
+    shouldUseMockRef.value = false;
 
     Object.assign(mockStore, {
       isRenderExportData: { value: false },
@@ -226,6 +237,32 @@ describe('ConversationalExport', () => {
 
     it('should match snapshot', () => {
       expect(wrapper.element).toMatchSnapshot();
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      shouldUseMockRef.value = true;
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      shouldUseMockRef.value = false;
+    });
+
+    it('should disable export button when shouldUseMock is true', () => {
+      const button = wrapper.find('[data-testid="export-data-button"]');
+      expect(button.attributes('disabled')).toBeDefined();
+    });
+
+    it('should disable export button even when hasExportData is true', () => {
+      wrapper = createWrapper({
+        export_data: { value: { status: 'ready' } },
+      });
+      expect(wrapper.vm.hasExportData).toBe(true);
+      const button = wrapper.find('[data-testid="export-data-button"]');
+      expect(button.attributes('disabled')).toBeDefined();
     });
   });
 });

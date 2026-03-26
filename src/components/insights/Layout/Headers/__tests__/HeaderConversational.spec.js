@@ -95,4 +95,61 @@ describe('HeaderConversational', () => {
       expect(wrapper.vm.hasFilters).toBe(false);
     });
   });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    const createMockWrapper = (storeState = {}) =>
+      shallowMount(HeaderConversational, {
+        global: {
+          plugins: [
+            createTestingPinia({
+              initialState: {
+                dashboards: {
+                  currentDashboardFilters: [{ name: 'filter1' }],
+                  ...storeState.dashboards,
+                },
+                conversational: {
+                  isConfigurationLoaded: true,
+                  shouldUseMock: true,
+                  ...storeState.conversational,
+                },
+              },
+              stubActions: false,
+            }),
+          ],
+          stubs: {
+            InsightsLayoutHeaderFilters: true,
+            HeaderRefresh: true,
+            ConversationalExport: true,
+            UnnnicInput: true,
+          },
+        },
+      });
+
+    it('should render mock date filter input instead of filters', () => {
+      wrapper = createMockWrapper();
+      expect(
+        wrapper.find('[data-testid="mock-date-filter"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-testid="insights-layout-header-filters"]').exists(),
+      ).toBe(false);
+    });
+
+    it('should render mock date filter as disabled', () => {
+      wrapper = createMockWrapper();
+      const input = wrapper.find('[data-testid="mock-date-filter"]');
+      expect(input.attributes('disabled')).toBeDefined();
+    });
+
+    it('should render calendar icon on mock date filter', () => {
+      wrapper = createMockWrapper();
+      const input = wrapper.find('[data-testid="mock-date-filter"]');
+      expect(input.attributes('iconleft')).toBe('calendar_month');
+    });
+
+    it('should compute datePlaceholder with date format', () => {
+      wrapper = createMockWrapper();
+      expect(wrapper.vm.datePlaceholder).toContain(' - ');
+    });
+  });
 });

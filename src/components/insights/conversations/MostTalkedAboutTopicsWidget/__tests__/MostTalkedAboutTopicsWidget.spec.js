@@ -22,6 +22,7 @@ const mockRoute = {
 const mockConversationalStore = {
   refreshDataConversational: false,
   setIsLoadingConversationalData: vi.fn(),
+  shouldUseMock: { value: false },
 };
 
 vi.mock('@/store/modules/conversational/topics', () => ({
@@ -296,6 +297,65 @@ describe('MostTalkedAboutTopicsWidget', () => {
       expect(
         mockConversationalStore.setIsLoadingConversationalData,
       ).toBeDefined();
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockConversationalStore.shouldUseMock = { value: true };
+      Object.assign(mockTopicsStore, {
+        topicsDistributionCount: { value: 0 },
+        topicsDistribution: { value: [] },
+        isLoadingTopicsDistribution: { value: false },
+        topicType: { value: 'HUMAN' },
+        hasExistingTopics: { value: false },
+      });
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
+
+    it('should use mock topics distribution as treemapData', () => {
+      const data = wrapper.vm.treemapData;
+      expect(data.length).toBeGreaterThan(0);
+      expect(data[0]).toHaveProperty('label');
+      expect(data[0]).toHaveProperty('value');
+      expect(data[0]).toHaveProperty('percentage');
+    });
+
+    it('should add mock-hover CSS class', () => {
+      expect(section().classes()).toContain(
+        'most-talked-about-topics--mock-hover',
+      );
+    });
+
+    it('should pass empty actions to BaseConversationWidget', () => {
+      const baseWidget = wrapper.find(
+        '[data-testid="topics-base-widget"]',
+      );
+      expect(baseWidget.attributes('actions')).toBe('');
+    });
+
+    it('should pass hiddenTabs as true to BaseConversationWidget', () => {
+      const baseWidget = wrapper.find(
+        '[data-testid="topics-base-widget"]',
+      );
+      expect(baseWidget.attributes('hiddentabs')).toBeTruthy();
+    });
+
+    it('should not show See All button', () => {
+      expect(
+        wrapper.find('[data-testid="topics-see-all-button"]').exists(),
+      ).toBe(false);
+    });
+
+    it('should show AddWidget overlay for hover effect', () => {
+      expect(
+        wrapper.find('[data-testid="topics-add-widget"]').exists(),
+      ).toBe(true);
     });
   });
 });

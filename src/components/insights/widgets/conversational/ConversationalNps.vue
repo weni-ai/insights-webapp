@@ -59,18 +59,19 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import type { NpsResponse } from '@/services/api/resources/conversational/widgets';
 import { Tab } from '@/components/insights/conversations/BaseConversationWidget.vue';
 import {
-  colorGreen500,
-  colorGreen100,
-  colorOrange600,
-  colorOrange100,
-  colorRed500,
-  colorRed100,
+  colorBgGreenStrong,
+  colorBgGreenPlain,
+  colorBgOrangeStrong,
+  colorBgOrangePlain,
+  colorBgRedStrong,
+  colorBgRedPlain,
 } from '@weni/unnnic-system/tokens/colors';
 
 const { t } = useI18n();
 const route = useRoute();
 const conversational = useConversational();
 const { setIsDrawerCustomizableOpen } = conversational;
+const { shouldUseMock } = storeToRefs(conversational);
 
 const conversationalWidgets = useConversationalWidgets();
 const { loadNpsWidgetData, setNpsWidgetType } = conversationalWidgets;
@@ -110,10 +111,15 @@ const tabName = computed(() => {
 });
 
 const widgetData = computed(() => {
-  return handleNpsWidgetData(currentNpsWidget.value?.data || null);
+  const data = shouldUseMock.value
+    ? npsWidgetData.value
+    : currentNpsWidget.value?.data || null;
+  return handleNpsWidgetData(data);
 });
 
 const progressItems = computed(() => {
+  if (shouldUseMock.value) return widgetData.value.progressItems;
+
   if (
     (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) ||
     (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value)
@@ -145,6 +151,8 @@ const currentTab = computed(() => {
 });
 
 const actions = computed(() => {
+  if (shouldUseMock.value) return [];
+
   const editOption = {
     icon: 'edit_square',
     text: t(
@@ -167,16 +175,16 @@ const actions = computed(() => {
 const handleNpsWidgetData = (data: NpsResponse) => {
   const colors = {
     promoters: {
-      color: colorGreen500,
-      backgroundColor: colorGreen100,
+      color: colorBgGreenStrong,
+      backgroundColor: colorBgGreenPlain,
     },
     passives: {
-      color: colorOrange600,
-      backgroundColor: colorOrange100,
+      color: colorBgOrangeStrong,
+      backgroundColor: colorBgOrangePlain,
     },
     detractors: {
-      color: colorRed500,
-      backgroundColor: colorRed100,
+      color: colorBgRedStrong,
+      backgroundColor: colorBgRedPlain,
     },
   };
 
@@ -242,7 +250,8 @@ const handleNpsWidgetData = (data: NpsResponse) => {
     card,
     progressItems: Object.entries(colors).map(([key, value]) => ({
       text: formattedData[key],
-      value: data?.[key],
+      value: data?.[key]?.value,
+      full_value: data?.[key]?.full_value,
       color: value.color,
       backgroundColor: value.backgroundColor,
     })),
@@ -262,8 +271,12 @@ const handleTabChange = (tab: Tab) => {
 };
 
 onMounted(() => {
-  if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
+  if (shouldUseMock.value) {
+    setNpsWidgetType('AI');
+  } else if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
     setNpsWidgetType('HUMAN');
+  } else if (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value) {
+    setNpsWidgetType('AI');
   }
   loadNpsWidgetData();
 });

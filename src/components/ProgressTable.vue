@@ -25,6 +25,7 @@
         :key="item.label"
         data-testid="progress-table-item"
         :label="item.label"
+        :subtitle="item.subtitle"
         :value="item.value"
         :description="item.description"
         :backgroundColor="item.backgroundColor"
@@ -34,6 +35,7 @@
         :expanded="expandedItems.includes(item.label)"
         :subItems="item.subItems"
         :tooltip="item.tooltip"
+        :maxValue="maxValue"
         @expand="expandItem(item.label, $event)"
       />
     </tbody>
@@ -41,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { ProgressTableRowItem } from './ProgressTableRowItem.vue';
 import ProgressItem from './ProgressTableRow.vue';
 
@@ -61,13 +63,18 @@ function expandItem(label: string, expanded: boolean) {
     expandedItems.value = expandedItems.value.filter((item) => item !== label);
   }
 }
+
+const maxValue = computed(() => {
+  const max = Math.max(...props.progressItems.map((item) => item.value));
+  return max < 100 ? 100 : max;
+});
 </script>
 
 <style scoped lang="scss">
 .progress-table__loading {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 }
 
 .progress-table {

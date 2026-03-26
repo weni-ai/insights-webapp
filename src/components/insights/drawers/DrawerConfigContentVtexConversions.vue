@@ -349,18 +349,18 @@ fieldset {
 .vtex-conversions-form {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__meta {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
   }
 
   &__vtex {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
   }
 }
 </style>

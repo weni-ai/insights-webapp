@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="formattedItems"
+    :items="widgetData"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -18,7 +18,26 @@
     @update:sort="handleSort"
     @item-click="redirectItem"
     @load-more="loadMore"
-  />
+  >
+    <template #body-first_response_time="{ item }">
+      <p
+        v-if="item.first_response_time === null"
+        class="italic-text"
+      >
+        {{ $t('human_support_dashboard.common.no_response') }}
+      </p>
+      <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
+    </template>
+    <template #body-duration="{ item }">
+      {{ formatSecondsToTime(item.duration) }}
+    </template>
+    <template #body-awaiting_time="{ item }">
+      {{ formatSecondsToTime(item.awaiting_time) }}
+    </template>
+    <template #body-response_time="{ item }">
+      {{ formatSecondsToTime(item.response_time) }}
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
@@ -28,21 +47,18 @@ import { FinishedDataResult } from '@/services/api/resources/humanSupport/analys
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { analysisDetailedAnalysisFinishedMock } from '../mocks';
 
-type FormattedFinishedData = Omit<
-  FinishedDataResult,
-  'duration' | 'awaiting_time' | 'first_response_time' | 'response_time'
-> & {
-  duration: string;
-  awaiting_time: string;
-  first_response_time: string;
-  response_time: string;
-};
+defineOptions({
+  name: 'AnalysisFinishedTable',
+});
 
 const { t } = useI18n();
 const humanSupport = useHumanSupport();
+const projectStore = useProject();
 
 const baseTranslationKey = 'human_support_dashboard.columns.common';
 
@@ -52,16 +68,8 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   itemKey: 'agent',
 });
 
-const formatResults = (
-  results: FinishedDataResult[],
-): FormattedFinishedData[] => {
-  return results.map((result) => ({
-    ...result,
-    duration: formatSecondsToTime(result?.duration),
-    awaiting_time: formatSecondsToTime(result?.awaiting_time),
-    first_response_time: formatSecondsToTime(result?.first_response_time),
-    response_time: formatSecondsToTime(result?.response_time),
-  }));
+const formatResults = (results: FinishedDataResult[]) => {
+  return results;
 };
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {
@@ -81,9 +89,17 @@ const {
   loadMoreData,
   resetAndLoadData,
   handleSort: handleSortChange,
-} = useInfiniteScrollTable<FinishedDataResult, FormattedFinishedData>({
+} = useInfiniteScrollTable<FinishedDataResult, FinishedDataResult>({
   fetchData,
   formatResults,
+  sort: currentSort.value,
+});
+
+const widgetData = computed(() => {
+  if (!projectStore.hasSectorsConfigured) {
+    return formatResults(analysisDetailedAnalysisFinishedMock);
+  }
+  return formattedItems.value;
 });
 
 const formattedHeaders = computed(() => {
@@ -143,3 +159,9 @@ watch(
   { immediate: true },
 );
 </script>
+
+<style scoped>
+.italic-text {
+  font-style: italic;
+}
+</style>

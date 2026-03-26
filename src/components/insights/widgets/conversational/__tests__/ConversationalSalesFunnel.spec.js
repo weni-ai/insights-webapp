@@ -12,6 +12,7 @@ const mockWidgetsStore = {
 const mockConversationalStore = {
   refreshDataConversational: false,
   setIsLoadingConversationalData: vi.fn(),
+  shouldUseMock: { value: false },
 };
 
 const mockRoute = { query: {} };
@@ -160,6 +161,28 @@ describe('ConversationalSalesFunnel', () => {
       await wrapper.vm.$nextTick();
       const modal = wrapper.findComponent({ name: 'ModalRemoveWidget' });
       expect(modal.exists()).toBe(true);
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      vi.clearAllMocks();
+      mockConversationalStore.shouldUseMock = { value: true };
+      mockConversationalStore.refreshDataConversational = false;
+      wrapper = createWrapper();
+    });
+
+    afterEach(() => {
+      mockConversationalStore.shouldUseMock = { value: false };
+    });
+
+    it('should return empty actions in mock mode', () => {
+      expect(wrapper.vm.actions).toEqual([]);
+    });
+
+    it('should pass empty actions to ProgressWidget', () => {
+      const widget = wrapper.findComponent({ name: 'ProgressWidget' });
+      expect(widget.props('actions')).toEqual([]);
     });
   });
 });

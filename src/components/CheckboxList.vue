@@ -64,6 +64,6 @@ export default defineComponent({
 .checkbox-list {
   display: flex;
   flex-wrap: wrap;
-  row-gap: $unnnic-spacing-nano;
+  row-gap: $unnnic-space-1;
 }
 </style>

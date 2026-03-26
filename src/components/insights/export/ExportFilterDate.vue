@@ -66,6 +66,6 @@ const handleDateSelect = (value: DateRange): void => {
 .export-filter-date {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 }
 </style>

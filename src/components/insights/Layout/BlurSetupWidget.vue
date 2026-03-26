@@ -56,12 +56,12 @@ const props = withDefaults(defineProps<SetupWidgetProps>(), {
   border-radius: $unnnic-radius-2;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
     font: $unnnic-font-display-2;
   }
 
   &__description {
-    color: $unnnic-color-neutral-cloudy;
+    color: $unnnic-color-fg-muted;
     font: $unnnic-font-display-4;
   }
 }

@@ -5,8 +5,8 @@
     :defaultTab="defaultTab"
     :mock="mock"
     :mockItemsCount="mockItemsCount"
-    :barColor="colorOrange500"
-    :barBackgroundColor="colorOrange100"
+    :barColor="colorBgOrangeStrong"
+    :barBackgroundColor="colorBgOrangePlain"
     itemKey="queues"
     itemLabelKey="queue_name"
     :formatFooterText="formatFooterText"
@@ -34,8 +34,8 @@ import volumePerQueueService from '@/services/api/resources/humanSupport/volumeP
 import { redirectToChatsConfig } from '@/utils/redirect';
 
 import {
-  colorOrange500,
-  colorOrange100,
+  colorBgOrangeStrong,
+  colorBgOrangePlain,
 } from '@weni/unnnic-system/tokens/colors';
 
 import i18n from '@/utils/plugins/i18n';

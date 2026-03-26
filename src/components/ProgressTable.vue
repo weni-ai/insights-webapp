@@ -74,7 +74,7 @@ const maxValue = computed(() => {
 .progress-table__loading {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 }
 
 .progress-table {

@@ -84,16 +84,12 @@ const formattedTime = computed(() => {
 .insights-layout-header-filters_last-updated-at {
   display: flex;
   align-items: center;
-  padding: 0 $unnnic-spacing-sm 0 0;
+  padding: 0 $unnnic-space-4 0 0;
   gap: $unnnic-space-05;
 
   &_text {
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-style: normal;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
-    color: $unnnic-color-neutral-cloudy;
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-muted;
   }
 }
 </style>

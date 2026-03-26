@@ -88,6 +88,6 @@ const primaryButtonText = computed(() => {
 .modal-topic {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-md;
+  gap: $unnnic-space-6;
 }
 </style>

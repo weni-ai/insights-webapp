@@ -78,12 +78,12 @@ export default {
 .skeleton-radio {
   display: flex;
   align-items: center;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 }
 .skeleton-group-radio {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $unnnic-spacing-sm;
-  row-gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
+  row-gap: $unnnic-space-4;
 }
 </style>

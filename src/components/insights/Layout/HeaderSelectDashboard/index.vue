@@ -9,14 +9,8 @@
   >
     <template #trigger>
       <section class="header-select-dashboard__trigger">
-        <UnnnicAvatarIcon
-          v-if="$route.name === 'dashboard'"
-          data-testid="dashboard-icon"
-          icon="monitoring"
-          scheme="aux-purple-500"
-        />
         <UnnnicIcon
-          v-else
+          v-if="!($route.name === 'dashboard')"
           data-testid="back-icon"
           class="header-select-dashboard__arrow-back"
           icon="arrow_back"
@@ -72,12 +66,12 @@ import { mapActions, mapState } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useOnboarding } from '@/store/modules/onboarding';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
 import BetaText from './BetaText.vue';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -177,6 +171,7 @@ $dropdownFixedWidth: 314px;
 
 .header-select-dashboard {
   display: flex;
+  width: fit-content;
 
   &__title {
     display: flex;

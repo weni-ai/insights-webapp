@@ -295,7 +295,7 @@ export default {
 .insights-layout-header-filters {
   display: flex;
   flex-direction: row;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
 
   &_dynamic_container {
     width: 19.75rem;

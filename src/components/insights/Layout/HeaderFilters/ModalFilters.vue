@@ -215,7 +215,7 @@ export default {
 .modal-filters {
   &__form {
     display: grid;
-    gap: $unnnic-spacing-xs $unnnic-spacing-sm;
+    gap: $unnnic-space-2 $unnnic-space-4;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 1fr);
 

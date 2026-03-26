@@ -60,19 +60,18 @@ export default {
   border: none;
 
   display: flex;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
   justify-content: center;
   align-items: center;
 
-  padding: $unnnic-spacing-ant $unnnic-spacing-sm;
+  padding: $unnnic-space-3 $unnnic-space-4;
 
-  border-radius: $unnnic-border-radius-sm;
-  background: $unnnic-color-neutral-darkest;
+  border-radius: $unnnic-radius-1;
+  background: $unnnic-color-gray-12;
 
-  color: $unnnic-color-weni-300;
+  color: $unnnic-color-teal-5;
 
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-gt;
+  font: $unnnic-font-body;
 
   cursor: pointer;
 }

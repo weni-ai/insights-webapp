@@ -135,8 +135,8 @@ import { formatPercentage, formatNumber } from '@/utils/numbers';
 import { redirectToChatsConfig } from '@/utils/redirect';
 
 import {
-  colorPurple100,
-  colorPurple500,
+  colorBgPurplePlain,
+  colorBgPurpleStrong,
 } from '@weni/unnnic-system/tokens/colors';
 
 defineOptions({
@@ -254,8 +254,8 @@ const progressItemsRatingsData = computed(() => {
     .reverse()
     .map(([key, value]) => ({
       label: labelMapping[key as keyof typeof labelMapping],
-      backgroundColor: colorPurple100,
-      color: colorPurple500,
+      backgroundColor: colorBgPurplePlain,
+      color: colorBgPurpleStrong,
       value: value.value,
       description: `${formatPercentage(value.value, localeI18n.value)} (${formatNumber(value.full_value)})`,
     }));
@@ -353,12 +353,12 @@ watch(
   width: 100%;
   padding: $unnnic-space-6;
 
-  border-radius: $unnnic-spacing-xs;
-  border: 1px solid $unnnic-color-border-soft;
-  background: $unnnic-color-neutral-white;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-border-base;
+  background: $unnnic-color-gray-0;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
+    color: $unnnic-color-gray-12;
     font: $unnnic-font-display-2;
   }
 

@@ -66,8 +66,8 @@ import {
 } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import {
-  colorOrange500,
-  colorOrange200,
+  colorBgOrangeStrong,
+  colorBgOrangePlain,
 } from '@weni/unnnic-system/tokens/colors';
 
 defineOptions({
@@ -110,7 +110,7 @@ const graphData = computed(() => {
     description: i18n.global.t(
       'conversations_dashboard.sales_funnel_widget.captured_leads',
     ),
-    color: colorOrange500,
+    color: colorBgOrangeStrong,
   };
   const purchasesData = {
     title: formatPercentage(
@@ -124,7 +124,7 @@ const graphData = computed(() => {
     description: i18n.global.t(
       'conversations_dashboard.sales_funnel_widget.purchases_made',
     ),
-    color: colorOrange200,
+    color: colorBgOrangePlain,
   };
   return [leadsData, purchasesData];
 });
@@ -154,8 +154,8 @@ const graphData = computed(() => {
     padding: $unnnic-space-6;
     width: 100%;
 
-    border-radius: $unnnic-border-radius-md;
-    border: 1px solid $unnnic-color-neutral-soft;
+    border-radius: $unnnic-radius-2;
+    border: 1px solid $unnnic-color-gray-2;
     background: $unnnic-color-bg-base;
 
     &-item {

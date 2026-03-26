@@ -55,30 +55,25 @@ const ignoreOnboarding = () => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: $unnnic-spacing-md;
+    gap: $unnnic-space-6;
     text-align: center;
   }
 
   &__title {
-    font-size: $unnnic-font-size-title-sm;
-    font-weight: $unnnic-font-weight-black;
-    line-height: $unnnic-line-height-large * 1.75;
-    color: $unnnic-color-neutral-darkest;
+    font: $unnnic-font-display-2;
+    font-weight: 900;
+    color: $unnnic-color-gray-12;
   }
 
   &__version {
-    font-size: $unnnic-font-size-body-md;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-line-height-large * 1.25;
-    color: $unnnic-color-neutral-darkest;
+    font: $unnnic-font-caption-2;
+    color: $unnnic-color-gray-12;
   }
 
   &__info {
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-line-height-large * 1.375;
-    color: $unnnic-color-neutral-cloudy;
-    margin-top: $unnnic-spacing-xs;
+    font: $unnnic-font-body;
+    color: $unnnic-color-gray-7;
+    margin-top: $unnnic-space-2;
   }
 }
 </style>

@@ -12,9 +12,9 @@ export default {
 
 <style lang="scss" scoped>
 .card-base {
-  background-color: $unnnic-color-neutral-white;
-  box-shadow: $unnnic-shadow-level-far;
-  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-  border-radius: $unnnic-border-radius-sm;
+  background-color: $unnnic-color-gray-0;
+  box-shadow: $unnnic-shadow-1;
+  border: 1px solid $unnnic-color-gray-2;
+  border-radius: $unnnic-radius-1;
 }
 </style>

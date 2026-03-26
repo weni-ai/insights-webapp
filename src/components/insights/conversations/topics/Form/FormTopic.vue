@@ -115,9 +115,9 @@ const handleAddSubTopic = (topicIndex: number) => {
   &__divider {
     width: 100%;
     height: 1px;
-    margin-top: $unnnic-spacing-md;
-    margin-bottom: $unnnic-spacing-md;
-    background-color: $unnnic-color-neutral-soft;
+    margin-top: $unnnic-space-6;
+    margin-bottom: $unnnic-space-6;
+    background-color: $unnnic-color-gray-2;
   }
 
   &__body {
@@ -129,8 +129,8 @@ const handleAddSubTopic = (topicIndex: number) => {
   &__skeleton {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
-    margin-top: $unnnic-spacing-md;
+    gap: $unnnic-space-4;
+    margin-top: $unnnic-space-6;
   }
 }
 </style>

@@ -214,7 +214,7 @@ export default {
   height: 100%;
 
   display: grid;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   &__loading {
     width: 100vw;
     height: 85vh;

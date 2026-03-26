@@ -1,20 +1,20 @@
 import i18n from '@/utils/plugins/i18n';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import {
-  colorTeal100,
-  colorTeal300,
-  colorPurple100,
-  colorPurple300,
-  colorBlue100,
-  colorBlue300,
-  colorGreen100,
-  colorGreen300,
-  colorOrange100,
-  colorOrange300,
-  colorRed100,
-  colorRed300,
-  colorGray100,
-  colorGray200,
+  colorBgTealPlain,
+  colorBgTealStrong,
+  colorBgPurplePlain,
+  colorBgPurpleStrong,
+  colorBgBluePlain,
+  colorBgBlueStrong,
+  colorBgGreenPlain,
+  colorBgGreenStrong,
+  colorBgOrangePlain,
+  colorBgOrangeStrong,
+  colorBgRedPlain,
+  colorBgRedStrong,
+  colorBgMuted,
+  colorGray4,
 } from '@weni/unnnic-system/tokens/colors';
 
 /**
@@ -56,32 +56,32 @@ interface DataWithColor extends topicDistributionMetric {
 
 const COLOR_PALETTE = {
   position: [
-    colorTeal100,
-    colorPurple100,
-    colorBlue100,
-    colorGreen100,
-    colorOrange100,
+    colorBgTealPlain,
+    colorBgPurplePlain,
+    colorBgBluePlain,
+    colorBgGreenPlain,
+    colorBgOrangePlain,
   ],
   positionHover: [
-    colorTeal300,
-    colorPurple300,
-    colorBlue300,
-    colorGreen300,
-    colorOrange300,
+    colorBgTealStrong,
+    colorBgPurpleStrong,
+    colorBgBlueStrong,
+    colorBgGreenStrong,
+    colorBgOrangeStrong,
   ],
   special: {
     others: {
-      normal: colorGray100,
-      hover: colorGray200,
+      normal: colorBgMuted,
+      hover: colorGray4,
     },
     unclassified: {
-      normal: colorRed100,
-      hover: colorRed300,
+      normal: colorBgRedPlain,
+      hover: colorBgRedStrong,
     },
   },
   fallback: {
-    normal: colorGray100,
-    hover: colorGray200,
+    normal: colorBgMuted,
+    hover: colorGray4,
   },
 };
 

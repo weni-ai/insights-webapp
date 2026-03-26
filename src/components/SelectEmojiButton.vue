@@ -110,20 +110,20 @@ export default {
 
   cursor: pointer;
 
-  padding: $unnnic-spacing-nano;
+  padding: $unnnic-space-1;
 
-  border: $unnnic-border-width-thinner solid $unnnic-color-neutral-cleanest;
-  border-radius: $unnnic-border-radius-lg;
-  background-color: $unnnic-color-neutral-white;
+  border: 1px solid $unnnic-color-gray-4;
+  border-radius: $unnnic-radius-4;
+  background-color: $unnnic-color-gray-0;
 
   &--selected {
-    border-color: $unnnic-color-weni-500;
-    background-color: $unnnic-color-weni-50;
+    border-color: $unnnic-color-teal-7;
+    background-color: $unnnic-color-teal-1;
   }
 
   &__selected-emoji {
-    height: $unnnic-avatar-size-nano;
-    width: $unnnic-avatar-size-nano;
+    height: 20px;
+    width: 20px;
   }
 }
 </style>

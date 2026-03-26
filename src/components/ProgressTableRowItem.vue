@@ -133,9 +133,9 @@ const handleExpand = () => {
       content: '';
       display: block;
       width: 100%;
-      margin: $unnnic-spacing-nano 0;
-      height: $unnnic-border-width-thinner;
-      background-color: $unnnic-color-neutral-soft;
+      margin: $unnnic-space-1 0;
+      height: 1px;
+      background-color: $unnnic-color-gray-2;
     }
   }
 
@@ -145,14 +145,14 @@ const handleExpand = () => {
 
   &__main-row {
     & > * {
-      padding: $unnnic-spacing-sm 0;
+      padding: $unnnic-space-4 0;
     }
   }
 
   &__label {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
 
     .label__icon {
       transform: rotate(-90deg);
@@ -172,11 +172,8 @@ const handleExpand = () => {
         overflow: hidden;
         text-overflow: ellipsis;
 
-        color: $unnnic-color-neutral-darkest;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-lg;
-        font-weight: $unnnic-font-weight-regular;
-        line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+        color: $unnnic-color-gray-12;
+        font: $unnnic-font-display-4;
 
         width: 200px;
 
@@ -199,10 +196,8 @@ const handleExpand = () => {
 
       .infos__description {
         white-space: nowrap;
-        color: $unnnic-color-neutral-cloudy;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-md;
-        line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+        color: $unnnic-color-fg-muted;
+        font: $unnnic-font-caption-2;
       }
     }
   }
@@ -210,7 +205,7 @@ const handleExpand = () => {
   &__progress {
     width: 100%;
 
-    padding: 0 $unnnic-spacing-sm;
+    padding: 0 $unnnic-space-4;
   }
 
   &__description {
@@ -219,11 +214,8 @@ const handleExpand = () => {
     text-overflow: ellipsis;
 
     text-align: end;
-    color: $unnnic-color-neutral-dark;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    color: $unnnic-color-gray-10;
+    font: $unnnic-font-display-3;
     min-width: 55px;
   }
 
@@ -239,23 +231,24 @@ const handleExpand = () => {
         display: flex;
         flex-direction: column;
 
-        margin: 0 0 $unnnic-spacing-sm $unnnic-spacing-lg;
+        margin: 0 0 $unnnic-space-4 $unnnic-space-8;
 
-        border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
-        border-radius: $unnnic-border-radius-md;
+        border: 1px solid $unnnic-color-gray-2;
+        border-radius: $unnnic-radius-2;
 
         overflow: hidden;
 
-        padding: 0 $unnnic-spacing-sm;
+        padding: 0 $unnnic-space-4;
 
-        width: calc(100% - $unnnic-spacing-lg);
+        width: calc(100% - $unnnic-space-8);
 
         :deep(.progress-table-row-item__main-row > *) {
-          padding-top: $unnnic-spacing-md;
-          padding-bottom: $unnnic-spacing-md;
+          padding-top: $unnnic-space-6;
+          padding-bottom: $unnnic-space-6;
         }
       }
     }
   }
 }
 </style>
+style>

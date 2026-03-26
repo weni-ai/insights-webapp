@@ -345,6 +345,6 @@ defineExpose({
 
 <style lang="scss">
 .unnnic-popover {
-  background-color: $unnnic-color-background-snow;
+  background-color: $unnnic-color-gray-0;
 }
 </style>

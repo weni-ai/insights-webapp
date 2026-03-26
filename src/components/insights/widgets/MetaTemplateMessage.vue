@@ -172,8 +172,8 @@ const getButtonIcon = (buttonType) => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  border: 1px solid $unnnic-color-neutral-soft;
-  border-radius: $unnnic-border-radius-sm;
+  border: 1px solid $unnnic-color-gray-2;
+  border-radius: $unnnic-radius-1;
 
   &__loading {
     height: 100%;
@@ -185,8 +185,8 @@ const getButtonIcon = (buttonType) => {
   &__header {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-xs;
-    padding: $unnnic-spacing-sm;
+    gap: $unnnic-space-2;
+    padding: $unnnic-space-4;
   }
 
   :deep(.unnnic-tooltip-label) {
@@ -197,13 +197,11 @@ const getButtonIcon = (buttonType) => {
     &-title {
       display: flex;
       justify-content: space-between;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
       align-items: end;
-      color: $unnnic-color-neutral-dark;
+      color: $unnnic-color-gray-10;
 
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
-      line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+      font: $unnnic-font-body;
 
       &__name {
         margin-right: auto;
@@ -214,17 +212,17 @@ const getButtonIcon = (buttonType) => {
       display: flex;
       flex-direction: column;
       height: 100%;
-      padding: $unnnic-spacing-sm;
+      padding: $unnnic-space-4;
     }
   }
 
   &__preview {
     display: flex;
     flex-direction: column;
-    padding: $unnnic-spacing-xs;
+    padding: $unnnic-space-2;
     gap: 5.35px;
-    background-color: $unnnic-color-neutral-white;
-    border-radius: $unnnic-border-radius-sm;
+    background-color: $unnnic-color-gray-0;
+    border-radius: $unnnic-radius-1;
 
     &-image {
       object-fit: cover;
@@ -232,36 +230,36 @@ const getButtonIcon = (buttonType) => {
     }
 
     &-title {
-      color: $unnnic-color-neutral-black;
-      font-family: $unnnic-font-family-secondary;
+      color: $unnnic-color-gray-13;
+      font-family: $unnnic-font-family;
       font-size: 10.692px;
       font-weight: $unnnic-font-weight-bold;
       line-height: 16.037px;
     }
 
     &-text {
-      color: $unnnic-color-neutral-black;
-      font-family: $unnnic-font-family-secondary;
+      color: $unnnic-color-gray-13;
+      font-family: $unnnic-font-family;
       font-size: 10.692px;
       line-height: 16.037px;
       word-break: break-word;
     }
 
     &-hint {
-      color: $unnnic-color-neutral-clean;
+      color: $unnnic-color-fg-muted;
       text-align: right;
-      font-family: $unnnic-font-family-secondary;
+      font-family: $unnnic-font-family;
       font-size: 9.355px;
       line-height: 14.701px;
     }
 
     &-link {
       display: flex;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
       color: $unnnic-color-aux-blue-500;
       align-items: center;
       justify-content: center;
-      border-top: 1px solid $unnnic-color-neutral-soft;
+      border-top: 1px solid $unnnic-color-gray-2;
       padding: 5.35px 0;
     }
   }
@@ -269,7 +267,7 @@ const getButtonIcon = (buttonType) => {
   &__edit {
     display: flex;
     width: 100%;
-    padding: $unnnic-spacing-sm;
+    padding: $unnnic-space-4;
     background-color: $unnnic-color-background-grass;
     &-button {
       width: 100%;
@@ -277,10 +275,7 @@ const getButtonIcon = (buttonType) => {
   }
 
   &__preview-label {
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-body-lg + $unnnic-font-size-body-sm;
+    font: $unnnic-font-display-3;
   }
 }
 </style>

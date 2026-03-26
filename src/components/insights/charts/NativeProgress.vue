@@ -25,7 +25,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { UnnnicToolTip } from '@weni/unnnic-system';
-import { colorBlue500, colorGray50 } from '@weni/unnnic-system/tokens/colors';
+import {
+  colorBgBlueStrong,
+  colorBgBaseSoft,
+} from '@weni/unnnic-system/tokens/colors';
 
 interface Props {
   progress: number;
@@ -38,8 +41,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   progress: 0,
-  color: colorBlue500,
-  backgroundColor: colorGray50,
+  color: colorBgBlueStrong,
+  backgroundColor: colorBgBaseSoft,
   height: 8,
   tooltip: '',
   maxProgressValue: 100,
@@ -68,7 +71,7 @@ const progressBarStyles = computed(() => ({
 <style scoped lang="scss">
 .native-progress {
   width: 100%;
-  border-radius: $unnnic-border-radius-sm;
+  border-radius: $unnnic-radius-1;
   overflow: hidden;
   position: relative;
   display: grid;

@@ -218,13 +218,13 @@ onMounted(() => searchTemplates());
 .search-template-messages-modal {
   &__filters-container {
     display: flex;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
     .filter {
       width: 100%;
     }
   }
   &__table-container {
-    margin-top: $unnnic-spacing-md;
+    margin-top: $unnnic-space-6;
     :deep(.table-pagination) {
       display: none;
     }
@@ -232,8 +232,8 @@ onMounted(() => searchTemplates());
   &__table-pagination {
     display: flex;
     justify-content: end;
-    padding: $unnnic-spacing-xs 0;
-    gap: $unnnic-spacing-nano;
+    padding: $unnnic-space-2 0;
+    gap: $unnnic-space-1;
   }
 }
 </style>

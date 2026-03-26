@@ -196,7 +196,7 @@ const titleButton = computed(() => {
     width: 400px;
     display: flex;
     flex-wrap: wrap;
-    gap: $unnnic-spacing-md;
+    gap: $unnnic-space-6;
     padding: $unnnic-space-3 $unnnic-space-2;
   }
 
@@ -204,14 +204,14 @@ const titleButton = computed(() => {
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
   }
 
   &__footer {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
 
     &-button {
       width: 100%;

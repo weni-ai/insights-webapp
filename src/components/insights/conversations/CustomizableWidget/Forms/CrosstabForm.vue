@@ -135,9 +135,9 @@ onUnmounted(() => {
   }
 
   &__divider {
-    background: $unnnic-color-neutral-light;
+    background: $unnnic-color-gray-1;
     height: 100%;
-    border: 1px solid $unnnic-color-neutral-light;
+    border: 1px solid $unnnic-color-gray-1;
   }
   :deep(.crosstab-form__disclaimer) {
     .unnnic-disclaimer__icon {

@@ -83,8 +83,8 @@ export default {
   &__generating {
     text-align: start;
 
-    color: $unnnic-color-neutral-clean;
-    font-size: $unnnic-font-size-body-gt;
+    color: $unnnic-color-fg-muted;
+    font: $unnnic-font-body;
 
     @keyframes wave {
       0%,
@@ -104,7 +104,7 @@ export default {
       height: 2px;
       border-radius: 50%;
       margin-right: 2px;
-      background-color: $unnnic-color-neutral-clean;
+      background-color: $unnnic-color-gray-5;
       animation: wave 1.3s linear infinite;
 
       &:nth-child(2) {
@@ -119,10 +119,9 @@ export default {
 
   &__generated {
     text-align: start;
-    color: $unnnic-color-neutral-white;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-light;
-    line-height: $unnnic-line-height-large * 1.4;
+    color: $unnnic-color-gray-0;
+    font: $unnnic-font-display-4;
+    font-weight: 300;
   }
 }
 </style>

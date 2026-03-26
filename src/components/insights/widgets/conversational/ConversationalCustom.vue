@@ -43,7 +43,10 @@ import SeeAllDrawer from '@/components/insights/conversations/CustomizableWidget
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import type { CustomWidgetResponse } from '@/services/api/resources/conversational/widgets';
-import { colorBlue500, colorBlue100 } from '@weni/unnnic-system/tokens/colors';
+import {
+  colorBgBlueStrong,
+  colorBgBluePlain,
+} from '@weni/unnnic-system/tokens/colors';
 
 interface Props {
   uuid: string;
@@ -131,8 +134,8 @@ const actions = computed(() => {
 
 const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   const defaultColors = {
-    color: colorBlue500,
-    backgroundColor: colorBlue100,
+    color: colorBgBlueStrong,
+    backgroundColor: colorBgBluePlain,
   };
 
   if (data?.results?.length === 0) {

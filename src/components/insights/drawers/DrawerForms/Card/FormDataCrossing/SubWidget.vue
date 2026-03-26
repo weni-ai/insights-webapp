@@ -166,6 +166,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .subwidget-form {
   display: grid;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
 }
 </style>

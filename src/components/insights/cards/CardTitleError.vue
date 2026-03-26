@@ -21,14 +21,14 @@ export default {
 <style lang="scss" scoped>
 .card-title-error {
   display: flex;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
   align-items: center;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
-    font-family: $unnnic-font-family-secondary;
+    color: $unnnic-color-gray-12;
+    font-family: $unnnic-font-family;
     font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-line-height-small * 6;
+    line-height: 4px * 6;
   }
 }
 </style>

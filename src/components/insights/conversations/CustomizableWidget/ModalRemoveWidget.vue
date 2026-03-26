@@ -123,19 +123,19 @@ const handleRemoveWidget = async () => {
 .modal-remove-widget {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-md;
+  gap: $unnnic-space-6;
 
   &__description {
-    font-size: $unnnic-font-size-body-gt;
-    color: $unnnic-color-neutral-cloudy;
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-muted;
   }
 
   :deep(.unnnic-modal-dialog__container__content) {
-    padding-bottom: $unnnic-spacing-sm;
+    padding-bottom: $unnnic-space-4;
   }
 
   :deep(.unnnic-modal-dialog__container__actions) {
-    padding-top: $unnnic-spacing-sm;
+    padding-top: $unnnic-space-4;
   }
 }
 </style>

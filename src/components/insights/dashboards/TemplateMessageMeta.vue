@@ -544,7 +544,7 @@ const unfavoriteTemplate = async () => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: $unnnic-spacing-md;
+    margin-bottom: $unnnic-space-6;
 
     :deep(.template-message-meta-dashboard__api-select) {
       min-width: 250px;
@@ -559,16 +559,13 @@ const unfavoriteTemplate = async () => {
 
   &__tab {
     cursor: pointer;
-    font-family: $unnnic-font-family-secondary;
-    font-weight: $unnnic-font-weight-regular;
-    font-size: $unnnic-font-size-body-gt;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-medium;
+    font: $unnnic-font-body;
     text-decoration: underline solid;
-    color: $unnnic-color-neutral-cloudy;
+    color: $unnnic-color-fg-muted;
 
     &--active {
-      color: $unnnic-color-neutral-dark;
-      font-weight: $unnnic-font-weight-black;
+      color: $unnnic-color-gray-10;
+      font-weight: 900;
       text-decoration: none;
     }
   }
@@ -579,11 +576,8 @@ const unfavoriteTemplate = async () => {
     overflow: auto;
     height: 100%;
     &-title {
-      font-family: $unnnic-font-family-secondary;
-      font-weight: $unnnic-font-weight-bold;
-      font-size: $unnnic-font-size-body-lg;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
-      color: $unnnic-color-neutral-dark;
+      font: $unnnic-font-display-3;
+      color: $unnnic-color-gray-10;
       margin-bottom: 10px;
     }
   }
@@ -601,11 +595,9 @@ const unfavoriteTemplate = async () => {
       max-height: 202px;
     }
     &-text {
-      color: $unnnic-color-neutral-cloudy;
+      color: $unnnic-color-fg-muted;
       text-align: center;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-lg;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-medium;
+      font: $unnnic-font-display-4;
     }
   }
 

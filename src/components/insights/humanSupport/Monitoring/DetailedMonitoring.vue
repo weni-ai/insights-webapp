@@ -150,8 +150,8 @@ const filterType = computed(() => {
   gap: $unnnic-space-6;
 
   border-radius: $unnnic-radius-2;
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-background-white;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &__title {
     font: $unnnic-font-display-2;

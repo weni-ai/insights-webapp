@@ -149,7 +149,7 @@ const handleTooltipText = computed(() => {
   }
 
   :deep(.material-symbols-rounded.unnnic-icon-size--sm) {
-    font-size: $unnnic-font-size-title-sm;
+    font-size: 20px;
   }
 }
 
@@ -157,15 +157,11 @@ const handleTooltipText = computed(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__text {
-    color: $unnnic-color-neutral-cloudy;
-
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-line-height-md + $unnnic-font-size-body-gt;
+    color: $unnnic-color-gray-7;
+    font: $unnnic-font-body;
   }
 }
 </style>

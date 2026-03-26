@@ -22,21 +22,18 @@ defineProps<{
 <style scoped lang="scss">
 .warning-message {
   display: flex;
-  padding: $unnnic-spacing-sm;
+  padding: $unnnic-space-4;
   align-items: center;
-  gap: $unnnic-spacing-xs;
+  gap: $unnnic-space-2;
   align-self: stretch;
 
-  border-radius: $unnnic-border-radius-sm;
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-background-carpet;
+  border-radius: $unnnic-radius-1;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-1;
 
   &__title {
-    color: $unnnic-color-neutral-dark;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    color: $unnnic-color-gray-10;
+    font: $unnnic-font-body;
   }
 }
 </style>

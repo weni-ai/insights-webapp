@@ -451,49 +451,42 @@ const isDisabledPrimaryButton = computed(() => {
 <style scoped lang="scss">
 .add-widget-drawer {
   &__section-title {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    color: $unnnic-color-fg-muted;
+    font: $unnnic-font-display-4;
   }
 
   &__section {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &__widget-list {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
 
     .widget-list__item {
-      padding: $unnnic-spacing-md;
+      padding: $unnnic-space-6;
 
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
 
-      border-radius: $unnnic-border-radius-md;
-      border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+      border-radius: $unnnic-radius-2;
+      border: 1px solid $unnnic-color-gray-2;
 
       cursor: pointer;
 
       .item__title {
-        color: $unnnic-color-neutral-darkest;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-lg;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+        color: $unnnic-color-gray-12;
+        font: $unnnic-font-display-3;
       }
 
       .item__description {
-        color: $unnnic-color-neutral-cloudy;
-        font-size: $unnnic-font-size-body-gt;
-        line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+        color: $unnnic-color-fg-muted;
+        font: $unnnic-font-body;
       }
     }
   }

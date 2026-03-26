@@ -44,7 +44,7 @@
             <UnnnicIcon
               icon="more_vert"
               size="ant"
-              scheme="neutral-cloudy"
+              scheme="fg-muted"
             />
           </template>
 
@@ -132,16 +132,16 @@ const handleTabChange = (tab: Tab) => {
   width: 100%;
   height: 100%;
   display: flex;
-  padding: $unnnic-spacing-md;
+  padding: $unnnic-space-6;
   flex-direction: column;
   justify-content: space-between;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   flex: 1 0 0;
   align-self: stretch;
 
-  border-radius: $unnnic-spacing-xs;
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-neutral-white;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &__header {
     display: flex;
@@ -162,7 +162,7 @@ const handleTabChange = (tab: Tab) => {
     .header__actions {
       display: flex;
       align-items: center;
-      gap: $unnnic-spacing-xs;
+      gap: $unnnic-space-2;
 
       .actions__dropdown {
         display: flex;
@@ -176,20 +176,18 @@ const handleTabChange = (tab: Tab) => {
         }
 
         :deep(.unnnic-dropdown__content) {
-          padding: $unnnic-spacing-sm;
+          padding: $unnnic-space-4;
 
-          gap: $unnnic-spacing-sm;
+          gap: $unnnic-space-4;
         }
 
         .dropdown__action {
           display: flex;
           align-items: center;
-          gap: $unnnic-spacing-xs;
+          gap: $unnnic-space-2;
 
           .action__text {
-            font-family: $unnnic-font-family-secondary;
-            font-size: $unnnic-font-size-body-md;
-            line-height: $unnnic-font-size-body-md + $unnnic-line-height-md;
+            font: $unnnic-font-caption-2;
             white-space: nowrap;
           }
 

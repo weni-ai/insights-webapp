@@ -8,7 +8,7 @@
     "waiting_time": "Tiempo de espera",
     "awaiting_service": "Esperando servicio",
     "interaction_time": "Tiempo de interacción",
-    "all_agents": "Todos los agentes",
+    "all_agents": "Todos los representantes",
     "tooltips": {
       "in_progress": "Total de chats abiertos",
       "response_time": "Tiempo promedio que los contactos esperan para recibir una respuesta a cada mensaje",
@@ -368,7 +368,7 @@
   "table_group": {
     "contact": "Contacto",
     "urn": "URN",
-    "agent": "Agente",
+    "agent": "Representante",
     "created_on": "Inicio",
     "ended_at": "Fin",
     "sector": "Sector",
@@ -387,8 +387,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agente",
-      "placeholder": "Seleccionar agente"
+      "label": "Representante",
+      "placeholder": "Seleccionar representante"
     },
     "contact": {
       "label": "Contacto",
@@ -420,8 +420,8 @@
   "lines_count": "{count} líneas",
   "reload": "Recargar",
   "agent": "Agente",
-  "online_agents": "Agentes online",
-  "chats_per_agents": "Chats por agente",
+  "online_agents": "Representantes online",
+  "chats_per_agents": "Chats por representante",
   "closeds": "Cerrados",
   "finished": "Finalizado",
   "in_progress": "En curso",
@@ -487,7 +487,7 @@
   "reset": "Restablecer",
   "onboarding": {
     "welcome_modal": {
-      "title": "Nueva funcionalidad: explora Insights",
+      "title": "Nueva funcionalidad: explora Analytics",
       "text": "Esta nueva herramienta te permite monitorear el éxito de tu operación aquí en Weni",
       "button": {
         "go": "Empezar",
@@ -846,14 +846,14 @@
       "sectors": "Sectores",
       "queues": "Colas",
       "rooms": "Salas",
-      "users": "Agentes",
+      "users": "Representantes",
       "sector_tags": "Tags",
       "contacts": "Contactos",
       "resolutions": "Resoluciones de conversaciones",
       "topics": "Asuntos",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Agent"
+      "agent_status_logs": "Representante"
     },
     "field_labels": {
       "config": "Configuración",
@@ -922,14 +922,14 @@
     "filters": {
       "sector": "Sector",
       "select_sector": "Selecciona el sector",
-      "agent": "Agente",
-      "select_agent": "Selecciona el agente",
+      "representative": "Representante",
+      "select_representative": "Selecciona el representante",
       "queue": "Cola",
       "select_queue": "Selecciona la cola",
       "tag": "Tag",
       "select_tag": "Selecciona la tag",
       "all_sectors": "Todos los sectores",
-      "all_agents": "Todos los agentes",
+      "all_representatives": "Todos los representantes",
       "all_queues": "Todas las colas",
       "all_tags": "Todas las tags"
     },
@@ -942,15 +942,15 @@
     "error_default": "Ups, se produjo un error"
   },
   "disconnectAgent": {
-    "title": "Desconectar agente",
-    "description": "¿Realmente deseas desconectar el agente {agent}?",
-    "description_confirm": "Después de confirmar, el agente {agent} estará offline.",
-    "tooltip": "Desconectar agente",
+    "title": "Desconectar representante",
+    "description": "¿Realmente deseas desconectar el representante {agent}?",
+    "description_confirm": "Después de confirmar, el representante {agent} estará offline.",
+    "tooltip": "Desconectar representante",
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
     "sucess_message": "¡{agent} está offline!",
-    "error_message": "Error al desconectar el agente {agent}",
-    "tooltip_disabled": "Este agente no puede ser desconectado porque está offline"
+    "error_message": "Error al desconectar el representante {agent}",
+    "tooltip_disabled": "Este representante no puede ser desconectado porque está offline"
   },
   "human_support_dashboard": {
     "title": "Atención humana",
@@ -979,9 +979,9 @@
       "max": "Máximo",
       "tooltips": {
         "average_time_is_waiting": "Tiempo medio que los contactos esperan en la cola hasta que el atendimiento comience",
-        "average_time_first_response": "Tiempo medio hasta la primera respuesta del agente después de que se asigne la sala",
+        "average_time_first_response": "Tiempo medio hasta la primera respuesta del representante después de que se asigne la sala",
         "average_response_time": "Tiempo medio que el contacto espera para recibir una respuesta a cada mensaje",
-        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del atendimiento con el agente hasta que se finaliza"
+        "average_time_chat": "Tiempo medio total de la conversa, desde el inicio del atendimiento con el representante hasta que se finaliza"
       }
     },
     "services_open_by_hour": {
@@ -992,21 +992,21 @@
       "tabs": {
         "in_awaiting": "En espera",
         "in_progress": "En progreso",
-        "attendant": "Atendido",
+        "attendant": "Representante",
         "pauses": "Pausas personalizadas"
       },
       "in_progress": {
         "duration": "Duración",
         "awaiting_time": "Tiempo en espera",
         "first_response_time": "Tiempo de 1ª respuesta",
-        "attendant": "Atendido",
+        "attendant": "Representante",
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto"
       },
       "pauses": {
         "status": "Estado",
-        "attendant": "Atendente",
+        "attendant": "Representante",
         "opened": "Abiertos",
         "closed": "Cerrados"
       },
@@ -1017,7 +1017,7 @@
         "queue": "Cola"
       },
       "attendant": {
-        "agent": "Atendente",
+        "agent": "Representante",
         "status": "Estado",
         "ongoing": "En curso",
         "finished": "Finalizado",
@@ -1039,7 +1039,7 @@
         "clear": "Limpiar selección"
       },
       "attendant": {
-        "label": "Agente"
+        "label": "Representante"
       },
       "contact": {
         "label": "Contacto"
@@ -1057,7 +1057,7 @@
         "awaiting_time": "Tiempo en espera",
         "first_response_time": "Tiempo de 1ª respuesta",
         "response_time": "Tiempo de respuesta",
-        "agent": "Agente",
+        "agent": "Representante",
         "sector": "Sector",
         "queue": "Cola",
         "contact": "Contacto",
@@ -1093,7 +1093,7 @@
         "dissatisfied": "☹️ Insatisfecho",
         "very_dissatisfied": "😡 Muy insatisfecho"
       },
-      "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y agente."
+      "disabled_text": "Habilitar CSAT para rastrear evaluaciones generales, por departamento, cola y representante."
     },
     "setup": {
       "title": "No sector creado",
@@ -1139,22 +1139,22 @@
     }
   },
   "news": {
-    "title": "Noticias y actualizaciones en Insights - Atención humana",
+    "title": "Noticias y actualizaciones en Analytics - Atención humana",
     "human_support_dashboard": {
       "monitoring": {
         "first_text": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica gargalos y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",
         "second_text": "Ahora puedes monitorizar el estado de los atendimientos en tiempo real:",
         "third_text": "Monitoriza las métricas de tiempo ahora — tiempo medio y máximo en espera, tiempo para 1ª respuesta y duración — en tiempo real:",
-        "fourth_text": "La tabla de monitorización detallada permite acompañar datos en tiempo real para cada interacción y agente.",
+        "fourth_text": "La tabla de monitorización detallada permite acompañar datos en tiempo real para cada interacción y representante.",
         "fifth_text": "Puedes monitorizar cada interacción a través de las pestañas <b>En progreso</b> y <b>En espera</b>. Haz clic en las interacciones para verlas.",
-        "sixth_text": "Las pestañas <b>Atendido</b> y <b>Pausas</b> permiten monitorizar las métricas de cada agente por interacción, así como las pausas personalizadas.",
-        "seventh_text": "En la pestaña <b>Atendido</b>, puedes hacer clic en cada agente para entrar en modo de visualización o usar el botón para desconectarlo."
+        "sixth_text": "Las pestañas <b>Representante</b> y <b>Pausas</b> permiten monitorizar las métricas de cada representante por interacción, así como las pausas personalizadas.",
+        "seventh_text": "En la pestaña <b>Representante</b>, puedes hacer clic en cada representante para entrar en modo de visualización o usar el botón para desconectarlo."
       },
       "analysis": {
         "first_text": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
         "second_text": "Ahora, puedes acompañar todas las métricas de atendimiento cerrado: <b>Tiempo medio en espera</b>, <b>Tiempo medio para 1ª respuesta</b>, <b>Tiempo medio de respuesta</b> y <b>Duración media de atendimiento</b>.",
-        "third_text": "La tabla de análisis detallada permite analizar datos para cada interacción y agente.",
-        "fourth_text": "Puedes revisar cada interacción cerrada en la pestaña <b>Cerrados</b>. Las pestañas <b>Atendido</b> y <b>Pausas</b> permiten analizar las métricas de cada agente por interacción cerrada, así como las pausas personalizadas dentro del período filtrado."
+        "third_text": "La tabla de análisis detallada permite analizar datos para cada interacción y representante.",
+        "fourth_text": "Puedes revisar cada interacción cerrada en la pestaña <b>Cerrados</b>. Las pestañas <b>Representante</b> y <b>Pausas</b> permiten analizar las métricas de cada representante por interacción cerrada, así como las pausas personalizadas dentro del período filtrado."
       }
     }
   },

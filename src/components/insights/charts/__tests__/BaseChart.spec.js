@@ -137,7 +137,7 @@ describe('BaseChart', () => {
 
     it('should set Chart.js default font family', () => {
       createWrapper();
-      expect(ChartJS.defaults.font.family).toBe('Lato, sans-serif');
+      expect(ChartJS.defaults.font.family).toBe('Inter, sans-serif');
     });
 
     it('should initialize Chart.js with correct config on mount', () => {

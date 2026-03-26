@@ -76,7 +76,7 @@ describe('LineChart', () => {
   describe('Chart Configuration', () => {
     it('should merge default chart configuration with provided data', () => {
       const { mergedData } = wrapper.vm;
-      expect(mergedData.datasets[0]).toHaveProperty('borderColor', '#00A49F');
+      expect(mergedData.datasets[0]).toHaveProperty('borderColor', '#01A29B');
       expect(mergedData.datasets[0]).toHaveProperty('pointRadius', 0);
       expect(mergedData.datasets[0]).toHaveProperty('hoverRadius', 3);
       expect(mergedData.datasets[0]).toHaveProperty('pointStyle', 'circle');
@@ -85,7 +85,7 @@ describe('LineChart', () => {
 
     it('should have correct chart options configuration', () => {
       const { chartOptions } = wrapper.vm;
-      expect(chartOptions.backgroundColor).toBe('#00A49F');
+      expect(chartOptions.backgroundColor).toBe('#01A29B');
       expect(chartOptions.scales.y.beginAtZero).toBe(true);
       expect(chartOptions.interaction.intersect).toBe(false);
       expect(chartOptions.interaction.mode).toBe('index');
@@ -95,7 +95,7 @@ describe('LineChart', () => {
       const { chartOptions } = wrapper.vm;
       const tooltipConfig = chartOptions.plugins.tooltip;
       expect(tooltipConfig.enabled).toBe(true);
-      expect(tooltipConfig.backgroundColor).toBe('#23262E'); // colorGray950
+      expect(tooltipConfig.backgroundColor).toBe('#1F1F1F'); // colorGray950
       expect(tooltipConfig.displayColors).toBe(false);
     });
 

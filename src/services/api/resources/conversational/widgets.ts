@@ -188,7 +188,7 @@ export default {
 
   async getSalesFunnelData(
     queryParams: Partial<WidgetQueryParams> = {},
-    options: { mock?: boolean } = { mock: false },
+    options: { mock?: boolean; signal?: AbortSignal } = {},
   ): Promise<SalesFunnelResponse> {
     if (options.mock) return MOCK_SALES_FUNNEL_DATA;
 
@@ -203,6 +203,7 @@ export default {
 
     const response = (await http.get('/metrics/conversations/sales_funnel/', {
       params,
+      signal: options.signal,
     })) as SalesFunnelResponse;
 
     return response;

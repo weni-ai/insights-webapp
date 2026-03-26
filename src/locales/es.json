@@ -1078,6 +1078,10 @@
           "finished": "Finalizado",
           "attendant": "Atendido",
           "pauses": "Pausas personalizadas"
+        },
+        "not_handled": {
+          "title": "No atendido",
+          "description": "La conversación finalizó mientras aún estaba en la cola"
         }
       }
     },

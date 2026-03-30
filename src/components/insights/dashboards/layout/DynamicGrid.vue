@@ -69,10 +69,10 @@ const getBoxClass = (index: number) => {
 
 .box {
   border-radius: 0.1025rem;
-  background-color: $unnnic-color-neutral-cleanest;
+  background-color: $unnnic-color-gray-4;
 
   &-active {
-    background-color: $unnnic-color-weni-600;
+    background-color: $unnnic-color-teal-8;
   }
 }
 

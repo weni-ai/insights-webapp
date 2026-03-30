@@ -138,38 +138,37 @@ export default {
     content: none;
   }
 
-  border-radius: $unnnic-border-radius-sm;
+  border-radius: $unnnic-radius-1;
 
-  padding: $unnnic-spacing-xs;
+  padding: $unnnic-space-2;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: $unnnic-spacing-nano;
+  gap: $unnnic-space-1;
 
-  color: $unnnic-color-neutral-darkest;
-  font-family: $unnnic-font-family-secondary;
-  font-size: $unnnic-font-size-body-gt;
+  color: $unnnic-color-gray-12;
+  font: $unnnic-font-body;
 
   &__content {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
   }
 
   &--active {
-    background-color: $unnnic-color-neutral-lightest;
+    background-color: $unnnic-color-gray-1;
     font-weight: $unnnic-font-weight-bold;
   }
 
   .option-select-dashboard__star-icon:not(
       .option-select-dashboard__star-icon--selected
     ):hover {
-    color: $unnnic-color-weni-500;
+    color: $unnnic-color-teal-7;
   }
 
   .option-select-dashboard__star-icon--selected {
-    color: $unnnic-color-weni-600;
+    color: $unnnic-color-teal-8;
   }
 }
 </style>

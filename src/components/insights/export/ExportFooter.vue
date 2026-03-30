@@ -96,29 +96,26 @@ const handleAcceptTermsChange = (value: boolean): void => {
 .export-footer {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
 
   &__format {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &__terms {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &__terms-warning {
     display: flex;
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
 
-    color: $unnnic-color-neutral-dark;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+    color: $unnnic-color-gray-10;
+    font: $unnnic-font-body;
   }
 }
 </style>

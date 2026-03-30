@@ -17,7 +17,7 @@
               icon="info"
               size="sm"
               filled
-              scheme="neutral-cleanest"
+              scheme="fg-muted"
             />
           </UnnnicToolTip>
         </section>
@@ -63,17 +63,17 @@ const props = withDefaults(defineProps<AgentCardProps>(), {
   padding: $unnnic-space-2;
   justify-content: space-between;
 
-  border-radius: $unnnic-spacing-xs;
-  border: 1px solid $unnnic-color-border-soft;
-  background: $unnnic-color-neutral-white;
+  border-radius: $unnnic-space-2;
+  border: 1px solid $unnnic-color-border-base;
+  background: $unnnic-color-gray-0;
 
   &.active {
-    border: 1px solid $unnnic-color-border-active;
-    background: $unnnic-color-teal-50;
+    border: 1px solid $unnnic-color-border-accent-strong;
+    background: $unnnic-color-teal-1;
   }
 
   &:hover:not(.active) {
-    background: $unnnic-color-bg-soft;
+    background: $unnnic-color-bg-base-soft;
   }
 
   &__container {
@@ -82,7 +82,7 @@ const props = withDefaults(defineProps<AgentCardProps>(), {
     gap: $unnnic-space-2;
 
     :deep(.user-avatar) {
-      background-color: $unnnic-color-neutral-white;
+      background-color: $unnnic-color-gray-0;
     }
   }
 

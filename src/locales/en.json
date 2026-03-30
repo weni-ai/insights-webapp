@@ -436,7 +436,7 @@
   "reset": "Reset",
   "onboarding": {
     "welcome_modal": {
-      "title": "New feature available: Meet Insights",
+      "title": "New feature available: Meet Analytics",
       "text": "We're introducing a new tool to help you track your operation's success here on Weni",
       "button": {
         "go": "Get started",
@@ -1092,7 +1092,7 @@
     }
   },
   "news": {
-    "title": "News and updates in Insights - Human Support",
+    "title": "News and updates in Analytics - Human Support",
     "human_support_dashboard": {
       "monitoring": {
         "first_text": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation. Discover the new <b>Monitoring</b> view!",

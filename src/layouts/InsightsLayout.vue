@@ -57,20 +57,20 @@ export default {
 
   overflow: hidden;
 
-  padding: $unnnic-spacing-sm;
+  padding: $unnnic-space-4;
   padding-right: 0;
 
-  gap: $unnnic-spacing-sm;
+  gap: $unnnic-space-4;
   position: relative;
 
   &__header {
-    margin-right: $unnnic-spacing-sm;
+    margin-right: $unnnic-space-4;
   }
 
   &__insights {
     overflow: hidden;
 
-    margin-right: $unnnic-spacing-xs;
+    margin-right: $unnnic-space-2;
 
     height: 100%;
 
@@ -82,9 +82,9 @@ export default {
       display: flex;
       flex-direction: column;
 
-      padding-right: $unnnic-spacing-xs;
+      padding-right: $unnnic-space-2;
 
-      background-color: $unnnic-color-neutral-white;
+      background-color: $unnnic-color-gray-0;
 
       overflow-y: auto;
       overflow-x: hidden;

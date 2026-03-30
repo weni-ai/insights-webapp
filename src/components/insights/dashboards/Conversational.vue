@@ -212,7 +212,7 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
-$layout-gap: $unnnic-spacing-sm;
+$layout-gap: $unnnic-space-4;
 
 .dashboard-conversational {
   display: flex;

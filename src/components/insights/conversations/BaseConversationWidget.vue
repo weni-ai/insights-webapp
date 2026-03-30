@@ -149,7 +149,7 @@ const handleTabChange = (tab: Tab) => {
     align-items: center;
 
     .header__title {
-      color: $unnnic-color-gray-12;
+      color: $unnnic-color-fg-emphasized;
       font: $unnnic-font-display-2;
 
       overflow: hidden;

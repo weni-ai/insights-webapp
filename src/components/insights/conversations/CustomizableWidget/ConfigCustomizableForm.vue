@@ -13,6 +13,7 @@
     />
     <CustomizedForm v-if="type === 'custom'" />
     <CrosstabForm v-if="type === 'crosstab'" />
+    <AbsoluteNumbersForm v-if="type === 'absolute_numbers'" />
   </section>
 </template>
 
@@ -20,6 +21,7 @@
 import SentimentAnalysisForm from './Forms/SentimentAnalysisForm.vue';
 import CustomizedForm from './Forms/CustomizedForm.vue';
 import CrosstabForm from './Forms/CrosstabForm.vue';
+import AbsoluteNumbersForm from './Forms/AbsoluteNumbersForm.vue';
 import { DrawerWidgetType } from '@/store/modules/conversational/conversational';
 
 defineProps<{

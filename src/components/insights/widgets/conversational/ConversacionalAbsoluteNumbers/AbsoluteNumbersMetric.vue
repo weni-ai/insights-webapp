@@ -107,8 +107,8 @@ const actions = computed(() => {
   return [editOption, deleteOption];
 });
 
-onMounted(async () => {
-  await getChildrenValue();
+onMounted(() => {
+  getChildrenValue();
 });
 
 watch(

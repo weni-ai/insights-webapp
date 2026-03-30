@@ -2,7 +2,7 @@
   <UnnnicSkeletonLoading
     v-if="isLoadingChildren"
     data-testid="conversational-absolute-numbers-skeleton"
-    :width="`100%`"
+    width="100%"
     height="100%"
   />
   <CardWidgetContainer
@@ -105,8 +105,8 @@ const props = defineProps<{
   uuid: string;
 }>();
 
-onMounted(async () => {
-  await loadChildren();
+onMounted(() => {
+  loadChildren();
 });
 
 const customWidgetsStore = useCustomWidgets();

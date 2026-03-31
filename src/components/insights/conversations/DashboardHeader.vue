@@ -196,6 +196,9 @@ const loadCardData = async () => {
       await conversationalHeaderApi.getConversationalHeaderTotals();
     applyMetrics(response);
     conversationalStore.setEndpointError('header', false);
+    if (response.length > 0) {
+      conversationalStore.setHasEndpointData(true);
+    }
   } catch (error) {
     conversationalStore.setEndpointError('header', true);
     console.error('Error loading conversational header data:', error);
@@ -232,7 +235,6 @@ const handleCardClick = (cardId: string) => {
 };
 
 onMounted(() => {
-  if (shouldUseMock.value) return;
   dashboardsStore.updateLastUpdatedRequest();
   loadCardData();
 });

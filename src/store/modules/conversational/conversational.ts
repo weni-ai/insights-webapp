@@ -22,6 +22,7 @@ interface ConversationalState {
   isNewDrawerCustomizable: boolean;
   refreshDataConversational: boolean;
   isConfigurationLoaded: boolean;
+  hasEndpointData: boolean;
   isloadingConversationalData: {
     header: boolean;
     mostTalkedAboutTopics: boolean;
@@ -37,6 +38,7 @@ export const useConversational = defineStore('conversational', {
     isNewDrawerCustomizable: false,
     refreshDataConversational: false,
     isConfigurationLoaded: false,
+    hasEndpointData: false,
     isloadingConversationalData: {
       header: false,
       mostTalkedAboutTopics: false,
@@ -70,6 +72,9 @@ export const useConversational = defineStore('conversational', {
     },
     setConfigurationLoaded(value: boolean) {
       this.isConfigurationLoaded = value;
+    },
+    setHasEndpointData(value: boolean) {
+      this.hasEndpointData = value;
     },
     setEndpointError(key: EndpointErrorKey, value: boolean) {
       this.endpointErrors[key] = value;
@@ -111,6 +116,8 @@ export const useConversational = defineStore('conversational', {
 
       const hasErrors = Object.values(state.endpointErrors).some(Boolean);
       if (hasErrors) return false;
+
+      if (state.hasEndpointData) return false;
 
       const { hasExistingTopics } = useConversationalTopics();
       const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =

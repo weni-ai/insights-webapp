@@ -1,9 +1,7 @@
 <template>
   <section class="insights-layout-header-filters">
     <FilterHumanSupport v-if="isHumanSupportDashboard" />
-    <FilterFavoriteTemplateMessage
-      v-if="isMetaTemplateDashboard && !emptyTemplates"
-    />
+
     <template v-if="hasManyFilters">
       <UnnnicButton
         data-testid="many-filters-button"
@@ -32,6 +30,9 @@
         @update:model-value="updateFilter"
       />
     </section>
+    <FilterFavoriteTemplateMessage
+      v-if="isMetaTemplateDashboard && !emptyTemplates"
+    />
     <ModalFilters
       data-testid="modal-filters"
       :showModal="filterModalOpened"
@@ -44,8 +45,7 @@
     />
     <template v-if="isMetaTemplateDashboard">
       <UnnnicButton
-        type="secondary"
-        iconLeft="search"
+        type="primary"
         :text="$t('template_messages_dashboard.templates_modal.title')"
         :disabled="emptyTemplates"
         @click.stop="handlerShowSearchTemplateModal(true)"

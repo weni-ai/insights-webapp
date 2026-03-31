@@ -1,30 +1,19 @@
 <template>
-  <header
-    v-if="currentDashboard"
-    class="insights-layout-header"
-    data-testid="insights-layout-header"
-  >
-    <UnnnicBreadcrumb
-      v-if="!isExpansiveMode"
-      :crumbs="breadcrumbs"
-      @crumb-click="
-        $router.push({ name: $event.routeName, path: $event.routePath })
-      "
-    />
-    <section
-      v-if="!isExpansiveMode"
-      class="insights-layout-header__content"
-      data-testid="insights-layout-header-content"
+  <header class="insights-layout-header">
+    <UnnnicPageHeader
+      v-if="currentDashboard && !isExpansiveMode"
+      hideDivider
+      data-testid="insights-layout-header"
     >
-      <HeaderSelectDashboard v-if="!isExpansiveMode" />
-
-      <section
-        v-if="!isExpansiveMode"
-        class="content__actions"
-      >
-        <DynamicHeader :dashboardType="dashboardHeaderType" />
-      </section>
-    </section>
+      <template #infos>
+        <HeaderSelectDashboard v-if="!isExpansiveMode" />
+      </template>
+      <template #actions>
+        <section class="insights-layout-header__actions">
+          <DynamicHeader :dashboardType="dashboardHeaderType" />
+        </section>
+      </template>
+    </UnnnicPageHeader>
     <section
       v-if="isExpansiveMode"
       class="insights-layout-header__expansive"
@@ -52,10 +41,10 @@ import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 export default {
   name: 'InsightsLayoutHeader',
@@ -202,21 +191,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$dropdownFixedWidth: 314px;
 .insights-layout-header {
-  display: grid;
-  gap: $unnnic-space-4;
-
-  &__content {
+  .page-header {
+    grid-template-columns: $dropdownFixedWidth 1fr;
+    padding-bottom: 0;
+  }
+  &__actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: $unnnic-space-2;
-
-    .content__actions {
-      display: flex;
-      gap: $unnnic-space-3;
-    }
+    justify-content: flex-end;
+    gap: $unnnic-space-3;
   }
   &__expansive {
     border-radius: 0.5rem 0.5rem 0rem 0rem;

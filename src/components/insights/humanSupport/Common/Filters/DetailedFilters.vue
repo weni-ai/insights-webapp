@@ -111,8 +111,10 @@ const filters = ref<Record<FilterType, FilterState>>({
     type: 'attendant',
     source: 'agents',
     selected: '',
-    formatOptionsFn: (agents) => {
-      return agents.map((agent: any) => ({
+    formatOptionsFn: (
+      agents: { uuid: string; name: string; email: string }[],
+    ) => {
+      return agents.map((agent) => ({
         value: agent.uuid,
         label: agent.name.trim() || agent.email,
       }));

@@ -148,6 +148,7 @@ const handleOpenDrawer = (isNew: boolean) => {
   if (!isNew) {
     const findedCustomWidget = getCustomWidgetByUuid(props.uuid) as any;
     setCrosstabForm({
+      reference_field: findedCustomWidget?.config?.reference_field,
       widget_uuid: findedCustomWidget?.uuid,
       widget_name: findedCustomWidget?.name,
       key_a: findedCustomWidget?.config?.source_a?.key,

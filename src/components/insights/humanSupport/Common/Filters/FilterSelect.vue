@@ -51,7 +51,7 @@ interface TicketIdItem {
   ticket_id: string;
 }
 
-interface FilterOption {
+export interface FilterOption {
   value: string;
   label: string;
 }
@@ -60,7 +60,7 @@ interface Props {
   type: FilterType;
   source: SourceType;
   modelValue: string;
-  formatOptionsFn?: (_options: unknown[]) => FilterOption[];
+  formatOptionsFn?: (_options: Record<string, unknown>[]) => FilterOption[];
   filterParams?: {
     sectors?: string[];
     queues?: string[];

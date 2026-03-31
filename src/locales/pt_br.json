@@ -173,7 +173,7 @@
       "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
-      "absolute_numbers_description": "Acompanhe seus números absolutos: total de pedidos, ticket médio, valor total e funil de conversão.",
+      "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",

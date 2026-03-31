@@ -34,37 +34,16 @@ describe('HeaderDashboardSettings.vue', () => {
   });
 
   it('shows DrawerDashboardConfig when "showEditDashboard" is true', async () => {
-    expect(
-      wrapper.findComponent('[data-testid="edit-dashboard-drawer"]').exists(),
-    ).toBe(false);
+    expect(wrapper.findComponent(DrawerDashboardConfig).exists()).toBe(false);
 
-    const optionMenuButton = wrapper.findComponent(
-      '[data-testid="options-dashboard-button"]',
-    );
-
-    await optionMenuButton.trigger('click');
-
-    const dropdownItem = wrapper.findComponent(
-      '[data-testid="edit-dashboard-button"]',
-    );
-
-    await dropdownItem.trigger('click');
+    await wrapper.vm.handleEditDashboard();
 
     expect(wrapper.vm.showEditDashboard).toBe(true);
+    expect(wrapper.findComponent(DrawerDashboardConfig).exists()).toBe(true);
   });
 
   it('closes DrawerDashboardConfig when close event is emitted', async () => {
-    const optionMenuButton = wrapper.findComponent(
-      '[data-testid="options-dashboard-button"]',
-    );
-
-    await optionMenuButton.trigger('click');
-
-    const dropdownItem = wrapper.findComponent(
-      '[data-testid="edit-dashboard-button"]',
-    );
-
-    await dropdownItem.trigger('click');
+    await wrapper.vm.handleEditDashboard();
 
     expect(wrapper.findComponent(DrawerDashboardConfig).exists()).toBe(true);
 

@@ -13,9 +13,10 @@
         </h1>
       </section>
       <section v-if="!isExpansive">
-        <UnnnicButtonIcon
+        <UnnnicButton
           size="small"
-          icon="expand_content"
+          iconCenter="expand_content"
+          type="secondary"
           data-testid="expand-button"
           @click.prevent.stop="$emit('seeMore')"
         />
@@ -104,7 +105,7 @@ export default {
     ...mapState(useWidgets, ['currentExpansiveWidgetFilters']),
     ...mapState(useDashboards, ['appliedFilters']),
     hasExpansiveWidgetFilteringDates() {
-      return !!this.currentExpansiveWidgetFilters.date.start;
+      return !!this.currentExpansiveWidgetFilters.date?.start;
     },
     formattedHeaders() {
       const shownHeaders = this.headers?.filter(

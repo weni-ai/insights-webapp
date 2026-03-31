@@ -36,8 +36,8 @@
       >
         {{ $t('human_service_dashboard.all_agents') }}
       </p>
-      <UnnnicButtonIcon
-        icon="close"
+      <UnnnicButton
+        iconCenter="close"
         size="small"
         type="tertiary"
         class="insights-layout-header__expansive-close"

@@ -1079,6 +1079,10 @@
           "finished": "Finished",
           "attendant": "Representative",
           "pauses": "Custom Breaks"
+        },
+        "not_handled": {
+          "title": "Not handled",
+          "description": "Conversation ended while still in queue"
         }
       }
     },

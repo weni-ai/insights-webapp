@@ -89,7 +89,7 @@ describe('HeaderRefresh.vue', () => {
       const props = refreshButton.props();
 
       expect(props.text).toBe('Refresh');
-      expect(props.type).toBe('tertiary');
+      expect(props.type).toBe('secondary');
       expect(props.iconLeft).toBe('refresh');
       expect(refreshButton.attributes('data-testid')).toBe('refresh-button');
     });
@@ -190,7 +190,7 @@ describe('HeaderRefresh.vue', () => {
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
       expect(refreshButton.exists()).toBe(true);
 
-      expect(refreshButton.props('type')).toBe('tertiary');
+      expect(refreshButton.props('type')).toBe('secondary');
       expect(refreshButton.props('iconLeft')).toBe('refresh');
     });
   });
@@ -221,7 +221,7 @@ describe('HeaderRefresh.vue', () => {
       const refreshButton = wrapper.findComponent({ name: 'UnnnicButton' });
       const props = refreshButton.props();
 
-      expect(props.type).toBe('tertiary');
+      expect(props.type).toBe('secondary');
       expect(props.iconLeft).toBe('refresh');
     });
   });

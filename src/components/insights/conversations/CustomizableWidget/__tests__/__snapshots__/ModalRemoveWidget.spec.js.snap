@@ -15,6 +15,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
   type="warning"
 >
   
+  
   <p
     class="modal-remove-widget__description"
     data-testid="modal-remove-widget-description"
@@ -22,6 +23,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
   >
     conversations_dashboard.customize_your_dashboard.modal_remove_widget.description {}
   </p>
+  
   
 </div>
 `;

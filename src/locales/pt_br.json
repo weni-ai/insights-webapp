@@ -122,6 +122,7 @@
     "sales_funnel": "Funil e dados de vendas",
     "custom": "Gráfico de barras horizontal",
     "crosstab": "Tabela cruzada",
+    "absolute_numbers": "Números absolutos",
     "no_data_available": "Nenhum dado disponível para o período de uso",
     "widget_error": {
       "title": "Ops, ocorreu um erro ao carregar os dados",
@@ -172,6 +173,7 @@
       "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
+      "absolute_numbers_description": "Acompanhe seus números absolutos: total de pedidos, ticket médio, valor total e funil de conversão.",
       "human_support": "Atendimento humano",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -221,6 +223,53 @@
           "disclaimer": "<b>Chave:</b> um identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> o nome do campo para o valor que você deseja ver. Se deixado em branco, o sistema utilizará um valor padrão.",
           "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
           "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:"
+        }
+      },
+      "absolute_numbers": {
+        "drawer": {
+          "description": "Defina o nome do widget:",
+          "add_child": "Adicionar métrica",
+          "metric_name": {
+            "label": "Nome da métrica",
+            "placeholder": "Digite o nome da métrica aqui"
+          },
+          "select_agent": {
+            "label": "Selecione um agente",
+            "placeholder": "Selecione ou busque"
+          },
+          "key": {
+            "label": "Chave",
+            "placeholder": "Digite a chave do agente aqui",
+            "hint": "Um identificador único utilizado para rastrear um evento específico no fluxo de dados."
+          },
+          "value_field_name": {
+            "label": "Metadados do evento (@.lower:optional)",
+            "placeholder": "Digite os metadados do evento aqui",
+            "hint": "Nome do campo dos metadados do evento para realizar operações. Se deixado em branco, o sistema usará o campo padrão (value)."
+          },
+          "currency": {
+            "switch": "Valor com moeda"
+          },
+          "operation": {
+            "label": "Operação",
+            "placeholder": "Selecione ou busque",
+            "options": {
+              "sum": "Soma",
+              "average": "Média",
+              "highest": "Máximo",
+              "lowest": "Mínimo",
+              "total": "Total"
+            }
+          }
+        },
+        "remove_modal": {
+          "description": "Tem certeza de que deseja deletar o widget {widget_name}?",
+          "info": "O widget {widget_name} será deletado com todas as métricas adicionadas."
+        },
+        "remove_child_modal": {
+          "title": "Remover métrica",
+          "description": "Tem certeza de que deseja deletar a métrica {metric_name}?",
+          "info": "O widget {widget_name} não será deletado. Apenas a métrica {metric_name}."
         }
       }
     },
@@ -381,6 +430,9 @@
   "in-service": "Em atendimento",
   "status": "Status",
   "metric": "Métrica",
+  "edit_metric": "Editar métrica",
+  "remove_metric": "Remover métrica",
+  "edit_widget": "Editar widget",
   "metrics": "Métricas",
   "flow": "Fluxo",
   "flows": "Fluxos",

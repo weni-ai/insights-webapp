@@ -4,6 +4,7 @@
     class="modal-remove-widget"
     :modelValue="modelValue"
     :title="
+      title ??
       $t(
         'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
       )
@@ -24,22 +25,24 @@
       onClick: () => emit('update:modelValue', false),
     }"
     showCloseIcon
-    size="sm"
+    :size="size ?? 'sm'"
     @update:model-value="emit('update:modelValue', $event)"
   >
-    <p
-      class="modal-remove-widget__description"
-      data-testid="modal-remove-widget-description"
-    >
-      {{
-        $t(
-          'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
-          {
-            type: props.name,
-          },
-        )
-      }}
-    </p>
+    <slot name="description">
+      <p
+        class="modal-remove-widget__description"
+        data-testid="modal-remove-widget-description"
+      >
+        {{
+          $t(
+            'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
+            {
+              type: props.name,
+            },
+          )
+        }}
+      </p>
+    </slot>
   </UnnnicModalDialog>
 </template>
 
@@ -53,16 +56,26 @@ import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 
 interface Props {
-  type: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab';
+  type:
+    | 'csat'
+    | 'nps'
+    | 'custom'
+    | 'sales_funnel'
+    | 'crosstab'
+    | 'absolute_numbers'
+    | 'absolute_numbers_child';
   modelValue: boolean;
   uuid?: string;
   name?: string;
+  title?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
+  (_e: 'success'): void;
 }>();
 
 const { deleteWidget } = useConversationalWidgets();
@@ -73,7 +86,11 @@ const isLoading = ref(false);
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
-    if (props.type === 'custom') {
+    if (
+      props.type === 'custom' ||
+      props.type === 'absolute_numbers' ||
+      props.type === 'absolute_numbers_child'
+    ) {
       await deleteCustomWidget(props.uuid);
     } else {
       await deleteWidget(props.type);
@@ -81,7 +98,6 @@ const handleRemoveWidget = async () => {
 
     unnnicCallAlert({
       props: {
-        version: '1.1',
         text: t(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
           {
@@ -94,6 +110,7 @@ const handleRemoveWidget = async () => {
     });
 
     emit('update:modelValue', false);
+    emit('success');
   } catch (error) {
     console.error(error);
   } finally {

@@ -72,7 +72,7 @@ export function formatCurrency(
   currencyCode: string,
   locale?: string,
 ): string {
-  return new Intl.NumberFormat(locale || 'en-US', {
+  return new Intl.NumberFormat(locale || i18n.global.locale || 'en-US', {
     style: 'currency',
     currency: currencyCode || 'USD',
     minimumFractionDigits: 2,

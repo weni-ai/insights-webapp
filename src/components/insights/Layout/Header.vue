@@ -45,10 +45,10 @@ import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 export default {
   name: 'InsightsLayoutHeader',

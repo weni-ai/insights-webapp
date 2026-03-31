@@ -1,20 +1,25 @@
 <template>
-  <UnnnicDropdown v-if="isDashboardEditable">
-    <template #trigger>
+  <UnnnicPopover
+    :open="openPopover"
+    @update:open="openPopover = $event"
+  >
+    <UnnnicPopoverTrigger>
       <UnnnicButton
-        type="secondary"
+        type="tertiary"
         size="large"
-        iconCenter="tune"
+        :pressed="openPopover"
+        iconCenter="more_vert"
         data-testid="options-dashboard-button"
       />
-    </template>
-    <UnnnicDropdownItem
-      data-testid="edit-dashboard-button"
-      @click="showEditDashboard = true"
-    >
-      {{ $t('edit_dashboard.title') }}
-    </UnnnicDropdownItem>
-  </UnnnicDropdown>
+    </UnnnicPopoverTrigger>
+    <UnnnicPopoverContent>
+      <UnnnicPopoverOption
+        :label="$t('edit_dashboard.title')"
+        icon="edit_square"
+        @click="handleEditDashboard"
+      />
+    </UnnnicPopoverContent>
+  </UnnnicPopover>
   <DrawerDashboardConfig
     v-if="showEditDashboard"
     v-model="showEditDashboard"
@@ -38,6 +43,7 @@ export default {
   },
   data() {
     return {
+      openPopover: false,
       showEditDashboard: false,
     };
   },
@@ -49,35 +55,11 @@ export default {
       return this.currentDashboard.is_editable && !isHumanSupportDashboard;
     },
   },
+  methods: {
+    handleEditDashboard() {
+      this.showEditDashboard = true;
+      this.openPopover = false;
+    },
+  },
 };
 </script>
-
-<style lang="scss" scoped>
-$dropdownFixedWidth: 165px;
-:deep(.unnnic-dropdown__trigger) {
-  .unnnic-dropdown__content {
-    margin-top: $unnnic-space-1;
-    right: 0;
-    width: $dropdownFixedWidth;
-    padding: $unnnic-space-2;
-    gap: $unnnic-space-1;
-
-    .unnnic-dropdown-item {
-      border-radius: $unnnic-radius-1;
-
-      padding: $unnnic-space-2;
-
-      display: flex;
-      align-items: center;
-      gap: $unnnic-space-1;
-
-      color: $unnnic-color-gray-12;
-      font: $unnnic-font-body;
-
-      &::before {
-        content: none;
-      }
-    }
-  }
-}
-</style>

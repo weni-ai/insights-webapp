@@ -222,7 +222,8 @@
           "description": "Defina o nome do widget:",
           "disclaimer": "<b>Chave:</b> um identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> o nome do campo para o valor que você deseja ver. Se deixado em branco, o sistema utilizará um valor padrão.",
           "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
-          "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:"
+          "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:",
+          "reference_field_label": "Defina o campo de referência a ser usado para vincular os eventos:"
         }
       },
       "absolute_numbers": {
@@ -463,6 +464,7 @@
   "rejected": "Rejeitado",
   "active": "Ativo",
   "disabled": "Desabilitado",
+  "enable": "Ativar",
   "alert_added": "{name} adicionado",
   "alert_edited": "{name} editado",
   "select_date": {

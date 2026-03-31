@@ -184,7 +184,6 @@ export default {
             { key: 'custom_conversational', id: 'custom' },
           ];
 
-          customFilter.disableClear = false;
           customFilter.shortCutOptions = conversationalShortcuts.map(
             ({ key, id }) => ({
               name: this.$t(`select_date.${key}`, dateParam),

@@ -55,6 +55,7 @@ vi.mock('@/store/modules/conversational/conversational', () => {
         refreshDataConversational: false,
         setIsLoadingConversationalData: vi.fn(),
         setEndpointError: vi.fn(),
+        setHasEndpointData: vi.fn(),
         shouldUseMock: mockShouldUseMock,
       }),
   };
@@ -319,6 +320,52 @@ describe('DashboardHeader.vue', () => {
 
       // All cards should not be loading
       expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
+    });
+
+    it('should call setHasEndpointData on successful API response', async () => {
+      const mockApiResponse = [
+        { id: 'total_conversations', value: 1000, percentage: 100 },
+        { id: 'resolved', value: 850, percentage: 85 },
+        { id: 'unresolved', value: 100, percentage: 10 },
+        { id: 'transferred_to_human', value: 25, percentage: 2.5 },
+      ];
+
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        mockApiResponse,
+      );
+
+      const { useConversational } = await import(
+        '@/store/modules/conversational/conversational'
+      );
+      const store = useConversational();
+
+      const vm = wrapper.vm;
+      await vm.loadCardData();
+
+      expect(store.setHasEndpointData).toHaveBeenCalledWith(true);
+    });
+
+    it('should not call setHasEndpointData on empty API response', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        [],
+      );
+
+      const { useConversational } = await import(
+        '@/store/modules/conversational/conversational'
+      );
+      const store = useConversational();
+      store.setHasEndpointData.mockClear();
+
+      const vm = wrapper.vm;
+      await vm.loadCardData();
+
+      expect(store.setHasEndpointData).not.toHaveBeenCalled();
     });
 
     it('should handle API error loading', async () => {
@@ -681,7 +728,7 @@ describe('DashboardHeader.vue', () => {
       mockShouldUseMock.value = false;
     });
 
-    it('should not call API on mount when shouldUseMock is true', async () => {
+    it('should still call API on mount when shouldUseMock is true', async () => {
       const conversationalHeaderApi = await import(
         '@/services/api/resources/conversational/header'
       );
@@ -692,7 +739,7 @@ describe('DashboardHeader.vue', () => {
 
       expect(
         conversationalHeaderApi.default.getConversationalHeaderTotals,
-      ).not.toHaveBeenCalled();
+      ).toHaveBeenCalled();
     });
 
     it('should render mock cards with formatted values directly', () => {

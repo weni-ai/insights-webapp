@@ -58,6 +58,7 @@ describe('useConversational store', () => {
         mostTalkedAboutTopics: false,
         dynamicWidgets: false,
       });
+      expect(store.hasEndpointData).toBe(false);
       expect(store.endpointErrors).toEqual({
         topics: false,
         header: false,
@@ -192,6 +193,19 @@ describe('useConversational store', () => {
     });
   });
 
+  describe('setHasEndpointData action', () => {
+    it('should set hasEndpointData to true', () => {
+      store.setHasEndpointData(true);
+      expect(store.hasEndpointData).toBe(true);
+    });
+
+    it('should set hasEndpointData to false', () => {
+      store.setHasEndpointData(true);
+      store.setHasEndpointData(false);
+      expect(store.hasEndpointData).toBe(false);
+    });
+  });
+
   describe('setEndpointError action', () => {
     const keys = ['topics', 'header', 'widgets'];
 
@@ -247,6 +261,13 @@ describe('useConversational store', () => {
       store.setConfigurationLoaded(true);
       mockDependentStores();
       expect(store.shouldUseMock).toBe(true);
+    });
+
+    it('should return false when endpoint has data', () => {
+      store.setConfigurationLoaded(true);
+      store.setHasEndpointData(true);
+      mockDependentStores();
+      expect(store.shouldUseMock).toBe(false);
     });
 
     it('should return false when topics exist', () => {

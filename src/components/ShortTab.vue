@@ -1,15 +1,21 @@
 <template>
   <UnnnicSegmentedControl
     class="short-tab"
+    data-testid="short-tab"
     :modelValue="activeTab"
     @update:model-value="switchTab"
   >
-    <UnnnicSegmentedControlList size="small">
+    <UnnnicSegmentedControlList
+      class="short-tab__tabs"
+      data-testid="short-tab-container"
+      size="small"
+    >
       <UnnnicSegmentedControlTrigger
         v-for="(tab, index) in tabs"
         :key="index"
         :value="tab.key"
-        class="short-tab__tab-name"
+        :data-testid="`short-tab-button-${index}`"
+        class="short-tab__tab"
       >
         {{ tab.name }}
       </UnnnicSegmentedControlTrigger>
@@ -51,11 +57,13 @@ const switchTab = (key: string) => {
     emit('tab-change', key);
   }
 };
+
+defineExpose({ activeTab, switchTab });
 </script>
 
 <style lang="scss" scoped>
 .short-tab {
-  &__tab-name {
+  &__tab {
     white-space: nowrap;
   }
 }

@@ -195,6 +195,16 @@ watch(
   },
 );
 
+watch(
+  () => conversational.hasEndpointData,
+  (hasData) => {
+    if (hasData && isConfigurationLoaded.value) {
+      customWidgets.clearMockWidgets();
+      setDynamicWidgets();
+    }
+  },
+);
+
 onMounted(() => {
   initializeConfiguration();
 });
@@ -212,6 +222,7 @@ onUnmounted(() => {
   dynamicWidgets.value = [];
   customWidgets.clearMockWidgets();
   conversational.setConfigurationLoaded(false);
+  conversational.setHasEndpointData(false);
 });
 </script>
 

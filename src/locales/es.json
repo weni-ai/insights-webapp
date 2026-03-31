@@ -476,8 +476,8 @@
     "last_30_days_conversational": "Últimos 30 días (hasta {date})",
     "last_12_months_conversational": "Últimos 12 meses (hasta {date})",
     "current_month_conversational": "Mes actual (hasta {date})",
-    "previous_month_conversational": "Mes anterior (hasta {date})",
-    "custom_conversational": "Personalizado (hasta {date})"
+    "previous_month_conversational": "Mes anterior",
+    "custom_conversational": "Personalizado"
   },
   "data_period": {
     "label": "Período",
@@ -1080,6 +1080,10 @@
           "finished": "Finalizado",
           "attendant": "Atendido",
           "pauses": "Pausas personalizadas"
+        },
+        "not_handled": {
+          "title": "No atendido",
+          "description": "La conversación finalizó mientras aún estaba en la cola"
         }
       }
     },

@@ -476,8 +476,8 @@
     "last_30_days_conversational": "Last 30 days (up to {date})",
     "last_12_months_conversational": "Last 12 months (up to {date})",
     "current_month_conversational": "Current month (up to {date})",
-    "previous_month_conversational": "Previous month (up to {date})",
-    "custom_conversational": "Custom (up to {date})"
+    "previous_month_conversational": "Previous month",
+    "custom_conversational": "Custom"
   },
   "data_period": {
     "label": "Data period",
@@ -1080,6 +1080,10 @@
           "finished": "Finished",
           "attendant": "Representative",
           "pauses": "Custom Breaks"
+        },
+        "not_handled": {
+          "title": "Not handled",
+          "description": "Conversation ended while still in queue"
         }
       }
     },

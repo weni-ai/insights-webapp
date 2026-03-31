@@ -19,6 +19,26 @@
     @item-click="redirectItem"
     @load-more="loadMore"
   >
+    <template #body-agent="{ item }">
+      <p v-if="item.agent">{{ item.agent }}</p>
+      <UnnnicToolTip
+        v-else
+        enabled
+        :text="
+          $t(
+            'human_support_dashboard.analyze.detailed_analysis.not_handled.description',
+          )
+        "
+      >
+        <p class="italic-text">
+          {{
+            $t(
+              'human_support_dashboard.analyze.detailed_analysis.not_handled.title',
+            )
+          }}
+        </p>
+      </UnnnicToolTip>
+    </template>
     <template #body-first_response_time="{ item }">
       <p
         v-if="item.first_response_time === null"
@@ -69,7 +89,10 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 });
 
 const formatResults = (results: FinishedDataResult[]) => {
-  return results;
+  return results.map((result) => ({
+    ...result,
+    agent: result?.agent || result?.agent_email || '',
+  }));
 };
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {
@@ -97,7 +120,9 @@ const {
 
 const widgetData = computed(() => {
   if (!projectStore.hasSectorsConfigured) {
-    return formatResults(analysisDetailedAnalysisFinishedMock);
+    return formatResults(
+      analysisDetailedAnalysisFinishedMock as FinishedDataResult[],
+    );
   }
   return formattedItems.value;
 });

@@ -233,6 +233,7 @@
   "template_messages_dashboard": {
     "title": "Meta template messages",
     "favorites": "Favorites",
+    "select_favorite": "Select a favorite template",
     "add_to_favorites": "Add to favorites",
     "empty_templates": "No data yet. Once there's activity, it will be displayed here.",
     "favorite_limit_reached": "Favorite limit reached. Remove a favorite and try again.",

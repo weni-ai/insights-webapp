@@ -233,6 +233,7 @@
   "template_messages_dashboard": {
     "title": "Mensajes plantilla de Meta",
     "favorites": "Favoritos",
+    "select_favorite": "Seleccionar a plantilla favorita",
     "add_to_favorites": "Agregar a favoritos",
     "empty_templates": "Aún no hay datos disponibles. Cuando haya alguna actividad se mostrará aquí.",
     "favorite_limit_reached": "Límite de favoritos alcanzado. Elimina algún favorito e inténtalo de nuevo.",

@@ -1,5 +1,6 @@
 <template>
   <UnnnicPopover
+    v-if="isDashboardEditable"
     :open="openPopover"
     @update:open="openPopover = $event"
   >

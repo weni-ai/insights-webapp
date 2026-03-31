@@ -3,7 +3,6 @@
     v-if="hasFilters"
     data-testid="insights-layout-header-filters"
   />
-
   <HeaderDashboardSettings />
 </template>
 

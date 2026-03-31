@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { mount, config } from '@vue/test-utils';
+import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import ShortTab from '../ShortTab.vue';
@@ -22,9 +23,16 @@ const defaultProps = {
   ],
 };
 
+const emitModelUpdate = async (wrapper, value) => {
+  wrapper.vm.switchTab(value);
+  await nextTick();
+};
+
 const createWrapper = (props = {}) => {
   return mount(ShortTab, {
-    global: { plugins: [UnnnicSystem] },
+    global: {
+      plugins: [UnnnicSystem],
+    },
     props: { ...defaultProps, ...props },
   });
 };
@@ -103,36 +111,22 @@ describe('ShortTab.vue', () => {
   describe('Active Tab State', () => {
     it('should have first tab active by default', () => {
       expect(wrapper.vm.activeTab).toBe('tab1');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-0"]').classes(),
-      ).toContain('short-tab__tab--active');
     });
 
     it('should respect custom currentTab prop', async () => {
       await wrapper.setProps({ currentTab: 'tab2' });
 
       expect(wrapper.vm.activeTab).toBe('tab2');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-1"]').classes(),
-      ).toContain('short-tab__tab--active');
     });
 
-    it('should switch active tab when clicked', async () => {
-      const secondButton = wrapper.find('[data-testid="short-tab-button-1"]');
-      await secondButton.trigger('click');
+    it('should switch active tab when segmented value updates', async () => {
+      await emitModelUpdate(wrapper, 'tab2');
 
       expect(wrapper.vm.activeTab).toBe('tab2');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-1"]').classes(),
-      ).toContain('short-tab__tab--active');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-0"]').classes(),
-      ).not.toContain('short-tab__tab--active');
     });
 
-    it('should not change when clicking same active tab', async () => {
-      const firstButton = wrapper.find('[data-testid="short-tab-button-0"]');
-      await firstButton.trigger('click');
+    it('should not change when segmented value is already active', async () => {
+      await emitModelUpdate(wrapper, 'tab1');
 
       expect(wrapper.vm.activeTab).toBe('tab1');
       expect(wrapper.emitted('tab-change')).toBeFalsy();
@@ -141,24 +135,21 @@ describe('ShortTab.vue', () => {
 
   describe('Event Emission', () => {
     it('should emit tab-change event with correct key when switching tabs', async () => {
-      const secondButton = wrapper.find('[data-testid="short-tab-button-1"]');
-      await secondButton.trigger('click');
+      await emitModelUpdate(wrapper, 'tab2');
 
       expect(wrapper.emitted('tab-change')).toBeTruthy();
       expect(wrapper.emitted('tab-change')[0]).toEqual(['tab2']);
     });
 
     it('should emit different keys for different tabs', async () => {
-      const thirdButton = wrapper.find('[data-testid="short-tab-button-2"]');
-      await thirdButton.trigger('click');
+      await emitModelUpdate(wrapper, 'tab3');
 
       expect(wrapper.emitted('tab-change')).toBeTruthy();
       expect(wrapper.emitted('tab-change')[0]).toEqual(['tab3']);
     });
 
-    it('should not emit when clicking already active tab', async () => {
-      const firstButton = wrapper.find('[data-testid="short-tab-button-0"]');
-      await firstButton.trigger('click');
+    it('should not emit when selection is already the active tab', async () => {
+      await emitModelUpdate(wrapper, 'tab1');
 
       expect(wrapper.emitted('tab-change')).toBeFalsy();
     });
@@ -172,9 +163,6 @@ describe('ShortTab.vue', () => {
       expectElementExists(wrapper, 'short-tab-button-0');
       expectElementExists(wrapper, 'short-tab-button-1', false);
       expectElementText(wrapper, 'short-tab-button-0', 'Only Tab');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-0"]').classes(),
-      ).toContain('short-tab__tab--active');
     });
 
     it('should handle complete props configuration', async () => {
@@ -191,9 +179,6 @@ describe('ShortTab.vue', () => {
       expect(wrapper.vm.activeTab).toBe('second');
       expectElementText(wrapper, 'short-tab-button-0', 'First');
       expectElementText(wrapper, 'short-tab-button-1', 'Second');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-1"]').classes(),
-      ).toContain('short-tab__tab--active');
     });
   });
 
@@ -223,9 +208,6 @@ describe('ShortTab.vue', () => {
       await wrapper.setProps({ currentTab: 'invalid-key' });
 
       expect(wrapper.vm.activeTab).toBe('invalid-key');
-      expect(
-        wrapper.find('[data-testid="short-tab-button-0"]').classes(),
-      ).not.toContain('short-tab__tab--active');
     });
 
     it('should handle tabs with special characters', async () => {

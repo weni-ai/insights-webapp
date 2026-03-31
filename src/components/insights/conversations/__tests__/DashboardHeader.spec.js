@@ -47,6 +47,7 @@ vi.mock('@/store/modules/dashboards', () => ({
 }));
 
 const mockShouldUseMock = vueRef(false);
+const mockSetHasEndpointData = vi.fn();
 
 vi.mock('@/store/modules/conversational/conversational', () => {
   return {
@@ -55,7 +56,7 @@ vi.mock('@/store/modules/conversational/conversational', () => {
         refreshDataConversational: false,
         setIsLoadingConversationalData: vi.fn(),
         setEndpointError: vi.fn(),
-        setHasEndpointData: vi.fn(),
+        setHasEndpointData: mockSetHasEndpointData,
         shouldUseMock: mockShouldUseMock,
       }),
   };
@@ -337,15 +338,12 @@ describe('DashboardHeader.vue', () => {
         mockApiResponse,
       );
 
-      const { useConversational } = await import(
-        '@/store/modules/conversational/conversational'
-      );
-      const store = useConversational();
+      mockSetHasEndpointData.mockClear();
 
       const vm = wrapper.vm;
       await vm.loadCardData();
 
-      expect(store.setHasEndpointData).toHaveBeenCalledWith(true);
+      expect(mockSetHasEndpointData).toHaveBeenCalledWith(true);
     });
 
     it('should not call setHasEndpointData on empty API response', async () => {
@@ -356,16 +354,12 @@ describe('DashboardHeader.vue', () => {
         [],
       );
 
-      const { useConversational } = await import(
-        '@/store/modules/conversational/conversational'
-      );
-      const store = useConversational();
-      store.setHasEndpointData.mockClear();
+      mockSetHasEndpointData.mockClear();
 
       const vm = wrapper.vm;
       await vm.loadCardData();
 
-      expect(store.setHasEndpointData).not.toHaveBeenCalled();
+      expect(mockSetHasEndpointData).not.toHaveBeenCalled();
     });
 
     it('should handle API error loading', async () => {

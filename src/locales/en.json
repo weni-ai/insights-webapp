@@ -222,7 +222,8 @@
           "description": "Set a name for the widget:",
           "disclaimer": "<b>Key:</b> a unique identifier used to track a specific event in the data flow.<br><b>Field name:</b> the name of the field for the value you want to see. If left blank, the system will use a default value.",
           "first_data_label": "Define the <b>first</b> data you want to track:",
-          "second_data_label": "Define the <b>second</b> data you want to track:"
+          "second_data_label": "Define the <b>second</b> data you want to track:",
+          "reference_field_label": "Define the reference field to be used to link the events:"
         }
       },
       "absolute_numbers": {

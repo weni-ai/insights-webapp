@@ -25,6 +25,7 @@ interface customForm {
 }
 
 interface crosstabForm {
+  reference_field: string;
   widget_uuid: string;
   widget_name: string;
   key_a: string;
@@ -85,6 +86,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       widget_name: '',
     } as customForm,
     crosstabForm: {
+      reference_field: '',
       widget_uuid: '',
       widget_name: '',
       key_a: '',
@@ -168,6 +170,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
         type: 'conversations.crosstab',
         source: 'conversations.crosstab',
         config: {
+          reference_field: this.crosstabForm.reference_field,
           source_a: {
             key: this.crosstabForm.key_a,
             field_name: this.crosstabForm.field_name_a,

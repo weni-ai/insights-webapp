@@ -12,6 +12,7 @@ export type DrawerWidgetType =
   | 'custom'
   | 'sales_funnel'
   | 'crosstab'
+  | 'absolute_numbers'
   | null;
 type EndpointErrorKey = 'topics' | 'header' | 'widgets';
 
@@ -21,6 +22,7 @@ interface ConversationalState {
   isNewDrawerCustomizable: boolean;
   refreshDataConversational: boolean;
   isConfigurationLoaded: boolean;
+  hasEndpointData: boolean;
   isloadingConversationalData: {
     header: boolean;
     mostTalkedAboutTopics: boolean;
@@ -32,16 +34,11 @@ interface ConversationalState {
 export const useConversational = defineStore('conversational', {
   state: (): ConversationalState => ({
     isDrawerCustomizableOpen: false,
-    drawerWidgetType: null as
-      | 'nps'
-      | 'csat'
-      | 'add'
-      | 'custom'
-      | 'crosstab'
-      | null,
+    drawerWidgetType: null as DrawerWidgetType,
     isNewDrawerCustomizable: false,
     refreshDataConversational: false,
     isConfigurationLoaded: false,
+    hasEndpointData: false,
     isloadingConversationalData: {
       header: false,
       mostTalkedAboutTopics: false,
@@ -57,14 +54,7 @@ export const useConversational = defineStore('conversational', {
   actions: {
     setIsDrawerCustomizableOpen(
       isDrawerCustomizableOpen: boolean,
-      type:
-        | 'nps'
-        | 'csat'
-        | 'add'
-        | 'custom'
-        | 'sales_funnel'
-        | 'crosstab'
-        | null,
+      type: DrawerWidgetType,
       isNew: boolean,
     ) {
       this.isDrawerCustomizableOpen = isDrawerCustomizableOpen;
@@ -82,6 +72,9 @@ export const useConversational = defineStore('conversational', {
     },
     setConfigurationLoaded(value: boolean) {
       this.isConfigurationLoaded = value;
+    },
+    setHasEndpointData(value: boolean) {
+      this.hasEndpointData = value;
     },
     setEndpointError(key: EndpointErrorKey, value: boolean) {
       this.endpointErrors[key] = value;
@@ -123,6 +116,8 @@ export const useConversational = defineStore('conversational', {
 
       const hasErrors = Object.values(state.endpointErrors).some(Boolean);
       if (hasErrors) return false;
+
+      if (state.hasEndpointData) return false;
 
       const { hasExistingTopics } = useConversationalTopics();
       const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =

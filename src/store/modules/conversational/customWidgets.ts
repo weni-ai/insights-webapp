@@ -25,12 +25,36 @@ interface customForm {
 }
 
 interface crosstabForm {
+  reference_field: string;
   widget_uuid: string;
   widget_name: string;
   key_a: string;
   field_name_a: string;
   key_b: string;
   field_name_b: string;
+}
+
+export interface absoluteNumbersFormChildren {
+  uuid?: string;
+  name: string;
+  parent?: string;
+  config: {
+    index: number;
+    agent_uuid: string;
+    key: string;
+    operation: string;
+    value_field_name: string;
+    currency: {
+      is_active: boolean;
+      code: string | null;
+    };
+  };
+}
+
+interface absoluteNumbersForm {
+  widget_uuid: string;
+  name: string;
+  children: absoluteNumbersFormChildren[];
 }
 
 interface customWidget extends WidgetType {
@@ -62,6 +86,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
       widget_name: '',
     } as customForm,
     crosstabForm: {
+      reference_field: '',
       widget_uuid: '',
       widget_name: '',
       key_a: '',
@@ -69,6 +94,12 @@ export const useCustomWidgets = defineStore('customWidgets', {
       key_b: '',
       field_name_b: '',
     } as crosstabForm,
+    absoluteNumbersFormChildToScroll: null as string | null,
+    absoluteNumbersForm: {
+      widget_uuid: '',
+      name: '',
+      children: [],
+    } as absoluteNumbersForm,
     isLoadingSaveNewCustomWidget: false,
     isLoadingDeleteCustomWidget: false,
     loadingByUuid: [] as string[],
@@ -93,6 +124,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
     resetForms() {
       this.customForm = {} as customForm;
       this.crosstabForm = {} as crosstabForm;
+      this.absoluteNumbersForm = {} as absoluteNumbersForm;
     },
     setCustomFormAgent(agent_uuid: string, agent_name: string) {
       this.customForm.agent_uuid = agent_uuid;
@@ -138,6 +170,7 @@ export const useCustomWidgets = defineStore('customWidgets', {
         type: 'conversations.crosstab',
         source: 'conversations.crosstab',
         config: {
+          reference_field: this.crosstabForm.reference_field,
           source_a: {
             key: this.crosstabForm.key_a,
             field_name: this.crosstabForm.field_name_a,
@@ -148,6 +181,85 @@ export const useCustomWidgets = defineStore('customWidgets', {
           },
         },
       };
+    },
+    _mountAbsoluteNumbersWidgetBody() {
+      return {
+        uuid: this.absoluteNumbersForm.widget_uuid || undefined,
+        name: this.absoluteNumbersForm.name,
+        type: 'conversations.absolute_numbers',
+        source: 'conversations.absolute_numbers',
+        position: [],
+      };
+    },
+    _mountAbsoluteNumbersWidgetBodyChildren(parent: string) {
+      return this.absoluteNumbersForm.children.map((child, index) => ({
+        uuid: child.uuid || undefined,
+        name: child.name,
+        parent,
+        type: 'conversations.absolute_numbers_child',
+        source: 'conversations.absolute_numbers.child',
+        config: { ...child.config, index: index + 1 },
+      }));
+    },
+    _makeAbsoluteNumbersChildRequest(children) {
+      const childrenRequests = children.map((child) => {
+        if (child.uuid) {
+          return WidgetService.updateWidget({
+            widget: child,
+          });
+        } else {
+          return WidgetService.saveNewWidget(child);
+        }
+      });
+      return childrenRequests;
+    },
+    async saveAbsoluteNumbers() {
+      this.isLoadingSaveNewAbsoluteNumbersWidget = true;
+      try {
+        const widget = this._mountAbsoluteNumbersWidgetBody();
+
+        if (widget.uuid) {
+          await WidgetService.updateWidget({
+            widget,
+          });
+        } else {
+          const createdWidget = (await WidgetService.saveNewWidget(
+            widget,
+          )) as unknown as WidgetType;
+          widget.uuid = createdWidget.uuid;
+        }
+
+        const children = this._mountAbsoluteNumbersWidgetBodyChildren(
+          widget.uuid,
+        );
+
+        const childrenRequests =
+          this._makeAbsoluteNumbersChildRequest(children);
+
+        await Promise.all(childrenRequests);
+
+        this.resetForms();
+
+        const { getCurrentDashboardWidgets } = useWidgets();
+
+        await getCurrentDashboardWidgets();
+
+        const alertText = this.absoluteNumbersForm.widget_uuid
+          ? i18n.global.t('alert_edited', { name: widget.name })
+          : i18n.global.t('alert_added', { name: widget.name });
+
+        unnnicCallAlert({
+          props: {
+            text: alertText,
+            type: 'success',
+            seconds: 5,
+          },
+        });
+      } catch (error) {
+        console.error('Error saving absolute numbers widget', error);
+      } finally {
+        this.isLoadingSaveNewAbsoluteNumbersWidget = false;
+      }
     },
     injectMockWidgets() {
       const hasMockCustom = this.customWidgets.some(
@@ -296,5 +408,19 @@ export const useCustomWidgets = defineStore('customWidgets', {
       state.crosstabForm.widget_name?.trim() !== '' &&
       state.crosstabForm.key_a?.trim() !== '' &&
       state.crosstabForm.key_b?.trim() !== '',
+    isEnabledSaveAbsoluteNumbersForm: (state) => {
+      const validWidgetName = state.absoluteNumbersForm.name?.trim() !== '';
+      const validChildren = state.absoluteNumbersForm.children.every(
+        (child) => {
+          return (
+            child.name?.trim() !== '' &&
+            child.config.agent_uuid?.trim() !== '' &&
+            child.config.key?.trim() !== '' &&
+            child.config.operation?.trim() !== ''
+          );
+        },
+      );
+      return validWidgetName && validChildren;
+    },
   },
 });

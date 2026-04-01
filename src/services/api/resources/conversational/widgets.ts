@@ -59,6 +59,28 @@ interface WidgetQueryParams {
   project_uuid?: string;
 }
 
+interface AbsoluteNumbersChildrenResponse {
+  next: string | null;
+  previous: string | null;
+  results: AbsoluteNumbersChildrenItem[];
+}
+
+interface AbsoluteNumbersChildrenItem {
+  uuid: string;
+  parent: string;
+  name: string;
+  config: {
+    index: number;
+    agent_uuid: string;
+    key: string;
+    operation: string;
+    value_field_name: string;
+    currency: {
+      is_active: boolean;
+      code: string | null;
+    };
+  };
+}
 // eslint-disable-next-line no-unused-vars
 enum AvailableWidget {
   // eslint-disable-next-line no-unused-vars
@@ -206,6 +228,32 @@ export default {
 
     return response;
   },
+
+  async getAbsoluteNumbersChildren(
+    widgetUuid: string,
+  ): Promise<AbsoluteNumbersChildrenResponse> {
+    const response = (await http.get(
+      `/widgets/${widgetUuid}/children/`,
+    )) as AbsoluteNumbersChildrenResponse;
+
+    return response;
+  },
+
+  async getAbsoluteNumbersChildrenValue(
+    widgetUuid: string,
+  ): Promise<{ value: number }> {
+    const { appliedFilters } = useConversational();
+    const params = {
+      widget_uuid: widgetUuid,
+      ...appliedFilters,
+    };
+    const response = (await http.get(
+      `/metrics/conversations/absolute-numbers/`,
+      { params },
+    )) as { value: number };
+
+    return response;
+  },
 };
 
 export { AvailableWidget };
@@ -221,4 +269,6 @@ export type {
   CrosstabResultItem,
   AvailableWidgetsQueryParams,
   AvailableWidgetsResponse,
+  AbsoluteNumbersChildrenResponse,
+  AbsoluteNumbersChildrenItem,
 };

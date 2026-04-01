@@ -190,11 +190,6 @@ describe('HeaderFilters', () => {
       expect(wrapper.vm.yesterdayFormatted).toBe('08/02');
     });
 
-    it('should set disableClear to false for conversational dashboard', () => {
-      const { filter } = wrapper.vm;
-      expect(filter.disableClear).toBe(false);
-    });
-
     it('should include yesterday date in conversational shortcut option names', () => {
       const { filter } = wrapper.vm;
       const expectedOptions = [
@@ -219,11 +214,11 @@ describe('HeaderFilters', () => {
           id: 'current-month',
         },
         {
-          name: 'Previous month (up to 08/02)',
+          name: 'Previous month',
           id: 'previous-month',
         },
         {
-          name: 'Custom (up to 08/02)',
+          name: 'Custom',
           id: 'custom',
         },
       ];

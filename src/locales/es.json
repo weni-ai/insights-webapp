@@ -122,6 +122,7 @@
     "sales_funnel": "Embudo y datos de ventas",
     "custom": "Gráfico de barras horizontal",
     "crosstab": "Tabla cruzada",
+    "absolute_numbers": "Números absolutos",
     "no_data_available": "No hay datos disponibles para el periodo de uso",
     "widget_error": {
       "title": "Ups, se produjo un error al cargar los datos",
@@ -172,6 +173,7 @@
       "nps_description": "El Índice Neto de Recomendación (NPS) indica la probabilidad de que el contacto recomiende el servicio recibido a otras personas",
       "config_csat_or_nps_description": "Define cuál {type} deseas monitorear:",
       "sales_funnel_description": "Rastrea tus ventas: total de pedidos, ticket promedio, valor total y embudo de conversión.",
+      "absolute_numbers_description": "Destaca una única métrica clave, mostrando su valor exacto para una visualización rápida y directa",
       "human_support": "Soporte humano",
       "ai_support": "IA",
       "activate_agent": "Activar agente",
@@ -220,7 +222,55 @@
           "description": "Define el nombre del widget:",
           "disclaimer": "<b>Clave:</b> un identificador único utilizado para rastrear un evento específico en el flujo de datos.<br><b>Nombre del campo:</b> el nombre del campo para el valor que deseas ver. Si se deja en blanco, el sistema utilizará un valor predeterminado.",
           "first_data_label": "Define el <b>primer</b> dato que deseas rastrear:",
-          "second_data_label": "Define el <b>segundo</b> dato que deseas rastrear:"
+          "second_data_label": "Define el <b>segundo</b> dato que deseas rastrear:",
+          "reference_field_label": "Define el campo de referencia que se usará para vincular los eventos:"
+        }
+      },
+      "absolute_numbers": {
+        "drawer": {
+          "description": "Define el nombre del widget:",
+          "add_child": "Agregar métrica",
+          "metric_name": {
+            "label": "Nombre de la métrica",
+            "placeholder": "Ingresa el nombre de la métrica aquí"
+          },
+          "select_agent": {
+            "label": "Selecciona un agente",
+            "placeholder": "Selecciona o busca"
+          },
+          "key": {
+            "label": "Clave",
+            "placeholder": "Ingresa la clave del agente aquí",
+            "hint": "Un identificador único utilizado para rastrear un evento específico en el flujo de datos."
+          },
+          "value_field_name": {
+            "label": "Metadatos del evento (@.lower:optional)",
+            "placeholder": "Ingresa los metadatos del evento aquí",
+            "hint": "Nombre del campo de los metadatos del evento para realizar operaciones. Si se deja en blanco, el sistema usará el campo predeterminado (value)."
+          },
+          "currency": {
+            "switch": "Valor con moneda"
+          },
+          "operation": {
+            "label": "Operación",
+            "placeholder": "Selecciona o busca",
+            "options": {
+              "sum": "Suma",
+              "average": "Promedio",
+              "highest": "Máximo",
+              "lowest": "Mínimo",
+              "total": "Total"
+            }
+          }
+        },
+        "remove_modal": {
+          "description": "¿Realmente deseas eliminar el widget {widget_name}?",
+          "info": "El widget {widget_name} se eliminará con todas las métricas agregadas."
+        },
+        "remove_child_modal": {
+          "title": "Eliminar métrica",
+          "description": "¿Realmente deseas eliminar la métrica {metric_name}?",
+          "info": "El widget {widget_name} no se eliminará. Solo la métrica {metric_name}."
         }
       }
     },
@@ -382,6 +432,9 @@
   "in-service": "Servicio en curso",
   "status": "Status",
   "metric": "Métrica",
+  "edit_metric": "Editar métrica",
+  "remove_metric": "Eliminar métrica",
+  "edit_widget": "Editar widget",
   "metrics": "Métricas",
   "flow": "Flujo",
   "flows": "Flujos",
@@ -412,6 +465,7 @@
   "rejected": "Rechazado",
   "active": "Activo",
   "disabled": "Inactivo",
+  "enable": "Activar",
   "alert_added": "{name} agregado",
   "alert_edited": "{name} editado",
   "select_date": {
@@ -423,8 +477,8 @@
     "last_30_days_conversational": "Últimos 30 días (hasta {date})",
     "last_12_months_conversational": "Últimos 12 meses (hasta {date})",
     "current_month_conversational": "Mes actual (hasta {date})",
-    "previous_month_conversational": "Mes anterior (hasta {date})",
-    "custom_conversational": "Personalizado (hasta {date})"
+    "previous_month_conversational": "Mes anterior",
+    "custom_conversational": "Personalizado"
   },
   "data_period": {
     "label": "Período",
@@ -1027,6 +1081,10 @@
           "finished": "Finalizado",
           "attendant": "Atendido",
           "pauses": "Pausas personalizadas"
+        },
+        "not_handled": {
+          "title": "No atendido",
+          "description": "La conversación finalizó mientras aún estaba en la cola"
         }
       }
     },

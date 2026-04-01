@@ -6,6 +6,7 @@ import { createRequestQuery } from '@/utils/request';
 
 interface FinishedDataResult {
   agent: string;
+  agent_email: string;
   sector: string;
   queue: string;
   awaiting_time: number;

@@ -1,26 +1,26 @@
 <template>
-  <section
+  <UnnnicSegmentedControl
     class="short-tab"
     data-testid="short-tab"
+    :modelValue="activeTab"
+    @update:model-value="switchTab"
   >
-    <section
+    <UnnnicSegmentedControlList
       class="short-tab__tabs"
       data-testid="short-tab-container"
+      size="small"
     >
-      <button
+      <UnnnicSegmentedControlTrigger
         v-for="(tab, index) in tabs"
         :key="index"
-        :class="[
-          'short-tab__tab',
-          { 'short-tab__tab--active': activeTab === tab.key },
-        ]"
+        :value="tab.key"
         :data-testid="`short-tab-button-${index}`"
-        @click="switchTab(tab.key)"
+        class="short-tab__tab"
       >
         {{ tab.name }}
-      </button>
-    </section>
-  </section>
+      </UnnnicSegmentedControlTrigger>
+    </UnnnicSegmentedControlList>
+  </UnnnicSegmentedControl>
 </template>
 
 <script setup lang="ts">
@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   'tab-change': [tab: string];
 }>();
+
 const activeTab = ref(props.currentTab || props.tabs[0].key);
 
 watch(
@@ -56,54 +57,14 @@ const switchTab = (key: string) => {
     emit('tab-change', key);
   }
 };
+
+defineExpose({ activeTab, switchTab });
 </script>
 
 <style lang="scss" scoped>
 .short-tab {
-  &__tabs {
-    display: flex;
-    gap: $unnnic-space-1;
-    background-color: $unnnic-color-bg-base-soft;
-    border-radius: $unnnic-radius-2;
-    padding: $unnnic-space-1;
-    align-items: center;
-  }
-
   &__tab {
-    border: none;
-    border-radius: $unnnic-radius-1;
-
-    padding: $unnnic-space-2 $unnnic-space-4;
-
-    flex: 1;
-    gap: $unnnic-space-1;
-    justify-content: center;
     white-space: nowrap;
-    align-items: center;
-
-    background-color: $unnnic-color-bg-base-soft;
-    color: $unnnic-color-gray-7;
-    font: $unnnic-font-caption-1;
-
-    cursor: pointer;
-
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: $unnnic-color-bg-base-soft;
-      color: $unnnic-color-fg-emphasized;
-    }
-
-    &--active {
-      background-color: $unnnic-color-bg-base;
-      border: 1px solid $unnnic-color-border-base;
-      color: $unnnic-color-fg-emphasized;
-
-      &:hover {
-        background-color: $unnnic-color-bg-base;
-        color: $unnnic-color-fg-emphasized;
-      }
-    }
   }
 }
 </style>

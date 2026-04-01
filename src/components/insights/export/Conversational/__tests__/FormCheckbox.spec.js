@@ -9,6 +9,7 @@ const mockStore = {
   selected_fields: { value: {} },
   enabled_models: { value: [] },
   custom_widgets: { value: [] },
+  crosstab_widgets: { value: [] },
   updateModelFieldSelection: vi.fn(),
   toggleModelEnabled: vi.fn(),
   initializeDefaultFields: vi.fn(),
@@ -57,6 +58,7 @@ describe('Conversational FormCheckbox', () => {
       selected_fields: { value: {} },
       enabled_models: { value: [] },
       custom_widgets: { value: [] },
+      crosstab_widgets: { value: [] },
     });
 
     wrapper = createWrapper();
@@ -129,6 +131,61 @@ describe('Conversational FormCheckbox', () => {
       expect(translated['Widget (12345678)']).toBeDefined();
       expect(translated['Widget (87654321)']).toBeDefined();
     });
+
+    it('should translate crosstab widget UUID to display name', () => {
+      wrapper = createWrapper({
+        crosstab_widgets: {
+          value: [
+            { uuid: 'ct-111-222', name: 'Crosstab A' },
+            { uuid: 'ct-333-444', name: 'Crosstab B' },
+          ],
+        },
+        model_fields: {
+          value: { 'ct-111-222': {}, 'ct-333-444': {} },
+        },
+      });
+
+      const translated = wrapper.vm.translatedModelFields;
+      expect(translated['Crosstab A']).toBeDefined();
+      expect(translated['Crosstab B']).toBeDefined();
+      expect(translated['ct-111-222']).toBeUndefined();
+    });
+
+    it('should translate both custom and crosstab widgets', () => {
+      wrapper = createWrapper({
+        custom_widgets: {
+          value: [{ uuid: 'cw-111', name: 'Custom W' }],
+        },
+        crosstab_widgets: {
+          value: [{ uuid: 'ct-222', name: 'Crosstab W' }],
+        },
+        model_fields: {
+          value: { 'cw-111': { f1: {} }, 'ct-222': { f2: {} } },
+        },
+      });
+
+      const translated = wrapper.vm.translatedModelFields;
+      expect(translated['Custom W']).toBeDefined();
+      expect(translated['Crosstab W']).toBeDefined();
+    });
+
+    it('should handle duplicate names across custom and crosstab widgets', () => {
+      wrapper = createWrapper({
+        custom_widgets: {
+          value: [{ uuid: '12345678-aaaa', name: 'Same Name' }],
+        },
+        crosstab_widgets: {
+          value: [{ uuid: '87654321-bbbb', name: 'Same Name' }],
+        },
+        model_fields: {
+          value: { '12345678-aaaa': {}, '87654321-bbbb': {} },
+        },
+      });
+
+      const translated = wrapper.vm.translatedModelFields;
+      expect(translated['Same Name (12345678)']).toBeDefined();
+      expect(translated['Same Name (87654321)']).toBeDefined();
+    });
   });
 
   describe('Event handlers', () => {
@@ -174,6 +231,35 @@ describe('Conversational FormCheckbox', () => {
         true,
       );
     });
+
+    it('should handle model toggle for crosstab widget', () => {
+      wrapper = createWrapper({
+        crosstab_widgets: {
+          value: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
+        },
+      });
+
+      wrapper.vm.handleModelToggle('Crosstab A', true);
+      expect(mockStore.toggleModelEnabled).toHaveBeenCalledWith(
+        'ct-111-222',
+        true,
+      );
+    });
+
+    it('should handle field toggle for crosstab widget', () => {
+      wrapper = createWrapper({
+        crosstab_widgets: {
+          value: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
+        },
+      });
+
+      wrapper.vm.handleFieldToggle('Crosstab A', 'field1', true);
+      expect(mockStore.updateModelFieldSelection).toHaveBeenCalledWith(
+        'ct-111-222',
+        'field1',
+        true,
+      );
+    });
   });
 
   describe('Computed properties', () => {
@@ -203,6 +289,47 @@ describe('Conversational FormCheckbox', () => {
       const translated = wrapper.vm.translatedSelectedFields;
       expect(translated['Widget A']).toEqual(['field1']);
       expect(translated['123-456']).toBeUndefined();
+    });
+
+    it('should translate enabled models for crosstab widgets', () => {
+      wrapper = createWrapper({
+        crosstab_widgets: {
+          value: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
+        },
+        enabled_models: { value: ['ct-111-222'] },
+      });
+
+      expect(wrapper.vm.translatedEnabledModels).toEqual(['Crosstab A']);
+    });
+
+    it('should translate selected fields for crosstab widgets', () => {
+      wrapper = createWrapper({
+        crosstab_widgets: {
+          value: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
+        },
+        selected_fields: { value: { 'ct-111-222': ['field1'] } },
+      });
+
+      const translated = wrapper.vm.translatedSelectedFields;
+      expect(translated['Crosstab A']).toEqual(['field1']);
+      expect(translated['ct-111-222']).toBeUndefined();
+    });
+
+    it('should merge allExportableWidgets from both custom and crosstab', () => {
+      wrapper = createWrapper({
+        custom_widgets: {
+          value: [{ uuid: 'cw-1', name: 'Custom' }],
+        },
+        crosstab_widgets: {
+          value: [{ uuid: 'ct-1', name: 'Crosstab' }],
+        },
+        enabled_models: { value: ['cw-1', 'ct-1'] },
+      });
+
+      expect(wrapper.vm.translatedEnabledModels).toEqual([
+        'Custom',
+        'Crosstab',
+      ]);
     });
   });
 

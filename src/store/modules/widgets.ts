@@ -97,18 +97,22 @@ export const useWidgets = defineStore('widgets', {
         if (widgets?.length > 0) {
           const { setCsatWidget, setNpsWidget } = useConversationalWidgets();
           const { setCustomWidgets } = useCustomWidgets();
-          const { addCustomWidgets } = useConversationalExport();
+          const { addCustomWidgets, addCrosstabWidgets } =
+            useConversationalExport();
 
           const customWidgets = widgets.filter((widget) =>
-            [
-              'conversations.custom',
-              'conversations.crosstab',
-              'conversations.absolute_numbers',
-            ].includes(widget.source as string),
+            ['conversations.custom', 'conversations.absolute_numbers'].includes(
+              widget.source as string,
+            ),
           );
 
-          setCustomWidgets(customWidgets);
+          const crosstabWidgets = widgets.filter(
+            (widget) => widget.source === 'conversations.crosstab',
+          );
+
+          setCustomWidgets([...customWidgets, ...crosstabWidgets]);
           addCustomWidgets(customWidgets);
+          addCrosstabWidgets(crosstabWidgets);
 
           const csatWidget = widgets.find(
             (widget) => widget.source === 'conversations.csat',

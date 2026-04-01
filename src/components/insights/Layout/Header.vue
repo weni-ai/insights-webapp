@@ -1,48 +1,42 @@
 <template>
-  <header
-    v-if="currentDashboard"
-    class="insights-layout-header"
-    data-testid="insights-layout-header"
-  >
-    <UnnnicBreadcrumb
-      v-if="!isExpansiveMode"
-      :crumbs="breadcrumbs"
-      @crumb-click="
-        $router.push({ name: $event.routeName, path: $event.routePath })
-      "
-    />
-    <section
-      v-if="!isExpansiveMode"
-      class="insights-layout-header__content"
-      data-testid="insights-layout-header-content"
+  <header class="insights-layout-header">
+    <UnnnicPageHeader
+      v-if="currentDashboard && !isExpansiveMode"
+      hideDivider
+      class="insights-page-header"
+      data-testid="insights-layout-header"
     >
-      <HeaderSelectDashboard v-if="!isExpansiveMode" />
-
+      <template #infos>
+        <HeaderSelectDashboard v-if="!isExpansiveMode" />
+      </template>
+      <template #actions>
+        <section class="insights-layout-header__actions">
+          <DynamicHeader :dashboardType="dashboardHeaderType" />
+        </section>
+      </template>
+    </UnnnicPageHeader>
+    <section
+      v-else-if="isExpansiveMode"
+      data-testid="insights-layout-header"
+    >
       <section
-        v-if="!isExpansiveMode"
-        class="content__actions"
+        class="insights-layout-header__expansive"
+        data-testid="insights-layout-header-expansive"
       >
-        <DynamicHeader :dashboardType="dashboardHeaderType" />
+        <p
+          class="insights-layout-header__expansive-title"
+          data-testid="insights-layout-header-expansive-title"
+        >
+          {{ $t('human_service_dashboard.all_agents') }}
+        </p>
+        <UnnnicButtonIcon
+          icon="close"
+          size="small"
+          type="tertiary"
+          class="insights-layout-header__expansive-close"
+          @click="setCurrentExpansiveWidget({})"
+        />
       </section>
-    </section>
-    <section
-      v-if="isExpansiveMode"
-      class="insights-layout-header__expansive"
-      data-testid="insights-layout-header-expansive"
-    >
-      <p
-        class="insights-layout-header__expansive-title"
-        data-testid="insights-layout-header-expansive-title"
-      >
-        {{ $t('human_service_dashboard.all_agents') }}
-      </p>
-      <UnnnicButtonIcon
-        icon="close"
-        size="small"
-        type="tertiary"
-        class="insights-layout-header__expansive-close"
-        @click="setCurrentExpansiveWidget({})"
-      />
     </section>
   </header>
 </template>
@@ -52,10 +46,10 @@ import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 export default {
   name: 'InsightsLayoutHeader',
@@ -202,21 +196,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$dropdownFixedWidth: 314px;
 .insights-layout-header {
-  display: grid;
-  gap: $unnnic-space-4;
-
-  &__content {
+  :deep(.insights-page-header) {
+    grid-template-columns: $dropdownFixedWidth 1fr;
+    padding-bottom: 0;
+  }
+  &__actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: $unnnic-space-2;
-
-    .content__actions {
-      display: flex;
-      gap: $unnnic-space-3;
-    }
+    justify-content: flex-end;
+    gap: $unnnic-space-3;
   }
   &__expansive {
     border-radius: 0.5rem 0.5rem 0rem 0rem;

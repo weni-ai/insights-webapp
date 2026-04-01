@@ -1,15 +1,12 @@
 <template>
   <section class="filter-favorite-template">
-    <p class="filter-favorite-template__label">
-      {{ `${$t('template_messages_dashboard.favorites')}:` }}
-    </p>
     <UnnnicSelectSmart
       :modelValue="selectedFavorite"
-      type="secondary"
       :options="favoriteOptions"
       autocomplete
       autocompleteClearOnFocus
       data-testid="select-favorite-template"
+      :placeholder="$t('template_messages_dashboard.select_favorite')"
       :locale="i18n.global.locale"
       @update:model-value="selectFavorite"
     />

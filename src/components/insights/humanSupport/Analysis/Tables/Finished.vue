@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
     <template #body-agent="{ item }">
@@ -71,6 +72,7 @@ import { useProject } from '@/store/modules/project';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { analysisDetailedAnalysisFinishedMock } from '../mocks';
+import { openNewTabLink } from '@/utils/redirect';
 
 defineOptions({
   name: 'AnalysisFinishedTable',
@@ -156,6 +158,11 @@ const handleSort = (sort: {
 
 const loadMore = () => {
   loadMoreData(currentSort.value);
+};
+
+const redirectItemNewTab = (item: FinishedDataResult) => {
+  if (!item?.link?.url) return;
+  openNewTabLink(item.link?.url);
 };
 
 const redirectItem = (item: FinishedDataResult) => {

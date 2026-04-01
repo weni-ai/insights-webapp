@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   />
 </template>
@@ -32,6 +33,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
+import { openNewTabLink } from '@/utils/redirect';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
@@ -112,6 +114,12 @@ const handleSort = (sort: {
 
 const loadMore = () => {
   loadMoreData(currentSort.value);
+};
+
+const redirectItemNewTab = (item: InAwaitingDataResult) => {
+  if (!item?.link?.url) return;
+  const path = `${item.link?.url}/insights`;
+  openNewTabLink(path);
 };
 
 const redirectItem = (item: InAwaitingDataResult) => {

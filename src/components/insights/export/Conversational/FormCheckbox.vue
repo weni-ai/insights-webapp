@@ -23,17 +23,29 @@ const {
   toggleModelEnabled,
   initializeDefaultFields,
 } = conversationalExport;
-const { model_fields, selected_fields, enabled_models, custom_widgets } =
-  storeToRefs(conversationalExport);
+const {
+  model_fields,
+  selected_fields,
+  enabled_models,
+  custom_widgets,
+  crosstab_widgets,
+} = storeToRefs(conversationalExport);
 const isLoading = ref(false);
 
 const modelFilters = computed(() => []);
+
+const allExportableWidgets = computed(() => [
+  ...custom_widgets.value,
+  ...crosstab_widgets.value,
+]);
 
 const getUniqueDisplayName = (widget: any): string => {
   const baseName = widget.name;
   const shortUuid = widget.uuid.slice(0, 8);
 
-  const duplicates = custom_widgets.value.filter((w) => w.name === baseName);
+  const duplicates = allExportableWidgets.value.filter(
+    (w) => w.name === baseName,
+  );
 
   if (duplicates.length > 1) {
     return `${baseName} (${shortUuid})`;
@@ -45,8 +57,8 @@ const getUniqueDisplayName = (widget: any): string => {
 const translatedSelectedFields = computed(() => {
   const fields = { ...selected_fields.value };
 
-  if (custom_widgets.value.length > 0) {
-    custom_widgets.value.forEach((widget) => {
+  if (allExportableWidgets.value.length > 0) {
+    allExportableWidgets.value.forEach((widget) => {
       if (fields[widget.uuid]) {
         const fieldData = fields[widget.uuid];
         delete fields[widget.uuid];
@@ -61,7 +73,7 @@ const translatedSelectedFields = computed(() => {
 
 const translatedEnabledModels = computed(() => {
   return enabled_models.value.map((modelKey) => {
-    const widget = custom_widgets.value.find((w) => w.uuid === modelKey);
+    const widget = allExportableWidgets.value.find((w) => w.uuid === modelKey);
     return widget ? getUniqueDisplayName(widget) : modelKey;
   });
 });
@@ -69,8 +81,8 @@ const translatedEnabledModels = computed(() => {
 const translatedModelFields = computed(() => {
   const fields = { ...model_fields.value };
 
-  if (custom_widgets.value.length > 0) {
-    custom_widgets.value.forEach((widget) => {
+  if (allExportableWidgets.value.length > 0) {
+    allExportableWidgets.value.forEach((widget) => {
       if (fields[widget.uuid]) {
         const fieldData = fields[widget.uuid];
         delete fields[widget.uuid];
@@ -95,13 +107,13 @@ const initializeFields = () => {
 };
 
 const getModelKeyForStore = (displayName: string): string => {
-  let widget = custom_widgets.value.find((w) => w.name === displayName);
+  let widget = allExportableWidgets.value.find((w) => w.name === displayName);
 
   if (!widget) {
     const match = displayName.match(/^(.+) \(([a-f0-9-]{8})\)$/);
     if (match) {
       const [, baseName, shortUuid] = match;
-      widget = custom_widgets.value.find(
+      widget = allExportableWidgets.value.find(
         (w) => w.name === baseName && w.uuid.startsWith(shortUuid),
       );
     }

@@ -3,6 +3,7 @@
     <UnnnicPageHeader
       v-if="currentDashboard && !isExpansiveMode"
       hideDivider
+      class="insights-page-header"
       data-testid="insights-layout-header"
     >
       <template #infos>
@@ -197,7 +198,7 @@ export default {
 <style lang="scss" scoped>
 $dropdownFixedWidth: 314px;
 .insights-layout-header {
-  .page-header {
+  :deep(.insights-page-header) {
     grid-template-columns: $dropdownFixedWidth 1fr;
     padding-bottom: 0;
   }

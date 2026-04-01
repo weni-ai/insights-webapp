@@ -2,7 +2,6 @@
   <section class="filter-favorite-template">
     <UnnnicSelectSmart
       :modelValue="selectedFavorite"
-      type="tertiary"
       :options="favoriteOptions"
       autocomplete
       autocompleteClearOnFocus

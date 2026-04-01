@@ -17,6 +17,7 @@ interface ExportRequest {
   type: 'CSV' | 'XLSX';
   sections: TypeSections[];
   custom_widgets: string[];
+  crosstab_widgets: string[];
 }
 
 interface ExportResponse {
@@ -28,6 +29,7 @@ interface ExportResponse {
 interface AvailableExportsResponse {
   sections: TypeSections[];
   custom_widgets: string[];
+  crosstab_widgets: string[];
 }
 
 export default {

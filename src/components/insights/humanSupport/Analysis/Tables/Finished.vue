@@ -162,7 +162,7 @@ const loadMore = () => {
 
 const redirectItemNewTab = (item: FinishedDataResult) => {
   if (!item?.link?.url) return;
-  openNewTabLink(item.link?.url);
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 const redirectItem = (item: FinishedDataResult) => {

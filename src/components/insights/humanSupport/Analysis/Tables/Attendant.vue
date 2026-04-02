@@ -144,8 +144,7 @@ const redirectItem = (item: AttendantDataResult) => {
 
 const redirectItemNewTab = (item: AttendantDataResult) => {
   if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
-  openNewTabLink(path);
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 watch(

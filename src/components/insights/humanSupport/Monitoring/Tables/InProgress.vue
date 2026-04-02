@@ -144,8 +144,8 @@ const loadMore = () => {
 
 const redirectItemNewTab = (item: InProgressDataResult) => {
   if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
-  openNewTabLink(path);
+
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 const redirectItem = (item: InProgressDataResult) => {

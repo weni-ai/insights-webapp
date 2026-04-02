@@ -181,8 +181,7 @@ const loadMore = () => {
 
 const redirectItemNewTab = (item: PausesDataResult) => {
   if (!item?.link?.url) return;
-  const path = `${item.link?.url}/insights`;
-  openNewTabLink(path);
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 const redirectItem = (item: PausesDataResult) => {

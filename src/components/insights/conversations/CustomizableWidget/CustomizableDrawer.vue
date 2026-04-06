@@ -121,8 +121,12 @@ import WidgetConversationalService, {
   AvailableWidget,
 } from '@/services/api/resources/conversational/widgets';
 
-const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
-  useConversationalWidgets();
+const {
+  resetNewWidget,
+  saveNewWidget,
+  updateConversationalWidget,
+  restoreWidgetsFromDashboard,
+} = useConversationalWidgets();
 const {
   isEnabledSaveNewWidget,
   isCsatConfigured,
@@ -178,6 +182,7 @@ async function getAvailableWidgets() {
 
 function closeDrawer() {
   clearEditingContext();
+  restoreWidgetsFromDashboard();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 
@@ -270,9 +275,7 @@ function returnWidgetTypeChoice() {
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  drawerWidgetType.value = 'add';
-  clearEditingContext();
-  setIsDrawerCustomizableOpen(false, null, false);
+  closeDrawer();
 }
 
 function confirmAttentionModal() {

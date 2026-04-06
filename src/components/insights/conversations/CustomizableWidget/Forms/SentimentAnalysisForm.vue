@@ -180,9 +180,11 @@ function handleChangeAiSupport($event: boolean) {
 }
 
 watch(
-  () => agent.value,
+  [() => agent.value, () => sentimentForm.value.aiSupport],
   () => {
-    handleSetAgent();
+    if (sentimentForm.value.aiSupport) {
+      handleSetAgent();
+    }
   },
   { immediate: true },
 );

@@ -410,6 +410,15 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         this.isLoadingUpdateWidget = false;
       }
     },
+    restoreWidgetsFromDashboard() {
+      const { findWidgetBySource } = useWidgets();
+
+      const csatWidget = findWidgetBySource('conversations.csat');
+      this.csatWidget = csatWidget ?? null;
+
+      const npsWidget = findWidgetBySource('conversations.nps');
+      this.npsWidget = npsWidget ?? null;
+    },
     async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel' | 'crosstab') {
       this.isLoadingDeleteWidget = true;
       try {

@@ -439,12 +439,12 @@ const isDisabledPrimaryButton = computed(() => {
     return !isEnabledSaveAbsoluteNumbersForm.value;
   }
 
-  if (drawerWidgetType.value === 'csat') {
-    return !isEnabledUpdateWidgetCsat.value;
-  }
-
   if (isNewDrawerCustomizable.value) {
     return !isEnabledSaveNewWidget.value;
+  }
+
+  if (drawerWidgetType.value === 'csat') {
+    return !isEnabledUpdateWidgetCsat.value;
   }
 
   return !isEnabledUpdateWidgetNps.value;

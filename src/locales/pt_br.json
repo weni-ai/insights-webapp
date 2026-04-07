@@ -123,6 +123,8 @@
     "custom": "Gráfico de barras horizontal",
     "crosstab": "Tabela cruzada",
     "absolute_numbers": "Números absolutos",
+    "agent_invocation": "Agente",
+    "tool_result": "Ferramenta",
     "no_data_available": "Nenhum dado disponível para o período de uso",
     "widget_error": {
       "title": "Ops, ocorreu um erro ao carregar os dados",

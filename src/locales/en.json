@@ -123,6 +123,8 @@
     "custom": "Horizontal bar chart",
     "crosstab": "Crosstab",
     "absolute_numbers": "Absolute numbers",
+    "agent_invocation": "Agent",
+    "tool_result": "Tool",
     "no_data_available": "No data available for the usage period",
     "widget_error": {
       "title": "Oops, an error occurred while loading the data",

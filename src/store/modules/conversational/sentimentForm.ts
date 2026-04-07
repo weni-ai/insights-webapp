@@ -57,8 +57,14 @@ export const useSentimentAnalysisForm = defineStore(
       sentimentForm.flow.uuid = null;
       sentimentForm.flow.result = null;
       sentimentForm.agentUuid = null;
-      conversationalWidgets.setIsFormHuman(false);
-      conversationalWidgets.setIsFormAi(false);
+      conversationalWidgets.setIsFormHuman(
+        false,
+        editingContext.type as 'csat' | 'nps',
+      );
+      conversationalWidgets.setIsFormAi(
+        false,
+        editingContext.type as 'csat' | 'nps',
+      );
     }
 
     function setEditingContext(type: string, isNew: boolean, uuid = '') {
@@ -287,13 +293,32 @@ export const useSentimentAnalysisForm = defineStore(
     function setHumanSupport(enabled: boolean) {
       setSentimentForm({ humanSupport: enabled });
       const conversationalWidgets = useConversationalWidgets();
-      conversationalWidgets.setIsFormHuman(enabled);
+      conversationalWidgets.setIsFormHuman(
+        enabled,
+        editingContext.type as 'csat' | 'nps',
+      );
+      if (!enabled) {
+        setSentimentForm({
+          flow: {
+            uuid: null,
+            result: null,
+          },
+        });
+      }
     }
 
     function setAiSupport(enabled: boolean) {
       setSentimentForm({ aiSupport: enabled });
       const conversationalWidgets = useConversationalWidgets();
-      conversationalWidgets.setIsFormAi(enabled);
+      conversationalWidgets.setIsFormAi(
+        enabled,
+        editingContext.type as 'csat' | 'nps',
+      );
+      if (!enabled) {
+        setSentimentForm({
+          agentUuid: null,
+        });
+      }
     }
 
     function loadSentimentData(type: 'csat' | 'nps') {
@@ -319,8 +344,14 @@ export const useSentimentAnalysisForm = defineStore(
         aiSupport = true;
       }
 
-      conversationalWidgets.setIsFormHuman(humanSupport);
-      conversationalWidgets.setIsFormAi(aiSupport);
+      conversationalWidgets.setIsFormHuman(
+        humanSupport,
+        editingContext.type as 'csat' | 'nps',
+      );
+      conversationalWidgets.setIsFormAi(
+        aiSupport,
+        editingContext.type as 'csat' | 'nps',
+      );
 
       setSentimentForm({
         humanSupport,

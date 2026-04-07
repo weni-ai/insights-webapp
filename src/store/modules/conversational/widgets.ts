@@ -87,6 +87,13 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     ): boolean {
       if (!dashboardConfig || !widgetConfig) return false;
 
+      const dashboardHasAi = !!dashboardConfig.datalake_config?.agent_uuid;
+      const dashboardHasHuman = !!(
+        dashboardConfig.filter?.flow &&
+        dashboardConfig.op_field &&
+        dashboardConfig.op_field !== ''
+      );
+
       const aiConfigChanged =
         dashboardConfig.datalake_config?.agent_uuid !==
         widgetConfig.datalake_config?.agent_uuid;
@@ -95,9 +102,14 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         dashboardConfig.filter?.flow !== widgetConfig.filter?.flow ||
         dashboardConfig.op_field !== widgetConfig.op_field;
 
+      const aiToggleChanged = dashboardHasAi !== this.isFormAi;
+      const humanToggleChanged = dashboardHasHuman !== this.isFormHuman;
+
       return (
         (this.isFormAi && aiConfigChanged) ||
-        (this.isFormHuman && humanConfigChanged)
+        (this.isFormHuman && humanConfigChanged) ||
+        aiToggleChanged ||
+        humanToggleChanged
       );
     },
     setNewWidget(widget: WidgetType | null) {
@@ -112,11 +124,52 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     setNpsWidget(widget: WidgetType | null) {
       this.npsWidget = widget;
     },
-    setIsFormAi(isFormAi: boolean) {
+    setIsFormAi(isFormAi: boolean, widgetType?: 'csat' | 'nps' | undefined) {
       this.isFormAi = isFormAi;
+      if (!isFormAi && widgetType) {
+        const currentWidget =
+          widgetType === 'csat' ? this.csatWidget : this.npsWidget;
+
+        if (!currentWidget) return;
+
+        const removedDatalakeConfig = {
+          ...currentWidget,
+          config: {
+            ...currentWidget.config,
+            datalake_config: {},
+          },
+        };
+
+        const setCurrentWidget =
+          widgetType === 'csat' ? this.setCsatWidget : this.setNpsWidget;
+        setCurrentWidget(removedDatalakeConfig);
+      }
     },
-    setIsFormHuman(isFormHuman: boolean) {
+    setIsFormHuman(
+      isFormHuman: boolean,
+      widgetType?: 'csat' | 'nps' | undefined,
+    ) {
       this.isFormHuman = isFormHuman;
+
+      if (!isFormHuman && widgetType) {
+        const currentWidget =
+          widgetType === 'csat' ? this.csatWidget : this.npsWidget;
+
+        if (!currentWidget) return;
+
+        const removedFilter = {
+          ...currentWidget,
+          config: {
+            ...currentWidget.config,
+            filter: {},
+            op_field: '',
+          },
+        };
+
+        const setCurrentWidget =
+          widgetType === 'csat' ? this.setCsatWidget : this.setNpsWidget;
+        setCurrentWidget(removedFilter);
+      }
     },
     setCsatWidgetData(data: CsatResponse | null) {
       this.csatWidgetData = data;
@@ -357,6 +410,15 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         this.isLoadingUpdateWidget = false;
       }
     },
+    restoreWidgetsFromDashboard() {
+      const { findWidgetBySource } = useWidgets();
+
+      const csatWidget = findWidgetBySource('conversations.csat');
+      this.csatWidget = csatWidget ?? null;
+
+      const npsWidget = findWidgetBySource('conversations.nps');
+      this.npsWidget = npsWidget ?? null;
+    },
     async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel' | 'crosstab') {
       this.isLoadingDeleteWidget = true;
       try {
@@ -420,10 +482,13 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         widgetCsatFromDashboard.config as CsatOrNpsCardConfig;
       const csatWidgetConfig = state.csatWidget.config as CsatOrNpsCardConfig;
 
-      return (
-        _hasValidConfig(csatWidgetConfig) &&
-        _hasConfigChanges(dashboardConfig, csatWidgetConfig)
-      );
+      const hasChanges = _hasConfigChanges(dashboardConfig, csatWidgetConfig);
+
+      if (!state.isFormAi && !state.isFormHuman) {
+        return hasChanges;
+      }
+
+      return _hasValidConfig(csatWidgetConfig) && hasChanges;
     },
     isEnabledUpdateWidgetNps: (state) => {
       const { findWidgetBySource } = useWidgets();
@@ -438,10 +503,13 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         widgetNpsFromDashboard.config as CsatOrNpsCardConfig;
       const npsWidgetConfig = state.npsWidget.config as CsatOrNpsCardConfig;
 
-      return (
-        _hasValidConfig(npsWidgetConfig) &&
-        _hasConfigChanges(dashboardConfig, npsWidgetConfig)
-      );
+      const hasChanges = _hasConfigChanges(dashboardConfig, npsWidgetConfig);
+
+      if (!state.isFormAi && !state.isFormHuman) {
+        return hasChanges;
+      }
+
+      return _hasValidConfig(npsWidgetConfig) && hasChanges;
     },
     getDynamicWidgets: () => {
       const { currentDashboardWidgets } = storeToRefs(useWidgets());

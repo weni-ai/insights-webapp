@@ -2,6 +2,7 @@
   <UnnnicDrawer
     v-if="isDrawerCustomizableOpen"
     :modelValue="isDrawerCustomizableOpen"
+    :withoutOverlay="warningModalType !== ''"
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
@@ -121,8 +122,12 @@ import WidgetConversationalService, {
   AvailableWidget,
 } from '@/services/api/resources/conversational/widgets';
 
-const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
-  useConversationalWidgets();
+const {
+  resetNewWidget,
+  saveNewWidget,
+  updateConversationalWidget,
+  restoreWidgetsFromDashboard,
+} = useConversationalWidgets();
 const {
   isEnabledSaveNewWidget,
   isCsatConfigured,
@@ -178,6 +183,7 @@ async function getAvailableWidgets() {
 
 function closeDrawer() {
   clearEditingContext();
+  restoreWidgetsFromDashboard();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 
@@ -270,9 +276,7 @@ function returnWidgetTypeChoice() {
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  drawerWidgetType.value = 'add';
-  clearEditingContext();
-  setIsDrawerCustomizableOpen(false, null, false);
+  closeDrawer();
 }
 
 function confirmAttentionModal() {
@@ -436,12 +440,12 @@ const isDisabledPrimaryButton = computed(() => {
     return !isEnabledSaveAbsoluteNumbersForm.value;
   }
 
-  if (drawerWidgetType.value === 'csat') {
-    return !isEnabledUpdateWidgetCsat.value;
-  }
-
   if (isNewDrawerCustomizable.value) {
     return !isEnabledSaveNewWidget.value;
+  }
+
+  if (drawerWidgetType.value === 'csat') {
+    return !isEnabledUpdateWidgetCsat.value;
   }
 
   return !isEnabledUpdateWidgetNps.value;

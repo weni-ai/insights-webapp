@@ -101,11 +101,11 @@ describe('useSentimentAnalysisForm store', () => {
 
     store.setHumanSupport(true);
     expect(store.sentimentForm.humanSupport).toBe(true);
-    expect(spyHuman).toHaveBeenCalledWith(true);
+    expect(spyHuman).toHaveBeenCalledWith(true, '');
 
     store.setAiSupport(true);
     expect(store.sentimentForm.aiSupport).toBe(true);
-    expect(spyAi).toHaveBeenCalledWith(true);
+    expect(spyAi).toHaveBeenCalledWith(true, '');
   });
 
   it('initializeForm with type add resets both forms', () => {

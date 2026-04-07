@@ -9,6 +9,7 @@ import { useWidgets } from '@/store/modules/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
+import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 
 config.global.plugins = [
   createI18n({
@@ -21,6 +22,7 @@ vi.mock('@/store/modules/widgets');
 vi.mock('@/store/modules/conversational/customWidgets');
 vi.mock('@/store/modules/conversational/conversational');
 vi.mock('@/store/modules/conversational/topics');
+vi.mock('@/store/modules/conversational/autoWidgets');
 
 describe('Conversational.vue', () => {
   let wrapper;
@@ -29,6 +31,7 @@ describe('Conversational.vue', () => {
   let customWidgetsStore;
   let conversationalStore;
   let topicsStore;
+  let autoWidgetsStore;
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -70,6 +73,14 @@ describe('Conversational.vue', () => {
       loadFormTopics: vi.fn().mockResolvedValue(undefined),
     };
     useConversationalTopics.mockReturnValue(topicsStore);
+
+    autoWidgetsStore = {
+      hasAgentInvocationData: false,
+      hasToolResultData: false,
+      loadAllAutoWidgets: vi.fn().mockResolvedValue(undefined),
+      resetAutoWidgets: vi.fn(),
+    };
+    useAutoWidgets.mockReturnValue(autoWidgetsStore);
 
     wrapper = shallowMount(Conversational, {
       global: {
@@ -463,6 +474,102 @@ describe('Conversational.vue', () => {
       expect(types).not.toContain('nps');
       expect(types).not.toContain('sales_funnel');
       expect(types).toContain('add');
+    });
+  });
+
+  describe('Auto widgets (agent_invocation / tool_result)', () => {
+    beforeEach(async () => {
+      conversationalStore.shouldUseMock = false;
+      conversationalStore.isConfigurationLoaded = ref(true);
+
+      widgetsStore.isLoadingCurrentDashboardWidgets = ref(false);
+      widgetsStore.currentDashboardWidgets = ref([]);
+
+      customWidgetsStore.getCustomWidgets = [];
+
+      wrapper = shallowMount(Conversational, {
+        global: {
+          stubs: {
+            DashboardHeader: true,
+            MostTalkedAboutTopicsWidget: true,
+            ConversationalDynamicWidget: true,
+            CustomizableDrawer: true,
+            Info: true,
+          },
+        },
+      });
+
+      await nextTick();
+      await nextTick();
+    });
+
+    it('should include agent_invocation widget when data exists', async () => {
+      autoWidgetsStore.hasAgentInvocationData = true;
+
+      widgetsStore.currentDashboardWidgets.value = [];
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+    });
+
+    it('should include tool_result widget when data exists', async () => {
+      autoWidgetsStore.hasToolResultData = true;
+
+      widgetsStore.currentDashboardWidgets.value = [];
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('tool_result');
+    });
+
+    it('should include both auto widgets when both have data', async () => {
+      autoWidgetsStore.hasAgentInvocationData = true;
+      autoWidgetsStore.hasToolResultData = true;
+
+      widgetsStore.currentDashboardWidgets.value = [];
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
+    });
+
+    it('should not include auto widgets when no data exists', async () => {
+      autoWidgetsStore.hasAgentInvocationData = false;
+      autoWidgetsStore.hasToolResultData = false;
+
+      widgetsStore.currentDashboardWidgets.value = [];
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).not.toContain('agent_invocation');
+      expect(types).not.toContain('tool_result');
+    });
+
+    it('should place auto widgets after custom widgets and before sales_funnel', async () => {
+      conversationalWidgetsStore.isCsatConfigured = true;
+      conversationalWidgetsStore.isSalesFunnelConfigured = true;
+      autoWidgetsStore.hasAgentInvocationData = true;
+      autoWidgetsStore.hasToolResultData = true;
+
+      widgetsStore.currentDashboardWidgets.value = [];
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      const agentIdx = types.indexOf('agent_invocation');
+      const toolIdx = types.indexOf('tool_result');
+      const funnelIdx = types.indexOf('sales_funnel');
+      const addIdx = types.indexOf('add');
+
+      expect(agentIdx).toBeLessThan(funnelIdx);
+      expect(toolIdx).toBeLessThan(funnelIdx);
+      expect(funnelIdx).toBeLessThan(addIdx);
     });
   });
 });

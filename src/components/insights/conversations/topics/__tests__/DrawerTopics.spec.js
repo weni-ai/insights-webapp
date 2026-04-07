@@ -277,5 +277,21 @@ describe('DrawerTopics', () => {
         'drawer-topics-drawer',
       );
     });
+
+    it('should set withoutOverlay on drawer when modal is open', async () => {
+      wrapper = createWrapper({
+        isAddTopicsDrawerOpen: true,
+        isOpenModal: false,
+      });
+      await nextTick();
+
+      const drawerComponent = wrapper.findComponent({ name: 'UnnnicDrawer' });
+      expect(drawerComponent.attributes('withoutoverlay')).toBe('false');
+
+      isOpenModalRef.value = true;
+      await nextTick();
+
+      expect(drawerComponent.attributes('withoutoverlay')).toBe('true');
+    });
   });
 });

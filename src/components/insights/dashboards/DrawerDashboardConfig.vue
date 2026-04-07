@@ -3,6 +3,7 @@
     ref="unnnicDrawer"
     :style="{ display: showProgressBar ? 'none' : 'flex' }"
     :modelValue="modelValue"
+    :withoutOverlay="showDeleteDashboardModal"
     :title="dashboard ? $t('edit_dashboard.title') : $t('new_dashboard.title')"
     :primaryButtonText="$t('save')"
     :disabledPrimaryButton="!isValidConfig"

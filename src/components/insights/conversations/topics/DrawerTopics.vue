@@ -2,6 +2,7 @@
   <UnnnicDrawer
     v-if="isAddTopicsDrawerOpen"
     :modelValue="isAddTopicsDrawerOpen"
+    :withoutOverlay="isOpenModal"
     :title="$t('conversations_dashboard.form_topic.title')"
     class="add-topics-drawer"
     data-testid="drawer-topics-drawer"

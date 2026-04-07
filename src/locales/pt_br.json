@@ -26,7 +26,7 @@
     "others": "Outros",
     "unclassified": "Sem classificação",
     "info": {
-      "description": "A partir de {date}, os dados conversacionais contemplam janelas encerradas até às 23h59m59s do dia de início, considerando o timezone configurado no projeto. Conversas do dia atual ainda estão em processamento e serão exibidas após o fechamento do período.",
+      "description": "Os dados conversacionais mostram conversas iniciadas até 24 horas antes do horário atual. Conversas mais recentes ainda estão sendo classificadas e não são exibidas. Atualize o dashboard para atualizar a janela de dados.",
       "mock_description": "Estes números são apenas para fins de demonstração. Assim que o primeiro widget for configurado, os dados reais serão exibidos aqui."
     },
     "mock": {
@@ -65,11 +65,11 @@
       "unengaged": "Não engajadas",
       "transferred": "Transferidas para live desk",
       "tooltips": {
-        "total": "Total de conversas encerradas no período. Uma conversa é contabilizada desde a primeira mensagem do contato até as 23h59m59s do mesmo dia. Mensagens enviadas após este horário iniciam uma nova janela de conversa no dia seguinte.",
-        "resolved": "Quando o agente demonstra competência e fornece serviço útil",
-        "unresolved": "Quando não houve atendimento efetivo (cumprimentos, fora de escopo, falhas do agente)",
-        "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações, emojis ou foi encerrada sem interação relevante.",
-        "transferred": "Conversas que requerem assistência humana. Os valores podem diferir do painel de Atendimento humano, pois este conta conversas (não salas) que foram abertas e passaram pela IA. Como uma conversa pode gerar várias salas - e algumas salas podem ser abertas diretamente no atendimento humano - a comparação dos painéis não é recomendada."
+        "total": "Total de conversas iniciadas no período. Uma conversa é contada 24 horas após a primeira mensagem do contato.",
+        "resolved": "Quando o agente demonstra competência e fornece um serviço útil",
+        "unresolved": "Quando não houve atendimento efetivo (por exemplo: cumprimentos, assunto fora do escopo ou falhas do agente)",
+        "unengaged": "Conversa sem engajamento útil. A conversa foi limitada a saudações e emojis, ou foi encerrada sem interação relevante.",
+        "transferred": "Conversas que requerem assistência humana. Os valores podem diferir do dashboard de atendimento humano, pois ele contabiliza conversas (não salas) que foram abertas e passaram pela IA. Como uma conversa pode gerar várias salas — e algumas delas podem ser abertas diretamente no atendimento humano —, a comparação entre painéis não é recomendada."
       }
     },
     "form_topic": {
@@ -106,7 +106,7 @@
         "continue": "Continuar"
       },
       "added_topic": "Adicionado em {date} às {time}",
-      "disclaimer": "Ao adicionar assuntos, você permite que a IA classifique automaticamente as conversas com eles. Isso ajudará a IA a entender melhor as conversas e fornecer respostas mais precisas."
+      "disclaimer": "Ao adicionar assuntos, você permite que a IA classifique automaticamente as conversas com base neles. Isso ajudará a IA a entender melhor as conversas e fornecer respostas mais precisas."
     },
     "most_talked_about_topics": {
       "title": "Assuntos mais comuns",
@@ -131,7 +131,7 @@
     "auto_widget_error": "Não foi possível carregar os dados. Atualize o dashboard ou entre em contato com o suporte",
     "no_data_available": "Nenhum dado disponível para o período de uso",
     "widget_error": {
-      "title": "Ops, ocorreu um erro ao carregar os dados",
+      "title": "Ocorreu um erro ao carregar os dados",
       "button": "Verificar configuração do widget",
       "crosstab_validation_title": "Problema de configuração",
       "crosstab_validation_description": "A chave ou o valor não foram encontrados no banco de dados."
@@ -176,7 +176,7 @@
       "add_widget": "Adicionar widget",
       "add_first_widget": "Adicione seu primeiro widget",
       "csat_description": "A pontuação de satisfação do cliente (CSAT) mede o nível de satisfação com o serviço recebido",
-      "nps_description": "A pontuação do promotor líquido (NPS) mede a probabilidade de o contato recomendar o serviço recebido a outras pessoas",
+      "nps_description": "A pontuação NPS (Net Promoter Score) mede a probabilidade do contato recomendar o serviço recebido a outras pessoas",
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
@@ -202,13 +202,13 @@
         "cancel": "Cancelar"
       },
       "edit_csat_or_nps": "Editar {type}",
-      "remove_widget": "Remover widget",
+      "remove_widget": "Excluir widget",
       "modal_remove_widget": {
-        "title": "Remover widget {type}",
-        "description": "Tem certeza de que deseja remover o widget {type}?",
-        "remove": "Remover",
+        "title": "Excluir widget {type}",
+        "description": "Tem certeza de que deseja excluir o widget {type}?",
+        "remove": "Excluir",
         "cancel": "Cancelar",
-        "success_message": "{widget} removido"
+        "success_message": "{widget} excluído"
       },
       "tabs": {
         "sentiment_analysis": "Análise de sentimento",
@@ -219,14 +219,14 @@
       "select_data": "Selecione os dados que você deseja acompanhar",
       "horizontal_bar_chart": {
         "title": "Gráfico de barras horizontal",
-        "description": "Visualização com barras horizontais, em que o comprimento de cada barra indica a magnitude do valor correspondente."
+        "description": "Visualização com barras horizontais, em que o comprimento de cada barra representa o valor correspondente."
       },
       "crosstab": {
         "title": "Tabela cruzada",
-        "description": "Combine e compare dois pontos de dados diferentes para encontrar insights.",
+        "description": "Combine e compare duas dimensões de dados para identificar insights.",
         "drawer": {
           "description": "Defina o nome do widget:",
-          "disclaimer": "<b>Chave:</b> um identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> o nome do campo para o valor que você deseja ver. Se deixado em branco, o sistema utilizará um valor padrão.",
+          "disclaimer": "<b>Chave:</b> identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema utilizará um valor padrão.",
           "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
           "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:",
           "reference_field_label": "Defina o campo de referência a ser usado para vincular os eventos:"
@@ -292,7 +292,7 @@
     "select_favorite": "Selecione o template favorito",
     "add_to_favorites": "Adicionar aos favoritos",
     "empty_templates": "Nenhum dado ainda. Assim que houver atividade, ela será exibida aqui.",
-    "favorite_limit_reached": "Limite de favoritos atingido. Remova algum favorito e tente novamente.",
+    "favorite_limit_reached": "Limite de favoritos atingido. Remova um favorito e tente novamente.",
     "all_data": "Todos os dados",
     "data_source": "Fonte de dados: {source}",
     "all_data_table": {
@@ -376,7 +376,7 @@
   "table_group": {
     "contact": "Contato",
     "urn": "URN",
-    "agent": "Representante",
+    "agent": "Agente",
     "created_on": "Início",
     "ended_at": "Término",
     "sector": "Setor",
@@ -395,8 +395,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Atendente",
-      "placeholder": "Selecione um atendente"
+      "label": "Agente",
+      "placeholder": "Selecione um agente"
     },
     "contact": {
       "label": "Contato",
@@ -429,11 +429,11 @@
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Agentes online",
-  "chats_per_agents": "Chats por atendente",
+  "chats_per_agents": "Chats por agente",
   "closeds": "Encerrados",
   "finished": "Finalizado",
   "in_progress": "Em andamento",
-  "waiting": "Aguardando",
+  "waiting": "Em espera",
   "awaiting": "Em espera",
   "in-service": "Em atendimento",
   "status": "Status",
@@ -463,7 +463,7 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "now": "Agora",
-  "date_format": "DD/MM/YYYY",
+  "date_format": "DD/MM/AAAA",
   "search": "Buscar",
   "category": "Categoria",
   "language": "Idioma",
@@ -478,13 +478,13 @@
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})",
-    "last_7_days_conversational": "Últimos 7 dias (até {date})",
-    "last_14_days_conversational": "Últimos 14 dias (até {date})",
-    "last_30_days_conversational": "Últimos 30 dias (até {date})",
-    "last_12_months_conversational": "Últimos 12 meses (até {date})",
-    "current_month_conversational": "Mês atual (até {date})",
-    "previous_month_conversational": "Mês anterior",
-    "custom_conversational": "Personalizado"
+    "last_7_days_conversational": "Últimos 7 dias (até 24h atrás)",
+    "last_14_days_conversational": "Últimos 14 dias (até 24h atrás)",
+    "last_30_days_conversational": "Últimos 30 dias (até 24h atrás)",
+    "last_12_months_conversational": "Últimos 12 meses (até 24h atrás)",
+    "current_month_conversational": "Mês atual (até 24h atrás)",
+    "previous_month_conversational": "Mês anterior (até 24h atrás)",
+    "custom_conversational": "Personalizado (até 24h atrás)"
   },
   "data_period": {
     "label": "Período",
@@ -496,7 +496,7 @@
   "reset": "Redefinir",
   "onboarding": {
     "welcome_modal": {
-      "title": "Temos uma novidade: conheça o Analytics",
+      "title": "Temos uma novidade: conheça o Insights",
       "text": "Apresentamos a nova ferramenta para acompanhar o sucesso da sua operação aqui na Weni",
       "button": {
         "go": "Vamos lá",
@@ -526,7 +526,7 @@
       "flow_executions": "Execuções do @.lower:flow",
       "error": {
         "title": "Ocorreu um problema ao carregar os dados",
-        "description": "Tente recarregar novamente"
+        "description": "Tente carregar novamente"
       }
     },
     "empty_widget": {
@@ -582,7 +582,7 @@
         },
         "flow_result": {
           "title": "Resultado do @.lower:flow",
-          "description": "Traz um resultado de @.lower:flow e permite operações básicas"
+          "description": "Retorna um resultado de @.lower:flow e permite operações básicas"
         },
         "data_crossing": {
           "title": "Cruzamento de dados",
@@ -698,9 +698,9 @@
   },
   "insights_header": {
     "auto_refresh": "Atualização automática: {status}",
-    "auto_refresh_on": "Este dashboard é atualizado a cada minuto. Use o botão Atualizar para atualizar agora ou o botão Pausar para pausar as atualizações automáticas.",
-    "auto_refresh_off": "Para atualizar o dashboard, use o botão Atualizar. Você pode retomar a atualização automática usando o botão Reproduzir.",
-    "auto_refresh_alert": "A atualização automática está {status}!",
+    "auto_refresh_on": "Este dashboard é atualizado a cada minuto. Use o botão Atualizar para atualizar agora ou o botão de pausar para pausar as atualizações automáticas.",
+    "auto_refresh_off": "Para atualizar o dashboard, use o botão Atualizar. Você pode retomar a atualização automática usando o botão de reproduzir.",
+    "auto_refresh_alert": "A atualização automática está {status}.",
     "refresh": "Atualizar",
     "refresh_button_tooltip": "Novas atualizações estão disponíveis. Clique em Atualizar para aplicá-las.",
     "filters": "Filtros",
@@ -720,7 +720,7 @@
         "placeholder_negative": "Como podemos melhorar?"
       },
       "feedback": {
-        "question": "O insight fornecido foi útil?",
+        "question": "O insight gerado foi útil?",
         "complete": "Agradecemos pelo feedback!"
       },
       "button": {
@@ -730,7 +730,7 @@
       },
       "by_ai": "por Meta Llama",
       "error": "Não foi possível gerar insights. Verifique sua conexão com a internet e tente novamente mais tarde.",
-      "prompt": "Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e aguardando. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência, possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: {values}",
+      "prompt": "Analise o desempenho de um dashboard de resultados de uma operação de atendimento humano. O dashboard exibe três categorias principais: atendimentos em andamento, encerrados e em espera. Além disso, avalie as seguintes métricas: tempo de primeira resposta, tempo de espera e tempo de interação. Identifique padrões de eficiência e possíveis gargalos no fluxo de atendimento e ofereça sugestões para otimizar o tempo de resposta e a produtividade da equipe. Dados: {values}",
       "prompt_language": "Resposta em Português brasileiro"
     }
   },
@@ -758,7 +758,7 @@
     "notice": "Esta ação é irreversível. Para confirmar, digite o nome do dashboard.",
     "alert": {
       "success": "Dashboard excluído com sucesso",
-      "error": "Falha ao excluir dashboard"
+      "error": "Erro ao excluir dashboard"
     }
   },
   "currency_options": {
@@ -789,7 +789,7 @@
         },
         "set_metric": {
           "title": "Definir métrica",
-          "description": "Após selecionar o tipo de métrica, selecione um fluxo que forneça dados relevantes para sua operação. Preencha os demais campos e salve."
+          "description": "Após selecionar o tipo de métrica, selecione um fluxo que forneça dados relevantes para sua operação. Preencha os demais campos e, depois, salve."
         }
       }
     },
@@ -847,7 +847,7 @@
   },
   "export_data": {
     "title": "Exportar dados",
-    "tooltip": "A exportação está em andamento. Você poderá gerar um novo relatório para este projeto quando a exportação for finalizada.",
+    "tooltip": "A exportação está em andamento. Você poderá gerar um novo relatório para este projeto quando a exportação estiver finalizada.",
     "description": "Selecione os dados que deseja exportar. O arquivo completo será enviado para seu email após a confirmação.",
     "feedback": "Você receberá o arquivo por email em breve. Lembre-se de verificar sua pasta de spam.",
     "feedback_title": "Processando exportação",
@@ -855,7 +855,7 @@
       "sectors": "Setores",
       "queues": "Filas",
       "rooms": "Salas",
-      "users": "Atendentes",
+      "users": "Agentes",
       "sector_tags": "Tags",
       "contacts": "Contatos",
       "resolutions": "Resoluções de conversas",
@@ -864,7 +864,7 @@
       "topics": "Assuntos",
       "csat": "CSAT",
       "nps": "NPS",
-      "agent_status_logs": "Atendente"
+      "agent_status_logs": "Agent"
     },
     "field_labels": {
       "config": "Configuração",
@@ -901,7 +901,7 @@
       "queue__sector__name": "Setor",
       "created_on": "Data de início",
       "duration": "Duração",
-      "awaiting_time": "Tempo em espera",
+      "awaiting_time": "Tempo de espera",
       "first_response_time": "Tempo para 1ª resposta",
       "agent__email": "Email",
       "agent__first_name": "Nome",
@@ -913,10 +913,10 @@
       "metric__first_response_time": "Tempo para primeira resposta",
       "metric__message_response_time": "Tempo médio de resposta",
       "metric__interaction_time": "Duração",
-      "metric__waiting_time": "Tempo aguardando"
+      "metric__waiting_time": "Tempo em espera"
     },
     "select_data": {
-      "label": "Selecione o período para buscar dados (máximo de 92 dias entre a data inicial e a data final)",
+      "label": "Selecione o período para buscar dados (máximo de 92 dias entre a data de início e a data de término)",
       "placeholder": "DD/MM/AAAA",
       "shortcuts": {
         "last_7_days": "Últimos 7 dias",
@@ -933,14 +933,14 @@
     "filters": {
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "representative": "Atendente",
-      "select_representative": "Selecione o atendente",
+      "agent": "Agente",
+      "select_agent": "Selecione o agente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",
       "tag": "Tag",
       "select_tag": "Selecione a tag",
       "all_sectors": "Todos os setores",
-      "all_representatives": "Todos os atendentes",
+      "all_agents": "Todos os agentes",
       "all_queues": "Todas as filas",
       "all_tags": "Todas as tags"
     },
@@ -950,17 +950,17 @@
     "save_btn": "Exportar dados",
     "cancel_btn": "Cancelar",
     "error_pending_export": "Já existe um relatório em andamento para este projeto. Tente novamente mais tarde.",
-    "error_default": "Ops, ocorreu um erro"
+    "error_default": "Ocorreu um erro"
   },
   "disconnectAgent": {
-    "title": "Desconectar atendente",
-    "description": "Tem certeza de que deseja desconectar o atendente {agent}?",
-    "description_confirm": "Ao confirmar, o atendente {agent} ficará offline.",
-    "tooltip": "Desconectar atendente",
+    "title": "Desconectar agente",
+    "description": "Tem certeza de que deseja desconectar o agente {agent}?",
+    "description_confirm": "Ao confirmar, o agente {agent} ficará offline.",
+    "tooltip": "Desconectar agente",
     "save_btn": "Desconectar",
     "cancel_btn": "Cancelar",
-    "sucess_message": "{agent} está offline!",
-    "error_message": "Erro ao desconectar o atendente {agent}",
+    "sucess_message": "{agent} está offline.",
+    "error_message": "Erro ao desconectar o agente {agent}",
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
   "human_support_dashboard": {
@@ -975,7 +975,7 @@
       "is_in_progress": "Em andamento",
       "is_closed": "Finalizado",
       "tooltips": {
-        "is_waiting": "Número de contatos esperando o início do atendimento agora",
+        "is_waiting": "Número de contatos esperando o início do atendimento",
         "is_in_progress": "Número de contatos em atendimento agora",
         "is_closed": "Número de atendimentos finalizados hoje",
         "is_closed_by_date": "Número de atendimentos finalizados no período selecionado"
@@ -983,7 +983,7 @@
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
-      "average_time_is_waiting": "Tempo médio em espera",
+      "average_time_is_waiting": "Tempo médio de espera",
       "average_time_first_response": "Tempo médio para 1ª resposta",
       "average_response_time": "Tempo médio de resposta",
       "average_time_chat": "Duração média da conversa",
@@ -1008,7 +1008,7 @@
       },
       "in_progress": {
         "duration": "Duração",
-        "awaiting_time": "Tempo em espera",
+        "awaiting_time": "Tempo de espera",
         "first_response_time": "Tempo para 1ª resposta",
         "attendant": "Atendente",
         "sector": "Setor",
@@ -1022,7 +1022,7 @@
         "closed": "Fechados"
       },
       "in_awaiting": {
-        "awaiting_time": "Tempo em espera",
+        "awaiting_time": "Tempo de espera",
         "contact": "Contato",
         "sector": "Setor",
         "queue": "Fila"
@@ -1039,9 +1039,9 @@
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} em pausa",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {{count} online} other {{count} online}}",
+        "custom_breaks": "{count, plural, one {{count} em pausa} other {{count} em pausas}}",
+        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
       }
     },
     "filters": {
@@ -1065,7 +1065,7 @@
     "columns": {
       "common": {
         "duration": "Duração",
-        "awaiting_time": "Tempo em espera",
+        "awaiting_time": "Tempo de espera",
         "first_response_time": "Tempo para 1ª resposta",
         "response_time": "Tempo de resposta",
         "agent": "Atendente",
@@ -1099,14 +1099,14 @@
     "csat": {
       "title": "CSAT",
       "agents_ratings_general_title": "Avaliação geral",
-      "agents_ratings_general_tooltip": "Esta pontuação reflete a performance geral do projeto. Se filtros forem aplicados a este dashboard, a pontuação se ajustará automaticamente para mostrar a média geral dos itens filtrados.",
+      "agents_ratings_general_tooltip": "Esta pontuação reflete o desempenho geral do projeto. Se filtros forem aplicados a este dashboard, a pontuação se ajustará automaticamente para exibir a média geral dos itens filtrados.",
       "agents_ratings_subtitle": "{rooms} atendimentos • {reviews} avaliações",
       "review_rating": {
-        "very_satisfied": "🤩 Muito satisfeito",
-        "satisfied": "😁 Satisfeito",
-        "neutral": "😐 Neutro",
-        "dissatisfied": "☹️ Insatisfeito",
-        "very_dissatisfied": "😡 Muito insatisfeito"
+        "very_satisfied": "Muito satisfeito",
+        "satisfied": "Satisfeito",
+        "neutral": "Neutro",
+        "dissatisfied": "Insatisfeito",
+        "very_dissatisfied": "Muito insatisfeito"
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     },
@@ -1129,34 +1129,34 @@
     },
     "volume_per_queue": {
       "title": "Volume por fila",
-      "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",
-      "analysis_count": "{count} fila com chats finalizados | {count} filas com chats finalizados",
-      "setup_description": "Crie filas por setor para monitorar mais dados.",
+      "monitoring_count": "{count, plural, one {{count} fila com chats {status}} other {{count} filas com chats {status}}}",
+      "analysis_count": "{count, plural, one {{count} fila com chats finalizados} other {{count} filas com chats finalizados}}",
+      "setup_description": "Crie filas por setor para monitorar mais dados",
       "empty_data": {
         "monitoring": {
           "waiting": "Não há filas com chats aguardando suporte",
-          "ongoing": "Não há filas com chats em progresso",
+          "ongoing": "Não há filas com chats em andamento",
           "closed": "Não há chats finalizados hoje"
         },
         "analysis": {
-          "closed": "Não há chats finalizados no período selecionado"
+          "closed": "Nenhum chat finalizado no período selecionado"
         }
       }
     },
     "volume_per_tag": {
       "title": "Volume por tag",
-      "setup_description": "Adicione tags a setores para monitorar mais dados.",
+      "setup_description": "Adicione tags a setores para monitorar mais dados",
       "count": {
-        "ongoing": "{count} tag em uso | {count} tags em uso",
-        "closed": "{count} tag atribuída | {count} tags atribuídas"
+        "ongoing": "{count, plural, one {{count} tag em uso} other {{count} tags em uso}}",
+        "closed": "{count, plural, one {{count} tag atribuída} other {{count} tags atribuídas}}"
       },
       "empty_data": {
         "monitoring": {
-          "ongoing": "Não há tags em uso em chats em andamento",
-          "closed": "Não há tags atribuídas a chats finalizados hoje"
+          "ongoing": "Nenhuma tag sendo usada em chats em andamento",
+          "closed": "Nenhuma tag atribuída a chats finalizados hoje"
         },
         "analysis": {
-          "closed": "Não há tags atribuídas a chats finalizados no período selecionado"
+          "closed": "Nenhuma tag atribuída a chats finalizados no período selecionado"
         }
       }
     }
@@ -1165,19 +1165,19 @@
     "title": "Notícias e atualizações no Analytics - Live Desk",
     "human_support_dashboard": {
       "monitoring": {
-        "first_text": "Monitorize as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>!",
+        "first_text": "Monitore as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>.",
         "second_text": "Agora você pode monitorar o status dos atendimentos em tempo real:",
-        "third_text": "Monitorize as métricas de tempo agora — tempo médio e máximo em espera, tempo para 1ª resposta e duração — em tempo real:",
-        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar dados em tempo real para cada interação e atendente.",
-        "fifth_text": "Você pode monitorar cada interação através das abas <b>Em andamento</b> e <b>Em espera</b>. Clique nas interações para visualizá-las.",
-        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada atendente por interação, bem como as pausas personalizadas.",
-        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada atendente para entrar em modo de visualização ou usar o botão para desconectá-lo."
+        "third_text": "Monitore, em tempo real, as métricas de tempo — média e máxima de espera, tempo para a primeira resposta e duração:",
+        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar, em tempo real, os dados de cada interação e agente.",
+        "fifth_text": "Você pode monitorar cada interação nas abas <b>Em andamento</b> e <b>Aguardando</b>. Clique nas interações para visualizá-las.",
+        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada agente por interação, bem como as pausas personalizadas.",
+        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada agente para entrar no modo de visualização ou usar o botão para desconectá-lo."
       },
       "analysis": {
-        "first_text": "Explore as interações encerradas para descobrir padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
-        "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio em espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
-        "third_text": "A tabela de análise detalhada permite analisar dados para cada interação e atendente.",
-        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada atendente por interação encerrada, bem como as pausas personalizadas dentro do período filtrado."
+        "first_text": "Explore as interações encerradas para identificar padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
+        "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio de espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
+        "third_text": "A tabela de análise detalhada permite analisar os dados para cada interação e agente.",
+        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas no período filtrado."
       }
     }
   },
@@ -1185,13 +1185,13 @@
   "off": "Desativada",
   "paused": "Pausada",
   "data_feedback": {
-    "title": "Compartilhe sua experiência com o Dashboard de IA Conversacional",
+    "title": "Compartilhe sua experiência usando o Dashboard de IA Conversacional",
     "description": "Considerando sua experiência com este dashboard, indique o quanto você concorda com as afirmações abaixo:",
     "q1": "Eu confio nos dados apresentados neste dashboard.",
     "q2": "Os dados deste dashboard me ajudam a tomar decisões.",
     "q3": "Com este dashboard, consigo entender o impacto (ROI) das conversas de IA nos resultados do negócio.",
     "textarea_label": "O que poderíamos melhorar neste dashboard? (opcional)",
-    "textarea_placeholder": "Compartilhe sugestões para melhorar a clareza, confiança ou utilidade dos dados.",
+    "textarea_placeholder": "Compartilhe sugestões para melhorar a clareza, a confiança ou a utilidade dos dados.",
     "strongly_agree": "Concordo totalmente",
     "partially_agree": "Concordo parcialmente",
     "neutral": "Neutro",

@@ -26,7 +26,7 @@
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
-      "description": "As of {date}, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed.",
+      "description": "Conversational data shows conversations started up to 24 hours before the current time. More recent conversations are still being classified and are not displayed. Refresh the dashboard to update the data window.",
       "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
     },
     "mock": {
@@ -65,7 +65,7 @@
       "unengaged": "Unengaged",
       "transferred": "Transferred to live desk",
       "tooltips": {
-        "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
+        "total": "Total conversations started in this period. A conversation is counted 24 hours after the contact's first message.",
         "resolved": "When the agent demonstrates competence and provides useful service",
         "unresolved": "When support chat wasn't effective (greetings, out of scope, agent errors)",
         "unengaged": "Conversation without useful engagement. This includes greetings or emojis only, or cases closed without relevant interaction.",
@@ -129,7 +129,7 @@
     "tool_result_count": "{count} tools",
     "auto_widget_no_data": "No data available for the filtered period",
     "auto_widget_error": "Data couldn't be loaded. Refresh the dashboard or contact support",
-    "no_data_available": "No data available for the usage period",
+    "no_data_available": "No data available for this usage period",
     "widget_error": {
       "title": "An error occurred while loading the data",
       "button": "Check widget configuration",
@@ -376,10 +376,10 @@
   "table_group": {
     "contact": "Contact",
     "urn": "URN",
-    "agent": "Representative",
+    "agent": "Agent",
     "created_on": "Start",
     "ended_at": "End",
-    "sector": "Sector",
+    "sector": "Industry",
     "queue": "Queue",
     "tags": "Tags"
   },
@@ -395,8 +395,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Representative",
-      "placeholder": "Select a representative"
+      "label": "Agent",
+      "placeholder": "Select an agent"
     },
     "contact": {
       "label": "Contact",
@@ -428,8 +428,8 @@
   "lines_count": "{count} rows",
   "reload": "Refresh",
   "agent": "Agent",
-  "online_agents": "Online representatives",
-  "chats_per_agents": "Chats per representative",
+  "online_agents": "Online agents",
+  "chats_per_agents": "Chats per agent",
   "closeds": "Closed",
   "finished": "Completed",
   "in_progress": "In progress",
@@ -478,13 +478,13 @@
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})",
-    "last_7_days_conversational": "Last 7 days (up to {date})",
-    "last_14_days_conversational": "Last 14 days (up to {date})",
-    "last_30_days_conversational": "Last 30 days (up to {date})",
-    "last_12_months_conversational": "Last 12 months (up to {date})",
-    "current_month_conversational": "Current month (up to {date})",
-    "previous_month_conversational": "Previous month",
-    "custom_conversational": "Custom"
+    "last_7_days_conversational": "Last 7 days (up to 24h ago)",
+    "last_14_days_conversational": "Last 14 days (up to 24h ago)",
+    "last_30_days_conversational": "Last 30 days (up to 24h ago)",
+    "last_12_months_conversational": "Last 12 months (up to 24h ago)",
+    "current_month_conversational": "Current month (up to 24h ago)",
+    "previous_month_conversational": "Previous month (up to 24h ago)",
+    "custom_conversational": "Custom (up to 24h ago)"
   },
   "data_period": {
     "label": "Period",
@@ -1039,9 +1039,9 @@
         "action": "Action"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} on break",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# on break} other {# on break}}",
+        "offline": "{count, plural, one {# offline} other {# offline}}"
       }
     },
     "filters": {
@@ -1147,8 +1147,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to industries to monitor more data",
       "count": {
-        "ongoing": "{count} tag in use | {count} tags in use",
-        "closed": "{count} assigned tag | {count} assigned tags"
+        "ongoing": "{count, plural, one {{count} tag in use} other {{count} tags in use}}",
+        "closed": "{count, plural, one {{count} assigned tag} other {{count} assigned tags}}"
       },
       "empty_data": {
         "monitoring": {

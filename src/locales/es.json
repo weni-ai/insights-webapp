@@ -26,7 +26,7 @@
     "others": "Otras",
     "unclassified": "Sin clasificar",
     "info": {
-      "description": "A partir del {date}, los datos conversacionales incluyen ventanas cerradas hasta las 23h59m59s del día de inicio, considerando el timezone configurado en el proyecto. Las conversaciones del día actual aún están siendo procesadas y se mostrarán después de que el período se cierre.",
+      "description": "Los datos conversacionales muestran las conversaciones iniciadas hasta 24 horas antes del momento actual. Las conversaciones más recientes todavía se están clasificando y no se muestran. Actualiza el dashboard para actualizar la ventana de datos.",
       "mock_description": "Estos números son solo para fines de demostración. Una vez que se configure el primer widget, los datos reales se mostrarán aquí."
     },
     "mock": {
@@ -129,7 +129,7 @@
     "tool_result_count": "{count} herramientas",
     "auto_widget_no_data": "No hay datos disponibles para el período filtrado",
     "auto_widget_error": "No se pudieron cargar los datos. Actualiza el panel o contacta con soporte",
-    "no_data_available": "No hay datos disponibles para el periodo de uso",
+    "no_data_available": "No hay datos disponibles para este periodo de uso",
     "widget_error": {
       "title": "Se produjo un error al cargar los datos",
       "button": "Verificar configuración del widget",
@@ -376,7 +376,7 @@
   "table_group": {
     "contact": "Contacto",
     "urn": "URN",
-    "agent": "Representante",
+    "agent": "Agente",
     "created_on": "Inicio",
     "ended_at": "Fin",
     "sector": "Sector",
@@ -428,8 +428,8 @@
   "lines_count": "{count} filas",
   "reload": "Actualizar",
   "agent": "Agente",
-  "online_agents": "Representantes online",
-  "chats_per_agents": "Chats por representante",
+  "online_agents": "Agentes online",
+  "chats_per_agents": "Chats por agente",
   "closeds": "Cerrados",
   "finished": "Finalizados",
   "in_progress": "En curso",
@@ -478,13 +478,13 @@
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
     "previous_month": "Mes anterior ({date})",
-    "last_7_days_conversational": "Últimos 7 días (hasta {date})",
-    "last_14_days_conversational": "Últimos 14 días (hasta {date})",
-    "last_30_days_conversational": "Últimos 30 días (hasta {date})",
-    "last_12_months_conversational": "Últimos 12 meses (hasta {date})",
-    "current_month_conversational": "Mes actual (hasta {date})",
-    "previous_month_conversational": "Mes anterior",
-    "custom_conversational": "Personalizado"
+    "last_7_days_conversational": "Últimos 7 días (hasta hace 24 h)",
+    "last_14_days_conversational": "Últimos 14 días (hasta hace 24 h)",
+    "last_30_days_conversational": "Últimos 30 días (hasta hace 24 h)",
+    "last_12_months_conversational": "Últimos 12 meses (hasta hace 24 h)",
+    "current_month_conversational": "Mes actual (hasta hace 24 h)",
+    "previous_month_conversational": "Mes anterior (hasta hace 24 h)",
+    "custom_conversational": "Personalizado (hasta hace 24 h)"
   },
   "data_period": {
     "label": "Periodo",
@@ -496,7 +496,7 @@
   "reset": "Restablecer",
   "onboarding": {
     "welcome_modal": {
-      "title": "Nueva funcionalidad: explora Analytics",
+      "title": "Nueva funcionalidad: explora Insights",
       "text": "Esta nueva herramienta te permite monitorear el éxito de tu operación aquí en Weni",
       "button": {
         "go": "Comenzar",
@@ -967,7 +967,7 @@
     "title": "Live desk",
     "monitoring": "Monitorización",
     "monitoring_tooltip": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",
-    "analysis": "Análisis",
+    "analysis": "Analytics",
     "analysis_tooltip": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
     "support_status": {
       "title": "Status de los chats de soporte",
@@ -1147,8 +1147,8 @@
       "title": "Volumen por tag",
       "setup_description": "Agrega tags a sectores para monitorear más datos",
       "count": {
-        "ongoing": "{count} tag en uso | {count} tags en uso",
-        "closed": "{count} tag asignada | {count} tags asignadas"
+        "ongoing": "{count, plural, one {{count} tag en uso} other {{count} tags en uso}}",
+        "closed": "{count, plural, one {{count} tag asignada} other {{count} tags asignadas}}"
       },
       "empty_data": {
         "monitoring": {

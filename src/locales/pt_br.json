@@ -26,7 +26,7 @@
     "others": "Outros",
     "unclassified": "Sem classificação",
     "info": {
-      "description": "A partir de {date}, os dados conversacionais contemplam janelas encerradas até às 23h59m59s do dia de início, considerando o timezone configurado no projeto. Conversas do dia atual ainda estão em processamento e serão exibidas após o fechamento do período.",
+      "description": "Os dados conversacionais mostram conversas iniciadas até 24 horas antes do horário atual. Conversas mais recentes ainda estão sendo classificadas e não são exibidas. Atualize o dashboard para atualizar a janela de dados.",
       "mock_description": "Estes números são apenas para fins de demonstração. Assim que o primeiro widget for configurado, os dados reais serão exibidos aqui."
     },
     "mock": {
@@ -395,8 +395,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Atendente",
-      "placeholder": "Selecione um atendente"
+      "label": "Agente",
+      "placeholder": "Selecione um agente"
     },
     "contact": {
       "label": "Contato",
@@ -478,13 +478,13 @@
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})",
-    "last_7_days_conversational": "Últimos 7 dias (até {date})",
-    "last_14_days_conversational": "Últimos 14 dias (até {date})",
-    "last_30_days_conversational": "Últimos 30 dias (até {date})",
-    "last_12_months_conversational": "Últimos 12 meses (até {date})",
-    "current_month_conversational": "Mês atual (até {date})",
-    "previous_month_conversational": "Mês anterior",
-    "custom_conversational": "Personalizado"
+    "last_7_days_conversational": "Últimos 7 dias (até 24h atrás)",
+    "last_14_days_conversational": "Últimos 14 dias (até 24h atrás)",
+    "last_30_days_conversational": "Últimos 30 dias (até 24h atrás)",
+    "last_12_months_conversational": "Últimos 12 meses (até 24h atrás)",
+    "current_month_conversational": "Mês atual (até 24h atrás)",
+    "previous_month_conversational": "Mês anterior (até 24h atrás)",
+    "custom_conversational": "Personalizado (até 24h atrás)"
   },
   "data_period": {
     "label": "Período",
@@ -496,7 +496,7 @@
   "reset": "Redefinir",
   "onboarding": {
     "welcome_modal": {
-      "title": "Temos uma novidade: conheça o Analytics",
+      "title": "Temos uma novidade: conheça o Insights",
       "text": "Apresentamos a nova ferramenta para acompanhar o sucesso da sua operação aqui na Weni",
       "button": {
         "go": "Vamos lá",
@@ -1039,9 +1039,9 @@
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} em pausa",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {{count} online} other {{count} online}}",
+        "custom_breaks": "{count, plural, one {{count} em pausa} other {{count} em pausas}}",
+        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
       }
     },
     "filters": {
@@ -1147,8 +1147,8 @@
       "title": "Volume por tag",
       "setup_description": "Adicione tags a setores para monitorar mais dados",
       "count": {
-        "ongoing": "{count} tag em uso | {count} tags em uso",
-        "closed": "{count} tag atribuída | {count} tags atribuídas"
+        "ongoing": "{count, plural, one {{count} tag em uso} other {{count} tags em uso}}",
+        "closed": "{count, plural, one {{count} tag atribuída} other {{count} tags atribuídas}}"
       },
       "empty_data": {
         "monitoring": {

@@ -373,7 +373,7 @@
     "agent": "Agent",
     "created_on": "Inițiere",
     "ended_at": "Sfârșit",
-    "sector": "Sector",
+    "sector": "Sector de activitate",
     "queue": "Coadă",
     "tags": "Etichete"
   },

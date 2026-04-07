@@ -93,6 +93,7 @@ const createWrapper = (props = {}, piniaOptions = {}) => {
       },
       stubs: {
         UnnnicDrawer: {
+          name: 'UnnnicDrawer',
           template: `
             <div data-testid="unnnic-drawer">
               <slot name="content" />
@@ -110,6 +111,7 @@ const createWrapper = (props = {}, piniaOptions = {}) => {
             'secondaryButtonText',
             'disabledSecondaryButton',
             'wide',
+            'withoutOverlay',
           ],
           emits: ['primary-button-click', 'secondary-button-click', 'close'],
           methods: {
@@ -377,6 +379,25 @@ describe('DrawerDashboardConfig', () => {
       await wrapper.find('[data-testid="unnnic-button"]').trigger('click');
 
       expect(wrapper.vm.showDeleteDashboardModal).toBe(true);
+    });
+
+    it('should set withoutOverlay on drawer when delete modal is open', async () => {
+      const mockDashboard = {
+        uuid: 'test-uuid',
+        name: 'Test Dashboard',
+        is_deletable: true,
+        config: { currency_type: 'USD' },
+      };
+
+      const wrapper = createWrapper({ dashboard: mockDashboard });
+      const drawerComponent = wrapper.findComponent({ name: 'UnnnicDrawer' });
+
+      expect(drawerComponent.props('withoutOverlay')).toBe(false);
+
+      await wrapper.find('[data-testid="unnnic-button"]').trigger('click');
+      await wrapper.vm.$nextTick();
+
+      expect(drawerComponent.props('withoutOverlay')).toBe(true);
     });
   });
 

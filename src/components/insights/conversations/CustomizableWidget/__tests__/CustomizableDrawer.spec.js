@@ -297,6 +297,15 @@ describe('CustomizableWidget', () => {
       expect(modalAttention().exists()).toBe(true);
       expect(modalAttention().vm.modelValue).toBe(true);
     });
+
+    it('should set withoutOverlay on drawer when warningModalType is set', async () => {
+      expect(drawer().attributes('withoutoverlay')).toBe('false');
+
+      wrapper.vm.warningModalType = 'cancel';
+      await nextTick();
+
+      expect(drawer().attributes('withoutoverlay')).toBe('true');
+    });
   });
 
   describe('Warning modal methods', () => {

@@ -2,6 +2,7 @@
   <UnnnicDrawer
     v-if="isDrawerCustomizableOpen"
     :modelValue="isDrawerCustomizableOpen"
+    :withoutOverlay="warningModalType !== ''"
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"

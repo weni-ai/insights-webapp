@@ -4,6 +4,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useConversationalTopics } from './topics';
 import { useConversationalWidgets } from './widgets';
 import { useCustomWidgets } from './customWidgets';
+import { useAutoWidgets } from './autoWidgets';
 
 export type DrawerWidgetType =
   | 'nps'
@@ -123,13 +124,16 @@ export const useConversational = defineStore('conversational', {
       const { isCsatConfigured, isNpsConfigured, isSalesFunnelConfigured } =
         useConversationalWidgets();
       const { getRealCustomWidgets } = useCustomWidgets();
+      const { hasAgentInvocationData, hasToolResultData } = useAutoWidgets();
 
       const hasAnyConfiguration =
         hasExistingTopics ||
         isCsatConfigured ||
         isNpsConfigured ||
         isSalesFunnelConfigured ||
-        getRealCustomWidgets.length > 0;
+        getRealCustomWidgets.length > 0 ||
+        hasAgentInvocationData ||
+        hasToolResultData;
 
       return !hasAnyConfiguration;
     },

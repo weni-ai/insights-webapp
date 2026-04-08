@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
     <template #body-action="{ item }">
@@ -51,6 +52,7 @@ import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/A
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
+import { openNewTabLink } from '@/utils/redirect';
 
 defineOptions({
   name: 'AttendantTable',
@@ -194,6 +196,11 @@ const redirectItem = (item: AttendantDataResult) => {
   if (!item?.link?.url) return;
   const path = `${item.link?.url}/insights`;
   window.parent.postMessage({ event: 'redirect', path }, '*');
+};
+
+const redirectItemNewTab = (item: AttendantDataResult) => {
+  if (!item?.link?.url) return;
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 const isRequestPending = ref(false);

@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
     <template #body-first_response_time="{ item }">
@@ -58,6 +59,7 @@ import { InProgressDataResult } from '@/services/api/resources/humanSupport/moni
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
+import { openNewTabLink } from '@/utils/redirect';
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -138,6 +140,12 @@ const handleSort = (sort: {
 
 const loadMore = () => {
   loadMoreData(currentSort.value);
+};
+
+const redirectItemNewTab = (item: InProgressDataResult) => {
+  if (!item?.link?.url) return;
+
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 const redirectItem = (item: InProgressDataResult) => {

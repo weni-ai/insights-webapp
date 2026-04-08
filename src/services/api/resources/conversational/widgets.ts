@@ -66,6 +66,7 @@ interface AutoWidgetResult {
 }
 
 interface AutoWidgetResponse {
+  total: number;
   results: AutoWidgetResult[];
 }
 

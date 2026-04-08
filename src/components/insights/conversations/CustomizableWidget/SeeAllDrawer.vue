@@ -41,16 +41,18 @@ const props = defineProps<{
   data: CsatResult[] | CrosstabResultItem[] | AutoWidgetResult[];
   isCrosstab?: boolean;
   title?: string;
+  color?: string;
+  backgroundColor?: string;
 }>();
 
 const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
 }>();
 
-const defaultColor = colorBgBlueStrong;
+const defaultColor = props.color || colorBgBlueStrong;
 const defaultBackgroundColor = props.isCrosstab
   ? colorBgOrangeStrong
-  : colorBgBluePlain;
+  : props.backgroundColor || colorBgBluePlain;
 
 const formattedCrosstabData = computed(() => {
   return (props.data as CrosstabResultItem[]).map((item) => {

@@ -107,6 +107,9 @@ const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
   const useMock = conversational.shouldUseMock;
 
+  newWidgets.push({ type: 'agent_invocation', uuid: '' });
+  newWidgets.push({ type: 'tool_result', uuid: '' });
+
   if (useMock || conversationalWidgets.isCsatConfigured) {
     newWidgets.push({ type: 'csat', uuid: '' });
   }
@@ -126,13 +129,6 @@ const setDynamicWidgets = () => {
         uuid: widget.uuid,
       });
     });
-  }
-
-  if (autoWidgets.hasAgentInvocationData) {
-    newWidgets.push({ type: 'agent_invocation', uuid: '' });
-  }
-  if (autoWidgets.hasToolResultData) {
-    newWidgets.push({ type: 'tool_result', uuid: '' });
   }
 
   if (useMock || conversationalWidgets.isSalesFunnelConfigured) {

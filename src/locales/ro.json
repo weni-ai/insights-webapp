@@ -1031,9 +1031,9 @@
         "action": "Acțiune"
       },
       "agents_count": {
-        "online": "{count, plural, one {# online} few {# online} other {# online}}",
-        "custom_breaks": "{count, plural, one {# în pauză} few {# în pauză} other {# în pauză}}",
-        "offline": "{count, plural, one {# offline} few {# offline} other {# offline}}"
+        "online": "{count} online",
+        "custom_breaks": "{count} în pauză",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -1113,8 +1113,8 @@
     },
     "volume_per_queue": {
       "title": "Volum per coadă",
-      "monitoring_count": "{count, plural, one {{count} coadă cu {status} chaturi} few {{count} cozi cu {status} chaturi} other {{count} cozi cu {status} chaturi}}",
-      "analysis_count": "{count, plural, one {{count} coadă cu chaturi finalizate} few {{count} cozi cu chaturi finalizate} other {{count} de cozi cu chaturi finalizate}}",
+      "monitoring_count": "{count} coadă cu {status} chaturi | {count} cozi cu {status} chaturi",
+      "analysis_count": "{count} coadă cu chaturi finalizate | {count} cozi cu chaturi finalizate",
       "setup_description": "Creează cozi pe sector de activitate pentru a monitoriza mai multe date",
       "empty_data": {
         "monitoring": {
@@ -1131,8 +1131,8 @@
       "title": "Volum per etichetă",
       "setup_description": "Adaugă etichete pentru sectoare de activitate pentru a monitoriza mai multe date",
       "count": {
-        "ongoing": "{count, plural, one {{count} etichetă în uz} few {{count} etichete în uz} other {{count} etichete în uz}}",
-        "closed": "{count, plural, one {{count} etichetă atribuită} few {{count} etichete atribuite} other {{count} etichete atribuite}}"
+        "ongoing": "{count} etichetă în uz | {count} etichete în uz",
+        "closed": "{count} etichetă atribuită | {count} etichete atribuite"
       },
       "empty_data": {
         "monitoring": {

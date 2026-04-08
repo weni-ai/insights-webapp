@@ -395,8 +395,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agent",
-      "placeholder": "Select an agent"
+      "label": "Representative",
+      "placeholder": "Select a representative"
     },
     "contact": {
       "label": "Contact",
@@ -429,7 +429,7 @@
   "reload": "Refresh",
   "agent": "Agent",
   "online_agents": "Online agents",
-  "chats_per_agents": "Chats per agent",
+  "chats_per_agents": "Chats per representative",
   "closeds": "Closed",
   "finished": "Completed",
   "in_progress": "In progress",
@@ -496,7 +496,7 @@
   "reset": "Reset",
   "onboarding": {
     "welcome_modal": {
-      "title": "New feature available: Insights",
+      "title": "New feature available: Analytics",
       "text": "We're introducing a new tool to help you track operation success on Weni",
       "button": {
         "go": "Get started",
@@ -1039,9 +1039,9 @@
         "action": "Action"
       },
       "agents_count": {
-        "online": "{count, plural, one {# online} other {# online}}",
-        "custom_breaks": "{count, plural, one {# on break} other {# on break}}",
-        "offline": "{count, plural, one {# offline} other {# offline}}"
+        "online": "{count} online",
+        "custom_breaks": "{count} on break",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -1129,8 +1129,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count, plural, one {{count} queue with {status} chats} other {{count} queues with {status} chats}}",
-      "analysis_count": "{count, plural, one {{count} queue with completed chats} other {{count} queues with completed chats}}",
+      "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
+      "analysis_count": "{count} queue with completed chats | {count} queues with completed chats",
       "setup_description": "Create queues by industry to monitor more data",
       "empty_data": {
         "monitoring": {
@@ -1147,8 +1147,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to industries to monitor more data",
       "count": {
-        "ongoing": "{count, plural, one {{count} tag in use} other {{count} tags in use}}",
-        "closed": "{count, plural, one {{count} assigned tag} other {{count} assigned tags}}"
+        "ongoing": "{count} tag in use | {count} tags in use",
+        "closed": "{count} assigned tag | {count} assigned tags"
       },
       "empty_data": {
         "monitoring": {

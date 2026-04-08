@@ -395,8 +395,8 @@
   },
   "filter": {
     "agent": {
-      "label": "Agente",
-      "placeholder": "Selecciona el agente"
+      "label": "Representante",
+      "placeholder": "Selecciona el representante"
     },
     "contact": {
       "label": "Contacto",
@@ -429,7 +429,7 @@
   "reload": "Actualizar",
   "agent": "Agente",
   "online_agents": "Agentes online",
-  "chats_per_agents": "Chats por agente",
+  "chats_per_agents": "Chats por representante",
   "closeds": "Cerrados",
   "finished": "Finalizados",
   "in_progress": "En curso",
@@ -496,7 +496,7 @@
   "reset": "Restablecer",
   "onboarding": {
     "welcome_modal": {
-      "title": "Nueva funcionalidad: explora Insights",
+      "title": "Nueva funcionalidad: explora Analytics",
       "text": "Esta nueva herramienta te permite monitorear el éxito de tu operación aquí en Weni",
       "button": {
         "go": "Comenzar",
@@ -1039,9 +1039,9 @@
         "action": "Acción"
       },
       "agents_count": {
-        "online": "{count, plural, one {{count} online} other {{count} online}}",
-        "custom_breaks": "{count, plural, one {{count} en pausa} other {{count} en pausa}}",
-        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
+        "online": "{count} online",
+        "custom_breaks": "{count} en pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -1129,8 +1129,8 @@
     },
     "volume_per_queue": {
       "title": "Volumen por cola",
-      "monitoring_count": "{count, plural, one {{count} cola con chats {status}} other {{count} colas con chats {status}}}",
-      "analysis_count": "{count, plural, one {{count} cola con chats finalizados} other {{count} colas con chats finalizados}}",
+      "monitoring_count": "{count} cola con chats {status} | {count} colas con chats {status}",
+      "analysis_count": "{count} cola con chats finalizados | {count} colas con chats finalizados",
       "setup_description": "Crea colas por sector para monitorear más datos",
       "empty_data": {
         "monitoring": {
@@ -1147,8 +1147,8 @@
       "title": "Volumen por tag",
       "setup_description": "Agrega tags a sectores para monitorear más datos",
       "count": {
-        "ongoing": "{count, plural, one {{count} tag en uso} other {{count} tags en uso}}",
-        "closed": "{count, plural, one {{count} tag asignada} other {{count} tags asignadas}}"
+        "ongoing": "{count} tag en uso | {count} tags en uso",
+        "closed": "{count} tag asignada | {count} tags asignadas"
       },
       "empty_data": {
         "monitoring": {

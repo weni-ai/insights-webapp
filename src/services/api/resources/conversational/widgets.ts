@@ -52,6 +52,18 @@ interface SalesFunnelResponse {
   currency: string;
 }
 
+interface AutoWidgetResult {
+  label: string;
+  agent: { uuid: string };
+  value: number;
+  full_value: number;
+}
+
+interface AutoWidgetResponse {
+  total: number;
+  results: AutoWidgetResult[];
+}
+
 interface WidgetQueryParams {
   start_date?: string;
   end_date?: string;
@@ -254,6 +266,45 @@ export default {
 
     return response;
   },
+
+  async getAgentInvocationData(
+    queryParams: Partial<WidgetQueryParams> = {},
+  ): Promise<AutoWidgetResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get(
+      '/metrics/conversations/agent-invocation/',
+      { params },
+    )) as AutoWidgetResponse;
+
+    return response;
+  },
+
+  async getToolResultData(
+    queryParams: Partial<WidgetQueryParams> = {},
+  ): Promise<AutoWidgetResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/conversations/tool-result/', {
+      params,
+    })) as AutoWidgetResponse;
+
+    return response;
+  },
 };
 
 export { AvailableWidget };
@@ -271,4 +322,6 @@ export type {
   AvailableWidgetsResponse,
   AbsoluteNumbersChildrenResponse,
   AbsoluteNumbersChildrenItem,
+  AutoWidgetResult,
+  AutoWidgetResponse,
 };

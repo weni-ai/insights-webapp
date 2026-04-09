@@ -44,6 +44,8 @@ const createWrapper = (props = {}) =>
         ConversationalCustom: true,
         ConversationalCrosstab: true,
         ConversationalSalesFunnel: true,
+        ConversationalAgentInvocation: true,
+        ConversationalToolResult: true,
         ConversationalAdd: true,
         AddWidget: true,
       },
@@ -89,6 +91,22 @@ describe('ConversationalDynamicWidget', () => {
       const wrapper = createWrapper({ type: 'sales_funnel' });
       expect(
         wrapper.findComponent({ name: 'ConversationalSalesFunnel' }).exists(),
+      ).toBe(true);
+    });
+
+    it('renders ConversationalAgentInvocation for agent_invocation type', () => {
+      const wrapper = createWrapper({ type: 'agent_invocation' });
+      expect(
+        wrapper
+          .findComponent({ name: 'ConversationalAgentInvocation' })
+          .exists(),
+      ).toBe(true);
+    });
+
+    it('renders ConversationalToolResult for tool_result type', () => {
+      const wrapper = createWrapper({ type: 'tool_result' });
+      expect(
+        wrapper.findComponent({ name: 'ConversationalToolResult' }).exists(),
       ).toBe(true);
     });
 
@@ -159,15 +177,20 @@ describe('ConversationalDynamicWidget', () => {
       ).toBe(false);
     });
 
-    it.each(['csat', 'nps', 'sales_funnel', 'custom', 'crosstab'])(
-      'renders overlay for %s widget type',
-      (type) => {
-        const wrapper = createWrapper({ type, uuid: 'test-uuid' });
-        expect(
-          wrapper.find('[data-testid="mock-widget-overlay"]').exists(),
-        ).toBe(true);
-      },
-    );
+    it.each([
+      'csat',
+      'nps',
+      'sales_funnel',
+      'custom',
+      'crosstab',
+      'agent_invocation',
+      'tool_result',
+    ])('renders overlay for %s widget type', (type) => {
+      const wrapper = createWrapper({ type, uuid: 'test-uuid' });
+      expect(wrapper.find('[data-testid="mock-widget-overlay"]').exists()).toBe(
+        true,
+      );
+    });
 
     it('calls setIsDrawerCustomizableOpen when overlay action is triggered', async () => {
       const wrapper = createWrapper({ type: 'csat' });

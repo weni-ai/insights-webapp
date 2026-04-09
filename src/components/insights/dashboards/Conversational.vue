@@ -44,6 +44,7 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
+import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import Info from '@/components/insights/conversations/Info.vue';
 import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
@@ -68,13 +69,16 @@ type ConversationalWidgetType =
   | 'sales_funnel'
   | 'custom'
   | 'crosstab'
-  | 'absolute_numbers';
+  | 'absolute_numbers'
+  | 'agent_invocation'
+  | 'tool_result';
 
 const customWidgets = useCustomWidgets();
 const widgets = useWidgets();
 const conversational = useConversational();
 const conversationalWidgets = useConversationalWidgets();
 const topicsStore = useConversationalTopics();
+const autoWidgets = useAutoWidgets();
 
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
@@ -102,6 +106,9 @@ const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
 const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
   const useMock = conversational.shouldUseMock;
+
+  newWidgets.push({ type: 'agent_invocation', uuid: '' });
+  newWidgets.push({ type: 'tool_result', uuid: '' });
 
   if (useMock || conversationalWidgets.isCsatConfigured) {
     newWidgets.push({ type: 'csat', uuid: '' });
@@ -158,7 +165,11 @@ const waitForDashboardWidgets = () =>
   });
 
 const initializeConfiguration = async () => {
-  await Promise.all([waitForDashboardWidgets(), topicsStore.loadFormTopics()]);
+  await Promise.all([
+    waitForDashboardWidgets(),
+    topicsStore.loadFormTopics(),
+    autoWidgets.loadAllAutoWidgets(),
+  ]);
   conversational.setConfigurationLoaded(true);
 
   if (conversational.shouldUseMock) {
@@ -221,6 +232,7 @@ watch(activeFeatures, () => {
 onUnmounted(() => {
   dynamicWidgets.value = [];
   customWidgets.clearMockWidgets();
+  autoWidgets.resetAutoWidgets();
   conversational.setConfigurationLoaded(false);
   conversational.setHasEndpointData(false);
 });

@@ -123,6 +123,12 @@
     "custom": "Gráfico de barras horizontal",
     "crosstab": "Tabla cruzada",
     "absolute_numbers": "Números absolutos",
+    "agent_invocation": "Agentes más usados",
+    "agent_invocation_count": "{count} agentes",
+    "tool_result": "Herramientas más usadas",
+    "tool_result_count": "{count} herramientas",
+    "auto_widget_no_data": "No hay datos disponibles para el período filtrado",
+    "auto_widget_error": "No se pudieron cargar los datos. Actualiza el panel o contacta con soporte",
     "no_data_available": "No hay datos disponibles para el periodo de uso",
     "widget_error": {
       "title": "Ups, se produjo un error al cargar los datos",

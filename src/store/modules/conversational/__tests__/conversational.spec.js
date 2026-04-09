@@ -5,6 +5,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useConversationalTopics } from '../topics';
 import { useConversationalWidgets } from '../widgets';
 import { useCustomWidgets } from '../customWidgets';
+import { useAutoWidgets } from '../autoWidgets';
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: vi.fn(),
@@ -22,12 +23,18 @@ vi.mock('../customWidgets', () => ({
   useCustomWidgets: vi.fn(),
 }));
 
+vi.mock('../autoWidgets', () => ({
+  useAutoWidgets: vi.fn(),
+}));
+
 const mockDependentStores = ({
   hasExistingTopics = false,
   isCsatConfigured = false,
   isNpsConfigured = false,
   isSalesFunnelConfigured = false,
   getRealCustomWidgets = [],
+  hasAgentInvocationData = false,
+  hasToolResultData = false,
 } = {}) => {
   useConversationalTopics.mockReturnValue({ hasExistingTopics });
   useConversationalWidgets.mockReturnValue({
@@ -36,6 +43,10 @@ const mockDependentStores = ({
     isSalesFunnelConfigured,
   });
   useCustomWidgets.mockReturnValue({ getRealCustomWidgets });
+  useAutoWidgets.mockReturnValue({
+    hasAgentInvocationData,
+    hasToolResultData,
+  });
 };
 
 describe('useConversational store', () => {
@@ -297,6 +308,18 @@ describe('useConversational store', () => {
     it('should return false when custom widgets exist', () => {
       store.setConfigurationLoaded(true);
       mockDependentStores({ getRealCustomWidgets: [{ uuid: 'w1' }] });
+      expect(store.shouldUseMock).toBe(false);
+    });
+
+    it('should return false when agent invocation data exists', () => {
+      store.setConfigurationLoaded(true);
+      mockDependentStores({ hasAgentInvocationData: true });
+      expect(store.shouldUseMock).toBe(false);
+    });
+
+    it('should return false when tool result data exists', () => {
+      store.setConfigurationLoaded(true);
+      mockDependentStores({ hasToolResultData: true });
       expect(store.shouldUseMock).toBe(false);
     });
 

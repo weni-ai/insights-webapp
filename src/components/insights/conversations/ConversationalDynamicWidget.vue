@@ -34,6 +34,8 @@ import ConversationalCustom from '@/components/insights/widgets/conversational/C
 import ConversationalCrosstab from '@/components/insights/widgets/conversational/ConversationalCrosstab.vue';
 import ConversationalSalesFunnel from '@/components/insights/widgets/conversational/ConversationalSalesFunnel.vue';
 import ConversationalAbsoluteNumbers from '@/components/insights/widgets/conversational/ConversacionalAbsoluteNumbers/index.vue';
+import ConversationalAgentInvocation from '@/components/insights/widgets/conversational/ConversationalAgentInvocation.vue';
+import ConversationalToolResult from '@/components/insights/widgets/conversational/ConversationalToolResult.vue';
 import ConversationalAdd from '@/components/insights/widgets/conversational/ConversationalAdd.vue';
 import AddWidget from '@/components/insights/conversations/AddWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -45,7 +47,9 @@ type ConversationalWidgetType =
   | 'sales_funnel'
   | 'custom'
   | 'crosstab'
-  | 'absolute_numbers';
+  | 'absolute_numbers'
+  | 'agent_invocation'
+  | 'tool_result';
 
 interface Props {
   type: ConversationalWidgetType;
@@ -65,6 +69,8 @@ const componentMap: Record<ConversationalWidgetType, Component> = {
   crosstab: ConversationalCrosstab,
   sales_funnel: ConversationalSalesFunnel,
   absolute_numbers: ConversationalAbsoluteNumbers,
+  agent_invocation: ConversationalAgentInvocation,
+  tool_result: ConversationalToolResult,
   add: ConversationalAdd,
 };
 

@@ -376,7 +376,7 @@
   "table_group": {
     "contact": "Contacto",
     "urn": "URN",
-    "agent": "Agente",
+    "agent": "Representante",
     "created_on": "Inicio",
     "ended_at": "Fin",
     "sector": "Sector",
@@ -428,7 +428,7 @@
   "lines_count": "{count} filas",
   "reload": "Actualizar",
   "agent": "Agente",
-  "online_agents": "Agentes online",
+  "online_agents": "Representantes online",
   "chats_per_agents": "Chats por representante",
   "closeds": "Cerrados",
   "finished": "Finalizados",

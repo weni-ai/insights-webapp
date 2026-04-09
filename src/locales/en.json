@@ -376,7 +376,7 @@
   "table_group": {
     "contact": "Contact",
     "urn": "URN",
-    "agent": "Agent",
+    "agent": "Representative",
     "created_on": "Start",
     "ended_at": "End",
     "sector": "Industry",
@@ -428,7 +428,7 @@
   "lines_count": "{count} rows",
   "reload": "Refresh",
   "agent": "Agent",
-  "online_agents": "Online agents",
+  "online_agents": "Online representatives",
   "chats_per_agents": "Chats per representative",
   "closeds": "Closed",
   "finished": "Completed",

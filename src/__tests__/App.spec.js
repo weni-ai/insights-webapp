@@ -53,10 +53,6 @@ const mockComponents = {
     name: 'IconLoading',
     template: '<div class="icon-loading">Loading...</div>',
   },
-  UnnnicIconLoading: {
-    name: 'UnnnicIconLoading',
-    template: '<div class="unnnic-icon-loading">Loading...</div>',
-  },
   CompleteOnboardingModal: {
     name: 'CompleteOnboardingModal',
     template: '<div class="complete-onboarding-modal"></div>',

@@ -59,7 +59,7 @@
     v-if="isSeeAllDrawerOpen"
     v-model="isSeeAllDrawerOpen"
     :title="$t('conversations_dashboard.agent_invocation')"
-    :data="autoWidgetsStore.agentInvocation.data?.results || []"
+    :data="resolvedResults"
     :color="colorBgPinkStrong"
     :backgroundColor="colorBgPinkPlain"
   />
@@ -76,6 +76,7 @@ import ProgressTable from '@/components/ProgressTable.vue';
 import SeeAllDrawer from '@/components/insights/conversations/CustomizableWidget/SeeAllDrawer.vue';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { useProject } from '@/store/modules/project';
 import { formatPercentage, formatNumber } from '@/utils/numbers';
 import {
   colorBgPinkStrong,
@@ -85,6 +86,7 @@ import {
 const route = useRoute();
 const conversational = useConversational();
 const autoWidgetsStore = useAutoWidgets();
+const projectStore = useProject();
 
 const { shouldUseMock } = storeToRefs(conversational);
 
@@ -104,8 +106,22 @@ const totalCount = computed(
 
 const isExpanded = computed(() => results.value.length > 5);
 
+function resolveAgentName(agentUuid: string, fallbackLabel: string): string {
+  const agent = projectStore.agentsTeam.agents.find(
+    (a: { uuid: string }) => a.uuid === agentUuid,
+  );
+  return agent?.name || fallbackLabel;
+}
+
+const resolvedResults = computed(() => {
+  return results.value.map((result) => ({
+    ...result,
+    label: resolveAgentName(result.agent.uuid, result.label),
+  }));
+});
+
 const progressItems = computed(() => {
-  return [...results.value]
+  return [...resolvedResults.value]
     .sort((a, b) => b.value - a.value)
     .slice(0, 5)
     .map((result) => ({
@@ -120,6 +136,9 @@ const progressItems = computed(() => {
 onMounted(() => {
   if (!shouldUseMock.value) {
     autoWidgetsStore.loadAgentInvocationData();
+    if (!projectStore.agentsTeam.agents.length) {
+      projectStore.getAgentsTeam();
+    }
   }
 });
 

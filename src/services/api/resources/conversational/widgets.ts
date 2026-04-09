@@ -2,13 +2,7 @@ import http from '@/services/api/http';
 import http2 from '@/services/api/http2';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
-import {
-  MOCK_CSAT_DATA,
-  MOCK_NPS_DATA,
-  MOCK_SALES_FUNNEL_DATA,
-  MOCK_AGENT_INVOCATION_DATA,
-  MOCK_TOOL_RESULT_DATA,
-} from './mocks';
+import { MOCK_CSAT_DATA, MOCK_NPS_DATA, MOCK_SALES_FUNNEL_DATA } from './mocks';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
 
@@ -104,9 +98,6 @@ enum AvailableWidget {
   // eslint-disable-next-line no-unused-vars
   SALES_FUNNEL = 'SALES_FUNNEL',
 }
-
-// TODO: Set to true to use mock data for auto widgets during development; remove when done
-const USE_MOCK_AUTO_WIDGETS = true;
 
 interface AvailableWidgetsQueryParams {
   project_uuid?: string;
@@ -279,8 +270,6 @@ export default {
   async getAgentInvocationData(
     queryParams: Partial<WidgetQueryParams> = {},
   ): Promise<AutoWidgetResponse> {
-    if (USE_MOCK_AUTO_WIDGETS) return MOCK_AGENT_INVOCATION_DATA;
-
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -301,8 +290,6 @@ export default {
   async getToolResultData(
     queryParams: Partial<WidgetQueryParams> = {},
   ): Promise<AutoWidgetResponse> {
-    if (USE_MOCK_AUTO_WIDGETS) return MOCK_TOOL_RESULT_DATA;
-
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 

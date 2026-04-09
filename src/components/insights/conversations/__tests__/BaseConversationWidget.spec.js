@@ -67,6 +67,11 @@ describe('BaseConversationWidget', () => {
       expect(actions().exists()).toBe(true);
     });
 
+    it('should render the body wrapper for slot content', () => {
+      const body = wrapper.find('.base-conversation-widget__body');
+      expect(body.exists()).toBe(true);
+    });
+
     it('should render ShortTab component with correct props', () => {
       expect(tabs().exists()).toBe(true);
 

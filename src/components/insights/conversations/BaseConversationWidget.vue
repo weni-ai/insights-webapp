@@ -74,7 +74,9 @@
         </UnnnicDropdown>
       </section>
     </section>
-    <slot />
+    <section class="base-conversation-widget__body">
+      <slot />
+    </section>
   </section>
 </template>
 
@@ -142,6 +144,14 @@ const handleTabChange = (tab: Tab) => {
   border-radius: $unnnic-space-2;
   border: 1px solid $unnnic-color-gray-2;
   background: $unnnic-color-gray-0;
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: inherit;
+    min-height: 0;
+  }
 
   &__header {
     display: flex;

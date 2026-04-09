@@ -6,6 +6,7 @@ import type {
   SalesFunnelResponse,
   CustomWidgetResponse,
   CrosstabWidgetResponse,
+  AutoWidgetResponse,
 } from './widgets';
 import i18n from '@/utils/plugins/i18n';
 
@@ -123,6 +124,90 @@ export const getMockCustomWidgetData = () =>
       },
     ],
   }) as unknown as CustomWidgetResponse;
+
+export const MOCK_AGENT_INVOCATION_DATA: AutoWidgetResponse = {
+  total: 8,
+  results: [
+    {
+      label: 'feedback_recorder_2',
+      agent: { uuid: '111-aaa' },
+      value: 60,
+      full_value: 60,
+    },
+    {
+      label: 'order_status_checker',
+      agent: { uuid: '111-aaa' },
+      value: 25,
+      full_value: 25,
+    },
+    {
+      label: 'payment_processor',
+      agent: { uuid: '222-bbb' },
+      value: 10,
+      full_value: 10,
+    },
+    {
+      label: 'greeting_handler',
+      agent: { uuid: '222-bbb' },
+      value: 5,
+      full_value: 5,
+    },
+    {
+      label: 'feedback_recorder_4',
+      agent: { uuid: '111-aaa' },
+      value: 60,
+      full_value: 60,
+    },
+    {
+      label: 'order_status_checker_5',
+      agent: { uuid: '111-aaa' },
+      value: 25,
+      full_value: 25,
+    },
+    {
+      label: 'payment_processor_6',
+      agent: { uuid: '222-bbb' },
+      value: 10,
+      full_value: 10,
+    },
+    {
+      label: 'greeting_handler_7',
+      agent: { uuid: '222-bbb' },
+      value: 5,
+      full_value: 5,
+    },
+  ],
+};
+
+export const MOCK_TOOL_RESULT_DATA: AutoWidgetResponse = {
+  total: 8,
+  results: [
+    {
+      label: 'search_orders',
+      agent: { uuid: '111-aaa' },
+      value: 45,
+      full_value: 45,
+    },
+    {
+      label: 'send_email',
+      agent: { uuid: '111-aaa' },
+      value: 30,
+      full_value: 30,
+    },
+    {
+      label: 'check_inventory',
+      agent: { uuid: '222-bbb' },
+      value: 15,
+      full_value: 15,
+    },
+    {
+      label: 'process_refund',
+      agent: { uuid: '222-bbb' },
+      value: 10,
+      full_value: 10,
+    },
+  ],
+};
 
 export const getMockCrosstabWidgetData = (): CrosstabWidgetResponse => ({
   total_rows: 9,

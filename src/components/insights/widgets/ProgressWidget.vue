@@ -221,6 +221,7 @@ const isWarningMessage = computed(() => {
   &__footer {
     display: flex;
     align-items: center;
+    margin-top: auto;
 
     &-content-start {
       justify-content: flex-start;

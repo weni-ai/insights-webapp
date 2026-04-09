@@ -23,6 +23,7 @@ import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import type {
   CsatResult,
   CrosstabResultItem,
+  AutoWidgetResult,
 } from '@/services/api/resources/conversational/widgets';
 
 import { getWidgetCrosstabTooltip } from '@/utils/widget';
@@ -37,19 +38,21 @@ const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 const props = defineProps<{
   modelValue: boolean;
-  data: CsatResult[] | CrosstabResultItem[];
+  data: CsatResult[] | CrosstabResultItem[] | AutoWidgetResult[];
   isCrosstab?: boolean;
   title?: string;
+  color?: string;
+  backgroundColor?: string;
 }>();
 
 const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
 }>();
 
-const defaultColor = colorBgBlueStrong;
+const defaultColor = props.color || colorBgBlueStrong;
 const defaultBackgroundColor = props.isCrosstab
   ? colorBgOrangeStrong
-  : colorBgBluePlain;
+  : props.backgroundColor || colorBgBluePlain;
 
 const formattedCrosstabData = computed(() => {
   return (props.data as CrosstabResultItem[]).map((item) => {

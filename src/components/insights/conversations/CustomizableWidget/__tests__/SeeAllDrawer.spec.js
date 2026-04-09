@@ -176,4 +176,36 @@ describe('SeeAllDrawer', () => {
       });
     });
   });
+
+  describe('Custom color props', () => {
+    it('should use custom color when color prop is provided', () => {
+      const customColor = '#EF5997';
+      wrapper = createWrapper({ color: customColor });
+
+      const formatted = wrapper.vm.formattedData;
+      formatted.forEach((item) => {
+        expect(item.color).toBe(customColor);
+      });
+    });
+
+    it('should use custom backgroundColor when backgroundColor prop is provided', () => {
+      const customBg = '#FFDFEB';
+      wrapper = createWrapper({ backgroundColor: customBg });
+
+      const formatted = wrapper.vm.formattedData;
+      formatted.forEach((item) => {
+        expect(item.backgroundColor).toBe(customBg);
+      });
+    });
+
+    it('should use default blue colors when no custom colors are provided', () => {
+      wrapper = createWrapper();
+
+      const formatted = wrapper.vm.formattedData;
+      formatted.forEach((item) => {
+        expect(item.color).toBe('#3993F4');
+        expect(item.backgroundColor).toBe('#CBE9FF');
+      });
+    });
+  });
 });

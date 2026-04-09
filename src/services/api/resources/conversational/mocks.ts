@@ -125,8 +125,8 @@ export const getMockCustomWidgetData = () =>
     ],
   }) as unknown as CustomWidgetResponse;
 
-// TODO: Remove these mock constants once real endpoints are available
 export const MOCK_AGENT_INVOCATION_DATA: AutoWidgetResponse = {
+  total: 8,
   results: [
     {
       label: 'feedback_recorder_2',
@@ -152,10 +152,35 @@ export const MOCK_AGENT_INVOCATION_DATA: AutoWidgetResponse = {
       value: 5,
       full_value: 5,
     },
+    {
+      label: 'feedback_recorder_4',
+      agent: { uuid: '111-aaa' },
+      value: 60,
+      full_value: 60,
+    },
+    {
+      label: 'order_status_checker_5',
+      agent: { uuid: '111-aaa' },
+      value: 25,
+      full_value: 25,
+    },
+    {
+      label: 'payment_processor_6',
+      agent: { uuid: '222-bbb' },
+      value: 10,
+      full_value: 10,
+    },
+    {
+      label: 'greeting_handler_7',
+      agent: { uuid: '222-bbb' },
+      value: 5,
+      full_value: 5,
+    },
   ],
 };
 
 export const MOCK_TOOL_RESULT_DATA: AutoWidgetResponse = {
+  total: 8,
   results: [
     {
       label: 'search_orders',

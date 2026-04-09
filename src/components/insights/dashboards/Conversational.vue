@@ -89,7 +89,7 @@ const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
 );
 
 const orderedDynamicWidgets = computed(() => {
-  if (isLoadingCurrentDashboardWidgets.value || !isConfigurationLoaded.value) {
+  if (isLoadingCurrentDashboardWidgets.value) {
     return [];
   }
 
@@ -165,11 +165,13 @@ const waitForDashboardWidgets = () =>
   });
 
 const initializeConfiguration = async () => {
-  await Promise.all([
-    waitForDashboardWidgets(),
-    topicsStore.loadFormTopics(),
-    autoWidgets.loadAllAutoWidgets(),
-  ]);
+  const topicsPromise = topicsStore.loadFormTopics();
+  const autoWidgetsPromise = autoWidgets.loadAllAutoWidgets();
+
+  await waitForDashboardWidgets();
+  setDynamicWidgets();
+
+  await Promise.all([topicsPromise, autoWidgetsPromise]);
   conversational.setConfigurationLoaded(true);
 
   if (conversational.shouldUseMock) {

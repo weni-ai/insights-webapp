@@ -52,6 +52,7 @@ import { Chart as ChartJS, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import { addColors, prepareTopData } from '@/utils/treemap';
+import { formatPercentage } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import { useI18n } from 'vue-i18n';
 import { colorFgBase } from '@weni/unnnic-system/tokens/colors';
@@ -72,6 +73,11 @@ const props = defineProps<{
 }>();
 
 const { locale } = useI18n();
+
+function treemapPercentageDisplay(value: number | undefined): string {
+  if (value === undefined || Number.isNaN(value)) return '0';
+  return formatPercentage(value, locale.value);
+}
 
 const preparedData = computed(() => {
   const handleLabel = (label: string | undefined, uuid: string | undefined) => {
@@ -147,7 +153,7 @@ const createOrUpdateChart = () => {
                 // Yes, this is a workaround to add padding to the label.
                 // Each space here is 4px, so 4 spaces is 16px :)
                 return [
-                  `${padding}${labelText} (${data.percentage}%)${padding}`,
+                  `${padding}${labelText} (${treemapPercentageDisplay(data.percentage)})${padding}`,
                   `${padding}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}${padding}`,
                 ];
               },
@@ -207,7 +213,7 @@ const createOrUpdateChart = () => {
             callbacks: {
               title: function (ctx: any) {
                 const data = ctx[0].raw._data;
-                return `${data.label} (${data.percentage}%)`;
+                return `${data.label} (${treemapPercentageDisplay(data.percentage)})`;
               },
               label: function (ctx: any) {
                 return `${ctx.raw._data.value} ${i18n.global.t('conversations_dashboard.conversations')}`;

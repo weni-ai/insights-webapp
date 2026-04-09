@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
     <template
@@ -52,6 +53,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
+import { openNewTabLink } from '@/utils/redirect';
 
 defineOptions({
   name: 'AgentsPausesTable',
@@ -87,7 +89,7 @@ const fetchData = async (page: number, pageSize: number, ordering: string) => {
     ordering,
     limit: pageSize,
     offset,
-    agent: humanSupport.appliedDetailFilters.agent.value,
+    agent: humanSupport.appliedDetailFilters.agent.value as string,
   });
 };
 
@@ -175,6 +177,11 @@ const handleSort = (sort: {
 
 const loadMore = () => {
   loadMoreData(currentSort.value);
+};
+
+const redirectItemNewTab = (item: PausesDataResult) => {
+  if (!item?.link?.url) return;
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 const redirectItem = (item: PausesDataResult) => {

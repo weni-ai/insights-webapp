@@ -17,6 +17,7 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   />
 </template>
@@ -30,6 +31,7 @@ import service from '@/services/api/resources/humanSupport/analysis/detailedAnal
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { openNewTabLink } from '@/utils/redirect';
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
@@ -43,6 +45,10 @@ type FormattedAttendantData = Omit<
   average_duration: string;
   time_in_service: string;
 };
+
+defineOptions({
+  name: 'AnalysisAttendantTable',
+});
 
 const { t } = useI18n();
 const humanSupport = useHumanSupport();
@@ -134,6 +140,11 @@ const redirectItem = (item: AttendantDataResult) => {
   if (!item?.link?.url) return;
   const path = `${item.link?.url}/insights`;
   window.parent.postMessage({ event: 'redirect', path }, '*');
+};
+
+const redirectItemNewTab = (item: AttendantDataResult) => {
+  if (!item?.link?.url) return;
+  openNewTabLink(item.link.url, { concatInsights: true });
 };
 
 watch(

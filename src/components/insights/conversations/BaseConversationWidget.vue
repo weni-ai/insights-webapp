@@ -149,7 +149,8 @@ const handleTabChange = (tab: Tab) => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: $unnnic-space-4;
+    gap: inherit;
+    min-height: 0;
   }
 
   &__header {

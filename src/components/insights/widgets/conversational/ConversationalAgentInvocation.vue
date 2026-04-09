@@ -116,7 +116,7 @@ function resolveAgentName(agentUuid: string, fallbackLabel: string): string {
 const resolvedResults = computed(() => {
   return results.value.map((result) => ({
     ...result,
-    label: resolveAgentName(result.agent.uuid, result.label),
+    label: resolveAgentName(result?.agent?.uuid, result?.label),
   }));
 });
 

@@ -451,6 +451,67 @@ describe('Conversational.vue', () => {
     });
   });
 
+  describe('Configured widgets show during initialization', () => {
+    it('should show configured widgets before isConfigurationLoaded is true', async () => {
+      conversationalStore.shouldUseMock = false;
+      conversationalStore.isConfigurationLoaded = false;
+
+      conversationalWidgetsStore.isCsatConfigured = true;
+      conversationalWidgetsStore.isNpsConfigured = true;
+
+      widgetsStore.isLoadingCurrentDashboardWidgets = ref(false);
+      widgetsStore.currentDashboardWidgets = ref([]);
+
+      customWidgetsStore.getCustomWidgets = [];
+
+      wrapper = shallowMount(Conversational, {
+        global: {
+          stubs: {
+            DashboardHeader: true,
+            MostTalkedAboutTopicsWidget: true,
+            ConversationalDynamicWidget: true,
+            CustomizableDrawer: true,
+            Info: true,
+          },
+        },
+      });
+
+      await nextTick();
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
+      expect(types).toContain('csat');
+      expect(types).toContain('nps');
+      expect(types).toContain('add');
+    });
+
+    it('should return empty when dashboard widgets are still loading', async () => {
+      conversationalStore.shouldUseMock = false;
+      conversationalStore.isConfigurationLoaded = false;
+
+      widgetsStore.isLoadingCurrentDashboardWidgets = ref(true);
+      widgetsStore.currentDashboardWidgets = ref([]);
+
+      wrapper = shallowMount(Conversational, {
+        global: {
+          stubs: {
+            DashboardHeader: true,
+            MostTalkedAboutTopicsWidget: true,
+            ConversationalDynamicWidget: true,
+            CustomizableDrawer: true,
+            Info: true,
+          },
+        },
+      });
+
+      await nextTick();
+
+      expect(wrapper.vm.orderedDynamicWidgets).toEqual([]);
+    });
+  });
+
   describe('Auto widgets ordering', () => {
     beforeEach(async () => {
       conversationalStore.shouldUseMock = false;

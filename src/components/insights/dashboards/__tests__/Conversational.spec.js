@@ -24,6 +24,11 @@ vi.mock('@/store/modules/conversational/conversational');
 vi.mock('@/store/modules/conversational/topics');
 vi.mock('@/store/modules/conversational/autoWidgets');
 
+const autoWidgetEntries = [
+  { type: 'agent_invocation', uuid: '' },
+  { type: 'tool_result', uuid: '' },
+];
+
 describe('Conversational.vue', () => {
   let wrapper;
   let conversationalWidgetsStore;
@@ -95,31 +100,42 @@ describe('Conversational.vue', () => {
     });
   });
 
-  it('should show csat and add widgets when only csat is configured and widgets are less than 2', async () => {
+  it('should always include agent_invocation and tool_result first', async () => {
+    widgetsStore.currentDashboardWidgets.value = [];
+    await nextTick();
+
+    const widgets = wrapper.vm.orderedDynamicWidgets;
+    expect(widgets[0]).toEqual({ type: 'agent_invocation', uuid: '' });
+    expect(widgets[1]).toEqual({ type: 'tool_result', uuid: '' });
+  });
+
+  it('should show csat after auto widgets when csat is configured', async () => {
     conversationalWidgetsStore.isCsatConfigured = true;
 
     widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
     await nextTick();
 
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      ...autoWidgetEntries,
       { type: 'csat', uuid: '' },
       { type: 'add', uuid: '' },
     ]);
   });
 
-  it('should show nps and add widgets when only nps is configured and widgets are less than 2', async () => {
+  it('should show nps after auto widgets when nps is configured', async () => {
     conversationalWidgetsStore.isNpsConfigured = true;
 
     widgetsStore.currentDashboardWidgets.value = [{ type: 'nps' }];
     await nextTick();
 
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      ...autoWidgetEntries,
       { type: 'nps', uuid: '' },
       { type: 'add', uuid: '' },
     ]);
   });
 
-  it('should show csat and nps widgets when both are configured', async () => {
+  it('should show csat and nps widgets after auto widgets when both are configured', async () => {
     conversationalWidgetsStore.isCsatConfigured = true;
     conversationalWidgetsStore.isNpsConfigured = true;
 
@@ -130,34 +146,19 @@ describe('Conversational.vue', () => {
     await nextTick();
 
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      ...autoWidgetEntries,
       { type: 'csat', uuid: '' },
       { type: 'nps', uuid: '' },
       { type: 'add', uuid: '' },
     ]);
   });
 
-  it('should show only add widget when no dynamic widgets are configured', async () => {
+  it('should show auto widgets and add when no other widgets are configured', async () => {
     widgetsStore.currentDashboardWidgets.value = [];
     await nextTick();
 
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([
-      { type: 'add', uuid: '' },
-    ]);
-  });
-
-  it('should maintain csat first, then nps order when both are present', async () => {
-    conversationalWidgetsStore.isCsatConfigured = true;
-    conversationalWidgetsStore.isNpsConfigured = true;
-
-    widgetsStore.currentDashboardWidgets.value = [
-      { type: 'csat' },
-      { type: 'nps' },
-    ];
-    await nextTick();
-
-    expect(wrapper.vm.orderedDynamicWidgets).toEqual([
-      { type: 'csat', uuid: '' },
-      { type: 'nps', uuid: '' },
+      ...autoWidgetEntries,
       { type: 'add', uuid: '' },
     ]);
   });
@@ -168,7 +169,7 @@ describe('Conversational.vue', () => {
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([]);
   });
 
-  it('should include custom widgets when they exist', async () => {
+  it('should include custom widgets after csat/nps', async () => {
     customWidgetsStore.getCustomWidgets = [
       { uuid: 'custom-1', type: 'custom_widget' },
       { uuid: 'custom-2', type: 'custom_widget' },
@@ -178,6 +179,7 @@ describe('Conversational.vue', () => {
     await nextTick();
 
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      ...autoWidgetEntries,
       { type: 'custom', uuid: 'custom-1' },
       { type: 'custom', uuid: 'custom-2' },
       { type: 'add', uuid: '' },
@@ -198,6 +200,7 @@ describe('Conversational.vue', () => {
     await nextTick();
 
     expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+      ...autoWidgetEntries,
       { type: 'csat', uuid: '' },
       { type: 'nps', uuid: '' },
       { type: 'custom', uuid: 'custom-1' },
@@ -206,85 +209,39 @@ describe('Conversational.vue', () => {
   });
 
   describe('isOnlyAddWidget', () => {
-    it('should return true for add widget when there is an odd number of widgets', async () => {
+    it('should return false for add widget when auto widgets make the count even', async () => {
       widgetsStore.currentDashboardWidgets.value = [];
       await nextTick();
 
       expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        ...autoWidgetEntries,
         { type: 'add', uuid: '' },
       ]);
       expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
-      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
-      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
     });
 
-    it('should return true for add widget when there are 3 widgets (odd)', async () => {
-      conversationalWidgetsStore.isCsatConfigured = true;
-      conversationalWidgetsStore.isNpsConfigured = true;
-
-      widgetsStore.currentDashboardWidgets.value = [
-        { type: 'csat' },
-        { type: 'nps' },
-      ];
-      await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
-        { type: 'csat', uuid: '' },
-        { type: 'nps', uuid: '' },
-        { type: 'add', uuid: '' },
-      ]);
-      expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
-      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
-      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
-    });
-
-    it('should return true for add widget when there are 3 widgets (csat, nps, add - odd)', async () => {
-      conversationalWidgetsStore.isCsatConfigured = true;
-      conversationalWidgetsStore.isNpsConfigured = true;
-
-      widgetsStore.currentDashboardWidgets.value = [
-        { type: 'csat' },
-        { type: 'nps' },
-      ];
-      await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
-        { type: 'csat', uuid: '' },
-        { type: 'nps', uuid: '' },
-        { type: 'add', uuid: '' },
-      ]);
-      expect(wrapper.vm.isOnlyAddWidget('add')).toBe(true);
-      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
-      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
-    });
-
-    it('should return false for add widget when there would be an even number of widgets', async () => {
+    it('should return false for add widget when total widget count is even', async () => {
       conversationalWidgetsStore.isCsatConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
       await nextTick();
+
       expect(wrapper.vm.orderedDynamicWidgets).toEqual([
+        ...autoWidgetEntries,
         { type: 'csat', uuid: '' },
         { type: 'add', uuid: '' },
       ]);
       expect(wrapper.vm.isOnlyAddWidget('add')).toBe(false);
-      expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
     });
 
-    it('should return false for non-add widgets even with odd number of widgets', async () => {
+    it('should return false for non-add widgets', async () => {
       conversationalWidgetsStore.isCsatConfigured = true;
-      conversationalWidgetsStore.isNpsConfigured = true;
 
-      widgetsStore.currentDashboardWidgets.value = [
-        { type: 'csat' },
-        { type: 'nps' },
-      ];
+      widgetsStore.currentDashboardWidgets.value = [{ type: 'csat' }];
       await nextTick();
-      expect(wrapper.vm.orderedDynamicWidgets).toEqual([
-        { type: 'csat', uuid: '' },
-        { type: 'nps', uuid: '' },
-        { type: 'add', uuid: '' },
-      ]);
+
       expect(wrapper.vm.isOnlyAddWidget('csat')).toBe(false);
-      expect(wrapper.vm.isOnlyAddWidget('nps')).toBe(false);
+      expect(wrapper.vm.isOnlyAddWidget('agent_invocation')).toBe(false);
     });
   });
 
@@ -320,6 +277,13 @@ describe('Conversational.vue', () => {
 
     it('should call injectMockWidgets when shouldUseMock is true', () => {
       expect(customWidgetsStore.injectMockWidgets).toHaveBeenCalled();
+    });
+
+    it('should include agent_invocation and tool_result in mock mode', async () => {
+      await nextTick();
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
     });
 
     it('should include csat, nps, and sales_funnel widgets in mock mode', async () => {
@@ -381,6 +345,8 @@ describe('Conversational.vue', () => {
       expect(customWidgetsStore.clearMockWidgets).toHaveBeenCalled();
 
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
       expect(types).not.toContain('csat');
       expect(types).not.toContain('nps');
       expect(types).not.toContain('sales_funnel');
@@ -397,6 +363,8 @@ describe('Conversational.vue', () => {
       await nextTick();
 
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
       expect(types).toContain('csat');
       expect(types).not.toContain('nps');
       expect(types).not.toContain('sales_funnel');
@@ -437,6 +405,8 @@ describe('Conversational.vue', () => {
 
     it('should show mock widgets initially when no errors', () => {
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
       expect(types).toContain('csat');
       expect(types).toContain('nps');
       expect(types).toContain('sales_funnel');
@@ -454,6 +424,8 @@ describe('Conversational.vue', () => {
       expect(customWidgetsStore.clearMockWidgets).toHaveBeenCalled();
 
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
       expect(types).not.toContain('csat');
       expect(types).not.toContain('nps');
       expect(types).not.toContain('sales_funnel');
@@ -470,6 +442,8 @@ describe('Conversational.vue', () => {
       await nextTick();
 
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
       expect(types).toContain('csat');
       expect(types).not.toContain('nps');
       expect(types).not.toContain('sales_funnel');
@@ -477,7 +451,7 @@ describe('Conversational.vue', () => {
     });
   });
 
-  describe('Auto widgets (agent_invocation / tool_result)', () => {
+  describe('Auto widgets ordering', () => {
     beforeEach(async () => {
       conversationalStore.shouldUseMock = false;
       conversationalStore.isConfigurationLoaded = ref(true);
@@ -503,42 +477,7 @@ describe('Conversational.vue', () => {
       await nextTick();
     });
 
-    it('should include agent_invocation widget when data exists', async () => {
-      autoWidgetsStore.hasAgentInvocationData = true;
-
-      widgetsStore.currentDashboardWidgets.value = [];
-      await nextTick();
-      await nextTick();
-
-      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('agent_invocation');
-    });
-
-    it('should include tool_result widget when data exists', async () => {
-      autoWidgetsStore.hasToolResultData = true;
-
-      widgetsStore.currentDashboardWidgets.value = [];
-      await nextTick();
-      await nextTick();
-
-      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('tool_result');
-    });
-
-    it('should include both auto widgets when both have data', async () => {
-      autoWidgetsStore.hasAgentInvocationData = true;
-      autoWidgetsStore.hasToolResultData = true;
-
-      widgetsStore.currentDashboardWidgets.value = [];
-      await nextTick();
-      await nextTick();
-
-      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('agent_invocation');
-      expect(types).toContain('tool_result');
-    });
-
-    it('should not include auto widgets when no data exists', async () => {
+    it('should always include agent_invocation and tool_result regardless of data', async () => {
       autoWidgetsStore.hasAgentInvocationData = false;
       autoWidgetsStore.hasToolResultData = false;
 
@@ -547,15 +486,14 @@ describe('Conversational.vue', () => {
       await nextTick();
 
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).not.toContain('agent_invocation');
-      expect(types).not.toContain('tool_result');
+      expect(types).toContain('agent_invocation');
+      expect(types).toContain('tool_result');
     });
 
-    it('should place auto widgets after custom widgets and before sales_funnel', async () => {
+    it('should place auto widgets before csat, nps, and sales_funnel', async () => {
       conversationalWidgetsStore.isCsatConfigured = true;
+      conversationalWidgetsStore.isNpsConfigured = true;
       conversationalWidgetsStore.isSalesFunnelConfigured = true;
-      autoWidgetsStore.hasAgentInvocationData = true;
-      autoWidgetsStore.hasToolResultData = true;
 
       widgetsStore.currentDashboardWidgets.value = [];
       await nextTick();
@@ -564,12 +502,25 @@ describe('Conversational.vue', () => {
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
       const agentIdx = types.indexOf('agent_invocation');
       const toolIdx = types.indexOf('tool_result');
+      const csatIdx = types.indexOf('csat');
+      const npsIdx = types.indexOf('nps');
       const funnelIdx = types.indexOf('sales_funnel');
       const addIdx = types.indexOf('add');
 
-      expect(agentIdx).toBeLessThan(funnelIdx);
-      expect(toolIdx).toBeLessThan(funnelIdx);
+      expect(agentIdx).toBeLessThan(csatIdx);
+      expect(toolIdx).toBeLessThan(csatIdx);
+      expect(agentIdx).toBeLessThan(npsIdx);
+      expect(toolIdx).toBeLessThan(npsIdx);
       expect(funnelIdx).toBeLessThan(addIdx);
+    });
+
+    it('should place add widget at the end', async () => {
+      widgetsStore.currentDashboardWidgets.value = [];
+      await nextTick();
+      await nextTick();
+
+      const widgets = wrapper.vm.orderedDynamicWidgets;
+      expect(widgets[widgets.length - 1].type).toBe('add');
     });
   });
 });

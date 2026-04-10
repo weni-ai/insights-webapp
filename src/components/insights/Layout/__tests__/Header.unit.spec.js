@@ -64,7 +64,7 @@ const createWrapper = (storeState = {}) =>
         HeaderSelectDashboard: true,
         DynamicHeader: true,
         UnnnicBreadcrumb: true,
-        UnnnicButtonIcon: true,
+        UnnnicButton: true,
       },
     },
   });

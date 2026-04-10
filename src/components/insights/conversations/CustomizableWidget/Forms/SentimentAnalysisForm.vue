@@ -79,13 +79,12 @@
               )
             "
           />
-          <UnnnicSelectSmart
+          <UnnnicSelect
             data-testid="sentiment-analysis-form-select-agent"
             :modelValue="agentSelectModel"
-            :options="[]"
-            autocomplete
-            autocompleteIconLeft
-            selectFirst
+            :options="agentOptions"
+            itemLabel="label"
+            itemValue="value"
             disabled
             @update:model-value="handleChangeAgent"
           />
@@ -145,9 +144,12 @@ const agent = computed(() => {
   return props.type === 'csat' ? project.csatAgent : project.npsAgent;
 });
 
-const agentSelectModel = computed(() => [
-  { value: agent.value?.uuid || '', label: agent.value?.name || '' },
-]);
+const agentSelectModel = computed(() => agent.value?.uuid || '');
+
+const agentOptions = computed(() => {
+  if (!agent.value) return [];
+  return [{ value: agent.value.uuid, label: agent.value.name }];
+});
 
 async function handleActivateAgent() {
   await activateAgent(props.type);

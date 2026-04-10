@@ -51,7 +51,7 @@ describe('FilterFavoriteTemplate.vue', () => {
             { id: '2', name: 'Favorite 2' },
           ],
           selectedTemplateUuid: '1',
-          selectedFavoriteTemplate: '',
+          selectedFavoriteTemplate: [{ value: '' }],
         },
         dashboards: {
           currentDashboard: {
@@ -91,7 +91,7 @@ describe('FilterFavoriteTemplate.vue', () => {
       .findComponent('[data-testid="select-favorite-template"]')
       .vm.$emit('update:model-value', '1');
 
-    expect(dispatchSpy).toHaveBeenCalledWith('1');
+    expect(dispatchSpy).toHaveBeenCalledWith({ value: '1', label: 'Favorite 1' });
   });
 
   it('resets selectedFavorite when selectedTemplateUuid changes to non-favorite', async () => {
@@ -106,6 +106,6 @@ describe('FilterFavoriteTemplate.vue', () => {
 
     await wrapper.vm.$nextTick();
 
-    expect(dispatchSpy).toHaveBeenCalledWith({ label: 'Select', value: '' });
+    expect(dispatchSpy).toHaveBeenCalledWith({ value: '', label: '' });
   });
 });

@@ -39,11 +39,13 @@
         </p>
       </template>
     </section>
-    <UnnnicSelectSmart
+    <UnnnicSelect
       v-if="showDataSourceSelect"
       v-model="selectedApiOptions"
       class="template-message-meta-dashboard__api-select"
       :options="dataSourceOptions"
+      itemLabel="label"
+      itemValue="value"
     />
   </section>
   <template v-if="viewTab === 'home'">
@@ -190,9 +192,9 @@ const dataSourceOptions = [
   },
 ];
 
-const selectedApiOptions = ref([
-  dataSourceOptions[isMMLiteActive.value ? 1 : 0],
-]);
+const selectedApiOptions = ref(
+  dataSourceOptions[isMMLiteActive.value ? 1 : 0].value,
+);
 
 onUnmounted(() => {
   metaTemplateMessageStore.setSelectedTemplateUuid('');
@@ -385,7 +387,7 @@ const getButtonClicksData = async () => {
       date_end: appliedFilters.value?.date?._end,
       product_type:
         templatePreview.value.category === 'MARKETING'
-          ? selectedApiOptions.value[0].value
+          ? selectedApiOptions.value
           : undefined,
     };
 
@@ -415,7 +417,7 @@ const getMessagesAnalytics = async () => {
       end_date: appliedFilters.value?.date?._end,
       product_type:
         templatePreview.value.category === 'MARKETING'
-          ? selectedApiOptions.value[0].value
+          ? selectedApiOptions.value
           : undefined,
     };
 
@@ -639,5 +641,9 @@ const unfavoriteTemplate = async () => {
       }
     }
   }
+}
+
+.unnnic-popover {
+  background-color: $unnnic-color-background-snow;
 }
 </style>

@@ -40,41 +40,45 @@ describe('SelectFlow.vue', () => {
     expect(selectFlowLabel.exists()).toBe(true);
   });
 
-  it('should have placeholder option in flowsOptions', () => {
-    const placeholderTranslated = {
-      value: '',
-      label: wrapper.vm.$t('drawers.config_funnel.select_flow'),
-    };
-    expect(wrapper.vm.flowsOptions).toContainEqual(placeholderTranslated);
+  it('should contain project flows in flowsOptions', () => {
+    expect(wrapper.vm.flowsOptions).toContainEqual({
+      value: 'flow1',
+      label: 'Flow 1',
+    });
+    expect(wrapper.vm.flowsOptions).toContainEqual({
+      value: 'flow2',
+      label: 'Flow 2',
+    });
   });
 
-  it('should transform modelValue string to array', async () => {
+  it('should set flow to string value when modelValue is a string', async () => {
     wrapper = createWrapper({ modelValue: 'flow1' });
-    expect(wrapper.vm.flow).toEqual([{ value: 'flow1', label: 'Flow 1' }]);
+    expect(wrapper.vm.flow).toBe('flow1');
   });
 
-  it('should transform modelValue object to array', async () => {
+  it('should extract value from modelValue object', async () => {
     const modelValue = { value: 'flow2', label: 'Flow 2' };
     wrapper = createWrapper({ modelValue });
-    expect(wrapper.vm.flow).toEqual([modelValue]);
+    expect(wrapper.vm.flow).toBe('flow2');
   });
 
-  it('should keep modelValue array as array', async () => {
+  it('should extract value from modelValue array', async () => {
     const modelValue = [{ value: 'flow1', label: 'Flow 1' }];
     wrapper = createWrapper({ modelValue });
-    expect(wrapper.vm.flow).toEqual(modelValue);
+    expect(wrapper.vm.flow).toBe('flow1');
   });
 
-  it('should clear selected flow if modelValue its cleaned', () => {
+  it('should clear selected flow if modelValue is empty', () => {
     wrapper = createWrapper({ modelValue: '' });
-    expect(wrapper.vm.flow[0].value).toBe('');
+    expect(wrapper.vm.flow).toBe('');
   });
 
   it('should update flow correctly when user selects an option', async () => {
     wrapper = createWrapper({ modelValue: '' });
-    await wrapper.setData({ flow: [{ value: 'flow2', label: 'Flow 2' }] });
+    await wrapper.setData({ flow: 'flow2' });
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.emitted()['update:model-value'][1][0]).toEqual('flow2');
+    const emitted = wrapper.emitted()['update:model-value'];
+    expect(emitted[emitted.length - 1][0]).toEqual('flow2');
   });
 });

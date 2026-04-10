@@ -25,7 +25,7 @@ const createWrapper = (props = {}) => {
     },
     global: {
       stubs: {
-        UnnnicSelectSmart: true,
+        UnnnicSelect: true,
       },
     },
   });
@@ -42,7 +42,7 @@ describe('FilterSelect', () => {
 
   it('renders correctly', () => {
     expect(
-      wrapper.findComponent({ name: 'UnnnicSelectSmart' }).exists(),
+      wrapper.findComponent({ name: 'UnnnicSelect' }).exists(),
     ).toBeTruthy();
   });
 
@@ -93,40 +93,22 @@ describe('FilterSelect', () => {
     expect(Projects.getProjectSource).not.toHaveBeenCalled();
   });
 
-  it('computes treatedModelValue correctly for string modelValue', async () => {
+  it('passes modelValue directly to UnnnicSelect', async () => {
     const customWrapper = createWrapper({
       modelValue: '1',
     });
     await customWrapper.vm.$nextTick();
-    expect(customWrapper.vm.treatedModelValue).toEqual([
-      {
-        label: 'Source 1',
-        value: '1',
-      },
-    ]);
-  });
-
-  it('computes treatedModelValue correctly when modelValue is not provided', async () => {
-    const options = [
-      { label: 'Select an option', value: '' },
-      { label: 'Source 1', value: '1' },
-      { label: 'Source 2', value: '2' },
-    ];
-
-    const customWrapper = createWrapper({
-      options,
-      modelValue: undefined,
+    const selectComponent = customWrapper.findComponent({
+      name: 'UnnnicSelect',
     });
-
-    await customWrapper.vm.$nextTick();
-    expect(customWrapper.vm.treatedModelValue).toEqual([options[0]]);
+    expect(selectComponent.props('modelValue')).toBe('1');
   });
 
-  it('emits update:model-value when UnnnicSelectSmart value changes', async () => {
+  it('emits update:model-value when UnnnicSelect value changes', async () => {
     const selectComponent = wrapper.findComponent({
-      name: 'UnnnicSelectSmart',
+      name: 'UnnnicSelect',
     });
-    await selectComponent.vm.$emit('update:model-value', [{ value: '1' }]);
+    await selectComponent.vm.$emit('update:model-value', '1');
 
     expect(wrapper.emitted('update:model-value')).toBeTruthy();
     expect(wrapper.emitted('update:model-value')[0]).toEqual(['1']);

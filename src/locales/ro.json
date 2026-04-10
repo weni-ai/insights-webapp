@@ -26,7 +26,7 @@
     "others": "Altele",
     "unclassified": "Neclasificate",
     "info": {
-      "description": "Datele conversaționale arată conversațiile inițiate cu până la 24 de ore înainte de momentul curent. Conversațiile mai recente încă sunt clasificate şi nu sunt afișate. Reîmprospătează dashboard-ul pentru a actualiza fereastra de date.",
+      "description": "As of {date}, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed.",
       "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
     },
     "mock": {
@@ -65,7 +65,7 @@
       "unengaged": "Neimplicat",
       "transferred": "Transferat la asistență umană",
       "tooltips": {
-        "total": "Totalul conversațiilor începute în această perioadă. O conversație este contorizată la 24 de ore după primul mesaj al contactului.",
+        "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
         "resolved": "Când agentul demonstrează competență și oferă un serviciu util",
         "unresolved": "Când chatul de asistență nu a fost eficient (saluturi, în afara domeniului, erori ale agentului)",
         "unengaged": "Conversație fără implicare utilă. Aceasta include doar saluturi sau emoticoane, ori cazuri închise fără interacțiune relevantă.",
@@ -373,7 +373,7 @@
     "agent": "Agent",
     "created_on": "Inițiere",
     "ended_at": "Sfârșit",
-    "sector": "Sector de activitate",
+    "sector": "Sector",
     "queue": "Coadă",
     "tags": "Etichete"
   },
@@ -472,13 +472,13 @@
     "yesterday": "Ieri ({date})",
     "last_days": "Ultimele {value} zile ({date})",
     "previous_month": "Luna precedentă ({date})",
-    "last_7_days_conversational": "Ultimele 7 zile (până acum 24 de ore)",
-    "last_14_days_conversational": "Ultimele 14 zile (până acum 24 de ore)",
-    "last_30_days_conversational": "Ultimele 30 de zile (până acum 24h)",
-    "last_12_months_conversational": "Ultimele 12 luni (până acum 24h)",
-    "current_month_conversational": "Luna curentă (până acum 24 de ore)",
-    "previous_month_conversational": "Luna precedentă (până acum 24 de ore)",
-    "custom_conversational": "Personalizat (până acum 24 de ore)"
+    "last_7_days_conversational": "Last 7 days (up to {date})",
+    "last_14_days_conversational": "Last 14 days (up to {date})",
+    "last_30_days_conversational": "Last 30 days (up to {date})",
+    "last_12_months_conversational": "Last 12 months (up to {date})",
+    "current_month_conversational": "Current month (up to {date})",
+    "previous_month_conversational": "Previous month",
+    "custom_conversational": "Custom"
   },
   "data_period": {
     "label": "Perioadă",

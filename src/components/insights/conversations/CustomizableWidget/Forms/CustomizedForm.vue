@@ -43,18 +43,13 @@
           $t('conversations_dashboard.customize_your_dashboard.select_agent')
         "
       />
-      <UnnnicSelectSmart
+      <UnnnicSelect
         data-testid="customized-form-select-agent"
         :modelValue="agentSelectModel"
-        :options="
-          agentsTeam.agents.map((agent) => ({
-            value: agent.uuid,
-            label: agent.name,
-          }))
-        "
-        disableInternalFilter
-        selectFirst
-        :isLoading="isLoadingAgentsTeam"
+        :options="agentOptions"
+        itemLabel="label"
+        itemValue="value"
+        :disabled="isLoadingAgentsTeam"
         @update:model-value="handleChangeAgent"
       />
     </section>
@@ -93,26 +88,32 @@ const { setCustomFormAgent } = formsStore;
 const { agentsTeam, isLoadingAgentsTeam } = storeToRefs(useProject());
 const conversational = useConversational();
 
-const agentSelectModel = computed(() => [
-  {
-    value: customizedForm.value.agentUuid,
-    label: customizedForm.value.agentName,
-  },
-]);
+const agentSelectModel = computed(() => customizedForm.value.agentUuid || '');
+
+const agentOptions = computed(() =>
+  agentsTeam.value.agents.map((agent: { uuid: string; name: string }) => ({
+    value: agent.uuid,
+    label: agent.name,
+  })),
+);
 
 watch(
   [agentsTeam, () => customizedForm.value.agentUuid],
   ([agentsTeamValue, agentUuid]) => {
+    if (!agentsTeamValue?.agents?.length) return;
+
     if (conversational.isNewDrawerCustomizable) {
+      if (!agentUuid) {
+        const first = agentsTeamValue.agents[0];
+        setCustomFormAgent(first.uuid, first.name);
+      }
       return;
     }
 
-    if (!agentUuid || !agentsTeamValue?.agents?.length) {
-      return;
-    }
+    if (!agentUuid) return;
 
     const agent = agentsTeamValue.agents.find(
-      (agent: { uuid: string }) => agent.uuid === agentUuid,
+      (a: { uuid: string }) => a.uuid === agentUuid,
     );
 
     if (agent && customizedForm.value.agentName !== agent.name) {
@@ -122,8 +123,13 @@ watch(
   { immediate: true },
 );
 
-const handleChangeAgent = (agent: any) => {
-  setCustomFormAgent(agent[0].value, agent[0].label);
+const handleChangeAgent = (value: string) => {
+  const agent = agentOptions.value.find(
+    (a: { value: string }) => a.value === value,
+  );
+  if (agent) {
+    setCustomFormAgent(agent.value, agent.label);
+  }
 };
 
 const handleChangeWidgetName = (widgetName: string) => {

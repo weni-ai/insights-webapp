@@ -2,7 +2,6 @@
   <UnnnicSelect
     :modelValue="modelValue"
     :options="options"
-    enableSearch
     :placeholder="placeholder"
     itemLabel="label"
     itemValue="value"

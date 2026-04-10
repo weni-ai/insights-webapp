@@ -1,48 +1,42 @@
 <template>
-  <header
-    v-if="currentDashboard"
-    class="insights-layout-header"
-    data-testid="insights-layout-header"
-  >
-    <UnnnicBreadcrumb
-      v-if="!isExpansiveMode"
-      :crumbs="breadcrumbs"
-      @crumb-click="
-        $router.push({ name: $event.routeName, path: $event.routePath })
-      "
-    />
-    <section
-      v-if="!isExpansiveMode"
-      class="insights-layout-header__content"
-      data-testid="insights-layout-header-content"
+  <header class="insights-layout-header">
+    <UnnnicPageHeader
+      v-if="currentDashboard && !isExpansiveMode"
+      hideDivider
+      class="insights-page-header"
+      data-testid="insights-layout-header"
     >
-      <HeaderSelectDashboard v-if="!isExpansiveMode" />
-
+      <template #infos>
+        <HeaderSelectDashboard v-if="!isExpansiveMode" />
+      </template>
+      <template #actions>
+        <section class="insights-layout-header__actions">
+          <DynamicHeader :dashboardType="dashboardHeaderType" />
+        </section>
+      </template>
+    </UnnnicPageHeader>
+    <section
+      v-else-if="isExpansiveMode"
+      data-testid="insights-layout-header"
+    >
       <section
-        v-if="!isExpansiveMode"
-        class="content__actions"
+        class="insights-layout-header__expansive"
+        data-testid="insights-layout-header-expansive"
       >
-        <DynamicHeader :dashboardType="dashboardHeaderType" />
+        <p
+          class="insights-layout-header__expansive-title"
+          data-testid="insights-layout-header-expansive-title"
+        >
+          {{ $t('human_service_dashboard.all_agents') }}
+        </p>
+        <UnnnicButton
+          iconCenter="close"
+          size="small"
+          type="tertiary"
+          class="insights-layout-header__expansive-close"
+          @click="setCurrentExpansiveWidget({})"
+        />
       </section>
-    </section>
-    <section
-      v-if="isExpansiveMode"
-      class="insights-layout-header__expansive"
-      data-testid="insights-layout-header-expansive"
-    >
-      <p
-        class="insights-layout-header__expansive-title"
-        data-testid="insights-layout-header-expansive-title"
-      >
-        {{ $t('human_service_dashboard.all_agents') }}
-      </p>
-      <UnnnicButton
-        iconCenter="close"
-        size="small"
-        type="tertiary"
-        class="insights-layout-header__expansive-close"
-        @click="setCurrentExpansiveWidget({})"
-      />
     </section>
   </header>
 </template>
@@ -52,10 +46,10 @@ import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 export default {
   name: 'InsightsLayoutHeader',
@@ -128,7 +122,7 @@ export default {
         {
           path: currentDashboard.uuid,
           routeName: 'dashboard',
-          name: `Insights ${this.$t(currentDashboard.name || '')}`,
+          name: `Analytics ${this.$t(currentDashboard.name || '')}`,
         },
       ];
 
@@ -202,41 +196,35 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$dropdownFixedWidth: 314px;
 .insights-layout-header {
-  display: grid;
-  gap: $unnnic-spacing-sm;
-
-  &__content {
+  :deep(.insights-page-header) {
+    grid-template-columns: $dropdownFixedWidth 1fr;
+    padding-bottom: 0;
+  }
+  &__actions {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: $unnnic-spacing-xs;
-
-    .content__actions {
-      display: flex;
-      gap: $unnnic-spacing-ant;
-    }
+    justify-content: flex-end;
+    gap: $unnnic-space-3;
   }
   &__expansive {
     border-radius: 0.5rem 0.5rem 0rem 0rem;
-    background: $unnnic-color-neutral-white;
+    background: $unnnic-color-gray-0;
     display: flex;
     width: 100%;
     justify-content: space-between;
     align-items: center;
-    padding: $unnnic-spacing-xs $unnnic-spacing-md;
+    padding: $unnnic-space-2 $unnnic-space-6;
 
     &-title {
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-black;
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-primary;
-      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+      font: $unnnic-font-display-2;
+      font-weight: 900;
+      color: $unnnic-color-gray-12;
     }
 
     &-close {
-      background-color: $unnnic-color-neutral-white;
+      background-color: $unnnic-color-gray-0;
     }
   }
 }

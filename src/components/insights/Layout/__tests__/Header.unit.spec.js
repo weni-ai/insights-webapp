@@ -91,17 +91,6 @@ describe('Header', () => {
       ).toBe(false);
     });
 
-    it('renders content section when not in expansive mode', async () => {
-      await router.push({
-        name: 'dashboard',
-        params: { dashboardUuid: '123' },
-      });
-      wrapper = createWrapper();
-      expect(
-        wrapper.find('[data-testid="insights-layout-header-content"]').exists(),
-      ).toBe(true);
-    });
-
     it('renders expansive section when in expansive mode', () => {
       wrapper = createWrapper({
         widgets: { currentExpansiveWidget: { uuid: '456', name: 'Widget' } },

@@ -14,6 +14,7 @@ exports[`ExportFilterDate > Component structure > should match snapshot 1`] = `
     class=""
     data-testid="export-filter-date-picker"
     data-v-8d4d5760=""
+    disabled="false"
     maxdate="2024-12-31"
     mindate="2024-01-01"
     modelvalue="[object Object]"

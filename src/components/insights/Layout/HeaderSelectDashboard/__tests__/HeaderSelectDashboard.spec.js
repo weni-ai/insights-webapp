@@ -85,17 +85,6 @@ describe('HeaderSelectDashboard', () => {
   });
 
   describe('Title icon', () => {
-    it('Should display a "monitoring" icon when the current route is named "dashboard"', async () => {
-      router.push({ name: 'dashboard', params: { dashboardUuid: '1' } });
-      await flushPromises();
-
-      const dashboardIcon = wrapper.findComponent(
-        '[data-testid=dashboard-icon]',
-      );
-      expect(dashboardIcon.exists()).toBe(true);
-      expect(dashboardIcon.props('icon')).toBe('monitoring');
-    });
-
     it('Should display an "arrow_back" icon when the current route is not "dashboard"', async () => {
       router.push({
         name: 'report',

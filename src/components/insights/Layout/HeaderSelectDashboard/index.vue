@@ -9,14 +9,8 @@
   >
     <template #trigger>
       <section class="header-select-dashboard__trigger">
-        <UnnnicAvatarIcon
-          v-if="$route.name === 'dashboard'"
-          data-testid="dashboard-icon"
-          icon="monitoring"
-          scheme="aux-purple-500"
-        />
         <UnnnicIcon
-          v-else
+          v-if="!($route.name === 'dashboard')"
           data-testid="back-icon"
           class="header-select-dashboard__arrow-back"
           icon="arrow_back"
@@ -72,12 +66,12 @@ import { mapActions, mapState } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useOnboarding } from '@/store/modules/onboarding';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
 import BetaText from './BetaText.vue';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 export default {
   name: 'HeaderSelectDashboard',
@@ -177,28 +171,26 @@ $dropdownFixedWidth: 314px;
 
 .header-select-dashboard {
   display: flex;
+  width: fit-content;
 
   &__title {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
     cursor: pointer;
   }
 
   &__trigger {
     display: flex;
     align-items: center;
-    gap: $unnnic-spacing-nano;
+    gap: $unnnic-space-1;
     cursor: pointer;
 
     .trigger__title {
-      margin: $unnnic-spacing-nano 0;
+      margin: $unnnic-space-1 0;
 
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-primary;
-      font-size: $unnnic-font-size-title-sm;
-      font-weight: $unnnic-font-weight-bold;
-      line-height: $unnnic-line-height-large * 2;
+      color: $unnnic-color-gray-12;
+      font: $unnnic-font-display-2;
       text-wrap: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -207,25 +199,25 @@ $dropdownFixedWidth: 314px;
   }
 
   &__arrow-back {
-    margin: $unnnic-spacing-xs;
+    margin: $unnnic-space-2;
   }
 
   :deep(.unnnic-dropdown__trigger) {
     display: flex;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
     align-items: center;
 
     .unnnic-dropdown__content {
       z-index: 9999;
-      margin-top: $unnnic-spacing-nano;
+      margin-top: $unnnic-space-1;
 
       left: 0;
 
       min-width: $dropdownFixedWidth;
       width: 100%;
 
-      padding: $unnnic-spacing-xs;
-      gap: $unnnic-spacing-nano;
+      padding: $unnnic-space-2;
+      gap: $unnnic-space-1;
     }
   }
 }

@@ -13,10 +13,22 @@ const i18n = createI18n({
       widgets: {
         treemap: {
           no_data: 'No data available',
+          no_data_description: 'No data description',
         },
       },
       conversations_dashboard: {
         conversations: 'conversations',
+      },
+    },
+    pt: {
+      widgets: {
+        treemap: {
+          no_data: 'Sem dados',
+          no_data_description: 'Sem descrição',
+        },
+      },
+      conversations_dashboard: {
+        conversations: 'conversas',
       },
     },
   },
@@ -29,7 +41,7 @@ vi.mock('chart.js', () => {
     destroy: vi.fn(),
   }));
   Chart.defaults = {
-    font: { family: 'Lato, sans-serif' },
+    font: { family: 'Inter, sans-serif' },
   };
   Chart.register = vi.fn();
 
@@ -226,6 +238,8 @@ describe('TreemapChart', () => {
       raw: { _data: { label: 'Test Topic', percentage: 50, value: 100 } },
     });
     expect(Array.isArray(labelResult)).toBe(true);
+    expect(labelResult[0]).toContain('Test Topic');
+    expect(labelResult[0]).toMatch(/\(50%\)/);
 
     const labelEmpty = dataset.labels.formatter({ type: 'not-data' });
     expect(labelEmpty).toBeUndefined();
@@ -264,6 +278,37 @@ describe('TreemapChart', () => {
       tooltipItems: [{ element: { height: 100 } }],
     });
     expect(caretPadding).toBe(50);
+  });
+
+  it('formats treemap percentage labels without float artifacts', async () => {
+    const { Chart } = await import('chart.js');
+
+    await wrapper.setProps({ data: mockData });
+    await nextTick();
+
+    const chartConfig = Chart.mock.calls[0][1];
+    const dataset = chartConfig.data.datasets[0];
+    const tooltipCallbacks = chartConfig.options.plugins.tooltip.callbacks;
+
+    const uglyPercentage = 5.109999999999999;
+
+    const labelLines = dataset.labels.formatter({
+      type: 'data',
+      raw: {
+        _data: {
+          label: 'Other',
+          percentage: uglyPercentage,
+          value: 7,
+        },
+      },
+    });
+
+    expect(labelLines[0]).toMatch(/\(5\.11%\)/);
+
+    const tooltipTitle = tooltipCallbacks.title([
+      { raw: { _data: { label: 'Other', percentage: uglyPercentage } } },
+    ]);
+    expect(tooltipTitle).toBe('Other (5.11%)');
   });
 
   it('should recreate chart when locale changes', async () => {

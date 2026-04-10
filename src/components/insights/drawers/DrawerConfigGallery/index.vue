@@ -193,6 +193,10 @@ export default {
       this.callTourPreviousStep({
         tour: 'widgets-onboarding-tour',
       });
+
+      if (!this.galleryOptions.length) {
+        this.$emit('close');
+      }
     },
   },
 };
@@ -202,7 +206,7 @@ export default {
 .drawer-config-gallery {
   &__options {
     display: grid;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
   }
 }
 </style>

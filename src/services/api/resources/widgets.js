@@ -49,7 +49,7 @@ export default {
 
     const response = await http.post(`/widgets/`, {
       ...widget,
-      dashboard: currentDashboard?.uuid,
+      dashboard: widget.parent ? null : currentDashboard?.uuid,
     });
     return response;
   },

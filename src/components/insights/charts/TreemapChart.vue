@@ -52,14 +52,12 @@ import { Chart as ChartJS, LinearScale, Tooltip } from 'chart.js';
 import { TreemapController, TreemapElement } from 'chartjs-chart-treemap';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
 import { addColors, prepareTopData } from '@/utils/treemap';
+import { formatPercentage } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import { useI18n } from 'vue-i18n';
-import {
-  colorGray700,
-  colorGray800,
-} from '@weni/unnnic-system/tokens/colors';
+import { colorFgBase } from '@weni/unnnic-system/tokens/colors';
 
-ChartJS.defaults.font.family = 'Lato, sans-serif';
+ChartJS.defaults.font.family = 'Inter, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);
 
 const treemapCanvas = ref<HTMLCanvasElement | null>(null);
@@ -75,6 +73,11 @@ const props = defineProps<{
 }>();
 
 const { locale } = useI18n();
+
+function treemapPercentageDisplay(value: number | undefined): string {
+  if (value === undefined || Number.isNaN(value)) return '0';
+  return formatPercentage(value, locale.value);
+}
 
 const preparedData = computed(() => {
   const handleLabel = (label: string | undefined, uuid: string | undefined) => {
@@ -150,20 +153,20 @@ const createOrUpdateChart = () => {
                 // Yes, this is a workaround to add padding to the label.
                 // Each space here is 4px, so 4 spaces is 16px :)
                 return [
-                  `${padding}${labelText} (${data.percentage}%)${padding}`,
+                  `${padding}${labelText} (${treemapPercentageDisplay(data.percentage)})${padding}`,
                   `${padding}${data.value} ${i18n.global.t('conversations_dashboard.conversations')}${padding}`,
                 ];
               },
-              color: colorGray700,
-              hoverColor: colorGray700,
+              color: colorFgBase,
+              hoverColor: colorFgBase,
               font: [
                 {
                   size: 16,
-                  family: 'Lato, sans-serif',
+                  family: 'Inter, sans-serif',
                   lineHeight: '26px',
                   weight: 'bold',
                 },
-                { size: 14, family: 'Lato, sans-serif', lineHeight: '24px' },
+                { size: 14, family: 'Inter, sans-serif', lineHeight: '24px' },
               ],
               position: 'middle',
             },
@@ -191,7 +194,7 @@ const createOrUpdateChart = () => {
           },
           tooltip: {
             enabled: true,
-            backgroundColor: colorGray800,
+            backgroundColor: colorFgBase,
             displayColors: false,
             position: 'nearest',
             caretPadding: (ctx: any) => {
@@ -202,15 +205,15 @@ const createOrUpdateChart = () => {
             mode: 'index',
             titleFont: {
               size: 12,
-              family: 'Lato, sans-serif',
+              family: 'Inter, sans-serif',
               weight: 'bold',
             },
-            bodyFont: { size: 12, family: 'Lato, sans-serif' },
+            bodyFont: { size: 12, family: 'Inter, sans-serif' },
             yAlign: 'bottom',
             callbacks: {
               title: function (ctx: any) {
                 const data = ctx[0].raw._data;
-                return `${data.label} (${data.percentage}%)`;
+                return `${data.label} (${treemapPercentageDisplay(data.percentage)})`;
               },
               label: function (ctx: any) {
                 return `${ctx.raw._data.value} ${i18n.global.t('conversations_dashboard.conversations')}`;
@@ -271,12 +274,12 @@ watch(locale, () => {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: $unnnic-spacing-xs;
+    gap: $unnnic-space-2;
 
     height: 100%;
 
     .loading__skeleton {
-      border-radius: $unnnic-border-radius-md;
+      border-radius: $unnnic-radius-2;
       height: 100%;
       width: 100%;
 
@@ -312,23 +315,18 @@ watch(locale, () => {
 
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-ant;
+    gap: $unnnic-space-3;
     justify-content: center;
     align-items: center;
 
     .no-data__title {
-      font-size: $unnnic-font-size-title-sm;
-      font-family: $unnnic-font-family-secondary;
-      font-weight: $unnnic-font-weight-bold;
-      color: $unnnic-color-neutral-darkest;
-      line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+      font: $unnnic-font-display-2;
+      color: $unnnic-color-gray-12;
     }
 
     .no-data__description {
-      font-size: $unnnic-font-size-body-lg;
-      font-family: $unnnic-font-family-secondary;
-      color: $unnnic-color-neutral-cloudy;
-      line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+      font: $unnnic-font-display-4;
+      color: $unnnic-color-fg-muted;
     }
   }
 

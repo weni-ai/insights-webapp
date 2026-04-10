@@ -1,8 +1,15 @@
 import http from '@/services/api/http';
+import http2 from '@/services/api/http2';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { MOCK_CSAT_DATA, MOCK_NPS_DATA, MOCK_SALES_FUNNEL_DATA } from './mocks';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
+
+interface ValueWithFullValue {
+  value: number;
+  full_value: number;
+}
 
 interface CsatResult {
   label: CsatLabel;
@@ -31,24 +38,30 @@ interface CrosstabWidgetResponse {
 interface NpsResponse {
   score: number;
   total_responses: number;
-  promoters: number;
-  passives: number;
-  detractors: number;
+  promoters: ValueWithFullValue;
+  passives: ValueWithFullValue;
+  detractors: ValueWithFullValue;
 }
 
 interface SalesFunnelResponse {
-  captured_leads: {
-    value: number;
-    full_value: number;
-  };
-  purchases_made: {
-    value: number;
-    full_value: number;
-  };
+  captured_leads: ValueWithFullValue;
+  purchases_made: ValueWithFullValue;
   total_orders: number;
   total_value: number;
   average_ticket: number;
   currency: string;
+}
+
+interface AutoWidgetResult {
+  label: string;
+  agent: { uuid: string };
+  value: number;
+  full_value: number;
+}
+
+interface AutoWidgetResponse {
+  total: number;
+  results: AutoWidgetResult[];
 }
 
 interface WidgetQueryParams {
@@ -58,6 +71,28 @@ interface WidgetQueryParams {
   project_uuid?: string;
 }
 
+interface AbsoluteNumbersChildrenResponse {
+  next: string | null;
+  previous: string | null;
+  results: AbsoluteNumbersChildrenItem[];
+}
+
+interface AbsoluteNumbersChildrenItem {
+  uuid: string;
+  parent: string;
+  name: string;
+  config: {
+    index: number;
+    agent_uuid: string;
+    key: string;
+    operation: string;
+    value_field_name: string;
+    currency: {
+      is_active: boolean;
+      code: string | null;
+    };
+  };
+}
 // eslint-disable-next-line no-unused-vars
 enum AvailableWidget {
   // eslint-disable-next-line no-unused-vars
@@ -76,8 +111,11 @@ interface AvailableWidgetsResponse {
 export default {
   async getCsatData(
     type: 'HUMAN' | 'AI',
-    queryParams: WidgetQueryParams,
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { mock?: boolean } = { mock: false },
   ): Promise<CsatResponse> {
+    if (options.mock) return MOCK_CSAT_DATA;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -97,8 +135,11 @@ export default {
 
   async getNpsData(
     type: 'HUMAN' | 'AI',
-    queryParams: WidgetQueryParams,
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { mock?: boolean } = { mock: false },
   ): Promise<NpsResponse> {
+    if (options.mock) return MOCK_NPS_DATA;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -109,7 +150,7 @@ export default {
       ...queryParams,
     };
 
-    const response = (await http.get('/metrics/conversations/nps/', {
+    const response = (await http2.get('/metrics/conversations/nps/', {
       params,
     })) as NpsResponse;
 
@@ -158,8 +199,11 @@ export default {
   },
 
   async getSalesFunnelData(
-    queryParams: WidgetQueryParams,
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { mock?: boolean; signal?: AbortSignal } = {},
   ): Promise<SalesFunnelResponse> {
+    if (options.mock) return MOCK_SALES_FUNNEL_DATA;
+
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -171,6 +215,7 @@ export default {
 
     const response = (await http.get('/metrics/conversations/sales_funnel/', {
       params,
+      signal: options.signal,
     })) as SalesFunnelResponse;
 
     return response;
@@ -195,6 +240,71 @@ export default {
 
     return response;
   },
+
+  async getAbsoluteNumbersChildren(
+    widgetUuid: string,
+  ): Promise<AbsoluteNumbersChildrenResponse> {
+    const response = (await http.get(
+      `/widgets/${widgetUuid}/children/`,
+    )) as AbsoluteNumbersChildrenResponse;
+
+    return response;
+  },
+
+  async getAbsoluteNumbersChildrenValue(
+    widgetUuid: string,
+  ): Promise<{ value: number }> {
+    const { appliedFilters } = useConversational();
+    const params = {
+      widget_uuid: widgetUuid,
+      ...appliedFilters,
+    };
+    const response = (await http.get(
+      `/metrics/conversations/absolute-numbers/`,
+      { params },
+    )) as { value: number };
+
+    return response;
+  },
+
+  async getAgentInvocationData(
+    queryParams: Partial<WidgetQueryParams> = {},
+  ): Promise<AutoWidgetResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get(
+      '/metrics/conversations/agent-invocation/',
+      { params },
+    )) as AutoWidgetResponse;
+
+    return response;
+  },
+
+  async getToolResultData(
+    queryParams: Partial<WidgetQueryParams> = {},
+  ): Promise<AutoWidgetResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/conversations/tool-result/', {
+      params,
+    })) as AutoWidgetResponse;
+
+    return response;
+  },
 };
 
 export { AvailableWidget };
@@ -210,4 +320,8 @@ export type {
   CrosstabResultItem,
   AvailableWidgetsQueryParams,
   AvailableWidgetsResponse,
+  AbsoluteNumbersChildrenResponse,
+  AbsoluteNumbersChildrenItem,
+  AutoWidgetResult,
+  AutoWidgetResponse,
 };

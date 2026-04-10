@@ -2,6 +2,7 @@
   <UnnnicDrawer
     v-if="isDrawerCustomizableOpen"
     :modelValue="isDrawerCustomizableOpen"
+    :withoutOverlay="warningModalType !== ''"
     title="Widgets"
     class="add-widget-drawer"
     data-testid="add-widget-drawer"
@@ -115,13 +116,18 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { WidgetType } from '@/models/types/WidgetTypes';
 import WidgetConversationalService, {
   AvailableWidget,
 } from '@/services/api/resources/conversational/widgets';
 
-const { resetNewWidget, saveNewWidget, updateConversationalWidget } =
-  useConversationalWidgets();
+const {
+  resetNewWidget,
+  saveNewWidget,
+  updateConversationalWidget,
+  restoreWidgetsFromDashboard,
+} = useConversationalWidgets();
 const {
   isEnabledSaveNewWidget,
   isCsatConfigured,
@@ -147,14 +153,18 @@ const {
   isEnabledCreateCustomForm,
   isLoadingSaveNewCustomWidget,
   isEnabledSaveCrosstabForm,
+  isEnabledSaveAbsoluteNumbersForm,
 } = storeToRefs(customWidgets);
-const { saveCustomWidget } = customWidgets;
+
+const { saveCustomWidget, saveAbsoluteNumbers } = customWidgets;
 
 const sentimentFormStore = useSentimentAnalysisForm();
 const { initializeForm, clearEditingContext } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
 const availableWidgetsFromApi = ref<AvailableWidget[]>([]);
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
 
 onBeforeMount(() => {
   getAgentsTeam();
@@ -173,6 +183,7 @@ async function getAvailableWidgets() {
 
 function closeDrawer() {
   clearEditingContext();
+  restoreWidgetsFromDashboard();
   setIsDrawerCustomizableOpen(false, null, false);
 }
 
@@ -199,7 +210,9 @@ watch(
 );
 
 async function saveWidgetConfigs() {
-  if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
+  if (drawerWidgetType.value === 'absolute_numbers') {
+    await saveAbsoluteNumbers();
+  } else if (['custom', 'crosstab'].includes(drawerWidgetType.value)) {
     await saveCustomWidget(drawerWidgetType.value as 'custom' | 'crosstab');
   } else if (isNewDrawerCustomizable.value) {
     await saveNewWidget();
@@ -263,9 +276,7 @@ function returnWidgetTypeChoice() {
 
 function cancelWidgetConfigs() {
   closeWarningModal();
-  drawerWidgetType.value = 'add';
-  clearEditingContext();
-  setIsDrawerCustomizableOpen(false, null, false);
+  closeDrawer();
 }
 
 function confirmAttentionModal() {
@@ -315,6 +326,13 @@ const availableWidgets = computed(() => {
         'conversations_dashboard.customize_your_dashboard.crosstab.description',
       ),
       key: 'crosstab',
+    },
+    {
+      name: i18n.global.t('conversations_dashboard.absolute_numbers'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.absolute_numbers_description',
+      ),
+      key: 'absolute_numbers',
     },
   ];
 });
@@ -378,17 +396,33 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
   }
 
   if (tabKey === 'customized') {
-    return [
+    const isAbsoluteNumbersEnabled = isFeatureFlagEnabled(
+      'insightsAbsoluteNumbersWidget',
+    );
+
+    const widgets = [
       handleWidgetTypeChoice('custom'),
       handleWidgetTypeChoice('crosstab'),
     ];
+
+    if (isAbsoluteNumbersEnabled) {
+      widgets.push(handleWidgetTypeChoice('absolute_numbers'));
+    }
+
+    return widgets;
   }
 
   return [];
 };
 
 const handleWidgetTypeChoice = (
-  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab',
+  widgetType:
+    | 'csat'
+    | 'nps'
+    | 'custom'
+    | 'sales_funnel'
+    | 'crosstab'
+    | 'absolute_numbers',
 ) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };
@@ -400,6 +434,10 @@ const isDisabledPrimaryButton = computed(() => {
 
   if (drawerWidgetType.value === 'crosstab') {
     return !isEnabledSaveCrosstabForm.value;
+  }
+
+  if (drawerWidgetType.value === 'absolute_numbers') {
+    return !isEnabledSaveAbsoluteNumbersForm.value;
   }
 
   if (isNewDrawerCustomizable.value) {
@@ -417,49 +455,42 @@ const isDisabledPrimaryButton = computed(() => {
 <style scoped lang="scss">
 .add-widget-drawer {
   &__section-title {
-    color: $unnnic-color-neutral-cloudy;
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    color: $unnnic-color-fg-muted;
+    font: $unnnic-font-display-4;
   }
 
   &__section {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
   }
 
   &__widget-list {
     display: flex;
     flex-direction: column;
-    gap: $unnnic-spacing-sm;
+    gap: $unnnic-space-4;
 
     .widget-list__item {
-      padding: $unnnic-spacing-md;
+      padding: $unnnic-space-6;
 
       display: flex;
       flex-direction: column;
       justify-content: center;
-      gap: $unnnic-spacing-nano;
+      gap: $unnnic-space-1;
 
-      border-radius: $unnnic-border-radius-md;
-      border: $unnnic-border-width-thinner solid $unnnic-color-neutral-soft;
+      border-radius: $unnnic-radius-2;
+      border: 1px solid $unnnic-color-gray-2;
 
       cursor: pointer;
 
       .item__title {
-        color: $unnnic-color-neutral-darkest;
-        font-family: $unnnic-font-family-secondary;
-        font-size: $unnnic-font-size-body-lg;
-        font-weight: $unnnic-font-weight-bold;
-        line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+        color: $unnnic-color-gray-12;
+        font: $unnnic-font-display-3;
       }
 
       .item__description {
-        color: $unnnic-color-neutral-cloudy;
-        font-size: $unnnic-font-size-body-gt;
-        line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+        color: $unnnic-color-fg-muted;
+        font: $unnnic-font-body;
       }
     }
   }

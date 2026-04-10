@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { ref as vueRef, reactive } from 'vue';
 import { mount, config } from '@vue/test-utils';
 
 import DashboardHeader from '../DashboardHeader.vue';
@@ -45,12 +46,21 @@ vi.mock('@/store/modules/dashboards', () => ({
   }),
 }));
 
-vi.mock('@/store/modules/conversational/conversational', () => ({
-  useConversational: () => ({
-    refreshDataConversational: false,
-    setIsLoadingConversationalData: vi.fn(),
-  }),
-}));
+const mockShouldUseMock = vueRef(false);
+const mockSetHasEndpointData = vi.fn();
+
+vi.mock('@/store/modules/conversational/conversational', () => {
+  return {
+    useConversational: () =>
+      reactive({
+        refreshDataConversational: false,
+        setIsLoadingConversationalData: vi.fn(),
+        setEndpointError: vi.fn(),
+        setHasEndpointData: mockSetHasEndpointData,
+        shouldUseMock: mockShouldUseMock,
+      }),
+  };
+});
 
 vi.mock('@/composables/useWidgetFormatting', () => ({
   useWidgetFormatting: () => ({
@@ -311,6 +321,45 @@ describe('DashboardHeader.vue', () => {
 
       // All cards should not be loading
       expect(vm.cardsData.every((card) => !card.isLoading)).toBe(true);
+    });
+
+    it('should call setHasEndpointData on successful API response', async () => {
+      const mockApiResponse = [
+        { id: 'total_conversations', value: 1000, percentage: 100 },
+        { id: 'resolved', value: 850, percentage: 85 },
+        { id: 'unresolved', value: 100, percentage: 10 },
+        { id: 'transferred_to_human', value: 25, percentage: 2.5 },
+      ];
+
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        mockApiResponse,
+      );
+
+      mockSetHasEndpointData.mockClear();
+
+      const vm = wrapper.vm;
+      await vm.loadCardData();
+
+      expect(mockSetHasEndpointData).toHaveBeenCalledWith(true);
+    });
+
+    it('should not call setHasEndpointData on empty API response', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockResolvedValue(
+        [],
+      );
+
+      mockSetHasEndpointData.mockClear();
+
+      const vm = wrapper.vm;
+      await vm.loadCardData();
+
+      expect(mockSetHasEndpointData).not.toHaveBeenCalled();
     });
 
     it('should handle API error loading', async () => {
@@ -661,6 +710,65 @@ describe('DashboardHeader.vue', () => {
       expect(vm.cardsData[3].value).toBe('transferred-test-value');
       expect(vm.cardsData[3].description).toBe('transferred-test-description');
       expect(vm.cardsData[3].isLoading).toBe(false);
+    });
+  });
+
+  describe('Mock mode (shouldUseMock = true)', () => {
+    beforeEach(() => {
+      mockShouldUseMock.value = true;
+    });
+
+    afterEach(() => {
+      mockShouldUseMock.value = false;
+    });
+
+    it('should still call API on mount when shouldUseMock is true', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
+
+      createWrapper();
+      await new Promise((r) => setTimeout(r, 50));
+
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).toHaveBeenCalled();
+    });
+
+    it('should render mock cards with formatted values directly', () => {
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+
+      expect(vm.cards).toHaveLength(4);
+      vm.cards.forEach((card) => {
+        expect(card.isLoading).toBe(false);
+        expect(card.value).not.toBe('-');
+      });
+    });
+
+    it('should render total_conversations with formatted number', () => {
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+
+      const totalCard = vm.cards.find((c) => c.id === 'total_conversations');
+      expect(totalCard.value).toBe('24,300');
+      expect(totalCard.description).toBeNull();
+    });
+
+    it('should render percentage cards with formatted percentage', () => {
+      const testWrapper = createWrapper();
+      const vm = testWrapper.vm;
+
+      const resolved = vm.cards.find((c) => c.id === 'resolved');
+      expect(resolved.value).toBe('65.00%');
+      expect(resolved.description).toContain('conversations');
+
+      const unresolved = vm.cards.find((c) => c.id === 'unresolved');
+      expect(unresolved.value).toBe('20.00%');
+
+      const transferred = vm.cards.find((c) => c.id === 'transferred_to_human');
+      expect(transferred.value).toBe('15.00%');
     });
   });
 });

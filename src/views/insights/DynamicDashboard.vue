@@ -11,6 +11,24 @@ import { computed, watch, defineAsyncComponent } from 'vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 
+const asyncComponents = {
+  custom_dashboard: defineAsyncComponent(
+    () => import('@/components/insights/dashboards/DashboardCustom.vue'),
+  ),
+  expansive_widget: defineAsyncComponent(
+    () => import('@/components/insights/widgets/ExpansiveWidget.vue'),
+  ),
+  meta_template_message: defineAsyncComponent(
+    () => import('@/components/insights/dashboards/TemplateMessageMeta.vue'),
+  ),
+  conversational: defineAsyncComponent(
+    () => import('@/components/insights/dashboards/Conversational.vue'),
+  ),
+  human_support: defineAsyncComponent(
+    () => import('@/components/insights/dashboards/HumanSupport.vue'),
+  ),
+} as const;
+
 const widgetsStore = useWidgets();
 const dashboardsStore = useDashboards();
 
@@ -59,26 +77,7 @@ const dashboardType = computed(() => {
 });
 
 const currentComponent = computed(() => {
-  const componentMap = {
-    custom_dashboard: defineAsyncComponent(
-      () => import('@/components/insights/dashboards/DashboardCustom.vue'),
-    ),
-    expansive_widget: defineAsyncComponent(
-      () => import('@/components/insights/widgets/ExpansiveWidget.vue'),
-    ),
-    meta_template_message: defineAsyncComponent(
-      () => import('@/components/insights/dashboards/TemplateMessageMeta.vue'),
-    ),
-    conversational: defineAsyncComponent(
-      () => import('@/components/insights/dashboards/Conversational.vue'),
-    ),
-    human_support: defineAsyncComponent(
-      () => import('@/components/insights/dashboards/HumanSupport.vue'),
-    ),
-    template_dashboard: null,
-  };
-
-  return componentMap[dashboardType.value] || null;
+  return asyncComponents[dashboardType.value] || null;
 });
 
 const dashboardProps = computed(() => {
@@ -119,6 +118,7 @@ watch(
       // Only reset filters when switching between dashboards, not on initial load
       if (oldCurrentDashboardUuid) {
         resetAppliedFilters();
+        widgetsStore.updateCurrentWidgetEditing(null);
       }
       getCurrentDashboardWidgets();
     }

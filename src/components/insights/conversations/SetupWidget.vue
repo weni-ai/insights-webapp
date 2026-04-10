@@ -46,7 +46,7 @@ defineProps<{
 
   display: flex;
   flex-direction: column;
-  gap: $unnnic-spacing-ant;
+  gap: $unnnic-space-3;
   justify-content: center;
   align-items: center;
 
@@ -54,21 +54,17 @@ defineProps<{
   height: 100%;
 
   &__title {
-    color: $unnnic-color-neutral-darkest;
-    font-size: $unnnic-font-size-title-sm;
-    font-weight: $unnnic-font-weight-bold;
-    line-height: $unnnic-font-size-title-sm + $unnnic-line-height-md;
+    color: $unnnic-color-gray-12;
+    font: $unnnic-font-display-2;
   }
 
   &__description {
-    padding: 0 $unnnic-spacing-sm;
+    padding: 0 $unnnic-space-4;
 
     max-width: 600px;
 
-    color: $unnnic-color-neutral-cloudy;
-    font-size: $unnnic-font-size-body-lg;
-    font-weight: $unnnic-font-weight-regular;
-    line-height: $unnnic-font-size-body-lg + $unnnic-line-height-md;
+    color: $unnnic-color-fg-muted;
+    font: $unnnic-font-emphasis;
     text-align: center;
   }
 }

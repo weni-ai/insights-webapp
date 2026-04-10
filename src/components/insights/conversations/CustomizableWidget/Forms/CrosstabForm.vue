@@ -90,6 +90,25 @@
         "
       />
     </section>
+    <section class="crosstab-form__container">
+      <p
+        class="crosstab-form__description"
+        v-html="
+          $t(
+            'conversations_dashboard.customize_your_dashboard.crosstab.drawer.reference_field_label',
+          )
+        "
+      />
+      <UnnnicInput
+        v-model="crosstabForm.reference_field"
+        :label="`${$t('field_name')} (${$t('optional').toLowerCase()})`"
+        :placeholder="
+          $t(
+            'conversations_dashboard.customize_your_dashboard.enter_field_name',
+          )
+        "
+      />
+    </section>
   </section>
 </template>
 
@@ -103,6 +122,7 @@ const { crosstabForm } = storeToRefs(customWidgets);
 
 onUnmounted(() => {
   crosstabForm.value = {
+    reference_field: '',
     widget_uuid: '',
     widget_name: '',
     key_a: '',
@@ -122,6 +142,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-5;
+  margin-bottom: $unnnic-space-4;
 
   &__container {
     display: flex;
@@ -135,9 +156,9 @@ onUnmounted(() => {
   }
 
   &__divider {
-    background: $unnnic-color-neutral-light;
+    background: $unnnic-color-gray-1;
     height: 100%;
-    border: 1px solid $unnnic-color-neutral-light;
+    border: 1px solid $unnnic-color-gray-1;
   }
   :deep(.crosstab-form__disclaimer) {
     .unnnic-disclaimer__icon {

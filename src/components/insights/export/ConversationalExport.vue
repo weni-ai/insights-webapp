@@ -16,7 +16,7 @@
         size="large"
         :text="t('export_data.title')"
         :loading="isLoadingCheckExportStatus"
-        :disabled="!hasExportData"
+        :disabled="!hasExportData || shouldUseMock"
         data-testid="export-data-button"
         @click="setIsRenderExportData(true)"
       />
@@ -67,10 +67,13 @@ import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed, watch } from 'vue';
 import { useElementVisibility } from '@vueuse/core';
 import { useConversationalExport } from '@/store/modules/export/conversational/export';
+import { useConversational } from '@/store/modules/conversational/conversational';
 import { UnnnicToolTip } from '@weni/unnnic-system';
 import FormExport from './Conversational/FormExport.vue';
 
 const { t } = useI18n();
+const conversationalStore = useConversational();
+const { shouldUseMock } = storeToRefs(conversationalStore);
 const conversationalExport = useConversationalExport();
 const { setIsRenderExportData, setIsRenderExportDataFeedback, createExport } =
   conversationalExport;
@@ -137,11 +140,8 @@ watch(
 }
 
 .export-data-feedback__text {
-  font-family: $unnnic-font-family-secondary;
-  color: $unnnic-color-neutral-cloudy;
-  font-size: $unnnic-font-size-body-gt;
-  font-weight: $unnnic-font-weight-regular;
-  line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
+  font: $unnnic-font-body;
+  color: $unnnic-color-fg-muted;
 }
 
 .export-data-tooltip {

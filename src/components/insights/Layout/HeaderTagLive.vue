@@ -35,13 +35,13 @@ const titleText = computed(() => {
 
 <style lang="scss">
 .header-tag-live {
-  padding: 0 $unnnic-spacing-xs;
+  padding: 0 $unnnic-space-2;
 
   display: inline-flex;
   align-items: center;
 
-  color: $unnnic-color-neutral-darkest;
-  font-family: $unnnic-font-family-secondary;
+  color: $unnnic-color-gray-12;
+  font-family: $unnnic-font-family;
 
   &__indicator {
     .primary {
@@ -50,7 +50,7 @@ const titleText = computed(() => {
 
     @keyframes pulse {
       0% {
-        fill: $unnnic-color-neutral-soft;
+        fill: $unnnic-color-gray-2;
       }
 
       50% {
@@ -58,7 +58,7 @@ const titleText = computed(() => {
       }
 
       100% {
-        fill: $unnnic-color-neutral-soft;
+        fill: $unnnic-color-gray-2;
       }
     }
   }
@@ -66,7 +66,7 @@ const titleText = computed(() => {
   &__text {
     margin: 0;
 
-    font-size: $unnnic-font-size-body-gt;
+    font: $unnnic-font-body;
   }
 }
 </style>

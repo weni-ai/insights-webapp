@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="formattedItems"
+    :items="widgetData"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -17,8 +17,29 @@
     :sort="currentSort"
     @update:sort="handleSort"
     @item-click="redirectItem"
+    @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
+    <template #body-agent="{ item }">
+      <p v-if="item.agent">{{ item.agent }}</p>
+      <UnnnicToolTip
+        v-else
+        enabled
+        :text="
+          $t(
+            'human_support_dashboard.analyze.detailed_analysis.not_handled.description',
+          )
+        "
+      >
+        <p class="italic-text">
+          {{
+            $t(
+              'human_support_dashboard.analyze.detailed_analysis.not_handled.title',
+            )
+          }}
+        </p>
+      </UnnnicToolTip>
+    </template>
     <template #body-first_response_time="{ item }">
       <p
         v-if="item.first_response_time === null"
@@ -47,8 +68,11 @@ import { FinishedDataResult } from '@/services/api/resources/humanSupport/analys
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import { useI18n } from 'vue-i18n';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useProject } from '@/store/modules/project';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { analysisDetailedAnalysisFinishedMock } from '../mocks';
+import { openNewTabLink } from '@/utils/redirect';
 
 defineOptions({
   name: 'AnalysisFinishedTable',
@@ -56,6 +80,7 @@ defineOptions({
 
 const { t } = useI18n();
 const humanSupport = useHumanSupport();
+const projectStore = useProject();
 
 const baseTranslationKey = 'human_support_dashboard.columns.common';
 
@@ -66,7 +91,10 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 });
 
 const formatResults = (results: FinishedDataResult[]) => {
-  return results;
+  return results.map((result) => ({
+    ...result,
+    agent: result?.agent || result?.agent_email || '',
+  }));
 };
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {
@@ -90,6 +118,15 @@ const {
   fetchData,
   formatResults,
   sort: currentSort.value,
+});
+
+const widgetData = computed(() => {
+  if (!projectStore.hasSectorsConfigured) {
+    return formatResults(
+      analysisDetailedAnalysisFinishedMock as FinishedDataResult[],
+    );
+  }
+  return formattedItems.value;
 });
 
 const formattedHeaders = computed(() => {
@@ -121,6 +158,11 @@ const handleSort = (sort: {
 
 const loadMore = () => {
   loadMoreData(currentSort.value);
+};
+
+const redirectItemNewTab = (item: FinishedDataResult) => {
+  if (!item?.link?.url) return;
+  openNewTabLink(item.link.url);
 };
 
 const redirectItem = (item: FinishedDataResult) => {

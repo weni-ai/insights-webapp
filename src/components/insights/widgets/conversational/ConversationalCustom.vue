@@ -10,6 +10,7 @@
     :isExpanded="isExpanded"
     :isError="isError"
     :actionError="actionError"
+    :hiddenTabs="shouldUseMock"
     type="custom"
     :uuid="uuid"
     @open-expanded="handleOpenExpanded"
@@ -42,7 +43,10 @@ import SeeAllDrawer from '@/components/insights/conversations/CustomizableWidget
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import type { CustomWidgetResponse } from '@/services/api/resources/conversational/widgets';
-import { colorBlue500, colorBlue100 } from '@weni/unnnic-system/tokens/colors';
+import {
+  colorBgBlueStrong,
+  colorBgBluePlain,
+} from '@weni/unnnic-system/tokens/colors';
 
 interface Props {
   uuid: string;
@@ -64,6 +68,7 @@ const {
 } = customWidgetsStore;
 
 const { customWidgetDataErrorByUuid } = storeToRefs(customWidgetsStore);
+const { shouldUseMock } = storeToRefs(conversational);
 
 const isSeeAllDrawerOpen = ref(false);
 const isRemoveWidgetModalOpen = ref(false);
@@ -106,6 +111,8 @@ const isExpanded = computed(() => {
 });
 
 const actions = computed(() => {
+  if (shouldUseMock.value) return [];
+
   const editOption = {
     icon: 'edit_square',
     text: t(
@@ -127,8 +134,8 @@ const actions = computed(() => {
 
 const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   const defaultColors = {
-    color: colorBlue500,
-    backgroundColor: colorBlue100,
+    color: colorBgBlueStrong,
+    backgroundColor: colorBgBluePlain,
   };
 
   if (data?.results?.length === 0) {
@@ -147,6 +154,7 @@ const handleCustomWidgetData = (data: CustomWidgetResponse) => {
   return {
     progressItems: orderByValue?.slice(0, 5)?.map((result) => ({
       text: result?.label,
+      full_value: result?.full_value,
       value: result?.value,
       color: defaultColors.color,
       backgroundColor: defaultColors.backgroundColor,
@@ -174,13 +182,17 @@ const handleOpenExpanded = () => {
 };
 
 onMounted(() => {
-  loadCustomWidgetData(props.uuid);
+  if (!shouldUseMock.value) {
+    loadCustomWidgetData(props.uuid);
+  }
 });
 
 watch(
   () => route.query,
   () => {
-    loadCustomWidgetData(props.uuid);
+    if (!shouldUseMock.value) {
+      loadCustomWidgetData(props.uuid);
+    }
   },
   { deep: true },
 );
@@ -188,7 +200,7 @@ watch(
 watch(
   () => conversational.refreshDataConversational,
   (newValue) => {
-    if (newValue) {
+    if (newValue && !shouldUseMock.value) {
       conversational.setIsLoadingConversationalData('dynamicWidgets', true);
       loadCustomWidgetData(props.uuid).finally(() => {
         conversational.setIsLoadingConversationalData('dynamicWidgets', false);

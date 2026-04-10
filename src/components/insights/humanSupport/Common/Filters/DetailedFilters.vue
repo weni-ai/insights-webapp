@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-import FilterSelect from './FilterSelect.vue';
+import FilterSelect, { type FilterOption } from './FilterSelect.vue';
 import FilterInput from './FilterInput.vue';
 import FilterMultiSelect from './FilterMultiSelect.vue';
 
@@ -63,6 +63,7 @@ interface FilterState {
   component: any;
   itemValue?: string;
   itemLabel?: string;
+  formatOptionsFn?: (_options: Record<string, unknown>[]) => FilterOption[];
 }
 
 const props = defineProps<Props>();
@@ -110,6 +111,14 @@ const filters = ref<Record<FilterType, FilterState>>({
     type: 'attendant',
     source: 'agents',
     selected: '',
+    formatOptionsFn: (
+      agents: { uuid: string; name: string; email: string }[],
+    ) => {
+      return agents.map((agent) => ({
+        value: agent.uuid,
+        label: agent.name.trim() || agent.email,
+      }));
+    },
     component: FilterSelect,
   },
   contact: {
@@ -190,6 +199,7 @@ const activeFilters = computed(() => {
       filterParams: filterParams.value,
       itemValue: filter.itemValue,
       itemLabel: filter.itemLabel,
+      formatOptionsFn: filter.formatOptionsFn,
     };
 
     const events = {

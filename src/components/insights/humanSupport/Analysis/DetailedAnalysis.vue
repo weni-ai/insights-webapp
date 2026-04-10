@@ -1,9 +1,14 @@
 <template>
   <section
-    id="detailed-monitoring"
+    id="detailed-analysis"
+    ref="detailedAnalysis"
     class="detailed-monitoring"
     data-testid="detailed-analysis"
   >
+    <BlurSetupWidget
+      v-if="showSetup"
+      v-bind="widgetSetupProps"
+    />
     <p
       class="detailed-monitoring__title"
       data-testid="detailed-analysis-title"
@@ -61,7 +66,7 @@
 <script setup lang="ts">
 import { UnnnicTab } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
 import {
   ActiveDetailedTab,
@@ -71,6 +76,22 @@ import { Component } from 'vue';
 import Finished from './Tables/Finished.vue';
 import Attendant from './Tables/Attendant.vue';
 import Pauses from '../Common/Tables/Pauses.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+import { useProject } from '@/store/modules/project';
+import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useMouseInElement } from '@vueuse/core';
+
+const projectStore = useProject();
+const { hasSectorsConfigured } = storeToRefs(projectStore);
+const humanSupport = useHumanSupport();
+const { widgetSetupProps } = storeToRefs(humanSupport);
+
+const detailedAnalysisRef = useTemplateRef<HTMLDivElement>('detailedAnalysis');
+const { isOutside } = useMouseInElement(detailedAnalysisRef);
+
+const showSetup = computed(() => {
+  return !hasSectorsConfigured.value && !isOutside.value;
+});
 
 const tabs: Record<
   ActiveDetailedTab,
@@ -107,14 +128,15 @@ const filterType = computed(() => {
 
 <style scoped lang="scss">
 .detailed-monitoring {
+  position: relative;
   display: flex;
   padding: $unnnic-space-6;
   flex-direction: column;
   gap: $unnnic-space-6;
 
   border-radius: $unnnic-radius-2;
-  border: 1px solid $unnnic-color-neutral-soft;
-  background: $unnnic-color-background-white;
+  border: 1px solid $unnnic-color-gray-2;
+  background: $unnnic-color-gray-0;
 
   &__title {
     font: $unnnic-font-display-2;

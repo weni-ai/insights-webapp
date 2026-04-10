@@ -1,20 +1,26 @@
 <template>
-  <UnnnicDropdown v-if="isDashboardEditable">
-    <template #trigger>
+  <UnnnicPopover
+    v-if="isDashboardEditable"
+    :open="openPopover"
+    @update:open="openPopover = $event"
+  >
+    <UnnnicPopoverTrigger>
       <UnnnicButton
-        type="secondary"
+        type="tertiary"
         size="large"
-        iconCenter="tune"
+        :pressed="openPopover"
+        iconCenter="more_vert"
         data-testid="options-dashboard-button"
       />
-    </template>
-    <UnnnicDropdownItem
-      data-testid="edit-dashboard-button"
-      @click="showEditDashboard = true"
-    >
-      {{ $t('edit_dashboard.title') }}
-    </UnnnicDropdownItem>
-  </UnnnicDropdown>
+    </UnnnicPopoverTrigger>
+    <UnnnicPopoverContent>
+      <UnnnicPopoverOption
+        :label="$t('edit_dashboard.title')"
+        icon="edit_square"
+        @click="handleEditDashboard"
+      />
+    </UnnnicPopoverContent>
+  </UnnnicPopover>
   <DrawerDashboardConfig
     v-if="showEditDashboard"
     v-model="showEditDashboard"
@@ -38,6 +44,7 @@ export default {
   },
   data() {
     return {
+      openPopover: false,
       showEditDashboard: false,
     };
   },
@@ -49,36 +56,11 @@ export default {
       return this.currentDashboard.is_editable && !isHumanSupportDashboard;
     },
   },
+  methods: {
+    handleEditDashboard() {
+      this.showEditDashboard = true;
+      this.openPopover = false;
+    },
+  },
 };
 </script>
-
-<style lang="scss" scoped>
-$dropdownFixedWidth: 165px;
-:deep(.unnnic-dropdown__trigger) {
-  .unnnic-dropdown__content {
-    margin-top: $unnnic-spacing-nano;
-    right: 0;
-    width: $dropdownFixedWidth;
-    padding: $unnnic-spacing-xs;
-    gap: $unnnic-spacing-nano;
-
-    .unnnic-dropdown-item {
-      border-radius: $unnnic-border-radius-sm;
-
-      padding: $unnnic-spacing-xs;
-
-      display: flex;
-      align-items: center;
-      gap: $unnnic-spacing-nano;
-
-      color: $unnnic-color-neutral-darkest;
-      font-family: $unnnic-font-family-secondary;
-      font-size: $unnnic-font-size-body-gt;
-
-      &::before {
-        content: none;
-      }
-    }
-  }
-}
-</style>

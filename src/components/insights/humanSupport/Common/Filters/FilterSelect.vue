@@ -51,7 +51,7 @@ interface TicketIdItem {
   ticket_id: string;
 }
 
-interface FilterOption {
+export interface FilterOption {
   value: string;
   label: string;
 }
@@ -60,6 +60,7 @@ interface Props {
   type: FilterType;
   source: SourceType;
   modelValue: string;
+  formatOptionsFn?: (_options: Record<string, unknown>[]) => FilterOption[];
   filterParams?: {
     sectors?: string[];
     queues?: string[];
@@ -118,7 +119,14 @@ const mapItemToOption = (item: FilterItem | TicketIdItem): FilterOption => {
 };
 
 const options = computed(() => {
-  return Array.isArray(data.value) ? data.value.map(mapItemToOption) : [];
+  const validData = Array.isArray(data.value);
+  if (validData) {
+    if (props.formatOptionsFn) {
+      return props.formatOptionsFn(data.value);
+    }
+    return data.value.map(mapItemToOption);
+  }
+  return [];
 });
 
 const canLoadMore = () => {
@@ -345,6 +353,6 @@ defineExpose({
 
 <style lang="scss">
 .unnnic-popover {
-  background-color: $unnnic-color-background-snow;
+  background-color: $unnnic-color-gray-0;
 }
 </style>

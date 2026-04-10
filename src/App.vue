@@ -3,12 +3,6 @@
     id="app"
     :class="`app-insights-${!sharedStore ? 'dev' : 'prod'}`"
   >
-    <WelcomeOnboardingModal
-      data-testid="welcome-onboarding-modal"
-      :showModal="showOnboardingModal"
-      @close="showOnboardingModal = false"
-      @start-onboarding="handlerStartOnboarding"
-    />
     <CompleteOnboardingModal
       data-testid="complete-onboarding-modal"
       :showModal="showCompleteOnboardingModal"
@@ -23,10 +17,7 @@
       class="loading-container"
       data-testid="loading-container-dashboards"
     >
-      <img
-        src="./assets/images/weni-loading.svg"
-        width="64"
-      />
+      <UnnnicIconLoading size="xl" />
     </section>
     <InsightsLayout
       v-else-if="dashboards.length"
@@ -56,7 +47,6 @@ import { useUser } from './store/modules/user';
 
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
-import WelcomeOnboardingModal from './components/WelcomeOnboardingModal.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
 import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
@@ -77,14 +67,8 @@ export default {
   components: {
     InsightsLayout,
     IconLoading,
-    WelcomeOnboardingModal,
     CompleteOnboardingModal,
     DashboardOnboarding,
-  },
-  data() {
-    return {
-      showOnboardingModal: false,
-    };
   },
   computed: {
     ...mapState(useDashboards, [
@@ -150,10 +134,10 @@ export default {
 
   async mounted() {
     try {
-      this.handlerTokenAndProjectUuid();
+      await this.handlerTokenAndProjectUuid();
+      this.checkHasSectorsConfigured();
       this.getDashboards().then(() => {
         this.handleRedirectToHumanServiceDashboard();
-        this.handlerShowOnboardingModal();
       });
     } catch (error) {
       console.error(error);
@@ -172,7 +156,11 @@ export default {
       'checkEnableCreateCustomDashboards',
     ]),
     ...mapActions(useFeatureFlag, ['getFeatureFlags']),
-    ...mapActions(useProject, ['setIsCommerce']),
+    ...mapActions(useProject, [
+      'setIsCommerce',
+      'checkHasSectorsConfigured',
+      'checkHasTagsConfigured',
+    ]),
     ...mapActions(useUser, ['setEmail']),
     ...mapActions(useOnboarding, [
       'setOnboardingRef',
@@ -263,30 +251,6 @@ export default {
         handler: handlerFunctionMapper[eventName],
         dataKey: handlerParamsMapper[eventName],
       };
-    },
-
-    handlerShowOnboardingModal() {
-      const hasCustomDashboard = this.dashboards.find(
-        (dashboard) => dashboard.is_deletable,
-      );
-
-      if (hasCustomDashboard || !this.enableCreateCustomDashboards) {
-        moduleStorage.setItem('hasDashboardOnboardingComplete', true);
-        this.showOnboardingModal = false;
-        return;
-      }
-
-      const hasOnboardingComplete = moduleStorage.getItem(
-        'hasDashboardOnboardingComplete',
-        false,
-      );
-
-      this.showOnboardingModal = !hasOnboardingComplete;
-    },
-
-    handlerStartOnboarding() {
-      this.showOnboardingModal = false;
-      this.setShowCreateDashboardOnboarding(true);
     },
   },
 };

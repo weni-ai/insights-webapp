@@ -7,21 +7,17 @@
     @tab-change="handleTabChange"
   >
     <section class="bar-list__content">
-      <template v-if="showConfig">
-        <section class="bar-list__setup">
-          <p class="bar-list__setup__title">
-            {{ props.setupTitle || props.title }}
-          </p>
-          <p class="bar-list__setup__description">
-            {{ props.setupDescription }}
-          </p>
-          <UnnnicButton
-            :text="$t('add')"
-            type="primary"
-            @click="emit('click:setup')"
-          />
-        </section>
-      </template>
+      <BlurSetupWidget
+        v-if="showConfig"
+        :title="props.setupTitle || props.title"
+        :description="props.setupDescription"
+        :actionButtonProps="{
+          text: $t('add'),
+          type: 'primary',
+          size: 'small',
+        }"
+        :actionClick="() => emit('click:setup')"
+      />
       <template v-if="emptyData && !props.isLoading">
         <UnnnicDisclaimer>
           <template #description>
@@ -66,8 +62,8 @@ import { computed } from 'vue';
 import CardWidgetContainer from '@/components/insights/widgets/layout/CardWidgetContainer.vue';
 import type { CardWidgetContainerProps } from '../../../widgets/layout/CardWidgetContainer.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
-import { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue';
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
+import type { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue';
+import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
 
 defineOptions({
   name: 'BarList',
@@ -160,7 +156,7 @@ const handleTabChange = (tab: string) => {
 
     &__count {
       font: $unnnic-font-body;
-      color: $unnnic-color-neutral-clean;
+      color: $unnnic-color-fg-muted;
     }
     &__see-more {
       font: $unnnic-font-display-4;

@@ -116,24 +116,24 @@ describe('SeeAllDrawer', () => {
           label: 'Satisfied',
           value: 75.5,
           description: '75.5% (302)',
-          backgroundColor: '#E5EEF9', // colorBlue100
-          color: '#3182CE', // colorBlue500
+          backgroundColor: '#CBE9FF', // colorBgBluePlain
+          color: '#3993F4', // colorBgBlueStrong
           subItems: [],
         },
         {
           label: 'Neutral',
           value: 15.2,
           description: '15.2% (61)',
-          backgroundColor: '#E5EEF9', // colorBlue100
-          color: '#3182CE', // colorBlue500
+          backgroundColor: '#CBE9FF', // colorBgBluePlain
+          color: '#3993F4', // colorBgBlueStrong
           subItems: [],
         },
         {
           label: 'Unsatisfied',
           value: 9.3,
           description: '9.3% (37)',
-          backgroundColor: '#E5EEF9', // colorBlue100
-          color: '#3182CE', // colorBlue500
+          backgroundColor: '#CBE9FF', // colorBgBluePlain
+          color: '#3993F4', // colorBgBlueStrong
           subItems: [],
         },
       ];
@@ -173,6 +173,38 @@ describe('SeeAllDrawer', () => {
 
         expect(wrapper.props('modelValue')).toBe(modelValue);
         expect(wrapper.props('data')).toEqual(data);
+      });
+    });
+  });
+
+  describe('Custom color props', () => {
+    it('should use custom color when color prop is provided', () => {
+      const customColor = '#EF5997';
+      wrapper = createWrapper({ color: customColor });
+
+      const formatted = wrapper.vm.formattedData;
+      formatted.forEach((item) => {
+        expect(item.color).toBe(customColor);
+      });
+    });
+
+    it('should use custom backgroundColor when backgroundColor prop is provided', () => {
+      const customBg = '#FFDFEB';
+      wrapper = createWrapper({ backgroundColor: customBg });
+
+      const formatted = wrapper.vm.formattedData;
+      formatted.forEach((item) => {
+        expect(item.backgroundColor).toBe(customBg);
+      });
+    });
+
+    it('should use default blue colors when no custom colors are provided', () => {
+      wrapper = createWrapper();
+
+      const formatted = wrapper.vm.formattedData;
+      formatted.forEach((item) => {
+        expect(item.color).toBe('#3993F4');
+        expect(item.backgroundColor).toBe('#CBE9FF');
       });
     });
   });

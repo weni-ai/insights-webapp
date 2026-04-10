@@ -42,6 +42,7 @@ interface ExportData {
   enabled_models: string[];
   sections: TypeSections[];
   custom_widgets: WidgetType[];
+  crosstab_widgets: WidgetType[];
   isLoadingCreateExport: boolean;
   isLoadingCheckExportStatus: boolean;
 }
@@ -59,6 +60,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
     enabled_models: [],
     sections: [],
     custom_widgets: [],
+    crosstab_widgets: [],
     isLoadingCreateExport: false,
     isLoadingCheckExportStatus: false,
   }),
@@ -87,9 +89,9 @@ export const useConversationalExport = defineStore('conversationalExport', {
       this.model_fields = modelFields;
     },
     addCustomWidgets(widgets: WidgetType[]) {
-      if (Object.keys(this.model_fields).length > 5) return;
-
       this.custom_widgets = widgets;
+
+      if (Object.keys(this.model_fields).length > 5) return;
 
       const customWidgetsFields = widgets.reduce((acc, widget) => {
         acc[widget.uuid] = {};
@@ -97,6 +99,18 @@ export const useConversationalExport = defineStore('conversationalExport', {
       }, {} as ConversationalModelFields);
 
       this.model_fields = { ...this.model_fields, ...customWidgetsFields };
+    },
+    addCrosstabWidgets(widgets: WidgetType[]) {
+      this.crosstab_widgets = widgets;
+
+      if (Object.keys(this.model_fields).length > 5) return;
+
+      const crosstabWidgetsFields = widgets.reduce((acc, widget) => {
+        acc[widget.uuid] = {};
+        return acc;
+      }, {} as ConversationalModelFields);
+
+      this.model_fields = { ...this.model_fields, ...crosstabWidgetsFields };
     },
     setSelectedFields(selectedFields: SelectedFields) {
       this.selected_fields = selectedFields;
@@ -182,9 +196,22 @@ export const useConversationalExport = defineStore('conversationalExport', {
       Object.keys(this.model_fields).forEach((uuid) => {
         if (
           defaultFields[uuid] ||
-          availableWidgets.custom_widgets.includes(uuid)
+          availableWidgets.custom_widgets.includes(uuid) ||
+          availableWidgets.crosstab_widgets.includes(uuid)
         ) {
           filteredModelFields[uuid] = this.model_fields[uuid];
+        }
+      });
+
+      availableWidgets.custom_widgets.forEach((uuid) => {
+        if (!filteredModelFields[uuid]) {
+          filteredModelFields[uuid] = {};
+        }
+      });
+
+      availableWidgets.crosstab_widgets.forEach((uuid) => {
+        if (!filteredModelFields[uuid]) {
+          filteredModelFields[uuid] = {};
         }
       });
 
@@ -195,6 +222,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
       try {
         const selectedSections: TypeSections[] = [];
         const selectedCustomWidgets: string[] = [];
+        const selectedCrosstabWidgets: string[] = [];
 
         const modelToSectionMap: Record<
           string,
@@ -229,12 +257,19 @@ export const useConversationalExport = defineStore('conversationalExport', {
           }
         }
 
+        for (const widget of this.crosstab_widgets) {
+          if (this.enabled_models.includes(widget.uuid)) {
+            selectedCrosstabWidgets.push(widget.uuid);
+          }
+        }
+
         const exportData: Omit<ExportRequest, 'project_uuid'> = {
           start_date: this.date_range.start,
           end_date: this.date_range.end,
           type: this.type,
           sections: selectedSections,
           custom_widgets: selectedCustomWidgets,
+          crosstab_widgets: selectedCrosstabWidgets,
         };
 
         const response = await exportApi.createExport(exportData);
@@ -291,6 +326,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
         'csat',
         'nps',
         ...state.custom_widgets.map((widget) => widget.uuid),
+        ...state.crosstab_widgets.map((widget) => widget.uuid),
       ].forEach((section) => {
         if (state.enabled_models.includes(section)) {
           const sectionFields = state.selected_fields[section] || [];
@@ -299,6 +335,12 @@ export const useConversationalExport = defineStore('conversationalExport', {
           }
 
           if (state.custom_widgets.some((widget) => widget.uuid === section)) {
+            hasValidSelections = true;
+          }
+
+          if (
+            state.crosstab_widgets.some((widget) => widget.uuid === section)
+          ) {
             hasValidSelections = true;
           }
         }

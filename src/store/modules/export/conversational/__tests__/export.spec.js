@@ -50,7 +50,12 @@ describe('useConversationalExport', () => {
         expect(store[key]).toBe(value);
       });
 
-      ['enabled_models', 'sections', 'custom_widgets'].forEach((key) => {
+      [
+        'enabled_models',
+        'sections',
+        'custom_widgets',
+        'crosstab_widgets',
+      ].forEach((key) => {
         expect(store[key]).toEqual([]);
       });
 
@@ -154,7 +159,7 @@ describe('useConversationalExport', () => {
       expect(store.model_fields['widget-2']).toEqual({});
     });
 
-    it('should not add custom widgets if model_fields exceed 5', () => {
+    it('should always update custom_widgets state even if model_fields exceed 5', () => {
       store.setModelFields({
         field1: {},
         field2: {},
@@ -167,7 +172,40 @@ describe('useConversationalExport', () => {
       const widgets = [{ uuid: 'widget-1', name: 'Widget 1' }];
       store.addCustomWidgets(widgets);
 
-      expect(store.custom_widgets).toEqual([]);
+      expect(store.custom_widgets).toEqual(widgets);
+      expect(store.model_fields['widget-1']).toBeUndefined();
+    });
+  });
+
+  describe('Actions - Crosstab Widgets', () => {
+    it('should add crosstab widgets', () => {
+      const widgets = [
+        { uuid: 'crosstab-1', name: 'Crosstab 1' },
+        { uuid: 'crosstab-2', name: 'Crosstab 2' },
+      ];
+
+      store.addCrosstabWidgets(widgets);
+
+      expect(store.crosstab_widgets).toEqual(widgets);
+      expect(store.model_fields['crosstab-1']).toEqual({});
+      expect(store.model_fields['crosstab-2']).toEqual({});
+    });
+
+    it('should always update crosstab_widgets state even if model_fields exceed 5', () => {
+      store.setModelFields({
+        field1: {},
+        field2: {},
+        field3: {},
+        field4: {},
+        field5: {},
+        field6: {},
+      });
+
+      const widgets = [{ uuid: 'crosstab-1', name: 'Crosstab 1' }];
+      store.addCrosstabWidgets(widgets);
+
+      expect(store.crosstab_widgets).toEqual(widgets);
+      expect(store.model_fields['crosstab-1']).toBeUndefined();
     });
   });
 
@@ -176,6 +214,7 @@ describe('useConversationalExport', () => {
       const mockResponse = {
         sections: ['RESOLUTIONS', 'TOPICS_AI', 'TOPICS_HUMAN'],
         custom_widgets: ['widget-1'],
+        crosstab_widgets: [],
       };
       exportApi.getAvailableWidgets.mockResolvedValue(mockResponse);
       store.setModelFields({ 'widget-1': {} });
@@ -188,6 +227,39 @@ describe('useConversationalExport', () => {
         human: { type: 'subsection' },
       });
       expect(store.model_fields['widget-1']).toEqual({});
+    });
+
+    it('should keep crosstab widget UUIDs from model_fields', async () => {
+      const mockResponse = {
+        sections: ['RESOLUTIONS'],
+        custom_widgets: [],
+        crosstab_widgets: ['crosstab-1', 'crosstab-2'],
+      };
+      exportApi.getAvailableWidgets.mockResolvedValue(mockResponse);
+      store.setModelFields({ 'crosstab-1': {}, 'crosstab-2': {} });
+
+      await store.initializeDefaultFields();
+
+      expect(store.model_fields.resolutions).toEqual({});
+      expect(store.model_fields['crosstab-1']).toEqual({});
+      expect(store.model_fields['crosstab-2']).toEqual({});
+    });
+
+    it('should create model_fields entries for API widget UUIDs not already present', async () => {
+      const mockResponse = {
+        sections: ['RESOLUTIONS'],
+        custom_widgets: ['widget-1'],
+        crosstab_widgets: ['crosstab-1', 'crosstab-2'],
+      };
+      exportApi.getAvailableWidgets.mockResolvedValue(mockResponse);
+      store.setModelFields({});
+
+      await store.initializeDefaultFields();
+
+      expect(store.model_fields.resolutions).toEqual({});
+      expect(store.model_fields['widget-1']).toEqual({});
+      expect(store.model_fields['crosstab-1']).toEqual({});
+      expect(store.model_fields['crosstab-2']).toEqual({});
     });
   });
 
@@ -223,6 +295,36 @@ describe('useConversationalExport', () => {
       expect(exportApi.createExport.mock.calls[0][0].custom_widgets).toContain(
         'widget-1',
       );
+    });
+
+    it('should include crosstab widgets in export', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.crosstab_widgets = [
+        { uuid: 'crosstab-1', name: 'Crosstab 1' },
+        { uuid: 'crosstab-2', name: 'Crosstab 2' },
+      ];
+      store.enabled_models.push('crosstab-1', 'crosstab-2');
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.crosstab_widgets).toContain('crosstab-1');
+      expect(call.crosstab_widgets).toContain('crosstab-2');
+    });
+
+    it('should only include enabled crosstab widgets in export', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.crosstab_widgets = [
+        { uuid: 'crosstab-1', name: 'Crosstab 1' },
+        { uuid: 'crosstab-2', name: 'Crosstab 2' },
+      ];
+      store.enabled_models.push('crosstab-1');
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.crosstab_widgets).toContain('crosstab-1');
+      expect(call.crosstab_widgets).not.toContain('crosstab-2');
     });
 
     const errorTests = [
@@ -298,6 +400,12 @@ describe('useConversationalExport', () => {
 
       store.setSelectedFields({ topics: [] });
       expect(store.hasEnabledToExport).toBeFalsy();
+    });
+
+    it('should return true when crosstab widget is enabled', () => {
+      store.crosstab_widgets = [{ uuid: 'crosstab-1', name: 'Crosstab 1' }];
+      store.enabled_models = ['crosstab-1'];
+      expect(store.hasEnabledToExport).toBe(true);
     });
   });
 });

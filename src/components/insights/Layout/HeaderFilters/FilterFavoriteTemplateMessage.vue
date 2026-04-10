@@ -1,15 +1,12 @@
 <template>
   <section class="filter-favorite-template">
-    <p class="filter-favorite-template__label">
-      {{ `${$t('template_messages_dashboard.favorites')}:` }}
-    </p>
     <UnnnicSelectSmart
       :modelValue="selectedFavorite"
-      type="secondary"
       :options="favoriteOptions"
       autocomplete
       autocompleteClearOnFocus
       data-testid="select-favorite-template"
+      :placeholder="$t('template_messages_dashboard.select_favorite')"
       :locale="i18n.global.locale"
       @update:model-value="selectFavorite"
     />
@@ -73,10 +70,8 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   align-items: center;
 
   &__label {
-    font-family: $unnnic-font-family-secondary;
-    font-size: $unnnic-font-size-body-gt;
-    line-height: $unnnic-font-size-body-gt + $unnnic-line-height-md;
-    color: $unnnic-color-neutral-cloudy;
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-muted;
   }
 }
 </style>

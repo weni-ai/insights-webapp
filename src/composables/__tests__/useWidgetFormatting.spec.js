@@ -7,12 +7,13 @@ import { useDashboards } from '@/store/modules/dashboards';
 
 // Mock the numbers utility
 vi.mock('@/utils/numbers', () => ({
-  formatCurrency: vi.fn(
-    (value, symbol, locale) =>
-      `${symbol} ${(value || 0).toLocaleString(locale || 'en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      })}`,
+  formatCurrency: vi.fn((value, currencyCode, locale) =>
+    new Intl.NumberFormat(locale || 'en-US', {
+      style: 'currency',
+      currency: currencyCode || 'USD',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value || 0),
   ),
   formatPercentageFixed: vi.fn(
     (value, locale) =>
@@ -51,16 +52,6 @@ vi.mock('@/utils/time', () => ({
   ),
 }));
 
-// Mock currency utility
-vi.mock('@/utils/currency', () => ({
-  currencySymbols: {
-    USD: '$',
-    EUR: '€',
-    BRL: 'R$',
-    GBP: '£',
-  },
-}));
-
 describe('useWidgetFormatting', () => {
   let pinia;
   let dashboardsStore;
@@ -92,14 +83,14 @@ describe('useWidgetFormatting', () => {
   });
 
   describe('formatCurrency', () => {
-    it('should format currency with USD symbol correctly', () => {
+    it('should format currency with USD code correctly', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(1234.567);
-      expect(result).toBe('$ 1,234.57');
+      expect(result).toBe('$1,234.57');
     });
 
-    it('should format currency with EUR symbol correctly', () => {
+    it('should format currency with EUR code correctly', () => {
       dashboardsStore.currentDashboard = {
         config: { currency_type: 'EUR' },
       };
@@ -107,51 +98,51 @@ describe('useWidgetFormatting', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(1234.567);
-      expect(result).toBe('€ 1,234.57');
+      expect(result).toBe('€1,234.57');
     });
 
     it('should handle zero values', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(0);
-      expect(result).toBe('$ 0.00');
+      expect(result).toBe('$0.00');
     });
 
     it('should handle null/undefined values', () => {
       const { formatCurrency } = useWidgetFormatting();
 
-      expect(formatCurrency(null)).toBe('$ 0.00');
-      expect(formatCurrency(undefined)).toBe('$ 0.00');
+      expect(formatCurrency(null)).toBe('$0.00');
+      expect(formatCurrency(undefined)).toBe('$0.00');
     });
 
     it('should use custom locale when provided', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(1234.567, 'pt-BR');
-      expect(result).toBe('$ 1.234,57');
+      expect(result).toMatch(/US\$\s*1\.234,57/);
     });
 
-    it('should handle missing currency config gracefully', () => {
+    it('should fallback to USD when currency config is missing', () => {
       dashboardsStore.currentDashboard = { config: {} };
 
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(1234.567);
-      expect(result).toBe('undefined 1,234.57');
+      expect(result).toBe('$1,234.57');
     });
 
     it('should handle large numbers', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(1234567.89);
-      expect(result).toBe('$ 1,234,567.89');
+      expect(result).toBe('$1,234,567.89');
     });
 
     it('should handle small decimal numbers', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(0.01);
-      expect(result).toBe('$ 0.01');
+      expect(result).toBe('$0.01');
     });
   });
 
@@ -287,7 +278,7 @@ describe('useWidgetFormatting', () => {
       };
 
       const result = getWidgetFormattedData(widget);
-      expect(result).toBe('$ 1,234.56');
+      expect(result).toBe('$1,234.56');
     });
 
     it('should format regular number data correctly', () => {
@@ -459,8 +450,8 @@ describe('useWidgetFormatting', () => {
 
       const result = formatVtexData(vtexData);
 
-      expect(result.total_value).toBe('$ 1,000.50');
-      expect(result.average_ticket).toBe('$ 250.75');
+      expect(result.total_value).toBe('$1,000.50');
+      expect(result.average_ticket).toBe('$250.75');
       expect(result.orders).toBe('4');
     });
 
@@ -491,8 +482,8 @@ describe('useWidgetFormatting', () => {
 
       const result = formatVtexData(vtexData);
 
-      expect(result.total_value).toBe('$ 0.00');
-      expect(result.average_ticket).toBe('$ 0.00');
+      expect(result.total_value).toBe('$0.00');
+      expect(result.average_ticket).toBe('$0.00');
       expect(result.orders).toBe('0');
     });
 
@@ -527,8 +518,8 @@ describe('useWidgetFormatting', () => {
 
       const result = formatVtexData(vtexData);
 
-      expect(result.total_value).toBe('€ 1,000.00');
-      expect(result.average_ticket).toBe('€ 250.00');
+      expect(result.total_value).toBe('€1,000.00');
+      expect(result.average_ticket).toBe('€250.00');
       expect(result.orders).toBe('4');
     });
   });
@@ -540,7 +531,7 @@ describe('useWidgetFormatting', () => {
       const { formatCurrency, formatPercentage, formatNumber } =
         useWidgetFormatting();
 
-      expect(formatCurrency(1234.56)).toBe('$ 1.234,56');
+      expect(formatCurrency(1234.56)).toMatch(/US\$\s*1\.234,56/);
       expect(formatPercentage(75.5)).toBe('75,50%');
       expect(formatNumber(1234567)).toBe('1.234.567');
     });
@@ -551,7 +542,7 @@ describe('useWidgetFormatting', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(1234.56);
-      expect(result).toBe('$ 1,234.56');
+      expect(result).toBe('$1,234.56');
     });
   });
 
@@ -559,26 +550,24 @@ describe('useWidgetFormatting', () => {
     it('should react to dashboard changes', () => {
       const { formatCurrency } = useWidgetFormatting();
 
-      // Initial currency
       let result = formatCurrency(100);
-      expect(result).toBe('$ 100.00');
+      expect(result).toBe('$100.00');
 
-      // Change currency in dashboard
       dashboardsStore.currentDashboard = {
         config: { currency_type: 'EUR' },
       };
 
       result = formatCurrency(100);
-      expect(result).toBe('€ 100.00');
+      expect(result).toBe('€100.00');
     });
 
-    it('should handle missing dashboard config', () => {
+    it('should fallback to USD when dashboard config is missing', () => {
       dashboardsStore.currentDashboard = {};
 
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(100);
-      expect(result).toBe('undefined 100.00');
+      expect(result).toBe('$100.00');
     });
 
     it('should handle null dashboard', () => {
@@ -625,14 +614,14 @@ describe('useWidgetFormatting', () => {
       const { formatCurrency } = useWidgetFormatting();
 
       const result = formatCurrency(999999999999.99);
-      expect(result).toBe('$ 999,999,999,999.99');
+      expect(result).toBe('$999,999,999,999.99');
     });
 
     it('should handle negative numbers', () => {
       const { formatCurrency, formatPercentage, formatNumber } =
         useWidgetFormatting();
 
-      expect(formatCurrency(-100.5)).toBe('$ -100.50');
+      expect(formatCurrency(-100.5)).toBe('-$100.50');
       expect(formatPercentage(-25.5)).toBe('-25.50%');
       expect(formatNumber(-1000)).toBe('-1,000');
     });

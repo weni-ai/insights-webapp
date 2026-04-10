@@ -18,9 +18,11 @@
         data-testid="columns-select"
         :options="headerOptions"
         enableSearch
+        :search="columnsSearchText"
         :placeholder="$t('insights_header.placeholder_dynamic_columns')"
         itemLabel="label"
         itemValue="value"
+        @update:search="columnsSearchText = $event"
         @update:model-value="handleVisibleColumnsUpdate"
       />
     </section>
@@ -85,6 +87,7 @@ const agentsColumnsFilterStore = useAgentsColumnsFilter();
 const widgetsStore = useWidgets();
 
 const selectedColumns = ref([]);
+const columnsSearchText = ref('');
 const dependsOnQueue = ref({
   search_param: 'sector_id',
   filter: 'sector',

@@ -1,16 +1,16 @@
 <template>
-  <UnnnicSelectSmart
-    v-model="currentDate"
+  <UnnnicSelect
+    :modelValue="currentDateId"
     :options="dates"
-    size="md"
     class="filter-date"
-    :orderedByIndex="true"
+    itemLabel="label"
+    itemValue="id"
     @update:model-value="updateCurrentDate"
   />
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed, ref } from 'vue';
+import { defineProps, defineEmits, computed, ref, watch } from 'vue';
 
 import {
   getYesterdayDate,
@@ -40,17 +40,31 @@ const getDateRanges = () => ({
 
 const dateRanges = getDateRanges();
 
-const currentDate = ref([props.modelValue]);
+const createDateOption = (id, label, range) => ({
+  id,
+  label,
+  value: {
+    start: range.start,
+    end: range.end,
+  },
+});
 
 const dates = computed(() => [
   createDateOption(
+    'yesterday',
     i18n.global.t('select_date.yesterday', {
       date: dateRanges.yesterday.dmFormat,
     }),
     dateRanges.yesterday,
   ),
-  ...[7, 14, 30, 90].map((days) =>
+  ...[
+    { days: 7, id: 'last7' },
+    { days: 14, id: 'last14' },
+    { days: 30, id: 'last30' },
+    { days: 90, id: 'last90' },
+  ].map(({ days, id }) =>
     createDateOption(
+      id,
       i18n.global.t('select_date.last_days', {
         value: days,
         date: dateRanges[`last${days}Days`].dmFormat,
@@ -59,6 +73,7 @@ const dates = computed(() => [
     ),
   ),
   createDateOption(
+    'lastMonth',
     i18n.global.t('select_date.previous_month', {
       date: dateRanges.lastMonth.dmFormat,
     }),
@@ -66,38 +81,41 @@ const dates = computed(() => [
   ),
 ]);
 
-const createDateOption = (label, range) => ({
-  label,
-  value: {
-    start: range.start,
-    end: range.end,
-  },
-});
+const findDateIdByValue = (modelValue) => {
+  const start = modelValue?.value?.start || modelValue?.start;
+  const end = modelValue?.value?.end || modelValue?.end;
+  if (!start) return '';
+  return (
+    dates.value.find((d) => d.value.start === start && d.value.end === end)
+      ?.id || ''
+  );
+};
 
-const updateCurrentDate = (option) => {
-  currentDate.value = option;
-  emit('update:modelValue', option[0].value);
+const currentDateId = ref(findDateIdByValue(props.modelValue));
+
+watch(
+  () => props.modelValue,
+  (newVal) => {
+    const id = findDateIdByValue(newVal);
+    if (id && id !== currentDateId.value) {
+      currentDateId.value = id;
+    }
+  },
+);
+
+const updateCurrentDate = (id) => {
+  currentDateId.value = id;
+  const option = dates.value.find((d) => d.id === id);
+  if (option) {
+    emit('update:modelValue', option.value);
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .filter-date {
-  :deep(.input) {
-    color: $unnnic-color-gray-12;
-    font: $unnnic-font-body;
-  }
-
-  :deep(.dropdown) {
-    z-index: 3;
-  }
-
-  :deep(.unnnic-select-smart-option--selectable) {
-    &:hover {
-      color: $unnnic-color-teal-8;
-      font-weight: $unnnic-font-weight-bold;
-    }
-
-    color: $unnnic-color-gray-12;
+  :deep(.unnnic-select__input .unnnic-input__field) {
+    color: $unnnic-color-fg-emphasized;
     font: $unnnic-font-body;
   }
 }

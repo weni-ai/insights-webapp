@@ -86,7 +86,10 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
       plugins: [store],
       stubs: {
         UnnnicCheckbox: Unnnic.unnnicCheckbox,
-        UnnnicSelectSmart: Unnnic.unnnicSelectSmart,
+        UnnnicSelect: {
+          template: '<div></div>',
+          props: ['modelValue', 'options', 'disabled', 'itemLabel', 'itemValue'],
+        },
         UnnnicButton: Unnnic.unnnicButton,
         UnnnicLabel: Unnnic.unnnicLabel,
         SelectFlow: true,
@@ -289,9 +292,9 @@ describe('SentimentAnalysisForm', () => {
       formsStore.setSentimentForm({ aiSupport: true });
       await nextTick();
 
-      expect(sentimentAnalysisFormSelectAgent().props('modelValue')).toEqual([
-        { value: 'csat-agent-uuid', label: 'CSAT Agent' },
-      ]);
+      expect(sentimentAnalysisFormSelectAgent().props('modelValue')).toBe(
+        'csat-agent-uuid',
+      );
     });
   });
 });

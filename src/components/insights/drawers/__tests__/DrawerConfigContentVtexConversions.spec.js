@@ -77,14 +77,17 @@ describe('VtexConversionsForm.vue', () => {
     const wrapper = createWrapper();
     await nextTick();
 
-    expect(wrapper.vm.selectedWaba[0]?.value).toBe('waba-id');
+    expect(wrapper.vm.selectedWaba).toBe('waba-id');
   });
 
   it('should fetch templates when WABA is selected', async () => {
     const templatesSpy = vi.spyOn(MetaTemplateMessageService, 'listTemplates');
 
-    wrapper.vm.selectedWaba = [{ label: 'WABA Test', value: 'waba-id' }];
+    wrapper.vm.selectedWaba = '';
+    await nextTick();
+    templatesSpy.mockClear();
 
+    wrapper.vm.selectedWaba = 'waba-id';
     await flushPromises();
 
     expect(templatesSpy).toHaveBeenCalledWith({
@@ -133,7 +136,7 @@ describe('VtexConversionsForm.vue', () => {
     await flushPromises();
 
     expect(wrapper.vm.widgetData.name).toBe('Editing');
-    expect(wrapper.vm.selectedTemplate[0].label).toBe('Promo');
+    expect(wrapper.vm.selectedTemplate).toBe('template-id');
   });
 
   it('should reset widgetData on click reset buttons', async () => {
@@ -159,12 +162,8 @@ describe('VtexConversionsForm.vue', () => {
     expect(resetMetaFieldsSpy).toHaveBeenCalled();
     expect(wrapper.vm.widgetData.config.filter.template_id).toBe('');
     expect(wrapper.vm.widgetData.config.filter.waba_id).toBe('');
-    expect(wrapper.vm.selectedWaba).toStrictEqual([
-      { value: '', label: expect.any(String) },
-    ]);
-    expect(wrapper.vm.selectedTemplate).toStrictEqual([
-      { value: '', label: expect.any(String) },
-    ]);
+    expect(wrapper.vm.selectedWaba).toBe('');
+    expect(wrapper.vm.selectedTemplate).toBe('');
 
     await resetVtexData.trigger('click');
 

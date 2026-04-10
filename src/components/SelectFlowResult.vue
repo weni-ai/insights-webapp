@@ -1,19 +1,18 @@
 <template>
   <section>
     <UnnnicLabel :label="$t('drawers.config_card.flow_result.label')" />
-    <UnnnicSelectSmart
+    <UnnnicSelect
       v-bind="$attrs"
-      v-model="flowResult"
+      :modelValue="flowResult"
       :disabled="!flowResults.length"
-      :options="
-        flowResultsOptions.length
-          ? flowResultsOptions
-          : [flowResultsOptionsPlaceholder]
-      "
-      autocomplete
-      autocompleteIconLeft
-      autocompleteClearOnFocus
-      selectFirst
+      :options="flowResultsOptions"
+      enableSearch
+      :search="searchText"
+      :placeholder="$t('drawers.config_card.flow_result.placeholder')"
+      itemLabel="label"
+      itemValue="value"
+      @update:model-value="handleSelect"
+      @update:search="searchText = $event"
     />
   </section>
 </template>
@@ -40,12 +39,9 @@ export default {
 
   data() {
     return {
-      flowResultsOptionsPlaceholder: {
-        label: this.$t('drawers.config_card.flow_result.placeholder'),
-        value: '',
-      },
       flowResultsOptions: [],
-      flowResult: [],
+      flowResult: '',
+      searchText: '',
     };
   },
 
@@ -60,9 +56,6 @@ export default {
         []
       );
     },
-    selectEmpty() {
-      return [this.flowResultsOptionsPlaceholder];
-    },
   },
 
   watch: {
@@ -71,7 +64,7 @@ export default {
     flow: 'updateFlowResultsOptions',
 
     flowResult(newResult) {
-      this.$emit('update:model-value', newResult?.[0]?.value);
+      this.$emit('update:model-value', newResult || '');
     },
   },
 
@@ -81,32 +74,40 @@ export default {
   },
 
   methods: {
+    handleSelect(value) {
+      this.flowResult = value;
+    },
+
     treatModelValue() {
       const { modelValue } = this;
 
       if (!modelValue) {
-        this.flowResult = this.selectEmpty;
+        this.flowResult = '';
         return;
       }
 
-      const modelValueByTypeMap = {
-        string: [
-          this.flowResults.find((result) => result.value === modelValue) ||
-            this.flowResultsOptionsPlaceholder,
-        ],
-        object: Array.isArray(modelValue) ? modelValue : [modelValue],
-      };
+      if (typeof modelValue === 'string') {
+        this.flowResult = modelValue;
+        return;
+      }
 
-      this.flowResult =
-        modelValueByTypeMap[typeof modelValue] || this.selectEmpty;
+      if (Array.isArray(modelValue) && modelValue.length) {
+        this.flowResult = modelValue[0]?.value || '';
+        return;
+      }
+
+      if (typeof modelValue === 'object') {
+        this.flowResult = modelValue.value || '';
+        return;
+      }
+
+      this.flowResult = '';
     },
 
     updateFlowResultsOptions() {
-      this.flowResultsOptions = [
-        this.flowResultsOptionsPlaceholder,
-        ...this.flowResults,
-      ];
-      this.flowResult = this.selectEmpty;
+      this.flowResultsOptions = [...this.flowResults];
+      this.flowResult = '';
+      this.searchText = '';
     },
   },
 };

@@ -53,12 +53,6 @@ const mockComponents = {
     name: 'IconLoading',
     template: '<div class="icon-loading">Loading...</div>',
   },
-  WelcomeOnboardingModal: {
-    name: 'WelcomeOnboardingModal',
-    template: '<div class="welcome-onboarding-modal"></div>',
-    props: ['showModal'],
-    emits: ['close', 'start-onboarding'],
-  },
   CompleteOnboardingModal: {
     name: 'CompleteOnboardingModal',
     template: '<div class="complete-onboarding-modal"></div>',
@@ -160,7 +154,6 @@ describe('App', () => {
       const items = {
         insights_token: 'mock-token',
         insights_projectUuid: 'stored-project-uuid',
-        insights_hasDashboardOnboardingComplete: 'false',
       };
       return items[key] || null;
     });
@@ -373,62 +366,6 @@ describe('App', () => {
         expect(result.dataKey).toBeUndefined();
       });
     });
-
-    describe('handlerShowOnboardingModal', () => {
-      it('should not show modal when custom dashboard exists', () => {
-        dashboardsStore.dashboards = [
-          { id: 1, is_deletable: true },
-          { id: 2, is_deletable: false },
-        ];
-
-        wrapper.vm.handlerShowOnboardingModal();
-
-        expect(wrapper.vm.showOnboardingModal).toBe(false);
-        expect(localStorageMock.setItem).toHaveBeenCalledWith(
-          'insights_hasDashboardOnboardingComplete',
-          'true',
-        );
-      });
-
-      it('should show modal when no custom dashboard, enableCreateCustomDashboards is true and onboarding not complete', () => {
-        dashboardsStore.dashboards = [{ id: 1, is_deletable: false }];
-        localStorageMock.getItem.mockImplementation((key) => {
-          if (key === 'insights_hasDashboardOnboardingComplete') return null;
-          return null;
-        });
-        configStore.enableCreateCustomDashboards = true;
-
-        wrapper.vm.handlerShowOnboardingModal();
-
-        expect(wrapper.vm.showOnboardingModal).toBe(true);
-      });
-
-      it('should not show modal when onboarding is complete', () => {
-        dashboardsStore.dashboards = [{ id: 1, is_deletable: false }];
-        localStorageMock.getItem.mockImplementation((key) => {
-          if (key === 'insights_hasDashboardOnboardingComplete') return 'true';
-          return null;
-        });
-
-        wrapper.vm.handlerShowOnboardingModal();
-
-        expect(wrapper.vm.showOnboardingModal).toBe(false);
-      });
-    });
-
-    describe('handlerStartOnboarding', () => {
-      it('should close onboarding modal and start dashboard onboarding', () => {
-        const setShowCreateDashboardOnboardingSpy = vi.spyOn(
-          onboardingStore,
-          'setShowCreateDashboardOnboarding',
-        );
-
-        wrapper.vm.handlerStartOnboarding();
-
-        expect(wrapper.vm.showOnboardingModal).toBe(false);
-        expect(setShowCreateDashboardOnboardingSpy).toHaveBeenCalledWith(true);
-      });
-    });
   });
 
   describe('Conditional Rendering', () => {
@@ -491,34 +428,6 @@ describe('App', () => {
       );
       expect(modal.exists()).toBe(true);
       expect(modal.props('showModal')).toBe(true);
-    });
-
-    it('should handle WelcomeOnboardingModal close event', async () => {
-      wrapper.vm.showOnboardingModal = true;
-      await wrapper.vm.$nextTick();
-
-      const modal = wrapper.findComponent(
-        '[data-testid="welcome-onboarding-modal"]',
-      );
-      await modal.vm.$emit('close');
-
-      expect(wrapper.vm.showOnboardingModal).toBe(false);
-    });
-
-    it('should handle WelcomeOnboardingModal start-onboarding event', async () => {
-      const handlerStartOnboardingSpy = vi.spyOn(
-        wrapper.vm,
-        'handlerStartOnboarding',
-      );
-      wrapper.vm.showOnboardingModal = true;
-      await wrapper.vm.$nextTick();
-
-      const modal = wrapper.findComponent(
-        '[data-testid="welcome-onboarding-modal"]',
-      );
-      await modal.vm.$emit('start-onboarding');
-
-      expect(handlerStartOnboardingSpy).toHaveBeenCalled();
     });
 
     it('should handle CompleteOnboardingModal finish-onboarding event', async () => {

@@ -9,9 +9,11 @@
       v-model="flow"
       :options="flowsOptions"
       enableSearch
+      :search="searchText"
       :placeholder="$t('drawers.config_funnel.select_flow')"
       itemLabel="label"
       itemValue="value"
+      @update:search="searchText = $event"
     />
   </section>
 </template>
@@ -35,6 +37,7 @@ export default {
     return {
       flowsOptions: [],
       flow: '',
+      searchText: '',
     };
   },
 

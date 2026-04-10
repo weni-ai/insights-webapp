@@ -67,7 +67,7 @@ const factory = ({
       stubs: {
         UnnnicLabel: true,
         UnnnicInput: true,
-        UnnnicSelectSmart: true,
+        UnnnicSelect: true,
       },
       mocks: {
         $t: (key) => key,
@@ -160,12 +160,16 @@ describe('CustomizedForm.vue', () => {
 
   describe('Interactions', () => {
     it('updates agent on select change', async () => {
+      wrapper = factory({
+        agents: [
+          { uuid: 'agent-1', name: 'Agent 1' },
+          { uuid: 'agent-2', name: 'Agent 2' },
+        ],
+      });
       const formsStore = useCustomizedWidgetForm();
       const customWidgets = useCustomWidgets();
 
-      await findAgentSelect().vm.$emit('update:modelValue', [
-        { value: 'agent-2', label: 'Agent 2' },
-      ]);
+      await findAgentSelect().vm.$emit('update:model-value', 'agent-2');
 
       expect(formsStore.customizedForm.agentUuid).toBe('agent-2');
       expect(formsStore.customizedForm.agentName).toBe('Agent 2');
@@ -199,7 +203,7 @@ describe('CustomizedForm.vue', () => {
         projectOverrides,
       });
 
-      expect(findAgentSelect().attributes('isloading')).toBe('true');
+      expect(findAgentSelect().attributes('disabled')).toBe('true');
     });
   });
 });

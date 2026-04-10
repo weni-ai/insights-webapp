@@ -159,7 +159,7 @@ export default {
       const modelValuesMap = {
         select_date_range: dateModel,
         date_range: dateModel,
-        select: value?.[0]?.value,
+        select: value,
         select_multi: value,
       };
 

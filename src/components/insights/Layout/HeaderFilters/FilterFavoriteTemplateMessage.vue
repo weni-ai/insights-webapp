@@ -1,25 +1,25 @@
 <template>
   <section class="filter-favorite-template">
-    <UnnnicSelectSmart
-      :modelValue="selectedFavorite"
+    <UnnnicSelect
+      :modelValue="selectedFavoriteValue"
       :options="favoriteOptions"
-      autocomplete
-      autocompleteClearOnFocus
+      enableSearch
+      :search="searchText"
       data-testid="select-favorite-template"
       :placeholder="$t('template_messages_dashboard.select_favorite')"
-      :locale="i18n.global.locale"
+      itemLabel="label"
+      itemValue="value"
       @update:model-value="selectFavorite"
+      @update:search="searchText = $event"
     />
   </section>
 </template>
 
 <script setup>
-import { computed, onMounted, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 import { useDashboards } from '@/store/modules/dashboards';
-
-import i18n from '@/utils/plugins/i18n';
 
 const metaTemplateMessageStore = useMetaTemplateMessage();
 const dashboardsStore = useDashboards();
@@ -32,8 +32,10 @@ const selectedTemplateUuid = computed(
   () => metaTemplateMessageStore.selectedTemplateUuid,
 );
 
+const searchText = ref('');
+
 const favoriteOptions = computed(() => {
-  const options = [{ label: i18n.global.t('select'), value: '' }];
+  const options = [];
 
   favorites.value.forEach((favorite) =>
     options.push({ label: favorite.name, value: favorite.id }),
@@ -42,12 +44,17 @@ const favoriteOptions = computed(() => {
   return options;
 });
 
-const selectedFavorite = computed(
-  () => metaTemplateMessageStore.selectedFavoriteTemplate,
-);
+const selectedFavoriteValue = computed(() => {
+  const stored = metaTemplateMessageStore.selectedFavoriteTemplate;
+  if (Array.isArray(stored)) return stored[0]?.value || '';
+  return stored?.value || '';
+});
 
-const selectFavorite = (favorite) => {
-  metaTemplateMessageStore.setSelectedFavorite(favorite);
+const selectFavorite = (value) => {
+  const option = favoriteOptions.value.find((opt) => opt.value === value);
+  metaTemplateMessageStore.setSelectedFavorite(
+    option || { value: '', label: '' },
+  );
 };
 
 onMounted(async () => {
@@ -60,7 +67,7 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
   const favoritesIds = favorites.value.map((favorite) => favorite.id);
   const newSelectedIsFavorite = favoritesIds.includes(newUuid);
   if (!oldUuid || newSelectedIsFavorite) return;
-  selectFavorite(favoriteOptions.value[0]);
+  selectFavorite('');
 });
 </script>
 

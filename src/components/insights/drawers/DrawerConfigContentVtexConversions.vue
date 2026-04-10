@@ -36,9 +36,11 @@
                 )
               "
             />
-            <UnnnicSelectSmart
+            <UnnnicSelect
               v-model="selectedWaba"
               :options="wabasOptions"
+              itemLabel="label"
+              itemValue="value"
             />
           </fieldset>
           <fieldset>
@@ -49,15 +51,15 @@
                 )
               "
             />
-            <UnnnicSelectSmart
+            <UnnnicSelect
               v-model="selectedTemplate"
               :options="templatesOptions"
-              :disabled="!selectedWaba[0]?.value"
-              :isLoading="isLoadingtemplates"
-              autocomplete
-              autocompleteClearOnFocus
-              autocompleteIconLeft
-              @update:search-value="setSearchTextTemplateValue"
+              :disabled="!selectedWaba"
+              enableSearch
+              :search="templateSearchText"
+              itemLabel="label"
+              itemValue="value"
+              @update:search="handleTemplateSearch"
             />
           </fieldset>
           <UnnnicButton
@@ -173,8 +175,9 @@ watch(
 );
 
 const resetMetaFields = () => {
-  selectedWaba.value = [wabasOptions.value[0]];
-  selectedTemplate.value = [templatesOptions.value[0]];
+  selectedWaba.value = '';
+  selectedTemplate.value = '';
+  templateSearchText.value = '';
   widgetData.value.config.filter.template_id = '';
   widgetData.value.config.filter.waba_id = '';
 };
@@ -197,7 +200,7 @@ const wabasOptions = computed(() => {
   return options;
 });
 
-const selectedWaba = ref([]);
+const selectedWaba = ref('');
 
 const getMetaWabas = async () => {
   const params = { project_uuid: project_uuid.value };
@@ -206,21 +209,15 @@ const getMetaWabas = async () => {
   wabas.value = results;
 
   if (results.length === 1) {
-    selectedWaba.value = [
-      { label: results[0].phone_number, value: results[0].id },
-    ];
+    selectedWaba.value = results[0].id;
   }
 };
 const isLoadingtemplates = ref(false);
 const searchTextTemplate = ref('');
-const setSearchTextTemplateValue = (value) => {
-  searchTextTemplate.value =
-    value ===
-    i18n.global.t(
-      'drawers.config_gallery.options.vtex_conversions.form.input.template.label',
-    )
-      ? ''
-      : value;
+const templateSearchText = ref('');
+const handleTemplateSearch = (value) => {
+  templateSearchText.value = value;
+  searchTextTemplate.value = value?.trim() || '';
 };
 const templates = ref([]);
 const templatesOptions = computed(() => {
@@ -240,14 +237,16 @@ const templatesOptions = computed(() => {
   return options;
 });
 
-const selectedTemplate = ref([]);
+const selectedTemplate = ref('');
 
 watch(selectedTemplate, () => {
-  const selectedTemplateId = selectedTemplate.value[0]?.value;
-  const selectedTemplateName = selectedTemplate.value[0]?.label;
+  const selectedTemplateId = selectedTemplate.value;
   if (!selectedTemplateId) return;
+  const option = templatesOptions.value.find(
+    (t) => t.value === selectedTemplateId,
+  );
   widgetData.value.config.filter.template_id = selectedTemplateId;
-  widgetData.value.config.template_name = selectedTemplateName;
+  widgetData.value.config.template_name = option?.label || '';
 });
 
 const searchTemplate = async () => {
@@ -255,7 +254,7 @@ const searchTemplate = async () => {
     isLoadingtemplates.value = true;
     const params = {
       limit: 20,
-      waba_id: selectedWaba.value[0]?.value,
+      waba_id: selectedWaba.value,
       project_uuid: project_uuid.value,
       fields: 'name,id',
       search: searchTextTemplate.value,
@@ -275,7 +274,7 @@ const searchTemplate = async () => {
 };
 
 const validWabaConfig = computed(() => {
-  return !!selectedTemplate.value[0]?.value && !!selectedWaba.value[0]?.value;
+  return !!selectedTemplate.value && !!selectedWaba.value;
 });
 
 const searchTimeout = ref(0);
@@ -288,14 +287,12 @@ watch(searchTextTemplate, () => {
 
 watch(selectedWaba, (newWaba, oldWaba) => {
   templates.value = [];
-  const selectedWabaId = selectedWaba.value[0]?.value;
-  if (selectedWabaId) {
-    widgetData.value.config.filter.waba_id = selectedWaba.value[0]?.value;
-    const oldWabaValue = oldWaba[0]?.value;
-    const newWabaValue = newWaba[0]?.value;
+  if (newWaba) {
+    widgetData.value.config.filter.waba_id = newWaba;
 
-    if (oldWabaValue && newWabaValue !== oldWabaValue) {
-      selectedTemplate.value = [templatesOptions.value[0]];
+    if (oldWaba && newWaba !== oldWaba) {
+      selectedTemplate.value = '';
+      templateSearchText.value = '';
     }
 
     nextTick(() => {
@@ -310,22 +307,14 @@ const handlerIsEditingWidgetData = () => {
     ...props.modelValue.config,
   };
 
-  const waba = wabasOptions.value.find(
-    (waba) => waba.value === props.modelValue.config.filter.waba_id,
-  );
-
-  selectedWaba.value = [waba];
+  selectedWaba.value = props.modelValue.config.filter.waba_id || '';
 
   templates.value.push({
     name: props.modelValue.config.template_name,
     id: props.modelValue.config.filter.template_id,
   });
 
-  const template = templatesOptions.value.find(
-    (template) => template.value === props.modelValue.config.filter.template_id,
-  );
-
-  selectedTemplate.value = [template];
+  selectedTemplate.value = props.modelValue.config.filter.template_id || '';
 };
 
 onMounted(async () => {

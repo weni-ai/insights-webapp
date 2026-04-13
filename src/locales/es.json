@@ -859,6 +859,8 @@
       "sector_tags": "Tags",
       "contacts": "Contactos",
       "resolutions": "Resoluciones de conversaciones",
+      "tool_result": "Herramientas más usadas",
+      "agent_invocation": "Agentes más usados",
       "topics": "Asuntos",
       "csat": "CSAT",
       "nps": "NPS",

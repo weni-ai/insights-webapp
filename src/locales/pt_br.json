@@ -962,7 +962,7 @@
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
   "human_support_dashboard": {
-    "title": "Atendimento humano",
+    "title": "Live desk",
     "monitoring": "Monitoramento",
     "monitoring_tooltip": "Acompanhe em tempo real os atendimentos do dia. Identifique gargalos e tome decisões rápidas para otimizar a operação.",
     "analysis": "Análise",
@@ -1152,7 +1152,7 @@
     }
   },
   "news": {
-    "title": "Notícias e atualizações no Analytics - Atendimento humano",
+    "title": "Notícias e atualizações no Analytics - Live Desk",
     "human_support_dashboard": {
       "monitoring": {
         "first_text": "Monitorize as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>!",

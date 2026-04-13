@@ -1,6 +1,6 @@
 {
   "human_service_dashboard": {
-    "title": "Atendimento humano",
+    "title": "Live desk",
     "peaks_in_human_service": "Chats abertos por hora",
     "closed": "Encerrados",
     "in_progress": "Em andamento",
@@ -22,7 +22,7 @@
     "title": "Conversacional",
     "conversations": "conversas",
     "artificial_intelligence": "IA",
-    "human_support": "Atendimento humano",
+    "human_support": "Live desk",
     "others": "Outros",
     "unclassified": "Sem classificação",
     "info": {
@@ -63,7 +63,7 @@
       "resolved": "Atendido por IA",
       "unresolved": "Não atendido por IA",
       "unengaged": "Não engajadas",
-      "transferred": "Transferidas para atendimento humano",
+      "transferred": "Transferidas para live desk",
       "tooltips": {
         "total": "Total de conversas encerradas no período. Uma conversa é contabilizada desde a primeira mensagem do contato até as 23h59m59s do mesmo dia. Mensagens enviadas após este horário iniciam uma nova janela de conversa no dia seguinte.",
         "resolved": "Quando o agente demonstra competência e fornece serviço útil",
@@ -180,7 +180,7 @@
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
-      "human_support": "Atendimento humano",
+      "human_support": "Live desk",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
       "select_agent": "Selecione um agente",

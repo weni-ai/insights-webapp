@@ -23,7 +23,7 @@
     "conversations": "conversaciones",
     "artificial_intelligence": "IA",
     "human_support": "Live desk",
-    "others": "Otros",
+    "others": "Otras",
     "unclassified": "Sin clasificar",
     "info": {
       "description": "A partir del {date}, los datos conversacionales incluyen ventanas cerradas hasta las 23h59m59s del día de inicio, considerando el timezone configurado en el proyecto. Las conversaciones del día actual aún están siendo procesadas y se mostrarán después de que el período se cierre.",

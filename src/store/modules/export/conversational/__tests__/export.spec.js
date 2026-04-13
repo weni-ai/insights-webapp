@@ -229,6 +229,30 @@ describe('useConversationalExport', () => {
       expect(store.model_fields['widget-1']).toEqual({});
     });
 
+    it('should initialize tool_result and agent_invocation fields when available', async () => {
+      const mockResponse = {
+        sections: [
+          'RESOLUTIONS',
+          'TOOL_RESULT',
+          'AGENT_INVOCATION',
+          'TOPICS_AI',
+        ],
+        custom_widgets: [],
+        crosstab_widgets: [],
+      };
+      exportApi.getAvailableWidgets.mockResolvedValue(mockResponse);
+      store.setModelFields({});
+
+      await store.initializeDefaultFields();
+
+      expect(store.model_fields.resolutions).toEqual({});
+      expect(store.model_fields.tool_result).toEqual({});
+      expect(store.model_fields.agent_invocation).toEqual({});
+      expect(store.model_fields.topics).toEqual({
+        ai: { type: 'subsection' },
+      });
+    });
+
     it('should keep crosstab widget UUIDs from model_fields', async () => {
       const mockResponse = {
         sections: ['RESOLUTIONS'],
@@ -283,6 +307,28 @@ describe('useConversationalExport', () => {
       });
       expect(store.export_data).toEqual(mockResponse);
       expect(store.isRenderExportDataFeedback).toBe(true);
+    });
+
+    it('should include TOOL_RESULT section when tool_result is enabled', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.enabled_models = ['tool_result'];
+      store.setSelectedFields({});
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.sections).toContain('TOOL_RESULT');
+    });
+
+    it('should include AGENT_INVOCATION section when agent_invocation is enabled', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.enabled_models = ['agent_invocation'];
+      store.setSelectedFields({});
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.sections).toContain('AGENT_INVOCATION');
     });
 
     it('should include custom widgets in export', async () => {
@@ -400,6 +446,16 @@ describe('useConversationalExport', () => {
 
       store.setSelectedFields({ topics: [] });
       expect(store.hasEnabledToExport).toBeFalsy();
+    });
+
+    it('should return true when tool_result is enabled', () => {
+      store.enabled_models = ['tool_result'];
+      expect(store.hasEnabledToExport).toBe(true);
+    });
+
+    it('should return true when agent_invocation is enabled', () => {
+      store.enabled_models = ['agent_invocation'];
+      expect(store.hasEnabledToExport).toBe(true);
     });
 
     it('should return true when crosstab widget is enabled', () => {

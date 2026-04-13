@@ -3,6 +3,8 @@ import { useConfig } from '@/store/modules/config';
 
 type TypeSections =
   | 'RESOLUTIONS'
+  | 'TOOL_RESULT'
+  | 'AGENT_INVOCATION'
   | 'TOPICS_AI'
   | 'TOPICS_HUMAN'
   | 'CSAT_AI'

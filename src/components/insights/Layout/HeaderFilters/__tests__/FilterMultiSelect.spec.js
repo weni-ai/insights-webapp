@@ -49,21 +49,19 @@ describe('FilterMultiSelect', () => {
   });
 
   describe('Rendering', () => {
-    it('renders UnnnicSelectSmart component correctly', () => {
+    it('renders UnnnicMultiSelect component correctly', () => {
       const selectComponent = wrapper.findComponent(
         '[data-testid="unnnic-multi-select"]',
       );
       expect(selectComponent.exists()).toBeTruthy();
     });
 
-    it('passes correct props to UnnnicSelectSmart', () => {
+    it('passes correct props to UnnnicMultiSelect', () => {
       const selectComponent = wrapper.findComponent(
         '[data-testid="unnnic-multi-select"]',
       );
-      expect(selectComponent.props('multiple')).toBe(true);
-      expect(selectComponent.props('autocomplete')).toBe(true);
-      expect(selectComponent.props('autocompleteIconLeft')).toBe(true);
-      expect(selectComponent.props('autocompleteClearOnFocus')).toBe(true);
+      expect(selectComponent.props('enableSearch')).toBe(true);
+      expect(selectComponent.props('returnObject')).toBe(true);
     });
 
     it('initializes with correct default props', () => {
@@ -75,18 +73,15 @@ describe('FilterMultiSelect', () => {
         dependsOnValue: null,
         keyValueField: '',
         allLabel: '',
+        disabled: false,
       });
     });
   });
 
   describe('Data initialization', () => {
-    it('sets initial options with placeholder', async () => {
-      // Wait for component to be fully mounted
-      await wrapper.vm.$nextTick();
-      expect(wrapper.vm.options[0]).toEqual({
-        value: '',
-        label: 'Select options',
-      });
+    it('initializes with empty options', async () => {
+      const freshWrapper = createWrapper();
+      expect(freshWrapper.vm.options).toEqual([]);
     });
 
     it('computes treatedModelValue correctly when modelValue is provided', () => {
@@ -108,7 +103,7 @@ describe('FilterMultiSelect', () => {
     it('fetches source data on mount when no dependsOn is provided', async () => {
       expect(Projects.getProjectSource).toHaveBeenCalledWith('test-source', {});
       await wrapper.vm.$nextTick();
-      expect(wrapper.vm.options).toHaveLength(4); // placeholder + 3 sources
+      expect(wrapper.vm.options).toHaveLength(3);
     });
 
     it('does not fetch source data on mount when dependsOn is provided', async () => {
@@ -127,10 +122,6 @@ describe('FilterMultiSelect', () => {
       await wrapper.vm.$nextTick();
 
       expect(wrapper.vm.options).toEqual([
-        {
-          value: '',
-          label: 'Select options',
-        },
         {
           value: '1',
           label: 'Source 1',
@@ -159,11 +150,11 @@ describe('FilterMultiSelect', () => {
 
       await customWrapper.vm.$nextTick();
 
-      expect(customWrapper.vm.options[1]).toEqual({
+      expect(customWrapper.vm.options[0]).toEqual({
         value: 'c1',
         label: 'Custom 1',
       });
-      expect(customWrapper.vm.options[2]).toEqual({
+      expect(customWrapper.vm.options[1]).toEqual({
         value: 'c2',
         label: 'Custom 2',
       });
@@ -182,7 +173,7 @@ describe('FilterMultiSelect', () => {
 
       await customWrapper.vm.$nextTick();
 
-      expect(customWrapper.vm.options[1]).toEqual({
+      expect(customWrapper.vm.options[0]).toEqual({
         value: 'uuid1',
         label: 'Source 1',
       });
@@ -194,12 +185,7 @@ describe('FilterMultiSelect', () => {
 
       await customWrapper.vm.$nextTick();
 
-      expect(customWrapper.vm.options).toEqual([
-        {
-          value: '',
-          label: 'Select options',
-        },
-      ]);
+      expect(customWrapper.vm.options).toEqual([]);
     });
 
     it('handles error from getProjectSource gracefully', async () => {
@@ -216,12 +202,7 @@ describe('FilterMultiSelect', () => {
         'getProjectSource error',
         expect.any(Error),
       );
-      expect(customWrapper.vm.options).toEqual([
-        {
-          value: '',
-          label: 'Select options',
-        },
-      ]);
+      expect(customWrapper.vm.options).toEqual([]);
 
       consoleSpy.mockRestore();
     });
@@ -282,10 +263,8 @@ describe('FilterMultiSelect', () => {
         dependsOnValue: { param1: 'value1' },
       });
 
-      // First, populate options
       await customWrapper.vm.$nextTick();
       customWrapper.vm.options = [
-        { value: '', label: 'Select options' },
         { value: '1', label: 'Source 1' },
       ];
 
@@ -295,9 +274,7 @@ describe('FilterMultiSelect', () => {
         dependsOnValue: { param1: 'value1', param2: 'value2' },
       });
 
-      // Should clear options first, then fetch new data
       expect(customWrapper.vm.options).toEqual([
-        { value: '', label: 'Select options' },
         { value: '1', label: 'Source 1' },
         { value: '2', label: 'Source 2' },
         { value: '3', label: 'Source 3' },
@@ -308,28 +285,25 @@ describe('FilterMultiSelect', () => {
   describe('Methods', () => {
     it('clears options correctly', () => {
       wrapper.vm.options = [
-        { value: '', label: 'Select options' },
         { value: '1', label: 'Source 1' },
         { value: '2', label: 'Source 2' },
       ];
 
       wrapper.vm.clearOptions();
 
-      expect(wrapper.vm.options).toEqual([
-        {
-          value: '',
-          label: 'Select options',
-        },
-      ]);
+      expect(wrapper.vm.options).toEqual([]);
     });
 
     it('emits update:model-value when updateModelValue is called', async () => {
       const selectComponent = wrapper.findComponent(
         '[data-testid="unnnic-multi-select"]',
       );
-      const newValue = ['1', '2'];
+      const newValue = [
+        { value: '1', label: 'Source 1' },
+        { value: '2', label: 'Source 2' },
+      ];
 
-      await selectComponent.vm.$emit('update:model-value', newValue);
+      await selectComponent.vm.$emit('update:modelValue', newValue);
 
       expect(wrapper.emitted('update:model-value')).toBeTruthy();
       expect(wrapper.emitted('update:model-value')[0]).toEqual([newValue]);
@@ -337,40 +311,45 @@ describe('FilterMultiSelect', () => {
   });
 
   describe('Component interaction', () => {
-    it('emits update:model-value when UnnnicSelectSmart value changes', async () => {
+    it('emits update:model-value when UnnnicMultiSelect value changes', async () => {
       const selectComponent = wrapper.findComponent(
         '[data-testid="unnnic-multi-select"]',
       );
-      const newValue = ['1', '3'];
+      const newValue = [
+        { value: '1', label: 'Source 1' },
+        { value: '3', label: 'Source 3' },
+      ];
 
-      await selectComponent.vm.$emit('update:model-value', newValue);
+      await selectComponent.vm.$emit('update:modelValue', newValue);
 
       expect(wrapper.emitted('update:model-value')).toBeTruthy();
       expect(wrapper.emitted('update:model-value')[0]).toEqual([newValue]);
     });
 
-    it('passes treatedModelValue to UnnnicSelectSmart', async () => {
+    it('passes treatedModelValue to UnnnicMultiSelect', async () => {
       const customWrapper = createWrapper({
-        modelValue: ['1', '2'],
+        modelValue: [
+          { value: '1', label: 'Source 1' },
+          { value: '2', label: 'Source 2' },
+        ],
       });
 
       const selectComponent = customWrapper.findComponent(
         '[data-testid="unnnic-multi-select"]',
       );
-      expect(selectComponent.props('modelValue')).toEqual(['1', '2']);
+      expect(selectComponent.props('modelValue')).toEqual([
+        { value: '1', label: 'Source 1' },
+        { value: '2', label: 'Source 2' },
+      ]);
     });
 
-    it('passes options to UnnnicSelectSmart', async () => {
+    it('passes options to UnnnicMultiSelect', async () => {
       await wrapper.vm.$nextTick();
 
       const selectComponent = wrapper.findComponent(
         '[data-testid="unnnic-multi-select"]',
       );
       expect(selectComponent.props('options')).toEqual([
-        {
-          value: '',
-          label: 'Select options',
-        },
         {
           value: '1',
           label: 'Source 1',
@@ -383,6 +362,66 @@ describe('FilterMultiSelect', () => {
           value: '3',
           label: 'Source 3',
         },
+      ]);
+    });
+  });
+
+  describe('All option handling', () => {
+    it('adds __all__ option when allLabel is provided and options exist', async () => {
+      const customWrapper = createWrapper({
+        allLabel: 'All items',
+      });
+
+      await customWrapper.vm.$nextTick();
+
+      expect(customWrapper.vm.optionsWithAll[0]).toEqual({
+        value: '__all__',
+        label: 'All items',
+      });
+    });
+
+    it('does not add __all__ option when allLabel is empty', async () => {
+      await wrapper.vm.$nextTick();
+
+      const hasAll = wrapper.vm.optionsWithAll.some(
+        (opt) => opt.value === '__all__',
+      );
+      expect(hasAll).toBe(false);
+    });
+
+    it('keeps only __all__ when selecting __all__ while others are selected', () => {
+      const customWrapper = createWrapper({
+        allLabel: 'All items',
+        modelValue: [{ value: '1', label: 'Source 1' }],
+      });
+
+      const newValue = [
+        { value: '1', label: 'Source 1' },
+        { value: '__all__', label: 'All items' },
+      ];
+
+      customWrapper.vm.updateModelValue(newValue);
+
+      expect(customWrapper.emitted('update:model-value')[0]).toEqual([
+        [{ value: '__all__', label: 'All items' }],
+      ]);
+    });
+
+    it('keeps __all__ when selecting specific option while __all__ was selected', () => {
+      const customWrapper = createWrapper({
+        allLabel: 'All items',
+        modelValue: [{ value: '__all__', label: 'All items' }],
+      });
+
+      const newValue = [
+        { value: '__all__', label: 'All items' },
+        { value: '1', label: 'Source 1' },
+      ];
+
+      customWrapper.vm.updateModelValue(newValue);
+
+      expect(customWrapper.emitted('update:model-value')[0]).toEqual([
+        [{ value: '__all__', label: 'All items' }],
       ]);
     });
   });

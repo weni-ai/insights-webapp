@@ -45,7 +45,7 @@ const localeMap: Record<string, Locale> = {
 };
 
 const formattedDate = computed(() => {
-  const referenceDate = new Date(2026, 2, 14);
+  const referenceDate = new Date(2026, 2, 28);
   const dateFnsLocale = localeMap[locale.value.toLowerCase()] || enUS;
   return format(referenceDate, 'P', { locale: dateFnsLocale });
 });

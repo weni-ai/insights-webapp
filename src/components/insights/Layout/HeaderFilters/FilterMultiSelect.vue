@@ -1,22 +1,22 @@
 <template>
-  <UnnnicSelectSmart
+  <UnnnicMultiSelect
+    ref="multiSelectRef"
     data-testid="unnnic-multi-select"
     :modelValue="treatedModelValue"
     :options="optionsWithAll"
-    multiple
-    autocomplete
-    autocompleteIconLeft
-    autocompleteClearOnFocus
-    :orderedByIndex="allLabel ? true : false"
-    :multipleWithoutSelectsMessage="$t('multiple_without_selects_message')"
+    :placeholder="placeholder"
+    :disabled="disabled"
+    returnObject
+    enableSearch
+    :search="searchValue"
     @update:model-value="updateModelValue"
-    @on-active-change="handleOptionsActiveChange"
+    @update:search="searchValue = $event"
   />
 </template>
 
-<script>
-import { UnnnicSelectSmart } from '@weni/unnnic-system';
-import { mapActions } from 'pinia';
+<script setup>
+import { ref, computed, watch, onMounted, useTemplateRef } from 'vue';
+import { UnnnicMultiSelect } from '@weni/unnnic-system';
 
 import { useSectors } from '@/store/modules/sectors';
 
@@ -24,166 +24,162 @@ import Projects from '@/services/api/resources/projects';
 
 import { compareEquals } from '@/utils/array';
 
-export default {
-  name: 'FilterMultiSelect',
-  components: {
-    UnnnicSelectSmart,
+const props = defineProps({
+  modelValue: {
+    type: [Object, String],
+    default: () => {},
   },
-  props: {
-    modelValue: {
-      type: [Object, String],
-      default: () => {},
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
-    source: {
-      type: String,
-      default: '',
-    },
-    dependsOn: {
-      type: [Object, undefined],
-      default: undefined,
-    },
-    dependsOnValue: {
-      type: Object,
-      default: null,
-    },
-    keyValueField: {
-      type: String,
-      default: '',
-    },
-    allLabel: {
-      type: String,
-      default: '',
-    },
+  placeholder: {
+    type: String,
+    default: '',
   },
+  source: {
+    type: String,
+    default: '',
+  },
+  dependsOn: {
+    type: [Object, undefined],
+    default: undefined,
+  },
+  dependsOnValue: {
+    type: Object,
+    default: null,
+  },
+  keyValueField: {
+    type: String,
+    default: '',
+  },
+  allLabel: {
+    type: String,
+    default: '',
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 
-  emits: ['update:model-value', 'on-options-active-change'],
+const emit = defineEmits(['update:model-value', 'on-options-active-change']);
 
-  data() {
-    return {
-      options: [
-        {
-          value: '',
-          label: this.placeholder,
-        },
-      ],
+const multiSelectRef = useTemplateRef('multiSelectRef');
+const sectorsStore = useSectors();
+const { updateSectors } = sectorsStore;
+
+const searchValue = ref('');
+const options = ref([]);
+
+const treatedModelValue = computed(() => props.modelValue || []);
+
+const optionsWithAll = computed(() => {
+  const baseOptions = [...options.value];
+  const hasOptions = baseOptions.length > 0;
+
+  if (props.allLabel && hasOptions) {
+    const allOption = {
+      value: '__all__',
+      label: props.allLabel,
     };
+    return [allOption, ...baseOptions];
+  }
+
+  return baseOptions;
+});
+
+watch(
+  () => multiSelectRef.value?.openPopover,
+  (newValue) => {
+    emit('on-options-active-change', !!newValue);
   },
+);
 
-  computed: {
-    treatedModelValue() {
-      const { modelValue } = this;
+watch(
+  () => props.dependsOnValue,
+  (newDependsOnValue, oldDependsOnValue) => {
+    const newValues = Object.values(newDependsOnValue || {});
+    const oldValues = Object.values(oldDependsOnValue || {});
+    if (!compareEquals(newValues, oldValues)) {
+      const filledDependsOnValue = newValues.every(Boolean);
 
-      return modelValue || [];
-    },
-
-    optionsWithAll() {
-      const baseOptions = [...this.options];
-
-      const hasOptions =
-        this.options.filter((option) => option.value !== '').length > 0;
-
-      if (this.allLabel && hasOptions) {
-        const allOption = {
-          value: '__all__',
-          label: this.allLabel,
-        };
-
-        return [allOption, ...baseOptions];
+      if (filledDependsOnValue) {
+        clearOptions();
+        fetchSource();
       }
-
-      return baseOptions;
-    },
+    }
   },
+  { immediate: true },
+);
 
-  watch: {
-    dependsOnValue: {
-      immediate: true,
-      handler(newDependsOnValue, oldDependsOnValue) {
-        const newValues = Object.values(newDependsOnValue || {});
-        const oldValues = Object.values(oldDependsOnValue || {});
-        if (!compareEquals(newValues, oldValues)) {
-          const filledDependsOnValue = newValues.every((value) => value);
+onMounted(() => {
+  if (!props.dependsOn?.search_param) fetchSource();
+});
 
-          if (filledDependsOnValue) {
-            this.clearOptions();
-            this.fetchSource();
-          }
-        }
-      },
-    },
-  },
+async function fetchSource() {
+  try {
+    const response = await Projects.getProjectSource(
+      props.source,
+      props.dependsOnValue || {},
+    );
 
-  mounted() {
-    if (!this.dependsOn?.search_param) this.fetchSource();
-  },
+    if (props.source === 'sectors') {
+      updateSectors(response);
+    }
 
-  methods: {
-    ...mapActions(useSectors, ['updateSectors']),
-    handleOptionsActiveChange(active) {
-      this.$emit('on-options-active-change', active);
-    },
-    async fetchSource() {
-      try {
-        const response = await Projects.getProjectSource(
-          this.source,
-          this.dependsOnValue || {},
-        );
+    response?.forEach((source) => {
+      options.value.push({
+        value: source[props.keyValueField] || source.uuid,
+        label: source.name,
+      });
+    });
+  } catch (e) {
+    console.error('getProjectSource error', e);
+  }
+}
 
-        if (this.source === 'sectors') {
-          this.updateSectors(response);
-        }
+function clearOptions() {
+  options.value = [];
+}
 
-        response?.forEach((source) => {
-          this.options.push({
-            value: source[this.keyValueField] || source.uuid,
-            label: source.name,
-          });
-        });
-      } catch (e) {
-        console.error('getProjectSource error', e);
-      }
-    },
-    clearOptions() {
-      const optionsPlaceholder = this.options[0];
-      this.options = [optionsPlaceholder];
-    },
-    updateModelValue(value) {
-      if (this.allLabel && value && Array.isArray(value)) {
-        const hasAllSelected = value.some((item) => item.value === '__all__');
-        const hasOthersSelected = value.some(
+function updateModelValue(value) {
+  if (props.allLabel && value && Array.isArray(value)) {
+    const hasAllSelected = value.some((item) => item.value === '__all__');
+    const hasOthersSelected = value.some(
+      (item) => item.value !== '__all__' && item.value !== '',
+    );
+
+    if (hasAllSelected && hasOthersSelected) {
+      const allOption = value.find((item) => item.value === '__all__');
+      emit('update:model-value', [allOption]);
+      return;
+    }
+
+    if (
+      hasOthersSelected &&
+      props.modelValue &&
+      Array.isArray(props.modelValue)
+    ) {
+      const wasAllSelected = props.modelValue.some(
+        (item) => item.value === '__all__',
+      );
+      if (wasAllSelected) {
+        const filteredValue = value.filter(
           (item) => item.value !== '__all__' && item.value !== '',
         );
-
-        if (hasAllSelected && hasOthersSelected) {
-          const allOption = value.find((item) => item.value === '__all__');
-          this.$emit('update:model-value', [allOption]);
-          return;
-        }
-
-        if (
-          hasOthersSelected &&
-          this.modelValue &&
-          Array.isArray(this.modelValue)
-        ) {
-          const wasAllSelected = this.modelValue.some(
-            (item) => item.value === '__all__',
-          );
-          if (wasAllSelected) {
-            const filteredValue = value.filter(
-              (item) => item.value !== '__all__' && item.value !== '',
-            );
-            this.$emit('update:model-value', filteredValue);
-            return;
-          }
-        }
+        emit('update:model-value', filteredValue);
+        return;
       }
+    }
+  }
 
-      this.$emit('update:model-value', value);
-    },
-  },
-};
+  emit('update:model-value', value);
+}
+
+defineExpose({
+  options,
+  treatedModelValue,
+  optionsWithAll,
+  clearOptions,
+  fetchSource,
+  updateModelValue,
+  searchValue,
+});
 </script>

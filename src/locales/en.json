@@ -1,6 +1,6 @@
 {
   "human_service_dashboard": {
-    "title": "Human support",
+    "title": "Live desk",
     "peaks_in_human_service": "Supports opened by hour",
     "closed": "Closed",
     "in_progress": "In progress",
@@ -22,7 +22,7 @@
     "title": "Conversational",
     "conversations": "conversations",
     "artificial_intelligence": "AI",
-    "human_support": "Human support",
+    "human_support": "Live desk",
     "others": "Other",
     "unclassified": "Unclassified",
     "info": {
@@ -63,7 +63,7 @@
       "resolved": "AI-Assisted",
       "unresolved": "Not Assisted",
       "unengaged": "Unengaged",
-      "transferred": "Transferred to human support",
+      "transferred": "Transferred to live desk",
       "tooltips": {
         "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
         "resolved": "When the agent demonstrates competence and provides useful service",
@@ -180,7 +180,7 @@
       "config_csat_or_nps_description": "Set which {type} you want to track",
       "sales_funnel_description": "Track your sales: total orders, average ticket, total value and conversion funnel.",
       "absolute_numbers_description": "Highlight a single key metric, displaying its exact value for quick, straightforward viewing.",
-      "human_support": "Human support",
+      "human_support": "Live desk",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
       "select_agent": "Select an agent",
@@ -859,6 +859,8 @@
       "sector_tags": "Tags",
       "contacts": "Contacts",
       "resolutions": "Conversation resolutions",
+      "tool_result": "Most used tools",
+      "agent_invocation": "Most used agents",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",
@@ -888,7 +890,7 @@
       "phone": "Phone",
       "status": "Status",
       "ai": "AI",
-      "human": "Human support",
+      "human": "Live desk",
       "user__first_name": "Representative name",
       "user__last_name": "Representative last name",
       "user__email": "Email",
@@ -962,7 +964,7 @@
     "tooltip_disabled": "This representative cannot be disconnected because it is offline"
   },
   "human_support_dashboard": {
-    "title": "Human support",
+    "title": "Live desk",
     "monitoring": "Monitoring",
     "monitoring_tooltip": "Monitor the day's customer support interactions in real-time, identify bottlenecks and make quick decisions to optimize the operation.",
     "analysis": "Analysis",

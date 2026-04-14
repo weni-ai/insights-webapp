@@ -113,28 +113,48 @@ const analysisCsatTotalsMock = {
 
 const analysisCsatAgentsMock = [
   {
-    agent: { name: 'Ana Costa', email: 'ana.costa@email.com' },
+    agent: {
+      name: 'Ana Costa',
+      email: 'ana.costa@email.com',
+      is_deleted: false,
+    },
     rooms: 850,
     reviews: 620,
     avg_rating: 4.8,
+    is_deleted: false,
   },
   {
-    agent: { name: 'Bruno Lima', email: 'bruno.lima@email.com' },
+    agent: {
+      name: 'Bruno Lima',
+      email: 'bruno.lima@email.com',
+      is_deleted: false,
+    },
     rooms: 810,
     reviews: 590,
     avg_rating: 4.8,
+    is_deleted: false,
   },
   {
-    agent: { name: 'Camila Rocha', email: 'camila.rocha@email.com' },
+    agent: {
+      name: 'Camila Rocha',
+      email: 'camila.rocha@email.com',
+      is_deleted: false,
+    },
     rooms: 795,
     reviews: 580,
     avg_rating: 4.7,
+    is_deleted: false,
   },
   {
-    agent: { name: 'Diego Alves', email: 'diego.alves@email.com' },
+    agent: {
+      name: 'Diego Alves',
+      email: 'diego.alves@email.com',
+      is_deleted: false,
+    },
     rooms: 760,
     reviews: 510,
     avg_rating: 4.5,
+    is_deleted: false,
   },
 ];
 

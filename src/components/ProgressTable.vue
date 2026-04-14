@@ -36,6 +36,9 @@
         :subItems="item.subItems"
         :tooltip="item.tooltip"
         :maxValue="maxValue"
+        :labelMuted="item.labelMuted"
+        :subtitleMuted="item.subtitleMuted"
+        :deletedTooltip="item.deletedTooltip"
         @expand="expandItem(item.label, $event)"
       />
     </tbody>

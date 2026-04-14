@@ -119,8 +119,9 @@ const handleTabChange = (tab: string) => {
 
 interface Item {
   sector_name: string;
-  queues?: { queue_name: string; value: number }[];
-  tags?: { tag_name: string; value: number }[];
+  is_deleted?: boolean;
+  queues?: { queue_name: string; value: number; is_deleted?: boolean }[];
+  tags?: { tag_name: string; value: number; is_deleted?: boolean }[];
 }
 
 const itemsNext = ref<string | null>(null);
@@ -134,6 +135,28 @@ const items = ref<Item[]>([]);
 const isLoadingItems = ref(false);
 const showVisualLoading = ref(true);
 
+const getDeletedTooltip = (
+  subitemDeleted: boolean,
+  sectorDeleted: boolean,
+): string | undefined => {
+  const isQueue = props.itemKey === 'queues';
+
+  if (subitemDeleted && sectorDeleted) {
+    return isQueue
+      ? t('human_support_dashboard.deleted_tooltips.queue_and_sector')
+      : t('human_support_dashboard.deleted_tooltips.tag_and_sector');
+  }
+  if (subitemDeleted) {
+    return isQueue
+      ? t('human_support_dashboard.deleted_tooltips.queue')
+      : t('human_support_dashboard.deleted_tooltips.tag');
+  }
+  if (sectorDeleted) {
+    return t('human_support_dashboard.deleted_tooltips.sector');
+  }
+  return undefined;
+};
+
 const formattedItems = computed(() => {
   const { itemKey, itemLabelKey } = props;
 
@@ -141,15 +164,28 @@ const formattedItems = computed(() => {
 
   const toOrderItems: ProgressTableRowItem[] = toFormatItems.flatMap((item) => {
     const subitems = item[itemKey] ?? [];
+    const sectorDeleted = item.is_deleted === true;
     return subitems.map(
-      (subitem: { queue_name?: string; tag_name?: string; value: number }) => ({
-        label: subitem[itemLabelKey] ?? '',
-        subtitle: item.sector_name,
-        value: subitem.value,
-        description: `${formatNumber(subitem.value)}`,
-        color: props.barColor,
-        backgroundColor: props.barBackgroundColor,
-      }),
+      (subitem: {
+        queue_name?: string;
+        tag_name?: string;
+        value: number;
+        is_deleted?: boolean;
+      }) => {
+        const subitemDeleted = subitem.is_deleted === true;
+
+        return {
+          label: subitem[itemLabelKey] ?? '',
+          subtitle: item.sector_name,
+          value: subitem.value,
+          description: `${formatNumber(subitem.value)}`,
+          color: props.barColor,
+          backgroundColor: props.barBackgroundColor,
+          labelMuted: subitemDeleted,
+          subtitleMuted: sectorDeleted,
+          deletedTooltip: getDeletedTooltip(subitemDeleted, sectorDeleted),
+        };
+      },
     );
   });
 

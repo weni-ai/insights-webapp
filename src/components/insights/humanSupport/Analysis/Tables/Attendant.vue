@@ -19,7 +19,17 @@
     @item-click="redirectItem"
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
-  />
+  >
+    <template #body-agent="{ item }">
+      <DynamicCellText
+        :text="item.agent"
+        :isDeleted="item.agent_is_deleted"
+        :tooltipText="
+          $t('human_support_dashboard.deleted_tooltips.representative')
+        "
+      />
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
@@ -32,14 +42,18 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { openNewTabLink } from '@/utils/redirect';
+import DynamicCellText from '../../Common/DynamicCellText.vue';
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
+  | 'agent'
   | 'average_first_response_time'
   | 'average_response_time'
   | 'average_duration'
   | 'time_in_service'
 > & {
+  agent: string;
+  agent_is_deleted: boolean;
   average_first_response_time: string;
   average_response_time: string;
   average_duration: string;
@@ -66,7 +80,8 @@ const formatResults = (
 ): FormattedAttendantData[] => {
   return results.map((result) => ({
     ...result,
-    agent: result?.agent || result?.agent_email || '',
+    agent: formatAgentName(result?.agent),
+    agent_is_deleted: result.agent?.is_deleted === true,
     average_first_response_time: formatSecondsToTime(
       result?.average_first_response_time,
     ),
@@ -74,6 +89,10 @@ const formatResults = (
     average_duration: formatSecondsToTime(result?.average_duration),
     time_in_service: formatSecondsToTime(result?.time_in_service),
   }));
+};
+
+const formatAgentName = (agent: { name: string; email: string }) => {
+  return agent?.name?.trim().length > 0 ? agent?.name : agent?.email || '';
 };
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {

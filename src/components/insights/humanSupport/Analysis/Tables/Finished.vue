@@ -21,7 +21,14 @@
     @load-more="loadMore"
   >
     <template #body-agent="{ item }">
-      <p v-if="item.agent">{{ item.agent }}</p>
+      <DynamicCellText
+        v-if="item.agent"
+        :text="item.agent"
+        :isDeleted="item.agent_is_deleted"
+        :tooltipText="
+          $t('human_support_dashboard.deleted_tooltips.representative')
+        "
+      />
       <UnnnicToolTip
         v-else
         enabled
@@ -39,6 +46,20 @@
           }}
         </p>
       </UnnnicToolTip>
+    </template>
+    <template #body-sector="{ item }">
+      <DynamicCellText
+        :text="item.sector"
+        :isDeleted="item.sector_is_deleted"
+        :tooltipText="$t('human_support_dashboard.deleted_tooltips.sector')"
+      />
+    </template>
+    <template #body-queue="{ item }">
+      <DynamicCellText
+        :text="item.queue"
+        :isDeleted="item.queue_is_deleted"
+        :tooltipText="$t('human_support_dashboard.deleted_tooltips.queue')"
+      />
     </template>
     <template #body-first_response_time="{ item }">
       <p
@@ -73,6 +94,7 @@ import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { analysisDetailedAnalysisFinishedMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
+import DynamicCellText from '../../Common/DynamicCellText.vue';
 
 defineOptions({
   name: 'AnalysisFinishedTable',
@@ -93,7 +115,12 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 const formatResults = (results: FinishedDataResult[]) => {
   return results.map((result) => ({
     ...result,
-    agent: result?.agent || result?.agent_email || '',
+    agent: result.agent?.name || result?.agent_email || '',
+    agent_is_deleted: result.agent?.is_deleted === true,
+    sector: result.sector?.name || '',
+    sector_is_deleted: result.sector?.is_deleted === true,
+    queue: result.queue?.name || '',
+    queue_is_deleted: result.queue?.is_deleted === true,
   }));
 };
 

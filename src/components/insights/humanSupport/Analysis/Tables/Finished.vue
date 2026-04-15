@@ -96,6 +96,18 @@ import { analysisDetailedAnalysisFinishedMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
 import DynamicCellText from '../../Common/DynamicCellText.vue';
 
+type FormattedFinishedData = Omit<
+  FinishedDataResult,
+  'agent' | 'sector' | 'queue'
+> & {
+  agent: string;
+  agent_is_deleted: boolean;
+  sector: string;
+  sector_is_deleted: boolean;
+  queue: string;
+  queue_is_deleted: boolean;
+};
+
 defineOptions({
   name: 'AnalysisFinishedTable',
 });
@@ -141,7 +153,7 @@ const {
   loadMoreData,
   resetAndLoadData,
   handleSort: handleSortChange,
-} = useInfiniteScrollTable<FinishedDataResult, FinishedDataResult>({
+} = useInfiniteScrollTable<FinishedDataResult, FormattedFinishedData>({
   fetchData,
   formatResults,
   sort: currentSort.value,
@@ -150,7 +162,7 @@ const {
 const widgetData = computed(() => {
   if (!projectStore.hasSectorsConfigured) {
     return formatResults(
-      analysisDetailedAnalysisFinishedMock as FinishedDataResult[],
+      analysisDetailedAnalysisFinishedMock as unknown as FinishedDataResult[],
     );
   }
   return formattedItems.value;

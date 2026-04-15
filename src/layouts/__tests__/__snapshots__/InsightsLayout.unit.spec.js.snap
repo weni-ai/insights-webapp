@@ -5,6 +5,9 @@ exports[`InsightsLayout > matches snapshot 1`] = `
   class="insights-layout"
   data-v-abe5f7dc=""
 >
+  <mcp-disclaimer-stub
+    data-v-abe5f7dc=""
+  />
   <insights-layout-header-stub
     class="insights-layout__header"
     data-v-abe5f7dc=""

@@ -8,6 +8,14 @@
       :showModal="showCompleteOnboardingModal"
       @finish-onboarding="setShowCompleteOnboardingModal(false)"
     />
+    <McpNewsModal
+      v-if="showMcpNewsModal"
+      :modelValue="showMcpNewsModal"
+      data-testid="mcp-news-modal"
+      @not-now="handleMcpNotNow"
+      @view-guide="handleMcpViewGuide"
+      @update:model-value="showMcpNewsModal = $event"
+    />
     <DashboardOnboarding
       v-if="showCreateDashboardTour"
       data-testid="dashboard-onboarding"
@@ -48,6 +56,7 @@ import { useUser } from './store/modules/user';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
+import McpNewsModal from './components/McpNewsModal.vue';
 import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
 import initHotjar from '@/utils/plugins/Hotjar';
@@ -68,7 +77,13 @@ export default {
     InsightsLayout,
     IconLoading,
     CompleteOnboardingModal,
+    McpNewsModal,
     DashboardOnboarding,
+  },
+  data() {
+    return {
+      showMcpNewsModal: !moduleStorage.getItem('mcp_news_modal_seen'),
+    };
   },
   computed: {
     ...mapState(useDashboards, [
@@ -167,6 +182,28 @@ export default {
       'setShowCreateDashboardOnboarding',
       'setShowCompleteOnboardingModal',
     ]),
+
+    handleMcpNotNow() {
+      moduleStorage.setItem('mcp_news_modal_seen', true);
+      moduleStorage.setItem('mcp_news_show_disclaimer', true);
+      this.showMcpNewsModal = false;
+
+      const layout = this.$refs['insights-layout'];
+      if (layout) {
+        layout.showMcpDisclaimer = true;
+      }
+    },
+
+    handleMcpViewGuide() {
+      moduleStorage.setItem('mcp_news_modal_seen', true);
+      moduleStorage.setItem('mcp_news_show_disclaimer', false);
+      this.showMcpNewsModal = false;
+
+      const layout = this.$refs['insights-layout'];
+      if (layout) {
+        layout.showMcpDisclaimer = false;
+      }
+    },
 
     handleRedirectToHumanServiceDashboard() {
       const isHumanServiceDashboardRouter =

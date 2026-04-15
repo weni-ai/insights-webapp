@@ -213,6 +213,55 @@ describe('Finished', () => {
     });
   });
 
+  describe('formatResults with v2 API format', () => {
+    it('flattens agent object to string and carries is_deleted', () => {
+      const mockData = [
+        {
+          agent: { name: 'Ana Costa', is_deleted: true },
+          agent_email: 'ana@test.com',
+          sector: { name: 'Logistics', is_deleted: false },
+          queue: { name: 'Order status', is_deleted: true },
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('Ana Costa');
+      expect(result[0].agent_is_deleted).toBe(true);
+      expect(result[0].sector).toBe('Logistics');
+      expect(result[0].sector_is_deleted).toBe(false);
+      expect(result[0].queue).toBe('Order status');
+      expect(result[0].queue_is_deleted).toBe(true);
+    });
+
+    it('falls back to agent_email when agent is null', () => {
+      const mockData = [
+        {
+          agent: null,
+          agent_email: 'ana@test.com',
+          sector: { name: 'Sales' },
+          queue: { name: 'VIP' },
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('ana@test.com');
+      expect(result[0].agent_is_deleted).toBe(false);
+    });
+
+    it('handles items with no is_deleted flags', () => {
+      const mockData = [
+        {
+          agent: { name: 'Bruno Lima' },
+          agent_email: '',
+          sector: { name: 'Support' },
+          queue: { name: 'General' },
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent_is_deleted).toBe(false);
+      expect(result[0].sector_is_deleted).toBe(false);
+      expect(result[0].queue_is_deleted).toBe(false);
+    });
+  });
+
   describe('Lifecycle', () => {
     it('loads data on mount', () => {
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();

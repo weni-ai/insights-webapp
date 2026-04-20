@@ -8,10 +8,6 @@
       :showModal="showCompleteOnboardingModal"
       @finish-onboarding="setShowCompleteOnboardingModal(false)"
     />
-    <DashboardOnboarding
-      v-if="showCreateDashboardTour"
-      data-testid="dashboard-onboarding"
-    />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
@@ -68,7 +64,6 @@ export default {
     InsightsLayout,
     IconLoading,
     CompleteOnboardingModal,
-    DashboardOnboarding,
   },
   computed: {
     ...mapState(useDashboards, [

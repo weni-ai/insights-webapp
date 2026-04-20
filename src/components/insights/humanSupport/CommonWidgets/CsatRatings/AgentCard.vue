@@ -25,7 +25,7 @@
       </section>
     </section>
     <p class="agent-card__rating">
-      {{ formatNumber(props.rating, $i18n.locale) }}
+      {{ props.rating ? formatNumber(props.rating, $i18n.locale) : '-' }}
     </p>
   </section>
 </template>
@@ -65,7 +65,7 @@ const props = withDefaults(defineProps<AgentCardProps>(), {
 
   border-radius: $unnnic-space-2;
   border: 1px solid $unnnic-color-border-base;
-  background: $unnnic-color-gray-0;
+  background: $unnnic-color-bg-base;
 
   &.active {
     border: 1px solid $unnnic-color-border-accent-strong;
@@ -80,10 +80,6 @@ const props = withDefaults(defineProps<AgentCardProps>(), {
     display: flex;
     align-items: center;
     gap: $unnnic-space-2;
-
-    :deep(.user-avatar) {
-      background-color: $unnnic-color-gray-0;
-    }
   }
 
   &__agent {

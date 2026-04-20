@@ -32,14 +32,24 @@ config.global.plugins = [
   }),
 ];
 
+const UnnnicDialogStub = {
+  name: 'UnnnicDialog',
+  template: '<div data-testid="modal-topic"><slot /></div>',
+  props: ['open'],
+  emits: ['update:open'],
+};
+
 const createWrapper = (props = {}) => {
   return shallowMount(ModalTopic, {
     props: { isOpen: true, type: 'remove-topic', ...props },
     global: {
       stubs: {
-        UnnnicModalDialog: {
-          template: '<div v-bind="$attrs"><slot /></div>',
-        },
+        UnnnicDialog: UnnnicDialogStub,
+        UnnnicDialogContent: { template: '<div><slot /></div>' },
+        UnnnicDialogHeader: { template: '<header><slot /></header>' },
+        UnnnicDialogTitle: { template: '<div><slot /></div>' },
+        UnnnicDialogFooter: { template: '<div><slot /></div>' },
+        UnnnicButton: { template: '<button type="button" />' },
       },
     },
   });
@@ -53,6 +63,7 @@ describe('ModalTopic', () => {
   });
 
   const modalTopic = () => wrapper.find('[data-testid="modal-topic"]');
+  const dialog = () => wrapper.findComponent({ name: 'UnnnicDialog' });
 
   describe('Initial render', () => {
     it('should render the component with correct structure', () => {
@@ -61,12 +72,12 @@ describe('ModalTopic', () => {
     });
 
     it('should display modal when isOpen is true', () => {
-      expect(modalTopic().attributes('modelvalue')).toBe('true');
+      expect(dialog().props('open')).toBe(true);
     });
 
     it('should not display modal when isOpen is false', () => {
       wrapper = createWrapper({ isOpen: false });
-      expect(modalTopic().attributes('modelvalue')).toBe('false');
+      expect(dialog().props('open')).toBe(false);
     });
   });
 
@@ -75,31 +86,26 @@ describe('ModalTopic', () => {
       {
         type: 'remove-topic',
         expectedType: 'warning',
-        expectedIcon: 'warning',
         title: 'Remove Topic',
       },
       {
         type: 'remove-sub-topic',
         expectedType: 'warning',
-        expectedIcon: 'warning',
         title: 'Remove Sub-topic',
       },
       {
         type: 'cancel-topic',
         expectedType: 'attention',
-        expectedIcon: 'error',
         title: 'Cancel Changes',
       },
     ];
 
-    modalTypes.forEach(({ type, expectedType, expectedIcon, title }) => {
+    modalTypes.forEach(({ type, expectedType, title }) => {
       it(`should configure ${type} modal correctly`, () => {
         wrapper = createWrapper({ type });
-        const modal = modalTopic();
 
-        expect(modal.attributes('type')).toBe(expectedType);
-        expect(modal.attributes('icon')).toBe(expectedIcon);
-        expect(modal.attributes('title')).toBe(title);
+        expect(wrapper.vm.modalType).toBe(expectedType);
+        expect(wrapper.vm.title).toBe(title);
       });
     });
   });
@@ -145,13 +151,12 @@ describe('ModalTopic', () => {
       },
     ];
 
-    buttonConfigs.forEach(({ type }) => {
+    buttonConfigs.forEach(({ type, primaryText, secondaryText }) => {
       it(`should configure ${type} buttons correctly`, () => {
         wrapper = createWrapper({ type });
-        const modal = modalTopic();
 
-        expect(modal.attributes('primarybuttonprops')).toBeDefined();
-        expect(modal.attributes('secondarybuttonprops')).toBeDefined();
+        expect(wrapper.vm.primaryButtonText).toBe(primaryText);
+        expect(wrapper.vm.secondaryButtonText).toBe(secondaryText);
       });
     });
   });
@@ -201,11 +206,8 @@ describe('ModalTopic', () => {
   });
 
   describe('Component integration', () => {
-    it('should maintain proper modal dialog attributes', () => {
-      const modal = modalTopic();
-
-      expect(modal.attributes('showcloseicon')).toBeDefined();
-      expect(modal.attributes('size')).toBe('sm');
+    it('passes open state to the dialog', () => {
+      expect(dialog().props('open')).toBe(true);
     });
 
     it('should have working click handlers', () => {

@@ -1,20 +1,35 @@
 <template>
-  <UnnnicModalDialog
+  <UnnnicDialog
     data-testid="modal-topic"
-    :modelValue="props.isOpen"
-    :title="title"
-    :type="modalType"
-    :icon="icon"
-    :primaryButtonProps="primaryButtonProps"
-    :secondaryButtonProps="secondaryButtonProps"
-    showCloseIcon
-    size="sm"
-    @secondary-button-click="secondaryButtonClick"
-    @primary-button-click="primaryButtonClick"
-    @update:model-value="emit('close')"
+    :open="props.isOpen"
+    @update:open="handleUpdateOpen"
   >
-    {{ description }}
-  </UnnnicModalDialog>
+    <UnnnicDialogContent
+      size="small"
+      class="modal-topic"
+    >
+      <UnnnicDialogHeader :type="modalType">
+        <UnnnicDialogTitle>{{ title }}</UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
+      <section class="modal-topic__content">
+        {{ description }}
+      </section>
+
+      <UnnnicDialogFooter>
+        <UnnnicButton
+          type="tertiary"
+          :text="secondaryButtonText"
+          @click="secondaryButtonClick"
+        />
+        <UnnnicButton
+          :type="primaryButtonVariant"
+          :text="primaryButtonText"
+          @click="primaryButtonClick"
+        />
+      </UnnnicDialogFooter>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script setup lang="ts">
@@ -28,9 +43,9 @@ interface Props {
 }
 
 const emit = defineEmits<{
-  (e: 'primary-button-click'): void;
-  (e: 'secondary-button-click'): void;
-  (e: 'close'): void;
+  (_e: 'primary-button-click'): void;
+  (_e: 'secondary-button-click'): void;
+  (_e: 'close'): void;
 }>();
 
 const { t } = useI18n();
@@ -47,34 +62,29 @@ const modalType = computed(() => {
   return remove.includes(props.type) ? 'warning' : 'attention';
 });
 
-const icon = computed(() => {
+const primaryButtonText = computed(() => {
   const remove = ['remove-topic', 'remove-sub-topic'];
 
-  return remove.includes(props.type) ? 'warning' : 'error';
+  return remove.includes(props.type)
+    ? t('conversations_dashboard.form_topic.remove_modal.remove')
+    : t('conversations_dashboard.form_topic.cancel_modal.cancel');
 });
 
-const primaryButtonProps = computed(() => {
+const secondaryButtonText = computed(() => {
   const remove = ['remove-topic', 'remove-sub-topic'];
 
-  return {
-    text: remove.includes(props.type)
-      ? t('conversations_dashboard.form_topic.remove_modal.remove')
-      : t('conversations_dashboard.form_topic.cancel_modal.cancel'),
-  };
+  return remove.includes(props.type)
+    ? t('conversations_dashboard.form_topic.remove_modal.cancel')
+    : t('conversations_dashboard.form_topic.cancel_modal.continue');
 });
 
-const secondaryButtonProps = computed(() => {
+const primaryButtonVariant = computed(() => {
   const remove = ['remove-topic', 'remove-sub-topic'];
-
-  return {
-    text: remove.includes(props.type)
-      ? t('conversations_dashboard.form_topic.remove_modal.cancel')
-      : t('conversations_dashboard.form_topic.cancel_modal.continue'),
-  };
+  return remove.includes(props.type) ? 'warning' : 'attention';
 });
 
 const title = computed(() => {
-  const title = {
+  const titleMap = {
     'remove-topic': t(
       'conversations_dashboard.form_topic.remove_modal.title_remove_topic',
     ),
@@ -84,7 +94,7 @@ const title = computed(() => {
     'cancel-topic': t('conversations_dashboard.form_topic.cancel_modal.title'),
   };
 
-  return title[props.type];
+  return titleMap[props.type];
 });
 
 const description = computed(() => {
@@ -105,6 +115,12 @@ const description = computed(() => {
   return desc[props.type];
 });
 
+const handleUpdateOpen = (open: boolean) => {
+  if (!open) {
+    emit('close');
+  }
+};
+
 const secondaryButtonClick = () => {
   emit('secondary-button-click');
 };
@@ -116,8 +132,10 @@ const primaryButtonClick = () => {
 
 <style lang="scss" scoped>
 .modal-topic {
-  display: flex;
-  flex-direction: column;
-  gap: $unnnic-space-6;
+  &__content {
+    padding: $unnnic-space-6;
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-base;
+  }
 }
 </style>

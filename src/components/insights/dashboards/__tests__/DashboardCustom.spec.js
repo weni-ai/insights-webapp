@@ -48,7 +48,6 @@ describe('DashboardCustom', () => {
           DynamicWidget: true,
           DrawerConfigGallery: true,
           IconLoading: true,
-          WidgetOnboarding: true,
           FlowResultContactListModal: true,
         },
       },

@@ -74,7 +74,7 @@ describe('SearchTemplateMessagesModal.vue', () => {
   it('renders modal correctly', async () => {
     await flushPromises();
 
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
     const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
     const buttons = wrapper.findAllComponents({ name: 'UnnnicButton' });
 
@@ -113,8 +113,8 @@ describe('SearchTemplateMessagesModal.vue', () => {
   });
 
   it('closes modal when close method is called', async () => {
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-    await modal.vm.$emit('update:model-value');
+    const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
+    await modal.vm.$emit('update:open', false);
     expect(wrapper.emitted('close')).toBeTruthy();
   });
 

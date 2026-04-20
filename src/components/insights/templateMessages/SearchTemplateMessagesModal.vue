@@ -1,93 +1,104 @@
 <template>
-  <UnnnicModalDialog
-    :modelValue="vmodel"
-    :title="$t('template_messages_dashboard.templates_modal.title')"
-    size="lg"
-    showCloseIcon
-    class="search-template-messages-modal"
-    data-testid="search-template-messages-modal"
-    @update:model-value="close()"
+  <UnnnicDialog
+    :open="vmodel"
+    @update:open="handleDialogOpenChange"
   >
-    <section
-      class="search-template-messages-modal__filters-container"
-      data-testid="filters"
+    <UnnnicDialogContent
+      size="large"
+      class="search-template-messages-modal"
     >
-      <FilterInputText
-        v-model="filters.name"
-        class="filter filter__name"
-        :placeholder="$t('search')"
-        iconPosition="left"
-        data-testid="filter-name"
-        @update:model-value="handlerSearchTemplatesByName()"
-      />
-      <FilterSelect
-        :modelValue="filters.category"
-        class="filter filter__category"
-        :placeholder="$t('category')"
-        :fetchRequest="() => sourceRequest('categories')"
-        keyValueField="value"
-        data-testid="filter-category"
-        @update:model-value="
-          ($event) => {
-            filters.category = $event;
-            if ($event) searchTemplates();
-          }
-        "
-      />
-      <FilterSelect
-        :modelValue="filters.language"
-        class="filter filter__language"
-        :placeholder="$t('language')"
-        :fetchRequest="() => sourceRequest('languages')"
-        keyValueField="value"
-        data-testid="filter-language"
-        @update:model-value="
-          ($event) => {
-            filters.language = $event;
-            if ($event) searchTemplates();
-          }
-        "
-      />
-    </section>
+      <UnnnicDialogHeader>
+        <UnnnicDialogTitle>
+          {{ $t('template_messages_dashboard.templates_modal.title') }}
+        </UnnnicDialogTitle>
+      </UnnnicDialogHeader>
 
-    <section class="search-template-messages-modal__table-container">
-      <UnnnicDataTable
-        :headers="tableHeaders"
-        :items="templateMessages"
-        clickable
-        hidePagination
-        :pageInterval="5"
-        :paginationTotal="5"
-        :pagination="1"
-        :isLoading="loadingTemplateMessages"
-        data-testid="template-messages-table"
-        :locale="i18n.global.locale"
-        @item-click="rowClick"
+      <div
+        class="search-template-messages-modal__content"
+        data-testid="search-template-messages-modal"
       >
-        <template #body-status="{ item }">
-          <QualityTemplateMessageFlag :status="item.status" />
-        </template>
-      </UnnnicDataTable>
-      <section class="search-template-messages-modal__table-pagination">
-        <UnnnicButton
-          type="tertiary"
-          size="small"
-          iconCenter="arrow-left-1-1"
-          :disabled="!tablePagination.previous"
-          data-testid="previous-button"
-          @click="searchTemplates('previous')"
-        />
-        <UnnnicButton
-          type="tertiary"
-          size="small"
-          iconCenter="arrow-right-1-1"
-          :disabled="!tablePagination.next"
-          data-testid="next-button"
-          @click="searchTemplates('next')"
-        />
-      </section>
-    </section>
-  </UnnnicModalDialog>
+        <section
+          class="search-template-messages-modal__filters-container"
+          data-testid="filters"
+        >
+          <FilterInputText
+            v-model="filters.name"
+            class="filter filter__name"
+            :placeholder="$t('search')"
+            iconPosition="left"
+            data-testid="filter-name"
+            @update:model-value="handlerSearchTemplatesByName()"
+          />
+          <FilterSelect
+            :modelValue="filters.category"
+            class="filter filter__category"
+            :placeholder="$t('category')"
+            :fetchRequest="() => sourceRequest('categories')"
+            keyValueField="value"
+            data-testid="filter-category"
+            @update:model-value="
+              ($event) => {
+                filters.category = $event;
+                if ($event) searchTemplates();
+              }
+            "
+          />
+          <FilterSelect
+            :modelValue="filters.language"
+            class="filter filter__language"
+            :placeholder="$t('language')"
+            :fetchRequest="() => sourceRequest('languages')"
+            keyValueField="value"
+            data-testid="filter-language"
+            @update:model-value="
+              ($event) => {
+                filters.language = $event;
+                if ($event) searchTemplates();
+              }
+            "
+          />
+        </section>
+
+        <section class="search-template-messages-modal__table-container">
+          <UnnnicDataTable
+            :headers="tableHeaders"
+            :items="templateMessages"
+            clickable
+            hidePagination
+            :pageInterval="5"
+            :paginationTotal="5"
+            :pagination="1"
+            :isLoading="loadingTemplateMessages"
+            data-testid="template-messages-table"
+            :locale="i18n.global.locale"
+            @item-click="rowClick"
+          >
+            <template #body-status="{ item }">
+              <QualityTemplateMessageFlag :status="item.status" />
+            </template>
+          </UnnnicDataTable>
+          <section class="search-template-messages-modal__table-pagination">
+            <UnnnicButton
+              type="tertiary"
+              size="small"
+              iconCenter="arrow-left-1-1"
+              :disabled="!tablePagination.previous"
+              data-testid="previous-button"
+              @click="searchTemplates('previous')"
+            />
+            <UnnnicButton
+              type="tertiary"
+              size="small"
+              iconCenter="arrow-right-1-1"
+              :disabled="!tablePagination.next"
+              data-testid="next-button"
+              @click="searchTemplates('next')"
+            />
+          </section>
+        </section>
+      </div>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script>
@@ -126,6 +137,12 @@ const emit = defineEmits(['close']);
 
 const close = () => {
   emit('close');
+};
+
+const handleDialogOpenChange = (isOpen) => {
+  if (!isOpen) {
+    close();
+  }
 };
 
 const vmodel = defineModel({ required: true, type: Boolean });
@@ -216,6 +233,13 @@ onMounted(() => searchTemplates());
 
 <style lang="scss" scoped>
 .search-template-messages-modal {
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: $unnnic-space-6;
+    overflow: auto;
+  }
+
   &__filters-container {
     display: flex;
     gap: $unnnic-space-2;

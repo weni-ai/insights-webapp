@@ -44,7 +44,6 @@ import { useUser } from './store/modules/user';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
-import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';

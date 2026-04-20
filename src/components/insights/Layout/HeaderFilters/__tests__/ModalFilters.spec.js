@@ -37,26 +37,16 @@ const createTestStore = () =>
     },
   });
 
-const UnnnicModalDialogStub = {
-  template: `
-    <div data-testid="modal">
-      <slot></slot>
-      <slot name="options"></slot>
-    </div>
-  `,
-  props: [
-    'modelValue',
-    'title',
-    'showActionsDivider',
-    'showCloseIcon',
-    'primaryButtonProps',
-    'secondaryButtonProps',
-  ],
-  emits: [
-    'update:model-value',
-    'primary-button-click',
-    'secondary-button-click',
-  ],
+const UnnnicDialogStub = {
+  name: 'UnnnicDialog',
+  template: '<div data-testid="modal"><slot /></div>',
+  props: ['open'],
+  emits: ['update:open'],
+};
+
+const UnnnicDialogTitleStub = {
+  name: 'UnnnicDialogTitle',
+  template: '<div class="modal-filters-dialog-title"><slot /></div>',
 };
 
 const createWrapper = (store) => {
@@ -67,7 +57,12 @@ const createWrapper = (store) => {
     global: {
       plugins: [store],
       stubs: {
-        UnnnicModalDialog: UnnnicModalDialogStub,
+        UnnnicDialog: UnnnicDialogStub,
+        UnnnicDialogContent: { template: '<div><slot /></div>' },
+        UnnnicDialogHeader: { template: '<div><slot /></div>' },
+        UnnnicDialogTitle: UnnnicDialogTitleStub,
+        UnnnicDialogFooter: { template: '<div><slot /></div>' },
+        UnnnicButton: { template: '<button type="button" />' },
       },
       mocks: {
         $t: (key) => (key === 'insights_header.filters' ? 'Filters' : key),
@@ -80,7 +75,7 @@ describe('ModalFilters', () => {
   let wrapper;
   let store;
 
-  const modal = () => wrapper.findComponent('[data-testid="modal"]');
+  const modal = () => wrapper.findComponent({ name: 'UnnnicDialog' });
 
   beforeEach(() => {
     store = createTestStore();
@@ -92,16 +87,18 @@ describe('ModalFilters', () => {
     vi.restoreAllMocks();
   });
 
-  describe('UnnnicModalDialog rendering and interaction', () => {
-    it('renders UnnnicModalDialog with correct props', () => {
+  describe('UnnnicDialog rendering and interaction', () => {
+    it('renders UnnnicDialog with correct props', () => {
       expect(modal().exists()).toBe(true);
-      expect(modal().props('modelValue')).toBe(true);
+      expect(modal().props('open')).toBe(true);
 
-      expect(modal().props('title')).toBe('Filters');
+      expect(wrapper.find('.modal-filters-dialog-title').text()).toBe(
+        'Filters',
+      );
     });
 
     it('emits close event when modal is closed', async () => {
-      await modal().vm.$emit('update:model-value', false);
+      await modal().vm.$emit('update:open', false);
 
       expect(wrapper.emitted('close')).toBeTruthy();
     });

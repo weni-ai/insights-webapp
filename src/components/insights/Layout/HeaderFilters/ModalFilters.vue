@@ -1,53 +1,65 @@
 <template>
-  <UnnnicModalDialog
-    data-testid="modal"
-    :modelValue="showModal"
-    class="modal-filters"
-    :title="$t('insights_header.filters')"
-    showActionsDivider
-    showCloseIcon
-    :primaryButtonProps="primaryButtonProps"
-    :secondaryButtonProps="secondaryButtonProps"
-    @primary-button-click="setFilters"
-    @secondary-button-click="clearFilters"
-    @update:model-value="!$event ? close() : {}"
+  <UnnnicDialog
+    :open="showModal"
+    @update:open="handleOpenChange"
   >
-    <form
-      class="modal-filters__form"
-      @submit.prevent
+    <UnnnicDialogContent
+      size="medium"
+      class="modal-filters"
     >
-      <template
-        v-for="filter of currentDashboardFilters"
-        :key="filter.name"
+      <UnnnicDialogHeader>
+        <UnnnicDialogTitle>
+          {{ $t('insights_header.filters') }}
+        </UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
+      <form
+        class="modal-filters__form"
+        @submit.prevent
       >
-        <DynamicFilter
-          data-testid="dynamic-filter"
-          :modelValue="filtersInternal[filter.name]"
-          :filter="filter"
-          :disabled="handleDisabledFilter(filter)"
-          :dependsOnValue="getDynamicFiltersDependsOnValues(filter)"
-          @update:model-value="updateFilter(filter.name, $event)"
+        <template
+          v-for="filter of currentDashboardFilters"
+          :key="filter.name"
+        >
+          <DynamicFilter
+            data-testid="dynamic-filter"
+            :modelValue="filtersInternal[filter.name]"
+            :filter="filter"
+            :disabled="handleDisabledFilter(filter)"
+            :dependsOnValue="getDynamicFiltersDependsOnValues(filter)"
+            @update:model-value="updateFilter(filter.name, $event)"
+          />
+        </template>
+      </form>
+
+      <UnnnicDialogFooter>
+        <UnnnicButton
+          type="tertiary"
+          :text="$t('insights_header.clear_filters')"
+          :disabled="!hasFiltersInternal"
+          @click="clearFilters"
         />
-      </template>
-    </form>
-    <template #options>
-      <UnnnicButton
-        :text="$t('insights_header.clear_filters')"
-        type="tertiary"
-        :disabled="!hasFiltersInternal"
-        @click="clearFilters"
-      />
-      <UnnnicButton
-        :text="$t('insights_header.filtrate')"
-        type="primary"
-        @click="setFilters"
-      />
-    </template>
-  </UnnnicModalDialog>
+        <UnnnicButton
+          type="primary"
+          :text="$t('insights_header.filtrate')"
+          @click="setFilters"
+        />
+      </UnnnicDialogFooter>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script>
 import { mapActions, mapState } from 'pinia';
+
+import {
+  UnnnicButton,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+} from '@weni/unnnic-system';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useSectors } from '@/store/modules/sectors';
@@ -59,6 +71,12 @@ export default {
 
   components: {
     DynamicFilter,
+    UnnnicButton,
+    UnnnicDialog,
+    UnnnicDialogContent,
+    UnnnicDialogFooter,
+    UnnnicDialogHeader,
+    UnnnicDialogTitle,
   },
 
   props: {
@@ -90,17 +108,6 @@ export default {
         JSON.stringify(this.filtersInternal)
       );
     },
-    primaryButtonProps() {
-      return {
-        text: this.$t('insights_header.filtrate'),
-      };
-    },
-    secondaryButtonProps() {
-      return {
-        text: this.$t('insights_header.clear_filters'),
-        disabled: !this.hasFiltersInternal,
-      };
-    },
   },
 
   watch: {
@@ -118,6 +125,13 @@ export default {
 
   methods: {
     ...mapActions(useDashboards, ['setAppliedFilters', 'resetAppliedFilters']),
+
+    handleOpenChange(isOpen) {
+      if (!isOpen) {
+        this.close();
+      }
+    },
+
     getDynamicFiltersDependsOnValues(filter) {
       if (!filter.depends_on?.search_param) return null;
 
@@ -219,27 +233,13 @@ export default {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 1fr);
 
+    padding: $unnnic-space-6;
     text-align: left;
 
     > :nth-child(1),
     > :nth-child(2) {
       grid-column-start: 1;
       grid-column-end: 3;
-    }
-
-    // Temporary adjustments to allow dropdowns to not be limited to the modal space and may overflow
-
-    :deep(.dropdown-data) {
-      left: 0;
-      .unnnic-date-picker {
-        position: fixed;
-      }
-    }
-
-    :deep(.unnnic-select-smart__options.active) {
-      position: fixed;
-      left: auto;
-      right: auto;
     }
   }
 }

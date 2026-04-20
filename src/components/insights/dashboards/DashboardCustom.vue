@@ -3,11 +3,6 @@
     class="dashboard"
     :style="dashboardGridStyle"
   >
-    <WidgetOnboarding
-      v-if="showConfigWidgetOnboarding"
-      :showCardTour="showOnboarding.card"
-      :showWidgetTour="showOnboarding.empty_widget"
-    />
     <section
       v-if="isLoadingCurrentDashboardWidgets"
       class="dashboard__loading"
@@ -52,7 +47,6 @@ import { useOnboarding } from '@/store/modules/onboarding';
 
 import DrawerConfigGallery from '@/components/insights/drawers/DrawerConfigGallery/index.vue';
 import IconLoading from '@/components/IconLoading.vue';
-import WidgetOnboarding from '@/components/insights/onboardings/WidgetOnboarding.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 import { moduleStorage } from '@/utils/storage';
 
@@ -65,7 +59,6 @@ export default {
     ),
     DrawerConfigGallery,
     IconLoading,
-    WidgetOnboarding,
     FlowResultContactListModal,
   },
 

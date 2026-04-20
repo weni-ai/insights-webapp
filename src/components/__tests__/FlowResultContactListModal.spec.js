@@ -62,11 +62,10 @@ describe('FlowResultContactListModal.vue', () => {
 
   it('renders the modal with correct title', async () => {
     await wrapper.vm.$nextTick();
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
     expect(modal.exists()).toBe(true);
-    // Check that title prop exists and contains either the translation key or the actual label
-    expect(modal.props('title')).toBeDefined();
-    expect(typeof modal.props('title')).toBe('string');
+    const title = wrapper.findComponent({ name: 'UnnnicDialogTitle' });
+    expect(title.text()).toContain('Test Label');
   });
 
   it('fetches data and updates table rows', async () => {
@@ -98,8 +97,8 @@ describe('FlowResultContactListModal.vue', () => {
   });
 
   it('should emit close event when modal is closed', async () => {
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-    await modal.vm.$emit('update:model-value', false);
+    const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
+    await modal.vm.$emit('update:open', false);
     expect(wrapper.emitted('close')).toBeTruthy();
   });
 

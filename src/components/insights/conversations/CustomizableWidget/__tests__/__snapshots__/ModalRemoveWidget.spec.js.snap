@@ -2,28 +2,66 @@
 
 exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
 <div
-  class="modal-remove-widget"
-  data-testid="modal-remove-widget"
   data-v-1d7c4579=""
-  icon="warning"
-  modelvalue="true"
-  primarybuttonprops="[object Object]"
-  secondarybuttonprops="[object Object]"
-  showcloseicon=""
-  size="sm"
-  title="conversations_dashboard.customize_your_dashboard.modal_remove_widget.title undefined"
-  type="warning"
 >
   
-  
-  <p
-    class="modal-remove-widget__description"
-    data-testid="modal-remove-widget-description"
+  <div
+    class="modal-remove-widget"
+    data-testid="modal-remove-widget"
     data-v-1d7c4579=""
+    size="small"
   >
-    conversations_dashboard.customize_your_dashboard.modal_remove_widget.description {}
-  </p>
-  
+    
+    <header
+      data-v-1d7c4579=""
+      type="warning"
+    >
+      
+      <div
+        data-v-1d7c4579=""
+      >
+        
+        conversations_dashboard.customize_your_dashboard.modal_remove_widget.title undefined
+        
+      </div>
+      
+    </header>
+    <section
+      class="modal-remove-widget__content"
+      data-v-1d7c4579=""
+    >
+      
+      <p
+        class="modal-remove-widget__description"
+        data-testid="modal-remove-widget-description"
+        data-v-1d7c4579=""
+      >
+        conversations_dashboard.customize_your_dashboard.modal_remove_widget.description {}
+      </p>
+      
+    </section>
+    <footer
+      data-v-1d7c4579=""
+    >
+      
+      <button
+        data-v-1d7c4579=""
+        type="button"
+      >
+        
+        
+      </button>
+      <button
+        data-v-1d7c4579=""
+        type="button"
+      >
+        
+        
+      </button>
+      
+    </footer>
+    
+  </div>
   
 </div>
 `;

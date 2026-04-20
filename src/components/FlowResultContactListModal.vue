@@ -1,34 +1,39 @@
 <template>
-  <UnnnicModalDialog
-    :modelValue="true"
-    :title="$t('contact_list_modal.title', { label: props.flowResultLabel })"
-    showCloseIcon
-    size="lg"
+  <UnnnicDialog
+    :open="open"
     data-testid="contact-list-modal"
-    @update:model-value="$emit('close')"
+    @update:open="handleUpdateOpen"
   >
-    <UnnnicTableNext
-      :locale="i18n.global.locale"
-      :headers="tableHeaders"
-      :pagination="page"
-      :paginationInterval="limit"
-      :paginationTotal="dataCount"
-      :isLoading="loading"
-      :rows="rows"
-      data-testid="contact-list-table"
-      @update:pagination="page = $event"
-    />
-  </UnnnicModalDialog>
+    <UnnnicDialogContent size="large">
+      <UnnnicDialogHeader>
+        <UnnnicDialogTitle>
+          {{ $t('contact_list_modal.title', { label: props.flowResultLabel }) }}
+        </UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+      <section class="flow-result-contact-list-modal__content">
+        <UnnnicTableNext
+          :locale="i18n.global.locale"
+          :headers="tableHeaders"
+          :pagination="page"
+          :paginationInterval="limit"
+          :paginationTotal="dataCount"
+          :isLoading="loading"
+          :rows="rows"
+          data-testid="contact-list-table"
+          @update:pagination="page = $event"
+        />
+      </section>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 
-import Unnnic from '@weni/unnnic-system';
-
 import Widget from '@/services/api/resources/widgets';
 import moment from 'moment';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 const props = defineProps({
   flowResultLabel: {
@@ -42,6 +47,15 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+
+const open = ref(true);
+
+const handleUpdateOpen = (value) => {
+  open.value = value;
+  if (!value) {
+    emit('close');
+  }
+};
 
 const tableHeaders = [
   { content: i18n.global.t('contact_list_modal.header.contact_name') },
@@ -84,7 +98,7 @@ const getData = async () => {
 
     rows.value = contacts.map((item) => formatRow(item));
   } catch (error) {
-    Unnnic.unnnicCallAlert({
+    UnnnicCallAlert({
       props: {
         text: i18n.global.t('contact_list_modal.message.get_data_fail'),
         type: 'error',
@@ -100,3 +114,11 @@ const getData = async () => {
 onMounted(getData);
 watch(page, getData);
 </script>
+
+<style lang="scss" scoped>
+.flow-result-contact-list-modal {
+  &__content {
+    padding: $unnnic-space-6;
+  }
+}
+</style>

@@ -1,16 +1,33 @@
 <template>
-  <UnnnicModalDialog
-    :modelValue="modelValue"
-    :title="$t('widgets.reset')"
-    showCloseIcon
-    :primaryButtonProps="primaryButtonProps"
-    :secondaryButtonProps="secondaryButtonProps"
-    @primary-button-click="resetWidget"
-    @secondary-button-click="updateModelValue"
-    @update:model-value="updateModelValue"
+  <UnnnicDialog
+    :open="modelValue"
+    @update:open="updateModelValue"
   >
-    <p>{{ $t('widgets.info_reset') }}</p>
-  </UnnnicModalDialog>
+    <UnnnicDialogContent size="medium">
+      <UnnnicDialogHeader>
+        <UnnnicDialogTitle>
+          {{ $t('widgets.reset') }}
+        </UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
+      <section class="modal-reset-widget__content">
+        <p>{{ $t('widgets.info_reset') }}</p>
+      </section>
+      <UnnnicDialogFooter>
+        <UnnnicButton
+          type="tertiary"
+          :text="$t('cancel')"
+          @click="updateModelValue(false)"
+        />
+        <UnnnicButton
+          type="primary"
+          :text="$t('reset')"
+          :loading="isLoading"
+          @click="resetWidget"
+        />
+      </UnnnicDialogFooter>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script>
@@ -18,9 +35,9 @@ import { mapActions } from 'pinia';
 
 import { useWidgets } from '@/store/modules/widgets';
 
-import Unnnic from '@weni/unnnic-system';
-
 import { clearDeepValues } from '@/utils/object';
+
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 export default {
   name: 'ModalResetWidget',
@@ -42,20 +59,6 @@ export default {
     return {
       isLoading: false,
     };
-  },
-
-  computed: {
-    primaryButtonProps() {
-      return {
-        text: this.$t('reset'),
-        loading: this.isLoading,
-      };
-    },
-    secondaryButtonProps() {
-      return {
-        text: this.$t('cancel'),
-      };
-    },
   },
 
   methods: {
@@ -102,7 +105,7 @@ export default {
     },
 
     callSuccessAlert() {
-      Unnnic.unnnicCallAlert({
+      UnnnicCallAlert({
         props: {
           text: this.$t('widgets.success_reset'),
           type: 'success',
@@ -112,7 +115,7 @@ export default {
     },
 
     callErrorAlert() {
-      Unnnic.unnnicCallAlert({
+      UnnnicCallAlert({
         props: {
           text: this.$t('widgets.error_reset'),
           type: 'error',
@@ -123,3 +126,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.modal-reset-widget__content {
+  padding: $unnnic-space-6;
+  font: $unnnic-font-body;
+  color: $unnnic-color-fg-base;
+}
+</style>

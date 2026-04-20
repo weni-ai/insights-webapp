@@ -5,11 +5,16 @@ import ModalResetWidget from '../ModalResetWidget.vue';
 import { useWidgets } from '@/store/modules/widgets';
 import Unnnic from '@weni/unnnic-system';
 
-vi.mock('@weni/unnnic-system', () => ({
-  default: {
-    unnnicCallAlert: vi.fn(),
-  },
-}));
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    default: {
+      ...actual.default,
+      UnnnicCallAlert: vi.fn(),
+    },
+  };
+});
 
 describe('ModalResetWidget', () => {
   let wrapper;

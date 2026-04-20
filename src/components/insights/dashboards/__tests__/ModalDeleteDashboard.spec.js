@@ -1,15 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
 
-import unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 import ModalDeleteDashboard from '../ModalDeleteDashboard.vue';
 
 import Dashboards from '@/services/api/resources/dashboards';
 
 vi.mock('@/services/api/resources/dashboards');
+
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
 
 describe('ModalDeleteDashboard', () => {
   let store;
@@ -20,6 +28,8 @@ describe('ModalDeleteDashboard', () => {
   };
 
   beforeEach(() => {
+    vi.clearAllMocks();
+
     store = createTestingPinia({
       initialState: {
         dashboards: {
@@ -71,15 +81,14 @@ describe('ModalDeleteDashboard', () => {
   });
 
   it('shows success alert and updates state on successful deletion', async () => {
-    const callAlertSpy = vi.spyOn(unnnic, 'unnnicCallAlert');
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
     const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
 
     await input.setValue('Test Dashboard');
     await deleteBtn.trigger('click');
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
-    expect(callAlertSpy).toHaveBeenCalledWith({
+    expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
         text: wrapper.vm.$t('delete_dashboard.alert.success'),
         type: 'success',
@@ -89,7 +98,6 @@ describe('ModalDeleteDashboard', () => {
   });
 
   it('shows error alert on failed deletion', async () => {
-    const callAlertSpy = vi.spyOn(unnnic, 'unnnicCallAlert');
     Dashboards.deleteDashboard.mockRejectedValueOnce(new Error('Failed'));
 
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
@@ -97,11 +105,11 @@ describe('ModalDeleteDashboard', () => {
 
     await input.setValue('Test Dashboard');
     await deleteBtn.trigger('click');
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
     expect(Dashboards.deleteDashboard).toHaveBeenCalled();
 
-    expect(callAlertSpy).toHaveBeenCalledWith({
+    expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
         text: wrapper.vm.$t('delete_dashboard.alert.error'),
         type: 'error',

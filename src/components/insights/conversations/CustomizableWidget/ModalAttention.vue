@@ -1,26 +1,35 @@
 <template>
-  <UnnnicModalDialog
+  <UnnnicDialog
     data-testid="modal-attention"
-    :modelValue="modelValue"
-    :title="title"
-    type="attention"
-    icon="error"
-    :primaryButtonProps="{
-      text: primaryButtonText,
-    }"
-    :secondaryButtonProps="{
-      text: $t(
-        'conversations_dashboard.customize_your_dashboard.modal_attention.keep_configuring',
-      ),
-    }"
-    showCloseIcon
-    size="sm"
-    @update:model-value="emit('secondary-button-click')"
-    @secondary-button-click="emit('secondary-button-click')"
-    @primary-button-click="emit('primary-button-click')"
+    :open="modelValue"
+    @update:open="handleOpenChange"
   >
-    {{ description }}
-  </UnnnicModalDialog>
+    <UnnnicDialogContent
+      size="small"
+      class="modal-attention"
+    >
+      <UnnnicDialogHeader type="attention">
+        <UnnnicDialogTitle>{{ title }}</UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
+      <section class="modal-attention__content">
+        {{ description }}
+      </section>
+
+      <UnnnicDialogFooter>
+        <UnnnicButton
+          type="tertiary"
+          :text="secondaryButtonText"
+          @click="emit('secondary-button-click')"
+        />
+        <UnnnicButton
+          type="attention"
+          :text="primaryButtonText"
+          @click="emit('primary-button-click')"
+        />
+      </UnnnicDialogFooter>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script setup lang="ts">
@@ -43,6 +52,12 @@ const props = withDefaults(defineProps<Props>(), {
   type: 'cancel',
   modelValue: false,
 });
+
+const secondaryButtonText = computed(() =>
+  t(
+    'conversations_dashboard.customize_your_dashboard.modal_attention.keep_configuring',
+  ),
+);
 
 const title = computed(() => {
   const text = {
@@ -82,12 +97,20 @@ const primaryButtonText = computed(() => {
 
   return text[props.type];
 });
+
+const handleOpenChange = (open: boolean) => {
+  if (!open) {
+    emit('secondary-button-click');
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-.modal-topic {
-  display: flex;
-  flex-direction: column;
-  gap: $unnnic-space-6;
+.modal-attention {
+  &__content {
+    padding: $unnnic-space-6;
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-base;
+  }
 }
 </style>

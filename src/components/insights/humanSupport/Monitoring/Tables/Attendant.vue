@@ -71,14 +71,17 @@ defineOptions({
 type FormattedAttendantData = Omit<
   AttendantDataResult,
   | 'agent'
+  | 'status'
   | 'average_first_response_time'
   | 'average_response_time'
   | 'average_duration'
   | 'time_in_service'
 > & {
   agent: string | null;
-  agent_email: string | null;
+  agent_email: string;
   agent_is_deleted: boolean;
+  status: string;
+  status_label: string;
   average_first_response_time: string;
   average_response_time: string;
   average_duration: string;
@@ -104,9 +107,11 @@ const formatResults = (
 ): FormattedAttendantData[] => {
   return results.map((result) => ({
     ...result,
-    agent: formatAgentName(result.agent),
+    agent: result?.agent ? formatAgentName(result.agent) : null,
     agent_email: result?.agent?.email || '',
     agent_is_deleted: result?.agent?.is_deleted === true,
+    status: result?.status?.status || '',
+    status_label: result?.status?.label || '',
     average_first_response_time: formatSecondsToTime(
       result?.average_first_response_time,
     ),

@@ -422,4 +422,37 @@ describe('Attendant', () => {
       expect(result[0].agent_is_deleted).toBe(false);
     });
   });
+
+  describe('Status flattening (v2 format)', () => {
+    it('flattens status object into status and status_label', () => {
+      const mockData = [
+        {
+          agent: { name: 'John Doe', email: 'john@example.com' },
+          status: { status: 'custom', label: 'Em pausa' },
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].status).toBe('custom');
+      expect(result[0].status_label).toBe('Em pausa');
+    });
+
+    it('returns empty strings when status is missing', () => {
+      const mockData = [
+        {
+          agent: { name: 'John Doe', email: 'john@example.com' },
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].status).toBe('');
+      expect(result[0].status_label).toBe('');
+    });
+  });
 });

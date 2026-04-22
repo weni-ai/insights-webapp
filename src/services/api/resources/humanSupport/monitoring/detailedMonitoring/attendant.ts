@@ -13,14 +13,13 @@ interface AttendantData {
 
 interface AttendantDataResult {
   agent: { name: string; email: string; is_deleted?: boolean };
-  status: string;
+  status: { status: string; label: string };
   ongoing: string;
   finished: string;
   average_first_response_time: number;
   average_response_time: number;
   average_duration: number;
   time_in_service: number;
-  status_label?: string;
   link: {
     url: string;
     type: string;

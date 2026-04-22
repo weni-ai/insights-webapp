@@ -16,6 +16,9 @@ interface AutoWidgetState {
   };
 }
 
+let agentInvocationAbortController: AbortController | null = null;
+let toolResultAbortController: AbortController | null = null;
+
 export const useAutoWidgets = defineStore('autoWidgets', {
   state: (): AutoWidgetState => ({
     agentInvocation: {
@@ -32,14 +35,21 @@ export const useAutoWidgets = defineStore('autoWidgets', {
 
   actions: {
     async loadAgentInvocationData() {
-      if (this.agentInvocation.isLoading) return;
+      if (agentInvocationAbortController) {
+        agentInvocationAbortController.abort();
+      }
+      agentInvocationAbortController = new AbortController();
+      const { signal } = agentInvocationAbortController;
 
       this.agentInvocation.isLoading = true;
       this.agentInvocation.error = false;
 
       try {
         const response =
-          await WidgetConversationalService.getAgentInvocationData();
+          await WidgetConversationalService.getAgentInvocationData(
+            {},
+            { signal },
+          );
         this.agentInvocation.data = response;
 
         if (response.results?.length > 0) {
@@ -47,21 +57,31 @@ export const useAutoWidgets = defineStore('autoWidgets', {
           conversational.setHasEndpointData(true);
         }
       } catch (error) {
+        if (signal.aborted) return;
         this.agentInvocation.error = true;
         console.error('Error loading agent invocation data', error);
       } finally {
-        this.agentInvocation.isLoading = false;
+        if (!signal.aborted) {
+          this.agentInvocation.isLoading = false;
+        }
       }
     },
 
     async loadToolResultData() {
-      if (this.toolResult.isLoading) return;
+      if (toolResultAbortController) {
+        toolResultAbortController.abort();
+      }
+      toolResultAbortController = new AbortController();
+      const { signal } = toolResultAbortController;
 
       this.toolResult.isLoading = true;
       this.toolResult.error = false;
 
       try {
-        const response = await WidgetConversationalService.getToolResultData();
+        const response = await WidgetConversationalService.getToolResultData(
+          {},
+          { signal },
+        );
         this.toolResult.data = response;
 
         if (response.results?.length > 0) {
@@ -69,10 +89,13 @@ export const useAutoWidgets = defineStore('autoWidgets', {
           conversational.setHasEndpointData(true);
         }
       } catch (error) {
+        if (signal.aborted) return;
         this.toolResult.error = true;
         console.error('Error loading tool result data', error);
       } finally {
-        this.toolResult.isLoading = false;
+        if (!signal.aborted) {
+          this.toolResult.isLoading = false;
+        }
       }
     },
 
@@ -84,6 +107,14 @@ export const useAutoWidgets = defineStore('autoWidgets', {
     },
 
     resetAutoWidgets() {
+      if (agentInvocationAbortController) {
+        agentInvocationAbortController.abort();
+        agentInvocationAbortController = null;
+      }
+      if (toolResultAbortController) {
+        toolResultAbortController.abort();
+        toolResultAbortController = null;
+      }
       this.agentInvocation = { data: null, isLoading: false, error: false };
       this.toolResult = { data: null, isLoading: false, error: false };
     },

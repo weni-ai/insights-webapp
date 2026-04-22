@@ -16,10 +16,6 @@
       @view-guide="handleMcpViewGuide"
       @update:model-value="showMcpNewsModal = $event"
     />
-    <DashboardOnboarding
-      v-if="showCreateDashboardTour"
-      data-testid="dashboard-onboarding"
-    />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
@@ -57,7 +53,6 @@ import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
 import McpNewsModal from './components/McpNewsModal.vue';
-import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
@@ -78,7 +73,6 @@ export default {
     IconLoading,
     CompleteOnboardingModal,
     McpNewsModal,
-    DashboardOnboarding,
   },
   data() {
     return {

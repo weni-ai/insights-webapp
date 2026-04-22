@@ -65,10 +65,6 @@ const mockComponents = {
     props: ['modelValue'],
     emits: ['not-now', 'view-guide', 'update:modelValue'],
   },
-  DashboardOnboarding: {
-    name: 'DashboardOnboarding',
-    template: '<div class="dashboard-onboarding"></div>',
-  },
   RouterView: {
     name: 'RouterView',
     template: '<div class="router-view"></div>',
@@ -412,15 +408,6 @@ describe('App', () => {
       await flushPromises();
 
       expect(wrapper.findComponent({ name: 'RouterView' }).exists()).toBe(true);
-    });
-
-    it('should show DashboardOnboarding when showCreateDashboardTour is true', async () => {
-      onboardingStore.showCreateDashboardOnboarding = true;
-      await wrapper.vm.$nextTick();
-
-      expect(
-        wrapper.findComponent('[data-testid="dashboard-onboarding"]').exists(),
-      ).toBe(true);
     });
   });
 

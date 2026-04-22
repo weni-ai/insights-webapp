@@ -69,6 +69,7 @@ const conversationalStore = useConversational();
 const isRemoveWidgetModalOpen = ref<boolean>(false);
 const metricValue = ref<number>(0);
 const isLoading = ref<boolean>(false);
+let abortController: AbortController | null = null;
 const formattedValue = computed(() => {
   if (props.metric.config.currency.code) {
     return formatCurrency(metricValue.value, props.metric.config.currency.code);
@@ -77,16 +78,26 @@ const formattedValue = computed(() => {
 });
 
 const getChildrenValue = async () => {
+  if (abortController) {
+    abortController.abort();
+  }
+  abortController = new AbortController();
+  const { signal } = abortController;
+
   try {
     isLoading.value = true;
     const response = await WidgetService.getAbsoluteNumbersChildrenValue(
       props.metric.uuid,
+      { signal },
     );
     metricValue.value = response.value;
   } catch (error) {
+    if (signal.aborted) return;
     console.error('Error getting children value', error);
   } finally {
-    isLoading.value = false;
+    if (!signal.aborted) {
+      isLoading.value = false;
+    }
   }
 };
 

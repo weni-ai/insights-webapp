@@ -232,7 +232,7 @@ describe('Finished', () => {
       expect(result[0].queue_is_deleted).toBe(true);
     });
 
-    it('falls back to agent_email when agent is null', () => {
+    it('returns empty agent and false agent_is_deleted when agent is null', () => {
       const mockData = [
         {
           agent: null,
@@ -242,8 +242,21 @@ describe('Finished', () => {
         },
       ];
       const result = wrapper.vm.formatResults(mockData);
-      expect(result[0].agent).toBe('ana@test.com');
+      expect(result[0].agent).toBe('');
       expect(result[0].agent_is_deleted).toBe(false);
+    });
+
+    it('falls back to agent email when name is empty', () => {
+      const mockData = [
+        {
+          agent: { name: '', email: 'ana@test.com' },
+          agent_email: '',
+          sector: { name: 'Sales' },
+          queue: { name: 'VIP' },
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent).toBe('ana@test.com');
     });
 
     it('handles items with no is_deleted flags', () => {

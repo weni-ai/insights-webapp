@@ -5,7 +5,7 @@ import { createRequestQuery } from '@/utils/request';
 import http2 from '@/services/api/http2';
 
 interface FinishedDataResult {
-  agent: { name: string; is_deleted?: boolean } | null;
+  agent: { name: string; email: string; is_deleted?: boolean } | null;
   agent_email: string;
   sector: { name: string; is_deleted?: boolean };
   queue: { name: string; is_deleted?: boolean };

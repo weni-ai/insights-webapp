@@ -100,7 +100,7 @@ type FormattedFinishedData = Omit<
   FinishedDataResult,
   'agent' | 'sector' | 'queue'
 > & {
-  agent: string;
+  agent: string | null;
   agent_is_deleted: boolean;
   sector: string;
   sector_is_deleted: boolean;
@@ -127,13 +127,17 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
 const formatResults = (results: FinishedDataResult[]) => {
   return results.map((result) => ({
     ...result,
-    agent: result.agent?.name || result?.agent_email || '',
+    agent: formatAgentName(result.agent),
     agent_is_deleted: result.agent?.is_deleted === true,
     sector: result.sector?.name || '',
     sector_is_deleted: result.sector?.is_deleted === true,
     queue: result.queue?.name || '',
     queue_is_deleted: result.queue?.is_deleted === true,
   }));
+};
+
+const formatAgentName = (agent: { name: string; email: string }) => {
+  return agent?.name?.trim().length > 0 ? agent?.name : agent?.email || '';
 };
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {

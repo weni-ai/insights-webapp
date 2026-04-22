@@ -167,12 +167,16 @@ const formattedItems = computed(() => {
 
     return {
       link: item.link,
-      agent: item.agent?.name || item.agent?.email || '',
+      agent: formatAgentName(item.agent),
       agent_is_deleted: item.agent?.is_deleted === true,
       ...customStatusObj,
     };
   });
 });
+
+const formatAgentName = (agent: { name: string; email: string }) => {
+  return agent?.name?.trim().length > 0 ? agent?.name : agent?.email || '';
+};
 
 const handleSort = (sort: {
   header: string;

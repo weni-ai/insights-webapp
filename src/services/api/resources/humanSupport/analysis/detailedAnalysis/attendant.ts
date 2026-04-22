@@ -1,4 +1,4 @@
-import http from '@/services/api/http';
+import http2 from '@/services/api/http2';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
@@ -59,7 +59,7 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(
+    const response = (await http2.get(
       `/metrics/human-support/detailed-monitoring/agents/`,
       {
         params: formattedParams,

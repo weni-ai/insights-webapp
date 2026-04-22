@@ -1,3 +1,4 @@
+import http2 from '@/services/api/http2';
 import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
@@ -11,16 +12,14 @@ interface AttendantData {
 }
 
 interface AttendantDataResult {
-  agent: string;
-  status: string;
+  agent: { name: string; email: string; is_deleted?: boolean };
+  status: { status: string; label: string };
   ongoing: string;
   finished: string;
-  agent_email: string;
   average_first_response_time: number;
   average_response_time: number;
   average_duration: number;
   time_in_service: number;
-  status_label?: string;
   link: {
     url: string;
     type: string;
@@ -67,7 +66,7 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(
+    const response = (await http2.get(
       `/metrics/human-support/detailed-monitoring/agents/`,
       {
         params: formattedParams,
@@ -76,11 +75,7 @@ export default {
 
     const formattedResponse: AttendantData = {
       ...response,
-      results:
-        response?.results?.map((result) => ({
-          ...result,
-          agent: result?.agent?.trim().length > 0 ? result?.agent : '',
-        })) || [],
+      results: response?.results || [],
     };
 
     return formattedResponse;

@@ -65,6 +65,7 @@ interface Props {
     sectors?: string[];
     queues?: string[];
     tags?: string[];
+    include_removed?: boolean;
   };
 }
 
@@ -266,7 +267,7 @@ const loadData = async (search?: string) => {
     isLoading.value = true;
 
     const params = search
-      ? { ...props.filterParams, search }
+      ? { ...props.filterParams, search, include_removed: true }
       : props.filterParams || {};
 
     const response = await Projects.getProjectSource(

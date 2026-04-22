@@ -34,6 +34,15 @@
         :label="getStatusLabel(item.status, item?.status_label)"
       />
     </template>
+    <template #body-agent="{ item }">
+      <DynamicCellText
+        :text="item.agent"
+        :isDeleted="item.agent_is_deleted"
+        :tooltipText="
+          $t('human_support_dashboard.deleted_tooltips.representative')
+        "
+      />
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -49,6 +58,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
 import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/AgentStatus.vue';
+import DynamicCellText from '../../Common/DynamicCellText.vue';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
@@ -60,11 +70,18 @@ defineOptions({
 
 type FormattedAttendantData = Omit<
   AttendantDataResult,
+  | 'agent'
+  | 'status'
   | 'average_first_response_time'
   | 'average_response_time'
   | 'average_duration'
   | 'time_in_service'
 > & {
+  agent: string | null;
+  agent_email: string;
+  agent_is_deleted: boolean;
+  status: string;
+  status_label: string;
   average_first_response_time: string;
   average_response_time: string;
   average_duration: string;
@@ -90,7 +107,11 @@ const formatResults = (
 ): FormattedAttendantData[] => {
   return results.map((result) => ({
     ...result,
-    agent: result?.agent || result?.agent_email || '',
+    agent: result?.agent ? formatAgentName(result.agent) : null,
+    agent_email: result?.agent?.email || '',
+    agent_is_deleted: result?.agent?.is_deleted === true,
+    status: result?.status?.status || '',
+    status_label: result?.status?.label || '',
     average_first_response_time: formatSecondsToTime(
       result?.average_first_response_time,
     ),
@@ -98,6 +119,10 @@ const formatResults = (
     average_duration: formatSecondsToTime(result?.average_duration),
     time_in_service: formatSecondsToTime(result?.time_in_service),
   }));
+};
+
+const formatAgentName = (agent: { name: string; email: string }) => {
+  return agent?.name?.trim().length > 0 ? agent?.name : agent?.email || '';
 };
 
 const fetchData = async (page: number, pageSize: number, ordering: string) => {

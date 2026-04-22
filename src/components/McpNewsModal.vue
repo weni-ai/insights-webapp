@@ -44,7 +44,7 @@
             >
               <UnnnicIcon
                 icon="hub"
-                size="md"
+                size="lg"
                 scheme="neutral-dark"
               />
               <span class="mcp-news-modal__flow-label">
@@ -217,12 +217,6 @@ function handleViewGuide() {
     flex-direction: column;
     align-items: center;
     gap: $unnnic-space-2;
-
-    &--hero {
-      :deep(.unnnic-icon) {
-        font-size: $unnnic-icon-size-7;
-      }
-    }
   }
 
   &__flow-label {

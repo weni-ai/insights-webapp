@@ -1119,6 +1119,14 @@
     "common": {
       "no_response": "Sem resposta"
     },
+    "deleted_tooltips": {
+      "queue_and_sector": "Fila e setor removidos do projeto",
+      "queue": "Fila removida do projeto",
+      "tag_and_sector": "Tag e setor removidos do projeto",
+      "tag": "Tag removida do projeto",
+      "sector": "Setor removido do projeto",
+      "representative": "Atendente removido do projeto"
+    },
     "volume_per_queue": {
       "title": "Volume por fila",
       "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",

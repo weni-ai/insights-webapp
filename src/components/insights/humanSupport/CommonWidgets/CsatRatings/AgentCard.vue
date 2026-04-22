@@ -5,24 +5,38 @@
         v-if="!props.hiddenAvatar"
         :username="props.title"
       />
-      <section class="agent-card__agent">
-        <section class="agent-card__agent-name-container">
-          <p class="agent-card__agent-name">{{ props.title }}</p>
-          <UnnnicToolTip
-            v-if="props.tooltip"
-            enabled
-            :text="props.tooltip"
-          >
-            <UnnnicIcon
-              icon="info"
-              size="sm"
-              filled
-              scheme="fg-muted"
-            />
-          </UnnnicToolTip>
+      <UnnnicToolTip
+        :enabled="!!props.deletedTooltip"
+        :text="props.deletedTooltip"
+        side="right"
+        data-testid="agent-card-deleted-tooltip"
+      >
+        <section class="agent-card__agent">
+          <section class="agent-card__agent-name-container">
+            <p
+              :class="[
+                'agent-card__agent-name',
+                { 'agent-card__agent-name--muted': props.isDeleted },
+              ]"
+            >
+              {{ props.title }}
+            </p>
+            <UnnnicToolTip
+              v-if="props.tooltip"
+              enabled
+              :text="props.tooltip"
+            >
+              <UnnnicIcon
+                icon="info"
+                size="sm"
+                filled
+                scheme="fg-muted"
+              />
+            </UnnnicToolTip>
+          </section>
+          <p class="agent-card__agent-subtitle">{{ props.subtitle }}</p>
         </section>
-        <p class="agent-card__agent-subtitle">{{ props.subtitle }}</p>
-      </section>
+      </UnnnicToolTip>
     </section>
     <p class="agent-card__rating">
       {{ props.rating ? formatNumber(props.rating, $i18n.locale) : '-' }}
@@ -44,6 +58,8 @@ interface AgentCardProps {
   rating?: number;
   hiddenAvatar?: boolean;
   active?: boolean;
+  isDeleted?: boolean;
+  deletedTooltip?: string;
 }
 
 const props = withDefaults(defineProps<AgentCardProps>(), {
@@ -51,6 +67,8 @@ const props = withDefaults(defineProps<AgentCardProps>(), {
   tooltip: '',
   rating: undefined,
   active: false,
+  isDeleted: false,
+  deletedTooltip: '',
 });
 </script>
 
@@ -90,6 +108,11 @@ const props = withDefaults(defineProps<AgentCardProps>(), {
     &-name {
       font: $unnnic-font-display-3;
       color: $unnnic-color-fg-emphasized;
+
+      &--muted {
+        color: $unnnic-color-fg-muted;
+      }
+
       &-container {
         display: flex;
         flex-direction: row;

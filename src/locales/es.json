@@ -1119,6 +1119,14 @@
     "common": {
       "no_response": "Sin respuesta"
     },
+    "deleted_tooltips": {
+      "queue_and_sector": "Cola y sector eliminados del proyecto",
+      "queue": "Cola eliminada del proyecto",
+      "tag_and_sector": "Tag y sector eliminados del proyecto",
+      "tag": "Tag eliminada del proyecto",
+      "sector": "Sector eliminado del proyecto",
+      "representative": "Representante eliminado del proyecto"
+    },
     "volume_per_queue": {
       "title": "Volumen por cola",
       "monitoring_count": "{count} cola con chats {status} | {count} colas con chats {status}",

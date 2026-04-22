@@ -16,7 +16,7 @@ interface PausesDataResult {
     type: string;
   };
   opened: number;
-  agent: string;
+  agent: { name: string; email?: string; is_deleted?: boolean };
   closed: number;
   status: {
     status: string;

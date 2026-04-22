@@ -11,8 +11,7 @@ interface AttendantData {
 }
 
 interface AttendantDataResult {
-  agent: string;
-  agent_email: string;
+  agent: { name: string; email: string; is_deleted?: boolean };
   finished: string;
   average_first_response_time: number;
   average_response_time: number;
@@ -69,11 +68,7 @@ export default {
 
     const formattedResponse: AttendantData = {
       ...response,
-      results:
-        response?.results?.map((result) => ({
-          ...result,
-          agent: result?.agent?.trim().length > 0 ? result?.agent : '',
-        })) || [],
+      results: response?.results || [],
     };
 
     return formattedResponse;

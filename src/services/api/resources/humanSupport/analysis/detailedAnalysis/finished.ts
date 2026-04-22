@@ -5,10 +5,10 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
 
 interface FinishedDataResult {
-  agent: string;
+  agent: { name: string; is_deleted?: boolean } | null;
   agent_email: string;
-  sector: string;
-  queue: string;
+  sector: { name: string; is_deleted?: boolean };
+  queue: { name: string; is_deleted?: boolean };
   awaiting_time: number;
   first_response_time: number | null;
   response_time: number;

@@ -1119,6 +1119,14 @@
     "common": {
       "no_response": "No response"
     },
+    "deleted_tooltips": {
+      "queue_and_sector": "Queue and sector removed from project",
+      "queue": "Queue removed from project",
+      "tag_and_sector": "Tag and sector removed from project",
+      "tag": "Tag removed from project",
+      "sector": "Sector removed from project",
+      "representative": "Representative removed from project"
+    },
     "volume_per_queue": {
       "title": "Volume per queue",
       "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",

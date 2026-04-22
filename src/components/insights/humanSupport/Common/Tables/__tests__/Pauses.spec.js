@@ -21,7 +21,7 @@ const mockInfiniteScroll = {
   formattedItems: {
     value: [
       {
-        agent: 'Agent 1',
+        agent: { name: 'Agent 1', is_deleted: false },
         custom_status: [
           { status_type: 'Break', break_time: 300 },
           { status_type: 'Lunch', break_time: 600 },
@@ -95,7 +95,7 @@ describe('Pauses', () => {
     Object.assign(mockInfiniteScroll.formattedItems, {
       value: [
         {
-          agent: 'Agent 1',
+          agent: { name: 'Agent 1', is_deleted: false },
           custom_status: [
             { status_type: 'Break', break_time: 300 },
             { status_type: 'Lunch', break_time: 600 },
@@ -135,7 +135,7 @@ describe('Pauses', () => {
       Object.assign(mockInfiniteScroll.formattedItems, {
         value: [
           {
-            agent: 'Agent 1',
+            agent: { name: 'Agent 1' },
             custom_status: [
               { status_type: 'Zebra', break_time: 100 },
               { status_type: 'Alpha', break_time: 200 },
@@ -171,6 +171,26 @@ describe('Pauses', () => {
       expect(items[0].agent).toBe('Agent 1');
       expect(items[0].Break).toBe('300s');
       expect(items[0].Lunch).toBe('600s');
+    });
+
+    it('carries agent_is_deleted from API response', () => {
+      Object.assign(mockInfiniteScroll.formattedItems, {
+        value: [
+          {
+            agent: { name: 'Deleted Agent', is_deleted: true },
+            custom_status: [],
+          },
+        ],
+      });
+      const newWrapper = createWrapper();
+      const items = newWrapper.vm.formattedItems;
+      expect(items[0].agent).toBe('Deleted Agent');
+      expect(items[0].agent_is_deleted).toBe(true);
+    });
+
+    it('sets agent_is_deleted to false when not present', () => {
+      const items = wrapper.vm.formattedItems;
+      expect(items[0].agent_is_deleted).toBe(false);
     });
   });
 
@@ -246,28 +266,28 @@ describe('Pauses', () => {
 
     it('prevents multiple simultaneous requests', async () => {
       vi.clearAllMocks();
-      
+
       let resolveRequest;
       const requestPromise = new Promise((resolve) => {
         resolveRequest = resolve;
       });
       mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
-      
+
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
-      
+
       resolveRequest();
       await requestPromise;
       await wrapper.vm.$nextTick();
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
     });
   });

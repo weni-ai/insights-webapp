@@ -8,10 +8,6 @@
       :showModal="showCompleteOnboardingModal"
       @finish-onboarding="setShowCompleteOnboardingModal(false)"
     />
-    <DashboardOnboarding
-      v-if="showCreateDashboardTour"
-      data-testid="dashboard-onboarding"
-    />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
@@ -48,7 +44,6 @@ import { useUser } from './store/modules/user';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
-import DashboardOnboarding from './components/insights/onboardings/DashboardOnboarding.vue';
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
@@ -68,7 +63,6 @@ export default {
     InsightsLayout,
     IconLoading,
     CompleteOnboardingModal,
-    DashboardOnboarding,
   },
   computed: {
     ...mapState(useDashboards, [

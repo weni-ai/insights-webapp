@@ -16,6 +16,8 @@ import i18n from '@/utils/plugins/i18n';
 export const MOCK_CUSTOM_UUID = 'mock-custom';
 export const MOCK_CROSSTAB_UUID = 'mock-crosstab';
 
+const abortControllersByUuid = new Map<string, AbortController>();
+
 interface customForm {
   agent_uuid: string;
   agent_name: string;
@@ -365,13 +367,21 @@ export const useCustomWidgets = defineStore('customWidgets', {
       }
     },
     async loadCustomWidgetData(uuid: string) {
-      if (this.loadingByUuid.includes(uuid)) return;
+      const existingController = abortControllersByUuid.get(uuid);
+      if (existingController) {
+        existingController.abort();
+      }
+      const controller = new AbortController();
+      abortControllersByUuid.set(uuid, controller);
+      const { signal } = controller;
 
       const widget = this.getCustomWidgetByUuid(uuid);
 
       if (!widget) return;
 
-      this.loadingByUuid.push(uuid);
+      if (!this.loadingByUuid.includes(uuid)) {
+        this.loadingByUuid.push(uuid);
+      }
 
       try {
         const sourceMap = {
@@ -381,16 +391,18 @@ export const useCustomWidgets = defineStore('customWidgets', {
             WidgetConversationalService.getCrosstabWidgetData,
         };
         const dataRequest = sourceMap[widget.source as keyof typeof sourceMap];
-        const response = await dataRequest({
-          widget_uuid: uuid,
-        });
+        const response = await dataRequest({ widget_uuid: uuid }, { signal });
         this.updateCustomWidget(uuid, response);
         this.customWidgetDataErrorByUuid[uuid] = false;
       } catch (error) {
+        if (signal.aborted) return;
         this.customWidgetDataErrorByUuid[uuid] = error.status || true;
         console.error('Error loading custom widget data', error);
       } finally {
-        this.loadingByUuid = this.loadingByUuid.filter((id) => id !== uuid);
+        if (!signal.aborted) {
+          this.loadingByUuid = this.loadingByUuid.filter((id) => id !== uuid);
+          abortControllersByUuid.delete(uuid);
+        }
       }
     },
   },

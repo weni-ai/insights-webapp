@@ -165,6 +165,9 @@ describe('AbsoluteNumbersMetric', () => {
     await flushPromises();
     expect(WidgetService.getAbsoluteNumbersChildrenValue).toHaveBeenCalledWith(
       'my-child-uuid',
+      expect.objectContaining({
+        signal: expect.any(AbortSignal),
+      }),
     );
   });
 
@@ -232,5 +235,46 @@ describe('AbsoluteNumbersMetric', () => {
     expect(actions[0].icon).toBe('edit_square');
     expect(actions[1].icon).toBe('delete');
     expect(actions[1].scheme).toBe('aux-red-500');
+  });
+
+  it('aborts previous request when getChildrenValue is called again', async () => {
+    let firstResolve;
+    let secondResolve;
+
+    WidgetService.getAbsoluteNumbersChildrenValue
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            firstResolve = resolve;
+          }),
+      )
+      .mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            secondResolve = resolve;
+          }),
+      );
+
+    createWrapper();
+    await nextTick();
+
+    const firstSignal =
+      WidgetService.getAbsoluteNumbersChildrenValue.mock.calls[0][1]?.signal;
+
+    expect(firstSignal?.aborted).toBe(false);
+
+    WidgetService.getAbsoluteNumbersChildrenValue.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          secondResolve = resolve;
+        }),
+    );
+
+    createWrapper();
+    await nextTick();
+
+    expect(
+      WidgetService.getAbsoluteNumbersChildrenValue,
+    ).toHaveBeenCalledTimes(2);
   });
 });

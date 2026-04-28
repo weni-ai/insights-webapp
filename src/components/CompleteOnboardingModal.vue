@@ -1,3 +1,4 @@
+<!-- This component should not be migrated to UnnnicDialog because it is deprecated and will be removed soon -->
 <template>
   <UnnnicModalDialog
     data-test-id="modal-dialog"

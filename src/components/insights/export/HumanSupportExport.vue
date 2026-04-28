@@ -4,59 +4,85 @@
     class="modal-export-data"
     data-testid="modal-export-data"
   >
-    <UnnnicToolTip
-      data-testid="export-data-tooltip"
-      :text="t('export_data.tooltip')"
-      side="left"
-      :enabled="!hasExportData"
+    <UnnnicDialog
+      :open="isRenderExportData"
+      @update:open="setIsRenderExportData"
     >
-      <UnnnicButton
-        type="primary"
-        size="large"
-        :text="t('export_data.title')"
-        :loading="isLoadingCheckExportStatus"
-        :disabled="disableExport"
-        data-testid="export-data-button"
-        @click="setIsRenderExportData(true)"
-      />
-    </UnnnicToolTip>
-    <UnnnicModalDialog
-      data-testid="modal-dialog"
-      :modelValue="isRenderExportData"
-      class="finish-onboarding-modal"
-      :primaryButtonProps="{
-        text: t('export_data.save_btn'),
-        disabled: !hasEnabledToExport,
-        loading: isLoadingCreateExport,
-      }"
-      :secondaryButtonProps="{ text: t('export_data.cancel_btn') }"
-      showActionsDivider
-      size="lg"
-      :title="t('export_data.title')"
-      showCloseIcon
-      @primary-button-click="createExport"
-      @secondary-button-click="setIsRenderExportData(false)"
-      @update:model-value="setIsRenderExportData(false)"
-    >
-      <FormExport />
-    </UnnnicModalDialog>
-    <UnnnicModalDialog
-      data-testid="modal-dialog-feedback"
-      :modelValue="isRenderExportDataFeedback"
-      class="finish-onboarding-modal"
-      :title="t('export_data.feedback_title')"
-      type="success"
-      size="md"
-      showCloseIcon
-      @update:model-value="setIsRenderExportDataFeedback(false)"
-    >
-      <p
-        class="export-data-feedback__text"
-        data-testid="export-data-feedback-text"
+      <UnnnicToolTip
+        class="export-data-tooltip"
+        data-testid="export-data-tooltip"
+        :text="t('export_data.tooltip')"
+        side="left"
+        :enabled="!hasExportData"
       >
-        {{ $t('export_data.feedback') }}
-      </p>
-    </UnnnicModalDialog>
+        <UnnnicDialogTrigger asChild>
+          <UnnnicButton
+            type="primary"
+            size="large"
+            :text="t('export_data.title')"
+            :loading="isLoadingCheckExportStatus"
+            :disabled="disableExport"
+            data-testid="export-data-button"
+          />
+        </UnnnicDialogTrigger>
+      </UnnnicToolTip>
+
+      <UnnnicDialogContent
+        data-testid="modal-dialog"
+        class="finish-onboarding-modal human-support-export-dialog"
+        size="large"
+      >
+        <UnnnicDialogHeader>
+          <UnnnicDialogTitle>{{ t('export_data.title') }}</UnnnicDialogTitle>
+        </UnnnicDialogHeader>
+
+        <div class="human-support-export-dialog__body">
+          <FormExport />
+        </div>
+
+        <UnnnicDialogFooter>
+          <UnnnicDialogClose>
+            <UnnnicButton
+              type="tertiary"
+              :text="t('export_data.cancel_btn')"
+            />
+          </UnnnicDialogClose>
+          <UnnnicButton
+            type="primary"
+            :text="t('export_data.save_btn')"
+            :disabled="!hasEnabledToExport"
+            :loading="isLoadingCreateExport"
+            @click="createExport"
+          />
+        </UnnnicDialogFooter>
+      </UnnnicDialogContent>
+    </UnnnicDialog>
+
+    <UnnnicDialog
+      :open="isRenderExportDataFeedback"
+      @update:open="setIsRenderExportDataFeedback"
+    >
+      <UnnnicDialogContent
+        data-testid="modal-dialog-feedback"
+        class="finish-onboarding-modal"
+        size="medium"
+      >
+        <UnnnicDialogHeader type="success">
+          <UnnnicDialogTitle>{{
+            t('export_data.feedback_title')
+          }}</UnnnicDialogTitle>
+        </UnnnicDialogHeader>
+
+        <div class="export-data-feedback">
+          <p
+            class="export-data-feedback__text"
+            data-testid="export-data-feedback-text"
+          >
+            {{ $t('export_data.feedback') }}
+          </p>
+        </div>
+      </UnnnicDialogContent>
+    </UnnnicDialog>
   </section>
 </template>
 
@@ -65,6 +91,7 @@ import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { onMounted, onUnmounted, ref, computed, watch } from 'vue';
 import { useElementVisibility } from '@vueuse/core';
+
 import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
 import { useProject } from '@/store/modules/project';
 import FormExport from './HumanSupport/FormExport.vue';
@@ -91,7 +118,8 @@ const pollingInterval = ref<ReturnType<typeof setInterval> | null>(null);
 const secondsToPoll = ref(60000);
 
 const disableExport = computed(() => {
-  if (!hasSectorsConfigured.value) {
+  const sectorsConfigured = hasSectorsConfigured?.value;
+  if (sectorsConfigured == null || !sectorsConfigured) {
     return true;
   }
 
@@ -138,6 +166,14 @@ watch(
   },
   { immediate: true },
 );
+
+defineExpose({
+  hasExportData,
+  disableExport,
+  startPolling,
+  stopPolling,
+  pollingInterval,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -145,8 +181,27 @@ watch(
   display: flex;
 }
 
-.export-data-feedback__text {
-  font: $unnnic-font-body;
-  color: $unnnic-color-fg-muted;
+.human-support-export-dialog {
+  &__body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: $unnnic-space-6;
+  }
+}
+
+.export-data-feedback {
+  padding: $unnnic-space-6;
+
+  &__text {
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-muted;
+  }
+}
+
+.export-data-tooltip {
+  :deep(.unnnic-tooltip-label) {
+    z-index: 5;
+  }
 }
 </style>

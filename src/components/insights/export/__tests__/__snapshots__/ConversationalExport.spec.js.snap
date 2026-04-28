@@ -6,61 +6,148 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
   data-testid="modal-export-data"
   data-v-b7434839=""
 >
-  
-  
-  
-  
   <div
-    class="unnnic-tooltip-trigger unnnic-tooltip export-data-tooltip"
-    data-grace-area-trigger=""
-    data-state="closed"
-    data-testid="tooltip-trigger"
-    data-v-03fa3548=""
-    data-v-47313aed=""
+    class="unnnic-dialog-stub"
+    data-v-b7434839=""
   >
     
-    
-    
-    <unnnic-button-stub
-      data-testid="export-data-button"
+    <div
+      class="unnnic-tooltip-stub export-data-tooltip"
+      data-testid="export-data-tooltip"
       data-v-b7434839=""
-      disabled="false"
-      loading="[object Object]"
-      size="large"
-      text="Export Data"
-      type="primary"
-    />
-    
-    
+      enabled="false"
+      side="left"
+      text="Tooltip text"
+    >
+      
+      <div
+        class="unnnic-dialog-trigger-stub"
+        data-v-b7434839=""
+      >
+        
+        <button
+          class="unnnic-button-stub"
+          data-testid="export-data-button"
+          data-v-b7434839=""
+          loading="false"
+          size="large"
+          text="Export Data"
+          type="submit"
+        >
+          
+          
+        </button>
+        
+      </div>
+      
+    </div>
+    <div
+      class="unnnic-dialog-content-stub finish-onboarding-modal conversational-export-dialog finish-onboarding-modal conversational-export-dialog"
+      data-testid="modal-dialog"
+      data-v-b7434839=""
+    >
+      
+      <header
+        class="unnnic-dialog-header-stub"
+        data-v-b7434839=""
+      >
+        
+        <div
+          class="unnnic-dialog-title-stub"
+          data-v-b7434839=""
+        >
+          
+          Export Data
+          
+        </div>
+        
+      </header>
+      <div
+        class="conversational-export-dialog__body"
+        data-v-b7434839=""
+      >
+        <form-export-stub
+          data-v-b7434839=""
+        />
+      </div>
+      <footer
+        class="unnnic-dialog-footer-stub"
+        data-v-b7434839=""
+      >
+        
+        <div
+          class="unnnic-dialog-close-stub"
+          data-v-b7434839=""
+        >
+          
+          <button
+            class="unnnic-button-stub"
+            data-v-b7434839=""
+            text="Cancel"
+            type="submit"
+          >
+            
+            
+          </button>
+          
+        </div>
+        <button
+          class="unnnic-button-stub"
+          data-v-b7434839=""
+          loading="false"
+          text="Save"
+          type="submit"
+        >
+          
+          
+        </button>
+        
+      </footer>
+      
+    </div>
     
   </div>
-  <!--teleport start-->
-  <!--teleport end-->
-  
-  
-  
-  
-  <unnnic-modal-dialog-stub
-    class="finish-onboarding-modal"
-    data-testid="modal-dialog"
+  <div
+    class="unnnic-dialog-stub"
     data-v-b7434839=""
-    modelvalue="[object Object]"
-    primarybuttonprops="[object Object]"
-    secondarybuttonprops="[object Object]"
-    showactionsdivider=""
-    showcloseicon=""
-    size="lg"
-    title="Export Data"
-  />
-  <unnnic-modal-dialog-stub
-    class="finish-onboarding-modal"
-    data-testid="modal-dialog-feedback"
-    data-v-b7434839=""
-    modelvalue="[object Object]"
-    showcloseicon=""
-    size="md"
-    title="Success"
-    type="success"
-  />
+  >
+    
+    <div
+      class="unnnic-dialog-content-stub finish-onboarding-modal finish-onboarding-modal"
+      data-testid="modal-dialog-feedback"
+      data-v-b7434839=""
+    >
+      
+      <header
+        class="unnnic-dialog-header-stub"
+        data-v-b7434839=""
+      >
+        
+        <div
+          class="unnnic-dialog-title-stub"
+          data-v-b7434839=""
+        >
+          
+          Success
+          
+        </div>
+        
+      </header>
+      <div
+        class="export-data-feedback"
+        data-v-b7434839=""
+      >
+        <p
+          class="export-data-feedback__text"
+          data-testid="export-data-feedback-text"
+          data-v-b7434839=""
+        >
+          Export successful
+        </p>
+      </div>
+      
+    </div>
+    
+  </div>
 </section>
 `;

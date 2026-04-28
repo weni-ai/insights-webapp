@@ -6,14 +6,18 @@ import { ref } from 'vue';
 import ConversationalExport from '../ConversationalExport.vue';
 
 const mockStore = {
-  isRenderExportData: { value: false },
-  isRenderExportDataFeedback: { value: false },
-  hasEnabledToExport: { value: true },
-  isLoadingCreateExport: { value: false },
-  isLoadingCheckExportStatus: { value: false },
-  export_data: { value: { status: 'ready' } },
-  setIsRenderExportData: vi.fn(),
-  setIsRenderExportDataFeedback: vi.fn(),
+  isRenderExportData: ref(false),
+  isRenderExportDataFeedback: ref(false),
+  hasEnabledToExport: ref(true),
+  isLoadingCreateExport: ref(false),
+  isLoadingCheckExportStatus: ref(false),
+  export_data: ref({ status: 'ready' }),
+  setIsRenderExportData: vi.fn((value) => {
+    mockStore.isRenderExportData.value = value;
+  }),
+  setIsRenderExportDataFeedback: vi.fn((value) => {
+    mockStore.isRenderExportDataFeedback.value = value;
+  }),
   createExport: vi.fn(),
   checkExportStatus: vi.fn(),
 };
@@ -66,15 +70,18 @@ config.global.plugins = [i18n];
 describe('ConversationalExport', () => {
   let wrapper;
 
-  const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockStore, storeOverrides);
-
+  const createWrapper = () => {
     return mount(ConversationalExport, {
       global: {
         stubs: {
-          UnnnicButton: true,
-          UnnnicToolTip: true,
-          UnnnicModalDialog: true,
+          UnnnicButton: {
+            inheritAttrs: true,
+            template:
+              '<button type="button" class="unnnic-button-stub" v-bind="$attrs"><slot /></button>',
+          },
+          UnnnicToolTip: {
+            template: '<div class="unnnic-tooltip-stub"><slot /></div>',
+          },
           FormExport: true,
         },
       },
@@ -86,23 +93,27 @@ describe('ConversationalExport', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.clearAllMocks();
+    mockStore.setIsRenderExportData.mockImplementation((value) => {
+      mockStore.isRenderExportData.value = value;
+    });
+    mockStore.setIsRenderExportDataFeedback.mockImplementation((value) => {
+      mockStore.isRenderExportDataFeedback.value = value;
+    });
     shouldUseMockRef.value = false;
 
-    Object.assign(mockStore, {
-      isRenderExportData: { value: false },
-      isRenderExportDataFeedback: { value: false },
-      hasEnabledToExport: { value: true },
-      isLoadingCreateExport: { value: false },
-      isLoadingCheckExportStatus: { value: false },
-      export_data: { value: { status: 'ready' } },
-    });
+    mockStore.isRenderExportData.value = false;
+    mockStore.isRenderExportDataFeedback.value = false;
+    mockStore.hasEnabledToExport.value = true;
+    mockStore.isLoadingCreateExport.value = false;
+    mockStore.isLoadingCheckExportStatus.value = false;
+    mockStore.export_data.value = { status: 'ready' };
 
     wrapper = createWrapper();
   });
 
   afterEach(() => {
     vi.useRealTimers();
-    wrapper.unmount();
+    wrapper?.unmount();
   });
 
   describe('Component rendering', () => {
@@ -110,41 +121,34 @@ describe('ConversationalExport', () => {
       expect(section().exists()).toBe(true);
     });
 
-    it('should render tooltip', () => {
-      const tooltip = wrapper.find('[data-testid="tooltip-trigger"]');
-      expect(tooltip.exists()).toBe(true);
+    it('should render export trigger button', () => {
+      expect(wrapper.find('[data-testid="export-data-button"]').exists()).toBe(
+        true,
+      );
     });
   });
 
   describe('Computed properties', () => {
     it('should compute hasExportData as true when status is ready', () => {
-      wrapper = createWrapper({
-        export_data: { value: { status: 'ready' } },
-      });
+      mockStore.export_data.value = { status: 'ready' };
 
       expect(wrapper.vm.hasExportData).toBe(true);
     });
 
     it('should compute hasExportData as true when status is READY (uppercase)', () => {
-      wrapper = createWrapper({
-        export_data: { value: { status: 'READY' } },
-      });
+      mockStore.export_data.value = { status: 'READY' };
 
       expect(wrapper.vm.hasExportData).toBe(true);
     });
 
     it('should compute hasExportData as false when status is not ready', () => {
-      wrapper = createWrapper({
-        export_data: { value: { status: 'processing' } },
-      });
+      mockStore.export_data.value = { status: 'processing' };
 
       expect(wrapper.vm.hasExportData).toBe(false);
     });
 
     it('should handle null export_data', () => {
-      wrapper = createWrapper({
-        export_data: { value: null },
-      });
+      mockStore.export_data.value = null;
 
       expect(wrapper.vm.hasExportData).toBe(false);
     });
@@ -207,9 +211,7 @@ describe('ConversationalExport', () => {
     });
 
     it('should render export modal with correct value when open', () => {
-      wrapper = createWrapper({
-        isRenderExportData: { value: true },
-      });
+      mockStore.isRenderExportData.value = true;
 
       const modal = wrapper.find('[data-testid="modal-dialog"]');
       expect(modal.exists()).toBe(true);
@@ -221,9 +223,7 @@ describe('ConversationalExport', () => {
     });
 
     it('should render feedback modal with correct value when open', () => {
-      wrapper = createWrapper({
-        isRenderExportDataFeedback: { value: true },
-      });
+      mockStore.isRenderExportDataFeedback.value = true;
 
       const modal = wrapper.find('[data-testid="modal-dialog-feedback"]');
       expect(modal.exists()).toBe(true);
@@ -243,6 +243,12 @@ describe('ConversationalExport', () => {
   describe('Mock mode (shouldUseMock = true)', () => {
     beforeEach(() => {
       vi.clearAllMocks();
+      mockStore.setIsRenderExportData.mockImplementation((value) => {
+        mockStore.isRenderExportData.value = value;
+      });
+      mockStore.setIsRenderExportDataFeedback.mockImplementation((value) => {
+        mockStore.isRenderExportDataFeedback.value = value;
+      });
       shouldUseMockRef.value = true;
       wrapper = createWrapper();
     });
@@ -257,9 +263,7 @@ describe('ConversationalExport', () => {
     });
 
     it('should disable export button even when hasExportData is true', () => {
-      wrapper = createWrapper({
-        export_data: { value: { status: 'ready' } },
-      });
+      mockStore.export_data.value = { status: 'ready' };
       expect(wrapper.vm.hasExportData).toBe(true);
       const button = wrapper.find('[data-testid="export-data-button"]');
       expect(button.attributes('disabled')).toBeDefined();

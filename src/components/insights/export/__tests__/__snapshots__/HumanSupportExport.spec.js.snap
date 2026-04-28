@@ -6,34 +6,148 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
   data-testid="modal-export-data"
   data-v-81b4e24b=""
 >
-  <unnnic-tool-tip-stub
-    data-testid="export-data-tooltip"
+  <div
+    class="unnnic-dialog-stub"
     data-v-81b4e24b=""
-    enabled="false"
-    side="left"
-    text="Tooltip text"
-  />
-  <unnnic-modal-dialog-stub
-    class="finish-onboarding-modal"
-    data-testid="modal-dialog"
+  >
+    
+    <div
+      class="unnnic-tooltip-stub export-data-tooltip"
+      data-testid="export-data-tooltip"
+      data-v-81b4e24b=""
+      enabled="false"
+      side="left"
+      text="Tooltip text"
+    >
+      
+      <div
+        class="unnnic-dialog-trigger-stub"
+        data-v-81b4e24b=""
+      >
+        
+        <button
+          class="unnnic-button-stub"
+          data-testid="export-data-button"
+          data-v-81b4e24b=""
+          loading="false"
+          size="large"
+          text="Export Data"
+          type="submit"
+        >
+          
+          
+        </button>
+        
+      </div>
+      
+    </div>
+    <div
+      class="unnnic-dialog-content-stub finish-onboarding-modal human-support-export-dialog finish-onboarding-modal human-support-export-dialog"
+      data-testid="modal-dialog"
+      data-v-81b4e24b=""
+    >
+      
+      <header
+        class="unnnic-dialog-header-stub"
+        data-v-81b4e24b=""
+      >
+        
+        <div
+          class="unnnic-dialog-title-stub"
+          data-v-81b4e24b=""
+        >
+          
+          Export Data
+          
+        </div>
+        
+      </header>
+      <div
+        class="human-support-export-dialog__body"
+        data-v-81b4e24b=""
+      >
+        <form-export-stub
+          data-v-81b4e24b=""
+        />
+      </div>
+      <footer
+        class="unnnic-dialog-footer-stub"
+        data-v-81b4e24b=""
+      >
+        
+        <div
+          class="unnnic-dialog-close-stub"
+          data-v-81b4e24b=""
+        >
+          
+          <button
+            class="unnnic-button-stub"
+            data-v-81b4e24b=""
+            text="Cancel"
+            type="submit"
+          >
+            
+            
+          </button>
+          
+        </div>
+        <button
+          class="unnnic-button-stub"
+          data-v-81b4e24b=""
+          loading="false"
+          text="Save"
+          type="submit"
+        >
+          
+          
+        </button>
+        
+      </footer>
+      
+    </div>
+    
+  </div>
+  <div
+    class="unnnic-dialog-stub"
     data-v-81b4e24b=""
-    modelvalue="[object Object]"
-    primarybuttonprops="[object Object]"
-    secondarybuttonprops="[object Object]"
-    showactionsdivider=""
-    showcloseicon=""
-    size="lg"
-    title="Export Data"
-  />
-  <unnnic-modal-dialog-stub
-    class="finish-onboarding-modal"
-    data-testid="modal-dialog-feedback"
-    data-v-81b4e24b=""
-    modelvalue="[object Object]"
-    showcloseicon=""
-    size="md"
-    title="Success"
-    type="success"
-  />
+  >
+    
+    <div
+      class="unnnic-dialog-content-stub finish-onboarding-modal finish-onboarding-modal"
+      data-testid="modal-dialog-feedback"
+      data-v-81b4e24b=""
+    >
+      
+      <header
+        class="unnnic-dialog-header-stub"
+        data-v-81b4e24b=""
+      >
+        
+        <div
+          class="unnnic-dialog-title-stub"
+          data-v-81b4e24b=""
+        >
+          
+          Success
+          
+        </div>
+        
+      </header>
+      <div
+        class="export-data-feedback"
+        data-v-81b4e24b=""
+      >
+        <p
+          class="export-data-feedback__text"
+          data-testid="export-data-feedback-text"
+          data-v-81b4e24b=""
+        >
+          Export successful
+        </p>
+      </div>
+      
+    </div>
+    
+  </div>
 </section>
 `;

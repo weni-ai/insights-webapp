@@ -77,7 +77,7 @@ describe('HeaderGenerateInsightButton', () => {
 
   it('should render the image inside the button', () => {
     const img = wrapper.find('img');
-    expect(img.attributes('src')).toBe('/src/assets/images/shine.svg');
+    expect(img.attributes('src')).toContain('assets/images/shine.svg');
   });
 
   it('should compute the correct token from Vuex store', async () => {

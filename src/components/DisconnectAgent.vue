@@ -1,64 +1,75 @@
 <template>
-  <section
+  <div
     :class="[
       'disconnect-agent-container',
       { 'disconnect-agent-container--center': props.containerCenter },
     ]"
     @click.stop
   >
-    <UnnnicToolTip
-      :text="handleTooltipText"
-      :side="props.disabled ? 'left' : 'top'"
-      class="disconnect-agent-tooltip"
-      data-test-id="disconnect-agent-tooltip"
-      enabled
-    >
-      <UnnnicButton
-        data-testid="disconnect-agent-button"
-        class="disconnect-agent-button"
-        iconCenter="mode_off_on"
-        size="small"
-        type="tertiary"
-        :disabled="props.disabled"
-        @click="handleModalClick"
-      />
-    </UnnnicToolTip>
+    <UnnnicDialog v-model:open="isOpen">
+      <UnnnicDialogTrigger asChild>
+        <UnnnicToolTip
+          :text="handleTooltipText"
+          :side="props.disabled ? 'left' : 'top'"
+          class="disconnect-agent-tooltip"
+          data-test-id="disconnect-agent-tooltip"
+          enabled
+        >
+          <UnnnicButton
+            data-testid="disconnect-agent-button"
+            class="disconnect-agent-button"
+            iconCenter="mode_off_on"
+            size="small"
+            type="tertiary"
+            :disabled="props.disabled"
+          />
+        </UnnnicToolTip>
+      </UnnnicDialogTrigger>
+      <UnnnicDialogContent
+        class="disconnect-agent-modal"
+        size="medium"
+      >
+        <UnnnicDialogHeader type="warning">
+          <UnnnicDialogTitle>
+            {{ $t('disconnectAgent.title') }}
+          </UnnnicDialogTitle>
+        </UnnnicDialogHeader>
 
-    <UnnnicModalDialog
-      :modelValue="modelValue"
-      type="warning"
-      class="disconnect-agent-modal"
-      :title="$t('disconnectAgent.title')"
-      :primaryButtonProps="{
-        text: $t('disconnectAgent.save_btn'),
-        loading: isLoading,
-      }"
-      :secondaryButtonProps="{ text: $t('disconnectAgent.cancel_btn') }"
-      showCloseIcon
-      @primary-button-click="handleDisconnectModalClick"
-      @secondary-button-click="handleCancelClick"
-      @update:model-value="handleUpdateModelValue"
-      @click.stop
-    >
-      <section class="disconnect-agent-modal-content">
-        <p class="disconnect-agent-modal-content__text">
-          {{ $t('disconnectAgent.description', { agent: props.agent.name }) }}
-        </p>
-        <p class="disconnect-agent-modal-content__text">
-          {{
-            $t('disconnectAgent.description_confirm', {
-              agent: props.agent.name,
-            })
-          }}
-        </p>
-      </section>
-    </UnnnicModalDialog>
-  </section>
+        <div class="disconnect-agent-modal-content">
+          <p class="disconnect-agent-modal-content__text">
+            {{ $t('disconnectAgent.description', { agent: props.agent.name }) }}
+          </p>
+          <p class="disconnect-agent-modal-content__text">
+            {{
+              $t('disconnectAgent.description_confirm', {
+                agent: props.agent.name,
+              })
+            }}
+          </p>
+        </div>
+
+        <UnnnicDialogFooter>
+          <UnnnicDialogClose>
+            <UnnnicButton
+              :text="$t('disconnectAgent.cancel_btn')"
+              type="tertiary"
+            />
+          </UnnnicDialogClose>
+          <UnnnicButton
+            :text="$t('disconnectAgent.save_btn')"
+            type="warning"
+            :loading="isLoading"
+            @click="handleDisconnectModalClick"
+          />
+        </UnnnicDialogFooter>
+      </UnnnicDialogContent>
+    </UnnnicDialog>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { unnnicCallAlert, UnnnicButton } from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import disconnectAgentApi from '@/services/api/resources/disconnectAgent';
 
@@ -85,27 +96,14 @@ const props = defineProps({
 
 const emits = defineEmits(['request-data']);
 
-const modelValue = ref(false);
+const isOpen = ref(false);
 const isLoading = ref(false);
-
-const handleModalClick = (event: Event) => {
-  event.stopPropagation();
-  modelValue.value = true;
-};
-
-const handleCancelClick = () => {
-  modelValue.value = false;
-};
-
-const handleUpdateModelValue = (value: boolean) => {
-  modelValue.value = value;
-};
 
 const handleDisconnectModalClick = async () => {
   isLoading.value = true;
   try {
     await disconnectAgentApi.disconnectAgent({ agent: props.agent.email });
-    modelValue.value = false;
+    isOpen.value = false;
     defaultAlert(
       'success',
       t('disconnectAgent.sucess_message', { agent: props.agent.name }),
@@ -123,7 +121,7 @@ const handleDisconnectModalClick = async () => {
 };
 
 const defaultAlert = (type: 'success' | 'error', text: string) => {
-  unnnicCallAlert({
+  UnnnicCallAlert({
     props: {
       text,
       type,
@@ -141,10 +139,13 @@ const handleTooltipText = computed(() => {
 
 <style scoped lang="scss">
 .disconnect-agent-container {
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  max-width: 100%;
 
   &--center {
+    display: flex;
+    width: 100%;
     justify-content: center;
   }
 
@@ -158,6 +159,7 @@ const handleTooltipText = computed(() => {
   flex-direction: column;
   align-items: flex-start;
   gap: $unnnic-space-4;
+  padding: $unnnic-space-6;
 
   &__text {
     color: $unnnic-color-gray-7;

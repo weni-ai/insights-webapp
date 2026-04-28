@@ -859,6 +859,8 @@
       "sector_tags": "Tags",
       "contacts": "Contatos",
       "resolutions": "Resoluções de conversas",
+      "tool_result": "Ferramentas mais usadas",
+      "agent_invocation": "Agentes mais usados",
       "topics": "Assuntos",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1195,5 +1197,19 @@
     "toast_postponed": "Feedback adiado. Você poderá responder depois.",
     "toast_postponed_respond": "Responder agora"
   },
-  "without_results": "Nenhum resultado encontrado"
+  "without_results": "Nenhum resultado encontrado",
+  "mcp_news": {
+    "modal_title": "Analytics, agora disponível em ferramentas de IA!",
+    "modal_description": "O MCP conecta com segurança os dados do Analytics a ferramentas de IA como ChatGPT, Claude, Cursor e outras para explorar insights usando linguagem natural.",
+    "flow_analytics": "ANALYTICS",
+    "flow_mcp_connection": "CONEXÃO MCP",
+    "flow_ai_tools": "FERRAMENTAS DE IA",
+    "flow_prompt": "\"Quais tópicos a IA teve mais dificuldade?\"",
+    "feature_ask_questions": "Faça perguntas sobre seus dados em linguagem natural",
+    "feature_track_metrics": "Acompanhe CSAT, NPS e desempenho de conversas instantaneamente",
+    "feature_prepare_reports": "Prepare relatórios e gere dashboards personalizados",
+    "privacy_note": "Apenas dados aos quais você tem acesso estão disponíveis pelo MCP.",
+    "not_now": "Agora não",
+    "view_setup_guide": "Ver guia de configuração"
+  }
 }

@@ -859,6 +859,8 @@
       "sector_tags": "Tags",
       "contacts": "Contacts",
       "resolutions": "Conversation resolutions",
+      "tool_result": "Most used tools",
+      "agent_invocation": "Most used agents",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1195,5 +1197,19 @@
     "toast_postponed": "Feedback postponed. You can respond later.",
     "toast_postponed_respond": "Respond now"
   },
-  "without_results": "No results found"
+  "without_results": "No results found",
+  "mcp_news": {
+    "modal_title": "Analytics, now available in AI tools!",
+    "modal_description": "The MCP securely connects your Analytics data to AI tools like ChatGPT, Claude, Cursor, and more to explore insights using natural language.",
+    "flow_analytics": "ANALYTICS",
+    "flow_mcp_connection": "MCP CONNECTION",
+    "flow_ai_tools": "AI TOOLS",
+    "flow_prompt": "\"Which topics did the AI struggle with the most?\"",
+    "feature_ask_questions": "Ask questions about your data in natural language",
+    "feature_track_metrics": "Track CSAT, NPS, and conversation performance instantly",
+    "feature_prepare_reports": "Prepare reports and generate custom dashboards",
+    "privacy_note": "Only data you have access to is available through MCP.",
+    "not_now": "Not now",
+    "view_setup_guide": "View setup guide"
+  }
 }

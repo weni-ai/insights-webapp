@@ -112,7 +112,7 @@ export default {
   async getCsatData(
     type: 'HUMAN' | 'AI',
     queryParams: Partial<WidgetQueryParams> = {},
-    options: { mock?: boolean } = { mock: false },
+    options: { mock?: boolean; signal?: AbortSignal } = {},
   ): Promise<CsatResponse> {
     if (options.mock) return MOCK_CSAT_DATA;
 
@@ -128,6 +128,7 @@ export default {
 
     const response = (await http.get('/metrics/conversations/csat/', {
       params,
+      signal: options.signal,
     })) as CsatResponse;
 
     return response;
@@ -136,7 +137,7 @@ export default {
   async getNpsData(
     type: 'HUMAN' | 'AI',
     queryParams: Partial<WidgetQueryParams> = {},
-    options: { mock?: boolean } = { mock: false },
+    options: { mock?: boolean; signal?: AbortSignal } = {},
   ): Promise<NpsResponse> {
     if (options.mock) return MOCK_NPS_DATA;
 
@@ -152,6 +153,7 @@ export default {
 
     const response = (await http2.get('/metrics/conversations/nps/', {
       params,
+      signal: options.signal,
     })) as NpsResponse;
 
     return response;
@@ -159,6 +161,7 @@ export default {
 
   async getCustomWidgetData(
     queryParams: WidgetQueryParams,
+    options: { signal?: AbortSignal } = {},
   ): Promise<CustomWidgetResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
@@ -171,12 +174,16 @@ export default {
 
     const response = (await http.get('/metrics/conversations/custom/', {
       params,
+      signal: options.signal,
     })) as CustomWidgetResponse;
 
     return response;
   },
 
-  async getCrosstabWidgetData(queryParams: WidgetQueryParams): Promise<any> {
+  async getCrosstabWidgetData(
+    queryParams: WidgetQueryParams,
+    options: { signal?: AbortSignal } = {},
+  ): Promise<any> {
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
 
@@ -188,6 +195,7 @@ export default {
 
     const response = (await http.get('/metrics/conversations/crosstab/', {
       params,
+      signal: options.signal,
     })) as CrosstabWidgetResponse;
 
     const sortedResponse = {
@@ -253,6 +261,7 @@ export default {
 
   async getAbsoluteNumbersChildrenValue(
     widgetUuid: string,
+    options: { signal?: AbortSignal } = {},
   ): Promise<{ value: number }> {
     const { appliedFilters } = useConversational();
     const params = {
@@ -261,7 +270,7 @@ export default {
     };
     const response = (await http.get(
       `/metrics/conversations/absolute-numbers/`,
-      { params },
+      { params, signal: options.signal },
     )) as { value: number };
 
     return response;
@@ -269,6 +278,7 @@ export default {
 
   async getAgentInvocationData(
     queryParams: Partial<WidgetQueryParams> = {},
+    options: { signal?: AbortSignal } = {},
   ): Promise<AutoWidgetResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
@@ -281,7 +291,7 @@ export default {
 
     const response = (await http.get(
       '/metrics/conversations/agent-invocation/',
-      { params },
+      { params, signal: options.signal },
     )) as AutoWidgetResponse;
 
     return response;
@@ -289,6 +299,7 @@ export default {
 
   async getToolResultData(
     queryParams: Partial<WidgetQueryParams> = {},
+    options: { signal?: AbortSignal } = {},
   ): Promise<AutoWidgetResponse> {
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
@@ -301,6 +312,7 @@ export default {
 
     const response = (await http.get('/metrics/conversations/tool-result/', {
       params,
+      signal: options.signal,
     })) as AutoWidgetResponse;
 
     return response;

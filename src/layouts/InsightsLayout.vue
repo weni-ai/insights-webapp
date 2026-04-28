@@ -1,5 +1,9 @@
 <template>
   <section class="insights-layout">
+    <McpDisclaimer
+      v-if="showMcpDisclaimer"
+      @dismiss="showMcpDisclaimer = false"
+    />
     <InsightsLayoutHeader class="insights-layout__header" />
     <section
       v-if="currentDashboardFilters.length"
@@ -21,14 +25,23 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useOnboarding } from '@/store/modules/onboarding';
 
 import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
+import McpDisclaimer from '@/components/McpDisclaimer.vue';
+import { moduleStorage } from '@/utils/storage';
 
 export default {
   name: 'InsightsLayout',
 
   components: {
     InsightsLayoutHeader,
+    McpDisclaimer,
   },
 
+  data() {
+    return {
+      showMcpDisclaimer:
+        moduleStorage.getItem('mcp_news_show_disclaimer') === true,
+    };
+  },
   computed: {
     ...mapState(useDashboards, ['currentDashboardFilters']),
   },

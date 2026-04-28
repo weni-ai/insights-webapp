@@ -39,6 +39,8 @@ interface ConversationalWidgetsState {
 }
 
 let salesFunnelAbortController: AbortController | null = null;
+let csatAbortController: AbortController | null = null;
+let npsAbortController: AbortController | null = null;
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
   state: (): ConversationalWidgetsState => ({
@@ -231,6 +233,12 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       }
     },
     async loadCsatWidgetData() {
+      if (csatAbortController) {
+        csatAbortController.abort();
+      }
+      csatAbortController = new AbortController();
+      const { signal } = csatAbortController;
+
       this.isLoadingCsatWidgetData = true;
       try {
         const { shouldUseMock } = useConversational();
@@ -255,19 +263,29 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         const csatData = await WidgetConversationalService.getCsatData(
           this.csatWidgetType,
           { widget_uuid: widgetCsat.uuid },
+          { signal },
         );
 
         this.setCsatWidgetData(csatData);
         this.isCsatWidgetDataError = false;
       } catch (error) {
+        if (signal.aborted) return;
         this.setCsatWidgetData({ results: [] });
         this.isCsatWidgetDataError = true;
         console.error('Error loading CSAT widget data', error);
       } finally {
-        this.isLoadingCsatWidgetData = false;
+        if (!signal.aborted) {
+          this.isLoadingCsatWidgetData = false;
+        }
       }
     },
     async loadNpsWidgetData() {
+      if (npsAbortController) {
+        npsAbortController.abort();
+      }
+      npsAbortController = new AbortController();
+      const { signal } = npsAbortController;
+
       this.isLoadingNpsWidgetData = true;
       try {
         const { shouldUseMock } = useConversational();
@@ -292,16 +310,20 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         const npsData = await WidgetConversationalService.getNpsData(
           this.npsWidgetType,
           { widget_uuid: widgetNps.uuid },
+          { signal },
         );
 
         this.setNpsWidgetData(npsData);
         this.isNpsWidgetDataError = false;
       } catch (error) {
+        if (signal.aborted) return;
         this.setNpsWidgetData({ total_responses: 0 });
         this.isNpsWidgetDataError = true;
         console.error('Error loading NPS widget data', error);
       } finally {
-        this.isLoadingNpsWidgetData = false;
+        if (!signal.aborted) {
+          this.isLoadingNpsWidgetData = false;
+        }
       }
     },
     async saveNewWidget() {

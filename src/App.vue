@@ -8,6 +8,14 @@
       :showModal="showCompleteOnboardingModal"
       @finish-onboarding="setShowCompleteOnboardingModal(false)"
     />
+    <McpNewsModal
+      v-if="showMcpNewsModal"
+      :modelValue="showMcpNewsModal"
+      data-testid="mcp-news-modal"
+      @not-now="handleMcpNotNow"
+      @view-guide="handleMcpViewGuide"
+      @update:model-value="showMcpNewsModal = $event"
+    />
     <section
       v-if="isLoadingDashboards"
       class="loading-container"
@@ -44,6 +52,7 @@ import { useUser } from './store/modules/user';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
 import CompleteOnboardingModal from './components/CompleteOnboardingModal.vue';
+import McpNewsModal from './components/McpNewsModal.vue';
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
@@ -63,6 +72,12 @@ export default {
     InsightsLayout,
     IconLoading,
     CompleteOnboardingModal,
+    McpNewsModal,
+  },
+  data() {
+    return {
+      showMcpNewsModal: !moduleStorage.getItem('mcp_news_modal_seen'),
+    };
   },
   computed: {
     ...mapState(useDashboards, [
@@ -161,6 +176,28 @@ export default {
       'setShowCreateDashboardOnboarding',
       'setShowCompleteOnboardingModal',
     ]),
+
+    handleMcpNotNow() {
+      moduleStorage.setItem('mcp_news_modal_seen', true);
+      moduleStorage.setItem('mcp_news_show_disclaimer', true);
+      this.showMcpNewsModal = false;
+
+      const layout = this.$refs['insights-layout'];
+      if (layout) {
+        layout.showMcpDisclaimer = true;
+      }
+    },
+
+    handleMcpViewGuide() {
+      moduleStorage.setItem('mcp_news_modal_seen', true);
+      moduleStorage.setItem('mcp_news_show_disclaimer', false);
+      this.showMcpNewsModal = false;
+
+      const layout = this.$refs['insights-layout'];
+      if (layout) {
+        layout.showMcpDisclaimer = false;
+      }
+    },
 
     handleRedirectToHumanServiceDashboard() {
       const isHumanServiceDashboardRouter =

@@ -5,6 +5,15 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useOnboarding } from '@/store/modules/onboarding';
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 
+vi.mock('@/utils/storage', () => ({
+  moduleStorage: {
+    getItem: vi.fn(() => null),
+    setItem: vi.fn(),
+  },
+}));
+
+import { moduleStorage } from '@/utils/storage';
+
 describe('InsightsLayout', () => {
   let wrapper;
   let store;
@@ -16,6 +25,7 @@ describe('InsightsLayout', () => {
         plugins: [store],
         stubs: {
           InsightsLayoutHeader: true,
+          McpDisclaimer: true,
         },
       },
       slots: {
@@ -25,6 +35,8 @@ describe('InsightsLayout', () => {
   };
 
   beforeEach(() => {
+    vi.clearAllMocks();
+
     store = createTestingPinia({
       initialState: {
         dashboards: { currentDashboardFilters: [] },
@@ -75,6 +87,38 @@ describe('InsightsLayout', () => {
         key: 'insights-layout',
         ref: wrapper.element,
       });
+    });
+  });
+
+  describe('MCP Disclaimer', () => {
+    it('should not show McpDisclaimer when storage returns null', () => {
+      expect(wrapper.findComponent({ name: 'McpDisclaimer' }).exists()).toBe(
+        false,
+      );
+    });
+
+    it('should show McpDisclaimer when storage returns true', () => {
+      moduleStorage.getItem.mockReturnValue(true);
+      wrapper = createWrapper();
+
+      expect(wrapper.findComponent({ name: 'McpDisclaimer' }).exists()).toBe(
+        true,
+      );
+    });
+
+    it('should hide McpDisclaimer when dismiss event is emitted', async () => {
+      moduleStorage.getItem.mockReturnValue(true);
+      wrapper = createWrapper();
+
+      const disclaimer = wrapper.findComponent({ name: 'McpDisclaimer' });
+      expect(disclaimer.exists()).toBe(true);
+
+      await disclaimer.vm.$emit('dismiss');
+      await wrapper.vm.$nextTick();
+
+      expect(wrapper.findComponent({ name: 'McpDisclaimer' }).exists()).toBe(
+        false,
+      );
     });
   });
 

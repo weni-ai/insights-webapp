@@ -67,6 +67,12 @@
             "
             :rating="agent.avg_rating"
             :active="activeAgentEmail === agent.agent.email"
+            :isDeleted="agent.agent.is_deleted === true"
+            :deletedTooltip="
+              agent.agent.is_deleted
+                ? t('human_support_dashboard.deleted_tooltips.representative')
+                : ''
+            "
             @click="activeAgentEmail = agent.agent.email"
           />
         </template>

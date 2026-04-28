@@ -37,7 +37,13 @@
       </UnnnicToolTip>
     </template>
     <template #body-agent="{ item }">
-      {{ item.agent || item.agent_email }}
+      <DynamicCellText
+        :text="item.agent"
+        :isDeleted="item.agent_is_deleted"
+        :tooltipText="
+          $t('human_support_dashboard.deleted_tooltips.representative')
+        "
+      />
     </template>
   </UnnnicDataTable>
 </template>
@@ -54,6 +60,7 @@ import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { storeToRefs } from 'pinia';
 import { openNewTabLink } from '@/utils/redirect';
+import DynamicCellText from '../DynamicCellText.vue';
 
 defineOptions({
   name: 'AgentsPausesTable',
@@ -160,12 +167,16 @@ const formattedItems = computed(() => {
 
     return {
       link: item.link,
-      agent: item.agent,
-      agent_email: item.agent_email,
+      agent: formatAgentName(item.agent),
+      agent_is_deleted: item.agent?.is_deleted === true,
       ...customStatusObj,
     };
   });
 });
+
+const formatAgentName = (agent: { name: string; email: string }) => {
+  return agent?.name?.trim().length > 0 ? agent?.name : agent?.email || '';
+};
 
 const handleSort = (sort: {
   header: string;

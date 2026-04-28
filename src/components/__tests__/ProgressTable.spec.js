@@ -241,6 +241,39 @@ describe('ProgressTable', () => {
       expect(progressTableItems()[0].props().isExpandable).toBe(false);
       expect(progressTableItems()[0].props().subItems).toBeUndefined();
     });
+
+    it('should pass deleted state props to ProgressItem components', async () => {
+      const deletedItems = [
+        {
+          label: 'Deleted Queue',
+          value: 100,
+          description: '100',
+          subtitle: 'Deleted Sector',
+          labelMuted: true,
+          subtitleMuted: true,
+          deletedTooltip: 'Queue and sector removed from project',
+        },
+        {
+          label: 'Active Queue',
+          value: 50,
+          description: '50',
+          subtitle: 'Active Sector',
+        },
+      ];
+
+      await wrapper.setProps({ progressItems: deletedItems });
+
+      const items = progressTableItems();
+      expect(items[0].props().labelMuted).toBe(true);
+      expect(items[0].props().subtitleMuted).toBe(true);
+      expect(items[0].props().deletedTooltip).toBe(
+        'Queue and sector removed from project',
+      );
+
+      expect(items[1].props().labelMuted).toBeUndefined();
+      expect(items[1].props().subtitleMuted).toBeUndefined();
+      expect(items[1].props().deletedTooltip).toBeUndefined();
+    });
   });
 
   describe('Loading State', () => {

@@ -9,7 +9,7 @@ interface QueryParams {
 }
 
 export interface AgentsTotalResult {
-  agent: { name: string; email: string };
+  agent: { name: string; email: string; is_deleted?: boolean };
   rooms: number;
   reviews: number;
   avg_rating: number;

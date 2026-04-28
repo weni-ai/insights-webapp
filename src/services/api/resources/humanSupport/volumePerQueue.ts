@@ -11,8 +11,9 @@ interface QueryParams {
 
 interface VolumePerQueueResult {
   sector_name: string;
+  is_deleted?: boolean;
   total_queues?: number;
-  queues: { queue_name: string; value: number }[];
+  queues: { queue_name: string; value: number; is_deleted?: boolean }[];
 }
 
 interface VolumePerQueueResponse {

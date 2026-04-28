@@ -13,6 +13,9 @@
     :expanded="expanded"
     :tooltip="tooltip"
     :maxValue="maxValue"
+    :labelMuted="labelMuted"
+    :subtitleMuted="subtitleMuted"
+    :deletedTooltip="deletedTooltip"
     @expand="emit('expand', $event)"
   >
     <template

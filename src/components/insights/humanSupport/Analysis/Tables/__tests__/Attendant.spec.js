@@ -196,12 +196,11 @@ describe('Attendant', () => {
     });
   });
 
-  describe('Agent fallback logic', () => {
-    it('uses agent when it has a value', () => {
+  describe('Agent fallback logic (v2 format)', () => {
+    it('uses agent name when it has a value', () => {
       const mockData = [
         {
-          agent: 'John Doe',
-          agent_email: 'john@example.com',
+          agent: { name: 'John Doe', email: 'john@example.com' },
           average_first_response_time: 100,
           average_response_time: 200,
           average_duration: 300,
@@ -212,11 +211,10 @@ describe('Attendant', () => {
       expect(result[0].agent).toBe('John Doe');
     });
 
-    it('uses agent_email when agent is empty string', () => {
+    it('falls back to agent email when name is empty', () => {
       const mockData = [
         {
-          agent: '',
-          agent_email: 'john@example.com',
+          agent: { name: '', email: 'john@example.com' },
           average_first_response_time: 100,
           average_response_time: 200,
           average_duration: 300,
@@ -227,40 +225,10 @@ describe('Attendant', () => {
       expect(result[0].agent).toBe('john@example.com');
     });
 
-    it('uses agent_email when agent is null', () => {
+    it('returns empty string when both name and email are empty', () => {
       const mockData = [
         {
-          agent: null,
-          agent_email: 'john@example.com',
-          average_first_response_time: 100,
-          average_response_time: 200,
-          average_duration: 300,
-          time_in_service: 400,
-        },
-      ];
-      const result = wrapper.vm.formatResults(mockData);
-      expect(result[0].agent).toBe('john@example.com');
-    });
-
-    it('uses agent_email when agent is undefined', () => {
-      const mockData = [
-        {
-          agent_email: 'john@example.com',
-          average_first_response_time: 100,
-          average_response_time: 200,
-          average_duration: 300,
-          time_in_service: 400,
-        },
-      ];
-      const result = wrapper.vm.formatResults(mockData);
-      expect(result[0].agent).toBe('john@example.com');
-    });
-
-    it('returns empty string when both agent and agent_email are empty', () => {
-      const mockData = [
-        {
-          agent: '',
-          agent_email: '',
+          agent: { name: '', email: '' },
           average_first_response_time: 100,
           average_response_time: 200,
           average_duration: 300,
@@ -271,11 +239,10 @@ describe('Attendant', () => {
       expect(result[0].agent).toBe('');
     });
 
-    it('returns empty string when both agent and agent_email are null/undefined', () => {
+    it('carries agent_is_deleted when is_deleted is true', () => {
       const mockData = [
         {
-          agent: null,
-          agent_email: null,
+          agent: { name: 'John Doe', email: 'john@example.com', is_deleted: true },
           average_first_response_time: 100,
           average_response_time: 200,
           average_duration: 300,
@@ -283,7 +250,21 @@ describe('Attendant', () => {
         },
       ];
       const result = wrapper.vm.formatResults(mockData);
-      expect(result[0].agent).toBe('');
+      expect(result[0].agent_is_deleted).toBe(true);
+    });
+
+    it('sets agent_is_deleted to false when is_deleted is not present', () => {
+      const mockData = [
+        {
+          agent: { name: 'John Doe', email: 'john@example.com' },
+          average_first_response_time: 100,
+          average_response_time: 200,
+          average_duration: 300,
+          time_in_service: 400,
+        },
+      ];
+      const result = wrapper.vm.formatResults(mockData);
+      expect(result[0].agent_is_deleted).toBe(false);
     });
   });
 });

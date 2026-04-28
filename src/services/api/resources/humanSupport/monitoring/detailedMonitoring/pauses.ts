@@ -1,4 +1,4 @@
-import http from '@/services/api/http';
+import http2 from '@/services/api/http2';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
@@ -16,7 +16,7 @@ interface PausesDataResult {
     type: string;
   };
   opened: number;
-  agent: string;
+  agent: { name: string; email?: string; is_deleted?: boolean };
   closed: number;
   status: {
     status: string;
@@ -69,7 +69,7 @@ export default {
     const baseUrl = `/metrics/human-support/`;
     const finalUrl = `detailed-monitoring/status/`;
     const url = `${baseUrl}${activeTab === 'analysis' ? 'analysis/' + finalUrl : finalUrl}`;
-    const response = (await http.get(url, {
+    const response = (await http2.get(url, {
       params: formattedParams,
     })) as PausesData;
 

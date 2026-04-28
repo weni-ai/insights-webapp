@@ -11,8 +11,9 @@ interface QueryParams {
 
 interface VolumePerTagsResult {
   sector_name: string;
+  is_deleted?: boolean;
   total_tags?: number;
-  tags: { tag_name: string; value: number }[];
+  tags: { tag_name: string; value: number; is_deleted?: boolean }[];
 }
 
 interface VolumePerTagsResponse {

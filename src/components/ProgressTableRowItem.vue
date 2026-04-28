@@ -30,30 +30,43 @@
           size="md"
           scheme="neutral-cloudy"
         />
-        <section class="label__infos">
-          <section class="infos__title-container">
+        <UnnnicToolTip
+          :enabled="!!props.deletedTooltip"
+          :text="props.deletedTooltip"
+          side="right"
+          data-testid="progress-table-row-item-deleted-tooltip"
+        >
+          <section class="label__infos">
+            <section class="infos__title-container">
+              <p
+                :class="[
+                  'infos__title',
+                  { 'infos__title--muted': props.labelMuted },
+                ]"
+                :title="label"
+              >
+                {{ label }}
+              </p>
+              <p
+                v-if="props.subtitle"
+                :class="[
+                  'infos__subtitle',
+                  { 'infos__subtitle--muted': props.subtitleMuted },
+                ]"
+                :title="props.subtitle"
+              >
+                {{ props.subtitle }}
+              </p>
+            </section>
             <p
-              class="infos__title"
-              :title="label"
+              v-if="isExpandable"
+              class="infos__description"
+              data-testid="progress-table-row-item-expandable-description"
             >
-              {{ label }}
-            </p>
-            <p
-              v-if="props.subtitle"
-              class="infos__subtitle"
-              :title="props.subtitle"
-            >
-              {{ props.subtitle }}
+              {{ expandableDescription }}
             </p>
           </section>
-          <p
-            v-if="isExpandable"
-            class="infos__description"
-            data-testid="progress-table-row-item-expandable-description"
-          >
-            {{ expandableDescription }}
-          </p>
-        </section>
+        </UnnnicToolTip>
       </td>
       <td class="progress-table-row-item__progress">
         <NativeProgress
@@ -102,6 +115,9 @@ export interface BaseProgressTableRowItem {
   color?: string;
   tooltip?: string;
   maxValue?: number;
+  labelMuted?: boolean;
+  subtitleMuted?: boolean;
+  deletedTooltip?: string;
 }
 
 export interface ProgressTableRowItem extends BaseProgressTableRowItem {
@@ -163,6 +179,10 @@ const handleExpand = () => {
       }
     }
 
+    :deep(.unnnic-tooltip) {
+      display: flex;
+    }
+
     .label__infos {
       display: flex;
       flex-direction: column;
@@ -181,6 +201,10 @@ const handleExpand = () => {
           display: flex;
           flex-direction: column;
         }
+
+        &--muted {
+          color: $unnnic-color-fg-muted;
+        }
       }
 
       .infos__subtitle {
@@ -192,6 +216,10 @@ const handleExpand = () => {
         max-width: 120px;
         -webkit-box-orient: vertical;
         line-clamp: 1;
+
+        &--muted {
+          color: $unnnic-color-fg-muted;
+        }
       }
 
       .infos__description {

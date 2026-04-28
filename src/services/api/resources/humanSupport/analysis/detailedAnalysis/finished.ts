@@ -1,14 +1,14 @@
-import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
 import { createRequestQuery } from '@/utils/request';
+import http2 from '@/services/api/http2';
 
 interface FinishedDataResult {
-  agent: string;
+  agent: { name: string; email: string; is_deleted?: boolean } | null;
   agent_email: string;
-  sector: string;
-  queue: string;
+  sector: { name: string; is_deleted?: boolean };
+  queue: { name: string; is_deleted?: boolean };
   awaiting_time: number;
   first_response_time: number | null;
   response_time: number;
@@ -75,7 +75,7 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(
+    const response = (await http2.get(
       `/dashboards/${currentDashboard.uuid}/finished/`,
       {
         params: formattedParams,

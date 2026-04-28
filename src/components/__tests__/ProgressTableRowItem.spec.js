@@ -449,4 +449,130 @@ describe('ProgressTableRowItem.vue', () => {
       });
     });
   });
+
+  describe('Deleted State (labelMuted, subtitleMuted, deletedTooltip)', () => {
+    describe('labelMuted', () => {
+      it('should not apply muted class to title by default', () => {
+        const title = wrapper.find('.infos__title');
+        expect(title.classes()).not.toContain('infos__title--muted');
+      });
+
+      it('should apply muted class to title when labelMuted is true', async () => {
+        await wrapper.setProps({ labelMuted: true });
+        const title = wrapper.find('.infos__title');
+        expect(title.classes()).toContain('infos__title--muted');
+      });
+
+      it('should not apply muted class to title when labelMuted is false', async () => {
+        await wrapper.setProps({ labelMuted: false });
+        const title = wrapper.find('.infos__title');
+        expect(title.classes()).not.toContain('infos__title--muted');
+      });
+    });
+
+    describe('subtitleMuted', () => {
+      it('should not apply muted class to subtitle by default', async () => {
+        await wrapper.setProps({ subtitle: 'Test Sector' });
+        const subtitle = wrapper.find('.infos__subtitle');
+        expect(subtitle.classes()).not.toContain('infos__subtitle--muted');
+      });
+
+      it('should apply muted class to subtitle when subtitleMuted is true', async () => {
+        await wrapper.setProps({
+          subtitle: 'Test Sector',
+          subtitleMuted: true,
+        });
+        const subtitle = wrapper.find('.infos__subtitle');
+        expect(subtitle.classes()).toContain('infos__subtitle--muted');
+      });
+
+      it('should not apply muted class to subtitle when subtitleMuted is false', async () => {
+        await wrapper.setProps({
+          subtitle: 'Test Sector',
+          subtitleMuted: false,
+        });
+        const subtitle = wrapper.find('.infos__subtitle');
+        expect(subtitle.classes()).not.toContain('infos__subtitle--muted');
+      });
+    });
+
+    describe('deletedTooltip', () => {
+      it('should have deleted tooltip disabled by default', () => {
+        const tooltip = wrapper.find(
+          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        );
+        expect(tooltip.attributes('enabled')).toBe('false');
+      });
+
+      it('should enable deleted tooltip when deletedTooltip is provided', async () => {
+        await wrapper.setProps({
+          deletedTooltip: 'Queue removed from project',
+        });
+        const tooltip = wrapper.find(
+          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        );
+        expect(tooltip.attributes('enabled')).toBe('true');
+      });
+
+      it('should pass correct text to deleted tooltip', async () => {
+        const tooltipText = 'Queue and sector removed from project';
+        await wrapper.setProps({ deletedTooltip: tooltipText });
+        const tooltip = wrapper.find(
+          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        );
+        expect(tooltip.attributes('text')).toBe(tooltipText);
+      });
+
+      it('should still render label and subtitle inside tooltip', async () => {
+        await wrapper.setProps({
+          subtitle: 'Test Sector',
+          deletedTooltip: 'Queue removed from project',
+          labelMuted: true,
+          subtitleMuted: true,
+        });
+        const title = wrapper.find('.infos__title');
+        const subtitle = wrapper.find('.infos__subtitle');
+        expect(title.exists()).toBe(true);
+        expect(subtitle.exists()).toBe(true);
+        expect(title.classes()).toContain('infos__title--muted');
+        expect(subtitle.classes()).toContain('infos__subtitle--muted');
+      });
+    });
+
+    describe('Combined deleted state scenarios', () => {
+      it('should handle both label and subtitle muted with tooltip', async () => {
+        await wrapper.setProps({
+          subtitle: 'After-Sales',
+          labelMuted: true,
+          subtitleMuted: true,
+          deletedTooltip: 'Queue and sector removed from project',
+        });
+
+        const title = wrapper.find('.infos__title');
+        const subtitle = wrapper.find('.infos__subtitle');
+        const tooltip = wrapper.find(
+          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        );
+
+        expect(title.classes()).toContain('infos__title--muted');
+        expect(subtitle.classes()).toContain('infos__subtitle--muted');
+        expect(tooltip.exists()).toBe(true);
+      });
+
+      it('should handle only label muted (queue deleted, sector active)', async () => {
+        await wrapper.setProps({
+          subtitle: 'Logistics',
+          labelMuted: true,
+          subtitleMuted: false,
+          deletedTooltip: 'Queue removed from project',
+        });
+
+        const title = wrapper.find('.infos__title');
+        const subtitle = wrapper.find('.infos__subtitle');
+
+        expect(title.classes()).toContain('infos__title--muted');
+        expect(subtitle.classes()).not.toContain('infos__subtitle--muted');
+      });
+    });
+  });
 });

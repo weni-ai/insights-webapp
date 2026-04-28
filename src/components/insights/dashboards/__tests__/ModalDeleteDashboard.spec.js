@@ -1,15 +1,23 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { flushPromises, mount } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
 
-import unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 import ModalDeleteDashboard from '../ModalDeleteDashboard.vue';
 
 import Dashboards from '@/services/api/resources/dashboards';
 
 vi.mock('@/services/api/resources/dashboards');
+
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
 
 describe('ModalDeleteDashboard', () => {
   let store;
@@ -20,6 +28,8 @@ describe('ModalDeleteDashboard', () => {
   };
 
   beforeEach(() => {
+    vi.clearAllMocks();
+
     store = createTestingPinia({
       initialState: {
         dashboards: {
@@ -38,47 +48,47 @@ describe('ModalDeleteDashboard', () => {
   });
 
   it('renders correctly with required props', () => {
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
+    const title = wrapper.findComponent({ name: 'UnnnicDialogTitle' });
 
     expect(modal.exists()).toBe(true);
-    expect(modal.props('modelValue')).toBe(true);
-    expect(modal.props('title')).toContain(mockDashboard.name);
+    expect(modal.props('open')).toBe(true);
+    expect(title.text()).toContain(mockDashboard.name);
     expect(input.exists()).toBe(true);
     expect(wrapper.vm.validDashboardName).toBe(false);
   });
 
   it('enables primary button only if dashboard name matches', async () => {
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
 
-    expect(modal.props('primaryButtonProps').disabled).toBe(true);
+    expect(deleteBtn.props('disabled')).toBe(true);
 
     await input.setValue('Test Dashboard');
 
-    expect(modal.props('primaryButtonProps').disabled).toBe(false);
+    expect(deleteBtn.props('disabled')).toBe(false);
   });
 
   it('calls deleteDashboard on primary button click', async () => {
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
 
     await input.setValue('Test Dashboard');
-    await modal.vm.$emit('primary-button-click');
+    await deleteBtn.trigger('click');
 
     expect(Dashboards.deleteDashboard).toHaveBeenCalledWith(mockDashboard.uuid);
   });
 
   it('shows success alert and updates state on successful deletion', async () => {
-    const callAlertSpy = vi.spyOn(unnnic, 'unnnicCallAlert');
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
 
     await input.setValue('Test Dashboard');
-    await modal.vm.$emit('primary-button-click');
-    await wrapper.vm.$nextTick();
+    await deleteBtn.trigger('click');
+    await flushPromises();
 
-    expect(callAlertSpy).toHaveBeenCalledWith({
+    expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
         text: wrapper.vm.$t('delete_dashboard.alert.success'),
         type: 'success',
@@ -88,19 +98,18 @@ describe('ModalDeleteDashboard', () => {
   });
 
   it('shows error alert on failed deletion', async () => {
-    const callAlertSpy = vi.spyOn(unnnic, 'unnnicCallAlert');
     Dashboards.deleteDashboard.mockRejectedValueOnce(new Error('Failed'));
 
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
 
     await input.setValue('Test Dashboard');
-    await modal.vm.$emit('primary-button-click');
-    await wrapper.vm.$nextTick();
+    await deleteBtn.trigger('click');
+    await flushPromises();
 
     expect(Dashboards.deleteDashboard).toHaveBeenCalled();
 
-    expect(callAlertSpy).toHaveBeenCalledWith({
+    expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
         text: wrapper.vm.$t('delete_dashboard.alert.error'),
         type: 'error',
@@ -110,9 +119,9 @@ describe('ModalDeleteDashboard', () => {
   });
 
   it('closes modal and emits close event when secondary button is clicked', async () => {
-    const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
+    const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
 
-    await modal.vm.$emit('update:model-value', false);
+    await modal.vm.$emit('update:open', false);
 
     expect(wrapper.emitted('close')).toBeTruthy();
   });

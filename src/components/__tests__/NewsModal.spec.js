@@ -3,18 +3,36 @@ import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import NewsModal from '../NewsModal.vue';
 
-vi.mock('@weni/unnnic-system', () => ({
-  UnnnicPagination: {
-    name: 'UnnnicPagination',
-    props: ['modelValue', 'max', 'show'],
-    template: '<div />',
-  },
-  UnnnicModalDialog: {
-    name: 'UnnnicModalDialog',
-    props: ['modelValue', 'title', 'showCloseIcon', 'size'],
-    template: '<div><slot /></div>',
-  },
-}));
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicPagination: {
+      name: 'UnnnicPagination',
+      props: ['modelValue', 'max', 'show'],
+      template: '<div />',
+    },
+    UnnnicDialog: {
+      name: 'UnnnicDialog',
+      template: '<div data-testid="news-modal"><slot /></div>',
+      props: ['open'],
+      emits: ['update:open'],
+    },
+    UnnnicDialogContent: {
+      name: 'UnnnicDialogContent',
+      template: '<div><slot /></div>',
+      props: ['size', 'class'],
+    },
+    UnnnicDialogHeader: {
+      name: 'UnnnicDialogHeader',
+      template: '<div><slot /></div>',
+    },
+    UnnnicDialogTitle: {
+      name: 'UnnnicDialogTitle',
+      template: '<div><slot /></div>',
+    },
+  };
+});
 
 const mockNews = [
   {
@@ -99,23 +117,23 @@ describe('NewsModal', () => {
 
   describe('Props handling', () => {
     it('should display correct title', () => {
-      const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-      expect(modal.props('title')).toBe('News Title');
+      const title = wrapper.findComponent({ name: 'UnnnicDialogTitle' });
+      expect(title.text()).toBe('News Title');
     });
 
-    it('should display correct modelValue', () => {
-      const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-      expect(modal.props('modelValue')).toBe(true);
+    it('should display correct open state', () => {
+      const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
+      expect(modal.props('open')).toBe(true);
     });
 
-    it('should have showCloseIcon enabled', () => {
-      const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-      expect(modal.props('showCloseIcon')).toBeDefined();
+    it('should render dialog header with close control', () => {
+      const header = wrapper.findComponent({ name: 'UnnnicDialogHeader' });
+      expect(header.exists()).toBe(true);
     });
 
-    it('should have large size', () => {
-      const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-      expect(modal.props('size')).toBe('large');
+    it('should have large dialog content', () => {
+      const content = wrapper.findComponent({ name: 'UnnnicDialogContent' });
+      expect(content.props('size')).toBe('large');
     });
   });
 
@@ -213,15 +231,15 @@ describe('NewsModal', () => {
 
   describe('Events', () => {
     it('should emit close when modal is closed', async () => {
-      const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-      await modal.vm.$emit('update:model-value', false);
+      const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
+      await modal.vm.$emit('update:open', false);
 
       expect(wrapper.emitted('close')).toBeTruthy();
     });
 
     it('should emit close with correct value', async () => {
-      const modal = wrapper.findComponent({ name: 'UnnnicModalDialog' });
-      await modal.vm.$emit('update:model-value', false);
+      const modal = wrapper.findComponent({ name: 'UnnnicDialog' });
+      await modal.vm.$emit('update:open', false);
 
       expect(wrapper.emitted('close')).toHaveLength(1);
     });

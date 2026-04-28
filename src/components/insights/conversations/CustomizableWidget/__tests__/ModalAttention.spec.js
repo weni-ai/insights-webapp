@@ -16,12 +16,32 @@ describe('ModalAttention', () => {
   const modalDialog = () =>
     wrapper.findComponent('[data-testid="modal-attention"]');
 
+  const dialogStubs = {
+    UnnnicDialog: {
+      name: 'UnnnicDialog',
+      template: '<div data-testid="modal-attention"><slot /></div>',
+      props: ['open'],
+      emits: ['update:open'],
+    },
+    UnnnicDialogContent: { template: '<div><slot /></div>' },
+    UnnnicDialogHeader: { template: '<div><slot /></div>' },
+    UnnnicDialogTitle: { template: '<div><slot /></div>' },
+    UnnnicDialogFooter: { template: '<div><slot /></div>' },
+    UnnnicButton: {
+      name: 'UnnnicButton',
+      template: '<button type="button" />',
+    },
+  };
+
   const createWrapper = (props = {}) => {
     return mount(ModalAttention, {
       props: {
         type: 'cancel',
         modelValue: false,
         ...props,
+      },
+      global: {
+        stubs: dialogStubs,
       },
     });
   };
@@ -31,7 +51,7 @@ describe('ModalAttention', () => {
   });
 
   describe('Component Structure', () => {
-    it('should render the UnnnicModalDialog component', () => {
+    it('should render the UnnnicDialog component', () => {
       expect(modalDialog().exists()).toBe(true);
     });
 
@@ -110,14 +130,16 @@ describe('ModalAttention', () => {
 
   describe('Event Emissions', () => {
     it('should emit primary-button-click when primary button is clicked', async () => {
-      await modalDialog().vm.$emit('primary-button-click');
+      const buttons = wrapper.findAllComponents({ name: 'UnnnicButton' });
+      await buttons[1].trigger('click');
 
       expect(wrapper.emitted('primary-button-click')).toBeTruthy();
       expect(wrapper.emitted('primary-button-click')).toHaveLength(1);
     });
 
     it('should emit secondary-button-click when secondary button is clicked', async () => {
-      await modalDialog().vm.$emit('secondary-button-click');
+      const buttons = wrapper.findAllComponents({ name: 'UnnnicButton' });
+      await buttons[0].trigger('click');
 
       expect(wrapper.emitted('secondary-button-click')).toBeTruthy();
       expect(wrapper.emitted('secondary-button-click')).toHaveLength(1);
@@ -128,7 +150,7 @@ describe('ModalAttention', () => {
     it('should render the description in the modal content', () => {
       wrapper = createWrapper({ type: 'cancel' });
 
-      expect(modalDialog().text()).toBe(wrapper.vm.description);
+      expect(wrapper.text()).toContain(wrapper.vm.description);
     });
 
     it('should update content when type prop changes', async () => {
@@ -178,7 +200,7 @@ describe('ModalAttention', () => {
       });
 
       expect(modalDialog().exists()).toBe(true);
-      expect(modalDialog().props('modelValue')).toBe(true);
+      expect(modalDialog().props('open')).toBe(true);
     });
 
     it('should maintain reactive properties when props change', async () => {

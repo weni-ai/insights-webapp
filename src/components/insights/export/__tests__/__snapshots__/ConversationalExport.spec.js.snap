@@ -1,219 +1,153 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`ConversationalExport > Component structure > should match snapshot 1`] = `
-<div
+<section
   class="modal-export-data"
   data-testid="modal-export-data"
   data-v-b7434839=""
 >
-  
-  
-  
-  
-  
-  
   <div
-    class="unnnic-tooltip-trigger unnnic-tooltip export-data-tooltip"
-    data-grace-area-trigger=""
-    data-state="closed"
-    data-testid="tooltip-trigger"
-    data-v-03fa3548=""
-    data-v-47313aed=""
-  >
-    
-    
-    
-    <unnnic-button-stub
-      aria-expanded="false"
-      aria-haspopup="dialog"
-      data-state="closed"
-      data-testid="export-data-button"
-      data-v-b7434839=""
-      disabled="false"
-      float="false"
-      iconcenter=""
-      iconleft=""
-      iconright=""
-      iconsfilled="false"
-      loading="false"
-      pressed="false"
-      size="large"
-      text="Export Data"
-      type="primary"
-    />
-    
-    
-    
-  </div>
-  <!--teleport start-->
-  <!--teleport end-->
-  
-  
-  
-  
-  <div
-    class="unnnic-dialog-content-stub finish-onboarding-modal conversational-export-dialog finish-onboarding-modal conversational-export-dialog"
-    data-testid="modal-dialog"
+    class="unnnic-dialog-stub"
     data-v-b7434839=""
-    size="large"
   >
     
-    <header
-      class="unnnic-dialog-header unnnic-dialog-header--with-divider"
-      data-v-68698b12=""
+    <div
+      class="unnnic-tooltip-stub export-data-tooltip"
+      data-testid="export-data-tooltip"
       data-v-b7434839=""
+      enabled="false"
+      side="left"
+      text="Tooltip text"
     >
-      <!---->
       
-      <h2
-        class="unnnic-dialog-title"
+      <div
+        class="unnnic-dialog-trigger-stub"
         data-v-b7434839=""
-        data-v-d76f41b9=""
-        id=""
       >
         
+        <button
+          class="unnnic-button-stub"
+          data-testid="export-data-button"
+          data-v-b7434839=""
+          loading="false"
+          size="large"
+          text="Export Data"
+          type="submit"
+        >
+          
+          
+        </button>
         
-        Export Data
-        
-        
-      </h2>
+      </div>
       
-      <unnnic-button-stub
-        class="unnnic-dialog-close unnnic-dialog-header__close"
-        data-v-523f78a3=""
-        data-v-68698b12=""
-        disabled="false"
-        float="false"
-        iconcenter="close"
-        iconleft=""
-        iconright=""
-        iconsfilled="false"
-        loading="false"
-        pressed="false"
-        size="small"
-        text=""
-        type="tertiary"
-      />
-    </header>
-    <div
-      class="conversational-export-dialog__body"
-      data-v-b7434839=""
-    >
-      <form-export-stub
-        data-v-b7434839=""
-      />
     </div>
-    <footer
-      class="unnnic-dialog-footer unnnic-dialog-footer--with-divider"
-      data-v-9a01dfac=""
-      data-v-b7434839=""
-    >
-      
-      <unnnic-button-stub
-        class="unnnic-dialog-close"
-        data-v-523f78a3=""
-        data-v-b7434839=""
-        disabled="false"
-        float="false"
-        iconcenter=""
-        iconleft=""
-        iconright=""
-        iconsfilled="false"
-        loading="false"
-        pressed="false"
-        size="large"
-        text="Cancel"
-        type="tertiary"
-      />
-      <unnnic-button-stub
-        data-v-b7434839=""
-        disabled="false"
-        float="false"
-        iconcenter=""
-        iconleft=""
-        iconright=""
-        iconsfilled="false"
-        loading="false"
-        pressed="false"
-        size="large"
-        text="Save"
-        type="primary"
-      />
-      
-    </footer>
-    
-  </div>
-  
-  
-  
-  
-  <div
-    class="unnnic-dialog-content-stub finish-onboarding-modal finish-onboarding-modal"
-    data-testid="modal-dialog-feedback"
-    data-v-b7434839=""
-    size="medium"
-  >
-    
-    <header
-      class="unnnic-dialog-header unnnic-dialog-header--with-divider"
-      data-v-68698b12=""
-      data-v-b7434839=""
-    >
-      <span
-        class="unnnic-icon material-symbols-rounded unnnic-icon-scheme--fg-success unnnic-icon-size--md unnnic-icon__size--md"
-        data-testid="material-icon"
-        data-v-68698b12=""
-        data-v-b593673c=""
-        translate="no"
-      >
-        check_circle
-      </span>
-      
-      <h2
-        class="unnnic-dialog-title"
-        data-v-b7434839=""
-        data-v-d76f41b9=""
-        id=""
-      >
-        
-        
-        Success
-        
-        
-      </h2>
-      
-      <unnnic-button-stub
-        class="unnnic-dialog-close unnnic-dialog-header__close"
-        data-v-523f78a3=""
-        data-v-68698b12=""
-        disabled="false"
-        float="false"
-        iconcenter="close"
-        iconleft=""
-        iconright=""
-        iconsfilled="false"
-        loading="false"
-        pressed="false"
-        size="small"
-        text=""
-        type="tertiary"
-      />
-    </header>
     <div
-      class="export-data-feedback"
+      class="unnnic-dialog-content-stub finish-onboarding-modal conversational-export-dialog finish-onboarding-modal conversational-export-dialog"
+      data-testid="modal-dialog"
       data-v-b7434839=""
     >
-      <p
-        class="export-data-feedback__text"
-        data-testid="export-data-feedback-text"
+      
+      <header
+        class="unnnic-dialog-header-stub"
         data-v-b7434839=""
       >
-        Export successful
-      </p>
+        
+        <div
+          class="unnnic-dialog-title-stub"
+          data-v-b7434839=""
+        >
+          
+          Export Data
+          
+        </div>
+        
+      </header>
+      <div
+        class="conversational-export-dialog__body"
+        data-v-b7434839=""
+      >
+        <form-export-stub
+          data-v-b7434839=""
+        />
+      </div>
+      <footer
+        class="unnnic-dialog-footer-stub"
+        data-v-b7434839=""
+      >
+        
+        <div
+          class="unnnic-dialog-close-stub"
+          data-v-b7434839=""
+        >
+          
+          <button
+            class="unnnic-button-stub"
+            data-v-b7434839=""
+            text="Cancel"
+            type="submit"
+          >
+            
+            
+          </button>
+          
+        </div>
+        <button
+          class="unnnic-button-stub"
+          data-v-b7434839=""
+          loading="false"
+          text="Save"
+          type="submit"
+        >
+          
+          
+        </button>
+        
+      </footer>
+      
     </div>
     
   </div>
-  
-  
-</div>
+  <div
+    class="unnnic-dialog-stub"
+    data-v-b7434839=""
+  >
+    
+    <div
+      class="unnnic-dialog-content-stub finish-onboarding-modal finish-onboarding-modal"
+      data-testid="modal-dialog-feedback"
+      data-v-b7434839=""
+    >
+      
+      <header
+        class="unnnic-dialog-header-stub"
+        data-v-b7434839=""
+      >
+        
+        <div
+          class="unnnic-dialog-title-stub"
+          data-v-b7434839=""
+        >
+          
+          Success
+          
+        </div>
+        
+      </header>
+      <div
+        class="export-data-feedback"
+        data-v-b7434839=""
+      >
+        <p
+          class="export-data-feedback__text"
+          data-testid="export-data-feedback-text"
+          data-v-b7434839=""
+        >
+          Export successful
+        </p>
+      </div>
+      
+    </div>
+    
+  </div>
+</section>
 `;

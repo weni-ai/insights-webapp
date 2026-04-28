@@ -74,12 +74,13 @@ describe('ConversationalExport', () => {
     return mount(ConversationalExport, {
       global: {
         stubs: {
-          UnnnicButton: true,
-          UnnnicToolTip: true,
-          UnnnicDialogContent: {
+          UnnnicButton: {
             inheritAttrs: true,
             template:
-              '<div class="unnnic-dialog-content-stub" v-bind="$attrs"><slot /></div>',
+              '<button type="button" class="unnnic-button-stub" v-bind="$attrs"><slot /></button>',
+          },
+          UnnnicToolTip: {
+            template: '<div class="unnnic-tooltip-stub"><slot /></div>',
           },
           FormExport: true,
         },
@@ -112,7 +113,7 @@ describe('ConversationalExport', () => {
 
   afterEach(() => {
     vi.useRealTimers();
-    wrapper.unmount();
+    wrapper?.unmount();
   });
 
   describe('Component rendering', () => {
@@ -120,9 +121,10 @@ describe('ConversationalExport', () => {
       expect(section().exists()).toBe(true);
     });
 
-    it('should render tooltip', () => {
-      const tooltip = wrapper.find('[data-testid="tooltip-trigger"]');
-      expect(tooltip.exists()).toBe(true);
+    it('should render export trigger button', () => {
+      expect(wrapper.find('[data-testid="export-data-button"]').exists()).toBe(
+        true,
+      );
     });
   });
 

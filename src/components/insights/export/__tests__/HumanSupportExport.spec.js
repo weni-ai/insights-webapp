@@ -70,12 +70,13 @@ describe('HumanSupportExport', () => {
     return mount(HumanSupportExport, {
       global: {
         stubs: {
-          UnnnicButton: true,
-          UnnnicToolTip: true,
-          UnnnicDialogContent: {
+          UnnnicButton: {
             inheritAttrs: true,
             template:
-              '<div class="unnnic-dialog-content-stub" v-bind="$attrs"><slot /></div>',
+              '<button type="button" class="unnnic-button-stub" v-bind="$attrs"><slot /></button>',
+          },
+          UnnnicToolTip: {
+            template: '<div class="unnnic-tooltip-stub"><slot /></div>',
           },
           FormExport: true,
         },

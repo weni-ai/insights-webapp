@@ -1,56 +1,71 @@
 <template>
-  <UnnnicModalDialog
-    data-testid="modal-remove-widget"
-    class="modal-remove-widget"
-    :modelValue="modelValue"
-    :title="
-      title ??
-      $t(
-        'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
-      )
-    "
-    type="warning"
-    icon="warning"
-    :primaryButtonProps="{
-      text: $t(
-        'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove',
-      ),
-      loading: isLoading,
-      onClick: handleRemoveWidget,
-    }"
-    :secondaryButtonProps="{
-      text: $t(
-        'conversations_dashboard.customize_your_dashboard.modal_remove_widget.cancel',
-      ),
-      onClick: () => emit('update:modelValue', false),
-    }"
-    showCloseIcon
-    :size="size ?? 'sm'"
-    @update:model-value="emit('update:modelValue', $event)"
+  <UnnnicDialog
+    :open="modelValue"
+    @update:open="emit('update:modelValue', $event)"
   >
-    <slot name="description">
-      <p
-        class="modal-remove-widget__description"
-        data-testid="modal-remove-widget-description"
-      >
-        {{
-          $t(
-            'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
-            {
-              type: props.name,
-            },
-          )
-        }}
-      </p>
-    </slot>
-  </UnnnicModalDialog>
+    <UnnnicDialogContent
+      data-testid="modal-remove-widget"
+      class="modal-remove-widget"
+      :size="dialogContentSize"
+    >
+      <UnnnicDialogHeader type="warning">
+        <UnnnicDialogTitle>
+          {{
+            title ??
+            $t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
+            )
+          }}
+        </UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
+      <section class="modal-remove-widget__content">
+        <slot name="description">
+          <p
+            class="modal-remove-widget__description"
+            data-testid="modal-remove-widget-description"
+          >
+            {{
+              $t(
+                'conversations_dashboard.customize_your_dashboard.modal_remove_widget.description',
+                {
+                  type: props.name,
+                },
+              )
+            }}
+          </p>
+        </slot>
+      </section>
+      <UnnnicDialogFooter>
+        <UnnnicButton
+          :text="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.cancel',
+            )
+          "
+          type="tertiary"
+          @click="emit('update:modelValue', false)"
+        />
+        <UnnnicButton
+          :text="
+            $t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove',
+            )
+          "
+          type="warning"
+          :loading="isLoading"
+          @click="handleRemoveWidget"
+        />
+      </UnnnicDialogFooter>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
-import { unnnicCallAlert } from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -83,6 +98,15 @@ const { deleteCustomWidget } = useCustomWidgets();
 
 const isLoading = ref(false);
 
+const dialogContentSize = computed(() => {
+  const map = {
+    sm: 'small',
+    md: 'medium',
+    lg: 'large',
+  } as const;
+  return map[props.size ?? 'sm'];
+});
+
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
@@ -96,7 +120,7 @@ const handleRemoveWidget = async () => {
       await deleteWidget(props.type);
     }
 
-    unnnicCallAlert({
+    UnnnicCallAlert({
       props: {
         text: t(
           'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
@@ -112,7 +136,7 @@ const handleRemoveWidget = async () => {
     emit('update:modelValue', false);
     emit('success');
   } catch (error) {
-    console.error(error);
+    console.error('Error removing widget', error);
   } finally {
     isLoading.value = false;
   }
@@ -121,21 +145,8 @@ const handleRemoveWidget = async () => {
 
 <style lang="scss" scoped>
 .modal-remove-widget {
-  display: flex;
-  flex-direction: column;
-  gap: $unnnic-space-6;
-
-  &__description {
-    font: $unnnic-font-body;
-    color: $unnnic-color-fg-muted;
-  }
-
-  :deep(.unnnic-modal-dialog__container__content) {
-    padding-bottom: $unnnic-space-4;
-  }
-
-  :deep(.unnnic-modal-dialog__container__actions) {
-    padding-top: $unnnic-space-4;
+  &__content {
+    padding: $unnnic-space-6;
   }
 }
 </style>

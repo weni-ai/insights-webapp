@@ -1,45 +1,65 @@
 <template>
-  <UnnnicModalDialog
-    :modelValue="modelValue"
-    :title="`${$t('delete_dashboard.title')} ${dashboard.name}`"
-    :primaryButtonProps="{
-      text: $t('delete'),
-      disabled: !validDashboardName,
-      loading: loadingRequest,
-    }"
-    :secondaryButtonProps="{ disabled: loadingRequest }"
-    showActionsDivider
-    showCloseIcon
-    size="sm"
-    data-testid="modal-delete-dashboard"
-    @update:model-value="!$event ? close() : {}"
-    @primary-button-click="deleteDashboard"
+  <UnnnicDialog
+    :open="modelValue"
+    @update:open="handleOpenChange"
   >
-    <p
-      class="delete-notice"
-      data-testid="delete-notice"
-    >
-      {{ $t('delete_dashboard.notice') }}
-    </p>
-    <UnnnicLabel :label="$t('confirmation')" />
-    <UnnnicInput
-      v-model="dashboardName"
-      :placeholder="dashboard.name"
-      data-testid="input-dashboard-name"
-    />
-  </UnnnicModalDialog>
+    <UnnnicDialogContent>
+      <UnnnicDialogHeader type="warning">
+        <UnnnicDialogTitle>
+          {{ $t('delete_dashboard.title') }} {{ dashboard.name }}
+        </UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
+      <section
+        class="modal-delete-dashboard__body"
+        data-testid="modal-delete-dashboard"
+      >
+        <p
+          class="delete-notice"
+          data-testid="delete-notice"
+        >
+          {{ $t('delete_dashboard.notice') }}
+        </p>
+        <UnnnicLabel :label="$t('confirmation')" />
+        <UnnnicInput
+          v-model="dashboardName"
+          :placeholder="dashboard.name"
+          data-testid="input-dashboard-name"
+        />
+      </section>
+
+      <UnnnicDialogFooter>
+        <UnnnicButton
+          data-testid="modal-delete-dashboard-cancel"
+          type="tertiary"
+          :text="$t('cancel')"
+          :disabled="loadingRequest"
+          @click="close()"
+        />
+        <UnnnicButton
+          data-testid="delete-dashboard-submit"
+          type="warning"
+          :text="$t('delete')"
+          :disabled="!validDashboardName"
+          :loading="loadingRequest"
+          @click="deleteDashboard"
+        />
+      </UnnnicDialogFooter>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script>
 import { mapState } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 
-import Dashboards from '@/services/api/resources/dashboards';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
-import unnnic from '@weni/unnnic-system';
+import Dashboards from '@/services/api/resources/dashboards';
 
 export default {
   name: 'ModalDeleteDashboard',
+
   props: {
     modelValue: {
       type: Boolean,
@@ -65,6 +85,11 @@ export default {
     },
   },
   methods: {
+    handleOpenChange(isOpen) {
+      if (!isOpen) {
+        this.close();
+      }
+    },
     close(cascade = false) {
       this.$emit('close', { cascade });
     },
@@ -84,7 +109,7 @@ export default {
             this.dashboardDefault.is_default = true;
           }
 
-          unnnic.unnnicCallAlert({
+          UnnnicCallAlert({
             props: {
               text: this.$t('delete_dashboard.alert.success'),
               type: 'success',
@@ -98,7 +123,7 @@ export default {
           });
         })
         .catch((error) => {
-          unnnic.unnnicCallAlert({
+          UnnnicCallAlert({
             props: {
               text: this.$t('delete_dashboard.alert.error'),
               type: 'error',
@@ -117,7 +142,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.delete-notice {
-  font: $unnnic-font-body;
+.modal-delete-dashboard {
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-4;
+    padding: $unnnic-space-6;
+
+    font: $unnnic-font-body;
+    color: $unnnic-color-fg-base;
+  }
 }
 </style>

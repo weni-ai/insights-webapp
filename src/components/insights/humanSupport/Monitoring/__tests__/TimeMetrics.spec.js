@@ -123,7 +123,9 @@ describe('TimeMetrics', () => {
 
     it('should render title', () => {
       expect(title().exists()).toBe(true);
-      expect(title().text()).toBe('Time metrics now');
+      expect(title().text()).toBe(
+        wrapper.vm.$t('human_support_dashboard.time_metrics.title'),
+      );
     });
 
     it('should render cards container', () => {
@@ -143,8 +145,22 @@ describe('TimeMetrics', () => {
       expect(section().classes()).toContain('time-metrics');
     });
 
-    it('should match snapshot', () => {
-      expect(wrapper.element).toMatchSnapshot();
+    it('should have the expected DOM structure', () => {
+      expect(title().exists()).toBe(true);
+      expect(title().element.tagName).toBe('P');
+      expect(title().classes()).toContain('time-metrics__title');
+
+      expect(cards().exists()).toBe(true);
+      expect(cards().classes()).toContain('time-metrics__cards');
+
+      const cardComponents = wrapper.findAllComponents({
+        name: 'CardConversations',
+      });
+      expect(cardComponents).toHaveLength(3);
+
+      cardComponents.forEach((card) => {
+        expect(card.classes()).toContain('time-metrics__card');
+      });
     });
   });
 
@@ -207,14 +223,17 @@ describe('TimeMetrics', () => {
 
     it('should format sub values (max times) correctly', () => {
       const vm = wrapper.vm;
+      const maxLabel = vm.$t('human_support_dashboard.time_metrics.max');
 
-      expect(vm.getCardSubValue('average_time_is_waiting')).toContain(
-        'Max: 5m 00s',
+      expect(vm.getCardSubValue('average_time_is_waiting')).toBe(
+        `${maxLabel}: 5m 00s`,
       );
-      expect(vm.getCardSubValue('average_time_first_response')).toContain(
-        'Max: 1m 30s',
+      expect(vm.getCardSubValue('average_time_first_response')).toBe(
+        `${maxLabel}: 1m 30s`,
       );
-      expect(vm.getCardSubValue('average_time_chat')).toContain('Max: 20m 00s');
+      expect(vm.getCardSubValue('average_time_chat')).toBe(
+        `${maxLabel}: 20m 00s`,
+      );
     });
 
     const edgeCases = [
@@ -222,23 +241,24 @@ describe('TimeMetrics', () => {
         name: 'null values',
         data: { average: null, max: null },
         expectedValue: '-',
-        expectedDesc: '',
+        hasMaxDesc: false,
       },
       {
         name: 'undefined values',
         data: { average: undefined, max: undefined },
         expectedValue: '-',
-        expectedDesc: '',
+        hasMaxDesc: false,
       },
       {
         name: 'zero values',
         data: { average: 0, max: 0 },
         expectedValue: '0s',
-        expectedDesc: 'Max: 0s',
+        hasMaxDesc: true,
+        expectedFormattedMax: '0s',
       },
     ];
 
-    edgeCases.forEach(({ name, data, expectedValue, expectedDesc }) => {
+    edgeCases.forEach(({ name, data, expectedValue, hasMaxDesc, expectedFormattedMax }) => {
       it(`should handle ${name}`, () => {
         const testData = { average_time_is_waiting: data };
         wrapper = createWrapper({
@@ -248,9 +268,10 @@ describe('TimeMetrics', () => {
         const vm = wrapper.vm;
         expect(vm.getCardValue('average_time_is_waiting')).toBe(expectedValue);
 
-        if (expectedDesc) {
-          expect(vm.getCardSubValue('average_time_is_waiting')).toContain(
-            'Max:',
+        if (hasMaxDesc) {
+          const maxLabel = vm.$t('human_support_dashboard.time_metrics.max');
+          expect(vm.getCardSubValue('average_time_is_waiting')).toBe(
+            `${maxLabel}: ${expectedFormattedMax}`,
           );
         } else {
           expect(vm.getCardSubValue('average_time_is_waiting')).toBe('');

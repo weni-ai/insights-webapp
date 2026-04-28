@@ -168,6 +168,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
         { model: string; subsection?: string }
       > = {
         RESOLUTIONS: { model: 'resolutions' },
+        TOOL_RESULT: { model: 'tool_result' },
+        AGENT_INVOCATION: { model: 'agent_invocation' },
         TOPICS_AI: { model: 'topics', subsection: 'ai' },
         TOPICS_HUMAN: { model: 'topics', subsection: 'human' },
         CSAT_AI: { model: 'csat', subsection: 'ai' },
@@ -229,6 +231,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
           string | Record<string, string>
         > = {
           resolutions: 'RESOLUTIONS',
+          tool_result: 'TOOL_RESULT',
+          agent_invocation: 'AGENT_INVOCATION',
           topics: { human: 'TOPICS_HUMAN', ai: 'TOPICS_AI' },
           csat: { human: 'CSAT_HUMAN', ai: 'CSAT_AI' },
           nps: { human: 'NPS_HUMAN', ai: 'NPS_AI' },
@@ -316,7 +320,9 @@ export const useConversationalExport = defineStore('conversationalExport', {
 
       if (
         state.enabled_models.includes('resolutions') ||
-        state.enabled_models.includes('transferred')
+        state.enabled_models.includes('transferred') ||
+        state.enabled_models.includes('tool_result') ||
+        state.enabled_models.includes('agent_invocation')
       ) {
         hasValidSelections = true;
       }

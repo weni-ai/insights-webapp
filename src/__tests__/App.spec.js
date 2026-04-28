@@ -59,6 +59,12 @@ const mockComponents = {
     props: ['showModal'],
     emits: ['finish-onboarding'],
   },
+  McpNewsModal: {
+    name: 'McpNewsModal',
+    template: '<div class="mcp-news-modal" data-testid="mcp-news-modal"></div>',
+    props: ['modelValue'],
+    emits: ['not-now', 'view-guide', 'update:modelValue'],
+  },
   RouterView: {
     name: 'RouterView',
     template: '<div class="router-view"></div>',
@@ -431,6 +437,64 @@ describe('App', () => {
       await modal.vm.$emit('finish-onboarding');
 
       expect(setShowCompleteOnboardingModalSpy).toHaveBeenCalledWith(false);
+    });
+  });
+
+  describe('MCP News Modal', () => {
+    it('should render McpNewsModal when mcp_news_modal_seen is not in storage', async () => {
+      await wrapper.vm.$nextTick();
+
+      const modal = wrapper.findComponent('[data-testid="mcp-news-modal"]');
+      expect(modal.exists()).toBe(true);
+    });
+
+    it('should not render McpNewsModal when mcp_news_modal_seen is set', () => {
+      localStorageMock.getItem.mockImplementation((key) => {
+        const items = {
+          insights_token: 'mock-token',
+          insights_projectUuid: 'stored-project-uuid',
+          insights_mcp_news_modal_seen: 'true',
+        };
+        return items[key] || null;
+      });
+
+      wrapper = createWrapper();
+      const modal = wrapper.find('[data-testid="mcp-news-modal"]');
+      expect(modal.exists()).toBe(false);
+    });
+
+    it('should handle not-now event by setting localStorage and hiding modal', async () => {
+      await wrapper.vm.$nextTick();
+
+      wrapper.vm.handleMcpNotNow();
+      await wrapper.vm.$nextTick();
+
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'insights_mcp_news_modal_seen',
+        'true',
+      );
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'insights_mcp_news_show_disclaimer',
+        'true',
+      );
+      expect(wrapper.vm.showMcpNewsModal).toBe(false);
+    });
+
+    it('should handle view-guide event by setting localStorage and hiding modal', async () => {
+      await wrapper.vm.$nextTick();
+
+      wrapper.vm.handleMcpViewGuide();
+      await wrapper.vm.$nextTick();
+
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'insights_mcp_news_modal_seen',
+        'true',
+      );
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'insights_mcp_news_show_disclaimer',
+        'false',
+      );
+      expect(wrapper.vm.showMcpNewsModal).toBe(false);
     });
   });
 });

@@ -118,6 +118,22 @@ describe('FilterMultiSelect', () => {
       expect(Projects.getProjectSource).not.toHaveBeenCalled();
     });
 
+    it('does not fetch source data on mount when dependsOnValue is provided', async () => {
+      Projects.getProjectSource.mockClear();
+
+      createWrapper({
+        dependsOnValue: { sector_id: 'some-uuid' },
+      });
+
+      await vi.waitFor(() => {
+        expect(Projects.getProjectSource).toHaveBeenCalledTimes(1);
+      });
+
+      expect(Projects.getProjectSource).toHaveBeenCalledWith('test-source', {
+        sector_id: 'some-uuid',
+      });
+    });
+
     it('adds fetched sources to options correctly', async () => {
       await wrapper.vm.$nextTick();
 
@@ -264,9 +280,7 @@ describe('FilterMultiSelect', () => {
       });
 
       await customWrapper.vm.$nextTick();
-      customWrapper.vm.options = [
-        { value: '1', label: 'Source 1' },
-      ];
+      customWrapper.vm.options = [{ value: '1', label: 'Source 1' }];
 
       Projects.getProjectSource.mockClear();
 

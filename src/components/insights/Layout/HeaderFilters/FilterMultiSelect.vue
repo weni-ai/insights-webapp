@@ -110,7 +110,7 @@ watch(
 );
 
 onMounted(() => {
-  if (!props.dependsOn?.search_param) fetchSource();
+  if (!props.dependsOn?.search_param && !props.dependsOnValue) fetchSource();
 });
 
 async function fetchSource() {
@@ -124,12 +124,10 @@ async function fetchSource() {
       updateSectors(response);
     }
 
-    response?.forEach((source) => {
-      options.value.push({
-        value: source[props.keyValueField] || source.uuid,
-        label: source.name,
-      });
-    });
+    options.value = (response || []).map((source) => ({
+      value: source[props.keyValueField] || source.uuid,
+      label: source.name,
+    }));
   } catch (e) {
     console.error('getProjectSource error', e);
   }

@@ -1,11 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`ConversationalExport > Component structure > should match snapshot 1`] = `
-<section
+<div
   class="modal-export-data"
   data-testid="modal-export-data"
   data-v-b7434839=""
 >
+  
+  
   
   
   
@@ -22,10 +24,19 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
     
     
     <unnnic-button-stub
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      data-state="closed"
       data-testid="export-data-button"
       data-v-b7434839=""
       disabled="false"
-      loading="[object Object]"
+      float="false"
+      iconcenter=""
+      iconleft=""
+      iconright=""
+      iconsfilled="false"
+      loading="false"
+      pressed="false"
       size="large"
       text="Export Data"
       type="primary"
@@ -40,27 +51,169 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
   
   
   
-  <unnnic-modal-dialog-stub
-    class="finish-onboarding-modal"
+  <div
+    class="unnnic-dialog-content-stub finish-onboarding-modal conversational-export-dialog finish-onboarding-modal conversational-export-dialog"
     data-testid="modal-dialog"
     data-v-b7434839=""
-    modelvalue="[object Object]"
-    primarybuttonprops="[object Object]"
-    secondarybuttonprops="[object Object]"
-    showactionsdivider=""
-    showcloseicon=""
-    size="lg"
-    title="Export Data"
-  />
-  <unnnic-modal-dialog-stub
-    class="finish-onboarding-modal"
+    size="large"
+  >
+    
+    <header
+      class="unnnic-dialog-header unnnic-dialog-header--with-divider"
+      data-v-68698b12=""
+      data-v-b7434839=""
+    >
+      <!---->
+      
+      <h2
+        class="unnnic-dialog-title"
+        data-v-b7434839=""
+        data-v-d76f41b9=""
+        id=""
+      >
+        
+        
+        Export Data
+        
+        
+      </h2>
+      
+      <unnnic-button-stub
+        class="unnnic-dialog-close unnnic-dialog-header__close"
+        data-v-523f78a3=""
+        data-v-68698b12=""
+        disabled="false"
+        float="false"
+        iconcenter="close"
+        iconleft=""
+        iconright=""
+        iconsfilled="false"
+        loading="false"
+        pressed="false"
+        size="small"
+        text=""
+        type="tertiary"
+      />
+    </header>
+    <div
+      class="conversational-export-dialog__body"
+      data-v-b7434839=""
+    >
+      <form-export-stub
+        data-v-b7434839=""
+      />
+    </div>
+    <footer
+      class="unnnic-dialog-footer unnnic-dialog-footer--with-divider"
+      data-v-9a01dfac=""
+      data-v-b7434839=""
+    >
+      
+      <unnnic-button-stub
+        class="unnnic-dialog-close"
+        data-v-523f78a3=""
+        data-v-b7434839=""
+        disabled="false"
+        float="false"
+        iconcenter=""
+        iconleft=""
+        iconright=""
+        iconsfilled="false"
+        loading="false"
+        pressed="false"
+        size="large"
+        text="Cancel"
+        type="tertiary"
+      />
+      <unnnic-button-stub
+        data-v-b7434839=""
+        disabled="false"
+        float="false"
+        iconcenter=""
+        iconleft=""
+        iconright=""
+        iconsfilled="false"
+        loading="false"
+        pressed="false"
+        size="large"
+        text="Save"
+        type="primary"
+      />
+      
+    </footer>
+    
+  </div>
+  
+  
+  
+  
+  <div
+    class="unnnic-dialog-content-stub finish-onboarding-modal finish-onboarding-modal"
     data-testid="modal-dialog-feedback"
     data-v-b7434839=""
-    modelvalue="[object Object]"
-    showcloseicon=""
-    size="md"
-    title="Success"
-    type="success"
-  />
-</section>
+    size="medium"
+  >
+    
+    <header
+      class="unnnic-dialog-header unnnic-dialog-header--with-divider"
+      data-v-68698b12=""
+      data-v-b7434839=""
+    >
+      <span
+        class="unnnic-icon material-symbols-rounded unnnic-icon-scheme--fg-success unnnic-icon-size--md unnnic-icon__size--md"
+        data-testid="material-icon"
+        data-v-68698b12=""
+        data-v-b593673c=""
+        translate="no"
+      >
+        check_circle
+      </span>
+      
+      <h2
+        class="unnnic-dialog-title"
+        data-v-b7434839=""
+        data-v-d76f41b9=""
+        id=""
+      >
+        
+        
+        Success
+        
+        
+      </h2>
+      
+      <unnnic-button-stub
+        class="unnnic-dialog-close unnnic-dialog-header__close"
+        data-v-523f78a3=""
+        data-v-68698b12=""
+        disabled="false"
+        float="false"
+        iconcenter="close"
+        iconleft=""
+        iconright=""
+        iconsfilled="false"
+        loading="false"
+        pressed="false"
+        size="small"
+        text=""
+        type="tertiary"
+      />
+    </header>
+    <div
+      class="export-data-feedback"
+      data-v-b7434839=""
+    >
+      <p
+        class="export-data-feedback__text"
+        data-testid="export-data-feedback-text"
+        data-v-b7434839=""
+      >
+        Export successful
+      </p>
+    </div>
+    
+  </div>
+  
+  
+</div>
 `;

@@ -1,6 +1,7 @@
 import { config } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
+import { unnnicDialogStubs } from '@/test-utils/unnnicDialogStubs.js';
 import { vi } from 'vitest';
 
 // Import all locale messages
@@ -40,3 +41,8 @@ const i18n = createI18n({
 });
 
 config.global.plugins = [i18n, UnnnicSystemPlugin];
+
+config.global.stubs = {
+  ...(config.global.stubs || {}),
+  ...unnnicDialogStubs,
+};

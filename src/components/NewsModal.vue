@@ -1,55 +1,67 @@
 <template>
-  <UnnnicModalDialog
+  <UnnnicDialog
     data-testid="news-modal"
-    :modelValue="modelValue"
-    :title="title"
-    showCloseIcon
-    size="large"
-    @update:model-value="emit('close')"
+    :open="modelValue"
+    @update:open="handleOpenChange"
   >
-    <section
-      class="news-modal__content"
-      data-testid="news-modal-content"
+    <UnnnicDialogContent
+      size="large"
+      class="news-modal"
     >
+      <UnnnicDialogHeader>
+        <UnnnicDialogTitle>{{ title }}</UnnnicDialogTitle>
+      </UnnnicDialogHeader>
+
       <section
-        class="news-modal__description"
-        data-testid="news-modal-description"
+        class="news-modal__content"
+        data-testid="news-modal-content"
       >
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <p
-          data-testid="news-modal-description-text"
-          v-html="currentNewsItem.description"
+        <section
+          class="news-modal__description"
+          data-testid="news-modal-description"
+        >
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <p
+            data-testid="news-modal-description-text"
+            v-html="currentNewsItem.description"
+          />
+          <p
+            v-if="currentNewsItem.secondDescription"
+            data-testid="news-modal-description-second-text"
+            v-html="currentNewsItem.secondDescription"
+          />
+        </section>
+        <img
+          class="news-modal__image"
+          data-testid="news-modal-image"
+          :src="currentNewsItem.image"
+          :alt="currentNewsItem.description"
         />
-        <p
-          v-if="currentNewsItem.secondDescription"
-          data-testid="news-modal-description-second-text"
-          v-html="currentNewsItem.secondDescription"
+        <UnnnicPagination
+          class="news-modal__pagination"
+          data-testid="news-modal-pagination"
+          :modelValue="page"
+          :max="news.length"
+          :show="pageSize"
+          @update:model-value="updatePage"
         />
       </section>
-      <img
-        class="news-modal__image"
-        data-testid="news-modal-image"
-        :src="currentNewsItem.image"
-        :alt="currentNewsItem.description"
-      />
-      <UnnnicPagination
-        class="news-modal__pagination"
-        data-testid="news-modal-pagination"
-        :modelValue="page"
-        :max="news.length"
-        :show="pageSize"
-        @update:model-value="updatePage"
-      />
-    </section>
-  </UnnnicModalDialog>
+    </UnnnicDialogContent>
+  </UnnnicDialog>
 </template>
 
 <script setup lang="ts">
-import { UnnnicPagination, UnnnicModalDialog } from '@weni/unnnic-system';
+import {
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+  UnnnicPagination,
+} from '@weni/unnnic-system';
 import { computed, ref } from 'vue';
 
 const emit = defineEmits<{
-  close: []
+  close: [];
 }>();
 
 const props = defineProps<{
@@ -69,6 +81,12 @@ const currentNewsItem = computed(() => {
   return props.news[page.value - 1];
 });
 
+const handleOpenChange = (open: boolean) => {
+  if (!open) {
+    emit('close');
+  }
+};
+
 const updatePage = (value: number) => {
   page.value = value;
 };
@@ -82,6 +100,7 @@ const updatePage = (value: number) => {
     gap: $unnnic-space-4;
     justify-content: space-between;
     max-width: 750px;
+    padding: $unnnic-space-6;
   }
 
   &__description {

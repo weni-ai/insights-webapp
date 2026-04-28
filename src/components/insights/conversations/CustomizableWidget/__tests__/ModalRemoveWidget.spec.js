@@ -57,9 +57,26 @@ describe('ModalRemoveWidget', () => {
       props: { ...defaultProps, ...props },
       global: {
         stubs: {
-          UnnnicModalDialog: {
+          UnnnicDialog: {
+            inheritAttrs: false,
+            template: '<div><slot /></div>',
+          },
+          UnnnicDialogContent: {
             template:
               '<div data-testid="modal-remove-widget" class="modal-remove-widget"><slot /></div>',
+          },
+          UnnnicDialogHeader: {
+            template: '<header><slot /></header>',
+          },
+          UnnnicDialogTitle: {
+            template: '<div><slot /></div>',
+          },
+          UnnnicDialogFooter: {
+            template: '<footer><slot /></footer>',
+          },
+          UnnnicButton: {
+            template: '<button type="button"><slot /></button>',
+            props: ['text', 'type', 'loading'],
           },
         },
         mocks: {
@@ -164,7 +181,10 @@ describe('ModalRemoveWidget', () => {
 
       await wrapper.vm.handleRemoveWidget();
 
-      expect(consoleSpy).toHaveBeenCalledWith(new Error('Test error'));
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Error removing widget',
+        new Error('Test error'),
+      );
       expect(wrapper.vm.isLoading).toBe(false);
 
       consoleSpy.mockRestore();

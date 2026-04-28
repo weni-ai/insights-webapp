@@ -3,13 +3,15 @@ import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import ModalResetWidget from '../ModalResetWidget.vue';
 import { useWidgets } from '@/store/modules/widgets';
-import Unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
-vi.mock('@weni/unnnic-system', () => ({
-  default: {
-    unnnicCallAlert: vi.fn(),
-  },
-}));
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
 
 describe('ModalResetWidget', () => {
   let wrapper;
@@ -74,7 +76,7 @@ describe('ModalResetWidget', () => {
 
   it('shows success alert after successful reset', async () => {
     await wrapper.vm.resetWidget();
-    expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
+    expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
         text: wrapper.vm.$t('widgets.success_reset'),
         type: 'success',
@@ -89,7 +91,7 @@ describe('ModalResetWidget', () => {
 
     await wrapper.vm.resetWidget();
 
-    expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
+    expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
         text: wrapper.vm.$t('widgets.error_reset'),
         type: 'error',

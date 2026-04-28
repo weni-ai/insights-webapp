@@ -44,7 +44,7 @@
             >
               <UnnnicIcon
                 icon="hub"
-                size="md"
+                size="lg"
                 scheme="neutral-dark"
               />
               <span class="mcp-news-modal__flow-label">
@@ -74,7 +74,7 @@
             <UnnnicIcon
               icon="chat_bubble"
               size="sm"
-              scheme="aux-blue"
+              scheme="neutral-dark"
             />
             <span class="mcp-news-modal__prompt-text">
               {{ t('mcp_news.flow_prompt') }}
@@ -217,12 +217,6 @@ function handleViewGuide() {
     flex-direction: column;
     align-items: center;
     gap: $unnnic-space-2;
-
-    &--hero {
-      :deep(.unnnic-icon) {
-        font-size: 32px;
-      }
-    }
   }
 
   &__flow-label {
@@ -234,10 +228,10 @@ function handleViewGuide() {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: $unnnic-space-3;
     padding: 9px 17px;
     border: 1px solid $unnnic-color-border-accent-plain;
-    border-radius: 9999px;
+    border-radius: $unnnic-radius-full;
     background-color: $unnnic-color-bg-base;
     align-self: center;
   }

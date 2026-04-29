@@ -379,6 +379,149 @@ describe('ContactsHeader.vue', () => {
     });
   });
 
+  describe('Abort Signal Handling', () => {
+    it('should pass an AbortSignal to the contacts service on each call', async () => {
+      const contactsApi = await import(
+        '@/services/api/resources/conversational/contacts'
+      );
+      contactsApi.default.getConversationalContacts.mockResolvedValue([
+        { id: 'unique', value: 1 },
+        { id: 'returning', value: 1, percentage: 1 },
+        { id: 'avg_conversations_per_contact', value: 1 },
+      ]);
+
+      const vm = wrapper.vm;
+      await vm.loadCardData();
+
+      const callArgs =
+        contactsApi.default.getConversationalContacts.mock.calls.at(-1);
+
+      expect(callArgs[1]).toBeDefined();
+      expect(callArgs[1].signal).toBeInstanceOf(AbortSignal);
+    });
+
+    it('should abort the previous in-flight request when called again', async () => {
+      const contactsApi = await import(
+        '@/services/api/resources/conversational/contacts'
+      );
+
+      const capturedSignals = [];
+      contactsApi.default.getConversationalContacts
+        .mockImplementationOnce((_q, options) => {
+          capturedSignals.push(options.signal);
+          return new Promise((resolve) => {
+            options.signal.addEventListener('abort', () =>
+              resolve([
+                { id: 'unique', value: 0 },
+                { id: 'returning', value: 0, percentage: 0 },
+                { id: 'avg_conversations_per_contact', value: 0 },
+              ]),
+            );
+          });
+        })
+        .mockImplementationOnce((_q, options) => {
+          capturedSignals.push(options.signal);
+          return Promise.resolve([
+            { id: 'unique', value: 1 },
+            { id: 'returning', value: 1, percentage: 1 },
+            { id: 'avg_conversations_per_contact', value: 1 },
+          ]);
+        });
+
+      const vm = wrapper.vm;
+
+      const firstPromise = vm.loadCardData();
+      const secondPromise = vm.loadCardData();
+
+      await Promise.all([firstPromise, secondPromise]);
+
+      expect(capturedSignals).toHaveLength(2);
+      expect(capturedSignals[0].aborted).toBe(true);
+      expect(capturedSignals[1].aborted).toBe(false);
+    });
+
+    it('should not apply data from an aborted (older) request', async () => {
+      const contactsApi = await import(
+        '@/services/api/resources/conversational/contacts'
+      );
+
+      let resolveOldRequest;
+      const oldPromise = new Promise((resolve) => {
+        resolveOldRequest = resolve;
+      });
+
+      const newResponse = [
+        { id: 'unique', value: 999 },
+        { id: 'returning', value: 999, percentage: 99 },
+        { id: 'avg_conversations_per_contact', value: 99 },
+      ];
+
+      contactsApi.default.getConversationalContacts
+        .mockReturnValueOnce(oldPromise)
+        .mockResolvedValueOnce(newResponse);
+
+      const vm = wrapper.vm;
+
+      const firstCall = vm.loadCardData();
+      const secondCall = vm.loadCardData();
+
+      await secondCall;
+
+      resolveOldRequest([
+        { id: 'unique', value: 1 },
+        { id: 'returning', value: 1, percentage: 1 },
+        { id: 'avg_conversations_per_contact', value: 1 },
+      ]);
+      await firstCall;
+
+      const uniqueCard = vm.cardsData.find((c) => c.id === 'unique');
+      expect(uniqueCard.value).toBe('999');
+    });
+
+    it('should ignore aborted error and not raise the error toast', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      Unnnic.unnnicCallAlert.mockClear();
+      mockSetEndpointError.mockClear();
+
+      const contactsApi = await import(
+        '@/services/api/resources/conversational/contacts'
+      );
+
+      let abortedSignal;
+      contactsApi.default.getConversationalContacts
+        .mockImplementationOnce((_q, options) => {
+          abortedSignal = options.signal;
+          return new Promise((_resolve, reject) => {
+            options.signal.addEventListener('abort', () => {
+              const abortError = new Error('Aborted');
+              abortError.name = 'AbortError';
+              reject(abortError);
+            });
+          });
+        })
+        .mockResolvedValueOnce([
+          { id: 'unique', value: 5 },
+          { id: 'returning', value: 5, percentage: 5 },
+          { id: 'avg_conversations_per_contact', value: 5 },
+        ]);
+
+      const vm = wrapper.vm;
+
+      const first = vm.loadCardData();
+      const second = vm.loadCardData();
+
+      await Promise.all([first, second]);
+
+      expect(abortedSignal.aborted).toBe(true);
+      expect(Unnnic.unnnicCallAlert).not.toHaveBeenCalled();
+      expect(mockSetEndpointError).not.toHaveBeenCalledWith('contacts', true);
+
+      consoleSpy.mockRestore();
+    });
+  });
+
   describe('Tooltip Side Logic', () => {
     it('should return left side for avg card', () => {
       const vm = wrapper.vm;

@@ -72,6 +72,21 @@
         "transferred": "Conversaciones que requieren soporte humano. Los números pueden diferir del dashboard de soporte humano, ya que este cuenta conversaciones (no salas) que se abrieron y pasaron por IA. Como una misma conversación puede generar múltiples salas, algunas de las cuales pueden ser abiertas directamente por soporte humano, no se recomienda comparar los dashboards."
       }
     },
+    "sections": {
+      "conversations": "Conversaciones",
+      "contacts": "Contactos"
+    },
+    "contacts_header": {
+      "unique": "Contactos únicos",
+      "returning": "Contactos recurrentes",
+      "avg": "Promedio de conversaciones por contacto",
+      "returning_description_suffix": "del total de contactos únicos",
+      "tooltips": {
+        "unique": "Número de contactos distintos que iniciaron conversaciones durante el período seleccionado.",
+        "returning": "Contactos que iniciaron más de una conversación durante el período seleccionado.",
+        "avg": "Promedio de conversaciones considerando todos los contactos únicos del período."
+      }
+    },
     "form_topic": {
       "add_topic": "Agregar asunto",
       "add_sub_topic": "Agregar subasunto",

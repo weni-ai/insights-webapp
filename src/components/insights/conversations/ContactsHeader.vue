@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
@@ -136,6 +136,8 @@ const cards = computed(() =>
   shouldUseMock.value ? mockCards.value : apiCards.value,
 );
 
+let loadCardDataAbortController: AbortController | null = null;
+
 watch(
   () => route.query,
   () => {
@@ -199,19 +201,32 @@ const applyMetrics = (metrics: typeof MOCK_CONTACTS_DATA) => {
 };
 
 const loadCardData = async () => {
+  if (loadCardDataAbortController) {
+    loadCardDataAbortController.abort();
+  }
+  loadCardDataAbortController = new AbortController();
+  const { signal } = loadCardDataAbortController;
+
   cardsData.value.forEach((card) => {
     card.isLoading = true;
   });
 
   try {
-    const response =
-      await conversationalContactsApi.getConversationalContacts();
+    const response = await conversationalContactsApi.getConversationalContacts(
+      {},
+      { signal },
+    );
+
+    if (signal.aborted) return;
+
     applyMetrics(response);
     conversationalStore.setEndpointError('contacts', false);
     if (response.length > 0) {
       conversationalStore.setHasEndpointData(true);
     }
   } catch (error) {
+    if (signal.aborted) return;
+
     conversationalStore.setEndpointError('contacts', true);
     console.error('Error loading conversational contacts data:', error);
 
@@ -223,15 +238,24 @@ const loadCardData = async () => {
       showErrorToast();
     }
   } finally {
-    cardsData.value.forEach((card) => {
-      card.isLoading = false;
-    });
+    if (!signal.aborted) {
+      cardsData.value.forEach((card) => {
+        card.isLoading = false;
+      });
+    }
   }
 };
 
 onMounted(() => {
   dashboardsStore.updateLastUpdatedRequest();
   loadCardData();
+});
+
+onUnmounted(() => {
+  if (loadCardDataAbortController) {
+    loadCardDataAbortController.abort();
+    loadCardDataAbortController = null;
+  }
 });
 </script>
 

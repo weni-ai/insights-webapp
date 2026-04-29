@@ -46,6 +46,7 @@ interface FormattedParams extends QueryParams {
 export default {
   async getConversationalContacts(
     queryParams: QueryParams = {},
+    options: { signal?: AbortSignal } = {},
   ): Promise<FormattedContactMetric[]> {
     const { project } = useConfig();
     const { appliedFilters } = useConversational();
@@ -60,6 +61,7 @@ export default {
 
     const response = (await http.get(`/metrics/conversations/contacts/`, {
       params: formattedParams,
+      signal: options.signal,
     })) as ConversationalContactsResponse;
 
     const formattedResponse: FormattedContactMetric[] = Object.entries(

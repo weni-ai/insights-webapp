@@ -176,6 +176,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
         CSAT_HUMAN: { model: 'csat', subsection: 'human' },
         NPS_AI: { model: 'nps', subsection: 'ai' },
         NPS_HUMAN: { model: 'nps', subsection: 'human' },
+        CONTACTS: { model: 'contacts' },
       };
 
       availableWidgets.sections.forEach((section) => {
@@ -233,6 +234,7 @@ export const useConversationalExport = defineStore('conversationalExport', {
           resolutions: 'RESOLUTIONS',
           tool_result: 'TOOL_RESULT',
           agent_invocation: 'AGENT_INVOCATION',
+          contacts: 'CONTACTS',
           topics: { human: 'TOPICS_HUMAN', ai: 'TOPICS_AI' },
           csat: { human: 'CSAT_HUMAN', ai: 'CSAT_AI' },
           nps: { human: 'NPS_HUMAN', ai: 'NPS_AI' },
@@ -322,7 +324,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
         state.enabled_models.includes('resolutions') ||
         state.enabled_models.includes('transferred') ||
         state.enabled_models.includes('tool_result') ||
-        state.enabled_models.includes('agent_invocation')
+        state.enabled_models.includes('agent_invocation') ||
+        state.enabled_models.includes('contacts')
       ) {
         hasValidSelections = true;
       }

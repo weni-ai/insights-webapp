@@ -15,7 +15,7 @@ export type DrawerWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | null;
-type EndpointErrorKey = 'topics' | 'header' | 'widgets';
+type EndpointErrorKey = 'topics' | 'header' | 'widgets' | 'contacts';
 
 interface ConversationalState {
   isDrawerCustomizableOpen: boolean;
@@ -26,6 +26,7 @@ interface ConversationalState {
   hasEndpointData: boolean;
   isloadingConversationalData: {
     header: boolean;
+    contactsHeader: boolean;
     mostTalkedAboutTopics: boolean;
     dynamicWidgets: boolean;
   };
@@ -42,6 +43,7 @@ export const useConversational = defineStore('conversational', {
     hasEndpointData: false,
     isloadingConversationalData: {
       header: false,
+      contactsHeader: false,
       mostTalkedAboutTopics: false,
       dynamicWidgets: false,
     },
@@ -49,6 +51,7 @@ export const useConversational = defineStore('conversational', {
       topics: false,
       header: false,
       widgets: false,
+      contacts: false,
     },
   }),
 
@@ -66,7 +69,11 @@ export const useConversational = defineStore('conversational', {
       this.refreshDataConversational = value;
     },
     setIsLoadingConversationalData(
-      key: 'header' | 'mostTalkedAboutTopics' | 'dynamicWidgets',
+      key:
+        | 'header'
+        | 'contactsHeader'
+        | 'mostTalkedAboutTopics'
+        | 'dynamicWidgets',
       value: boolean,
     ) {
       this.isloadingConversationalData[key] = value;

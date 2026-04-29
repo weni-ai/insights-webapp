@@ -1,5 +1,6 @@
 import type { ConversationalTopicsDistribution } from './topics';
 import type { FormattedMetric } from './header';
+import type { FormattedContactMetric } from './contacts';
 import type {
   CsatResponse,
   NpsResponse,
@@ -60,6 +61,12 @@ export const MOCK_HEADER_DATA: FormattedMetric[] = [
   { id: 'resolved', value: 15795, percentage: 65 },
   { id: 'unresolved', value: 4860, percentage: 20 },
   { id: 'transferred_to_human', value: 3645, percentage: 15 },
+];
+
+export const MOCK_CONTACTS_DATA: FormattedContactMetric[] = [
+  { id: 'unique', value: 80 },
+  { id: 'returning', value: 28, percentage: 35 },
+  { id: 'avg_conversations_per_contact', value: 1.8 },
 ];
 
 export const MOCK_CSAT_DATA: CsatResponse = {

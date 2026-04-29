@@ -256,7 +256,12 @@ describe('ContactsHeader.vue', () => {
       const vm = wrapper.vm;
       await vm.loadCardData();
 
-      expect(contactsApi.default.getConversationalContacts).toHaveBeenCalled();
+      expect(
+        contactsApi.default.getConversationalContacts,
+      ).toHaveBeenCalledWith(
+        {},
+        expect.objectContaining({ signal: expect.any(AbortSignal) }),
+      );
 
       expect(vm.cardsData[0].value).toBe('80');
       expect(vm.cardsData[0].description).toBe(null);

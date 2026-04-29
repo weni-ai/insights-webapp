@@ -10,7 +10,8 @@ type TypeSections =
   | 'CSAT_AI'
   | 'CSAT_HUMAN'
   | 'NPS_AI'
-  | 'NPS_HUMAN';
+  | 'NPS_HUMAN'
+  | 'CONTACTS';
 
 interface ExportRequest {
   project_uuid: string;

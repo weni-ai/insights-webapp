@@ -853,6 +853,8 @@
       "sector_tags": "Etichete",
       "contacts": "Contacte",
       "resolutions": "Rezoluții de conversație",
+      "tool_result": "Cele mai utilizate instrumente",
+      "agent_invocation": "Cei mai utilizați agenți",
       "topics": "Subiecte",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1146,7 +1148,7 @@
     }
   },
   "news": {
-    "title": "Știri și actualizări în Insights - Asistență umană",
+    "title": "Știri și actualizări în Analytics – Panou live",
     "human_support_dashboard": {
       "monitoring": {
         "first_text": "Monitorizează în timp real interacțiunile din chatul de asistență, identifică blocajele și ia decizii rapide pentru a optimiza operațiunile. Explorează noua vizualizare <b>Monitorizare</b>.",

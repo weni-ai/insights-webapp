@@ -72,6 +72,21 @@
         "transferred": "Conversas que requerem assistência humana. Os valores podem diferir do dashboard de atendimento humano, pois ele contabiliza conversas (não salas) que foram abertas e passaram pela IA. Como uma conversa pode gerar várias salas — e algumas delas podem ser abertas diretamente no atendimento humano —, a comparação entre painéis não é recomendada."
       }
     },
+    "sections": {
+      "conversations": "Conversas",
+      "contacts": "Contatos"
+    },
+    "contacts_header": {
+      "unique": "Contatos únicos",
+      "returning": "Contatos recorrentes",
+      "avg": "Média de conversas por contato",
+      "returning_description_suffix": "do total de contatos únicos",
+      "tooltips": {
+        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado.",
+        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado.",
+        "avg": "Média de conversas considerando todos os contatos únicos no período."
+      }
+    },
     "form_topic": {
       "add_topic": "Adicionar assunto",
       "add_sub_topic": "Adicionar subassunto",

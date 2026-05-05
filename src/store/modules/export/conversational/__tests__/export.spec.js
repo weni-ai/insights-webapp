@@ -253,6 +253,21 @@ describe('useConversationalExport', () => {
       });
     });
 
+    it('should initialize contacts field when CONTACTS section is available', async () => {
+      const mockResponse = {
+        sections: ['RESOLUTIONS', 'CONTACTS'],
+        custom_widgets: [],
+        crosstab_widgets: [],
+      };
+      exportApi.getAvailableWidgets.mockResolvedValue(mockResponse);
+      store.setModelFields({});
+
+      await store.initializeDefaultFields();
+
+      expect(store.model_fields.resolutions).toEqual({});
+      expect(store.model_fields.contacts).toEqual({});
+    });
+
     it('should keep crosstab widget UUIDs from model_fields', async () => {
       const mockResponse = {
         sections: ['RESOLUTIONS'],
@@ -329,6 +344,17 @@ describe('useConversationalExport', () => {
 
       const call = exportApi.createExport.mock.calls[0][0];
       expect(call.sections).toContain('AGENT_INVOCATION');
+    });
+
+    it('should include CONTACTS section when contacts is enabled', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.enabled_models = ['contacts'];
+      store.setSelectedFields({});
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.sections).toContain('CONTACTS');
     });
 
     it('should include custom widgets in export', async () => {
@@ -455,6 +481,11 @@ describe('useConversationalExport', () => {
 
     it('should return true when agent_invocation is enabled', () => {
       store.enabled_models = ['agent_invocation'];
+      expect(store.hasEnabledToExport).toBe(true);
+    });
+
+    it('should return true when contacts is enabled', () => {
+      store.enabled_models = ['contacts'];
       expect(store.hasEnabledToExport).toBe(true);
     });
 

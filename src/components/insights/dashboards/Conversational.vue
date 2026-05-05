@@ -2,7 +2,25 @@
   <section class="dashboard-conversational">
     <Info class="dashboard-conversational__info" />
 
-    <DashboardHeader class="dashboard-conversational__header" />
+    <section
+      class="dashboard-conversational__section"
+      data-testid="conversations-section"
+    >
+      <h2 class="dashboard-conversational__section-title">
+        {{ $t('conversations_dashboard.sections.conversations') }}
+      </h2>
+      <DashboardHeader class="dashboard-conversational__header" />
+    </section>
+
+    <section
+      class="dashboard-conversational__section"
+      data-testid="contacts-section"
+    >
+      <h2 class="dashboard-conversational__section-title">
+        {{ $t('conversations_dashboard.sections.contacts') }}
+      </h2>
+      <ContactsHeader class="dashboard-conversational__header" />
+    </section>
 
     <MostTalkedAboutTopicsWidget
       class="dashboard-conversational__most-talked-about-topics"
@@ -36,6 +54,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
+import ContactsHeader from '@/components/insights/conversations/ContactsHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
 import { useWidgets } from '@/store/modules/widgets';
@@ -247,6 +266,20 @@ $layout-gap: $unnnic-space-4;
   display: flex;
   gap: $layout-gap;
   flex-wrap: wrap;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-2;
+    width: 100%;
+  }
+
+  &__section-title {
+    color: $unnnic-color-gray-12;
+    font: $unnnic-font-display-2;
+    font-weight: 900;
+    margin: 0;
+  }
 
   &__header {
     width: 100%;

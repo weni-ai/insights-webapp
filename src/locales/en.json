@@ -72,6 +72,21 @@
         "transferred": "Conversations requiring human support. Numbers may differ from the human support dashboard, as this counts conversations (not rooms) that were opened and went through AI. As the same conversation can generate multiple rooms, some of which may be opened directly by human support, comparing the dashboards isn't recommended."
       }
     },
+    "sections": {
+      "conversations": "Conversations",
+      "contacts": "Contacts"
+    },
+    "contacts_header": {
+      "unique": "Unique contacts",
+      "returning": "Returning contacts",
+      "avg": "Average conversations per contact",
+      "returning_description_suffix": "of total unique contacts",
+      "tooltips": {
+        "unique": "Number of distinct contacts who started conversations during the selected period.",
+        "returning": "Contacts who started more than one conversation during the selected period.",
+        "avg": "Average conversations considering all unique contacts during the period."
+      }
+    },
     "form_topic": {
       "add_topic": "Add topic",
       "add_sub_topic": "Add subtopic",

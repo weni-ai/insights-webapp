@@ -72,6 +72,21 @@
         "transferred": "Conversații care necesită asistență umană. Numerele pot diferi de cele din dashboard-ul de asistență umană, deoarece aici se numără conversațiile (nu camerele) care au fost deschise și au trecut prin IA. Deoarece aceeași conversație poate genera mai multe camere, dintre care unele pot fi deschise direct de asistența umană, compararea dashboard-urilor nu este recomandată."
       }
     },
+    "sections": {
+      "conversations": "Conversații",
+      "contacts": "Contacte"
+    },
+    "contacts_header": {
+      "unique": "Contacte unice",
+      "returning": "Contacte recurente",
+      "avg": "Media conversațiilor per contact",
+      "returning_description_suffix": "din totalul contactelor unice",
+      "tooltips": {
+        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată.",
+        "returning": "Contacte care au inițiat mai mult de o conversație în perioada selectată.",
+        "avg": "Media conversațiilor luând în considerare toate contactele unice din perioadă."
+      }
+    },
     "form_topic": {
       "add_topic": "Adaugă subiect",
       "add_sub_topic": "Adaugă subiect secundar",

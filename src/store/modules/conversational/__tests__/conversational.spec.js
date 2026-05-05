@@ -66,6 +66,7 @@ describe('useConversational store', () => {
       expect(store.refreshDataConversational).toBe(false);
       expect(store.isloadingConversationalData).toEqual({
         header: false,
+        contactsHeader: false,
         mostTalkedAboutTopics: false,
         dynamicWidgets: false,
       });
@@ -74,6 +75,7 @@ describe('useConversational store', () => {
         topics: false,
         header: false,
         widgets: false,
+        contacts: false,
       });
     });
   });
@@ -127,7 +129,12 @@ describe('useConversational store', () => {
   });
 
   describe('setIsLoadingConversationalData action', () => {
-    const keys = ['header', 'mostTalkedAboutTopics', 'dynamicWidgets'];
+    const keys = [
+      'header',
+      'contactsHeader',
+      'mostTalkedAboutTopics',
+      'dynamicWidgets',
+    ];
 
     keys.forEach((key) => {
       it(`should set ${key} loading to true`, () => {
@@ -218,7 +225,7 @@ describe('useConversational store', () => {
   });
 
   describe('setEndpointError action', () => {
-    const keys = ['topics', 'header', 'widgets'];
+    const keys = ['topics', 'header', 'widgets', 'contacts'];
 
     keys.forEach((key) => {
       it(`should set ${key} error to true`, () => {
@@ -251,6 +258,11 @@ describe('useConversational store', () => {
 
     it('should return true when widgets endpoint has error', () => {
       store.setEndpointError('widgets', true);
+      expect(store.hasEndpointErrors).toBe(true);
+    });
+
+    it('should return true when contacts endpoint has error', () => {
+      store.setEndpointError('contacts', true);
       expect(store.hasEndpointErrors).toBe(true);
     });
 

@@ -66,7 +66,12 @@ describe('Conversational.vue', () => {
       shouldUseMock: false,
       hasEndpointErrors: false,
       hasEndpointData: false,
-      endpointErrors: { topics: false, header: false, widgets: false },
+      endpointErrors: {
+        topics: false,
+        header: false,
+        widgets: false,
+        contacts: false,
+      },
       isConfigurationLoaded: ref(true),
       setConfigurationLoaded: vi.fn(),
       setHasEndpointData: vi.fn(),
@@ -91,12 +96,38 @@ describe('Conversational.vue', () => {
       global: {
         stubs: {
           DashboardHeader: true,
+          ContactsHeader: true,
           MostTalkedAboutTopicsWidget: true,
           ConversationalDynamicWidget: true,
           CustomizableDrawer: true,
           Info: true,
         },
       },
+    });
+  });
+
+  describe('Sections layout', () => {
+    it('should render the conversations section with the DashboardHeader', () => {
+      const section = wrapper.find('[data-testid="conversations-section"]');
+      expect(section.exists()).toBe(true);
+      expect(section.findComponent({ name: 'DashboardHeader' }).exists()).toBe(
+        true,
+      );
+    });
+
+    it('should render the contacts section with the ContactsHeader', () => {
+      const section = wrapper.find('[data-testid="contacts-section"]');
+      expect(section.exists()).toBe(true);
+      expect(section.findComponent({ name: 'ContactsHeader' }).exists()).toBe(
+        true,
+      );
+    });
+
+    it('should render both section title elements', () => {
+      const titles = wrapper.findAll(
+        '.dashboard-conversational__section-title',
+      );
+      expect(titles).toHaveLength(2);
     });
   });
 
@@ -263,6 +294,7 @@ describe('Conversational.vue', () => {
         global: {
           stubs: {
             DashboardHeader: true,
+            ContactsHeader: true,
             MostTalkedAboutTopicsWidget: true,
             ConversationalDynamicWidget: true,
             CustomizableDrawer: true,
@@ -321,6 +353,7 @@ describe('Conversational.vue', () => {
         global: {
           stubs: {
             DashboardHeader: true,
+            ContactsHeader: true,
             MostTalkedAboutTopicsWidget: true,
             ConversationalDynamicWidget: true,
             CustomizableDrawer: true,
@@ -391,6 +424,7 @@ describe('Conversational.vue', () => {
         global: {
           stubs: {
             DashboardHeader: true,
+            ContactsHeader: true,
             MostTalkedAboutTopicsWidget: true,
             ConversationalDynamicWidget: true,
             CustomizableDrawer: true,
@@ -468,6 +502,7 @@ describe('Conversational.vue', () => {
         global: {
           stubs: {
             DashboardHeader: true,
+            ContactsHeader: true,
             MostTalkedAboutTopicsWidget: true,
             ConversationalDynamicWidget: true,
             CustomizableDrawer: true,
@@ -498,6 +533,7 @@ describe('Conversational.vue', () => {
         global: {
           stubs: {
             DashboardHeader: true,
+            ContactsHeader: true,
             MostTalkedAboutTopicsWidget: true,
             ConversationalDynamicWidget: true,
             CustomizableDrawer: true,
@@ -526,6 +562,7 @@ describe('Conversational.vue', () => {
         global: {
           stubs: {
             DashboardHeader: true,
+            ContactsHeader: true,
             MostTalkedAboutTopicsWidget: true,
             ConversationalDynamicWidget: true,
             CustomizableDrawer: true,

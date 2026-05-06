@@ -1054,9 +1054,9 @@
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count, plural, one {{count} online} other {{count} online}}",
-        "custom_breaks": "{count, plural, one {{count} em pausa} other {{count} em pausas}}",
-        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
+        "online": "{count} online",
+        "custom_breaks": "{count} em pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {

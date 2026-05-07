@@ -18,16 +18,11 @@
       data-testid="monitoring-csat-ratings"
     />
     <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
-    <NewsHumanSupportModal
-      :modelValue="showNewsModal"
-      type="monitoring"
-      @close="handleClose"
-    />
   </section>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, watch, ref, computed } from 'vue';
+import { onUnmounted, watch, ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
@@ -40,10 +35,7 @@ import TimeMetrics from './TimeMetrics.vue';
 import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
-import NewsHumanSupportModal from '../Common/Modals/NewsHumanSupportModal.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
-
-import { moduleStorage } from '@/utils/storage';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
@@ -53,14 +45,6 @@ defineOptions({
 
 const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);
-
-const STORAGE_KEY = 'news_modal_monitoring_shown';
-const showNewsModal = ref(false);
-
-const handleClose = () => {
-  showNewsModal.value = false;
-  moduleStorage.setItem(STORAGE_KEY, true);
-};
 
 let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 let timeoutStop: (() => void) | null = null;
@@ -110,13 +94,6 @@ const stopAutoRefresh = () => {
     timeoutStop = null;
   }
 };
-
-onMounted(() => {
-  const hasBeenShown = moduleStorage.getItem(STORAGE_KEY, false);
-  if (!hasBeenShown) {
-    showNewsModal.value = true;
-  }
-});
 
 onUnmounted(() => {
   stopAutoRefresh();

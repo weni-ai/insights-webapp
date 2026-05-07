@@ -1176,26 +1176,6 @@
       }
     }
   },
-  "news": {
-    "title": "Noticias y actualizaciones en Analytics - Live desk",
-    "human_support_dashboard": {
-      "monitoring": {
-        "first_text": "Monitorea en tiempo real las interacciones del chat de soporte, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Explora la nueva vista <b>Monitoreo</b>.",
-        "second_text": "Ahora puedes monitorear el status de los chats de soporte en tiempo real:",
-        "third_text": "Puedes monitorear métricas de tiempo, como tiempos promedio y máximos de espera, tiempo hasta la primera respuesta y duración en tiempo real:",
-        "fourth_text": "La tabla de monitoreo detallada permite hacer seguimiento de datos en tiempo real por cada interacción y agente.",
-        "fifth_text": "Puedes monitorear cada interacción en las pestañas <b>En curso</b> y <b>Esperando</b>. Haz clic en las interacciones para verlas.",
-        "sixth_text": "Las pestañas <b>Representante</b> y <b>Pausas</b> te permiten monitorear las métricas de cada agente por interacción, así como las pausas personalizadas.",
-        "seventh_text": "En la pestaña <b>Representante</b>, puedes hacer clic en cada agente para entrar en modo de vista o usar el botón para desconectarlo."
-      },
-      "analysis": {
-        "first_text": "Explora interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento del equipo. ¡Explora la nueva vista de <b>Analytics</b>!",
-        "second_text": "Ahora puedes monitorear todas las métricas de chats de soporte cerrados: <b>Tiempo de espera promedio</b>, <b>Tiempo promedio hasta la primera respuesta</b>, <b>Tiempo promedio de respuesta</b> y <b>Duración promedio del chat de soporte</b>.",
-        "third_text": "Esta tabla detallada de analytics permite analizar datos por interacción y agente.",
-        "fourth_text": "Puedes revisar cada interacción cerrada en la pestaña <b>Cerrados</b>. Las pestañas <b>Representante</b> y <b>Pausas</b> te permiten analizar las métricas de cada agente por interacción cerrada, así como las pausas personalizadas dentro del periodo filtrado."
-      }
-    }
-  },
   "on": "Activo",
   "off": "Inactivo",
   "paused": "En pausa",

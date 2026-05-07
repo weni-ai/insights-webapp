@@ -70,6 +70,7 @@ const tagsColorsTokens = {
 };
 
 const isLoadingCounts = ref(false);
+
 const counts = ref({
   online: 0,
   custom_breaks: 0,

@@ -1054,9 +1054,9 @@
         "action": "Action"
       },
       "agents_count": {
-        "online": "{count, plural, one {# online} other {# online}}",
-        "custom_breaks": "{count, plural, one {# on break} other {# on break}}",
-        "offline": "{count, plural, one {# offline} other {# offline}}"
+        "online": "{count} online",
+        "custom_breaks": "{count} on break",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -1173,26 +1173,6 @@
         "analysis": {
           "closed": "No tags assigned to chats completed in the selected period"
         }
-      }
-    }
-  },
-  "news": {
-    "title": "News and updates in Analytics - Live desk",
-    "human_support_dashboard": {
-      "monitoring": {
-        "first_text": "Monitor real-time support chat interactions, identify bottlenecks, and make quick decisions to optimize operations. Explore the new <b>Monitoring</b> view.",
-        "second_text": "You can now monitor the status of support chats in real-time:",
-        "third_text": "You can monitor time metrics —average and maximum wait times, time to first response, and duration— in real-time:",
-        "fourth_text": "The detailed monitoring table lets you track real-time data for each interaction and agent.",
-        "fifth_text": "You can monitor each interaction through the <b>In progress</b> and <b>Waiting</b> tabs. Click interactions to view them.",
-        "sixth_text": "The <b>Representative</b> and <b>Breaks</b> tabs let you monitor the metrics of each agent per interaction, as well as custom breaks.",
-        "seventh_text": "In the <b>Representative</b> tab, you can click each agent to enter view mode or use the button to disconnect them."
-      },
-      "analysis": {
-        "first_text": "Explore closed interactions to discover patterns and trends. Identify improvement opportunities and boost team performance. Explore the new <b>Analytics</b> view!",
-        "second_text": "Now you can track all closed support chat metrics: <b>Average wait time</b>, <b>Average time to first response</b>, <b>Average response time</b>, and <b>Average support chat duration</b>.",
-        "third_text": "This detailed analytics table allows analyzing data per interaction and agent.",
-        "fourth_text": "You can review each closed interaction in the <b>Closed</b> tab. The <b>Representative</b> and <b>Breaks</b> tabs let you analyze the metrics of each agent per closed interaction, as well as custom breaks within the filtered period."
       }
     }
   },

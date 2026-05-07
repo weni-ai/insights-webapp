@@ -478,7 +478,7 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "now": "Agora",
-  "date_format": "DD/MM/AAAA",
+  "date_format": "DD/MM/YYYY",
   "search": "Buscar",
   "category": "Categoria",
   "language": "Idioma",
@@ -1054,9 +1054,9 @@
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count, plural, one {{count} online} other {{count} online}}",
-        "custom_breaks": "{count, plural, one {{count} em pausa} other {{count} em pausas}}",
-        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
+        "online": "{count} online",
+        "custom_breaks": "{count} em pausa",
+        "offline": "{count} offline"
       }
     },
     "filters": {
@@ -1173,26 +1173,6 @@
         "analysis": {
           "closed": "Nenhuma tag atribuída a chats finalizados no período selecionado"
         }
-      }
-    }
-  },
-  "news": {
-    "title": "Notícias e atualizações no Analytics - Live Desk",
-    "human_support_dashboard": {
-      "monitoring": {
-        "first_text": "Monitore as interações de atendimento ao cliente em tempo real, identifique gargalos e tome decisões rápidas para otimizar a operação. Descubra a nova visualização <b>Monitoramento</b>.",
-        "second_text": "Agora você pode monitorar o status dos atendimentos em tempo real:",
-        "third_text": "Monitore, em tempo real, as métricas de tempo — média e máxima de espera, tempo para a primeira resposta e duração:",
-        "fourth_text": "A tabela de monitoramento detalhada permite acompanhar, em tempo real, os dados de cada interação e agente.",
-        "fifth_text": "Você pode monitorar cada interação nas abas <b>Em andamento</b> e <b>Aguardando</b>. Clique nas interações para visualizá-las.",
-        "sixth_text": "As abas <b>Atendente</b> e <b>Pausas</b> permitem monitorar as métricas de cada agente por interação, bem como as pausas personalizadas.",
-        "seventh_text": "Na aba <b>Atendente</b>, você pode clicar em cada agente para entrar no modo de visualização ou usar o botão para desconectá-lo."
-      },
-      "analysis": {
-        "first_text": "Explore as interações encerradas para identificar padrões e tendências. Identifique oportunidades de melhoria e aumente o desempenho da sua equipe. Descubra a nova visualização <b>Análise</b>!",
-        "second_text": "Agora, você pode acompanhar todas as métricas de atendimento encerrado: <b>Tempo médio de espera</b>, <b>Tempo médio para 1ª resposta</b>, <b>Tempo médio de resposta</b> e <b>Duração média de atendimento</b>.",
-        "third_text": "A tabela de análise detalhada permite analisar os dados para cada interação e agente.",
-        "fourth_text": "Você pode revisar cada interação encerrada na aba <b>Encerrados</b>. As abas <b>Atendente</b> e <b>Pausas</b> permitem analisar as métricas de cada agente por interação encerrada, bem como as pausas personalizadas no período filtrado."
       }
     }
   },

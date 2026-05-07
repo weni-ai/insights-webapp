@@ -34,7 +34,6 @@ describe('Analysis', () => {
           StatusCards: true,
           ServicesOpenByHour: true,
           DetailedAnalysis: true,
-          NewsHumanSupportModal: true,
         },
       },
     });
@@ -88,93 +87,6 @@ describe('Analysis', () => {
   describe('Component structure', () => {
     it('should have correct CSS classes', () => {
       expect(wrapper.find('.analysis').exists()).toBe(true);
-    });
-  });
-
-  describe('News Modal functionality', () => {
-    it('should render NewsHumanSupportModal component', () => {
-      const modal = wrapper.findComponent({ name: 'NewsHumanSupportModal' });
-      expect(modal.exists()).toBe(true);
-    });
-
-    it('should show modal on first visit', async () => {
-      wrapper.unmount();
-      mockModuleStorage.getItem.mockReturnValue(false);
-
-      const newWrapper = createWrapper();
-      await newWrapper.vm.$nextTick();
-
-      const modal = newWrapper.findComponent({ name: 'NewsHumanSupportModal' });
-      expect(modal.props('modelValue')).toBe(true);
-
-      newWrapper.unmount();
-    });
-
-    it('should not show modal if already shown', async () => {
-      wrapper.unmount();
-      mockModuleStorage.getItem.mockReturnValue(true);
-
-      const newWrapper = createWrapper();
-      await newWrapper.vm.$nextTick();
-
-      const modal = newWrapper.findComponent({ name: 'NewsHumanSupportModal' });
-      expect(modal.props('modelValue')).toBe(false);
-
-      newWrapper.unmount();
-    });
-
-    it('should save to storage when modal is closed', async () => {
-      mockModuleStorage.getItem.mockReturnValue(false);
-
-      const newWrapper = createWrapper();
-      await newWrapper.vm.$nextTick();
-
-      const modal = newWrapper.findComponent({ name: 'NewsHumanSupportModal' });
-      await modal.vm.$emit('close');
-
-      expect(mockModuleStorage.setItem).toHaveBeenCalledWith(
-        'news_modal_analysis_shown',
-        true,
-      );
-
-      newWrapper.unmount();
-    });
-
-    it('should hide modal after close event', async () => {
-      mockModuleStorage.getItem.mockReturnValue(false);
-
-      const newWrapper = createWrapper();
-      await newWrapper.vm.$nextTick();
-
-      const modal = newWrapper.findComponent({ name: 'NewsHumanSupportModal' });
-      expect(modal.props('modelValue')).toBe(true);
-
-      await modal.vm.$emit('close');
-      await newWrapper.vm.$nextTick();
-
-      expect(modal.props('modelValue')).toBe(false);
-
-      newWrapper.unmount();
-    });
-
-    it('should pass correct type prop to NewsHumanSupportModal', () => {
-      const modal = wrapper.findComponent({ name: 'NewsHumanSupportModal' });
-      expect(modal.props('type')).toBe('analysis');
-    });
-
-    it('should check storage with correct key on mount', async () => {
-      wrapper.unmount();
-      vi.clearAllMocks();
-
-      const newWrapper = createWrapper();
-      await newWrapper.vm.$nextTick();
-
-      expect(mockModuleStorage.getItem).toHaveBeenCalledWith(
-        'news_modal_analysis_shown',
-        false,
-      );
-
-      newWrapper.unmount();
     });
   });
 });

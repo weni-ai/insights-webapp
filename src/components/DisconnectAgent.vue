@@ -22,6 +22,7 @@
             size="small"
             type="tertiary"
             :disabled="props.disabled"
+            @click="isOpen = true"
           />
         </UnnnicToolTip>
       </UnnnicDialogTrigger>
@@ -162,7 +163,7 @@ const handleTooltipText = computed(() => {
   padding: $unnnic-space-6;
 
   &__text {
-    color: $unnnic-color-gray-7;
+    color: $unnnic-color-fg-emphasized;
     font: $unnnic-font-body;
   }
 }

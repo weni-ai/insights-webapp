@@ -868,6 +868,8 @@
       "sector_tags": "Etichete",
       "contacts": "Contacte",
       "resolutions": "Rezoluții de conversație",
+      "tool_result": "Cele mai utilizate instrumente",
+      "agent_invocation": "Cei mai utilizați agenți",
       "topics": "Subiecte",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1160,26 +1162,6 @@
       }
     }
   },
-  "news": {
-    "title": "Știri și actualizări în Insights - Asistență umană",
-    "human_support_dashboard": {
-      "monitoring": {
-        "first_text": "Monitorizează în timp real interacțiunile din chatul de asistență, identifică blocajele și ia decizii rapide pentru a optimiza operațiunile. Explorează noua vizualizare <b>Monitorizare</b>.",
-        "second_text": "Acum poți monitoriza starea chaturilor de asistență în timp real:",
-        "third_text": "Poți monitoriza în timp real metricile de timp — timpul mediu și maxim de așteptare, timpul până la primul răspuns și durata —:",
-        "fourth_text": "Tabelul detaliat de monitorizare îți permite să urmărești date în timp real pentru fiecare interacțiune și agent.",
-        "fifth_text": "Poți monitoriza fiecare interacțiune prin intermediul filelor <b>În curs</b> și <b>În așteptare</b>. Fă clic pe interacțiuni pentru a le vizualiza.",
-        "sixth_text": "Filele <b>Reprezentant</b> și <b>Pauze</b> îți permit să monitorizezi metricile fiecărui agent pentru fiecare interacțiune, precum și pauzele personalizate.",
-        "seventh_text": "În fila <b>Reprezentant</b>, poți face clic pe fiecare agent pentru a intra în modul vizualizare sau poți folosi butonul pentru a-i deconecta."
-      },
-      "analysis": {
-        "first_text": "Explorează interacțiunile închise pentru a descoperi tipare și tendințe. Identifică oportunități de îmbunătățire și crește performanța echipei. Explorează noua viziune <b>Analiză</b>!",
-        "second_text": "Acum poți urmări toate metricile pentru chaturile de asistență închise: <b>Timpul mediu de așteptare</b>, <b>Timpul mediu până la primul răspuns</b>, <b>Timpul mediu de răspuns</b> și <b>Durata medie a chatului de asistență</b>.",
-        "third_text": "Acest tabel detaliat de analiză permite analizarea datelor per interacțiune și agent.",
-        "fourth_text": "Poți analiza fiecare interacțiune închisă în fila <b>Închise</b>. Filele <b>Reprezentant</b> și <b>Pauze</b> îți permit să analizezi metricile fiecărui agent pentru fiecare interacțiune închisă, precum și pauzele personalizate în perioada filtrată."
-      }
-    }
-  },
   "on": "Activ",
   "off": "Inactive",
   "paused": "Pus în pauză",
@@ -1203,6 +1185,6 @@
     "toast_error_retry": "Încearcă din nou",
     "toast_postponed": "Feedbackul a fost salvat pentru mai târziu. Poți răspunde altă dată.",
     "toast_postponed_respond": "Răspunde acum"
-    },
-    "without_results": "No results found"
+  },
+  "without_results": "No results found"
 }

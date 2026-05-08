@@ -1128,6 +1128,14 @@
     "common": {
       "no_response": "Niciun răspuns"
     },
+    "deleted_tooltips": {
+      "queue_and_sector": "Coada și departamentul au fost eliminate din proiect",
+      "queue": "Coada a fost eliminată din proiect",
+      "tag_and_sector": "Eticheta și departamentul au fost eliminate din proiect",
+      "tag": "Eticheta a fost eliminată din proiect",
+      "sector": "Departamentul a fost eliminat din proiect",
+      "representative": "Reprezentantul a fost eliminat din proiect"
+    },
     "volume_per_queue": {
       "title": "Volum per coadă",
       "monitoring_count": "{count} coadă cu {status} chaturi | {count} cozi cu {status} chaturi",

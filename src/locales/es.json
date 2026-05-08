@@ -1162,8 +1162,8 @@
       "title": "Volumen por tag",
       "setup_description": "Agrega tags a sectores para monitorear más datos",
       "count": {
-        "ongoing": "{count, plural, one {{count} tag en uso} other {{count} tags en uso}}",
-        "closed": "{count, plural, one {{count} tag asignada} other {{count} tags asignadas}}"
+        "ongoing": "{count} tag en uso | {count} tags en uso",
+        "closed": "{count} tag asignada | {count} tags asignadas"
       },
       "empty_data": {
         "monitoring": {

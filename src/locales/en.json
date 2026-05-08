@@ -1162,8 +1162,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to industries to monitor more data",
       "count": {
-        "ongoing": "{count, plural, one {{count} tag in use} other {{count} tags in use}}",
-        "closed": "{count, plural, one {{count} assigned tag} other {{count} assigned tags}}"
+        "ongoing": "{count} tag in use | {count} tags in use",
+        "closed": "{count} assigned tag | {count} assigned tags"
       },
       "empty_data": {
         "monitoring": {

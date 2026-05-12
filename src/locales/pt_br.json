@@ -138,6 +138,7 @@
     "custom": "Gráfico de barras horizontal",
     "crosstab": "Tabela cruzada",
     "absolute_numbers": "Números absolutos",
+    "abandoned_cart_recovery": "Recuperação de carrinho abandonado",
     "agent_invocation": "Agentes mais usados",
     "agent_invocation_count": "{count} agentes",
     "tool_result": "Ferramentas mais usadas",
@@ -185,6 +186,26 @@
       "captured_leads": "Leads capturados",
       "purchases_made": "Compras realizadas"
     },
+    "abandoned_cart_recovery_widget": {
+      "title": "Recuperação de carrinho abandonado",
+      "no_data": "Nenhum dado disponível para o período filtrado.",
+      "error": "Erro ao carregar os dados. Atualize o dashboard ou entre em contato com o suporte.",
+      "chart": {
+        "sent": "Enviados",
+        "delivered": "Entregues",
+        "read": "Lidos",
+        "read_help": "Mensagens que foram abertas e lidas pelo destinatário. Essa métrica depende das configurações de privacidade individuais do destinatário e pode não ser rastreada se os recibos de leitura estiverem desativados.",
+        "clicks": "Cliques"
+      },
+      "info_card": {
+        "recovery_revenue": "Receita de recuperação",
+        "total_sends": "Total de envios",
+        "converted_sales": "Vendas convertidas",
+        "conversion_rate": "Taxa de conversão",
+        "average_order_value": "Valor médio do pedido",
+        "roas_tooltip": "O retorno sobre o investimento em anúncios mede quanto de receita você gera para cada $xxx gasto em mensagens. Por que é tão alto? > A recuperação automatizada é altamente eficiente porque o custo de uma mensagem é mínimo em comparação com o valor médio do pedido da sua loja."
+      }
+    },
     "customize_your_dashboard": {
       "title": "Personalize seu dashboard",
       "description": "Personalize o dashboard com suas principais métricas",
@@ -195,6 +216,7 @@
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
+      "abandoned_cart_recovery_description": "Acompanhe métricas de recuperação de carrinho abandonado: receita recuperada, vendas convertidas, taxa de conversão, avarege order value, etc.",
       "human_support": "Live desk",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -217,13 +239,13 @@
         "cancel": "Cancelar"
       },
       "edit_csat_or_nps": "Editar {type}",
-      "remove_widget": "Excluir widget",
+      "remove_widget": "Remover widget",
       "modal_remove_widget": {
-        "title": "Excluir widget {type}",
-        "description": "Tem certeza de que deseja excluir o widget {type}?",
-        "remove": "Excluir",
+        "title": "Remover widget {type}",
+        "description": "Tem certeza de que deseja remover o widget {type}?",
+        "remove": "Remover",
         "cancel": "Cancelar",
-        "success_message": "{widget} excluído"
+        "success_message": "{widget} removido"
       },
       "tabs": {
         "sentiment_analysis": "Análise de sentimento",

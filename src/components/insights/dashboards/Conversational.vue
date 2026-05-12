@@ -26,6 +26,11 @@
       class="dashboard-conversational__most-talked-about-topics"
     />
 
+    <AbandonedCartWidget
+      v-if="isAbandonedCartRecoveryConfigured"
+      class="dashboard-conversational__abandoned-cart-widget"
+    />
+
     <ConversationalDynamicWidget
       v-for="(widget, index) in orderedDynamicWidgets"
       :key="`${widget.type}-${widget.uuid || index}`"
@@ -53,20 +58,24 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import ContactsHeader from '@/components/insights/conversations/ContactsHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
-import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
+import Info from '@/components/insights/conversations/Info.vue';
+import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
+import AbandonedCartWidget from '@/components/insights/conversations/AbandonedCartWidget/index.vue';
+
+import { useWidgets } from '@/store/modules/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
-import Info from '@/components/insights/conversations/Info.vue';
-import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
@@ -102,6 +111,9 @@ const autoWidgets = useAutoWidgets();
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
 const { isConfigurationLoaded } = storeToRefs(conversational);
+const { isAbandonedCartRecoveryConfigured } = storeToRefs(
+  conversationalWidgets,
+);
 
 const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
   [],
@@ -137,6 +149,7 @@ const setDynamicWidgets = () => {
   }
 
   const customWidgetsList = customWidgets.getCustomWidgets;
+
   if (customWidgetsList.length > 0) {
     customWidgetsList.forEach((widget) => {
       newWidgets.push({
@@ -282,6 +295,10 @@ $layout-gap: $unnnic-space-4;
   }
 
   &__header {
+    width: 100%;
+  }
+
+  &__abandoned-cart-widget {
     width: 100%;
   }
 

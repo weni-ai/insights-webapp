@@ -39,9 +39,12 @@ export function formatNumber(value: number, locale?: string): string {
  */
 export function formatPercentage(value: number, locale?: string): string {
   if (value === 0) return '0%';
-  return `${Math.abs(value).toLocaleString(locale || 'en-US', {
-    maximumFractionDigits: 2,
-  })}%`;
+  return `${Math.abs(value).toLocaleString(
+    locale || i18n.global.locale || 'en-US',
+    {
+      maximumFractionDigits: 2,
+    },
+  )}%`;
 }
 
 /**

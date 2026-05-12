@@ -138,7 +138,8 @@
     "custom": "Diagramă cu bare orizontale",
     "crosstab": "Tabel încrucișat",
     "absolute_numbers": "Absolute numbers",
-    "no_data_available": "Nu sunt date disponibile pentru perioada filtrată",
+    "abandoned_cart_recovery": "Recuperare coș abandonat",
+    "no_data_available": "Nu sunt date disponibile pentru această perioadă de utilizare",
     "widget_error": {
       "title": "A apărut o eroare în timpul încărcării datelor",
       "button": "Verifică configurația widgetului",
@@ -179,6 +180,26 @@
       "captured_leads": "Lead-uri capturate",
       "purchases_made": "Achiziții finalizate"
     },
+    "abandoned_cart_recovery_widget": {
+      "title": "Recuperare coș abandonat",
+      "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
+      "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
+      "chart": {
+        "sent": "Trimise",
+        "delivered": "Livrate",
+        "read": "Citite",
+        "read_help": "Mesajele care au fost deschise și citite de destinatar. Această metrică depinde de setările individuale de confidențialitate ale destinatarului și poate să nu fie urmărită dacă confirmările de citire sunt dezactivate.",
+        "clicks": "Clickuri"
+      },
+      "info_card": {
+        "recovery_revenue": "Venit din recuperare",
+        "total_sends": "Total trimiteri",
+        "converted_sales": "Vânzări convertite",
+        "conversion_rate": "Rată de conversie",
+        "average_order_value": "Valoare medie a comenzii",
+        "roas_tooltip": "Rentabilitatea investiției în reclame măsoară cât venit generezi pentru fiecare $xxx cheltuit pe mesaje. De ce este atât de mare? > Recuperarea automată este foarte eficientă pentru că costul unui mesaj este minim comparativ cu valoarea medie a comenzii din magazinul tău."
+      }
+    },
     "customize_your_dashboard": {
       "title": "Personalizează-ți dashboard-ul",
       "description": "Personalizează dashboard-ul cu metricile tale cheie",
@@ -189,6 +210,7 @@
       "config_csat_or_nps_description": "Setează ce {type} vrei să monitorizezi",
       "sales_funnel_description": "Monitorizează-ți vânzările: Total comenzi, Tichet mediu, Sumă totală și Canal de conversie",
       "absolute_numbers_description": "Evidențiază o singură metrică cheie, afișând valoarea exactă pentru vizualizare rapidă și directă",
+      "abandoned_cart_recovery_description": "Urmărește metricile de recuperare a coșului abandonat: venit recuperat, vânzări convertite, rată de conversie, avarege order value, etc.",
       "human_support": "Asistență umană",
       "ai_support": "IA",
       "activate_agent": "Activează agent",

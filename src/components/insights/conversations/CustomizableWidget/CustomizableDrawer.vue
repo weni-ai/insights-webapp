@@ -137,6 +137,7 @@ const {
   isEnabledUpdateWidgetNps,
   isLoadingSaveNewWidget,
   isLoadingUpdateWidget,
+  isAbandonedCartRecoveryConfigured,
 } = storeToRefs(useConversationalWidgets());
 
 const projectStore = useProject();
@@ -248,21 +249,50 @@ function handleSecondaryButtonClick() {
   }
 }
 
+function createSalesFunnelWidget() {
+  const conversationalWidgetsStore = useConversationalWidgets();
+  const createSalesFunnelWidget = {
+    uuid: '',
+    name: 'conversations_dashboard.sales_funnel_widget.title',
+    config: {},
+    type: 'sales_funnel',
+    source: 'conversations.sales_funnel',
+    is_configurable: true,
+  };
+  conversationalWidgetsStore.newWidget = createSalesFunnelWidget as WidgetType;
+  saveWidgetConfigs();
+}
+
+function createAbandonedCartRecoveryWidget() {
+  const conversationalWidgetsStore = useConversationalWidgets();
+  const createdAbandonedCartRecoveryWidget = {
+    uuid: '',
+    name: 'conversations_dashboard.abandoned_cart_recovery_widget.title',
+    config: {},
+    type: 'abandoned_cart_recovery',
+    source: 'conversations.abandoned_cart_recovery',
+    is_configurable: true,
+  };
+  conversationalWidgetsStore.newWidget =
+    createdAbandonedCartRecoveryWidget as WidgetType;
+  saveWidgetConfigs();
+}
+
 function clickWidgetOption(
-  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab',
+  widgetType:
+    | 'csat'
+    | 'nps'
+    | 'custom'
+    | 'sales_funnel'
+    | 'crosstab'
+    | 'abandoned_cart_recovery',
 ) {
+  if (widgetType === 'abandoned_cart_recovery') {
+    createAbandonedCartRecoveryWidget();
+    return;
+  }
   if (widgetType === 'sales_funnel') {
-    const conversationalWidgetsStore = useConversationalWidgets();
-    const createWidget = {
-      uuid: '',
-      name: 'conversations_dashboard.sales_funnel_widget.title',
-      config: {},
-      type: 'sales_funnel',
-      source: 'conversations.sales_funnel',
-      is_configurable: true,
-    };
-    conversationalWidgetsStore.newWidget = createWidget as WidgetType;
-    saveWidgetConfigs();
+    createSalesFunnelWidget();
     return;
   }
 
@@ -334,6 +364,13 @@ const availableWidgets = computed(() => {
       ),
       key: 'absolute_numbers',
     },
+    {
+      name: i18n.global.t('conversations_dashboard.abandoned_cart_recovery'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.abandoned_cart_recovery_description',
+      ),
+      key: 'abandoned_cart_recovery',
+    },
   ];
 });
 
@@ -368,6 +405,7 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       handleWidgetTypeChoice('csat'),
       handleWidgetTypeChoice('nps'),
       handleWidgetTypeChoice('sales_funnel'),
+      handleWidgetTypeChoice('abandoned_cart_recovery'),
     ];
 
     if (isCsatConfigured.value) {
@@ -390,6 +428,12 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       !isSalesFunnelAvailableFromApi
     ) {
       widgets = widgets.filter((widget) => widget.key !== 'sales_funnel');
+    }
+
+    if (isAbandonedCartRecoveryConfigured.value) {
+      widgets = widgets.filter(
+        (widget) => widget.key !== 'abandoned_cart_recovery',
+      );
     }
 
     return widgets;
@@ -422,7 +466,8 @@ const handleWidgetTypeChoice = (
     | 'custom'
     | 'sales_funnel'
     | 'crosstab'
-    | 'absolute_numbers',
+    | 'absolute_numbers'
+    | 'abandoned_cart_recovery',
 ) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };

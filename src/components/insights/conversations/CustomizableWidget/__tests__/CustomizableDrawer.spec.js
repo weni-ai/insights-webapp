@@ -275,7 +275,7 @@ describe('CustomizableWidget', () => {
     });
 
     it('should render correct number of available widgets when no CSAT/NPS configured', () => {
-      expect(drawerItems()).toHaveLength(4);
+      expect(drawerItems()).toHaveLength(5);
     });
 
     it('should set type when widget is selected', async () => {
@@ -345,9 +345,10 @@ describe('CustomizableWidget', () => {
 
     it('should return correct widgets for native tab when no widgets configured and no sales funnel from API', () => {
       const sentimentWidgets = wrapper.vm.handleTabChoice('native');
-      expect(sentimentWidgets).toHaveLength(2);
+      expect(sentimentWidgets).toHaveLength(3);
       expect(sentimentWidgets[0].key).toBe('csat');
       expect(sentimentWidgets[1].key).toBe('nps');
+      expect(sentimentWidgets[2].key).toBe('abandoned_cart_recovery');
     });
 
     it('should filter out CSAT widget when already configured', async () => {
@@ -368,8 +369,9 @@ describe('CustomizableWidget', () => {
       await nextTick();
 
       const sentimentWidgets = wrapperWithCsat.vm.handleTabChoice('native');
-      expect(sentimentWidgets).toHaveLength(1);
+      expect(sentimentWidgets).toHaveLength(2);
       expect(sentimentWidgets[0].key).toBe('nps');
+      expect(sentimentWidgets[1].key).toBe('abandoned_cart_recovery');
     });
 
     it('should filter out NPS widget when already configured', async () => {
@@ -390,7 +392,7 @@ describe('CustomizableWidget', () => {
       await nextTick();
 
       const sentimentWidgets = wrapperWithNps.vm.handleTabChoice('native');
-      expect(sentimentWidgets).toHaveLength(1);
+      expect(sentimentWidgets).toHaveLength(2);
       expect(sentimentWidgets[0].key).toBe('csat');
     });
 
@@ -485,7 +487,7 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(6);
+      expect(widgets).toHaveLength(7);
       expect(widgets.map((w) => w.key)).toEqual([
         'csat',
         'nps',
@@ -493,6 +495,7 @@ describe('CustomizableWidget', () => {
         'sales_funnel',
         'crosstab',
         'absolute_numbers',
+        'abandoned_cart_recovery',
       ]);
     });
   });

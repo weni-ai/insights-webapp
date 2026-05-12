@@ -29,7 +29,11 @@
             :placeholder="$t('export_data.filters.select_sector')"
             source="sectors"
             keyValueField="uuid"
-            :allLabel="$t('export_data.filters.all_sectors')"
+            :allLabel="
+              activeTab === 'monitoring'
+                ? $t('export_data.filters.all_sectors')
+                : ''
+            "
             @update:model-value="handleUpdateSectors"
             @on-options-active-change="handleOptionsActiveChange"
           />
@@ -42,7 +46,11 @@
             :placeholder="$t('export_data.filters.select_queue')"
             source="queues"
             keyValueField="uuid"
-            :allLabel="$t('export_data.filters.all_queues')"
+            :allLabel="
+              activeTab === 'monitoring'
+                ? $t('export_data.filters.all_queues')
+                : ''
+            "
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueQueues"
             @on-options-active-change="handleOptionsActiveChange"
@@ -56,7 +64,11 @@
             :placeholder="$t('export_data.filters.select_tag')"
             source="tags"
             keyValueField="uuid"
-            :allLabel="$t('export_data.filters.all_tags')"
+            :allLabel="
+              activeTab === 'monitoring'
+                ? $t('export_data.filters.all_tags')
+                : ''
+            "
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueTags"
             @on-options-active-change="handleOptionsActiveChange"
@@ -88,7 +100,7 @@
 <script setup lang="ts">
 import { UnnnicButton, UnnnicDropdown, UnnnicLabel } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
@@ -102,6 +114,8 @@ const { hasSectorsConfigured } = storeToRefs(projectStore);
 const humanSupport = useHumanSupport();
 const { clearFilters, saveAppliedFilters } = humanSupport;
 const {
+  activeTab,
+  appliedFilters,
   appliedFiltersLength,
   sectors,
   queues,
@@ -180,6 +194,21 @@ const titleButton = computed(() => {
   }
 
   return t('insights_header.filters');
+});
+
+watch(activeTab, () => {
+  if (activeTab.value === 'analysis') {
+    tags.value = appliedFilters.value.tags.filter(
+      (tag) => tag.value !== '__all__',
+    );
+    queues.value = appliedFilters.value.queues.filter(
+      (queue) => queue.value !== '__all__',
+    );
+    sectors.value = appliedFilters.value.sectors.filter(
+      (sector) => sector.value !== '__all__',
+    );
+    saveAppliedFilters();
+  }
 });
 </script>
 

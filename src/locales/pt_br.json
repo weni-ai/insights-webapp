@@ -265,7 +265,7 @@
             "hint": "Um identificador único utilizado para rastrear um evento específico no fluxo de dados."
           },
           "value_field_name": {
-            "label": "Metadados do evento (@.lower:optional)",
+            "label": "Metadados do evento (opcional)",
             "placeholder": "Digite os metadados do evento aqui",
             "hint": "Nome do campo dos metadados do evento para realizar operações. Se deixado em branco, o sistema usará o campo padrão (value)."
           },
@@ -528,17 +528,17 @@
     "info_reset": "Ao redefinir, os dados configurados serão perdidos.",
     "success_reset": "O widget foi redefinido com sucesso",
     "error_reset": "Não foi possível redefinir o widget. Tente novamente.",
-    "metric_error": "Erro ao buscar @.lower:metric",
+    "metric_error": "Erro ao buscar métrica",
     "card": {
-      "error_description": "Configure novamente o @.lower:flow de origem para obter dados válidos",
+      "error_description": "Configure novamente o fluxo de origem para obter dados válidos",
       "metric_empty": "Configurar",
-      "metric_set": "Definir @.lower:metric"
+      "metric_set": "Definir métrica"
     },
     "graph_funnel": {
       "title": "Funil",
-      "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto",
-      "select_flows": "@:select @.lower:flows",
-      "flow_executions": "Execuções do @.lower:flow",
+      "not_configured_description": "Selecione os fluxos que deseja mapear para montar a visualização em funil do seu projeto",
+      "select_flows": "Selecionar fluxos",
+      "flow_executions": "Execuções do fluxo",
       "error": {
         "title": "Ocorreu um problema ao carregar os dados",
         "description": "Tente carregar novamente"
@@ -584,7 +584,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "@:metric salva com sucesso",
+    "metric_saved": "Métrica salva com sucesso",
     "reset_widget": "Redefinir widget",
     "clear_all_fields": "Limpar todos os campos",
     "config_gallery": {
@@ -593,11 +593,11 @@
       "options": {
         "executions": {
           "title": "Execuções",
-          "description": "Visualize o total de execuções de um @.lower:flow"
+          "description": "Visualize o total de execuções de um fluxo"
         },
         "flow_result": {
-          "title": "Resultado do @.lower:flow",
-          "description": "Retorna um resultado de @.lower:flow e permite operações básicas"
+          "title": "Resultado do fluxo",
+          "description": "Retorna um resultado de fluxo e permite operações básicas"
         },
         "data_crossing": {
           "title": "Cruzamento de dados",
@@ -654,15 +654,15 @@
       }
     },
     "config_card": {
-      "title": "Definir @.lower:metric para o card",
+      "title": "Definir métrica para o card",
       "name_card": {
         "label": "Dê um nome para o card",
-        "placeholder": "@:ex @.lower:flows do projeto"
+        "placeholder": "Ex.: fluxos do projeto"
       },
-      "select_origin_flow": "@:select @.lower:flow de origem",
+      "select_origin_flow": "Selecionar fluxo de origem",
       "result_type": "Tipo de resultado",
       "flow_result": {
-        "label": "Resultado do @.lower:flow",
+        "label": "Resultado do fluxo",
         "placeholder": "Busque ou selecione um resultado"
       },
       "operation": "Operação",
@@ -685,20 +685,20 @@
         "difference": "Diferença",
         "percentage": "Porcentagem"
       },
-      "total_flow_executions": "Total de execuções do @.lower:flow",
+      "total_flow_executions": "Total de execuções do fluxo",
       "first_value": "Primeiro valor",
       "second_value": "Segundo valor"
     },
     "config_funnel": {
-      "title": "Definir @.lower:metrics do gráfico",
-      "description": "Selecione pelo menos três @.lower:flows para obter a visualização em gráfico de funil",
-      "add_metric": "@:add @.lower:metric",
-      "first_metric": "Primeira @.lower:metric",
-      "second_metric": "Segunda @.lower:metric",
-      "third_metric": "Terceira @.lower:metric",
-      "fourth_metric": "Quarta @.lower:metric",
-      "fifth_metric": "Quinta @.lower:metric",
-      "select_flow": "@:select @.lower:flow"
+      "title": "Definir métricas do gráfico",
+      "description": "Selecione pelo menos três fluxos para obter a visualização em gráfico de funil",
+      "add_metric": "Adicionar métrica",
+      "first_metric": "Primeira métrica",
+      "second_metric": "Segunda métrica",
+      "third_metric": "Terceira métrica",
+      "fourth_metric": "Quarta métrica",
+      "fifth_metric": "Quinta métrica",
+      "select_flow": "Selecionar fluxo"
     },
     "config_recurrence": {
       "name_metric": "Nome da métrica"
@@ -706,10 +706,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Nomear @.lower:metric",
-      "placeholder": "@:ex @.lower:flows do projeto"
+      "label": "Nomear métrica",
+      "placeholder": "Ex.: fluxos do projeto"
     },
-    "select_origin_flow": "@:select @.lower:flow de origem"
+    "select_origin_flow": "Selecionar fluxo de origem"
   },
   "insights_header": {
     "auto_refresh": "Atualização automática: {status}",

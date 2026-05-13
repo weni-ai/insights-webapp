@@ -265,7 +265,7 @@
             "hint": "Un identificador único utilizado para rastrear un evento específico en el flujo de datos."
           },
           "value_field_name": {
-            "label": "Metadatos del evento (@.lower:optional)",
+            "label": "Metadatos del evento (opcional)",
             "placeholder": "Ingresa los metadatos del evento aquí",
             "hint": "Nombre del campo de los metadatos del evento para realizar operaciones. Si se deja en blanco, el sistema usará el campo predeterminado (value)."
           },
@@ -528,17 +528,17 @@
     "info_reset": "Al restablecer, los datos configurados se perderán.",
     "success_reset": "Widget restablecido con éxito",
     "error_reset": "No se pudo restablecer el widget. Inténtalo de nuevo.",
-    "metric_error": "Error al buscar @.lower:metric",
+    "metric_error": "Error al buscar métrica",
     "card": {
-      "error_description": "Configura nuevamente el @.lower:flow de origen para obtener datos válidos",
+      "error_description": "Configura nuevamente el flujo de origen para obtener datos válidos",
       "metric_empty": "Configurar",
-      "metric_set": "Definir @.lower:metric"
+      "metric_set": "Definir métrica"
     },
     "graph_funnel": {
       "title": "Embudo",
-      "not_configured_description": "Selecciona los @.lower:flows que deseas mapear para crear la vista de embudo de tu proyecto",
-      "select_flows": "@:select @.lower:flows",
-      "flow_executions": "Ejecuciones de @.lower:flow",
+      "not_configured_description": "Selecciona los flujos que deseas mapear para crear la vista de embudo de tu proyecto",
+      "select_flows": "Seleccionar flujos",
+      "flow_executions": "Ejecuciones de flujo",
       "error": {
         "title": "Se produjo un problema al cargar los datos",
         "description": "Intenta recargar"
@@ -584,7 +584,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "@:metric guardada con éxito",
+    "metric_saved": "Métrica guardada con éxito",
     "reset_widget": "Restablecer widget",
     "clear_all_fields": "Limpiar todos los campos",
     "config_gallery": {
@@ -593,11 +593,11 @@
       "options": {
         "executions": {
           "title": "Ejecuciones",
-          "description": "Muestra el total de ejecuciones de un @.lower:flow"
+          "description": "Muestra el total de ejecuciones de un flujo"
         },
         "flow_result": {
-          "title": "Resultado del @.lower:flow",
-          "description": "Proporciona el resultado del @.lower:flow y permite operaciones básicas"
+          "title": "Resultado del flujo",
+          "description": "Proporciona el resultado del flujo y permite operaciones básicas"
         },
         "data_crossing": {
           "title": "Cruce de datos",
@@ -654,15 +654,15 @@
       }
     },
     "config_card": {
-      "title": "Definir @.lower:metric para la tarjeta",
+      "title": "Definir métrica para la tarjeta",
       "name_card": {
         "label": "Ingresa un nombre para la tarjeta",
-        "placeholder": "@:ex @.lower:flows del proyecto"
+        "placeholder": "Ejemplo: flujos del proyecto"
       },
-      "select_origin_flow": "@:select @.lower:flow de origen",
+      "select_origin_flow": "Seleccionar flujo de origen",
       "result_type": "Tipo de resultado",
       "flow_result": {
-        "label": "Resultado del @.lower:flow",
+        "label": "Resultado del flujo",
         "placeholder": "Buscar o seleccionar el resultado"
       },
       "operation": "Operación",
@@ -685,20 +685,20 @@
         "difference": "Diferencia",
         "percentage": "Porcentaje"
       },
-      "total_flow_executions": "Total de ejecuciones del @.lower:flow",
+      "total_flow_executions": "Total de ejecuciones del flujo",
       "first_value": "Primer valor",
       "second_value": "Segundo valor"
     },
     "config_funnel": {
-      "title": "Definir @.lower:metrics del gráfico",
-      "description": "Selecciona al menos tres @.lower:flows para obtener la vista de gráfico de embudo",
-      "add_metric": "@:add @.lower:metric",
-      "first_metric": "Primera @.lower:metric",
-      "second_metric": "Segunda @.lower:metric",
-      "third_metric": "Tercera @.lower:metric",
-      "fourth_metric": "Cuarta @.lower:metric",
-      "fifth_metric": "Quinta @.lower:metric",
-      "select_flow": "@:select @.lower:flow"
+      "title": "Definir métricas del gráfico",
+      "description": "Selecciona al menos tres flujos para obtener la vista de gráfico de embudo",
+      "add_metric": "Agregar métrica",
+      "first_metric": "Primera métrica",
+      "second_metric": "Segunda métrica",
+      "third_metric": "Tercera métrica",
+      "fourth_metric": "Cuarta métrica",
+      "fifth_metric": "Quinta métrica",
+      "select_flow": "Seleccionar flujo"
     },
     "config_recurrence": {
       "name_metric": "Nombre de la métrica"
@@ -706,10 +706,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Ingresa un nombre para la @.lower:metric",
-      "placeholder": "@:ex @.lower:flows del proyecto"
+      "label": "Ingresa un nombre para la métrica",
+      "placeholder": "Ejemplo: flujos del proyecto"
     },
-    "select_origin_flow": "@:select @.lower:flow de origen"
+    "select_origin_flow": "Seleccionar flujo de origen"
   },
   "insights_header": {
     "auto_refresh": "Actualización automática: {status}",

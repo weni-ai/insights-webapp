@@ -235,7 +235,7 @@
       "edit_csat_or_nps": "Editează {type}",
       "remove_widget": "Șterge widget-ul",
       "modal_remove_widget": {
-        "title": "Șterge widget-ul {type}",
+        "title": "Șterge widget-ul",
         "description": "Sigur vrei să ștergi widget-ul {type}?",
         "remove": "Eliminare",
         "cancel": "Anulează",

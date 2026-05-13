@@ -241,7 +241,7 @@
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Remover widget",
       "modal_remove_widget": {
-        "title": "Remover widget {type}",
+        "title": "Remover widget",
         "description": "Tem certeza de que deseja remover o widget {type}?",
         "remove": "Remover",
         "cancel": "Cancelar",

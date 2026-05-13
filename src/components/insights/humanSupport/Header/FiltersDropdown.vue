@@ -85,7 +85,7 @@
 <script setup lang="ts">
 import { UnnnicButton, UnnnicDropdown, UnnnicLabel } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
-import { computed, ref, watch } from 'vue';
+import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
@@ -99,8 +99,6 @@ const { hasSectorsConfigured } = storeToRefs(projectStore);
 const humanSupport = useHumanSupport();
 const { clearFilters, saveAppliedFilters } = humanSupport;
 const {
-  activeTab,
-  appliedFilters,
   appliedFiltersLength,
   sectors,
   queues,
@@ -179,21 +177,6 @@ const titleButton = computed(() => {
   }
 
   return t('insights_header.filters');
-});
-
-watch(activeTab, () => {
-  if (activeTab.value === 'analysis') {
-    tags.value = appliedFilters.value.tags.filter(
-      (tag) => tag.value !== '__all__',
-    );
-    queues.value = appliedFilters.value.queues.filter(
-      (queue) => queue.value !== '__all__',
-    );
-    sectors.value = appliedFilters.value.sectors.filter(
-      (sector) => sector.value !== '__all__',
-    );
-    saveAppliedFilters();
-  }
 });
 </script>
 

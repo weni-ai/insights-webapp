@@ -16,8 +16,9 @@
         </p>
       </section>
       <section class="abandoned-cart-widget-info-card__roas">
-        <!-- TODO: calc roas -->
-        <p class="abandoned-cart-widget-info-card__roas__value">RoAS: 20.3x</p>
+        <p class="abandoned-cart-widget-info-card__roas__value">
+          RoAS: {{ formatNumber(roas) }}x
+        </p>
         <UnnnicToolTip
           enabled
           :text="
@@ -92,7 +93,13 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
+import { useProject } from '@/store/modules/project';
+
 import { formatNumber, formatPercentage } from '@/utils/numbers';
+import { storeToRefs } from 'pinia';
+
+const projectStore = useProject();
+const { abandonedCartRecoveryCost } = storeToRefs(projectStore);
 
 defineOptions({
   name: 'AbandonedCartWidgetInfoCard',
@@ -114,8 +121,16 @@ const conversionRate = computed(() => {
 });
 
 const averageOrderValue = computed(() => {
-  return props.data.recoveryRevenue / props.data.convertedSales;
+  const value = props.data.recoveryRevenue / props.data.convertedSales;
+  if (isNaN(value)) {
+    return 0;
+  }
+  return value;
 });
+
+const cost = props.data.totalSends * abandonedCartRecoveryCost.value || 0;
+
+const roas = cost > 0 ? props.data.recoveryRevenue / cost : 0;
 </script>
 
 <style scoped lang="scss">

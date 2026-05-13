@@ -192,7 +192,7 @@
         "clicks": "Clickuri"
       },
       "info_card": {
-        "recovery_revenue": "Venit din recuperare",
+        "recovery_revenue": "Venit recuperat",
         "total_sends": "Total trimiteri",
         "converted_sales": "Vânzări convertite",
         "conversion_rate": "Rată de conversie",
@@ -235,7 +235,7 @@
       "edit_csat_or_nps": "Editează {type}",
       "remove_widget": "Șterge widget-ul",
       "modal_remove_widget": {
-        "title": "Șterge widget-ul {type}",
+        "title": "Șterge widget-ul",
         "description": "Sigur vrei să ștergi widget-ul {type}?",
         "remove": "Eliminare",
         "cancel": "Anulează",

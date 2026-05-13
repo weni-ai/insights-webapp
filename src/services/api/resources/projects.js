@@ -61,6 +61,7 @@ export default {
       })),
     };
   },
+
   async verifyProjectIndexer() {
     const { project } = useConfig();
     const response = await http.get(
@@ -68,10 +69,27 @@ export default {
     );
     return response;
   },
+
   async verifyProjectCsat() {
     const { project } = useConfig();
 
     const response = await http.get(`/projects/${project.uuid}/verify_csat/`);
+    return response;
+  },
+
+  async verifyProjectAbandonedCartRecovery() {
+    const { project } = useConfig();
+    const response = await http.get('/commerce/abandoned-cart/status/', {
+      params: { project_uuid: project.uuid },
+    });
+    return response;
+  },
+
+  async getMarketingTemplateCost() {
+    const { project } = useConfig();
+    const response = await http.get('/commerce/marketing-pricing/', {
+      params: { project_uuid: project.uuid },
+    });
     return response;
   },
 };

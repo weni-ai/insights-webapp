@@ -198,7 +198,7 @@
         "clicks": "Clics"
       },
       "info_card": {
-        "recovery_revenue": "Ingresos por recuperación",
+        "recovery_revenue": "Ingresos recuperados",
         "total_sends": "Total de envíos",
         "converted_sales": "Ventas convertidas",
         "conversion_rate": "Tasa de conversión",
@@ -241,7 +241,7 @@
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Eliminar widget",
       "modal_remove_widget": {
-        "title": "Eliminar widget {type}",
+        "title": "Eliminar widget",
         "description": "¿Realmente deseas eliminar el widget {type}?",
         "remove": "Eliminar",
         "cancel": "Cancelar",

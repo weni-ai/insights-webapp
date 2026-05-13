@@ -14,6 +14,7 @@
             title ??
             $t(
               'conversations_dashboard.customize_your_dashboard.modal_remove_widget.title',
+              { type: props.name },
             )
           }}
         </UnnnicDialogTitle>

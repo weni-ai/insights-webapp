@@ -12,7 +12,7 @@
       </UnnnicDialogHeader>
       <section class="flow-result-contact-list-modal__content">
         <UnnnicTableNext
-          :locale="i18n.global.locale"
+          :locale="i18n.global.locale.value"
           :headers="tableHeaders"
           :pagination="page"
           :paginationInterval="limit"

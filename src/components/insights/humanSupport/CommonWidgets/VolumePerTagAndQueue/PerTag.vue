@@ -31,7 +31,7 @@ import volumePerTagService from '@/services/api/resources/humanSupport/volumePer
 import { redirectToChatsConfig } from '@/utils/redirect';
 
 import i18n from '@/utils/plugins/i18n';
-const { t, tc } = i18n.global;
+const { t } = i18n.global;
 
 import {
   monitoringVolumePerTagMock,
@@ -89,13 +89,9 @@ const formatFooterText = (
   count: number,
 ) => {
   if (count === 0) return '';
-  return tc(
-    `human_support_dashboard.volume_per_tag.count.${currentTab}`,
+  return t(`human_support_dashboard.volume_per_tag.count.${currentTab}`, {
     count,
-    {
-      count,
-    },
-  );
+  });
 };
 
 const formatEmptyDataText = (context: WidgetContext, currentTab: string) =>

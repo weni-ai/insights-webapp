@@ -27,7 +27,9 @@ export function formatNumber(value: number, locale?: string): string {
   if (value === -Infinity) return '-∞';
   if (Number.isNaN(value)) return 'NaN';
 
-  return (value || 0).toLocaleString(locale || i18n.global.locale || 'en-US');
+  return (value || 0).toLocaleString(
+    locale || i18n.global.locale.value || 'en-US',
+  );
 }
 
 /**
@@ -52,7 +54,7 @@ export function formatPercentage(value: number, locale?: string): string {
  */
 export function formatPercentageFixed(value: number, locale?: string): string {
   return (
-    (value || 0).toLocaleString(locale || i18n.global.locale || 'en-US', {
+    (value || 0).toLocaleString(locale || i18n.global.locale.value || 'en-US', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }) + '%'
@@ -72,7 +74,7 @@ export function formatCurrency(
   currencyCode: string,
   locale?: string,
 ): string {
-  return new Intl.NumberFormat(locale || i18n.global.locale || 'en-US', {
+  return new Intl.NumberFormat(locale || i18n.global.locale.value || 'en-US', {
     style: 'currency',
     currency: currencyCode || 'USD',
     minimumFractionDigits: 2,
@@ -115,7 +117,7 @@ export function getPercentageOf(
  * @returns A formatted percentage string
  */
 export function formatToPercent(val: number, precision: number = 2): string {
-  const formatedPercent = val.toLocaleString(i18n.global.locale, {
+  const formatedPercent = val.toLocaleString(i18n.global.locale.value, {
     minimumFractionDigits: precision,
     maximumFractionDigits: precision,
   });

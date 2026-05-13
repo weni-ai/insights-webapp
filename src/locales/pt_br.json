@@ -1144,8 +1144,8 @@
     },
     "volume_per_queue": {
       "title": "Volume por fila",
-      "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",
-      "analysis_count": "{count} fila com chats finalizados | {count} filas com chats finalizados",
+      "monitoring_count": "{count, plural, one {# fila com chats {status}} other {# filas com chats {status}}}",
+      "analysis_count": "{count, plural, one {# fila com chats finalizados} other {# filas com chats finalizados}}",
       "setup_description": "Crie filas por setor para monitorar mais dados",
       "empty_data": {
         "monitoring": {
@@ -1162,8 +1162,8 @@
       "title": "Volume por tag",
       "setup_description": "Adicione tags a setores para monitorar mais dados",
       "count": {
-        "ongoing": "{count} tag em uso | {count} tags em uso",
-        "closed": "{count} tag atribuída | {count} tags atribuídas"
+        "ongoing": "{count, plural, one {# tag em uso} other {# tags em uso}}",
+        "closed": "{count, plural, one {# tag atribuída} other {# tags atribuídas}}"
       },
       "empty_data": {
         "monitoring": {

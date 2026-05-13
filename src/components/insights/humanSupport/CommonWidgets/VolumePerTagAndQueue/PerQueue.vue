@@ -39,7 +39,7 @@ import {
 } from '@weni/unnnic-system/tokens/colors';
 
 import i18n from '@/utils/plugins/i18n';
-const { t, tc } = i18n.global;
+const { t } = i18n.global;
 
 import {
   monitoringVolumePerQueueMock,
@@ -100,16 +100,12 @@ const formatFooterText = (
 ) => {
   if (count === 0) return '';
   if (ctx === 'monitoring' && statusLabel) {
-    return tc(
-      'human_support_dashboard.volume_per_queue.monitoring_count',
+    return t('human_support_dashboard.volume_per_queue.monitoring_count', {
       count,
-      {
-        count,
-        status: statusLabel.toLocaleLowerCase(),
-      },
-    );
+      status: statusLabel.toLocaleLowerCase(),
+    });
   }
-  return tc('human_support_dashboard.volume_per_queue.analysis_count', count, {
+  return t('human_support_dashboard.volume_per_queue.analysis_count', {
     count,
   });
 };

@@ -27,7 +27,11 @@
             iconCenter="more_vert"
           />
         </UnnnicPopoverTrigger>
-        <UnnnicPopoverContent>
+        <UnnnicPopoverContent
+          side="bottom"
+          align="end"
+          size="small"
+        >
           <UnnnicPopoverOption
             :label="
               $t(
@@ -234,7 +238,7 @@ watch(
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: $unnnic-space-6;
+    gap: $unnnic-space-4;
   }
 }
 </style>

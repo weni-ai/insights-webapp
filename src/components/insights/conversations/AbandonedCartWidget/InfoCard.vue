@@ -114,7 +114,11 @@ const conversionRate = computed(() => {
 });
 
 const averageOrderValue = computed(() => {
-  return props.data.recoveryRevenue / props.data.convertedSales;
+  const value = props.data.recoveryRevenue / props.data.convertedSales;
+  if (isNaN(value)) {
+    return 0;
+  }
+  return value;
 });
 </script>
 

@@ -29,11 +29,6 @@
             :placeholder="$t('export_data.filters.select_sector')"
             source="sectors"
             keyValueField="uuid"
-            :allLabel="
-              activeTab === 'monitoring'
-                ? $t('export_data.filters.all_sectors')
-                : ''
-            "
             @update:model-value="handleUpdateSectors"
             @on-options-active-change="handleOptionsActiveChange"
           />
@@ -46,11 +41,6 @@
             :placeholder="$t('export_data.filters.select_queue')"
             source="queues"
             keyValueField="uuid"
-            :allLabel="
-              activeTab === 'monitoring'
-                ? $t('export_data.filters.all_queues')
-                : ''
-            "
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueQueues"
             @on-options-active-change="handleOptionsActiveChange"
@@ -64,11 +54,6 @@
             :placeholder="$t('export_data.filters.select_tag')"
             source="tags"
             keyValueField="uuid"
-            :allLabel="
-              activeTab === 'monitoring'
-                ? $t('export_data.filters.all_tags')
-                : ''
-            "
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueTags"
             @on-options-active-change="handleOptionsActiveChange"
@@ -145,18 +130,18 @@ const sectorsForDependency = computed(() => {
 });
 
 const isManySectorsSelected = computed(() => {
-  return sectors.value?.length > 1 && sectorsForDependency.value !== '__all__';
+  return sectors.value?.length > 1;
 });
 
 const dependsOnValueQueues = computed(() => {
-  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+  if (sectors.value?.length === 1) {
     return { sector_id: sectorsForDependency.value };
   }
   return { sectors: sectorsForDependency.value };
 });
 
 const dependsOnValueTags = computed(() => {
-  if (sectors.value?.length === 1 && sectorsForDependency.value !== '__all__') {
+  if (sectors.value?.length === 1) {
     return { sector_id: sectorsForDependency.value };
   }
   return { sectors: sectorsForDependency.value };

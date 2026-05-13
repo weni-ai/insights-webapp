@@ -41,12 +41,9 @@ export function formatNumber(value: number, locale?: string): string {
  */
 export function formatPercentage(value: number, locale?: string): string {
   if (value === 0) return '0%';
-  return `${Math.abs(value).toLocaleString(
-    locale || i18n.global.locale || 'en-US',
-    {
-      maximumFractionDigits: 2,
-    },
-  )}%`;
+  return `${Math.abs(value).toLocaleString(locale || i18n.global.locale.value, {
+    maximumFractionDigits: 2,
+  })}%`;
 }
 
 /**
@@ -77,15 +74,6 @@ export function formatCurrency(
   currencyCode?: string,
   locale?: string,
 ): string {
-  if (!value || !currencyCode) {
-    return new Intl.NumberFormat(
-      locale || i18n.global.locale.value || 'en-US',
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      },
-    ).format(0);
-  }
   return new Intl.NumberFormat(locale || i18n.global.locale.value || 'en-US', {
     style: 'currency',
     currency: currencyCode,

@@ -1183,8 +1183,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count, plural, one {{count} queue with {status} chats} other {{count} queues with chats {status}}}",
-      "analysis_count": "{count, plural, one {{count} queue with completed chats} other {{count} queues with completed chats}}",
+      "monitoring_count": "{count, plural, one {# queue with {status} chats} other {# queues with chats {status}}}",
+      "analysis_count": "{count, plural, one {# queue with completed chats} other {# queues with completed chats}}",
       "setup_description": "Create queues by industry to monitor more data",
       "empty_data": {
         "monitoring": {
@@ -1201,8 +1201,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to industries to monitor more data",
       "count": {
-        "ongoing": "{count, plural, one {{count} tag in use} other {{count} tags in use}}",
-        "closed": "{count, plural, one {{count} assigned tag} other {{count} assigned tags}}"
+        "ongoing": "{count, plural, one {# tag in use} other {# tags in use}}",
+        "closed": "{count, plural, one {# assigned tag} other {# assigned tags}}"
       },
       "empty_data": {
         "monitoring": {

@@ -1130,8 +1130,8 @@
     },
     "volume_per_queue": {
       "title": "Volum per coadă",
-      "monitoring_count": "{count, plural, one {# coadă cu {status} chaturi} other {# cozi cu {status} chaturi}}",
-      "analysis_count": "{count, plural, one {# coadă cu chaturi finalizate} other {# cozi cu chaturi finalizate}}",
+      "monitoring_count": "{count, plural, one {{count} coadă cu {status} chaturi} other {{count} cozi cu {status} chaturi}}",
+      "analysis_count": "{count, plural, one {{count} coadă cu chaturi finalizate} other {{count} cozi cu chaturi finalizate}}",
       "setup_description": "Creează cozi pe sector de activitate pentru a monitoriza mai multe date",
       "empty_data": {
         "monitoring": {
@@ -1148,8 +1148,8 @@
       "title": "Volum per etichetă",
       "setup_description": "Adaugă etichete pentru sectoare de activitate pentru a monitoriza mai multe date",
       "count": {
-        "ongoing": "{count, plural, one {# etichetă în uz} other {# etichete în uz}}",
-        "closed": "{count, plural, one {# etichetă atribuită} other {# etichete atribuite}}"
+        "ongoing": "{count, plural, one {{count} etichetă în uz} other {{count} etichete în uz}}",
+        "closed": "{count, plural, one {{count} etichetă atribuită} other {{count} etichete atribuite}}"
       },
       "empty_data": {
         "monitoring": {

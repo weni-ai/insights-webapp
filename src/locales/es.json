@@ -1144,8 +1144,8 @@
     },
     "volume_per_queue": {
       "title": "Volumen por cola",
-      "monitoring_count": "{count, plural, one {# cola con chats {status}} other {# colas con chats {status}}}",
-      "analysis_count": "{count, plural, one {# cola con chats finalizados} other {# colas con chats finalizados}}",
+      "monitoring_count": "{count, plural, one {{count} cola con chats {status}} other {{count} colas con chats {status}}}",
+      "analysis_count": "{count, plural, one {{count} cola con chats finalizados} other {{count} colas con chats finalizados}}",
       "setup_description": "Crea colas por sector para monitorear más datos",
       "empty_data": {
         "monitoring": {
@@ -1162,8 +1162,8 @@
       "title": "Volumen por tag",
       "setup_description": "Agrega tags a sectores para monitorear más datos",
       "count": {
-        "ongoing": "{count, plural, one {# tag en uso} other {# tags en uso}}",
-        "closed": "{count, plural, one {# tag asignada} other {# tags asignadas}}"
+        "ongoing": "{count, plural, one {{count} tag en uso} other {{count} tags en uso}}",
+        "closed": "{count, plural, one {{count} tag asignada} other {{count} tags asignadas}}"
       },
       "empty_data": {
         "monitoring": {

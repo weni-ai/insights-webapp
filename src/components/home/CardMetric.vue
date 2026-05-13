@@ -41,7 +41,7 @@
         class="metric-card__value"
         data-test-id="metric-value"
       >
-        {{ prefix }}{{ formatValue(value, i18n.global.locale) }}
+        {{ prefix }}{{ formatValue(value, i18n.global.locale.value) }}
       </section>
     </section>
   </section>

@@ -287,7 +287,7 @@
             "hint": " A unique identifier used to track a specific event in the data flow."
           },
           "value_field_name": {
-            "label": "Event metadata (@.lower:optional)",
+            "label": "Event metadata (optional)",
             "placeholder": "Enter the event metadata here",
             "hint": "Metadata's field name for performing operations. If left blank, the system will use the default field (value)."
           },
@@ -550,17 +550,17 @@
     "info_reset": "If you reset the widget, the configured data will be lost.",
     "success_reset": "Widget reset successfully",
     "error_reset": "Couldn't reset widget. Try again.",
-    "metric_error": "Error fetching @.lower:metric",
+    "metric_error": "Error fetching metric",
     "card": {
-      "error_description": "Reset the source @.lower:flow to fetch valid data",
+      "error_description": "Reset the source flow to fetch valid data",
       "metric_empty": "Configure",
-      "metric_set": "Set @.lower:metric"
+      "metric_set": "Set metric"
     },
     "graph_funnel": {
       "title": "Funnel",
-      "not_configured_description": "Select the @.lower:flows you want to map to build the funnel view for your project",
-      "select_flows": "@:select @.lower:flows",
-      "flow_executions": "@.lower:flow runs",
+      "not_configured_description": "Select the flows you want to map to build the funnel view for your project",
+      "select_flows": "Select flows",
+      "flow_executions": "flow runs",
       "error": {
         "title": "There was a problem while loading the data",
         "description": "Try reloading"
@@ -606,7 +606,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "@:metric saved successfully",
+    "metric_saved": "Metric saved successfully",
     "reset_widget": "Reset widget",
     "clear_all_fields": "Clear all fields",
     "config_gallery": {
@@ -615,11 +615,11 @@
       "options": {
         "executions": {
           "title": "Runs",
-          "description": "View the total runs of a @.lower:flow"
+          "description": "View the total runs of a flow"
         },
         "flow_result": {
-          "title": "@.lower:flow result",
-          "description": "Returns a @.lower:flow result and allows basic operations"
+          "title": "Flow result",
+          "description": "Returns a flow result and allows basic operations"
         },
         "data_crossing": {
           "title": "Data crossing",
@@ -676,15 +676,15 @@
       }
     },
     "config_card": {
-      "title": "Set @.lower:metric for the card",
+      "title": "Set metric for the card",
       "name_card": {
         "label": "Enter a name for the card",
-        "placeholder": "@:ex @.lower:project flows"
+        "placeholder": "Example: Project flows"
       },
-      "select_origin_flow": "@:select @.lower:source flow",
+      "select_origin_flow": "Select source flow",
       "result_type": "Result type",
       "flow_result": {
-        "label": "@.lower:flow result",
+        "label": "flow result",
         "placeholder": "Search or select a result"
       },
       "operation": "Operation",
@@ -707,20 +707,20 @@
         "difference": "Difference",
         "percentage": "Percentage"
       },
-      "total_flow_executions": "Total @.lower:flow runs",
+      "total_flow_executions": "Total flow runs",
       "first_value": "First value",
       "second_value": "Second value"
     },
     "config_funnel": {
-      "title": "Set @.lower:metrics for the chart",
-      "description": "Select at least three @.lower:flows to fetch the funnel chart view",
-      "add_metric": "@:add @.lower:metric",
-      "first_metric": "First @.lower:metric",
-      "second_metric": "Second @.lower:metric",
-      "third_metric": "Third @.lower:metric",
-      "fourth_metric": "Fourth @.lower:metric",
-      "fifth_metric": "Fifth @.lower:metric",
-      "select_flow": "@:select @.lower:flow"
+      "title": "Set metrics for the chart",
+      "description": "Select at least three flows to fetch the funnel chart view",
+      "add_metric": "Add metric",
+      "first_metric": "First metric",
+      "second_metric": "Second metric",
+      "third_metric": "Third metric",
+      "fourth_metric": "Fourth metric",
+      "fifth_metric": "Fifth metric",
+      "select_flow": "Select flow"
     },
     "config_recurrence": {
       "name_metric": "Metric name"
@@ -728,10 +728,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Enter a name for @.lower:metric",
-      "placeholder": "@:ex project @.lower:flows"
+      "label": "Enter a name for metric",
+      "placeholder": "Example: Project flows"
     },
-    "select_origin_flow": "@:select source @.lower:flow"
+    "select_origin_flow": "Select source flow"
   },
   "insights_header": {
     "auto_refresh": "Automatic update: {status}",
@@ -1166,8 +1166,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
-      "analysis_count": "{count} queue with completed chats | {count} queues with completed chats",
+      "monitoring_count": "{count, plural, one {{count} queue with {status} chats} other {{count} queues with chats {status}}}",
+      "analysis_count": "{count, plural, one {{count} queue with completed chats} other {{count} queues with completed chats}}",
       "setup_description": "Create queues by industry to monitor more data",
       "empty_data": {
         "monitoring": {
@@ -1184,8 +1184,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to industries to monitor more data",
       "count": {
-        "ongoing": "{count} tag in use | {count} tags in use",
-        "closed": "{count} assigned tag | {count} assigned tags"
+        "ongoing": "{count, plural, one {{count} tag in use} other {{count} tags in use}}",
+        "closed": "{count, plural, one {{count} assigned tag} other {{count} assigned tags}}"
       },
       "empty_data": {
         "monitoring": {

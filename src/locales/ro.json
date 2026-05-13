@@ -281,7 +281,7 @@
             "hint": " A unique identifier used to track a specific event in the data flow."
           },
           "value_field_name": {
-            "label": "Event metadata (@.lower:optional)",
+            "label": "Event metadata (opțional)",
             "placeholder": "Enter the event metadata here",
             "hint": "Metadata's field name for performing operations. If left blank, the system will use the default field (value)."
           },
@@ -544,17 +544,17 @@
     "info_reset": "Dacă resetezi widgetul, datele configurate se vor pierde.",
     "success_reset": "Widget resetat cu succes",
     "error_reset": "Nu s-a putut reseta widgetul. Încearcă din nou.",
-    "metric_error": "Eroare la preluarea @.lower:metric",
+    "metric_error": "Eroare la preluarea metric",
     "card": {
-      "error_description": "Resetează sursa @.lower:flow pentru a prelua date valide",
+      "error_description": "Resetează sursa flux pentru a prelua date valide",
       "metric_empty": "Configurează",
-      "metric_set": "Setează @.lower:metric"
+      "metric_set": "Setează metric"
     },
     "graph_funnel": {
       "title": "Pâlnie",
-      "not_configured_description": "Selectează @.lower:flows pe care vrei să le mapezi pentru a construi vizualizarea pâlniei pentru proiectul tău",
-      "select_flows": "@:select @.lower:flows",
-      "flow_executions": "rulările fluxului @.lower",
+      "not_configured_description": "Selectează fluxuri pe care vrei să le mapezi pentru a construi vizualizarea pâlniei pentru proiectul tău",
+      "select_flows": "Selectare fluxuri",
+      "flow_executions": "Rulări flux",
       "error": {
         "title": "A apărut o problemă la încărcarea datelor",
         "description": "Reîncarcă"
@@ -600,7 +600,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "@:metric salvat cu succes",
+    "metric_saved": "Metric salvat cu succes",
     "reset_widget": "Resetează widgetul",
     "clear_all_fields": "Șterge toate câmpurile",
     "config_gallery": {
@@ -609,15 +609,15 @@
       "options": {
         "executions": {
           "title": "Rulări",
-          "description": "Vizualizează numărul total de rulări ale unui @.lower:flow"
+          "description": "Vizualizează numărul total de rulări ale unui flux"
         },
         "flow_result": {
-          "title": "rezultat @.lower:flow",
-          "description": "Returnează un rezultat @.lower:flow și permite operațiuni de bază"
+          "title": "rezultat flux",
+          "description": "Returnează un rezultat flux și permite operațiuni de bază"
         },
         "data_crossing": {
           "title": "Încrucișarea datelor",
-          "description": "Combină două valori pentru a ob\u0002ține un metric"
+          "description": "Combină două valori pentru a obține un metric"
         },
         "funnel": {
           "title": "Pâlnie",
@@ -670,15 +670,15 @@
       }
     },
     "config_card": {
-      "title": "Configurează @.lower:metric pentru card",
+      "title": "Configurează metric pentru card",
       "name_card": {
         "label": "Introdu un nume pentru card",
-        "placeholder": "@:ex @.lower:fluxuri de proiect"
+        "placeholder": "Exemplu: fluxuri de proiect"
       },
-      "select_origin_flow": "@:select @.lower:flux sursă",
+      "select_origin_flow": "Selectare flux sursă",
       "result_type": "Tipul rezultatului",
       "flow_result": {
-        "label": "rezultat @.lower:flow",
+        "label": "Rezultat flux",
         "placeholder": "Caută sau selectează un rezultat"
       },
       "operation": "Operațiune",
@@ -701,20 +701,20 @@
         "difference": "Diferență",
         "percentage": "Procent"
       },
-      "total_flow_executions": "Total rulări @.lower:flow",
+      "total_flow_executions": "Total rulări flux",
       "first_value": "Prima valoare",
       "second_value": "A doua valoare"
     },
     "config_funnel": {
-      "title": "Configurează @.lower:metrics pentru diagramă",
-      "description": "Selectează cel puțin trei @.lower:flows pentru a prelua vizualizarea diagramei pâlniei",
-      "add_metric": "@:add @.lower:metric",
-      "first_metric": "Primul @.lower:metric",
-      "second_metric": "Al doilea @.lower:metric",
-      "third_metric": "Al treilea @.lower:metric",
-      "fourth_metric": "Al patrulea @.lower:metric",
-      "fifth_metric": "Al cincilea @.lower:metric",
-      "select_flow": "@:select @.lower:flow"
+      "title": "Configurează metrici pentru diagramă",
+      "description": "Selectează cel puțin trei fluxuri pentru a prelua vizualizarea diagramei pâlniei",
+      "add_metric": "Adăugare metric",
+      "first_metric": "Primul metric",
+      "second_metric": "Al doilea metric",
+      "third_metric": "Al treilea metric",
+      "fourth_metric": "Al patrulea metric",
+      "fifth_metric": "Al cincilea metric",
+      "select_flow": "Selectare flux"
     },
     "config_recurrence": {
       "name_metric": "Nume metric"
@@ -722,10 +722,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Introdu un nume pentru @.lower:metric",
-      "placeholder": "@:ex @.lower:flows proiect"
+      "label": "Introdu un nume pentru metric",
+      "placeholder": "Exemplu: fluxuri proiect"
     },
-    "select_origin_flow": "@:select @.lower:flow sursă"
+    "select_origin_flow": "Selectare flux sursă"
   },
   "insights_header": {
     "auto_refresh": "Actualizare automată: {status}",
@@ -1152,8 +1152,8 @@
     },
     "volume_per_queue": {
       "title": "Volum per coadă",
-      "monitoring_count": "{count} coadă cu {status} chaturi | {count} cozi cu {status} chaturi",
-      "analysis_count": "{count} coadă cu chaturi finalizate | {count} cozi cu chaturi finalizate",
+      "monitoring_count": "{count, plural, one {{count} coadă cu {status} chaturi} other {{count} cozi cu {status} chaturi}}",
+      "analysis_count": "{count, plural, one {{count} coadă cu chaturi finalizate} other {{count} cozi cu chaturi finalizate}}",
       "setup_description": "Creează cozi pe sector de activitate pentru a monitoriza mai multe date",
       "empty_data": {
         "monitoring": {
@@ -1170,8 +1170,8 @@
       "title": "Volum per etichetă",
       "setup_description": "Adaugă etichete pentru sectoare de activitate pentru a monitoriza mai multe date",
       "count": {
-        "ongoing": "{count} etichetă în uz | {count} etichete în uz",
-        "closed": "{count} etichetă atribuită | {count} etichete atribuite"
+        "ongoing": "{count, plural, one {{count} etichetă în uz} other {{count} etichete în uz}}",
+        "closed": "{count, plural, one {{count} etichetă atribuită} other {{count} etichete atribuite}}"
       },
       "empty_data": {
         "monitoring": {

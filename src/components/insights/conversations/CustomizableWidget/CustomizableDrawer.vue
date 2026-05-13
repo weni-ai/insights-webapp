@@ -143,7 +143,8 @@ const {
 const projectStore = useProject();
 const { getAgentsTeam, getProjectFlows } = projectStore;
 
-const { hasValidSalesFunnelAgent } = storeToRefs(projectStore);
+const { hasValidSalesFunnelAgent, hasAbandonedCartRecoveryEnabled } =
+  storeToRefs(projectStore);
 
 const { setIsDrawerCustomizableOpen } = useConversational();
 const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
@@ -405,8 +406,11 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       handleWidgetTypeChoice('csat'),
       handleWidgetTypeChoice('nps'),
       handleWidgetTypeChoice('sales_funnel'),
-      handleWidgetTypeChoice('abandoned_cart_recovery'),
     ];
+
+    if (hasAbandonedCartRecoveryEnabled.value) {
+      widgets.push(handleWidgetTypeChoice('abandoned_cart_recovery'));
+    }
 
     if (isCsatConfigured.value) {
       widgets = widgets.filter((widget) => widget.key !== 'csat');

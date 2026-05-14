@@ -28,7 +28,7 @@
           {{
             formatCurrency(
               (salesFunnelWidgetData?.total_value || 0) / 100,
-              salesFunnelWidgetData?.currency || 'USD',
+              salesFunnelWidgetData?.currency,
               i18n.global.locale.value,
             )
           }}
@@ -42,7 +42,7 @@
           {{
             formatCurrency(
               (salesFunnelWidgetData?.average_ticket || 0) / 100,
-              salesFunnelWidgetData?.currency || 'USD',
+              salesFunnelWidgetData?.currency,
               i18n.global.locale.value,
             )
           }}

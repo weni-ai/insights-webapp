@@ -78,7 +78,8 @@ interface Props {
     | 'sales_funnel'
     | 'crosstab'
     | 'absolute_numbers'
-    | 'absolute_numbers_child';
+    | 'absolute_numbers_child'
+    | 'abandoned_cart_recovery';
   modelValue: boolean;
   uuid?: string;
   name?: string;

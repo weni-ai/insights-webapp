@@ -317,6 +317,23 @@ export default {
 
     return response;
   },
+
+  async getAbandonedCartRecoveryData(
+    queryParams: Partial<WidgetQueryParams> = {},
+  ): Promise<Record<string, any>[]> {
+    const { project } = useConfig();
+    const params = {
+      skill: 'abandoned_cart',
+      project_uuid: project.uuid,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/skills/', {
+      params,
+    })) as Record<string, any>[];
+
+    return response;
+  },
 };
 
 export { AvailableWidget };

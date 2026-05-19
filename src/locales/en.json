@@ -138,6 +138,7 @@
     "custom": "Horizontal bar chart",
     "crosstab": "Crosstab",
     "absolute_numbers": "Absolute numbers",
+    "abandoned_cart_recovery": "Abandoned cart recovery",
     "agent_invocation": "Most used agents",
     "agent_invocation_count": "{count} agents",
     "tool_result": "Most used tools",
@@ -185,6 +186,26 @@
       "captured_leads": "Captured leads",
       "purchases_made": "Completed purchases"
     },
+    "abandoned_cart_recovery_widget": {
+      "title": "Abandoned cart recovery",
+      "no_data": "No data available for the filtered period.",
+      "error": "Error loading data. Please refresh the dashboard or contact support.",
+      "chart": {
+        "sent": "Sent",
+        "delivered": "Delivered",
+        "read": "Read",
+        "read_help": "Messages that were opened and read by the recipient. This metric depends on the recipient's individual privacy settings and may not be tracked if read receipts are disabled.",
+        "clicks": "Clicks"
+      },
+      "info_card": {
+        "recovery_revenue": "Recovered revenue",
+        "total_sends": "Total sends",
+        "converted_sales": "Converted sales",
+        "conversion_rate": "Conversion rate",
+        "average_order_value": "Average order value",
+        "roas_tooltip": "Return on Ad Spend measures how much revenue you generate for every $xxx spent on messages. Why is it so high? > Automated recovery is highly efficient because the cost of a message is minimal compared to your store's average order value."
+      }
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
@@ -195,6 +216,7 @@
       "config_csat_or_nps_description": "Set which {type} you want to track",
       "sales_funnel_description": "Track your sales: Total orders, Average ticket, Total amount, and Conversion funnel",
       "absolute_numbers_description": "Highlight a single key metric, displaying its exact value for quick, straightforward viewing.",
+      "abandoned_cart_recovery_description": "Track abandoned cart recovery metrics: recovered revenue, converted sales, conversion rate, avarege order value, etc.",
       "human_support": "Live desk",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -217,10 +239,10 @@
         "cancel": "Cancel"
       },
       "edit_csat_or_nps": "Edit {type}",
-      "remove_widget": "Delete widget",
+      "remove_widget": "Remove widget",
       "modal_remove_widget": {
-        "title": "Delete {type} widget",
-        "description": "Are you sure you want to delete the {type} widget?",
+        "title": "Remove widget",
+        "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
         "cancel": "Cancel",
         "success_message": "{widget} removed"

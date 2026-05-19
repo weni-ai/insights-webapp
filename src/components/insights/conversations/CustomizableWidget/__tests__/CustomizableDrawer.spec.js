@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { nextTick } from 'vue';
+import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import CustomizableDrawer from '../CustomizableDrawer.vue';
@@ -28,7 +28,8 @@ vi.mock('@/store/modules/project', () => ({
     getAgentsTeam: vi.fn(),
     agentsTeam: { manager: null, agents: [] },
     isLoadingAgentsTeam: false,
-    hasValidSalesFunnelAgent: false,
+    hasValidSalesFunnelAgent: ref(false),
+    hasAbandonedCartRecoveryEnabled: ref(true),
   }),
 }));
 

@@ -27,6 +27,12 @@ vi.mock('@/services/api/resources/projects', () => ({
     getProjectSource: vi.fn(),
     verifyProjectIndexer: vi.fn(),
     verifyProjectCsat: vi.fn(() => ({ is_enabled: true })),
+    verifyProjectAbandonedCartRecovery: vi.fn(() =>
+      Promise.resolve({ active: false }),
+    ),
+    getMarketingTemplateCost: vi.fn(() =>
+      Promise.resolve({ value: 0 }),
+    ),
   },
 }));
 

@@ -144,7 +144,7 @@ export default {
   async mounted() {
     try {
       await this.handlerTokenAndProjectUuid();
-      console.log('checkHasAbandonedCartRecoveryConfigured');
+
       this.checkHasAbandonedCartRecoveryConfigured().then(() => {
         this.getAbandonedCartRecoveryCost();
       });

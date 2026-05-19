@@ -3,7 +3,6 @@ import http2 from '@/services/api/http2';
 import { useConfig } from '@/store/modules/config';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { MOCK_CSAT_DATA, MOCK_NPS_DATA, MOCK_SALES_FUNNEL_DATA } from './mocks';
-import { asyncTimeout } from '@/utils/time';
 
 type CsatLabel = '1' | '2' | '3' | '4' | '5';
 

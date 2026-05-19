@@ -18,9 +18,11 @@
       name="setup-widget"
     />
     <template v-else-if="!isError">
-      <WarningMessage
+      <UnnnicDisclaimer
         v-if="isWarningMessage"
-        :title="$t('conversations_dashboard.no_data_available')"
+        type="neutral"
+        :description="$t('conversations_dashboard.no_data_available')"
+        data-testid="progress-widget-no-data-disclaimer"
       />
       <section
         class="progress-widget__content"
@@ -110,9 +112,10 @@ import { computed } from 'vue';
 import BaseConversationWidget, {
   Tab,
 } from '@/components/insights/conversations/BaseConversationWidget.vue';
+import { UnnnicDisclaimer } from '@weni/unnnic-system';
+
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
-import WarningMessage from '@/components/WarningMessage.vue';
 import WidgetError from '@/components/insights/conversations/WidgetError.vue';
 import SalesFunnelWidget from '@/components/insights/widgets/SalesFunnelWidget.vue';
 import CrosstabWidget from './CrosstabWidget.vue';

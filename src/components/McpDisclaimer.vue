@@ -1,24 +1,25 @@
 <template>
-  <UnnnicDisclaimer
-    class="mcp-disclaimer"
-    data-testid="mcp-disclaimer"
-    type="informational"
-    :title="t('mcp_news.modal_title')"
-  >
-    <template #description>
-      {{ t('mcp_news.modal_description') }}
-      <a
-        class="mcp-disclaimer__link"
-        data-testid="mcp-disclaimer-link"
-        :href="MCP_SETUP_GUIDE_URL"
-        target="_blank"
-        rel="noopener noreferrer"
-        @click="handleViewGuide"
-      >
-        {{ t('mcp_news.view_setup_guide') }}
-      </a>
-    </template>
-  </UnnnicDisclaimer>
+  <section class="mcp-disclaimer">
+    <UnnnicDisclaimer
+      data-testid="mcp-disclaimer"
+      type="informational"
+      :title="t('mcp_news.modal_title')"
+    >
+      <template #description>
+        {{ t('mcp_news.modal_description') }}
+        <a
+          class="mcp-disclaimer__link"
+          data-testid="mcp-disclaimer-link"
+          :href="MCP_SETUP_GUIDE_URL"
+          target="_blank"
+          rel="noopener noreferrer"
+          @click="handleViewGuide"
+        >
+          {{ t('mcp_news.view_setup_guide') }}
+        </a>
+      </template>
+    </UnnnicDisclaimer>
+  </section>
 </template>
 
 <script setup lang="ts">

@@ -191,4 +191,81 @@ describe('ProgressWidget.vue', () => {
       expect(progressTable.exists()).toBe(false);
     });
   });
+
+  describe('No-data disclaimer', () => {
+    const zeroItems = [
+      { text: 'Item 1', value: 0 },
+      { text: 'Item 2', value: 0 },
+    ];
+
+    it('should render UnnnicDisclaimer when all progress items have value 0 and not loading', async () => {
+      await wrapper.setProps({
+        progressItems: zeroItems,
+        isLoadingProgress: false,
+      });
+
+      expectElementExists(wrapper, 'progress-widget-no-data-disclaimer');
+    });
+
+    it('should bind type="neutral" and the no_data_available description on the disclaimer', async () => {
+      await wrapper.setProps({
+        progressItems: zeroItems,
+        isLoadingProgress: false,
+      });
+
+      const disclaimer = wrapper.findComponent(
+        '[data-testid="progress-widget-no-data-disclaimer"]',
+      );
+      expect(disclaimer.exists()).toBe(true);
+      expect(disclaimer.props('type')).toBe('neutral');
+      expect(disclaimer.props('description')).toBe(
+        'conversations_dashboard.no_data_available',
+      );
+    });
+
+    it('should NOT render the disclaimer when at least one progress item has a non-zero value', async () => {
+      await wrapper.setProps({
+        progressItems: [
+          { text: 'Item 1', value: 0 },
+          { text: 'Item 2', value: 10 },
+        ],
+        isLoadingProgress: false,
+      });
+
+      expectElementExists(wrapper, 'progress-widget-no-data-disclaimer', false);
+    });
+
+    it('should NOT render the disclaimer while isLoadingProgress is true', async () => {
+      await wrapper.setProps({
+        progressItems: zeroItems,
+        isLoadingProgress: true,
+      });
+
+      expectElementExists(wrapper, 'progress-widget-no-data-disclaimer', false);
+    });
+
+    it('should NOT render the disclaimer when there are no progress items at all', async () => {
+      await wrapper.setProps({
+        progressItems: [],
+        isLoadingProgress: false,
+      });
+
+      expectElementExists(wrapper, 'progress-widget-no-data-disclaimer', false);
+    });
+
+    it('should NOT render the disclaimer when isError is true', async () => {
+      await wrapper.setProps({
+        progressItems: zeroItems,
+        isLoadingProgress: false,
+        isError: true,
+        actionError: {
+          title: 'error',
+          buttonText: 'retry',
+          onClick: () => {},
+        },
+      });
+
+      expectElementExists(wrapper, 'progress-widget-no-data-disclaimer', false);
+    });
+  });
 });

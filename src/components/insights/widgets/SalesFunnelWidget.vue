@@ -1,8 +1,10 @@
 <template>
   <section class="sales-funnel-widget">
-    <WarningMessage
+    <UnnnicDisclaimer
       v-if="isEmptyData"
-      :title="$t('conversations_dashboard.no_data_available')"
+      type="neutral"
+      :description="$t('conversations_dashboard.no_data_available')"
+      data-testid="sales-funnel-no-data-disclaimer"
     />
     <section class="sales-funnel-widget__count-container">
       <section class="sales-funnel-widget__count-container-item">
@@ -26,7 +28,7 @@
           {{
             formatCurrency(
               (salesFunnelWidgetData?.total_value || 0) / 100,
-              salesFunnelWidgetData?.currency || 'USD',
+              salesFunnelWidgetData?.currency,
               i18n.global.locale,
             )
           }}
@@ -40,7 +42,7 @@
           {{
             formatCurrency(
               (salesFunnelWidgetData?.average_ticket || 0) / 100,
-              salesFunnelWidgetData?.currency || 'USD',
+              salesFunnelWidgetData?.currency,
               i18n.global.locale,
             )
           }}
@@ -57,8 +59,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
-import { UnnnicChartFunnel } from '@weni/unnnic-system';
-import WarningMessage from '@/components/WarningMessage.vue';
+import { UnnnicChartFunnel, UnnnicDisclaimer } from '@weni/unnnic-system';
 import {
   formatPercentage,
   formatNumber,

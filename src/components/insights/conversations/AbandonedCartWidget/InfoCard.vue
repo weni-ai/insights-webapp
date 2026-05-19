@@ -83,7 +83,9 @@
           }}
         </p>
         <p class="abandoned-cart-widget-info-card__item__value">
-          {{ `${props.data.currency} ${formatNumber(averageOrderValue)}` }}
+          {{
+            `${props.data.currency} ${formatNumber(Number(averageOrderValue))}`
+          }}
         </p>
       </section>
     </section>
@@ -121,10 +123,14 @@ const conversionRate = computed(() => {
 });
 
 const averageOrderValue = computed(() => {
-  const value = props.data.recoveryRevenue / props.data.convertedSales;
-  if (isNaN(value)) {
+  const value = Number(
+    props.data.recoveryRevenue / props.data.convertedSales,
+  ).toFixed(2);
+
+  if (isNaN(Number(value))) {
     return 0;
   }
+
   return value;
 });
 

@@ -71,15 +71,24 @@ export function formatPercentageFixed(value: number, locale?: string): string {
  */
 export function formatCurrency(
   value: number,
-  currencyCode: string,
+  currencyCode?: string,
   locale?: string,
 ): string {
+  if (!value || !currencyCode) {
+    return new Intl.NumberFormat(
+      locale || i18n.global.locale.value || 'en-US',
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      },
+    ).format(0);
+  }
   return new Intl.NumberFormat(locale || i18n.global.locale.value || 'en-US', {
     style: 'currency',
-    currency: currencyCode || 'USD',
+    currency: currencyCode,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value || 0);
+  }).format(value);
 }
 
 /**

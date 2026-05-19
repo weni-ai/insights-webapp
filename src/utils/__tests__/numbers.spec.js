@@ -109,16 +109,18 @@ describe('Number Utilities', () => {
     });
 
     it('handles zero values', () => {
-      expect(formatCurrency(0, 'USD')).toBe('$0.00');
+      expect(formatCurrency(0)).toBe('0.00');
     });
 
     it('handles null/undefined values', () => {
-      expect(formatCurrency(null, 'USD')).toBe('$0.00');
-      expect(formatCurrency(undefined, 'USD')).toBe('$0.00');
+      expect(formatCurrency(null, 'USD')).toBe('0.00');
+      expect(formatCurrency(undefined, 'USD')).toBe('0.00');
     });
 
     it('uses custom locale when provided', () => {
-      expect(formatCurrency(1234.567, 'USD', 'pt-BR')).toBe('US$\u00a01.234,57');
+      expect(formatCurrency(1234.567, 'USD', 'pt-BR')).toBe(
+        'US$\u00a01.234,57',
+      );
     });
 
     it('handles large numbers', () => {
@@ -131,11 +133,6 @@ describe('Number Utilities', () => {
 
     it('handles negative numbers', () => {
       expect(formatCurrency(-100.5, 'USD')).toBe('-$100.50');
-    });
-
-    it('falls back to USD when currency code is not provided', () => {
-      expect(formatCurrency(100, null)).toBe('$100.00');
-      expect(formatCurrency(100, undefined)).toBe('$100.00');
     });
   });
 

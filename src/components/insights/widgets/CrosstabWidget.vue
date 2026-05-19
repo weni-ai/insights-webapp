@@ -3,9 +3,10 @@
     <section class="crosstab-widget__table">
       <UnnnicDisclaimer
         v-if="isEmptyData && !isLoading"
-        type="attention"
+        type="neutral"
         class="crosstab-widget__empty-data-disclaimer"
         :description="$t('conversations_dashboard.no_data_available')"
+        data-testid="crosstab-widget-no-data-disclaimer"
       />
       <ProgressTable
         :progressItems="formattedData.slice(0, 5)"

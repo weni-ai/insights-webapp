@@ -75,6 +75,9 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useDashboards } from '@/store/modules/dashboards';
+
+import Dashboards from '@/services/api/resources/dashboards';
 
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 
@@ -119,6 +122,9 @@ const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
   [],
 );
 
+const dashboardsStore = useDashboards();
+const { currentDashboard } = storeToRefs(dashboardsStore);
+
 const orderedDynamicWidgets = computed(() => {
   if (isLoadingCurrentDashboardWidgets.value) {
     return [];
@@ -138,8 +144,12 @@ const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
   const useMock = conversational.shouldUseMock;
 
-  newWidgets.push({ type: 'agent_invocation', uuid: '' });
-  newWidgets.push({ type: 'tool_result', uuid: '' });
+  if (currentDashboard.value.config?.show_agent_invocation) {
+    newWidgets.push({ type: 'agent_invocation', uuid: '' });
+  }
+  if (currentDashboard.value.config?.show_tool_result) {
+    newWidgets.push({ type: 'tool_result', uuid: '' });
+  }
 
   if (useMock || conversationalWidgets.isCsatConfigured) {
     newWidgets.push({ type: 'csat', uuid: '' });
@@ -217,11 +227,38 @@ const initializeConfiguration = async () => {
     checkSurvey();
   }
 
+  const hasInitializedAgentInvocation =
+    currentDashboard.value.config?.show_agent_invocation !== undefined;
+  const hasInitializedToolsResult =
+    currentDashboard.value.config?.show_tool_result !== undefined;
+
+  if (!hasInitializedAgentInvocation) {
+    await Dashboards.updateDashboardConfig({
+      dashboardUuid: currentDashboard.value.uuid,
+      config: {
+        ...currentDashboard.value.config,
+        show_agent_invocation: true,
+      },
+    });
+    currentDashboard.value.config.show_agent_invocation = true;
+  }
+
+  if (!hasInitializedToolsResult) {
+    await Dashboards.updateDashboardConfig({
+      dashboardUuid: currentDashboard.value.uuid,
+      config: {
+        ...currentDashboard.value.config,
+        show_tool_result: true,
+      },
+    });
+    currentDashboard.value.config.show_tool_result = true;
+  }
+
   setDynamicWidgets();
 };
 
 watch(
-  currentDashboardWidgets,
+  [() => currentDashboardWidgets.value, () => currentDashboard.value.config],
   () => {
     if (isConfigurationLoaded.value) {
       setDynamicWidgets();
@@ -250,7 +287,7 @@ watch(
   },
 );
 
-onMounted(() => {
+onMounted(async () => {
   initializeConfiguration();
 });
 

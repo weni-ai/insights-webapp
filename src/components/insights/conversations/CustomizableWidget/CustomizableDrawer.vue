@@ -117,10 +117,13 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useDashboards } from '@/store/modules/dashboards';
 import { WidgetType } from '@/models/types/WidgetTypes';
 import WidgetConversationalService, {
   AvailableWidget,
 } from '@/services/api/resources/conversational/widgets';
+import DashboardsService from '@/services/api/resources/dashboards';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 const {
   resetNewWidget,
@@ -169,6 +172,8 @@ const warningModalType = ref<'cancel' | 'return' | ''>('');
 const availableWidgetsFromApi = ref<AvailableWidget[]>([]);
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
+
+const { currentDashboard } = storeToRefs(useDashboards());
 
 onBeforeMount(() => {
   getAgentsTeam();
@@ -280,11 +285,46 @@ function createAbandonedCartRecoveryWidget() {
     createdAbandonedCartRecoveryWidget as WidgetType;
   saveWidgetConfigs();
 }
-// TODO: Implement
-function createAgentInvocationWidget() {}
 
-// TODO: Implement
-function createToolResultWidget() {}
+async function createAgentInvocationWidget() {
+  await DashboardsService.updateDashboardConfig({
+    dashboardUuid: currentDashboard.value.uuid,
+    config: {
+      ...currentDashboard.value.config,
+      show_agent_invocation: true,
+    },
+  });
+  currentDashboard.value.config.show_agent_invocation = true;
+  UnnnicCallAlert({
+    props: {
+      text: i18n.global.t('alert_added', {
+        name: i18n.global.t('conversations_dashboard.agent_invocation'),
+      }),
+      type: 'success',
+    },
+  });
+  closeDrawer();
+}
+
+async function createToolResultWidget() {
+  await DashboardsService.updateDashboardConfig({
+    dashboardUuid: currentDashboard.value.uuid,
+    config: {
+      ...currentDashboard.value.config,
+      show_tool_result: true,
+    },
+  });
+  currentDashboard.value.config.show_tool_result = true;
+  UnnnicCallAlert({
+    props: {
+      text: i18n.global.t('alert_added', {
+        name: i18n.global.t('conversations_dashboard.tool_result'),
+      }),
+      type: 'success',
+    },
+  });
+  closeDrawer();
+}
 
 function clickWidgetOption(
   widgetType:
@@ -389,15 +429,18 @@ const availableWidgets = computed(() => {
       ),
       key: 'abandoned_cart_recovery',
     },
-    // TODO: Translations
     {
       name: i18n.global.t('conversations_dashboard.agent_invocation'),
-      description: '',
+      description: i18n.global.t(
+        'conversations_dashboard.agent_invocation_description',
+      ),
       key: 'agent_invocation',
     },
     {
       name: i18n.global.t('conversations_dashboard.tool_result'),
-      description: '',
+      description: i18n.global.t(
+        'conversations_dashboard.tool_result_description',
+      ),
       key: 'tool_result',
     },
   ];

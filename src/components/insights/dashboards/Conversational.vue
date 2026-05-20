@@ -258,7 +258,7 @@ const initializeConfiguration = async () => {
 };
 
 watch(
-  currentDashboardWidgets,
+  [() => currentDashboardWidgets.value, () => currentDashboard.value.config],
   () => {
     if (isConfigurationLoaded.value) {
       setDynamicWidgets();

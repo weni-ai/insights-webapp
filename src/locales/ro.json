@@ -1208,5 +1208,19 @@
     "toast_postponed": "Feedbackul a fost salvat pentru mai târziu. Poți răspunde altă dată.",
     "toast_postponed_respond": "Răspunde acum"
   },
-  "without_results": "No results found"
+  "without_results": "No results found",
+  "mcp_news": {
+    "modal_title": "Analytics este acum disponibilă în instrumentele IA!",
+    "modal_description": "MCP conectează în siguranță datele Analytics la instrumente IA precum ChatGPT, Claude, Cursor \u0002și altele, pentru a explora informații folosind limbaj natural.",
+    "flow_analytics": "ANALYTICS",
+    "flow_mcp_connection": "CONEXIUNE MCP",
+    "flow_ai_tools": "INSTRUMENTE IA",
+    "flow_prompt": "\"Cu ce subiecte a avut cele mai mari dificultăți IA-ul?\"",
+    "feature_ask_questions": "Pune\u0002 întrebări despre datele tale \u0000în limbaj natural",
+    "feature_track_metrics": "Monitorizează instantaneu performanța CSAT, NPS și a conversațiilor",
+    "feature_prepare_reports": "Pregătește rapoarte și generează tablouri de bord personalizate",
+    "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
+    "not_now": "Poate mai târziu",
+    "view_setup_guide": "Vezi ghidul de configurare"
+  }
 }

@@ -1049,6 +1049,7 @@
         "duration": "Durată",
         "awaiting_time": "Timp de așteptare",
         "first_response_time": "Timp până la primul răspuns",
+        "pending_response_tooltip": "Ultimul mesaj din conversație a fost trimis de contact",
         "attendant": "Reprezentant",
         "sector": "Sector de activitate",
         "queue": "Coadă",

@@ -1049,6 +1049,7 @@
         "duration": "Duration",
         "awaiting_time": "Wait time",
         "first_response_time": "Time to first response",
+        "pending_response_tooltip": "The last message in the conversation was sent by the contact",
         "attendant": "Representative",
         "sector": "Industry",
         "queue": "Queue",

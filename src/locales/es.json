@@ -1049,6 +1049,7 @@
         "duration": "Duración",
         "awaiting_time": "Tiempo de espera",
         "first_response_time": "Tiempo hasta la primera respuesta",
+        "pending_response_tooltip": "El último mensaje de la conversación fue enviado por el contacto",
         "attendant": "Representante",
         "sector": "Sector",
         "queue": "Cola",

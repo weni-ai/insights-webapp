@@ -14,6 +14,7 @@ interface InProgressDataResult {
   agent: string;
   duration: number;
   first_response_time: number;
+  pending_response: boolean;
   awaiting_time: number;
   sector: string;
   queue: string;

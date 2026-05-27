@@ -95,7 +95,7 @@ defineOptions({
   name: 'AbandonedCartWidget',
 });
 
-const DATA_AVAILABILITY_DAYS = 90;
+const DATA_AVAILABILITY_DAYS = 89;
 
 const { t } = useI18n();
 const conversationalStore = useConversational();

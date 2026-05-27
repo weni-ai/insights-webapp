@@ -280,8 +280,8 @@ watch(
     color: $unnnic-color-fg-emphasized;
   }
   &__content {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     align-items: center;
     gap: $unnnic-space-4;
   }

@@ -46,18 +46,12 @@
       </UnnnicPopover>
     </section>
     <section
-      v-if="hasEmptyData || hasError"
+      v-if="showDisclaimer"
       class="abandoned-cart-widget__no-data"
     >
       <UnnnicDisclaimer
-        :type="hasError ? 'error' : 'neutral'"
-        :description="
-          hasError
-            ? $t('conversations_dashboard.abandoned_cart_recovery_widget.error')
-            : $t(
-                'conversations_dashboard.abandoned_cart_recovery_widget.no_data',
-              )
-        "
+        :type="disclaimerType"
+        :description="disclaimerDescription"
       />
     </section>
     <section
@@ -85,6 +79,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
+import { isBefore, parseISO, startOfDay, subDays } from 'date-fns';
+import { useI18n } from 'vue-i18n';
 
 import Chart from './Chart.vue';
 import InfoCard from './InfoCard.vue';
@@ -99,6 +95,9 @@ defineOptions({
   name: 'AbandonedCartWidget',
 });
 
+const DATA_AVAILABILITY_DAYS = 90;
+
+const { t } = useI18n();
 const conversationalStore = useConversational();
 const { appliedFilters, refreshDataConversational } =
   storeToRefs(conversationalStore);
@@ -130,6 +129,46 @@ const hasEmptyData = computed(() => {
   );
 });
 
+const minAvailableDate = computed(() =>
+  startOfDay(subDays(new Date(), DATA_AVAILABILITY_DAYS)),
+);
+
+const isFilterDateOutOfRange = computed(() => {
+  const { start_date: filterDateStart, end_date: filterDateEnd } =
+    appliedFilters.value;
+
+  const isDateBeforeMinAvailable = (date?: string) => {
+    if (!date) return false;
+
+    return isBefore(parseISO(date), minAvailableDate.value);
+  };
+
+  return (
+    isDateBeforeMinAvailable(filterDateStart) ||
+    isDateBeforeMinAvailable(filterDateEnd)
+  );
+});
+
+const showDisclaimer = computed(
+  () => isFilterDateOutOfRange.value || hasEmptyData.value || hasError.value,
+);
+
+const disclaimerType = computed(() => (hasError.value ? 'error' : 'neutral'));
+
+const disclaimerDescription = computed(() => {
+  if (hasError.value) {
+    return t('conversations_dashboard.abandoned_cart_recovery_widget.error');
+  }
+
+  if (isFilterDateOutOfRange.value) {
+    return t(
+      'conversations_dashboard.abandoned_cart_recovery_widget.unavailable_period',
+    );
+  }
+
+  return t('conversations_dashboard.abandoned_cart_recovery_widget.no_data');
+});
+
 const chartData = computed(() => {
   return {
     sent: widgetData.value.sent,
@@ -154,6 +193,12 @@ const handleRemoveWidget = () => {
 };
 
 const fetchData = async () => {
+  if (isFilterDateOutOfRange.value) {
+    hasError.value = false;
+    isLoadingData.value = false;
+    return;
+  }
+
   try {
     hasError.value = false;
     isLoadingData.value = true;

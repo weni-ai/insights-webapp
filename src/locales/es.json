@@ -192,6 +192,7 @@
       "title": "Recuperación de carrito abandonado",
       "no_data": "No hay datos disponibles para el período filtrado.",
       "error": "Error al cargar los datos. Actualiza el panel o contacta con soporte.",
+      "unavailable_period": "Los datos para este widget son proporcionados por Meta para los últimos 90 días solamente. Verifica si el rango de fechas seleccionado está dentro de este período para ver la información.",
       "chart": {
         "sent": "Enviados",
         "delivered": "Entregados",

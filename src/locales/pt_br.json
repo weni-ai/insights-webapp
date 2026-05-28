@@ -192,6 +192,7 @@
       "title": "Recuperação de carrinho abandonado",
       "no_data": "Nenhum dado disponível para o período filtrado.",
       "error": "Erro ao carregar os dados. Atualize o dashboard ou entre em contato com o suporte.",
+      "unavailable_period": "Os dados para este widget são fornecidos pela Meta para os últimos 90 dias apenas. Verifique se o intervalo de datas selecionado está dentro desse período para ver a informação.",
       "chart": {
         "sent": "Enviados",
         "delivered": "Entregues",
@@ -1049,6 +1050,7 @@
         "duration": "Duração",
         "awaiting_time": "Tempo de espera",
         "first_response_time": "Tempo para 1ª resposta",
+        "pending_response_tooltip": "A última mensagem da conversa foi enviada pelo contato",
         "attendant": "Atendente",
         "sector": "Setor",
         "queue": "Fila",

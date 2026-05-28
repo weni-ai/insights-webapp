@@ -192,6 +192,7 @@
       "title": "Recuperare coș abandonat",
       "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
       "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
+      "unavailable_period": "Datele pentru acest widget sunt furnizate de Meta pentru ultimele 90 de zile doar. Verifică dacă intervalul de date selectat se află în acest perioadă pentru a vedea informația.",
       "chart": {
         "sent": "Trimise",
         "delivered": "Livrate",
@@ -1049,6 +1050,7 @@
         "duration": "Durată",
         "awaiting_time": "Timp de așteptare",
         "first_response_time": "Timp până la primul răspuns",
+        "pending_response_tooltip": "Ultimul mesaj din conversație a fost trimis de contact",
         "attendant": "Reprezentant",
         "sector": "Sector de activitate",
         "queue": "Coadă",

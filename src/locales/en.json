@@ -192,6 +192,7 @@
       "title": "Abandoned cart recovery",
       "no_data": "No data available for the filtered period.",
       "error": "Error loading data. Please refresh the dashboard or contact support.",
+      "unavailable_period": "Data for this widget is provided by Meta for the last 90 days only. Check if the selected date range is within this period to view the information.",
       "chart": {
         "sent": "Sent",
         "delivered": "Delivered",
@@ -1049,6 +1050,7 @@
         "duration": "Duration",
         "awaiting_time": "Wait time",
         "first_response_time": "Time to first response",
+        "pending_response_tooltip": "The last message in the conversation was sent by the contact",
         "attendant": "Representative",
         "sector": "Industry",
         "queue": "Queue",

@@ -31,7 +31,24 @@
       <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
     </template>
     <template #body-duration="{ item }">
-      {{ formatSecondsToTime(item.duration) }}
+      <section class="in-progress-duration">
+        <span>{{ formatSecondsToTime(item.duration) }}</span>
+        <UnnnicToolTip
+          v-if="item.pending_response"
+          enabled
+          :text="$t(`${baseTranslationKey}.pending_response_tooltip`)"
+          side="right"
+          data-testid="in-progress-pending-response-tooltip"
+        >
+          <UnnnicIcon
+            icon="reply"
+            size="sm"
+            scheme="fg-info"
+            data-testid="in-progress-pending-response-icon"
+            @click.stop
+          />
+        </UnnnicToolTip>
+      </section>
     </template>
     <template #body-awaiting_time="{ item }">
       {{ formatSecondsToTime(item.awaiting_time) }}
@@ -200,5 +217,11 @@ watch(
 <style lang="scss" scoped>
 .italic-text {
   font-style: italic;
+}
+
+.in-progress-duration {
+  display: flex;
+  align-items: center;
+  gap: $unnnic-space-1;
 }
 </style>

@@ -2,7 +2,8 @@
   <BaseConversationWidget
     :title="$t('conversations_dashboard.agent_invocation')"
     :isLoading="isLoading && !hasData"
-    :hiddenTabs="true"
+    hiddenTabs
+    :actions="widgetActions"
   >
     <UnnnicDisclaimer
       v-if="hasError"
@@ -63,6 +64,12 @@
     :color="colorBgPinkStrong"
     :backgroundColor="colorBgPinkPlain"
   />
+  <ModalRemoveWidget
+    v-if="isRemoveWidgetModalOpen"
+    v-model="isRemoveWidgetModalOpen"
+    type="agent_invocation"
+    :name="$t('conversations_dashboard.agent_invocation')"
+  />
 </template>
 
 <script setup lang="ts">
@@ -74,23 +81,31 @@ import { UnnnicDisclaimer } from '@weni/unnnic-system';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
 import SeeAllDrawer from '@/components/insights/conversations/CustomizableWidget/SeeAllDrawer.vue';
+import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
+
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useProject } from '@/store/modules/project';
+import { useDashboards } from '@/store/modules/dashboards';
+
 import { formatPercentage, formatNumber } from '@/utils/numbers';
 import {
   colorBgPinkStrong,
   colorBgPinkPlain,
 } from '@weni/unnnic-system/tokens/colors';
+import i18n from '@/utils/plugins/i18n';
 
 const route = useRoute();
 const conversational = useConversational();
 const autoWidgetsStore = useAutoWidgets();
 const projectStore = useProject();
+const dashboardsStore = useDashboards();
 
 const { shouldUseMock } = storeToRefs(conversational);
+const { currentDashboard } = storeToRefs(dashboardsStore);
 
 const isSeeAllDrawerOpen = ref(false);
+const isRemoveWidgetModalOpen = ref(false);
 
 const isLoading = computed(() => autoWidgetsStore.agentInvocation.isLoading);
 const hasData = computed(() => autoWidgetsStore.hasAgentInvocationData);
@@ -131,6 +146,21 @@ const progressItems = computed(() => {
       color: colorBgPinkStrong,
       backgroundColor: colorBgPinkPlain,
     }));
+});
+
+const widgetActions = computed(() => {
+  if (!currentDashboard.value?.is_editable) {
+    return [];
+  }
+  const deleteOption = {
+    icon: 'delete',
+    text: i18n.global.t(
+      'conversations_dashboard.customize_your_dashboard.remove_widget',
+    ),
+    onClick: () => (isRemoveWidgetModalOpen.value = true),
+    scheme: 'aux-red-500',
+  };
+  return [deleteOption];
 });
 
 onMounted(() => {

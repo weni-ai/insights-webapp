@@ -2,7 +2,8 @@
   <BaseConversationWidget
     :title="$t('conversations_dashboard.tool_result')"
     :isLoading="isLoading && !hasData"
-    :hiddenTabs="true"
+    hiddenTabs
+    :actions="widgetActions"
   >
     <UnnnicDisclaimer
       v-if="hasError"
@@ -61,6 +62,12 @@
     :color="colorBgTealStrong"
     :backgroundColor="colorBgTealPlain"
   />
+  <ModalRemoveWidget
+    v-if="isRemoveWidgetModalOpen"
+    v-model="isRemoveWidgetModalOpen"
+    type="tool_result"
+    :name="$t('conversations_dashboard.tool_result')"
+  />
 </template>
 
 <script setup lang="ts">
@@ -72,21 +79,30 @@ import { UnnnicDisclaimer } from '@weni/unnnic-system';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
 import SeeAllDrawer from '@/components/insights/conversations/CustomizableWidget/SeeAllDrawer.vue';
+import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
+
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { useDashboards } from '@/store/modules/dashboards';
+
 import { formatPercentage, formatNumber } from '@/utils/numbers';
 import {
   colorBgTealStrong,
   colorBgTealPlain,
 } from '@weni/unnnic-system/tokens/colors';
 
+import i18n from '@/utils/plugins/i18n';
+
 const route = useRoute();
 const conversational = useConversational();
 const autoWidgetsStore = useAutoWidgets();
+const dashboardsStore = useDashboards();
 
 const { shouldUseMock } = storeToRefs(conversational);
+const { currentDashboard } = storeToRefs(dashboardsStore);
 
 const isSeeAllDrawerOpen = ref(false);
+const isRemoveWidgetModalOpen = ref(false);
 
 const isLoading = computed(() => autoWidgetsStore.toolResult.isLoading);
 const hasData = computed(() => autoWidgetsStore.hasToolResultData);
@@ -111,6 +127,21 @@ const progressItems = computed(() => {
       color: colorBgTealStrong,
       backgroundColor: colorBgTealPlain,
     }));
+});
+
+const widgetActions = computed(() => {
+  if (!currentDashboard.value?.is_editable) {
+    return [];
+  }
+  const deleteOption = {
+    icon: 'delete',
+    text: i18n.global.t(
+      'conversations_dashboard.customize_your_dashboard.remove_widget',
+    ),
+    onClick: () => (isRemoveWidgetModalOpen.value = true),
+    scheme: 'aux-red-500',
+  };
+  return [deleteOption];
 });
 
 onMounted(() => {

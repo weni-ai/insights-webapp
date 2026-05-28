@@ -276,7 +276,7 @@ describe('CustomizableWidget', () => {
     });
 
     it('should render correct number of available widgets when no CSAT/NPS configured', () => {
-      expect(drawerItems()).toHaveLength(5);
+      expect(drawerItems()).toHaveLength(7);
     });
 
     it('should set type when widget is selected', async () => {
@@ -346,10 +346,12 @@ describe('CustomizableWidget', () => {
 
     it('should return correct widgets for native tab when no widgets configured and no sales funnel from API', () => {
       const sentimentWidgets = wrapper.vm.handleTabChoice('native');
-      expect(sentimentWidgets).toHaveLength(3);
+      expect(sentimentWidgets).toHaveLength(5);
       expect(sentimentWidgets[0].key).toBe('csat');
       expect(sentimentWidgets[1].key).toBe('nps');
-      expect(sentimentWidgets[2].key).toBe('abandoned_cart_recovery');
+      expect(sentimentWidgets[2].key).toBe('agent_invocation');
+      expect(sentimentWidgets[3].key).toBe('tool_result');
+      expect(sentimentWidgets[4].key).toBe('abandoned_cart_recovery');
     });
 
     it('should filter out CSAT widget when already configured', async () => {
@@ -370,9 +372,11 @@ describe('CustomizableWidget', () => {
       await nextTick();
 
       const sentimentWidgets = wrapperWithCsat.vm.handleTabChoice('native');
-      expect(sentimentWidgets).toHaveLength(2);
+      expect(sentimentWidgets).toHaveLength(4);
       expect(sentimentWidgets[0].key).toBe('nps');
-      expect(sentimentWidgets[1].key).toBe('abandoned_cart_recovery');
+      expect(sentimentWidgets[1].key).toBe('agent_invocation');
+      expect(sentimentWidgets[2].key).toBe('tool_result');
+      expect(sentimentWidgets[3].key).toBe('abandoned_cart_recovery');
     });
 
     it('should filter out NPS widget when already configured', async () => {
@@ -393,8 +397,11 @@ describe('CustomizableWidget', () => {
       await nextTick();
 
       const sentimentWidgets = wrapperWithNps.vm.handleTabChoice('native');
-      expect(sentimentWidgets).toHaveLength(2);
+      expect(sentimentWidgets).toHaveLength(4);
       expect(sentimentWidgets[0].key).toBe('csat');
+      expect(sentimentWidgets[1].key).toBe('agent_invocation');
+      expect(sentimentWidgets[2].key).toBe('tool_result');
+      expect(sentimentWidgets[3].key).toBe('abandoned_cart_recovery');
     });
 
     it('should show sales_funnel widget when available from API and has valid agent', async () => {
@@ -488,7 +495,7 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(7);
+      expect(widgets).toHaveLength(9);
       expect(widgets.map((w) => w.key)).toEqual([
         'csat',
         'nps',
@@ -497,6 +504,8 @@ describe('CustomizableWidget', () => {
         'crosstab',
         'absolute_numbers',
         'abandoned_cart_recovery',
+        'agent_invocation',
+        'tool_result',
       ]);
     });
   });

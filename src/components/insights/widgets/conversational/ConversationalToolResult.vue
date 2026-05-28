@@ -83,6 +83,8 @@ import ModalRemoveWidget from '@/components/insights/conversations/CustomizableW
 
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { useDashboards } from '@/store/modules/dashboards';
+
 import { formatPercentage, formatNumber } from '@/utils/numbers';
 import {
   colorBgTealStrong,
@@ -94,8 +96,10 @@ import i18n from '@/utils/plugins/i18n';
 const route = useRoute();
 const conversational = useConversational();
 const autoWidgetsStore = useAutoWidgets();
+const dashboardsStore = useDashboards();
 
 const { shouldUseMock } = storeToRefs(conversational);
+const { currentDashboard } = storeToRefs(dashboardsStore);
 
 const isSeeAllDrawerOpen = ref(false);
 const isRemoveWidgetModalOpen = ref(false);
@@ -126,6 +130,9 @@ const progressItems = computed(() => {
 });
 
 const widgetActions = computed(() => {
+  if (!currentDashboard.value?.is_editable) {
+    return [];
+  }
   const deleteOption = {
     icon: 'delete',
     text: i18n.global.t(

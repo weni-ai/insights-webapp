@@ -147,7 +147,7 @@
     "tool_result_count": "{count} ferramentas",
     "auto_widget_no_data": "Nenhum dado disponível para o período filtrado",
     "auto_widget_error": "Não foi possível carregar os dados. Atualize o dashboard ou entre em contato com o suporte",
-    "no_data_available": "Nenhum dado disponível para o período filtrado",
+    "no_data_available": "Nenhum dado disponível para o período selecionado",
     "widget_error": {
       "title": "Ocorreu um erro ao carregar os dados",
       "button": "Verificar configuração do widget",

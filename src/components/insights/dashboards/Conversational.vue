@@ -77,8 +77,6 @@ import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useDashboards } from '@/store/modules/dashboards';
 
-import Dashboards from '@/services/api/resources/dashboards';
-
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
@@ -225,33 +223,6 @@ const initializeConfiguration = async () => {
     !conversational.shouldUseMock
   ) {
     checkSurvey();
-  }
-
-  const hasInitializedAgentInvocation =
-    currentDashboard.value.config?.show_agent_invocation !== undefined;
-  const hasInitializedToolsResult =
-    currentDashboard.value.config?.show_tool_result !== undefined;
-
-  if (!hasInitializedAgentInvocation) {
-    await Dashboards.updateDashboardConfig({
-      dashboardUuid: currentDashboard.value.uuid,
-      config: {
-        ...currentDashboard.value.config,
-        show_agent_invocation: true,
-      },
-    });
-    currentDashboard.value.config.show_agent_invocation = true;
-  }
-
-  if (!hasInitializedToolsResult) {
-    await Dashboards.updateDashboardConfig({
-      dashboardUuid: currentDashboard.value.uuid,
-      config: {
-        ...currentDashboard.value.config,
-        show_tool_result: true,
-      },
-    });
-    currentDashboard.value.config.show_tool_result = true;
   }
 
   setDynamicWidgets();

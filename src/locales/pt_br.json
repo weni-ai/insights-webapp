@@ -82,9 +82,9 @@
       "avg": "Média de conversas por contato",
       "returning_description_suffix": "do total de contatos únicos",
       "tooltips": {
-        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado.",
-        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado.",
-        "avg": "Média de conversas considerando todos os contatos únicos no período."
+        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado",
+        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado",
+        "avg": "Média de conversas considerando todos os contatos únicos no período"
       }
     },
     "form_topic": {

@@ -131,7 +131,7 @@ const progressItems = computed(() => {
 
 const widgetActions = computed(() => {
   if (!currentDashboard.value?.is_editable) {
-    return [];
+    return undefined;
   }
   const deleteOption = {
     icon: 'delete',

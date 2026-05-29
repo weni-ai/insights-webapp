@@ -1134,6 +1134,9 @@
         "not_handled": {
           "title": "Não atendido",
           "description": "A conversa foi finalizada enquanto ainda estava na fila"
+        },
+        "duration": {
+          "automatic_closed_tooltip": "Encerrado automaticamente por falta de interação do contato"
         }
       }
     },

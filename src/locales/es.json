@@ -8,7 +8,7 @@
     "waiting_time": "Tiempo de espera",
     "awaiting_service": "Esperando chat de soporte",
     "interaction_time": "Tiempo de interacción",
-    "all_agents": "Todos los agentes",
+    "all_agents": "Todos los representantes",
     "tooltips": {
       "in_progress": "Total de chats en curso",
       "response_time": "Tiempo promedio que los contactos esperan para recibir una respuesta a cada mensaje",
@@ -158,7 +158,7 @@
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",
       "satisfied": "Satisfecho",
-      "neutral": "Neutral",
+      "neutral": "Neutro",
       "dissatisfied": "Insatisfecho",
       "very_dissatisfied": "Muy insatisfecho"
     },
@@ -246,9 +246,9 @@
       "modal_remove_widget": {
         "title": "Eliminar widget",
         "description": "¿Realmente deseas eliminar el widget {type}?",
-        "remove": "Eliminar",
+        "remove": "Remover",
         "cancel": "Cancelar",
-        "success_message": "{widget} eliminado"
+        "success_message": "{widget} removido"
       },
       "tabs": {
         "sentiment_analysis": "Análisis de opiniones",
@@ -339,7 +339,7 @@
       "title": "Número de mensajes",
       "header": {
         "category": "Categoría",
-        "qtd": "Total"
+        "qtd": "Cantidad"
       },
       "row": {
         "SERVICE": "Servicio",
@@ -367,7 +367,7 @@
     "quality": {
       "high": "Alta calidad",
       "medium": "Calidad media",
-      "low": "Baja calidad",
+      "low": "Calidad baja",
       "more_info_tooltip": "Consulta más información en la <a style='color: white;' href='https://developers.facebook.com/docs/whatsapp/message-templates/guidelines' target='_blank'>documentación de Meta</a>"
     },
     "messages_graph": {
@@ -387,7 +387,7 @@
       },
       "button_type": {
         "PHONE_NUMBER": "Teléfono",
-        "URL": "Link",
+        "URL": "Enlace",
         "COPY_CODE": "Copiar y pegar",
         "FLOW": "Flujo",
         "QUICK_REPLY": "Respuesta rápida"
@@ -421,7 +421,7 @@
     "ended_at": "Fin",
     "sector": "Sector",
     "queue": "Cola",
-    "tags": "Tags"
+    "tags": "Etiquetas"
   },
   "contact_list_modal": {
     "title": "Lista de contactos de {label}",
@@ -455,7 +455,7 @@
       "placeholder": "Selecciona un sector"
     },
     "tags": {
-      "label": "Tags",
+      "label": "Etiquetas",
       "placeholder": "Selecciona la tag"
     }
   },
@@ -503,7 +503,7 @@
   "clear_fields": "Limpiar campos",
   "today": "Hoy",
   "now": "Ahora",
-  "date_format": "DD/MM/YYYY",
+  "date_format": "DD/MM/AAAA",
   "search": "Buscar",
   "category": "Categoría",
   "language": "Idioma",
@@ -896,7 +896,7 @@
       "queues": "Colas",
       "rooms": "Salas",
       "users": "Agentes",
-      "sector_tags": "Tags",
+      "sector_tags": "Etiquetas",
       "contacts": "Contactos",
       "resolutions": "Resoluciones de conversaciones",
       "tool_result": "Herramientas más usadas",
@@ -914,26 +914,26 @@
       "user": "Usuario",
       "ended_at": "Fecha de fin del chat de soporte",
       "ended_by": "Finalizado por",
-      "is_active": "Status",
+      "is_active": "Estado",
       "is_wating": "Está esperando",
       "protocol": "Protocolo",
       "urn": "URN del contacto",
-      "full_transfer_history": "Historial completo de transferencias",
       "transfer_history": "Historial de transferencias",
+      "full_transfer_history": "Historial completo de transferencias",
       "service_chat": "Chat de soporte",
       "custom_fields": "Campos personalizados",
       "contact": "Contacto",
-      "tags": "Tags",
+      "tags": "Etiquetas",
       "last_name": "Apellido",
-      "email": "Email",
+      "email": "Correo electrónico",
       "first_name": "Nombre",
       "phone": "Teléfono",
-      "status": "Status",
+      "status": "Estado",
       "ai": "IA",
       "human": "Soporte humano",
       "user__first_name": "Nombre del representante",
       "user__last_name": "Apellido del representante",
-      "user__email": "Email",
+      "user__email": "Correo electrónico",
       "contact__name": "Nombre de contacto",
       "contact__uuid": "ID del contacto",
       "queue__name": "Cola",
@@ -977,7 +977,7 @@
       "select_agent": "Selecciona el agente",
       "queue": "Cola",
       "select_queue": "Selecciona la cola",
-      "tag": "Tag",
+      "tag": "Etiqueta",
       "select_tag": "Selecciona la tag",
       "all_sectors": "Todos los sectores",
       "all_agents": "Todos los agentes",
@@ -1004,7 +1004,7 @@
     "tooltip_disabled": "Este representante no puede ser desconectado porque está offline"
   },
   "human_support_dashboard": {
-    "title": "Live desk",
+    "title": "Atención humana",
     "monitoring": "Monitorización",
     "monitoring_tooltip": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",
     "analysis": "Analytics",
@@ -1057,7 +1057,7 @@
         "contact": "Contacto"
       },
       "pauses": {
-        "status": "Status",
+        "status": "Estado",
         "attendant": "Representante",
         "opened": "Abiertos",
         "closed": "Cerrados"
@@ -1070,7 +1070,7 @@
       },
       "attendant": {
         "agent": "Representante",
-        "status": "Status",
+        "status": "Estado",
         "ongoing": "En curso",
         "finished": "Finalizados",
         "average_first_response_time": "Tiempo promedio hasta la primera respuesta",
@@ -1100,7 +1100,7 @@
         "label": "Protocolo"
       },
       "status": {
-        "label": "Status"
+        "label": "Estado"
       }
     },
     "columns": {

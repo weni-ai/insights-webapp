@@ -117,13 +117,17 @@ const dialogContentSize = computed(() => {
 });
 
 const handleRemoveAgentInvocationWidget = async () => {
-  if (props.type !== 'agent_invocation') {
+  if (
+    props.type !== 'agent_invocation' &&
+    currentDashboard.value.config?.type !== 'conversational'
+  ) {
     return;
   }
   await DashboardsService.updateDashboardConfig({
     dashboardUuid: currentDashboard.value.uuid,
     config: {
-      ...currentDashboard.value.config,
+      ...(currentDashboard.value.config || {}),
+      type: 'conversational',
       show_agent_invocation: false,
     },
   });
@@ -131,13 +135,17 @@ const handleRemoveAgentInvocationWidget = async () => {
 };
 
 const handleRemoveToolResultWidget = async () => {
-  if (props.type !== 'tool_result') {
+  if (
+    props.type !== 'tool_result' &&
+    currentDashboard.value.config?.type !== 'conversational'
+  ) {
     return;
   }
   await DashboardsService.updateDashboardConfig({
     dashboardUuid: currentDashboard.value.uuid,
     config: {
-      ...currentDashboard.value.config,
+      ...(currentDashboard.value.config || {}),
+      type: 'conversational',
       show_tool_result: false,
     },
   });

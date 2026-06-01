@@ -12,6 +12,7 @@ import { CsatOrNpsCardConfig, WidgetType } from '@/models/types/WidgetTypes';
 import i18n from '@/utils/plugins/i18n';
 import { unnnicCallAlert } from '@weni/unnnic-system';
 import { useConversational } from './conversational';
+import { useDashboards } from '../dashboards';
 
 type TypeWidget = 'HUMAN' | 'AI';
 
@@ -643,6 +644,24 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       }
 
       return false;
+    },
+
+    isAgentInvocationConfigured: () => {
+      const dashboardStore = useDashboards();
+      const isConversational =
+        dashboardStore.currentDashboard?.config?.type === 'conversational';
+      const showAgentInvocation =
+        dashboardStore.currentDashboard?.config?.show_agent_invocation;
+      return isConversational && showAgentInvocation;
+    },
+
+    isToolResultConfigured: () => {
+      const dashboardStore = useDashboards();
+      const isConversational =
+        dashboardStore.currentDashboard?.config?.type === 'conversational';
+      const showToolResult =
+        dashboardStore.currentDashboard?.config?.show_tool_result;
+      return isConversational && showToolResult;
     },
   },
 });

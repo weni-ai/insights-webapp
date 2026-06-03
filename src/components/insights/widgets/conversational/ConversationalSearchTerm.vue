@@ -9,16 +9,14 @@
     <UnnnicDisclaimer
       v-if="isError"
       type="error"
-      :description="$t('conversations_dashboard.product_ranking_widget.error')"
+      :description="$t('conversations_dashboard.auto_widget_error')"
       data-testid="conversational-search-term-error"
     />
     <template v-else>
       <UnnnicDisclaimer
         v-if="isEmpty"
         type="neutral"
-        :description="
-          $t('conversations_dashboard.product_ranking_widget.no_data')
-        "
+        :description="$t('conversations_dashboard.auto_widget_no_data')"
         data-testid="conversational-search-term-no-data"
       />
       <ProgressTable
@@ -33,12 +31,9 @@
       >
         <p class="conversational-search-term__footer-count">
           {{
-            $t(
-              'conversations_dashboard.product_ranking_widget.products_count',
-              {
-                count: totalCount,
-              },
-            )
+            $t('conversations_dashboard.search_term_count', {
+              count: totalCount,
+            })
           }}
         </p>
         <button
@@ -48,7 +43,7 @@
           data-testid="conversational-search-term-see-all"
           @click="isSeeAllDrawerOpen = true"
         >
-          {{ $t('conversations_dashboard.product_ranking_widget.see_all') }}
+          {{ $t('see_all') }}
         </button>
       </section>
     </template>
@@ -113,9 +108,7 @@ const isSeeAllDrawerOpen = ref(false);
 const color = colorBgYellowStrong;
 const backgroundColor = colorBgYellowPlain;
 
-const title = computed(() =>
-  t('conversations_dashboard.search_term_widget.title'),
-);
+const title = computed(() => t('conversations_dashboard.search_term'));
 
 const isLoading = computed(() => isLoadingSearchTermWidgetData.value);
 

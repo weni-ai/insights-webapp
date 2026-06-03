@@ -82,9 +82,9 @@
       "avg": "Média de conversas por contato",
       "returning_description_suffix": "do total de contatos únicos",
       "tooltips": {
-        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado.",
-        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado.",
-        "avg": "Média de conversas considerando todos os contatos únicos no período."
+        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado",
+        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado",
+        "avg": "Média de conversas considerando todos os contatos únicos no período"
       }
     },
     "form_topic": {
@@ -147,7 +147,7 @@
     "tool_result_count": "{count} ferramentas",
     "auto_widget_no_data": "Nenhum dado disponível para o período filtrado",
     "auto_widget_error": "Não foi possível carregar os dados. Atualize o dashboard ou entre em contato com o suporte",
-    "no_data_available": "Nenhum dado disponível para o período filtrado",
+    "no_data_available": "Nenhum dado disponível para o período selecionado",
     "widget_error": {
       "title": "Ocorreu um erro ao carregar os dados",
       "button": "Verificar configuração do widget",

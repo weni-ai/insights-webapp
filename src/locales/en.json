@@ -147,7 +147,7 @@
     "tool_result_count": "{count} tools",
     "auto_widget_no_data": "No data available for the filtered period",
     "auto_widget_error": "Data couldn't be loaded. Refresh the dashboard or contact support",
-    "no_data_available": "No data available for the filtered period",
+    "no_data_available": "No data available for the selected period",
     "widget_error": {
       "title": "An error occurred while loading the data",
       "button": "Check widget configuration",

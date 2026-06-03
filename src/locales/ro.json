@@ -147,7 +147,7 @@
     "tool_result_count": "{count} instrumente",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
-    "no_data_available": "Nu sunt date disponibile pentru această perioadă de utilizare",
+    "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
     "widget_error": {
       "title": "A apărut o eroare în timpul încărcării datelor",
       "button": "Verifică configurația widgetului",

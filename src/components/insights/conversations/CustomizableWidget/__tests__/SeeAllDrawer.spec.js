@@ -208,4 +208,40 @@ describe('SeeAllDrawer', () => {
       });
     });
   });
+
+  describe('Product ranking data shape', () => {
+    it('renders ProductRankingResult items with the widget color scheme', () => {
+      const productRankingColor = '#B18D01';
+      const productRankingBackground = '#FDF5AD';
+      wrapper = createWrapper({
+        title: 'Most searched terms',
+        data: [
+          { label: 'Olive oil', value: 65, full_value: 8125 },
+          { label: 'Coffee beans', value: 25, full_value: 3125 },
+        ],
+        color: productRankingColor,
+        backgroundColor: productRankingBackground,
+      });
+
+      expect(progressTable().exists()).toBe(true);
+      expect(wrapper.vm.formattedData).toEqual([
+        {
+          label: 'Olive oil',
+          value: 65,
+          description: '65% (8125)',
+          backgroundColor: productRankingBackground,
+          color: productRankingColor,
+          subItems: [],
+        },
+        {
+          label: 'Coffee beans',
+          value: 25,
+          description: '25% (3125)',
+          backgroundColor: productRankingBackground,
+          color: productRankingColor,
+          subItems: [],
+        },
+      ]);
+    });
+  });
 });

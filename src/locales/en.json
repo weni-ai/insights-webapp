@@ -254,7 +254,9 @@
         "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
         "cancel": "Cancel",
-        "success_message": "{widget} removed"
+        "success_message": "{widget} removed",
+        "remove_success": "{widget} removed successfully",
+        "remove_error": "Failed to remove {widget}. Please try again."
       },
       "tabs": {
         "sentiment_analysis": "Sentiment analysis",

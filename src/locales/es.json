@@ -254,7 +254,9 @@
         "description": "¿Realmente deseas eliminar el widget {type}?",
         "remove": "Eliminar",
         "cancel": "Cancelar",
-        "success_message": "{widget} eliminado"
+        "success_message": "{widget} eliminado",
+        "remove_success": "{widget} eliminado con éxito",
+        "remove_error": "No se pudo eliminar {widget}. Inténtalo de nuevo."
       },
       "tabs": {
         "sentiment_analysis": "Análisis de opiniones",

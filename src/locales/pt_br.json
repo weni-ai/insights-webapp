@@ -254,7 +254,9 @@
         "description": "Tem certeza de que deseja remover o widget {type}?",
         "remove": "Remover",
         "cancel": "Cancelar",
-        "success_message": "{widget} removido"
+        "success_message": "{widget} removido",
+        "remove_success": "{widget} removido com sucesso",
+        "remove_error": "Não foi possível remover {widget}. Tente novamente."
       },
       "tabs": {
         "sentiment_analysis": "Análise de sentimento",

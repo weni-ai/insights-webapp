@@ -79,12 +79,12 @@
     "contacts_header": {
       "unique": "Contacte unice",
       "returning": "Contacte recurente",
-      "avg": "Media conversațiilor per contact",
+      "avg": "Conversații medii per contact",
       "returning_description_suffix": "din totalul contactelor unice",
       "tooltips": {
-        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată.",
-        "returning": "Contacte care au inițiat mai mult de o conversație în perioada selectată.",
-        "avg": "Media conversațiilor luând în considerare toate contactele unice din perioadă."
+        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată",
+        "returning": "Contacte care au început mai mult de o conversație în perioada selectată",
+        "avg": "Conversații medii luând în considerare toate contactele unice în perioada respectivă"
       }
     },
     "form_topic": {

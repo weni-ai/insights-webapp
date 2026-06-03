@@ -82,9 +82,9 @@
       "avg": "Average conversations per contact",
       "returning_description_suffix": "of total unique contacts",
       "tooltips": {
-        "unique": "Number of distinct contacts who started conversations during the selected period.",
-        "returning": "Contacts who started more than one conversation during the selected period.",
-        "avg": "Average conversations considering all unique contacts during the period."
+        "unique": "Number of distinct contacts who started conversations during the selected period",
+        "returning": "Contacts who started more than one conversation during the selected period",
+        "avg": "Average conversations considering all unique contacts during the period"
       }
     },
     "form_topic": {

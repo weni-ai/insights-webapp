@@ -590,6 +590,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         }
       } catch (error) {
         console.error('Error deleting widget', error);
+        throw error;
       } finally {
         this.isLoadingDeleteWidget = false;
       }

@@ -84,7 +84,9 @@ interface Props {
     | 'absolute_numbers_child'
     | 'abandoned_cart_recovery'
     | 'agent_invocation'
-    | 'tool_result';
+    | 'tool_result'
+    | 'search_term'
+    | 'added_to_cart';
   modelValue: boolean;
   uuid?: string;
   name?: string;

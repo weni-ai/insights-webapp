@@ -11,6 +11,7 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useDashboards } from '@/store/modules/dashboards';
+import { useProject } from '@/store/modules/project';
 
 config.global.plugins = [
   createI18n({
@@ -25,6 +26,14 @@ vi.mock('@/store/modules/conversational/conversational');
 vi.mock('@/store/modules/conversational/topics');
 vi.mock('@/store/modules/conversational/autoWidgets');
 vi.mock('@/store/modules/dashboards');
+vi.mock('@/store/modules/project');
+vi.mock(
+  '@/components/insights/widgets/conversational/__mock__/productRankingMock',
+  () => ({
+    PRODUCT_RANKING_MOCK_ENABLED: false,
+    getProductRankingWidgetMock: () => null,
+  }),
+);
 vi.mock('@/services/api/resources/dashboards', () => ({
   default: {
     updateDashboardConfig: vi.fn(() => Promise.resolve({})),
@@ -60,6 +69,7 @@ describe('Conversational.vue', () => {
   let conversationalStore;
   let topicsStore;
   let autoWidgetsStore;
+  let projectStore;
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -68,8 +78,18 @@ describe('Conversational.vue', () => {
       isCsatConfigured: false,
       isNpsConfigured: false,
       isSalesFunnelConfigured: false,
+      isSearchTermConfigured: false,
+      isAddedToCartConfigured: false,
     };
     useConversationalWidgets.mockReturnValue(conversationalWidgetsStore);
+
+    projectStore = reactive({
+      agentsTeam: { manager: null, agents: [] },
+      isSearchTermAgentAvailable: false,
+      isAddedToCartAgentAvailable: false,
+      getAgentsTeam: vi.fn().mockResolvedValue(undefined),
+    });
+    useProject.mockReturnValue(projectStore);
 
     widgetsStore = {
       isLoadingCurrentDashboardWidgets: ref(false),
@@ -653,6 +673,60 @@ describe('Conversational.vue', () => {
 
       const widgets = wrapper.vm.orderedDynamicWidgets;
       expect(widgets[widgets.length - 1].type).toBe('add');
+    });
+  });
+
+  describe('Product ranking widgets gating', () => {
+    it('should include search_term when agent available and configured', async () => {
+      projectStore.isSearchTermAgentAvailable = true;
+      conversationalWidgetsStore.isSearchTermConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'search_term', source: 'conversations.search_term' },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('search_term');
+    });
+
+    it('should include added_to_cart when agent available and configured', async () => {
+      projectStore.isAddedToCartAgentAvailable = true;
+      conversationalWidgetsStore.isAddedToCartConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'added_to_cart', source: 'conversations.added_to_cart' },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('added_to_cart');
+    });
+
+    it('should NOT render search_term when configured but agent unavailable', async () => {
+      projectStore.isSearchTermAgentAvailable = false;
+      conversationalWidgetsStore.isSearchTermConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'search_term', source: 'conversations.search_term' },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).not.toContain('search_term');
+    });
+
+    it('should NOT render added_to_cart when configured but agent unavailable', async () => {
+      projectStore.isAddedToCartAgentAvailable = false;
+      conversationalWidgetsStore.isAddedToCartConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'added_to_cart', source: 'conversations.added_to_cart' },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).not.toContain('added_to_cart');
     });
   });
 });

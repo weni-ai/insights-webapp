@@ -3,9 +3,12 @@
     "target": "es6",
     "module": "esnext",
     "baseUrl": "./",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@weni/unnnic-system/tokens/colors": [
+        "node_modules/@weni/unnnic-system/dist/tokens/colors.d.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "dist"],

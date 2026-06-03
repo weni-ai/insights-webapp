@@ -452,7 +452,7 @@ const formattedMessagesAnalyticsData = computed(() => {
       data: data,
       total: formatValue(
         messagesAnalyticsData.value.status_count?.[key]?.value || 0,
-        i18n.global.locale,
+        i18n.global.locale.value,
       ),
     };
   });

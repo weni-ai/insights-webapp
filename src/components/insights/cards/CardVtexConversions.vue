@@ -134,10 +134,13 @@ const metaData = computed(() => {
   return keysOrdend.map((key, index) => ({
     title:
       key === 'sent'
-        ? formatPercentage(100, i18n.global.locale)
-        : formatPercentage(graphData[key]?.percentage, i18n.global.locale),
+        ? formatPercentage(100, i18n.global.locale.value)
+        : formatPercentage(
+            graphData[key]?.percentage,
+            i18n.global.locale.value,
+          ),
     description: i18n.global.t(`widgets.vtex_conversions.label.${key}`),
-    value: formatValue(graphData[key]?.value, i18n.global.locale),
+    value: formatValue(graphData[key]?.value, i18n.global.locale.value),
     color: colors[index],
   }));
 });

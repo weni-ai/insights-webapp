@@ -15,7 +15,7 @@
           {{
             formatNumber(
               salesFunnelWidgetData?.total_orders || 0,
-              i18n.global.locale,
+              i18n.global.locale.value,
             )
           }}
         </p>
@@ -29,7 +29,7 @@
             formatCurrency(
               (salesFunnelWidgetData?.total_value || 0) / 100,
               salesFunnelWidgetData?.currency,
-              i18n.global.locale,
+              i18n.global.locale.value,
             )
           }}
         </p>
@@ -43,7 +43,7 @@
             formatCurrency(
               (salesFunnelWidgetData?.average_ticket || 0) / 100,
               salesFunnelWidgetData?.currency,
-              i18n.global.locale,
+              i18n.global.locale.value,
             )
           }}
         </p>
@@ -102,11 +102,11 @@ const graphData = computed(() => {
   const leadsData = {
     title: formatPercentage(
       salesFunnelWidgetData?.captured_leads?.value || 0,
-      i18n.global.locale,
+      i18n.global.locale.value,
     ),
     value: formatNumber(
       salesFunnelWidgetData?.captured_leads?.full_value,
-      i18n.global.locale,
+      i18n.global.locale.value,
     ),
     description: i18n.global.t(
       'conversations_dashboard.sales_funnel_widget.captured_leads',
@@ -116,11 +116,11 @@ const graphData = computed(() => {
   const purchasesData = {
     title: formatPercentage(
       salesFunnelWidgetData?.purchases_made?.value || 0,
-      i18n.global.locale,
+      i18n.global.locale.value,
     ),
     value: formatNumber(
       salesFunnelWidgetData?.purchases_made?.full_value,
-      i18n.global.locale,
+      i18n.global.locale.value,
     ),
     description: i18n.global.t(
       'conversations_dashboard.sales_funnel_widget.purchases_made',

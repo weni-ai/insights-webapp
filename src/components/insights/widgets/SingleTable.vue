@@ -15,7 +15,7 @@
       :paginationInterval="paginationInterval"
       :headers="headers"
       :rows="rows"
-      :locale="i18n.global.locale"
+      :locale="i18n.global.locale.value"
       :isLoading="isLoading"
       @update:pagination="$emit('changePage', $event)"
     />

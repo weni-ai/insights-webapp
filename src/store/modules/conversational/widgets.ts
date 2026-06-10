@@ -12,6 +12,7 @@ import { CsatOrNpsCardConfig, WidgetType } from '@/models/types/WidgetTypes';
 import i18n from '@/utils/plugins/i18n';
 import { unnnicCallAlert } from '@weni/unnnic-system';
 import { useConversational } from './conversational';
+import { useDashboards } from '../dashboards';
 
 type TypeWidget = 'HUMAN' | 'AI';
 
@@ -333,7 +334,9 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           'conversations.csat': 'csat',
           'conversations.nps': 'nps',
           'conversations.sales_funnel': 'sales_funnel',
+          'conversations.abandoned_cart_recovery': 'abandoned_cart_recovery',
         };
+
         const type = mapTypes[this.newWidget?.source as keyof typeof mapTypes];
 
         let widget = this.newWidget;
@@ -358,6 +361,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         const { getCurrentDashboardWidgets } = useWidgets();
 
         await getCurrentDashboardWidgets();
+
         if (type === 'nps') {
           this.loadNpsWidgetData();
         }
@@ -370,7 +374,9 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
         unnnicCallAlert({
           props: {
-            text: i18n.global.t('alert_added', { name: type?.toUpperCase() }),
+            text: i18n.global.t('alert_added', {
+              name: i18n.global.t(`conversations_dashboard.${type}`),
+            }),
             type: 'success',
             seconds: 5,
           },
@@ -441,7 +447,14 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       const npsWidget = findWidgetBySource('conversations.nps');
       this.npsWidget = npsWidget ?? null;
     },
-    async deleteWidget(type: 'csat' | 'nps' | 'sales_funnel' | 'crosstab') {
+    async deleteWidget(
+      type:
+        | 'csat'
+        | 'nps'
+        | 'sales_funnel'
+        | 'crosstab'
+        | 'abandoned_cart_recovery',
+    ) {
       this.isLoadingDeleteWidget = true;
       try {
         const { findWidgetBySource } = useWidgets();
@@ -450,6 +463,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           nps: 'conversations.nps',
           sales_funnel: 'conversations.sales_funnel',
           crosstab: 'conversations.crosstab',
+          abandoned_cart_recovery: 'conversations.abandoned_cart_recovery',
         };
 
         const widget = findWidgetBySource(sourceMap[type]);
@@ -461,6 +475,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         await WidgetService.deleteWidget(widget.uuid);
 
         const { getCurrentDashboardWidgets } = useWidgets();
+
         await getCurrentDashboardWidgets();
 
         if (type === 'sales_funnel') {
@@ -583,6 +598,14 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       );
     },
 
+    isAbandonedCartRecoveryConfigured: () => {
+      return (
+        useWidgets().findWidgetBySource(
+          'conversations.abandoned_cart_recovery',
+        ) !== undefined
+      );
+    },
+
     isNpsAiConfig: () => {
       const { findWidgetBySource } = useWidgets();
       const widgetNps = findWidgetBySource('conversations.nps');
@@ -621,6 +644,24 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       }
 
       return false;
+    },
+
+    isAgentInvocationConfigured: () => {
+      const dashboardStore = useDashboards();
+      const isConversational =
+        dashboardStore.currentDashboard?.config?.type === 'conversational';
+      const showAgentInvocation =
+        dashboardStore.currentDashboard?.config?.show_agent_invocation;
+      return isConversational && showAgentInvocation;
+    },
+
+    isToolResultConfigured: () => {
+      const dashboardStore = useDashboards();
+      const isConversational =
+        dashboardStore.currentDashboard?.config?.type === 'conversational';
+      const showToolResult =
+        dashboardStore.currentDashboard?.config?.show_tool_result;
+      return isConversational && showToolResult;
     },
   },
 });

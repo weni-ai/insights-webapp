@@ -18,6 +18,8 @@ export const useProject = defineStore('project', {
     isLoadingAgentsTeam: false,
     hasSectorsConfigured: null,
     hasTagsConfigured: null,
+    hasAbandonedCartRecoveryEnabled: null,
+    abandonedCartRecoveryCost: null,
   }),
 
   getters: {
@@ -91,6 +93,15 @@ export const useProject = defineStore('project', {
       if (this.hasTagsConfigured !== null) return;
       const response = await Projects.getProjectSource('tags', { limit: 1 });
       this.hasTagsConfigured = response.length > 0;
+    },
+    async checkHasAbandonedCartRecoveryConfigured() {
+      if (this.hasAbandonedCartRecoveryEnabled !== null) return;
+      const response = await Projects.verifyProjectAbandonedCartRecovery();
+      this.hasAbandonedCartRecoveryEnabled = response.active;
+    },
+    async getAbandonedCartRecoveryCost() {
+      const response = await Projects.getMarketingTemplateCost();
+      this.abandonedCartRecoveryCost = response.value;
     },
   },
 });

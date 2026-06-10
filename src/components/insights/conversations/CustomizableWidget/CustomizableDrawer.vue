@@ -117,10 +117,13 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useDashboards } from '@/store/modules/dashboards';
 import { WidgetType } from '@/models/types/WidgetTypes';
 import WidgetConversationalService, {
   AvailableWidget,
 } from '@/services/api/resources/conversational/widgets';
+import DashboardsService from '@/services/api/resources/dashboards';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 const {
   resetNewWidget,
@@ -137,12 +140,16 @@ const {
   isEnabledUpdateWidgetNps,
   isLoadingSaveNewWidget,
   isLoadingUpdateWidget,
+  isAbandonedCartRecoveryConfigured,
+  isAgentInvocationConfigured,
+  isToolResultConfigured,
 } = storeToRefs(useConversationalWidgets());
 
 const projectStore = useProject();
 const { getAgentsTeam, getProjectFlows } = projectStore;
 
-const { hasValidSalesFunnelAgent } = storeToRefs(projectStore);
+const { hasValidSalesFunnelAgent, hasAbandonedCartRecoveryEnabled } =
+  storeToRefs(projectStore);
 
 const { setIsDrawerCustomizableOpen } = useConversational();
 const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
@@ -165,6 +172,8 @@ const warningModalType = ref<'cancel' | 'return' | ''>('');
 const availableWidgetsFromApi = ref<AvailableWidget[]>([]);
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
+
+const { currentDashboard } = storeToRefs(useDashboards());
 
 onBeforeMount(() => {
   getAgentsTeam();
@@ -248,21 +257,100 @@ function handleSecondaryButtonClick() {
   }
 }
 
+function createSalesFunnelWidget() {
+  const conversationalWidgetsStore = useConversationalWidgets();
+  const createSalesFunnelWidget = {
+    uuid: '',
+    name: 'conversations_dashboard.sales_funnel_widget.title',
+    config: {},
+    type: 'sales_funnel',
+    source: 'conversations.sales_funnel',
+    is_configurable: true,
+  };
+  conversationalWidgetsStore.newWidget = createSalesFunnelWidget as WidgetType;
+  saveWidgetConfigs();
+}
+
+function createAbandonedCartRecoveryWidget() {
+  const conversationalWidgetsStore = useConversationalWidgets();
+  const createdAbandonedCartRecoveryWidget = {
+    uuid: '',
+    name: 'conversations_dashboard.abandoned_cart_recovery_widget.title',
+    config: {},
+    type: 'abandoned_cart_recovery',
+    source: 'conversations.abandoned_cart_recovery',
+    is_configurable: true,
+  };
+  conversationalWidgetsStore.newWidget =
+    createdAbandonedCartRecoveryWidget as WidgetType;
+  saveWidgetConfigs();
+}
+
+async function createAgentInvocationWidget() {
+  await DashboardsService.updateDashboardConfig({
+    dashboardUuid: currentDashboard.value.uuid,
+    config: {
+      ...currentDashboard.value.config,
+      show_agent_invocation: true,
+    },
+  });
+  currentDashboard.value.config.show_agent_invocation = true;
+  UnnnicCallAlert({
+    props: {
+      text: i18n.global.t('alert_added', {
+        name: i18n.global.t('conversations_dashboard.agent_invocation'),
+      }),
+      type: 'success',
+    },
+  });
+  closeDrawer();
+}
+
+async function createToolResultWidget() {
+  await DashboardsService.updateDashboardConfig({
+    dashboardUuid: currentDashboard.value.uuid,
+    config: {
+      ...currentDashboard.value.config,
+      show_tool_result: true,
+    },
+  });
+  currentDashboard.value.config.show_tool_result = true;
+  UnnnicCallAlert({
+    props: {
+      text: i18n.global.t('alert_added', {
+        name: i18n.global.t('conversations_dashboard.tool_result'),
+      }),
+      type: 'success',
+    },
+  });
+  closeDrawer();
+}
+
 function clickWidgetOption(
-  widgetType: 'csat' | 'nps' | 'custom' | 'sales_funnel' | 'crosstab',
+  widgetType:
+    | 'csat'
+    | 'nps'
+    | 'custom'
+    | 'sales_funnel'
+    | 'crosstab'
+    | 'abandoned_cart_recovery'
+    | 'agent_invocation'
+    | 'tool_result',
 ) {
+  if (widgetType === 'abandoned_cart_recovery') {
+    createAbandonedCartRecoveryWidget();
+    return;
+  }
   if (widgetType === 'sales_funnel') {
-    const conversationalWidgetsStore = useConversationalWidgets();
-    const createWidget = {
-      uuid: '',
-      name: 'conversations_dashboard.sales_funnel_widget.title',
-      config: {},
-      type: 'sales_funnel',
-      source: 'conversations.sales_funnel',
-      is_configurable: true,
-    };
-    conversationalWidgetsStore.newWidget = createWidget as WidgetType;
-    saveWidgetConfigs();
+    createSalesFunnelWidget();
+    return;
+  }
+  if (widgetType === 'agent_invocation') {
+    createAgentInvocationWidget();
+    return;
+  }
+  if (widgetType === 'tool_result') {
+    createToolResultWidget();
     return;
   }
 
@@ -334,6 +422,27 @@ const availableWidgets = computed(() => {
       ),
       key: 'absolute_numbers',
     },
+    {
+      name: i18n.global.t('conversations_dashboard.abandoned_cart_recovery'),
+      description: i18n.global.t(
+        'conversations_dashboard.customize_your_dashboard.abandoned_cart_recovery_description',
+      ),
+      key: 'abandoned_cart_recovery',
+    },
+    {
+      name: i18n.global.t('conversations_dashboard.agent_invocation'),
+      description: i18n.global.t(
+        'conversations_dashboard.agent_invocation_description',
+      ),
+      key: 'agent_invocation',
+    },
+    {
+      name: i18n.global.t('conversations_dashboard.tool_result'),
+      description: i18n.global.t(
+        'conversations_dashboard.tool_result_description',
+      ),
+      key: 'tool_result',
+    },
   ];
 });
 
@@ -368,7 +477,13 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       handleWidgetTypeChoice('csat'),
       handleWidgetTypeChoice('nps'),
       handleWidgetTypeChoice('sales_funnel'),
+      handleWidgetTypeChoice('agent_invocation'),
+      handleWidgetTypeChoice('tool_result'),
     ];
+
+    if (hasAbandonedCartRecoveryEnabled.value) {
+      widgets.push(handleWidgetTypeChoice('abandoned_cart_recovery'));
+    }
 
     if (isCsatConfigured.value) {
       widgets = widgets.filter((widget) => widget.key !== 'csat');
@@ -390,6 +505,20 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
       !isSalesFunnelAvailableFromApi
     ) {
       widgets = widgets.filter((widget) => widget.key !== 'sales_funnel');
+    }
+
+    if (isAbandonedCartRecoveryConfigured.value) {
+      widgets = widgets.filter(
+        (widget) => widget.key !== 'abandoned_cart_recovery',
+      );
+    }
+
+    if (isAgentInvocationConfigured.value) {
+      widgets = widgets.filter((widget) => widget.key !== 'agent_invocation');
+    }
+
+    if (isToolResultConfigured.value) {
+      widgets = widgets.filter((widget) => widget.key !== 'tool_result');
     }
 
     return widgets;
@@ -422,7 +551,10 @@ const handleWidgetTypeChoice = (
     | 'custom'
     | 'sales_funnel'
     | 'crosstab'
-    | 'absolute_numbers',
+    | 'absolute_numbers'
+    | 'abandoned_cart_recovery'
+    | 'agent_invocation'
+    | 'tool_result',
 ) => {
   return availableWidgets.value.find((widget) => widget.key === widgetType);
 };

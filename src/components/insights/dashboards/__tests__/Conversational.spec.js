@@ -10,6 +10,7 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
+import { useDashboards } from '@/store/modules/dashboards';
 
 config.global.plugins = [
   createI18n({
@@ -23,6 +24,28 @@ vi.mock('@/store/modules/conversational/customWidgets');
 vi.mock('@/store/modules/conversational/conversational');
 vi.mock('@/store/modules/conversational/topics');
 vi.mock('@/store/modules/conversational/autoWidgets');
+vi.mock('@/store/modules/dashboards');
+vi.mock('@/services/api/resources/dashboards', () => ({
+  default: {
+    updateDashboardConfig: vi.fn(() => Promise.resolve({})),
+  },
+}));
+vi.mock('@/composables/useFeedbackSurvey', () => ({
+  useFeedbackSurvey: () => ({
+    shouldShowModal: ref(false),
+    surveyUuid: ref(''),
+    checkSurvey: vi.fn(),
+    onPostpone: vi.fn(),
+    onSubmitted: vi.fn(),
+    onSubmitError: vi.fn(),
+  }),
+}));
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: vi.fn(() => false),
+    activeFeatures: ref([]),
+  }),
+}));
 
 const autoWidgetEntries = [
   { type: 'agent_invocation', uuid: '' },
@@ -91,6 +114,17 @@ describe('Conversational.vue', () => {
       resetAutoWidgets: vi.fn(),
     };
     useAutoWidgets.mockReturnValue(autoWidgetsStore);
+
+    useDashboards.mockReturnValue({
+      currentDashboard: ref({
+        uuid: 'dashboard-uuid',
+        config: {
+          type: 'conversational',
+          show_agent_invocation: true,
+          show_tool_result: true,
+        },
+      }),
+    });
 
     wrapper = shallowMount(Conversational, {
       global: {

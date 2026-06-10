@@ -79,12 +79,12 @@
     "contacts_header": {
       "unique": "Contacte unice",
       "returning": "Contacte recurente",
-      "avg": "Media conversațiilor per contact",
+      "avg": "Conversații medii per contact",
       "returning_description_suffix": "din totalul contactelor unice",
       "tooltips": {
-        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată.",
-        "returning": "Contacte care au inițiat mai mult de o conversație în perioada selectată.",
-        "avg": "Media conversațiilor luând în considerare toate contactele unice din perioadă."
+        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată",
+        "returning": "Contacte care au început mai mult de o conversație în perioada selectată",
+        "avg": "Conversații medii luând în considerare toate contactele unice în perioada respectivă"
       }
     },
     "form_topic": {
@@ -139,7 +139,15 @@
     "crosstab": "Tabel încrucișat",
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
-    "no_data_available": "Nu sunt date disponibile pentru această perioadă de utilizare",
+    "agent_invocation": "Cei mai utilizați agenți",
+    "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
+    "agent_invocation_count": "{count} agenți",
+    "tool_result": "Cele mai utilizate instrumente",
+    "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
+    "tool_result_count": "{count} instrumente",
+    "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
+    "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
+    "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
     "widget_error": {
       "title": "A apărut o eroare în timpul încărcării datelor",
       "button": "Verifică configurația widgetului",
@@ -184,6 +192,7 @@
       "title": "Recuperare coș abandonat",
       "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
       "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
+      "unavailable_period": "Datele pentru acest widget sunt furnizate de Meta pentru ultimele 90 de zile doar. Verifică dacă intervalul de date selectat se află în acest perioadă pentru a vedea informația.",
       "chart": {
         "sent": "Trimise",
         "delivered": "Livrate",
@@ -1041,6 +1050,7 @@
         "duration": "Durată",
         "awaiting_time": "Timp de așteptare",
         "first_response_time": "Timp până la primul răspuns",
+        "pending_response_tooltip": "Ultimul mesaj din conversație a fost trimis de contact",
         "attendant": "Reprezentant",
         "sector": "Sector de activitate",
         "queue": "Coadă",
@@ -1150,6 +1160,14 @@
     "common": {
       "no_response": "Niciun răspuns"
     },
+    "deleted_tooltips": {
+      "queue_and_sector": "Coadă și sector eliminate din proiect",
+      "queue": "Coadă eliminată din proiect",
+      "tag_and_sector": "Etichetă și sector eliminate din proiect",
+      "tag": "Etichetă eliminată din proiect",
+      "sector": "Sector eliminat din proiect",
+      "representative": "Reprezentant eliminat din proiect"
+    },
     "volume_per_queue": {
       "title": "Volum per coadă",
       "monitoring_count": "{count} coadă cu {status} chaturi | {count} cozi cu {status} chaturi",
@@ -1221,6 +1239,17 @@
     "feature_prepare_reports": "Pregătește rapoarte și generează tablouri de bord personalizate",
     "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
     "not_now": "Poate mai târziu",
+    "modal_title": "Analytics, acum disponibil în instrumente IA!",
+    "modal_description": "MCP conectează în siguranță datele Analytics la instrumente IA precum ChatGPT, Claude, Cursor și altele pentru a explora insight-uri folosind limbaj natural",
+    "flow_analytics": "ANALYTICS",
+    "flow_mcp_connection": "CONEXIUNE MCP",
+    "flow_ai_tools": "INSTRUMENTE IA",
+    "flow_prompt": "\"Care subiecte au fost cele mai dificile pentru IA?\"",
+    "feature_ask_questions": "Pune întrebări despre datele tale în limbaj natural",
+    "feature_track_metrics": "Urmărește CSAT, NPS și performanța conversațiilor instantaneu",
+    "feature_prepare_reports": "Pregătește rapoarte și generează dashboard-uri personalizate",
+    "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP",
+    "not_now": "Nu acum",
     "view_setup_guide": "Vezi ghidul de configurare"
   }
 }

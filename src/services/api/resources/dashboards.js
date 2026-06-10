@@ -26,7 +26,7 @@ export default {
       const isConversational = name === 'conversations_dashboard.title';
       const isHumanSupport = name === 'human_support_dashboard.title';
 
-      if (isConversational) {
+      if (isConversational && !config) {
         return {
           type: 'conversational',
         };
@@ -256,6 +256,21 @@ export default {
       '/dashboards/create_flows_dashboard/',
       reqBody,
       { params: { project: useConfig().project?.uuid } },
+    );
+
+    return response;
+  },
+
+  async updateDashboardConfig({ dashboardUuid, config }) {
+    const reqBody = {
+      config: config,
+    };
+    const response = await http.patch(
+      `/dashboards/${dashboardUuid}/`,
+      reqBody,
+      {
+        params: { project: useConfig().project?.uuid },
+      },
     );
 
     return response;

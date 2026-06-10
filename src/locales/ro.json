@@ -1134,6 +1134,9 @@
         "not_handled": {
           "title": "Not handled",
           "description": "Conversation ended while still in queue"
+        },
+        "duration": {
+          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului"
         }
       }
     },
@@ -1161,12 +1164,12 @@
       "no_response": "Niciun răspuns"
     },
     "deleted_tooltips": {
-      "queue_and_sector": "Coadă și sector eliminate din proiect",
-      "queue": "Coadă eliminată din proiect",
-      "tag_and_sector": "Etichetă și sector eliminate din proiect",
-      "tag": "Etichetă eliminată din proiect",
-      "sector": "Sector eliminat din proiect",
-      "representative": "Reprezentant eliminat din proiect"
+      "queue_and_sector": "Coada și departamentul au fost eliminate din proiect",
+      "queue": "Coada a fost eliminată din proiect",
+      "tag_and_sector": "Eticheta și departamentul au fost eliminate din proiect",
+      "tag": "Eticheta a fost eliminată din proiect",
+      "sector": "Departamentul a fost eliminat din proiect",
+      "representative": "Reprezentantul a fost eliminat din proiect"
     },
     "volume_per_queue": {
       "title": "Volum per coadă",
@@ -1228,17 +1231,17 @@
   },
   "without_results": "No results found",
   "mcp_news": {
-    "modal_title": "Analytics, acum disponibil în instrumente IA!",
-    "modal_description": "MCP conectează în siguranță datele Analytics la instrumente IA precum ChatGPT, Claude, Cursor și altele pentru a explora insight-uri folosind limbaj natural",
+    "modal_title": "Analytics este acum disponibilă în instrumentele IA!",
+    "modal_description": "MCP conectează în siguranță datele Analytics la instrumente IA precum ChatGPT, Claude, Cursor \u0002și altele, pentru a explora informații folosind limbaj natural.",
     "flow_analytics": "ANALYTICS",
     "flow_mcp_connection": "CONEXIUNE MCP",
     "flow_ai_tools": "INSTRUMENTE IA",
-    "flow_prompt": "\"Care subiecte au fost cele mai dificile pentru IA?\"",
-    "feature_ask_questions": "Pune întrebări despre datele tale în limbaj natural",
-    "feature_track_metrics": "Urmărește CSAT, NPS și performanța conversațiilor instantaneu",
-    "feature_prepare_reports": "Pregătește rapoarte și generează dashboard-uri personalizate",
-    "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP",
-    "not_now": "Nu acum",
+    "flow_prompt": "\"Cu ce subiecte a avut cele mai mari dificultăți IA-ul?\"",
+    "feature_ask_questions": "Pune\u0002 întrebări despre datele tale \u0000în limbaj natural",
+    "feature_track_metrics": "Monitorizează instantaneu performanța CSAT, NPS și a conversațiilor",
+    "feature_prepare_reports": "Pregătește rapoarte și generează tablouri de bord personalizate",
+    "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
+    "not_now": "Poate mai târziu",
     "view_setup_guide": "Vezi ghidul de configurare"
   }
 }

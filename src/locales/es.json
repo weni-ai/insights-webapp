@@ -1142,6 +1142,9 @@
         "not_handled": {
           "title": "No atendido",
           "description": "La conversación finalizó mientras aún estaba en la cola"
+        },
+        "duration": {
+          "automatic_closed_tooltip": "Finalizado automáticamente por falta de interacción del contacto"
         }
       }
     },
@@ -1169,12 +1172,12 @@
       "no_response": "Sin respuesta"
     },
     "deleted_tooltips": {
-      "queue_and_sector": "Cola y sector eliminados del proyecto",
-      "queue": "Cola eliminada del proyecto",
-      "tag_and_sector": "Tag y sector eliminados del proyecto",
-      "tag": "Tag eliminada del proyecto",
-      "sector": "Sector eliminado del proyecto",
-      "representative": "Representante eliminado del proyecto"
+      "queue_and_sector": "Cola y departamento removidos del proyecto",
+      "queue": "Cola removida del proyecto",
+      "tag_and_sector": "Tag y departamento removidos del proyecto",
+      "tag": "Tag removida del proyecto",
+      "sector": "Departamento removido del proyecto",
+      "representative": "Representante removido del proyecto"
     },
     "volume_per_queue": {
       "title": "Volumen por cola",
@@ -1236,16 +1239,16 @@
   },
   "without_results": "No se encontró ningún resultado",
   "mcp_news": {
-    "modal_title": "Analytics, ahora disponible en herramientas de IA!",
-    "modal_description": "El MCP conecta de forma segura los datos de Analytics a herramientas de IA como ChatGPT, Claude, Cursor y más para explorar insights usando lenguaje natural.",
+    "modal_title": "¡Analytics ya está disponible en las herramientas de IA!",
+    "modal_description": "El MCP conecta de forma segura los datos de Analytics con herramientas de IA como ChatGPT, Claude, Cursor y otras para explorar insights usando lenguaje natural.",
     "flow_analytics": "ANALYTICS",
-    "flow_mcp_connection": "CONEXIÓN MCP",
+    "flow_mcp_connection": "CONEXIÓN CON MCP",
     "flow_ai_tools": "HERRAMIENTAS DE IA",
-    "flow_prompt": "\"¿Cuáles temas le resultaron más difíciles a la IA?\"",
-    "feature_ask_questions": "Haz preguntas sobre tus datos en lenguaje natural",
-    "feature_track_metrics": "Monitorea CSAT, NPS y rendimiento de conversaciones al instante",
+    "flow_prompt": "\"¿Con qué temas tuvo más dificultades la IA?\"",
+    "feature_ask_questions": "Haz preguntas sobre los datos en lenguaje natural",
+    "feature_track_metrics": "Monitorea CSAT, NPS y el desempeño de las conversaciones instantáneamente",
     "feature_prepare_reports": "Prepara informes y genera dashboards personalizados",
-    "privacy_note": "Solo los datos a los que tienes acceso están disponibles a través del MCP.",
+    "privacy_note": "Solo están disponibles en el MCP los datos a los que tienes acceso.",
     "not_now": "Ahora no",
     "view_setup_guide": "Ver guía de configuración"
   }

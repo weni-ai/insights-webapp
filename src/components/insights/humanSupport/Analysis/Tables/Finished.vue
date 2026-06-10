@@ -71,7 +71,25 @@
       <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
     </template>
     <template #body-duration="{ item }">
-      {{ formatSecondsToTime(item.duration) }}
+      <section class="flex-container">
+        <p>{{ formatSecondsToTime(item.duration) }}</p>
+        <UnnnicToolTip
+          v-if="item.automatic_closed"
+          side="top"
+          :text="
+            $t(
+              'human_support_dashboard.analyze.detailed_analysis.duration.automatic_closed_tooltip',
+            )
+          "
+          enabled
+        >
+          <UnnnicIcon
+            icon="info"
+            size="ant"
+            scheme="fg-info"
+          />
+        </UnnnicToolTip>
+      </section>
     </template>
     <template #body-awaiting_time="{ item }">
       {{ formatSecondsToTime(item.awaiting_time) }}
@@ -235,7 +253,12 @@ watch(
 );
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.flex-container {
+  display: flex;
+  align-items: center;
+  gap: $unnnic-space-1;
+}
 .italic-text {
   font-style: italic;
 }

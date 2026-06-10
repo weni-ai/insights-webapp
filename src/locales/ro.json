@@ -1239,17 +1239,6 @@
     "feature_prepare_reports": "Pregătește rapoarte și generează tablouri de bord personalizate",
     "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
     "not_now": "Poate mai târziu",
-    "modal_title": "Analytics, acum disponibil în instrumente IA!",
-    "modal_description": "MCP conectează în siguranță datele Analytics la instrumente IA precum ChatGPT, Claude, Cursor și altele pentru a explora insight-uri folosind limbaj natural",
-    "flow_analytics": "ANALYTICS",
-    "flow_mcp_connection": "CONEXIUNE MCP",
-    "flow_ai_tools": "INSTRUMENTE IA",
-    "flow_prompt": "\"Care subiecte au fost cele mai dificile pentru IA?\"",
-    "feature_ask_questions": "Pune întrebări despre datele tale în limbaj natural",
-    "feature_track_metrics": "Urmărește CSAT, NPS și performanța conversațiilor instantaneu",
-    "feature_prepare_reports": "Pregătește rapoarte și generează dashboard-uri personalizate",
-    "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP",
-    "not_now": "Nu acum",
     "view_setup_guide": "Vezi ghidul de configurare"
   }
 }

@@ -79,12 +79,12 @@
     "contacts_header": {
       "unique": "Contacte unice",
       "returning": "Contacte recurente",
-      "avg": "Media conversațiilor per contact",
+      "avg": "Conversații medii per contact",
       "returning_description_suffix": "din totalul contactelor unice",
       "tooltips": {
-        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată.",
-        "returning": "Contacte care au inițiat mai mult de o conversație în perioada selectată.",
-        "avg": "Media conversațiilor luând în considerare toate contactele unice din perioadă."
+        "unique": "Numărul de contacte distincte care au inițiat conversații în perioada selectată",
+        "returning": "Contacte care au început mai mult de o conversație în perioada selectată",
+        "avg": "Conversații medii luând în considerare toate contactele unice în perioada respectivă"
       }
     },
     "form_topic": {
@@ -147,7 +147,7 @@
     "tool_result_count": "{count} instrumente",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
-    "no_data_available": "Nu sunt date disponibile pentru această perioadă de utilizare",
+    "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
     "widget_error": {
       "title": "A apărut o eroare în timpul încărcării datelor",
       "button": "Verifică configurația widgetului",

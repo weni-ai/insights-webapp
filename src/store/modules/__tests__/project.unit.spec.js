@@ -24,6 +24,14 @@ vi.mock('@/utils/object', () => ({
   parseValue: vi.fn(),
 }));
 
+const mockIsFeatureFlagEnabled = vi.fn();
+
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: (...args) => mockIsFeatureFlagEnabled(...args),
+  }),
+}));
+
 vi.mock('@/utils/env');
 
 describe('useProject store', () => {
@@ -167,6 +175,8 @@ describe('useProject store', () => {
         const envVars = {
           CSAT_AGENT_UUID: 'csat-agent-uuid',
           NPS_AGENT_UUID: 'nps-agent-uuid',
+          AGENT_UUID_CONCIERGE: 'concierge-uuid',
+          AGENT_UUID_PAYMENT: 'payment-uuid',
         };
         return envVars[key];
       });
@@ -234,6 +244,98 @@ describe('useProject store', () => {
       };
 
       expect(store.npsAgent).toBeUndefined();
+    });
+
+    it('should return conciergeAgent from agents team', () => {
+      const store = useProject();
+
+      store.agentsTeam = {
+        manager: null,
+        agents: [
+          { uuid: 'agent-1', name: 'Agent 1' },
+          { uuid: 'concierge-uuid', name: 'Concierge Agent' },
+        ],
+      };
+
+      expect(store.conciergeAgent).toEqual({
+        uuid: 'concierge-uuid',
+        name: 'Concierge Agent',
+      });
+    });
+
+    it('should return paymentAgent from agents team', () => {
+      const store = useProject();
+
+      store.agentsTeam = {
+        manager: null,
+        agents: [
+          { uuid: 'agent-1', name: 'Agent 1' },
+          { uuid: 'payment-uuid', name: 'Payment Agent' },
+        ],
+      };
+
+      expect(store.paymentAgent).toEqual({
+        uuid: 'payment-uuid',
+        name: 'Payment Agent',
+      });
+    });
+
+    it('isSearchTermAgentAvailable is true only when flag enabled and concierge agent present', () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(true);
+      const store = useProject();
+      store.agentsTeam = {
+        manager: null,
+        agents: [{ uuid: 'concierge-uuid', name: 'Concierge Agent' }],
+      };
+
+      expect(store.isSearchTermAgentAvailable).toBe(true);
+      expect(mockIsFeatureFlagEnabled).toHaveBeenCalledWith(
+        'insightsProductRankingWidgets',
+      );
+    });
+
+    it('isSearchTermAgentAvailable is false when the flag is disabled', () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(false);
+      const store = useProject();
+      store.agentsTeam = {
+        manager: null,
+        agents: [{ uuid: 'concierge-uuid', name: 'Concierge Agent' }],
+      };
+
+      expect(store.isSearchTermAgentAvailable).toBe(false);
+    });
+
+    it('isSearchTermAgentAvailable is false when the concierge agent is missing', () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(true);
+      const store = useProject();
+      store.agentsTeam = {
+        manager: null,
+        agents: [{ uuid: 'agent-1', name: 'Agent 1' }],
+      };
+
+      expect(store.isSearchTermAgentAvailable).toBe(false);
+    });
+
+    it('isAddedToCartAgentAvailable is true only when flag enabled and payment agent present', () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(true);
+      const store = useProject();
+      store.agentsTeam = {
+        manager: null,
+        agents: [{ uuid: 'payment-uuid', name: 'Payment Agent' }],
+      };
+
+      expect(store.isAddedToCartAgentAvailable).toBe(true);
+    });
+
+    it('isAddedToCartAgentAvailable is false when the payment agent is missing', () => {
+      mockIsFeatureFlagEnabled.mockReturnValue(true);
+      const store = useProject();
+      store.agentsTeam = {
+        manager: null,
+        agents: [{ uuid: 'agent-1', name: 'Agent 1' }],
+      };
+
+      expect(store.isAddedToCartAgentAvailable).toBe(false);
     });
   });
 });

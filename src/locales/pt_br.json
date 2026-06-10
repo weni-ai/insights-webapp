@@ -82,9 +82,9 @@
       "avg": "Média de conversas por contato",
       "returning_description_suffix": "do total de contatos únicos",
       "tooltips": {
-        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado.",
-        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado.",
-        "avg": "Média de conversas considerando todos os contatos únicos no período."
+        "unique": "Número de contatos distintos que iniciaram conversas no período selecionado",
+        "returning": "Contatos que iniciaram mais de uma conversa no período selecionado",
+        "avg": "Média de conversas considerando todos os contatos únicos no período"
       }
     },
     "form_topic": {
@@ -139,15 +139,19 @@
     "crosstab": "Tabela cruzada",
     "absolute_numbers": "Números absolutos",
     "abandoned_cart_recovery": "Recuperação de carrinho abandonado",
+    "added_to_cart": "Produtos mais adicionados ao carrinho",
+    "search_term": "Termos mais pesquisados",
     "agent_invocation": "Agentes mais usados",
     "agent_invocation_description": "Acompanhe o ranking dos agentes mais usados",
     "agent_invocation_count": "{count} agentes",
     "tool_result": "Ferramentas mais usadas",
     "tool_result_description": "Acompanhe o ranking das ferramentas mais usadas",
     "tool_result_count": "{count} ferramentas",
+    "search_term_count": "{count} produtos",
+    "added_to_cart_count": "{count} produtos",
     "auto_widget_no_data": "Nenhum dado disponível para o período filtrado",
     "auto_widget_error": "Não foi possível carregar os dados. Atualize o dashboard ou entre em contato com o suporte",
-    "no_data_available": "Nenhum dado disponível para o período filtrado",
+    "no_data_available": "Nenhum dado disponível para o período selecionado",
     "widget_error": {
       "title": "Ocorreu um erro ao carregar os dados",
       "button": "Verificar configuração do widget",
@@ -220,6 +224,8 @@
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
       "abandoned_cart_recovery_description": "Acompanhe métricas de recuperação de carrinho abandonado: receita recuperada, vendas convertidas, taxa de conversão, avarege order value, etc.",
+      "search_term_description": "Acompanhe o ranking dos termos mais pesquisados.",
+      "added_to_cart_description": "Acompanhe o ranking dos produtos mais adicionados ao carrinho.",
       "human_support": "Live desk",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
@@ -248,7 +254,9 @@
         "description": "Tem certeza de que deseja remover o widget {type}?",
         "remove": "Remover",
         "cancel": "Cancelar",
-        "success_message": "{widget} removido"
+        "success_message": "{widget} removido",
+        "remove_success": "{widget} removido com sucesso",
+        "remove_error": "Não foi possível remover {widget}. Tente novamente."
       },
       "tabs": {
         "sentiment_analysis": "Análise de sentimento",

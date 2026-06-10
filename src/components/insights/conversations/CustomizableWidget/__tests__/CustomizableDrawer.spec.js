@@ -4,6 +4,9 @@ import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
+const mockIsSearchTermAgentAvailable = ref(false);
+const mockIsAddedToCartAgentAvailable = ref(false);
+
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
@@ -30,6 +33,8 @@ vi.mock('@/store/modules/project', () => ({
     isLoadingAgentsTeam: false,
     hasValidSalesFunnelAgent: ref(false),
     hasAbandonedCartRecoveryEnabled: ref(true),
+    isSearchTermAgentAvailable: mockIsSearchTermAgentAvailable,
+    isAddedToCartAgentAvailable: mockIsAddedToCartAgentAvailable,
   }),
 }));
 
@@ -74,7 +79,7 @@ config.global.plugins = [
   }),
 ];
 
-const createWrapper = (props = {}, storeOverrides = {}) => {
+const createWrapper = (props = {}, storeOverrides = {}, options = {}) => {
   const pinia = createTestingPinia({
     initialState: {
       conversational: {
@@ -87,6 +92,8 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
         isEnabledSaveNewWidget: true,
         isCsatConfigured: false,
         isNpsConfigured: false,
+        isSearchTermConfigured: false,
+        isAddedToCartConfigured: false,
         isEnabledUpdateWidgetCsat: true,
         isEnabledUpdateWidgetNps: true,
         currentCsatWidget: { config: {} },
@@ -94,7 +101,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
         ...storeOverrides.conversationalWidgets,
       },
     },
-    stubActions: false,
+    stubActions: options.stubActions ?? false,
   });
 
   return shallowMount(CustomizableDrawer, {
@@ -133,6 +140,8 @@ describe('CustomizableWidget', () => {
   let conversationalStore;
 
   beforeEach(() => {
+    mockIsSearchTermAgentAvailable.value = false;
+    mockIsAddedToCartAgentAvailable.value = false;
     wrapper = createWrapper();
     conversationalStore = useConversational();
   });
@@ -495,7 +504,7 @@ describe('CustomizableWidget', () => {
   describe('Available widgets', () => {
     it('should return all available widgets', () => {
       const widgets = wrapper.vm.availableWidgets;
-      expect(widgets).toHaveLength(9);
+      expect(widgets).toHaveLength(11);
       expect(widgets.map((w) => w.key)).toEqual([
         'csat',
         'nps',
@@ -504,9 +513,76 @@ describe('CustomizableWidget', () => {
         'crosstab',
         'absolute_numbers',
         'abandoned_cart_recovery',
+        'search_term',
+        'added_to_cart',
         'agent_invocation',
         'tool_result',
       ]);
+    });
+  });
+
+  describe('Product ranking widgets', () => {
+    it('should include search_term and added_to_cart in native tab when agents are available', () => {
+      mockIsSearchTermAgentAvailable.value = true;
+      mockIsAddedToCartAgentAvailable.value = true;
+      const wrapperWithAgents = createWrapper();
+
+      const nativeKeys = wrapperWithAgents.vm
+        .handleTabChoice('native')
+        .map((widget) => widget.key);
+
+      expect(nativeKeys).toContain('search_term');
+      expect(nativeKeys).toContain('added_to_cart');
+    });
+
+    it('should exclude product ranking widgets from native tab when agents are unavailable', () => {
+      mockIsSearchTermAgentAvailable.value = false;
+      mockIsAddedToCartAgentAvailable.value = false;
+      const wrapperWithoutAgents = createWrapper();
+
+      const nativeKeys = wrapperWithoutAgents.vm
+        .handleTabChoice('native')
+        .map((widget) => widget.key);
+
+      expect(nativeKeys).not.toContain('search_term');
+      expect(nativeKeys).not.toContain('added_to_cart');
+    });
+
+    it('should exclude search_term when already configured', async () => {
+      mockIsSearchTermAgentAvailable.value = true;
+      const wrapperConfigured = createWrapper();
+
+      const widgetsStore = useConversationalWidgets();
+      widgetsStore.isSearchTermConfigured = true;
+      await nextTick();
+
+      const nativeKeys = wrapperConfigured.vm
+        .handleTabChoice('native')
+        .map((widget) => widget.key);
+
+      expect(nativeKeys).not.toContain('search_term');
+    });
+
+    it('createSearchTermWidget sets newWidget with the search_term source', () => {
+      const wrapperStubbed = createWrapper({}, {}, { stubActions: true });
+      wrapperStubbed.vm.clickWidgetOption('search_term');
+
+      const widgetsStore = useConversationalWidgets();
+      expect(widgetsStore.newWidget).toMatchObject({
+        type: 'search_term',
+        source: 'conversations.search_term',
+      });
+    });
+
+    it('createAddedToCartWidget sets newWidget with the added_to_cart source', () => {
+      const wrapperStubbed = createWrapper({}, {}, { stubActions: true });
+      wrapperStubbed.vm.clickWidgetOption('added_to_cart');
+
+      const widgetsStore = useConversationalWidgets();
+      expect(widgetsStore.newWidget).toMatchObject({
+        type: 'added_to_cart',
+        source: 'conversations.added_to_cart',
+      });
     });
   });
 });

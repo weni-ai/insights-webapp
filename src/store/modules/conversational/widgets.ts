@@ -5,6 +5,7 @@ import {
   CsatResponse,
   NpsResponse,
   SalesFunnelResponse,
+  ProductRankingResponse,
 } from '@/services/api/resources/conversational/widgets';
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
 import WidgetService from '@/services/api/resources/widgets';
@@ -21,9 +22,13 @@ interface ConversationalWidgetsState {
   csatWidgetData: CsatResponse | null;
   npsWidgetData: NpsResponse | null;
   salesFunnelWidgetData: SalesFunnelResponse | null;
+  searchTermWidgetData: ProductRankingResponse | null;
+  addedToCartWidgetData: ProductRankingResponse | null;
   isLoadingCsatWidgetData: boolean;
   isLoadingNpsWidgetData: boolean;
   isLoadingSalesFunnelWidgetData: boolean;
+  isLoadingSearchTermWidgetData: boolean;
+  isLoadingAddedToCartWidgetData: boolean;
   csatWidgetType: TypeWidget;
   npsWidgetType: TypeWidget;
   isFormAi: boolean;
@@ -37,11 +42,15 @@ interface ConversationalWidgetsState {
   isCsatWidgetDataError: boolean;
   isNpsWidgetDataError: boolean;
   isSalesFunnelWidgetDataError: boolean;
+  isSearchTermWidgetDataError: boolean;
+  isAddedToCartWidgetDataError: boolean;
 }
 
 let salesFunnelAbortController: AbortController | null = null;
 let csatAbortController: AbortController | null = null;
 let npsAbortController: AbortController | null = null;
+let searchTermAbortController: AbortController | null = null;
+let addedToCartAbortController: AbortController | null = null;
 
 export const useConversationalWidgets = defineStore('conversationalWidgets', {
   state: (): ConversationalWidgetsState => ({
@@ -49,11 +58,15 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     csatWidgetData: null,
     npsWidgetData: null,
     salesFunnelWidgetData: null,
+    searchTermWidgetData: null,
+    addedToCartWidgetData: null,
     isFormAi: false,
     isFormHuman: false,
     isLoadingCsatWidgetData: false,
     isLoadingNpsWidgetData: false,
     isLoadingSalesFunnelWidgetData: false,
+    isLoadingSearchTermWidgetData: false,
+    isLoadingAddedToCartWidgetData: false,
     csatWidgetType: 'AI' as TypeWidget,
     npsWidgetType: 'AI' as TypeWidget,
     isLoadingSaveNewWidget: false,
@@ -65,6 +78,8 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isCsatWidgetDataError: false,
     isNpsWidgetDataError: false,
     isSalesFunnelWidgetDataError: false,
+    isSearchTermWidgetDataError: false,
+    isAddedToCartWidgetDataError: false,
   }),
 
   actions: {
@@ -233,6 +248,80 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         }
       }
     },
+    async loadSearchTermWidgetData() {
+      if (searchTermAbortController) {
+        searchTermAbortController.abort();
+      }
+      searchTermAbortController = new AbortController();
+      const { signal } = searchTermAbortController;
+
+      this.isLoadingSearchTermWidgetData = true;
+      this.isSearchTermWidgetDataError = false;
+      try {
+        const { findWidgetBySource } = useWidgets();
+        const widgetSearchTerm = findWidgetBySource(
+          'conversations.search_term',
+        );
+
+        if (!widgetSearchTerm) {
+          throw new Error('Search term widget not found');
+        }
+
+        const searchTermData =
+          await WidgetConversationalService.getSearchTermsData(
+            { widget_uuid: widgetSearchTerm.uuid },
+            { signal },
+          );
+
+        this.searchTermWidgetData = searchTermData;
+      } catch (error) {
+        if (signal.aborted) return;
+        this.searchTermWidgetData = null;
+        this.isSearchTermWidgetDataError = true;
+        console.error('Error loading search term widget data', error);
+      } finally {
+        if (!signal.aborted) {
+          this.isLoadingSearchTermWidgetData = false;
+        }
+      }
+    },
+    async loadAddedToCartWidgetData() {
+      if (addedToCartAbortController) {
+        addedToCartAbortController.abort();
+      }
+      addedToCartAbortController = new AbortController();
+      const { signal } = addedToCartAbortController;
+
+      this.isLoadingAddedToCartWidgetData = true;
+      this.isAddedToCartWidgetDataError = false;
+      try {
+        const { findWidgetBySource } = useWidgets();
+        const widgetAddedToCart = findWidgetBySource(
+          'conversations.added_to_cart',
+        );
+
+        if (!widgetAddedToCart) {
+          throw new Error('Added to cart widget not found');
+        }
+
+        const addedToCartData =
+          await WidgetConversationalService.getAddedToCartData(
+            { widget_uuid: widgetAddedToCart.uuid },
+            { signal },
+          );
+
+        this.addedToCartWidgetData = addedToCartData;
+      } catch (error) {
+        if (signal.aborted) return;
+        this.addedToCartWidgetData = null;
+        this.isAddedToCartWidgetDataError = true;
+        console.error('Error loading added to cart widget data', error);
+      } finally {
+        if (!signal.aborted) {
+          this.isLoadingAddedToCartWidgetData = false;
+        }
+      }
+    },
     async loadCsatWidgetData() {
       if (csatAbortController) {
         csatAbortController.abort();
@@ -335,6 +424,8 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           'conversations.nps': 'nps',
           'conversations.sales_funnel': 'sales_funnel',
           'conversations.abandoned_cart_recovery': 'abandoned_cart_recovery',
+          'conversations.search_term': 'search_term',
+          'conversations.added_to_cart': 'added_to_cart',
         };
 
         const type = mapTypes[this.newWidget?.source as keyof typeof mapTypes];
@@ -370,6 +461,12 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         }
         if (type === 'sales_funnel') {
           this.loadSalesFunnelWidgetData();
+        }
+        if (type === 'search_term') {
+          this.loadSearchTermWidgetData();
+        }
+        if (type === 'added_to_cart') {
+          this.loadAddedToCartWidgetData();
         }
 
         unnnicCallAlert({
@@ -453,7 +550,9 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         | 'nps'
         | 'sales_funnel'
         | 'crosstab'
-        | 'abandoned_cart_recovery',
+        | 'abandoned_cart_recovery'
+        | 'search_term'
+        | 'added_to_cart',
     ) {
       this.isLoadingDeleteWidget = true;
       try {
@@ -464,6 +563,8 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           sales_funnel: 'conversations.sales_funnel',
           crosstab: 'conversations.crosstab',
           abandoned_cart_recovery: 'conversations.abandoned_cart_recovery',
+          search_term: 'conversations.search_term',
+          added_to_cart: 'conversations.added_to_cart',
         };
 
         const widget = findWidgetBySource(sourceMap[type]);
@@ -489,6 +590,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         }
       } catch (error) {
         console.error('Error deleting widget', error);
+        throw error;
       } finally {
         this.isLoadingDeleteWidget = false;
       }
@@ -506,9 +608,8 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           (state.newWidget?.config as CsatOrNpsCardConfig)?.op_field)
       );
     },
-    isEnabledUpdateWidgetCsat: (state) => {
+    isEnabledUpdateWidgetCsat(state) {
       const { findWidgetBySource } = useWidgets();
-      const { _hasValidConfig, _hasConfigChanges } = useConversationalWidgets();
       const widgetCsatFromDashboard = findWidgetBySource('conversations.csat');
 
       if (!widgetCsatFromDashboard || !state.csatWidget) {
@@ -519,17 +620,19 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         widgetCsatFromDashboard.config as CsatOrNpsCardConfig;
       const csatWidgetConfig = state.csatWidget.config as CsatOrNpsCardConfig;
 
-      const hasChanges = _hasConfigChanges(dashboardConfig, csatWidgetConfig);
+      const hasChanges = this._hasConfigChanges(
+        dashboardConfig,
+        csatWidgetConfig,
+      );
 
       if (!state.isFormAi && !state.isFormHuman) {
         return hasChanges;
       }
 
-      return _hasValidConfig(csatWidgetConfig) && hasChanges;
+      return this._hasValidConfig(csatWidgetConfig) && hasChanges;
     },
-    isEnabledUpdateWidgetNps: (state) => {
+    isEnabledUpdateWidgetNps(state) {
       const { findWidgetBySource } = useWidgets();
-      const { _hasValidConfig, _hasConfigChanges } = useConversationalWidgets();
       const widgetNpsFromDashboard = findWidgetBySource('conversations.nps');
 
       if (!widgetNpsFromDashboard || !state.npsWidget) {
@@ -540,19 +643,23 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         widgetNpsFromDashboard.config as CsatOrNpsCardConfig;
       const npsWidgetConfig = state.npsWidget.config as CsatOrNpsCardConfig;
 
-      const hasChanges = _hasConfigChanges(dashboardConfig, npsWidgetConfig);
+      const hasChanges = this._hasConfigChanges(
+        dashboardConfig,
+        npsWidgetConfig,
+      );
 
       if (!state.isFormAi && !state.isFormHuman) {
         return hasChanges;
       }
 
-      return _hasValidConfig(npsWidgetConfig) && hasChanges;
+      return this._hasValidConfig(npsWidgetConfig) && hasChanges;
     },
     getDynamicWidgets: () => {
       const { currentDashboardWidgets } = storeToRefs(useWidgets());
       const types = ['conversations.nps', 'conversations.csat'];
 
-      const isNpsOrCsat = (widget) => types.includes(widget.source);
+      const isNpsOrCsat = (widget: WidgetType) =>
+        types.includes(widget.source as string);
 
       return currentDashboardWidgets.value.filter(isNpsOrCsat);
     },
@@ -603,6 +710,20 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
         useWidgets().findWidgetBySource(
           'conversations.abandoned_cart_recovery',
         ) !== undefined
+      );
+    },
+
+    isSearchTermConfigured: (): boolean => {
+      return (
+        useWidgets().findWidgetBySource('conversations.search_term') !==
+        undefined
+      );
+    },
+
+    isAddedToCartConfigured: (): boolean => {
+      return (
+        useWidgets().findWidgetBySource('conversations.added_to_cart') !==
+        undefined
       );
     },
 
@@ -665,3 +786,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     },
   },
 });
+
+export type ConversationalWidgetsStore = ReturnType<
+  typeof useConversationalWidgets
+>;

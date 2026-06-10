@@ -46,6 +46,8 @@ const createWrapper = (props = {}) =>
         ConversationalSalesFunnel: true,
         ConversationalAgentInvocation: true,
         ConversationalToolResult: true,
+        ConversationalSearchTerm: true,
+        ConversationalAddedToCart: true,
         ConversationalAdd: true,
         AddWidget: true,
       },
@@ -107,6 +109,20 @@ describe('ConversationalDynamicWidget', () => {
       const wrapper = createWrapper({ type: 'tool_result' });
       expect(
         wrapper.findComponent({ name: 'ConversationalToolResult' }).exists(),
+      ).toBe(true);
+    });
+
+    it('renders ConversationalSearchTerm for search_term type', () => {
+      const wrapper = createWrapper({ type: 'search_term' });
+      expect(
+        wrapper.findComponent({ name: 'ConversationalSearchTerm' }).exists(),
+      ).toBe(true);
+    });
+
+    it('renders ConversationalAddedToCart for added_to_cart type', () => {
+      const wrapper = createWrapper({ type: 'added_to_cart' });
+      expect(
+        wrapper.findComponent({ name: 'ConversationalAddedToCart' }).exists(),
       ).toBe(true);
     });
 
@@ -185,6 +201,8 @@ describe('ConversationalDynamicWidget', () => {
       'crosstab',
       'agent_invocation',
       'tool_result',
+      'search_term',
+      'added_to_cart',
     ])('renders overlay for %s widget type', (type) => {
       const wrapper = createWrapper({ type, uuid: 'test-uuid' });
       expect(wrapper.find('[data-testid="mock-widget-overlay"]').exists()).toBe(

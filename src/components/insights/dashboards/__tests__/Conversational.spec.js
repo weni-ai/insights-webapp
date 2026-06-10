@@ -695,7 +695,10 @@ describe('Conversational.vue', () => {
       conversationalWidgetsStore.isAddedToCartConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [
-        { type: 'added_to_cart', source: 'conversations.added_to_cart' },
+        {
+          type: 'added_to_cart',
+          source: 'conversations.product_added_to_cart',
+        },
       ];
       await nextTick();
 
@@ -721,7 +724,10 @@ describe('Conversational.vue', () => {
       conversationalWidgetsStore.isAddedToCartConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [
-        { type: 'added_to_cart', source: 'conversations.added_to_cart' },
+        {
+          type: 'added_to_cart',
+          source: 'conversations.product_added_to_cart',
+        },
       ];
       await nextTick();
 

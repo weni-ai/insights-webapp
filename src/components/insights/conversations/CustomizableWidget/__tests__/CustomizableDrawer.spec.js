@@ -569,7 +569,8 @@ describe('CustomizableWidget', () => {
 
       const widgetsStore = useConversationalWidgets();
       expect(widgetsStore.newWidget).toMatchObject({
-        type: 'search_term',
+        name: 'conversations.search_term',
+        type: 'conversations.search_term',
         source: 'conversations.search_term',
       });
     });
@@ -580,8 +581,9 @@ describe('CustomizableWidget', () => {
 
       const widgetsStore = useConversationalWidgets();
       expect(widgetsStore.newWidget).toMatchObject({
-        type: 'added_to_cart',
-        source: 'conversations.added_to_cart',
+        name: 'conversations.product_added_to_cart',
+        type: 'conversations.product_added_to_cart',
+        source: 'conversations.product_added_to_cart',
       });
     });
   });

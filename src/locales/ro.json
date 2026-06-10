@@ -1161,12 +1161,12 @@
       "no_response": "Niciun răspuns"
     },
     "deleted_tooltips": {
-      "queue_and_sector": "Coadă și sector eliminate din proiect",
-      "queue": "Coadă eliminată din proiect",
-      "tag_and_sector": "Etichetă și sector eliminate din proiect",
-      "tag": "Etichetă eliminată din proiect",
-      "sector": "Sector eliminat din proiect",
-      "representative": "Reprezentant eliminat din proiect"
+      "queue_and_sector": "Coada și departamentul au fost eliminate din proiect",
+      "queue": "Coada a fost eliminată din proiect",
+      "tag_and_sector": "Eticheta și departamentul au fost eliminate din proiect",
+      "tag": "Eticheta a fost eliminată din proiect",
+      "sector": "Departamentul a fost eliminat din proiect",
+      "representative": "Reprezentantul a fost eliminat din proiect"
     },
     "volume_per_queue": {
       "title": "Volum per coadă",

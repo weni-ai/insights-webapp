@@ -165,7 +165,9 @@ describe('useConversationalWidgets store - product ranking widgets', () => {
 
     it('isAddedToCartConfigured is true when the widget exists', () => {
       mockFindWidgetBySource.mockImplementation((source: string) =>
-        source === 'conversations.added_to_cart' ? { uuid: 'c' } : undefined,
+        source === 'conversations.product_added_to_cart'
+          ? { uuid: 'c' }
+          : undefined,
       );
       expect(store.isAddedToCartConfigured).toBe(true);
     });
@@ -185,9 +187,9 @@ describe('useConversationalWidgets store - product ranking widgets', () => {
 
       store.newWidget = {
         uuid: '',
-        name: 'conversations_dashboard.search_term',
+        name: 'conversations.search_term',
         config: {},
-        type: 'search_term',
+        type: 'conversations.search_term',
         source: 'conversations.search_term',
         is_configurable: true,
       } as never;
@@ -206,10 +208,10 @@ describe('useConversationalWidgets store - product ranking widgets', () => {
 
       store.newWidget = {
         uuid: '',
-        name: 'conversations_dashboard.added_to_cart',
+        name: 'conversations.product_added_to_cart',
         config: {},
-        type: 'added_to_cart',
-        source: 'conversations.added_to_cart',
+        type: 'conversations.product_added_to_cart',
+        source: 'conversations.product_added_to_cart',
         is_configurable: true,
       } as never;
 
@@ -239,7 +241,7 @@ describe('useConversationalWidgets store - product ranking widgets', () => {
       await store.deleteWidget('added_to_cart');
 
       expect(mockFindWidgetBySource).toHaveBeenCalledWith(
-        'conversations.added_to_cart',
+        'conversations.product_added_to_cart',
       );
       expect(mockDeleteWidget).toHaveBeenCalledWith('cart-uuid');
     });

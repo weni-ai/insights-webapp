@@ -909,6 +909,8 @@
       "resolutions": "Conversation resolutions",
       "tool_result": "Most used tools",
       "agent_invocation": "Most used agents",
+      "search_terms": "Most searched terms",
+      "added_to_cart": "Most added products to cart",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",

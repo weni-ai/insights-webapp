@@ -297,7 +297,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
       try {
         const { findWidgetBySource } = useWidgets();
         const widgetAddedToCart = findWidgetBySource(
-          'conversations.added_to_cart',
+          'conversations.product_added_to_cart',
         );
 
         if (!widgetAddedToCart) {
@@ -425,7 +425,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           'conversations.sales_funnel': 'sales_funnel',
           'conversations.abandoned_cart_recovery': 'abandoned_cart_recovery',
           'conversations.search_term': 'search_term',
-          'conversations.added_to_cart': 'added_to_cart',
+          'conversations.product_added_to_cart': 'added_to_cart',
         };
 
         const type = mapTypes[this.newWidget?.source as keyof typeof mapTypes];
@@ -564,7 +564,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
           crosstab: 'conversations.crosstab',
           abandoned_cart_recovery: 'conversations.abandoned_cart_recovery',
           search_term: 'conversations.search_term',
-          added_to_cart: 'conversations.added_to_cart',
+          added_to_cart: 'conversations.product_added_to_cart',
         };
 
         const widget = findWidgetBySource(sourceMap[type]);
@@ -722,8 +722,9 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 
     isAddedToCartConfigured: (): boolean => {
       return (
-        useWidgets().findWidgetBySource('conversations.added_to_cart') !==
-        undefined
+        useWidgets().findWidgetBySource(
+          'conversations.product_added_to_cart',
+        ) !== undefined
       );
     },
 

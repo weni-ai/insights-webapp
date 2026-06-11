@@ -298,9 +298,9 @@ function createSearchTermWidget() {
   const conversationalWidgetsStore = useConversationalWidgets();
   const createdSearchTermWidget = {
     uuid: '',
-    name: 'conversations_dashboard.search_term',
+    name: 'conversations.search_term',
     config: {},
-    type: 'search_term',
+    type: 'conversations.search_term',
     source: 'conversations.search_term',
     is_configurable: true,
   };
@@ -312,10 +312,10 @@ function createAddedToCartWidget() {
   const conversationalWidgetsStore = useConversationalWidgets();
   const createdAddedToCartWidget = {
     uuid: '',
-    name: 'conversations_dashboard.added_to_cart',
+    name: 'conversations.product_added_to_cart',
     config: {},
-    type: 'added_to_cart',
-    source: 'conversations.added_to_cart',
+    type: 'conversations.product_added_to_cart',
+    source: 'conversations.product_added_to_cart',
     is_configurable: true,
   };
   conversationalWidgetsStore.newWidget = createdAddedToCartWidget as WidgetType;

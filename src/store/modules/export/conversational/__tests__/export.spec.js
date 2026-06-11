@@ -253,6 +253,21 @@ describe('useConversationalExport', () => {
       });
     });
 
+    it('should initialize search_terms and added_to_cart fields when available', async () => {
+      const mockResponse = {
+        sections: ['SEARCH_TERMS', 'ADDED_TO_CART'],
+        custom_widgets: [],
+        crosstab_widgets: [],
+      };
+      exportApi.getAvailableWidgets.mockResolvedValue(mockResponse);
+      store.setModelFields({});
+
+      await store.initializeDefaultFields();
+
+      expect(store.model_fields.search_terms).toEqual({});
+      expect(store.model_fields.added_to_cart).toEqual({});
+    });
+
     it('should initialize contacts field when CONTACTS section is available', async () => {
       const mockResponse = {
         sections: ['RESOLUTIONS', 'CONTACTS'],
@@ -344,6 +359,28 @@ describe('useConversationalExport', () => {
 
       const call = exportApi.createExport.mock.calls[0][0];
       expect(call.sections).toContain('AGENT_INVOCATION');
+    });
+
+    it('should include SEARCH_TERMS section when search_terms is enabled', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.enabled_models = ['search_terms'];
+      store.setSelectedFields({});
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.sections).toContain('SEARCH_TERMS');
+    });
+
+    it('should include ADDED_TO_CART section when added_to_cart is enabled', async () => {
+      exportApi.createExport.mockResolvedValue({ status: 'pending' });
+      store.enabled_models = ['added_to_cart'];
+      store.setSelectedFields({});
+
+      await store.createExport();
+
+      const call = exportApi.createExport.mock.calls[0][0];
+      expect(call.sections).toContain('ADDED_TO_CART');
     });
 
     it('should include CONTACTS section when contacts is enabled', async () => {
@@ -481,6 +518,16 @@ describe('useConversationalExport', () => {
 
     it('should return true when agent_invocation is enabled', () => {
       store.enabled_models = ['agent_invocation'];
+      expect(store.hasEnabledToExport).toBe(true);
+    });
+
+    it('should return true when search_terms is enabled', () => {
+      store.enabled_models = ['search_terms'];
+      expect(store.hasEnabledToExport).toBe(true);
+    });
+
+    it('should return true when added_to_cart is enabled', () => {
+      store.enabled_models = ['added_to_cart'];
       expect(store.hasEnabledToExport).toBe(true);
     });
 

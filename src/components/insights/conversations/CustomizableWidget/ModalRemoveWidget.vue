@@ -84,7 +84,9 @@ interface Props {
     | 'absolute_numbers_child'
     | 'abandoned_cart_recovery'
     | 'agent_invocation'
-    | 'tool_result';
+    | 'tool_result'
+    | 'search_term'
+    | 'added_to_cart';
   modelValue: boolean;
   uuid?: string;
   name?: string;
@@ -150,6 +152,10 @@ const handleRemoveToolResultWidget = async () => {
   });
   currentDashboard.value.config.show_tool_result = false;
 };
+const isProductRankingWidget = computed(
+  () => props.type === 'search_term' || props.type === 'added_to_cart',
+);
+
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
@@ -169,12 +175,15 @@ const handleRemoveWidget = async () => {
 
     UnnnicCallAlert({
       props: {
-        text: t(
-          'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
-          {
-            widget: props.name,
-          },
-        ),
+        text: isProductRankingWidget.value
+          ? t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove_success',
+              { widget: props.name },
+            )
+          : t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
+              { widget: props.name },
+            ),
         type: 'success',
         seconds: 5,
       },
@@ -184,6 +193,19 @@ const handleRemoveWidget = async () => {
     emit('success');
   } catch (error) {
     console.error('Error removing widget', error);
+
+    if (isProductRankingWidget.value) {
+      UnnnicCallAlert({
+        props: {
+          text: t(
+            'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove_error',
+            { widget: props.name },
+          ),
+          type: 'error',
+          seconds: 5,
+        },
+      });
+    }
   } finally {
     isLoading.value = false;
   }

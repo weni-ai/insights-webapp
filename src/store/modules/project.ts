@@ -31,12 +31,34 @@ export const useProject = defineStore('project', {
       state.agentsTeam.agents.find(
         (agent) => agent.uuid === env('NPS_AGENT_UUID'),
       ),
+    conciergeAgent: (state) =>
+      state.agentsTeam.agents.find(
+        (agent) => agent.uuid === env('AGENT_UUID_CONCIERGE'),
+      ),
+    paymentAgent: (state) =>
+      state.agentsTeam.agents.find(
+        (agent) => agent.uuid === env('AGENT_UUID_PAYMENT'),
+      ),
     hasValidSalesFunnelAgent: () => {
       const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
         'insightsSalesFunnel',
       );
 
       return enableFeatureFlag;
+    },
+    isSearchTermAgentAvailable() {
+      const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
+        'insightsProductRankingWidgets',
+      );
+
+      return enableFeatureFlag && !!this.conciergeAgent;
+    },
+    isAddedToCartAgentAvailable() {
+      const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
+        'insightsProductRankingWidgets',
+      );
+
+      return enableFeatureFlag && !!this.paymentAgent;
     },
   },
 

@@ -76,6 +76,7 @@ import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useDashboards } from '@/store/modules/dashboards';
+import { useProject } from '@/store/modules/project';
 
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 
@@ -100,7 +101,9 @@ type ConversationalWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | 'agent_invocation'
-  | 'tool_result';
+  | 'tool_result'
+  | 'search_term'
+  | 'added_to_cart';
 
 const customWidgets = useCustomWidgets();
 const widgets = useWidgets();
@@ -108,6 +111,7 @@ const conversational = useConversational();
 const conversationalWidgets = useConversationalWidgets();
 const topicsStore = useConversationalTopics();
 const autoWidgets = useAutoWidgets();
+const project = useProject();
 
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
@@ -175,6 +179,19 @@ const setDynamicWidgets = () => {
     newWidgets.push({ type: 'sales_funnel', uuid: '' });
   }
 
+  if (
+    project.isSearchTermAgentAvailable &&
+    conversationalWidgets.isSearchTermConfigured
+  ) {
+    newWidgets.push({ type: 'search_term', uuid: '' });
+  }
+  if (
+    project.isAddedToCartAgentAvailable &&
+    conversationalWidgets.isAddedToCartConfigured
+  ) {
+    newWidgets.push({ type: 'added_to_cart', uuid: '' });
+  }
+
   newWidgets.push({ type: 'add', uuid: '' });
 
   const hasChanged =
@@ -207,6 +224,7 @@ const waitForDashboardWidgets = () =>
 const initializeConfiguration = async () => {
   const topicsPromise = topicsStore.loadFormTopics();
   const autoWidgetsPromise = autoWidgets.loadAllAutoWidgets();
+  project.getAgentsTeam();
 
   await waitForDashboardWidgets();
   setDynamicWidgets();
@@ -229,7 +247,12 @@ const initializeConfiguration = async () => {
 };
 
 watch(
-  [() => currentDashboardWidgets.value, () => currentDashboard.value.config],
+  [
+    () => currentDashboardWidgets.value,
+    () => currentDashboard.value.config,
+    () => project.agentsTeam.agents,
+    () => activeFeatures.value,
+  ],
   () => {
     if (isConfigurationLoaded.value) {
       setDynamicWidgets();

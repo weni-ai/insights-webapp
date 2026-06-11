@@ -3,6 +3,7 @@ import { useConfig } from '@/store/modules/config';
 
 type TypeSections =
   | 'RESOLUTIONS'
+  | 'TRANSFERRED'
   | 'TOOL_RESULT'
   | 'AGENT_INVOCATION'
   | 'TOPICS_AI'
@@ -11,7 +12,9 @@ type TypeSections =
   | 'CSAT_HUMAN'
   | 'NPS_AI'
   | 'NPS_HUMAN'
-  | 'CONTACTS';
+  | 'CONTACTS'
+  | 'SEARCH_TERMS'
+  | 'ADDED_TO_CART';
 
 interface ExportRequest {
   project_uuid: string;

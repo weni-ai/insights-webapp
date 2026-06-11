@@ -4,6 +4,7 @@ import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
 
 import ModalRemoveWidget from '../ModalRemoveWidget.vue';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 const mockConversationalWidgets = {
   deleteWidget: vi.fn(),
@@ -21,6 +22,14 @@ vi.mock('@/store/modules/conversational/customWidgets', () => ({
   useCustomWidgets: () => mockCustomWidgets,
 }));
 
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -33,6 +42,9 @@ const i18n = createI18n({
             description: 'Remove {type} widget description',
             remove: 'Remove',
             cancel: 'Cancel',
+            success_message: '{widget} removed',
+            remove_success: '{widget} removed successfully',
+            remove_error: 'Failed to remove {widget}. Please try again.',
           },
         },
       },
@@ -106,7 +118,13 @@ describe('ModalRemoveWidget', () => {
     });
 
     it('should render with different widget types', () => {
-      const typeTestCases = ['csat', 'nps', 'custom'];
+      const typeTestCases = [
+        'csat',
+        'nps',
+        'custom',
+        'search_term',
+        'added_to_cart',
+      ];
 
       typeTestCases.forEach((type) => {
         wrapper = createWrapper({ type });
@@ -186,6 +204,104 @@ describe('ModalRemoveWidget', () => {
         new Error('Test error'),
       );
       expect(wrapper.vm.isLoading).toBe(false);
+
+      consoleSpy.mockRestore();
+    });
+  });
+
+  describe('Product ranking widget toasts', () => {
+    it('shows the success toast with remove_success for search_term', async () => {
+      wrapper = createWrapper({
+        type: 'search_term',
+        name: 'Most searched terms',
+      });
+      mockConversationalWidgets.deleteWidget.mockResolvedValueOnce();
+
+      await wrapper.vm.handleRemoveWidget();
+
+      expect(UnnnicCallAlert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            text: 'Most searched terms removed successfully',
+            type: 'success',
+          }),
+        }),
+      );
+    });
+
+    it('shows the success toast with remove_success for added_to_cart', async () => {
+      wrapper = createWrapper({
+        type: 'added_to_cart',
+        name: 'Most added products to cart',
+      });
+      mockConversationalWidgets.deleteWidget.mockResolvedValueOnce();
+
+      await wrapper.vm.handleRemoveWidget();
+
+      expect(UnnnicCallAlert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            text: 'Most added products to cart removed successfully',
+            type: 'success',
+          }),
+        }),
+      );
+    });
+
+    it('shows the error toast with remove_error when deletion fails', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      wrapper = createWrapper({
+        type: 'search_term',
+        name: 'Most searched terms',
+      });
+      mockConversationalWidgets.deleteWidget.mockRejectedValueOnce(
+        new Error('boom'),
+      );
+
+      await wrapper.vm.handleRemoveWidget();
+
+      expect(UnnnicCallAlert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            text: 'Failed to remove Most searched terms. Please try again.',
+            type: 'error',
+          }),
+        }),
+      );
+
+      consoleSpy.mockRestore();
+    });
+
+    it('uses the generic success_message for non product ranking widgets', async () => {
+      wrapper = createWrapper({ type: 'csat', name: 'CSAT' });
+      mockConversationalWidgets.deleteWidget.mockResolvedValueOnce();
+
+      await wrapper.vm.handleRemoveWidget();
+
+      expect(UnnnicCallAlert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          props: expect.objectContaining({
+            text: 'CSAT removed',
+            type: 'success',
+          }),
+        }),
+      );
+    });
+
+    it('does not show an error toast for non product ranking widgets', async () => {
+      const consoleSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      wrapper = createWrapper({ type: 'csat', name: 'CSAT' });
+      mockConversationalWidgets.deleteWidget.mockRejectedValueOnce(
+        new Error('boom'),
+      );
+
+      await wrapper.vm.handleRemoveWidget();
+
+      expect(UnnnicCallAlert).not.toHaveBeenCalled();
 
       consoleSpy.mockRestore();
     });

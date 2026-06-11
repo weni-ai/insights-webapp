@@ -36,6 +36,8 @@ import ConversationalSalesFunnel from '@/components/insights/widgets/conversatio
 import ConversationalAbsoluteNumbers from '@/components/insights/widgets/conversational/ConversacionalAbsoluteNumbers/index.vue';
 import ConversationalAgentInvocation from '@/components/insights/widgets/conversational/ConversationalAgentInvocation.vue';
 import ConversationalToolResult from '@/components/insights/widgets/conversational/ConversationalToolResult.vue';
+import ConversationalSearchTerm from '@/components/insights/widgets/conversational/ConversationalSearchTerm.vue';
+import ConversationalAddedToCart from '@/components/insights/widgets/conversational/ConversationalAddedToCart.vue';
 import ConversationalAdd from '@/components/insights/widgets/conversational/ConversationalAdd.vue';
 import AddWidget from '@/components/insights/conversations/AddWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -49,7 +51,9 @@ type ConversationalWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | 'agent_invocation'
-  | 'tool_result';
+  | 'tool_result'
+  | 'search_term'
+  | 'added_to_cart';
 
 interface Props {
   type: ConversationalWidgetType;
@@ -71,6 +75,8 @@ const componentMap: Record<ConversationalWidgetType, Component> = {
   absolute_numbers: ConversationalAbsoluteNumbers,
   agent_invocation: ConversationalAgentInvocation,
   tool_result: ConversationalToolResult,
+  search_term: ConversationalSearchTerm,
+  added_to_cart: ConversationalAddedToCart,
   add: ConversationalAdd,
 };
 

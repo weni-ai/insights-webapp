@@ -24,6 +24,7 @@ import type {
   CsatResult,
   CrosstabResultItem,
   AutoWidgetResult,
+  ProductRankingResult,
 } from '@/services/api/resources/conversational/widgets';
 
 import { getWidgetCrosstabTooltip } from '@/utils/widget';
@@ -38,7 +39,11 @@ const { formatPercentage, formatNumber } = useWidgetFormatting();
 
 const props = defineProps<{
   modelValue: boolean;
-  data: CsatResult[] | CrosstabResultItem[] | AutoWidgetResult[];
+  data:
+    | CsatResult[]
+    | CrosstabResultItem[]
+    | AutoWidgetResult[]
+    | ProductRankingResult[];
   isCrosstab?: boolean;
   title?: string;
   color?: string;

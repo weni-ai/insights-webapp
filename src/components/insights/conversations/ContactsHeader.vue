@@ -27,11 +27,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onUnmounted, watch } from 'vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
+import { useLazyData } from '@/composables/useLazyData';
 import conversationalContactsApi from '@/services/api/resources/conversational/contacts';
 import { MOCK_CONTACTS_DATA } from '@/services/api/resources/conversational/mocks';
 import { useRoute } from 'vue-router';
@@ -141,6 +142,7 @@ let loadCardDataAbortController: AbortController | null = null;
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     if (shouldUseMock.value) return;
     dashboardsStore.updateLastUpdatedRequest();
     loadCardData();
@@ -150,6 +152,7 @@ watch(
 watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue && !shouldUseMock.value) {
       dashboardsStore.updateLastUpdatedRequest();
       conversationalStore.setIsLoadingConversationalData(
@@ -246,9 +249,11 @@ const loadCardData = async () => {
   }
 };
 
-onMounted(() => {
-  dashboardsStore.updateLastUpdatedRequest();
-  loadCardData();
+const { hasBeenVisible } = useLazyData({
+  load: () => {
+    dashboardsStore.updateLastUpdatedRequest();
+    return loadCardData();
+  },
 });
 
 onUnmounted(() => {

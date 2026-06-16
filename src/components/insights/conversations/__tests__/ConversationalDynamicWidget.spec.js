@@ -150,6 +150,15 @@ describe('ConversationalDynamicWidget', () => {
       );
     });
 
+    it('wraps the widget in a LazyWidget boundary', () => {
+      const wrapper = createWrapper({ type: 'csat' });
+      const lazyWidget = wrapper.findComponent({ name: 'LazyWidget' });
+      expect(lazyWidget.exists()).toBe(true);
+      expect(
+        lazyWidget.findComponent({ name: 'ConversationalCsat' }).exists(),
+      ).toBe(true);
+    });
+
     it('computes currentComponent correctly', () => {
       const wrapper = createWrapper({ type: 'csat' });
       expect(wrapper.vm.currentComponent).toBeDefined();

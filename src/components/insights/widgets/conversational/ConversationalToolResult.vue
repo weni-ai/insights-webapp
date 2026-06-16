@@ -71,10 +71,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { UnnnicDisclaimer } from '@weni/unnnic-system';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
@@ -144,15 +146,18 @@ const widgetActions = computed(() => {
   return [deleteOption];
 });
 
-onMounted(() => {
-  if (!shouldUseMock.value) {
-    autoWidgetsStore.loadToolResultData();
-  }
+const { hasBeenVisible } = useLazyData({
+  load: () => {
+    if (!shouldUseMock.value) {
+      autoWidgetsStore.loadToolResultData();
+    }
+  },
 });
 
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     if (!shouldUseMock.value) {
       autoWidgetsStore.loadToolResultData();
     }
@@ -163,6 +168,7 @@ watch(
 watch(
   () => conversational.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue && !shouldUseMock.value) {
       conversational.setIsLoadingConversationalData('dynamicWidgets', true);
       autoWidgetsStore.loadToolResultData().finally(() => {

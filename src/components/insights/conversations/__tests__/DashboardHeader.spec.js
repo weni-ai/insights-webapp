@@ -3,6 +3,7 @@ import { ref as vueRef, reactive } from 'vue';
 import { mount, config } from '@vue/test-utils';
 
 import DashboardHeader from '../DashboardHeader.vue';
+import { LazyVisibilityKey } from '@/composables/useLazyData';
 
 import { createI18n } from 'vue-i18n';
 import Unnnic from '@weni/unnnic-system';
@@ -117,6 +118,23 @@ const createWrapper = () => {
   });
 };
 
+const createLazyWrapper = (hasBeenVisible) => {
+  const hasBeenVisibleRef = vueRef(hasBeenVisible);
+  const wrapper = mount(DashboardHeader, {
+    global: {
+      plugins: [Unnnic],
+      provide: {
+        [LazyVisibilityKey]: {
+          hasBeenVisible: hasBeenVisibleRef,
+          isVisible: vueRef(hasBeenVisible),
+          forceLoad: vi.fn(),
+        },
+      },
+    },
+  });
+  return { wrapper, hasBeenVisibleRef };
+};
+
 describe('DashboardHeader.vue', () => {
   let wrapper;
 
@@ -124,6 +142,41 @@ describe('DashboardHeader.vue', () => {
     vi.clearAllMocks();
 
     wrapper = createWrapper();
+  });
+
+  describe('Lazy loading', () => {
+    it('should not load card data while off screen', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
+
+      createLazyWrapper(false);
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).not.toHaveBeenCalled();
+    });
+
+    it('should load card data once it becomes visible', async () => {
+      const conversationalHeaderApi = await import(
+        '@/services/api/resources/conversational/header'
+      );
+      conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
+
+      const { hasBeenVisibleRef } = createLazyWrapper(false);
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).not.toHaveBeenCalled();
+
+      hasBeenVisibleRef.value = true;
+      await new Promise((r) => setTimeout(r, 0));
+
+      expect(
+        conversationalHeaderApi.default.getConversationalHeaderTotals,
+      ).toHaveBeenCalled();
+    });
   });
 
   describe('Component Structure', () => {

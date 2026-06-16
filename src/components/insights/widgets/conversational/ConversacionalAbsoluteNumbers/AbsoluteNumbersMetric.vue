@@ -37,8 +37,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import CardWidgetContainer from '../../layout/CardWidgetContainer.vue';
 import WidgetService, {
@@ -118,13 +120,14 @@ const actions = computed(() => {
   return [editOption, deleteOption];
 });
 
-onMounted(() => {
-  getChildrenValue();
+const { hasBeenVisible } = useLazyData({
+  load: getChildrenValue,
 });
 
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     getChildrenValue();
   },
   { deep: true },
@@ -133,6 +136,7 @@ watch(
 watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue) {
       getChildrenValue();
     }

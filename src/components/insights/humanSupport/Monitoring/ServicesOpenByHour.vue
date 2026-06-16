@@ -24,12 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMouseInElement } from '@vueuse/core';
 
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useProject } from '@/store/modules/project';
@@ -80,9 +82,7 @@ const showSetup = computed(() => {
   return !isOutside.value && !hasSectorsConfigured.value;
 });
 
-onMounted(() => {
-  loadHumanSupportByHourData();
-});
+useLazyData({ load: loadHumanSupportByHourData });
 </script>
 
 <style scoped lang="scss">

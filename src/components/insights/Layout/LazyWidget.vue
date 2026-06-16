@@ -52,9 +52,7 @@ watch(
 );
 
 onMounted(() => {
-  observerRoot.value =
-    injectedScrollContainer?.value ??
-    (document.querySelector('.insights__main') as HTMLElement | null);
+  observerRoot.value = injectedScrollContainer?.value ?? null;
 });
 
 useIntersectionObserver(

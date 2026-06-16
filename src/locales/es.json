@@ -196,7 +196,7 @@
       "title": "Recuperación de carrito abandonado",
       "no_data": "No hay datos disponibles para el período filtrado.",
       "error": "Error al cargar los datos. Actualiza el panel o contacta con soporte.",
-      "unavailable_period": "Los datos para este widget son proporcionados por Meta para los últimos 90 días solamente. Verifica si el rango de fechas seleccionado está dentro de este período para ver la información.",
+      "unavailable_period": "Meta solo proporciona datos para este widget de los últimos 90 días. Comprueba si el rango de fechas seleccionado se encuentra dentro de ese periodo para ver la información.",
       "chart": {
         "sent": "Enviados",
         "delivered": "Entregados",
@@ -1060,7 +1060,7 @@
         "duration": "Duración",
         "awaiting_time": "Tiempo de espera",
         "first_response_time": "Tiempo hasta la primera respuesta",
-        "pending_response_tooltip": "El último mensaje de la conversación fue enviado por el contacto",
+        "pending_response_tooltip": "El último mensaje del chat lo envió el contacto",
         "attendant": "Representante",
         "sector": "Sector",
         "queue": "Cola",

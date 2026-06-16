@@ -89,7 +89,22 @@ const i18n = createI18n({
 
 config.global.plugins = [i18n, UnnnicSystemPlugin];
 
+/**
+ * Default stub for the lazy-loading wrapper.
+ * Renders its slot without providing visibility, so `useLazyData` falls back to
+ * eager loading in unit tests (preserving legacy "loads on mount" assertions).
+ * Opt out with `stubs: { LazyWidget: false }` to test real visibility gating.
+ */
+const lazyWidgetStub = {
+  LazyWidget: {
+    name: 'LazyWidget',
+    props: ['rootMargin', 'forceVisible'],
+    template: '<div class="lazy-widget-stub"><slot /></div>',
+  },
+};
+
 config.global.stubs = {
   ...(config.global.stubs || {}),
   ...unnnicDialogStubs,
+  ...lazyWidgetStub,
 };

@@ -61,6 +61,7 @@ import AgentStatus from '@/components/insights/widgets/HumanServiceAgentsTable/A
 import DynamicCellText from '../../Common/DynamicCellText.vue';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { useLazyData } from '@/composables/useLazyData';
 import { storeToRefs } from 'pinia';
 import { openNewTabLink } from '@/utils/redirect';
 
@@ -241,9 +242,14 @@ const loadDataSafely = async (sortValue: typeof currentSort.value) => {
   }
 };
 
+const { hasBeenVisible } = useLazyData({
+  load: () => loadDataSafely(currentSort.value),
+});
+
 watchDebounced(
   () => humanSupport.appliedDetailFilters.status,
   async () => {
+    if (!hasBeenVisible.value) return;
     await resetAndLoadData(currentSort.value);
   },
   { deep: true, debounce: 700 },
@@ -256,14 +262,16 @@ watch(
     () => humanSupport.appliedFilters,
   ],
   () => {
+    if (!hasBeenVisible.value) return;
     loadDataSafely(currentSort.value);
   },
-  { immediate: true, deep: true },
+  { deep: true },
 );
 
 watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'attendant') {
       loadDataSafely(currentSort.value);
     }

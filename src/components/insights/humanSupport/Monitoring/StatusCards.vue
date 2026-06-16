@@ -39,12 +39,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMouseInElement } from '@vueuse/core';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import {
   ActiveDetailedTab,
@@ -96,10 +98,13 @@ const cardDefinitions: CardData[] = [
 ];
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
-const { loadServiceStatusData, setActiveDetailedTab } = humanSupportMonitoring;
+const { loadServiceStatusData, setActiveDetailedTab, setForceLoadDetailed } =
+  humanSupportMonitoring;
 const { serviceStatusData, loadingServiceStatusData } = storeToRefs(
   humanSupportMonitoring,
 );
+
+useLazyData({ load: loadServiceStatusData });
 
 const isLoadingCards = computed(() => loadingServiceStatusData.value);
 
@@ -144,12 +149,9 @@ const handleCardClick = (id: CardId) => {
   };
 
   setActiveDetailedTab(status[id] as ActiveDetailedTab);
+  setForceLoadDetailed(true);
   setTimeout(scrollToDetailedMonitoring, 100);
 };
-
-onMounted(() => {
-  loadServiceStatusData();
-});
 </script>
 
 <style scoped lang="scss">

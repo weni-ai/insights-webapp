@@ -8,16 +8,27 @@
       v-if="!hasSectorsConfigured"
       :description="$t('human_support_dashboard.setup.disclaimer')"
     />
-    <StatusCards data-testid="monitoring-status-cards" />
-    <TimeMetrics data-testid="monitoring-time-metrics" />
-    <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
-    <VolumePerTagAndQueueWidget context="monitoring" />
-    <CsatRatings
-      v-if="isFeatureFlagEnabled('insightsCSAT')"
-      type="monitoring"
-      data-testid="monitoring-csat-ratings"
-    />
-    <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
+    <LazyWidget>
+      <StatusCards data-testid="monitoring-status-cards" />
+    </LazyWidget>
+    <LazyWidget>
+      <TimeMetrics data-testid="monitoring-time-metrics" />
+    </LazyWidget>
+    <LazyWidget>
+      <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
+    </LazyWidget>
+    <LazyWidget>
+      <VolumePerTagAndQueueWidget context="monitoring" />
+    </LazyWidget>
+    <LazyWidget v-if="isFeatureFlagEnabled('insightsCSAT')">
+      <CsatRatings
+        type="monitoring"
+        data-testid="monitoring-csat-ratings"
+      />
+    </LazyWidget>
+    <LazyWidget :forceVisible="forceLoadDetailed">
+      <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
+    </LazyWidget>
   </section>
 </template>
 
@@ -36,6 +47,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
+import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
@@ -54,7 +66,9 @@ const AUTO_REFRESH_INTERVAL = 60 * 1000;
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
 
 const { setRefreshDataMonitoring } = humanSupportMonitoringStore;
-const { autoRefresh } = storeToRefs(humanSupportMonitoringStore);
+const { autoRefresh, forceLoadDetailed } = storeToRefs(
+  humanSupportMonitoringStore,
+);
 
 const monitoringRef = ref(null);
 const isVisible = useElementVisibility(monitoringRef);

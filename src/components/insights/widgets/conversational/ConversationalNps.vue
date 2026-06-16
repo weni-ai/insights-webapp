@@ -46,10 +46,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import SetupWidget from '@/components/insights/conversations/SetupWidget.vue';
@@ -270,15 +272,17 @@ const handleTabChange = (tab: Tab) => {
   }
 };
 
-onMounted(() => {
-  if (shouldUseMock.value) {
-    setNpsWidgetType('AI');
-  } else if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
-    setNpsWidgetType('HUMAN');
-  } else if (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value) {
-    setNpsWidgetType('AI');
-  }
-  loadNpsWidgetData();
+const { hasBeenVisible } = useLazyData({
+  load: () => {
+    if (shouldUseMock.value) {
+      setNpsWidgetType('AI');
+    } else if (npsWidgetType.value === 'AI' && !isNpsAiConfig.value) {
+      setNpsWidgetType('HUMAN');
+    } else if (npsWidgetType.value === 'HUMAN' && !isNpsHumanConfig.value) {
+      setNpsWidgetType('AI');
+    }
+    loadNpsWidgetData();
+  },
 });
 
 watch(
@@ -298,6 +302,7 @@ watch(
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     loadNpsWidgetData();
   },
   { deep: true },
@@ -306,6 +311,7 @@ watch(
 watch(
   () => conversational.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue) {
       conversational.setIsLoadingConversationalData('dynamicWidgets', true);
       loadNpsWidgetData().finally(() => {

@@ -185,6 +185,13 @@ describe('Conversational.vue', () => {
     });
   });
 
+  describe('Lazy loading', () => {
+    it('should not eagerly load auto widgets on init (lazy-loaded per widget)', async () => {
+      await nextTick();
+      expect(autoWidgetsStore.loadAllAutoWidgets).not.toHaveBeenCalled();
+    });
+  });
+
   it('should always include agent_invocation and tool_result first', async () => {
     widgetsStore.currentDashboardWidgets.value = [];
     await nextTick();

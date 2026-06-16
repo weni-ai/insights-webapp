@@ -78,9 +78,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { isBefore, parseISO, startOfDay, subDays } from 'date-fns';
 import { useI18n } from 'vue-i18n';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import Chart from './Chart.vue';
 import InfoCard from './InfoCard.vue';
@@ -231,13 +233,14 @@ const fetchData = async () => {
   }
 };
 
-onMounted(() => {
-  fetchData();
+const { hasBeenVisible } = useLazyData({
+  load: fetchData,
 });
 
 watch(
   () => appliedFilters.value,
   () => {
+    if (!hasBeenVisible.value) return;
     fetchData();
   },
   { deep: true },
@@ -246,6 +249,7 @@ watch(
 watch(
   () => refreshDataConversational.value,
   (val) => {
+    if (!hasBeenVisible.value) return;
     if (val) {
       fetchData();
     }

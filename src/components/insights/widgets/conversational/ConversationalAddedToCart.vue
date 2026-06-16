@@ -67,10 +67,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import ProgressTable from '@/components/ProgressTable.vue';
@@ -151,13 +153,14 @@ const actions = computed(() => {
   ];
 });
 
-onMounted(() => {
-  loadAddedToCartWidgetData();
+const { hasBeenVisible } = useLazyData({
+  load: loadAddedToCartWidgetData,
 });
 
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     loadAddedToCartWidgetData();
   },
   { deep: true },
@@ -166,6 +169,7 @@ watch(
 watch(
   () => conversational.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue) {
       conversational.setIsLoadingConversationalData('dynamicWidgets', true);
       loadAddedToCartWidgetData().finally(() => {

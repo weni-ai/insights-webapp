@@ -77,9 +77,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { cloneDeep } from 'lodash-es';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import CardWidgetContainer from '@/components/insights/widgets/layout/CardWidgetContainer.vue';
 import AbsoluteNumbersMetric from './AbsoluteNumbersMetric.vue';
@@ -105,8 +107,8 @@ const props = defineProps<{
   uuid: string;
 }>();
 
-onMounted(() => {
-  loadChildren();
+useLazyData({
+  load: () => loadChildren(),
 });
 
 const customWidgetsStore = useCustomWidgets();

@@ -18,10 +18,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import ProgressWidget from '@/components/insights/widgets/ProgressWidget.vue';
 import ModalRemoveWidget from '@/components/insights/conversations/CustomizableWidget/ModalRemoveWidget.vue';
@@ -65,13 +67,14 @@ const actions = computed(() => {
   ];
 });
 
-onMounted(() => {
-  loadSalesFunnelWidgetData();
+const { hasBeenVisible } = useLazyData({
+  load: loadSalesFunnelWidgetData,
 });
 
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     loadSalesFunnelWidgetData();
   },
   { deep: true },
@@ -80,6 +83,7 @@ watch(
 watch(
   () => conversational.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue) {
       conversational.setIsLoadingConversationalData('dynamicWidgets', true);
       loadSalesFunnelWidgetData().finally(() => {

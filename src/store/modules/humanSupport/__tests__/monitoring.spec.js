@@ -125,7 +125,7 @@ describe('useHumanSupportMonitoring store', () => {
   });
 
   describe('loadAllData action', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
       vi.useFakeTimers();
 
       TimeMetricsService.getTimeMetricsData.mockResolvedValue({
@@ -133,10 +133,35 @@ describe('useHumanSupportMonitoring store', () => {
         average_time_first_response: { average: 30, max: 60 },
         average_time_chat: { average: 500, max: 1000 },
       });
+
+      // loadAllData only reloads slices that have already been loaded once
+      // (i.e. became visible). Prime them so the refresh paths can reload.
+      await Promise.all([
+        store.loadServiceStatusData(),
+        store.loadTimeMetricsData(),
+        store.loadHumanSupportByHourData(),
+      ]);
+      vi.clearAllMocks();
     });
 
     afterEach(() => {
       vi.useRealTimers();
+    });
+
+    it('should not load any slice that was never visible/loaded', async () => {
+      setActivePinia(createPinia());
+      const freshStore = useHumanSupportMonitoring();
+
+      const loadAllDataPromise = freshStore.loadAllData();
+
+      vi.advanceTimersByTime(3000);
+      await loadAllDataPromise;
+
+      expect(ServiceStatusService.getServiceStatusData).not.toHaveBeenCalled();
+      expect(TimeMetricsService.getTimeMetricsData).not.toHaveBeenCalled();
+      expect(
+        ServicesOpenByHourService.getServicesOpenByHourData,
+      ).not.toHaveBeenCalled();
     });
 
     it('should set isLoadingAllData to true when any individual load is running', async () => {
@@ -322,7 +347,7 @@ describe('useHumanSupportMonitoring store', () => {
   });
 
   describe('refresh data monitoring', () => {
-    it('should trigger loadAllData when refreshDataMonitoring is set to true', async () => {
+    it('should trigger loadAllData for loaded slices when refreshDataMonitoring is set to true', async () => {
       vi.useFakeTimers();
 
       TimeMetricsService.getTimeMetricsData.mockResolvedValue({
@@ -330,6 +355,14 @@ describe('useHumanSupportMonitoring store', () => {
         average_time_first_response: { average: 30, max: 60 },
         average_time_chat: { average: 500, max: 1000 },
       });
+
+      // Prime the slices (simulate widgets becoming visible).
+      await Promise.all([
+        store.loadServiceStatusData(),
+        store.loadTimeMetricsData(),
+        store.loadHumanSupportByHourData(),
+      ]);
+      vi.clearAllMocks();
 
       expect(store.refreshDataMonitoring).toBe(false);
 
@@ -344,6 +377,23 @@ describe('useHumanSupportMonitoring store', () => {
       expect(
         ServicesOpenByHourService.getServicesOpenByHourData,
       ).toHaveBeenCalled();
+
+      vi.useRealTimers();
+    });
+
+    it('should not refetch slices that were never loaded on refresh', async () => {
+      vi.useFakeTimers();
+      vi.clearAllMocks();
+
+      store.setRefreshDataMonitoring(true);
+
+      await vi.runAllTimersAsync();
+
+      expect(ServiceStatusService.getServiceStatusData).not.toHaveBeenCalled();
+      expect(TimeMetricsService.getTimeMetricsData).not.toHaveBeenCalled();
+      expect(
+        ServicesOpenByHourService.getServicesOpenByHourData,
+      ).not.toHaveBeenCalled();
 
       vi.useRealTimers();
     });
@@ -401,6 +451,20 @@ describe('useHumanSupportMonitoring store', () => {
         store.setActiveDetailedTab('in_progress');
         expect(store.activeDetailedTab).toBe('in_progress');
       });
+    });
+  });
+
+  describe('forceLoadDetailed', () => {
+    it('should default to false', () => {
+      expect(store.forceLoadDetailed).toBe(false);
+    });
+
+    it('should set forceLoadDetailed via setForceLoadDetailed', () => {
+      store.setForceLoadDetailed(true);
+      expect(store.forceLoadDetailed).toBe(true);
+
+      store.setForceLoadDetailed(false);
+      expect(store.forceLoadDetailed).toBe(false);
     });
   });
 });

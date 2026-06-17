@@ -11,7 +11,10 @@
       class="insights-layout__insights"
       data-testid="content-slot"
     >
-      <main class="insights__main">
+      <main
+        ref="insightsMain"
+        class="insights__main"
+      >
         <slot />
       </main>
     </section>
@@ -19,6 +22,7 @@
 </template>
 
 <script>
+import { computed } from 'vue';
 import { mapActions, mapState } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
@@ -36,10 +40,17 @@ export default {
     McpDisclaimer,
   },
 
+  provide() {
+    return {
+      insightsScrollContainer: computed(() => this.insightsMainEl),
+    };
+  },
+
   data() {
     return {
       showMcpDisclaimer:
         moduleStorage.getItem('mcp_news_show_disclaimer') === true,
+      insightsMainEl: null,
     };
   },
   computed: {
@@ -47,6 +58,8 @@ export default {
   },
 
   mounted() {
+    this.insightsMainEl = this.$refs.insightsMain || null;
+
     this.setOnboardingRef({
       key: 'insights-layout',
       ref: this.$el,

@@ -199,13 +199,20 @@ describe('useHumanSupportAnalysis store', () => {
   });
 
   describe('Action: loadAllData', () => {
-    it('should load both data sources independently', async () => {
+    it('should reload both data sources once they have been loaded', async () => {
       ServiceStatusAnalysisService.getServiceStatusAnalysisData.mockResolvedValue(
         mockServiceStatusData,
       );
       ServicesOpenByHourAnalysisService.getServicesOpenByHourAnalysisData.mockResolvedValue(
         mockServicesOpenByHourData,
       );
+
+      // Prime the slices (simulate widgets becoming visible).
+      await Promise.all([
+        store.loadServiceStatusData(),
+        store.loadHumanSupportByHourData(),
+      ]);
+      vi.clearAllMocks();
 
       store.loadAllData();
 
@@ -219,6 +226,33 @@ describe('useHumanSupportAnalysis store', () => {
       ).toHaveBeenCalled();
       expect(store.serviceStatusData).toEqual(mockServiceStatusData);
       expect(store.servicesOpenByHourData).toEqual(mockServicesOpenByHourData);
+    });
+
+    it('should not load slices that were never visible/loaded', async () => {
+      store.loadAllData();
+
+      await new Promise((resolve) => setTimeout(resolve, 20));
+
+      expect(
+        ServiceStatusAnalysisService.getServiceStatusAnalysisData,
+      ).not.toHaveBeenCalled();
+      expect(
+        ServicesOpenByHourAnalysisService.getServicesOpenByHourAnalysisData,
+      ).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Action: setForceLoadDetailed', () => {
+    it('should default forceLoadDetailed to false', () => {
+      expect(store.forceLoadDetailed).toBe(false);
+    });
+
+    it('should toggle forceLoadDetailed', () => {
+      store.setForceLoadDetailed(true);
+      expect(store.forceLoadDetailed).toBe(true);
+
+      store.setForceLoadDetailed(false);
+      expect(store.forceLoadDetailed).toBe(false);
     });
   });
 
@@ -236,6 +270,12 @@ describe('useHumanSupportAnalysis store', () => {
             setTimeout(() => resolve(mockServicesOpenByHourData), 30),
           ),
       );
+
+      // Prime the slices so loadAllData reloads them.
+      await Promise.all([
+        store.loadServiceStatusData(),
+        store.loadHumanSupportByHourData(),
+      ]);
 
       store.loadAllData();
 

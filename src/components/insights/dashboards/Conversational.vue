@@ -9,7 +9,9 @@
       <h2 class="dashboard-conversational__section-title">
         {{ $t('conversations_dashboard.sections.conversations') }}
       </h2>
-      <DashboardHeader class="dashboard-conversational__header" />
+      <LazyWidget class="dashboard-conversational__header">
+        <DashboardHeader />
+      </LazyWidget>
     </section>
 
     <section
@@ -19,17 +21,21 @@
       <h2 class="dashboard-conversational__section-title">
         {{ $t('conversations_dashboard.sections.contacts') }}
       </h2>
-      <ContactsHeader class="dashboard-conversational__header" />
+      <LazyWidget class="dashboard-conversational__header">
+        <ContactsHeader />
+      </LazyWidget>
     </section>
 
-    <MostTalkedAboutTopicsWidget
-      class="dashboard-conversational__most-talked-about-topics"
-    />
+    <LazyWidget class="dashboard-conversational__most-talked-about-topics">
+      <MostTalkedAboutTopicsWidget />
+    </LazyWidget>
 
-    <AbandonedCartWidget
+    <LazyWidget
       v-if="isAbandonedCartRecoveryConfigured"
       class="dashboard-conversational__abandoned-cart-widget"
-    />
+    >
+      <AbandonedCartWidget />
+    </LazyWidget>
 
     <ConversationalDynamicWidget
       v-for="(widget, index) in orderedDynamicWidgets"
@@ -67,6 +73,7 @@ import CustomizableDrawer from '@/components/insights/conversations/Customizable
 import Info from '@/components/insights/conversations/Info.vue';
 import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import AbandonedCartWidget from '@/components/insights/conversations/AbandonedCartWidget/index.vue';
+import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 import { useWidgets } from '@/store/modules/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
@@ -223,13 +230,12 @@ const waitForDashboardWidgets = () =>
 
 const initializeConfiguration = async () => {
   const topicsPromise = topicsStore.loadFormTopics();
-  const autoWidgetsPromise = autoWidgets.loadAllAutoWidgets();
   project.getAgentsTeam();
 
   await waitForDashboardWidgets();
   setDynamicWidgets();
 
-  await Promise.all([topicsPromise, autoWidgetsPromise]);
+  await topicsPromise;
   conversational.setConfigurationLoaded(true);
 
   if (conversational.shouldUseMock) {

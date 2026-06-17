@@ -59,9 +59,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
+import { useLazyData } from '@/composables/useLazyData';
 import BaseConversationWidget from '@/components/insights/conversations/BaseConversationWidget.vue';
 import TreemapChart from '@/components/insights/charts/TreemapChart.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
@@ -132,13 +133,19 @@ const handleTabChange = (tab: Tab) => {
   setTopicType(tab === 'artificial-intelligence' ? 'AI' : 'HUMAN');
 };
 
+const { hasBeenVisible } = useLazyData({
+  load: loadTopicsDistribution,
+});
+
 watch(topicType, () => {
+  if (!hasBeenVisible.value) return;
   loadTopicsDistribution();
 });
 
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     loadTopicsDistribution();
   },
 );
@@ -146,6 +153,7 @@ watch(
 watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue) {
       conversationalStore.setIsLoadingConversationalData(
         'mostTalkedAboutTopics',
@@ -160,10 +168,6 @@ watch(
     }
   },
 );
-
-onMounted(() => {
-  loadTopicsDistribution();
-});
 </script>
 
 <style lang="scss" scoped>

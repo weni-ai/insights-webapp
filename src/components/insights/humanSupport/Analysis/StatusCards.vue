@@ -54,12 +54,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useMouseInElement } from '@vueuse/core';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
@@ -135,9 +137,12 @@ const cardDefinitions: CardData[] = [
 ];
 
 const humanSupportAnalysis = useHumanSupportAnalysis();
-const { loadServiceStatusData, setActiveDetailedTab } = humanSupportAnalysis;
+const { loadServiceStatusData, setActiveDetailedTab, setForceLoadDetailed } =
+  humanSupportAnalysis;
 const { serviceStatusData, loadingServiceStatusData } =
   storeToRefs(humanSupportAnalysis);
+
+useLazyData({ load: loadServiceStatusData });
 
 const isLoadingCards = computed(() => loadingServiceStatusData.value);
 
@@ -170,13 +175,13 @@ const getTooltipSide = (index: number) => {
   return 'top';
 };
 
-const scrollToDetailedMonitoring = () => {
-  const detailedMonitoringElement = document.querySelector(
-    '[id="detailed-monitoring"]',
+const scrollToDetailedAnalysis = () => {
+  const detailedAnalysisElement = document.querySelector(
+    '[id="detailed-analysis"]',
   );
 
-  if (detailedMonitoringElement) {
-    detailedMonitoringElement.scrollIntoView({
+  if (detailedAnalysisElement) {
+    detailedAnalysisElement.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
@@ -191,12 +196,9 @@ const handleCardClick = (id: CardId) => {
   };
 
   setActiveDetailedTab(status[id] as ActiveDetailedTab);
-  setTimeout(scrollToDetailedMonitoring, 100);
+  setForceLoadDetailed(true);
+  setTimeout(scrollToDetailedAnalysis, 100);
 };
-
-onMounted(() => {
-  loadServiceStatusData();
-});
 </script>
 
 <style scoped lang="scss">

@@ -110,6 +110,7 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useProject } from '@/store/modules/project';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { useLazyData } from '@/composables/useLazyData';
 import { analysisDetailedAnalysisFinishedMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
 import DynamicCellText from '../../Common/DynamicCellText.vue';
@@ -237,6 +238,10 @@ const redirectItem = (item: FinishedDataResult) => {
   window.parent.postMessage({ event: 'redirect', path: url }, '*');
 };
 
+const { hasBeenVisible } = useLazyData({
+  load: () => resetAndLoadData(currentSort.value),
+});
+
 watch(
   [
     currentSort,
@@ -247,9 +252,9 @@ watch(
     () => humanSupport.appliedDetailFilters.ticketId,
   ],
   () => {
+    if (!hasBeenVisible.value) return;
     resetAndLoadData(currentSort.value);
   },
-  { immediate: true },
 );
 </script>
 

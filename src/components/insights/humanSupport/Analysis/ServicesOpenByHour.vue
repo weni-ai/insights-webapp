@@ -19,12 +19,14 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed, useTemplateRef } from 'vue';
+import { computed, useTemplateRef } from 'vue';
 import { useMouseInElement } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportAnalysis } from '@/store/modules/humanSupport/analysis';
@@ -76,9 +78,7 @@ const isLoading = computed(() => {
   return loadingHumanSupportByHourData.value;
 });
 
-onMounted(() => {
-  loadHumanSupportByHourData();
-});
+useLazyData({ load: loadHumanSupportByHourData });
 </script>
 
 <style scoped lang="scss">

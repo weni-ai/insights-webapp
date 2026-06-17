@@ -11,6 +11,7 @@ export const useHumanSupportAnalysis = defineStore(
   'humanSupportAnalysis',
   () => {
     const activeDetailedTab = ref<ActiveDetailedTab>('finished');
+    const forceLoadDetailed = ref<boolean>(false);
     const serviceStatusData = ref<ServiceStatusFormattedResponse>({
       finished: null,
       average_time_is_waiting: null,
@@ -22,6 +23,11 @@ export const useHumanSupportAnalysis = defineStore(
     const loadingServiceStatusData = ref(false);
     const loadingHumanSupportByHourData = ref(false);
 
+    // Tracks which data slices have already been requested (i.e. became
+    // visible) so the central refresh only reloads on-screen widgets.
+    const hasLoadedServiceStatus = ref(false);
+    const hasLoadedHumanSupportByHour = ref(false);
+
     const isLoadingAllData = computed(
       () =>
         loadingServiceStatusData.value || loadingHumanSupportByHourData.value,
@@ -31,12 +37,17 @@ export const useHumanSupportAnalysis = defineStore(
       activeDetailedTab.value = tab;
     };
 
+    const setForceLoadDetailed = (value: boolean) => {
+      forceLoadDetailed.value = value;
+    };
+
     const loadAllData = () => {
-      loadServiceStatusData();
-      loadHumanSupportByHourData();
+      if (hasLoadedServiceStatus.value) loadServiceStatusData();
+      if (hasLoadedHumanSupportByHour.value) loadHumanSupportByHourData();
     };
 
     const loadServiceStatusData = async () => {
+      hasLoadedServiceStatus.value = true;
       try {
         loadingServiceStatusData.value = true;
         const data =
@@ -51,6 +62,7 @@ export const useHumanSupportAnalysis = defineStore(
     };
 
     const loadHumanSupportByHourData = async () => {
+      hasLoadedHumanSupportByHour.value = true;
       try {
         loadingHumanSupportByHourData.value = true;
         const data =
@@ -71,10 +83,12 @@ export const useHumanSupportAnalysis = defineStore(
       loadingHumanSupportByHourData,
       servicesOpenByHourData,
       activeDetailedTab,
+      forceLoadDetailed,
       loadAllData,
       loadServiceStatusData,
       loadHumanSupportByHourData,
       setActiveDetailedTab,
+      setForceLoadDetailed,
     };
   },
 );

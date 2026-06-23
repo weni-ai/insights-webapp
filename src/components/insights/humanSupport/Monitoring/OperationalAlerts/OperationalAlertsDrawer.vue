@@ -1,26 +1,23 @@
 <template>
-  <UnnnicDrawer
-    ref="drawer"
-    class="operational-alerts-drawer"
-    :modelValue="modelValue"
-    :title="$t('operational_alerts.drawer.title')"
-    :primaryButtonText="$t('save')"
-    :disabledPrimaryButton="!isValid"
-    :loadingPrimaryButton="savingGoals"
-    :secondaryButtonText="$t('cancel')"
-    :disabledSecondaryButton="savingGoals"
-    wide
-    size="xl"
-    data-testid="operational-alerts-drawer"
-    @primary-button-click="handleSave"
-    @secondary-button-click="close"
-    @close="close"
+  <UnnnicDrawerNext
+    :open="modelValue"
+    @update:open="handleOpenChange"
   >
-    <template #content>
-      <section class="operational-alerts-drawer__content">
-        <p class="operational-alerts-drawer__description">
+    <UnnnicDrawerContent
+      class="operational-alerts-drawer"
+      size="extra-large"
+      data-testid="operational-alerts-drawer"
+    >
+      <UnnnicDrawerHeader>
+        <UnnnicDrawerTitle>
+          {{ $t('operational_alerts.drawer.title') }}
+        </UnnnicDrawerTitle>
+        <UnnnicDrawerDescription>
           {{ $t('operational_alerts.drawer.description') }}
-        </p>
+        </UnnnicDrawerDescription>
+      </UnnnicDrawerHeader>
+
+      <section class="operational-alerts-drawer__body">
         <section
           v-for="metric in metricKeys"
           :key="metric"
@@ -47,13 +44,39 @@
           </template>
         </section>
       </section>
-    </template>
-  </UnnnicDrawer>
+
+      <UnnnicDrawerFooter class="operational-alerts-drawer__footer">
+        <UnnnicDrawerClose>
+          <UnnnicButton
+            class="secondary"
+            type="tertiary"
+            :text="$t('cancel')"
+            :disabled="savingGoals"
+          />
+        </UnnnicDrawerClose>
+        <UnnnicButton
+          class="primary"
+          type="primary"
+          :text="$t('save')"
+          :disabled="!isValid || savingGoals"
+          :loading="savingGoals"
+          @click="handleSave"
+        />
+      </UnnnicDrawerFooter>
+    </UnnnicDrawerContent>
+  </UnnnicDrawerNext>
 </template>
 
 <script setup lang="ts">
 import {
-  UnnnicDrawer,
+  UnnnicButton,
+  UnnnicDrawerNext,
+  UnnnicDrawerContent,
+  UnnnicDrawerHeader,
+  UnnnicDrawerTitle,
+  UnnnicDrawerDescription,
+  UnnnicDrawerFooter,
+  UnnnicDrawerClose,
   UnnnicSwitch,
   UnnnicDisclaimer,
   unnnicCallAlert,
@@ -134,6 +157,13 @@ const isValid = computed(() =>
   }),
 );
 
+const handleOpenChange = (open: boolean) => {
+  emit('update:modelValue', open);
+  if (!open) {
+    emit('close');
+  }
+};
+
 const close = () => {
   emit('update:modelValue', false);
   emit('close');
@@ -172,35 +202,29 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.operational-alerts-drawer.unnnic-drawer__container {
-  .unnnic-drawer__footer {
-    justify-content: flex-end;
+.operational-alerts-drawer__footer.unnnic-drawer__footer {
+  justify-content: flex-end;
 
-    > * {
-      flex-grow: 0;
-      width: auto;
-    }
+  > * {
+    flex-grow: 0;
+    width: auto;
   }
 }
 </style>
 
 <style scoped lang="scss">
-.operational-alerts-drawer {
-  &__content {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-space-6;
-  }
+.operational-alerts-drawer__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: $unnnic-space-6;
+  overflow-y: auto;
+  padding: $unnnic-space-6;
+}
 
-  &__section {
-    display: flex;
-    flex-direction: column;
-    gap: $unnnic-space-4;
-  }
-
-  &__description {
-    color: $unnnic-color-fg-base;
-    font: $unnnic-font-body;
-  }
+.operational-alerts-drawer__section {
+  display: flex;
+  flex-direction: column;
+  gap: $unnnic-space-4;
 }
 </style>

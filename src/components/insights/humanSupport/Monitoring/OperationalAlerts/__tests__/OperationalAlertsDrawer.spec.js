@@ -11,27 +11,50 @@ vi.mock('@weni/unnnic-system', async (importOriginal) => {
   return { ...actual, unnnicCallAlert: vi.fn() };
 });
 
-const UnnnicDrawerStub = {
-  name: 'UnnnicDrawer',
-  props: [
-    'modelValue',
-    'title',
-    'description',
-    'primaryButtonText',
-    'disabledPrimaryButton',
-    'loadingPrimaryButton',
-    'secondaryButtonText',
-    'disabledSecondaryButton',
-    'wide',
-  ],
-  emits: ['primary-button-click', 'secondary-button-click', 'close'],
-  template: `
-    <div class="drawer-stub">
-      <button class="primary" :disabled="disabledPrimaryButton" @click="$emit('primary-button-click')" />
-      <button class="secondary" @click="$emit('secondary-button-click')" />
-      <slot name="content" />
-    </div>
-  `,
+const drawerSlotStub = (name) => ({
+  name,
+  template: '<div><slot /></div>',
+});
+
+const UnnnicDrawerNextStub = {
+  name: 'UnnnicDrawerNext',
+  props: ['open'],
+  emits: ['update:open'],
+  provide() {
+    return {
+      closeOperationalAlertsDrawer: () => this.$emit('update:open', false),
+    };
+  },
+  template: '<div class="drawer-next-stub"><slot /></div>',
+};
+
+const UnnnicDrawerContentStub = {
+  name: 'UnnnicDrawerContent',
+  template: '<div class="drawer-content-stub"><slot /></div>',
+};
+
+const UnnnicDrawerFooterStub = {
+  name: 'UnnnicDrawerFooter',
+  template: '<div class="drawer-footer-stub"><slot /></div>',
+};
+
+const UnnnicDrawerCloseStub = {
+  name: 'UnnnicDrawerClose',
+  inject: {
+    closeOperationalAlertsDrawer: {
+      default: null,
+    },
+  },
+  template:
+    '<div @click="closeOperationalAlertsDrawer && closeOperationalAlertsDrawer()"><slot /></div>',
+};
+
+const UnnnicButtonStub = {
+  name: 'UnnnicButton',
+  props: ['disabled', 'loading', 'text'],
+  emits: ['click'],
+  template:
+    '<button v-bind="$attrs" :disabled="disabled" @click="$emit(\'click\')">{{ text }}</button>',
 };
 
 const UnnnicSwitchStub = {
@@ -47,7 +70,14 @@ const createWrapper = (goals = {}) => {
     global: {
       plugins: [createTestingPinia({ createSpy: vi.fn })],
       stubs: {
-        UnnnicDrawer: UnnnicDrawerStub,
+        UnnnicDrawerNext: UnnnicDrawerNextStub,
+        UnnnicDrawerContent: UnnnicDrawerContentStub,
+        UnnnicDrawerHeader: drawerSlotStub('UnnnicDrawerHeader'),
+        UnnnicDrawerTitle: drawerSlotStub('UnnnicDrawerTitle'),
+        UnnnicDrawerDescription: drawerSlotStub('UnnnicDrawerDescription'),
+        UnnnicDrawerFooter: UnnnicDrawerFooterStub,
+        UnnnicDrawerClose: UnnnicDrawerCloseStub,
+        UnnnicButton: UnnnicButtonStub,
         UnnnicSwitch: UnnnicSwitchStub,
         UnnnicDisclaimer: true,
         OperationalAlertForm: true,
@@ -88,7 +118,7 @@ describe('OperationalAlertsDrawer.vue', () => {
     ).toBe(true);
   });
 
-  it('should emit close on secondary button click', async () => {
+  it('should emit close on cancel button click', async () => {
     const { wrapper } = createWrapper();
     await wrapper.find('.secondary').trigger('click');
     expect(wrapper.emitted('close')).toBeTruthy();

@@ -33,6 +33,7 @@
           enableTimeIcon
           :tooltipSide="getTooltipSide(index)"
           :isLoading="isLoadingCards"
+          :alert="getCardAlert(card.id)"
           isClickable
           @click="handleCardClick(card.id)"
         />
@@ -58,6 +59,11 @@ import {
 } from '@/store/modules/humanSupport/monitoring';
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+import {
+  MetricGoalBreach,
+  TimeUnit,
+} from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
 
 import { formatSecondsToTime } from '@/utils/time';
 import { monitoringTimeMetricsMock } from './mocks';
@@ -66,6 +72,13 @@ type CardId =
   | 'average_time_is_waiting'
   | 'average_time_first_response'
   | 'average_time_chat';
+
+type GoalKey =
+  | 'waiting_time_goal'
+  | 'first_response_time_goal'
+  | 'conversation_duration_goal';
+
+type AlertScheme = 'red' | 'orange' | 'yellow';
 
 interface CardData {
   id: CardId;
@@ -117,6 +130,23 @@ const { timeMetricsData, loadingTimeMetricsData } = storeToRefs(
   humanSupportMonitoring,
 );
 
+const { isFeatureFlagEnabled } = useFeatureFlag();
+
+const cardAlertConfig: Record<
+  CardId,
+  { goalKey: GoalKey; scheme: AlertScheme }
+> = {
+  average_time_is_waiting: { goalKey: 'waiting_time_goal', scheme: 'red' },
+  average_time_first_response: {
+    goalKey: 'first_response_time_goal',
+    scheme: 'orange',
+  },
+  average_time_chat: {
+    goalKey: 'conversation_duration_goal',
+    scheme: 'yellow',
+  },
+};
+
 useLazyData({ load: loadTimeMetricsData });
 
 const widgetData = computed(() => {
@@ -139,6 +169,28 @@ const getCardSubValue = (id: CardId) => {
     return `${t('human_support_dashboard.time_metrics.max')}: ${formatSecondsToTime(data.max)}`;
   }
   return '';
+};
+
+const getCardAlert = (id: CardId) => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return undefined;
+
+  const { goalKey, scheme } = cardAlertConfig[id];
+  const goal = widgetData.value[goalKey] as MetricGoalBreach | undefined;
+
+  if (!goal?.is_breached) return undefined;
+
+  const unit = t(
+    `operational_alerts.unit_words.${goal.unit as TimeUnit}`,
+  ).toLowerCase();
+
+  return {
+    scheme,
+    text: t('operational_alerts.card_alert', {
+      count: goal.breached_rooms_count,
+      value: goal.threshold_value,
+      unit,
+    }),
+  };
 };
 
 const getTooltipSide = (index: number) => {

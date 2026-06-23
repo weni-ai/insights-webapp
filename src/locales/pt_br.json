@@ -1018,6 +1018,7 @@
       "save_error": "Não foi possível salvar os alertas operacionais devido a um problema técnico",
       "save_success": "Alertas operacionais salvos com sucesso"
     },
+    "card_alert": "{count} chats ultrapassaram {value} {unit}",
     "drawer": {
       "description": "Configure alertas para identificar chats que ultrapassam os limites de tempo definidos para uma operação:",
       "title": "Alertas operacionais"
@@ -1053,6 +1054,21 @@
       "conversation_duration": "Alertar no dashboard Live Desk quando a duração de um chat ultrapassa o limite definido",
       "first_response_time": "Alertar no dashboard Live Desk quando o tempo para primeira resposta de um chat ultrapassa o limite definido",
       "waiting_time": "Alertar no dashboard Live Desk quando o tempo de espera de um chat ultrapassa o limite definido"
+    },
+    "table_tooltip": {
+      "conversation_duration": "Este chat ultrapassou o limite de {value} {unit}.",
+      "first_response_time": "Este chat ultrapassou o limite de {value} {unit} para a primeira resposta.",
+      "waiting_time": "Este chat ultrapassou o limite de {value} {unit} de espera."
+    },
+    "unit_word_singular": {
+      "h": "hora",
+      "m": "minuto",
+      "s": "segundo"
+    },
+    "unit_words": {
+      "h": "horas",
+      "m": "minutos",
+      "s": "segundos"
     }
   },
   "human_support_dashboard": {

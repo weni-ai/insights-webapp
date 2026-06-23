@@ -3,6 +3,7 @@ import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
+import { MetricGoalBreach } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface AverageTimeData {
   average: number;
@@ -13,6 +14,9 @@ interface TimeMetricsDataResponse {
   average_time_is_waiting: AverageTimeData;
   average_time_first_response: AverageTimeData;
   average_time_chat: AverageTimeData;
+  waiting_time_goal?: MetricGoalBreach;
+  first_response_time_goal?: MetricGoalBreach;
+  conversation_duration_goal?: MetricGoalBreach;
 }
 
 interface QueryParams {
@@ -56,4 +60,5 @@ export default {
   },
 };
 
-export type { TimeMetricsDataResponse, QueryParams };
+export type { TimeMetricsDataResponse, QueryParams, MetricGoalBreach };
+export type { TimeUnit } from '@/services/api/resources/humanSupport/monitoring/metricGoals';

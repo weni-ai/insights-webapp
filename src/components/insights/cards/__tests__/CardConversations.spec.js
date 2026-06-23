@@ -266,6 +266,44 @@ describe('CardConversations.vue', () => {
     });
   });
 
+  describe('Alert Pill', () => {
+    it('should render the alert pill with text and scheme class when alert is provided', async () => {
+      await wrapper.setProps({
+        alert: { scheme: 'red', text: '7 chats exceeded 1 minute' },
+      });
+
+      const pill = wrapper.find(
+        '[data-testid="card-conversations-alert-pill"]',
+      );
+
+      expect(pill.exists()).toBe(true);
+      expect(pill.text()).toBe('7 chats exceeded 1 minute');
+      expect(pill.classes()).toContain('card-conversations__alert-pill--red');
+    });
+
+    it('should apply the matching scheme class for orange and yellow alerts', async () => {
+      await wrapper.setProps({
+        alert: { scheme: 'orange', text: 'Orange alert' },
+      });
+      expect(
+        wrapper.find('[data-testid="card-conversations-alert-pill"]').classes(),
+      ).toContain('card-conversations__alert-pill--orange');
+
+      await wrapper.setProps({
+        alert: { scheme: 'yellow', text: 'Yellow alert' },
+      });
+      expect(
+        wrapper.find('[data-testid="card-conversations-alert-pill"]').classes(),
+      ).toContain('card-conversations__alert-pill--yellow');
+    });
+
+    it('should not render the alert pill when alert is not provided', () => {
+      expect(
+        wrapper.find('[data-testid="card-conversations-alert-pill"]').exists(),
+      ).toBe(false);
+    });
+  });
+
   describe('Complete Integration', () => {
     it('should render all elements when all props are provided', async () => {
       const props = {

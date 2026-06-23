@@ -271,34 +271,36 @@ watch(
 
 :deep(.unnnic-data-table__body-row) {
   position: relative;
+}
 
-  &:has(.row-alert--orange) {
-    background-color: $unnnic-color-bg-orange-plain;
-  }
+:deep(.unnnic-data-table__body-row:has(.row-alert--orange)) {
+  background-color: $unnnic-color-bg-orange-plain;
+}
 
-  &:has(.row-alert--yellow) {
-    background-color: $unnnic-color-bg-yellow-plain;
-  }
+:deep(.unnnic-data-table__body-row:has(.row-alert--yellow)) {
+  background-color: $unnnic-color-bg-yellow-plain;
+}
 
-  &--clickable:has(.row-alert--orange):hover {
-    background-color: $unnnic-color-bg-orange-plain;
-  }
+:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--orange):hover) {
+  background-color: $unnnic-color-bg-orange-plain;
+}
 
-  &--clickable:has(.row-alert--yellow):hover {
-    background-color: $unnnic-color-bg-yellow-plain;
-  }
+:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--yellow):hover) {
+  background-color: $unnnic-color-bg-yellow-plain;
+}
 
-  &:hover {
-    overflow: visible;
+:deep(.unnnic-data-table__body-row:hover) {
+  overflow: visible;
+}
 
-    .unnnic-data-table__body-cell:first-of-type {
-      overflow: visible;
-    }
+:deep(
+  .unnnic-data-table__body-row:hover .unnnic-data-table__body-cell:first-of-type
+) {
+  overflow: visible;
+}
 
-    .row-alert__tooltip {
-      opacity: 1;
-      visibility: visible;
-    }
-  }
+:deep(.unnnic-data-table__body-row:hover .row-alert__tooltip) {
+  opacity: 1;
+  visibility: visible;
 }
 </style>

@@ -2,10 +2,11 @@
   <span
     :class="['row-alert', `row-alert--${scheme}`]"
     data-testid="table-row-alert"
-    aria-hidden="true"
   >
+    <span class="row-alert__accessible-text">{{ text }}</span>
     <span
       class="row-alert__tooltip"
+      aria-hidden="true"
       data-testid="table-row-alert-tooltip"
     >
       {{ text }}
@@ -30,6 +31,18 @@ defineProps<{
   width: 0;
   height: 100%;
   pointer-events: none;
+
+  &__accessible-text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
 
   &__tooltip {
     position: absolute;

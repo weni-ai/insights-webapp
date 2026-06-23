@@ -36,9 +36,9 @@
       <section class="in-progress-duration">
         <span class="in-progress-duration__value">
           <TableRowAlert
-            v-if="getItemAlert(item)"
-            :scheme="getItemAlert(item).scheme"
-            :text="getItemAlert(item).text"
+            v-if="item.row_alert"
+            :scheme="item.row_alert.scheme"
+            :text="item.row_alert.text"
           >
             {{ formatSecondsToTime(item.duration) }}
           </TableRowAlert>
@@ -94,6 +94,10 @@ import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
 import { formatSecondsToTime } from '@/utils/time';
 
+type FormattedInProgressData = InProgressDataResult & {
+  row_alert: RowAlert | null;
+};
+
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
@@ -105,7 +109,7 @@ const { hasSectorsConfigured } = storeToRefs(projectStore);
 const { isFeatureFlagEnabled } = useFeatureFlag();
 const { getRowAlert } = useTableRowAlert();
 
-const getItemAlert = (item: InProgressDataResult): RowAlert | null => {
+const resolveRowAlert = (item: InProgressDataResult): RowAlert | null => {
   if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return null;
 
   return getRowAlert([
@@ -121,6 +125,8 @@ const getItemAlert = (item: InProgressDataResult): RowAlert | null => {
     },
   ]);
 };
+
+defineExpose({ getItemAlert: resolveRowAlert });
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -148,16 +154,24 @@ const {
   loadMoreData,
   resetAndLoadData,
   handleSort: handleSortChange,
-} = useInfiniteScrollTable<InProgressDataResult, InProgressDataResult>({
+} = useInfiniteScrollTable<InProgressDataResult, FormattedInProgressData>({
   fetchData,
-  formatResults: (results) => results,
+  formatResults: (results) =>
+    results.map((item) => ({
+      ...item,
+      row_alert: resolveRowAlert(item),
+    })),
   sort: currentSort.value,
 });
 
 const widgetData = computed(() => {
   if (!hasSectorsConfigured.value) {
-    return monitoringDetailedMonitoringInProgressMock;
+    return monitoringDetailedMonitoringInProgressMock.map((item) => ({
+      ...item,
+      row_alert: resolveRowAlert(item as InProgressDataResult),
+    }));
   }
+
   return formattedItems.value;
 });
 

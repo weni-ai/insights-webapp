@@ -21,14 +21,14 @@
     @load-more="loadMore"
   >
     <template #body-awaiting_time="{ item }">
-      <span class="in-awaiting-cell">
+      <TableRowAlert
+        v-if="getItemAlert(item)"
+        :scheme="getItemAlert(item).scheme"
+        :text="getItemAlert(item).text"
+      >
         {{ item.awaiting_time }}
-        <TableRowAlert
-          v-if="getItemAlert(item)"
-          :scheme="getItemAlert(item).scheme"
-          :text="getItemAlert(item).text"
-        />
-      </span>
+      </TableRowAlert>
+      <template v-else>{{ item.awaiting_time }}</template>
     </template>
   </UnnnicDataTable>
 </template>
@@ -205,34 +205,11 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-.in-awaiting-cell {
-  display: inline;
-}
-
-:deep(.unnnic-data-table__body-row) {
-  position: relative;
-}
-
 :deep(.unnnic-data-table__body-row:has(.row-alert--red)) {
   background-color: $unnnic-color-bg-red-plain;
 }
 
 :deep(.unnnic-data-table__body-row--clickable:has(.row-alert--red):hover) {
   background-color: $unnnic-color-bg-red-plain;
-}
-
-:deep(.unnnic-data-table__body-row:hover) {
-  overflow: visible;
-}
-
-:deep(
-  .unnnic-data-table__body-row:hover .unnnic-data-table__body-cell:first-of-type
-) {
-  overflow: visible;
-}
-
-:deep(.unnnic-data-table__body-row:hover .row-alert__tooltip) {
-  opacity: 1;
-  visibility: visible;
 }
 </style>

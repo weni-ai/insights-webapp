@@ -35,12 +35,14 @@
     <template #body-duration="{ item }">
       <section class="in-progress-duration">
         <span class="in-progress-duration__value">
-          {{ formatSecondsToTime(item.duration) }}
           <TableRowAlert
             v-if="getItemAlert(item)"
             :scheme="getItemAlert(item).scheme"
             :text="getItemAlert(item).text"
-          />
+          >
+            {{ formatSecondsToTime(item.duration) }}
+          </TableRowAlert>
+          <template v-else>{{ formatSecondsToTime(item.duration) }}</template>
         </span>
         <UnnnicToolTip
           v-if="item.pending_response"
@@ -269,10 +271,6 @@ watch(
   }
 }
 
-:deep(.unnnic-data-table__body-row) {
-  position: relative;
-}
-
 :deep(.unnnic-data-table__body-row:has(.row-alert--orange)) {
   background-color: $unnnic-color-bg-orange-plain;
 }
@@ -287,20 +285,5 @@ watch(
 
 :deep(.unnnic-data-table__body-row--clickable:has(.row-alert--yellow):hover) {
   background-color: $unnnic-color-bg-yellow-plain;
-}
-
-:deep(.unnnic-data-table__body-row:hover) {
-  overflow: visible;
-}
-
-:deep(
-  .unnnic-data-table__body-row:hover .unnnic-data-table__body-cell:first-of-type
-) {
-  overflow: visible;
-}
-
-:deep(.unnnic-data-table__body-row:hover .row-alert__tooltip) {
-  opacity: 1;
-  visibility: visible;
 }
 </style>

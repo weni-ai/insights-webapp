@@ -28,11 +28,20 @@
         {{ $t('human_support_dashboard.common.no_response') }}
       </p>
 
-      <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
+      <template v-else>
+        {{ formatSecondsToTime(item.first_response_time) }}
+      </template>
     </template>
     <template #body-duration="{ item }">
       <section class="in-progress-duration">
-        <span>{{ formatSecondsToTime(item.duration) }}</span>
+        <span class="in-progress-duration__value">
+          {{ formatSecondsToTime(item.duration) }}
+          <TableRowAlert
+            v-if="getItemAlert(item)"
+            :scheme="getItemAlert(item).scheme"
+            :text="getItemAlert(item).text"
+          />
+        </span>
         <UnnnicToolTip
           v-if="item.pending_response"
           enabled
@@ -68,16 +77,20 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useProject } from '@/store/modules/project';
 
-import { formatSecondsToTime } from '@/utils/time';
-
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { useLazyData } from '@/composables/useLazyData';
+import { useTableRowAlert } from '@/composables/useTableRowAlert';
+import type { RowAlert } from '@/composables/useTableRowAlert';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 
+import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
+
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
+import { formatSecondsToTime } from '@/utils/time';
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -86,6 +99,26 @@ const humanSupport = useHumanSupport();
 
 const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
+const { getRowAlert } = useTableRowAlert();
+
+const getItemAlert = (item: InProgressDataResult): RowAlert | null => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return null;
+
+  return getRowAlert([
+    {
+      metric: 'first_response_time',
+      scheme: 'orange',
+      goal: item.first_response_time_goal,
+    },
+    {
+      metric: 'conversation_duration',
+      scheme: 'yellow',
+      goal: item.conversation_duration_goal,
+    },
+  ]);
+};
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -230,5 +263,42 @@ watch(
   display: flex;
   align-items: center;
   gap: $unnnic-space-1;
+
+  &__value {
+    display: inline;
+  }
+}
+
+:deep(.unnnic-data-table__body-row) {
+  position: relative;
+
+  &:has(.row-alert--orange) {
+    background-color: $unnnic-color-bg-orange-plain;
+  }
+
+  &:has(.row-alert--yellow) {
+    background-color: $unnnic-color-bg-yellow-plain;
+  }
+
+  &--clickable:has(.row-alert--orange):hover {
+    background-color: $unnnic-color-bg-orange-plain;
+  }
+
+  &--clickable:has(.row-alert--yellow):hover {
+    background-color: $unnnic-color-bg-yellow-plain;
+  }
+
+  &:hover {
+    overflow: visible;
+
+    .unnnic-data-table__body-cell:first-of-type {
+      overflow: visible;
+    }
+
+    .row-alert__tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 </style>

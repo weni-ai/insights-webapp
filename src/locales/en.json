@@ -1018,6 +1018,7 @@
       "save_error": "Operational alerts couldn't be saved due to a technical issue",
       "save_success": "Operational alerts saved successfully"
     },
+    "card_alert": "{count} chats exceeded {value} {unit}",
     "drawer": {
       "description": "Configure alerts to identify chats that exceed the defined time limits for an operation:",
       "title": "Operational alerts"
@@ -1053,6 +1054,21 @@
       "conversation_duration": "Alert in the Live Desk dashboard when a chat's duration exceeds the defined threshold",
       "first_response_time": "Alert in the Live Desk dashboard when a chat's first response time exceeds the defined threshold",
       "waiting_time": "Alert in the Live Desk dashboard when a chat's wait time exceeds the defined threshold"
+    },
+    "table_tooltip": {
+      "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",
+      "first_response_time": "This chat has exceeded the {value}-{unit} time limit for the first response.",
+      "waiting_time": "This chat has exceeded the {value}-{unit} waiting time limit."
+    },
+    "unit_word_singular": {
+      "h": "hour",
+      "m": "minute",
+      "s": "second"
+    },
+    "unit_words": {
+      "h": "hours",
+      "m": "minutes",
+      "s": "seconds"
     }
   },
   "human_support_dashboard": {

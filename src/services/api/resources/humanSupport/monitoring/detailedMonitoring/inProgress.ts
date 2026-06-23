@@ -2,6 +2,7 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
+import { MetricGoalBreach } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InProgressData {
   next: string;
@@ -23,6 +24,8 @@ interface InProgressDataResult {
     url: string;
     type: string;
   };
+  first_response_time_goal?: MetricGoalBreach;
+  conversation_duration_goal?: MetricGoalBreach;
 }
 
 interface QueryParams {

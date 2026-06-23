@@ -2,6 +2,7 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
+import { MetricGoalBreach } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InAwaitingData {
   next: string;
@@ -19,6 +20,7 @@ interface InAwaitingDataResult {
     url: string;
     type: string;
   };
+  waiting_time_goal?: MetricGoalBreach;
 }
 
 interface QueryParams {

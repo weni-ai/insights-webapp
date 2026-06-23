@@ -19,7 +19,18 @@
     @item-click="redirectItem"
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
-  />
+  >
+    <template #body-awaiting_time="{ item }">
+      <span class="in-awaiting-cell">
+        {{ item.awaiting_time }}
+        <TableRowAlert
+          v-if="getItemAlert(item)"
+          :scheme="getItemAlert(item).scheme"
+          :text="getItemAlert(item).text"
+        />
+      </span>
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
@@ -33,17 +44,38 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { useLazyData } from '@/composables/useLazyData';
+import { useTableRowAlert } from '@/composables/useTableRowAlert';
+import type { RowAlert } from '@/composables/useTableRowAlert';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { storeToRefs } from 'pinia';
 import { openNewTabLink } from '@/utils/redirect';
 
+import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
+
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
+  awaiting_time_raw: number;
 };
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
 const { isSilentRefresh } = storeToRefs(humanSupportMonitoring);
 const humanSupport = useHumanSupport();
+
+const { isFeatureFlagEnabled } = useFeatureFlag();
+const { getRowAlert } = useTableRowAlert();
+
+const getItemAlert = (item: FormattedInAwaitingData): RowAlert | null => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return null;
+
+  return getRowAlert([
+    {
+      metric: 'waiting_time',
+      scheme: 'red',
+      goal: item.waiting_time_goal,
+    },
+  ]);
+};
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_awaiting';
@@ -60,6 +92,7 @@ const formatResults = (
   return results.map((result) => ({
     ...result,
     awaiting_time: formatSecondsToTime(result?.awaiting_time),
+    awaiting_time_raw: result?.awaiting_time,
   }));
 };
 
@@ -170,3 +203,34 @@ watch(
   },
 );
 </script>
+
+<style lang="scss" scoped>
+.in-awaiting-cell {
+  display: inline;
+}
+
+:deep(.unnnic-data-table__body-row) {
+  position: relative;
+
+  &:has(.row-alert--red) {
+    background-color: $unnnic-color-bg-red-plain;
+  }
+
+  &--clickable:has(.row-alert--red):hover {
+    background-color: $unnnic-color-bg-red-plain;
+  }
+
+  &:hover {
+    overflow: visible;
+
+    .unnnic-data-table__body-cell:first-of-type {
+      overflow: visible;
+    }
+
+    .row-alert__tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+</style>

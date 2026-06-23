@@ -1013,6 +1013,43 @@
     "error_message": "Error al desconectar el agente {agent}",
     "tooltip_disabled": "Este representante no puede ser desconectado porque está offline"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "No se pudieron guardar las alertas operativas debido a un problema técnico",
+      "save_success": "Alertas operativas guardadas con éxito"
+    },
+    "drawer": {
+      "description": "Define objetivos de tiempo para cada métrica y recibe alertas cuando un chat los supere",
+      "title": "Alertas operativas"
+    },
+    "first_response_info": "El tiempo a la primera respuesta se cuenta desde el momento en que el chat se asigna a un representante",
+    "form": {
+      "email_notification_label": "Notificación por correo (opcional)",
+      "email_notification_tooltip": "Los destinatarios reciben un correo cuando se alcanza el número de chats con alertas activas",
+      "recipients_helper": "Solo los moderadores pueden recibir alertas",
+      "send_email_to_label": "Enviar correo a",
+      "send_email_to_placeholder": "Seleccionar…",
+      "threshold_label": "Objetivo de tiempo",
+      "threshold_placeholder": "Ingresa un valor",
+      "unit_label": "Unidad",
+      "units": {
+        "hours": "Horas",
+        "minutes": "Minutos",
+        "seconds": "Segundos"
+      },
+      "when_helper": "Número de chats con alertas activas",
+      "when_label": "Cuándo"
+    },
+    "popover": {
+      "new_tag": "Nuevo",
+      "option_label": "Alertas operativas"
+    },
+    "sections": {
+      "conversation_duration": "Duración del chat",
+      "first_response_time": "Tiempo a la primera respuesta",
+      "waiting_time": "Tiempo de espera"
+    }
+  },
   "human_support_dashboard": {
     "title": "Live desk",
     "monitoring": "Monitorización",

@@ -1003,6 +1003,43 @@
     "error_message": "Eroare la deconectarea agentului {agent}",
     "tooltip_disabled": "Acest reprezentant nu poate fi deconectat deoarece este offline"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Alertele operaționale nu au putut fi salvate din cauza unei probleme tehnice",
+      "save_success": "Alerte operaționale salvate cu succes"
+    },
+    "drawer": {
+      "description": "Setează obiective de timp pentru fiecare metrică și primește alerte când o conversație le depășește",
+      "title": "Alerte operaționale"
+    },
+    "first_response_info": "Timpul până la primul răspuns este calculat din momentul în care conversația este atribuită unui reprezentant",
+    "form": {
+      "email_notification_label": "Notificare prin e-mail (opțional)",
+      "email_notification_tooltip": "Destinatarii primesc un e-mail când este atins numărul de conversații cu alerte active",
+      "recipients_helper": "Doar moderatorii pot primi alerte",
+      "send_email_to_label": "Trimite e-mail către",
+      "send_email_to_placeholder": "Selectează…",
+      "threshold_label": "Obiectiv de timp",
+      "threshold_placeholder": "Introdu o valoare",
+      "unit_label": "Unitate",
+      "units": {
+        "hours": "Ore",
+        "minutes": "Minute",
+        "seconds": "Secunde"
+      },
+      "when_helper": "Numărul de conversații cu alerte active",
+      "when_label": "Când"
+    },
+    "popover": {
+      "new_tag": "Nou",
+      "option_label": "Alerte operaționale"
+    },
+    "sections": {
+      "conversation_duration": "Durata conversației",
+      "first_response_time": "Timp până la primul răspuns",
+      "waiting_time": "Timp de așteptare"
+    }
+  },
   "human_support_dashboard": {
     "title": "Asistență umană",
     "monitoring": "Monitorizare",

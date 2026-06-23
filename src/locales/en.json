@@ -1013,6 +1013,43 @@
     "error_message": "Error disconnecting agent {agent}",
     "tooltip_disabled": "This representative can't be disconnected because they are offline"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Operational alerts couldn't be saved due to a technical issue",
+      "save_success": "Operational alerts saved successfully"
+    },
+    "drawer": {
+      "description": "Set time goals for each metric and get alerts when a chat exceeds them",
+      "title": "Operational alerts"
+    },
+    "first_response_info": "Time to first response is counted from the moment the chat is assigned to a representative",
+    "form": {
+      "email_notification_label": "Email notification (optional)",
+      "email_notification_tooltip": "Recipients get an email when the number of chats with active alerts is reached",
+      "recipients_helper": "Only moderators can receive alerts",
+      "send_email_to_label": "Send email to",
+      "send_email_to_placeholder": "Select…",
+      "threshold_label": "Time goal",
+      "threshold_placeholder": "Enter a value",
+      "unit_label": "Unit",
+      "units": {
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds"
+      },
+      "when_helper": "Number of chats with active alerts",
+      "when_label": "When"
+    },
+    "popover": {
+      "new_tag": "New",
+      "option_label": "Operational alerts"
+    },
+    "sections": {
+      "conversation_duration": "Chat duration",
+      "first_response_time": "Time to first response",
+      "waiting_time": "Wait time"
+    }
+  },
   "human_support_dashboard": {
     "title": "Live desk",
     "monitoring": "Monitoring",

@@ -84,6 +84,7 @@ export const useMetricGoals = defineStore('metricGoals', () => {
       );
     } catch (error) {
       console.error('Error loading metric goals:', error);
+      throw error;
     } finally {
       hasLoadedGoals.value = true;
       loadingGoals.value = false;

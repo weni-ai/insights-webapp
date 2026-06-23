@@ -172,5 +172,6 @@ describe('OperationalAlertsDrawer.vue', () => {
         props: expect.objectContaining({ type: 'error' }),
       }),
     );
+    expect(wrapper.emitted('close')).toBeFalsy();
   });
 });

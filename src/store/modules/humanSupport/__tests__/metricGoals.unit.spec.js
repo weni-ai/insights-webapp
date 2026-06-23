@@ -54,9 +54,10 @@ describe('useMetricGoals Store', () => {
       expect(store.hasConfiguredGoals).toBe(true);
     });
 
-    it('should handle errors gracefully', async () => {
+    it('should throw when loading goals fails', async () => {
       MetricGoalsService.getMetricGoals.mockRejectedValue(new Error('fail'));
-      await store.loadGoals();
+
+      await expect(store.loadGoals()).rejects.toThrow('fail');
       expect(store.goals).toEqual({});
       expect(store.hasLoadedGoals).toBe(true);
     });
@@ -165,6 +166,25 @@ describe('useMetricGoals Store', () => {
       expect(MetricGoalsService.deleteMetricGoal).toHaveBeenCalledWith(
         'waiting_time',
       );
+    });
+
+    it('should throw when reload fails after save', async () => {
+      MetricGoalsService.saveMetricGoal.mockResolvedValue({});
+      MetricGoalsService.getMetricGoals.mockRejectedValue(new Error('reload fail'));
+
+      await expect(
+        store.saveGoals(
+          buildFormState({
+            waiting_time: {
+              enabled: true,
+              threshold: 5,
+              unit: 'm',
+              recipients: [],
+              roomsThresholdCount: 5,
+            },
+          }),
+        ),
+      ).rejects.toThrow('reload fail');
     });
 
     it('should not call save or delete for untouched disabled metrics', async () => {

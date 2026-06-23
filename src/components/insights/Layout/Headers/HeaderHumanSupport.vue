@@ -48,7 +48,6 @@ const isMonitoring = computed(() => activeTab.value === 'monitoring');
 const hasFilters = computed(() => !!currentDashboardFilters.value.length);
 
 const showOperationalAlerts = computed(
-  () =>
-    isMonitoring.value && isFeatureFlagEnabled('insights-operational-alerts'),
+  () => isMonitoring.value && isFeatureFlagEnabled('insightsOperationalAlerts'),
 );
 </script>

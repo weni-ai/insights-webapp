@@ -7,7 +7,9 @@
       <section
         class="operational-alert-form__field operational-alert-form__field--threshold"
       >
-        <UnnnicLabel :label="$t('operational_alerts.form.threshold_label')" />
+        <UnnnicLabel
+          :label="$t(`operational_alerts.form.threshold_labels.${metric}`)"
+        />
         <UnnnicInput
           v-model="thresholdModel"
           type="number"
@@ -38,45 +40,57 @@
         <UnnnicToolTip
           enabled
           :text="$t('operational_alerts.form.email_notification_tooltip')"
-          side="top"
+          side="right"
+          maxWidth="570px"
           :data-testid="`email-tooltip-${metric}`"
         >
           <UnnnicIcon
             icon="info"
             size="sm"
-            filled
             scheme="neutral-cloudy"
           />
         </UnnnicToolTip>
       </section>
-      <UnnnicLabel :label="$t('operational_alerts.form.send_email_to_label')" />
-      <UnnnicMultiSelect
-        v-model="recipientsModel"
-        :options="recipientOptions"
-        returnObject
-        clearable
-        :placeholder="$t('operational_alerts.form.send_email_to_placeholder')"
-        :data-testid="`recipients-select-${metric}`"
-      />
-      <p class="operational-alert-form__helper">
-        {{ $t('operational_alerts.form.recipients_helper') }}
-      </p>
-    </section>
 
-    <section
-      v-if="hasRecipients"
-      class="operational-alert-form__field operational-alert-form__field--when"
-    >
-      <UnnnicLabel :label="$t('operational_alerts.form.when_label')" />
-      <UnnnicInput
-        v-model="roomsThresholdModel"
-        type="number"
-        nativeType="number"
-        :data-testid="`when-input-${metric}`"
-      />
-      <p class="operational-alert-form__helper">
-        {{ $t('operational_alerts.form.when_helper') }}
-      </p>
+      <section class="operational-alert-form__row">
+        <section
+          class="operational-alert-form__field operational-alert-form__field--recipients"
+        >
+          <UnnnicLabel
+            :label="$t('operational_alerts.form.send_email_to_label')"
+          />
+          <FilterMultiSelect
+            ref="filterMultiSelectRef"
+            :modelValue="selectedRecipients"
+            source="agents"
+            keyValueField="uuid"
+            :placeholder="
+              $t('operational_alerts.form.send_email_to_placeholder')
+            "
+            :data-testid="`recipients-select-${metric}`"
+            @update:model-value="updateRecipients"
+          />
+          <p class="operational-alert-form__helper">
+            {{ $t('operational_alerts.form.recipients_helper') }}
+          </p>
+        </section>
+
+        <section
+          class="operational-alert-form__field operational-alert-form__field--when"
+        >
+          <UnnnicLabel :label="$t('operational_alerts.form.when_label')" />
+          <UnnnicInput
+            v-model="roomsThresholdModel"
+            type="number"
+            nativeType="number"
+            :placeholder="$t('operational_alerts.form.when_placeholder')"
+            :data-testid="`when-input-${metric}`"
+          />
+          <p class="operational-alert-form__helper">
+            {{ $t('operational_alerts.form.when_helper') }}
+          </p>
+        </section>
+      </section>
     </section>
   </section>
 </template>
@@ -86,15 +100,14 @@ import {
   UnnnicLabel,
   UnnnicInput,
   UnnnicSelect,
-  UnnnicMultiSelect,
   UnnnicToolTip,
   UnnnicIcon,
 } from '@weni/unnnic-system';
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-import { useMetricGoals } from '@/store/modules/humanSupport/metricGoals';
+import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
+
 import { MetricFormState } from '@/store/modules/humanSupport/metricGoals';
 import {
   MetricKey,
@@ -114,8 +127,8 @@ const model = defineModel<MetricFormState>({ required: true });
 
 const { t } = useI18n();
 
-const metricGoalsStore = useMetricGoals();
-const { recipients } = storeToRefs(metricGoalsStore);
+const filterMultiSelectRef = useTemplateRef('filterMultiSelectRef');
+const selectedRecipients = ref<RecipientOption[]>([]);
 
 const unitOptions = computed<{ value: TimeUnit; label: string }[]>(() => [
   { value: 's', label: t('operational_alerts.form.units.seconds') },
@@ -123,15 +136,44 @@ const unitOptions = computed<{ value: TimeUnit; label: string }[]>(() => [
   { value: 'h', label: t('operational_alerts.form.units.hours') },
 ]);
 
-const recipientOptions = computed<RecipientOption[]>(() =>
-  recipients.value.map((recipient) => {
-    const name = `${recipient.first_name} ${recipient.last_name}`.trim();
-    return {
-      value: recipient.uuid_project_permission,
-      label: name || recipient.email,
-    };
-  }),
-);
+const syncRecipientsFromModel = () => {
+  const loadedOptions = filterMultiSelectRef.value?.options || [];
+  const presetOptions = model.value.recipientOptions || [];
+
+  selectedRecipients.value = model.value.recipients.map((recipientId) => {
+    const fromOptions = loadedOptions.find(
+      (option) => option.value === recipientId,
+    );
+    const fromPreset = presetOptions.find(
+      (option) => option.value === recipientId,
+    );
+    const fromSelected = selectedRecipients.value.find(
+      (option) => option.value === recipientId,
+    );
+
+    return (
+      fromOptions ||
+      fromPreset ||
+      fromSelected || { value: recipientId, label: recipientId }
+    );
+  });
+};
+
+watch(() => model.value.recipients, syncRecipientsFromModel, {
+  immediate: true,
+  deep: true,
+});
+
+watch(() => filterMultiSelectRef.value?.options, syncRecipientsFromModel, {
+  deep: true,
+});
+
+const updateRecipients = (value: RecipientOption[]) => {
+  selectedRecipients.value = value || [];
+  model.value.recipients = selectedRecipients.value.map(
+    (option) => option.value,
+  );
+};
 
 const thresholdModel = computed<string>({
   get: () =>
@@ -161,18 +203,6 @@ const roomsThresholdModel = computed<string>({
       parsed === null || Number.isNaN(parsed) ? null : parsed;
   },
 });
-
-const recipientsModel = computed<RecipientOption[]>({
-  get: () =>
-    recipientOptions.value.filter((option) =>
-      model.value.recipients.includes(option.value),
-    ),
-  set: (value) => {
-    model.value.recipients = (value || []).map((option) => option.value);
-  },
-});
-
-const hasRecipients = computed(() => model.value.recipients.length > 0);
 </script>
 
 <style scoped lang="scss">
@@ -191,10 +221,18 @@ const hasRecipients = computed(() => model.value.recipients.length > 0);
     flex-direction: column;
 
     &--threshold {
-      flex: 2;
+      flex: 1;
     }
 
     &--unit {
+      flex: 1;
+    }
+
+    &--recipients {
+      flex: 1;
+    }
+
+    &--when {
       flex: 1;
     }
   }

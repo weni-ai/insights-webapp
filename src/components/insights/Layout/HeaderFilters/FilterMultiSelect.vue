@@ -126,7 +126,7 @@ async function fetchSource() {
 
     options.value = (response || []).map((source) => ({
       value: source[props.keyValueField] || source.uuid,
-      label: source.name,
+      label: source.name?.trim() || source.email || source.name,
     }));
   } catch (e) {
     console.error('getProjectSource error', e);

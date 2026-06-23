@@ -1,15 +1,16 @@
 <template>
   <UnnnicDrawer
     ref="drawer"
+    class="operational-alerts-drawer"
     :modelValue="modelValue"
     :title="$t('operational_alerts.drawer.title')"
-    :description="$t('operational_alerts.drawer.description')"
     :primaryButtonText="$t('save')"
     :disabledPrimaryButton="!isValid"
     :loadingPrimaryButton="savingGoals"
     :secondaryButtonText="$t('cancel')"
     :disabledSecondaryButton="savingGoals"
     wide
+    size="xl"
     data-testid="operational-alerts-drawer"
     @primary-button-click="handleSave"
     @secondary-button-click="close"
@@ -17,6 +18,9 @@
   >
     <template #content>
       <section class="operational-alerts-drawer__content">
+        <p class="operational-alerts-drawer__description">
+          {{ $t('operational_alerts.drawer.description') }}
+        </p>
         <section
           v-for="metric in metricKeys"
           :key="metric"
@@ -68,7 +72,7 @@ import {
 } from '@/store/modules/humanSupport/metricGoals';
 import {
   MetricKey,
-  TimeUnit,
+  formatRecipientLabel,
 } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 defineProps<{
@@ -90,18 +94,10 @@ const metricKeys = METRIC_KEYS;
 
 const DEFAULT_ROOMS_THRESHOLD = 5;
 
-const secondsToThreshold = (
-  seconds: number,
-): { threshold: number; unit: TimeUnit } => {
-  if (seconds % 3600 === 0) return { threshold: seconds / 3600, unit: 'h' };
-  if (seconds % 60 === 0) return { threshold: seconds / 60, unit: 'm' };
-  return { threshold: seconds, unit: 's' };
-};
-
 const buildMetricFormState = (metric: MetricKey): MetricFormState => {
   const goal = getGoalForMetric(metric);
 
-  if (!goal) {
+  if (!goal?.is_active) {
     return {
       enabled: false,
       threshold: null,
@@ -111,13 +107,15 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
     };
   }
 
-  const { threshold, unit } = secondsToThreshold(goal.threshold_seconds);
-
   return {
     enabled: true,
-    threshold,
-    unit,
+    threshold: goal.threshold_value,
+    unit: goal.unit,
     recipients: [...goal.recipients],
+    recipientOptions: goal.recipientDetails.map((recipient) => ({
+      value: recipient.uuid,
+      label: formatRecipientLabel(recipient),
+    })),
     roomsThresholdCount: goal.rooms_threshold_count || DEFAULT_ROOMS_THRESHOLD,
   };
 };
@@ -173,6 +171,19 @@ onMounted(() => {
 });
 </script>
 
+<style lang="scss">
+.operational-alerts-drawer.unnnic-drawer__container {
+  .unnnic-drawer__footer {
+    justify-content: flex-end;
+
+    > * {
+      flex-grow: 0;
+      width: auto;
+    }
+  }
+}
+</style>
+
 <style scoped lang="scss">
 .operational-alerts-drawer {
   &__content {
@@ -185,6 +196,11 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
     gap: $unnnic-space-4;
+  }
+
+  &__description {
+    color: $unnnic-color-fg-base;
+    font: $unnnic-font-body;
   }
 }
 </style>

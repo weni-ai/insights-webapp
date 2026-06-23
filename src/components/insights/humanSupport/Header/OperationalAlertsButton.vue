@@ -8,16 +8,27 @@
       @update:open="handlePopoverToggle"
     >
       <UnnnicPopoverTrigger>
-        <UnnnicButton
-          type="tertiary"
-          size="large"
-          :pressed="isPopoverOpen"
-          iconCenter="more_vert"
-          data-testid="operational-alerts-trigger"
-          :disabled="!hasSectorsConfigured"
-        />
+        <section class="operational-alerts-button__trigger">
+          <UnnnicButton
+            type="tertiary"
+            size="large"
+            :pressed="isPopoverOpen"
+            iconCenter="more_vert"
+            data-testid="operational-alerts-trigger"
+            :disabled="!hasSectorsConfigured"
+          />
+          <UnnnicTag
+            v-if="!hasOpenedDrawer"
+            class="operational-alerts-button__new-tag"
+            data-testid="operational-alerts-new-tag"
+            :text="$t('operational_alerts.popover.new_tag')"
+            scheme="aux-blue"
+            size="small"
+            type="default"
+          />
+        </section>
       </UnnnicPopoverTrigger>
-      <UnnnicPopoverContent>
+      <UnnnicPopoverContent size="small">
         <section
           class="operational-alerts-button__option"
           data-testid="operational-alerts-option"
@@ -26,19 +37,11 @@
           <UnnnicIcon
             icon="settings"
             size="sm"
-            scheme="neutral-cloudy"
+            scheme="fg-emphasized"
           />
           <p class="operational-alerts-button__option-label">
             {{ $t('operational_alerts.popover.option_label') }}
           </p>
-          <UnnnicTag
-            v-if="!hasOpenedDrawer"
-            class="operational-alerts-button__new-tag"
-            data-testid="operational-alerts-new-tag"
-            :text="$t('operational_alerts.popover.new_tag')"
-            scheme="aux-blue"
-            type="default"
-          />
         </section>
       </UnnnicPopoverContent>
     </UnnnicPopover>
@@ -74,8 +77,7 @@ const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const metricGoalsStore = useMetricGoals();
 const { hasSeenPopover, hasOpenedDrawer } = storeToRefs(metricGoalsStore);
-const { loadGoals, loadRecipients, setHasSeenPopover, setHasOpenedDrawer } =
-  metricGoalsStore;
+const { loadGoals, setHasSeenPopover, setHasOpenedDrawer } = metricGoalsStore;
 
 const isPopoverOpen = ref(false);
 const showDrawer = ref(false);
@@ -87,10 +89,11 @@ const handlePopoverToggle = (open: boolean) => {
   }
 };
 
-const handleOpenDrawer = () => {
-  showDrawer.value = true;
+const handleOpenDrawer = async () => {
   isPopoverOpen.value = false;
   setHasSeenPopover(true);
+  await loadGoals();
+  showDrawer.value = true;
 };
 
 const handleCloseDrawer = () => {
@@ -99,9 +102,6 @@ const handleCloseDrawer = () => {
 };
 
 onMounted(() => {
-  loadGoals();
-  loadRecipients();
-
   if (!hasSeenPopover.value) {
     isPopoverOpen.value = true;
   }
@@ -111,6 +111,20 @@ onMounted(() => {
 <style scoped lang="scss">
 .operational-alerts-button {
   display: flex;
+
+  &__trigger {
+    position: relative;
+    display: inline-flex;
+  }
+
+  &__new-tag {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
 
   &__option {
     display: flex;
@@ -126,13 +140,9 @@ onMounted(() => {
   }
 
   &__option-label {
-    color: $unnnic-color-gray-12;
-    font: $unnnic-font-body;
+    color: $unnnic-color-fg-emphasized;
+    font: $unnnic-font-emphasis;
     white-space: nowrap;
-  }
-
-  &__new-tag {
-    margin-left: $unnnic-space-1;
   }
 }
 </style>

@@ -152,6 +152,30 @@ describe('useMetricGoals Store', () => {
       );
     });
 
+    it('should preserve rooms_threshold_count of 0 when email enabled', async () => {
+      MetricGoalsService.saveMetricGoal.mockResolvedValue({});
+
+      await store.saveGoals(
+        buildFormState({
+          first_response_time: {
+            enabled: true,
+            threshold: 2,
+            unit: 'h',
+            recipients: ['perm-1'],
+            roomsThresholdCount: 0,
+          },
+        }),
+      );
+
+      expect(MetricGoalsService.saveMetricGoal).toHaveBeenCalledWith(
+        'first_response_time',
+        expect.objectContaining({
+          email_enabled: true,
+          rooms_threshold_count: 0,
+        }),
+      );
+    });
+
     it('should DELETE metrics that were disabled but previously configured', async () => {
       MetricGoalsService.getMetricGoals.mockResolvedValue({
         goals: [waitingGoal],

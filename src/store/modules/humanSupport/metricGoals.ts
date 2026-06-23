@@ -119,7 +119,7 @@ export const useMetricGoals = defineStore('metricGoals', () => {
                   }))
                 : [],
               rooms_threshold_count: emailEnabled
-                ? metricForm.roomsThresholdCount || DEFAULT_ROOMS_THRESHOLD
+                ? (metricForm.roomsThresholdCount ?? DEFAULT_ROOMS_THRESHOLD)
                 : 0,
             }),
           );

@@ -115,6 +115,20 @@ describe('OperationalAlertsButton.vue', () => {
     );
   });
 
+  it('should open the drawer even when loading goals fails', async () => {
+    const { wrapper, store } = createWrapper();
+    store.loadGoals = vi.fn().mockRejectedValue(new Error('network error'));
+
+    await wrapper
+      .find('[data-testid="operational-alerts-option"]')
+      .trigger('click');
+    await vi.waitFor(() =>
+      expect(
+        wrapper.findComponent(OperationalAlertsDrawerStub).exists(),
+      ).toBe(true),
+    );
+  });
+
   it('should mark the drawer as opened when it closes', async () => {
     const { wrapper, store } = createWrapper();
 

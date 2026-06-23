@@ -92,8 +92,11 @@ const handlePopoverToggle = (open: boolean) => {
 const handleOpenDrawer = async () => {
   isPopoverOpen.value = false;
   setHasSeenPopover(true);
-  await loadGoals();
-  showDrawer.value = true;
+  try {
+    await loadGoals();
+  } finally {
+    showDrawer.value = true;
+  }
 };
 
 const handleCloseDrawer = () => {

@@ -1,5 +1,0 @@
-# syntax=docker/dockerfile:1
-
-# Build context must be the dist/ directory (see CI workflow).
-FROM scratch
-COPY . /dist

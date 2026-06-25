@@ -7,6 +7,10 @@ on:
       - '*.*.*-staging'
       - '*.*.*'
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -38,18 +42,99 @@ jobs:
           echo "image_latest=${{ secrets.REGISTRY_ECR }}/insights:latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
           echo "image_tag_latest=latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
 
+  build-assets:
+    needs: setup
+    runs-on: ubuntu-latest
+    outputs:
+      assets_image: ${{ steps.assets-meta.outputs.image }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Get VCS token
+        id: vcs-token
+        run: |
+          VCS_TOKEN=$(
+            aws ssm get-parameter --with-decryption \
+              --name "/cloud/github/TOKEN" \
+              | jq -r .Parameter.Value
+          )
+          echo "::add-mask::${VCS_TOKEN}"
+          echo "token=${VCS_TOKEN}" >> "${GITHUB_OUTPUT}"
+
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Download webapp secret
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          repository: weni-ai/webapp-secret
+          token: ${{ steps.vcs-token.outputs.token }}
+          path: ./webapp-secret/
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.19.1'
+          cache: npm
+
+      - name: Build application
+        run: |
+          TAG="$( echo "${GITHUB_REF}" | cut -d'/' -f3 )"
+          if grep -qs -e '^.*.*-develop' <<< "${TAG}" ; then
+            export "MANIFESTS_ENVIRONMENT=develop"
+          elif grep -qs -e '^.*.*-staging' <<< "${TAG}" ; then
+            export "MANIFESTS_ENVIRONMENT=staging"
+          else
+            export "MANIFESTS_ENVIRONMENT=production"
+          fi
+          ENV_FILE="webapp-secret/insights-webapp/${MANIFESTS_ENVIRONMENT}/env"
+          if [ -r "${ENV_FILE}" ]; then
+            set -a
+            # shellcheck disable=SC1090
+            source <(sed -e '/^#/d' -e '/^\s*$/d' "${ENV_FILE}")
+            set +a
+          fi
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push assets image
+        id: assets-meta
+        run: |
+          ASSETS_IMAGE="${{ secrets.REGISTRY_ECR }}/insights:webapp-assets-${{ github.sha }}"
+          docker buildx create --use --name assets-builder 2>/dev/null || docker buildx use assets-builder
+          docker buildx build \
+            --platform linux/amd64 \
+            --file docker/Dockerfile.assets \
+            --tag "${ASSETS_IMAGE}" \
+            --push \
+            dist
+          echo "image=${ASSETS_IMAGE}" >> "${GITHUB_OUTPUT}"
+
   call-workflow:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
     needs:
       - setup
+      - build-assets
     with:
+      image_arch: '[{"platform":"linux/arm64","runner":"ubuntu-24.04-arm"},{"platform":"linux/amd64","runner":"ubuntu-latest"}]'
       image_repository: insights
       image_tags: |
         type=ref,event=tag
         type=raw,${{ needs.setup.outputs.image_tag_latest }}
       image_tag_prefix: "webapp-"
-      dockerfile: "docker/Dockerfile"
+      dockerfile: "docker/Dockerfile.runtime"
       build_args: |
+        ASSETS_IMAGE=${{ needs.build-assets.outputs.assets_image }}
         OLD_IMAGE=869898323958.dkr.ecr.us-east-1.amazonaws.com/insights:webapp-${{ needs.setup.outputs.image_tag_latest }}
         ${{ needs.setup.outputs.extra_build_args }}
       target_repository: weni-ai/kubernetes-manifests-chats

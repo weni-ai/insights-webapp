@@ -1,7 +1,5 @@
 <template>
   <section class="dashboard-conversational">
-    <Info class="dashboard-conversational__info" />
-
     <section
       class="dashboard-conversational__section"
       data-testid="conversations-section"
@@ -70,7 +68,6 @@ import ContactsHeader from '@/components/insights/conversations/ContactsHeader.v
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
-import Info from '@/components/insights/conversations/Info.vue';
 import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import AbandonedCartWidget from '@/components/insights/conversations/AbandonedCartWidget/index.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
@@ -86,6 +83,10 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useProject } from '@/store/modules/project';
 
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
+
+defineOptions({
+  name: 'ConversationalDashboard',
+});
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 const { activeFeatures } = storeToRefs(useFeatureFlag());

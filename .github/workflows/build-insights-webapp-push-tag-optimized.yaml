@@ -1,0 +1,419 @@
+name: Build Insights-WebApp (Optimized - Single npm build)
+
+# Performance-comparison workflow: npm install + build run once, then Docker
+# images are built per architecture using pre-built dist/ assets.
+#
+# Test with tags such as:
+#   git tag 1.2.3-staging-perf && git push origin 1.2.3-staging-perf
+#
+# The -perf suffix is stripped for environment detection (staging, develop, etc.)
+# and does not trigger the standard build-insights-webapp-push-tag-shared workflow.
+
+on:
+  push:
+    tags:
+      - '*.*.*-develop-perf'
+      - '*.*.*-staging-perf'
+      - '*.*.*-perf'
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  NODE_VERSION: '18.19.1'
+  IMAGE_REPOSITORY: insights
+  IMAGE_TAG_PREFIX: webapp-
+  DOCKERFILE: docker/Dockerfile.runtime
+  TARGET_REPOSITORY: weni-ai/kubernetes-manifests-chats
+  TARGET_REPOSITORY_BRANCH: main
+  TARGET_APPLICATION: insights-webapp
+  TARGET_PATCH_FILE: deployment.json
+  AWS_REGION: us-east-1
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_environment: ${{ steps.setup.outputs.deploy_environment }}
+      image_tag_latest: ${{ steps.setup.outputs.image_tag_latest }}
+      image_url: ${{ steps.registry.outputs.image_url }}
+      digests_prefix: ${{ steps.setup.outputs.digests_prefix }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        if: env.role_arn != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Resolve registry and tokens
+        id: registry
+        env:
+          REGISTRY_ECR: ${{ secrets.REGISTRY_ECR }}
+        run: |
+          echo "::add-mask::${REGISTRY_ECR}"
+          echo "image_url=${REGISTRY_ECR}/${{ env.IMAGE_REPOSITORY }}" >> "${GITHUB_OUTPUT}"
+
+      - name: Set environment outputs
+        id: setup
+        run: |
+          TAG="$(echo "${GITHUB_REF}" | cut -d'/' -f3)"
+          TAG="${TAG%-perf}"
+
+          if grep -qs -e '^.*.*-develop' <<< "${TAG}"; then
+            echo "Found environment: DEVELOP - ${TAG}"
+            DEPLOY_ENVIRONMENT=develop
+          elif grep -qs -e '^.*.*-staging' <<< "${TAG}"; then
+            echo "Found environment: STAGING - ${TAG}"
+            DEPLOY_ENVIRONMENT=staging
+          elif grep -qs -e '^.*.*' <<< "${TAG}"; then
+            echo "No environment found, assuming: PRODUCTION - ${TAG}"
+            DEPLOY_ENVIRONMENT=production
+          else
+            echo 'Not a valid tag. Skipping...'
+            exit 1
+          fi
+
+          echo "deploy_environment=${DEPLOY_ENVIRONMENT}" >> "${GITHUB_OUTPUT}"
+          echo "image_tag_latest=latest-${DEPLOY_ENVIRONMENT}" >> "${GITHUB_OUTPUT}"
+          echo "digests_prefix=digests-$(echo "${{ steps.registry.outputs.image_url }}" | tr './' '-')" >> "${GITHUB_OUTPUT}"
+
+      - name: Download webapp secret
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          repository: weni-ai/webapp-secret
+          token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+          path: ./webapp-secret/
+
+      - name: Upload webapp secret for build assets
+        uses: actions/upload-artifact@v4
+        with:
+          name: webapp-secret
+          path: ./webapp-secret/
+          retention-days: 1
+
+  build_assets:
+    needs: setup
+    runs-on: ubuntu-latest
+    outputs:
+      duration_seconds: ${{ steps.timing.outputs.duration_seconds }}
+    steps:
+      - name: Record start time
+        run: echo "START_TIME=$(date +%s)" >> "${GITHUB_ENV}"
+
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Download webapp secret
+        uses: actions/download-artifact@v4
+        with:
+          name: webapp-secret
+          path: ./webapp-secret/
+
+      - name: Load build environment variables
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          ENV_FILE="./webapp-secret/${REPO_NAME}/${{ needs.setup.outputs.deploy_environment }}/env"
+          if [ -r "${ENV_FILE}" ]; then
+            grep -vE '^\s*(#|$)' "${ENV_FILE}" >> "${GITHUB_ENV}"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install system dependencies for canvas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcairo2-dev \
+            libjpeg-dev \
+            libpango1.0-dev \
+            libgif-dev \
+            build-essential \
+            g++
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
+      - name: Record build duration
+        id: timing
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "duration_seconds=${DURATION}" >> "${GITHUB_OUTPUT}"
+          echo "### Build assets timing" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- npm ci + npm run build: **${DURATION}s**" >> "${GITHUB_STEP_SUMMARY}"
+
+  build_and_push:
+    needs:
+      - setup
+      - build_assets
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/arm64
+            runner: ubuntu-latest
+          - platform: linux/amd64
+            runner: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Record start time
+        run: echo "START_TIME=$(date +%s)" >> "${GITHUB_ENV}"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        if: env.role_arn != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Set platform pair
+        run: |
+          platform="${{ matrix.platform }}"
+          echo "PLATFORM_PAIR=${platform//\//-}" >> "${GITHUB_ENV}"
+
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Download dist artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ needs.setup.outputs.image_url }}
+          tags: |
+            type=ref,event=tag
+            type=raw,${{ needs.setup.outputs.image_tag_latest }}
+          flavor: |
+            prefix=${{ env.IMAGE_TAG_PREFIX }},onlatest=false
+
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_ECR }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        if: matrix.platform != 'linux/amd64'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          provenance: false
+          file: ${{ env.DOCKERFILE }}
+          context: .
+          build-args: |
+            OLD_IMAGE=869898323958.dkr.ecr.us-east-1.amazonaws.com/insights:${{ env.IMAGE_TAG_PREFIX }}${{ needs.setup.outputs.image_tag_latest }}
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ needs.setup.outputs.image_url }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=registry,ref=${{ needs.setup.outputs.image_url }}:buildcache-runtime-${{ env.PLATFORM_PAIR }}
+          cache-to: type=registry,ref=${{ needs.setup.outputs.image_url }}:buildcache-runtime-${{ env.PLATFORM_PAIR }},mode=max
+
+      - name: Export digest and push platform tag
+        env:
+          SOURCE_IMAGE: "${{ needs.setup.outputs.image_url }}@${{ steps.build.outputs.digest }}"
+          TARGET_IMAGE: "${{ needs.setup.outputs.image_url }}:${{ steps.meta.outputs.version }}-${{ env.PLATFORM_PAIR }}"
+        run: |
+          mkdir -p "${{ runner.temp }}/digests"
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+          docker pull "${SOURCE_IMAGE}"
+          docker tag "${SOURCE_IMAGE}" "${TARGET_IMAGE}"
+          docker push "${TARGET_IMAGE}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.setup.outputs.digests_prefix }}-${{ steps.meta.outputs.version }}-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+      - name: Record docker build duration
+        run: |
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
+          echo "### Docker build (${{ matrix.platform }})" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- Runtime image build + push: **${DURATION}s**" >> "${GITHUB_STEP_SUMMARY}"
+
+  merge:
+    needs:
+      - setup
+      - build_assets
+      - build_and_push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        if: env.role_arn != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ needs.setup.outputs.image_url }}
+          tags: |
+            type=ref,event=tag
+            type=raw,${{ needs.setup.outputs.image_tag_latest }}
+          flavor: |
+            prefix=${{ env.IMAGE_TAG_PREFIX }},onlatest=false
+
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: ${{ needs.setup.outputs.digests_prefix }}-${{ steps.meta.outputs.version }}-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to ECR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_ECR }}
+
+      - name: Create manifest list and push
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "${DOCKER_METADATA_OUTPUT_JSON}") \
+            $(printf '${{ needs.setup.outputs.image_url }}@sha256:%s ' *)
+
+      - name: Performance summary
+        run: |
+          echo "### Optimized workflow summary" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- npm ci + build (once): **${{ needs.build_assets.outputs.duration_seconds }}s**" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- Tag: \`${GITHUB_REF#refs/tags/}\`" >> "${GITHUB_STEP_SUMMARY}"
+          echo "- Environment: \`${{ needs.setup.outputs.deploy_environment }}\`" >> "${GITHUB_STEP_SUMMARY}"
+
+  deploy:
+    if: contains(github.ref, '-staging-perf') || contains(github.ref, '-develop-perf')
+    needs:
+      - setup
+      - merge
+      - build_and_push
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_APPLICATION: ${{ env.TARGET_APPLICATION }}
+      DEPLOY_REPOSITORY: ${{ env.TARGET_REPOSITORY }}
+      DEPLOY_PATCH_TARGET: ${{ env.TARGET_PATCH_FILE }}
+      DEPLOY_REPOSITORY_BRANCH: ${{ env.TARGET_REPOSITORY_BRANCH }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        if: env.role_arn != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Check out deploy repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DEPLOY_REPOSITORY_BRANCH }}
+          repository: ${{ env.DEPLOY_REPOSITORY }}
+          token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+          path: ./deploy-repository/
+
+      - name: Update image on kubernetes manifests
+        working-directory: ./deploy-repository/${{ env.DEPLOY_APPLICATION }}
+        env:
+          IMAGE_TAG: ${{ needs.setup.outputs.image_url }}:${{ needs.build_and_push.outputs.version }}
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+
+          extver() {
+            echo "$1" | sed 's/^.*[v:-]\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/' | head -n1
+          }
+
+          verlte() {
+            [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+          }
+
+          DEPLOY_ENV_TARGET=$(
+            echo "${{ needs.build_and_push.outputs.version }}" | grep -Eo 'mumbai-staging|staging|develop|ireland|mumbai' || echo 'production'
+          )
+
+          echo "Target environment: ${DEPLOY_ENV_TARGET}"
+
+          if [ ! -d "${DEPLOY_ENV_TARGET}" ] || [ ! -r "${DEPLOY_ENV_TARGET}/kustomization.yaml" ] || [ ! -r "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}" ]; then
+            echo "${DEPLOY_ENV_TARGET}, ${DEPLOY_ENV_TARGET}/kustomization.yaml, or ${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}: Not readable, or neither one of those exists"
+            exit 1
+          fi
+
+          CURRENT_IMAGE=$(
+            jq -r '.[] | select(.path == "/spec/template/spec/containers/0/image") | .value' \
+              "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}"
+          )
+          CURRENT_VERSION=$(extver "${CURRENT_IMAGE}")
+          TARGET_VERSION=$(extver "${IMAGE_TAG}")
+
+          echo "Replacing the following image:"
+          echo "  Image: ${CURRENT_IMAGE%%:*}"
+          echo "  Current version: ${CURRENT_VERSION}"
+          echo "  Target version: ${TARGET_VERSION}"
+
+          if verlte "${CURRENT_VERSION}" "${TARGET_VERSION}"; then
+            jq --arg imageTag "${IMAGE_TAG}" \
+              '(.. | select(.path == "/spec/template/spec/containers/0/image")?) += {value: $imageTag}' \
+              "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}" \
+              | tee "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}"
+          else
+            echo "Version in file is greater than build, skipping update yaml"
+          fi
+
+      - name: Commit and push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+          repository: ${{ env.DEPLOY_REPOSITORY }}
+          directory: ./deploy-repository/
+          branch: ${{ env.DEPLOY_REPOSITORY_BRANCH }}
+          message: "From ${{ github.repository }}: ${{ github.workflow }} (optimized build)"

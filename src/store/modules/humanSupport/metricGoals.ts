@@ -16,6 +16,8 @@ const OPENED_DRAWER_KEY = 'operational_alerts_opened_drawer';
 
 const DEFAULT_ROOMS_THRESHOLD = 5;
 
+export { DEFAULT_ROOMS_THRESHOLD };
+
 export const METRIC_KEYS: MetricKey[] = [
   'waiting_time',
   'first_response_time',

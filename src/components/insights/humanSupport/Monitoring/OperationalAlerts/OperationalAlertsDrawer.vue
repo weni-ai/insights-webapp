@@ -90,6 +90,7 @@ import OperationalAlertForm from './OperationalAlertForm.vue';
 import {
   useMetricGoals,
   METRIC_KEYS,
+  DEFAULT_ROOMS_THRESHOLD,
   MetricFormState,
   OperationalAlertsFormState,
 } from '@/store/modules/humanSupport/metricGoals';
@@ -114,8 +115,6 @@ const { savingGoals } = storeToRefs(metricGoalsStore);
 const { getGoalForMetric, saveGoals } = metricGoalsStore;
 
 const metricKeys = METRIC_KEYS;
-
-const DEFAULT_ROOMS_THRESHOLD = 5;
 
 const buildMetricFormState = (metric: MetricKey): MetricFormState => {
   const goal = getGoalForMetric(metric);

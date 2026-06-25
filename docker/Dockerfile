@@ -41,16 +41,12 @@ ENV CHATS_API_URL=${CHATS_API_URL}
 
 RUN apk add --no-cache \
     git \
-    build-base \
-    cairo-dev \
-    pango-dev \
-    jpeg-dev \
-    giflib-dev \
-    librsvg-dev
+    build-base
 
 COPY package.json package-lock.json ./
 
-RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm install
+RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm \
+    npm ci --ignore-scripts
 
 COPY . ./
 

@@ -43,6 +43,7 @@ jobs:
     needs:
       - setup
     with:
+      image_arch: '[{"platform":"linux/arm64","runner":"ubuntu-24.04-arm"},{"platform":"linux/amd64","runner":"ubuntu-latest"}]'
       image_repository: insights
       image_tags: |
         type=ref,event=tag

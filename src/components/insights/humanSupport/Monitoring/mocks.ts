@@ -8,6 +8,27 @@ const monitoringTimeMetricsMock = {
   average_time_is_waiting: { average: 40, max: 105 },
   average_time_first_response: { average: 72, max: 143 },
   average_time_chat: { average: 1710, max: 2423 },
+  waiting_time_goal: {
+    thresholdSeconds: 60,
+    thresholdValue: 1,
+    unit: 'm',
+    isBreached: true,
+    breachedRoomsCount: 7,
+  },
+  first_response_time_goal: {
+    thresholdSeconds: 60,
+    thresholdValue: 1,
+    unit: 'm',
+    isBreached: true,
+    breachedRoomsCount: 4,
+  },
+  conversation_duration_goal: {
+    thresholdSeconds: 600,
+    thresholdValue: 10,
+    unit: 'm',
+    isBreached: true,
+    breachedRoomsCount: 3,
+  },
 };
 
 const monitoringPeaksInHumanServiceMock = [
@@ -200,6 +221,13 @@ const monitoringDetailedMonitoringInProgressMock = [
       url: '',
       type: 'internal',
     },
+    conversation_duration_goal: {
+      thresholdSeconds: 600,
+      thresholdValue: 10,
+      unit: 'm',
+      isBreached: true,
+      breachedRoomsCount: 1,
+    },
   },
   {
     agent: 'Camila Rocha',
@@ -214,6 +242,20 @@ const monitoringDetailedMonitoringInProgressMock = [
     link: {
       url: '',
       type: 'internal',
+    },
+    first_response_time_goal: {
+      thresholdSeconds: 60,
+      thresholdValue: 1,
+      unit: 'm',
+      isBreached: true,
+      breachedRoomsCount: 1,
+    },
+    conversation_duration_goal: {
+      thresholdSeconds: 600,
+      thresholdValue: 10,
+      unit: 'm',
+      isBreached: true,
+      breachedRoomsCount: 1,
     },
   },
   {

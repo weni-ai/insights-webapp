@@ -1013,6 +1013,64 @@
     "error_message": "Error disconnecting agent {agent}",
     "tooltip_disabled": "This representative can't be disconnected because they are offline"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Operational alerts couldn't be saved due to a technical issue",
+      "save_success": "Operational alerts saved successfully"
+    },
+    "card_alert": "{count} chats exceeded {value} {unit}",
+    "drawer": {
+      "description": "Configure alerts to identify chats that exceed the defined time limits for an operation:",
+      "title": "Operational alerts"
+    },
+    "first_response_info": "Time to first response is counted from the moment the chat is assigned to a representative",
+    "form": {
+      "email_notification_label": "Email notification (optional)",
+      "email_notification_tooltip": "This alert is always displayed in the Live Desk dashboard when a chat reaches the defined threshold.\n\nYou can also configure email notifications for selected moderators and choose when they should be sent - for example, when one or more chats reach the defined threshold.",
+      "recipients_helper": "Only moderators can receive alerts",
+      "send_email_to_label": "Send email to",
+      "send_email_to_placeholder": "Select the moderators",
+      "threshold_labels": {
+        "conversation_duration": "Maximum chat duration",
+        "first_response_time": "Maximum time to first response",
+        "waiting_time": "Maximum wait time"
+      },
+      "threshold_placeholder": "Example: 10",
+      "unit_label": "Unit",
+      "units": {
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds"
+      },
+      "when_helper": "Number of chats with active alerts",
+      "when_label": "When",
+      "when_placeholder": "Example: 5"
+    },
+    "popover": {
+      "new_tag": "New",
+      "option_label": "Operational alerts"
+    },
+    "sections": {
+      "conversation_duration": "Alert in the Live Desk dashboard when a chat's duration exceeds the defined threshold",
+      "first_response_time": "Alert in the Live Desk dashboard when a chat's first response time exceeds the defined threshold",
+      "waiting_time": "Alert in the Live Desk dashboard when a chat's wait time exceeds the defined threshold"
+    },
+    "table_tooltip": {
+      "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",
+      "first_response_time": "This chat has exceeded the {value}-{unit} time limit for the first response.",
+      "waiting_time": "This chat has exceeded the {value}-{unit} waiting time limit."
+    },
+    "unit_word_singular": {
+      "h": "hour",
+      "m": "minute",
+      "s": "second"
+    },
+    "unit_words": {
+      "h": "hours",
+      "m": "minutes",
+      "s": "seconds"
+    }
+  },
   "human_support_dashboard": {
     "title": "Live desk",
     "monitoring": "Monitoring",

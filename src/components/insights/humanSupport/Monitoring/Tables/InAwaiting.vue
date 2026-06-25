@@ -22,9 +22,9 @@
   >
     <template #body-awaiting_time="{ item }">
       <TableRowAlert
-        v-if="item.row_alert"
-        :scheme="item.row_alert.scheme"
-        :text="item.row_alert.text"
+        v-if="item.rowAlert"
+        :scheme="item.rowAlert.scheme"
+        :text="item.rowAlert.text"
       >
         {{ item.awaiting_time }}
       </TableRowAlert>
@@ -54,8 +54,8 @@ import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
-  awaiting_time_raw: number;
-  row_alert: RowAlert | null;
+  awaitingTimeRaw: number;
+  rowAlert: RowAlert | null;
 };
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
@@ -95,8 +95,8 @@ const formatResults = (
   return results.map((result) => ({
     ...result,
     awaiting_time: formatSecondsToTime(result?.awaiting_time),
-    awaiting_time_raw: result?.awaiting_time,
-    row_alert: resolveRowAlert(result),
+    awaitingTimeRaw: result?.awaiting_time,
+    rowAlert: resolveRowAlert(result),
   }));
 };
 

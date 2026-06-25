@@ -36,9 +36,9 @@
       <section class="in-progress-duration">
         <span class="in-progress-duration__value">
           <TableRowAlert
-            v-if="item.row_alert"
-            :scheme="item.row_alert.scheme"
-            :text="item.row_alert.text"
+            v-if="item.rowAlert"
+            :scheme="item.rowAlert.scheme"
+            :text="item.rowAlert.text"
           >
             {{ formatSecondsToTime(item.duration) }}
           </TableRowAlert>
@@ -95,7 +95,7 @@ import { openNewTabLink } from '@/utils/redirect';
 import { formatSecondsToTime } from '@/utils/time';
 
 type FormattedInProgressData = InProgressDataResult & {
-  row_alert: RowAlert | null;
+  rowAlert: RowAlert | null;
 };
 
 const { t } = useI18n();
@@ -159,7 +159,7 @@ const {
   formatResults: (results) =>
     results.map((item) => ({
       ...item,
-      row_alert: resolveRowAlert(item),
+      rowAlert: resolveRowAlert(item),
     })),
   sort: currentSort.value,
 });
@@ -168,7 +168,7 @@ const widgetData = computed(() => {
   if (!hasSectorsConfigured.value) {
     return monitoringDetailedMonitoringInProgressMock.map((item) => ({
       ...item,
-      row_alert: resolveRowAlert(item as InProgressDataResult),
+      rowAlert: resolveRowAlert(item as InProgressDataResult),
     }));
   }
 

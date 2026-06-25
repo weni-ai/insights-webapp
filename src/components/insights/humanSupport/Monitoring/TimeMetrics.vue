@@ -177,7 +177,7 @@ const getCardAlert = (id: CardId) => {
   const { goalKey, scheme } = cardAlertConfig[id];
   const goal = widgetData.value[goalKey] as MetricGoalBreach | undefined;
 
-  if (!goal?.is_breached) return undefined;
+  if (!goal?.isBreached) return undefined;
 
   const unit = t(
     `operational_alerts.unit_words.${goal.unit as TimeUnit}`,
@@ -186,8 +186,8 @@ const getCardAlert = (id: CardId) => {
   return {
     scheme,
     text: t('operational_alerts.card_alert', {
-      count: goal.breached_rooms_count,
-      value: goal.threshold_value,
+      count: goal.breachedRoomsCount,
+      value: goal.thresholdValue,
       unit,
     }),
   };

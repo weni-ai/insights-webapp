@@ -260,18 +260,18 @@ describe('InProgress', () => {
 
   describe('Row alert', () => {
     const firstResponseBreach = {
-      threshold_seconds: 60,
-      threshold_value: 1,
+      thresholdSeconds: 60,
+      thresholdValue: 1,
       unit: 'm',
-      is_breached: true,
-      breached_rooms_count: 2,
+      isBreached: true,
+      breachedRoomsCount: 2,
     };
     const durationBreach = {
-      threshold_seconds: 600,
-      threshold_value: 10,
+      thresholdSeconds: 600,
+      thresholdValue: 10,
       unit: 'm',
-      is_breached: true,
-      breached_rooms_count: 3,
+      isBreached: true,
+      breachedRoomsCount: 3,
     };
 
     it('prioritizes the orange first response alert over the yellow duration alert', () => {

@@ -5,7 +5,16 @@ ARG BASE_VERSION="alpine3.19"
 ARG OLD_IMAGE="insights-webapp:latest"
 ARG KEEP_DAYS=60
 
-FROM node:${NODE_VERSION}-${BASE_VERSION} AS builder
+FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-${BASE_VERSION} AS deps
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm \
+    npm ci --ignore-scripts --no-audit --no-fund
+
+FROM deps AS builder
 
 WORKDIR /app
 
@@ -39,16 +48,9 @@ ENV HOTJAR_ID=${HOTJAR_ID}
 ENV ENVIRONMENT=${ENVIRONMENT}
 ENV CHATS_API_URL=${CHATS_API_URL}
 
-RUN apk add --no-cache \
-    git \
-    build-base
-
-COPY package.json package-lock.json ./
-
-RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm \
-    npm ci --ignore-scripts
-
-COPY . ./
+COPY rspack.config.js postcss.config.js jsconfig.json index.html ./
+COPY public ./public
+COPY src ./src
 
 RUN npm run build
 

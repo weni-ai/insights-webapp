@@ -12,9 +12,7 @@ name: Build Insights-WebApp (Optimized - Single npm build)
 on:
   push:
     tags:
-      - '*.*.*-develop-perf'
-      - '*.*.*-staging-perf'
-      - '*.*.*-perf'
+      - '*.*.*-staging-ci-test'
   workflow_dispatch:
 
 permissions:

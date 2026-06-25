@@ -12,7 +12,6 @@
         data-testid="table-row-alert"
       >
         <slot />
-        <span class="row-alert__accessible-text">{{ text }}</span>
       </span>
     </UnnnicToolTip>
   </span>
@@ -35,18 +34,6 @@ defineProps<{
 
   &__trigger {
     display: inline;
-  }
-
-  &__accessible-text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
   }
 }
 </style>

@@ -60,6 +60,25 @@ jobs:
           role-to-assume: ${{ secrets.ROLE_ARN }}
           aws-region: us-east-1
 
+      - name: Resolve VCS token
+        id: vcs_token
+        env:
+          DEVOPS_TOKEN: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+        run: |
+          if [ -n "${DEVOPS_TOKEN}" ]; then
+            VCS_TOKEN="${DEVOPS_TOKEN}"
+          else
+            VCS_TOKEN="$(aws ssm get-parameter --with-decryption \
+              --name "/cloud/github/TOKEN" \
+              | jq -r .Parameter.Value)"
+          fi
+          if [ -z "${VCS_TOKEN}" ]; then
+            echo "VCS token could not be resolved"
+            exit 1
+          fi
+          echo "::add-mask::${VCS_TOKEN}"
+          echo "token=${VCS_TOKEN}" >> "${GITHUB_OUTPUT}"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -68,7 +87,7 @@ jobs:
         with:
           ref: main
           repository: weni-ai/webapp-secret
-          token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+          token: ${{ steps.vcs_token.outputs.token }}
           path: ./webapp-secret/
 
       - name: Login to Registry

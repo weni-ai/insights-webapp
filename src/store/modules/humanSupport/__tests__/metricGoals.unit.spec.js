@@ -20,14 +20,14 @@ vi.mock('@/store/modules/config', () => ({
 
 const waitingGoal = {
   metric: 'waiting_time',
-  threshold_seconds: 300,
-  threshold_value: 5,
+  thresholdSeconds: 300,
+  thresholdValue: 5,
   unit: 'm',
-  is_active: true,
-  email_enabled: false,
+  isActive: true,
+  emailEnabled: false,
   recipients: [],
   recipientDetails: [],
-  rooms_threshold_count: 0,
+  roomsThresholdCount: 0,
 };
 
 describe('useMetricGoals Store', () => {
@@ -113,10 +113,10 @@ describe('useMetricGoals Store', () => {
         {
           threshold: 5,
           unit: 'm',
-          is_active: true,
-          email_enabled: false,
+          isActive: true,
+          emailEnabled: false,
           recipients: [],
-          rooms_threshold_count: 0,
+          roomsThresholdCount: 0,
         },
       );
     });
@@ -141,13 +141,10 @@ describe('useMetricGoals Store', () => {
         {
           threshold: 2,
           unit: 'h',
-          is_active: true,
-          email_enabled: true,
-          recipients: [
-            { uuid_project_permission: 'perm-1' },
-            { uuid_project_permission: 'perm-2' },
-          ],
-          rooms_threshold_count: 3,
+          isActive: true,
+          emailEnabled: true,
+          recipients: ['perm-1', 'perm-2'],
+          roomsThresholdCount: 3,
         },
       );
     });
@@ -170,8 +167,8 @@ describe('useMetricGoals Store', () => {
       expect(MetricGoalsService.saveMetricGoal).toHaveBeenCalledWith(
         'first_response_time',
         expect.objectContaining({
-          email_enabled: true,
-          rooms_threshold_count: 0,
+          emailEnabled: true,
+          roomsThresholdCount: 0,
         }),
       );
     });

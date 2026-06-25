@@ -128,14 +128,14 @@ describe('OperationalAlertsDrawer.vue', () => {
   it('should initialize form state from goals loaded before mount', async () => {
     const waitingGoal = {
       metric: 'waiting_time',
-      threshold_seconds: 300,
-      threshold_value: 5,
+      thresholdSeconds: 300,
+      thresholdValue: 5,
       unit: 'm',
-      is_active: true,
-      email_enabled: false,
+      isActive: true,
+      emailEnabled: false,
       recipients: [],
       recipientDetails: [],
-      rooms_threshold_count: 3,
+      roomsThresholdCount: 3,
     };
 
     const pinia = createTestingPinia({ createSpy: vi.fn });

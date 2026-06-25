@@ -9,11 +9,11 @@ type MetricKey =
 type TimeUnit = 's' | 'm' | 'h';
 
 interface MetricGoalBreach {
-  threshold_seconds: number;
-  threshold_value: number;
+  thresholdSeconds: number;
+  thresholdValue: number;
   unit: TimeUnit;
-  is_breached: boolean;
-  breached_rooms_count: number;
+  isBreached: boolean;
+  breachedRoomsCount: number;
 }
 
 interface MetricGoalRecipientApi {
@@ -24,7 +24,7 @@ interface MetricGoalRecipientApi {
   uuid_project_permission?: string;
 }
 
-interface MetricGoalRecipient {
+interface MetricGoalRecipientApiPayload {
   uuid_project_permission: string;
 }
 
@@ -36,32 +36,41 @@ interface MetricGoalApi {
   unit: TimeUnit;
   is_active: boolean;
   email_enabled: boolean;
-  recipients: MetricGoalRecipientApi[] | MetricGoalRecipient[] | string[];
+  recipients: MetricGoalRecipientApi[] | MetricGoalRecipientApiPayload[] | string[];
   rooms_threshold_count: number;
   rooms_threshold_percent?: number | null;
 }
 
 interface MetricGoalRecipientDetail {
   uuid: string;
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   email?: string;
 }
 
 interface MetricGoal {
   metric: MetricKey;
-  threshold_seconds: number;
-  threshold_value: number;
+  thresholdSeconds: number;
+  thresholdValue: number;
   unit: TimeUnit;
-  is_active: boolean;
-  email_enabled: boolean;
+  isActive: boolean;
+  emailEnabled: boolean;
   recipients: string[];
   recipientDetails: MetricGoalRecipientDetail[];
-  rooms_threshold_count: number;
+  roomsThresholdCount: number;
 }
 
 interface MetricGoalsResponse {
   goals: MetricGoal[];
+}
+
+interface MetricGoalSaveParams {
+  threshold: number;
+  unit: TimeUnit;
+  isActive: boolean;
+  emailEnabled: boolean;
+  roomsThresholdCount: number;
+  recipients: string[];
 }
 
 interface MetricGoalSavePayload {
@@ -70,7 +79,7 @@ interface MetricGoalSavePayload {
   is_active: boolean;
   email_enabled: boolean;
   rooms_threshold_count: number;
-  recipients: MetricGoalRecipient[];
+  recipients: MetricGoalRecipientApiPayload[];
 }
 
 const UNIT_SECONDS: Record<TimeUnit, number> = {
@@ -83,7 +92,7 @@ const thresholdToSeconds = (threshold: number, unit: TimeUnit): number =>
   Math.round(threshold * UNIT_SECONDS[unit]);
 
 const formatRecipientLabel = (recipient: MetricGoalRecipientDetail): string => {
-  const name = [recipient.first_name, recipient.last_name]
+  const name = [recipient.firstName, recipient.lastName]
     .filter(Boolean)
     .join(' ')
     .trim();
@@ -92,7 +101,7 @@ const formatRecipientLabel = (recipient: MetricGoalRecipientDetail): string => {
 };
 
 const normalizeRecipientId = (
-  recipient: MetricGoalRecipientApi | MetricGoalRecipient | string,
+  recipient: MetricGoalRecipientApi | MetricGoalRecipientApiPayload | string,
 ): string => {
   if (typeof recipient === 'string') return recipient;
 
@@ -104,7 +113,7 @@ const normalizeRecipientId = (
 };
 
 const normalizeRecipientDetail = (
-  recipient: MetricGoalRecipientApi | MetricGoalRecipient | string,
+  recipient: MetricGoalRecipientApi | MetricGoalRecipientApiPayload | string,
 ): MetricGoalRecipientDetail | null => {
   if (typeof recipient === 'string') {
     return { uuid: recipient };
@@ -120,8 +129,8 @@ const normalizeRecipientDetail = (
   ) {
     return {
       uuid,
-      first_name: recipient.first_name,
-      last_name: recipient.last_name,
+      firstName: recipient.first_name,
+      lastName: recipient.last_name,
       email: recipient.email,
     };
   }
@@ -166,23 +175,34 @@ const resolveThresholdValue = (
 };
 
 const normalizeGoal = (goal: MetricGoalApi): MetricGoal => {
-  const threshold_seconds = resolveThresholdSeconds(goal);
+  const thresholdSeconds = resolveThresholdSeconds(goal);
   const recipientDetails = (goal.recipients || [])
     .map(normalizeRecipientDetail)
     .filter((recipient): recipient is MetricGoalRecipientDetail => !!recipient);
 
   return {
     metric: goal.metric,
-    threshold_seconds,
-    threshold_value: resolveThresholdValue(goal, threshold_seconds),
+    thresholdSeconds,
+    thresholdValue: resolveThresholdValue(goal, thresholdSeconds),
     unit: goal.unit,
-    is_active: goal.is_active,
-    email_enabled: goal.email_enabled,
+    isActive: goal.is_active,
+    emailEnabled: goal.email_enabled,
     recipients: recipientDetails.map((recipient) => recipient.uuid),
     recipientDetails,
-    rooms_threshold_count: goal.rooms_threshold_count,
+    roomsThresholdCount: goal.rooms_threshold_count,
   };
 };
+
+const toSavePayload = (params: MetricGoalSaveParams): MetricGoalSavePayload => ({
+  threshold: params.threshold,
+  unit: params.unit,
+  is_active: params.isActive,
+  email_enabled: params.emailEnabled,
+  rooms_threshold_count: params.roomsThresholdCount,
+  recipients: params.recipients.map((permissionUuid) => ({
+    uuid_project_permission: permissionUuid,
+  })),
+});
 
 const extractGoalsFromResponse = (
   response:
@@ -218,13 +238,13 @@ export default {
 
   async saveMetricGoal(
     metric: MetricKey,
-    payload: MetricGoalSavePayload,
+    params: MetricGoalSaveParams,
   ): Promise<MetricGoal> {
     const { project } = useConfig();
 
     const response = (await chatsHttp.post(
       metricGoalsPath(project.uuid, metric),
-      payload,
+      toSavePayload(params),
     )) as MetricGoalApi;
 
     return normalizeGoal(response);
@@ -241,9 +261,8 @@ export type {
   MetricGoal,
   MetricGoalApi,
   MetricGoalBreach,
-  MetricGoalRecipient,
   MetricGoalRecipientDetail,
-  MetricGoalSavePayload,
+  MetricGoalSaveParams,
   MetricKey,
   TimeUnit,
   MetricGoalsResponse,

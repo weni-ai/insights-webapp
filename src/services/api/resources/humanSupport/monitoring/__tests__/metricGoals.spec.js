@@ -60,21 +60,21 @@ describe('metricGoalsService', () => {
         goals: [
           {
             metric: 'waiting_time',
-            threshold_seconds: 600,
-            threshold_value: 10,
+            thresholdSeconds: 600,
+            thresholdValue: 10,
             unit: 'm',
-            is_active: true,
-            email_enabled: true,
+            isActive: true,
+            emailEnabled: true,
             recipients: ['user-1'],
             recipientDetails: [
               {
                 uuid: 'user-1',
-                first_name: 'Marcus',
-                last_name: 'L S',
+                firstName: 'Marcus',
+                lastName: 'L S',
                 email: 'marcus@example.com',
               },
             ],
-            rooms_threshold_count: 5,
+            roomsThresholdCount: 5,
           },
         ],
       });
@@ -100,14 +100,14 @@ describe('metricGoalsService', () => {
 
       expect(result.goals[0]).toEqual({
         metric: 'waiting_time',
-        threshold_seconds: 3600,
-        threshold_value: 1,
+        thresholdSeconds: 3600,
+        thresholdValue: 1,
         unit: 'h',
-        is_active: true,
-        email_enabled: true,
+        isActive: true,
+        emailEnabled: true,
         recipients: ['perm-1'],
         recipientDetails: [{ uuid: 'perm-1' }],
-        rooms_threshold_count: 2,
+        roomsThresholdCount: 2,
       });
     });
 
@@ -127,13 +127,13 @@ describe('metricGoalsService', () => {
 
   describe('saveMetricGoal', () => {
     it('should POST the payload to the metric endpoint', async () => {
-      const payload = {
+      const params = {
         threshold: 10,
         unit: 'm',
-        is_active: true,
-        email_enabled: true,
-        recipients: [{ uuid_project_permission: 'perm-1' }],
-        rooms_threshold_count: 5,
+        isActive: true,
+        emailEnabled: true,
+        recipients: ['perm-1'],
+        roomsThresholdCount: 5,
       };
       const mockResponse = {
         metric: 'first_response_time',
@@ -156,30 +156,37 @@ describe('metricGoalsService', () => {
 
       const result = await metricGoalsService.saveMetricGoal(
         'first_response_time',
-        payload,
+        params,
       );
 
       expect(chatsHttp.post).toHaveBeenCalledWith(
         `project/${mockProjectUuid}/metric-goals/first_response_time/`,
-        payload,
+        {
+          threshold: 10,
+          unit: 'm',
+          is_active: true,
+          email_enabled: true,
+          recipients: [{ uuid_project_permission: 'perm-1' }],
+          rooms_threshold_count: 5,
+        },
       );
       expect(result).toEqual({
         metric: 'first_response_time',
-        threshold_seconds: 600,
-        threshold_value: 10,
+        thresholdSeconds: 600,
+        thresholdValue: 10,
         unit: 'm',
-        is_active: true,
-        email_enabled: true,
+        isActive: true,
+        emailEnabled: true,
         recipients: ['perm-1'],
         recipientDetails: [
           {
             uuid: 'perm-1',
-            first_name: 'Alan',
-            last_name: 'Vale',
+            firstName: 'Alan',
+            lastName: 'Vale',
             email: 'alan@example.com',
           },
         ],
-        rooms_threshold_count: 5,
+        roomsThresholdCount: 5,
       });
     });
 
@@ -189,10 +196,10 @@ describe('metricGoalsService', () => {
         metricGoalsService.saveMetricGoal('waiting_time', {
           threshold: 1,
           unit: 'm',
-          is_active: true,
-          email_enabled: false,
+          isActive: true,
+          emailEnabled: false,
           recipients: [],
-          rooms_threshold_count: 0,
+          roomsThresholdCount: 0,
         }),
       ).rejects.toThrow('Network Error');
     });

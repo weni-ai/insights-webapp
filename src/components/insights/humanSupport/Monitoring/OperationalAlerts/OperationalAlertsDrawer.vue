@@ -120,7 +120,7 @@ const DEFAULT_ROOMS_THRESHOLD = 5;
 const buildMetricFormState = (metric: MetricKey): MetricFormState => {
   const goal = getGoalForMetric(metric);
 
-  if (!goal?.is_active) {
+  if (!goal?.isActive) {
     return {
       enabled: false,
       threshold: null,
@@ -132,7 +132,7 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
 
   return {
     enabled: true,
-    threshold: goal.threshold_value,
+    threshold: goal.thresholdValue,
     unit: goal.unit,
     recipients: [...goal.recipients],
     recipientOptions: goal.recipientDetails.map((recipient) => ({
@@ -140,7 +140,7 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
       label: formatRecipientLabel(recipient),
     })),
     roomsThresholdCount:
-      goal.rooms_threshold_count ?? DEFAULT_ROOMS_THRESHOLD,
+      goal.roomsThresholdCount ?? DEFAULT_ROOMS_THRESHOLD,
   };
 };
 

@@ -111,14 +111,10 @@ export const useMetricGoals = defineStore('metricGoals', () => {
             MetricGoalsService.saveMetricGoal(metric, {
               threshold: metricForm.threshold as number,
               unit: metricForm.unit,
-              is_active: true,
-              email_enabled: emailEnabled,
-              recipients: emailEnabled
-                ? metricForm.recipients.map((permissionUuid) => ({
-                    uuid_project_permission: permissionUuid,
-                  }))
-                : [],
-              rooms_threshold_count: emailEnabled
+              isActive: true,
+              emailEnabled,
+              recipients: emailEnabled ? metricForm.recipients : [],
+              roomsThresholdCount: emailEnabled
                 ? (metricForm.roomsThresholdCount ?? DEFAULT_ROOMS_THRESHOLD)
                 : 0,
             }),

@@ -112,10 +112,7 @@ export default {
     },
 
     isRenderBetaText() {
-      const isConversational =
-        this.currentDashboard.name === 'conversations_dashboard.title';
-
-      return isConversational;
+      return false;
     },
     enabledShowDashboards() {
       if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {

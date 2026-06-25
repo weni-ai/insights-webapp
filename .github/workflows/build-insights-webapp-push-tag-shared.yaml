@@ -43,6 +43,9 @@ jobs:
   build_assets:
     needs: setup
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     outputs:
       assets_image: ${{ secrets.REGISTRY_ECR }}/insights:webapp-assets-${{ needs.setup.outputs.tag }}
     steps:

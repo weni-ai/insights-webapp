@@ -64,6 +64,31 @@ describe('timeMetrics API', () => {
       expect(result).toEqual(mockHttpResponse);
     });
 
+    it('should normalize goal breach fields from the API response', async () => {
+      http.get.mockResolvedValue({
+        average_time_is_waiting: { average: 120, max: 300 },
+        average_time_first_response: { average: 45, max: 90 },
+        average_time_chat: { average: 600, max: 1200 },
+        waiting_time_goal: {
+          threshold_seconds: 60,
+          threshold_value: 1,
+          unit: 'm',
+          is_breached: true,
+          breached_rooms_count: 7,
+        },
+      });
+
+      const result = await timeMetrics.getTimeMetricsData();
+
+      expect(result.waiting_time_goal).toEqual({
+        thresholdSeconds: 60,
+        thresholdValue: 1,
+        unit: 'm',
+        isBreached: true,
+        breachedRoomsCount: 7,
+      });
+    });
+
     it('should handle custom query parameters', async () => {
       const queryParams = { start_date: '2023-01-01', end_date: '2023-12-31' };
       createRequestQuery.mockReturnValue(queryParams);

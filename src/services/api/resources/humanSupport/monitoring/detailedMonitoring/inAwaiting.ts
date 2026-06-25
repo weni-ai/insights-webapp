@@ -2,7 +2,7 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
-import { MetricGoalBreach } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
+import { MetricGoalBreach, MetricGoalBreachApi, normalizeMetricGoalBreach } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InAwaitingData {
   next: string;
@@ -64,11 +64,21 @@ export default {
       {
         params: formattedParams,
       },
-    )) as InAwaitingData;
+    )) as InAwaitingData & {
+      results: (Omit<InAwaitingDataResult, 'waiting_time_goal'> & {
+        waiting_time_goal?: MetricGoalBreachApi;
+      })[];
+    };
 
-    const formattedResponse: InAwaitingData = response;
-
-    return formattedResponse;
+    return {
+      ...response,
+      results: response.results.map((result) => ({
+        ...result,
+        waiting_time_goal: result.waiting_time_goal
+          ? normalizeMetricGoalBreach(result.waiting_time_goal)
+          : undefined,
+      })),
+    };
   },
 };
 

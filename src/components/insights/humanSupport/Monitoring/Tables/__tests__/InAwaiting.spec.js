@@ -208,11 +208,11 @@ describe('InAwaiting', () => {
       const alert = wrapper.vm.getItemAlert({
         awaiting_time: '120s',
         waiting_time_goal: {
-          threshold_seconds: 60,
-          threshold_value: 1,
+          thresholdSeconds: 60,
+          thresholdValue: 1,
           unit: 'm',
-          is_breached: true,
-          breached_rooms_count: 3,
+          isBreached: true,
+          breachedRoomsCount: 3,
         },
       });
 

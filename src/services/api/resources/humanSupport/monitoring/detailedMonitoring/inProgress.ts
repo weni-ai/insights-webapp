@@ -2,7 +2,11 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
-import { MetricGoalBreach } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
+import {
+  MetricGoalBreach,
+  MetricGoalBreachApi,
+  normalizeMetricGoalBreach,
+} from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InProgressData {
   next: string;
@@ -69,11 +73,25 @@ export default {
       {
         params: formattedParams,
       },
-    )) as InProgressData;
+    )) as InProgressData & {
+      results: (Omit<InProgressDataResult, 'first_response_time_goal' | 'conversation_duration_goal'> & {
+        first_response_time_goal?: MetricGoalBreachApi;
+        conversation_duration_goal?: MetricGoalBreachApi;
+      })[];
+    };
 
-    const formattedResponse: InProgressData = response;
-
-    return formattedResponse;
+    return {
+      ...response,
+      results: response.results.map((result) => ({
+        ...result,
+        first_response_time_goal: result.first_response_time_goal
+          ? normalizeMetricGoalBreach(result.first_response_time_goal)
+          : undefined,
+        conversation_duration_goal: result.conversation_duration_goal
+          ? normalizeMetricGoalBreach(result.conversation_duration_goal)
+          : undefined,
+      })),
+    };
   },
 };
 

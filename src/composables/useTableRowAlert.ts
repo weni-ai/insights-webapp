@@ -24,7 +24,7 @@ export function useTableRowAlert() {
 
   const getRowAlert = (candidates: RowAlertCandidate[]): RowAlert | null => {
     const breached = candidates.find(
-      (candidate) => candidate.goal?.is_breached,
+      (candidate) => candidate.goal?.isBreached,
     );
 
     if (!breached?.goal) return null;
@@ -36,7 +36,7 @@ export function useTableRowAlert() {
     return {
       scheme: breached.scheme,
       text: t(`operational_alerts.table_tooltip.${breached.metric}`, {
-        value: breached.goal.threshold_value,
+        value: breached.goal.thresholdValue,
         unit,
       }),
     };

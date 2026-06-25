@@ -335,11 +335,6 @@ jobs:
       - merge
       - build_and_push
     runs-on: ubuntu-latest
-    env:
-      DEPLOY_APPLICATION: ${{ env.TARGET_APPLICATION }}
-      DEPLOY_REPOSITORY: ${{ env.TARGET_REPOSITORY }}
-      DEPLOY_PATCH_TARGET: ${{ env.TARGET_PATCH_FILE }}
-      DEPLOY_REPOSITORY_BRANCH: ${{ env.TARGET_REPOSITORY_BRANCH }}
     steps:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -355,13 +350,13 @@ jobs:
       - name: Check out deploy repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ env.DEPLOY_REPOSITORY_BRANCH }}
-          repository: ${{ env.DEPLOY_REPOSITORY }}
+          ref: ${{ env.TARGET_REPOSITORY_BRANCH }}
+          repository: ${{ env.TARGET_REPOSITORY }}
           token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
           path: ./deploy-repository/
 
       - name: Update image on kubernetes manifests
-        working-directory: ./deploy-repository/${{ env.DEPLOY_APPLICATION }}
+        working-directory: ./deploy-repository/${{ env.TARGET_APPLICATION }}
         env:
           IMAGE_TAG: ${{ needs.setup.outputs.image_url }}:${{ needs.build_and_push.outputs.version }}
         run: |
@@ -381,14 +376,14 @@ jobs:
 
           echo "Target environment: ${DEPLOY_ENV_TARGET}"
 
-          if [ ! -d "${DEPLOY_ENV_TARGET}" ] || [ ! -r "${DEPLOY_ENV_TARGET}/kustomization.yaml" ] || [ ! -r "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}" ]; then
-            echo "${DEPLOY_ENV_TARGET}, ${DEPLOY_ENV_TARGET}/kustomization.yaml, or ${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}: Not readable, or neither one of those exists"
+          if [ ! -d "${DEPLOY_ENV_TARGET}" ] || [ ! -r "${DEPLOY_ENV_TARGET}/kustomization.yaml" ] || [ ! -r "${DEPLOY_ENV_TARGET}/${{ env.TARGET_PATCH_FILE }}" ]; then
+            echo "${DEPLOY_ENV_TARGET}, ${DEPLOY_ENV_TARGET}/kustomization.yaml, or ${DEPLOY_ENV_TARGET}/${{ env.TARGET_PATCH_FILE }}: Not readable, or neither one of those exists"
             exit 1
           fi
 
           CURRENT_IMAGE=$(
             jq -r '.[] | select(.path == "/spec/template/spec/containers/0/image") | .value' \
-              "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}"
+              "${DEPLOY_ENV_TARGET}/${{ env.TARGET_PATCH_FILE }}"
           )
           CURRENT_VERSION=$(extver "${CURRENT_IMAGE}")
           TARGET_VERSION=$(extver "${IMAGE_TAG}")
@@ -401,8 +396,8 @@ jobs:
           if verlte "${CURRENT_VERSION}" "${TARGET_VERSION}"; then
             jq --arg imageTag "${IMAGE_TAG}" \
               '(.. | select(.path == "/spec/template/spec/containers/0/image")?) += {value: $imageTag}' \
-              "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}" \
-              | tee "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}"
+              "${DEPLOY_ENV_TARGET}/${{ env.TARGET_PATCH_FILE }}" \
+              | tee "${DEPLOY_ENV_TARGET}/${{ env.TARGET_PATCH_FILE }}"
           else
             echo "Version in file is greater than build, skipping update yaml"
           fi
@@ -411,7 +406,7 @@ jobs:
         uses: actions-js/push@master
         with:
           github_token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
-          repository: ${{ env.DEPLOY_REPOSITORY }}
+          repository: ${{ env.TARGET_REPOSITORY }}
           directory: ./deploy-repository/
-          branch: ${{ env.DEPLOY_REPOSITORY_BRANCH }}
+          branch: ${{ env.TARGET_REPOSITORY_BRANCH }}
           message: "From ${{ github.repository }}: ${{ github.workflow }} (optimized build)"

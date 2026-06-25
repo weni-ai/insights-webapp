@@ -125,6 +125,64 @@ describe('OperationalAlertsDrawer.vue', () => {
     expect(wrapper.emitted('update:modelValue')[0]).toEqual([false]);
   });
 
+  it('should initialize form state from goals loaded before mount', async () => {
+    const waitingGoal = {
+      metric: 'waiting_time',
+      threshold_seconds: 300,
+      threshold_value: 5,
+      unit: 'm',
+      is_active: true,
+      email_enabled: false,
+      recipients: [],
+      recipientDetails: [],
+      rooms_threshold_count: 3,
+    };
+
+    const pinia = createTestingPinia({ createSpy: vi.fn });
+    const store = useMetricGoals(pinia);
+    store.goals = { waiting_time: waitingGoal };
+    store.getGoalForMetric.mockImplementation((metric) => store.goals[metric]);
+
+    const wrapper = mount(OperationalAlertsDrawer, {
+      global: {
+        plugins: [pinia],
+        stubs: {
+          UnnnicDrawerNext: UnnnicDrawerNextStub,
+          UnnnicDrawerContent: UnnnicDrawerContentStub,
+          UnnnicDrawerHeader: drawerSlotStub('UnnnicDrawerHeader'),
+          UnnnicDrawerTitle: drawerSlotStub('UnnnicDrawerTitle'),
+          UnnnicDrawerDescription: drawerSlotStub('UnnnicDrawerDescription'),
+          UnnnicDrawerFooter: UnnnicDrawerFooterStub,
+          UnnnicDrawerClose: UnnnicDrawerCloseStub,
+          UnnnicButton: UnnnicButtonStub,
+          UnnnicSwitch: UnnnicSwitchStub,
+          UnnnicDisclaimer: true,
+          OperationalAlertForm: true,
+        },
+      },
+      props: { modelValue: true },
+    });
+
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.formState.waiting_time).toMatchObject({
+      enabled: true,
+      threshold: 5,
+      unit: 'm',
+      roomsThresholdCount: 3,
+    });
+  });
+
+  it('should not reset form state after mount', async () => {
+    const { wrapper } = createWrapper();
+
+    wrapper.vm.formState.waiting_time.threshold = 99;
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.vm.formState.waiting_time.threshold).toBe(99);
+  });
+
   it('should keep save disabled when an enabled metric has no threshold', async () => {
     const { wrapper } = createWrapper();
     await wrapper.findAllComponents(UnnnicSwitchStub)[0].trigger('click');

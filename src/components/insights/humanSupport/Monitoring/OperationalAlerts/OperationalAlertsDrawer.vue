@@ -81,7 +81,7 @@ import {
   UnnnicDisclaimer,
   unnnicCallAlert,
 } from '@weni/unnnic-system';
-import { reactive, computed, onMounted } from 'vue';
+import { reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 
@@ -139,7 +139,8 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
       value: recipient.uuid,
       label: formatRecipientLabel(recipient),
     })),
-    roomsThresholdCount: goal.rooms_threshold_count || DEFAULT_ROOMS_THRESHOLD,
+    roomsThresholdCount:
+      goal.rooms_threshold_count ?? DEFAULT_ROOMS_THRESHOLD,
   };
 };
 
@@ -194,11 +195,7 @@ const handleSave = async () => {
   }
 };
 
-onMounted(() => {
-  metricKeys.forEach((metric) => {
-    Object.assign(formState[metric], buildMetricFormState(metric));
-  });
-});
+defineExpose({ formState });
 </script>
 
 <style lang="scss">

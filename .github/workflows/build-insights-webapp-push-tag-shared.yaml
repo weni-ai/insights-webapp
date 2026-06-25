@@ -115,9 +115,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           provenance: false
-          file: docker/Dockerfile
+          file: docker/Dockerfile.assets
           context: .
-          target: assets
           platforms: linux/amd64
           push: true
           tags: ${{ secrets.REGISTRY_ECR }}/insights:webapp-assets-${{ needs.setup.outputs.tag }}

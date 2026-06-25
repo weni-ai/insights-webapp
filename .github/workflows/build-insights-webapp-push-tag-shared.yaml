@@ -7,13 +7,20 @@ on:
       - '*.*.*-staging'
       - '*.*.*'
 
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  NODE_VERSION: '18.19.1'
+
 jobs:
   setup:
     runs-on: ubuntu-latest
     outputs:
       image_latest: ${{ steps.setup.outputs.image_latest }}
       image_tag_latest: ${{ steps.setup.outputs.image_tag_latest }}
-      extra_build_args: ${{ steps.extra_build_args.outputs.BUILD_ENV_ARGS}}
+      deploy_environment: ${{ steps.setup.outputs.deploy_environment }}
     steps:
       - name: Set outputs
         id: setup
@@ -21,15 +28,15 @@ jobs:
           TAG="$( echo "${GITHUB_REF}" | cut -d'/' -f3 )"
           if grep -qs -e '^.*.*-develop' <<< "${TAG}" ; then
             echo "Found environment: DEVELOP - ${TAG}"
-            echo "MANIFESTS_ENVIRONMENT=develop" | tee "${GITHUB_OUTPUT}"
+            echo "deploy_environment=develop" | tee "${GITHUB_OUTPUT}"
             export "MANIFESTS_ENVIRONMENT=develop"
           elif grep -qs -e '^.*.*-staging' <<< "${TAG}" ; then
             echo "Found environment: STAGING - ${TAG}"
-            echo "MANIFESTS_ENVIRONMENT=staging" | tee -a "${GITHUB_OUTPUT}"
+            echo "deploy_environment=staging" | tee -a "${GITHUB_OUTPUT}"
             export "MANIFESTS_ENVIRONMENT=staging"
           elif grep -qs -e '^.*.*' <<< "${TAG}" ; then
             echo "No environment found, assuming: PRODUCTION - ${TAG}"
-            echo "MANIFESTS_ENVIRONMENT=production" | tee -a "${GITHUB_OUTPUT}"
+            echo "deploy_environment=production" | tee -a "${GITHUB_OUTPUT}"
             export "MANIFESTS_ENVIRONMENT=production"
           else
             echo 'Not a valid tag. Skipping...'
@@ -38,20 +45,74 @@ jobs:
           echo "image_latest=${{ secrets.REGISTRY_ECR }}/insights:latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
           echo "image_tag_latest=latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
 
+  frontend-build:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Download webapp secret
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          repository: weni-ai/webapp-secret
+          token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+          path: ./webapp-secret/
+
+      - name: Load build environment variables
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          ENV_FILE="./webapp-secret/${REPO_NAME}/${{ needs.setup.outputs.deploy_environment }}/env"
+          if [ -r "${ENV_FILE}" ]; then
+            grep -vE '^\s*(#|$)' "${ENV_FILE}" >> "${GITHUB_ENV}"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install system dependencies for canvas
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libcairo2-dev \
+            libjpeg-dev \
+            libpango1.0-dev \
+            libgif-dev \
+            build-essential \
+            g++
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build application
+        run: npm run build
+
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 1
+
   call-workflow:
-    uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
+    uses: ./.github/workflows/reusable-insights-webapp-build.yaml
     needs:
       - setup
+      - frontend-build
     with:
       image_repository: insights
       image_tags: |
         type=ref,event=tag
         type=raw,${{ needs.setup.outputs.image_tag_latest }}
       image_tag_prefix: "webapp-"
-      dockerfile: "docker/Dockerfile"
+      dockerfile: "docker/Dockerfile.runtime"
+      frontend_artifact_name: dist
       build_args: |
         OLD_IMAGE=869898323958.dkr.ecr.us-east-1.amazonaws.com/insights:webapp-${{ needs.setup.outputs.image_tag_latest }}
-        ${{ needs.setup.outputs.extra_build_args }}
       target_repository: weni-ai/kubernetes-manifests-chats
       target_repository_branch: main
       target_application: insights-webapp

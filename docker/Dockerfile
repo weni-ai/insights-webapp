@@ -5,7 +5,7 @@ ARG BASE_VERSION="alpine3.19"
 ARG OLD_IMAGE="insights-webapp:latest"
 ARG KEEP_DAYS=60
 
-FROM node:${NODE_VERSION}-${BASE_VERSION} AS builder
+FROM --platform=$BUILDPLATFORM node:${NODE_VERSION}-${BASE_VERSION} AS assets
 
 WORKDIR /app
 
@@ -55,6 +55,9 @@ RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm install
 COPY . ./
 
 RUN npm run build
+
+ARG ASSETS_IMAGE
+FROM ${ASSETS_IMAGE} AS builder
 
 FROM ${OLD_IMAGE} AS old_css
 

@@ -13,15 +13,17 @@ jobs:
     outputs:
       image_latest: ${{ steps.setup.outputs.image_latest }}
       image_tag_latest: ${{ steps.setup.outputs.image_tag_latest }}
-      extra_build_args: ${{ steps.extra_build_args.outputs.BUILD_ENV_ARGS}}
+      environment: ${{ steps.setup.outputs.MANIFESTS_ENVIRONMENT }}
+      tag: ${{ steps.setup.outputs.tag }}
     steps:
       - name: Set outputs
         id: setup
         run: |
           TAG="$( echo "${GITHUB_REF}" | cut -d'/' -f3 )"
+          echo "tag=${TAG}" | tee -a "${GITHUB_OUTPUT}"
           if grep -qs -e '^.*.*-develop' <<< "${TAG}" ; then
             echo "Found environment: DEVELOP - ${TAG}"
-            echo "MANIFESTS_ENVIRONMENT=develop" | tee "${GITHUB_OUTPUT}"
+            echo "MANIFESTS_ENVIRONMENT=develop" | tee -a "${GITHUB_OUTPUT}"
             export "MANIFESTS_ENVIRONMENT=develop"
           elif grep -qs -e '^.*.*-staging' <<< "${TAG}" ; then
             echo "Found environment: STAGING - ${TAG}"
@@ -38,10 +40,75 @@ jobs:
           echo "image_latest=${{ secrets.REGISTRY_ECR }}/insights:latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
           echo "image_tag_latest=latest-${MANIFESTS_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
 
+  build_assets:
+    needs: setup
+    runs-on: ubuntu-latest
+    outputs:
+      assets_image: ${{ secrets.REGISTRY_ECR }}/insights:webapp-assets-${{ needs.setup.outputs.tag }}
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        if: env.role_arn != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download webapp secret
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          repository: weni-ai/webapp-secret
+          token: ${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}
+          path: ./webapp-secret/
+
+      - name: Login to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.REGISTRY_ECR }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Prepare build args
+        id: build_args
+        run: |
+          ENV_FILE="webapp-secret/insights-webapp/${{ needs.setup.outputs.environment }}/env"
+          if [ -r "${ENV_FILE}" ]; then
+            {
+              echo 'args<<EOFenv'
+              sed -e '/^#/d' -e '/^\s*$/d' "${ENV_FILE}"
+              echo EOFenv
+            } >> "${GITHUB_OUTPUT}"
+          fi
+
+      - name: Build and push assets image
+        id: assets
+        uses: docker/build-push-action@v6
+        with:
+          provenance: false
+          file: docker/Dockerfile
+          context: .
+          target: assets
+          platforms: linux/amd64
+          push: true
+          tags: ${{ secrets.REGISTRY_ECR }}/insights:webapp-assets-${{ needs.setup.outputs.tag }}
+          build-args: |
+            ${{ steps.build_args.outputs.args }}
+          cache-from: type=registry,ref=${{ secrets.REGISTRY_ECR }}/insights:buildcache-assets
+          cache-to: type=registry,ref=${{ secrets.REGISTRY_ECR }}/insights:buildcache-assets,mode=max
+
   call-workflow:
     uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
     needs:
       - setup
+      - build_assets
     with:
       image_repository: insights
       image_tags: |
@@ -51,7 +118,7 @@ jobs:
       dockerfile: "docker/Dockerfile"
       build_args: |
         OLD_IMAGE=869898323958.dkr.ecr.us-east-1.amazonaws.com/insights:webapp-${{ needs.setup.outputs.image_tag_latest }}
-        ${{ needs.setup.outputs.extra_build_args }}
+        ASSETS_IMAGE=${{ needs.build_assets.outputs.assets_image }}
       target_repository: weni-ai/kubernetes-manifests-chats
       target_repository_branch: main
       target_application: insights-webapp

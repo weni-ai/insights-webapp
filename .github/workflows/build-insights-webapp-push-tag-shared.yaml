@@ -7,10 +7,6 @@ on:
       - '*.*.*-staging'
       - '*.*.*'
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -115,10 +111,10 @@ jobs:
           echo "image=${ASSETS_IMAGE}" >> "${GITHUB_OUTPUT}"
 
   call-workflow:
-    uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
     needs:
       - setup
       - build-assets
+    uses: weni-ai/actions-workflows/.github/workflows/reusable-workflow.yaml@main
     with:
       image_arch: '[{"platform":"linux/arm64","runner":"ubuntu-24.04-arm"},{"platform":"linux/amd64","runner":"ubuntu-latest"}]'
       image_repository: insights

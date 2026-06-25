@@ -30,7 +30,7 @@ export function useTableRowAlert() {
     if (!breached?.goal) return null;
 
     const unit = t(
-      `operational_alerts.unit_word_singular.${breached.goal.unit as TimeUnit}`,
+      `operational_alerts.unit_word${breached.goal.thresholdValue === 1 ? '_singular' : 's'}.${breached.goal.unit as TimeUnit}`,
     ).toLowerCase();
 
     return {

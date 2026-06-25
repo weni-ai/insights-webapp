@@ -180,7 +180,7 @@ const getCardAlert = (id: CardId) => {
   if (!goal?.isBreached) return undefined;
 
   const unit = t(
-    `operational_alerts.unit_words.${goal.unit as TimeUnit}`,
+    `operational_alerts.unit_word${goal.thresholdValue === 1 ? '_singular' : 's'}.${goal.unit as TimeUnit}`,
   ).toLowerCase();
 
   return {

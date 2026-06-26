@@ -918,8 +918,8 @@
       "is_wating": "Așteaptă",
       "protocol": "Protocol",
       "urn": "URN de contact",
-      "full_transfer_history": "Istoric complet al transferurilor",
       "transfer_history": "Istoricul transferurilor",
+      "full_transfer_history": "Istoric complet al transferurilor",
       "service_chat": "Chat de asistență",
       "custom_fields": "Câmpuri personalizate",
       "contact": "Contact",
@@ -1136,7 +1136,7 @@
           "description": "Conversation ended while still in queue"
         },
         "duration": {
-          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului"
+          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului."
         }
       }
     },

@@ -1,5 +1,8 @@
 <template>
-  <section class="abandoned-cart-widget-info-card">
+  <section
+    class="abandoned-cart-widget-info-card"
+    data-testid="abandoned-cart-widget-info-card"
+  >
     <section class="abandoned-cart-widget-info-card__header">
       <section class="abandoned-cart-widget-info-card__recovery-revenue__data">
         <p class="abandoned-cart-widget-info-card__item__label">
@@ -9,18 +12,25 @@
             )
           }}
         </p>
-        <p class="abandoned-cart-widget-info-card__item__value--display-1">
+        <p
+          class="abandoned-cart-widget-info-card__item__value--display-1"
+          data-testid="abandoned-cart-widget-info-card-recovery-revenue"
+        >
           {{
             `${props.data.currency} ${formatNumber(props.data.recoveryRevenue)}`
           }}
         </p>
       </section>
       <section class="abandoned-cart-widget-info-card__roas">
-        <p class="abandoned-cart-widget-info-card__roas__value">
+        <p
+          class="abandoned-cart-widget-info-card__roas__value"
+          data-testid="abandoned-cart-widget-info-card-roas"
+        >
           RoAS: {{ formatNumber(roas) }}x
         </p>
         <UnnnicToolTip
           enabled
+          data-testid="abandoned-cart-widget-info-card-roas-tooltip"
           :text="
             $t(
               'conversations_dashboard.abandoned_cart_recovery_widget.info_card.roas_tooltip',
@@ -44,7 +54,10 @@
             )
           }}
         </p>
-        <p class="abandoned-cart-widget-info-card__item__value">
+        <p
+          class="abandoned-cart-widget-info-card__item__value"
+          data-testid="abandoned-cart-widget-info-card-total-sends"
+        >
           {{ formatNumber(props.data.totalSends) }}
         </p>
       </section>
@@ -56,7 +69,10 @@
             )
           }}
         </p>
-        <p class="abandoned-cart-widget-info-card__item__value">
+        <p
+          class="abandoned-cart-widget-info-card__item__value"
+          data-testid="abandoned-cart-widget-info-card-converted-sales"
+        >
           {{ formatNumber(props.data.convertedSales) }}
         </p>
       </section>
@@ -70,7 +86,10 @@
             )
           }}
         </p>
-        <p class="abandoned-cart-widget-info-card__item__value">
+        <p
+          class="abandoned-cart-widget-info-card__item__value"
+          data-testid="abandoned-cart-widget-info-card-conversion-rate"
+        >
           {{ formatPercentage(conversionRate) }}
         </p>
       </section>
@@ -82,7 +101,10 @@
             )
           }}
         </p>
-        <p class="abandoned-cart-widget-info-card__item__value">
+        <p
+          class="abandoned-cart-widget-info-card__item__value"
+          data-testid="abandoned-cart-widget-info-card-average-order-value"
+        >
           {{
             `${props.data.currency} ${formatNumber(Number(averageOrderValue))}`
           }}

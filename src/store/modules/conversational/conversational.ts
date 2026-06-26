@@ -123,6 +123,7 @@ export const useConversational = defineStore('conversational', {
       if (!state.isConfigurationLoaded) return false;
 
       const hasErrors = Object.values(state.endpointErrors).some(Boolean);
+
       if (hasErrors) return false;
 
       if (state.hasEndpointData) return false;
@@ -138,7 +139,7 @@ export const useConversational = defineStore('conversational', {
         isCsatConfigured ||
         isNpsConfigured ||
         isSalesFunnelConfigured ||
-        getRealCustomWidgets.length > 0 ||
+        getRealCustomWidgets?.length > 0 ||
         hasAgentInvocationData ||
         hasToolResultData;
 

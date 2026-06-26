@@ -190,7 +190,7 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperare coș abandonat",
-      "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
+      "no_data": "Nu sunt date disponibile pentru perioada selectată",
       "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
       "unavailable_period": "Meta oferă doar datele din ultimele 90 de zile pentru acest widget. Asigură-te că intervalul de date selectat este în această perioadă pentru a putea vizualiza informațiile.",
       "chart": {
@@ -205,7 +205,7 @@
         "total_sends": "Total trimiteri",
         "converted_sales": "Vânzări convertite",
         "conversion_rate": "Rată de conversie",
-        "average_order_value": "Valoare medie a comenzii",
+        "average_order_value": "Valoarea medie a comenzii",
         "roas_tooltip": "Rentabilitatea investiției în reclame măsoară cât venit generezi pentru fiecare $xxx cheltuit pe mesaje. De ce este atât de mare? > Recuperarea automată este foarte eficientă pentru că costul unui mesaj este minim comparativ cu valoarea medie a comenzii din magazinul tău."
       }
     },
@@ -246,7 +246,7 @@
       "modal_remove_widget": {
         "title": "Șterge widget-ul",
         "description": "Sigur vrei să ștergi widget-ul {type}?",
-        "remove": "Eliminare",
+        "remove": "Elimină",
         "cancel": "Anulează",
         "success_message": "{widget} a fost eliminat"
       },
@@ -918,8 +918,8 @@
       "is_wating": "Așteaptă",
       "protocol": "Protocol",
       "urn": "URN de contact",
-      "full_transfer_history": "Istoric complet al transferurilor",
       "transfer_history": "Istoricul transferurilor",
+      "full_transfer_history": "Istoric complet al transferurilor",
       "service_chat": "Chat de asistență",
       "custom_fields": "Câmpuri personalizate",
       "contact": "Contact",

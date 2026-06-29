@@ -9,8 +9,9 @@ import i18n from '@/utils/plugins/i18n';
  * @returns A formatted string representation of the number
  */
 export function formatValue(value: number, locale?: string): string {
-  if (value % 1 === 0) return value.toLocaleString(locale || 'en-US');
-  return (value || 0).toLocaleString(locale || 'en-US', {
+  if (value % 1 === 0)
+    return value.toLocaleString(locale || i18n.global.locale.value);
+  return (value || 0).toLocaleString(locale || i18n.global.locale.value, {
     maximumFractionDigits: 2,
   });
 }
@@ -41,12 +42,9 @@ export function formatNumber(value: number, locale?: string): string {
  */
 export function formatPercentage(value: number, locale?: string): string {
   if (value === 0) return '0%';
-  return `${Math.abs(value).toLocaleString(
-    locale || i18n.global.locale.value || 'en-US',
-    {
-      maximumFractionDigits: 2,
-    },
-  )}%`;
+  return `${Math.abs(value).toLocaleString(locale || i18n.global.locale.value, {
+    maximumFractionDigits: 2,
+  })}%`;
 }
 
 /**
@@ -77,21 +75,12 @@ export function formatCurrency(
   currencyCode?: string,
   locale?: string,
 ): string {
-  if (!value || !currencyCode) {
-    return new Intl.NumberFormat(
-      locale || i18n.global.locale.value || 'en-US',
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      },
-    ).format(0);
-  }
   return new Intl.NumberFormat(locale || i18n.global.locale.value || 'en-US', {
-    style: 'currency',
-    currency: currencyCode || 'USD',
+    style: currencyCode ? 'currency' : 'decimal',
+    currency: currencyCode,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  }).format(value || 0);
 }
 
 /**

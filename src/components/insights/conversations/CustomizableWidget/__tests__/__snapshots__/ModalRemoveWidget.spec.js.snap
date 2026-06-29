@@ -21,7 +21,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
         data-v-1d7c4579=""
       >
         
-        conversations_dashboard.customize_your_dashboard.modal_remove_widget.title undefined
+        conversations_dashboard.customize_your_dashboard.modal_remove_widget.title {}
         
       </div>
       

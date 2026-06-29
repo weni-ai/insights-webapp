@@ -9,8 +9,9 @@ import i18n from '@/utils/plugins/i18n';
  * @returns A formatted string representation of the number
  */
 export function formatValue(value: number, locale?: string): string {
-  if (value % 1 === 0) return value.toLocaleString(locale || 'en-US');
-  return (value || 0).toLocaleString(locale || 'en-US', {
+  if (value % 1 === 0)
+    return value.toLocaleString(locale || i18n.global.locale.value);
+  return (value || 0).toLocaleString(locale || i18n.global.locale.value, {
     maximumFractionDigits: 2,
   });
 }
@@ -75,11 +76,11 @@ export function formatCurrency(
   locale?: string,
 ): string {
   return new Intl.NumberFormat(locale || i18n.global.locale.value || 'en-US', {
-    style: 'currency',
+    style: currencyCode ? 'currency' : 'decimal',
     currency: currencyCode,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  }).format(value || 0);
 }
 
 /**

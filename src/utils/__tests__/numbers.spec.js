@@ -113,8 +113,8 @@ describe('Number Utilities', () => {
     });
 
     it('handles null/undefined values', () => {
-      expect(formatCurrency(null, 'USD')).toBe('0.00');
-      expect(formatCurrency(undefined, 'USD')).toBe('0.00');
+      expect(formatCurrency(null, 'USD')).toBe('$0.00');
+      expect(formatCurrency(undefined, 'USD')).toBe('$0.00');
     });
 
     it('uses custom locale when provided', () => {

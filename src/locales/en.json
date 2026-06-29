@@ -143,12 +143,12 @@
     "search_term": "Most searched terms",
     "agent_invocation": "Most used agents",
     "agent_invocation_description": "Follow the ranking of the most used agents",
-    "agent_invocation_count": "{count} agents",
+    "agent_invocation_count": "{count, plural, one {# agent} other {# agents}}",
     "tool_result": "Most used tools",
     "tool_result_description": "Follow the ranking of the most used tools",
-    "tool_result_count": "{count} tools",
-    "search_term_count": "{count} products",
-    "added_to_cart_count": "{count} products",
+    "tool_result_count": "{count, plural, one {# tool} other {# tools}}",
+    "search_term_count": "{count, plural, one {# product} other {# products}}",
+    "added_to_cart_count": "{count, plural, one {# product} other {# products}}",
     "auto_widget_no_data": "No data available for the filtered period",
     "auto_widget_error": "Data couldn't be loaded. Refresh the dashboard or contact support",
     "no_data_available": "No data available for the selected period",
@@ -274,7 +274,7 @@
         "description": "Combine and compare two different data points to discover insights.",
         "drawer": {
           "description": "Enter the widget name:",
-          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br><b>Field name:</b> The name of the field for the value you want to show. If left blank, the system will use a default value.",
+          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br/><b>Field name:</b> The name of the field for the value you want to show. If left blank, the system will use a default value.",
           "first_data_label": "Set the <b>first</b> data point you want to track:",
           "second_data_label": "Set the <b>second</b> data point you want to track:",
           "reference_field_label": "Define the reference field to be used to link the events:"
@@ -473,7 +473,7 @@
   "filter-by": "Period:",
   "see_more": "Show more",
   "see_all": "View all",
-  "lines_count": "{count} rows",
+  "lines_count": "{count, plural, one {# row} other {# rows}}",
   "reload": "Refresh",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -1090,9 +1090,9 @@
         "action": "Action"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} on break",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# on break} other {# on break}}",
+        "offline": "{count, plural, one {# offline} other {# offline}}"
       }
     },
     "filters": {

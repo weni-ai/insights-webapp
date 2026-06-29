@@ -143,12 +143,12 @@
     "search_term": "Términos más buscados",
     "agent_invocation": "Agentes más usados",
     "agent_invocation_description": "Sigue el ranking de los agentes más usados",
-    "agent_invocation_count": "{count} agentes",
+    "agent_invocation_count": "{count, plural, one {# agente} other {# agentes}}",
     "tool_result": "Herramientas más usadas",
     "tool_result_description": "Sigue el ranking de las herramientas más usadas",
-    "tool_result_count": "{count} herramientas",
-    "search_term_count": "{count} productos",
-    "added_to_cart_count": "{count} productos",
+    "tool_result_count": "{count, plural, one {# herramienta} other {# herramientas}}",
+    "search_term_count": "{count, plural, one {# producto} other {# productos}}",
+    "added_to_cart_count": "{count, plural, one {# producto} other {# productos}}",
     "auto_widget_no_data": "No hay datos disponibles para el período filtrado",
     "auto_widget_error": "No se pudieron cargar los datos. Actualiza el panel o contacta con soporte",
     "no_data_available": "No hay datos disponibles para el periodo seleccionado",
@@ -274,7 +274,7 @@
         "description": "Combina y compara dos puntos de datos diferentes para descubrir insights.",
         "drawer": {
           "description": "Define el nombre del widget:",
-          "disclaimer": "<b>Clave:</b> Un identificador único utilizado para monitorear un evento específico en el flujo de datos.<br><b>Nombre del campo:</b> El nombre del campo para el valor que deseas mostrar. Si se deja en blanco, el sistema usará un valor predeterminado.",
+          "disclaimer": "<b>Clave:</b> Un identificador único utilizado para monitorear un evento específico en el flujo de datos.<br/><b>Nombre del campo:</b> El nombre del campo para el valor que deseas mostrar. Si se deja en blanco, el sistema usará un valor predeterminado.",
           "first_data_label": "Define el <b>primer</b> punto de datos que deseas monitorear:",
           "second_data_label": "Define el <b>segundo</b> punto de datos que deseas monitorear:",
           "reference_field_label": "Define el campo de referencia que se usará para vincular los eventos:"
@@ -473,7 +473,7 @@
   "filter-by": "Periodo:",
   "see_more": "Mostrar más",
   "see_all": "Ver todo",
-  "lines_count": "{count} filas",
+  "lines_count": "{count, plural, one {# fila} other {# filas}}",
   "reload": "Actualizar",
   "agent": "Agente",
   "online_agents": "Agentes online",
@@ -1090,9 +1090,9 @@
         "action": "Acción"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} en pausa",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# en pausa} other {# en pausa}}",
+        "offline": "{count, plural, one {# offline} other {# offline}}"
       }
     },
     "filters": {

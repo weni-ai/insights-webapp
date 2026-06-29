@@ -56,6 +56,8 @@ import pt_br from '@/locales/pt_br.json';
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
 
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+
 vi.mock('firebase/app', () => ({
   initializeApp: vi.fn(() => ({
     name: 'mockApp',
@@ -80,6 +82,7 @@ const i18n = createI18n({
     en,
     es,
   },
+  messageCompiler: icuMessageCompiler,
   globalInjection: true, // Allow $t in templates
   silentTranslationWarn: true,
   silentFallbackWarn: true,

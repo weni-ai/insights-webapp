@@ -58,6 +58,8 @@ vi.mock('pinia', async (importOriginal) => ({
   storeToRefs: (store) => store,
 }));
 
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -65,7 +67,7 @@ const i18n = createI18n({
     en: {
       conversations_dashboard: {
         tool_result: 'Most used tools',
-        tool_result_count: '{count} tools',
+        tool_result_count: '{count, plural, one {# tool} other {# tools}}',
         auto_widget_no_data: 'No data available for the filtered period',
         auto_widget_error:
           "Data couldn't be loaded. Refresh the dashboard or contact support",
@@ -75,6 +77,7 @@ const i18n = createI18n({
   },
   fallbackWarn: false,
   missingWarn: false,
+  messageCompiler: icuMessageCompiler,
 });
 
 config.global.plugins = [i18n];

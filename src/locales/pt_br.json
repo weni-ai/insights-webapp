@@ -143,12 +143,12 @@
     "search_term": "Termos mais pesquisados",
     "agent_invocation": "Agentes mais usados",
     "agent_invocation_description": "Acompanhe o ranking dos agentes mais usados",
-    "agent_invocation_count": "{count} agentes",
+    "agent_invocation_count": "{count, plural, one {# agente} other {# agentes}}",
     "tool_result": "Ferramentas mais usadas",
     "tool_result_description": "Acompanhe o ranking das ferramentas mais usadas",
-    "tool_result_count": "{count} ferramentas",
-    "search_term_count": "{count} produtos",
-    "added_to_cart_count": "{count} produtos",
+    "tool_result_count": "{count, plural, one {# ferramenta} other {# ferramentas}}",
+    "search_term_count": "{count, plural, one {# produto} other {# produtos}}",
+    "added_to_cart_count": "{count, plural, one {# produto} other {# produtos}}",
     "auto_widget_no_data": "Nenhum dado disponível para o período filtrado",
     "auto_widget_error": "Não foi possível carregar os dados. Atualize o dashboard ou entre em contato com o suporte",
     "no_data_available": "Nenhum dado disponível para o período selecionado",
@@ -274,7 +274,7 @@
         "description": "Combine e compare duas dimensões de dados para identificar insights.",
         "drawer": {
           "description": "Defina o nome do widget:",
-          "disclaimer": "<b>Chave:</b> identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema utilizará um valor padrão.",
+          "disclaimer": "<b>Chave:</b> identificador único utilizado para rastrear um evento específico no fluxo de dados.<br/><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema utilizará um valor padrão.",
           "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
           "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:",
           "reference_field_label": "Defina o campo de referência a ser usado para vincular os eventos:"
@@ -473,7 +473,7 @@
   "filter-by": "Período:",
   "see_more": "Ver mais",
   "see_all": "Ver todos",
-  "lines_count": "{count} linhas",
+  "lines_count": "{count, plural, one {# linha} other {# linhas}}",
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Atendentes online",
@@ -1148,9 +1148,9 @@
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} em pausa",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# em pausa} other {# em pausa}}",
+        "offline": "{count, plural, one {# offline} other {# offline}}"
       }
     },
     "filters": {

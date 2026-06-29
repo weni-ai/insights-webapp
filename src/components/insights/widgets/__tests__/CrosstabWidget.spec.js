@@ -14,6 +14,8 @@ vi.mock('@/store/modules/conversational/customWidgets', () => ({
   useCustomWidgets: () => mockCustomWidgetsStore,
 }));
 
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -22,12 +24,13 @@ const i18n = createI18n({
       conversations_dashboard: {
         no_data_available: 'No data available for the filtered period',
       },
-      lines_count: '{count} lines',
+      lines_count: '{count, plural, one {# line} other {# lines}}',
       see_all: 'See all',
     },
   },
   fallbackWarn: false,
   missingWarn: false,
+  messageCompiler: icuMessageCompiler,
 });
 
 config.global.plugins = [i18n];

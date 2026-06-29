@@ -141,10 +141,10 @@
     "abandoned_cart_recovery": "Recuperare coș abandonat",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
-    "agent_invocation_count": "{count} agenți",
+    "agent_invocation_count": "{count, plural, one {# agent} other {# agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
-    "tool_result_count": "{count} instrumente",
+    "tool_result_count": "{count, plural, one {# instrument} other {# instrumente}}",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -266,7 +266,7 @@
         "description": "Combină și compară două puncte de date diferite pentru a descoperi insight-uri.",
         "drawer": {
           "description": "Completează numele widgetului:",
-          "disclaimer": "<b>Cheie:</b> Un identificator unic folosit pentru a monitoriza un eveniment specific în fluxul de date.<br><b>Numele câmpului:</b> Numele câmpului pentru valoarea pe care vrei să o afișezi. Dacă este lăsat necompletat, sistemul va folosi o valoare implicită.",
+          "disclaimer": "<b>Cheie:</b> Un identificator unic folosit pentru a monitoriza un eveniment specific în fluxul de date.<br/><b>Numele câmpului:</b> Numele câmpului pentru valoarea pe care vrei să o afișezi. Dacă este lăsat necompletat, sistemul va folosi o valoare implicită.",
           "first_data_label": "Setează <b>primul</b> punct de date pe care vrei să-l monitorizezi:",
           "second_data_label": "Setează <b>al doilea</b> punct de date pe care vrei să-l monitorizezi:",
           "reference_field_label": "Define the reference field to be used to link the events:"
@@ -465,7 +465,7 @@
   "filter-by": "Perioadă:",
   "see_more": "Arată mai mult",
   "see_all": "Vizualizează tot",
-  "lines_count": "{count} rânduri",
+  "lines_count": "{count, plural, one {# rând} other {# rânduri}}",
   "reload": "Reîncarcă",
   "agent": "Agent",
   "online_agents": "Agenți online",
@@ -1138,9 +1138,9 @@
         "action": "Acțiune"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} în pauză",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# în pauză} other {# în pauză}}",
+        "offline": "{count, plural, one {# offline} other {# offline}}"
       }
     },
     "filters": {

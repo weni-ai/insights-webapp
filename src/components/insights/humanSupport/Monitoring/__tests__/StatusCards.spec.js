@@ -5,6 +5,7 @@ import { createTestingPinia } from '@pinia/testing';
 import { ref } from 'vue';
 
 import ServiceStatus from '../StatusCards.vue';
+import { LazyVisibilityKey } from '@/composables/useLazyData';
 
 const defaultServiceStatusData = {
   is_waiting: 25,
@@ -15,6 +16,8 @@ const defaultServiceStatusData = {
 const mockMonitoringStore = {
   $id: 'humanSupportMonitoring',
   loadServiceStatusData: vi.fn(),
+  setActiveDetailedTab: vi.fn(),
+  setForceLoadDetailed: vi.fn(),
   serviceStatusData: { value: { ...defaultServiceStatusData } },
   loadingServiceStatusData: { value: false },
 };
@@ -104,10 +107,35 @@ describe('ServiceStatus', () => {
   const title = () => wrapper.find('[data-testid="service-status-title"]');
   const cards = () => wrapper.find('[data-testid="service-status-cards"]');
 
+  const createLazyWrapper = (hasBeenVisible) => {
+    const hasBeenVisibleRef = ref(hasBeenVisible);
+    const isVisibleRef = ref(hasBeenVisible);
+    const lazyWrapper = mount(ServiceStatus, {
+      global: {
+        plugins: [
+          createTestingPinia({
+            initialState: { project: { hasSectorsConfigured: true } },
+          }),
+        ],
+        stubs: { CardConversations: true },
+        provide: {
+          [LazyVisibilityKey]: {
+            hasBeenVisible: hasBeenVisibleRef,
+            isVisible: isVisibleRef,
+            forceLoad: vi.fn(),
+          },
+        },
+      },
+    });
+    return { lazyWrapper, hasBeenVisibleRef };
+  };
+
   beforeEach(() => {
     vi.clearAllMocks();
     Object.assign(mockMonitoringStore, {
       loadServiceStatusData: vi.fn(),
+      setActiveDetailedTab: vi.fn(),
+      setForceLoadDetailed: vi.fn(),
       serviceStatusData: { value: { ...defaultServiceStatusData } },
       loadingServiceStatusData: { value: false },
     });
@@ -294,6 +322,47 @@ describe('ServiceStatus', () => {
   describe('Lifecycle', () => {
     it('should load service status data on mounted', () => {
       expect(mockMonitoringStore.loadServiceStatusData).toHaveBeenCalled();
+    });
+  });
+
+  describe('Lazy loading', () => {
+    it('should not load data while the widget is off screen', () => {
+      mockMonitoringStore.loadServiceStatusData.mockClear();
+      createLazyWrapper(false);
+      expect(mockMonitoringStore.loadServiceStatusData).not.toHaveBeenCalled();
+    });
+
+    it('should load data once the widget becomes visible', async () => {
+      mockMonitoringStore.loadServiceStatusData.mockClear();
+      const { hasBeenVisibleRef } = createLazyWrapper(false);
+      expect(mockMonitoringStore.loadServiceStatusData).not.toHaveBeenCalled();
+
+      hasBeenVisibleRef.value = true;
+      await Promise.resolve();
+
+      expect(mockMonitoringStore.loadServiceStatusData).toHaveBeenCalledTimes(
+        1,
+      );
+    });
+  });
+
+  describe('Card click navigation', () => {
+    it('should force-load the detailed section and switch tab on click', () => {
+      wrapper.vm.handleCardClick('is_waiting');
+
+      expect(mockMonitoringStore.setActiveDetailedTab).toHaveBeenCalledWith(
+        'in_awaiting',
+      );
+      expect(mockMonitoringStore.setForceLoadDetailed).toHaveBeenCalledWith(
+        true,
+      );
+    });
+
+    it('should not navigate when the finished card is clicked', () => {
+      wrapper.vm.handleCardClick('finished');
+
+      expect(mockMonitoringStore.setActiveDetailedTab).not.toHaveBeenCalled();
+      expect(mockMonitoringStore.setForceLoadDetailed).not.toHaveBeenCalled();
     });
   });
 

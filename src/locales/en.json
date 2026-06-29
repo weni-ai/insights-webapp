@@ -82,9 +82,9 @@
       "avg": "Average conversations per contact",
       "returning_description_suffix": "of total unique contacts",
       "tooltips": {
-        "unique": "Number of distinct contacts who started conversations during the selected period.",
-        "returning": "Contacts who started more than one conversation during the selected period.",
-        "avg": "Average conversations considering all unique contacts during the period."
+        "unique": "Number of distinct contacts who started conversations during the selected period",
+        "returning": "Contacts who started more than one conversation during the selected period",
+        "avg": "Average conversations considering all unique contacts during the period"
       }
     },
     "form_topic": {
@@ -138,13 +138,20 @@
     "custom": "Horizontal bar chart",
     "crosstab": "Crosstab",
     "absolute_numbers": "Absolute numbers",
+    "abandoned_cart_recovery": "Abandoned cart recovery",
+    "added_to_cart": "Most added products to cart",
+    "search_term": "Most searched terms",
     "agent_invocation": "Most used agents",
+    "agent_invocation_description": "Follow the ranking of the most used agents",
     "agent_invocation_count": "{count} agents",
     "tool_result": "Most used tools",
+    "tool_result_description": "Follow the ranking of the most used tools",
     "tool_result_count": "{count} tools",
+    "search_term_count": "{count} products",
+    "added_to_cart_count": "{count} products",
     "auto_widget_no_data": "No data available for the filtered period",
     "auto_widget_error": "Data couldn't be loaded. Refresh the dashboard or contact support",
-    "no_data_available": "No data available for the filtered period",
+    "no_data_available": "No data available for the selected period",
     "widget_error": {
       "title": "An error occurred while loading the data",
       "button": "Check widget configuration",
@@ -185,6 +192,27 @@
       "captured_leads": "Captured leads",
       "purchases_made": "Completed purchases"
     },
+    "abandoned_cart_recovery_widget": {
+      "title": "Abandoned cart recovery",
+      "no_data": "No data available for the filtered period.",
+      "error": "Error loading data. Please refresh the dashboard or contact support.",
+      "unavailable_period": "Meta only provides the data from the last 90 days for this widget. Make sure the selected date range is within this period to view the information.",
+      "chart": {
+        "sent": "Sent",
+        "delivered": "Delivered",
+        "read": "Read",
+        "read_help": "Messages that were opened and read by the recipient. This metric depends on the recipient's individual privacy settings and may not be tracked if read receipts are disabled.",
+        "clicks": "Clicks"
+      },
+      "info_card": {
+        "recovery_revenue": "Recovered revenue",
+        "total_sends": "Total sends",
+        "converted_sales": "Converted sales",
+        "conversion_rate": "Conversion rate",
+        "average_order_value": "Average order value",
+        "roas_tooltip": "Return on Ad Spend measures how much revenue you generate for every $xxx spent on messages. Why is it so high? > Automated recovery is highly efficient because the cost of a message is minimal compared to your store's average order value."
+      }
+    },
     "customize_your_dashboard": {
       "title": "Customize your dashboard",
       "description": "Customize the dashboard with your key metrics",
@@ -195,6 +223,9 @@
       "config_csat_or_nps_description": "Set which {type} you want to track",
       "sales_funnel_description": "Track your sales: Total orders, Average ticket, Total amount, and Conversion funnel",
       "absolute_numbers_description": "Highlight a single key metric, displaying its exact value for quick, straightforward viewing.",
+      "abandoned_cart_recovery_description": "Track abandoned cart recovery metrics: recovered revenue, converted sales, conversion rate, avarege order value, etc.",
+      "search_term_description": "Follow the ranking of the most searched terms.",
+      "added_to_cart_description": "Follow the ranking of the most added products to cart.",
       "human_support": "Live desk",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -217,13 +248,15 @@
         "cancel": "Cancel"
       },
       "edit_csat_or_nps": "Edit {type}",
-      "remove_widget": "Delete widget",
+      "remove_widget": "Remove widget",
       "modal_remove_widget": {
-        "title": "Delete {type} widget",
-        "description": "Are you sure you want to delete the {type} widget?",
+        "title": "Remove widget",
+        "description": "Are you sure you want to remove the {type} widget?",
         "remove": "Remove",
         "cancel": "Cancel",
-        "success_message": "{widget} removed"
+        "success_message": "{widget} removed",
+        "remove_success": "{widget} removed successfully",
+        "remove_error": "Failed to remove {widget}. Please try again."
       },
       "tabs": {
         "sentiment_analysis": "Sentiment analysis",
@@ -876,6 +909,8 @@
       "resolutions": "Conversation resolutions",
       "tool_result": "Most used tools",
       "agent_invocation": "Most used agents",
+      "search_terms": "Most searched terms",
+      "added_to_cart": "Most added products to cart",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1025,6 +1060,7 @@
         "duration": "Duration",
         "awaiting_time": "Wait time",
         "first_response_time": "Time to first response",
+        "pending_response_tooltip": "The last message in the chat was sent by the contact",
         "attendant": "Representative",
         "sector": "Industry",
         "queue": "Queue",
@@ -1108,6 +1144,9 @@
         "not_handled": {
           "title": "Not handled",
           "description": "Conversation ended while still in queue"
+        },
+        "duration": {
+          "automatic_closed_tooltip": "Automatically ended due to lack of interaction from the contact."
         }
       }
     },
@@ -1135,11 +1174,11 @@
       "no_response": "No response"
     },
     "deleted_tooltips": {
-      "queue_and_sector": "Queue and sector removed from project",
+      "queue_and_sector": "Queue and department removed from project",
       "queue": "Queue removed from project",
-      "tag_and_sector": "Tag and sector removed from project",
+      "tag_and_sector": "Tag and department removed from project",
       "tag": "Tag removed from project",
-      "sector": "Sector removed from project",
+      "sector": "Department removed from project",
       "representative": "Representative removed from project"
     },
     "volume_per_queue": {
@@ -1202,17 +1241,17 @@
   },
   "without_results": "No results found",
   "mcp_news": {
-    "modal_title": "Analytics, now available in AI tools!",
-    "modal_description": "The MCP securely connects your Analytics data to AI tools like ChatGPT, Claude, Cursor, and more to explore insights using natural language.",
+    "modal_title": "Analytics is now available in AI tools!",
+    "modal_description": "MCP securely connects Analytics data to AI tools like ChatGPT, Claude, Cursor, and more, to explore insights using natural language.",
     "flow_analytics": "ANALYTICS",
     "flow_mcp_connection": "MCP CONNECTION",
     "flow_ai_tools": "AI TOOLS",
-    "flow_prompt": "\"Which topics did the AI struggle with the most?\"",
+    "flow_prompt": "\"Which topics did AI struggle with the most?\"",
     "feature_ask_questions": "Ask questions about your data in natural language",
     "feature_track_metrics": "Track CSAT, NPS, and conversation performance instantly",
     "feature_prepare_reports": "Prepare reports and generate custom dashboards",
-    "privacy_note": "Only data you have access to is available through MCP.",
-    "not_now": "Not now",
+    "privacy_note": "Only data you can access is available through MCP.",
+    "not_now": "Maybe later",
     "view_setup_guide": "View setup guide"
   }
 }

@@ -64,6 +64,16 @@ interface AutoWidgetResponse {
   results: AutoWidgetResult[];
 }
 
+interface ProductRankingResult {
+  label: string;
+  value: number;
+  full_value: number;
+}
+
+interface ProductRankingResponse {
+  results: ProductRankingResult[];
+}
+
 interface WidgetQueryParams {
   start_date?: string;
   end_date?: string;
@@ -317,6 +327,65 @@ export default {
 
     return response;
   },
+
+  async getSearchTermsData(
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { signal?: AbortSignal } = {},
+  ): Promise<ProductRankingResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/conversations/search-terms/', {
+      params,
+      signal: options.signal,
+    })) as ProductRankingResponse;
+
+    return response;
+  },
+
+  async getAddedToCartData(
+    queryParams: Partial<WidgetQueryParams> = {},
+    options: { signal?: AbortSignal } = {},
+  ): Promise<ProductRankingResponse> {
+    const { project } = useConfig();
+    const { appliedFilters } = useConversational();
+
+    const params = {
+      project_uuid: project.uuid,
+      ...appliedFilters,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/conversations/added-to-cart/', {
+      params,
+      signal: options.signal,
+    })) as ProductRankingResponse;
+
+    return response;
+  },
+
+  async getAbandonedCartRecoveryData(
+    queryParams: Partial<WidgetQueryParams> = {},
+  ): Promise<Record<string, any>[]> {
+    const { project } = useConfig();
+    const params = {
+      skill: 'abandoned_cart',
+      project_uuid: project.uuid,
+      ...queryParams,
+    };
+
+    const response = (await http.get('/metrics/skills/', {
+      params,
+    })) as Record<string, any>[];
+
+    return response;
+  },
 };
 
 export { AvailableWidget };
@@ -336,4 +405,6 @@ export type {
   AbsoluteNumbersChildrenItem,
   AutoWidgetResult,
   AutoWidgetResponse,
+  ProductRankingResult,
+  ProductRankingResponse,
 };

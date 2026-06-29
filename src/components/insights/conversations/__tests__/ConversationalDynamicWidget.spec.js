@@ -46,6 +46,8 @@ const createWrapper = (props = {}) =>
         ConversationalSalesFunnel: true,
         ConversationalAgentInvocation: true,
         ConversationalToolResult: true,
+        ConversationalSearchTerm: true,
+        ConversationalAddedToCart: true,
         ConversationalAdd: true,
         AddWidget: true,
       },
@@ -110,6 +112,20 @@ describe('ConversationalDynamicWidget', () => {
       ).toBe(true);
     });
 
+    it('renders ConversationalSearchTerm for search_term type', () => {
+      const wrapper = createWrapper({ type: 'search_term' });
+      expect(
+        wrapper.findComponent({ name: 'ConversationalSearchTerm' }).exists(),
+      ).toBe(true);
+    });
+
+    it('renders ConversationalAddedToCart for added_to_cart type', () => {
+      const wrapper = createWrapper({ type: 'added_to_cart' });
+      expect(
+        wrapper.findComponent({ name: 'ConversationalAddedToCart' }).exists(),
+      ).toBe(true);
+    });
+
     it('renders ConversationalAdd for add type', () => {
       const wrapper = createWrapper({ type: 'add' });
       expect(
@@ -132,6 +148,15 @@ describe('ConversationalDynamicWidget', () => {
       expect(wrapper.find('.conversational-dynamic-widget').exists()).toBe(
         true,
       );
+    });
+
+    it('wraps the widget in a LazyWidget boundary', () => {
+      const wrapper = createWrapper({ type: 'csat' });
+      const lazyWidget = wrapper.findComponent({ name: 'LazyWidget' });
+      expect(lazyWidget.exists()).toBe(true);
+      expect(
+        lazyWidget.findComponent({ name: 'ConversationalCsat' }).exists(),
+      ).toBe(true);
     });
 
     it('computes currentComponent correctly', () => {
@@ -185,6 +210,8 @@ describe('ConversationalDynamicWidget', () => {
       'crosstab',
       'agent_invocation',
       'tool_result',
+      'search_term',
+      'added_to_cart',
     ])('renders overlay for %s widget type', (type) => {
       const wrapper = createWrapper({ type, uuid: 'test-uuid' });
       expect(wrapper.find('[data-testid="mock-widget-overlay"]').exists()).toBe(

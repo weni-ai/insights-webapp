@@ -177,6 +177,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
         NPS_AI: { model: 'nps', subsection: 'ai' },
         NPS_HUMAN: { model: 'nps', subsection: 'human' },
         CONTACTS: { model: 'contacts' },
+        SEARCH_TERMS: { model: 'search_terms' },
+        ADDED_TO_CART: { model: 'added_to_cart' },
       };
 
       availableWidgets.sections.forEach((section) => {
@@ -235,6 +237,8 @@ export const useConversationalExport = defineStore('conversationalExport', {
           tool_result: 'TOOL_RESULT',
           agent_invocation: 'AGENT_INVOCATION',
           contacts: 'CONTACTS',
+          search_terms: 'SEARCH_TERMS',
+          added_to_cart: 'ADDED_TO_CART',
           topics: { human: 'TOPICS_HUMAN', ai: 'TOPICS_AI' },
           csat: { human: 'CSAT_HUMAN', ai: 'CSAT_AI' },
           nps: { human: 'NPS_HUMAN', ai: 'NPS_AI' },
@@ -325,7 +329,9 @@ export const useConversationalExport = defineStore('conversationalExport', {
         state.enabled_models.includes('transferred') ||
         state.enabled_models.includes('tool_result') ||
         state.enabled_models.includes('agent_invocation') ||
-        state.enabled_models.includes('contacts')
+        state.enabled_models.includes('contacts') ||
+        state.enabled_models.includes('search_terms') ||
+        state.enabled_models.includes('added_to_cart')
       ) {
         hasValidSelections = true;
       }

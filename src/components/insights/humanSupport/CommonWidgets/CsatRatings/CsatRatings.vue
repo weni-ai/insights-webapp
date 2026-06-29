@@ -102,10 +102,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useInfiniteScroll, useMouseInElement } from '@vueuse/core';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import type {
   AgentsTotalsResponse,
@@ -155,8 +157,8 @@ interface Props {
 
 const props = defineProps<Props>();
 
-onMounted(() => {
-  configStore.checkEnableCsat().then(() => {
+const loadCsatData = () => {
+  return configStore.checkEnableCsat().then(() => {
     if (configStore.enableCsat) {
       loadAgentsData();
       loadRatingsData();
@@ -165,7 +167,9 @@ onMounted(() => {
       isLoadingRatingsData.value = false;
     }
   });
-});
+};
+
+const { hasBeenVisible } = useLazyData({ load: loadCsatData });
 
 const { t, locale: localeI18n } = useI18n();
 
@@ -325,6 +329,7 @@ watch(activeAgentEmail, () => {
 watch(
   () => [appliedFilters.value, appliedDateRange.value],
   () => {
+    if (!hasBeenVisible.value) return;
     if (!configStore.enableCsat) return;
     loadAgentsData();
     if (!activeAgentEmail.value) {
@@ -337,6 +342,7 @@ watch(
 watch(
   () => humanSupportMonitoringStore.refreshDataMonitoring,
   (value) => {
+    if (!hasBeenVisible.value) return;
     if (!configStore.enableCsat) return;
     if (value) {
       agentsTotalNext.value = null;

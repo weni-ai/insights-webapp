@@ -1,27 +1,31 @@
 <template>
-  <section
-    class="conversational-dynamic-widget"
-    :class="{ 'conversational-dynamic-widget--mock-hover': showMockOverlay }"
-  >
-    <component
-      :is="currentComponent"
-      :uuid="uuid"
-    />
+  <LazyWidget>
+    <section
+      class="conversational-dynamic-widget"
+      :class="{ 'conversational-dynamic-widget--mock-hover': showMockOverlay }"
+    >
+      <component
+        :is="currentComponent"
+        :uuid="uuid"
+      />
 
-    <AddWidget
-      v-if="showMockOverlay"
-      class="conversational-dynamic-widget__mock-overlay"
-      :title="$t('conversations_dashboard.customize_your_dashboard.title')"
-      :description="
-        $t('conversations_dashboard.customize_your_dashboard.description')
-      "
-      :actionText="
-        $t('conversations_dashboard.customize_your_dashboard.add_first_widget')
-      "
-      data-testid="mock-widget-overlay"
-      @action="handleOpenDrawer"
-    />
-  </section>
+      <AddWidget
+        v-if="showMockOverlay"
+        class="conversational-dynamic-widget__mock-overlay"
+        :title="$t('conversations_dashboard.customize_your_dashboard.title')"
+        :description="
+          $t('conversations_dashboard.customize_your_dashboard.description')
+        "
+        :actionText="
+          $t(
+            'conversations_dashboard.customize_your_dashboard.add_first_widget',
+          )
+        "
+        data-testid="mock-widget-overlay"
+        @action="handleOpenDrawer"
+      />
+    </section>
+  </LazyWidget>
 </template>
 
 <script setup lang="ts">
@@ -36,8 +40,11 @@ import ConversationalSalesFunnel from '@/components/insights/widgets/conversatio
 import ConversationalAbsoluteNumbers from '@/components/insights/widgets/conversational/ConversacionalAbsoluteNumbers/index.vue';
 import ConversationalAgentInvocation from '@/components/insights/widgets/conversational/ConversationalAgentInvocation.vue';
 import ConversationalToolResult from '@/components/insights/widgets/conversational/ConversationalToolResult.vue';
+import ConversationalSearchTerm from '@/components/insights/widgets/conversational/ConversationalSearchTerm.vue';
+import ConversationalAddedToCart from '@/components/insights/widgets/conversational/ConversationalAddedToCart.vue';
 import ConversationalAdd from '@/components/insights/widgets/conversational/ConversationalAdd.vue';
 import AddWidget from '@/components/insights/conversations/AddWidget.vue';
+import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 
 type ConversationalWidgetType =
@@ -49,7 +56,9 @@ type ConversationalWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | 'agent_invocation'
-  | 'tool_result';
+  | 'tool_result'
+  | 'search_term'
+  | 'added_to_cart';
 
 interface Props {
   type: ConversationalWidgetType;
@@ -71,6 +80,8 @@ const componentMap: Record<ConversationalWidgetType, Component> = {
   absolute_numbers: ConversationalAbsoluteNumbers,
   agent_invocation: ConversationalAgentInvocation,
   tool_result: ConversationalToolResult,
+  search_term: ConversationalSearchTerm,
+  added_to_cart: ConversationalAddedToCart,
   add: ConversationalAdd,
 };
 

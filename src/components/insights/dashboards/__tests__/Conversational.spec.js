@@ -10,6 +10,8 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useProject } from '@/store/modules/project';
 
 config.global.plugins = [
   createI18n({
@@ -23,6 +25,36 @@ vi.mock('@/store/modules/conversational/customWidgets');
 vi.mock('@/store/modules/conversational/conversational');
 vi.mock('@/store/modules/conversational/topics');
 vi.mock('@/store/modules/conversational/autoWidgets');
+vi.mock('@/store/modules/dashboards');
+vi.mock('@/store/modules/project');
+vi.mock(
+  '@/components/insights/widgets/conversational/__mock__/productRankingMock',
+  () => ({
+    PRODUCT_RANKING_MOCK_ENABLED: false,
+    getProductRankingWidgetMock: () => null,
+  }),
+);
+vi.mock('@/services/api/resources/dashboards', () => ({
+  default: {
+    updateDashboardConfig: vi.fn(() => Promise.resolve({})),
+  },
+}));
+vi.mock('@/composables/useFeedbackSurvey', () => ({
+  useFeedbackSurvey: () => ({
+    shouldShowModal: ref(false),
+    surveyUuid: ref(''),
+    checkSurvey: vi.fn(),
+    onPostpone: vi.fn(),
+    onSubmitted: vi.fn(),
+    onSubmitError: vi.fn(),
+  }),
+}));
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: vi.fn(() => false),
+    activeFeatures: ref([]),
+  }),
+}));
 
 const autoWidgetEntries = [
   { type: 'agent_invocation', uuid: '' },
@@ -37,6 +69,7 @@ describe('Conversational.vue', () => {
   let conversationalStore;
   let topicsStore;
   let autoWidgetsStore;
+  let projectStore;
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -45,8 +78,18 @@ describe('Conversational.vue', () => {
       isCsatConfigured: false,
       isNpsConfigured: false,
       isSalesFunnelConfigured: false,
+      isSearchTermConfigured: false,
+      isAddedToCartConfigured: false,
     };
     useConversationalWidgets.mockReturnValue(conversationalWidgetsStore);
+
+    projectStore = reactive({
+      agentsTeam: { manager: null, agents: [] },
+      isSearchTermAgentAvailable: false,
+      isAddedToCartAgentAvailable: false,
+      getAgentsTeam: vi.fn().mockResolvedValue(undefined),
+    });
+    useProject.mockReturnValue(projectStore);
 
     widgetsStore = {
       isLoadingCurrentDashboardWidgets: ref(false),
@@ -92,6 +135,17 @@ describe('Conversational.vue', () => {
     };
     useAutoWidgets.mockReturnValue(autoWidgetsStore);
 
+    useDashboards.mockReturnValue({
+      currentDashboard: ref({
+        uuid: 'dashboard-uuid',
+        config: {
+          type: 'conversational',
+          show_agent_invocation: true,
+          show_tool_result: true,
+        },
+      }),
+    });
+
     wrapper = shallowMount(Conversational, {
       global: {
         stubs: {
@@ -128,6 +182,13 @@ describe('Conversational.vue', () => {
         '.dashboard-conversational__section-title',
       );
       expect(titles).toHaveLength(2);
+    });
+  });
+
+  describe('Lazy loading', () => {
+    it('should not eagerly load auto widgets on init (lazy-loaded per widget)', async () => {
+      await nextTick();
+      expect(autoWidgetsStore.loadAllAutoWidgets).not.toHaveBeenCalled();
     });
   });
 
@@ -619,6 +680,66 @@ describe('Conversational.vue', () => {
 
       const widgets = wrapper.vm.orderedDynamicWidgets;
       expect(widgets[widgets.length - 1].type).toBe('add');
+    });
+  });
+
+  describe('Product ranking widgets gating', () => {
+    it('should include search_term when agent available and configured', async () => {
+      projectStore.isSearchTermAgentAvailable = true;
+      conversationalWidgetsStore.isSearchTermConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'search_term', source: 'conversations.search_term' },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('search_term');
+    });
+
+    it('should include added_to_cart when agent available and configured', async () => {
+      projectStore.isAddedToCartAgentAvailable = true;
+      conversationalWidgetsStore.isAddedToCartConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        {
+          type: 'added_to_cart',
+          source: 'conversations.product_added_to_cart',
+        },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).toContain('added_to_cart');
+    });
+
+    it('should NOT render search_term when configured but agent unavailable', async () => {
+      projectStore.isSearchTermAgentAvailable = false;
+      conversationalWidgetsStore.isSearchTermConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        { type: 'search_term', source: 'conversations.search_term' },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).not.toContain('search_term');
+    });
+
+    it('should NOT render added_to_cart when configured but agent unavailable', async () => {
+      projectStore.isAddedToCartAgentAvailable = false;
+      conversationalWidgetsStore.isAddedToCartConfigured = true;
+
+      widgetsStore.currentDashboardWidgets.value = [
+        {
+          type: 'added_to_cart',
+          source: 'conversations.product_added_to_cart',
+        },
+      ];
+      await nextTick();
+
+      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
+      expect(types).not.toContain('added_to_cart');
     });
   });
 });

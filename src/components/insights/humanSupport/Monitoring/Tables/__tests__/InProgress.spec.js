@@ -51,6 +51,8 @@ const i18n = createI18n({
             duration: 'Duration',
             awaiting_time: 'Awaiting Time',
             first_response_time: 'First Response',
+            pending_response_tooltip:
+              'The last message in the conversation was sent by the contact',
             attendant: 'Attendant',
             sector: 'Sector',
             queue: 'Queue',
@@ -249,6 +251,108 @@ describe('InProgress', () => {
       store.refreshDataMonitoring = true;
       await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Duration pending response icon', () => {
+    const baseItem = {
+      agent: 'Test Agent',
+      duration: 120,
+      awaiting_time: 10,
+      first_response_time: 5,
+      sector: 'Sector',
+      queue: 'Queue',
+      contact: 'Contact',
+      link: { url: '', type: 'internal' },
+    };
+
+    const UnnnicDataTableStub = {
+      name: 'UnnnicDataTable',
+      props: ['items'],
+      template: `
+        <div data-testid="in-progress-table">
+          <slot name="body-duration" :item="items[0]" />
+        </div>
+      `,
+    };
+
+    const createWrapperWithItem = (pendingResponse) => {
+      mockInfiniteScroll.formattedItems = {
+        value: [{ ...baseItem, pending_response: pendingResponse }],
+      };
+
+      return mount(InProgress, {
+        global: {
+          plugins: [
+            createTestingPinia({
+              initialState: {
+                project: { hasSectorsConfigured: true },
+                humanSupport: { appliedFilters: {} },
+                humanSupportMonitoring: {
+                  refreshDataMonitoring: false,
+                  isSilentRefresh: false,
+                  activeDetailedTab: 'in_progress',
+                },
+              },
+            }),
+          ],
+          stubs: {
+            UnnnicDataTable: UnnnicDataTableStub,
+            UnnnicToolTip: {
+              name: 'UnnnicToolTip',
+              props: ['text', 'enabled', 'side'],
+              template:
+                '<div data-testid="in-progress-pending-response-tooltip"><slot /></div>',
+            },
+            UnnnicIcon: {
+              name: 'UnnnicIcon',
+              props: ['icon', 'size'],
+              template:
+                '<span data-testid="in-progress-pending-response-icon" @click.stop />',
+            },
+          },
+        },
+      });
+    };
+
+    it('shows reply icon and tooltip when pending_response is true', () => {
+      const durationWrapper = createWrapperWithItem(true);
+
+      expect(
+        durationWrapper
+          .find('[data-testid="in-progress-pending-response-icon"]')
+          .exists(),
+      ).toBe(true);
+      expect(
+        durationWrapper
+          .find('[data-testid="in-progress-pending-response-tooltip"]')
+          .exists(),
+      ).toBe(true);
+
+      const tooltip = durationWrapper.findComponent({
+        name: 'UnnnicToolTip',
+      });
+      expect(tooltip.props('text')).toBe(
+        'The last message in the conversation was sent by the contact',
+      );
+
+      const icon = durationWrapper.findComponent({ name: 'UnnnicIcon' });
+      expect(icon.props('icon')).toBe('reply');
+    });
+
+    it('does not show reply icon when pending_response is false', () => {
+      const durationWrapper = createWrapperWithItem(false);
+
+      expect(
+        durationWrapper
+          .find('[data-testid="in-progress-pending-response-icon"]')
+          .exists(),
+      ).toBe(false);
+      expect(
+        durationWrapper
+          .find('[data-testid="in-progress-pending-response-tooltip"]')
+          .exists(),
+      ).toBe(false);
     });
   });
 });

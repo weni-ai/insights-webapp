@@ -68,6 +68,9 @@ import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { UnnnicCallAlert } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
+import DashboardsService from '@/services/api/resources/dashboards';
+import { useDashboards } from '@/store/modules/dashboards';
+import { storeToRefs } from 'pinia';
 
 const { t } = useI18n();
 
@@ -79,7 +82,12 @@ interface Props {
     | 'sales_funnel'
     | 'crosstab'
     | 'absolute_numbers'
-    | 'absolute_numbers_child';
+    | 'absolute_numbers_child'
+    | 'abandoned_cart_recovery'
+    | 'agent_invocation'
+    | 'tool_result'
+    | 'search_term'
+    | 'added_to_cart';
   modelValue: boolean;
   uuid?: string;
   name?: string;
@@ -93,6 +101,8 @@ const emit = defineEmits<{
   (_e: 'update:modelValue', _value: boolean): void;
   (_e: 'success'): void;
 }>();
+
+const { currentDashboard } = storeToRefs(useDashboards());
 
 const { deleteWidget } = useConversationalWidgets();
 const { deleteCustomWidget } = useCustomWidgets();
@@ -108,6 +118,45 @@ const dialogContentSize = computed(() => {
   return map[props.size ?? 'sm'];
 });
 
+const handleRemoveAgentInvocationWidget = async () => {
+  if (
+    props.type !== 'agent_invocation' &&
+    currentDashboard.value.config?.type !== 'conversational'
+  ) {
+    return;
+  }
+  await DashboardsService.updateDashboardConfig({
+    dashboardUuid: currentDashboard.value.uuid,
+    config: {
+      ...(currentDashboard.value.config || {}),
+      type: 'conversational',
+      show_agent_invocation: false,
+    },
+  });
+  currentDashboard.value.config.show_agent_invocation = false;
+};
+
+const handleRemoveToolResultWidget = async () => {
+  if (
+    props.type !== 'tool_result' &&
+    currentDashboard.value.config?.type !== 'conversational'
+  ) {
+    return;
+  }
+  await DashboardsService.updateDashboardConfig({
+    dashboardUuid: currentDashboard.value.uuid,
+    config: {
+      ...(currentDashboard.value.config || {}),
+      type: 'conversational',
+      show_tool_result: false,
+    },
+  });
+  currentDashboard.value.config.show_tool_result = false;
+};
+const isProductRankingWidget = computed(
+  () => props.type === 'search_term' || props.type === 'added_to_cart',
+);
+
 const handleRemoveWidget = async () => {
   try {
     isLoading.value = true;
@@ -117,18 +166,25 @@ const handleRemoveWidget = async () => {
       props.type === 'absolute_numbers_child'
     ) {
       await deleteCustomWidget(props.uuid);
+    } else if (props.type === 'agent_invocation') {
+      await handleRemoveAgentInvocationWidget();
+    } else if (props.type === 'tool_result') {
+      await handleRemoveToolResultWidget();
     } else {
       await deleteWidget(props.type);
     }
 
     UnnnicCallAlert({
       props: {
-        text: t(
-          'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
-          {
-            widget: props.name,
-          },
-        ),
+        text: isProductRankingWidget.value
+          ? t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove_success',
+              { widget: props.name },
+            )
+          : t(
+              'conversations_dashboard.customize_your_dashboard.modal_remove_widget.success_message',
+              { widget: props.name },
+            ),
         type: 'success',
         seconds: 5,
       },
@@ -138,6 +194,19 @@ const handleRemoveWidget = async () => {
     emit('success');
   } catch (error) {
     console.error('Error removing widget', error);
+
+    if (isProductRankingWidget.value) {
+      UnnnicCallAlert({
+        props: {
+          text: t(
+            'conversations_dashboard.customize_your_dashboard.modal_remove_widget.remove_error',
+            { widget: props.name },
+          ),
+          type: 'error',
+          seconds: 5,
+        },
+      });
+    }
   } finally {
     isLoading.value = false;
   }

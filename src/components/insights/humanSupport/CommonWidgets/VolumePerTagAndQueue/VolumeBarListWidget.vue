@@ -26,12 +26,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useProject } from '@/store/modules/project';
+
+import { useLazyData } from '@/composables/useLazyData';
 
 import BarList from '../BarList/index.vue';
 import SeeAllDrawer from './SeeAllDrawer.vue';
@@ -270,8 +272,8 @@ const seeAllDrawerTitle = computed(() => {
   return `${t(props.seeAllTitleKey)} - ${statusLabel}`;
 });
 
-onMounted(async () => {
-  await getItems({ silent: false, concat: false });
+const { hasBeenVisible } = useLazyData({
+  load: () => getItems({ silent: false, concat: false }),
 });
 
 watch(
@@ -282,12 +284,14 @@ watch(
 );
 
 watch([currentTab, appliedFilters, appliedDateRange], async () => {
+  if (!hasBeenVisible.value) return;
   itemsNext.value = null;
   itemsPrevious.value = null;
   await getItems({ silent: false, concat: false });
 });
 
 watch(refreshDataMonitoring, async () => {
+  if (!hasBeenVisible.value) return;
   if (refreshDataMonitoring.value && autoRefresh.value) {
     itemsNext.value = null;
     itemsPrevious.value = null;

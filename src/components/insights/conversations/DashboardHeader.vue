@@ -28,11 +28,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import Unnnic from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
+import { useLazyData } from '@/composables/useLazyData';
 import conversationalHeaderApi from '@/services/api/resources/conversational/header';
 import { MOCK_HEADER_DATA } from '@/services/api/resources/conversational/mocks';
 import { useRoute } from 'vue-router';
@@ -127,6 +128,7 @@ const cards = computed(() =>
 watch(
   () => route.query,
   () => {
+    if (!hasBeenVisible.value) return;
     if (shouldUseMock.value) return;
     dashboardsStore.updateLastUpdatedRequest();
     loadCardData();
@@ -136,6 +138,7 @@ watch(
 watch(
   () => conversationalStore.refreshDataConversational,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue && !shouldUseMock.value) {
       dashboardsStore.updateLastUpdatedRequest();
       conversationalStore.setIsLoadingConversationalData('header', true);
@@ -234,9 +237,11 @@ const handleCardClick = (cardId: string) => {
   );
 };
 
-onMounted(() => {
-  dashboardsStore.updateLastUpdatedRequest();
-  loadCardData();
+const { hasBeenVisible } = useLazyData({
+  load: () => {
+    dashboardsStore.updateLastUpdatedRequest();
+    return loadCardData();
+  },
 });
 </script>
 

@@ -64,9 +64,7 @@ export default {
       return this.dashboardDefault?.uuid === this.dashboard.uuid;
     },
     isRenderBetaText() {
-      const isConversational =
-        this.dashboard.name === 'conversations_dashboard.title';
-      return isConversational;
+      return false;
     },
   },
 

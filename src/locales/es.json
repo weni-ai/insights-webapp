@@ -82,9 +82,9 @@
       "avg": "Promedio de conversaciones por contacto",
       "returning_description_suffix": "del total de contactos únicos",
       "tooltips": {
-        "unique": "Número de contactos distintos que iniciaron conversaciones durante el período seleccionado.",
-        "returning": "Contactos que iniciaron más de una conversación durante el período seleccionado.",
-        "avg": "Promedio de conversaciones considerando todos los contactos únicos del período."
+        "unique": "Número de contactos distintos que iniciaron conversaciones durante el período seleccionado",
+        "returning": "Contactos que iniciaron más de una conversación durante el período seleccionado",
+        "avg": "Promedio de conversaciones considerando todos los contactos únicos del período"
       }
     },
     "form_topic": {
@@ -138,13 +138,20 @@
     "custom": "Gráfico de barras horizontal",
     "crosstab": "Tabla cruzada",
     "absolute_numbers": "Números absolutos",
+    "abandoned_cart_recovery": "Recuperación de carrito abandonado",
+    "added_to_cart": "Productos más agregados al carrito",
+    "search_term": "Términos más buscados",
     "agent_invocation": "Agentes más usados",
+    "agent_invocation_description": "Sigue el ranking de los agentes más usados",
     "agent_invocation_count": "{count} agentes",
     "tool_result": "Herramientas más usadas",
+    "tool_result_description": "Sigue el ranking de las herramientas más usadas",
     "tool_result_count": "{count} herramientas",
+    "search_term_count": "{count} productos",
+    "added_to_cart_count": "{count} productos",
     "auto_widget_no_data": "No hay datos disponibles para el período filtrado",
     "auto_widget_error": "No se pudieron cargar los datos. Actualiza el panel o contacta con soporte",
-    "no_data_available": "No hay datos disponibles para el período filtrado",
+    "no_data_available": "No hay datos disponibles para el periodo seleccionado",
     "widget_error": {
       "title": "Se produjo un error al cargar los datos",
       "button": "Verificar configuración del widget",
@@ -185,6 +192,27 @@
       "captured_leads": "Leads capturados",
       "purchases_made": "Compras completadas"
     },
+    "abandoned_cart_recovery_widget": {
+      "title": "Recuperación de carrito abandonado",
+      "no_data": "No hay datos disponibles para el período filtrado.",
+      "error": "Error al cargar los datos. Actualiza el panel o contacta con soporte.",
+      "unavailable_period": "Meta solo proporciona datos para este widget de los últimos 90 días. Comprueba si el rango de fechas seleccionado se encuentra dentro de ese periodo para ver la información.",
+      "chart": {
+        "sent": "Enviados",
+        "delivered": "Entregados",
+        "read": "Leídos",
+        "read_help": "Mensajes que fueron abiertos y leídos por el destinatario. Esta métrica depende de la configuración de privacidad individual del destinatario y puede no rastrearse si los avisos de lectura están desactivados.",
+        "clicks": "Clics"
+      },
+      "info_card": {
+        "recovery_revenue": "Ingresos recuperados",
+        "total_sends": "Total de envíos",
+        "converted_sales": "Ventas convertidas",
+        "conversion_rate": "Tasa de conversión",
+        "average_order_value": "Valor promedio del pedido",
+        "roas_tooltip": "El retorno de la inversión publicitaria mide cuántos ingresos generas por cada $xxx gastado en mensajes. ¿Por qué es tan alto? > La recuperación automatizada es muy eficiente porque el costo de un mensaje es mínimo en comparación con el valor promedio del pedido de tu tienda."
+      }
+    },
     "customize_your_dashboard": {
       "title": "Personaliza tu dashboard",
       "description": "Personaliza el dashboard con tus métricas clave",
@@ -195,6 +223,9 @@
       "config_csat_or_nps_description": "Define cuál {type} deseas monitorear:",
       "sales_funnel_description": "Monitorea tus ventas: total de pedidos, ticket promedio, valor total y embudo de conversión",
       "absolute_numbers_description": "Destaca una única métrica clave, mostrando su valor exacto para una visualización rápida y directa",
+      "abandoned_cart_recovery_description": "Supervisa métricas de recuperación de carrito abandonado: ingresos recuperados, ventas convertidas, tasa de conversión, avarege order value, etc.",
+      "search_term_description": "Sigue el ranking de los términos más buscados.",
+      "added_to_cart_description": "Sigue el ranking de los productos más agregados al carrito.",
       "human_support": "Live desk",
       "ai_support": "IA",
       "activate_agent": "Activar agente",
@@ -219,11 +250,13 @@
       "edit_csat_or_nps": "Editar {type}",
       "remove_widget": "Eliminar widget",
       "modal_remove_widget": {
-        "title": "Eliminar widget {type}",
+        "title": "Eliminar widget",
         "description": "¿Realmente deseas eliminar el widget {type}?",
-        "remove": "Remover",
+        "remove": "Eliminar",
         "cancel": "Cancelar",
-        "success_message": "{widget} removido"
+        "success_message": "{widget} eliminado",
+        "remove_success": "{widget} eliminado con éxito",
+        "remove_error": "No se pudo eliminar {widget}. Inténtalo de nuevo."
       },
       "tabs": {
         "sentiment_analysis": "Análisis de opiniones",
@@ -876,6 +909,8 @@
       "resolutions": "Resoluciones de conversaciones",
       "tool_result": "Herramientas más usadas",
       "agent_invocation": "Agentes más usados",
+      "search_terms": "Términos más buscados",
+      "added_to_cart": "Productos más agregados al carrito",
       "topics": "Asuntos",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1025,6 +1060,7 @@
         "duration": "Duración",
         "awaiting_time": "Tiempo de espera",
         "first_response_time": "Tiempo hasta la primera respuesta",
+        "pending_response_tooltip": "El último mensaje del chat lo envió el contacto",
         "attendant": "Representante",
         "sector": "Sector",
         "queue": "Cola",
@@ -1108,6 +1144,9 @@
         "not_handled": {
           "title": "No atendido",
           "description": "La conversación finalizó mientras aún estaba en la cola"
+        },
+        "duration": {
+          "automatic_closed_tooltip": "Finalizado automáticamente por falta de interacción del contacto"
         }
       }
     },
@@ -1135,12 +1174,12 @@
       "no_response": "Sin respuesta"
     },
     "deleted_tooltips": {
-      "queue_and_sector": "Cola y sector eliminados del proyecto",
-      "queue": "Cola eliminada del proyecto",
-      "tag_and_sector": "Tag y sector eliminados del proyecto",
-      "tag": "Tag eliminada del proyecto",
-      "sector": "Sector eliminado del proyecto",
-      "representative": "Representante eliminado del proyecto"
+      "queue_and_sector": "Cola y departamento removidos del proyecto",
+      "queue": "Cola removida del proyecto",
+      "tag_and_sector": "Tag y departamento removidos del proyecto",
+      "tag": "Tag removida del proyecto",
+      "sector": "Departamento removido del proyecto",
+      "representative": "Representante removido del proyecto"
     },
     "volume_per_queue": {
       "title": "Volumen por cola",
@@ -1202,16 +1241,16 @@
   },
   "without_results": "No se encontró ningún resultado",
   "mcp_news": {
-    "modal_title": "Analytics, ahora disponible en herramientas de IA!",
-    "modal_description": "El MCP conecta de forma segura los datos de Analytics a herramientas de IA como ChatGPT, Claude, Cursor y más para explorar insights usando lenguaje natural.",
+    "modal_title": "¡Analytics ya está disponible en las herramientas de IA!",
+    "modal_description": "El MCP conecta de forma segura los datos de Analytics con herramientas de IA como ChatGPT, Claude, Cursor y otras para explorar insights usando lenguaje natural.",
     "flow_analytics": "ANALYTICS",
-    "flow_mcp_connection": "CONEXIÓN MCP",
+    "flow_mcp_connection": "CONEXIÓN CON MCP",
     "flow_ai_tools": "HERRAMIENTAS DE IA",
-    "flow_prompt": "\"¿Cuáles temas le resultaron más difíciles a la IA?\"",
-    "feature_ask_questions": "Haz preguntas sobre tus datos en lenguaje natural",
-    "feature_track_metrics": "Monitorea CSAT, NPS y rendimiento de conversaciones al instante",
+    "flow_prompt": "\"¿Con qué temas tuvo más dificultades la IA?\"",
+    "feature_ask_questions": "Haz preguntas sobre los datos en lenguaje natural",
+    "feature_track_metrics": "Monitorea CSAT, NPS y el desempeño de las conversaciones instantáneamente",
     "feature_prepare_reports": "Prepara informes y genera dashboards personalizados",
-    "privacy_note": "Solo los datos a los que tienes acceso están disponibles a través del MCP.",
+    "privacy_note": "Solo están disponibles en el MCP los datos a los que tienes acceso.",
     "not_now": "Ahora no",
     "view_setup_guide": "Ver guía de configuración"
   }

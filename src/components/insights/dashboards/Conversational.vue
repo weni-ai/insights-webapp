@@ -1,7 +1,5 @@
 <template>
   <section class="dashboard-conversational">
-    <Info class="dashboard-conversational__info" />
-
     <section
       class="dashboard-conversational__section"
       data-testid="conversations-section"
@@ -9,7 +7,9 @@
       <h2 class="dashboard-conversational__section-title">
         {{ $t('conversations_dashboard.sections.conversations') }}
       </h2>
-      <DashboardHeader class="dashboard-conversational__header" />
+      <LazyWidget class="dashboard-conversational__header">
+        <DashboardHeader />
+      </LazyWidget>
     </section>
 
     <section
@@ -19,12 +19,21 @@
       <h2 class="dashboard-conversational__section-title">
         {{ $t('conversations_dashboard.sections.contacts') }}
       </h2>
-      <ContactsHeader class="dashboard-conversational__header" />
+      <LazyWidget class="dashboard-conversational__header">
+        <ContactsHeader />
+      </LazyWidget>
     </section>
 
-    <MostTalkedAboutTopicsWidget
-      class="dashboard-conversational__most-talked-about-topics"
-    />
+    <LazyWidget class="dashboard-conversational__most-talked-about-topics">
+      <MostTalkedAboutTopicsWidget />
+    </LazyWidget>
+
+    <LazyWidget
+      v-if="isAbandonedCartRecoveryConfigured"
+      class="dashboard-conversational__abandoned-cart-widget"
+    >
+      <AbandonedCartWidget />
+    </LazyWidget>
 
     <ConversationalDynamicWidget
       v-for="(widget, index) in orderedDynamicWidgets"
@@ -53,21 +62,31 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
+
 import DashboardHeader from '@/components/insights/conversations/DashboardHeader.vue';
 import ContactsHeader from '@/components/insights/conversations/ContactsHeader.vue';
 import MostTalkedAboutTopicsWidget from '@/components/insights/conversations/MostTalkedAboutTopicsWidget/index.vue';
 import ConversationalDynamicWidget from '@/components/insights/conversations/ConversationalDynamicWidget.vue';
-import { useWidgets } from '@/store/modules/widgets';
 import CustomizableDrawer from '@/components/insights/conversations/CustomizableWidget/CustomizableDrawer.vue';
+import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
+import AbandonedCartWidget from '@/components/insights/conversations/AbandonedCartWidget/index.vue';
+import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
+
+import { useWidgets } from '@/store/modules/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
-import Info from '@/components/insights/conversations/Info.vue';
-import DataFeedbackModal from '@/components/insights/conversations/Feedback/DataFeedbackModal.vue';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useDashboards } from '@/store/modules/dashboards';
+import { useProject } from '@/store/modules/project';
+
 import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
+
+defineOptions({
+  name: 'ConversationalDashboard',
+});
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 const { activeFeatures } = storeToRefs(useFeatureFlag());
@@ -90,7 +109,9 @@ type ConversationalWidgetType =
   | 'crosstab'
   | 'absolute_numbers'
   | 'agent_invocation'
-  | 'tool_result';
+  | 'tool_result'
+  | 'search_term'
+  | 'added_to_cart';
 
 const customWidgets = useCustomWidgets();
 const widgets = useWidgets();
@@ -98,14 +119,21 @@ const conversational = useConversational();
 const conversationalWidgets = useConversationalWidgets();
 const topicsStore = useConversationalTopics();
 const autoWidgets = useAutoWidgets();
+const project = useProject();
 
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
 const { isConfigurationLoaded } = storeToRefs(conversational);
+const { isAbandonedCartRecoveryConfigured } = storeToRefs(
+  conversationalWidgets,
+);
 
 const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
   [],
 );
+
+const dashboardsStore = useDashboards();
+const { currentDashboard } = storeToRefs(dashboardsStore);
 
 const orderedDynamicWidgets = computed(() => {
   if (isLoadingCurrentDashboardWidgets.value) {
@@ -126,8 +154,12 @@ const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
   const useMock = conversational.shouldUseMock;
 
-  newWidgets.push({ type: 'agent_invocation', uuid: '' });
-  newWidgets.push({ type: 'tool_result', uuid: '' });
+  if (currentDashboard.value.config?.show_agent_invocation) {
+    newWidgets.push({ type: 'agent_invocation', uuid: '' });
+  }
+  if (currentDashboard.value.config?.show_tool_result) {
+    newWidgets.push({ type: 'tool_result', uuid: '' });
+  }
 
   if (useMock || conversationalWidgets.isCsatConfigured) {
     newWidgets.push({ type: 'csat', uuid: '' });
@@ -137,6 +169,7 @@ const setDynamicWidgets = () => {
   }
 
   const customWidgetsList = customWidgets.getCustomWidgets;
+
   if (customWidgetsList.length > 0) {
     customWidgetsList.forEach((widget) => {
       newWidgets.push({
@@ -152,6 +185,19 @@ const setDynamicWidgets = () => {
 
   if (useMock || conversationalWidgets.isSalesFunnelConfigured) {
     newWidgets.push({ type: 'sales_funnel', uuid: '' });
+  }
+
+  if (
+    project.isSearchTermAgentAvailable &&
+    conversationalWidgets.isSearchTermConfigured
+  ) {
+    newWidgets.push({ type: 'search_term', uuid: '' });
+  }
+  if (
+    project.isAddedToCartAgentAvailable &&
+    conversationalWidgets.isAddedToCartConfigured
+  ) {
+    newWidgets.push({ type: 'added_to_cart', uuid: '' });
   }
 
   newWidgets.push({ type: 'add', uuid: '' });
@@ -185,12 +231,12 @@ const waitForDashboardWidgets = () =>
 
 const initializeConfiguration = async () => {
   const topicsPromise = topicsStore.loadFormTopics();
-  const autoWidgetsPromise = autoWidgets.loadAllAutoWidgets();
+  project.getAgentsTeam();
 
   await waitForDashboardWidgets();
   setDynamicWidgets();
 
-  await Promise.all([topicsPromise, autoWidgetsPromise]);
+  await topicsPromise;
   conversational.setConfigurationLoaded(true);
 
   if (conversational.shouldUseMock) {
@@ -208,7 +254,12 @@ const initializeConfiguration = async () => {
 };
 
 watch(
-  currentDashboardWidgets,
+  [
+    () => currentDashboardWidgets.value,
+    () => currentDashboard.value.config,
+    () => project.agentsTeam.agents,
+    () => activeFeatures.value,
+  ],
   () => {
     if (isConfigurationLoaded.value) {
       setDynamicWidgets();
@@ -237,7 +288,7 @@ watch(
   },
 );
 
-onMounted(() => {
+onMounted(async () => {
   initializeConfiguration();
 });
 
@@ -282,6 +333,10 @@ $layout-gap: $unnnic-space-4;
   }
 
   &__header {
+    width: 100%;
+  }
+
+  &__abandoned-cart-widget {
     width: 100%;
   }
 

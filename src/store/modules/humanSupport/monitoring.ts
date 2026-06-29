@@ -20,6 +20,7 @@ export const useHumanSupportMonitoring = defineStore(
     const autoRefresh = ref<boolean>(true);
     const refreshDataMonitoring = ref<boolean>(false);
     const isSilentRefresh = ref<boolean>(false);
+    const forceLoadDetailed = ref<boolean>(false);
     const activeDetailedTab = ref<ActiveDetailedTab>('in_progress');
     const serviceStatusData = ref<ServiceStatusDataResponse>({
       is_waiting: null,
@@ -35,6 +36,13 @@ export const useHumanSupportMonitoring = defineStore(
     const loadingServiceStatusData = ref(false);
     const loadingTimeMetricsData = ref(false);
     const loadingHumanSupportByHourData = ref(false);
+
+    // Tracks which data slices have already been requested (i.e. became
+    // visible). The central refresh/polling only reloads loaded slices so
+    // off-screen widgets are never fetched until the user scrolls to them.
+    const hasLoadedServiceStatus = ref(false);
+    const hasLoadedTimeMetrics = ref(false);
+    const hasLoadedHumanSupportByHour = ref(false);
 
     const { updateLastUpdatedRequest } = useDashboards();
 
@@ -54,13 +62,18 @@ export const useHumanSupportMonitoring = defineStore(
       isSilentRefresh.value = silent;
     };
 
+    const setForceLoadDetailed = (value: boolean) => {
+      forceLoadDetailed.value = value;
+    };
+
     const loadAllData = () => {
-      loadServiceStatusData();
-      loadTimeMetricsData();
-      loadHumanSupportByHourData();
+      if (hasLoadedServiceStatus.value) loadServiceStatusData();
+      if (hasLoadedTimeMetrics.value) loadTimeMetricsData();
+      if (hasLoadedHumanSupportByHour.value) loadHumanSupportByHourData();
     };
 
     const loadServiceStatusData = async () => {
+      hasLoadedServiceStatus.value = true;
       try {
         if (!isSilentRefresh.value) {
           loadingServiceStatusData.value = true;
@@ -79,6 +92,7 @@ export const useHumanSupportMonitoring = defineStore(
     };
 
     const loadTimeMetricsData = async () => {
+      hasLoadedTimeMetrics.value = true;
       try {
         if (!isSilentRefresh.value) {
           loadingTimeMetricsData.value = true;
@@ -98,6 +112,7 @@ export const useHumanSupportMonitoring = defineStore(
     };
 
     const loadHumanSupportByHourData = async () => {
+      hasLoadedHumanSupportByHour.value = true;
       try {
         if (!isSilentRefresh.value) {
           loadingHumanSupportByHourData.value = true;
@@ -120,10 +135,6 @@ export const useHumanSupportMonitoring = defineStore(
       if (newValue) loadAllData();
     });
 
-    watch(refreshDataMonitoring, (value) => {
-      if (value) loadAllData();
-    });
-
     return {
       isLoadingAllData,
       serviceStatusData,
@@ -136,12 +147,14 @@ export const useHumanSupportMonitoring = defineStore(
       autoRefresh,
       refreshDataMonitoring,
       isSilentRefresh,
+      forceLoadDetailed,
       loadAllData,
       loadServiceStatusData,
       loadTimeMetricsData,
       loadHumanSupportByHourData,
       setActiveDetailedTab,
       setRefreshDataMonitoring,
+      setForceLoadDetailed,
     };
   },
 );

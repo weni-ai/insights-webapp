@@ -144,6 +144,11 @@ export default {
   async mounted() {
     try {
       await this.handlerTokenAndProjectUuid();
+
+      this.checkHasAbandonedCartRecoveryConfigured().then(() => {
+        this.getAbandonedCartRecoveryCost();
+      });
+
       this.checkHasSectorsConfigured();
       this.getDashboards().then(() => {
         this.handleRedirectToHumanServiceDashboard();
@@ -169,6 +174,8 @@ export default {
       'setIsCommerce',
       'checkHasSectorsConfigured',
       'checkHasTagsConfigured',
+      'checkHasAbandonedCartRecoveryConfigured',
+      'getAbandonedCartRecoveryCost',
     ]),
     ...mapActions(useUser, ['setEmail']),
     ...mapActions(useOnboarding, [

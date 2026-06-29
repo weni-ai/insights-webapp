@@ -58,6 +58,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
+import { useLazyData } from '@/composables/useLazyData';
 import { storeToRefs } from 'pinia';
 import { openNewTabLink } from '@/utils/redirect';
 import DynamicCellText from '../DynamicCellText.vue';
@@ -214,6 +215,10 @@ const loadDataSafely = async (sortValue: typeof currentSort.value) => {
   }
 };
 
+const { hasBeenVisible } = useLazyData({
+  load: () => loadDataSafely(currentSort.value),
+});
+
 watch(
   [
     currentSort,
@@ -222,14 +227,15 @@ watch(
     () => humanSupport.appliedDateRange,
   ],
   () => {
+    if (!hasBeenVisible.value) return;
     loadDataSafely(currentSort.value);
   },
-  { immediate: true },
 );
 
 watch(
   () => humanSupportMonitoring.refreshDataMonitoring,
   (newValue) => {
+    if (!hasBeenVisible.value) return;
     if (newValue && humanSupportMonitoring.activeDetailedTab === 'pauses') {
       loadDataSafely(currentSort.value);
     }

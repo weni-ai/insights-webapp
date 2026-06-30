@@ -1050,6 +1050,13 @@
       "first_response_time": "Această conversație a depășit limita de {value} {unit} pentru primul răspuns.",
       "waiting_time": "Această conversație a depășit limita de {value} {unit} de așteptare."
     },
+    "toast": {
+      "conversation_duration": "{count} conversații au depășit durata maximă",
+      "first_response_time": "{count} conversații au depășit timpul maxim pentru primul răspuns",
+      "title": "Live Desk: atenție imediată necesară",
+      "view_details": "Vezi detalii",
+      "waiting_time": "{count} conversații au depășit timpul maxim de așteptare"
+    },
     "unit_word_singular": {
       "h": "oră",
       "m": "minut",

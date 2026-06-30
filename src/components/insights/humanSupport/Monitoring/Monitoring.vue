@@ -40,6 +40,8 @@ import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useProject } from '@/store/modules/project';
+import { useConfig } from '@/store/modules/config';
+import { useMetricGoalsSocket } from '@/composables/useMetricGoalsSocket';
 
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
@@ -50,6 +52,46 @@ import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/in
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
+
+const configStore = useConfig();
+const { token, project } = storeToRefs(configStore);
+const { connect: connectMetricGoalsSocket, disconnect: disconnectMetricGoalsSocket } =
+  useMetricGoalsSocket();
+
+const shouldConnectMetricGoalsSocket = computed(
+  () =>
+    isFeatureFlagEnabled('insightsOperationalAlerts') &&
+    !!token.value &&
+    !!project.value?.uuid,
+);
+
+watch(
+  shouldConnectMetricGoalsSocket,
+  (enabled) => {
+    if (enabled) {
+      connectMetricGoalsSocket();
+      return;
+    }
+
+    disconnectMetricGoalsSocket();
+  },
+  { immediate: true },
+);
+
+watch(
+  () => project.value?.uuid,
+  () => {
+    if (shouldConnectMetricGoalsSocket.value) {
+      connectMetricGoalsSocket();
+    }
+  },
+);
+
+watch(token, () => {
+  if (shouldConnectMetricGoalsSocket.value) {
+    connectMetricGoalsSocket();
+  }
+});
 
 defineOptions({
   name: 'MonitoringView',
@@ -111,6 +153,7 @@ const stopAutoRefresh = () => {
 
 onUnmounted(() => {
   stopAutoRefresh();
+  disconnectMetricGoalsSocket();
 });
 
 watch(

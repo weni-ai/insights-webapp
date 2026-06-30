@@ -314,11 +314,17 @@ export default {
 }
 </style>
 
-<style>
+<style lang="scss">
 /* This is necessary to prevent being behind some screen items such as svgs, tour popover and alerts */
 .alert-container,
 .unnnic-tour__mask,
 .unnnic-tour__popover {
   z-index: 99999999 !important;
+}
+
+[unnnic-toast-container] .unnnic-toast {
+  top: $unnnic-space-4;
+  right: $unnnic-space-4;
+  bottom: auto;
 }
 </style>

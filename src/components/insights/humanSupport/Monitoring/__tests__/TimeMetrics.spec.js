@@ -22,6 +22,21 @@ const mockMonitoringStore = {
 const hasSectorsConfiguredRef = ref(true);
 const widgetSetupPropsRef = ref({});
 
+const mockMetricGoalAlertsStore = {
+  $id: 'metricGoalAlerts',
+  liveBreaches: {
+    value: {
+      waiting_time: null,
+      first_response_time: null,
+      conversation_duration: null,
+    },
+  },
+};
+
+vi.mock('@/store/modules/humanSupport/metricGoalAlerts', () => ({
+  useMetricGoalAlerts: () => mockMetricGoalAlertsStore,
+}));
+
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockMonitoringStore,
 }));
@@ -64,6 +79,9 @@ vi.mock('pinia', async (importOriginal) => {
       }
       if (store?.$id === 'humanSupport') {
         return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      if (store?.$id === 'metricGoalAlerts') {
+        return { liveBreaches: mockMetricGoalAlertsStore.liveBreaches };
       }
       return actual.storeToRefs(store);
     },
@@ -117,6 +135,11 @@ describe('TimeMetrics', () => {
       },
       loadingTimeMetricsData: { value: false },
     });
+    mockMetricGoalAlertsStore.liveBreaches.value = {
+      waiting_time: null,
+      first_response_time: null,
+      conversation_duration: null,
+    };
     wrapper = createWrapper();
   });
 
@@ -347,6 +370,26 @@ describe('TimeMetrics', () => {
       expect(
         wrapper.vm.getCardAlert('average_time_is_waiting'),
       ).toBeUndefined();
+    });
+
+    it('should build alert from live socket breach when api goal is missing', () => {
+      mockMetricGoalAlertsStore.liveBreaches.value = {
+        waiting_time: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 5,
+        },
+        first_response_time: null,
+        conversation_duration: null,
+      };
+
+      wrapper = createWrapper();
+      const alert = wrapper.vm.getCardAlert('average_time_is_waiting');
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('red');
     });
   });
 

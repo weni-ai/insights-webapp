@@ -70,7 +70,7 @@
             :pagination="1"
             :isLoading="loadingTemplateMessages"
             data-testid="template-messages-table"
-            :locale="i18n.global.locale"
+            :locale="i18n.global.locale.value"
             @item-click="rowClick"
           >
             <template #body-status="{ item }">

@@ -58,6 +58,8 @@ import {
   colorBgYellowPlain,
 } from '@weni/unnnic-system/tokens/colors';
 
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
@@ -66,7 +68,8 @@ const i18n = createI18n({
       see_all: 'See all',
       conversations_dashboard: {
         search_term: 'Most searched terms',
-        search_term_count: '{count} products',
+        search_term_count:
+          '{count, plural, one {# product} other {# products}}',
         auto_widget_no_data: 'No data available for the filtered period',
         auto_widget_error: 'Error loading data',
         customize_your_dashboard: {
@@ -77,6 +80,7 @@ const i18n = createI18n({
   },
   fallbackWarn: false,
   missingWarn: false,
+  messageCompiler: icuMessageCompiler,
 });
 
 config.global.plugins = [i18n];

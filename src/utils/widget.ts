@@ -16,9 +16,12 @@ export const getWidgetCrosstabTooltip = (
       const capitalizedKey = key.charAt(0).toUpperCase() + key.slice(1);
       const percentage = formatPercentage(
         events[key].value,
-        i18n.global.locale,
+        i18n.global.locale.value,
       );
-      const total = formatNumber(events[key].full_value, i18n.global.locale);
+      const total = formatNumber(
+        events[key].full_value,
+        i18n.global.locale.value,
+      );
       return `${capitalizedKey}: ${percentage} (${total})`;
     })
     .join('<br>');

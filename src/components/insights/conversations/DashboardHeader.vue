@@ -200,7 +200,9 @@ const loadCardData = async () => {
     applyMetrics(response);
     conversationalStore.setEndpointError('header', false);
     if (response.length > 0) {
-      const hasValues = response.some((metric) => metric.value > 0);
+      const hasValues = response.some(
+        (metric) => metric.value && metric.value > 0,
+      );
       conversationalStore.setHasEndpointData(hasValues);
     }
   } catch (error) {

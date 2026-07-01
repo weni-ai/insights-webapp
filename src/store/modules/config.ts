@@ -24,7 +24,6 @@ export const useConfig = defineStore('config', {
     setIsActiveRoute(isActive: boolean) {
       this.isActiveRoute = isActive;
     },
-
     async checkEnableCsat() {
       const enabled = await Projects.verifyProjectCsat();
       this.enableCsat = enabled;

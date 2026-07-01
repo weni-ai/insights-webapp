@@ -637,10 +637,10 @@ describe('DashboardHeader.vue', () => {
       const vm = wrapper.vm;
       const initialTitle = vm.cards[0].title;
 
-      i18n.global.locale = 'es';
+      i18n.global.locale.value = 'es';
       await wrapper.vm.$nextTick();
 
-      i18n.global.locale = 'en';
+      i18n.global.locale.value = 'en';
       await wrapper.vm.$nextTick();
 
       expect(vm.cards[0].title).toBe(initialTitle);

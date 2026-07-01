@@ -225,7 +225,10 @@ const loadCardData = async () => {
     applyMetrics(response);
     conversationalStore.setEndpointError('contacts', false);
     if (response.length > 0) {
-      conversationalStore.setHasEndpointData(true);
+      const hasValues = response.some(
+        (metric) => metric.value && metric.value !== 0,
+      );
+      conversationalStore.setHasEndpointData(hasValues);
     }
   } catch (error) {
     if (signal.aborted) return;

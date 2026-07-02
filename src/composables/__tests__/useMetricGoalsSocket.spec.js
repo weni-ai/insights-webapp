@@ -105,7 +105,7 @@ describe('useMetricGoalsSocket', () => {
     expect(monitoringStore.refreshDataMonitoring).toBe(false);
   });
 
-  it('should update live breach without toast on violated update events', () => {
+  it('should update live breach and show toast when breach was not active', () => {
     const { connect } = useMetricGoalsSocket();
     const alertsStore = useMetricGoalAlerts();
 
@@ -127,10 +127,124 @@ describe('useMetricGoalsSocket', () => {
       },
     });
 
+    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
+    expect(
+      alertsStore.liveBreaches.first_response_time?.breachedRoomsCount,
+    ).toBe(3);
+  });
+
+  it('should update live breach without toast when breach is already active', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+
+    alertsStore.applyViolated({
+      project_uuid: 'project-1',
+      metric: 'first_response_time',
+      state: 'violating',
+      transition: 'new',
+      violating_count: 2,
+      max_value_seconds: 120,
+      threshold_seconds: 60,
+      rooms_threshold_count: 2,
+      rooms_threshold_percent: null,
+      active_rooms_count: null,
+      detected_at: '2026-06-23T18:55:36+00:00',
+    });
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.violated',
+      content: {
+        project_uuid: 'project-1',
+        metric: 'first_response_time',
+        state: 'violating',
+        transition: 'update',
+        violating_count: 3,
+        max_value_seconds: 120,
+        threshold_seconds: 60,
+        rooms_threshold_count: 2,
+        rooms_threshold_percent: null,
+        active_rooms_count: null,
+        detected_at: '2026-06-23T18:55:36+00:00',
+      },
+    });
+
     expect(showMetricGoalToast).not.toHaveBeenCalled();
-    expect(alertsStore.liveBreaches.first_response_time?.breachedRoomsCount).toBe(
-      3,
-    );
+    expect(
+      alertsStore.liveBreaches.first_response_time?.breachedRoomsCount,
+    ).toBe(3);
+  });
+
+  it('should update live breach and show toast on first metric_goal.update event', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+    const monitoringStore = useHumanSupportMonitoring();
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.update',
+      content: {
+        project_uuid: '2a39ac19-ef4a-4cd2-932a-64936c22217e',
+        metric: 'conversation_duration',
+        state: 'violating',
+        transition: 'update',
+        violating_count: 12,
+        max_value_seconds: 2958883,
+        threshold_seconds: 60,
+        rooms_threshold_count: 5,
+        rooms_threshold_percent: null,
+        active_rooms_count: null,
+        detected_at: '2026-07-01T22:15:07.079947+00:00',
+      },
+    });
+
+    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
+    expect(
+      alertsStore.liveBreaches.conversation_duration?.breachedRoomsCount,
+    ).toBe(12);
+    expect(monitoringStore.refreshDataMonitoring).toBe(true);
+  });
+
+  it('should update live breach without toast on recurring metric_goal.update events', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+
+    alertsStore.applyViolated({
+      project_uuid: '2a39ac19-ef4a-4cd2-932a-64936c22217e',
+      metric: 'conversation_duration',
+      state: 'violating',
+      transition: 'new',
+      violating_count: 10,
+      max_value_seconds: 2958883,
+      threshold_seconds: 60,
+      rooms_threshold_count: 5,
+      rooms_threshold_percent: null,
+      active_rooms_count: null,
+      detected_at: '2026-07-01T22:15:07.079947+00:00',
+    });
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.update',
+      content: {
+        project_uuid: '2a39ac19-ef4a-4cd2-932a-64936c22217e',
+        metric: 'conversation_duration',
+        state: 'violating',
+        transition: 'update',
+        violating_count: 12,
+        max_value_seconds: 2958883,
+        threshold_seconds: 60,
+        rooms_threshold_count: 5,
+        rooms_threshold_percent: null,
+        active_rooms_count: null,
+        detected_at: '2026-07-01T22:15:07.079947+00:00',
+      },
+    });
+
+    expect(showMetricGoalToast).not.toHaveBeenCalled();
+    expect(
+      alertsStore.liveBreaches.conversation_duration?.breachedRoomsCount,
+    ).toBe(12);
   });
 
   it('should clear live breach on resolved events', () => {

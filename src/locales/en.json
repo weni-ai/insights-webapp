@@ -158,6 +158,56 @@
       "crosstab_validation_title": "Configuration problem",
       "crosstab_validation_description": "The key or value wasn't found in the database"
     },
+    "resolution_criteria": {
+      "add_criterion": "Add criterion",
+      "base_section_description": "Applied to every project to keep Handled by AI consistent. They can't be edited or removed.",
+      "base_section_title": "Base criteria",
+      "custom_empty": "Add the first criterion to define additional Handled by AI situations for this project",
+      "custom_section_description": "Add situations this project should also count as Handled by AI. {count} of {max}.",
+      "custom_section_title": "Your criteria",
+      "errors": {
+        "ambiguous_description": "Rewrite the criterion to make it clearer",
+        "ambiguous_title": "The criterion is ambiguous",
+        "duplicate_description": "Edit the criterion to cover a different situation, or remove the other one first",
+        "duplicate_title": "You've already added a similar criterion",
+        "invalid_description": "Rewrite the criterion and validate again",
+        "invalid_title": "The criterion is invalid",
+        "technical": "The criterion couldn't be validated due to a technical issue"
+      },
+      "form": {
+        "create_title": "Add criterion",
+        "edit_title": "Edit criterion",
+        "field_placeholder": "Criterion",
+        "results_title": "Validation results",
+        "save": "Save",
+        "success_description": "Once saved, this criterion applies from the next daily evaluation. Conversations already classified won't change.",
+        "success_title": "No issues found",
+        "tooltip_fix_issue": "Fix the issue found in validation to save",
+        "tooltip_validate_first": "Validate this criterion before saving",
+        "validate": "Validate",
+        "validating": "Validating criterion..."
+      },
+      "list_description": "Define what counts as an Handled by AI conversation in this project. These criteria decide which conversations are marked Handled by AI on your dashboard.",
+      "list_title": "Handled by AI criteria",
+      "menu_option": "Edit Handled by AI criteria",
+      "remove_modal": {
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "description": "This action can't be undone. Are you sure you want to delete this criterion?",
+        "title": "Delete criterion"
+      },
+      "row_menu": {
+        "delete": "Delete criterion",
+        "edit": "Edit criterion"
+      },
+      "toast": {
+        "added": "Criterion added successfully",
+        "delete_error": "Criterion couldn't be deleted due to a technical issue",
+        "deleted": "Criterion deleted successfully",
+        "load_error": "Criteria couldn't be loaded due to a technical issue",
+        "updated": "Criterion updated successfully"
+      }
+    },
     "reviews": "reviews",
     "csat_widget": {
       "very_satisfied": "Very satisfied",

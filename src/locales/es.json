@@ -158,6 +158,56 @@
       "crosstab_validation_title": "Problema de configuración",
       "crosstab_validation_description": "La clave o el valor no se encontraron en la base de datos"
     },
+    "resolution_criteria": {
+      "add_criterion": "Agregar criterio",
+      "base_section_description": "Se aplican a todos los proyectos para mantener Atendido por IA consistente. No se pueden editar ni eliminar.",
+      "base_section_title": "Criterios base",
+      "custom_empty": "Agrega el primer criterio para definir situaciones adicionales de Atendido por IA en este proyecto",
+      "custom_section_description": "Agrega situaciones que este proyecto también debe contar como Atendido por IA. {count} de {max}.",
+      "custom_section_title": "Tus criterios",
+      "errors": {
+        "ambiguous_description": "Reescribe el criterio para que sea más claro",
+        "ambiguous_title": "El criterio es ambiguo",
+        "duplicate_description": "Edita el criterio para cubrir una situación diferente o elimina el otro primero",
+        "duplicate_title": "Ya agregaste un criterio similar",
+        "invalid_description": "Reescribe el criterio y valida de nuevo",
+        "invalid_title": "El criterio no es válido",
+        "technical": "No se pudo validar el criterio debido a un problema técnico"
+      },
+      "form": {
+        "create_title": "Agregar criterio",
+        "edit_title": "Editar criterio",
+        "field_placeholder": "Criterio",
+        "results_title": "Resultados de la validación",
+        "save": "Guardar",
+        "success_description": "Una vez guardado, este criterio se aplica a partir de la próxima evaluación diaria. Las conversaciones ya clasificadas no cambiarán.",
+        "success_title": "No se encontraron problemas",
+        "tooltip_fix_issue": "Corrige el problema encontrado en la validación para guardar",
+        "tooltip_validate_first": "Valida este criterio antes de guardar",
+        "validate": "Validar",
+        "validating": "Validando criterio..."
+      },
+      "list_description": "Define qué cuenta como conversación Atendida por IA en este proyecto. Estos criterios determinan qué conversaciones se marcan como Atendidas por IA en el dashboard.",
+      "list_title": "Criterios de Atendido por IA",
+      "menu_option": "Editar criterios de Atendido por IA",
+      "remove_modal": {
+        "cancel": "Cancelar",
+        "confirm": "Eliminar",
+        "description": "Esta acción no se puede deshacer. ¿Realmente deseas eliminar este criterio?",
+        "title": "Eliminar criterio"
+      },
+      "row_menu": {
+        "delete": "Eliminar criterio",
+        "edit": "Editar criterio"
+      },
+      "toast": {
+        "added": "Criterio agregado con éxito",
+        "delete_error": "No se pudo eliminar el criterio debido a un problema técnico",
+        "deleted": "Criterio eliminado con éxito",
+        "load_error": "No se pudieron cargar los criterios debido a un problema técnico",
+        "updated": "Criterio actualizado con éxito"
+      }
+    },
     "reviews": "calificaciones",
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",

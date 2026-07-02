@@ -1128,7 +1128,8 @@
         "average_first_response_time": "Tempo médio para 1ª resposta",
         "average_response_time": "Tempo médio de resposta",
         "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento"
+        "time_in_service": "Tempo em atendimento",
+        "csat_note": "CSAT"
       }
     },
     "analyze": {
@@ -1160,7 +1161,8 @@
         "satisfied": "Satisfeito",
         "neutral": "Neutro",
         "dissatisfied": "Insatisfeito",
-        "very_dissatisfied": "Muito insatisfeito"
+        "very_dissatisfied": "Muito insatisfeito",
+        "not_answered": "Sem resposta"
       },
       "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     },

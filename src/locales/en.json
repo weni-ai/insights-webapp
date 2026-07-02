@@ -1128,7 +1128,8 @@
         "average_first_response_time": "Average time to first response",
         "average_response_time": "Average response time",
         "average_duration": "Average duration",
-        "time_in_service": "Time in support chat"
+        "time_in_service": "Time in support chat",
+        "csat_note": "CSAT"
       }
     },
     "analyze": {
@@ -1160,7 +1161,8 @@
         "satisfied": "Satisfied",
         "neutral": "Neutral",
         "dissatisfied": "Dissatisfied",
-        "very_dissatisfied": "Very dissatisfied"
+        "very_dissatisfied": "Very dissatisfied",
+        "not_answered": "No response"
       },
       "disabled_text": "Enable CSAT to track overall ratings by industry, queue, and representative"
     },

@@ -19,6 +19,7 @@ interface FinishedDataResult {
     url: string;
     type: string;
   };
+  csat_note: number | null;
 }
 
 interface FinishedData {

@@ -1128,7 +1128,8 @@
         "average_first_response_time": "Tiempo promedio hasta la primera respuesta",
         "average_response_time": "Tiempo promedio de respuesta",
         "average_duration": "Duración promedio",
-        "time_in_service": "Tiempo en el chat de soporte"
+        "time_in_service": "Tiempo en el chat de soporte",
+        "csat_note": "CSAT"
       }
     },
     "analyze": {
@@ -1160,7 +1161,8 @@
         "satisfied": "Satisfecho",
         "neutral": "Neutral",
         "dissatisfied": "Insatisfecho",
-        "very_dissatisfied": "Muy insatisfecho"
+        "very_dissatisfied": "Muy insatisfecho",
+        "not_answered": "Sin respuesta"
       },
       "disabled_text": "Activa CSAT para monitorear calificaciones generales por sector, cola y representante"
     },

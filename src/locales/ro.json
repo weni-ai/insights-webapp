@@ -139,12 +139,16 @@
     "crosstab": "Tabel încrucișat",
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
+    "added_to_cart": "Produsele cele mai adăugate în coș",
+    "added_to_cart_count": "{count, plural, one {# produs} other {# produse}}",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
     "agent_invocation_count": "{count, plural, one {# agent} other {# agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
     "tool_result_count": "{count, plural, one {# instrument} other {# instrumente}}",
+    "search_term": "Termenii cei mai căutați",
+    "search_term_count": "{count, plural, one {# produs} other {# produse}}",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -220,6 +224,8 @@
       "sales_funnel_description": "Monitorizează-ți vânzările: Total comenzi, Tichet mediu, Sumă totală și Canal de conversie",
       "absolute_numbers_description": "Evidențiază o singură metrică cheie, afișând valoarea exactă pentru vizualizare rapidă și directă",
       "abandoned_cart_recovery_description": "Urmărește metricile de recuperare a coșului abandonat: venit recuperat, vânzări convertite, rată de conversie, avarege order value, etc.",
+      "added_to_cart_description": "Urmărește clasamentul produselor cele mai adăugate în coș.",
+      "search_term_description": "Urmărește clasamentul termenilor cei mai căutați.",
       "human_support": "Asistență umană",
       "ai_support": "IA",
       "activate_agent": "Activează agent",
@@ -248,7 +254,9 @@
         "description": "Sigur vrei să ștergi widget-ul {type}?",
         "remove": "Eliminare",
         "cancel": "Anulează",
-        "success_message": "{widget} a fost eliminat"
+        "success_message": "{widget} a fost eliminat",
+        "remove_success": "{widget} eliminat cu succes",
+        "remove_error": "Nu s-a putut elimina {widget}. Încearcă din nou."
       },
       "tabs": {
         "sentiment_analysis": "Analiza opiniilor",
@@ -901,6 +909,8 @@
       "resolutions": "Rezoluții de conversație",
       "tool_result": "Cele mai utilizate instrumente",
       "agent_invocation": "Cei mai utilizați agenți",
+      "search_terms": "Termenii cei mai căutați",
+      "added_to_cart": "Produsele cele mai adăugate în coș",
       "topics": "Subiecte",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1118,7 +1128,8 @@
         "average_first_response_time": "Timpul mediu până la primul răspuns",
         "average_response_time": "Timpul mediu de răspuns",
         "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență"
+        "time_in_service": "Timp în chatul de asistență",
+        "csat_note": "CSAT"
       }
     },
     "analyze": {
@@ -1150,7 +1161,8 @@
         "satisfied": "Mulțumit",
         "neutral": "Neutru",
         "dissatisfied": "Nemulțumit",
-        "very_dissatisfied": "Foarte nemulțumit"
+        "very_dissatisfied": "Foarte nemulțumit",
+        "not_answered": "Niciun răspuns"
       },
       "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
     },

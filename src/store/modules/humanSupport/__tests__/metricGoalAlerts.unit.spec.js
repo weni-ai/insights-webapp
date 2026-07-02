@@ -73,6 +73,14 @@ describe('useMetricGoalAlerts Store', () => {
     });
   });
 
+  it('should report whether a metric is already breaching', () => {
+    expect(store.isMetricBreaching('waiting_time')).toBe(false);
+
+    store.applyViolated(violatedContent);
+
+    expect(store.isMetricBreaching('waiting_time')).toBe(true);
+  });
+
   it('should reset all live breaches and connection state', () => {
     store.applyViolated(violatedContent);
     store.setConnectionState('connected');

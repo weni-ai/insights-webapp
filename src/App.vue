@@ -322,9 +322,9 @@ export default {
   z-index: 99999999 !important;
 }
 
-[unnnic-toast-container] .unnnic-toast {
+[unnnic-toast-container] .unnnic-toast--attention {
   top: $unnnic-space-4;
   right: $unnnic-space-4;
-  bottom: auto;
+  bottom: auto !important;
 }
 </style>

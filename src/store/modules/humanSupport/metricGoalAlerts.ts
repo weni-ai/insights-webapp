@@ -13,11 +13,7 @@ const LIVE_METRIC_KEYS: MetricKey[] = [
   'conversation_duration',
 ];
 
-type ConnectionState =
-  | 'disconnected'
-  | 'connecting'
-  | 'connected'
-  | 'error';
+type ConnectionState = 'disconnected' | 'connecting' | 'connected' | 'error';
 
 interface MetricGoalSocketViolatedContent {
   project_uuid: string;
@@ -40,7 +36,10 @@ interface MetricGoalSocketResolvedContent {
   detected_at: string;
 }
 
-const createEmptyLiveBreaches = (): Record<MetricKey, MetricGoalBreach | null> => ({
+const createEmptyLiveBreaches = (): Record<
+  MetricKey,
+  MetricGoalBreach | null
+> => ({
   waiting_time: null,
   first_response_time: null,
   conversation_duration: null,
@@ -88,6 +87,9 @@ export const useMetricGoalAlerts = defineStore('metricGoalAlerts', () => {
     liveBreaches.value[content.metric] = null;
   };
 
+  const isMetricBreaching = (metric: MetricKey): boolean =>
+    liveBreaches.value[metric]?.isBreached === true;
+
   const reset = () => {
     liveBreaches.value = createEmptyLiveBreaches();
     connectionState.value = 'disconnected';
@@ -100,6 +102,7 @@ export const useMetricGoalAlerts = defineStore('metricGoalAlerts', () => {
     applyViolated,
     applyUpdate,
     applyResolved,
+    isMetricBreaching,
     reset,
   };
 });

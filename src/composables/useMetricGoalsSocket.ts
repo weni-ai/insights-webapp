@@ -40,6 +40,24 @@ export function useMetricGoalsSocket() {
     }, REFRESH_PULSE_MS);
   };
 
+  const handleViolatingContent = (
+    content: MetricGoalSocketViolatedContent,
+    options: { isNew: boolean },
+  ) => {
+    const wasAlreadyBreaching = metricGoalAlertsStore.isMetricBreaching(
+      content.metric,
+    );
+
+    metricGoalAlertsStore.applyUpdate(content);
+
+    const shouldShowToast = options.isNew || !wasAlreadyBreaching;
+
+    if (shouldShowToast) {
+      showMetricGoalToast(content);
+      triggerSilentRefresh();
+    }
+  };
+
   const handleMessage = (event: MessageEvent) => {
     try {
       const payload = JSON.parse(event.data as string);
@@ -47,16 +65,16 @@ export function useMetricGoalsSocket() {
 
       if (type === 'metric_goal.violated') {
         if (content.transition === 'new') {
-          metricGoalAlertsStore.applyViolated(content);
-          showMetricGoalToast(content);
-          triggerSilentRefresh();
-          return;
+          handleViolatingContent(content, { isNew: true });
+        } else if (content.transition === 'update') {
+          handleViolatingContent(content, { isNew: false });
         }
 
-        if (content.transition === 'update') {
-          metricGoalAlertsStore.applyUpdate(content);
-        }
+        return;
+      }
 
+      if (type === 'metric_goal.update') {
+        handleViolatingContent(content, { isNew: false });
         return;
       }
 

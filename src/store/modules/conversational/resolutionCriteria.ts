@@ -156,9 +156,9 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
         this.validationError = null;
       } catch (error) {
         const parsed = parseCriterionError(error);
-        this.lastValidatedText = this.formText;
 
         if (parsed.status === 400) {
+          this.lastValidatedText = this.formText;
           this.validationStatus = 'invalid';
           this.validationError = {
             code: parsed.code,

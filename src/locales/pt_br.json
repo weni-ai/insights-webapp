@@ -1013,6 +1013,48 @@
     "error_message": "Erro ao desconectar o agente {agent}",
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Não foi possível salvar os alertas operacionais devido a um problema técnico",
+      "save_success": "Alertas operacionais salvos com sucesso"
+    },
+    "drawer": {
+      "description": "Configure alertas para identificar chats que ultrapassam os limites de tempo definidos para uma operação:",
+      "title": "Alertas operacionais"
+    },
+    "first_response_info": "O tempo para primeira resposta é contado a partir do momento em que o chat é atribuído a um representante",
+    "form": {
+      "email_notification_label": "Notificação por e-mail (opcional)",
+      "email_notification_tooltip": "Este alerta é sempre exibido no dashboard Live Desk quando um chat atinge o limite definido.\n\nVocê também pode configurar notificações por e-mail para moderadores selecionados e escolher quando elas devem ser enviadas - por exemplo, quando um ou mais chats atingem o limite definido.",
+      "recipients_helper": "Apenas moderadores podem receber alertas",
+      "send_email_to_label": "Enviar e-mail para",
+      "send_email_to_placeholder": "Selecionar moderadores",
+      "threshold_labels": {
+        "conversation_duration": "Duração máxima do chat",
+        "first_response_time": "Tempo máximo para primeira resposta",
+        "waiting_time": "Tempo máximo de espera"
+      },
+      "threshold_placeholder": "Exemplo: 10",
+      "unit_label": "Unidade",
+      "units": {
+        "hours": "Horas",
+        "minutes": "Minutos",
+        "seconds": "Segundos"
+      },
+      "when_helper": "Número de chats com alertas ativos",
+      "when_label": "Quando",
+      "when_placeholder": "Exemplo: 5"
+    },
+    "popover": {
+      "new_tag": "Novo",
+      "option_label": "Alertas operacionais"
+    },
+    "sections": {
+      "conversation_duration": "Alertar no dashboard Live Desk quando a duração de um chat ultrapassa o limite definido",
+      "first_response_time": "Alertar no dashboard Live Desk quando o tempo para primeira resposta de um chat ultrapassa o limite definido",
+      "waiting_time": "Alertar no dashboard Live Desk quando o tempo de espera de um chat ultrapassa o limite definido"
+    }
+  },
   "human_support_dashboard": {
     "title": "Live desk",
     "monitoring": "Monitoramento",

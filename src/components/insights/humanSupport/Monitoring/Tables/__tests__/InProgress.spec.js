@@ -30,7 +30,10 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
 }));
 
 vi.mock('@/store/modules/featureFlag', () => ({
-  useFeatureFlag: () => ({ isFeatureFlagEnabled: () => true }),
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: () => true,
+    activeFeatures: [],
+  }),
 }));
 
 vi.mock(

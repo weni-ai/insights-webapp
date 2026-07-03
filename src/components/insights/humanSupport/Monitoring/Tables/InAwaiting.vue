@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="formattedItems"
+    :items="tableItems"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -55,10 +55,14 @@ import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
   awaitingTimeRaw: number;
+};
+
+type TableInAwaitingItem = FormattedInAwaitingData & {
   rowAlert: RowAlert | null;
 };
 
-const { isFeatureFlagEnabled } = useFeatureFlag();
+const featureFlagStore = useFeatureFlag();
+const { isFeatureFlagEnabled } = featureFlagStore;
 const { getRowAlert } = useTableRowAlert();
 
 const resolveRowAlert = (item: InAwaitingDataResult): RowAlert | null => {
@@ -96,7 +100,6 @@ const formatResults = (
     ...result,
     awaiting_time: formatSecondsToTime(result?.awaiting_time),
     awaitingTimeRaw: result?.awaiting_time,
-    rowAlert: resolveRowAlert(result),
   }));
 };
 
@@ -121,6 +124,18 @@ const {
   fetchData,
   formatResults,
   sort: currentSort.value,
+});
+
+const tableItems = computed((): TableInAwaitingItem[] => {
+  featureFlagStore.activeFeatures;
+
+  return formattedItems.value.map((item) => ({
+    ...item,
+    rowAlert: resolveRowAlert({
+      ...item,
+      awaiting_time: item.awaitingTimeRaw,
+    }),
+  }));
 });
 
 const isLoadingVisible = computed(() => {

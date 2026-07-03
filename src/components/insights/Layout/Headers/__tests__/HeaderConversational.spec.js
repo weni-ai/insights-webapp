@@ -34,6 +34,7 @@ const createWrapper = (storeState = {}) =>
         InsightsLayoutHeaderFilters: true,
         HeaderRefresh: true,
         ConversationalExport: true,
+        ResolutionCriteriaSettings: true,
       },
     },
   });
@@ -120,6 +121,7 @@ describe('HeaderConversational', () => {
             InsightsLayoutHeaderFilters: true,
             HeaderRefresh: true,
             ConversationalExport: true,
+            ResolutionCriteriaSettings: true,
             UnnnicInput: true,
           },
         },
@@ -127,9 +129,9 @@ describe('HeaderConversational', () => {
 
     it('should render mock date filter input instead of filters', () => {
       wrapper = createMockWrapper();
-      expect(
-        wrapper.find('[data-testid="mock-date-filter"]').exists(),
-      ).toBe(true);
+      expect(wrapper.find('[data-testid="mock-date-filter"]').exists()).toBe(
+        true,
+      );
       expect(
         wrapper.find('[data-testid="insights-layout-header-filters"]').exists(),
       ).toBe(false);

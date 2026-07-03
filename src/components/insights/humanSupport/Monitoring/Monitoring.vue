@@ -55,8 +55,10 @@ const { isFeatureFlagEnabled } = useFeatureFlag();
 
 const configStore = useConfig();
 const { token, project } = storeToRefs(configStore);
-const { connect: connectMetricGoalsSocket, disconnect: disconnectMetricGoalsSocket } =
-  useMetricGoalsSocket();
+const {
+  connect: connectMetricGoalsSocket,
+  disconnect: disconnectMetricGoalsSocket,
+} = useMetricGoalsSocket();
 
 const shouldConnectMetricGoalsSocket = computed(
   () =>
@@ -66,32 +68,21 @@ const shouldConnectMetricGoalsSocket = computed(
 );
 
 watch(
-  shouldConnectMetricGoalsSocket,
-  (enabled) => {
+  [shouldConnectMetricGoalsSocket, () => project.value?.uuid, token],
+  ([enabled], previous) => {
+    const wasEnabled = previous?.[0];
+
     if (enabled) {
       connectMetricGoalsSocket();
       return;
     }
 
-    disconnectMetricGoalsSocket();
+    if (wasEnabled) {
+      disconnectMetricGoalsSocket();
+    }
   },
   { immediate: true },
 );
-
-watch(
-  () => project.value?.uuid,
-  () => {
-    if (shouldConnectMetricGoalsSocket.value) {
-      connectMetricGoalsSocket();
-    }
-  },
-);
-
-watch(token, () => {
-  if (shouldConnectMetricGoalsSocket.value) {
-    connectMetricGoalsSocket();
-  }
-});
 
 defineOptions({
   name: 'MonitoringView',

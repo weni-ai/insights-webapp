@@ -68,63 +68,67 @@
           </p>
         </header>
 
-        <p
-          v-if="!customCriteria.length"
-          class="criteria-list__empty"
-          data-testid="custom-criteria-empty"
-        >
-          {{ $t('conversations_dashboard.resolution_criteria.custom_empty') }}
-        </p>
-
-        <ul
-          v-else
-          class="criteria-list__rows"
-        >
-          <li
-            v-for="criterion in customCriteria"
-            :key="criterion.id"
-            class="criteria-list__row"
-            data-testid="custom-criterion-row"
-          >
-            <p class="criteria-list__row-text">{{ criterion.text }}</p>
-
-            <UnnnicPopover
-              :open="openRowMenuId === criterion.id"
-              @update:open="handleRowMenuToggle(criterion.id, $event)"
+        <ul class="criteria-list__rows">
+          <template v-if="!customCriteria.length">
+            <li
+              class="criteria-list__row criteria-list__row--empty"
+              data-testid="custom-criteria-empty"
             >
-              <UnnnicPopoverTrigger asChild>
-                <UnnnicButton
-                  type="tertiary"
-                  size="large"
-                  iconCenter="more_vert"
-                  :pressed="openRowMenuId === criterion.id"
-                  data-testid="custom-criterion-menu-button"
-                />
-              </UnnnicPopoverTrigger>
-              <UnnnicPopoverContent size="small">
-                <UnnnicPopoverOption
-                  :label="
-                    $t(
-                      'conversations_dashboard.resolution_criteria.row_menu.edit',
-                    )
-                  "
-                  icon="edit_square"
-                  data-testid="custom-criterion-edit-option"
-                  @click="handleEdit(criterion)"
-                />
-                <UnnnicPopoverOption
-                  :label="
-                    $t(
-                      'conversations_dashboard.resolution_criteria.row_menu.delete',
-                    )
-                  "
-                  icon="delete"
-                  data-testid="custom-criterion-delete-option"
-                  @click="handleDelete(criterion)"
-                />
-              </UnnnicPopoverContent>
-            </UnnnicPopover>
-          </li>
+              <p class="criteria-list__row-text criteria-list__row-text--empty">
+                {{
+                  $t('conversations_dashboard.resolution_criteria.custom_empty')
+                }}
+              </p>
+            </li>
+          </template>
+
+          <template v-else>
+            <li
+              v-for="criterion in customCriteria"
+              :key="criterion.id"
+              class="criteria-list__row"
+              data-testid="custom-criterion-row"
+            >
+              <p class="criteria-list__row-text">{{ criterion.text }}</p>
+
+              <UnnnicPopover
+                :open="openRowMenuId === criterion.id"
+                @update:open="handleRowMenuToggle(criterion.id, $event)"
+              >
+                <UnnnicPopoverTrigger asChild>
+                  <UnnnicButton
+                    type="tertiary"
+                    size="large"
+                    iconCenter="more_vert"
+                    :pressed="openRowMenuId === criterion.id"
+                    data-testid="custom-criterion-menu-button"
+                  />
+                </UnnnicPopoverTrigger>
+                <UnnnicPopoverContent size="small">
+                  <UnnnicPopoverOption
+                    :label="
+                      $t(
+                        'conversations_dashboard.resolution_criteria.row_menu.edit',
+                      )
+                    "
+                    icon="edit_square"
+                    data-testid="custom-criterion-edit-option"
+                    @click="handleEdit(criterion)"
+                  />
+                  <UnnnicPopoverOption
+                    :label="
+                      $t(
+                        'conversations_dashboard.resolution_criteria.row_menu.delete',
+                      )
+                    "
+                    icon="delete"
+                    data-testid="custom-criterion-delete-option"
+                    @click="handleDelete(criterion)"
+                  />
+                </UnnnicPopoverContent>
+              </UnnnicPopover>
+            </li>
+          </template>
         </ul>
       </section>
     </template>
@@ -219,9 +223,17 @@ const handleDelete = (criterion: Criterion) => {
     padding: $unnnic-space-3 0;
     border-bottom: 1px solid $unnnic-color-gray-2;
 
-    &--readonly {
+    &--readonly,
+    &--empty {
       min-height: 61px;
+    }
+
+    &--readonly {
       padding: $unnnic-space-4 0;
+    }
+
+    &--empty {
+      padding: $unnnic-space-3 0;
     }
 
     &:last-child {
@@ -235,13 +247,10 @@ const handleDelete = (criterion: Criterion) => {
     color: $unnnic-color-gray-12;
     font: $unnnic-font-body;
     word-break: break-word;
-  }
 
-  &__empty {
-    margin: 0;
-    padding: $unnnic-space-4 0;
-    color: $unnnic-color-fg-muted;
-    font: $unnnic-font-body;
+    &--empty {
+      color: $unnnic-color-fg-muted;
+    }
   }
 }
 </style>

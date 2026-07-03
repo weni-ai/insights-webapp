@@ -162,7 +162,7 @@
       "add_criterion": "Adicionar critério",
       "base_section_description": "Aplicados a todos os projetos para manter o Atendido por IA consistente. Não podem ser editados ou removidos.",
       "base_section_title": "Critérios base",
-      "custom_empty": "Adicione o primeiro critério para definir situações adicionais de Atendido por IA neste projeto",
+      "custom_empty": "Nenhum critério adicionado",
       "custom_section_description": "Adicione situações que este projeto também deve contar como Atendido por IA. {count} de {max}.",
       "custom_section_title": "Seus critérios",
       "errors": {

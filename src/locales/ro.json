@@ -158,7 +158,7 @@
       "add_criterion": "Adaugă criteriu",
       "base_section_description": "Se aplică tuturor proiectelor pentru a menține Gestionat de AI consistent. Nu pot fi editate sau eliminate.",
       "base_section_title": "Criterii de bază",
-      "custom_empty": "Adaugă primul criteriu pentru a defini situații suplimentare de Gestionat de AI în acest proiect",
+      "custom_empty": "Niciun criteriu adăugat",
       "custom_section_description": "Adaugă situații pe care acest proiect trebuie să le numere ca Gestionat de AI. {count} din {max}.",
       "custom_section_title": "Criteriile tale",
       "errors": {

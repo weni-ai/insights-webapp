@@ -162,7 +162,7 @@
       "add_criterion": "Add criterion",
       "base_section_description": "Applied to every project to keep Handled by AI consistent. They can't be edited or removed.",
       "base_section_title": "Base criteria",
-      "custom_empty": "Add the first criterion to define additional Handled by AI situations for this project",
+      "custom_empty": "No criteria added",
       "custom_section_description": "Add situations this project should also count as Handled by AI. {count} of {max}.",
       "custom_section_title": "Your criteria",
       "errors": {

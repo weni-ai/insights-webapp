@@ -1048,6 +1048,7 @@
     "table_tooltip": {
       "conversation_duration": "Această conversație a depășit limita de {value} {unit}.",
       "first_response_time": "Această conversație a depășit limita de {value} {unit} pentru primul răspuns.",
+      "generic": "Această conversație a depășit limita de timp configurată.",
       "waiting_time": "Această conversație a depășit limita de {value} {unit} de așteptare."
     },
     "toast": {

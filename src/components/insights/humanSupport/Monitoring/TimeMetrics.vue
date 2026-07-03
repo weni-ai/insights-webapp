@@ -186,7 +186,8 @@ const getCardAlert = (id: CardId) => {
   if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return undefined;
 
   const { goalKey, scheme } = cardAlertConfig[id];
-  const apiGoal = widgetData.value[goalKey] as MetricGoalBreach | undefined;
+  const cardData = widgetData.value[id];
+  const apiGoal = cardData?.[goalKey] as MetricGoalBreach | undefined;
   const metric = METRIC_BY_GOAL_KEY[goalKey];
   const liveGoal = liveBreaches.value[metric];
 

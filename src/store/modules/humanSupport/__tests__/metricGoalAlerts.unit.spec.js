@@ -81,6 +81,38 @@ describe('useMetricGoalAlerts Store', () => {
     expect(store.isMetricBreaching('waiting_time')).toBe(true);
   });
 
+  it('should hydrate live breaches from API goals', () => {
+    store.hydrateFromApiGoals({
+      average_time_is_waiting: {
+        average: 120,
+        max: 300,
+        waiting_time_goal: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 7,
+        },
+      },
+      average_time_first_response: {
+        average: 45,
+        max: 90,
+        first_response_time_goal: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: false,
+          breachedRoomsCount: 0,
+        },
+      },
+      average_time_chat: { average: 600, max: 1200 },
+    });
+
+    expect(store.isMetricBreaching('waiting_time')).toBe(true);
+    expect(store.isMetricBreaching('first_response_time')).toBe(false);
+    expect(store.liveBreaches.waiting_time?.breachedRoomsCount).toBe(7);
+  });
+
   it('should reset all live breaches and connection state', () => {
     store.applyViolated(violatedContent);
     store.setConnectionState('connected');

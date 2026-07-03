@@ -25,6 +25,7 @@
         v-if="item.rowAlert"
         :scheme="item.rowAlert.scheme"
         :text="item.rowAlert.text"
+        fullRow
       >
         {{ item.awaiting_time }}
       </TableRowAlert>
@@ -72,7 +73,7 @@ const resolveRowAlert = (item: InAwaitingDataResult): RowAlert | null => {
     {
       metric: 'waiting_time',
       scheme: 'red',
-      goal: item.waiting_time_goal,
+      exceeded: item.goals_metrics?.awaiting_time?.exceeded,
     },
   ]);
 };
@@ -230,5 +231,11 @@ watch(
 
 :deep(.unnnic-data-table__body-row--clickable:has(.row-alert--red):hover) {
   background-color: $unnnic-color-bg-red-plain;
+}
+
+:deep(
+  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
+) {
+  font: $unnnic-font-emphasis;
 }
 </style>

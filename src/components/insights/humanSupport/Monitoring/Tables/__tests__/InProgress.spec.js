@@ -262,40 +262,32 @@ describe('InProgress', () => {
   });
 
   describe('Row alert', () => {
-    const firstResponseBreach = {
-      thresholdSeconds: 60,
-      thresholdValue: 1,
-      unit: 'm',
-      isBreached: true,
-      breachedRoomsCount: 2,
-    };
-    const durationBreach = {
-      thresholdSeconds: 600,
-      thresholdValue: 10,
-      unit: 'm',
-      isBreached: true,
-      breachedRoomsCount: 3,
-    };
+    const firstResponseBreach = { exceeded: true };
+    const durationBreach = { exceeded: true };
 
     it('prioritizes the orange first response alert over the yellow duration alert', () => {
       const alert = wrapper.vm.getItemAlert({
-        first_response_time_goal: firstResponseBreach,
-        conversation_duration_goal: durationBreach,
+        goals_metrics: {
+          first_response_time: firstResponseBreach,
+          duration: durationBreach,
+        },
       });
 
       expect(alert).toBeTruthy();
       expect(alert.scheme).toBe('orange');
     });
 
-    it('returns a yellow alert when only the duration goal is breached', () => {
+    it('returns a yellow alert when only the duration goal is exceeded', () => {
       const alert = wrapper.vm.getItemAlert({
-        conversation_duration_goal: durationBreach,
+        goals_metrics: {
+          duration: durationBreach,
+        },
       });
 
       expect(alert.scheme).toBe('yellow');
     });
 
-    it('returns null when there is no breached goal', () => {
+    it('returns null when there is no exceeded goal', () => {
       expect(wrapper.vm.getItemAlert({})).toBeNull();
     });
   });

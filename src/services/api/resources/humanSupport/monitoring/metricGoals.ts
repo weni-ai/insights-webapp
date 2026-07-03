@@ -24,6 +24,26 @@ interface MetricGoalBreach {
   breachedRoomsCount: number;
 }
 
+interface GoalsMetricEntryApi {
+  exceeded: boolean;
+}
+
+interface GoalsMetricsApi {
+  awaiting_time?: GoalsMetricEntryApi;
+  first_response_time?: GoalsMetricEntryApi;
+  duration?: GoalsMetricEntryApi;
+}
+
+interface GoalsMetricEntry {
+  exceeded: boolean;
+}
+
+interface GoalsMetrics {
+  awaiting_time?: GoalsMetricEntry;
+  first_response_time?: GoalsMetricEntry;
+  duration?: GoalsMetricEntry;
+}
+
 interface MetricGoalRecipientApi {
   uuid: string;
   first_name?: string;
@@ -44,7 +64,10 @@ interface MetricGoalApi {
   unit: TimeUnit;
   is_active: boolean;
   email_enabled: boolean;
-  recipients: MetricGoalRecipientApi[] | MetricGoalRecipientApiPayload[] | string[];
+  recipients:
+    | MetricGoalRecipientApi[]
+    | MetricGoalRecipientApiPayload[]
+    | string[];
   rooms_threshold_count: number;
   rooms_threshold_percent?: number | null;
 }
@@ -99,6 +122,24 @@ const normalizeMetricGoalBreach = (
   isBreached: breach.is_breached,
   breachedRoomsCount: breach.breached_rooms_count,
 });
+
+const normalizeGoalsMetrics = (
+  goalsMetrics?: GoalsMetricsApi,
+): GoalsMetrics | undefined => {
+  if (!goalsMetrics) return undefined;
+
+  return {
+    awaiting_time: goalsMetrics.awaiting_time
+      ? { exceeded: goalsMetrics.awaiting_time.exceeded }
+      : undefined,
+    first_response_time: goalsMetrics.first_response_time
+      ? { exceeded: goalsMetrics.first_response_time.exceeded }
+      : undefined,
+    duration: goalsMetrics.duration
+      ? { exceeded: goalsMetrics.duration.exceeded }
+      : undefined,
+  };
+};
 
 const UNIT_SECONDS: Record<TimeUnit, number> = {
   s: 1,
@@ -211,7 +252,9 @@ const normalizeGoal = (goal: MetricGoalApi): MetricGoal => {
   };
 };
 
-const toSavePayload = (params: MetricGoalSaveParams): MetricGoalSavePayload => ({
+const toSavePayload = (
+  params: MetricGoalSaveParams,
+): MetricGoalSavePayload => ({
   threshold: params.threshold,
   unit: params.unit,
   is_active: params.isActive,
@@ -276,6 +319,10 @@ export default {
 };
 
 export type {
+  GoalsMetricEntry,
+  GoalsMetricEntryApi,
+  GoalsMetrics,
+  GoalsMetricsApi,
   MetricGoal,
   MetricGoalApi,
   MetricGoalBreach,
@@ -287,4 +334,8 @@ export type {
   MetricGoalsResponse,
 };
 
-export { formatRecipientLabel, normalizeMetricGoalBreach };
+export {
+  formatRecipientLabel,
+  normalizeGoalsMetrics,
+  normalizeMetricGoalBreach,
+};

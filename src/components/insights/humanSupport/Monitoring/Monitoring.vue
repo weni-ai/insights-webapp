@@ -78,8 +78,8 @@ const shouldConnectMetricGoalsSocket = computed(
 const loadOperationalAlertsData = () => {
   if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return;
 
-  humanSupportMonitoringStore.loadTimeMetricsData();
-  metricGoalsStore.loadGoals();
+  void humanSupportMonitoringStore.loadTimeMetricsData();
+  void metricGoalsStore.loadGoals().catch(() => undefined);
 };
 
 onMounted(() => {

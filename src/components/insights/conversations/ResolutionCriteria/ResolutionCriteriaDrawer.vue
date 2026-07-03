@@ -23,7 +23,7 @@
         <UnnnicButton
           type="tertiary"
           size="large"
-          iconCenter="arrow_left_alt"
+          iconCenter="arrow-left-1-1"
           data-testid="resolution-criteria-back-button"
           @click="goToList"
         />

@@ -60,10 +60,12 @@ import {
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useMetricGoalAlerts } from '@/store/modules/humanSupport/metricGoalAlerts';
 import {
   MetricGoalBreach,
   TimeUnit,
 } from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
+import type { MetricKey } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 import { formatSecondsToTime } from '@/utils/time';
 import { monitoringTimeMetricsMock } from './mocks';
@@ -132,6 +134,15 @@ const { timeMetricsData, loadingTimeMetricsData } = storeToRefs(
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
+const metricGoalAlertsStore = useMetricGoalAlerts();
+const { liveBreaches } = storeToRefs(metricGoalAlertsStore);
+
+const METRIC_BY_GOAL_KEY: Record<GoalKey, MetricKey> = {
+  waiting_time_goal: 'waiting_time',
+  first_response_time_goal: 'first_response_time',
+  conversation_duration_goal: 'conversation_duration',
+};
+
 const cardAlertConfig: Record<
   CardId,
   { goalKey: GoalKey; scheme: AlertScheme }
@@ -175,9 +186,18 @@ const getCardAlert = (id: CardId) => {
   if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return undefined;
 
   const { goalKey, scheme } = cardAlertConfig[id];
-  const goal = widgetData.value[goalKey] as MetricGoalBreach | undefined;
+  const apiGoal = widgetData.value[goalKey] as MetricGoalBreach | undefined;
+  const metric = METRIC_BY_GOAL_KEY[goalKey];
+  const liveGoal = liveBreaches.value[metric];
 
-  if (!goal?.isBreached) return undefined;
+  let goal: MetricGoalBreach | undefined;
+  if (apiGoal?.isBreached) {
+    goal = apiGoal;
+  } else if (liveGoal?.isBreached) {
+    goal = liveGoal;
+  }
+
+  if (!goal) return undefined;
 
   const unit = t(
     `operational_alerts.unit_word${goal.thresholdValue === 1 ? '_singular' : 's'}.${goal.unit as TimeUnit}`,

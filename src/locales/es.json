@@ -1060,6 +1060,13 @@
       "first_response_time": "Este chat superó el límite de {value} {unit} para la primera respuesta.",
       "waiting_time": "Este chat superó el límite de {value} {unit} de espera."
     },
+    "toast": {
+      "conversation_duration": "{count} chats superaron el tiempo máximo de duración",
+      "first_response_time": "{count} chats superaron el tiempo máximo para la primera respuesta",
+      "title": "Live Desk: atención inmediata necesaria",
+      "view_details": "Ver detalles",
+      "waiting_time": "{count} chats superaron el tiempo máximo de espera"
+    },
     "unit_word_singular": {
       "h": "hora",
       "m": "minuto",

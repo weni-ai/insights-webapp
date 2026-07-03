@@ -1,49 +1,64 @@
 <template>
-  <UnnnicDrawer
+  <UnnnicDrawerNext
     v-if="isDrawerOpen"
-    :modelValue="isDrawerOpen"
-    :withoutOverlay="isRemoveModalOpen"
-    :title="drawerTitle"
-    :description="drawerDescription"
-    class="resolution-criteria-drawer"
-    closeIcon="close"
-    size="lg"
-    data-testid="resolution-criteria-drawer"
-    :primaryButtonText="primaryButtonText"
-    :disabledPrimaryButton="isPrimaryButtonDisabled"
-    :loadingPrimaryButton="isPrimaryButtonLoading"
-    @close="handleClose"
-    @primary-button-click="handlePrimaryClick"
+    :open="isDrawerOpen"
+    @update:open="handleOpenChange"
   >
-    <template
-      v-if="view === 'form'"
-      #title
+    <UnnnicDrawerContent
+      class="resolution-criteria-drawer"
+      size="large"
+      :showOverlay="!isRemoveModalOpen"
+      data-testid="resolution-criteria-drawer"
     >
-      <div class="resolution-criteria-drawer__form-header">
-        <UnnnicButton
-          type="tertiary"
-          size="large"
-          iconCenter="arrow-left-1-1"
-          data-testid="resolution-criteria-back-button"
-          @click="goToList"
-        />
-        <p class="resolution-criteria-drawer__form-title">
-          {{ formTitle }}
-        </p>
-      </div>
-    </template>
+      <UnnnicDrawerHeader>
+        <template v-if="view === 'form'">
+          <div class="resolution-criteria-drawer__form-header">
+            <UnnnicButton
+              type="tertiary"
+              size="large"
+              iconCenter="arrow-left-1-1"
+              data-testid="resolution-criteria-back-button"
+              @click="goToList"
+            />
+            <p class="resolution-criteria-drawer__form-title">
+              {{ formTitle }}
+            </p>
+          </div>
+        </template>
+        <template v-else>
+          <UnnnicDrawerTitle>
+            {{ drawerTitle }}
+          </UnnnicDrawerTitle>
+          <UnnnicDrawerDescription v-if="drawerDescription">
+            {{ drawerDescription }}
+          </UnnnicDrawerDescription>
+        </template>
+      </UnnnicDrawerHeader>
 
-    <template #content>
-      <CriteriaList
-        v-if="view === 'list'"
-        data-testid="resolution-criteria-list"
-      />
-      <CriterionForm
-        v-else
-        data-testid="resolution-criteria-form"
-      />
-    </template>
-  </UnnnicDrawer>
+      <section class="resolution-criteria-drawer__body">
+        <CriteriaList
+          v-if="view === 'list'"
+          data-testid="resolution-criteria-list"
+        />
+        <CriterionForm
+          v-else
+          data-testid="resolution-criteria-form"
+        />
+      </section>
+
+      <UnnnicDrawerFooter>
+        <UnnnicButton
+          type="primary"
+          size="large"
+          :text="primaryButtonText"
+          :disabled="isPrimaryButtonDisabled"
+          :loading="isPrimaryButtonLoading"
+          data-testid="drawer-primary-button"
+          @click="handlePrimaryClick"
+        />
+      </UnnnicDrawerFooter>
+    </UnnnicDrawerContent>
+  </UnnnicDrawerNext>
 
   <RemoveCriterionModal />
 </template>
@@ -52,6 +67,14 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
+import {
+  UnnnicDrawerNext,
+  UnnnicDrawerContent,
+  UnnnicDrawerHeader,
+  UnnnicDrawerTitle,
+  UnnnicDrawerDescription,
+  UnnnicDrawerFooter,
+} from '@weni/unnnic-system';
 
 import CriteriaList from './CriteriaList.vue';
 import CriterionForm from './CriterionForm.vue';
@@ -108,8 +131,10 @@ const isPrimaryButtonLoading = computed(() =>
   view.value === 'list' ? isLoadingList.value : isSaving.value,
 );
 
-const handleClose = () => {
-  closeDrawer();
+const handleOpenChange = (open: boolean) => {
+  if (!open) {
+    closeDrawer();
+  }
 };
 
 const handlePrimaryClick = () => {
@@ -121,12 +146,12 @@ const handlePrimaryClick = () => {
   save();
 };
 </script>
-
 <style lang="scss" scoped>
 .resolution-criteria-drawer {
-  :deep(.unnnic-drawer__container) {
-    width: 662px;
-    max-width: 100%;
+  &__body {
+    overflow-y: auto;
+    flex: 1 0 0;
+    padding: $unnnic-space-6 $unnnic-space-6 0;
   }
 
   &__form-header {
@@ -141,6 +166,16 @@ const handlePrimaryClick = () => {
     color: $unnnic-color-gray-12;
     font: $unnnic-font-display-2;
     font-weight: 600;
+  }
+}
+.resolution-criteria-drawer.unnnic-drawer__content {
+  .unnnic-drawer__footer {
+    justify-content: flex-end;
+
+    > * {
+      flex-grow: 0;
+      width: auto;
+    }
   }
 }
 </style>

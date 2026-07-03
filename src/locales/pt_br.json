@@ -158,6 +158,56 @@
       "crosstab_validation_title": "Problema de configuração",
       "crosstab_validation_description": "A chave ou o valor não foram encontrados no banco de dados."
     },
+    "resolution_criteria": {
+      "add_criterion": "Adicionar critério",
+      "base_section_description": "Aplicados a todos os projetos para manter o Atendido por IA consistente. Não podem ser editados ou removidos.",
+      "base_section_title": "Critérios base",
+      "custom_empty": "Nenhum critério adicionado",
+      "custom_section_description": "Adicione situações que este projeto também deve contar como Atendido por IA. {count} de {max}.",
+      "custom_section_title": "Seus critérios",
+      "errors": {
+        "ambiguous_description": "Reescreva o critério para deixá-lo mais claro",
+        "ambiguous_title": "O critério é ambíguo",
+        "duplicate_description": "Edite o critério para cobrir uma situação diferente ou remova o outro primeiro",
+        "duplicate_title": "Você já adicionou um critério semelhante",
+        "invalid_description": "Reescreva o critério e valide novamente",
+        "invalid_title": "O critério é inválido",
+        "technical": "Não foi possível validar o critério devido a um problema técnico"
+      },
+      "form": {
+        "create_title": "Adicionar critério",
+        "edit_title": "Editar critério",
+        "field_placeholder": "Critério",
+        "results_title": "Resultados da validação",
+        "save": "Salvar",
+        "success_description": "Após salvar, este critério passa a valer a partir da próxima avaliação diária. Conversas já classificadas não serão alteradas.",
+        "success_title": "Nenhum problema encontrado",
+        "tooltip_fix_issue": "Corrija o problema encontrado na validação para salvar",
+        "tooltip_validate_first": "Valide este critério antes de salvar",
+        "validate": "Validar",
+        "validating": "Validando critério..."
+      },
+      "list_description": "Defina o que conta como conversa Atendida por IA neste projeto. Esses critérios definem quais conversas são marcadas como Atendidas por IA no dashboard.",
+      "list_title": "Critérios de Atendido por IA",
+      "menu_option": "Editar critérios de Atendido por IA",
+      "remove_modal": {
+        "cancel": "Cancelar",
+        "confirm": "Excluir",
+        "description": "Essa ação não pode ser desfeita. Tem certeza de que deseja excluir este critério?",
+        "title": "Excluir critério"
+      },
+      "row_menu": {
+        "delete": "Excluir critério",
+        "edit": "Editar critério"
+      },
+      "toast": {
+        "added": "Critério adicionado com sucesso",
+        "delete_error": "Não foi possível excluir o critério devido a um problema técnico",
+        "deleted": "Critério excluído com sucesso",
+        "load_error": "Não foi possível carregar os critérios devido a um problema técnico",
+        "updated": "Critério atualizado com sucesso"
+      }
+    },
     "reviews": "avaliações",
     "csat_widget": {
       "very_satisfied": "Muito satisfeito",

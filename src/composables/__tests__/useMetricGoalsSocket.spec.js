@@ -247,6 +247,48 @@ describe('useMetricGoalsSocket', () => {
     ).toBe(12);
   });
 
+  it('should not show toast when breach was already hydrated from API', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+
+    alertsStore.hydrateFromApiGoals({
+      average_time_is_waiting: {
+        average: 120,
+        max: 300,
+        waiting_time_goal: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 7,
+        },
+      },
+      average_time_first_response: { average: 45, max: 90 },
+      average_time_chat: { average: 600, max: 1200 },
+    });
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.violated',
+      content: {
+        project_uuid: 'project-1',
+        metric: 'waiting_time',
+        state: 'violating',
+        transition: 'new',
+        violating_count: 8,
+        max_value_seconds: 300,
+        threshold_seconds: 60,
+        rooms_threshold_count: 2,
+        rooms_threshold_percent: null,
+        active_rooms_count: null,
+        detected_at: '2026-06-23T18:55:36+00:00',
+      },
+    });
+
+    expect(showMetricGoalToast).not.toHaveBeenCalled();
+    expect(alertsStore.liveBreaches.waiting_time?.breachedRoomsCount).toBe(8);
+  });
+
   it('should clear live breach on resolved events', () => {
     const { connect } = useMetricGoalsSocket();
     const alertsStore = useMetricGoalAlerts();

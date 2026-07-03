@@ -39,6 +39,7 @@
             v-if="item.rowAlert"
             :scheme="item.rowAlert.scheme"
             :text="item.rowAlert.text"
+            fullRow
           >
             {{ formatSecondsToTime(item.duration) }}
           </TableRowAlert>
@@ -117,12 +118,12 @@ const resolveRowAlert = (item: InProgressDataResult): RowAlert | null => {
     {
       metric: 'first_response_time',
       scheme: 'orange',
-      goal: item.first_response_time_goal,
+      exceeded: item.goals_metrics?.first_response_time?.exceeded,
     },
     {
       metric: 'conversation_duration',
       scheme: 'yellow',
-      goal: item.conversation_duration_goal,
+      exceeded: item.goals_metrics?.duration?.exceeded,
     },
   ]);
 };
@@ -298,5 +299,11 @@ watch(
 
 :deep(.unnnic-data-table__body-row--clickable:has(.row-alert--yellow):hover) {
   background-color: $unnnic-color-bg-yellow-plain;
+}
+
+:deep(
+  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
+) {
+  font: $unnnic-font-emphasis;
 }
 </style>

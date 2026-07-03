@@ -1,5 +1,6 @@
 import { useConfig } from '@/store/modules/config';
 import { useMetricGoalAlerts } from '@/store/modules/humanSupport/metricGoalAlerts';
+import type { MetricGoalSocketViolatedContent } from '@/store/modules/humanSupport/metricGoalAlerts';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import env from '@/utils/env';
 import { showMetricGoalToast } from '@/utils/showMetricGoalToast';
@@ -40,19 +41,14 @@ export function useMetricGoalsSocket() {
     }, REFRESH_PULSE_MS);
   };
 
-  const handleViolatingContent = (
-    content: MetricGoalSocketViolatedContent,
-    options: { isNew: boolean },
-  ) => {
+  const handleViolatingContent = (content: MetricGoalSocketViolatedContent) => {
     const wasAlreadyBreaching = metricGoalAlertsStore.isMetricBreaching(
       content.metric,
     );
 
     metricGoalAlertsStore.applyUpdate(content);
 
-    const shouldShowToast = options.isNew || !wasAlreadyBreaching;
-
-    if (shouldShowToast) {
+    if (!wasAlreadyBreaching) {
       showMetricGoalToast(content);
       triggerSilentRefresh();
     }
@@ -64,17 +60,15 @@ export function useMetricGoalsSocket() {
       const { type, content } = payload;
 
       if (type === 'metric_goal.violated') {
-        if (content.transition === 'new') {
-          handleViolatingContent(content, { isNew: true });
-        } else if (content.transition === 'update') {
-          handleViolatingContent(content, { isNew: false });
+        if (content.transition === 'new' || content.transition === 'update') {
+          handleViolatingContent(content);
         }
 
         return;
       }
 
       if (type === 'metric_goal.update') {
-        handleViolatingContent(content, { isNew: false });
+        handleViolatingContent(content);
         return;
       }
 

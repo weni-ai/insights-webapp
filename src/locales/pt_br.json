@@ -1058,6 +1058,7 @@
     "table_tooltip": {
       "conversation_duration": "Este chat ultrapassou o limite de {value} {unit}.",
       "first_response_time": "Este chat ultrapassou o limite de {value} {unit} para a primeira resposta.",
+      "generic": "Este chat ultrapassou o limite de tempo configurado.",
       "waiting_time": "Este chat ultrapassou o limite de {value} {unit} de espera."
     },
     "toast": {

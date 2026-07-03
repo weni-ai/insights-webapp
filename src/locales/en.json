@@ -1058,6 +1058,7 @@
     "table_tooltip": {
       "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",
       "first_response_time": "This chat has exceeded the {value}-{unit} time limit for the first response.",
+      "generic": "This chat has exceeded the configured time limit.",
       "waiting_time": "This chat has exceeded the {value}-{unit} waiting time limit."
     },
     "toast": {

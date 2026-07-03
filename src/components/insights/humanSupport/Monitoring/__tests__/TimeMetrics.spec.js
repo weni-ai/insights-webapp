@@ -317,12 +317,15 @@ describe('TimeMetrics', () => {
         timeMetricsData: {
           value: {
             ...defaultTimeMetricsData,
-            waiting_time_goal: {
-              thresholdSeconds: 60,
-              thresholdValue: 1,
-              unit: 'm',
-              isBreached: true,
-              breachedRoomsCount: 7,
+            average_time_is_waiting: {
+              ...defaultTimeMetricsData.average_time_is_waiting,
+              waiting_time_goal: {
+                thresholdSeconds: 60,
+                thresholdValue: 1,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 7,
+              },
             },
           },
         },
@@ -340,19 +343,25 @@ describe('TimeMetrics', () => {
         timeMetricsData: {
           value: {
             ...defaultTimeMetricsData,
-            first_response_time_goal: {
-              thresholdSeconds: 60,
-              thresholdValue: 1,
-              unit: 'm',
-              isBreached: true,
-              breachedRoomsCount: 4,
+            average_time_first_response: {
+              ...defaultTimeMetricsData.average_time_first_response,
+              first_response_time_goal: {
+                thresholdSeconds: 60,
+                thresholdValue: 1,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 4,
+              },
             },
-            conversation_duration_goal: {
-              thresholdSeconds: 600,
-              thresholdValue: 10,
-              unit: 'm',
-              isBreached: true,
-              breachedRoomsCount: 3,
+            average_time_chat: {
+              ...defaultTimeMetricsData.average_time_chat,
+              conversation_duration_goal: {
+                thresholdSeconds: 600,
+                thresholdValue: 10,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 3,
+              },
             },
           },
         },

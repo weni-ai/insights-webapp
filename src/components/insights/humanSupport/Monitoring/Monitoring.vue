@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { onUnmounted, watch, ref, computed } from 'vue';
+import { onMounted, onUnmounted, watch, ref, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useTimeoutFn, useElementVisibility } from '@vueuse/core';
 
@@ -41,6 +41,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useProject } from '@/store/modules/project';
 import { useConfig } from '@/store/modules/config';
+import { useMetricGoals } from '@/store/modules/humanSupport/metricGoals';
 import { useMetricGoalsSocket } from '@/composables/useMetricGoalsSocket';
 
 import StatusCards from './StatusCards.vue';
@@ -53,8 +54,15 @@ import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
+const humanSupportMonitoringStore = useHumanSupportMonitoring();
+const { setRefreshDataMonitoring } = humanSupportMonitoringStore;
+const { autoRefresh, forceLoadDetailed } = storeToRefs(
+  humanSupportMonitoringStore,
+);
+
 const configStore = useConfig();
 const { token, project } = storeToRefs(configStore);
+const metricGoalsStore = useMetricGoals();
 const {
   connect: connectMetricGoalsSocket,
   disconnect: disconnectMetricGoalsSocket,
@@ -67,12 +75,24 @@ const shouldConnectMetricGoalsSocket = computed(
     !!project.value?.uuid,
 );
 
+const loadOperationalAlertsData = () => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return;
+
+  void humanSupportMonitoringStore.loadTimeMetricsData();
+  void metricGoalsStore.loadGoals().catch(() => undefined);
+};
+
+onMounted(() => {
+  loadOperationalAlertsData();
+});
+
 watch(
   [shouldConnectMetricGoalsSocket, () => project.value?.uuid, token],
   ([enabled], previous) => {
     const wasEnabled = previous?.[0];
 
     if (enabled) {
+      loadOperationalAlertsData();
       connectMetricGoalsSocket();
       return;
     }
@@ -95,13 +115,6 @@ let autoRefreshInterval: ReturnType<typeof setInterval> | null = null;
 let timeoutStop: (() => void) | null = null;
 
 const AUTO_REFRESH_INTERVAL = 60 * 1000;
-
-const humanSupportMonitoringStore = useHumanSupportMonitoring();
-
-const { setRefreshDataMonitoring } = humanSupportMonitoringStore;
-const { autoRefresh, forceLoadDetailed } = storeToRefs(
-  humanSupportMonitoringStore,
-);
 
 const monitoringRef = ref(null);
 const isVisible = useElementVisibility(monitoringRef);

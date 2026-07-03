@@ -29,6 +29,13 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
   useInfiniteScrollTable: vi.fn(() => mockInfiniteScroll),
 }));
 
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: () => true,
+    activeFeatures: [],
+  }),
+}));
+
 vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress',
   () => ({
@@ -251,6 +258,37 @@ describe('InProgress', () => {
       store.refreshDataMonitoring = true;
       await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Row alert', () => {
+    const firstResponseBreach = { exceeded: true };
+    const durationBreach = { exceeded: true };
+
+    it('prioritizes the orange first response alert over the yellow duration alert', () => {
+      const alert = wrapper.vm.getItemAlert({
+        goals_metrics: {
+          first_response_time: firstResponseBreach,
+          duration: durationBreach,
+        },
+      });
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('orange');
+    });
+
+    it('returns a yellow alert when only the duration goal is exceeded', () => {
+      const alert = wrapper.vm.getItemAlert({
+        goals_metrics: {
+          duration: durationBreach,
+        },
+      });
+
+      expect(alert.scheme).toBe('yellow');
+    });
+
+    it('returns null when there is no exceeded goal', () => {
+      expect(wrapper.vm.getItemAlert({})).toBeNull();
     });
   });
 

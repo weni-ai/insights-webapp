@@ -7,6 +7,7 @@ import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/mo
 import ServiceStatusService from '@/services/api/resources/humanSupport/monitoring/serviceStatus';
 import TimeMetricsService from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
 import ServicesOpenByHourService from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
+import { useMetricGoalAlerts } from '@/store/modules/humanSupport/metricGoalAlerts';
 
 export type ActiveDetailedTab =
   | 'in_awaiting'
@@ -102,6 +103,7 @@ export const useHumanSupportMonitoring = defineStore(
         const data = await TimeMetricsService.getTimeMetricsData();
 
         timeMetricsData.value = data;
+        useMetricGoalAlerts().hydrateFromApiGoals(data);
       } catch (error) {
         console.error('Error loading time metrics data:', error);
       } finally {

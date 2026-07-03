@@ -30,7 +30,7 @@
     "emoji-mart": "^5.6.0",
     "firebase": "^10.13.1",
     "html-rspack-plugin": "^6.0.2",
-    "intl-messageformat": "^11.2.5",
+    "intl-messageformat": "^11.2.9",
     "lodash-es": "^4.17.23",
     "marked": "^14.1.2",
     "mitt": "^3.0.1",

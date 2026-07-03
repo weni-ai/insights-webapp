@@ -76,13 +76,28 @@
           {{ valueDescription }}
         </p>
       </section>
-      <p
-        v-if="description"
-        class="card-conversations__description"
-        data-testid="card-description"
+      <section
+        v-if="description || props.alert"
+        class="card-conversations__description-row"
       >
-        {{ description }}
-      </p>
+        <p
+          v-if="description"
+          class="card-conversations__description"
+          data-testid="card-description"
+        >
+          {{ description }}
+        </p>
+        <span
+          v-if="props.alert"
+          :class="[
+            'card-conversations__alert-pill',
+            `card-conversations__alert-pill--${props.alert.scheme}`,
+          ]"
+          data-testid="card-conversations-alert-pill"
+        >
+          {{ props.alert.text }}
+        </span>
+      </section>
     </section>
   </section>
   <UnnnicSkeletonLoading
@@ -108,6 +123,7 @@ interface Props {
   activeDescriptionGap?: boolean;
   enableTimeIcon?: boolean;
   isClickable?: boolean;
+  alert?: { scheme: 'red' | 'orange' | 'yellow'; text: string };
 }
 
 const props = defineProps<Props>();
@@ -203,9 +219,35 @@ defineEmits<{
     font: $unnnic-font-display-3;
   }
 
+  &__description-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $unnnic-space-2;
+  }
+
   &__description {
     color: $unnnic-color-fg-muted;
     font: $unnnic-font-caption-2;
+  }
+
+  &__alert-pill {
+    padding: $unnnic-space-1 $unnnic-space-2;
+    border-radius: $unnnic-radius-full;
+    color: $unnnic-color-fg-emphasized;
+    font: $unnnic-font-caption-1;
+
+    &--red {
+      background: $unnnic-color-bg-red-plain;
+    }
+
+    &--orange {
+      background: $unnnic-color-bg-orange-plain;
+    }
+
+    &--yellow {
+      background: $unnnic-color-bg-yellow-plain;
+    }
   }
 
   &__skeleton {

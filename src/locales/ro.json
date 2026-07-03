@@ -1053,6 +1053,72 @@
     "error_message": "Eroare la deconectarea agentului {agent}",
     "tooltip_disabled": "Acest reprezentant nu poate fi deconectat deoarece este offline"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Alertele operaționale nu au putut fi salvate din cauza unei probleme tehnice",
+      "save_success": "Alerte operaționale salvate cu succes"
+    },
+    "card_alert": "{count} conversații au depășit {value} {unit}",
+    "drawer": {
+      "description": "Configure alertele pentru a identifica conversațiile care depășesc limitele de timp definite pentru o operațiune:",
+      "title": "Alerte operaționale"
+    },
+    "first_response_info": "Timpul până la primul răspuns este calculat din momentul în care conversația este atribuită unui reprezentant",
+    "form": {
+      "email_notification_label": "Notificare prin e-mail (opțional)",
+      "email_notification_tooltip": "Această alertă este afișată întotdeauna în dashboard-ul Live Desk când o conversație atinge limita definită.\n\nPoți configura și notificări prin e-mail pentru moderatorii selectați și poți alege când trebuie trimise - de exemplu, când una sau mai multe conversații ating limita definită.",
+      "recipients_helper": "Doar moderatorii pot primi alerte",
+      "send_email_to_label": "Trimite e-mail către",
+      "send_email_to_placeholder": "Selectează moderatorii",
+      "threshold_labels": {
+        "conversation_duration": "Durata maximă a conversației",
+        "first_response_time": "Timp maxim până la primul răspuns",
+        "waiting_time": "Timp maxim de așteptare"
+      },
+      "threshold_placeholder": "Exemplu: 10",
+      "unit_label": "Unitate",
+      "units": {
+        "hours": "Ore",
+        "minutes": "Minute",
+        "seconds": "Secunde"
+      },
+      "when_helper": "Numărul de conversații cu alerte active",
+      "when_label": "Când",
+      "when_placeholder": "Exemplu: 5"
+    },
+    "popover": {
+      "new_tag": "Nou",
+      "option_label": "Alerte operaționale"
+    },
+    "sections": {
+      "conversation_duration": "Alertă în dashboard-ul Live Desk când durata unei conversații depășește limita definită",
+      "first_response_time": "Alertă în dashboard-ul Live Desk când timpul până la primul răspuns al unei conversații depășește limita definită",
+      "waiting_time": "Alertă în dashboard-ul Live Desk când timpul de așteptare al unei conversații depășește limita definită"
+    },
+    "table_tooltip": {
+      "conversation_duration": "Această conversație a depășit limita de {value} {unit}.",
+      "first_response_time": "Această conversație a depășit limita de {value} {unit} pentru primul răspuns.",
+      "generic": "Această conversație a depășit limita de timp configurată.",
+      "waiting_time": "Această conversație a depășit limita de {value} {unit} de așteptare."
+    },
+    "toast": {
+      "conversation_duration": "{count} conversații au depășit durata maximă",
+      "first_response_time": "{count} conversații au depășit timpul maxim pentru primul răspuns",
+      "title": "Live Desk: atenție imediată necesară",
+      "view_details": "Vezi detalii",
+      "waiting_time": "{count} conversații au depășit timpul maxim de așteptare"
+    },
+    "unit_word_singular": {
+      "h": "oră",
+      "m": "minut",
+      "s": "secundă"
+    },
+    "unit_words": {
+      "h": "ore",
+      "m": "minute",
+      "s": "secunde"
+    }
+  },
   "human_support_dashboard": {
     "title": "Asistență umană",
     "monitoring": "Monitorizare",

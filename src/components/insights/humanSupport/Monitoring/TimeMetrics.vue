@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed, onUnmounted, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useMouseInElement } from '@vueuse/core';
@@ -222,7 +222,11 @@ const getTooltipSide = (index: number) => {
   return 'top';
 };
 
+let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+
 const scrollToDetailedMonitoring = () => {
+  if (typeof document === 'undefined') return;
+
   const detailedMonitoringElement = document.querySelector(
     '[id="detailed-monitoring"]',
   );
@@ -244,8 +248,20 @@ const handleCardClick = (id: CardId) => {
 
   setActiveDetailedTab(status[id] as ActiveDetailedTab);
   setForceLoadDetailed(true);
-  setTimeout(scrollToDetailedMonitoring, 100);
+
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout);
+  }
+
+  scrollTimeout = setTimeout(scrollToDetailedMonitoring, 100);
 };
+
+onUnmounted(() => {
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = null;
+  }
+});
 </script>
 
 <style scoped lang="scss">

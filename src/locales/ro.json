@@ -1008,6 +1008,7 @@
       "save_error": "Alertele operaționale nu au putut fi salvate din cauza unei probleme tehnice",
       "save_success": "Alerte operaționale salvate cu succes"
     },
+    "card_alert": "{count} conversații au depășit {value} {unit}",
     "drawer": {
       "description": "Configure alertele pentru a identifica conversațiile care depășesc limitele de timp definite pentru o operațiune:",
       "title": "Alerte operaționale"
@@ -1043,6 +1044,21 @@
       "conversation_duration": "Alertă în dashboard-ul Live Desk când durata unei conversații depășește limita definită",
       "first_response_time": "Alertă în dashboard-ul Live Desk când timpul până la primul răspuns al unei conversații depășește limita definită",
       "waiting_time": "Alertă în dashboard-ul Live Desk când timpul de așteptare al unei conversații depășește limita definită"
+    },
+    "table_tooltip": {
+      "conversation_duration": "Această conversație a depășit limita de {value} {unit}.",
+      "first_response_time": "Această conversație a depășit limita de {value} {unit} pentru primul răspuns.",
+      "waiting_time": "Această conversație a depășit limita de {value} {unit} de așteptare."
+    },
+    "unit_word_singular": {
+      "h": "oră",
+      "m": "minut",
+      "s": "secundă"
+    },
+    "unit_words": {
+      "h": "ore",
+      "m": "minute",
+      "s": "secunde"
     }
   },
   "human_support_dashboard": {

@@ -29,6 +29,13 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
   useInfiniteScrollTable: vi.fn(() => mockInfiniteScroll),
 }));
 
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: () => true,
+    activeFeatures: [],
+  }),
+}));
+
 vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress',
   () => ({
@@ -251,6 +258,45 @@ describe('InProgress', () => {
       store.refreshDataMonitoring = true;
       await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Row alert', () => {
+    const firstResponseBreach = {
+      thresholdSeconds: 60,
+      thresholdValue: 1,
+      unit: 'm',
+      isBreached: true,
+      breachedRoomsCount: 2,
+    };
+    const durationBreach = {
+      thresholdSeconds: 600,
+      thresholdValue: 10,
+      unit: 'm',
+      isBreached: true,
+      breachedRoomsCount: 3,
+    };
+
+    it('prioritizes the orange first response alert over the yellow duration alert', () => {
+      const alert = wrapper.vm.getItemAlert({
+        first_response_time_goal: firstResponseBreach,
+        conversation_duration_goal: durationBreach,
+      });
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('orange');
+    });
+
+    it('returns a yellow alert when only the duration goal is breached', () => {
+      const alert = wrapper.vm.getItemAlert({
+        conversation_duration_goal: durationBreach,
+      });
+
+      expect(alert.scheme).toBe('yellow');
+    });
+
+    it('returns null when there is no breached goal', () => {
+      expect(wrapper.vm.getItemAlert({})).toBeNull();
     });
   });
 

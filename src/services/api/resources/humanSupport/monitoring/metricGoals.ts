@@ -8,6 +8,14 @@ type MetricKey =
 
 type TimeUnit = 's' | 'm' | 'h';
 
+interface MetricGoalBreachApi {
+  threshold_seconds: number;
+  threshold_value: number;
+  unit: TimeUnit;
+  is_breached: boolean;
+  breached_rooms_count: number;
+}
+
 interface MetricGoalBreach {
   thresholdSeconds: number;
   thresholdValue: number;
@@ -81,6 +89,16 @@ interface MetricGoalSavePayload {
   rooms_threshold_count: number;
   recipients: MetricGoalRecipientApiPayload[];
 }
+
+const normalizeMetricGoalBreach = (
+  breach: MetricGoalBreachApi,
+): MetricGoalBreach => ({
+  thresholdSeconds: breach.threshold_seconds,
+  thresholdValue: breach.threshold_value,
+  unit: breach.unit,
+  isBreached: breach.is_breached,
+  breachedRoomsCount: breach.breached_rooms_count,
+});
 
 const UNIT_SECONDS: Record<TimeUnit, number> = {
   s: 1,
@@ -261,6 +279,7 @@ export type {
   MetricGoal,
   MetricGoalApi,
   MetricGoalBreach,
+  MetricGoalBreachApi,
   MetricGoalRecipientDetail,
   MetricGoalSaveParams,
   MetricKey,
@@ -268,4 +287,4 @@ export type {
   MetricGoalsResponse,
 };
 
-export { formatRecipientLabel };
+export { formatRecipientLabel, normalizeMetricGoalBreach };

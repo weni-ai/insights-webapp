@@ -28,6 +28,13 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
   useInfiniteScrollTable: vi.fn(() => mockInfiniteScroll),
 }));
 
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: () => true,
+    activeFeatures: [],
+  }),
+}));
+
 vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting',
   () => ({
@@ -173,29 +180,52 @@ describe('InAwaiting', () => {
 
     it('prevents multiple simultaneous requests', async () => {
       vi.clearAllMocks();
-      
+
       let resolveRequest;
       const requestPromise = new Promise((resolve) => {
         resolveRequest = resolve;
       });
       mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
-      
+
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
-      
+
       resolveRequest();
       await requestPromise;
       await wrapper.vm.$nextTick();
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('Row alert', () => {
+    it('returns a red alert when the waiting time goal is breached', () => {
+      const alert = wrapper.vm.getItemAlert({
+        awaiting_time: '120s',
+        waiting_time_goal: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 3,
+        },
+      });
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('red');
+      expect(typeof alert.text).toBe('string');
+    });
+
+    it('returns null when there is no breached goal', () => {
+      expect(wrapper.vm.getItemAlert({ awaiting_time: '5s' })).toBeNull();
     });
   });
 

@@ -143,12 +143,12 @@
     "search_term": "Most searched terms",
     "agent_invocation": "Most used agents",
     "agent_invocation_description": "Follow the ranking of the most used agents",
-    "agent_invocation_count": "{count} agents",
+    "agent_invocation_count": "{count, plural, one {# agent} other {# agents}}",
     "tool_result": "Most used tools",
     "tool_result_description": "Follow the ranking of the most used tools",
-    "tool_result_count": "{count} tools",
-    "search_term_count": "{count} products",
-    "added_to_cart_count": "{count} products",
+    "tool_result_count": "{count, plural, one {# tool} other {# tools}}",
+    "search_term_count": "{count, plural, one {# product} other {# products}}",
+    "added_to_cart_count": "{count, plural, one {# product} other {# products}}",
     "auto_widget_no_data": "No data available for the filtered period",
     "auto_widget_error": "Data couldn't be loaded. Refresh the dashboard or contact support",
     "no_data_available": "No data available for the selected period",
@@ -274,7 +274,7 @@
         "description": "Combine and compare two different data points to discover insights.",
         "drawer": {
           "description": "Enter the widget name:",
-          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br><b>Field name:</b> The name of the field for the value you want to show. If left blank, the system will use a default value.",
+          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br/><b>Field name:</b> The name of the field for the value you want to show. If left blank, the system will use a default value.",
           "first_data_label": "Set the <b>first</b> data point you want to track:",
           "second_data_label": "Set the <b>second</b> data point you want to track:",
           "reference_field_label": "Define the reference field to be used to link the events:"
@@ -298,7 +298,7 @@
             "hint": " A unique identifier used to track a specific event in the data flow."
           },
           "value_field_name": {
-            "label": "Event metadata (@.lower:optional)",
+            "label": "Event metadata (optional)",
             "placeholder": "Enter the event metadata here",
             "hint": "Metadata's field name for performing operations. If left blank, the system will use the default field (value)."
           },
@@ -473,7 +473,7 @@
   "filter-by": "Period:",
   "see_more": "Show more",
   "see_all": "View all",
-  "lines_count": "{count} rows",
+  "lines_count": "{count, plural, one {# row} other {# rows}}",
   "reload": "Refresh",
   "agent": "Agent",
   "online_agents": "Online agents",
@@ -561,17 +561,17 @@
     "info_reset": "If you reset the widget, the configured data will be lost.",
     "success_reset": "Widget reset successfully",
     "error_reset": "Couldn't reset widget. Try again.",
-    "metric_error": "Error fetching @.lower:metric",
+    "metric_error": "Error fetching metric",
     "card": {
-      "error_description": "Reset the source @.lower:flow to fetch valid data",
+      "error_description": "Reset the source flow to fetch valid data",
       "metric_empty": "Configure",
-      "metric_set": "Set @.lower:metric"
+      "metric_set": "Set metric"
     },
     "graph_funnel": {
       "title": "Funnel",
-      "not_configured_description": "Select the @.lower:flows you want to map to build the funnel view for your project",
-      "select_flows": "@:select @.lower:flows",
-      "flow_executions": "@.lower:flow runs",
+      "not_configured_description": "Select the flows you want to map to build the funnel view for your project",
+      "select_flows": "Select flows",
+      "flow_executions": "flow runs",
       "error": {
         "title": "There was a problem while loading the data",
         "description": "Try reloading"
@@ -617,7 +617,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "@:metric saved successfully",
+    "metric_saved": "Metric saved successfully",
     "reset_widget": "Reset widget",
     "clear_all_fields": "Clear all fields",
     "config_gallery": {
@@ -626,11 +626,11 @@
       "options": {
         "executions": {
           "title": "Runs",
-          "description": "View the total runs of a @.lower:flow"
+          "description": "View the total runs of a flow"
         },
         "flow_result": {
-          "title": "@.lower:flow result",
-          "description": "Returns a @.lower:flow result and allows basic operations"
+          "title": "Flow result",
+          "description": "Returns a flow result and allows basic operations"
         },
         "data_crossing": {
           "title": "Data crossing",
@@ -687,15 +687,15 @@
       }
     },
     "config_card": {
-      "title": "Set @.lower:metric for the card",
+      "title": "Set metric for the card",
       "name_card": {
         "label": "Enter a name for the card",
-        "placeholder": "@:ex @.lower:project flows"
+        "placeholder": "Example: Project flows"
       },
-      "select_origin_flow": "@:select @.lower:source flow",
+      "select_origin_flow": "Select source flow",
       "result_type": "Result type",
       "flow_result": {
-        "label": "@.lower:flow result",
+        "label": "flow result",
         "placeholder": "Search or select a result"
       },
       "operation": "Operation",
@@ -718,20 +718,20 @@
         "difference": "Difference",
         "percentage": "Percentage"
       },
-      "total_flow_executions": "Total @.lower:flow runs",
+      "total_flow_executions": "Total flow runs",
       "first_value": "First value",
       "second_value": "Second value"
     },
     "config_funnel": {
-      "title": "Set @.lower:metrics for the chart",
-      "description": "Select at least three @.lower:flows to fetch the funnel chart view",
-      "add_metric": "@:add @.lower:metric",
-      "first_metric": "First @.lower:metric",
-      "second_metric": "Second @.lower:metric",
-      "third_metric": "Third @.lower:metric",
-      "fourth_metric": "Fourth @.lower:metric",
-      "fifth_metric": "Fifth @.lower:metric",
-      "select_flow": "@:select @.lower:flow"
+      "title": "Set metrics for the chart",
+      "description": "Select at least three flows to fetch the funnel chart view",
+      "add_metric": "Add metric",
+      "first_metric": "First metric",
+      "second_metric": "Second metric",
+      "third_metric": "Third metric",
+      "fourth_metric": "Fourth metric",
+      "fifth_metric": "Fifth metric",
+      "select_flow": "Select flow"
     },
     "config_recurrence": {
       "name_metric": "Metric name"
@@ -739,10 +739,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Enter a name for @.lower:metric",
-      "placeholder": "@:ex project @.lower:flows"
+      "label": "Enter a name for metric",
+      "placeholder": "Example: Project flows"
     },
-    "select_origin_flow": "@:select source @.lower:flow"
+    "select_origin_flow": "Select source flow"
   },
   "insights_header": {
     "auto_refresh": "Automatic update: {status}",
@@ -1013,6 +1013,72 @@
     "error_message": "Error disconnecting agent {agent}",
     "tooltip_disabled": "This representative can't be disconnected because they are offline"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Operational alerts couldn't be saved due to a technical issue",
+      "save_success": "Operational alerts saved successfully"
+    },
+    "card_alert": "{count} chats exceeded {value} {unit}",
+    "drawer": {
+      "description": "Configure alerts to identify chats that exceed the defined time limits for an operation:",
+      "title": "Operational alerts"
+    },
+    "first_response_info": "Time to first response is counted from the moment the chat is assigned to a representative",
+    "form": {
+      "email_notification_label": "Email notification (optional)",
+      "email_notification_tooltip": "This alert is always displayed in the Live Desk dashboard when a chat reaches the defined threshold.\n\nYou can also configure email notifications for selected moderators and choose when they should be sent - for example, when one or more chats reach the defined threshold.",
+      "recipients_helper": "Only moderators can receive alerts",
+      "send_email_to_label": "Send email to",
+      "send_email_to_placeholder": "Select the moderators",
+      "threshold_labels": {
+        "conversation_duration": "Maximum chat duration",
+        "first_response_time": "Maximum time to first response",
+        "waiting_time": "Maximum wait time"
+      },
+      "threshold_placeholder": "Example: 10",
+      "unit_label": "Unit",
+      "units": {
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds"
+      },
+      "when_helper": "Number of chats with active alerts",
+      "when_label": "When",
+      "when_placeholder": "Example: 5"
+    },
+    "popover": {
+      "new_tag": "New",
+      "option_label": "Operational alerts"
+    },
+    "sections": {
+      "conversation_duration": "Alert in the Live Desk dashboard when a chat's duration exceeds the defined threshold",
+      "first_response_time": "Alert in the Live Desk dashboard when a chat's first response time exceeds the defined threshold",
+      "waiting_time": "Alert in the Live Desk dashboard when a chat's wait time exceeds the defined threshold"
+    },
+    "table_tooltip": {
+      "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",
+      "first_response_time": "This chat has exceeded the {value}-{unit} time limit for the first response.",
+      "generic": "This chat has exceeded the configured time limit.",
+      "waiting_time": "This chat has exceeded the {value}-{unit} waiting time limit."
+    },
+    "toast": {
+      "conversation_duration": "{count} chats exceeded the maximum duration time",
+      "first_response_time": "{count} chats exceeded the maximum time for first response",
+      "title": "Live Desk: immediate attention needed",
+      "view_details": "View details",
+      "waiting_time": "{count} chats exceeded the maximum wait time"
+    },
+    "unit_word_singular": {
+      "h": "hour",
+      "m": "minute",
+      "s": "second"
+    },
+    "unit_words": {
+      "h": "hours",
+      "m": "minutes",
+      "s": "seconds"
+    }
+  },
   "human_support_dashboard": {
     "title": "Live desk",
     "monitoring": "Monitoring",
@@ -1090,9 +1156,9 @@
         "action": "Action"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} on break",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# on break} other {# on break}}",
+        "offline": "{count, plural, one {# offline} other {# offline}}"
       }
     },
     "filters": {
@@ -1183,8 +1249,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count} queue with {status} chats | {count} queues with chats {status}",
-      "analysis_count": "{count} queue with completed chats | {count} queues with completed chats",
+      "monitoring_count": "{count, plural, one {# queue with {status} chats} other {# queues with chats {status}}}",
+      "analysis_count": "{count, plural, one {# queue with completed chats} other {# queues with completed chats}}",
       "setup_description": "Create queues by industry to monitor more data",
       "empty_data": {
         "monitoring": {
@@ -1201,8 +1267,8 @@
       "title": "Volume per tag",
       "setup_description": "Add tags to industries to monitor more data",
       "count": {
-        "ongoing": "{count} tag in use | {count} tags in use",
-        "closed": "{count} assigned tag | {count} assigned tags"
+        "ongoing": "{count, plural, one {# tag in use} other {# tags in use}}",
+        "closed": "{count, plural, one {# assigned tag} other {# assigned tags}}"
       },
       "empty_data": {
         "monitoring": {

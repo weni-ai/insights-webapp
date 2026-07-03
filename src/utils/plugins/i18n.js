@@ -7,6 +7,8 @@ import pt_br from '@/locales/pt_br.json';
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
 
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+
 import('moment/dist/locale/es.js');
 import('moment/dist/locale/pt-br.js');
 
@@ -21,9 +23,11 @@ const languages = {
 const messages = Object.assign(languages);
 
 export default createI18n({
+  legacy: false,
   locale: 'en',
   fallbackLocale: 'en',
   messages,
+  messageCompiler: icuMessageCompiler,
   globalInjection: true, // Enable $t in templates
   silentTranslationWarn: true,
   silentFallbackWarn: true,

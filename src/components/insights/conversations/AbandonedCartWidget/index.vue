@@ -2,6 +2,7 @@
   <section
     v-if="isLoadingData"
     class="abandoned-cart-widget__loading"
+    data-testid="abandoned-cart-widget-loading"
   >
     <UnnnicSkeletonLoading
       class="abandoned-cart-widget__loading__skeleton"
@@ -12,9 +13,13 @@
   <section
     v-else
     class="abandoned-cart-widget"
+    data-testid="abandoned-cart-widget"
   >
     <section class="abandoned-cart-widget__header">
-      <h2 class="abandoned-cart-widget__title">
+      <h2
+        class="abandoned-cart-widget__title"
+        data-testid="abandoned-cart-widget-title"
+      >
         {{ $t('conversations_dashboard.abandoned_cart_recovery_widget.title') }}
       </h2>
       <UnnnicPopover
@@ -33,6 +38,7 @@
           size="small"
         >
           <UnnnicPopoverOption
+            data-testid="abandoned-cart-widget-remove-option"
             :label="
               $t(
                 'conversations_dashboard.customize_your_dashboard.remove_widget',
@@ -48,8 +54,10 @@
     <section
       v-if="showDisclaimer"
       class="abandoned-cart-widget__no-data"
+      data-testid="abandoned-cart-widget-disclaimer-wrapper"
     >
       <UnnnicDisclaimer
+        data-testid="abandoned-cart-widget-disclaimer"
         :type="disclaimerType"
         :description="disclaimerDescription"
       />
@@ -57,6 +65,7 @@
     <section
       v-else
       class="abandoned-cart-widget__content"
+      data-testid="abandoned-cart-widget-content"
     >
       <Chart
         class="abandoned-cart-widget__content__chart"

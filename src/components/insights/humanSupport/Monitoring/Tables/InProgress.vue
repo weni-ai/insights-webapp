@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="widgetData"
+    :items="tableItems"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -28,11 +28,23 @@
         {{ $t('human_support_dashboard.common.no_response') }}
       </p>
 
-      <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
+      <template v-else>
+        {{ formatSecondsToTime(item.first_response_time) }}
+      </template>
     </template>
     <template #body-duration="{ item }">
       <section class="in-progress-duration">
-        <span>{{ formatSecondsToTime(item.duration) }}</span>
+        <span class="in-progress-duration__value">
+          <TableRowAlert
+            v-if="item.rowAlert"
+            :scheme="item.rowAlert.scheme"
+            :text="item.rowAlert.text"
+            fullRow
+          >
+            {{ formatSecondsToTime(item.duration) }}
+          </TableRowAlert>
+          <template v-else>{{ formatSecondsToTime(item.duration) }}</template>
+        </span>
         <UnnnicToolTip
           v-if="item.pending_response"
           enabled
@@ -68,16 +80,24 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useProject } from '@/store/modules/project';
 
-import { formatSecondsToTime } from '@/utils/time';
-
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { useLazyData } from '@/composables/useLazyData';
+import { useTableRowAlert } from '@/composables/useTableRowAlert';
+import type { RowAlert } from '@/composables/useTableRowAlert';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 
+import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
+
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
+import { formatSecondsToTime } from '@/utils/time';
+
+type TableInProgressItem = InProgressDataResult & {
+  rowAlert: RowAlert | null;
+};
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -86,6 +106,29 @@ const humanSupport = useHumanSupport();
 
 const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);
+
+const featureFlagStore = useFeatureFlag();
+const { isFeatureFlagEnabled } = featureFlagStore;
+const { getRowAlert } = useTableRowAlert();
+
+const resolveRowAlert = (item: InProgressDataResult): RowAlert | null => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return null;
+
+  return getRowAlert([
+    {
+      metric: 'first_response_time',
+      scheme: 'orange',
+      exceeded: item.goals_metrics?.first_response_time?.exceeded,
+    },
+    {
+      metric: 'conversation_duration',
+      scheme: 'yellow',
+      exceeded: item.goals_metrics?.duration?.exceeded,
+    },
+  ]);
+};
+
+defineExpose({ getItemAlert: resolveRowAlert });
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -115,15 +158,21 @@ const {
   handleSort: handleSortChange,
 } = useInfiniteScrollTable<InProgressDataResult, InProgressDataResult>({
   fetchData,
-  formatResults: (results) => results,
+  formatResults: (results) => results.map((item) => ({ ...item })),
   sort: currentSort.value,
 });
 
-const widgetData = computed(() => {
-  if (!hasSectorsConfigured.value) {
-    return monitoringDetailedMonitoringInProgressMock;
-  }
-  return formattedItems.value;
+const tableItems = computed((): TableInProgressItem[] => {
+  featureFlagStore.activeFeatures;
+
+  const source = hasSectorsConfigured.value
+    ? formattedItems.value
+    : (monitoringDetailedMonitoringInProgressMock as InProgressDataResult[]);
+
+  return source.map((item) => ({
+    ...item,
+    rowAlert: resolveRowAlert(item),
+  }));
 });
 
 const isLoadingVisible = computed(() => {
@@ -230,5 +279,31 @@ watch(
   display: flex;
   align-items: center;
   gap: $unnnic-space-1;
+
+  &__value {
+    display: inline;
+  }
+}
+
+:deep(.unnnic-data-table__body-row:has(.row-alert--orange)) {
+  background-color: $unnnic-color-bg-orange-plain;
+}
+
+:deep(.unnnic-data-table__body-row:has(.row-alert--yellow)) {
+  background-color: $unnnic-color-bg-yellow-plain;
+}
+
+:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--orange):hover) {
+  background-color: $unnnic-color-bg-orange-plain;
+}
+
+:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--yellow):hover) {
+  background-color: $unnnic-color-bg-yellow-plain;
+}
+
+:deep(
+  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
+) {
+  font: $unnnic-font-emphasis;
 }
 </style>

@@ -158,6 +158,56 @@
       "crosstab_validation_title": "Problema de configuração",
       "crosstab_validation_description": "A chave ou o valor não foram encontrados no banco de dados."
     },
+    "resolution_criteria": {
+      "add_criterion": "Adicionar critério",
+      "base_section_description": "Aplicados a todos os projetos para manter o Atendido por IA consistente. Não podem ser editados ou removidos.",
+      "base_section_title": "Critérios base",
+      "custom_empty": "Nenhum critério adicionado",
+      "custom_section_description": "Adicione situações que este projeto também deve contar como Atendido por IA. {count} de {max}.",
+      "custom_section_title": "Seus critérios",
+      "errors": {
+        "ambiguous_description": "Reescreva o critério para deixá-lo mais claro",
+        "ambiguous_title": "O critério é ambíguo",
+        "duplicate_description": "Edite o critério para cobrir uma situação diferente ou remova o outro primeiro",
+        "duplicate_title": "Você já adicionou um critério semelhante",
+        "invalid_description": "Reescreva o critério e valide novamente",
+        "invalid_title": "O critério é inválido",
+        "technical": "Não foi possível validar o critério devido a um problema técnico"
+      },
+      "form": {
+        "create_title": "Adicionar critério",
+        "edit_title": "Editar critério",
+        "field_placeholder": "Critério",
+        "results_title": "Resultados da validação",
+        "save": "Salvar",
+        "success_description": "Após salvar, este critério passa a valer a partir da próxima avaliação diária. Conversas já classificadas não serão alteradas.",
+        "success_title": "Nenhum problema encontrado",
+        "tooltip_fix_issue": "Corrija o problema encontrado na validação para salvar",
+        "tooltip_validate_first": "Valide este critério antes de salvar",
+        "validate": "Validar",
+        "validating": "Validando critério..."
+      },
+      "list_description": "Defina o que conta como conversa Atendida por IA neste projeto. Esses critérios definem quais conversas são marcadas como Atendidas por IA no dashboard.",
+      "list_title": "Critérios de Atendido por IA",
+      "menu_option": "Editar critérios de Atendido por IA",
+      "remove_modal": {
+        "cancel": "Cancelar",
+        "confirm": "Excluir",
+        "description": "Essa ação não pode ser desfeita. Tem certeza de que deseja excluir este critério?",
+        "title": "Excluir critério"
+      },
+      "row_menu": {
+        "delete": "Excluir critério",
+        "edit": "Editar critério"
+      },
+      "toast": {
+        "added": "Critério adicionado com sucesso",
+        "delete_error": "Não foi possível excluir o critério devido a um problema técnico",
+        "deleted": "Critério excluído com sucesso",
+        "load_error": "Não foi possível carregar os critérios devido a um problema técnico",
+        "updated": "Critério atualizado com sucesso"
+      }
+    },
     "reviews": "avaliações",
     "csat_widget": {
       "very_satisfied": "Muito satisfeito",
@@ -194,14 +244,14 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperação de carrinho abandonado",
-      "no_data": "Nenhum dado disponível para o período filtrado.",
-      "error": "Erro ao carregar os dados. Atualize o dashboard ou entre em contato com o suporte.",
+      "no_data": "Nenhum dado disponível para o período selecionado",
+      "error": "Erro ao carregar os dados. Atualize o dashboard ou entre em contato com o Suporte.",
       "unavailable_period": "Os dados deste widget são fornecidos pela Meta apenas para os últimos 90 dias. Selecione um intervalo de datas dentro desse período para visualizar as informações.",
       "chart": {
         "sent": "Enviados",
         "delivered": "Entregues",
         "read": "Lidos",
-        "read_help": "Mensagens que foram abertas e lidas pelo destinatário. Essa métrica depende das configurações de privacidade individuais do destinatário e pode não ser rastreada se os recibos de leitura estiverem desativados.",
+        "read_help": "Mensagens abertas pelo destinatário. Essa métrica depende das configurações de privacidade do destinatário e pode não ser monitorada se as confirmações de leitura estiverem desativadas.",
         "clicks": "Cliques"
       },
       "info_card": {
@@ -210,7 +260,7 @@
         "converted_sales": "Vendas convertidas",
         "conversion_rate": "Taxa de conversão",
         "average_order_value": "Valor médio do pedido",
-        "roas_tooltip": "O retorno sobre o investimento em anúncios mede quanto de receita você gera para cada $xxx gasto em mensagens. Por que é tão alto? > A recuperação automatizada é altamente eficiente porque o custo de uma mensagem é mínimo em comparação com o valor médio do pedido da sua loja."
+        "roas_tooltip": "O Retorno sobre investimento em publicidade (ROAS) mede quanta receita você gera para cada valor gasto em mensagens. Esse valor tende a ser alto porque o custo das mensagens é baixo em relação ao valor médio dos pedidos."
       }
     },
     "customize_your_dashboard": {
@@ -223,8 +273,8 @@
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
-      "abandoned_cart_recovery_description": "Acompanhe métricas de recuperação de carrinho abandonado: receita recuperada, vendas convertidas, taxa de conversão, avarege order value, etc.",
-      "search_term_description": "Acompanhe o ranking dos termos mais buscados.",
+      "abandoned_cart_recovery_description": "Monitore o desempenho da recuperação de carrinhos abandonados por meio de métricas como receita recuperada, vendas convertidas, taxa de conversão e valor médio dos pedidos.",
+      "search_term_description": "Acompanhe o ranking dos termos mais pesquisados.",
       "added_to_cart_description": "Acompanhe o ranking dos produtos mais adicionados ao carrinho.",
       "human_support": "Live desk",
       "ai_support": "IA",

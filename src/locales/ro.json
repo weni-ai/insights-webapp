@@ -158,6 +158,56 @@
       "crosstab_validation_title": "Problemă de configurare",
       "crosstab_validation_description": "Cheia sau valoarea nu a fost găsită în baza de date"
     },
+    "resolution_criteria": {
+      "add_criterion": "Adaugă criteriu",
+      "base_section_description": "Se aplică tuturor proiectelor pentru a menține Gestionat de AI consistent. Nu pot fi editate sau eliminate.",
+      "base_section_title": "Criterii de bază",
+      "custom_empty": "Niciun criteriu adăugat",
+      "custom_section_description": "Adaugă situații pe care acest proiect trebuie să le numere ca Gestionat de AI. {count} din {max}.",
+      "custom_section_title": "Criteriile tale",
+      "errors": {
+        "ambiguous_description": "Rescrie criteriul pentru a-l face mai clar",
+        "ambiguous_title": "Criteriul este ambiguu",
+        "duplicate_description": "Editează criteriul pentru a acoperi o situație diferită sau elimină celălalt mai întâi",
+        "duplicate_title": "Ai adăugat deja un criteriu similar",
+        "invalid_description": "Rescrie criteriul și validează din nou",
+        "invalid_title": "Criteriul este invalid",
+        "technical": "Criteriul nu a putut fi validat din cauza unei probleme tehnice"
+      },
+      "form": {
+        "create_title": "Adaugă criteriu",
+        "edit_title": "Editează criteriu",
+        "field_placeholder": "Criteriu",
+        "results_title": "Rezultatele validării",
+        "save": "Salvează",
+        "success_description": "După salvare, acest criteriu se aplică de la următoarea evaluare zilnică. Conversațiile deja clasificate nu se vor schimba.",
+        "success_title": "Nu s-au găsit probleme",
+        "tooltip_fix_issue": "Remediază problema găsită la validare pentru a salva",
+        "tooltip_validate_first": "Validează acest criteriu înainte de a salva",
+        "validate": "Validează",
+        "validating": "Se validează criteriul..."
+      },
+      "list_description": "Definește ce contează ca conversație Gestionată de AI în acest proiect. Aceste criterii decid ce conversații sunt marcate ca Gestionate de AI în dashboard.",
+      "list_title": "Criterii Gestionat de AI",
+      "menu_option": "Editează criteriile Gestionat de AI",
+      "remove_modal": {
+        "cancel": "Anulează",
+        "confirm": "Șterge",
+        "description": "Această acțiune nu poate fi anulată. Sigur dorești să ștergi acest criteriu?",
+        "title": "Șterge criteriu"
+      },
+      "row_menu": {
+        "delete": "Șterge criteriu",
+        "edit": "Editează criteriu"
+      },
+      "toast": {
+        "added": "Criteriu adăugat cu succes",
+        "delete_error": "Criteriul nu a putut fi șters din cauza unei probleme tehnice",
+        "deleted": "Criteriu șters cu succes",
+        "load_error": "Criteriile nu au putut fi încărcate din cauza unei probleme tehnice",
+        "updated": "Criteriu actualizat cu succes"
+      }
+    },
     "reviews": "recenzii",
     "csat_widget": {
       "very_satisfied": "Foarte mulțumit",
@@ -194,7 +244,7 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperare coș abandonat",
-      "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
+      "no_data": "Nu sunt date disponibile pentru perioada selectată",
       "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
       "unavailable_period": "Meta oferă doar datele din ultimele 90 de zile pentru acest widget. Asigură-te că intervalul de date selectat este în această perioadă pentru a putea vizualiza informațiile.",
       "chart": {
@@ -209,7 +259,7 @@
         "total_sends": "Total trimiteri",
         "converted_sales": "Vânzări convertite",
         "conversion_rate": "Rată de conversie",
-        "average_order_value": "Valoare medie a comenzii",
+        "average_order_value": "Valoarea medie a comenzii",
         "roas_tooltip": "Rentabilitatea investiției în reclame măsoară cât venit generezi pentru fiecare $xxx cheltuit pe mesaje. De ce este atât de mare? > Recuperarea automată este foarte eficientă pentru că costul unui mesaj este minim comparativ cu valoarea medie a comenzii din magazinul tău."
       }
     },
@@ -252,7 +302,7 @@
       "modal_remove_widget": {
         "title": "Șterge widget-ul",
         "description": "Sigur vrei să ștergi widget-ul {type}?",
-        "remove": "Eliminare",
+        "remove": "Elimină",
         "cancel": "Anulează",
         "success_message": "{widget} a fost eliminat",
         "remove_success": "{widget} eliminat cu succes",

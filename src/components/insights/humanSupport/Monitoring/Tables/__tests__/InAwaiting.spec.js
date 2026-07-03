@@ -29,7 +29,10 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
 }));
 
 vi.mock('@/store/modules/featureFlag', () => ({
-  useFeatureFlag: () => ({ isFeatureFlagEnabled: () => true }),
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: () => true,
+    activeFeatures: [],
+  }),
 }));
 
 vi.mock(
@@ -204,15 +207,11 @@ describe('InAwaiting', () => {
   });
 
   describe('Row alert', () => {
-    it('returns a red alert when the waiting time goal is breached', () => {
+    it('returns a red alert when the waiting time goal is exceeded', () => {
       const alert = wrapper.vm.getItemAlert({
         awaiting_time: '120s',
-        waiting_time_goal: {
-          thresholdSeconds: 60,
-          thresholdValue: 1,
-          unit: 'm',
-          isBreached: true,
-          breachedRoomsCount: 3,
+        goals_metrics: {
+          awaiting_time: { exceeded: true },
         },
       });
 

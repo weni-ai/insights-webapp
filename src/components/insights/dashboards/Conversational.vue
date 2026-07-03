@@ -154,10 +154,10 @@ const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
   const useMock = conversational.shouldUseMock;
 
-  if (currentDashboard.value.config?.show_agent_invocation) {
+  if (currentDashboard.value.config?.show_agent_invocation && !useMock) {
     newWidgets.push({ type: 'agent_invocation', uuid: '' });
   }
-  if (currentDashboard.value.config?.show_tool_result) {
+  if (currentDashboard.value.config?.show_tool_result && !useMock) {
     newWidgets.push({ type: 'tool_result', uuid: '' });
   }
 

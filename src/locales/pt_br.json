@@ -1058,7 +1058,15 @@
     "table_tooltip": {
       "conversation_duration": "Este chat ultrapassou o limite de {value} {unit}.",
       "first_response_time": "Este chat ultrapassou o limite de {value} {unit} para a primeira resposta.",
+      "generic": "Este chat ultrapassou o limite de tempo configurado.",
       "waiting_time": "Este chat ultrapassou o limite de {value} {unit} de espera."
+    },
+    "toast": {
+      "conversation_duration": "{count} chats ultrapassaram o tempo máximo de duração",
+      "first_response_time": "{count} chats ultrapassaram o tempo máximo para primeira resposta",
+      "title": "Live Desk: atenção imediata necessária",
+      "view_details": "Ver detalhes",
+      "waiting_time": "{count} chats ultrapassaram o tempo máximo de espera"
     },
     "unit_word_singular": {
       "h": "hora",

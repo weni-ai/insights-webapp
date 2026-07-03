@@ -1058,7 +1058,15 @@
     "table_tooltip": {
       "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",
       "first_response_time": "This chat has exceeded the {value}-{unit} time limit for the first response.",
+      "generic": "This chat has exceeded the configured time limit.",
       "waiting_time": "This chat has exceeded the {value}-{unit} waiting time limit."
+    },
+    "toast": {
+      "conversation_duration": "{count} chats exceeded the maximum duration time",
+      "first_response_time": "{count} chats exceeded the maximum time for first response",
+      "title": "Live Desk: immediate attention needed",
+      "view_details": "View details",
+      "waiting_time": "{count} chats exceeded the maximum wait time"
     },
     "unit_word_singular": {
       "h": "hour",

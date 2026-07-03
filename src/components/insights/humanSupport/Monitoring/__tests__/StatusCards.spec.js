@@ -132,6 +132,7 @@ describe('ServiceStatus', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
     Object.assign(mockMonitoringStore, {
       loadServiceStatusData: vi.fn(),
       setActiveDetailedTab: vi.fn(),
@@ -348,6 +349,8 @@ describe('ServiceStatus', () => {
 
   describe('Card click navigation', () => {
     it('should force-load the detailed section and switch tab on click', () => {
+      vi.useFakeTimers();
+
       wrapper.vm.handleCardClick('is_waiting');
 
       expect(mockMonitoringStore.setActiveDetailedTab).toHaveBeenCalledWith(
@@ -356,6 +359,9 @@ describe('ServiceStatus', () => {
       expect(mockMonitoringStore.setForceLoadDetailed).toHaveBeenCalledWith(
         true,
       );
+
+      vi.runAllTimers();
+      vi.useRealTimers();
     });
 
     it('should not navigate when the finished card is clicked', () => {

@@ -372,13 +372,6 @@ describe('Conversational.vue', () => {
       expect(customWidgetsStore.injectMockWidgets).toHaveBeenCalled();
     });
 
-    it('should include agent_invocation and tool_result in mock mode', async () => {
-      await nextTick();
-      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('agent_invocation');
-      expect(types).toContain('tool_result');
-    });
-
     it('should include csat, nps, and sales_funnel widgets in mock mode', async () => {
       await nextTick();
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
@@ -500,8 +493,6 @@ describe('Conversational.vue', () => {
 
     it('should show mock widgets initially when no errors', () => {
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('agent_invocation');
-      expect(types).toContain('tool_result');
       expect(types).toContain('csat');
       expect(types).toContain('nps');
       expect(types).toContain('sales_funnel');

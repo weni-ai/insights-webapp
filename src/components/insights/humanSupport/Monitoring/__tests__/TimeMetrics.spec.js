@@ -22,6 +22,21 @@ const mockMonitoringStore = {
 const hasSectorsConfiguredRef = ref(true);
 const widgetSetupPropsRef = ref({});
 
+const mockMetricGoalAlertsStore = {
+  $id: 'metricGoalAlerts',
+  liveBreaches: {
+    value: {
+      waiting_time: null,
+      first_response_time: null,
+      conversation_duration: null,
+    },
+  },
+};
+
+vi.mock('@/store/modules/humanSupport/metricGoalAlerts', () => ({
+  useMetricGoalAlerts: () => mockMetricGoalAlertsStore,
+}));
+
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockMonitoringStore,
 }));
@@ -64,6 +79,9 @@ vi.mock('pinia', async (importOriginal) => {
       }
       if (store?.$id === 'humanSupport') {
         return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      if (store?.$id === 'metricGoalAlerts') {
+        return { liveBreaches: mockMetricGoalAlertsStore.liveBreaches };
       }
       return actual.storeToRefs(store);
     },
@@ -117,6 +135,11 @@ describe('TimeMetrics', () => {
       },
       loadingTimeMetricsData: { value: false },
     });
+    mockMetricGoalAlertsStore.liveBreaches.value = {
+      waiting_time: null,
+      first_response_time: null,
+      conversation_duration: null,
+    };
     wrapper = createWrapper();
   });
 
@@ -294,12 +317,15 @@ describe('TimeMetrics', () => {
         timeMetricsData: {
           value: {
             ...defaultTimeMetricsData,
-            waiting_time_goal: {
-              thresholdSeconds: 60,
-              thresholdValue: 1,
-              unit: 'm',
-              isBreached: true,
-              breachedRoomsCount: 7,
+            average_time_is_waiting: {
+              ...defaultTimeMetricsData.average_time_is_waiting,
+              waiting_time_goal: {
+                thresholdSeconds: 60,
+                thresholdValue: 1,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 7,
+              },
             },
           },
         },
@@ -317,19 +343,25 @@ describe('TimeMetrics', () => {
         timeMetricsData: {
           value: {
             ...defaultTimeMetricsData,
-            first_response_time_goal: {
-              thresholdSeconds: 60,
-              thresholdValue: 1,
-              unit: 'm',
-              isBreached: true,
-              breachedRoomsCount: 4,
+            average_time_first_response: {
+              ...defaultTimeMetricsData.average_time_first_response,
+              first_response_time_goal: {
+                thresholdSeconds: 60,
+                thresholdValue: 1,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 4,
+              },
             },
-            conversation_duration_goal: {
-              thresholdSeconds: 600,
-              thresholdValue: 10,
-              unit: 'm',
-              isBreached: true,
-              breachedRoomsCount: 3,
+            average_time_chat: {
+              ...defaultTimeMetricsData.average_time_chat,
+              conversation_duration_goal: {
+                thresholdSeconds: 600,
+                thresholdValue: 10,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 3,
+              },
             },
           },
         },
@@ -347,6 +379,26 @@ describe('TimeMetrics', () => {
       expect(
         wrapper.vm.getCardAlert('average_time_is_waiting'),
       ).toBeUndefined();
+    });
+
+    it('should build alert from live socket breach when api goal is missing', () => {
+      mockMetricGoalAlertsStore.liveBreaches.value = {
+        waiting_time: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 5,
+        },
+        first_response_time: null,
+        conversation_duration: null,
+      };
+
+      wrapper = createWrapper();
+      const alert = wrapper.vm.getCardAlert('average_time_is_waiting');
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('red');
     });
   });
 

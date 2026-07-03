@@ -3,9 +3,9 @@ import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
 import {
-  MetricGoalBreach,
-  MetricGoalBreachApi,
-  normalizeMetricGoalBreach,
+  GoalsMetrics,
+  GoalsMetricsApi,
+  normalizeGoalsMetrics,
 } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InProgressData {
@@ -17,6 +17,7 @@ interface InProgressData {
 
 interface InProgressDataResult {
   agent: string;
+  agent_email?: string;
   duration: number;
   first_response_time: number;
   pending_response: boolean;
@@ -28,8 +29,7 @@ interface InProgressDataResult {
     url: string;
     type: string;
   };
-  first_response_time_goal?: MetricGoalBreach;
-  conversation_duration_goal?: MetricGoalBreach;
+  goals_metrics?: GoalsMetrics;
 }
 
 interface QueryParams {
@@ -74,9 +74,8 @@ export default {
         params: formattedParams,
       },
     )) as InProgressData & {
-      results: (Omit<InProgressDataResult, 'first_response_time_goal' | 'conversation_duration_goal'> & {
-        first_response_time_goal?: MetricGoalBreachApi;
-        conversation_duration_goal?: MetricGoalBreachApi;
+      results: (Omit<InProgressDataResult, 'goals_metrics'> & {
+        goals_metrics?: GoalsMetricsApi;
       })[];
     };
 
@@ -84,12 +83,7 @@ export default {
       ...response,
       results: response.results.map((result) => ({
         ...result,
-        first_response_time_goal: result.first_response_time_goal
-          ? normalizeMetricGoalBreach(result.first_response_time_goal)
-          : undefined,
-        conversation_duration_goal: result.conversation_duration_goal
-          ? normalizeMetricGoalBreach(result.conversation_duration_goal)
-          : undefined,
+        goals_metrics: normalizeGoalsMetrics(result.goals_metrics),
       })),
     };
   },

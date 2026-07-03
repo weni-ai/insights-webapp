@@ -21,6 +21,31 @@ vi.mock('vue-i18n', async (importOriginal) => {
 import ResolutionCriteriaDrawer from '../ResolutionCriteriaDrawer.vue';
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
 
+const drawerStubs = {
+  UnnnicDrawerNext: {
+    template: '<div><slot /></div>',
+  },
+  UnnnicDrawerContent: {
+    template: '<div data-testid="resolution-criteria-drawer"><slot /></div>',
+  },
+  UnnnicDrawerHeader: {
+    template: '<div><slot /></div>',
+  },
+  UnnnicDrawerTitle: true,
+  UnnnicDrawerDescription: true,
+  UnnnicDrawerFooter: {
+    template: '<div><slot /></div>',
+  },
+  CriteriaList: true,
+  CriterionForm: true,
+  RemoveCriterionModal: true,
+  UnnnicButton: {
+    props: ['disabled', 'text'],
+    template:
+      '<button data-testid="drawer-primary-button" :disabled="disabled" @click="$emit(\'click\')">{{ text }}</button>',
+  },
+};
+
 const createWrapper = () =>
   mount(ResolutionCriteriaDrawer, {
     global: {
@@ -29,21 +54,7 @@ const createWrapper = () =>
           stubActions: false,
         }),
       ],
-      stubs: {
-        UnnnicDrawer: {
-          props: [
-            'primaryButtonText',
-            'disabledPrimaryButton',
-            'loadingPrimaryButton',
-          ],
-          template:
-            '<div data-testid="resolution-criteria-drawer"><button data-testid="drawer-primary-button" :disabled="disabledPrimaryButton" @click="$emit(\'primary-button-click\')">{{ primaryButtonText }}</button><slot name="content" /></div>',
-        },
-        CriteriaList: true,
-        CriterionForm: true,
-        RemoveCriterionModal: true,
-        UnnnicButton: true,
-      },
+      stubs: drawerStubs,
     },
   });
 
@@ -96,21 +107,7 @@ describe('ResolutionCriteriaDrawer', () => {
     const wrapper = mount(ResolutionCriteriaDrawer, {
       global: {
         plugins: [pinia],
-        stubs: {
-          UnnnicDrawer: {
-            props: [
-              'primaryButtonText',
-              'disabledPrimaryButton',
-              'loadingPrimaryButton',
-            ],
-            template:
-              '<div data-testid="resolution-criteria-drawer"><button data-testid="drawer-primary-button" :disabled="disabledPrimaryButton" @click="$emit(\'primary-button-click\')">{{ primaryButtonText }}</button><slot name="content" /></div>',
-          },
-          CriteriaList: true,
-          CriterionForm: true,
-          RemoveCriterionModal: true,
-          UnnnicButton: true,
-        },
+        stubs: drawerStubs,
       },
     });
 
@@ -121,7 +118,9 @@ describe('ResolutionCriteriaDrawer', () => {
     store.lastValidatedText = 'Criterion text';
 
     await wrapper.vm.$nextTick();
-    await wrapper.find('[data-testid="drawer-primary-button"]').trigger('click');
+    await wrapper
+      .find('[data-testid="drawer-primary-button"]')
+      .trigger('click');
 
     expect(saveSpy).toHaveBeenCalled();
   });

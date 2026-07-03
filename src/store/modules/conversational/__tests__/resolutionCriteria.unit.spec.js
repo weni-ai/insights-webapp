@@ -135,6 +135,8 @@ describe('useResolutionCriteria store', () => {
       await store.validate();
 
       expect(store.validationStatus).toBe('idle');
+      expect(store.lastValidatedText).toBeNull();
+      expect(store.canValidate).toBe(true);
       expect(UnnnicCallAlert).toHaveBeenCalled();
       expect(store.canSave).toBe(false);
     });

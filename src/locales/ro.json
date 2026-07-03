@@ -1262,7 +1262,7 @@
           "description": "Conversation ended while still in queue"
         },
         "duration": {
-          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului"
+          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului."
         }
       }
     },

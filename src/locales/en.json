@@ -1262,7 +1262,7 @@
           "description": "Conversation ended while still in queue"
         },
         "duration": {
-          "automatic_closed_tooltip": "Automatically ended due to lack of interaction from the contact."
+          "automatic_closed_tooltip": "Automatically ended due to lack of interaction from the contact"
         }
       }
     },

@@ -50,7 +50,9 @@ RUN apk add --no-cache \
 
 COPY package.json package-lock.json ./
 
-RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm install
+RUN --mount=type=cache,target=/root/.npm \
+    NPM_CONFIG_CACHE=/root/.npm \
+    npm ci --ignore-scripts --prefer-offline
 
 COPY . ./
 

@@ -1,5 +1,6 @@
 <template>
   <UnnnicDialog
+    v-if="isRemoveModalOpen"
     :open="isRemoveModalOpen"
     data-testid="remove-criterion-modal"
     @update:open="handleUpdateOpen"

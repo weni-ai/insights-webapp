@@ -139,12 +139,16 @@
     "crosstab": "Tabel încrucișat",
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
+    "added_to_cart": "Cele mai adăugate produse în coș",
+    "search_term": "Cei mai căutați termeni",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
     "agent_invocation_count": "{count, plural, one {# agent} other {# agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
-    "tool_result_count": "{count, plural, one {# instrument} other {# instrumente}}",
+    "tool_result_count": "{count} instrumente",
+    "search_term_count": "{count} produse",
+    "added_to_cart_count": "{count} produse",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -240,7 +244,7 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperare coș abandonat",
-      "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
+      "no_data": "Nu sunt date disponibile pentru perioada selectată",
       "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
       "unavailable_period": "Meta oferă doar datele din ultimele 90 de zile pentru acest widget. Asigură-te că intervalul de date selectat este în această perioadă pentru a putea vizualiza informațiile.",
       "chart": {
@@ -255,7 +259,7 @@
         "total_sends": "Total trimiteri",
         "converted_sales": "Vânzări convertite",
         "conversion_rate": "Rată de conversie",
-        "average_order_value": "Valoare medie a comenzii",
+        "average_order_value": "Valoarea medie a comenzii",
         "roas_tooltip": "Rentabilitatea investiției în reclame măsoară cât venit generezi pentru fiecare $xxx cheltuit pe mesaje. De ce este atât de mare? > Recuperarea automată este foarte eficientă pentru că costul unui mesaj este minim comparativ cu valoarea medie a comenzii din magazinul tău."
       }
     },
@@ -270,6 +274,8 @@
       "sales_funnel_description": "Monitorizează-ți vânzările: Total comenzi, Tichet mediu, Sumă totală și Canal de conversie",
       "absolute_numbers_description": "Evidențiază o singură metrică cheie, afișând valoarea exactă pentru vizualizare rapidă și directă",
       "abandoned_cart_recovery_description": "Urmărește metricile de recuperare a coșului abandonat: venit recuperat, vânzări convertite, rată de conversie, avarege order value, etc.",
+      "search_term_description": "Urmărește clasamentul celor mai căutați termeni.",
+      "added_to_cart_description": "Urmărește clasamentul produselor cel mai des adăugate în coș.",
       "human_support": "Asistență umană",
       "ai_support": "IA",
       "activate_agent": "Activează agent",
@@ -296,9 +302,11 @@
       "modal_remove_widget": {
         "title": "Șterge widget-ul",
         "description": "Sigur vrei să ștergi widget-ul {type}?",
-        "remove": "Eliminare",
+        "remove": "Elimină",
         "cancel": "Anulează",
-        "success_message": "{widget} a fost eliminat"
+        "success_message": "{widget} a fost eliminat",
+        "remove_success": "{widget} eliminat cu succes",
+        "remove_error": "Eliminarea {widget} nu a reușit. Încearcă din nou."
       },
       "tabs": {
         "sentiment_analysis": "Analiza opiniilor",
@@ -951,6 +959,8 @@
       "resolutions": "Rezoluții de conversație",
       "tool_result": "Cele mai utilizate instrumente",
       "agent_invocation": "Cei mai utilizați agenți",
+      "search_terms": "Cei mai căutați termeni",
+      "added_to_cart": "Cele mai adăugate produse în coș",
       "topics": "Subiecte",
       "csat": "CSAT",
       "nps": "NPS",
@@ -968,8 +978,8 @@
       "is_wating": "Așteaptă",
       "protocol": "Protocol",
       "urn": "URN de contact",
-      "full_transfer_history": "Istoric complet al transferurilor",
       "transfer_history": "Istoricul transferurilor",
+      "full_transfer_history": "Istoric complet al transferurilor",
       "service_chat": "Chat de asistență",
       "custom_fields": "Câmpuri personalizate",
       "contact": "Contact",
@@ -1252,7 +1262,7 @@
           "description": "Conversation ended while still in queue"
         },
         "duration": {
-          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului"
+          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului."
         }
       }
     },

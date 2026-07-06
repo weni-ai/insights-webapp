@@ -164,7 +164,6 @@ const validationErrorDescription = computed(
     margin: 0;
     color: $unnnic-color-gray-12;
     font: $unnnic-font-display-3;
-    font-weight: 600;
   }
 
   &__validating {

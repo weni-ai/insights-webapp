@@ -165,7 +165,6 @@ const handlePrimaryClick = () => {
     margin: 0;
     color: $unnnic-color-gray-12;
     font: $unnnic-font-display-2;
-    font-weight: 600;
   }
 }
 .resolution-criteria-drawer.unnnic-drawer__content {

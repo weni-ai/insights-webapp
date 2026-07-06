@@ -139,7 +139,7 @@
     "crosstab": "Crosstab",
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Abandoned cart recovery",
-    "added_to_cart": "Most added products to cart",
+    "added_to_cart": "Most added-to-cart products",
     "search_term": "Most searched terms",
     "agent_invocation": "Most used agents",
     "agent_invocation_description": "Follow the ranking of the most used agents",
@@ -157,6 +157,56 @@
       "button": "Check widget configuration",
       "crosstab_validation_title": "Configuration problem",
       "crosstab_validation_description": "The key or value wasn't found in the database"
+    },
+    "resolution_criteria": {
+      "add_criterion": "Add criterion",
+      "base_section_description": "Applied to every project to keep Handled by AI consistent. They can't be edited or removed.",
+      "base_section_title": "Base criteria",
+      "custom_empty": "No criteria added",
+      "custom_section_description": "Add situations this project should also count as Handled by AI. {count} of {max}.",
+      "custom_section_title": "Your criteria",
+      "errors": {
+        "ambiguous_description": "Rewrite the criterion to make it clearer",
+        "ambiguous_title": "The criterion is ambiguous",
+        "duplicate_description": "Edit the criterion to cover a different situation, or remove the other one first",
+        "duplicate_title": "You've already added a similar criterion",
+        "invalid_description": "Rewrite the criterion and validate again",
+        "invalid_title": "The criterion is invalid",
+        "technical": "The criterion couldn't be validated due to a technical issue"
+      },
+      "form": {
+        "create_title": "Add criterion",
+        "edit_title": "Edit criterion",
+        "field_placeholder": "Criterion",
+        "results_title": "Validation results",
+        "save": "Save",
+        "success_description": "Once saved, this criterion applies from the next daily evaluation. Conversations already classified won't change.",
+        "success_title": "No issues found",
+        "tooltip_fix_issue": "Fix the issue found in validation to save",
+        "tooltip_validate_first": "Validate this criterion before saving",
+        "validate": "Validate",
+        "validating": "Validating criterion..."
+      },
+      "list_description": "Define what counts as an Handled by AI conversation in this project. These criteria decide which conversations are marked Handled by AI on your dashboard.",
+      "list_title": "Handled by AI criteria",
+      "menu_option": "Edit Handled by AI criteria",
+      "remove_modal": {
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "description": "This action can't be undone. Are you sure you want to delete this criterion?",
+        "title": "Delete criterion"
+      },
+      "row_menu": {
+        "delete": "Delete criterion",
+        "edit": "Edit criterion"
+      },
+      "toast": {
+        "added": "Criterion added successfully",
+        "delete_error": "Criterion couldn't be deleted due to a technical issue",
+        "deleted": "Criterion deleted successfully",
+        "load_error": "Criteria couldn't be loaded due to a technical issue",
+        "updated": "Criterion updated successfully"
+      }
     },
     "reviews": "reviews",
     "csat_widget": {
@@ -194,14 +244,14 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Abandoned cart recovery",
-      "no_data": "No data available for the filtered period.",
-      "error": "Error loading data. Please refresh the dashboard or contact support.",
+      "no_data": "No data available for the selected period",
+      "error": "Error loading data. Refresh the dashboard or contact Support.",
       "unavailable_period": "Meta only provides the data from the last 90 days for this widget. Make sure the selected date range is within this period to view the information.",
       "chart": {
         "sent": "Sent",
         "delivered": "Delivered",
         "read": "Read",
-        "read_help": "Messages that were opened and read by the recipient. This metric depends on the recipient's individual privacy settings and may not be tracked if read receipts are disabled.",
+        "read_help": "Messages the recipient opened. This count depends on the recipient's email privacy settings and may not be tracked if read receipts are deactivated.\n",
         "clicks": "Clicks"
       },
       "info_card": {
@@ -210,7 +260,7 @@
         "converted_sales": "Converted sales",
         "conversion_rate": "Conversion rate",
         "average_order_value": "Average order value",
-        "roas_tooltip": "Return on Ad Spend measures how much revenue you generate for every $xxx spent on messages. Why is it so high? > Automated recovery is highly efficient because the cost of a message is minimal compared to your store's average order value."
+        "roas_tooltip": "Return on Ad Spend measures how much revenue you generate for every $xxx spent on messages. This value can be high because message costs are low compared to average order values.\n"
       }
     },
     "customize_your_dashboard": {
@@ -223,9 +273,9 @@
       "config_csat_or_nps_description": "Set which {type} you want to track",
       "sales_funnel_description": "Track your sales: Total orders, Average ticket, Total amount, and Conversion funnel",
       "absolute_numbers_description": "Highlight a single key metric, displaying its exact value for quick, straightforward viewing.",
-      "abandoned_cart_recovery_description": "Track abandoned cart recovery metrics: recovered revenue, converted sales, conversion rate, avarege order value, etc.",
+      "abandoned_cart_recovery_description": "Track abandoned cart recovery metrics, including recovered revenue, converted sales, conversion rate, and average order value.",
       "search_term_description": "Follow the ranking of the most searched terms.",
-      "added_to_cart_description": "Follow the ranking of the most added products to cart.",
+      "added_to_cart_description": "Follow the ranking of the most added-to-cart products.",
       "human_support": "Live desk",
       "ai_support": "AI",
       "activate_agent": "Activate agent",
@@ -256,7 +306,7 @@
         "cancel": "Cancel",
         "success_message": "{widget} removed",
         "remove_success": "{widget} removed successfully",
-        "remove_error": "Failed to remove {widget}. Please try again."
+        "remove_error": "Failed to remove {widget}. Try again."
       },
       "tabs": {
         "sentiment_analysis": "Sentiment analysis",
@@ -910,7 +960,7 @@
       "tool_result": "Most used tools",
       "agent_invocation": "Most used agents",
       "search_terms": "Most searched terms",
-      "added_to_cart": "Most added products to cart",
+      "added_to_cart": "Most added-to-cart products",
       "topics": "Topics",
       "csat": "CSAT",
       "nps": "NPS",
@@ -1012,6 +1062,72 @@
     "sucess_message": "{agent} is offline.",
     "error_message": "Error disconnecting agent {agent}",
     "tooltip_disabled": "This representative can't be disconnected because they are offline"
+  },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Operational alerts couldn't be saved due to a technical issue",
+      "save_success": "Operational alerts saved successfully"
+    },
+    "card_alert": "{count} chats exceeded {value} {unit}",
+    "drawer": {
+      "description": "Configure alerts to identify chats that exceed the defined time limits for an operation:",
+      "title": "Operational alerts"
+    },
+    "first_response_info": "Time to first response is counted from the moment the chat is assigned to a representative",
+    "form": {
+      "email_notification_label": "Email notification (optional)",
+      "email_notification_tooltip": "This alert is always displayed in the Live Desk dashboard when a chat reaches the defined threshold.\n\nYou can also configure email notifications for selected moderators and choose when they should be sent - for example, when one or more chats reach the defined threshold.",
+      "recipients_helper": "Only moderators can receive alerts",
+      "send_email_to_label": "Send email to",
+      "send_email_to_placeholder": "Select the moderators",
+      "threshold_labels": {
+        "conversation_duration": "Maximum chat duration",
+        "first_response_time": "Maximum time to first response",
+        "waiting_time": "Maximum wait time"
+      },
+      "threshold_placeholder": "Example: 10",
+      "unit_label": "Unit",
+      "units": {
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds"
+      },
+      "when_helper": "Number of chats with active alerts",
+      "when_label": "When",
+      "when_placeholder": "Example: 5"
+    },
+    "popover": {
+      "new_tag": "New",
+      "option_label": "Operational alerts"
+    },
+    "sections": {
+      "conversation_duration": "Alert in the Live Desk dashboard when a chat's duration exceeds the defined threshold",
+      "first_response_time": "Alert in the Live Desk dashboard when a chat's first response time exceeds the defined threshold",
+      "waiting_time": "Alert in the Live Desk dashboard when a chat's wait time exceeds the defined threshold"
+    },
+    "table_tooltip": {
+      "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",
+      "first_response_time": "This chat has exceeded the {value}-{unit} time limit for the first response.",
+      "generic": "This chat has exceeded the configured time limit.",
+      "waiting_time": "This chat has exceeded the {value}-{unit} waiting time limit."
+    },
+    "toast": {
+      "conversation_duration": "{count} chats exceeded the maximum duration time",
+      "first_response_time": "{count} chats exceeded the maximum time for first response",
+      "title": "Live Desk: immediate attention needed",
+      "view_details": "View details",
+      "waiting_time": "{count} chats exceeded the maximum wait time"
+    },
+    "unit_word_singular": {
+      "h": "hour",
+      "m": "minute",
+      "s": "second"
+    },
+    "unit_words": {
+      "h": "hours",
+      "m": "minutes",
+      "s": "seconds"
+    }
   },
   "human_support_dashboard": {
     "title": "Live desk",
@@ -1147,7 +1263,7 @@
           "description": "Conversation ended while still in queue"
         },
         "duration": {
-          "automatic_closed_tooltip": "Automatically ended due to lack of interaction from the contact."
+          "automatic_closed_tooltip": "Automatically ended due to lack of interaction from the contact"
         }
       }
     },

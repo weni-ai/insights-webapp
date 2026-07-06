@@ -1,22 +1,31 @@
 <template>
-  <section class="abandoned-cart-widget-chart">
+  <section
+    class="abandoned-cart-widget-chart"
+    data-testid="abandoned-cart-widget-chart"
+  >
     <section
       v-for="(item, index) in chartDataOrdered"
-      :key="item.label"
+      :key="item.id"
       :class="{
         'abandoned-cart-widget-chart__item': true,
         'abandoned-cart-widget-chart__item--border-left': index !== 0,
       }"
+      :data-testid="`abandoned-cart-widget-chart-item-${item.id}`"
+      :data-border-left="index !== 0 ? 'true' : undefined"
     >
       <section class="abandoned-cart-widget-chart__item__header">
         <section class="abandoned-cart-widget-chart__item__header__content">
-          <p class="abandoned-cart-widget-chart__item__label">
+          <p
+            class="abandoned-cart-widget-chart__item__label"
+            :data-testid="`abandoned-cart-widget-chart-label-${item.id}`"
+          >
             {{ item.label }}
           </p>
           <UnnnicToolTip
             v-if="item.tooltip"
             enabled
             :text="item.tooltip"
+            :data-testid="`abandoned-cart-widget-chart-tooltip-${item.id}`"
           >
             <UnnnicIcon
               icon="help"
@@ -25,12 +34,16 @@
             />
           </UnnnicToolTip>
         </section>
-        <p class="abandoned-cart-widget-chart__item__value">
+        <p
+          class="abandoned-cart-widget-chart__item__value"
+          :data-testid="`abandoned-cart-widget-chart-value-${item.id}`"
+        >
           {{ formatNumber(item.value) }}
         </p>
       </section>
       <section
         class="abandoned-cart-widget-chart__item__bar"
+        :data-testid="`abandoned-cart-widget-chart-bar-${item.id}`"
         :style="{
           height: chartBars[index].height,
           width: '100%',
@@ -75,18 +88,21 @@ const props = defineProps<Props>();
 const chartDataOrdered = computed(() => {
   return [
     {
+      id: 'sent',
       label: t(
         'conversations_dashboard.abandoned_cart_recovery_widget.chart.sent',
       ),
       value: props.data.sent,
     },
     {
+      id: 'delivered',
       label: t(
         'conversations_dashboard.abandoned_cart_recovery_widget.chart.delivered',
       ),
       value: props.data.delivered,
     },
     {
+      id: 'read',
       label: t(
         'conversations_dashboard.abandoned_cart_recovery_widget.chart.read',
       ),
@@ -96,6 +112,7 @@ const chartDataOrdered = computed(() => {
       ),
     },
     {
+      id: 'clicks',
       label: t(
         'conversations_dashboard.abandoned_cart_recovery_widget.chart.clicks',
       ),

@@ -28,6 +28,13 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
   useInfiniteScrollTable: vi.fn(() => mockInfiniteScroll),
 }));
 
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({
+    isFeatureFlagEnabled: () => true,
+    activeFeatures: [],
+  }),
+}));
+
 vi.mock(
   '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inAwaiting',
   () => ({
@@ -173,29 +180,48 @@ describe('InAwaiting', () => {
 
     it('prevents multiple simultaneous requests', async () => {
       vi.clearAllMocks();
-      
+
       let resolveRequest;
       const requestPromise = new Promise((resolve) => {
         resolveRequest = resolve;
       });
       mockInfiniteScroll.resetAndLoadData.mockReturnValue(requestPromise);
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
-      
+
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(1);
-      
+
       resolveRequest();
       await requestPromise;
       await wrapper.vm.$nextTick();
-      
+
       wrapper.vm.loadDataSafely(wrapper.vm.currentSort);
       await wrapper.vm.$nextTick();
-      
+
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('Row alert', () => {
+    it('returns a red alert when the waiting time goal is exceeded', () => {
+      const alert = wrapper.vm.getItemAlert({
+        awaiting_time: '120s',
+        goals_metrics: {
+          awaiting_time: { exceeded: true },
+        },
+      });
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('red');
+      expect(typeof alert.text).toBe('string');
+    });
+
+    it('returns null when there is no breached goal', () => {
+      expect(wrapper.vm.getItemAlert({ awaiting_time: '5s' })).toBeNull();
     });
   });
 

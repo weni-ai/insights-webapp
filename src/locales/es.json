@@ -158,6 +158,56 @@
       "crosstab_validation_title": "Problema de configuración",
       "crosstab_validation_description": "La clave o el valor no se encontraron en la base de datos"
     },
+    "resolution_criteria": {
+      "add_criterion": "Agregar criterio",
+      "base_section_description": "Se aplican a todos los proyectos para mantener Atendido por IA consistente. No se pueden editar ni eliminar.",
+      "base_section_title": "Criterios base",
+      "custom_empty": "Ningún criterio agregado",
+      "custom_section_description": "Agrega situaciones que este proyecto también debe contar como Atendido por IA. {count} de {max}.",
+      "custom_section_title": "Tus criterios",
+      "errors": {
+        "ambiguous_description": "Reescribe el criterio para que sea más claro",
+        "ambiguous_title": "El criterio es ambiguo",
+        "duplicate_description": "Edita el criterio para cubrir una situación diferente o elimina el otro primero",
+        "duplicate_title": "Ya agregaste un criterio similar",
+        "invalid_description": "Reescribe el criterio y valida de nuevo",
+        "invalid_title": "El criterio no es válido",
+        "technical": "No se pudo validar el criterio debido a un problema técnico"
+      },
+      "form": {
+        "create_title": "Agregar criterio",
+        "edit_title": "Editar criterio",
+        "field_placeholder": "Criterio",
+        "results_title": "Resultados de la validación",
+        "save": "Guardar",
+        "success_description": "Una vez guardado, este criterio se aplica a partir de la próxima evaluación diaria. Las conversaciones ya clasificadas no cambiarán.",
+        "success_title": "No se encontraron problemas",
+        "tooltip_fix_issue": "Corrige el problema encontrado en la validación para guardar",
+        "tooltip_validate_first": "Valida este criterio antes de guardar",
+        "validate": "Validar",
+        "validating": "Validando criterio..."
+      },
+      "list_description": "Define qué cuenta como conversación Atendida por IA en este proyecto. Estos criterios determinan qué conversaciones se marcan como Atendidas por IA en el dashboard.",
+      "list_title": "Criterios de Atendido por IA",
+      "menu_option": "Editar criterios de Atendido por IA",
+      "remove_modal": {
+        "cancel": "Cancelar",
+        "confirm": "Eliminar",
+        "description": "Esta acción no se puede deshacer. ¿Realmente deseas eliminar este criterio?",
+        "title": "Eliminar criterio"
+      },
+      "row_menu": {
+        "delete": "Eliminar criterio",
+        "edit": "Editar criterio"
+      },
+      "toast": {
+        "added": "Criterio agregado con éxito",
+        "delete_error": "No se pudo eliminar el criterio debido a un problema técnico",
+        "deleted": "Criterio eliminado con éxito",
+        "load_error": "No se pudieron cargar los criterios debido a un problema técnico",
+        "updated": "Criterio actualizado con éxito"
+      }
+    },
     "reviews": "calificaciones",
     "csat_widget": {
       "very_satisfied": "Muy satisfecho",
@@ -194,14 +244,14 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperación de carrito abandonado",
-      "no_data": "No hay datos disponibles para el período filtrado.",
-      "error": "Error al cargar los datos. Actualiza el panel o contacta con soporte.",
+      "no_data": "No hay datos disponibles para el periodo seleccionado",
+      "error": "Error al cargar los datos. Actualiza el dashboard o ponte en contacto con Soporte.",
       "unavailable_period": "Meta solo proporciona datos para este widget de los últimos 90 días. Comprueba si el rango de fechas seleccionado se encuentra dentro de ese periodo para ver la información.",
       "chart": {
         "sent": "Enviados",
         "delivered": "Entregados",
         "read": "Leídos",
-        "read_help": "Mensajes que fueron abiertos y leídos por el destinatario. Esta métrica depende de la configuración de privacidad individual del destinatario y puede no rastrearse si los avisos de lectura están desactivados.",
+        "read_help": "Mensajes abiertos por el destinatario. Este recuento depende de la configuración de privacidad de email del destinatario y es posible que no se contabilice si los acuses de recibo están desactivados.\n",
         "clicks": "Clics"
       },
       "info_card": {
@@ -210,7 +260,7 @@
         "converted_sales": "Ventas convertidas",
         "conversion_rate": "Tasa de conversión",
         "average_order_value": "Valor promedio del pedido",
-        "roas_tooltip": "El retorno de la inversión publicitaria mide cuántos ingresos generas por cada $xxx gastado en mensajes. ¿Por qué es tan alto? > La recuperación automatizada es muy eficiente porque el costo de un mensaje es mínimo en comparación con el valor promedio del pedido de tu tienda."
+        "roas_tooltip": "El retorno de la inversión publicitaria (ROAS) mide los ingresos que generas en función del valor gastado en mensajes. Este valor puede ser elevado porque el costo de los mensajes es bajo en comparación con el valor promedio de los pedidos de tu tienda.\n"
       }
     },
     "customize_your_dashboard": {
@@ -223,7 +273,7 @@
       "config_csat_or_nps_description": "Define cuál {type} deseas monitorear:",
       "sales_funnel_description": "Monitorea tus ventas: total de pedidos, ticket promedio, valor total y embudo de conversión",
       "absolute_numbers_description": "Destaca una única métrica clave, mostrando su valor exacto para una visualización rápida y directa",
-      "abandoned_cart_recovery_description": "Supervisa métricas de recuperación de carrito abandonado: ingresos recuperados, ventas convertidas, tasa de conversión, avarege order value, etc.",
+      "abandoned_cart_recovery_description": "Haz seguimiento del rendimiento de la recuperación de carritos abandonados mediante métricas como ingresos recuperados, ventas convertidas, tasa de conversión y valor promedio de los pedidos.",
       "search_term_description": "Sigue el ranking de los términos más buscados.",
       "added_to_cart_description": "Sigue el ranking de los productos más agregados al carrito.",
       "human_support": "Live desk",
@@ -248,13 +298,13 @@
         "cancel": "Cancelar"
       },
       "edit_csat_or_nps": "Editar {type}",
-      "remove_widget": "Eliminar widget",
+      "remove_widget": "Remover widget",
       "modal_remove_widget": {
-        "title": "Eliminar widget",
-        "description": "¿Realmente deseas eliminar el widget {type}?",
-        "remove": "Eliminar",
+        "title": "Remover widget",
+        "description": "¿Realmente deseas remover el widget {type}?",
+        "remove": "Remover",
         "cancel": "Cancelar",
-        "success_message": "{widget} eliminado",
+        "success_message": "{widget} removido",
         "remove_success": "{widget} eliminado con éxito",
         "remove_error": "No se pudo eliminar {widget}. Inténtalo de nuevo."
       },
@@ -1012,6 +1062,72 @@
     "sucess_message": "{agent} está offline.",
     "error_message": "Error al desconectar el agente {agent}",
     "tooltip_disabled": "Este representante no puede ser desconectado porque está offline"
+  },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "No se pudieron guardar las alertas operativas debido a un problema técnico",
+      "save_success": "Alertas operativas guardadas con éxito"
+    },
+    "card_alert": "{count} chats superaron {value} {unit}",
+    "drawer": {
+      "description": "Configura alertas para identificar chats que superan los límites de tiempo definidos para una operación:",
+      "title": "Alertas operativas"
+    },
+    "first_response_info": "El tiempo a la primera respuesta se cuenta desde el momento en que el chat se asigna a un representante",
+    "form": {
+      "email_notification_label": "Notificación por correo (opcional)",
+      "email_notification_tooltip": "Esta alerta siempre se muestra en el dashboard Live Desk cuando un chat alcanza el límite definido.\n\nTambién puedes configurar notificaciones por correo para moderadores seleccionados y elegir cuándo deben enviarse - por ejemplo, cuando uno o más chats alcanzan el límite definido.",
+      "recipients_helper": "Solo los moderadores pueden recibir alertas",
+      "send_email_to_label": "Enviar correo a",
+      "send_email_to_placeholder": "Seleccionar moderadores",
+      "threshold_labels": {
+        "conversation_duration": "Duración máxima del chat",
+        "first_response_time": "Tiempo máximo a la primera respuesta",
+        "waiting_time": "Tiempo máximo de espera"
+      },
+      "threshold_placeholder": "Ejemplo: 10",
+      "unit_label": "Unidad",
+      "units": {
+        "hours": "Horas",
+        "minutes": "Minutos",
+        "seconds": "Segundos"
+      },
+      "when_helper": "Número de chats con alertas activas",
+      "when_label": "Cuándo",
+      "when_placeholder": "Ejemplo: 5"
+    },
+    "popover": {
+      "new_tag": "Nuevo",
+      "option_label": "Alertas operativas"
+    },
+    "sections": {
+      "conversation_duration": "Alertar en el dashboard Live Desk cuando la duración de un chat supera el límite definido",
+      "first_response_time": "Alertar en el dashboard Live Desk cuando el tiempo a la primera respuesta de un chat supera el límite definido",
+      "waiting_time": "Alertar en el dashboard Live Desk cuando el tiempo de espera de un chat supera el límite definido"
+    },
+    "table_tooltip": {
+      "conversation_duration": "Este chat superó el límite de {value} {unit}.",
+      "first_response_time": "Este chat superó el límite de {value} {unit} para la primera respuesta.",
+      "generic": "Este chat superó el límite de tiempo configurado.",
+      "waiting_time": "Este chat superó el límite de {value} {unit} de espera."
+    },
+    "toast": {
+      "conversation_duration": "{count} chats superaron el tiempo máximo de duración",
+      "first_response_time": "{count} chats superaron el tiempo máximo para la primera respuesta",
+      "title": "Live Desk: atención inmediata necesaria",
+      "view_details": "Ver detalles",
+      "waiting_time": "{count} chats superaron el tiempo máximo de espera"
+    },
+    "unit_word_singular": {
+      "h": "hora",
+      "m": "minuto",
+      "s": "segundo"
+    },
+    "unit_words": {
+      "h": "horas",
+      "m": "minutos",
+      "s": "segundos"
+    }
   },
   "human_support_dashboard": {
     "title": "Live desk",

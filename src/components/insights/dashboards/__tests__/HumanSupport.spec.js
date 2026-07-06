@@ -22,7 +22,9 @@ config.global.plugins = [
   }),
 ];
 
-const mockIsFeatureFlagEnabled = vi.fn(() => true);
+const mockIsFeatureFlagEnabled = vi.fn(
+  (flag) => flag === 'insights-new-human-dashboard',
+);
 
 vi.mock('@/services/api/resources/projects', () => ({
   default: {
@@ -40,8 +42,8 @@ const createWrapper = (options = {}) => {
   return mount(HumanSupport, {
     global: {
       stubs: {
-        Analysis: true,
-        Monitoring: true,
+        MonitoringView: true,
+        AnalysisView: true,
       },
       ...options.global,
     },

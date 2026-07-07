@@ -141,6 +141,7 @@ onUpdated(() => {
 
   syncRowAlertClass();
   updateOverlay();
+  setupResizeObserver();
 });
 
 watch(

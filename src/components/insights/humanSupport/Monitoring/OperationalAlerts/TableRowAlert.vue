@@ -32,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, onUpdated, ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, onUpdated, ref } from 'vue';
 import { UnnnicToolTip } from '@weni/unnnic-system';
 
 import type { RowAlertScheme } from '@/composables/useTableRowAlert';
@@ -143,13 +143,6 @@ onUpdated(() => {
   updateOverlay();
   setupResizeObserver();
 });
-
-watch(
-  () => props.scheme,
-  () => {
-    syncRowAlertClass();
-  },
-);
 
 onBeforeUnmount(() => {
   resizeObserver?.disconnect();

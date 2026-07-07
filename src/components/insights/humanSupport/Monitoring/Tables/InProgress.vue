@@ -172,13 +172,6 @@ const getRowAlertWrapperProps = (
   };
 };
 
-defineExpose({
-  getItemAlert: (item: InProgressDataResult) =>
-    resolveRowAlerts(item).dominantRowAlert,
-  getItemAlerts: (item: InProgressDataResult) =>
-    resolveRowAlerts(item).rowAlerts,
-});
-
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
 
@@ -231,6 +224,29 @@ const tableItems = computed((): TableInProgressItem[] => {
         getAlertForMetric(rowAlerts, 'conversation_duration') ?? null,
     };
   });
+});
+
+const findTableItem = (item: InProgressDataResult) =>
+  tableItems.value.find((tableItem) => tableItem === item) ??
+  tableItems.value.find(
+    (tableItem) =>
+      tableItem.link?.url === item.link?.url &&
+      tableItem.contact === item.contact,
+  );
+
+defineExpose({
+  getItemAlert: (item: InProgressDataResult) => {
+    const tableItem = findTableItem(item);
+    if (tableItem) return tableItem.dominantRowAlert;
+
+    return resolveRowAlerts(item).dominantRowAlert;
+  },
+  getItemAlerts: (item: InProgressDataResult) => {
+    const tableItem = findTableItem(item);
+    if (tableItem) return tableItem.rowAlerts;
+
+    return resolveRowAlerts(item).rowAlerts;
+  },
 });
 
 const isLoadingVisible = computed(() => {

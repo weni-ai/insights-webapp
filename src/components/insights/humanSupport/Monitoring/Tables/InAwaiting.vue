@@ -223,19 +223,3 @@ watch(
   },
 );
 </script>
-
-<style lang="scss" scoped>
-:deep(.unnnic-data-table__body-row:has(.row-alert--red)) {
-  background-color: $unnnic-color-bg-red-plain;
-}
-
-:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--red):hover) {
-  background-color: $unnnic-color-bg-red-plain;
-}
-
-:deep(
-  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
-) {
-  font: $unnnic-font-emphasis;
-}
-</style>

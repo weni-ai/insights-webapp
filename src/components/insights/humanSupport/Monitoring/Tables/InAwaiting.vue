@@ -21,15 +21,20 @@
     @load-more="loadMore"
   >
     <template #body-awaiting_time="{ item }">
-      <TableRowAlert
-        v-if="item.rowAlert"
-        :scheme="item.rowAlert.scheme"
-        :text="item.rowAlert.text"
-        fullRow
+      <component
+        :is="item.rowAlert ? TableRowAlert : 'span'"
+        v-bind="
+          item.rowAlert
+            ? {
+                scheme: item.rowAlert.scheme,
+                text: item.rowAlert.text,
+                fullRow: true,
+              }
+            : {}
+        "
       >
         {{ item.awaiting_time }}
-      </TableRowAlert>
-      <template v-else>{{ item.awaiting_time }}</template>
+      </component>
     </template>
   </UnnnicDataTable>
 </template>

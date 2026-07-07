@@ -60,7 +60,19 @@ describe('inAwaiting API', () => {
         },
       },
     );
-    expect(result).toEqual(mockResponse);
+    expect(result).toEqual({
+      ...mockResponse,
+      results: [
+        {
+          awaiting_time: 90,
+          contact: 'Jane',
+          sector: 'Sales',
+          queue: 'Priority',
+          link: { url: 'https://example.com', type: 'room' },
+          goals_metrics: undefined,
+        },
+      ],
+    });
   });
 
   it('merges query params and custom ordering', async () => {

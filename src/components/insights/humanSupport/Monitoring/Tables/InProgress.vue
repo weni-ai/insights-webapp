@@ -21,29 +21,40 @@
     @load-more="loadMore"
   >
     <template #body-first_response_time="{ item }">
-      <p
-        v-if="item.first_response_time === null"
-        class="italic-text"
+      <component
+        :is="item.firstResponseRowAlert ? TableRowAlert : 'span'"
+        v-bind="
+          getRowAlertWrapperProps(
+            item.firstResponseRowAlert,
+            item.dominantRowAlert,
+          )
+        "
       >
-        {{ $t('human_support_dashboard.common.no_response') }}
-      </p>
-
-      <template v-else>
-        {{ formatSecondsToTime(item.first_response_time) }}
-      </template>
+        <p
+          v-if="item.first_response_time === null"
+          class="italic-text"
+        >
+          {{ $t('human_support_dashboard.common.no_response') }}
+        </p>
+        <template v-else>
+          {{ formatSecondsToTime(item.first_response_time) }}
+        </template>
+      </component>
     </template>
     <template #body-duration="{ item }">
       <section class="in-progress-duration">
         <span class="in-progress-duration__value">
-          <TableRowAlert
-            v-if="item.rowAlert"
-            :scheme="item.rowAlert.scheme"
-            :text="item.rowAlert.text"
-            fullRow
+          <component
+            :is="item.durationRowAlert ? TableRowAlert : 'span'"
+            v-bind="
+              getRowAlertWrapperProps(
+                item.durationRowAlert,
+                item.dominantRowAlert,
+              )
+            "
           >
             {{ formatSecondsToTime(item.duration) }}
-          </TableRowAlert>
-          <template v-else>{{ formatSecondsToTime(item.duration) }}</template>
+          </component>
         </span>
         <UnnnicToolTip
           v-if="item.pending_response"
@@ -84,6 +95,7 @@ import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { useLazyData } from '@/composables/useLazyData';
 import { useTableRowAlert } from '@/composables/useTableRowAlert';
 import type { RowAlert } from '@/composables/useTableRowAlert';
+import type { MetricKey } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
@@ -96,8 +108,26 @@ import { openNewTabLink } from '@/utils/redirect';
 import { formatSecondsToTime } from '@/utils/time';
 
 type TableInProgressItem = InProgressDataResult & {
-  rowAlert: RowAlert | null;
+  rowAlerts: RowAlert[];
+  dominantRowAlert: RowAlert | null;
+  firstResponseRowAlert: RowAlert | null;
+  durationRowAlert: RowAlert | null;
 };
+
+const IN_PROGRESS_ALERT_CANDIDATES = (
+  item: InProgressDataResult,
+): Parameters<typeof getRowAlerts>[0] => [
+  {
+    metric: 'first_response_time',
+    scheme: 'orange',
+    exceeded: item.goals_metrics?.first_response_time?.exceeded,
+  },
+  {
+    metric: 'conversation_duration',
+    scheme: 'yellow',
+    exceeded: item.goals_metrics?.duration?.exceeded,
+  },
+];
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -109,26 +139,38 @@ const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const featureFlagStore = useFeatureFlag();
 const { isFeatureFlagEnabled } = featureFlagStore;
-const { getRowAlert } = useTableRowAlert();
+const { getRowAlerts } = useTableRowAlert();
 
-const resolveRowAlert = (item: InProgressDataResult): RowAlert | null => {
-  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return null;
+const resolveRowAlerts = (item: InProgressDataResult) => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) {
+    return { rowAlerts: [], dominantRowAlert: null };
+  }
 
-  return getRowAlert([
-    {
-      metric: 'first_response_time',
-      scheme: 'orange',
-      exceeded: item.goals_metrics?.first_response_time?.exceeded,
-    },
-    {
-      metric: 'conversation_duration',
-      scheme: 'yellow',
-      exceeded: item.goals_metrics?.duration?.exceeded,
-    },
-  ]);
+  const rowAlerts = getRowAlerts(IN_PROGRESS_ALERT_CANDIDATES(item));
+
+  return {
+    rowAlerts,
+    dominantRowAlert: rowAlerts[0] ?? null,
+  };
 };
 
-defineExpose({ getItemAlert: resolveRowAlert });
+const getAlertForMetric = (
+  alerts: RowAlert[],
+  metric: MetricKey,
+): RowAlert | undefined => alerts.find((alert) => alert.metric === metric);
+
+const getRowAlertWrapperProps = (
+  alert: RowAlert | null,
+  dominantAlert: RowAlert | null,
+) => {
+  if (!alert) return {};
+
+  return {
+    scheme: alert.scheme,
+    text: alert.text,
+    fullRow: dominantAlert?.metric === alert.metric,
+  };
+};
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -169,10 +211,42 @@ const tableItems = computed((): TableInProgressItem[] => {
     ? formattedItems.value
     : (monitoringDetailedMonitoringInProgressMock as InProgressDataResult[]);
 
-  return source.map((item) => ({
-    ...item,
-    rowAlert: resolveRowAlert(item),
-  }));
+  return source.map((item) => {
+    const { rowAlerts, dominantRowAlert } = resolveRowAlerts(item);
+
+    return {
+      ...item,
+      rowAlerts,
+      dominantRowAlert,
+      firstResponseRowAlert:
+        getAlertForMetric(rowAlerts, 'first_response_time') ?? null,
+      durationRowAlert:
+        getAlertForMetric(rowAlerts, 'conversation_duration') ?? null,
+    };
+  });
+});
+
+const findTableItem = (item: InProgressDataResult) =>
+  tableItems.value.find((tableItem) => tableItem === item) ??
+  tableItems.value.find(
+    (tableItem) =>
+      tableItem.link?.url === item.link?.url &&
+      tableItem.contact === item.contact,
+  );
+
+defineExpose({
+  getItemAlert: (item: InProgressDataResult) => {
+    const tableItem = findTableItem(item);
+    if (tableItem) return tableItem.dominantRowAlert;
+
+    return resolveRowAlerts(item).dominantRowAlert;
+  },
+  getItemAlerts: (item: InProgressDataResult) => {
+    const tableItem = findTableItem(item);
+    if (tableItem) return tableItem.rowAlerts;
+
+    return resolveRowAlerts(item).rowAlerts;
+  },
 });
 
 const isLoadingVisible = computed(() => {
@@ -283,27 +357,5 @@ watch(
   &__value {
     display: inline;
   }
-}
-
-:deep(.unnnic-data-table__body-row:has(.row-alert--orange)) {
-  background-color: $unnnic-color-bg-orange-plain;
-}
-
-:deep(.unnnic-data-table__body-row:has(.row-alert--yellow)) {
-  background-color: $unnnic-color-bg-yellow-plain;
-}
-
-:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--orange):hover) {
-  background-color: $unnnic-color-bg-orange-plain;
-}
-
-:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--yellow):hover) {
-  background-color: $unnnic-color-bg-yellow-plain;
-}
-
-:deep(
-  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
-) {
-  font: $unnnic-font-emphasis;
 }
 </style>

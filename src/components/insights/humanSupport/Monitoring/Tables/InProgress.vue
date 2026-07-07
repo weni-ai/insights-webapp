@@ -21,11 +21,14 @@
     @load-more="loadMore"
   >
     <template #body-first_response_time="{ item }">
-      <TableRowAlert
-        v-if="item.firstResponseRowAlert"
-        :scheme="item.firstResponseRowAlert.scheme"
-        :text="item.firstResponseRowAlert.text"
-        :fullRow="item.dominantRowAlert?.metric === 'first_response_time'"
+      <component
+        :is="item.firstResponseRowAlert ? TableRowAlert : 'span'"
+        v-bind="
+          getRowAlertWrapperProps(
+            item.firstResponseRowAlert,
+            item.dominantRowAlert,
+          )
+        "
       >
         <p
           v-if="item.first_response_time === null"
@@ -36,31 +39,22 @@
         <template v-else>
           {{ formatSecondsToTime(item.first_response_time) }}
         </template>
-      </TableRowAlert>
-      <template v-else>
-        <p
-          v-if="item.first_response_time === null"
-          class="italic-text"
-        >
-          {{ $t('human_support_dashboard.common.no_response') }}
-        </p>
-        <template v-else>
-          {{ formatSecondsToTime(item.first_response_time) }}
-        </template>
-      </template>
+      </component>
     </template>
     <template #body-duration="{ item }">
       <section class="in-progress-duration">
         <span class="in-progress-duration__value">
-          <TableRowAlert
-            v-if="item.durationRowAlert"
-            :scheme="item.durationRowAlert.scheme"
-            :text="item.durationRowAlert.text"
-            :fullRow="item.dominantRowAlert?.metric === 'conversation_duration'"
+          <component
+            :is="item.durationRowAlert ? TableRowAlert : 'span'"
+            v-bind="
+              getRowAlertWrapperProps(
+                item.durationRowAlert,
+                item.dominantRowAlert,
+              )
+            "
           >
             {{ formatSecondsToTime(item.duration) }}
-          </TableRowAlert>
-          <template v-else>{{ formatSecondsToTime(item.duration) }}</template>
+          </component>
         </span>
         <UnnnicToolTip
           v-if="item.pending_response"
@@ -164,6 +158,19 @@ const getAlertForMetric = (
   alerts: RowAlert[],
   metric: MetricKey,
 ): RowAlert | undefined => alerts.find((alert) => alert.metric === metric);
+
+const getRowAlertWrapperProps = (
+  alert: RowAlert | null,
+  dominantAlert: RowAlert | null,
+) => {
+  if (!alert) return {};
+
+  return {
+    scheme: alert.scheme,
+    text: alert.text,
+    fullRow: dominantAlert?.metric === alert.metric,
+  };
+};
 
 defineExpose({
   getItemAlert: (item: InProgressDataResult) =>

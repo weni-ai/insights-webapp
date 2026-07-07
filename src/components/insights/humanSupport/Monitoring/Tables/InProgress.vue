@@ -284,26 +284,4 @@ watch(
     display: inline;
   }
 }
-
-:deep(.unnnic-data-table__body-row:has(.row-alert--orange)) {
-  background-color: $unnnic-color-bg-orange-plain;
-}
-
-:deep(.unnnic-data-table__body-row:has(.row-alert--yellow)) {
-  background-color: $unnnic-color-bg-yellow-plain;
-}
-
-:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--orange):hover) {
-  background-color: $unnnic-color-bg-orange-plain;
-}
-
-:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--yellow):hover) {
-  background-color: $unnnic-color-bg-yellow-plain;
-}
-
-:deep(
-  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
-) {
-  font: $unnnic-font-emphasis;
-}
 </style>

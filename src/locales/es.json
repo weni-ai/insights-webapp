@@ -210,11 +210,11 @@
     },
     "reviews": "calificaciones",
     "csat_widget": {
-      "very_satisfied": "Muy satisfecho",
-      "satisfied": "Satisfecho",
-      "neutral": "Neutral",
-      "dissatisfied": "Insatisfecho",
-      "very_dissatisfied": "Muy insatisfecho"
+      "very_satisfied": "🤩 Muy satisfecho",
+      "satisfied": "😁 Satisfecho",
+      "neutral": "😐 Neutral",
+      "dissatisfied": "☹️ Insatisfecho",
+      "very_dissatisfied": "😡 Muy insatisfecho"
     },
     "nps_widget": {
       "promoters": "Promotores (9 o 10)",
@@ -1245,7 +1245,7 @@
         "average_response_time": "Tiempo promedio de respuesta",
         "average_duration": "Duración promedio",
         "time_in_service": "Tiempo en el chat de soporte",
-        "csat_note": "CSAT"
+        "csat_rating": "CSAT"
       }
     },
     "analyze": {
@@ -1273,11 +1273,11 @@
       "agents_ratings_general_tooltip": "Esta puntuación refleja el rendimiento general del proyecto. Si se aplican filtros a este dashboard, la puntuación se ajustará automáticamente para mostrar el promedio de los ítems filtrados.",
       "agents_ratings_subtitle": "{rooms} chats de soporte • {reviews} calificaciones",
       "review_rating": {
-        "very_satisfied": "Muy satisfecho",
-        "satisfied": "Satisfecho",
-        "neutral": "Neutral",
-        "dissatisfied": "Insatisfecho",
-        "very_dissatisfied": "Muy insatisfecho",
+        "very_satisfied": "🤩 Muy satisfecho",
+        "satisfied": "😁 Satisfecho",
+        "neutral": "😐 Neutral",
+        "dissatisfied": "☹️ Insatisfecho",
+        "very_dissatisfied": "😡 Muy insatisfecho",
         "not_answered": "Sin respuesta"
       },
       "disabled_text": "Activa CSAT para monitorear calificaciones generales por sector, cola y representante"

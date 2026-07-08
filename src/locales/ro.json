@@ -210,11 +210,11 @@
     },
     "reviews": "recenzii",
     "csat_widget": {
-      "very_satisfied": "Foarte mulțumit",
-      "satisfied": "Mulțumit",
-      "neutral": "Neutru",
-      "dissatisfied": "Nemulțumit",
-      "very_dissatisfied": "Foarte nemulțumit"
+      "very_satisfied": "🤩 Foarte mulțumit",
+      "satisfied": "😁 Mulțumit",
+      "neutral": "😐 Neutru",
+      "dissatisfied": "☹️ Nemulțumit",
+      "very_dissatisfied": "😡 Foarte nemulțumit"
     },
     "nps_widget": {
       "promoters": "Promotori (9 sau 10)",
@@ -1245,7 +1245,7 @@
         "average_response_time": "Timpul mediu de răspuns",
         "average_duration": "Durata medie",
         "time_in_service": "Timp în chatul de asistență",
-        "csat_note": "CSAT"
+        "csat_rating": "CSAT"
       }
     },
     "analyze": {
@@ -1273,11 +1273,11 @@
       "agents_ratings_general_tooltip": "Acest scor reflectă performanța generală a proiectului. Dacă se aplică filtre pentru acest dashboard, scorul se va ajusta automat pentru a arăta media elementelor filtrate.",
       "agents_ratings_subtitle": "{rooms} chaturi de asistență • {reviews} evaluări",
       "review_rating": {
-        "very_satisfied": "Foarte mulțumit",
-        "satisfied": "Mulțumit",
-        "neutral": "Neutru",
-        "dissatisfied": "Nemulțumit",
-        "very_dissatisfied": "Foarte nemulțumit",
+        "very_satisfied": "🤩 Foarte mulțumit",
+        "satisfied": "😁 Mulțumit",
+        "neutral": "😐 Neutru",
+        "dissatisfied": "☹️ Nemulțumit",
+        "very_dissatisfied": "😡 Foarte nemulțumit",
         "not_answered": "Niciun răspuns"
       },
       "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"

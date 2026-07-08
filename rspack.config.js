@@ -1,7 +1,7 @@
 const { defineConfig } = require('@rspack/cli');
 const { rspack } = require('@rspack/core');
 const HtmlRspackPlugin = require('html-rspack-plugin');
-const { VueLoaderPlugin } = require('vue-loader');
+const { VueLoaderPlugin } = require('rspack-vue-loader');
 const { resolve } = require('path');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -12,7 +12,56 @@ dotenv.config();
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 
+// In development we disable Rspack's native CSS (experiments.css) and go through
+// the css-loader/vue-style-loader chain instead. Native CSS does not reliably
+// hot-reload Vue SFC <style> blocks, so editing SCSS required a manual refresh.
+// Production keeps native CSS to emit hashed standalone CSS files.
+const isDev = process.env.NODE_ENV === 'development';
+
+const scssAdditionalData = `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`;
+
+const scssRule = isDev
+  ? {
+      test: /\.(scss|sass)$/,
+      use: [
+        'vue-style-loader',
+        'css-loader',
+        'postcss-loader',
+        {
+          loader: 'sass-loader',
+          options: { additionalData: scssAdditionalData },
+        },
+      ],
+      type: 'javascript/auto',
+    }
+  : {
+      test: /\.(scss|sass)$/,
+      use: [
+        'postcss-loader',
+        {
+          loader: 'sass-loader',
+          options: { additionalData: scssAdditionalData },
+        },
+      ],
+      type: 'css',
+    };
+
+const cssRule = isDev
+  ? {
+      test: /\.css$/,
+      use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
+      type: 'javascript/auto',
+    }
+  : {
+      test: /\.css$/,
+      use: ['postcss-loader'],
+      type: 'css',
+    };
+
 module.exports = defineConfig({
+  // `eval-*` keeps each module in its own eval wrapper, which plays well with
+  // HMR, while still giving line-level source maps back to the original files.
+  ...(isDev ? { devtool: 'eval-cheap-module-source-map' } : {}),
   context: __dirname,
   devServer: {
     port: 3003,
@@ -44,7 +93,7 @@ module.exports = defineConfig({
     rules: [
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
+        loader: 'rspack-vue-loader',
         options: {
           experimentalInlineMatchResource: true,
         },
@@ -65,24 +114,8 @@ module.exports = defineConfig({
           },
         ],
       },
-      {
-        test: /\.(scss|sass)$/,
-        use: [
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              additionalData: `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`,
-            },
-          },
-        ],
-        type: 'css',
-      },
-      {
-        test: /\.css$/,
-        use: ['postcss-loader'],
-        type: 'css',
-      },
+      scssRule,
+      cssRule,
       {
         test: /\.(png|jpe?g|gif|svg|webp|avif)$/i,
         type: 'asset/resource',
@@ -115,13 +148,21 @@ module.exports = defineConfig({
     new rspack.container.ModuleFederationPlugin({
       name: 'insights',
       filename: 'remoteEntry.js',
-      exposes: {
-        './main': './src/main.js',
-        './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
-        './locales/pt_br': './src/locales/pt_br.json',
-        './locales/en': './src/locales/en.json',
-        './locales/es': './src/locales/es.json',
-      },
+      // Exposing `./main` (the same file as `entry.main`) builds the whole app
+      // into both the entry graph and the container graph. In dev that breaks
+      // HMR: the container's hot-update handler fails with "Cannot set
+      // properties of undefined". Standalone dev mounts via the entry, so the
+      // exposes are only needed for the production remote build.
+      exposes: isDev
+        ? {}
+        : {
+            './main': './src/main.js',
+            './dashboard-commerce':
+              './src/views/insights/DashboardCommerce.vue',
+            './locales/pt_br': './src/locales/pt_br.json',
+            './locales/en': './src/locales/en.json',
+            './locales/es': './src/locales/es.json',
+          },
       remotes: {
         connect: `connect@${process.env.MODULE_FEDERATION_CONNECT_URL}/remoteEntry.js`,
       },
@@ -149,6 +190,6 @@ module.exports = defineConfig({
     ],
   },
   experiments: {
-    css: true,
+    css: !isDev,
   },
 });

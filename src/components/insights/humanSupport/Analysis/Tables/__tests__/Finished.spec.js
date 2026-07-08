@@ -56,7 +56,7 @@ const i18n = createI18n({
             duration: 'Duration',
             contact: 'Contact',
             ticket_id: 'Ticket',
-            csat_note: 'CSAT',
+            csat_rating: 'CSAT',
           },
         },
       },

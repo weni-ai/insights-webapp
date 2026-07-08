@@ -123,8 +123,11 @@ describe('Finished', () => {
     it('generates correct headers with translations', () => {
       const headers = wrapper.vm.formattedHeaders;
       expect(headers).toHaveLength(9);
+
       expect(headers[0].itemKey).toBe('agent');
       expect(headers[7].itemKey).toBe('ticket_id');
+      expect(headers[8].itemKey).toBe('csat_rating');
+
       expect(headers.every((h) => h.isSortable)).toBe(true);
     });
   });

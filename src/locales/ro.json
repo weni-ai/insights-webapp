@@ -139,16 +139,16 @@
     "crosstab": "Tabel încrucișat",
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
-    "added_to_cart": "Cele mai adăugate produse în coș",
-    "search_term": "Cei mai căutați termeni",
+    "added_to_cart": "Produsele cele mai adăugate în coș",
+    "added_to_cart_count": "{count, plural, one {# produs} other {# produse}}",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
     "agent_invocation_count": "{count, plural, one {# agent} other {# agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
-    "tool_result_count": "{count} instrumente",
-    "search_term_count": "{count} produse",
-    "added_to_cart_count": "{count} produse",
+    "tool_result_count": "{count, plural, one {# instrument} other {# instrumente}}",
+    "search_term": "Termenii cei mai căutați",
+    "search_term_count": "{count, plural, one {# produs} other {# produse}}",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -210,11 +210,11 @@
     },
     "reviews": "recenzii",
     "csat_widget": {
-      "very_satisfied": "Foarte mulțumit",
-      "satisfied": "Mulțumit",
-      "neutral": "Neutru",
-      "dissatisfied": "Nemulțumit",
-      "very_dissatisfied": "Foarte nemulțumit"
+      "very_satisfied": "🤩 Foarte mulțumit",
+      "satisfied": "😁 Mulțumit",
+      "neutral": "😐 Neutru",
+      "dissatisfied": "☹️ Nemulțumit",
+      "very_dissatisfied": "😡 Foarte nemulțumit"
     },
     "nps_widget": {
       "promoters": "Promotori (9 sau 10)",
@@ -1244,7 +1244,8 @@
         "average_first_response_time": "Timpul mediu până la primul răspuns",
         "average_response_time": "Timpul mediu de răspuns",
         "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență"
+        "time_in_service": "Timp în chatul de asistență",
+        "csat_rating": "CSAT"
       }
     },
     "analyze": {
@@ -1272,11 +1273,12 @@
       "agents_ratings_general_tooltip": "Acest scor reflectă performanța generală a proiectului. Dacă se aplică filtre pentru acest dashboard, scorul se va ajusta automat pentru a arăta media elementelor filtrate.",
       "agents_ratings_subtitle": "{rooms} chaturi de asistență • {reviews} evaluări",
       "review_rating": {
-        "very_satisfied": "Foarte mulțumit",
-        "satisfied": "Mulțumit",
-        "neutral": "Neutru",
-        "dissatisfied": "Nemulțumit",
-        "very_dissatisfied": "Foarte nemulțumit"
+        "very_satisfied": "🤩 Foarte mulțumit",
+        "satisfied": "😁 Mulțumit",
+        "neutral": "😐 Neutru",
+        "dissatisfied": "☹️ Nemulțumit",
+        "very_dissatisfied": "😡 Foarte nemulțumit",
+        "not_answered": "Niciun răspuns"
       },
       "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
     },

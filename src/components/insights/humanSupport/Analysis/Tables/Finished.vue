@@ -97,6 +97,15 @@
     <template #body-response_time="{ item }">
       {{ formatSecondsToTime(item.response_time) }}
     </template>
+    <template #body-csat_rating="{ item }">
+      <p
+        v-if="!item.csat_rating"
+        class="italic-text"
+      >
+        {{ $t('human_support_dashboard.csat.review_rating.not_answered') }}
+      </p>
+      <p v-else>{{ formatCsatNote(item.csat_rating) }}</p>
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -142,6 +151,21 @@ const currentSort = ref<{ header: string; itemKey: string; order: string }>({
   order: 'asc',
   itemKey: 'agent',
 });
+
+const formatCsatNote = (csatNote: number | null) => {
+  const csatNoteKeyMap = {
+    5: 'very_satisfied',
+    4: 'satisfied',
+    3: 'neutral',
+    2: 'dissatisfied',
+    1: 'very_dissatisfied',
+  };
+  return csatNote
+    ? t(
+        `human_support_dashboard.csat.review_rating.${csatNoteKeyMap[csatNote]}`,
+      )
+    : null;
+};
 
 const formatResults = (results: FinishedDataResult[]) => {
   return results.map((result) => ({
@@ -207,6 +231,7 @@ const formattedHeaders = computed(() => {
     createHeader('duration'),
     createHeader('contact'),
     createHeader('ticket_id'),
+    createHeader('csat_rating'),
   ];
 });
 

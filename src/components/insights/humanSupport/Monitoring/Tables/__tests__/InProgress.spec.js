@@ -265,6 +265,21 @@ describe('InProgress', () => {
     const firstResponseBreach = { exceeded: true };
     const durationBreach = { exceeded: true };
 
+    it('returns both alerts when first response and duration goals are exceeded', () => {
+      const alerts = wrapper.vm.getItemAlerts({
+        goals_metrics: {
+          first_response_time: firstResponseBreach,
+          duration: durationBreach,
+        },
+      });
+
+      expect(alerts).toHaveLength(2);
+      expect(alerts[0].metric).toBe('first_response_time');
+      expect(alerts[0].scheme).toBe('orange');
+      expect(alerts[1].metric).toBe('conversation_duration');
+      expect(alerts[1].scheme).toBe('yellow');
+    });
+
     it('prioritizes the orange first response alert over the yellow duration alert', () => {
       const alert = wrapper.vm.getItemAlert({
         goals_metrics: {
@@ -275,6 +290,7 @@ describe('InProgress', () => {
 
       expect(alert).toBeTruthy();
       expect(alert.scheme).toBe('orange');
+      expect(alert.metric).toBe('first_response_time');
     });
 
     it('returns a yellow alert when only the duration goal is exceeded', () => {
@@ -285,6 +301,7 @@ describe('InProgress', () => {
       });
 
       expect(alert.scheme).toBe('yellow');
+      expect(alert.metric).toBe('conversation_duration');
     });
 
     it('returns null when there is no exceeded goal', () => {

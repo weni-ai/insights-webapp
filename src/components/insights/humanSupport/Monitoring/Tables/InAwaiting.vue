@@ -21,15 +21,20 @@
     @load-more="loadMore"
   >
     <template #body-awaiting_time="{ item }">
-      <TableRowAlert
-        v-if="item.rowAlert"
-        :scheme="item.rowAlert.scheme"
-        :text="item.rowAlert.text"
-        fullRow
+      <component
+        :is="item.rowAlert ? TableRowAlert : 'span'"
+        v-bind="
+          item.rowAlert
+            ? {
+                scheme: item.rowAlert.scheme,
+                text: item.rowAlert.text,
+                fullRow: true,
+              }
+            : {}
+        "
       >
         {{ item.awaiting_time }}
-      </TableRowAlert>
-      <template v-else>{{ item.awaiting_time }}</template>
+      </component>
     </template>
   </UnnnicDataTable>
 </template>
@@ -223,19 +228,3 @@ watch(
   },
 );
 </script>
-
-<style lang="scss" scoped>
-:deep(.unnnic-data-table__body-row:has(.row-alert--red)) {
-  background-color: $unnnic-color-bg-red-plain;
-}
-
-:deep(.unnnic-data-table__body-row--clickable:has(.row-alert--red):hover) {
-  background-color: $unnnic-color-bg-red-plain;
-}
-
-:deep(
-  .unnnic-data-table__body-row:has(.row-alert) .unnnic-data-table__body-cell
-) {
-  font: $unnnic-font-emphasis;
-}
-</style>

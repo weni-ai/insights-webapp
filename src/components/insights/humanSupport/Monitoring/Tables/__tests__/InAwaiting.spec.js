@@ -209,7 +209,7 @@ describe('InAwaiting', () => {
   describe('Row alert', () => {
     it('returns a red alert when the waiting time goal is exceeded', () => {
       const alert = wrapper.vm.getItemAlert({
-        awaiting_time: '120s',
+        awaiting_time: 120,
         goals_metrics: {
           awaiting_time: { exceeded: true },
         },

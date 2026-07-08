@@ -15,6 +15,7 @@ interface RowAlertCandidate {
 }
 
 interface RowAlert {
+  metric: MetricKey;
   scheme: RowAlertScheme;
   text: string;
 }
@@ -23,18 +24,13 @@ export function useTableRowAlert() {
   const { t } = useI18n();
   const metricGoalsStore = useMetricGoals();
 
-  const getRowAlert = (candidates: RowAlertCandidate[]): RowAlert | null => {
-    const breached = candidates.find(
-      (candidate) => candidate.exceeded === true,
-    );
-
-    if (!breached) return null;
-
-    const configuredGoal = metricGoalsStore.getGoalForMetric(breached.metric);
+  const buildRowAlert = (candidate: RowAlertCandidate): RowAlert => {
+    const configuredGoal = metricGoalsStore.getGoalForMetric(candidate.metric);
 
     if (!configuredGoal) {
       return {
-        scheme: breached.scheme,
+        metric: candidate.metric,
+        scheme: candidate.scheme,
         text: t('operational_alerts.table_tooltip.generic'),
       };
     }
@@ -44,15 +40,26 @@ export function useTableRowAlert() {
     ).toLowerCase();
 
     return {
-      scheme: breached.scheme,
-      text: t(`operational_alerts.table_tooltip.${breached.metric}`, {
+      metric: candidate.metric,
+      scheme: candidate.scheme,
+      text: t(`operational_alerts.table_tooltip.${candidate.metric}`, {
         value: configuredGoal.thresholdValue,
         unit,
       }),
     };
   };
 
-  return { getRowAlert };
+  const getRowAlerts = (candidates: RowAlertCandidate[]): RowAlert[] => {
+    return candidates
+      .filter((candidate) => candidate.exceeded === true)
+      .map(buildRowAlert);
+  };
+
+  const getRowAlert = (candidates: RowAlertCandidate[]): RowAlert | null => {
+    return getRowAlerts(candidates)[0] ?? null;
+  };
+
+  return { getRowAlert, getRowAlerts };
 }
 
 export type { RowAlert, RowAlertScheme, RowAlertCandidate };

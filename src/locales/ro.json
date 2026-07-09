@@ -1073,7 +1073,7 @@
       "description": "Configure alertele pentru a identifica conversațiile care depășesc limitele de timp definite pentru o operațiune:",
       "title": "Alerte operaționale"
     },
-    "first_response_info": "Timpul până la primul răspuns este calculat din momentul în care conversația este atribuită unui reprezentant",
+    "first_response_info": "Alerta de timeout pentru primul răspuns va rămâne activă până când reprezentantul trimite primul mesaj.",
     "form": {
       "email_notification_label": "Notificare prin e-mail (opțional)",
       "email_notification_tooltip": "Această alertă este afișată întotdeauna în dashboard-ul Live Desk când o conversație atinge limita definită.\n\nPoți configura și notificări prin e-mail pentru moderatorii selectați și poți alege când trebuie trimise - de exemplu, când una sau mai multe conversații ating limita definită.",
@@ -1081,11 +1081,15 @@
       "send_email_to_label": "Trimite e-mail către",
       "send_email_to_placeholder": "Selectează moderatorii",
       "threshold_labels": {
-        "conversation_duration": "Durata maximă a conversației",
+        "conversation_duration": "Timp maxim de durată",
         "first_response_time": "Timp maxim până la primul răspuns",
         "waiting_time": "Timp maxim de așteptare"
       },
-      "threshold_placeholder": "Exemplu: 10",
+      "threshold_placeholders": {
+        "conversation_duration": "Exemplu: 30",
+        "first_response_time": "Exemplu: 2",
+        "waiting_time": "Exemplu: 10"
+      },
       "unit_label": "Unitate",
       "units": {
         "hours": "Ore",

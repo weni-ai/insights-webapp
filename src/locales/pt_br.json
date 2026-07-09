@@ -1073,7 +1073,7 @@
       "description": "Configure alertas para identificar chats que ultrapassam os limites de tempo definidos para uma operação:",
       "title": "Alertas operacionais"
     },
-    "first_response_info": "O tempo para primeira resposta é contado a partir do momento em que o chat é atribuído a um representante",
+    "first_response_info": "O alerta de tempo limite da primeira resposta permanecerá ativo até que o representante envie a primeira mensagem.",
     "form": {
       "email_notification_label": "Notificação por e-mail (opcional)",
       "email_notification_tooltip": "Este alerta é sempre exibido no dashboard Live Desk quando um chat atinge o limite definido.\n\nVocê também pode configurar notificações por e-mail para moderadores selecionados e escolher quando elas devem ser enviadas - por exemplo, quando um ou mais chats atingem o limite definido.",
@@ -1081,11 +1081,15 @@
       "send_email_to_label": "Enviar e-mail para",
       "send_email_to_placeholder": "Selecionar moderadores",
       "threshold_labels": {
-        "conversation_duration": "Duração máxima do chat",
+        "conversation_duration": "Tempo máximo de duração",
         "first_response_time": "Tempo máximo para primeira resposta",
         "waiting_time": "Tempo máximo de espera"
       },
-      "threshold_placeholder": "Exemplo: 10",
+      "threshold_placeholders": {
+        "conversation_duration": "Exemplo: 30",
+        "first_response_time": "Exemplo: 2",
+        "waiting_time": "Exemplo: 10"
+      },
       "unit_label": "Unidade",
       "units": {
         "hours": "Horas",

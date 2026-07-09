@@ -65,23 +65,24 @@ const UnnnicSwitchStub = {
     '<button class="switch-stub" @click="$emit(\'update:modelValue\', !modelValue)">{{ textRight }}</button>',
 };
 
+const drawerStubs = {
+  UnnnicDrawerNext: UnnnicDrawerNextStub,
+  UnnnicDrawerContent: UnnnicDrawerContentStub,
+  UnnnicDrawerHeader: drawerSlotStub('UnnnicDrawerHeader'),
+  UnnnicDrawerTitle: drawerSlotStub('UnnnicDrawerTitle'),
+  UnnnicDrawerFooter: UnnnicDrawerFooterStub,
+  UnnnicDrawerClose: UnnnicDrawerCloseStub,
+  UnnnicButton: UnnnicButtonStub,
+  UnnnicSwitch: UnnnicSwitchStub,
+  UnnnicDisclaimer: true,
+  OperationalAlertForm: true,
+};
+
 const createWrapper = (goals = {}) => {
   const wrapper = mount(OperationalAlertsDrawer, {
     global: {
       plugins: [createTestingPinia({ createSpy: vi.fn })],
-      stubs: {
-        UnnnicDrawerNext: UnnnicDrawerNextStub,
-        UnnnicDrawerContent: UnnnicDrawerContentStub,
-        UnnnicDrawerHeader: drawerSlotStub('UnnnicDrawerHeader'),
-        UnnnicDrawerTitle: drawerSlotStub('UnnnicDrawerTitle'),
-        UnnnicDrawerDescription: drawerSlotStub('UnnnicDrawerDescription'),
-        UnnnicDrawerFooter: UnnnicDrawerFooterStub,
-        UnnnicDrawerClose: UnnnicDrawerCloseStub,
-        UnnnicButton: UnnnicButtonStub,
-        UnnnicSwitch: UnnnicSwitchStub,
-        UnnnicDisclaimer: true,
-        OperationalAlertForm: true,
-      },
+      stubs: drawerStubs,
     },
     props: { modelValue: true },
   });
@@ -118,6 +119,52 @@ describe('OperationalAlertsDrawer.vue', () => {
     ).toBe(true);
   });
 
+  it('should render description in the body, not in the header', () => {
+    const { wrapper } = createWrapper();
+    const description = wrapper.find(
+      '[data-testid="operational-alerts-description"]',
+    );
+    const body = wrapper.find('.operational-alerts-drawer__body');
+    const header = wrapper.findComponent({ name: 'UnnnicDrawerHeader' });
+
+    expect(description.exists()).toBe(true);
+    expect(
+      body.find('[data-testid="operational-alerts-description"]').exists(),
+    ).toBe(true);
+    expect(
+      header.find('[data-testid="operational-alerts-description"]').exists(),
+    ).toBe(false);
+  });
+
+  it('should not render separators when all switches are off', () => {
+    const { wrapper } = createWrapper();
+    expect(
+      wrapper.findAll('[data-testid="operational-alerts-separator"]'),
+    ).toHaveLength(0);
+  });
+
+  it('should render a separator after an enabled non-last section', async () => {
+    const { wrapper } = createWrapper();
+
+    wrapper.vm.formState.waiting_time.enabled = true;
+    await wrapper.vm.$nextTick();
+
+    expect(
+      wrapper.findAll('[data-testid="operational-alerts-separator"]'),
+    ).toHaveLength(1);
+  });
+
+  it('should not render a separator after the last section when enabled', async () => {
+    const { wrapper } = createWrapper();
+
+    wrapper.vm.formState.conversation_duration.enabled = true;
+    await wrapper.vm.$nextTick();
+
+    expect(
+      wrapper.findAll('[data-testid="operational-alerts-separator"]'),
+    ).toHaveLength(0);
+  });
+
   it('should emit close on cancel button click', async () => {
     const { wrapper } = createWrapper();
     await wrapper.find('.secondary').trigger('click');
@@ -146,19 +193,7 @@ describe('OperationalAlertsDrawer.vue', () => {
     const wrapper = mount(OperationalAlertsDrawer, {
       global: {
         plugins: [pinia],
-        stubs: {
-          UnnnicDrawerNext: UnnnicDrawerNextStub,
-          UnnnicDrawerContent: UnnnicDrawerContentStub,
-          UnnnicDrawerHeader: drawerSlotStub('UnnnicDrawerHeader'),
-          UnnnicDrawerTitle: drawerSlotStub('UnnnicDrawerTitle'),
-          UnnnicDrawerDescription: drawerSlotStub('UnnnicDrawerDescription'),
-          UnnnicDrawerFooter: UnnnicDrawerFooterStub,
-          UnnnicDrawerClose: UnnnicDrawerCloseStub,
-          UnnnicButton: UnnnicButtonStub,
-          UnnnicSwitch: UnnnicSwitchStub,
-          UnnnicDisclaimer: true,
-          OperationalAlertForm: true,
-        },
+        stubs: drawerStubs,
       },
       props: { modelValue: true },
     });

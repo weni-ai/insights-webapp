@@ -3,36 +3,38 @@
     class="operational-alert-form"
     :data-testid="`operational-alert-form-${metric}`"
   >
-    <section class="operational-alert-form__row">
-      <section
-        class="operational-alert-form__field operational-alert-form__field--threshold"
-      >
-        <UnnnicLabel
-          :label="$t(`operational_alerts.form.threshold_labels.${metric}`)"
-        />
-        <UnnnicInput
-          v-model="thresholdModel"
-          type="number"
-          nativeType="number"
-          :placeholder="$t('operational_alerts.form.threshold_placeholder')"
-          :data-testid="`threshold-input-${metric}`"
-        />
-      </section>
-      <section
-        class="operational-alert-form__field operational-alert-form__field--unit"
-      >
-        <UnnnicLabel :label="$t('operational_alerts.form.unit_label')" />
-        <UnnnicSelect
-          v-model="unitModel"
-          :options="unitOptions"
-          itemLabel="label"
-          itemValue="value"
-          :data-testid="`unit-select-${metric}`"
-        />
+    <section class="operational-alert-form__time">
+      <section class="operational-alert-form__row">
+        <section
+          class="operational-alert-form__field operational-alert-form__field--threshold"
+        >
+          <UnnnicLabel
+            :label="$t(`operational_alerts.form.threshold_labels.${metric}`)"
+          />
+          <UnnnicInput
+            v-model="thresholdModel"
+            type="number"
+            nativeType="number"
+            :placeholder="$t('operational_alerts.form.threshold_placeholder')"
+            :data-testid="`threshold-input-${metric}`"
+          />
+        </section>
+        <section
+          class="operational-alert-form__field operational-alert-form__field--unit"
+        >
+          <UnnnicLabel :label="$t('operational_alerts.form.unit_label')" />
+          <UnnnicSelect
+            v-model="unitModel"
+            :options="unitOptions"
+            itemLabel="label"
+            itemValue="value"
+            :data-testid="`unit-select-${metric}`"
+          />
+        </section>
       </section>
     </section>
 
-    <section class="operational-alert-form__field">
+    <section class="operational-alert-form__email">
       <section class="operational-alert-form__email-label">
         <UnnnicLabel
           :label="$t('operational_alerts.form.email_notification_label')"
@@ -210,6 +212,17 @@ const roomsThresholdModel = computed<string>({
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-4;
+
+  &__time {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__email {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-4;
+  }
 
   &__row {
     display: flex;

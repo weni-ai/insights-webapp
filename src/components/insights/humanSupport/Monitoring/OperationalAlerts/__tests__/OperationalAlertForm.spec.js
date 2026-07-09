@@ -95,6 +95,27 @@ describe('OperationalAlertForm.vue', () => {
     ]);
   });
 
+  it('should use a metric-specific threshold placeholder', async () => {
+    const { wrapper } = createWrapper();
+    const getThresholdPlaceholder = () =>
+      wrapper
+        .findAllComponents({ name: 'UnnnicInput' })
+        .find((input) =>
+          String(input.attributes('data-testid') || '').startsWith(
+            'threshold-input-',
+          ),
+        )
+        ?.props('placeholder');
+
+    expect(getThresholdPlaceholder()).toBe('Example: 10');
+
+    await wrapper.setProps({ metric: 'first_response_time' });
+    expect(getThresholdPlaceholder()).toBe('Example: 2');
+
+    await wrapper.setProps({ metric: 'conversation_duration' });
+    expect(getThresholdPlaceholder()).toBe('Example: 30');
+  });
+
   it('should always show the when field', async () => {
     const { wrapper } = createWrapper();
     expect(

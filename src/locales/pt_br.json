@@ -166,11 +166,6 @@
       "custom_section_description": "Adicione situações que este projeto também deve contar como Atendido por IA. {count} de {max}.",
       "custom_section_title": "Seus critérios",
       "errors": {
-        "ambiguous_description": "Reescreva o critério para deixá-lo mais claro",
-        "ambiguous_title": "O critério é ambíguo",
-        "duplicate_description": "Edite o critério para cobrir uma situação diferente ou remova o outro primeiro",
-        "duplicate_title": "Você já adicionou um critério semelhante",
-        "invalid_description": "Reescreva o critério e valide novamente",
         "invalid_title": "O critério é inválido",
         "technical": "Não foi possível validar o critério devido a um problema técnico"
       },

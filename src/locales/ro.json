@@ -166,11 +166,6 @@
       "custom_section_description": "Adaugă situații pe care acest proiect trebuie să le numere ca Gestionat de AI. {count} din {max}.",
       "custom_section_title": "Criteriile tale",
       "errors": {
-        "ambiguous_description": "Rescrie criteriul pentru a-l face mai clar",
-        "ambiguous_title": "Criteriul este ambiguu",
-        "duplicate_description": "Editează criteriul pentru a acoperi o situație diferită sau elimină celălalt mai întâi",
-        "duplicate_title": "Ai adăugat deja un criteriu similar",
-        "invalid_description": "Rescrie criteriul și validează din nou",
         "invalid_title": "Criteriul este invalid",
         "technical": "Criteriul nu a putut fi validat din cauza unei probleme tehnice"
       },

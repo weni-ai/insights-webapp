@@ -4,6 +4,7 @@ import { UnnnicCallAlert } from '@weni/unnnic-system';
 import resolutionCriteriaService, {
   parseCriterionError,
   type Criterion,
+  type ValidationRule,
   MAX_CUSTOM_CRITERIA,
 } from '@/services/api/resources/conversational/resolutionCriteria';
 
@@ -25,6 +26,7 @@ export interface ResolutionCriteriaState {
   formText: string;
   validationStatus: ValidationStatus;
   validationError: ValidationError | null;
+  validationRules: ValidationRule[];
   lastValidatedText: string | null;
   isSaving: boolean;
   removeTarget: Criterion | null;
@@ -36,6 +38,7 @@ const initialFormState = () => ({
   formText: '',
   validationStatus: 'idle' as ValidationStatus,
   validationError: null as ValidationError | null,
+  validationRules: [] as ValidationRule[],
   lastValidatedText: null as string | null,
   isSaving: false,
 });
@@ -109,6 +112,7 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
       this.formText = criterion.text;
       this.validationStatus = 'idle';
       this.validationError = null;
+      this.validationRules = [];
       this.lastValidatedText = null;
     },
 
@@ -117,6 +121,7 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
       if (text !== this.lastValidatedText) {
         this.validationStatus = 'idle';
         this.validationError = null;
+        this.validationRules = [];
       }
     },
 
@@ -145,15 +150,17 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
 
       this.validationStatus = 'validating';
       this.validationError = null;
+      this.validationRules = [];
 
       try {
-        await resolutionCriteriaService.validateCriterion({
+        const response = await resolutionCriteriaService.validateCriterion({
           text: this.formText.trim(),
           criterionId: this.editingCriterion?.id ?? null,
         });
         this.validationStatus = 'valid';
         this.lastValidatedText = this.formText;
         this.validationError = null;
+        this.validationRules = response.validation.rules ?? [];
       } catch (error) {
         const parsed = parseCriterionError(error);
 
@@ -164,6 +171,7 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
             code: parsed.code,
             message: parsed.message,
           };
+          this.validationRules = parsed.rules;
         } else {
           this.validationStatus = 'idle';
           showToast(
@@ -229,19 +237,11 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
     },
 
     getErrorTitleKey(code: string): string {
-      const codeMap: Record<string, string> = {
-        DUPLICATE_CRITERION:
-          'conversations_dashboard.resolution_criteria.errors.duplicate_title',
-        AMBIGUOUS_CRITERION:
-          'conversations_dashboard.resolution_criteria.errors.ambiguous_title',
-        INVALID_CRITERION:
-          'conversations_dashboard.resolution_criteria.errors.invalid_title',
-      };
+      if (code === 'INVALID_CRITERION') {
+        return 'conversations_dashboard.resolution_criteria.errors.invalid_title';
+      }
 
-      return (
-        codeMap[code] ??
-        'conversations_dashboard.resolution_criteria.errors.technical'
-      );
+      return 'conversations_dashboard.resolution_criteria.errors.technical';
     },
 
     async confirmRemove() {

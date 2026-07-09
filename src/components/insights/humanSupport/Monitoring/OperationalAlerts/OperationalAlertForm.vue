@@ -15,7 +15,9 @@
             v-model="thresholdModel"
             type="number"
             nativeType="number"
-            :placeholder="$t('operational_alerts.form.threshold_placeholder')"
+            :placeholder="
+              $t(`operational_alerts.form.threshold_placeholders.${metric}`)
+            "
             :data-testid="`threshold-input-${metric}`"
           />
         </section>

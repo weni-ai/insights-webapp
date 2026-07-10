@@ -77,7 +77,7 @@ describe('OperationalAlertForm.vue', () => {
     const select = wrapper.findComponent(FilterMultiSelectStub);
 
     expect(select.props('source')).toBe('agents');
-    expect(select.props('keyValueField')).toBe('uuid');
+    expect(select.props('keyValueField')).toBe('email');
   });
 
   it('should update recipients when FilterMultiSelect emits selected agents', async () => {

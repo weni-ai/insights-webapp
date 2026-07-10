@@ -72,6 +72,7 @@ describe('FilterMultiSelect', () => {
         dependsOn: undefined,
         dependsOnValue: null,
         keyValueField: '',
+        fetchRequest: expect.any(Function),
         allLabel: '',
         disabled: false,
       });
@@ -221,6 +222,28 @@ describe('FilterMultiSelect', () => {
       expect(customWrapper.vm.options).toEqual([]);
 
       consoleSpy.mockRestore();
+    });
+
+    it('uses custom fetchRequest when provided', async () => {
+      const customFetchRequest = vi.fn().mockResolvedValue([
+        { uuid: 'custom-1', name: 'Custom Source 1' },
+        { uuid: 'custom-2', name: 'Custom Source 2' },
+      ]);
+
+      Projects.getProjectSource.mockClear();
+
+      const customWrapper = createWrapper({
+        fetchRequest: customFetchRequest,
+      });
+
+      await customWrapper.vm.$nextTick();
+
+      expect(customFetchRequest).toHaveBeenCalledWith('test-source', {});
+      expect(Projects.getProjectSource).not.toHaveBeenCalled();
+      expect(customWrapper.vm.options).toEqual([
+        { value: 'custom-1', label: 'Custom Source 1' },
+        { value: 'custom-2', label: 'Custom Source 2' },
+      ]);
     });
   });
 

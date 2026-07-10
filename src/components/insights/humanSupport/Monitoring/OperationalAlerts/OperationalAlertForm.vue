@@ -67,7 +67,8 @@
             ref="filterMultiSelectRef"
             :modelValue="selectedRecipients"
             source="agents"
-            keyValueField="uuid"
+            keyValueField="email"
+            :fetchRequest="Projects.getProjectManagers"
             :placeholder="
               $t('operational_alerts.form.send_email_to_placeholder')
             "
@@ -111,6 +112,8 @@ import { computed, ref, useTemplateRef, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
+
+import Projects from '@/services/api/resources/projects';
 
 import { MetricFormState } from '@/store/modules/humanSupport/metricGoals';
 import {

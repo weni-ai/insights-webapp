@@ -1028,14 +1028,14 @@
     "filters": {
       "sector": "Sector de activitate",
       "select_sector": "Selectează un sector de activitate",
-      "agent": "Agent",
-      "select_agent": "Alege un agent",
+      "representative": "Reprezentant",
+      "select_representative": "Selectează un reprezentant",
       "queue": "Coadă",
       "select_queue": "Selectează o coadă",
       "tag": "Etichetă",
       "select_tag": "Alege o etichetă",
       "all_sectors": "Toate sectoarele de activitate",
-      "all_agents": "Toți agenții",
+      "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
       "all_tags": "Toate etichetele"
     },

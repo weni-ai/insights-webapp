@@ -1028,14 +1028,14 @@
     "filters": {
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "agent": "Agente",
-      "select_agent": "Selecione o agente",
+      "representative": "Atendente",
+      "select_representative": "Selecione o atendente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",
       "tag": "Tag",
       "select_tag": "Selecione a tag",
       "all_sectors": "Todos os setores",
-      "all_agents": "Todos os agentes",
+      "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
       "all_tags": "Todas as tags"
     },

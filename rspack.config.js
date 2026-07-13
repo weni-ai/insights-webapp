@@ -1,7 +1,7 @@
 const { defineConfig } = require('@rspack/cli');
 const { rspack } = require('@rspack/core');
 const HtmlRspackPlugin = require('html-rspack-plugin');
-const { VueLoaderPlugin } = require('rspack-vue-loader');
+const { VueLoaderPlugin } = require('vue-loader');
 const { resolve } = require('path');
 const path = require('path');
 const dotenv = require('dotenv');
@@ -12,73 +12,68 @@ dotenv.config();
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 
-// In development we disable Rspack's native CSS (experiments.css) and go through
-// the css-loader/vue-style-loader chain instead. Native CSS does not reliably
-// hot-reload Vue SFC <style> blocks, so editing SCSS required a manual refresh.
-// Production keeps native CSS to emit hashed standalone CSS files.
 const isDev = process.env.NODE_ENV === 'development';
+const PORT = 3003;
+const PUBLIC_PATH = `${process.env.PUBLIC_PATH_URL}/`;
+const FEDERATION_NAME = 'insights';
 
 const scssAdditionalData = `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`;
 
-const scssRule = isDev
-  ? {
-      test: /\.(scss|sass)$/,
+/**
+ * Dev: vue-style-loader chain so Vue SFC <style> blocks hot-reload.
+ * Prod: native CSS (experiments.css) for hashed standalone CSS files.
+ */
+function styleRule(test, loadersAfterCss = []) {
+  if (isDev) {
+    return {
+      test,
       use: [
         'vue-style-loader',
         'css-loader',
         'postcss-loader',
-        {
-          loader: 'sass-loader',
-          options: { additionalData: scssAdditionalData },
-        },
+        ...loadersAfterCss,
       ],
       type: 'javascript/auto',
-    }
-  : {
-      test: /\.(scss|sass)$/,
-      use: [
-        'postcss-loader',
-        {
-          loader: 'sass-loader',
-          options: { additionalData: scssAdditionalData },
-        },
-      ],
-      type: 'css',
     };
+  }
 
-const cssRule = isDev
-  ? {
-      test: /\.css$/,
-      use: ['vue-style-loader', 'css-loader', 'postcss-loader'],
-      type: 'javascript/auto',
-    }
-  : {
-      test: /\.css$/,
-      use: ['postcss-loader'],
-      type: 'css',
-    };
+  return {
+    test,
+    use: ['postcss-loader', ...loadersAfterCss],
+    type: 'css',
+  };
+}
 
 module.exports = defineConfig({
-  // `eval-*` keeps each module in its own eval wrapper, which plays well with
-  // HMR, while still giving line-level source maps back to the original files.
   ...(isDev ? { devtool: 'eval-cheap-module-source-map' } : {}),
   context: __dirname,
   devServer: {
-    port: 3003,
+    port: PORT,
     historyApiFallback: true,
     hot: true,
     liveReload: false,
     compress: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    client: {
+      webSocketURL: `ws://localhost:${PORT}/ws`,
+    },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: `${process.env.PUBLIC_PATH_URL}/`,
-    filename: 'assets/js/[name]-[contenthash].js',
-    chunkFilename: 'assets/js/[name]-[contenthash].js',
+    uniqueName: FEDERATION_NAME,
+    publicPath: PUBLIC_PATH,
+    filename: isDev
+      ? 'assets/js/[name].js'
+      : 'assets/js/[name]-[contenthash].js',
+    chunkFilename: isDev
+      ? 'assets/js/[name].js'
+      : 'assets/js/[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext]',
   },
   entry: {
-    main: './src/main.js',
+    main: './src/index.js',
   },
   stats: {
     warnings: false,
@@ -93,7 +88,7 @@ module.exports = defineConfig({
     rules: [
       {
         test: /\.vue$/,
-        loader: 'rspack-vue-loader',
+        loader: 'vue-loader',
         options: {
           experimentalInlineMatchResource: true,
         },
@@ -114,8 +109,13 @@ module.exports = defineConfig({
           },
         ],
       },
-      scssRule,
-      cssRule,
+      styleRule(/\.(scss|sass)$/, [
+        {
+          loader: 'sass-loader',
+          options: { additionalData: scssAdditionalData },
+        },
+      ]),
+      styleRule(/\.css$/),
       {
         test: /\.(png|jpe?g|gif|svg|webp|avif)$/i,
         type: 'asset/resource',
@@ -129,6 +129,7 @@ module.exports = defineConfig({
     new HtmlRspackPlugin({
       template: './index.html',
       inject: 'head',
+      chunks: ['main'],
       minify: {
         removeComments: false,
         collapseWhitespace: true,
@@ -146,23 +147,15 @@ module.exports = defineConfig({
     }),
     new VueLoaderPlugin(),
     new rspack.container.ModuleFederationPlugin({
-      name: 'insights',
+      name: FEDERATION_NAME,
       filename: 'remoteEntry.js',
-      // Exposing `./main` (the same file as `entry.main`) builds the whole app
-      // into both the entry graph and the container graph. In dev that breaks
-      // HMR: the container's hot-update handler fails with "Cannot set
-      // properties of undefined". Standalone dev mounts via the entry, so the
-      // exposes are only needed for the production remote build.
-      exposes: isDev
-        ? {}
-        : {
-            './main': './src/main.js',
-            './dashboard-commerce':
-              './src/views/insights/DashboardCommerce.vue',
-            './locales/pt_br': './src/locales/pt_br.json',
-            './locales/en': './src/locales/en.json',
-            './locales/es': './src/locales/es.json',
-          },
+      exposes: {
+        './main': './src/main.js',
+        './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
+        './locales/pt_br': './src/locales/pt_br.json',
+        './locales/en': './src/locales/en.json',
+        './locales/es': './src/locales/es.json',
+      },
       remotes: {
         connect: `connect@${process.env.MODULE_FEDERATION_CONNECT_URL}/remoteEntry.js`,
       },

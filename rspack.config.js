@@ -16,6 +16,7 @@ const isDev = process.env.NODE_ENV === 'development';
 const PORT = 3003;
 const PUBLIC_PATH = `${process.env.PUBLIC_PATH_URL}/`;
 const FEDERATION_NAME = 'insights';
+const IS_EXPOSED_MF = !!process.env.MODULE_FEDERATION_CONNECT_URL;
 
 const scssAdditionalData = `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`;
 
@@ -149,13 +150,16 @@ module.exports = defineConfig({
     new rspack.container.ModuleFederationPlugin({
       name: FEDERATION_NAME,
       filename: 'remoteEntry.js',
-      exposes: {
-        './main': './src/main.js',
-        './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
-        './locales/pt_br': './src/locales/pt_br.json',
-        './locales/en': './src/locales/en.json',
-        './locales/es': './src/locales/es.json',
-      },
+      exposes: !IS_EXPOSED_MF
+        ? {}
+        : {
+            './main': './src/main.js',
+            './dashboard-commerce':
+              './src/views/insights/DashboardCommerce.vue',
+            './locales/pt_br': './src/locales/pt_br.json',
+            './locales/en': './src/locales/en.json',
+            './locales/es': './src/locales/es.json',
+          },
       remotes: {
         connect: `connect@${process.env.MODULE_FEDERATION_CONNECT_URL}/remoteEntry.js`,
       },

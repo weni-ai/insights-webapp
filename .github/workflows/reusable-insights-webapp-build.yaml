@@ -1,0 +1,982 @@
+# Fork of weni-ai/actions-workflows reusable-workflow.yaml with frontend artifact support.
+# Upstream: https://github.com/weni-ai/actions-workflows/blob/main/.github/workflows/reusable-workflow.yaml
+# Diff: adds frontend_artifact_name input and download step in build_and_push.
+
+name: Build, push to registry and deploy
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  workflow_call:
+    inputs:
+      image_arch:
+        required: false
+        type: string
+        default: ""
+      image_repository:
+        required: true
+        type: string
+      image_tags:
+        required: false
+        type: string
+        default: |
+          type=ref,event=tag
+      image_registry_url:
+        required: false
+        type: string
+        #default: 'docker.io'
+        default: ""
+      image_registry_username:
+        required: false
+        type: string
+        default: ""
+      image_registry_password:
+        required: false
+        type: string
+        default: ""
+      image_tag_latest_by_environment:
+        required: false
+        type: string
+        default: "false"
+      image_tag_prefix:
+        required: false
+        type: string
+        default: ""
+      image_tag_prefix_onlatest:
+        required: false
+        type: string
+        default: "false"
+      image_latest:
+        required: false
+        type: string
+        default: "false"
+      build_args:
+        required: false
+        type: string
+        default: ""
+      build_context:
+        required: false
+        type: string
+        default: "."
+      debug:
+        required: false
+        type: string
+        default: ""
+      default_environment:
+        required: false
+        type: string
+        default: "production"
+      dockerfile:
+        required: false
+        type: string
+        default: Dockerfile
+      target_application:
+        required: false
+        type: string
+        default: ""
+      target_application_directory_prefix:
+        required: false
+        type: string
+        default: ""
+      target_repository:
+        required: false
+        type: string
+        default: ""
+      deploy_type:
+        required: false
+        type: string
+        default: "kubernetes"
+      target_repository_branch:
+        required: false
+        type: string
+        default: "main"
+      target_patch_file:
+        required: false
+        type: string
+        default: "deployment.json"
+      target_patch_key:
+        required: false
+        type: string
+        default: "/spec/template/spec/containers/0/image"
+      aws_region:
+        required: false
+        type: string
+        default: "us-east-1"
+      aws_ssm_vcs_token:
+        required: false
+        type: string
+        default: "/cloud/github/TOKEN"
+      aws_ssm_registry_username:
+        required: false
+        type: string
+        #default: "/cloud/registry/USERNAME"
+        default: ""
+      aws_ssm_registry_password:
+        required: false
+        type: string
+        default: "/cloud/registry/PASSWORD"
+      aws_ssm_registry_url:
+        required: false
+        type: string
+        default: "/cloud/registry/URL"
+      aws_ssm_encode_secret:
+        required: false
+        type: string
+        default: "/cloud/encode-secret"
+
+      # kludges
+      kludge_webapp_secret_enable:
+        required: false
+        type: boolean
+        default: false
+      frontend_artifact_name:
+        required: false
+        type: string
+        default: ""
+
+    secrets:
+      ROLE_ARN:
+        required: false
+      REGISTRY_ECR:
+        required: false
+      REGISTRY_USERNAME:
+        required: false
+      REGISTRY_TOKEN:
+        required: false
+      DEVOPS_GITHUB_PERMANENT_TOKEN:
+        required: false
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      image_by_environment: ${{ steps.setup.outputs.image_by_environment }}
+      environment: ${{ steps.setup.outputs.DEPLOY_ENVIRONMENT }}
+      use_role: ${{ steps.setup.outputs.USE_ROLE }}
+      digests_prefix: ${{ steps.setup.outputs.DIGESTS_PREFIX }}
+      image_arch: ${{ steps.setup.outputs.image_arch }}
+      build_args: ${{ steps.setup.outputs.build_args }}
+      encoded_outputs: ${{ steps.encode-output.outputs.out }}
+    steps:
+      - name: Configure AWS Credentials from secret
+        uses: aws-actions/configure-aws-credentials@v4
+        if: env.role_arn != ''
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Configure AWS Credentials from input
+        uses: aws-actions/configure-aws-credentials@v4
+        if: inputs.aws_role_arn != ''
+        env:
+          use_role: ${{ inputs.aws_role_arn }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          ROLE_ARN=$(
+            if [ "${{ inputs.aws_role_arn }}" ] ; then
+              cat<<<"${{ inputs.aws_role_arn }}"
+            elif [ "${{ secrets.ROLE_ARN }}" ] ; then
+              cat<<<"${{ secrets.ROLE_ARN }}"
+            fi
+          )
+          ENCODE_SECRET=$(
+            if [ "${{ inputs.encode_secret }}" ] ; then
+              cat<<<"${{ inputs.encode_secret }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_encode_secret }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_encode_secret }}" \
+                | jq -r .Parameter.Value
+            elif [ "${{ secrets.ENCODE_SECRET }}" ] ; then
+              cat<<<"${{ secrets.ENCODE_SECRET }}"
+            fi
+          )
+          VCS_TOKEN=$(
+            if [ "${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}" ] ; then
+              cat<<<"${{ secrets.DEVOPS_GITHUB_PERMANENT_TOKEN }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_vcs_token }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_vcs_token }}" \
+                | jq -r .Parameter.Value
+            fi
+          )
+          REGISTRY_USERNAME=$(
+            if [ "${{ inputs.image_registry_username }}" ] ; then
+              cat<<<"${{ inputs.image_registry_username }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_registry_username }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_registry_username }}" \
+                | jq -r .Parameter.Value
+            elif [ "${{ secrets.REGISTRY_USERNAME }}" ] ; then
+              cat<<<"${{ secrets.REGISTRY_USERNAME }}"
+            fi
+          )
+          REGISTRY_PASSWORD=$(
+            if [ "${{ inputs.image_registry_password }}" ] ; then
+              cat<<<"${{ inputs.image_registry_password }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_registry_password }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_registry_password }}" \
+                | jq -r .Parameter.Value
+            elif [ "${{ secrets.REGISTRY_TOKEN }}" ] ; then
+              cat<<<"${{ secrets.REGISTRY_TOKEN }}"
+            fi
+          )
+          REGISTRY_URL=$(
+            if [ "${{ inputs.image_registry_url }}" ] ; then
+              cat<<<"${{ inputs.image_registry_url }}"
+            elif [ "${{ secrets.REGISTRY_ECR }}" ] ; then
+              cat<<<"${{ secrets.REGISTRY_ECR }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_registry_url }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_registry_url }}" \
+                | jq -r .Parameter.Value
+            fi
+          )
+          IMAGE_URL="${REGISTRY_URL}/${{ inputs.image_repository }}"
+          echo "::add-mask::${VCS_TOKEN}"
+          echo "::add-mask::${ROLE_ARN}"
+          echo "::add-mask::${ENCODE_SECRET}"
+          echo "::add-mask::${REGISTRY_URL}"
+          echo "::add-mask::${REGISTRY_USERNAME}"
+          echo "::add-mask::${REGISTRY_PASSWORD}"
+          echo "::add-mask::${IMAGE_URL}"
+          {
+            echo 'ROLE_ARN<<EOFenv'
+            cat<<<"${ROLE_ARN}"
+            echo 'EOFenv'
+
+            echo 'ENCODE_SECRET<<EOFenv'
+            cat<<<"${ENCODE_SECRET}"
+            echo 'EOFenv'
+
+            echo 'VCS_TOKEN<<EOFenv'
+            cat<<<"${VCS_TOKEN}"
+            echo 'EOFenv'
+
+            echo 'REGISTRY_USERNAME<<EOFenv'
+            cat<<<"${REGISTRY_USERNAME}"
+            echo 'EOFenv'
+
+            echo 'REGISTRY_PASSWORD<<EOFenv'
+            cat<<<"${REGISTRY_PASSWORD}"
+            echo 'EOFenv'
+
+            echo 'REGISTRY_URL<<EOFenv'
+            cat<<<"${REGISTRY_URL}"
+            echo 'EOFenv'
+
+            echo 'IMAGE_URL<<EOFenv'
+            cat<<<"${IMAGE_URL}"
+            echo 'EOFenv'
+          } >> "${GITHUB_OUTPUT}"
+        env:
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+
+      - name: Download webapp secret
+        uses: actions/checkout@master
+        if: inputs.kludge_webapp_secret_enable
+        with:
+          ref: main
+          repository: "weni-ai/webapp-secret"
+          token: "${{ steps.set-outputs.outputs.VCS_TOKEN }}"
+          path: ./webapp-secret/
+
+      - name: Set outputs
+        id: setup
+        env:
+          BUILD_ARGS: ${{ inputs.build_args }}
+        run: |
+          TAG="$( echo "${GITHUB_REF}" | cut -d'/' -f3 )"
+          if grep -qs -e '^.*.*-develop' <<< "${TAG}" ; then
+            echo "Found environment: DEVELOP - ${TAG}"
+            echo "DEPLOY_ENVIRONMENT=develop" | tee "${GITHUB_OUTPUT}"
+            export "DEPLOY_ENVIRONMENT=develop"
+          elif grep -qs -e '^.*.*-staging' <<< "${TAG}" ; then
+            echo "Found environment: STAGING - ${TAG}"
+            echo "DEPLOY_ENVIRONMENT=staging" | tee -a "${GITHUB_OUTPUT}"
+            export "DEPLOY_ENVIRONMENT=staging"
+          elif grep -qs -e '^.*.*' <<< "${TAG}" ; then
+            echo "No environment found, assuming: ${{ inputs.default_environment }} - ${TAG}"
+            echo "DEPLOY_ENVIRONMENT=${{ inputs.default_environment }}" | tee -a "${GITHUB_OUTPUT}"
+            export "DEPLOY_ENVIRONMENT=${{ inputs.default_environment }}"
+          else
+            echo 'Not a valid tag. Skipping...'
+            exit 1
+          fi
+          export GITHUB_REPOSITORY_NAME="${GITHUB_REPOSITORY#$GITHUB_REPOSITORY_OWNER/}"
+          {
+            if [ "${{ secrets.ROLE_ARN }}" ] ; then
+              echo "USE_ROLE=true" | tee -a "${GITHUB_OUTPUT}"
+            fi
+            if [ "${{ inputs.image_tag_latest_by_environment }}" = "true" ] ; then
+              echo "image_by_environment=type=raw,latest-${DEPLOY_ENVIRONMENT}" | tee -a "${GITHUB_OUTPUT}"
+            fi
+            echo "DIGESTS_PREFIX=digests-$( echo "${{ steps.set-outputs.outputs.REGISTRY_URL }}" | tr './' '-' )"
+            echo 'image_arch<<EOFenv'
+            if [ "${{ inputs.image_arch }}" = "" ] ; then
+              if [ "${{ github.repository_visibility }}" = "private" ] ; then
+                echo '[{"platform":"linux/arm64","runner":"ubuntu-latest"},{"platform":"linux/amd64","runner":"ubuntu-latest"}]'
+              else
+                echo '[{"platform":"linux/arm64","runner":"ubuntu-24.04-arm"},{"platform":"linux/amd64","runner":"ubuntu-latest"}]'
+              fi
+            else
+              echo '${{ inputs.image_arch }}'
+            fi
+            echo EOFenv
+
+            # Set build args
+            echo 'BUILD_ARGS<<EOFenv'
+            if [ -r "webapp-secret/${GITHUB_REPOSITORY_NAME}/${DEPLOY_ENVIRONMENT}/env" ] ; then
+              cat "webapp-secret/${GITHUB_REPOSITORY_NAME}/${DEPLOY_ENVIRONMENT}/env" \
+                | sed -e '/^#/d' -e '/^\s*$/d'
+            fi
+            #if [ "${BUILD_ARGS}" ] ; then
+            #  cat <<<"${BUILD_ARGS}"
+            #fi
+            echo EOFenv
+          } | tee -a "${GITHUB_OUTPUT}"
+
+          {
+            echo "### Workflow Outputs"
+            echo "| Variable             | Description     |"
+            echo "| -------------------- | --------------- |"
+            echo "| digests_prefix       | Prefix used in digests artifact |"
+            echo "| environment          | Enviroment identifier to build and/or deploy. Based on tags. |"
+            echo "| image_by_environment | Extra images to build based on enviroment |"
+            echo "| use_role             | If true, use role for AWS access |"
+            echo "| build_args           | build args to be used when building the container |"
+          } | tee -a "${GITHUB_STEP_SUMMARY}"
+
+      - name: Encode secret toml
+        uses: weni-ai/actions-workflows/secret-output@main
+        id: encode-output
+        with:
+          secret: ${{ steps.set-outputs.outputs.ENCODE_SECRET }}
+          in: |-
+            VCS_TOKEN = '${{ steps.set-outputs.outputs.VCS_TOKEN }}'
+            ROLE_ARN = '${{ steps.set-outputs.outputs.ROLE_ARN }}'
+            REGISTRY_URL = '${{ steps.set-outputs.outputs.REGISTRY_URL }}'
+            REGISTRY_USERNAME = '${{ steps.set-outputs.outputs.REGISTRY_USERNAME }}'
+            REGISTRY_PASSWORD = '${{ steps.set-outputs.outputs.REGISTRY_PASSWORD }}'
+            IMAGE_URL = '${{ steps.set-outputs.outputs.IMAGE_URL }}'
+
+  build_and_push:
+    needs:
+      - setup
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJson(needs.setup.outputs.image_arch) }}
+    runs-on: ${{ matrix.runner }}
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+    steps:
+      - name: Configure AWS Credentials from secret
+        uses: aws-actions/configure-aws-credentials@v4
+        if: env.role_arn != ''
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Configure AWS Credentials from input
+        uses: aws-actions/configure-aws-credentials@v4
+        if: inputs.aws_role_arn != ''
+        env:
+          use_role: ${{ inputs.aws_role_arn }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          ROLE_ARN=$(
+            if [ "${{ inputs.aws_role_arn }}" ] ; then
+              cat<<<"${{ inputs.aws_role_arn }}"
+            elif [ "${{ secrets.ROLE_ARN }}" ] ; then
+              cat<<<"${{ secrets.ROLE_ARN }}"
+            fi
+          )
+          ENCODE_SECRET=$(
+            if [ "${{ inputs.encode_secret }}" ] ; then
+              cat<<<"${{ inputs.encode_secret }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_encode_secret }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_encode_secret }}" \
+                | jq -r .Parameter.Value
+            elif [ "${{ secrets.ENCODE_SECRET }}" ] ; then
+              cat<<<"${{ secrets.ENCODE_SECRET }}"
+            fi
+          )
+          echo "::add-mask::${ROLE_ARN}"
+          echo "::add-mask::${ENCODE_SECRET}"
+          {
+            echo 'ROLE_ARN<<EOFenv'
+            cat<<<"${ROLE_ARN}"
+            echo 'EOFenv'
+
+            echo 'ENCODE_SECRET<<EOFenv'
+            cat<<<"${ENCODE_SECRET}"
+            echo 'EOFenv'
+          } >> "${GITHUB_OUTPUT}"
+        env:
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+
+      - name: Decode
+        uses: weni-ai/actions-workflows/secret-output@main
+        id: decode
+        with:
+          secret: ${{ steps.set-outputs.outputs.ENCODE_SECRET }}
+          op: toml-decode
+          in: "${{ needs.setup.outputs.encoded_outputs }}"
+
+      - name: Set variables
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" | tee -a "${GITHUB_ENV}"
+
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Download frontend build artifact
+        if: inputs.frontend_artifact_name != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.frontend_artifact_name }}
+          path: dist/
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.decode.outputs.IMAGE_URL }}
+          tags: |
+            ${{ inputs.image_tags }}
+            ${{ needs.setup.outputs.image_by_environment }}
+          flavor: |
+            latest=${{ inputs.image_latest }}
+            prefix=${{ inputs.image_tag_prefix }},onlatest=${{ inputs.image_tag_prefix_onlatest }}
+
+      - name: Configure AWS Credentials from role arn
+        uses: aws-actions/configure-aws-credentials@v4
+        if: github.event_name != 'pull_request' && steps.decode.outputs.ROLE_ARN != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ steps.decode.outputs.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Login to Registry with aws role
+        continue-on-error: true
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && steps.decode.outputs.ROLE_ARN != '' && steps.decode.outputs.REGISTRY_USERNAME == ''
+        with:
+          registry: ${{ steps.decode.outputs.REGISTRY_URL }}
+
+      - name: Login to Registry with login and password
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && steps.decode.outputs.REGISTRY_USERNAME != ''
+        with:
+          registry: ${{ steps.decode.outputs.REGISTRY_URL }}
+          username: ${{ steps.decode.outputs.REGISTRY_USERNAME }}
+          password: ${{ steps.decode.outputs.REGISTRY_PASSWORD }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        if: matrix.platform != 'linux/amd64' && matrix.runner == 'ubuntu-latest'
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      ## Cache
+      #- name: Cache var-cache-apt
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: var-cache-apt
+      #    key: var-cache-apt-${{ matrix.platform }}-${{ hashFiles(inputs.dockerfile) }}
+      #    restore-keys: |
+      #      var-cache-apt-${{ matrix.platform }}-
+      #- name: Cache var-lib-apt
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: var-lib-apt
+      #    key: var-lib-apt-${{ matrix.platform }}-${{ hashFiles(inputs.dockerfile) }}
+      #    restore-keys: |
+      #      var-lib-apt-${{ matrix.platform }}-
+      #- name: Cache pip
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: cache-pip
+      #    key: cache-pip-${{ matrix.platform }}-${{ hashFiles(inputs.dockerfile, 'requirements.txt', 'pyproject.toml') }}
+      #    restore-keys: |
+      #      cache-pip-${{ matrix.platform }}-
+      #- name: Cache ccache
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: cache-ccache
+      #    key: cache-ccache-${{ matrix.platform }}-${{ hashFiles(inputs.dockerfile) }}
+      #    restore-keys: |
+      #      cache-ccache-${{ matrix.platform }}-
+      #- name: Cache npm
+      #  uses: actions/cache@v3
+      #  with:
+      #    path: cache-npm
+      #    key: cache-npm-${{ matrix.platform }}-${{ hashFiles(inputs.dockerfile, 'package-lock.json') }}
+      #    restore-keys: |
+      #      cache-npm-${{ matrix.platform }}-
+
+      ## Inject cache
+      #- name: Restore Docker cache mounts
+      #  uses: reproducible-containers/buildkit-cache-dance@v3
+      #  with:
+      #    builder: ${{ steps.setup-buildx.outputs.name }}
+      #    cache-map: |
+      #      {
+      #        "var-cache-apt": "/var/cache/apt",
+      #        "var-lib-apt": "/var/lib/apt",
+      #        "cache-pip": "/pip_cache",
+      #        "cache-ccache": "/root/.cache/ccache",
+      #        "cache-npm": "/npm_cache"
+      #      }
+      #    skip-extraction: ${{ steps.cache.outputs.cache-hit }}
+
+      - name: Build and Push Image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          provenance: false # fix
+          #sbom: false
+          file: ${{ inputs.dockerfile }}
+          context: ${{ inputs.build_context }}
+          build-args: |
+            PLATFORM_PAIR=${{ env.PLATFORM_PAIR }}
+            ${{ needs.setup.outputs.build_args }}
+            ${{ inputs.build_args }}
+          annotations: ${{ steps.meta.outputs.annotations }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ steps.decode.outputs.IMAGE_URL }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: |
+            type=registry,ref=${{ steps.decode.outputs.IMAGE_URL }}:buildcache-${{ env.PLATFORM_PAIR }}
+          #            type=gha,scope=${{ inputs.target_application }}-${{ env.PLATFORM_PAIR }}
+          cache-to: |
+            type=registry,ref=${{ steps.decode.outputs.IMAGE_URL }}:buildcache-${{ env.PLATFORM_PAIR }},mode=max
+      #            type=gha,mode=max,scope=${{ inputs.target_application }}-${{ env.PLATFORM_PAIR }}
+      - name: Export digest and push tag
+        env:
+          SOURCE_IMAGE: "${{ steps.decode.outputs.IMAGE_URL }}@${{ steps.build.outputs.digest }}"
+          TARGET_IMAGE: "${{ steps.decode.outputs.IMAGE_URL }}:${{ steps.meta.outputs.version }}-${{ env.PLATFORM_PAIR }}"
+        run: |
+          if [ "${{ inputs.debug }}" = "true" ] ; then
+            set -xv
+          fi
+          mkdir -p ${{ runner.temp }}/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+          docker pull "${{ env.SOURCE_IMAGE }}"
+          docker tag "${{ env.SOURCE_IMAGE }}" "${{ env.TARGET_IMAGE }}"
+          docker push "${{ env.TARGET_IMAGE }}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ needs.setup.outputs.digests_prefix }}-${{ steps.meta.outputs.version }}-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    runs-on: ubuntu-latest
+    needs:
+      - setup
+      - build_and_push
+    steps:
+      - name: Configure AWS Credentials from secret
+        uses: aws-actions/configure-aws-credentials@v4
+        if: env.role_arn != ''
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Configure AWS Credentials from input
+        uses: aws-actions/configure-aws-credentials@v4
+        if: inputs.aws_role_arn != ''
+        env:
+          use_role: ${{ inputs.aws_role_arn }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          ROLE_ARN=$(
+            if [ "${{ inputs.aws_role_arn }}" ] ; then
+              cat<<<"${{ inputs.aws_role_arn }}"
+            elif [ "${{ secrets.ROLE_ARN }}" ] ; then
+              cat<<<"${{ secrets.ROLE_ARN }}"
+            fi
+          )
+          ENCODE_SECRET=$(
+            if [ "${{ inputs.encode_secret }}" ] ; then
+              cat<<<"${{ inputs.encode_secret }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_encode_secret }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_encode_secret }}" \
+                | jq -r .Parameter.Value
+            elif [ "${{ secrets.ENCODE_SECRET }}" ] ; then
+              cat<<<"${{ secrets.ENCODE_SECRET }}"
+            fi
+          )
+          echo "::add-mask::${ROLE_ARN}"
+          echo "::add-mask::${ENCODE_SECRET}"
+          {
+            echo 'ROLE_ARN<<EOFenv'
+            cat<<<"${ROLE_ARN}"
+            echo 'EOFenv'
+
+            echo 'ENCODE_SECRET<<EOFenv'
+            cat<<<"${ENCODE_SECRET}"
+            echo 'EOFenv'
+          } >> "${GITHUB_OUTPUT}"
+        env:
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+
+      - name: Decode
+        uses: weni-ai/actions-workflows/secret-output@main
+        id: decode
+        with:
+          secret: ${{ steps.set-outputs.outputs.ENCODE_SECRET }}
+          op: toml-decode
+          in: "${{ needs.setup.outputs.encoded_outputs }}"
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ steps.decode.outputs.IMAGE_URL }}
+          tags: |
+            ${{ inputs.image_tags }}
+            ${{ needs.setup.outputs.image_by_environment }}
+          flavor: |
+            latest=${{ inputs.image_latest }}
+            prefix=${{ inputs.image_tag_prefix }},onlatest=${{ inputs.image_tag_prefix_onlatest }}
+
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: ${{ needs.setup.outputs.digests_prefix }}-${{ steps.meta.outputs.version }}-*
+          merge-multiple: true
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        if: github.event_name != 'pull_request' && steps.decode.outputs.ROLE_ARN != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ steps.decode.outputs.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Login to Registry with role
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && steps.decode.outputs.ROLE_ARN != '' && steps.decode.outputs.REGISTRY_USERNAME == ''
+        with:
+          registry: ${{ steps.decode.outputs.REGISTRY_URL }}
+
+      - name: Login to Registry with login and password
+        uses: docker/login-action@v3
+        if: github.event_name != 'pull_request' && steps.decode.outputs.REGISTRY_USERNAME != ''
+        with:
+          registry: ${{ steps.decode.outputs.REGISTRY_URL }}
+          username: ${{ steps.decode.outputs.REGISTRY_USERNAME }}
+          password: ${{ steps.decode.outputs.REGISTRY_PASSWORD }}
+
+      - name: Create manifest list and push
+        working-directory: ${{ runner.temp }}/digests
+        run: |-
+          if [ "${{ inputs.debug }}" = "true" ] ; then
+            set -xv
+          fi
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "${DOCKER_METADATA_OUTPUT_JSON}") \
+            $(printf '${{ steps.decode.outputs.IMAGE_URL }}@sha256:%s ' *)
+
+      - name: Inspect image
+        working-directory: ${{ runner.temp }}/digests
+        if: inputs.debug == 'true'
+        run: |-
+          for x in $(jq -cr '.tags | join(" ")' <<< "${DOCKER_METADATA_OUTPUT_JSON}"); do
+            echo docker buildx imagetools inspect "${x}"
+            docker buildx imagetools inspect "${x}"
+          done
+
+  deploy:
+    if: inputs.target_repository != ''
+    env:
+      DEPLOY_APPLICATION: ${{ inputs.target_application_directory_prefix }}${{ inputs.target_application }}
+      DEPLOY_REPOSITORY: ${{ inputs.target_repository }}
+      DEPLOY_PATCH_TARGET: ${{ inputs.target_patch_file }}
+      DEPLOY_REPOSITORY_BRANCH: ${{ inputs.target_repository_branch }}
+    needs:
+      - setup
+      - merge
+      - build_and_push
+    #runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials from secret
+        uses: aws-actions/configure-aws-credentials@v4
+        if: env.role_arn != ''
+        env:
+          role_arn: ${{ secrets.ROLE_ARN }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ secrets.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Configure AWS Credentials from input
+        uses: aws-actions/configure-aws-credentials@v4
+        if: inputs.aws_role_arn != ''
+        env:
+          use_role: ${{ inputs.aws_role_arn }}
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ inputs.aws_role_arn }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Set outputs
+        id: set-outputs
+        run: |
+          ROLE_ARN=$(
+            if [ "${{ inputs.aws_role_arn }}" ] ; then
+              cat<<<"${{ inputs.aws_role_arn }}"
+            elif [ "${{ secrets.ROLE_ARN }}" ] ; then
+              cat<<<"${{ secrets.ROLE_ARN }}"
+            fi
+          )
+          ENCODE_SECRET=$(
+            if [ "${{ inputs.encode_secret }}" ] ; then
+              cat<<<"${{ inputs.encode_secret }}"
+            elif [ "${ROLE_ARN}" -a "${{ inputs.aws_ssm_encode_secret }}" ] ; then
+              aws ssm get-parameter --with-decryption \
+                --name "${{ inputs.aws_ssm_encode_secret }}" \
+                | jq -r .Parameter.Value
+            elif [ "${{ secrets.ENCODE_SECRET }}" ] ; then
+              cat<<<"${{ secrets.ENCODE_SECRET }}"
+            fi
+          )
+          echo "::add-mask::${ROLE_ARN}"
+          echo "::add-mask::${ENCODE_SECRET}"
+          {
+            echo 'ROLE_ARN<<EOFenv'
+            cat<<<"${ROLE_ARN}"
+            echo 'EOFenv'
+
+            echo 'ENCODE_SECRET<<EOFenv'
+            cat<<<"${ENCODE_SECRET}"
+            echo 'EOFenv'
+          } >> "${GITHUB_OUTPUT}"
+        env:
+          AWS_DEFAULT_REGION: ${{ inputs.aws_region }}
+
+      - name: Decode
+        uses: weni-ai/actions-workflows/secret-output@main
+        id: decode
+        with:
+          secret: ${{ steps.set-outputs.outputs.ENCODE_SECRET }}
+          op: toml-decode
+          in: "${{ needs.setup.outputs.encoded_outputs }}"
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        if: github.event_name != 'pull_request' && steps.decode.outputs.ROLE_ARN != ''
+        with:
+          audience: sts.amazonaws.com
+          role-session-name: ${{ github.run_id }}
+          role-to-assume: ${{ steps.decode.outputs.ROLE_ARN }}
+          aws-region: ${{ inputs.aws_region }}
+
+      - name: Check out deploy repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.DEPLOY_REPOSITORY_BRANCH }}
+          repository: ${{ env.DEPLOY_REPOSITORY }}
+          token: ${{ steps.decode.outputs.VCS_TOKEN }}
+          path: ./deploy-repository/
+
+      - name: Update image on kubernetes manifests
+        if: inputs.deploy_type == 'kubernetes'
+        working-directory: ./deploy-repository/${{ env.DEPLOY_APPLICATION }}
+        env:
+          IMAGE_TAG: ${{ steps.decode.outputs.IMAGE_URL }}:${{ needs.build_and_push.outputs.version }}
+          IMAGE_ARCH: ${{ fromJson(needs.setup.outputs.image_arch)[0].platform }}
+        run: |
+          if [ "${{ inputs.debug }}" = "true" ] ; then
+            set -xv
+          fi
+
+          which jq > /dev/null 2>&1 || ( sudo apt update; sudo apt install -y jq )
+
+          extver() {
+            echo "$1" | sed s'/^.*[v:-]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'g | head -n1
+          }
+
+          verlte() {
+            [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+          }
+
+          DEPLOY_ENV_TARGET=$(
+            echo ${{ needs.build_and_push.outputs.version }} | grep -Eo 'mumbai-staging|staging|develop|ireland|mumbai' || echo 'production'
+          )
+
+          echo "Target environment: ${DEPLOY_ENV_TARGET}"
+
+          if [ ! -d "${DEPLOY_ENV_TARGET}" ] || [ ! -r "${DEPLOY_ENV_TARGET}/kustomization.yaml" ] || [ ! -r "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}" ]; then
+            echo "${DEPLOY_ENV_TARGET}, ${DEPLOY_ENV_TARGET}/kustomization.yaml, or ${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}: Not readable, or neither one of those exists"
+            exit 1
+          else
+            CURRENT_IMAGE=$(
+              cat "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}" \
+                | jq -r '.[] | select(.path == "${{ inputs.target_patch_key }}") | .value'
+            )
+            CURRENT_VERSION=$(extver "${CURRENT_IMAGE}")
+            TARGET_VERSION=$(extver "${{ env.IMAGE_TAG }}")
+
+            echo "Replacing the following image:"
+            echo "  Image: ${CURRENT_IMAGE%%:*}"
+            echo "  Current version: ${CURRENT_VERSION}"
+            echo "  Target version: ${TARGET_VERSION}"
+
+            if verlte "${CURRENT_VERSION}" "${TARGET_VERSION}"; then
+              NEW_CONFIG=$(
+                jq --arg imageTag "${{ env.IMAGE_TAG }}" '(.. | select(.path == "${{ inputs.target_patch_key }}")?) += {value: $imageTag }' "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}"
+              )
+              echo "New configuration:"
+              echo "${NEW_CONFIG}" | tee "${DEPLOY_ENV_TARGET}/${{ env.DEPLOY_PATCH_TARGET }}"
+            else
+              echo "Version in file is greater than build, skipping update yaml"
+            fi
+          fi
+
+      - name: Update image on terraform one.yaml
+        if: inputs.deploy_type == 'terraform'
+        working-directory: ./deploy-repository/${{ inputs.target_application_directory_prefix }}
+        env:
+          IMAGE_TAG: ${{ steps.decode.outputs.IMAGE_URL }}:${{ needs.build_and_push.outputs.version }}
+          IMAGE_ARCH: ${{ fromJson(needs.setup.outputs.image_arch)[0].platform }}
+        run: |
+          if [ "${{ inputs.debug }}" = "true" ] ; then
+            set -xv
+          fi
+
+          which jq > /dev/null 2>&1 || ( sudo apt update; sudo apt install -y jq )
+
+          extver() {
+            echo "$1" | sed s'/^.*[v:-]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'g | head -n1
+          }
+
+          verlte() {
+            [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+          }
+
+          if [ ! -r "one.yaml" ] ; then
+            echo "one.yaml: Not readable, or neither one of those exists"
+            exit 1
+          fi
+
+          export ENVIRONMENT_ONE=$(
+            yq '.workspaces | keys | .[] ' -r < one.yaml \
+              | fgrep '${{needs.setup.outputs.environment}}' \
+              | head -n1
+          )
+
+          for APPLICATION_NAME in ${{ inputs.target_application }} ; do
+            OLD_IMAGE=$(
+              cat "one.yaml" \
+                | yq '.workspaces.'"${ENVIRONMENT_ONE}"'.lambda."'"${APPLICATION_NAME}"'".image' -r
+            )
+            OLD_VERSION=$(
+              echo "${OLD_IMAGE}" \
+                | sed s'/^.*[v:-]\([0-9]*\.[0-9]*\.[0-9]*\).*$/\1/'g \
+                | head -n1
+            )
+
+            echo "Target environment: ${{needs.setup.outputs.environment}}"
+
+            echo "Replacing the following image:"
+            echo "  Image: ${IMAGE_TAG%%:*}"
+            echo "  Current version: ${OLD_VERSION}"
+            echo "  Target version: ${{ needs.build_and_push.outputs.version }}"
+
+            echo "Old image version to compare: ${OLD_VERSION}<=${{ needs.build_and_push.outputs.version }}"
+            if verlte "${OLD_VERSION}" "${{ needs.build_and_push.outputs.version }}" || [[ ! "${OLD_VERSION}" =~ [0-9]+\.[0-9]+\.[0-9]+ ]] ; then
+              # Get region
+              LAMBDA_REGION=$(
+                cat 'one.yaml' \
+                  | yq '.workspaces.'"${ENVIRONMENT_ONE}"'.lambda."'"${APPLICATION_NAME}"'".region' -r
+              )
+              if [ "${LAMBDA_REGION}" = "null" ] ; then
+                LAMBDA_REGION=$(
+                  cat 'one.yaml' \
+                    | yq ".workspaces.${ENVIRONMENT_ONE}.region" -r
+                )
+              fi
+
+              # Set ECR target image
+              IMAGE_TAG=$(
+                echo "${{env.IMAGE_TAG}}" | sed "s/us-east-1/${LAMBDA_REGION}/"
+              )
+
+              echo 'New configurations:'
+              new_configuration=$(
+                yq \
+                  '.workspaces."'"${ENVIRONMENT_ONE}"'".lambda."'"${APPLICATION_NAME}"'" 
+                  |= ( .image = "'"${IMAGE_TAG}-${IMAGE_ARCH//\//-}"'" | .architectures = ["'"${IMAGE_ARCH//linux\//}"'"] )' --output-format=yaml < one.yaml \
+                  | sed s'/!!merge //'g
+              )
+              echo "${new_configuration}"
+              echo "${new_configuration}" > "one.yaml"
+            else
+              echo "Version in file is greater than build, skipping update yaml"
+            fi
+          done
+
+      - name: Commit & Push changes
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ steps.decode.outputs.VCS_TOKEN }}
+          repository: ${{ env.DEPLOY_REPOSITORY }}
+          directory: ./deploy-repository/
+          branch: ${{ env.DEPLOY_REPOSITORY_BRANCH }}
+          message: "From ${{github.repository}}: ${{ github.workflow }}"
+# vim: nu ts=2 fdm=indent et ft=yaml shiftwidth=2 softtabstop=2:

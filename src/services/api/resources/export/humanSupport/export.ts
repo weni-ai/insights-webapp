@@ -12,7 +12,8 @@ interface ModelFields {
 }
 
 interface ExportEntity {
-  uuids: string[];
+  uuids?: string[];
+  emails?: string[];
   fields: string[];
 }
 

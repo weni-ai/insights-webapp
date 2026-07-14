@@ -85,8 +85,6 @@ describe('Conversational.vue', () => {
 
     projectStore = reactive({
       agentsTeam: { manager: null, agents: [] },
-      isSearchTermAgentAvailable: false,
-      isAddedToCartAgentAvailable: false,
       getAgentsTeam: vi.fn().mockResolvedValue(undefined),
     });
     useProject.mockReturnValue(projectStore);

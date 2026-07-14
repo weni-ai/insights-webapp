@@ -4,9 +4,6 @@ import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-const mockIsSearchTermAgentAvailable = ref(false);
-const mockIsAddedToCartAgentAvailable = ref(false);
-
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
@@ -33,8 +30,6 @@ vi.mock('@/store/modules/project', () => ({
     isLoadingAgentsTeam: false,
     hasValidSalesFunnelAgent: ref(false),
     hasAbandonedCartRecoveryEnabled: ref(true),
-    isSearchTermAgentAvailable: mockIsSearchTermAgentAvailable,
-    isAddedToCartAgentAvailable: mockIsAddedToCartAgentAvailable,
   }),
 }));
 
@@ -140,8 +135,6 @@ describe('CustomizableWidget', () => {
   let conversationalStore;
 
   beforeEach(() => {
-    mockIsSearchTermAgentAvailable.value = false;
-    mockIsAddedToCartAgentAvailable.value = false;
     wrapper = createWrapper();
     conversationalStore = useConversational();
   });
@@ -523,8 +516,6 @@ describe('CustomizableWidget', () => {
 
   describe('Product ranking widgets', () => {
     it('should include search_term and added_to_cart in native tab when agents are available', () => {
-      mockIsSearchTermAgentAvailable.value = true;
-      mockIsAddedToCartAgentAvailable.value = true;
       const wrapperWithAgents = createWrapper();
 
       const nativeKeys = wrapperWithAgents.vm
@@ -536,8 +527,6 @@ describe('CustomizableWidget', () => {
     });
 
     it('should exclude product ranking widgets from native tab when agents are unavailable', () => {
-      mockIsSearchTermAgentAvailable.value = false;
-      mockIsAddedToCartAgentAvailable.value = false;
       const wrapperWithoutAgents = createWrapper();
 
       const nativeKeys = wrapperWithoutAgents.vm
@@ -549,7 +538,6 @@ describe('CustomizableWidget', () => {
     });
 
     it('should exclude search_term when already configured', async () => {
-      mockIsSearchTermAgentAvailable.value = true;
       const wrapperConfigured = createWrapper();
 
       const widgetsStore = useConversationalWidgets();

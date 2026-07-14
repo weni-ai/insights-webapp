@@ -153,6 +153,7 @@ export default {
       this.getDashboards().then(() => {
         this.handleRedirectToHumanServiceDashboard();
       });
+      this.verifyIsViewerPermission();
     } catch (error) {
       console.error(error);
     }
@@ -177,7 +178,7 @@ export default {
       'checkHasAbandonedCartRecoveryConfigured',
       'getAbandonedCartRecoveryCost',
     ]),
-    ...mapActions(useUser, ['setEmail']),
+    ...mapActions(useUser, ['setEmail', 'verifyIsViewerPermission']),
     ...mapActions(useOnboarding, [
       'setOnboardingRef',
       'setShowCreateDashboardOnboarding',

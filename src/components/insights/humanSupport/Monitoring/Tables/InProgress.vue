@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="widgetData"
+    :items="tableItems"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -21,18 +21,41 @@
     @load-more="loadMore"
   >
     <template #body-first_response_time="{ item }">
-      <p
-        v-if="item.first_response_time === null"
-        class="italic-text"
+      <component
+        :is="item.firstResponseRowAlert ? TableRowAlert : 'span'"
+        v-bind="
+          getRowAlertWrapperProps(
+            item.firstResponseRowAlert,
+            item.dominantRowAlert,
+          )
+        "
       >
-        {{ $t('human_support_dashboard.common.no_response') }}
-      </p>
-
-      <p v-else>{{ formatSecondsToTime(item.first_response_time) }}</p>
+        <p
+          v-if="item.first_response_time === null"
+          class="italic-text"
+        >
+          {{ $t('human_support_dashboard.common.no_response') }}
+        </p>
+        <template v-else>
+          {{ formatSecondsToTime(item.first_response_time) }}
+        </template>
+      </component>
     </template>
     <template #body-duration="{ item }">
       <section class="in-progress-duration">
-        <span>{{ formatSecondsToTime(item.duration) }}</span>
+        <span class="in-progress-duration__value">
+          <component
+            :is="item.durationRowAlert ? TableRowAlert : 'span'"
+            v-bind="
+              getRowAlertWrapperProps(
+                item.durationRowAlert,
+                item.dominantRowAlert,
+              )
+            "
+          >
+            {{ formatSecondsToTime(item.duration) }}
+          </component>
+        </span>
         <UnnnicToolTip
           v-if="item.pending_response"
           enabled
@@ -68,16 +91,43 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useProject } from '@/store/modules/project';
 
-import { formatSecondsToTime } from '@/utils/time';
-
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { useLazyData } from '@/composables/useLazyData';
+import { useTableRowAlert } from '@/composables/useTableRowAlert';
+import type { RowAlert } from '@/composables/useTableRowAlert';
+import type { MetricKey } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 
+import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
+
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
+import { formatSecondsToTime } from '@/utils/time';
+
+type TableInProgressItem = InProgressDataResult & {
+  rowAlerts: RowAlert[];
+  dominantRowAlert: RowAlert | null;
+  firstResponseRowAlert: RowAlert | null;
+  durationRowAlert: RowAlert | null;
+};
+
+const IN_PROGRESS_ALERT_CANDIDATES = (
+  item: InProgressDataResult,
+): Parameters<typeof getRowAlerts>[0] => [
+  {
+    metric: 'first_response_time',
+    scheme: 'orange',
+    exceeded: item.goals_metrics?.first_response_time?.exceeded,
+  },
+  {
+    metric: 'conversation_duration',
+    scheme: 'yellow',
+    exceeded: item.goals_metrics?.duration?.exceeded,
+  },
+];
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -86,6 +136,41 @@ const humanSupport = useHumanSupport();
 
 const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);
+
+const featureFlagStore = useFeatureFlag();
+const { isFeatureFlagEnabled } = featureFlagStore;
+const { getRowAlerts } = useTableRowAlert();
+
+const resolveRowAlerts = (item: InProgressDataResult) => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) {
+    return { rowAlerts: [], dominantRowAlert: null };
+  }
+
+  const rowAlerts = getRowAlerts(IN_PROGRESS_ALERT_CANDIDATES(item));
+
+  return {
+    rowAlerts,
+    dominantRowAlert: rowAlerts[0] ?? null,
+  };
+};
+
+const getAlertForMetric = (
+  alerts: RowAlert[],
+  metric: MetricKey,
+): RowAlert | undefined => alerts.find((alert) => alert.metric === metric);
+
+const getRowAlertWrapperProps = (
+  alert: RowAlert | null,
+  dominantAlert: RowAlert | null,
+) => {
+  if (!alert) return {};
+
+  return {
+    scheme: alert.scheme,
+    text: alert.text,
+    fullRow: dominantAlert?.metric === alert.metric,
+  };
+};
 
 const baseTranslationKey =
   'human_support_dashboard.detailed_monitoring.in_progress';
@@ -115,15 +200,53 @@ const {
   handleSort: handleSortChange,
 } = useInfiniteScrollTable<InProgressDataResult, InProgressDataResult>({
   fetchData,
-  formatResults: (results) => results,
+  formatResults: (results) => results.map((item) => ({ ...item })),
   sort: currentSort.value,
 });
 
-const widgetData = computed(() => {
-  if (!hasSectorsConfigured.value) {
-    return monitoringDetailedMonitoringInProgressMock;
-  }
-  return formattedItems.value;
+const tableItems = computed((): TableInProgressItem[] => {
+  featureFlagStore.activeFeatures;
+
+  const source = hasSectorsConfigured.value
+    ? formattedItems.value
+    : (monitoringDetailedMonitoringInProgressMock as InProgressDataResult[]);
+
+  return source.map((item) => {
+    const { rowAlerts, dominantRowAlert } = resolveRowAlerts(item);
+
+    return {
+      ...item,
+      rowAlerts,
+      dominantRowAlert,
+      firstResponseRowAlert:
+        getAlertForMetric(rowAlerts, 'first_response_time') ?? null,
+      durationRowAlert:
+        getAlertForMetric(rowAlerts, 'conversation_duration') ?? null,
+    };
+  });
+});
+
+const findTableItem = (item: InProgressDataResult) =>
+  tableItems.value.find((tableItem) => tableItem === item) ??
+  tableItems.value.find(
+    (tableItem) =>
+      tableItem.link?.url === item.link?.url &&
+      tableItem.contact === item.contact,
+  );
+
+defineExpose({
+  getItemAlert: (item: InProgressDataResult) => {
+    const tableItem = findTableItem(item);
+    if (tableItem) return tableItem.dominantRowAlert;
+
+    return resolveRowAlerts(item).dominantRowAlert;
+  },
+  getItemAlerts: (item: InProgressDataResult) => {
+    const tableItem = findTableItem(item);
+    if (tableItem) return tableItem.rowAlerts;
+
+    return resolveRowAlerts(item).rowAlerts;
+  },
 });
 
 const isLoadingVisible = computed(() => {
@@ -230,5 +353,9 @@ watch(
   display: flex;
   align-items: center;
   gap: $unnnic-space-1;
+
+  &__value {
+    display: inline;
+  }
 }
 </style>

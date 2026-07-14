@@ -22,8 +22,27 @@ const mockMonitoringStore = {
 const hasSectorsConfiguredRef = ref(true);
 const widgetSetupPropsRef = ref({});
 
+const mockMetricGoalAlertsStore = {
+  $id: 'metricGoalAlerts',
+  liveBreaches: {
+    value: {
+      waiting_time: null,
+      first_response_time: null,
+      conversation_duration: null,
+    },
+  },
+};
+
+vi.mock('@/store/modules/humanSupport/metricGoalAlerts', () => ({
+  useMetricGoalAlerts: () => mockMetricGoalAlertsStore,
+}));
+
 vi.mock('@/store/modules/humanSupport/monitoring', () => ({
   useHumanSupportMonitoring: () => mockMonitoringStore,
+}));
+
+vi.mock('@/store/modules/featureFlag', () => ({
+  useFeatureFlag: () => ({ isFeatureFlagEnabled: () => true }),
 }));
 
 vi.mock('@/utils/time', () => ({
@@ -60,6 +79,9 @@ vi.mock('pinia', async (importOriginal) => {
       }
       if (store?.$id === 'humanSupport') {
         return { widgetSetupProps: widgetSetupPropsRef };
+      }
+      if (store?.$id === 'metricGoalAlerts') {
+        return { liveBreaches: mockMetricGoalAlertsStore.liveBreaches };
       }
       return actual.storeToRefs(store);
     },
@@ -113,6 +135,11 @@ describe('TimeMetrics', () => {
       },
       loadingTimeMetricsData: { value: false },
     });
+    mockMetricGoalAlertsStore.liveBreaches.value = {
+      waiting_time: null,
+      first_response_time: null,
+      conversation_duration: null,
+    };
     wrapper = createWrapper();
   });
 
@@ -258,25 +285,120 @@ describe('TimeMetrics', () => {
       },
     ];
 
-    edgeCases.forEach(({ name, data, expectedValue, hasMaxDesc, expectedFormattedMax }) => {
-      it(`should handle ${name}`, () => {
-        const testData = { average_time_is_waiting: data };
-        wrapper = createWrapper({
-          timeMetricsData: { value: testData },
-        });
+    edgeCases.forEach(
+      ({ name, data, expectedValue, hasMaxDesc, expectedFormattedMax }) => {
+        it(`should handle ${name}`, () => {
+          const testData = { average_time_is_waiting: data };
+          wrapper = createWrapper({
+            timeMetricsData: { value: testData },
+          });
 
-        const vm = wrapper.vm;
-        expect(vm.getCardValue('average_time_is_waiting')).toBe(expectedValue);
-
-        if (hasMaxDesc) {
-          const maxLabel = vm.$t('human_support_dashboard.time_metrics.max');
-          expect(vm.getCardSubValue('average_time_is_waiting')).toBe(
-            `${maxLabel}: ${expectedFormattedMax}`,
+          const vm = wrapper.vm;
+          expect(vm.getCardValue('average_time_is_waiting')).toBe(
+            expectedValue,
           );
-        } else {
-          expect(vm.getCardSubValue('average_time_is_waiting')).toBe('');
-        }
+
+          if (hasMaxDesc) {
+            const maxLabel = vm.$t('human_support_dashboard.time_metrics.max');
+            expect(vm.getCardSubValue('average_time_is_waiting')).toBe(
+              `${maxLabel}: ${expectedFormattedMax}`,
+            );
+          } else {
+            expect(vm.getCardSubValue('average_time_is_waiting')).toBe('');
+          }
+        });
+      },
+    );
+  });
+
+  describe('Operational alert pill', () => {
+    it('should build a red alert for a breached waiting time goal', () => {
+      wrapper = createWrapper({
+        timeMetricsData: {
+          value: {
+            ...defaultTimeMetricsData,
+            average_time_is_waiting: {
+              ...defaultTimeMetricsData.average_time_is_waiting,
+              waiting_time_goal: {
+                thresholdSeconds: 60,
+                thresholdValue: 1,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 7,
+              },
+            },
+          },
+        },
       });
+
+      const alert = wrapper.vm.getCardAlert('average_time_is_waiting');
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('red');
+      expect(typeof alert.text).toBe('string');
+    });
+
+    it('should map each card to its scheme', () => {
+      wrapper = createWrapper({
+        timeMetricsData: {
+          value: {
+            ...defaultTimeMetricsData,
+            average_time_first_response: {
+              ...defaultTimeMetricsData.average_time_first_response,
+              first_response_time_goal: {
+                thresholdSeconds: 60,
+                thresholdValue: 1,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 4,
+              },
+            },
+            average_time_chat: {
+              ...defaultTimeMetricsData.average_time_chat,
+              conversation_duration_goal: {
+                thresholdSeconds: 600,
+                thresholdValue: 10,
+                unit: 'm',
+                isBreached: true,
+                breachedRoomsCount: 3,
+              },
+            },
+          },
+        },
+      });
+
+      expect(
+        wrapper.vm.getCardAlert('average_time_first_response').scheme,
+      ).toBe('orange');
+      expect(wrapper.vm.getCardAlert('average_time_chat').scheme).toBe(
+        'yellow',
+      );
+    });
+
+    it('should not build an alert when the goal is not breached', () => {
+      expect(
+        wrapper.vm.getCardAlert('average_time_is_waiting'),
+      ).toBeUndefined();
+    });
+
+    it('should build alert from live socket breach when api goal is missing', () => {
+      mockMetricGoalAlertsStore.liveBreaches.value = {
+        waiting_time: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 5,
+        },
+        first_response_time: null,
+        conversation_duration: null,
+      };
+
+      wrapper = createWrapper();
+      const alert = wrapper.vm.getCardAlert('average_time_is_waiting');
+
+      expect(alert).toBeTruthy();
+      expect(alert.scheme).toBe('red');
     });
   });
 

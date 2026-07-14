@@ -2,6 +2,11 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
+import {
+  GoalsMetrics,
+  GoalsMetricsApi,
+  normalizeGoalsMetrics,
+} from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InAwaitingData {
   next: string;
@@ -19,6 +24,7 @@ interface InAwaitingDataResult {
     url: string;
     type: string;
   };
+  goals_metrics?: GoalsMetrics;
 }
 
 interface QueryParams {
@@ -62,11 +68,19 @@ export default {
       {
         params: formattedParams,
       },
-    )) as InAwaitingData;
+    )) as InAwaitingData & {
+      results: (Omit<InAwaitingDataResult, 'goals_metrics'> & {
+        goals_metrics?: GoalsMetricsApi;
+      })[];
+    };
 
-    const formattedResponse: InAwaitingData = response;
-
-    return formattedResponse;
+    return {
+      ...response,
+      results: response.results.map((result) => ({
+        ...result,
+        goals_metrics: normalizeGoalsMetrics(result.goals_metrics),
+      })),
+    };
   },
 };
 

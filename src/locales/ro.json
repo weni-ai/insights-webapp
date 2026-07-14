@@ -139,12 +139,16 @@
     "crosstab": "Tabel încrucișat",
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
+    "added_to_cart": "Produsele cele mai adăugate în coș",
+    "added_to_cart_count": "{count, plural, one {# produs} other {# produse}}",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
     "agent_invocation_count": "{count, plural, one {# agent} other {# agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
     "tool_result_count": "{count, plural, one {# instrument} other {# instrumente}}",
+    "search_term": "Termenii cei mai căutați",
+    "search_term_count": "{count, plural, one {# produs} other {# produse}}",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -154,13 +158,63 @@
       "crosstab_validation_title": "Problemă de configurare",
       "crosstab_validation_description": "Cheia sau valoarea nu a fost găsită în baza de date"
     },
+    "resolution_criteria": {
+      "add_criterion": "Adaugă criteriu",
+      "base_section_description": "Se aplică tuturor proiectelor pentru a menține Gestionat de AI consistent. Nu pot fi editate sau eliminate.",
+      "base_section_title": "Criterii de bază",
+      "custom_empty": "Niciun criteriu adăugat",
+      "custom_section_description": "Adaugă situații pe care acest proiect trebuie să le numere ca Gestionat de AI. {count} din {max}.",
+      "custom_section_title": "Criteriile tale",
+      "errors": {
+        "ambiguous_description": "Rescrie criteriul pentru a-l face mai clar",
+        "ambiguous_title": "Criteriul este ambiguu",
+        "duplicate_description": "Editează criteriul pentru a acoperi o situație diferită sau elimină celălalt mai întâi",
+        "duplicate_title": "Ai adăugat deja un criteriu similar",
+        "invalid_description": "Rescrie criteriul și validează din nou",
+        "invalid_title": "Criteriul este invalid",
+        "technical": "Criteriul nu a putut fi validat din cauza unei probleme tehnice"
+      },
+      "form": {
+        "create_title": "Adaugă criteriu",
+        "edit_title": "Editează criteriu",
+        "field_placeholder": "Criteriu",
+        "results_title": "Rezultatele validării",
+        "save": "Salvează",
+        "success_description": "După salvare, acest criteriu se aplică de la următoarea evaluare zilnică. Conversațiile deja clasificate nu se vor schimba.",
+        "success_title": "Nu s-au găsit probleme",
+        "tooltip_fix_issue": "Remediază problema găsită la validare pentru a salva",
+        "tooltip_validate_first": "Validează acest criteriu înainte de a salva",
+        "validate": "Validează",
+        "validating": "Se validează criteriul..."
+      },
+      "list_description": "Definește ce contează ca conversație Gestionată de AI în acest proiect. Aceste criterii decid ce conversații sunt marcate ca Gestionate de AI în dashboard.",
+      "list_title": "Criterii Gestionat de AI",
+      "menu_option": "Editează criteriile Gestionat de AI",
+      "remove_modal": {
+        "cancel": "Anulează",
+        "confirm": "Șterge",
+        "description": "Această acțiune nu poate fi anulată. Sigur dorești să ștergi acest criteriu?",
+        "title": "Șterge criteriu"
+      },
+      "row_menu": {
+        "delete": "Șterge criteriu",
+        "edit": "Editează criteriu"
+      },
+      "toast": {
+        "added": "Criteriu adăugat cu succes",
+        "delete_error": "Criteriul nu a putut fi șters din cauza unei probleme tehnice",
+        "deleted": "Criteriu șters cu succes",
+        "load_error": "Criteriile nu au putut fi încărcate din cauza unei probleme tehnice",
+        "updated": "Criteriu actualizat cu succes"
+      }
+    },
     "reviews": "recenzii",
     "csat_widget": {
-      "very_satisfied": "Foarte mulțumit",
-      "satisfied": "Mulțumit",
-      "neutral": "Neutru",
-      "dissatisfied": "Nemulțumit",
-      "very_dissatisfied": "Foarte nemulțumit"
+      "very_satisfied": "🤩 Foarte mulțumit",
+      "satisfied": "😁 Mulțumit",
+      "neutral": "😐 Neutru",
+      "dissatisfied": "☹️ Nemulțumit",
+      "very_dissatisfied": "😡 Foarte nemulțumit"
     },
     "nps_widget": {
       "promoters": "Promotori (9 sau 10)",
@@ -190,7 +244,7 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperare coș abandonat",
-      "no_data": "Nu sunt date disponibile pentru perioada filtrată.",
+      "no_data": "Nu sunt date disponibile pentru perioada selectată",
       "error": "Eroare la încărcarea datelor. Reîmprospătează tabloul de bord sau contactează suportul.",
       "unavailable_period": "Meta oferă doar datele din ultimele 90 de zile pentru acest widget. Asigură-te că intervalul de date selectat este în această perioadă pentru a putea vizualiza informațiile.",
       "chart": {
@@ -205,7 +259,7 @@
         "total_sends": "Total trimiteri",
         "converted_sales": "Vânzări convertite",
         "conversion_rate": "Rată de conversie",
-        "average_order_value": "Valoare medie a comenzii",
+        "average_order_value": "Valoarea medie a comenzii",
         "roas_tooltip": "Rentabilitatea investiției în reclame măsoară cât venit generezi pentru fiecare $xxx cheltuit pe mesaje. De ce este atât de mare? > Recuperarea automată este foarte eficientă pentru că costul unui mesaj este minim comparativ cu valoarea medie a comenzii din magazinul tău."
       }
     },
@@ -220,6 +274,8 @@
       "sales_funnel_description": "Monitorizează-ți vânzările: Total comenzi, Tichet mediu, Sumă totală și Canal de conversie",
       "absolute_numbers_description": "Evidențiază o singură metrică cheie, afișând valoarea exactă pentru vizualizare rapidă și directă",
       "abandoned_cart_recovery_description": "Urmărește metricile de recuperare a coșului abandonat: venit recuperat, vânzări convertite, rată de conversie, avarege order value, etc.",
+      "search_term_description": "Urmărește clasamentul celor mai căutați termeni.",
+      "added_to_cart_description": "Urmărește clasamentul produselor cel mai des adăugate în coș.",
       "human_support": "Asistență umană",
       "ai_support": "IA",
       "activate_agent": "Activează agent",
@@ -246,9 +302,11 @@
       "modal_remove_widget": {
         "title": "Șterge widget-ul",
         "description": "Sigur vrei să ștergi widget-ul {type}?",
-        "remove": "Eliminare",
+        "remove": "Elimină",
         "cancel": "Anulează",
-        "success_message": "{widget} a fost eliminat"
+        "success_message": "{widget} a fost eliminat",
+        "remove_success": "{widget} eliminat cu succes",
+        "remove_error": "Eliminarea {widget} nu a reușit. Încearcă din nou."
       },
       "tabs": {
         "sentiment_analysis": "Analiza opiniilor",
@@ -901,6 +959,8 @@
       "resolutions": "Rezoluții de conversație",
       "tool_result": "Cele mai utilizate instrumente",
       "agent_invocation": "Cei mai utilizați agenți",
+      "search_terms": "Cei mai căutați termeni",
+      "added_to_cart": "Cele mai adăugate produse în coș",
       "topics": "Subiecte",
       "csat": "CSAT",
       "nps": "NPS",
@@ -918,8 +978,8 @@
       "is_wating": "Așteaptă",
       "protocol": "Protocol",
       "urn": "URN de contact",
-      "full_transfer_history": "Istoric complet al transferurilor",
       "transfer_history": "Istoricul transferurilor",
+      "full_transfer_history": "Istoric complet al transferurilor",
       "service_chat": "Chat de asistență",
       "custom_fields": "Câmpuri personalizate",
       "contact": "Contact",
@@ -973,14 +1033,14 @@
     "filters": {
       "sector": "Sector de activitate",
       "select_sector": "Selectează un sector de activitate",
-      "agent": "Agent",
-      "select_agent": "Alege un agent",
+      "representative": "Reprezentant",
+      "select_representative": "Selectează un reprezentant",
       "queue": "Coadă",
       "select_queue": "Selectează o coadă",
       "tag": "Etichetă",
       "select_tag": "Alege o etichetă",
       "all_sectors": "Toate sectoarele de activitate",
-      "all_agents": "Toți agenții",
+      "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
       "all_tags": "Toate etichetele"
     },
@@ -1002,6 +1062,76 @@
     "sucess_message": "{agent} este offline.",
     "error_message": "Eroare la deconectarea agentului {agent}",
     "tooltip_disabled": "Acest reprezentant nu poate fi deconectat deoarece este offline"
+  },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Alertele operaționale nu au putut fi salvate din cauza unei probleme tehnice",
+      "save_success": "Alerte operaționale salvate cu succes"
+    },
+    "card_alert": "{count} conversații au depășit {value} {unit}",
+    "drawer": {
+      "description": "Configure alertele pentru a identifica conversațiile care depășesc limitele de timp definite pentru o operațiune:",
+      "title": "Alerte operaționale"
+    },
+    "first_response_info": "Alerta de timeout pentru primul răspuns va rămâne activă până când reprezentantul trimite primul mesaj.",
+    "form": {
+      "email_notification_label": "Notificare prin e-mail (opțional)",
+      "email_notification_tooltip": "Această alertă este afișată întotdeauna în dashboard-ul Live Desk când o conversație atinge limita definită.\n\nPoți configura și notificări prin e-mail pentru moderatorii selectați și poți alege când trebuie trimise - de exemplu, când una sau mai multe conversații ating limita definită.",
+      "recipients_helper": "Doar moderatorii pot primi alerte",
+      "send_email_to_label": "Trimite e-mail către",
+      "send_email_to_placeholder": "Selectează moderatorii",
+      "threshold_labels": {
+        "conversation_duration": "Timp maxim de durată",
+        "first_response_time": "Timp maxim până la primul răspuns",
+        "waiting_time": "Timp maxim de așteptare"
+      },
+      "threshold_placeholders": {
+        "conversation_duration": "Exemplu: 30",
+        "first_response_time": "Exemplu: 2",
+        "waiting_time": "Exemplu: 10"
+      },
+      "unit_label": "Unitate",
+      "units": {
+        "hours": "Ore",
+        "minutes": "Minute",
+        "seconds": "Secunde"
+      },
+      "when_helper": "Numărul de conversații cu alerte active",
+      "when_label": "Când",
+      "when_placeholder": "Exemplu: 5"
+    },
+    "popover": {
+      "new_tag": "Nou",
+      "option_label": "Alerte operaționale"
+    },
+    "sections": {
+      "conversation_duration": "Alertă în dashboard-ul Live Desk când durata unei conversații depășește limita definită",
+      "first_response_time": "Alertă în dashboard-ul Live Desk când timpul până la primul răspuns al unei conversații depășește limita definită",
+      "waiting_time": "Alertă în dashboard-ul Live Desk când timpul de așteptare al unei conversații depășește limita definită"
+    },
+    "table_tooltip": {
+      "conversation_duration": "Această conversație a depășit limita de {value} {unit}.",
+      "first_response_time": "Această conversație a depășit limita de {value} {unit} pentru primul răspuns.",
+      "generic": "Această conversație a depășit limita de timp configurată.",
+      "waiting_time": "Această conversație a depășit limita de {value} {unit} de așteptare."
+    },
+    "toast": {
+      "conversation_duration": "{count} conversații au depășit durata maximă",
+      "first_response_time": "{count} conversații au depășit timpul maxim pentru primul răspuns",
+      "title": "Live Desk: atenție imediată necesară",
+      "view_details": "Vezi detalii",
+      "waiting_time": "{count} conversații au depășit timpul maxim de așteptare"
+    },
+    "unit_word_singular": {
+      "h": "oră",
+      "m": "minut",
+      "s": "secundă"
+    },
+    "unit_words": {
+      "h": "ore",
+      "m": "minute",
+      "s": "secunde"
+    }
   },
   "human_support_dashboard": {
     "title": "Asistență umană",
@@ -1118,7 +1248,8 @@
         "average_first_response_time": "Timpul mediu până la primul răspuns",
         "average_response_time": "Timpul mediu de răspuns",
         "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență"
+        "time_in_service": "Timp în chatul de asistență",
+        "csat_rating": "CSAT"
       }
     },
     "analyze": {
@@ -1136,7 +1267,7 @@
           "description": "Conversation ended while still in queue"
         },
         "duration": {
-          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului"
+          "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului."
         }
       }
     },
@@ -1146,11 +1277,12 @@
       "agents_ratings_general_tooltip": "Acest scor reflectă performanța generală a proiectului. Dacă se aplică filtre pentru acest dashboard, scorul se va ajusta automat pentru a arăta media elementelor filtrate.",
       "agents_ratings_subtitle": "{rooms} chaturi de asistență • {reviews} evaluări",
       "review_rating": {
-        "very_satisfied": "Foarte mulțumit",
-        "satisfied": "Mulțumit",
-        "neutral": "Neutru",
-        "dissatisfied": "Nemulțumit",
-        "very_dissatisfied": "Foarte nemulțumit"
+        "very_satisfied": "🤩 Foarte mulțumit",
+        "satisfied": "😁 Mulțumit",
+        "neutral": "😐 Neutru",
+        "dissatisfied": "☹️ Nemulțumit",
+        "very_dissatisfied": "😡 Foarte nemulțumit",
+        "not_answered": "Niciun răspuns"
       },
       "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
     },

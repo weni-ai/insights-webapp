@@ -33,6 +33,7 @@
           enableTimeIcon
           :tooltipSide="getTooltipSide(index)"
           :isLoading="isLoadingCards"
+          :alert="getCardAlert(card.id)"
           isClickable
           @click="handleCardClick(card.id)"
         />
@@ -42,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, useTemplateRef } from 'vue';
+import { computed, onUnmounted, useTemplateRef } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
 import { useMouseInElement } from '@vueuse/core';
@@ -58,6 +59,13 @@ import {
 } from '@/store/modules/humanSupport/monitoring';
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useMetricGoalAlerts } from '@/store/modules/humanSupport/metricGoalAlerts';
+import {
+  MetricGoalBreach,
+  TimeUnit,
+} from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
+import type { MetricKey } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 import { formatSecondsToTime } from '@/utils/time';
 import { monitoringTimeMetricsMock } from './mocks';
@@ -66,6 +74,13 @@ type CardId =
   | 'average_time_is_waiting'
   | 'average_time_first_response'
   | 'average_time_chat';
+
+type GoalKey =
+  | 'waiting_time_goal'
+  | 'first_response_time_goal'
+  | 'conversation_duration_goal';
+
+type AlertScheme = 'red' | 'orange' | 'yellow';
 
 interface CardData {
   id: CardId;
@@ -117,6 +132,32 @@ const { timeMetricsData, loadingTimeMetricsData } = storeToRefs(
   humanSupportMonitoring,
 );
 
+const { isFeatureFlagEnabled } = useFeatureFlag();
+
+const metricGoalAlertsStore = useMetricGoalAlerts();
+const { liveBreaches } = storeToRefs(metricGoalAlertsStore);
+
+const METRIC_BY_GOAL_KEY: Record<GoalKey, MetricKey> = {
+  waiting_time_goal: 'waiting_time',
+  first_response_time_goal: 'first_response_time',
+  conversation_duration_goal: 'conversation_duration',
+};
+
+const cardAlertConfig: Record<
+  CardId,
+  { goalKey: GoalKey; scheme: AlertScheme }
+> = {
+  average_time_is_waiting: { goalKey: 'waiting_time_goal', scheme: 'red' },
+  average_time_first_response: {
+    goalKey: 'first_response_time_goal',
+    scheme: 'orange',
+  },
+  average_time_chat: {
+    goalKey: 'conversation_duration_goal',
+    scheme: 'yellow',
+  },
+};
+
 useLazyData({ load: loadTimeMetricsData });
 
 const widgetData = computed(() => {
@@ -141,6 +182,38 @@ const getCardSubValue = (id: CardId) => {
   return '';
 };
 
+const getCardAlert = (id: CardId) => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return undefined;
+
+  const { goalKey, scheme } = cardAlertConfig[id];
+  const cardData = widgetData.value[id];
+  const apiGoal = cardData?.[goalKey] as MetricGoalBreach | undefined;
+  const metric = METRIC_BY_GOAL_KEY[goalKey];
+  const liveGoal = liveBreaches.value[metric];
+
+  let goal: MetricGoalBreach | undefined;
+  if (apiGoal?.isBreached) {
+    goal = apiGoal;
+  } else if (liveGoal?.isBreached) {
+    goal = liveGoal;
+  }
+
+  if (!goal) return undefined;
+
+  const unit = t(
+    `operational_alerts.unit_word${goal.thresholdValue === 1 ? '_singular' : 's'}.${goal.unit as TimeUnit}`,
+  ).toLowerCase();
+
+  return {
+    scheme,
+    text: t('operational_alerts.card_alert', {
+      count: goal.breachedRoomsCount,
+      value: goal.thresholdValue,
+      unit,
+    }),
+  };
+};
+
 const getTooltipSide = (index: number) => {
   const lastIndex = cardDefinitions.length - 1;
 
@@ -149,7 +222,11 @@ const getTooltipSide = (index: number) => {
   return 'top';
 };
 
+let scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+
 const scrollToDetailedMonitoring = () => {
+  if (typeof document === 'undefined') return;
+
   const detailedMonitoringElement = document.querySelector(
     '[id="detailed-monitoring"]',
   );
@@ -171,8 +248,20 @@ const handleCardClick = (id: CardId) => {
 
   setActiveDetailedTab(status[id] as ActiveDetailedTab);
   setForceLoadDetailed(true);
-  setTimeout(scrollToDetailedMonitoring, 100);
+
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout);
+  }
+
+  scrollTimeout = setTimeout(scrollToDetailedMonitoring, 100);
 };
+
+onUnmounted(() => {
+  if (scrollTimeout) {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = null;
+  }
+});
 </script>
 
 <style scoped lang="scss">

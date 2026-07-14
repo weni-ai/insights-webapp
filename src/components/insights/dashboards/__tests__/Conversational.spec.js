@@ -80,13 +80,13 @@ describe('Conversational.vue', () => {
       isSalesFunnelConfigured: false,
       isSearchTermConfigured: false,
       isAddedToCartConfigured: false,
+      isAbandonedCartRecoveryConfigured: false,
+      availableNativeWidgets: ref([]),
     };
     useConversationalWidgets.mockReturnValue(conversationalWidgetsStore);
 
     projectStore = reactive({
       agentsTeam: { manager: null, agents: [] },
-      isSearchTermAgentAvailable: false,
-      isAddedToCartAgentAvailable: false,
       getAgentsTeam: vi.fn().mockResolvedValue(undefined),
     });
     useProject.mockReturnValue(projectStore);
@@ -372,13 +372,6 @@ describe('Conversational.vue', () => {
       expect(customWidgetsStore.injectMockWidgets).toHaveBeenCalled();
     });
 
-    it('should include agent_invocation and tool_result in mock mode', async () => {
-      await nextTick();
-      const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('agent_invocation');
-      expect(types).toContain('tool_result');
-    });
-
     it('should include csat, nps, and sales_funnel widgets in mock mode', async () => {
       await nextTick();
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
@@ -500,8 +493,6 @@ describe('Conversational.vue', () => {
 
     it('should show mock widgets initially when no errors', () => {
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
-      expect(types).toContain('agent_invocation');
-      expect(types).toContain('tool_result');
       expect(types).toContain('csat');
       expect(types).toContain('nps');
       expect(types).toContain('sales_funnel');
@@ -684,8 +675,10 @@ describe('Conversational.vue', () => {
   });
 
   describe('Product ranking widgets gating', () => {
-    it('should include search_term when agent available and configured', async () => {
-      projectStore.isSearchTermAgentAvailable = true;
+    it('should include search_term when available from API and configured', async () => {
+      conversationalWidgetsStore.availableNativeWidgets.value = [
+        'SEARCH_TERMS',
+      ];
       conversationalWidgetsStore.isSearchTermConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [
@@ -697,8 +690,10 @@ describe('Conversational.vue', () => {
       expect(types).toContain('search_term');
     });
 
-    it('should include added_to_cart when agent available and configured', async () => {
-      projectStore.isAddedToCartAgentAvailable = true;
+    it('should include added_to_cart when available from API and configured', async () => {
+      conversationalWidgetsStore.availableNativeWidgets.value = [
+        'ADDED_TO_CART',
+      ];
       conversationalWidgetsStore.isAddedToCartConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [
@@ -713,8 +708,8 @@ describe('Conversational.vue', () => {
       expect(types).toContain('added_to_cart');
     });
 
-    it('should NOT render search_term when configured but agent unavailable', async () => {
-      projectStore.isSearchTermAgentAvailable = false;
+    it('should NOT render search_term when configured but not available from API', async () => {
+      conversationalWidgetsStore.availableNativeWidgets.value = [];
       conversationalWidgetsStore.isSearchTermConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [
@@ -726,8 +721,8 @@ describe('Conversational.vue', () => {
       expect(types).not.toContain('search_term');
     });
 
-    it('should NOT render added_to_cart when configured but agent unavailable', async () => {
-      projectStore.isAddedToCartAgentAvailable = false;
+    it('should NOT render added_to_cart when configured but not available from API', async () => {
+      conversationalWidgetsStore.availableNativeWidgets.value = [];
       conversationalWidgetsStore.isAddedToCartConfigured = true;
 
       widgetsStore.currentDashboardWidgets.value = [

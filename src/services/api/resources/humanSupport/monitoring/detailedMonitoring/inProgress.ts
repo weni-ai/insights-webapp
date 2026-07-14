@@ -2,6 +2,11 @@ import http from '@/services/api/http';
 import { useConfig } from '@/store/modules/config';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { createRequestQuery } from '@/utils/request';
+import {
+  GoalsMetrics,
+  GoalsMetricsApi,
+  normalizeGoalsMetrics,
+} from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 
 interface InProgressData {
   next: string;
@@ -12,6 +17,7 @@ interface InProgressData {
 
 interface InProgressDataResult {
   agent: string;
+  agent_email?: string;
   duration: number;
   first_response_time: number;
   pending_response: boolean;
@@ -23,6 +29,7 @@ interface InProgressDataResult {
     url: string;
     type: string;
   };
+  goals_metrics?: GoalsMetrics;
 }
 
 interface QueryParams {
@@ -66,11 +73,19 @@ export default {
       {
         params: formattedParams,
       },
-    )) as InProgressData;
+    )) as InProgressData & {
+      results: (Omit<InProgressDataResult, 'goals_metrics'> & {
+        goals_metrics?: GoalsMetricsApi;
+      })[];
+    };
 
-    const formattedResponse: InProgressData = response;
-
-    return formattedResponse;
+    return {
+      ...response,
+      results: response.results.map((result) => ({
+        ...result,
+        goals_metrics: normalizeGoalsMetrics(result.goals_metrics),
+      })),
+    };
   },
 };
 

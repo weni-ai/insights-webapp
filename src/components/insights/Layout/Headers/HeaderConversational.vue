@@ -14,6 +14,8 @@
   <HeaderRefresh type="conversations" />
 
   <ConversationalExport />
+
+  <ResolutionCriteriaSettings />
 </template>
 
 <script setup lang="ts">
@@ -24,6 +26,7 @@ import { useI18n } from 'vue-i18n';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import ConversationalExport from '../../export/ConversationalExport.vue';
+import ResolutionCriteriaSettings from '../../conversations/ResolutionCriteria/ResolutionCriteriaSettings.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConversational } from '@/store/modules/conversational/conversational';
 

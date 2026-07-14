@@ -147,17 +147,14 @@ const {
   isToolResultConfigured,
   isSearchTermConfigured,
   isAddedToCartConfigured,
+  availableNativeWidgets,
 } = storeToRefs(useConversationalWidgets());
 
 const projectStore = useProject();
 const { getAgentsTeam, getProjectFlows } = projectStore;
 
-const {
-  hasValidSalesFunnelAgent,
-  hasAbandonedCartRecoveryEnabled,
-  isSearchTermAgentAvailable,
-  isAddedToCartAgentAvailable,
-} = storeToRefs(projectStore);
+const { hasValidSalesFunnelAgent, hasAbandonedCartRecoveryEnabled } =
+  storeToRefs(projectStore);
 
 const { setIsDrawerCustomizableOpen } = useConversational();
 const { isDrawerCustomizableOpen, drawerWidgetType, isNewDrawerCustomizable } =
@@ -177,7 +174,6 @@ const sentimentFormStore = useSentimentAnalysisForm();
 const { initializeForm, clearEditingContext } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
-const availableWidgetsFromApi = ref<AvailableWidget[]>([]);
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
@@ -193,9 +189,10 @@ onBeforeMount(() => {
 
 async function getAvailableWidgets() {
   const response = await WidgetConversationalService.getAvailableWidgets({
-    type: 'NATIVE' as 'NATIVE' | 'CUSTOM',
+    type: 'NATIVE',
   });
-  availableWidgetsFromApi.value = response.available_widgets;
+
+  availableNativeWidgets.value = response.available_widgets;
 }
 
 function closeDrawer() {
@@ -533,7 +530,7 @@ const availableTabs: {
 
 const getNativeWidgets = () => {
   const hasValidSalesFunnel = !!hasValidSalesFunnelAgent?.value;
-  const isSalesFunnelAvailableFromApi = availableWidgetsFromApi.value.includes(
+  const isSalesFunnelAvailableFromApi = availableNativeWidgets.value.includes(
     AvailableWidget.SALES_FUNNEL,
   );
 
@@ -571,12 +568,14 @@ const getNativeWidgets = () => {
     {
       key: 'search_term',
       isVisible:
-        isSearchTermAgentAvailable.value && !isSearchTermConfigured.value,
+        availableNativeWidgets.value.includes(AvailableWidget.SEARCH_TERMS) &&
+        !isSearchTermConfigured.value,
     },
     {
       key: 'added_to_cart',
       isVisible:
-        isAddedToCartAgentAvailable.value && !isAddedToCartConfigured.value,
+        availableNativeWidgets.value.includes(AvailableWidget.ADDED_TO_CART) &&
+        !isAddedToCartConfigured.value,
     },
   ];
 

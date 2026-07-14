@@ -30,12 +30,12 @@
     "emoji-mart": "^5.6.0",
     "firebase": "^10.13.1",
     "html-rspack-plugin": "^6.0.2",
-    "intl-messageformat": "^11.2.5",
+    "intl-messageformat": "^11.2.9",
     "lodash-es": "^4.17.23",
     "marked": "^14.1.2",
     "mitt": "^3.0.1",
     "moment": "^2.30.1",
-    "pinia": "^3.0.2",
+    "pinia": "^3.0.3",
     "qs": "^6.14.0",
     "sass-loader": "^16.0.4",
     "vue": "3.5.11",
@@ -56,6 +56,7 @@
     "@vue/test-utils": "^2.4.6",
     "@weni/eslint-config": "^1.0.3",
     "canvas": "^2.10.0",
+    "css-loader": "^7.1.4",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -71,7 +72,8 @@
     "typescript": "^5.4.5",
     "vite": "^5.0.10",
     "vitest": "^2.0.5",
-    "vue-eslint-parser": "^9.4.2"
+    "vue-eslint-parser": "^9.4.2",
+    "vue-style-loader": "^4.1.3"
   },
   "resolutions": {
     "strip-ansi": "6.0.1"

@@ -7,7 +7,7 @@
     fixedHeaders
     height="500px"
     :headers="formattedHeaders"
-    :items="formattedItems"
+    :items="tableItems"
     :infiniteScroll="true"
     :infiniteScrollDistance="12"
     :infiniteScrollDisabled="!hasMoreData"
@@ -19,7 +19,24 @@
     @item-click="redirectItem"
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
-  />
+  >
+    <template #body-awaiting_time="{ item }">
+      <component
+        :is="item.rowAlert ? TableRowAlert : 'span'"
+        v-bind="
+          item.rowAlert
+            ? {
+                scheme: item.rowAlert.scheme,
+                text: item.rowAlert.text,
+                fullRow: true,
+              }
+            : {}
+        "
+      >
+        {{ item.awaiting_time }}
+      </component>
+    </template>
+  </UnnnicDataTable>
 </template>
 
 <script setup lang="ts">
@@ -33,12 +50,40 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { formatSecondsToTime } from '@/utils/time';
 import { useInfiniteScrollTable } from '@/composables/useInfiniteScrollTable';
 import { useLazyData } from '@/composables/useLazyData';
+import { useTableRowAlert } from '@/composables/useTableRowAlert';
+import type { RowAlert } from '@/composables/useTableRowAlert';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { storeToRefs } from 'pinia';
 import { openNewTabLink } from '@/utils/redirect';
 
+import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
+
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
+  awaitingTimeRaw: number;
 };
+
+type TableInAwaitingItem = FormattedInAwaitingData & {
+  rowAlert: RowAlert | null;
+};
+
+const featureFlagStore = useFeatureFlag();
+const { isFeatureFlagEnabled } = featureFlagStore;
+const { getRowAlert } = useTableRowAlert();
+
+const resolveRowAlert = (item: InAwaitingDataResult): RowAlert | null => {
+  if (!isFeatureFlagEnabled('insightsOperationalAlerts')) return null;
+
+  return getRowAlert([
+    {
+      metric: 'waiting_time',
+      scheme: 'red',
+      exceeded: item.goals_metrics?.awaiting_time?.exceeded,
+    },
+  ]);
+};
+
+defineExpose({ getItemAlert: resolveRowAlert });
 
 const { t } = useI18n();
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -60,6 +105,7 @@ const formatResults = (
   return results.map((result) => ({
     ...result,
     awaiting_time: formatSecondsToTime(result?.awaiting_time),
+    awaitingTimeRaw: result?.awaiting_time,
   }));
 };
 
@@ -84,6 +130,18 @@ const {
   fetchData,
   formatResults,
   sort: currentSort.value,
+});
+
+const tableItems = computed((): TableInAwaitingItem[] => {
+  featureFlagStore.activeFeatures;
+
+  return formattedItems.value.map((item) => ({
+    ...item,
+    rowAlert: resolveRowAlert({
+      ...item,
+      awaiting_time: item.awaitingTimeRaw,
+    }),
+  }));
 });
 
 const isLoadingVisible = computed(() => {

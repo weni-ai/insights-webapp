@@ -12,24 +12,69 @@ dotenv.config();
 // Target browsers, see: https://github.com/browserslist/browserslist
 const targets = ['chrome >= 87', 'edge >= 88', 'firefox >= 78', 'safari >= 14'];
 
+const isDev = process.env.NODE_ENV === 'development';
+const PORT = 3003;
+const PUBLIC_PATH = `${process.env.PUBLIC_PATH_URL}/`;
+const FEDERATION_NAME = 'insights';
+const IS_EXPOSED_MF = !!process.env.MODULE_FEDERATION_CONNECT_URL;
+
+const scssAdditionalData = `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`;
+
+/**
+ * Dev: vue-style-loader chain so Vue SFC <style> blocks hot-reload.
+ * Prod: native CSS (experiments.css) for hashed standalone CSS files.
+ */
+function styleRule(test, loadersAfterCss = []) {
+  if (isDev) {
+    return {
+      test,
+      use: [
+        'vue-style-loader',
+        'css-loader',
+        'postcss-loader',
+        ...loadersAfterCss,
+      ],
+      type: 'javascript/auto',
+    };
+  }
+
+  return {
+    test,
+    use: ['postcss-loader', ...loadersAfterCss],
+    type: 'css',
+  };
+}
+
 module.exports = defineConfig({
+  ...(isDev ? { devtool: 'eval-cheap-module-source-map' } : {}),
   context: __dirname,
   devServer: {
-    port: 3003,
+    port: PORT,
     historyApiFallback: true,
     hot: true,
     liveReload: false,
     compress: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    client: {
+      webSocketURL: `ws://localhost:${PORT}/ws`,
+    },
   },
   output: {
     path: path.resolve(__dirname, './dist'),
-    publicPath: `${process.env.PUBLIC_PATH_URL}/`,
-    filename: 'assets/js/[name]-[contenthash].js',
-    chunkFilename: 'assets/js/[name]-[contenthash].js',
+    uniqueName: FEDERATION_NAME,
+    publicPath: PUBLIC_PATH,
+    filename: isDev
+      ? 'assets/js/[name].js'
+      : 'assets/js/[name]-[contenthash].js',
+    chunkFilename: isDev
+      ? 'assets/js/[name].js'
+      : 'assets/js/[name]-[contenthash].js',
     assetModuleFilename: 'assets/[name]-[hash][ext]',
   },
   entry: {
-    main: './src/main.js',
+    main: './src/index.js',
   },
   stats: {
     warnings: false,
@@ -65,24 +110,13 @@ module.exports = defineConfig({
           },
         ],
       },
-      {
-        test: /\.(scss|sass)$/,
-        use: [
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              additionalData: `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`,
-            },
-          },
-        ],
-        type: 'css',
-      },
-      {
-        test: /\.css$/,
-        use: ['postcss-loader'],
-        type: 'css',
-      },
+      styleRule(/\.(scss|sass)$/, [
+        {
+          loader: 'sass-loader',
+          options: { additionalData: scssAdditionalData },
+        },
+      ]),
+      styleRule(/\.css$/),
       {
         test: /\.(png|jpe?g|gif|svg|webp|avif)$/i,
         type: 'asset/resource',
@@ -96,6 +130,7 @@ module.exports = defineConfig({
     new HtmlRspackPlugin({
       template: './index.html',
       inject: 'head',
+      chunks: ['main'],
       minify: {
         removeComments: false,
         collapseWhitespace: true,
@@ -113,15 +148,18 @@ module.exports = defineConfig({
     }),
     new VueLoaderPlugin(),
     new rspack.container.ModuleFederationPlugin({
-      name: 'insights',
+      name: FEDERATION_NAME,
       filename: 'remoteEntry.js',
-      exposes: {
-        './main': './src/main.js',
-        './dashboard-commerce': './src/views/insights/DashboardCommerce.vue',
-        './locales/pt_br': './src/locales/pt_br.json',
-        './locales/en': './src/locales/en.json',
-        './locales/es': './src/locales/es.json',
-      },
+      exposes: !IS_EXPOSED_MF
+        ? {}
+        : {
+            './main': './src/main.js',
+            './dashboard-commerce':
+              './src/views/insights/DashboardCommerce.vue',
+            './locales/pt_br': './src/locales/pt_br.json',
+            './locales/en': './src/locales/en.json',
+            './locales/es': './src/locales/es.json',
+          },
       remotes: {
         connect: `connect@${process.env.MODULE_FEDERATION_CONNECT_URL}/remoteEntry.js`,
       },
@@ -149,6 +187,6 @@ module.exports = defineConfig({
     ],
   },
   experiments: {
-    css: true,
+    css: !isDev,
   },
 });

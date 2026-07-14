@@ -46,20 +46,6 @@ export const useProject = defineStore('project', {
 
       return enableFeatureFlag;
     },
-    isSearchTermAgentAvailable() {
-      const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
-        'insightsProductRankingWidgets',
-      );
-
-      return enableFeatureFlag && !!this.conciergeAgent;
-    },
-    isAddedToCartAgentAvailable() {
-      const enableFeatureFlag = useFeatureFlag().isFeatureFlagEnabled(
-        'insightsProductRankingWidgets',
-      );
-
-      return enableFeatureFlag && !!this.paymentAgent;
-    },
   },
 
   actions: {

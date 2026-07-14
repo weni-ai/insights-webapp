@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { config, shallowMount, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
@@ -18,6 +18,8 @@ vi.mock('@/services/api/resources/conversational/widgets', () => ({
   },
   AvailableWidget: {
     SALES_FUNNEL: 'SALES_FUNNEL',
+    SEARCH_TERMS: 'SEARCH_TERMS',
+    ADDED_TO_CART: 'ADDED_TO_CART',
   },
 }));
 
@@ -515,10 +517,16 @@ describe('CustomizableWidget', () => {
   });
 
   describe('Product ranking widgets', () => {
-    it('should include search_term and added_to_cart in native tab when agents are available', () => {
-      const wrapperWithAgents = createWrapper();
+    it('should include search_term and added_to_cart in native tab when available from API', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: ['SEARCH_TERMS', 'ADDED_TO_CART'],
+      });
 
-      const nativeKeys = wrapperWithAgents.vm
+      const wrapperWithWidgets = createWrapper();
+      await nextTick();
+      await flushPromises();
+
+      const nativeKeys = wrapperWithWidgets.vm
         .handleTabChoice('native')
         .map((widget) => widget.key);
 
@@ -526,10 +534,10 @@ describe('CustomizableWidget', () => {
       expect(nativeKeys).toContain('added_to_cart');
     });
 
-    it('should exclude product ranking widgets from native tab when agents are unavailable', () => {
-      const wrapperWithoutAgents = createWrapper();
+    it('should exclude product ranking widgets from native tab when not available from API', () => {
+      const wrapperWithoutWidgets = createWrapper();
 
-      const nativeKeys = wrapperWithoutAgents.vm
+      const nativeKeys = wrapperWithoutWidgets.vm
         .handleTabChoice('native')
         .map((widget) => widget.key);
 
@@ -538,7 +546,13 @@ describe('CustomizableWidget', () => {
     });
 
     it('should exclude search_term when already configured', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: ['SEARCH_TERMS', 'ADDED_TO_CART'],
+      });
+
       const wrapperConfigured = createWrapper();
+      await nextTick();
+      await flushPromises();
 
       const widgetsStore = useConversationalWidgets();
       widgetsStore.isSearchTermConfigured = true;

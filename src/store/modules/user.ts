@@ -12,8 +12,8 @@ export const useUser = defineStore('user', () => {
 
   const verifyIsViewerPermission = async () => {
     // TODO: Remove this after testing
-    isViewerPermission.value = true;
-    return;
+    // isViewerPermission.value = true;
+    // return;
     const response = await User.verifyIsViewerPermission();
     isViewerPermission.value = response;
   };

@@ -141,8 +141,6 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
     };
   }
 
-  console.log({ metric, goal });
-
   return {
     enabled: true,
     threshold: goal.thresholdValue,

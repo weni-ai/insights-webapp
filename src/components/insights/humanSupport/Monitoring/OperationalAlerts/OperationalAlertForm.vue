@@ -18,7 +18,6 @@
             :placeholder="
               $t(`operational_alerts.form.threshold_placeholders.${metric}`)
             "
-            :disabled="readonly"
             :data-testid="`threshold-input-${metric}`"
           />
         </section>
@@ -31,7 +30,6 @@
             :options="unitOptions"
             itemLabel="label"
             itemValue="value"
-            :disabled="readonly"
             :data-testid="`unit-select-${metric}`"
           />
         </section>
@@ -70,7 +68,6 @@
             :modelValue="selectedRecipients"
             source="agents"
             keyValueField="uuid"
-            :disabled="readonly"
             :placeholder="
               $t('operational_alerts.form.send_email_to_placeholder')
             "
@@ -91,7 +88,6 @@
             type="number"
             nativeType="number"
             :placeholder="$t('operational_alerts.form.when_placeholder')"
-            :disabled="readonly"
             :data-testid="`when-input-${metric}`"
           />
           <p class="operational-alert-form__helper">
@@ -129,7 +125,6 @@ interface RecipientOption {
 
 defineProps<{
   metric: MetricKey;
-  readonly?: boolean;
 }>();
 
 const model = defineModel<MetricFormState>({ required: true });

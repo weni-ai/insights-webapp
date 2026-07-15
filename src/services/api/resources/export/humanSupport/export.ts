@@ -12,9 +12,13 @@ interface ModelFields {
 }
 
 interface ExportEntity {
-  uuids?: string[];
-  emails?: string[];
+  uuids: string[];
   fields: string[];
+}
+
+interface ExportUsersEntity {
+  fields: string[];
+  emails: string[];
 }
 
 interface ExportRequest {
@@ -27,7 +31,7 @@ interface ExportRequest {
   sectors: ExportEntity;
   queues: ExportEntity;
   rooms: ExportEntity;
-  users: ExportEntity;
+  users: ExportUsersEntity;
   sector_tags: ExportEntity;
   contacts: ExportEntity;
   agent_status_logs: ExportEntity;

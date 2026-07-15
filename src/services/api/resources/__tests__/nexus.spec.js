@@ -43,24 +43,28 @@ describe('Nexus Service', () => {
   describe('activateAgent', () => {
     const testAgentUuid = 'test-agent-uuid';
 
-    it('should call nexusHttp.patch with correct endpoint and payload', async () => {
+    it('should call nexusHttp.post with correct endpoint and payload', async () => {
       const mockResponse = { data: { success: true } };
-      nexusHttp.patch.mockResolvedValueOnce(mockResponse);
+      nexusHttp.post.mockResolvedValueOnce(mockResponse);
 
       const result = await nexus.activateAgent(testAgentUuid);
 
-      expect(nexusHttp.patch).toHaveBeenCalledWith(
-        `/api/project/${mockProject.uuid}/assign/${testAgentUuid}`,
+      expect(nexusHttp.post).toHaveBeenCalledWith(
+        '/api/v1/official/agents/',
+        { assigned: true },
         {
-          assigned: true,
+          params: {
+            project_uuid: mockProject.uuid,
+            agent_uuid: testAgentUuid,
+          },
         },
       );
       expect(result).toEqual(mockResponse);
     });
 
-    it('should handle errors from nexusHttp.patch', async () => {
+    it('should handle errors from nexusHttp.post', async () => {
       const mockError = new Error('API Error');
-      nexusHttp.patch.mockRejectedValueOnce(mockError);
+      nexusHttp.post.mockRejectedValueOnce(mockError);
 
       await expect(nexus.activateAgent(testAgentUuid)).rejects.toThrow(
         'API Error',
@@ -69,15 +73,19 @@ describe('Nexus Service', () => {
 
     it('should work with different agent UUIDs', async () => {
       const mockResponse = { data: { success: true } };
-      nexusHttp.patch.mockResolvedValueOnce(mockResponse);
+      nexusHttp.post.mockResolvedValueOnce(mockResponse);
 
       const differentAgentUuid = 'different-agent-uuid';
       await nexus.activateAgent(differentAgentUuid);
 
-      expect(nexusHttp.patch).toHaveBeenCalledWith(
-        `/api/project/${mockProject.uuid}/assign/${differentAgentUuid}`,
+      expect(nexusHttp.post).toHaveBeenCalledWith(
+        '/api/v1/official/agents/',
+        { assigned: true },
         {
-          assigned: true,
+          params: {
+            project_uuid: mockProject.uuid,
+            agent_uuid: differentAgentUuid,
+          },
         },
       );
     });

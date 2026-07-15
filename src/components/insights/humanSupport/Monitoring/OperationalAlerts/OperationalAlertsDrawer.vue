@@ -32,7 +32,6 @@
             v-model="formState[metric].enabled"
             :textRight="$t(`operational_alerts.sections.${metric}`)"
             :data-testid="`operational-alerts-switch-${metric}`"
-            :disabled="isViewerPermission"
           />
 
           <template v-if="formState[metric].enabled">
@@ -45,7 +44,6 @@
             <OperationalAlertForm
               v-model="formState[metric]"
               :metric="metric"
-              :readonly="isViewerPermission"
             />
           </template>
 
@@ -65,12 +63,11 @@
           <UnnnicButton
             class="secondary"
             type="tertiary"
-            :text="!isViewerPermission ? $t('cancel') : $t('close')"
+            :text="$t('cancel')"
             :disabled="savingGoals"
           />
         </UnnnicDrawerClose>
         <UnnnicButton
-          v-if="!isViewerPermission"
           class="primary"
           type="primary"
           :text="$t('save')"
@@ -103,11 +100,6 @@ import {
   MetricKey,
   formatRecipientLabel,
 } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
-
-import { useUser } from '@/store/modules/user';
-
-const userStore = useUser();
-const { isViewerPermission } = storeToRefs(userStore);
 
 defineProps<{
   modelValue: boolean;

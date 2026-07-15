@@ -24,12 +24,6 @@ export const useConfig = defineStore('config', {
     setIsActiveRoute(isActive: boolean) {
       this.isActiveRoute = isActive;
     },
-
-    async checkEnableCreateCustomDashboards() {
-      const enabled = await Projects.verifyProjectIndexer();
-      this.enableCreateCustomDashboards = enabled;
-    },
-
     async checkEnableCsat() {
       const enabled = await Projects.verifyProjectCsat();
       this.enableCsat = enabled;

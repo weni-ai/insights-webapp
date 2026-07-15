@@ -165,11 +165,7 @@ export default {
       'getCurrentDashboardFilters',
       'setCurrentDashboardFilters',
     ]),
-    ...mapActions(useConfig, [
-      'setToken',
-      'setProject',
-      'checkEnableCreateCustomDashboards',
-    ]),
+    ...mapActions(useConfig, ['setToken', 'setProject']),
     ...mapActions(useFeatureFlag, ['getFeatureFlags']),
     ...mapActions(useProject, [
       'setIsCommerce',
@@ -244,8 +240,6 @@ export default {
       }
 
       initHotjar(sessionUserEmail);
-
-      await this.checkEnableCreateCustomDashboards();
     },
 
     handlerSetLanguage(language) {

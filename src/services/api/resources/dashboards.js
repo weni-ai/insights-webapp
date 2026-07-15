@@ -54,7 +54,12 @@ export default {
         ),
     );
 
-    return { dashboards, next: response.next, previous: response.previous };
+    return {
+      dashboards,
+      next: response.next,
+      previous: response.previous,
+      is_indexer_active: response.is_indexer_active,
+    };
   },
 
   async getDashboardFilters(uuid) {

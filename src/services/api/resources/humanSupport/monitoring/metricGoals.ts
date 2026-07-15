@@ -53,7 +53,7 @@ interface MetricGoalRecipientApi {
 }
 
 interface MetricGoalRecipientApiPayload {
-  uuid_project_permission: string;
+  email: string;
 }
 
 interface MetricGoalApi {
@@ -165,10 +165,10 @@ const normalizeRecipientId = (
   if (typeof recipient === 'string') return recipient;
 
   if ('uuid' in recipient) {
-    return recipient.uuid || recipient.uuid_project_permission || '';
+    return recipient.uuid || recipient.email || '';
   }
 
-  return recipient.uuid_project_permission || '';
+  return recipient.email || '';
 };
 
 const normalizeRecipientDetail = (
@@ -246,7 +246,7 @@ const normalizeGoal = (goal: MetricGoalApi): MetricGoal => {
     unit: goal.unit,
     isActive: goal.is_active,
     emailEnabled: goal.email_enabled,
-    recipients: recipientDetails.map((recipient) => recipient.uuid),
+    recipients: recipientDetails.map((recipient) => recipient.email),
     recipientDetails,
     roomsThresholdCount: goal.rooms_threshold_count,
   };
@@ -260,8 +260,8 @@ const toSavePayload = (
   is_active: params.isActive,
   email_enabled: params.emailEnabled,
   rooms_threshold_count: params.roomsThresholdCount,
-  recipients: params.recipients.map((permissionUuid) => ({
-    uuid_project_permission: permissionUuid,
+  recipients: params.recipients.map((email) => ({
+    email,
   })),
 });
 

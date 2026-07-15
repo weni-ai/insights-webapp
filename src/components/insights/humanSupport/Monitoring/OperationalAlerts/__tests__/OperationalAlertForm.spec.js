@@ -6,13 +6,13 @@ import Projects from '@/services/api/resources/projects';
 
 vi.mock('@/services/api/resources/projects', () => ({
   default: {
-    getProjectSource: vi.fn(),
+    getProjectManagers: vi.fn(),
   },
 }));
 
 const FilterMultiSelectStub = {
   name: 'FilterMultiSelect',
-  props: ['modelValue', 'source', 'keyValueField', 'placeholder'],
+  props: ['modelValue', 'fetchRequest', 'keyValueField', 'placeholder'],
   emits: ['update:model-value'],
   template: '<div data-testid="recipients-select-stub" />',
 };
@@ -45,20 +45,20 @@ const createWrapper = (modelValue = defaultModel()) => {
 describe('OperationalAlertForm.vue', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    Projects.getProjectSource.mockResolvedValue([
-      {
-        uuid: 'agent-1',
-        uuid_project_permission: 'perm-1',
-        name: 'Ana Silva',
-        email: 'ana@example.com',
-      },
-      {
-        uuid: 'agent-2',
-        uuid_project_permission: 'perm-2',
-        name: '',
-        email: 'bob@example.com',
-      },
-    ]);
+    Projects.getProjectManagers.mockResolvedValue({
+      results: [
+        {
+          uuid: 'agent-1',
+          name: 'Ana Silva',
+          email: 'ana@example.com',
+        },
+        {
+          uuid: 'agent-2',
+          name: '',
+          email: 'bob@example.com',
+        },
+      ],
+    });
   });
 
   it('should render threshold, unit and recipients fields', () => {
@@ -72,26 +72,26 @@ describe('OperationalAlertForm.vue', () => {
     expect(wrapper.findComponent(FilterMultiSelectStub).exists()).toBe(true);
   });
 
-  it('should load agents through FilterMultiSelect using the agents source', () => {
+  it('should load managers through FilterMultiSelect using fetchRequest and email key', () => {
     const { wrapper } = createWrapper();
     const select = wrapper.findComponent(FilterMultiSelectStub);
 
-    expect(select.props('source')).toBe('agents');
+    expect(select.props('fetchRequest')).toEqual(expect.any(Function));
     expect(select.props('keyValueField')).toBe('email');
   });
 
-  it('should update recipients when FilterMultiSelect emits selected agents', async () => {
+  it('should update recipients when FilterMultiSelect emits selected managers', async () => {
     const { wrapper } = createWrapper();
     const select = wrapper.findComponent(FilterMultiSelectStub);
 
     await select.vm.$emit('update:model-value', [
-      { value: 'agent-1', label: 'Ana Silva' },
-      { value: 'agent-2', label: 'bob@example.com' },
+      { value: 'ana@example.com', label: 'Ana Silva' },
+      { value: 'bob@example.com', label: 'bob@example.com' },
     ]);
 
     expect(wrapper.props('modelValue').recipients).toEqual([
-      'agent-1',
-      'agent-2',
+      'ana@example.com',
+      'bob@example.com',
     ]);
   });
 

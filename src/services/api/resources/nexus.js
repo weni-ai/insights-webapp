@@ -8,7 +8,7 @@ export default {
   },
   async activateAgent(uuid) {
     const { project } = useConfig();
-    const url = '/api/v1/official/agents/';
+    const url = '/api/v1/official/agents';
     const response = await nexusHttp.post(
       url,
       { assigned: true },

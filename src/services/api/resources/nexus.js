@@ -8,11 +8,17 @@ export default {
   },
   async activateAgent(uuid) {
     const { project } = useConfig();
-    return await nexusHttp.patch(
-      `/api/project/${project.uuid}/assign/${uuid}`,
+    const url = '/api/v1/official/agents/';
+    const response = await nexusHttp.post(
+      url,
+      { assigned: true },
       {
-        assigned: true,
+        params: {
+          project_uuid: project.uuid,
+          agent_uuid: uuid,
+        },
       },
     );
+    return response;
   },
 };

@@ -44,6 +44,7 @@ interface ConversationalWidgetsState {
   isSalesFunnelWidgetDataError: boolean;
   isSearchTermWidgetDataError: boolean;
   isAddedToCartWidgetDataError: boolean;
+  availableNativeWidgets: string[];
 }
 
 let salesFunnelAbortController: AbortController | null = null;
@@ -80,6 +81,7 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
     isSalesFunnelWidgetDataError: false,
     isSearchTermWidgetDataError: false,
     isAddedToCartWidgetDataError: false,
+    availableNativeWidgets: [],
   }),
 
   actions: {

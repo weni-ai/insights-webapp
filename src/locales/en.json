@@ -1028,14 +1028,14 @@
     "filters": {
       "sector": "Industry",
       "select_sector": "Select industry",
-      "agent": "Agent",
-      "select_agent": "Select an agent",
+      "representative": "Representative",
+      "select_representative": "Select a representative",
       "queue": "Queue",
       "select_queue": "Select a queue",
       "tag": "Tag",
       "select_tag": "Select a tag",
       "all_sectors": "All industries",
-      "all_agents": "All agents",
+      "all_representatives": "All representatives",
       "all_queues": "All queues",
       "all_tags": "All tags"
     },
@@ -1068,7 +1068,7 @@
       "description": "Configure alerts to identify chats that exceed the defined time limits for an operation:",
       "title": "Operational alerts"
     },
-    "first_response_info": "Time to first response is counted from the moment the chat is assigned to a representative",
+    "first_response_info": "The first-response timeout alert will remain active until the representative sends the first message.",
     "form": {
       "email_notification_label": "Email notification (optional)",
       "email_notification_tooltip": "This alert is always displayed in the Live Desk dashboard when a chat reaches the defined threshold.\n\nYou can also configure email notifications for selected moderators and choose when they should be sent - for example, when one or more chats reach the defined threshold.",
@@ -1076,11 +1076,15 @@
       "send_email_to_label": "Send email to",
       "send_email_to_placeholder": "Select the moderators",
       "threshold_labels": {
-        "conversation_duration": "Maximum chat duration",
+        "conversation_duration": "Maximum duration time",
         "first_response_time": "Maximum time to first response",
         "waiting_time": "Maximum wait time"
       },
-      "threshold_placeholder": "Example: 10",
+      "threshold_placeholders": {
+        "conversation_duration": "Example: 30",
+        "first_response_time": "Example: 2",
+        "waiting_time": "Example: 10"
+      },
       "unit_label": "Unit",
       "units": {
         "hours": "Hours",

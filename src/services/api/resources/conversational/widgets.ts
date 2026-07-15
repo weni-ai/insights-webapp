@@ -107,6 +107,10 @@ interface AbsoluteNumbersChildrenItem {
 enum AvailableWidget {
   // eslint-disable-next-line no-unused-vars
   SALES_FUNNEL = 'SALES_FUNNEL',
+  // eslint-disable-next-line no-unused-vars
+  SEARCH_TERMS = 'SEARCH_TERMS',
+  // eslint-disable-next-line no-unused-vars
+  ADDED_TO_CART = 'ADDED_TO_CART',
 }
 
 interface AvailableWidgetsQueryParams {

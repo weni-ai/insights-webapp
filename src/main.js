@@ -76,6 +76,4 @@ export default async function mountInsightsApp({
 if (sharedStore && isFederatedModule) {
   moduleStorage.setItem('token', sharedStore.auth.token);
   moduleStorage.setItem('projectUuid', sharedStore.current.project.uuid);
-} else {
-  mountInsightsApp();
 }

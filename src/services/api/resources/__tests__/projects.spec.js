@@ -63,28 +63,4 @@ describe('Projects Service', () => {
       expect(sources).toEqual([]);
     });
   });
-
-  describe('verifyProjectIndexer', () => {
-    it('should call the API with the correct URL', async () => {
-      const mockResponse = { status: 'success' };
-      http.get.mockResolvedValueOnce(mockResponse);
-
-      const response = await SourceService.verifyProjectIndexer();
-
-      expect(http.get).toHaveBeenCalledWith(
-        '/projects/mock-project-uuid/verify_project_indexer/',
-      );
-
-      expect(response).toEqual(mockResponse);
-    });
-
-    it('should propagate errors from the API', async () => {
-      const mockError = new Error('API Error');
-      http.get.mockRejectedValueOnce(mockError);
-
-      await expect(SourceService.verifyProjectIndexer()).rejects.toThrow(
-        'API Error',
-      );
-    });
-  });
 });

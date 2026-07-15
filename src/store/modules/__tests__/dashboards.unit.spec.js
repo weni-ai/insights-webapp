@@ -1,6 +1,7 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useDashboards } from '../dashboards';
+import { useConfig } from '../config';
 import { Dashboards } from '@/services/api';
 import Router from '@/router';
 
@@ -48,6 +49,7 @@ describe('useDashboards Store', () => {
   beforeEach(() => {
     setActivePinia(createPinia());
     store = useDashboards();
+    vi.clearAllMocks();
   });
 
   it('should initialize with correct default values', () => {
@@ -148,6 +150,67 @@ describe('useDashboards Store', () => {
   it('updateLastUpdatedRequest should set last_updated_request to a Date', () => {
     store.updateLastUpdatedRequest();
     expect(store.last_updated_request).toBeInstanceOf(Date);
+  });
+
+  describe('getDashboards', () => {
+    it('should enable custom dashboard creation when is_indexer_active is true', async () => {
+      const configStore = useConfig();
+
+      Dashboards.getAll.mockResolvedValue({
+        dashboards: [
+          { uuid: 'dash-1', name: 'Custom dashboard', is_default: false },
+        ],
+        next: '',
+        is_indexer_active: true,
+      });
+
+      await store.getDashboards();
+
+      expect(configStore.enableCreateCustomDashboards).toBe(true);
+      expect(store.isLoadingDashboards).toBe(false);
+      expect(store.dashboards).toEqual([
+        { uuid: 'dash-1', name: 'Custom dashboard', is_default: false },
+      ]);
+    });
+
+    it('should disable custom dashboard creation when is_indexer_active is false', async () => {
+      const configStore = useConfig();
+      configStore.enableCreateCustomDashboards = true;
+
+      Dashboards.getAll.mockResolvedValue({
+        dashboards: [
+          { uuid: 'dash-1', name: 'Custom dashboard', is_default: false },
+        ],
+        next: '',
+        is_indexer_active: false,
+      });
+
+      await store.getDashboards();
+
+      expect(configStore.enableCreateCustomDashboards).toBe(false);
+    });
+
+    it('should fetch next page when API returns a next cursor', async () => {
+      Dashboards.getAll
+        .mockResolvedValueOnce({
+          dashboards: [{ uuid: 'dash-1', name: 'Page 1', is_default: false }],
+          next: '?page=2',
+          is_indexer_active: true,
+        })
+        .mockResolvedValueOnce({
+          dashboards: [{ uuid: 'dash-2', name: 'Page 2', is_default: false }],
+          next: '',
+          is_indexer_active: true,
+        });
+
+      await store.getDashboards();
+
+      expect(Dashboards.getAll).toHaveBeenCalledTimes(2);
+      expect(Dashboards.getAll).toHaveBeenNthCalledWith(2, {
+        nextReq: '?page=2',
+      });
+      expect(store.isLoadingDashboards).toBe(false);
+    });
   });
 
   describe('Getters', () => {

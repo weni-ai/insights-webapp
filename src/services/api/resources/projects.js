@@ -69,14 +69,6 @@ export default {
     return response;
   },
 
-  async verifyProjectIndexer() {
-    const { project } = useConfig();
-    const response = await http.get(
-      `/projects/${project.uuid}/verify_project_indexer/`,
-    );
-    return response;
-  },
-
   async verifyProjectCsat() {
     const { project } = useConfig();
 

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-
 import Router from '@/router';
+import { useConfig } from '@/store/modules/config';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards } from '@/services/api';
 import { removeDuplicatedItems, sortByKey } from '@/utils/array';
@@ -37,9 +37,14 @@ export const useDashboards = defineStore('dashboards', {
       try {
         this.isLoadingDashboards = true;
 
-        const { dashboards, next } = await Dashboards.getAll({
-          nextReq: this.nextDashboards,
-        });
+        const { dashboards, next, is_indexer_active } = await Dashboards.getAll(
+          {
+            nextReq: this.nextDashboards,
+          },
+        );
+
+        const configStore = useConfig();
+        configStore.enableCreateCustomDashboards = is_indexer_active;
 
         this.nextDashboards = next;
 

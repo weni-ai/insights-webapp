@@ -50,7 +50,7 @@ describe('Nexus Service', () => {
       const result = await nexus.activateAgent(testAgentUuid);
 
       expect(nexusHttp.post).toHaveBeenCalledWith(
-        '/api/v1/official/agents/',
+        '/api/v1/official/agents',
         { assigned: true },
         {
           params: {
@@ -79,7 +79,7 @@ describe('Nexus Service', () => {
       await nexus.activateAgent(differentAgentUuid);
 
       expect(nexusHttp.post).toHaveBeenCalledWith(
-        '/api/v1/official/agents/',
+        '/api/v1/official/agents',
         { assigned: true },
         {
           params: {

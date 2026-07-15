@@ -65,7 +65,7 @@ describe('metricGoalsService', () => {
             unit: 'm',
             isActive: true,
             emailEnabled: true,
-            recipients: ['user-1'],
+            recipients: ['marcus@example.com'],
             recipientDetails: [
               {
                 uuid: 'user-1',
@@ -80,7 +80,7 @@ describe('metricGoalsService', () => {
       });
     });
 
-    it('should normalize recipients from uuid_project_permission objects', async () => {
+    it('should normalize recipients from email objects', async () => {
       chatsHttp.get.mockResolvedValue({
         goals: [
           {
@@ -90,7 +90,7 @@ describe('metricGoalsService', () => {
             unit: 'h',
             is_active: true,
             email_enabled: true,
-            recipients: [{ uuid_project_permission: 'perm-1' }],
+            recipients: [{ email: 'manager@example.com' }],
             rooms_threshold_count: 2,
           },
         ],
@@ -105,8 +105,13 @@ describe('metricGoalsService', () => {
         unit: 'h',
         isActive: true,
         emailEnabled: true,
-        recipients: ['perm-1'],
-        recipientDetails: [{ uuid: 'perm-1' }],
+        recipients: ['manager@example.com'],
+        recipientDetails: [
+          {
+            uuid: 'manager@example.com',
+            email: 'manager@example.com',
+          },
+        ],
         roomsThresholdCount: 2,
       });
     });
@@ -132,7 +137,7 @@ describe('metricGoalsService', () => {
         unit: 'm',
         isActive: true,
         emailEnabled: true,
-        recipients: ['perm-1'],
+        recipients: ['alan@example.com'],
         roomsThresholdCount: 5,
       };
       const mockResponse = {
@@ -144,7 +149,7 @@ describe('metricGoalsService', () => {
         email_enabled: true,
         recipients: [
           {
-            uuid: 'perm-1',
+            uuid: 'user-1',
             first_name: 'Alan',
             last_name: 'Vale',
             email: 'alan@example.com',
@@ -166,7 +171,7 @@ describe('metricGoalsService', () => {
           unit: 'm',
           is_active: true,
           email_enabled: true,
-          recipients: [{ uuid_project_permission: 'perm-1' }],
+          recipients: [{ email: 'alan@example.com' }],
           rooms_threshold_count: 5,
         },
       );
@@ -177,10 +182,10 @@ describe('metricGoalsService', () => {
         unit: 'm',
         isActive: true,
         emailEnabled: true,
-        recipients: ['perm-1'],
+        recipients: ['alan@example.com'],
         recipientDetails: [
           {
-            uuid: 'perm-1',
+            uuid: 'user-1',
             firstName: 'Alan',
             lastName: 'Vale',
             email: 'alan@example.com',

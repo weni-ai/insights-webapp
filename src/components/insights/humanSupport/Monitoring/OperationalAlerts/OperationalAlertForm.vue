@@ -66,9 +66,8 @@
           <FilterMultiSelect
             ref="filterMultiSelectRef"
             :modelValue="selectedRecipients"
-            source="agents"
             keyValueField="email"
-            :fetchRequest="Projects.getProjectManagers"
+            :fetchRequest="getProjectManagers"
             :placeholder="
               $t('operational_alerts.form.send_email_to_placeholder')
             "
@@ -142,6 +141,11 @@ const unitOptions = computed<{ value: TimeUnit; label: string }[]>(() => [
   { value: 'm', label: t('operational_alerts.form.units.minutes') },
   { value: 'h', label: t('operational_alerts.form.units.hours') },
 ]);
+
+const getProjectManagers = async () => {
+  const { results } = await Projects.getProjectManagers();
+  return results;
+};
 
 const syncRecipientsFromModel = () => {
   const loadedOptions = filterMultiSelectRef.value?.options || [];

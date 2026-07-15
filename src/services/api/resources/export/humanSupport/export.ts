@@ -16,6 +16,11 @@ interface ExportEntity {
   fields: string[];
 }
 
+interface ExportUsersEntity {
+  fields: string[];
+  emails: string[];
+}
+
 interface ExportRequest {
   project_uuid: string;
   start_date: string; // YYYY-MM-DD format
@@ -26,7 +31,7 @@ interface ExportRequest {
   sectors: ExportEntity;
   queues: ExportEntity;
   rooms: ExportEntity;
-  users: ExportEntity;
+  users: ExportUsersEntity;
   sector_tags: ExportEntity;
   contacts: ExportEntity;
   agent_status_logs: ExportEntity;

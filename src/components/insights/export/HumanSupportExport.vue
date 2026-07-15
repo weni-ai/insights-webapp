@@ -68,9 +68,9 @@
         size="medium"
       >
         <UnnnicDialogHeader type="success">
-          <UnnnicDialogTitle>{{
-            t('export_data.feedback_title')
-          }}</UnnnicDialogTitle>
+          <UnnnicDialogTitle>
+            {{ t('export_data.feedback_title') }}
+          </UnnnicDialogTitle>
         </UnnnicDialogHeader>
 
         <div class="export-data-feedback">

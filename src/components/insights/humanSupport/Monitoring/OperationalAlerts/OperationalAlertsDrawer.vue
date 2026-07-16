@@ -81,18 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  UnnnicButton,
-  UnnnicDrawerNext,
-  UnnnicDrawerContent,
-  UnnnicDrawerHeader,
-  UnnnicDrawerTitle,
-  UnnnicDrawerFooter,
-  UnnnicDrawerClose,
-  UnnnicSwitch,
-  UnnnicDisclaimer,
-  unnnicCallAlert,
-} from '@weni/unnnic-system';
+import { unnnicCallAlert } from '@weni/unnnic-system';
 import { reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
@@ -106,6 +95,7 @@ import {
   MetricFormState,
   OperationalAlertsFormState,
 } from '@/store/modules/humanSupport/metricGoals';
+
 import {
   MetricKey,
   formatRecipientLabel,

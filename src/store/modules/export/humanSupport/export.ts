@@ -162,7 +162,7 @@ export const useHumanSupportExport = defineStore('humanSupportExport', {
             fields: this.selected_fields?.rooms || [],
           },
           users: {
-            uuids: this.agents.map((agent) => agent.value),
+            emails: this.agents.map((agent) => agent.value),
             fields: this.selected_fields?.users || [],
           },
           sector_tags: {

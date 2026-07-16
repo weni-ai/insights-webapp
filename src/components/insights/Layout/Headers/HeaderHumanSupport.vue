@@ -31,6 +31,10 @@ import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useProject } from '@/store/modules/project';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { useUser } from '@/store/modules/user';
+
+const userStore = useUser();
+const { isViewerPermission } = storeToRefs(userStore);
 
 const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);
@@ -48,6 +52,9 @@ const isMonitoring = computed(() => activeTab.value === 'monitoring');
 const hasFilters = computed(() => !!currentDashboardFilters.value.length);
 
 const showOperationalAlerts = computed(
-  () => isMonitoring.value && isFeatureFlagEnabled('insightsOperationalAlerts'),
+  () =>
+    isMonitoring.value &&
+    isFeatureFlagEnabled('insightsOperationalAlerts') &&
+    !isViewerPermission.value,
 );
 </script>

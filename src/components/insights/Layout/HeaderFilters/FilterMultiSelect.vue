@@ -49,6 +49,12 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  fetchRequest: {
+    type: Function,
+    default: (...params) => {
+      return Projects.getProjectSource(...params);
+    },
+  },
   allLabel: {
     type: String,
     default: '',
@@ -115,7 +121,7 @@ onMounted(() => {
 
 async function fetchSource() {
   try {
-    const response = await Projects.getProjectSource(
+    const response = await props.fetchRequest(
       props.source,
       props.dependsOnValue || {},
     );

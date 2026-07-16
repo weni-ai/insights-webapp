@@ -137,7 +137,7 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
     unit: goal.unit,
     recipients: [...goal.recipients],
     recipientOptions: goal.recipientDetails.map((recipient) => ({
-      value: recipient.uuid,
+      value: recipient.email,
       label: formatRecipientLabel(recipient),
     })),
     roomsThresholdCount: goal.roomsThresholdCount ?? DEFAULT_ROOMS_THRESHOLD,

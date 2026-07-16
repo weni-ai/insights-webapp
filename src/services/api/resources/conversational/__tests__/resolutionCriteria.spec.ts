@@ -1,11 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/services/api/nexusHttp');
-vi.mock('@/store/modules/config');
-vi.mock('@/services/api/resources/projects', () => ({
+vi.mock('@/services/api/nexusHttp', () => ({
   default: {
-    verifyProjectIndexer: vi.fn(),
+    get: vi.fn(),
+    post: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn(),
   },
+}));
+
+vi.mock('@/store/modules/config', () => ({
+  useConfig: vi.fn(),
 }));
 
 import resolutionCriteriaService, {

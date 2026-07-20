@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 
 import Projects from '@/services/api/resources/projects';
 import { moduleStorage } from '@/utils/storage';
+import { registerStoreHMR } from '@/utils/hmr';
 
 export const useConfig = defineStore('config', {
   state: () => ({
@@ -30,3 +31,5 @@ export const useConfig = defineStore('config', {
     },
   },
 });
+
+registerStoreHMR(useConfig, import.meta.webpackHot);

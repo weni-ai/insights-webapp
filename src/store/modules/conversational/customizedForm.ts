@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { reactive } from 'vue';
 
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
+import { registerStoreHMR } from '@/utils/hmr';
 
 interface CustomizedForm {
   widgetName: string;
@@ -61,3 +62,5 @@ export const useCustomizedWidgetForm = defineStore(
     };
   },
 );
+
+registerStoreHMR(useCustomizedWidgetForm, import.meta.webpackHot);

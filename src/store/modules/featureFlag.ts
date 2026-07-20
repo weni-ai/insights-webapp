@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import FeatureFlag from '@/services/api/resources/featureFlag/featureFlag';
+import { registerStoreHMR } from '@/utils/hmr';
 
 export const useFeatureFlag = defineStore('featureFlag', () => {
   const activeFeatures = ref<string[]>([]);
@@ -32,3 +33,5 @@ export const useFeatureFlag = defineStore('featureFlag', () => {
     isFeatureFlagEnabled,
   };
 });
+
+registerStoreHMR(useFeatureFlag, import.meta.webpackHot);

@@ -1,5 +1,6 @@
 import { asyncTimeout } from '@/utils/time';
 import { defineStore } from 'pinia';
+import { registerStoreHMR } from '@/utils/hmr';
 
 interface OnboardingRefs {
   [key: string]: null | HTMLElement;
@@ -141,3 +142,5 @@ export const useOnboarding = defineStore('onboarding', {
     },
   },
 });
+
+registerStoreHMR(useOnboarding, import.meta.webpackHot);

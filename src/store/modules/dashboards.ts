@@ -4,6 +4,7 @@ import { useConfig } from '@/store/modules/config';
 import { parseValue, stringifyValue } from '@/utils/object';
 import { Dashboards } from '@/services/api';
 import { removeDuplicatedItems, sortByKey } from '@/utils/array';
+import { registerStoreHMR } from '@/utils/hmr';
 
 export function treatFilters(filters, valueHandler, currentDashboardFilters) {
   return Object.entries(filters).reduce((acc, [key, value]) => {
@@ -182,3 +183,5 @@ export const useDashboards = defineStore('dashboards', {
     },
   },
 });
+
+registerStoreHMR(useDashboards, import.meta.webpackHot);

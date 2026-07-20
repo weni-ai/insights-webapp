@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { GPT } from '@/services/api';
+import { registerStoreHMR } from '@/utils/hmr';
 
 export const useGpt = defineStore('gpt', {
   state: () => ({ insights: [] as any[] }),
@@ -10,3 +11,5 @@ export const useGpt = defineStore('gpt', {
     },
   },
 });
+
+registerStoreHMR(useGpt, import.meta.webpackHot);

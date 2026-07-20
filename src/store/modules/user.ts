@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import User from '@/services/api/resources/user';
+import { registerStoreHMR } from '@/utils/hmr';
 
 export const useUser = defineStore('user', () => {
   const email = ref('');
@@ -17,3 +18,5 @@ export const useUser = defineStore('user', () => {
 
   return { email, isViewerPermission, setEmail, verifyIsViewerPermission };
 });
+
+registerStoreHMR(useUser, import.meta.webpackHot);

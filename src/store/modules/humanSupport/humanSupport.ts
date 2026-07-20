@@ -7,6 +7,7 @@ import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
 import i18n from '@/utils/plugins/i18n';
 import { redirectToChatsConfig } from '@/utils/redirect';
+import { registerStoreHMR } from '@/utils/hmr';
 
 interface Filter {
   value: string;
@@ -205,3 +206,5 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     widgetSetupProps,
   };
 });
+
+registerStoreHMR(useHumanSupport, import.meta.webpackHot);

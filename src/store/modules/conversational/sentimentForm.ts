@@ -6,6 +6,7 @@ import { useConversationalWidgets } from '@/store/modules/conversational/widgets
 import { useCustomizedWidgetForm } from './customizedForm';
 import { CsatOrNpsCardConfig, WidgetType } from '@/models/types/WidgetTypes';
 import env from '@/utils/env';
+import { registerStoreHMR } from '@/utils/hmr';
 
 type SentimentType = 'csat' | 'nps';
 
@@ -412,3 +413,5 @@ export const useSentimentAnalysisForm = defineStore(
     };
   },
 );
+
+registerStoreHMR(useSentimentAnalysisForm, import.meta.webpackHot);

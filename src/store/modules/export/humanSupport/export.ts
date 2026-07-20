@@ -6,6 +6,7 @@ import exportApi, {
 import i18n from '@/utils/plugins/i18n';
 import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';
+import { registerStoreHMR } from '@/utils/hmr';
 
 interface SelectedFields {
   [modelName: string]: string[];
@@ -230,3 +231,5 @@ export const useHumanSupportExport = defineStore('humanSupportExport', {
     },
   },
 });
+
+registerStoreHMR(useHumanSupportExport, import.meta.webpackHot);

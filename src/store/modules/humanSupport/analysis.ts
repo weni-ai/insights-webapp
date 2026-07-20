@@ -4,6 +4,7 @@ import { ServiceStatusFormattedResponse } from '@/services/api/resources/humanSu
 import { ServicesOpenByHourData } from '@/services/api/resources/humanSupport/analysis/servicesOpenByHour';
 import ServiceStatusAnalysisService from '@/services/api/resources/humanSupport/analysis/serviceStatus';
 import ServicesOpenByHourAnalysisService from '@/services/api/resources/humanSupport/analysis/servicesOpenByHour';
+import { registerStoreHMR } from '@/utils/hmr';
 
 export type ActiveDetailedTab = 'finished' | 'attendant' | 'pauses';
 
@@ -92,3 +93,5 @@ export const useHumanSupportAnalysis = defineStore(
     };
   },
 );
+
+registerStoreHMR(useHumanSupportAnalysis, import.meta.webpackHot);

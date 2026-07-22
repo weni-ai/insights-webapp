@@ -115,7 +115,7 @@ const filters = ref<Record<FilterType, FilterState>>({
       agents: { uuid: string; name: string; email: string }[],
     ) => {
       return agents.map((agent) => ({
-        value: agent.uuid,
+        value: agent.email,
         label: agent.name.trim() || agent.email,
       }));
     },
@@ -178,10 +178,8 @@ const handleFilterChange = (
     return;
   }
 
-  let valueToStore = payload.value;
-  if (filterType === 'attendant' && payload.email) {
-    valueToStore = payload.email;
-  }
+  const valueToStore =
+    filterType === 'attendant' && payload.email ? payload.email : payload.value;
 
   saveAppliedDetailFilter(storeFilterType, valueToStore, payload.label);
 };

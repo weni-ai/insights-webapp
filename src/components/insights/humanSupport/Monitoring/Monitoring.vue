@@ -87,7 +87,11 @@ onMounted(() => {
 });
 
 watch(
-  [shouldConnectMetricGoalsSocket, () => project.value?.uuid, token],
+  [
+    () => shouldConnectMetricGoalsSocket.value,
+    () => project.value?.uuid,
+    () => token.value,
+  ],
   ([enabled], previous) => {
     const wasEnabled = previous?.[0];
 

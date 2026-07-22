@@ -1,9 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/services/api/resources/projects', () => ({
+vi.mock('@/services/api/resources/conversational/resolutionCriteria', () => ({
   default: {
-    verifyProjectIndexer: vi.fn(),
+    getResolutionCriteria: vi.fn(),
+    validateCriterion: vi.fn(),
+    createCriterion: vi.fn(),
+    updateCriterion: vi.fn(),
+    deleteCriterion: vi.fn(),
   },
+  parseCriterionError: vi.fn((error) => ({
+    status: error?.status ?? 500,
+    code: error?.data?.error?.code ?? 'LAMBDA_VALIDATION_FAILED',
+    message:
+      error?.data?.error?.message ??
+      'The criterion could not be validated due to a technical issue',
+  })),
+  MAX_CUSTOM_CRITERIA: 10,
 }));
 
 vi.mock('@/utils/plugins/i18n', () => ({

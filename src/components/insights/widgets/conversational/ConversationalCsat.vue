@@ -175,11 +175,11 @@ const handleCsatWidgetData = (data: CsatResponse) => {
   };
 
   const formattedData = {
-    '5': `🤩 ${t('conversations_dashboard.csat_widget.very_satisfied')}`,
-    '4': `😁 ${t('conversations_dashboard.csat_widget.satisfied')}`,
-    '3': `😐 ${t('conversations_dashboard.csat_widget.neutral')}`,
-    '2': `☹️ ${t('conversations_dashboard.csat_widget.dissatisfied')}`,
-    '1': `😡 ${t('conversations_dashboard.csat_widget.very_dissatisfied')}`,
+    '5': `${t('conversations_dashboard.csat_widget.very_satisfied')}`,
+    '4': `${t('conversations_dashboard.csat_widget.satisfied')}`,
+    '3': `${t('conversations_dashboard.csat_widget.neutral')}`,
+    '2': `${t('conversations_dashboard.csat_widget.dissatisfied')}`,
+    '1': `${t('conversations_dashboard.csat_widget.very_dissatisfied')}`,
   };
 
   const order = ['5', '4', '3', '2', '1'];

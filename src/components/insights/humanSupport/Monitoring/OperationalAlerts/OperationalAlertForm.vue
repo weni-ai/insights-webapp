@@ -66,8 +66,8 @@
           <FilterMultiSelect
             ref="filterMultiSelectRef"
             :modelValue="selectedRecipients"
-            source="agents"
-            keyValueField="uuid"
+            keyValueField="email"
+            :fetchRequest="getProjectManagers"
             :placeholder="
               $t('operational_alerts.form.send_email_to_placeholder')
             "
@@ -112,6 +112,8 @@ import { useI18n } from 'vue-i18n';
 
 import FilterMultiSelect from '@/components/insights/Layout/HeaderFilters/FilterMultiSelect.vue';
 
+import Projects from '@/services/api/resources/projects';
+
 import { MetricFormState } from '@/store/modules/humanSupport/metricGoals';
 import {
   MetricKey,
@@ -139,6 +141,11 @@ const unitOptions = computed<{ value: TimeUnit; label: string }[]>(() => [
   { value: 'm', label: t('operational_alerts.form.units.minutes') },
   { value: 'h', label: t('operational_alerts.form.units.hours') },
 ]);
+
+const getProjectManagers = async () => {
+  const { results } = await Projects.getProjectManagers();
+  return results;
+};
 
 const syncRecipientsFromModel = () => {
   const loadedOptions = filterMultiSelectRef.value?.options || [];

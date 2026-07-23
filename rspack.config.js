@@ -110,6 +110,23 @@ module.exports = defineConfig({
           },
         ],
       },
+      // Dev: inject registerStoreHMR for every defineStore export (no per-file boilerplate).
+      ...(isDev
+        ? [
+            {
+              test: /\.(js|ts)$/,
+              include: [path.resolve(__dirname, 'src/store/modules')],
+              exclude: [
+                /node_modules/,
+                /\.spec\./,
+                /\.unit\./,
+                /__tests__/,
+              ],
+              enforce: 'pre',
+              use: [path.resolve(__dirname, 'build/pinia-hmr-loader.js')],
+            },
+          ]
+        : []),
       styleRule(/\.(scss|sass)$/, [
         {
           loader: 'sass-loader',

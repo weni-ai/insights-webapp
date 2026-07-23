@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import MetaTemplateMessage from '@/services/api/resources/template/metaTemplateMessage';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export const useMetaTemplateMessage = defineStore('metaTemplateMessage', {
   state: () => ({
@@ -41,5 +40,3 @@ export const useMetaTemplateMessage = defineStore('metaTemplateMessage', {
     },
   },
 });
-
-registerStoreHMR(useMetaTemplateMessage, import.meta.webpackHot);

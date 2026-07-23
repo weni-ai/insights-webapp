@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import { useConfig } from './config';
 import { moduleStorage } from '@/utils/storage';
-import { registerStoreHMR } from '@/utils/hmr';
 
 const STORAGE_KEY = 'agents_columns_filter';
 const STATIC_COLUMNS = ['status', 'agent'];
@@ -89,5 +88,3 @@ export const useAgentsColumnsFilter = defineStore('agentsColumnsFilter', {
     },
   },
 });
-
-registerStoreHMR(useAgentsColumnsFilter, import.meta.webpackHot);

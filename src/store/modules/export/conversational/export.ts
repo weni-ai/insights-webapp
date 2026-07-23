@@ -7,7 +7,6 @@ import i18n from '@/utils/plugins/i18n';
 import { defaultAlert } from '@/utils/topics';
 import { defineStore } from 'pinia';
 import { WidgetType } from '@/models/types/WidgetTypes';
-import { registerStoreHMR } from '@/utils/hmr';
 
 interface SelectedFields {
   [modelName: string]: string[];
@@ -372,5 +371,3 @@ export const useConversationalExport = defineStore('conversationalExport', {
     },
   },
 });
-
-registerStoreHMR(useConversationalExport, import.meta.webpackHot);

@@ -10,7 +10,6 @@ import {
 
 import { useConfig } from '@/store/modules/config';
 import { moduleStorage } from '@/utils/storage';
-import { registerStoreHMR } from '@/utils/hmr';
 
 const SEEN_POPOVER_KEY = 'operational_alerts_seen_popover';
 const OPENED_DRAWER_KEY = 'operational_alerts_opened_drawer';
@@ -152,4 +151,3 @@ export const useMetricGoals = defineStore('metricGoals', () => {
 
 export type { MetricFormState, OperationalAlertsFormState };
 
-registerStoreHMR(useMetricGoals, import.meta.webpackHot);

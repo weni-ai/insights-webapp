@@ -8,7 +8,6 @@ import { useConversationalWidgets } from './conversational/widgets';
 import { useCustomWidgets } from './conversational/customWidgets';
 import { useConversationalExport } from './export/conversational/export';
 import { useConversational } from './conversational/conversational';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export const useWidgets = defineStore('widgets', {
   state: () => ({
@@ -344,5 +343,3 @@ export const useWidgets = defineStore('widgets', {
     },
   },
 });
-
-registerStoreHMR(useWidgets, import.meta.webpackHot);

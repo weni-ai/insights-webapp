@@ -5,7 +5,6 @@ import { useConversationalTopics } from './topics';
 import { useConversationalWidgets } from './widgets';
 import { useCustomWidgets } from './customWidgets';
 import { useAutoWidgets } from './autoWidgets';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export type DrawerWidgetType =
   | 'nps'
@@ -148,5 +147,3 @@ export const useConversational = defineStore('conversational', {
     },
   },
 });
-
-registerStoreHMR(useConversational, import.meta.webpackHot);

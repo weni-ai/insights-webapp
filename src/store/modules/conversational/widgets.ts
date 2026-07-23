@@ -14,7 +14,6 @@ import i18n from '@/utils/plugins/i18n';
 import { unnnicCallAlert } from '@weni/unnnic-system';
 import { useConversational } from './conversational';
 import { useDashboards } from '../dashboards';
-import { registerStoreHMR } from '@/utils/hmr';
 
 type TypeWidget = 'HUMAN' | 'AI';
 
@@ -794,5 +793,3 @@ export const useConversationalWidgets = defineStore('conversationalWidgets', {
 export type ConversationalWidgetsStore = ReturnType<
   typeof useConversationalWidgets
 >;
-
-registerStoreHMR(useConversationalWidgets, import.meta.webpackHot);

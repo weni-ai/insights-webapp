@@ -4,7 +4,6 @@ import { parseValue } from '@/utils/object';
 import { defineStore } from 'pinia';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import env from '@/utils/env';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export const useProject = defineStore('project', {
   state: () => ({
@@ -114,5 +113,3 @@ export const useProject = defineStore('project', {
     },
   },
 });
-
-registerStoreHMR(useProject, import.meta.webpackHot);

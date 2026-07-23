@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import Router from '@/router';
 import { Dashboards } from '@/services/api';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export const useReports = defineStore('reports', {
   state: () => ({
@@ -54,5 +53,3 @@ export const useReports = defineStore('reports', {
     },
   },
 });
-
-registerStoreHMR(useReports, import.meta.webpackHot);

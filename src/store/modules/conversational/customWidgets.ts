@@ -12,7 +12,6 @@ import {
 import { useWidgets } from '@/store/modules/widgets';
 import { unnnicCallAlert } from '@weni/unnnic-system';
 import i18n from '@/utils/plugins/i18n';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export const MOCK_CUSTOM_UUID = 'mock-custom';
 export const MOCK_CROSSTAB_UUID = 'mock-crosstab';
@@ -437,5 +436,3 @@ export const useCustomWidgets = defineStore('customWidgets', {
     },
   },
 });
-
-registerStoreHMR(useCustomWidgets, import.meta.webpackHot);

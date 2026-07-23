@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { registerStoreHMR } from '@/utils/hmr';
 
 interface Sector {
   uuid: String;
@@ -22,5 +21,3 @@ export const useSectors = defineStore('sectors', {
     },
   },
 });
-
-registerStoreHMR(useSectors, import.meta.webpackHot);

@@ -8,8 +8,6 @@ import resolutionCriteriaService, {
   MAX_CUSTOM_CRITERIA,
 } from '@/services/api/resources/conversational/resolutionCriteria';
 
-import { registerStoreHMR } from '@/utils/hmr';
-
 export type ResolutionCriteriaView = 'list' | 'form';
 export type ValidationStatus = 'idle' | 'validating' | 'valid' | 'invalid';
 
@@ -276,5 +274,3 @@ export const useResolutionCriteria = defineStore('resolutionCriteria', {
     },
   },
 });
-
-registerStoreHMR(useResolutionCriteria, import.meta.webpackHot);

@@ -7,7 +7,6 @@ import type {
 } from '@/services/api/resources/humanSupport/monitoring/metricGoals';
 import type { TimeMetricsDataResponse } from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
 import { deriveThresholdFromSeconds } from '@/utils/metricGoalThreshold';
-import { registerStoreHMR } from '@/utils/hmr';
 
 const LIVE_METRIC_KEYS: MetricKey[] = [
   'waiting_time',
@@ -143,5 +142,3 @@ export type {
   MetricGoalSocketResolvedContent,
   MetricGoalSocketViolatedContent,
 };
-
-registerStoreHMR(useMetricGoalAlerts, import.meta.webpackHot);

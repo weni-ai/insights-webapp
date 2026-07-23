@@ -15,6 +15,10 @@ type WebpackHotModule = {
  * self-accepts and re-executes the module — the accept callback is an error
  * handler and never receives exports. Without a manual patch, edits are
  * accepted silently and the live store keeps the old getters/actions.
+ *
+ * Do not call this from store files. In development, `build/pinia-hmr-loader.js`
+ * injects `registerStoreHMR(useStore, import.meta.webpackHot)` for every
+ * `export const … = defineStore(...)` under `src/store/modules`.
  */
 export function registerStoreHMR(
   useStore: StoreDefinition<any, any, any, any>,

@@ -2,7 +2,6 @@ import { defineStore } from 'pinia';
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
 import type { AutoWidgetResponse } from '@/services/api/resources/conversational/widgets';
 import { useConversational } from './conversational';
-import { registerStoreHMR } from '@/utils/hmr';
 
 interface AutoWidgetState {
   agentInvocation: {
@@ -129,5 +128,3 @@ export const useAutoWidgets = defineStore('autoWidgets', {
       (state.toolResult.data?.results?.length ?? 0) > 0,
   },
 });
-
-registerStoreHMR(useAutoWidgets, import.meta.webpackHot);

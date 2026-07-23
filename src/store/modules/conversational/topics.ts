@@ -4,7 +4,6 @@ import type { topicDistributionMetric } from '@/services/api/resources/conversat
 import topicsService from '@/services/api/resources/conversational/topics';
 import { checkIsEmptyValuesAndNewTopics, defaultAlert } from '@/utils/topics';
 import { useConversational } from './conversational';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export interface Topic {
   uuid?: string;
@@ -414,5 +413,3 @@ export const useConversationalTopics = defineStore('conversationalTopics', {
     },
   },
 });
-
-registerStoreHMR(useConversationalTopics, import.meta.webpackHot);

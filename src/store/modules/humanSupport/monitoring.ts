@@ -8,7 +8,6 @@ import ServiceStatusService from '@/services/api/resources/humanSupport/monitori
 import TimeMetricsService from '@/services/api/resources/humanSupport/monitoring/timeMetrics';
 import ServicesOpenByHourService from '@/services/api/resources/humanSupport/monitoring/servicesOpenByHour';
 import { useMetricGoalAlerts } from '@/store/modules/humanSupport/metricGoalAlerts';
-import { registerStoreHMR } from '@/utils/hmr';
 
 export type ActiveDetailedTab =
   | 'in_awaiting'
@@ -161,5 +160,3 @@ export const useHumanSupportMonitoring = defineStore(
     };
   },
 );
-
-registerStoreHMR(useHumanSupportMonitoring, import.meta.webpackHot);

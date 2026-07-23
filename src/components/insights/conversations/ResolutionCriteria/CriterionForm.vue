@@ -51,31 +51,73 @@
           </p>
         </div>
 
-        <UnnnicDisclaimer
-          v-else-if="validationStatus === 'valid'"
-          type="success"
-          :title="
-            $t('conversations_dashboard.resolution_criteria.form.success_title')
-          "
-          :description="
-            $t(
-              'conversations_dashboard.resolution_criteria.form.success_description',
-            )
-          "
-          showTitle
-          showDescription
-          data-testid="criterion-form-success-disclaimer"
-        />
+        <template v-else-if="validationStatus === 'valid'">
+          <UnnnicDisclaimer
+            type="success"
+            :title="
+              $t(
+                'conversations_dashboard.resolution_criteria.form.success_title',
+              )
+            "
+            :description="
+              $t(
+                'conversations_dashboard.resolution_criteria.form.success_description',
+              )
+            "
+            showTitle
+            showDescription
+            data-testid="criterion-form-success-disclaimer"
+          />
 
-        <UnnnicDisclaimer
-          v-else-if="validationStatus === 'invalid' && validationError"
-          type="attention"
-          :title="validationErrorTitle"
-          :description="validationErrorDescription"
-          showTitle
-          showDescription
-          data-testid="criterion-form-error-disclaimer"
-        />
+          <ul
+            v-if="validationRules.length > 0"
+            class="criterion-form__rules"
+            data-testid="criterion-form-success-rules"
+          >
+            <li
+              v-for="(item, index) in validationRules"
+              :key="`success-rule-${index}`"
+              class="criterion-form__rule"
+              :class="{
+                'criterion-form__rule--valid': item.valid,
+                'criterion-form__rule--invalid': !item.valid,
+              }"
+            >
+              <p class="criterion-form__rule-text">{{ item.rule }}</p>
+              <p class="criterion-form__rule-reason">{{ item.reason }}</p>
+            </li>
+          </ul>
+        </template>
+
+        <template v-else-if="validationStatus === 'invalid' && validationError">
+          <UnnnicDisclaimer
+            type="attention"
+            :title="validationErrorTitle"
+            :description="validationErrorDescription"
+            showTitle
+            showDescription
+            data-testid="criterion-form-error-disclaimer"
+          />
+
+          <ul
+            v-if="validationRules.length > 0"
+            class="criterion-form__rules"
+            data-testid="criterion-form-error-rules"
+          >
+            <li
+              v-for="(item, index) in validationRules"
+              :key="`error-rule-${index}`"
+              class="criterion-form__rule"
+              :class="{
+                'criterion-form__rule--valid': item.valid,
+                'criterion-form__rule--invalid': !item.valid,
+              }"
+            >
+              <p class="criterion-form__rule-text">{{ item.rule }}</p>
+              <p class="criterion-form__rule-reason">{{ item.reason }}</p>
+            </li>
+          </ul>
+        </template>
       </section>
     </div>
   </section>
@@ -92,8 +134,13 @@ import { useResolutionCriteria } from '@/store/modules/conversational/resolution
 const { t } = useI18n();
 const store = useResolutionCriteria();
 
-const { formText, validationStatus, validationError, canValidate } =
-  storeToRefs(store);
+const {
+  formText,
+  validationStatus,
+  validationError,
+  validationRules,
+  canValidate,
+} = storeToRefs(store);
 
 const { setFormText, validate } = store;
 
@@ -104,26 +151,9 @@ const showValidationResults = computed(
     validationStatus.value === 'invalid',
 );
 
-const validationErrorTitle = computed(() => {
-  if (!validationError.value) return '';
-
-  const codeTitleMap: Record<string, string> = {
-    DUPLICATE_CRITERION: t(
-      'conversations_dashboard.resolution_criteria.errors.duplicate_title',
-    ),
-    AMBIGUOUS_CRITERION: t(
-      'conversations_dashboard.resolution_criteria.errors.ambiguous_title',
-    ),
-    INVALID_CRITERION: t(
-      'conversations_dashboard.resolution_criteria.errors.invalid_title',
-    ),
-  };
-
-  return (
-    codeTitleMap[validationError.value.code] ??
-    t('conversations_dashboard.resolution_criteria.errors.invalid_title')
-  );
-});
+const validationErrorTitle = computed(() =>
+  t('conversations_dashboard.resolution_criteria.errors.invalid_title'),
+);
 
 const validationErrorDescription = computed(
   () => validationError.value?.message ?? '',
@@ -173,6 +203,44 @@ const validationErrorDescription = computed(
   }
 
   &__validating-text {
+    margin: 0;
+    color: $unnnic-color-fg-muted;
+    font: $unnnic-font-body;
+  }
+
+  &__rules {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-2;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__rule {
+    display: flex;
+    flex-direction: column;
+    gap: $unnnic-space-1;
+    padding: $unnnic-space-3;
+    border-radius: $unnnic-radius-1;
+    border: 1px solid $unnnic-color-gray-2;
+
+    &--valid {
+      border-color: $unnnic-color-border-success;
+    }
+
+    &--invalid {
+      border-color: $unnnic-color-border-warning;
+    }
+  }
+
+  &__rule-text {
+    margin: 0;
+    color: $unnnic-color-gray-12;
+    font: $unnnic-font-emphasis;
+  }
+
+  &__rule-reason {
     margin: 0;
     color: $unnnic-color-fg-muted;
     font: $unnnic-font-body;

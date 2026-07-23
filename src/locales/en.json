@@ -166,11 +166,6 @@
       "custom_section_description": "Add situations this project should also count as Handled by AI. {count} of {max}.",
       "custom_section_title": "Your criteria",
       "errors": {
-        "ambiguous_description": "Rewrite the criterion to make it clearer",
-        "ambiguous_title": "The criterion is ambiguous",
-        "duplicate_description": "Edit the criterion to cover a different situation, or remove the other one first",
-        "duplicate_title": "You've already added a similar criterion",
-        "invalid_description": "Rewrite the criterion and validate again",
         "invalid_title": "The criterion is invalid",
         "technical": "The criterion couldn't be validated due to a technical issue"
       },

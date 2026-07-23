@@ -15,6 +15,7 @@ vi.mock('@/services/api/resources/conversational/resolutionCriteria', () => ({
     message:
       error?.data?.error?.message ??
       'The criterion could not be validated due to a technical issue',
+    rules: error?.data?.error?.rules ?? [],
   })),
   MAX_CUSTOM_CRITERIA: 10,
 }));
@@ -88,24 +89,48 @@ describe('useResolutionCriteria store', () => {
     it('sets valid state on success', async () => {
       store.formText = 'Criterion text';
       resolutionCriteriaService.validateCriterion.mockResolvedValueOnce({
-        validation: { status: true, message: 'ok' },
+        validation: {
+          status: true,
+          message: 'Criterion validated successfully',
+          rules: [
+            {
+              rule: 'Mark as resolved when...',
+              valid: true,
+              reason: 'Valid domain-specific rule.',
+            },
+          ],
+        },
       });
 
       await store.validate();
 
       expect(store.validationStatus).toBe('valid');
       expect(store.lastValidatedText).toBe('Criterion text');
+      expect(store.validationRules).toEqual([
+        {
+          rule: 'Mark as resolved when...',
+          valid: true,
+          reason: 'Valid domain-specific rule.',
+        },
+      ]);
       expect(store.canSave).toBe(true);
     });
 
     it('sets invalid state on 400 response', async () => {
-      store.formText = 'Duplicate text';
+      store.formText = 'Invalid text';
       resolutionCriteriaService.validateCriterion.mockRejectedValueOnce({
         status: 400,
         data: {
           error: {
-            code: 'DUPLICATE_CRITERION',
-            message: 'Duplicate criterion',
+            code: 'INVALID_CRITERION',
+            message: 'Directly overrides the base criteria...',
+            rules: [
+              {
+                rule: 'Always mark as resolved...',
+                valid: false,
+                reason: 'Directly overrides the base criteria...',
+              },
+            ],
           },
         },
       });
@@ -114,9 +139,16 @@ describe('useResolutionCriteria store', () => {
 
       expect(store.validationStatus).toBe('invalid');
       expect(store.validationError).toEqual({
-        code: 'DUPLICATE_CRITERION',
-        message: 'Duplicate criterion',
+        code: 'INVALID_CRITERION',
+        message: 'Directly overrides the base criteria...',
       });
+      expect(store.validationRules).toEqual([
+        {
+          rule: 'Always mark as resolved...',
+          valid: false,
+          reason: 'Directly overrides the base criteria...',
+        },
+      ]);
       expect(store.canSave).toBe(false);
     });
 

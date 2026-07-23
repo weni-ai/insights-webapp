@@ -4,8 +4,6 @@ import { useConfig } from '@/store/modules/config';
 export type CriterionType = 'base' | 'custom';
 
 export type CriterionErrorCode =
-  | 'DUPLICATE_CRITERION'
-  | 'AMBIGUOUS_CRITERION'
   | 'INVALID_CRITERION'
   | 'LAMBDA_VALIDATION_FAILED'
   | 'CRITERION_NOT_FOUND'
@@ -26,10 +24,17 @@ export interface ResolutionCriteriaResponse {
   custom_criteria: Criterion[];
 }
 
+export interface ValidationRule {
+  rule: string;
+  valid: boolean;
+  reason: string;
+}
+
 export interface ValidationResponse {
   validation: {
     status: boolean;
     message: string;
+    rules?: ValidationRule[];
   };
 }
 
@@ -37,6 +42,7 @@ export interface CriterionErrorResponse {
   error: {
     code: CriterionErrorCode;
     message: string;
+    rules?: ValidationRule[];
   };
 }
 
@@ -44,6 +50,7 @@ export interface ParsedCriterionError {
   status: number;
   code: CriterionErrorCode | string;
   message: string;
+  rules: ValidationRule[];
 }
 
 interface AxiosLikeError {
@@ -60,8 +67,9 @@ export function parseCriterionError(error: unknown): ParsedCriterionError {
   const message =
     err?.data?.error?.message ??
     'The criterion could not be validated due to a technical issue';
+  const rules = err?.data?.error?.rules ?? [];
 
-  return { status, code, message };
+  return { status, code, message, rules };
 }
 
 function getProjectUuid(): string {

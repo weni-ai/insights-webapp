@@ -44,7 +44,17 @@ describe('resolutionCriteria service', () => {
   describe('validateCriterion', () => {
     it('calls nexusHttp.post with text and criterion_id', async () => {
       const mockResponse = {
-        validation: { status: true, message: 'ok' },
+        validation: {
+          status: true,
+          message: 'Criterion validated successfully',
+          rules: [
+            {
+              rule: 'Mark as resolved when...',
+              valid: true,
+              reason: 'Valid domain-specific rule.',
+            },
+          ],
+        },
       };
       nexusHttp.post.mockResolvedValueOnce(mockResponse);
 
@@ -115,21 +125,35 @@ describe('resolutionCriteria service', () => {
   });
 
   describe('parseCriterionError', () => {
-    it('parses API error response', () => {
+    it('parses API error response with rules', () => {
       const parsed = parseCriterionError({
         status: 400,
         data: {
           error: {
-            code: 'DUPLICATE_CRITERION',
-            message: 'Duplicate criterion',
+            code: 'INVALID_CRITERION',
+            message: 'Directly overrides the base criteria...',
+            rules: [
+              {
+                rule: 'Always mark as resolved...',
+                valid: false,
+                reason: 'Directly overrides the base criteria...',
+              },
+            ],
           },
         },
       });
 
       expect(parsed).toEqual({
         status: 400,
-        code: 'DUPLICATE_CRITERION',
-        message: 'Duplicate criterion',
+        code: 'INVALID_CRITERION',
+        message: 'Directly overrides the base criteria...',
+        rules: [
+          {
+            rule: 'Always mark as resolved...',
+            valid: false,
+            reason: 'Directly overrides the base criteria...',
+          },
+        ],
       });
     });
 
@@ -138,6 +162,7 @@ describe('resolutionCriteria service', () => {
 
       expect(parsed.status).toBe(500);
       expect(parsed.code).toBe('LAMBDA_VALIDATION_FAILED');
+      expect(parsed.rules).toEqual([]);
     });
   });
 });

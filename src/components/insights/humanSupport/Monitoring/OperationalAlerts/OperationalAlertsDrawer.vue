@@ -12,12 +12,16 @@
         <UnnnicDrawerTitle>
           {{ $t('operational_alerts.drawer.title') }}
         </UnnnicDrawerTitle>
-        <UnnnicDrawerDescription>
-          {{ $t('operational_alerts.drawer.description') }}
-        </UnnnicDrawerDescription>
       </UnnnicDrawerHeader>
 
       <section class="operational-alerts-drawer__body">
+        <p
+          class="operational-alerts-drawer__description"
+          data-testid="operational-alerts-description"
+        >
+          {{ $t('operational_alerts.drawer.description') }}
+        </p>
+
         <section
           v-for="metric in metricKeys"
           :key="metric"
@@ -42,6 +46,15 @@
               :metric="metric"
             />
           </template>
+
+          <hr
+            v-if="
+              formState[metric].enabled &&
+              metric !== metricKeys[metricKeys.length - 1]
+            "
+            class="operational-alerts-drawer__separator"
+            data-testid="operational-alerts-separator"
+          />
         </section>
       </section>
 
@@ -68,19 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  UnnnicButton,
-  UnnnicDrawerNext,
-  UnnnicDrawerContent,
-  UnnnicDrawerHeader,
-  UnnnicDrawerTitle,
-  UnnnicDrawerDescription,
-  UnnnicDrawerFooter,
-  UnnnicDrawerClose,
-  UnnnicSwitch,
-  UnnnicDisclaimer,
-  unnnicCallAlert,
-} from '@weni/unnnic-system';
+import { unnnicCallAlert } from '@weni/unnnic-system';
 import { reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
@@ -94,6 +95,7 @@ import {
   MetricFormState,
   OperationalAlertsFormState,
 } from '@/store/modules/humanSupport/metricGoals';
+
 import {
   MetricKey,
   formatRecipientLabel,
@@ -135,11 +137,10 @@ const buildMetricFormState = (metric: MetricKey): MetricFormState => {
     unit: goal.unit,
     recipients: [...goal.recipients],
     recipientOptions: goal.recipientDetails.map((recipient) => ({
-      value: recipient.uuid,
+      value: recipient.email,
       label: formatRecipientLabel(recipient),
     })),
-    roomsThresholdCount:
-      goal.roomsThresholdCount ?? DEFAULT_ROOMS_THRESHOLD,
+    roomsThresholdCount: goal.roomsThresholdCount ?? DEFAULT_ROOMS_THRESHOLD,
   };
 };
 
@@ -218,9 +219,22 @@ defineExpose({ formState });
   padding: $unnnic-space-6;
 }
 
+.operational-alerts-drawer__description {
+  margin: 0;
+  font: $unnnic-font-body;
+  color: $unnnic-color-fg-base;
+}
+
 .operational-alerts-drawer__section {
   display: flex;
   flex-direction: column;
   gap: $unnnic-space-4;
+}
+
+.operational-alerts-drawer__separator {
+  width: 100%;
+  margin: 0;
+  border: none;
+  border-top: 1px solid $unnnic-color-border-soft;
 }
 </style>

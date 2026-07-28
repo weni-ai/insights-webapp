@@ -166,11 +166,6 @@
       "custom_section_description": "Adaugă situații pe care acest proiect trebuie să le numere ca Gestionat de AI. {count} din {max}.",
       "custom_section_title": "Criteriile tale",
       "errors": {
-        "ambiguous_description": "Rescrie criteriul pentru a-l face mai clar",
-        "ambiguous_title": "Criteriul este ambiguu",
-        "duplicate_description": "Editează criteriul pentru a acoperi o situație diferită sau elimină celălalt mai întâi",
-        "duplicate_title": "Ai adăugat deja un criteriu similar",
-        "invalid_description": "Rescrie criteriul și validează din nou",
         "invalid_title": "Criteriul este invalid",
         "technical": "Criteriul nu a putut fi validat din cauza unei probleme tehnice"
       },
@@ -529,6 +524,7 @@
   "online_agents": "Agenți online",
   "chats_per_agents": "Chaturi per agent",
   "closeds": "Închise",
+  "close": "Închide",
   "finished": "Finalizat",
   "in_progress": "În curs",
   "waiting": "În așteptare",
@@ -1033,14 +1029,14 @@
     "filters": {
       "sector": "Sector de activitate",
       "select_sector": "Selectează un sector de activitate",
-      "agent": "Agent",
-      "select_agent": "Alege un agent",
+      "representative": "Reprezentant",
+      "select_representative": "Selectează un reprezentant",
       "queue": "Coadă",
       "select_queue": "Selectează o coadă",
       "tag": "Etichetă",
       "select_tag": "Alege o etichetă",
       "all_sectors": "Toate sectoarele de activitate",
-      "all_agents": "Toți agenții",
+      "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
       "all_tags": "Toate etichetele"
     },
@@ -1073,7 +1069,7 @@
       "description": "Configure alertele pentru a identifica conversațiile care depășesc limitele de timp definite pentru o operațiune:",
       "title": "Alerte operaționale"
     },
-    "first_response_info": "Timpul până la primul răspuns este calculat din momentul în care conversația este atribuită unui reprezentant",
+    "first_response_info": "Alerta de timeout pentru primul răspuns va rămâne activă până când reprezentantul trimite primul mesaj.",
     "form": {
       "email_notification_label": "Notificare prin e-mail (opțional)",
       "email_notification_tooltip": "Această alertă este afișată întotdeauna în dashboard-ul Live Desk când o conversație atinge limita definită.\n\nPoți configura și notificări prin e-mail pentru moderatorii selectați și poți alege când trebuie trimise - de exemplu, când una sau mai multe conversații ating limita definită.",
@@ -1081,11 +1077,15 @@
       "send_email_to_label": "Trimite e-mail către",
       "send_email_to_placeholder": "Selectează moderatorii",
       "threshold_labels": {
-        "conversation_duration": "Durata maximă a conversației",
+        "conversation_duration": "Timp maxim de durată",
         "first_response_time": "Timp maxim până la primul răspuns",
         "waiting_time": "Timp maxim de așteptare"
       },
-      "threshold_placeholder": "Exemplu: 10",
+      "threshold_placeholders": {
+        "conversation_duration": "Exemplu: 30",
+        "first_response_time": "Exemplu: 2",
+        "waiting_time": "Exemplu: 10"
+      },
       "unit_label": "Unitate",
       "units": {
         "hours": "Ore",

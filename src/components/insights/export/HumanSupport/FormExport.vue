@@ -85,7 +85,7 @@
             v-model="agents"
             :placeholder="$t('export_data.filters.select_representative')"
             source="agents"
-            keyValueField="uuid"
+            keyValueField="email"
             :allLabel="$t('export_data.filters.all_representatives')"
             :disabled="!hasSectorsSelected"
             :dependsOnValue="dependsOnValueAgents"

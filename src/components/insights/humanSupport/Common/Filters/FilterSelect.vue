@@ -135,37 +135,23 @@ const canLoadMore = () => {
 };
 
 const findSelectedItem = (
-  items: FilterItem[] | TicketIdItem[],
   value: string,
 ): { value: string; label: string; email?: string } | null => {
-  if (!Array.isArray(items)) {
-    return null;
-  }
-
-  if (isTicketIdFilter.value) {
-    const item = (items as TicketIdItem[]).find((d) => d.ticket_id === value);
-    return item ? { value: item.ticket_id, label: item.ticket_id } : null;
-  }
-
-  const item = (items as FilterItem[]).find((d) => {
-    if (props.type === 'contact' && d.external_id) {
-      return d.external_id === value;
-    }
-    return d.uuid === value;
-  });
-
-  if (!item) return null;
-
-  const itemValue =
-    props.type === 'contact' && item.external_id ? item.external_id : item.uuid;
+  const option = options.value.find((o) => o.value === value);
+  if (!option) return null;
 
   const result: { value: string; label: string; email?: string } = {
-    value: itemValue,
-    label: item.name,
+    value: option.value,
+    label: option.label,
   };
 
-  if (props.type === 'attendant' && item.email) {
-    result.email = item.email;
+  if (props.type === 'attendant') {
+    const rawItem = (data.value as FilterItem[]).find(
+      (item) => item.email === option.value || item.uuid === option.value,
+    );
+    if (rawItem?.email) {
+      result.email = rawItem.email;
+    }
   }
 
   return result;
@@ -185,7 +171,7 @@ const handleChange = (selectedValue: string) => {
     return;
   }
 
-  const item = findSelectedItem(data.value, selectedValue);
+  const item = findSelectedItem(selectedValue);
 
   if (item) {
     if (props.modelValue === item.value) {

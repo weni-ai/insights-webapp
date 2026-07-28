@@ -1,9 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-vi.mock('@/services/api/resources/projects', () => ({
+vi.mock('@/services/api/resources/conversational/resolutionCriteria', () => ({
   default: {
-    verifyProjectIndexer: vi.fn(),
+    getResolutionCriteria: vi.fn(),
+    validateCriterion: vi.fn(),
+    createCriterion: vi.fn(),
+    updateCriterion: vi.fn(),
+    deleteCriterion: vi.fn(),
   },
+  parseCriterionError: vi.fn((error) => ({
+    status: error?.status ?? 500,
+    code: error?.data?.error?.code ?? 'LAMBDA_VALIDATION_FAILED',
+    message:
+      error?.data?.error?.message ??
+      'The criterion could not be validated due to a technical issue',
+  })),
+  MAX_CUSTOM_CRITERIA: 10,
 }));
 
 vi.mock('@/utils/plugins/i18n', () => ({
@@ -87,5 +99,63 @@ describe('CriterionForm', () => {
     expect(
       wrapper.find('[data-testid="criterion-form-validating"]').exists(),
     ).toBe(true);
+  });
+
+  it('shows success disclaimer and rules when validation succeeds', async () => {
+    const wrapper = createWrapper();
+    const store = useResolutionCriteria();
+
+    store.formText = 'Criterion text';
+    store.validationStatus = 'valid';
+    store.validationRules = [
+      {
+        rule: 'Mark as resolved when...',
+        valid: true,
+        reason: 'Valid domain-specific rule.',
+      },
+    ];
+
+    await wrapper.vm.$nextTick();
+
+    expect(
+      wrapper
+        .find('[data-testid="criterion-form-success-disclaimer"]')
+        .exists(),
+    ).toBe(true);
+    expect(
+      wrapper.find('[data-testid="criterion-form-success-rules"]').exists(),
+    ).toBe(true);
+    expect(wrapper.text()).toContain('Mark as resolved when...');
+    expect(wrapper.text()).toContain('Valid domain-specific rule.');
+  });
+
+  it('shows error disclaimer and rules when validation fails', async () => {
+    const wrapper = createWrapper();
+    const store = useResolutionCriteria();
+
+    store.formText = 'Invalid criterion';
+    store.validationStatus = 'invalid';
+    store.validationError = {
+      code: 'INVALID_CRITERION',
+      message: 'Directly overrides the base criteria...',
+    };
+    store.validationRules = [
+      {
+        rule: 'Always mark as resolved...',
+        valid: false,
+        reason: 'Directly overrides the base criteria...',
+      },
+    ];
+
+    await wrapper.vm.$nextTick();
+
+    expect(
+      wrapper.find('[data-testid="criterion-form-error-disclaimer"]').exists(),
+    ).toBe(true);
+    expect(
+      wrapper.find('[data-testid="criterion-form-error-rules"]').exists(),
+    ).toBe(true);
+    expect(wrapper.text()).toContain('Directly overrides the base criteria...');
+    expect(wrapper.text()).toContain('Always mark as resolved...');
   });
 });

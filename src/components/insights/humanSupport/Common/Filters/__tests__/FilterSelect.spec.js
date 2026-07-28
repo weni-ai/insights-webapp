@@ -27,6 +27,12 @@ const mockContactResponse = {
   next: 'http://api.com/next',
 };
 
+const formatAttendantOptions = (agents) =>
+  agents.map((agent) => ({
+    value: agent.email,
+    label: agent.name.trim() || agent.email,
+  }));
+
 const createWrapper = (props = {}, options = {}) => {
   const wrapper = mount(FilterSelect, {
     props: {
@@ -154,21 +160,30 @@ describe('FilterSelect', () => {
   describe('Filter Selection', () => {
     beforeEach(async () => {
       Projects.getProjectSource = vi.fn().mockResolvedValue(mockApiResponse);
-      wrapper = createWrapper();
+      wrapper = createWrapper({ formatOptionsFn: formatAttendantOptions });
       await nextTick();
     });
 
     it('should emit change event when option is selected', async () => {
-      wrapper.vm.handleChange('1');
+      wrapper.vm.handleChange('agent1@test.com');
       await nextTick();
 
       expect(wrapper.emitted('update:modelValue')).toBeTruthy();
       expect(wrapper.emitted('change')).toBeTruthy();
+      expect(wrapper.emitted('update:modelValue')[0]).toEqual([
+        'agent1@test.com',
+      ]);
+      expect(wrapper.emitted('change')[0][0]).toEqual({
+        value: 'agent1@test.com',
+        label: 'Agent 1',
+        email: 'agent1@test.com',
+      });
     });
 
     it('should emit clear event when selection is cleared', async () => {
       wrapper = createWrapper({
-        modelValue: '1',
+        modelValue: 'agent1@test.com',
+        formatOptionsFn: formatAttendantOptions,
       });
       await nextTick();
 
@@ -180,10 +195,11 @@ describe('FilterSelect', () => {
     });
 
     it('should handle attendant selection with email', async () => {
-      wrapper.vm.handleChange('1');
+      wrapper.vm.handleChange('agent1@test.com');
       await nextTick();
 
       const emitted = wrapper.emitted('change')[0][0];
+      expect(emitted.value).toBe('agent1@test.com');
       expect(emitted.email).toBe('agent1@test.com');
     });
 
@@ -202,12 +218,13 @@ describe('FilterSelect', () => {
 
     it('should not emit if same value is selected', async () => {
       wrapper = createWrapper({
-        modelValue: '1',
+        modelValue: 'agent1@test.com',
+        formatOptionsFn: formatAttendantOptions,
       });
       await nextTick();
 
       const emitCountBefore = wrapper.emitted('change')?.length || 0;
-      wrapper.vm.handleChange('1');
+      wrapper.vm.handleChange('agent1@test.com');
       await nextTick();
 
       const emitCountAfter = wrapper.emitted('change')?.length || 0;

@@ -62,6 +62,13 @@ export default {
     };
   },
 
+  async getProjectManagers() {
+    const { project } = useConfig();
+    const url = `/projects/${project.uuid}/filters/project_managers/`;
+    const response = await http.get(url);
+    return response;
+  },
+
   async verifyProjectCsat() {
     const { project } = useConfig();
 

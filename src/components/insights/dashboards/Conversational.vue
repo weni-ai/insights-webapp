@@ -124,9 +124,8 @@ const project = useProject();
 const { isLoadingCurrentDashboardWidgets, currentDashboardWidgets } =
   storeToRefs(widgets);
 const { isConfigurationLoaded } = storeToRefs(conversational);
-const { isAbandonedCartRecoveryConfigured } = storeToRefs(
-  conversationalWidgets,
-);
+const { isAbandonedCartRecoveryConfigured, availableNativeWidgets } =
+  storeToRefs(conversationalWidgets);
 
 const dynamicWidgets = ref<{ type: ConversationalWidgetType; uuid: string }[]>(
   [],
@@ -150,6 +149,14 @@ const isOnlyAddWidget = (widget: ConversationalWidgetType) => {
   return isOddNumberOfWidgets && isLastWidgetAdd;
 };
 
+const isAvaliableSearchTermWidget = computed(() => {
+  return availableNativeWidgets.value.includes('SEARCH_TERMS');
+});
+
+const isAvaliableAddedToCartWidget = computed(() => {
+  return availableNativeWidgets.value.includes('ADDED_TO_CART');
+});
+
 const setDynamicWidgets = () => {
   const newWidgets: { type: ConversationalWidgetType; uuid: string }[] = [];
   const useMock = conversational.shouldUseMock;
@@ -160,7 +167,6 @@ const setDynamicWidgets = () => {
   if (currentDashboard.value.config?.show_tool_result && !useMock) {
     newWidgets.push({ type: 'tool_result', uuid: '' });
   }
-
   if (useMock || conversationalWidgets.isCsatConfigured) {
     newWidgets.push({ type: 'csat', uuid: '' });
   }
@@ -188,13 +194,13 @@ const setDynamicWidgets = () => {
   }
 
   if (
-    project.isSearchTermAgentAvailable &&
+    isAvaliableSearchTermWidget.value &&
     conversationalWidgets.isSearchTermConfigured
   ) {
     newWidgets.push({ type: 'search_term', uuid: '' });
   }
   if (
-    project.isAddedToCartAgentAvailable &&
+    isAvaliableAddedToCartWidget.value &&
     conversationalWidgets.isAddedToCartConfigured
   ) {
     newWidgets.push({ type: 'added_to_cart', uuid: '' });
@@ -300,6 +306,14 @@ watch(activeFeatures, () => {
     checkSurvey();
   }
 });
+
+watch(
+  availableNativeWidgets,
+  () => {
+    setDynamicWidgets();
+  },
+  { deep: true },
+);
 
 onUnmounted(() => {
   dynamicWidgets.value = [];

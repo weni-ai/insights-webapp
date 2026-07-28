@@ -1,11 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { config, shallowMount, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
-
-const mockIsSearchTermAgentAvailable = ref(false);
-const mockIsAddedToCartAgentAvailable = ref(false);
 
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
@@ -21,6 +18,8 @@ vi.mock('@/services/api/resources/conversational/widgets', () => ({
   },
   AvailableWidget: {
     SALES_FUNNEL: 'SALES_FUNNEL',
+    SEARCH_TERMS: 'SEARCH_TERMS',
+    ADDED_TO_CART: 'ADDED_TO_CART',
   },
 }));
 
@@ -33,8 +32,6 @@ vi.mock('@/store/modules/project', () => ({
     isLoadingAgentsTeam: false,
     hasValidSalesFunnelAgent: ref(false),
     hasAbandonedCartRecoveryEnabled: ref(true),
-    isSearchTermAgentAvailable: mockIsSearchTermAgentAvailable,
-    isAddedToCartAgentAvailable: mockIsAddedToCartAgentAvailable,
   }),
 }));
 
@@ -140,8 +137,6 @@ describe('CustomizableWidget', () => {
   let conversationalStore;
 
   beforeEach(() => {
-    mockIsSearchTermAgentAvailable.value = false;
-    mockIsAddedToCartAgentAvailable.value = false;
     wrapper = createWrapper();
     conversationalStore = useConversational();
   });
@@ -522,12 +517,16 @@ describe('CustomizableWidget', () => {
   });
 
   describe('Product ranking widgets', () => {
-    it('should include search_term and added_to_cart in native tab when agents are available', () => {
-      mockIsSearchTermAgentAvailable.value = true;
-      mockIsAddedToCartAgentAvailable.value = true;
-      const wrapperWithAgents = createWrapper();
+    it('should include search_term and added_to_cart in native tab when available from API', async () => {
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: ['SEARCH_TERMS', 'ADDED_TO_CART'],
+      });
 
-      const nativeKeys = wrapperWithAgents.vm
+      const wrapperWithWidgets = createWrapper();
+      await nextTick();
+      await flushPromises();
+
+      const nativeKeys = wrapperWithWidgets.vm
         .handleTabChoice('native')
         .map((widget) => widget.key);
 
@@ -535,12 +534,10 @@ describe('CustomizableWidget', () => {
       expect(nativeKeys).toContain('added_to_cart');
     });
 
-    it('should exclude product ranking widgets from native tab when agents are unavailable', () => {
-      mockIsSearchTermAgentAvailable.value = false;
-      mockIsAddedToCartAgentAvailable.value = false;
-      const wrapperWithoutAgents = createWrapper();
+    it('should exclude product ranking widgets from native tab when not available from API', () => {
+      const wrapperWithoutWidgets = createWrapper();
 
-      const nativeKeys = wrapperWithoutAgents.vm
+      const nativeKeys = wrapperWithoutWidgets.vm
         .handleTabChoice('native')
         .map((widget) => widget.key);
 
@@ -549,8 +546,13 @@ describe('CustomizableWidget', () => {
     });
 
     it('should exclude search_term when already configured', async () => {
-      mockIsSearchTermAgentAvailable.value = true;
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValueOnce({
+        available_widgets: ['SEARCH_TERMS', 'ADDED_TO_CART'],
+      });
+
       const wrapperConfigured = createWrapper();
+      await nextTick();
+      await flushPromises();
 
       const widgetsStore = useConversationalWidgets();
       widgetsStore.isSearchTermConfigured = true;

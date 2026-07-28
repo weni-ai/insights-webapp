@@ -41,6 +41,20 @@ class MockWebSocket {
   }
 }
 
+const violatedContent = {
+  project_uuid: 'project-1',
+  metric: 'waiting_time',
+  state: 'violating',
+  transition: 'new',
+  violating_count: 5,
+  max_value_seconds: 300,
+  threshold_seconds: 60,
+  rooms_threshold_count: 2,
+  rooms_threshold_percent: null,
+  active_rooms_count: null,
+  detected_at: '2026-06-23T18:55:36+00:00',
+};
+
 describe('useMetricGoalsSocket', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -69,7 +83,90 @@ describe('useMetricGoalsSocket', () => {
     );
   });
 
-  it('should show toast and trigger silent refresh on violated new events', () => {
+  it('should show toast on metric_goal.alert without mutating store or refreshing', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+    const monitoringStore = useHumanSupportMonitoring();
+
+    connect();
+    MockWebSocket.instances[0].emitOpen();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.alert',
+      content: violatedContent,
+    });
+
+    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
+    expect(showMetricGoalToast).toHaveBeenCalledWith(violatedContent);
+    expect(alertsStore.liveBreaches.waiting_time).toBeNull();
+    expect(monitoringStore.refreshDataMonitoring).toBe(false);
+  });
+
+  it('should show toast on every metric_goal.alert even when breach is already active', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+
+    alertsStore.applyViolated({
+      ...violatedContent,
+      metric: 'first_response_time',
+      violating_count: 2,
+    });
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.alert',
+      content: {
+        ...violatedContent,
+        metric: 'first_response_time',
+        transition: 'update',
+        violating_count: 3,
+      },
+    });
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.alert',
+      content: {
+        ...violatedContent,
+        metric: 'first_response_time',
+        transition: 'update',
+        violating_count: 4,
+      },
+    });
+
+    expect(showMetricGoalToast).toHaveBeenCalledTimes(2);
+  });
+
+  it('should show toast on metric_goal.alert even when breach was hydrated from API', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+
+    alertsStore.hydrateFromApiGoals({
+      average_time_is_waiting: {
+        average: 120,
+        max: 300,
+        waiting_time_goal: {
+          thresholdSeconds: 60,
+          thresholdValue: 1,
+          unit: 'm',
+          isBreached: true,
+          breachedRoomsCount: 7,
+        },
+      },
+      average_time_first_response: { average: 45, max: 90 },
+      average_time_chat: { average: 600, max: 1200 },
+    });
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.alert',
+      content: {
+        ...violatedContent,
+        violating_count: 8,
+      },
+    });
+
+    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
+  });
+
+  it('should update live breach and trigger silent refresh on violated new events without toast', () => {
     vi.useFakeTimers();
 
     const { connect } = useMetricGoalsSocket();
@@ -80,22 +177,10 @@ describe('useMetricGoalsSocket', () => {
     MockWebSocket.instances[0].emitOpen();
     MockWebSocket.instances[0].emitMessage({
       type: 'metric_goal.violated',
-      content: {
-        project_uuid: 'project-1',
-        metric: 'waiting_time',
-        state: 'violating',
-        transition: 'new',
-        violating_count: 5,
-        max_value_seconds: 300,
-        threshold_seconds: 60,
-        rooms_threshold_count: 2,
-        rooms_threshold_percent: null,
-        active_rooms_count: null,
-        detected_at: '2026-06-23T18:55:36+00:00',
-      },
+      content: violatedContent,
     });
 
-    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
+    expect(showMetricGoalToast).not.toHaveBeenCalled();
     expect(alertsStore.liveBreaches.waiting_time?.breachedRoomsCount).toBe(5);
     expect(monitoringStore.refreshDataMonitoring).toBe(true);
     expect(monitoringStore.isSilentRefresh).toBe(true);
@@ -105,7 +190,7 @@ describe('useMetricGoalsSocket', () => {
     expect(monitoringStore.refreshDataMonitoring).toBe(false);
   });
 
-  it('should update live breach and show toast when breach was not active', () => {
+  it('should update live breach without toast on violated update when breach was not active', () => {
     const { connect } = useMetricGoalsSocket();
     const alertsStore = useMetricGoalAlerts();
 
@@ -113,59 +198,11 @@ describe('useMetricGoalsSocket', () => {
     MockWebSocket.instances[0].emitMessage({
       type: 'metric_goal.violated',
       content: {
-        project_uuid: 'project-1',
+        ...violatedContent,
         metric: 'first_response_time',
-        state: 'violating',
         transition: 'update',
         violating_count: 3,
         max_value_seconds: 120,
-        threshold_seconds: 60,
-        rooms_threshold_count: 2,
-        rooms_threshold_percent: null,
-        active_rooms_count: null,
-        detected_at: '2026-06-23T18:55:36+00:00',
-      },
-    });
-
-    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
-    expect(
-      alertsStore.liveBreaches.first_response_time?.breachedRoomsCount,
-    ).toBe(3);
-  });
-
-  it('should update live breach without toast when breach is already active', () => {
-    const { connect } = useMetricGoalsSocket();
-    const alertsStore = useMetricGoalAlerts();
-
-    alertsStore.applyViolated({
-      project_uuid: 'project-1',
-      metric: 'first_response_time',
-      state: 'violating',
-      transition: 'new',
-      violating_count: 2,
-      max_value_seconds: 120,
-      threshold_seconds: 60,
-      rooms_threshold_count: 2,
-      rooms_threshold_percent: null,
-      active_rooms_count: null,
-      detected_at: '2026-06-23T18:55:36+00:00',
-    });
-
-    connect();
-    MockWebSocket.instances[0].emitMessage({
-      type: 'metric_goal.violated',
-      content: {
-        project_uuid: 'project-1',
-        metric: 'first_response_time',
-        state: 'violating',
-        transition: 'update',
-        violating_count: 3,
-        max_value_seconds: 120,
-        threshold_seconds: 60,
-        rooms_threshold_count: 2,
-        rooms_threshold_percent: null,
-        active_rooms_count: null,
-        detected_at: '2026-06-23T18:55:36+00:00',
       },
     });
 
@@ -175,7 +212,38 @@ describe('useMetricGoalsSocket', () => {
     ).toBe(3);
   });
 
-  it('should update live breach and show toast on first metric_goal.update event', () => {
+  it('should update live breach without toast or refresh when breach is already active', () => {
+    const { connect } = useMetricGoalsSocket();
+    const alertsStore = useMetricGoalAlerts();
+    const monitoringStore = useHumanSupportMonitoring();
+
+    alertsStore.applyViolated({
+      ...violatedContent,
+      metric: 'first_response_time',
+      violating_count: 2,
+      max_value_seconds: 120,
+    });
+
+    connect();
+    MockWebSocket.instances[0].emitMessage({
+      type: 'metric_goal.violated',
+      content: {
+        ...violatedContent,
+        metric: 'first_response_time',
+        transition: 'update',
+        violating_count: 3,
+        max_value_seconds: 120,
+      },
+    });
+
+    expect(showMetricGoalToast).not.toHaveBeenCalled();
+    expect(monitoringStore.refreshDataMonitoring).toBe(false);
+    expect(
+      alertsStore.liveBreaches.first_response_time?.breachedRoomsCount,
+    ).toBe(3);
+  });
+
+  it('should update live breach and refresh on first metric_goal.update without toast', () => {
     const { connect } = useMetricGoalsSocket();
     const alertsStore = useMetricGoalAlerts();
     const monitoringStore = useHumanSupportMonitoring();
@@ -198,7 +266,7 @@ describe('useMetricGoalsSocket', () => {
       },
     });
 
-    expect(showMetricGoalToast).toHaveBeenCalledTimes(1);
+    expect(showMetricGoalToast).not.toHaveBeenCalled();
     expect(
       alertsStore.liveBreaches.conversation_duration?.breachedRoomsCount,
     ).toBe(12);
@@ -247,7 +315,7 @@ describe('useMetricGoalsSocket', () => {
     ).toBe(12);
   });
 
-  it('should not show toast when breach was already hydrated from API', () => {
+  it('should not show toast on violated when breach was already hydrated from API', () => {
     const { connect } = useMetricGoalsSocket();
     const alertsStore = useMetricGoalAlerts();
 
@@ -271,17 +339,8 @@ describe('useMetricGoalsSocket', () => {
     MockWebSocket.instances[0].emitMessage({
       type: 'metric_goal.violated',
       content: {
-        project_uuid: 'project-1',
-        metric: 'waiting_time',
-        state: 'violating',
-        transition: 'new',
+        ...violatedContent,
         violating_count: 8,
-        max_value_seconds: 300,
-        threshold_seconds: 60,
-        rooms_threshold_count: 2,
-        rooms_threshold_percent: null,
-        active_rooms_count: null,
-        detected_at: '2026-06-23T18:55:36+00:00',
       },
     });
 
@@ -293,19 +352,7 @@ describe('useMetricGoalsSocket', () => {
     const { connect } = useMetricGoalsSocket();
     const alertsStore = useMetricGoalAlerts();
 
-    alertsStore.applyViolated({
-      project_uuid: 'project-1',
-      metric: 'waiting_time',
-      state: 'violating',
-      transition: 'new',
-      violating_count: 5,
-      max_value_seconds: 300,
-      threshold_seconds: 60,
-      rooms_threshold_count: 2,
-      rooms_threshold_percent: null,
-      active_rooms_count: null,
-      detected_at: '2026-06-23T18:55:36+00:00',
-    });
+    alertsStore.applyViolated(violatedContent);
 
     connect();
     MockWebSocket.instances[0].emitMessage({

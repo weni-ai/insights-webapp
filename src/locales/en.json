@@ -319,7 +319,7 @@
         "description": "Combine and compare two different data points to discover insights.",
         "drawer": {
           "description": "Enter the widget name:",
-          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br/><b>Field name:</b> The name of the field for the value you want to show. If left blank, the system will use a default value.",
+          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br/><b>Field name:</b> The name of the field for the value you want to display. If left blank, the system will use a default value.",
           "first_data_label": "Set the <b>first</b> data point you want to track:",
           "second_data_label": "Set the <b>second</b> data point you want to track:",
           "reference_field_label": "Define the reference field to be used to link the events:"
@@ -785,7 +785,7 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Enter a name for metric",
+      "label": "Enter a name for the metric",
       "placeholder": "Example: Project flows"
     },
     "select_origin_flow": "Select source flow"
@@ -1114,7 +1114,7 @@
     "toast": {
       "conversation_duration": "{count} chats exceeded the maximum duration time",
       "first_response_time": "{count} chats exceeded the maximum time for first response",
-      "title": "Live Desk: immediate attention needed",
+      "title": "Live Desk: Immediate attention needed",
       "view_details": "View details",
       "waiting_time": "{count} chats exceeded the maximum wait time"
     },
@@ -1301,8 +1301,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count, plural, one {# queue with {status} chats} other {# queues with chats {status}}}",
-      "analysis_count": "{count, plural, one {# queue with completed chats} other {# queues with completed chats}}",
+      "monitoring_count": "{count, plural, one {# queue with {status} chats} other {# queues with {status} chats}}",
+      "analysis_count": "{count, plural, one {# queue with ended chats} other {# queues with ended chats}}",
       "setup_description": "Create queues by industry to monitor more data",
       "empty_data": {
         "monitoring": {

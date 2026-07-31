@@ -140,15 +140,15 @@
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
     "added_to_cart": "Produsele cele mai adăugate în coș",
-    "added_to_cart_count": "{count, plural, one {# produs} other {# produse}}",
+    "added_to_cart_count": "{count, plural, one {# produs} few {# produse} other {# de produse}}",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
-    "agent_invocation_count": "{count, plural, one {# agent} other {# agenți}}",
+    "agent_invocation_count": "{count, plural, one {# agent} few {# agenți} other {# de agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
-    "tool_result_count": "{count, plural, one {# instrument} other {# instrumente}}",
+    "tool_result_count": "{count, plural, one {# instrument} few {# instrumente} other {# de instrumente}}",
     "search_term": "Termenii cei mai căutați",
-    "search_term_count": "{count, plural, one {# produs} other {# produse}}",
+    "search_term_count": "{count, plural, one {# produs} few {# produse} other {# de produse}}",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -518,7 +518,7 @@
   "filter-by": "Perioadă:",
   "see_more": "Arată mai mult",
   "see_all": "Vizualizează tot",
-  "lines_count": "{count, plural, one {# rând} other {# rânduri}}",
+  "lines_count": "{count, plural, one {# rând} few {# rânduri} other {# de rânduri}}",
   "reload": "Reîncarcă",
   "agent": "Agent",
   "online_agents": "Agenți online",
@@ -607,17 +607,17 @@
     "info_reset": "Dacă resetezi widgetul, datele configurate se vor pierde.",
     "success_reset": "Widget resetat cu succes",
     "error_reset": "Nu s-a putut reseta widgetul. Încearcă din nou.",
-    "metric_error": "Eroare la preluarea metric",
+    "metric_error": "Eroare la preluarea parametrului",
     "card": {
-      "error_description": "Resetează sursa flux pentru a prelua date valide",
+      "error_description": "Resetează fluxul sursă pentru a prelua date valide",
       "metric_empty": "Configurează",
-      "metric_set": "Setează metric"
+      "metric_set": "Setează parametrul"
     },
     "graph_funnel": {
       "title": "Pâlnie",
-      "not_configured_description": "Selectează fluxuri pe care vrei să le mapezi pentru a construi vizualizarea pâlniei pentru proiectul tău",
-      "select_flows": "Selectare fluxuri",
-      "flow_executions": "Rulări flux",
+      "not_configured_description": "Selectează fluxurile pe care vrei să le mapezi pentru a construi vizualizarea pâlniei pentru proiectul tău",
+      "select_flows": "Selectează fluxurile",
+      "flow_executions": "rulări flux",
       "error": {
         "title": "A apărut o problemă la încărcarea datelor",
         "description": "Reîncarcă"
@@ -663,7 +663,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "Metric salvat cu succes",
+    "metric_saved": "Parametrul a fost salvat cu succes",
     "reset_widget": "Resetează widgetul",
     "clear_all_fields": "Șterge toate câmpurile",
     "config_gallery": {
@@ -675,7 +675,7 @@
           "description": "Vizualizează numărul total de rulări ale unui flux"
         },
         "flow_result": {
-          "title": "rezultat flux",
+          "title": "Rezultat flux",
           "description": "Returnează un rezultat flux și permite operațiuni de bază"
         },
         "data_crossing": {
@@ -733,15 +733,15 @@
       }
     },
     "config_card": {
-      "title": "Configurează metric pentru card",
+      "title": "Setează parametrul pentru card",
       "name_card": {
         "label": "Introdu un nume pentru card",
-        "placeholder": "Exemplu: fluxuri de proiect"
+        "placeholder": "Exemplu: Fluxuri de proiect"
       },
-      "select_origin_flow": "Selectare flux sursă",
+      "select_origin_flow": "Selectează fluxul sursă",
       "result_type": "Tipul rezultatului",
       "flow_result": {
-        "label": "Rezultat flux",
+        "label": "rezultat flux",
         "placeholder": "Caută sau selectează un rezultat"
       },
       "operation": "Operațiune",
@@ -764,20 +764,20 @@
         "difference": "Diferență",
         "percentage": "Procent"
       },
-      "total_flow_executions": "Total rulări flux",
+      "total_flow_executions": "Total rulări de flux",
       "first_value": "Prima valoare",
       "second_value": "A doua valoare"
     },
     "config_funnel": {
-      "title": "Configurează metrici pentru diagramă",
+      "title": "Configurează parametrii pentru diagramă",
       "description": "Selectează cel puțin trei fluxuri pentru a prelua vizualizarea diagramei pâlniei",
-      "add_metric": "Adăugare metric",
-      "first_metric": "Primul metric",
-      "second_metric": "Al doilea metric",
-      "third_metric": "Al treilea metric",
-      "fourth_metric": "Al patrulea metric",
-      "fifth_metric": "Al cincilea metric",
-      "select_flow": "Selectare flux"
+      "add_metric": "Adaugă parametru",
+      "first_metric": "Primul parametru",
+      "second_metric": "Al doilea parametru",
+      "third_metric": "Al treilea parametru",
+      "fourth_metric": "Al patrulea parametru",
+      "fifth_metric": "Al cincilea parametru",
+      "select_flow": "Selectează fluxul"
     },
     "config_recurrence": {
       "name_metric": "Nume metric"
@@ -785,10 +785,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Introdu un nume pentru metric",
-      "placeholder": "Exemplu: fluxuri proiect"
+      "label": "Introdu un nume pentru parametru",
+      "placeholder": "Exemplu: Fluxuri de proiect"
     },
-    "select_origin_flow": "Selectare flux sursă"
+    "select_origin_flow": "Selectează fluxul sursă"
   },
   "insights_header": {
     "auto_refresh": "Actualizare automată: {status}",
@@ -1106,17 +1106,17 @@
       "waiting_time": "Alertă în dashboard-ul Live Desk când timpul de așteptare al unei conversații depășește limita definită"
     },
     "table_tooltip": {
-      "conversation_duration": "Această conversație a depășit limita de {value} {unit}.",
-      "first_response_time": "Această conversație a depășit limita de {value} {unit} pentru primul răspuns.",
-      "generic": "Această conversație a depășit limita de timp configurată.",
-      "waiting_time": "Această conversație a depășit limita de {value} {unit} de așteptare."
+      "conversation_duration": "Acest chat a depășit limita de timp de {value}-{unit}.",
+      "first_response_time": "Acest chat a depășit limita de timp de {value}-{unit} pentru primul răspuns.",
+      "generic": "Acest chat a depășit limita de timp configurată.",
+      "waiting_time": "Acest chat a depășit limita de timp de așteptare de {value}-{unit}."
     },
     "toast": {
-      "conversation_duration": "{count} conversații au depășit durata maximă",
-      "first_response_time": "{count} conversații au depășit timpul maxim pentru primul răspuns",
-      "title": "Live Desk: atenție imediată necesară",
-      "view_details": "Vezi detalii",
-      "waiting_time": "{count} conversații au depășit timpul maxim de așteptare"
+      "conversation_duration": "{count} chaturi au depășit durata maximă de timp",
+      "first_response_time": "{count} chaturi au depășit timpul maxim pentru primul răspuns",
+      "title": "Live Desk: Atenție imediată necesară",
+      "view_details": "Vizualizează detalii",
+      "waiting_time": "{count} chaturi au depășit timpul maxim de așteptare"
     },
     "unit_word_singular": {
       "h": "oră",
@@ -1206,9 +1206,9 @@
         "action": "Acțiune"
       },
       "agents_count": {
-        "online": "{count, plural, one {# online} other {# online}}",
-        "custom_breaks": "{count, plural, one {# în pauză} other {# în pauză}}",
-        "offline": "{count, plural, one {# offline} other {# offline}}"
+        "online": "{count, plural, one {# online} few {# online} other {# online}}",
+        "custom_breaks": "{count, plural, one {# în pauză} few {# în pauză} other {# în pauză}}",
+        "offline": "{count, plural, one {# offline} few {# offline} other {# offline}}"
       }
     },
     "filters": {
@@ -1278,7 +1278,7 @@
         "neutral": "😐 Neutru",
         "dissatisfied": "☹️ Nemulțumit",
         "very_dissatisfied": "😡 Foarte nemulțumit",
-        "not_answered": "Niciun răspuns"
+        "not_answered": "Fără răspuns"
       },
       "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
     },
@@ -1301,8 +1301,8 @@
     },
     "volume_per_queue": {
       "title": "Volum per coadă",
-      "monitoring_count": "{count, plural, one {# coadă cu {status} chaturi} other {# cozi cu {status} chaturi}}",
-      "analysis_count": "{count, plural, one {# coadă cu chaturi finalizate} other {# cozi cu chaturi finalizate}}",
+      "monitoring_count": "{count, plural, one {# coadă cu chaturi {status}} few {# cozi cu chaturi {status}} other {# de cozi cu chaturi {status}}}",
+      "analysis_count": "{count, plural, one {# coadă cu chaturi încheiate} few {# cozi cu chaturi încheiate} other {# de cozi cu chaturi încheiate}}",
       "setup_description": "Creează cozi pe sector de activitate pentru a monitoriza mai multe date",
       "empty_data": {
         "monitoring": {
@@ -1319,8 +1319,8 @@
       "title": "Volum per etichetă",
       "setup_description": "Adaugă etichete pentru sectoare de activitate pentru a monitoriza mai multe date",
       "count": {
-        "ongoing": "{count, plural, one {# etichetă în uz} other {# etichete în uz}}",
-        "closed": "{count, plural, one {# etichetă atribuită} other {# etichete atribuite}}"
+        "ongoing": "{count, plural, one {# etichetă în uz} few {# etichete în uz} other {# de etichete în uz}}",
+        "closed": "{count, plural, one {# etichetă atribuită} few {# etichete atribuite} other {# de etichete atribuite}}"
       },
       "empty_data": {
         "monitoring": {

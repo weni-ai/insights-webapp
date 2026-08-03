@@ -766,6 +766,56 @@ describe('DashboardHeader.vue', () => {
     });
   });
 
+  describe('Card click redirect', () => {
+    let postMessageSpy;
+
+    beforeEach(() => {
+      postMessageSpy = vi.fn();
+      window.parent.postMessage = postMessageSpy;
+    });
+
+    it.each([
+      ['resolved', 'ai-conversations:init?status=optimized_resolution'],
+      ['unresolved', 'ai-conversations:init?status=other_conclusion'],
+      [
+        'transferred_to_human',
+        'ai-conversations:init?status=transferred_to_human_support',
+      ],
+    ])('should redirect %s card with status query', (cardId, expectedPath) => {
+      wrapper.vm.handleCardClick(cardId);
+
+      expect(postMessageSpy).toHaveBeenCalledWith(
+        { event: 'redirect', path: expectedPath },
+        '*',
+      );
+    });
+
+    it('should redirect total_conversations card without status query', () => {
+      wrapper.vm.handleCardClick('total_conversations');
+
+      expect(postMessageSpy).toHaveBeenCalledWith(
+        { event: 'redirect', path: 'ai-conversations:init' },
+        '*',
+      );
+    });
+
+    it('should redirect when a card emits click', async () => {
+      const unresolvedCard = wrapper.findAllComponents({
+        name: 'CardConversations',
+      })[2];
+
+      await unresolvedCard.vm.$emit('click');
+
+      expect(postMessageSpy).toHaveBeenCalledWith(
+        {
+          event: 'redirect',
+          path: 'ai-conversations:init?status=other_conclusion',
+        },
+        '*',
+      );
+    });
+  });
+
   describe('Mock mode (shouldUseMock = true)', () => {
     beforeEach(() => {
       mockShouldUseMock.value = true;

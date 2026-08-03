@@ -233,8 +233,6 @@ const handleCardClick = (cardId: string) => {
 
   const status = statusMap[cardId];
 
-  // The host route is `ai-conversations/:internal+`, so the path requires at
-  // least one segment. `init` means the module root.
   const path = `ai-conversations:init${status ? `?status=${status}` : ''}`;
 
   console.log('path', path);

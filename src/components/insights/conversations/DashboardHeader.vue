@@ -224,17 +224,22 @@ const loadCardData = async () => {
 };
 
 const handleCardClick = (cardId: string) => {
-  const statusMap = {
+  const statusMap: Record<string, string> = {
     total_conversations: '',
     resolved: 'optimized_resolution',
     unresolved: 'other_conclusion',
     transferred_to_human: 'transferred_to_human_support',
   };
 
+  const status = statusMap[cardId];
+
+  const path = `ai-conversations:init${status ? `?status=${status}` : ''}`;
+
+  console.log('path', path);
   window.parent.postMessage(
     {
       event: 'redirect',
-      path: `ai-conversations:?status=${statusMap[cardId]}`,
+      path,
     },
     '*',
   );

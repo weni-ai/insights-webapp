@@ -411,12 +411,26 @@ describe('DrawerDashboardConfig', () => {
     it('should compute currency options correctly', () => {
       const wrapper = createWrapper();
 
-      expect(wrapper.vm.currencyOptions).toHaveLength(4);
+      expect(wrapper.vm.currencyOptions).toHaveLength(18);
       expect(wrapper.vm.currencyOptions.map((option) => option.value)).toEqual([
-        'BRL',
-        'USD',
-        'EUR',
         'ARS',
+        'BRL',
+        'CAD',
+        'CHF',
+        'CLP',
+        'COP',
+        'CZK',
+        'DKK',
+        'EUR',
+        'GBP',
+        'MXN',
+        'NOK',
+        'PEN',
+        'PLN',
+        'RON',
+        'SEK',
+        'USD',
+        'UYU',
       ]);
     });
   });

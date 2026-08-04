@@ -617,7 +617,7 @@
       "title": "Funil",
       "not_configured_description": "Selecione os fluxos que deseja mapear para montar a visualização em funil do seu projeto",
       "select_flows": "Selecionar fluxos",
-      "flow_executions": "execuções de fluxo",
+      "flow_executions": "Execuções de fluxo",
       "error": {
         "title": "Ocorreu um problema ao carregar os dados",
         "description": "Tente carregar novamente"
@@ -741,7 +741,7 @@
       "select_origin_flow": "Selecionar fluxo de origem",
       "result_type": "Tipo de resultado",
       "flow_result": {
-        "label": "resultado do fluxo",
+        "label": "Resultado do fluxo",
         "placeholder": "Busque ou selecione um resultado"
       },
       "operation": "Operação",
@@ -1124,8 +1124,8 @@
       "s": "segundo"
     },
     "unit_words": {
-      "h": "Horas",
-      "m": "Minutos",
+      "h": "horas",
+      "m": "minutos",
       "s": "segundos"
     }
   },

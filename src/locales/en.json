@@ -617,7 +617,7 @@
       "title": "Funnel",
       "not_configured_description": "Select the flows you want to map to build the funnel view for your project",
       "select_flows": "Select flows",
-      "flow_executions": "flow runs",
+      "flow_executions": "Flow runs",
       "error": {
         "title": "There was a problem while loading the data",
         "description": "Try reloading"
@@ -741,7 +741,7 @@
       "select_origin_flow": "Select source flow",
       "result_type": "Result type",
       "flow_result": {
-        "label": "flow result",
+        "label": "Flow result",
         "placeholder": "Search or select a result"
       },
       "operation": "Operation",

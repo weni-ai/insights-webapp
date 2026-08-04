@@ -617,7 +617,7 @@
       "title": "Embudo",
       "not_configured_description": "Selecciona los flujos que deseas mapear para compilar la vista de embudo de tu proyecto",
       "select_flows": "Seleccionar flujos",
-      "flow_executions": "ejecuciones de flujo",
+      "flow_executions": "Ejecuciones de flujo",
       "error": {
         "title": "Se produjo un problema al cargar los datos",
         "description": "Intenta recargar"
@@ -741,7 +741,7 @@
       "select_origin_flow": "Seleccionar flujo de origen",
       "result_type": "Tipo de resultado",
       "flow_result": {
-        "label": "resultado de flujo",
+        "label": "Resultado de flujo",
         "placeholder": "Buscar o seleccionar el resultado"
       },
       "operation": "Operación",

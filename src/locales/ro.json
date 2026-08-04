@@ -617,7 +617,7 @@
       "title": "Pâlnie",
       "not_configured_description": "Selectează fluxurile pe care vrei să le mapezi pentru a construi vizualizarea pâlniei pentru proiectul tău",
       "select_flows": "Selectează fluxurile",
-      "flow_executions": "rulări flux",
+      "flow_executions": "Rulări flux",
       "error": {
         "title": "A apărut o problemă la încărcarea datelor",
         "description": "Reîncarcă"
@@ -741,7 +741,7 @@
       "select_origin_flow": "Selectează fluxul sursă",
       "result_type": "Tipul rezultatului",
       "flow_result": {
-        "label": "rezultat flux",
+        "label": "Rezultat flux",
         "placeholder": "Caută sau selectează un rezultat"
       },
       "operation": "Operațiune",

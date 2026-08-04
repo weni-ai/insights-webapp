@@ -504,8 +504,8 @@
       "placeholder": "Select a queue"
     },
     "sector": {
-      "label": "Industry",
-      "placeholder": "Select an industry"
+      "label": "Department",
+      "placeholder": "Select a department"
     },
     "tags": {
       "label": "Tags",
@@ -946,7 +946,7 @@
     "feedback": "You'll receive the file by email shortly. Remember to check your spam folder.",
     "feedback_title": "Exporting",
     "model_labels": {
-      "sectors": "Industries",
+      "sectors": "Departments",
       "queues": "Queues",
       "rooms": "Rooms",
       "users": "Agents",
@@ -994,7 +994,7 @@
       "contact__uuid": "Contact ID",
       "queue__name": "Queue",
       "queue__uuid": "Queue ID",
-      "queue__sector__name": "Industry",
+      "queue__sector__name": "Department",
       "created_on": "Start date",
       "duration": "Duration",
       "awaiting_time": "Waiting time",
@@ -1027,15 +1027,15 @@
     "chats_open": "Include chats opened during this period",
     "chats_closed": "Include chats closed during this period",
     "filters": {
-      "sector": "Industry",
-      "select_sector": "Select industry",
+      "sector": "Department",
+      "select_sector": "Select a department",
       "representative": "Representative",
       "select_representative": "Select a representative",
       "queue": "Queue",
       "select_queue": "Select a queue",
       "tag": "Tag",
       "select_tag": "Select a tag",
-      "all_sectors": "All industries",
+      "all_sectors": "All departments",
       "all_representatives": "All representatives",
       "all_queues": "All queues",
       "all_tags": "All tags"
@@ -1178,7 +1178,7 @@
         "first_response_time": "Time to first response",
         "pending_response_tooltip": "The last message in the chat was sent by the contact",
         "attendant": "Representative",
-        "sector": "Industry",
+        "sector": "Department",
         "queue": "Queue",
         "contact": "Contact"
       },
@@ -1191,7 +1191,7 @@
       "in_awaiting": {
         "awaiting_time": "Wait time",
         "contact": "Contact",
-        "sector": "Industry",
+        "sector": "Department",
         "queue": "Queue"
       },
       "attendant": {
@@ -1236,7 +1236,7 @@
         "first_response_time": "Time to first response",
         "response_time": "Response time",
         "agent": "Representative",
-        "sector": "Industry",
+        "sector": "Department",
         "queue": "Queue",
         "contact": "Contact",
         "ticket_id": "Protocol",
@@ -1280,7 +1280,7 @@
         "very_dissatisfied": "😡 Very dissatisfied",
         "not_answered": "No response"
       },
-      "disabled_text": "Enable CSAT to track overall ratings by industry, queue, and representative"
+      "disabled_text": "Enable CSAT to track overall ratings by department, queue, and representative"
     },
     "setup": {
       "title": "No sector created",
@@ -1317,7 +1317,7 @@
     },
     "volume_per_tag": {
       "title": "Volume per tag",
-      "setup_description": "Add tags to industries to monitor more data",
+      "setup_description": "Add tags to departments to monitor more data",
       "count": {
         "ongoing": "{count, plural, one {# tag in use} other {# tags in use}}",
         "closed": "{count, plural, one {# assigned tag} other {# assigned tags}}"

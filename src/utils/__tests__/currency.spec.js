@@ -4,14 +4,33 @@ import { CURRENCY_CODES, getCurrencyOptions } from '@/utils/currency';
 
 describe('currency utils', () => {
   describe('CURRENCY_CODES', () => {
-    it('contains 18 currency codes in alphabetical order', () => {
-      expect(CURRENCY_CODES).toHaveLength(18);
+    it('contains 30 currency codes in alphabetical order', () => {
+      expect(CURRENCY_CODES).toHaveLength(30);
       expect([...CURRENCY_CODES]).toEqual([...CURRENCY_CODES].sort());
     });
 
     it('includes the previously supported currencies', () => {
       expect(CURRENCY_CODES).toEqual(
         expect.arrayContaining(['ARS', 'BRL', 'EUR', 'USD']),
+      );
+    });
+
+    it('includes major Asian currencies', () => {
+      expect(CURRENCY_CODES).toEqual(
+        expect.arrayContaining([
+          'CNY',
+          'HKD',
+          'IDR',
+          'INR',
+          'JPY',
+          'KRW',
+          'MYR',
+          'PHP',
+          'SGD',
+          'THB',
+          'TWD',
+          'VND',
+        ]),
       );
     });
   });

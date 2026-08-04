@@ -125,7 +125,7 @@
           v-if="child.config.currency.is_active"
           v-model="child.config.currency.code"
           :options="currencies"
-          optionsLines="4"
+          optionsLines="8"
           itemLabel="label"
           itemValue="value"
         />
@@ -187,6 +187,7 @@ import { useProject } from '@/store/modules/project';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import type { absoluteNumbersFormChildren } from '@/store/modules/conversational/customWidgets';
 
+import { getCurrencyOptions } from '@/utils/currency';
 import i18n from '@/utils/plugins/i18n';
 
 defineOptions({ name: 'AbsoluteNumbersForm' });
@@ -252,14 +253,7 @@ watch(isRemoveWidgetModalOpen, (newValue) => {
   }
 });
 
-const currencies = computed(() => {
-  return [
-    { label: t('currency_options.BRL'), value: 'BRL' },
-    { label: t('currency_options.USD'), value: 'USD' },
-    { label: t('currency_options.EUR'), value: 'EUR' },
-    { label: t('currency_options.ARS'), value: 'ARS' },
-  ];
-});
+const currencies = computed(() => getCurrencyOptions(t));
 
 const handleCurrencySwitch = (index: number) => {
   if (absoluteNumbersForm.value.children[index].config.currency.is_active) {

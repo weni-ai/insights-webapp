@@ -856,10 +856,24 @@
     }
   },
   "currency_options": {
+    "ARS": "$ - Peso argentinian",
     "BRL": "R$ - Real brazilian",
-    "USD": "$ - dolar american",
+    "CAD": "$ - Dolar canadian",
+    "CHF": "CHF - Franc elvețian",
+    "CLP": "$ - Peso chilian",
+    "COP": "$ - Peso columbian",
+    "CZK": "Kč - Coroană cehă",
+    "DKK": "kr - Coroană daneză",
     "EUR": "€ - Euro",
-    "ARS": "$ - Peso"
+    "GBP": "£ - Liră sterlină",
+    "MXN": "$ - Peso mexican",
+    "NOK": "kr - Coroană norvegiană",
+    "PEN": "S/ - Sol peruvian",
+    "PLN": "zł - Zlot polonez",
+    "RON": "lei - Leu românesc",
+    "SEK": "kr - Coroană suedeză",
+    "USD": "$ - Dolar american",
+    "UYU": "$U - Peso uruguayan"
   },
   "dashboard_onboarding": {
     "step": {

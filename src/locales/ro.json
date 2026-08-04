@@ -504,8 +504,8 @@
       "placeholder": "Selectează o coadă"
     },
     "sector": {
-      "label": "Sector de activitate",
-      "placeholder": "Selectează un sector de activitate"
+      "label": "Departament",
+      "placeholder": "Selectează un departament"
     },
     "tags": {
       "label": "Etichete",
@@ -972,7 +972,7 @@
     "feedback": "Vei primi fișierul prin e-mail în scurt timp. Nu uita să verifici dosarul de spam.",
     "feedback_title": "Se exportă",
     "model_labels": {
-      "sectors": "Sectoare de activitate",
+      "sectors": "Departamente",
       "queues": "Cozi",
       "rooms": "Camere",
       "users": "Agenți",
@@ -1020,7 +1020,7 @@
       "contact__uuid": "ID contact",
       "queue__name": "Coadă",
       "queue__uuid": "ID coadă",
-      "queue__sector__name": "Sector de activitate",
+      "queue__sector__name": "Departament",
       "created_on": "Data de începere",
       "duration": "Durată",
       "awaiting_time": "Timp de așteptare",
@@ -1053,15 +1053,15 @@
     "chats_open": "Include chaturile deschise în această perioadă",
     "chats_closed": "Include chaturile închise în această perioadă",
     "filters": {
-      "sector": "Sector de activitate",
-      "select_sector": "Selectează un sector de activitate",
+      "sector": "Departament",
+      "select_sector": "Selectează un departament",
       "representative": "Reprezentant",
       "select_representative": "Selectează un reprezentant",
       "queue": "Coadă",
       "select_queue": "Selectează o coadă",
       "tag": "Etichetă",
       "select_tag": "Alege o etichetă",
-      "all_sectors": "Toate sectoarele de activitate",
+      "all_sectors": "Toate departamentele",
       "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
       "all_tags": "Toate etichetele"
@@ -1204,7 +1204,7 @@
         "first_response_time": "Timp până la primul răspuns",
         "pending_response_tooltip": "Ultimul mesaj din chat a fost trimis de contact",
         "attendant": "Reprezentant",
-        "sector": "Sector de activitate",
+        "sector": "Departament",
         "queue": "Coadă",
         "contact": "Contact"
       },
@@ -1217,7 +1217,7 @@
       "in_awaiting": {
         "awaiting_time": "Timp de așteptare",
         "contact": "Contact",
-        "sector": "Sector de activitate",
+        "sector": "Departament",
         "queue": "Coadă"
       },
       "attendant": {
@@ -1262,7 +1262,7 @@
         "first_response_time": "Timp până la primul răspuns",
         "response_time": "Timp de răspuns",
         "agent": "Reprezentant",
-        "sector": "Sector de activitate",
+        "sector": "Departament",
         "queue": "Coadă",
         "contact": "Contact",
         "ticket_id": "Protocol",
@@ -1306,7 +1306,7 @@
         "very_dissatisfied": "😡 Foarte nemulțumit",
         "not_answered": "Niciun răspuns"
       },
-      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
+      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe departament, coadă și reprezentant"
     },
     "setup": {
       "title": "No sector created",
@@ -1329,7 +1329,7 @@
       "title": "Volum per coadă",
       "monitoring_count": "{count, plural, one {# coadă cu {status} chaturi} other {# cozi cu {status} chaturi}}",
       "analysis_count": "{count, plural, one {# coadă cu chaturi finalizate} other {# cozi cu chaturi finalizate}}",
-      "setup_description": "Creează cozi pe sector de activitate pentru a monitoriza mai multe date",
+      "setup_description": "Creează cozi pe departament pentru a monitoriza mai multe date",
       "empty_data": {
         "monitoring": {
           "waiting": "Nu există cozi cu chaturi care să aștepte asistență",
@@ -1343,7 +1343,7 @@
     },
     "volume_per_tag": {
       "title": "Volum per etichetă",
-      "setup_description": "Adaugă etichete pentru sectoare de activitate pentru a monitoriza mai multe date",
+      "setup_description": "Adaugă etichete pentru departamente pentru a monitoriza mai multe date",
       "count": {
         "ongoing": "{count, plural, one {# etichetă în uz} other {# etichete în uz}}",
         "closed": "{count, plural, one {# etichetă atribuită} other {# etichete atribuite}}"

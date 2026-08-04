@@ -319,7 +319,7 @@
         "description": "Combina y compara dos puntos de datos diferentes para descubrir insights.",
         "drawer": {
           "description": "Define el nombre del widget:",
-          "disclaimer": "<b>Clave:</b> Un identificador único utilizado para monitorear un evento específico en el flujo de datos.<br/><b>Nombre del campo:</b> El nombre del campo para el valor que deseas mostrar. Si se deja en blanco, el sistema usará un valor predeterminado.",
+          "disclaimer": "<b>Clave:</b> un identificador único utilizado para hacer seguimiento de un evento específico en el flujo de datos.<br/><b>Nombre del campo:</b> el nombre del campo para el valor que deseas mostrar. Si se deja en blanco, el sistema usará un valor predeterminado.",
           "first_data_label": "Define el <b>primer</b> punto de datos que deseas monitorear:",
           "second_data_label": "Define el <b>segundo</b> punto de datos que deseas monitorear:",
           "reference_field_label": "Define el campo de referencia que se usará para vincular los eventos:"
@@ -607,15 +607,15 @@
     "info_reset": "Al restablecer, los datos configurados se perderán.",
     "success_reset": "Widget restablecido con éxito",
     "error_reset": "No se pudo restablecer el widget. Inténtalo de nuevo.",
-    "metric_error": "Error al buscar métrica",
+    "metric_error": "Error al recuperar la métrica",
     "card": {
-      "error_description": "Configura nuevamente el flujo de origen para obtener datos válidos",
+      "error_description": "Restablece el flujo de origen para recuperar datos válidos",
       "metric_empty": "Configurar",
       "metric_set": "Definir métrica"
     },
     "graph_funnel": {
       "title": "Embudo",
-      "not_configured_description": "Selecciona los flujos que deseas mapear para crear la vista de embudo de tu proyecto",
+      "not_configured_description": "Selecciona los flujos que deseas mapear para compilar la vista de embudo de tu proyecto",
       "select_flows": "Seleccionar flujos",
       "flow_executions": "Ejecuciones de flujo",
       "error": {
@@ -672,10 +672,10 @@
       "options": {
         "executions": {
           "title": "Ejecuciones",
-          "description": "Muestra el total de ejecuciones de un flujo"
+          "description": "Ver el total de ejecuciones de flujo"
         },
         "flow_result": {
-          "title": "Resultado del flujo",
+          "title": "Resultado de flujo",
           "description": "Proporciona el resultado del flujo y permite operaciones básicas"
         },
         "data_crossing": {
@@ -736,12 +736,12 @@
       "title": "Definir métrica para la tarjeta",
       "name_card": {
         "label": "Ingresa un nombre para la tarjeta",
-        "placeholder": "Ejemplo: flujos del proyecto"
+        "placeholder": "Ejemplo: Flujos del proyecto"
       },
       "select_origin_flow": "Seleccionar flujo de origen",
       "result_type": "Tipo de resultado",
       "flow_result": {
-        "label": "Resultado del flujo",
+        "label": "Resultado de flujo",
         "placeholder": "Buscar o seleccionar el resultado"
       },
       "operation": "Operación",
@@ -764,13 +764,13 @@
         "difference": "Diferencia",
         "percentage": "Porcentaje"
       },
-      "total_flow_executions": "Total de ejecuciones del flujo",
+      "total_flow_executions": "Total de ejecuciones de flujo",
       "first_value": "Primer valor",
       "second_value": "Segundo valor"
     },
     "config_funnel": {
       "title": "Definir métricas del gráfico",
-      "description": "Selecciona al menos tres flujos para obtener la vista de gráfico de embudo",
+      "description": "Selecciona al menos tres flujos para recuperar la vista del gráfico de embudo",
       "add_metric": "Agregar métrica",
       "first_metric": "Primera métrica",
       "second_metric": "Segunda métrica",
@@ -786,7 +786,7 @@
   "metric_accordion": {
     "name_metric": {
       "label": "Ingresa un nombre para la métrica",
-      "placeholder": "Ejemplo: flujos del proyecto"
+      "placeholder": "Ejemplo: Flujos del proyecto"
     },
     "select_origin_flow": "Seleccionar flujo de origen"
   },
@@ -1106,17 +1106,17 @@
       "waiting_time": "Alertar en el dashboard Live Desk cuando el tiempo de espera de un chat supera el límite definido"
     },
     "table_tooltip": {
-      "conversation_duration": "Este chat superó el límite de {value} {unit}.",
-      "first_response_time": "Este chat superó el límite de {value} {unit} para la primera respuesta.",
-      "generic": "Este chat superó el límite de tiempo configurado.",
-      "waiting_time": "Este chat superó el límite de {value} {unit} de espera."
+      "conversation_duration": "Este chat ha excedido el límite de tiempo de {value} {unit}.",
+      "first_response_time": "Este chat ha excedido el límite de tiempo de {value} {unit} de primera respuesta.",
+      "generic": "Este chat ha excedido el límite de tiempo configurado.",
+      "waiting_time": "Este chat ha excedido el límite de tiempo de espera de {value} {unit}."
     },
     "toast": {
-      "conversation_duration": "{count} chats superaron el tiempo máximo de duración",
-      "first_response_time": "{count} chats superaron el tiempo máximo para la primera respuesta",
-      "title": "Live Desk: atención inmediata necesaria",
+      "conversation_duration": "{count} chats excedieron la duración máxima",
+      "first_response_time": "{count} chats excedieron el tiempo máximo de primera respuesta",
+      "title": "Live Desk: se necesita atención inmediata",
       "view_details": "Ver detalles",
-      "waiting_time": "{count} chats superaron el tiempo máximo de espera"
+      "waiting_time": "{count} chats superaron el tiempo de espera máximo"
     },
     "unit_word_singular": {
       "h": "hora",
@@ -1206,9 +1206,9 @@
         "action": "Acción"
       },
       "agents_count": {
-        "online": "{count, plural, one {# online} other {# online}}",
-        "custom_breaks": "{count, plural, one {# en pausa} other {# en pausa}}",
-        "offline": "{count, plural, one {# offline} other {# offline}}"
+        "online": "{count, plural, one {{count} online} other {{count} online}}",
+        "custom_breaks": "{count, plural, one {{count} en pausa} other {{count} en pausa}}",
+        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
       }
     },
     "filters": {

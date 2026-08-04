@@ -856,10 +856,36 @@
     }
   },
   "currency_options": {
+    "ARS": "$ - Argentine peso",
     "BRL": "R$ - Brazilian real",
-    "USD": "$ - US dollar",
+    "CAD": "$ - Canadian dollar",
+    "CHF": "CHF - Swiss franc",
+    "CLP": "$ - Chilean peso",
+    "CNY": "¥ - Chinese yuan",
+    "COP": "$ - Colombian peso",
+    "CZK": "Kč - Czech koruna",
+    "DKK": "kr - Danish krone",
     "EUR": "€ - Euro",
-    "ARS": "$ - Peso"
+    "GBP": "£ - Pound sterling",
+    "HKD": "HK$ - Hong Kong dollar",
+    "IDR": "Rp - Indonesian rupiah",
+    "INR": "₹ - Indian rupee",
+    "JPY": "¥ - Japanese yen",
+    "KRW": "₩ - South Korean won",
+    "MXN": "$ - Mexican peso",
+    "MYR": "RM - Malaysian ringgit",
+    "NOK": "kr - Norwegian krone",
+    "PEN": "S/ - Peruvian sol",
+    "PHP": "₱ - Philippine peso",
+    "PLN": "zł - Polish zloty",
+    "RON": "lei - Romanian leu",
+    "SEK": "kr - Swedish krona",
+    "SGD": "S$ - Singapore dollar",
+    "THB": "฿ - Thai baht",
+    "TWD": "NT$ - New Taiwan dollar",
+    "USD": "$ - US dollar",
+    "UYU": "$U - Uruguayan peso",
+    "VND": "₫ - Vietnamese dong"
   },
   "dashboard_onboarding": {
     "step": {

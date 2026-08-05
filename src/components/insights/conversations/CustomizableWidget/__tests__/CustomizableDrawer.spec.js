@@ -280,7 +280,7 @@ describe('CustomizableWidget', () => {
     });
 
     it('should render correct number of available widgets when no CSAT/NPS configured', () => {
-      expect(drawerItems()).toHaveLength(7);
+      expect(drawerItems()).toHaveLength(8);
     });
 
     it('should set type when widget is selected', async () => {
@@ -459,11 +459,12 @@ describe('CustomizableWidget', () => {
 
     it('should return custom for customized tab', () => {
       const customizedWidgets = wrapper.vm.handleTabChoice('customized');
-      expect(customizedWidgets).toHaveLength(2);
+      expect(customizedWidgets).toHaveLength(3);
       expect(customizedWidgets[0].key).toBe('custom');
       expect(customizedWidgets[0].name).toBe('Horizontal Bar Chart');
       expect(customizedWidgets[1].key).toBe('crosstab');
       expect(customizedWidgets[1].name).toBe('Crosstab');
+      expect(customizedWidgets[2].key).toBe('absolute_numbers');
     });
 
     it('should return empty array for unknown tab', () => {

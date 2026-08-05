@@ -34,6 +34,8 @@ describe('Analysis', () => {
           StatusCards: true,
           ServicesOpenByHour: true,
           DetailedAnalysis: true,
+          CsatRatings: true,
+          VolumePerTagAndQueueWidget: true,
         },
       },
     });

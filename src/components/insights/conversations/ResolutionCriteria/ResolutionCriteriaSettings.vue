@@ -31,22 +31,17 @@ import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import ResolutionCriteriaDrawer from './ResolutionCriteriaDrawer.vue';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
 
 const openPopover = ref(false);
 
-const { isFeatureFlagEnabled } = useFeatureFlag();
 const conversationalStore = useConversational();
 const { shouldUseMock } = storeToRefs(conversationalStore);
 
 const resolutionCriteriaStore = useResolutionCriteria();
 
-const isVisible = computed(
-  () =>
-    isFeatureFlagEnabled('insightsResolutionCriteria') && !shouldUseMock.value,
-);
+const isVisible = computed(() => !shouldUseMock.value);
 
 const handleOpenDrawer = () => {
   openPopover.value = false;

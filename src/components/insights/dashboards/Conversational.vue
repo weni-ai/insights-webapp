@@ -49,7 +49,6 @@
     />
     <CustomizableDrawer />
     <DataFeedbackModal
-      v-if="isFeatureFlagEnabled('insightsDataFeedback')"
       v-model="shouldShowModal"
       :surveyUuid="surveyUuid"
       @postpone="onPostpone"
@@ -78,7 +77,6 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useProject } from '@/store/modules/project';
 
@@ -87,9 +85,6 @@ import { useFeedbackSurvey } from '@/composables/useFeedbackSurvey';
 defineOptions({
   name: 'ConversationalDashboard',
 });
-
-const { isFeatureFlagEnabled } = useFeatureFlag();
-const { activeFeatures } = storeToRefs(useFeatureFlag());
 
 const {
   shouldShowModal,
@@ -249,10 +244,7 @@ const initializeConfiguration = async () => {
     customWidgets.injectMockWidgets();
   }
 
-  if (
-    isFeatureFlagEnabled('insightsDataFeedback') &&
-    !conversational.shouldUseMock
-  ) {
+  if (!conversational.shouldUseMock) {
     checkSurvey();
   }
 
@@ -264,7 +256,6 @@ watch(
     () => currentDashboardWidgets.value,
     () => currentDashboard.value.config,
     () => project.agentsTeam.agents,
-    () => activeFeatures.value,
   ],
   () => {
     if (isConfigurationLoaded.value) {
@@ -296,15 +287,6 @@ watch(
 
 onMounted(async () => {
   initializeConfiguration();
-});
-
-watch(activeFeatures, () => {
-  if (
-    isFeatureFlagEnabled('insightsDataFeedback') &&
-    !conversational.shouldUseMock
-  ) {
-    checkSurvey();
-  }
 });
 
 watch(

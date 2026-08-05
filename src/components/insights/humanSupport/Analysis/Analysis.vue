@@ -13,7 +13,7 @@
     <LazyWidget>
       <VolumePerTagAndQueueWidget context="analysis" />
     </LazyWidget>
-    <LazyWidget v-if="isFeatureFlagEnabled('insightsCSAT')">
+    <LazyWidget>
       <CsatRatings
         type="analysis"
         data-testid="analysis-csat-ratings"
@@ -35,7 +35,6 @@ import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useProject } from '@/store/modules/project';
 import { useHumanSupportAnalysis } from '@/store/modules/humanSupport/analysis';
 
@@ -47,8 +46,6 @@ const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const { forceLoadDetailed } = storeToRefs(useHumanSupportAnalysis());
-
-const { isFeatureFlagEnabled } = useFeatureFlag();
 </script>
 
 <style scoped lang="scss">

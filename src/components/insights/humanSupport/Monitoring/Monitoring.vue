@@ -20,7 +20,7 @@
     <LazyWidget>
       <VolumePerTagAndQueueWidget context="monitoring" />
     </LazyWidget>
-    <LazyWidget v-if="isFeatureFlagEnabled('insightsCSAT')">
+    <LazyWidget>
       <CsatRatings
         type="monitoring"
         data-testid="monitoring-csat-ratings"

@@ -319,7 +319,7 @@
         "description": "Combine e compare duas dimensões de dados para identificar insights.",
         "drawer": {
           "description": "Defina o nome do widget:",
-          "disclaimer": "<b>Chave:</b> identificador único utilizado para rastrear um evento específico no fluxo de dados.<br/><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema utilizará um valor padrão.",
+          "disclaimer": "<b>Chave:</b> identificador único usado para rastrear um evento específico no fluxo de dados.<br/><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema usará um valor padrão.",
           "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
           "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:",
           "reference_field_label": "Defina o campo de referência a ser usado para vincular os eventos:"
@@ -607,9 +607,9 @@
     "info_reset": "Ao redefinir, os dados configurados serão perdidos.",
     "success_reset": "O widget foi redefinido com sucesso",
     "error_reset": "Não foi possível redefinir o widget. Tente novamente.",
-    "metric_error": "Erro ao buscar métrica",
+    "metric_error": "Erro ao obter métrica",
     "card": {
-      "error_description": "Configure novamente o fluxo de origem para obter dados válidos",
+      "error_description": "Redefina o fluxo de origem para obter dados válidos",
       "metric_empty": "Configurar",
       "metric_set": "Definir métrica"
     },
@@ -617,7 +617,7 @@
       "title": "Funil",
       "not_configured_description": "Selecione os fluxos que deseja mapear para montar a visualização em funil do seu projeto",
       "select_flows": "Selecionar fluxos",
-      "flow_executions": "Execuções do fluxo",
+      "flow_executions": "Execuções de fluxo",
       "error": {
         "title": "Ocorreu um problema ao carregar os dados",
         "description": "Tente carregar novamente"
@@ -785,8 +785,8 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Nomear métrica",
-      "placeholder": "Ex.: fluxos do projeto"
+      "label": "Informe um nome para a métrica",
+      "placeholder": "Exemplo: Fluxos do projeto"
     },
     "select_origin_flow": "Selecionar fluxo de origem"
   },
@@ -856,10 +856,36 @@
     }
   },
   "currency_options": {
+    "ARS": "$ - Peso argentino",
     "BRL": "R$ - Real",
-    "USD": "$ - Dólar",
+    "CAD": "$ - Dólar canadense",
+    "CHF": "CHF - Franco suíço",
+    "CLP": "$ - Peso chileno",
+    "CNY": "¥ - Yuan chinês",
+    "COP": "$ - Peso colombiano",
+    "CZK": "Kč - Coroa tcheca",
+    "DKK": "kr - Coroa dinamarquesa",
     "EUR": "€ - Euro",
-    "ARS": "$ - Peso"
+    "GBP": "£ - Libra esterlina",
+    "HKD": "HK$ - Dólar de Hong Kong",
+    "IDR": "Rp - Rupia indonésia",
+    "INR": "₹ - Rupia indiana",
+    "JPY": "¥ - Iene japonês",
+    "KRW": "₩ - Won sul-coreano",
+    "MXN": "$ - Peso mexicano",
+    "MYR": "RM - Ringgit malaio",
+    "NOK": "kr - Coroa norueguesa",
+    "PEN": "S/ - Sol peruano",
+    "PHP": "₱ - Peso filipino",
+    "PLN": "zł - Zloty polonês",
+    "RON": "lei - Leu romeno",
+    "SEK": "kr - Coroa sueca",
+    "SGD": "S$ - Dólar de Singapura",
+    "THB": "฿ - Baht tailandês",
+    "TWD": "NT$ - Dólar taiwanês",
+    "USD": "$ - Dólar",
+    "UYU": "$U - Peso uruguaio",
+    "VND": "₫ - Dong vietnamita"
   },
   "dashboard_onboarding": {
     "step": {
@@ -1106,17 +1132,17 @@
       "waiting_time": "Alertar no dashboard Live Desk quando o tempo de espera de um chat ultrapassa o limite definido"
     },
     "table_tooltip": {
-      "conversation_duration": "Este chat ultrapassou o limite de {value} {unit}.",
-      "first_response_time": "Este chat ultrapassou o limite de {value} {unit} para a primeira resposta.",
-      "generic": "Este chat ultrapassou o limite de tempo configurado.",
-      "waiting_time": "Este chat ultrapassou o limite de {value} {unit} de espera."
+      "conversation_duration": "Este chat excedeu o limite de tempo de {value}-{unit}.",
+      "first_response_time": "Este chat excedeu o limite de tempo de {value}-{unit} para a primeira resposta.",
+      "generic": "Este chat excedeu o limite de tempo configurado.",
+      "waiting_time": "Este chat excedeu o limite de {value}-{unit} de tempo de espera."
     },
     "toast": {
-      "conversation_duration": "{count} chats ultrapassaram o tempo máximo de duração",
-      "first_response_time": "{count} chats ultrapassaram o tempo máximo para primeira resposta",
+      "conversation_duration": "{count} chats excederam o tempo máximo de duração",
+      "first_response_time": "{count} chats excederam o tempo máximo para a primeira resposta",
       "title": "Live Desk: atenção imediata necessária",
       "view_details": "Ver detalhes",
-      "waiting_time": "{count} chats ultrapassaram o tempo máximo de espera"
+      "waiting_time": "{count} chats excederam o tempo máximo de espera"
     },
     "unit_word_singular": {
       "h": "hora",
@@ -1206,9 +1232,9 @@
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count, plural, one {# online} other {# online}}",
-        "custom_breaks": "{count, plural, one {# em pausa} other {# em pausa}}",
-        "offline": "{count, plural, one {# offline} other {# offline}}"
+        "online": "{count, plural, one {{count} online} other {{count} online}}",
+        "custom_breaks": "{count, plural, one {{count} em pausa} other {{count} em pausa}}",
+        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
       }
     },
     "filters": {

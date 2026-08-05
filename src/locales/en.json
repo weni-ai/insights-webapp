@@ -319,7 +319,7 @@
         "description": "Combine and compare two different data points to discover insights.",
         "drawer": {
           "description": "Enter the widget name:",
-          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br/><b>Field name:</b> The name of the field for the value you want to show. If left blank, the system will use a default value.",
+          "disclaimer": "<b>Key:</b> A unique identifier used to track a specific event in the data stream.<br/><b>Field name:</b> The name of the field for the value you want to display. If left blank, the system will use a default value.",
           "first_data_label": "Set the <b>first</b> data point you want to track:",
           "second_data_label": "Set the <b>second</b> data point you want to track:",
           "reference_field_label": "Define the reference field to be used to link the events:"
@@ -504,8 +504,8 @@
       "placeholder": "Select a queue"
     },
     "sector": {
-      "label": "Industry",
-      "placeholder": "Select an industry"
+      "label": "Department",
+      "placeholder": "Select a department"
     },
     "tags": {
       "label": "Tags",
@@ -617,7 +617,7 @@
       "title": "Funnel",
       "not_configured_description": "Select the flows you want to map to build the funnel view for your project",
       "select_flows": "Select flows",
-      "flow_executions": "flow runs",
+      "flow_executions": "Flow runs",
       "error": {
         "title": "There was a problem while loading the data",
         "description": "Try reloading"
@@ -741,7 +741,7 @@
       "select_origin_flow": "Select source flow",
       "result_type": "Result type",
       "flow_result": {
-        "label": "flow result",
+        "label": "Flow result",
         "placeholder": "Search or select a result"
       },
       "operation": "Operation",
@@ -785,7 +785,7 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Enter a name for metric",
+      "label": "Enter a name for the metric",
       "placeholder": "Example: Project flows"
     },
     "select_origin_flow": "Select source flow"
@@ -856,10 +856,36 @@
     }
   },
   "currency_options": {
+    "ARS": "$ - Argentine peso",
     "BRL": "R$ - Brazilian real",
-    "USD": "$ - US dollar",
+    "CAD": "$ - Canadian dollar",
+    "CHF": "CHF - Swiss franc",
+    "CLP": "$ - Chilean peso",
+    "CNY": "¥ - Chinese yuan",
+    "COP": "$ - Colombian peso",
+    "CZK": "Kč - Czech koruna",
+    "DKK": "kr - Danish krone",
     "EUR": "€ - Euro",
-    "ARS": "$ - Peso"
+    "GBP": "£ - Pound sterling",
+    "HKD": "HK$ - Hong Kong dollar",
+    "IDR": "Rp - Indonesian rupiah",
+    "INR": "₹ - Indian rupee",
+    "JPY": "¥ - Japanese yen",
+    "KRW": "₩ - South Korean won",
+    "MXN": "$ - Mexican peso",
+    "MYR": "RM - Malaysian ringgit",
+    "NOK": "kr - Norwegian krone",
+    "PEN": "S/ - Peruvian sol",
+    "PHP": "₱ - Philippine peso",
+    "PLN": "zł - Polish zloty",
+    "RON": "lei - Romanian leu",
+    "SEK": "kr - Swedish krona",
+    "SGD": "S$ - Singapore dollar",
+    "THB": "฿ - Thai baht",
+    "TWD": "NT$ - New Taiwan dollar",
+    "USD": "$ - US dollar",
+    "UYU": "$U - Uruguayan peso",
+    "VND": "₫ - Vietnamese dong"
   },
   "dashboard_onboarding": {
     "step": {
@@ -946,7 +972,7 @@
     "feedback": "You'll receive the file by email shortly. Remember to check your spam folder.",
     "feedback_title": "Exporting",
     "model_labels": {
-      "sectors": "Industries",
+      "sectors": "Departments",
       "queues": "Queues",
       "rooms": "Rooms",
       "users": "Agents",
@@ -994,7 +1020,7 @@
       "contact__uuid": "Contact ID",
       "queue__name": "Queue",
       "queue__uuid": "Queue ID",
-      "queue__sector__name": "Industry",
+      "queue__sector__name": "Department",
       "created_on": "Start date",
       "duration": "Duration",
       "awaiting_time": "Waiting time",
@@ -1027,15 +1053,15 @@
     "chats_open": "Include chats opened during this period",
     "chats_closed": "Include chats closed during this period",
     "filters": {
-      "sector": "Industry",
-      "select_sector": "Select industry",
+      "sector": "Department",
+      "select_sector": "Select a department",
       "representative": "Representative",
       "select_representative": "Select a representative",
       "queue": "Queue",
       "select_queue": "Select a queue",
       "tag": "Tag",
       "select_tag": "Select a tag",
-      "all_sectors": "All industries",
+      "all_sectors": "All departments",
       "all_representatives": "All representatives",
       "all_queues": "All queues",
       "all_tags": "All tags"
@@ -1114,7 +1140,7 @@
     "toast": {
       "conversation_duration": "{count} chats exceeded the maximum duration time",
       "first_response_time": "{count} chats exceeded the maximum time for first response",
-      "title": "Live Desk: immediate attention needed",
+      "title": "Live Desk: Immediate attention needed",
       "view_details": "View details",
       "waiting_time": "{count} chats exceeded the maximum wait time"
     },
@@ -1178,7 +1204,7 @@
         "first_response_time": "Time to first response",
         "pending_response_tooltip": "The last message in the chat was sent by the contact",
         "attendant": "Representative",
-        "sector": "Industry",
+        "sector": "Department",
         "queue": "Queue",
         "contact": "Contact"
       },
@@ -1191,7 +1217,7 @@
       "in_awaiting": {
         "awaiting_time": "Wait time",
         "contact": "Contact",
-        "sector": "Industry",
+        "sector": "Department",
         "queue": "Queue"
       },
       "attendant": {
@@ -1236,7 +1262,7 @@
         "first_response_time": "Time to first response",
         "response_time": "Response time",
         "agent": "Representative",
-        "sector": "Industry",
+        "sector": "Department",
         "queue": "Queue",
         "contact": "Contact",
         "ticket_id": "Protocol",
@@ -1280,7 +1306,7 @@
         "very_dissatisfied": "😡 Very dissatisfied",
         "not_answered": "No response"
       },
-      "disabled_text": "Enable CSAT to track overall ratings by industry, queue, and representative"
+      "disabled_text": "Enable CSAT to track overall ratings by department, queue, and representative"
     },
     "setup": {
       "title": "No sector created",
@@ -1301,8 +1327,8 @@
     },
     "volume_per_queue": {
       "title": "Volume per queue",
-      "monitoring_count": "{count, plural, one {# queue with {status} chats} other {# queues with chats {status}}}",
-      "analysis_count": "{count, plural, one {# queue with completed chats} other {# queues with completed chats}}",
+      "monitoring_count": "{count, plural, one {# queue with {status} chats} other {# queues with {status} chats}}",
+      "analysis_count": "{count, plural, one {# queue with ended chats} other {# queues with ended chats}}",
       "setup_description": "Create queues by industry to monitor more data",
       "empty_data": {
         "monitoring": {
@@ -1317,7 +1343,7 @@
     },
     "volume_per_tag": {
       "title": "Volume per tag",
-      "setup_description": "Add tags to industries to monitor more data",
+      "setup_description": "Add tags to departments to monitor more data",
       "count": {
         "ongoing": "{count, plural, one {# tag in use} other {# tags in use}}",
         "closed": "{count, plural, one {# assigned tag} other {# assigned tags}}"

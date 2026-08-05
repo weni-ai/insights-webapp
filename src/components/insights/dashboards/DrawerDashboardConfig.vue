@@ -33,6 +33,7 @@
             v-model="dashboardForm.currency"
             :options="currencyOptions"
             :placeholder="$t('select')"
+            optionsLines="8"
             itemLabel="label"
             itemValue="value"
           />
@@ -78,6 +79,8 @@ import LayoutSelector from '@/components/insights/dashboards/layout/LayoutSelect
 import { Dashboards } from '@/services/api';
 import { Dashboard } from '@/models';
 import { useDashboards } from '@/store/modules/dashboards';
+import { getCurrencyOptions } from '@/utils/currency';
+
 export default {
   name: 'DrawerDashboardConfig',
   components: { ProgressBar, ModalDeleteDashboard, LayoutSelector },
@@ -99,12 +102,6 @@ export default {
         layout: 1,
         currency: '',
       },
-      currencyOptions: [
-        { label: this.$t('currency_options.BRL'), value: 'BRL' },
-        { label: this.$t('currency_options.USD'), value: 'USD' },
-        { label: this.$t('currency_options.EUR'), value: 'EUR' },
-        { label: this.$t('currency_options.ARS'), value: 'ARS' },
-      ],
       loadingRequest: false,
       createdDashboard: {},
       showProgressBar: false,
@@ -114,6 +111,10 @@ export default {
   },
   computed: {
     ...mapState(useDashboards, ['dashboards']),
+
+    currencyOptions() {
+      return getCurrencyOptions(this.$t.bind(this));
+    },
 
     isValidConfig() {
       const commonValidations = !!(

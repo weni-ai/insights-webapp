@@ -49,12 +49,6 @@ vi.mock('@/composables/useFeedbackSurvey', () => ({
     onSubmitError: vi.fn(),
   }),
 }));
-vi.mock('@/store/modules/featureFlag', () => ({
-  useFeatureFlag: () => ({
-    isFeatureFlagEnabled: vi.fn(() => false),
-    activeFeatures: ref([]),
-  }),
-}));
 
 const autoWidgetEntries = [
   { type: 'agent_invocation', uuid: '' },

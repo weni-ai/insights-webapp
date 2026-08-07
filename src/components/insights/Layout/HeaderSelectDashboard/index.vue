@@ -66,7 +66,6 @@ import { mapActions, mapState } from 'pinia';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useOnboarding } from '@/store/modules/onboarding';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
@@ -115,13 +114,7 @@ export default {
       return false;
     },
     enabledShowDashboards() {
-      if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {
-        return this.dashboards;
-      }
-
-      return this.dashboards.filter(
-        (dashboard) => dashboard?.config?.type !== 'human_support',
-      );
+      return this.dashboards;
     },
   },
   mounted() {
@@ -139,7 +132,6 @@ export default {
       'callTourNextStep',
     ]),
     ...mapActions(useDashboards, ['setShowDashboardConfig']),
-    ...mapActions(useFeatureFlag, ['isFeatureFlagEnabled']),
 
     handlerCreateDashboardClick() {
       this.setShowDashboardConfig(true);

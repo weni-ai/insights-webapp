@@ -140,15 +140,15 @@
     "absolute_numbers": "Absolute numbers",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
     "added_to_cart": "Produsele cele mai adăugate în coș",
-    "added_to_cart_count": "{count, plural, one {# produs} few {# produse} other {# de produse}}",
+    "search_term": "Termenii cei mai căutați",
     "agent_invocation": "Cei mai utilizați agenți",
     "agent_invocation_description": "Urmărește clasamentul celor mai utilizați agenți",
     "agent_invocation_count": "{count, plural, one {# agent} few {# agenți} other {# de agenți}}",
     "tool_result": "Cele mai utilizate instrumente",
     "tool_result_description": "Urmărește clasamentul celor mai utilizate instrumente",
     "tool_result_count": "{count, plural, one {# instrument} few {# instrumente} other {# de instrumente}}",
-    "search_term": "Termenii cei mai căutați",
     "search_term_count": "{count, plural, one {# produs} few {# produse} other {# de produse}}",
+    "added_to_cart_count": "{count, plural, one {# produs} few {# produse} other {# de produse}}",
     "auto_widget_no_data": "Nu sunt date disponibile pentru perioada filtrată",
     "auto_widget_error": "Datele nu au putut fi încărcate. Reîmprospătează dashboard-ul sau contactează suportul",
     "no_data_available": "Nu sunt date disponibile pentru perioada selectată",
@@ -472,7 +472,7 @@
     "agent": "Agent",
     "created_on": "Inițiere",
     "ended_at": "Sfârșit",
-    "sector": "Sector",
+    "sector": "Sector de activitate",
     "queue": "Coadă",
     "tags": "Etichete"
   },
@@ -504,8 +504,8 @@
       "placeholder": "Selectează o coadă"
     },
     "sector": {
-      "label": "Departament",
-      "placeholder": "Selectează un departament"
+      "label": "Sector de activitate",
+      "placeholder": "Selectează un sector de activitate"
     },
     "tags": {
       "label": "Etichete",
@@ -1020,7 +1020,7 @@
       "contact__uuid": "ID contact",
       "queue__name": "Coadă",
       "queue__uuid": "ID coadă",
-      "queue__sector__name": "Departament",
+      "queue__sector__name": "Sector de activitate",
       "created_on": "Data de începere",
       "duration": "Durată",
       "awaiting_time": "Timp de așteptare",
@@ -1053,8 +1053,8 @@
     "chats_open": "Include chaturile deschise în această perioadă",
     "chats_closed": "Include chaturile închise în această perioadă",
     "filters": {
-      "sector": "Departament",
-      "select_sector": "Selectează un departament",
+      "sector": "Sector de activitate",
+      "select_sector": "Selectează un sector de activitate",
       "representative": "Reprezentant",
       "select_representative": "Selectează un reprezentant",
       "queue": "Coadă",
@@ -1204,7 +1204,7 @@
         "first_response_time": "Timp până la primul răspuns",
         "pending_response_tooltip": "Ultimul mesaj din chat a fost trimis de contact",
         "attendant": "Reprezentant",
-        "sector": "Departament",
+        "sector": "Sector de activitate",
         "queue": "Coadă",
         "contact": "Contact"
       },
@@ -1217,7 +1217,7 @@
       "in_awaiting": {
         "awaiting_time": "Timp de așteptare",
         "contact": "Contact",
-        "sector": "Departament",
+        "sector": "Sector de activitate",
         "queue": "Coadă"
       },
       "attendant": {
@@ -1262,7 +1262,7 @@
         "first_response_time": "Timp până la primul răspuns",
         "response_time": "Timp de răspuns",
         "agent": "Reprezentant",
-        "sector": "Departament",
+        "sector": "Sector de activitate",
         "queue": "Coadă",
         "contact": "Contact",
         "ticket_id": "Protocol",
@@ -1306,13 +1306,13 @@
         "very_dissatisfied": "😡 Foarte nemulțumit",
         "not_answered": "Fără răspuns"
       },
-      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe departament, coadă și reprezentant"
+      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
     },
     "setup": {
-      "title": "No sector created",
-      "description": "Create a sector for this project and start monitoring your team's support data in real time.",
-      "action_text": "Create sector",
-      "disclaimer": "These numbers are for demonstration purposes only. Once your project has a sector configured and begins receiving conversations, your real data will be displayed here."
+      "title": "Niciun departament creat",
+      "description": "Creează un departament pentru acest proiect și începe să monitorizezi datele de asistență ale echipei tale în timp real.",
+      "action_text": "Creează departament",
+      "disclaimer": "Aceste cifre sunt doar în scop demonstrativ. Odată ce proiectul tău are un departament configurat și începe să primească conversații, datele tale reale vor fi afișate aici."
     },
     "common": {
       "no_response": "Niciun răspuns"

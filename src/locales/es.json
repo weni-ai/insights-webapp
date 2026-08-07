@@ -1,11 +1,11 @@
 {
   "human_service_dashboard": {
-    "title": "Live desk",
+    "title": "Live Desk",
     "peaks_in_human_service": "Chats abiertos por hora",
     "closed": "Cerrados",
     "in_progress": "En curso",
     "response_time": "Tiempo de respuesta",
-    "waiting_time": "Tiempo de espera",
+    "waiting_time": "Espera",
     "awaiting_service": "Esperando chat de soporte",
     "interaction_time": "Tiempo de interacción",
     "all_agents": "Todos los agentes",
@@ -22,7 +22,7 @@
     "title": "Conversaciones",
     "conversations": "conversaciones",
     "artificial_intelligence": "IA",
-    "human_support": "Live desk",
+    "human_support": "Live Desk",
     "others": "Otras",
     "unclassified": "Sin clasificar",
     "info": {
@@ -63,7 +63,7 @@
       "resolved": "Atendido por IA",
       "unresolved": "No atendido por IA",
       "unengaged": "Sin participación",
-      "transferred": "Transferidas a live desk",
+      "transferred": "Transferidas a Live Desk",
       "tooltips": {
         "total": "Total de conversas encerradas en el período. Una conversa se cuenta desde el primer mensaje del contacto hasta las 23h59m59s del día de inicio. Mensagens enviadas después de este horário iniciam uma nova janela de conversa no dia seguinte.",
         "resolved": "Cuando el agente demuestra competencia y brinda un servicio útil",
@@ -271,7 +271,7 @@
       "abandoned_cart_recovery_description": "Haz seguimiento del rendimiento de la recuperación de carritos abandonados mediante métricas como ingresos recuperados, ventas convertidas, tasa de conversión y valor promedio de los pedidos.",
       "search_term_description": "Sigue el ranking de los términos más buscados.",
       "added_to_cart_description": "Sigue el ranking de los productos más agregados al carrito.",
-      "human_support": "Live desk",
+      "human_support": "Live Desk",
       "ai_support": "IA",
       "activate_agent": "Activar agente",
       "select_agent": "Selecciona el agente",
@@ -472,7 +472,7 @@
     "agent": "Agente",
     "created_on": "Inicio",
     "ended_at": "Fin",
-    "sector": "Sector",
+    "sector": "Departamento",
     "queue": "Cola",
     "tags": "Tags"
   },
@@ -504,8 +504,8 @@
       "placeholder": "Selecciona la cola"
     },
     "sector": {
-      "label": "Sector",
-      "placeholder": "Selecciona un sector"
+      "label": "Departamento",
+      "placeholder": "Selecciona un departamento"
     },
     "tags": {
       "label": "Tags",
@@ -1020,10 +1020,10 @@
       "contact__uuid": "ID del contacto",
       "queue__name": "Cola",
       "queue__uuid": "ID de la cola",
-      "queue__sector__name": "Sector",
+      "queue__sector__name": "Departamento",
       "created_on": "Fecha de inicio",
       "duration": "Duración",
-      "awaiting_time": "Tiempo de espera",
+      "awaiting_time": "Espera",
       "first_response_time": "Tiempo hasta la primera respuesta",
       "agent__email": "Email",
       "agent__first_name": "Nombre",
@@ -1035,7 +1035,7 @@
       "metric__first_response_time": "Tiempo hasta la primera respuesta",
       "metric__message_response_time": "Tiempo promedio de respuesta",
       "metric__interaction_time": "Duración",
-      "metric__waiting_time": "Tiempo de espera"
+      "metric__waiting_time": "Espera"
     },
     "select_data": {
       "label": "Selecciona el periodo para buscar datos (máximo de 92 días entre la fecha de inicio y fin)",
@@ -1053,8 +1053,8 @@
     "chats_open": "Considerar chats abiertos durante este periodo",
     "chats_closed": "Considerar chats cerrados durante este periodo",
     "filters": {
-      "sector": "Sector",
-      "select_sector": "Selecciona el sector",
+      "sector": "Departamento",
+      "select_sector": "Seleccionar departamento",
       "representative": "Representante",
       "select_representative": "Selecciona el representante",
       "queue": "Cola",
@@ -1157,8 +1157,8 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitorización",
-    "monitoring_tooltip": "Monitoriza las interacciones de atención al cliente en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitorización</b>!",
+    "monitoring": "Monitoreo",
+    "monitoring_tooltip": "Monitorea en tiempo real las interacciones del chat de soporte del día. Identifica cuellos de botella y toma decisiones rápidas para optimizar la operación.",
     "analysis": "Analytics",
     "analysis_tooltip": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
     "support_status": {
@@ -1175,10 +1175,10 @@
     },
     "time_metrics": {
       "title": "Métricas de tiempo actuales",
-      "average_time_is_waiting": "Tiempo de espera promedio",
+      "average_time_is_waiting": "Espera promedio",
       "average_time_first_response": "Tiempo promedio hasta la primera respuesta",
       "average_response_time": "Tiempo promedio de respuesta",
-      "average_time_chat": "Duración promedio del chat",
+      "average_time_chat": "Duración promedio",
       "max": "Máximo",
       "tooltips": {
         "average_time_is_waiting": "Tiempo promedio que los contactos esperan en cola antes del inicio del chat de soporte",
@@ -1200,11 +1200,11 @@
       },
       "in_progress": {
         "duration": "Duración",
-        "awaiting_time": "Tiempo de espera",
-        "first_response_time": "Tiempo hasta la primera respuesta",
+        "awaiting_time": "Espera",
+        "first_response_time": "1ª respuesta",
         "pending_response_tooltip": "El último mensaje del chat lo envió el contacto",
         "attendant": "Representante",
-        "sector": "Sector",
+        "sector": "Departamento",
         "queue": "Cola",
         "contact": "Contacto"
       },
@@ -1215,9 +1215,9 @@
         "closed": "Cerrados"
       },
       "in_awaiting": {
-        "awaiting_time": "Tiempo de espera",
+        "awaiting_time": "Espera",
         "contact": "Contacto",
-        "sector": "Sector",
+        "sector": "Departamento",
         "queue": "Cola"
       },
       "attendant": {
@@ -1258,16 +1258,16 @@
     "columns": {
       "common": {
         "duration": "Duración",
-        "awaiting_time": "Tiempo de espera",
-        "first_response_time": "Tiempo hasta la primera respuesta",
+        "awaiting_time": "Espera",
+        "first_response_time": "1ª respuesta",
         "response_time": "Tiempo de respuesta",
         "agent": "Representante",
-        "sector": "Sector",
+        "sector": "Departamento",
         "queue": "Cola",
         "contact": "Contacto",
         "ticket_id": "Protocolo",
         "total_attendances": "Total de chats de soporte",
-        "average_first_response_time": "Tiempo promedio hasta la primera respuesta",
+        "average_first_response_time": "Promedio de 1ª respuesta",
         "average_response_time": "Tiempo promedio de respuesta",
         "average_duration": "Duración promedio",
         "time_in_service": "Tiempo en el chat de soporte",
@@ -1306,13 +1306,13 @@
         "very_dissatisfied": "😡 Muy insatisfecho",
         "not_answered": "Sin respuesta"
       },
-      "disabled_text": "Activa CSAT para monitorear calificaciones generales por sector, cola y representante"
+      "disabled_text": "Activa CSAT para monitorear calificaciones generales por departamento, cola y representante"
     },
     "setup": {
-      "title": "No sector creado",
-      "description": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real.",
-      "action_text": "Crear sector",
-      "disclaimer": "Crea un sector para este proyecto y comienza a monitorizar los datos de tu equipo de soporte en tiempo real."
+      "title": "Ningún departamento creado",
+      "description": "Crea un departamento para este proyecto y comienza a monitorear los datos de tu equipo de soporte en tiempo real.",
+      "action_text": "Crear departamento",
+      "disclaimer": "Estos números son solo para fines de demostración. Una vez que tu proyecto tenga un departamento configurado y comience a recibir conversaciones, tus datos reales se mostrarán aquí."
     },
     "common": {
       "no_response": "Sin respuesta"
@@ -1329,7 +1329,7 @@
       "title": "Volumen por cola",
       "monitoring_count": "{count, plural, one {# cola con chats {status}} other {# colas con chats {status}}}",
       "analysis_count": "{count, plural, one {# cola con chats finalizados} other {# colas con chats finalizados}}",
-      "setup_description": "Crea colas por sector para monitorear más datos",
+      "setup_description": "Crea colas por departamento para monitorear más datos",
       "empty_data": {
         "monitoring": {
           "waiting": "No hay colas con chats esperando soporte",

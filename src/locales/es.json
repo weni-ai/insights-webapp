@@ -382,7 +382,7 @@
   "template_messages_dashboard": {
     "title": "Mensajes plantilla de Meta",
     "favorites": "Favoritos",
-    "select_favorite": "Seleccionar a plantilla favorita",
+    "select_favorite": "Plantilla favorita",
     "add_to_favorites": "Agregar a favoritos",
     "empty_templates": "Aún no hay datos disponibles. Cuando haya alguna actividad se mostrará aquí.",
     "favorite_limit_reached": "Límite de favoritos alcanzado. Remueve algún favorito e inténtalo de nuevo.",
@@ -1012,7 +1012,7 @@
       "phone": "Teléfono",
       "status": "Status",
       "ai": "IA",
-      "human": "Soporte humano",
+      "human": "Live Desk",
       "user__first_name": "Nombre del representante",
       "user__last_name": "Apellido del representante",
       "user__email": "Email",
@@ -1054,7 +1054,7 @@
     "chats_closed": "Considerar chats cerrados durante este periodo",
     "filters": {
       "sector": "Departamento",
-      "select_sector": "Seleccionar departamento",
+      "select_sector": "Selecciona el departamento",
       "representative": "Representante",
       "select_representative": "Selecciona el representante",
       "queue": "Cola",
@@ -1158,7 +1158,7 @@
   "human_support_dashboard": {
     "title": "Live desk",
     "monitoring": "Monitoreo",
-    "monitoring_tooltip": "Monitorea en tiempo real las interacciones del chat de soporte del día. Identifica cuellos de botella y toma decisiones rápidas para optimizar la operación.",
+    "monitoring_tooltip": "Monitorea las interacciones de chats de soporte en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitoreo</b>!",
     "analysis": "Analytics",
     "analysis_tooltip": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
     "support_status": {
@@ -1176,7 +1176,7 @@
     "time_metrics": {
       "title": "Métricas de tiempo actuales",
       "average_time_is_waiting": "Espera promedio",
-      "average_time_first_response": "Tiempo promedio hasta la primera respuesta",
+      "average_time_first_response": "Promedio de 1ª respuesta",
       "average_response_time": "Tiempo promedio de respuesta",
       "average_time_chat": "Duración promedio",
       "max": "Máximo",
@@ -1225,7 +1225,7 @@
         "status": "Status",
         "ongoing": "En curso",
         "finished": "Finalizados",
-        "average_first_response_time": "Tiempo promedio hasta la primera respuesta",
+        "average_first_response_time": "Promedio de 1ª respuesta",
         "average_response_time": "Tiempo promedio de respuesta",
         "average_duration": "Duración promedio",
         "time_in_service": "Tiempo en el chat de soporte",
@@ -1312,7 +1312,7 @@
       "title": "Ningún departamento creado",
       "description": "Crea un departamento para este proyecto y comienza a monitorear los datos de tu equipo de soporte en tiempo real.",
       "action_text": "Crear departamento",
-      "disclaimer": "Estos números son solo para fines de demostración. Una vez que tu proyecto tenga un departamento configurado y comience a recibir conversaciones, tus datos reales se mostrarán aquí."
+      "disclaimer": "Estas cifras son solo ejemplos. Después de que configures un departamento en tu proyecto y recibas conversaciones, tus datos reales se mostrarán aquí."
     },
     "common": {
       "no_response": "Sin respuesta"

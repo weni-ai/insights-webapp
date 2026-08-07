@@ -1,6 +1,6 @@
 {
   "human_service_dashboard": {
-    "title": "Asistență umană",
+    "title": "Live Desk",
     "peaks_in_human_service": "Chaturi deschise pe oră",
     "closed": "Închis",
     "in_progress": "În curs",
@@ -22,7 +22,7 @@
     "title": "Conversațional",
     "conversations": "conversații",
     "artificial_intelligence": "IA",
-    "human_support": "Asistență umană",
+    "human_support": "Live Desk",
     "others": "Altele",
     "unclassified": "Neclasificate",
     "info": {
@@ -63,7 +63,7 @@
       "resolved": "Gestionat de IA",
       "unresolved": "Nu este gestionat de IA",
       "unengaged": "Neimplicat",
-      "transferred": "Transferat la asistență umană",
+      "transferred": "Transferat la Live Desk",
       "tooltips": {
         "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
         "resolved": "Când agentul demonstrează competență și oferă un serviciu util",
@@ -271,7 +271,7 @@
       "abandoned_cart_recovery_description": "Urmărește metricile de recuperare a coșului abandonat: venit recuperat, vânzări convertite, rată de conversie, avarege order value, etc.",
       "search_term_description": "Urmărește clasamentul celor mai căutați termeni.",
       "added_to_cart_description": "Urmărește clasamentul produselor cel mai des adăugate în coș.",
-      "human_support": "Asistență umană",
+      "human_support": "Live Desk",
       "ai_support": "IA",
       "activate_agent": "Activează agent",
       "select_agent": "Alege un agent",
@@ -382,7 +382,7 @@
   "template_messages_dashboard": {
     "title": "Mesaje meta șablon",
     "favorites": "Favorite",
-    "select_favorite": "Selectează un template favorit",
+    "select_favorite": "Template favorit",
     "add_to_favorites": "Adaugă la favorite",
     "empty_templates": "Încă nu există date. Odată ce va fi activitate, acestea vor fi afișate aici.",
     "favorite_limit_reached": "Limita de favorite a fost atinsă. Elimină un favorit și încearcă din nou.",
@@ -472,7 +472,7 @@
     "agent": "Agent",
     "created_on": "Inițiere",
     "ended_at": "Sfârșit",
-    "sector": "Sector de activitate",
+    "sector": "Departament",
     "queue": "Coadă",
     "tags": "Etichete"
   },
@@ -504,8 +504,8 @@
       "placeholder": "Selectează o coadă"
     },
     "sector": {
-      "label": "Sector de activitate",
-      "placeholder": "Selectează un sector de activitate"
+      "label": "Departament",
+      "placeholder": "Selectează un departament"
     },
     "tags": {
       "label": "Etichete",
@@ -1020,7 +1020,7 @@
       "contact__uuid": "ID contact",
       "queue__name": "Coadă",
       "queue__uuid": "ID coadă",
-      "queue__sector__name": "Sector de activitate",
+      "queue__sector__name": "Departament",
       "created_on": "Data de începere",
       "duration": "Durată",
       "awaiting_time": "Timp de așteptare",
@@ -1053,8 +1053,8 @@
     "chats_open": "Include chaturile deschise în această perioadă",
     "chats_closed": "Include chaturile închise în această perioadă",
     "filters": {
-      "sector": "Sector de activitate",
-      "select_sector": "Selectează un sector de activitate",
+      "sector": "Departament",
+      "select_sector": "Selectează un departament",
       "representative": "Reprezentant",
       "select_representative": "Selectează un reprezentant",
       "queue": "Coadă",
@@ -1176,7 +1176,7 @@
     "time_metrics": {
       "title": "Metrici oră curentă",
       "average_time_is_waiting": "Timpul mediu de așteptare",
-      "average_time_first_response": "Timpul mediu până la primul răspuns",
+      "average_time_first_response": "Medie până la 1º răspuns",
       "average_response_time": "Timpul mediu de răspuns",
       "average_time_chat": "Durata medie a conversației în chat",
       "max": "Maximum",
@@ -1201,10 +1201,10 @@
       "in_progress": {
         "duration": "Durată",
         "awaiting_time": "Timp de așteptare",
-        "first_response_time": "Timp până la primul răspuns",
+        "first_response_time": "1º răspuns",
         "pending_response_tooltip": "Ultimul mesaj din chat a fost trimis de contact",
         "attendant": "Reprezentant",
-        "sector": "Sector de activitate",
+        "sector": "Departament",
         "queue": "Coadă",
         "contact": "Contact"
       },
@@ -1217,7 +1217,7 @@
       "in_awaiting": {
         "awaiting_time": "Timp de așteptare",
         "contact": "Contact",
-        "sector": "Sector de activitate",
+        "sector": "Departament",
         "queue": "Coadă"
       },
       "attendant": {
@@ -1225,7 +1225,7 @@
         "status": "Stare",
         "ongoing": "În curs",
         "finished": "Finalizat",
-        "average_first_response_time": "Timp mediu până la primul răspuns",
+        "average_first_response_time": "Medie până la 1º răspuns",
         "average_response_time": "Timpul mediu de răspuns",
         "average_duration": "Durata medie",
         "time_in_service": "Timp în chatul de asistență",
@@ -1259,15 +1259,15 @@
       "common": {
         "duration": "Durată",
         "awaiting_time": "Timp de așteptare",
-        "first_response_time": "Timp până la primul răspuns",
+        "first_response_time": "1º răspuns",
         "response_time": "Timp de răspuns",
         "agent": "Reprezentant",
-        "sector": "Sector de activitate",
+        "sector": "Departament",
         "queue": "Coadă",
         "contact": "Contact",
         "ticket_id": "Protocol",
         "total_attendances": "Total chaturi de asistență",
-        "average_first_response_time": "Timpul mediu până la primul răspuns",
+        "average_first_response_time": "Medie până la 1º răspuns",
         "average_response_time": "Timpul mediu de răspuns",
         "average_duration": "Durata medie",
         "time_in_service": "Timp în chatul de asistență",
@@ -1306,7 +1306,7 @@
         "very_dissatisfied": "😡 Foarte nemulțumit",
         "not_answered": "Fără răspuns"
       },
-      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe sector de activitate, coadă și reprezentant"
+      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe departament, coadă și reprezentant"
     },
     "setup": {
       "title": "Niciun departament creat",
@@ -1329,7 +1329,7 @@
       "title": "Volum per coadă",
       "monitoring_count": "{count, plural, one {# coadă cu chaturi {status}} few {# cozi cu chaturi {status}} other {# de cozi cu chaturi {status}}}",
       "analysis_count": "{count, plural, one {# coadă cu chaturi încheiate} few {# cozi cu chaturi încheiate} other {# de cozi cu chaturi încheiate}}",
-      "setup_description": "Creează cozi pe sector de activitate pentru a monitoriza mai multe date",
+      "setup_description": "Creează cozi pe departament pentru a monitoriza mai multe date",
       "empty_data": {
         "monitoring": {
           "waiting": "Nu există cozi cu chaturi care să aștepte asistență",

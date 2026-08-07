@@ -49,21 +49,16 @@ import { createTestingPinia } from '@pinia/testing';
 import ResolutionCriteriaSettings from '../ResolutionCriteriaSettings.vue';
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
 
-const createWrapper = ({ featureEnabled = true } = {}) =>
+const createWrapper = ({ hasEndpointData = true } = {}) =>
   shallowMount(ResolutionCriteriaSettings, {
     global: {
       plugins: [
         createTestingPinia({
           stubActions: false,
           initialState: {
-            featureFlag: {
-              activeFeatures: featureEnabled
-                ? ['insightsResolutionCriteria']
-                : [],
-            },
             conversational: {
               isConfigurationLoaded: true,
-              hasEndpointData: true,
+              hasEndpointData,
               endpointErrors: {
                 topics: false,
                 header: false,
@@ -104,15 +99,15 @@ describe('ResolutionCriteriaSettings', () => {
     vi.clearAllMocks();
   });
 
-  it('renders settings entry when feature flag is enabled', () => {
-    const wrapper = createWrapper();
+  it('renders settings entry when mock data is not used', () => {
+    const wrapper = createWrapper({ hasEndpointData: true });
     expect(
       wrapper.find('[data-testid="resolution-criteria-popover"]').exists(),
     ).toBe(true);
   });
 
-  it('does not render when feature flag is disabled', () => {
-    const wrapper = createWrapper({ featureEnabled: false });
+  it('does not render when mock data is used', () => {
+    const wrapper = createWrapper({ hasEndpointData: false });
     expect(
       wrapper.find('[data-testid="resolution-criteria-popover"]').exists(),
     ).toBe(false);

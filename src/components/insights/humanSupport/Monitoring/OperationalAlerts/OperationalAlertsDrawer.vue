@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { unnnicCallAlert } from '@weni/unnnic-system';
+import { UnnnicToastManager } from '@weni/unnnic-system';
 import { reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
@@ -175,23 +175,11 @@ const handleSave = async () => {
 
   try {
     await saveGoals(formState);
-    unnnicCallAlert({
-      props: {
-        text: t('operational_alerts.alerts.save_success'),
-        type: 'success',
-      },
-      seconds: 5,
-    });
     close();
+    UnnnicToastManager.success(t('operational_alerts.alerts.save_success'));
   } catch (error) {
     console.error('Error saving operational alerts:', error);
-    unnnicCallAlert({
-      props: {
-        text: t('operational_alerts.alerts.save_error'),
-        type: 'error',
-      },
-      seconds: 5,
-    });
+    UnnnicToastManager.error(t('operational_alerts.alerts.save_error'));
   }
 };
 

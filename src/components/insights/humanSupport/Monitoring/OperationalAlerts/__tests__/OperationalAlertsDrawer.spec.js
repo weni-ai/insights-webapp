@@ -4,11 +4,19 @@ import { createTestingPinia } from '@pinia/testing';
 
 import OperationalAlertsDrawer from '../OperationalAlertsDrawer.vue';
 import { useMetricGoals } from '@/store/modules/humanSupport/metricGoals';
-import { unnnicCallAlert } from '@weni/unnnic-system';
+import { UnnnicToastManager } from '@weni/unnnic-system';
 
 vi.mock('@weni/unnnic-system', async (importOriginal) => {
   const actual = await importOriginal();
-  return { ...actual, unnnicCallAlert: vi.fn() };
+  return {
+    ...actual,
+    UnnnicToastManager: {
+      success: vi.fn(),
+      error: vi.fn(),
+      info: vi.fn(),
+      attention: vi.fn(),
+    },
+  };
 });
 
 const drawerSlotStub = (name) => ({
@@ -235,7 +243,7 @@ describe('OperationalAlertsDrawer.vue', () => {
     await wrapper.vm.$nextTick();
   };
 
-  it('should save and show success alert when valid', async () => {
+  it('should save and show success toast when valid', async () => {
     const { wrapper, store } = createWrapper();
     store.saveGoals.mockResolvedValue(undefined);
 
@@ -244,14 +252,13 @@ describe('OperationalAlertsDrawer.vue', () => {
     await Promise.resolve();
 
     expect(store.saveGoals).toHaveBeenCalled();
-    expect(unnnicCallAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        props: expect.objectContaining({ type: 'success' }),
-      }),
+    expect(UnnnicToastManager.success).toHaveBeenCalledWith(
+      'Operational alerts saved successfully',
     );
+    expect(wrapper.emitted('close')).toBeTruthy();
   });
 
-  it('should show an error alert when saving fails', async () => {
+  it('should show an error toast when saving fails', async () => {
     const { wrapper, store } = createWrapper();
     store.saveGoals.mockRejectedValue(new Error('fail'));
 
@@ -260,10 +267,8 @@ describe('OperationalAlertsDrawer.vue', () => {
     await Promise.resolve();
     await Promise.resolve();
 
-    expect(unnnicCallAlert).toHaveBeenCalledWith(
-      expect.objectContaining({
-        props: expect.objectContaining({ type: 'error' }),
-      }),
+    expect(UnnnicToastManager.error).toHaveBeenCalledWith(
+      "Operational alerts couldn't be saved due to a technical issue",
     );
     expect(wrapper.emitted('close')).toBeFalsy();
   });

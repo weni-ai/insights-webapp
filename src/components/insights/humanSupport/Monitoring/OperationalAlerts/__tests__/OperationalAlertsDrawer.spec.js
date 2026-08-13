@@ -232,6 +232,58 @@ describe('OperationalAlertsDrawer.vue', () => {
     expect(wrapper.find('.primary').attributes('disabled')).toBeDefined();
   });
 
+  it('should keep save disabled when an enabled metric has a zero threshold', async () => {
+    const { wrapper } = createWrapper();
+    wrapper.vm.formState.waiting_time = {
+      enabled: true,
+      threshold: 0,
+      unit: 'm',
+      recipients: [],
+      roomsThresholdCount: 5,
+    };
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.primary').attributes('disabled')).toBeDefined();
+  });
+
+  it('should keep save disabled when recipients are set and when is zero', async () => {
+    const { wrapper } = createWrapper();
+    wrapper.vm.formState.waiting_time = {
+      enabled: true,
+      threshold: 5,
+      unit: 'm',
+      recipients: ['ana@example.com'],
+      roomsThresholdCount: 0,
+    };
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.primary').attributes('disabled')).toBeDefined();
+  });
+
+  it('should keep save disabled when recipients are set and when is negative', async () => {
+    const { wrapper } = createWrapper();
+    wrapper.vm.formState.waiting_time = {
+      enabled: true,
+      threshold: 5,
+      unit: 'm',
+      recipients: ['ana@example.com'],
+      roomsThresholdCount: -1,
+    };
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.primary').attributes('disabled')).toBeDefined();
+  });
+
+  it('should keep save enabled when when is zero but there are no recipients', async () => {
+    const { wrapper } = createWrapper();
+    wrapper.vm.formState.waiting_time = {
+      enabled: true,
+      threshold: 5,
+      unit: 'm',
+      recipients: [],
+      roomsThresholdCount: 0,
+    };
+    await wrapper.vm.$nextTick();
+    expect(wrapper.find('.primary').attributes('disabled')).toBeUndefined();
+  });
+
   const enableValidWaitingTime = async (wrapper) => {
     wrapper.vm.formState.waiting_time = {
       enabled: true,

@@ -88,6 +88,7 @@
             v-model="roomsThresholdModel"
             type="number"
             nativeType="number"
+            min="1"
             :placeholder="$t('operational_alerts.form.when_placeholder')"
             :data-testid="`when-input-${metric}`"
           />

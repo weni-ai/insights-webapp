@@ -150,11 +150,19 @@ const formState = reactive<OperationalAlertsFormState>({
   conversation_duration: buildMetricFormState('conversation_duration'),
 });
 
+const isPositiveNumber = (value: number | null): boolean =>
+  value !== null && value > 0;
+
 const isValid = computed(() =>
   metricKeys.every((metric) => {
     const metricForm = formState[metric];
     if (!metricForm.enabled) return true;
-    return metricForm.threshold !== null && metricForm.threshold > 0;
+
+    if (!isPositiveNumber(metricForm.threshold)) return false;
+
+    if (metricForm.recipients.length === 0) return true;
+
+    return isPositiveNumber(metricForm.roomsThresholdCount);
   }),
 );
 

@@ -123,6 +123,17 @@ describe('OperationalAlertForm.vue', () => {
     ).toBe(true);
   });
 
+  it('should set a minimum of 1 on the when field', () => {
+    const { wrapper } = createWrapper();
+    const whenInput = wrapper
+      .findAllComponents({ name: 'UnnnicInput' })
+      .find((input) =>
+        String(input.attributes('data-testid') || '').startsWith('when-input-'),
+      );
+
+    expect(whenInput?.attributes('min') || whenInput?.props('min')).toBe('1');
+  });
+
   it('should expose the unit options including the default minutes', () => {
     const { wrapper } = createWrapper();
     const select = wrapper.findComponent({ name: 'UnnnicSelect' });

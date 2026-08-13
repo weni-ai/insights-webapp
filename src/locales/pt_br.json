@@ -160,14 +160,19 @@
     },
     "resolution_criteria": {
       "add_criterion": "Adicionar critério",
-      "base_section_description": "Aplicados a todos os projetos para manter o Atendido por IA consistente. Não podem ser editados ou removidos.",
-      "base_section_title": "Critérios base",
+      "base_section_description": "Aplicado a todos os projetos para manter a consistência do Atendido por IA. Eles não podem ser editados nem removidos.",
+      "base_section_title": "Critérios-base",
       "custom_empty": "Nenhum critério adicionado",
       "custom_section_description": "Adicione situações que este projeto também deve contar como Atendido por IA. {count} de {max}.",
       "custom_section_title": "Seus critérios",
       "errors": {
-        "invalid_title": "O critério é inválido",
-        "technical": "Não foi possível validar o critério devido a um problema técnico"
+        "ambiguous_description": "Reescreva o critério para torná-lo mais claro",
+        "ambiguous_title": "Este critério é ambíguo",
+        "duplicate_description": "Edite o critério para cobrir uma situação diferente ou remova o outro primeiro",
+        "duplicate_title": "Você já adicionou um critério semelhante",
+        "invalid_description": "Reescreva o critério e valide-o novamente",
+        "invalid_title": "Este critério é inválido",
+        "technical": "Não foi possível validar este critério devido a um problema técnico"
       },
       "form": {
         "create_title": "Adicionar critério",
@@ -175,20 +180,20 @@
         "field_placeholder": "Critério",
         "results_title": "Resultados da validação",
         "save": "Salvar",
-        "success_description": "Após salvar, este critério passa a valer a partir da próxima avaliação diária. Conversas já classificadas não serão alteradas.",
+        "success_description": "Uma vez salvo, este critério será aplicado na próxima avaliação diária. As conversas classificadas anteriormente não serão alteradas.",
         "success_title": "Nenhum problema encontrado",
         "tooltip_fix_issue": "Corrija o problema encontrado na validação para salvar",
         "tooltip_validate_first": "Valide este critério antes de salvar",
         "validate": "Validar",
         "validating": "Validando critério..."
       },
-      "list_description": "Defina o que conta como conversa Atendida por IA neste projeto. Esses critérios definem quais conversas são marcadas como Atendidas por IA no dashboard.",
+      "list_description": "Defina o que conta como uma conversa atendida por IA neste projeto. Esses critérios determinam quais conversas serão marcadas como Atendido por IA no seu dashboard.",
       "list_title": "Critérios de Atendido por IA",
       "menu_option": "Editar critérios de Atendido por IA",
       "remove_modal": {
         "cancel": "Cancelar",
         "confirm": "Excluir",
-        "description": "Essa ação não pode ser desfeita. Tem certeza de que deseja excluir este critério?",
+        "description": "Esta ação não pode ser desfeita. Tem certeza de que deseja excluir este critério?",
         "title": "Excluir critério"
       },
       "row_menu": {
@@ -1092,19 +1097,19 @@
     },
     "card_alert": "{count} chats ultrapassaram {value} {unit}",
     "drawer": {
-      "description": "Configure alertas para identificar chats que ultrapassam os limites de tempo definidos para uma operação:",
+      "description": "Configure alertas para identificar chats que excedem os limites de tempo definidos para uma operação:",
       "title": "Alertas operacionais"
     },
-    "first_response_info": "O alerta de tempo limite da primeira resposta permanecerá ativo até que o representante envie a primeira mensagem.",
+    "first_response_info": "O alerta de tempo limite de primeira resposta permanecerá ativo até que o atendente envie a primeira mensagem.",
     "form": {
-      "email_notification_label": "Notificação por e-mail (opcional)",
-      "email_notification_tooltip": "Este alerta é sempre exibido no dashboard Live Desk quando um chat atinge o limite definido.\n\nVocê também pode configurar notificações por e-mail para moderadores selecionados e escolher quando elas devem ser enviadas - por exemplo, quando um ou mais chats atingem o limite definido.",
+      "email_notification_label": "Comunicação por email (opcional)",
+      "email_notification_tooltip": "Este alerta é sempre exibido no dashboard do Live Desk quando um chat atinge o limite definido.\n\nVocê também pode configurar comunicações por email com triggers para moderadores selecionados. Por exemplo, enviar uma comunicação quando um ou mais chats atingirem o limite definido.",
       "recipients_helper": "Apenas moderadores podem receber alertas",
-      "send_email_to_label": "Enviar e-mail para",
-      "send_email_to_placeholder": "Selecionar moderadores",
+      "send_email_to_label": "Enviar email para",
+      "send_email_to_placeholder": "Selecionar os moderadores",
       "threshold_labels": {
         "conversation_duration": "Tempo máximo de duração",
-        "first_response_time": "Tempo máximo para primeira resposta",
+        "first_response_time": "Tempo máximo para 1ª resposta",
         "waiting_time": "Tempo máximo de espera"
       },
       "threshold_placeholders": {
@@ -1112,6 +1117,7 @@
         "first_response_time": "Exemplo: 2",
         "waiting_time": "Exemplo: 10"
       },
+      "threshold_placeholder": "Exemplo: 10",
       "unit_label": "Unidade",
       "units": {
         "hours": "Horas",
@@ -1123,13 +1129,13 @@
       "when_placeholder": "Exemplo: 5"
     },
     "popover": {
-      "new_tag": "Novo",
+      "new_tag": "Novidade",
       "option_label": "Alertas operacionais"
     },
     "sections": {
-      "conversation_duration": "Alertar no dashboard Live Desk quando a duração de um chat ultrapassa o limite definido",
-      "first_response_time": "Alertar no dashboard Live Desk quando o tempo para primeira resposta de um chat ultrapassa o limite definido",
-      "waiting_time": "Alertar no dashboard Live Desk quando o tempo de espera de um chat ultrapassa o limite definido"
+      "conversation_duration": "Alerta no dashboard do Live Desk quando a duração de um chat exceder o limite definido",
+      "first_response_time": "Alerta no dashboard do Live Desk quando o tempo para a 1ª resposta de um chat exceder o limite definido",
+      "waiting_time": "Alerta no dashboard do Live Desk quando o tempo de espera de um chat exceder o limite definido"
     },
     "table_tooltip": {
       "conversation_duration": "Este chat excedeu o limite de tempo de {value}-{unit}.",

@@ -320,7 +320,7 @@ describe('OperationalAlertsDrawer.vue', () => {
     await Promise.resolve();
 
     expect(UnnnicToastManager.error).toHaveBeenCalledWith(
-      "Operational alerts couldn't be saved due to a technical issue",
+      "Couldn't save operational alerts due to a technical issue",
     );
     expect(wrapper.emitted('close')).toBeFalsy();
   });

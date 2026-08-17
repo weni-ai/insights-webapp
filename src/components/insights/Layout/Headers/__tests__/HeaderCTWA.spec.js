@@ -66,7 +66,7 @@ const createWrapper = () =>
     global: {
       plugins: [createTestingPinia()],
       stubs: {
-        FilterDate: true,
+        UnnnicInputDatePicker: true,
         CampaignFilter: true,
         UnnnicButton: true,
       },
@@ -86,7 +86,9 @@ describe('HeaderCTWA', () => {
 
   describe('Component rendering', () => {
     it('renders date and campaign filters', () => {
-      expect(wrapper.findComponent({ name: 'FilterDate' }).exists()).toBe(true);
+      expect(
+        wrapper.findComponent({ name: 'UnnnicInputDatePicker' }).exists(),
+      ).toBe(true);
       expect(wrapper.findComponent({ name: 'CampaignFilter' }).exists()).toBe(
         true,
       );
@@ -166,9 +168,11 @@ describe('HeaderCTWA', () => {
         tab: 'overview',
       };
 
-      const dateFilter = wrapper.findComponent({ name: 'FilterDate' });
+      const dateFilter = wrapper.findComponent({
+        name: 'UnnnicInputDatePicker',
+      });
       appliedDateRangeRef.value = { start: '2024-03-01', end: '2024-03-31' };
-      await dateFilter.vm.$emit('update:modelValue', {
+      await dateFilter.vm.$emit('update:model-value', {
         start: '2024-03-01',
         end: '2024-03-31',
       });

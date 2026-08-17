@@ -1,9 +1,13 @@
 <template>
   <section class="header-ctwa">
-    <FilterDate
+    <UnnnicInputDatePicker
       v-model="appliedDateRange"
-      className="header-ctwa__date"
+      class="header-ctwa__date"
       data-testid="ctwa-date-filter"
+      :disableClear="true"
+      position="right"
+      :maxDate="maxDate"
+      fillW
     />
     <CampaignFilter v-model="selectedCampaign" />
     <UnnnicButton
@@ -22,9 +26,9 @@ import { watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 
-import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
 import { useCTWA } from '@/store/modules/ctwa';
+import { getTodayDate } from '@/utils/time';
 
 defineOptions({
   name: 'HeaderCTWA',
@@ -33,6 +37,8 @@ defineOptions({
 const router = useRouter();
 const ctwaStore = useCTWA();
 const { appliedDateRange, selectedCampaign } = storeToRefs(ctwaStore);
+
+const maxDate = getTodayDate().start;
 
 const handleRefresh = () => {
   console.log('TODO: implement CTWA dashboard refresh');
@@ -68,6 +74,9 @@ watch(
 
   :deep(.header-ctwa__date) {
     width: 304px;
+    .unnnic-popover-trigger {
+      width: 100%;
+    }
   }
 
   &__refresh {

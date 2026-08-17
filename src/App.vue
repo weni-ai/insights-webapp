@@ -98,11 +98,7 @@ export default {
     async 'currentDashboard.uuid'(newCurrentDashboardUuid) {
       if (newCurrentDashboardUuid) {
         this.setCurrentDashboardFilters([]);
-
-        if (this.currentDashboard.config?.type !== 'ctwa') {
-          await this.getCurrentDashboardFilters();
-        }
-
+        await this.getCurrentDashboardFilters();
         await this.getFeatureFlags();
       }
     },

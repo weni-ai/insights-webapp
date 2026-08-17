@@ -28,6 +28,7 @@ import { useRouter } from 'vue-router';
 
 import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
 import { useCTWA } from '@/store/modules/ctwa';
+import { useDashboards } from '@/store/modules/dashboards';
 import { getTodayDate } from '@/utils/time';
 
 defineOptions({
@@ -35,7 +36,9 @@ defineOptions({
 });
 
 const router = useRouter();
+const dashboardsStore = useDashboards();
 const ctwaStore = useCTWA();
+const { currentDashboard } = storeToRefs(dashboardsStore);
 const { appliedDateRange, selectedCampaign } = storeToRefs(ctwaStore);
 
 const maxDate = getTodayDate().start;
@@ -47,6 +50,10 @@ const handleRefresh = () => {
 watch(
   [appliedDateRange, selectedCampaign],
   ([dateRange, campaign]) => {
+    const dashboardUuid = currentDashboard.value?.uuid;
+
+    if (!dashboardUuid) return;
+
     const query = { ...router.currentRoute.value.query };
 
     if (dateRange.start && dateRange.end) {
@@ -60,7 +67,11 @@ watch(
       delete query.campaign;
     }
 
-    router.replace({ query });
+    router.replace({
+      name: 'dashboard',
+      params: { dashboardUuid },
+      query,
+    });
   },
   { deep: true, immediate: true },
 );

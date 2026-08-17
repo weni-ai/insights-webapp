@@ -18,15 +18,25 @@ config.global.plugins = [
 
 const appliedDateRangeRef = ref({ start: '2024-01-01', end: '2024-01-07' });
 const selectedCampaignRef = ref('');
+const currentDashboardUuid = 'ctwa-dashboard-uuid';
+const currentDashboardRef = ref({ uuid: currentDashboardUuid });
 
 const mockRouter = {
   replace: vi.fn(),
   currentRoute: {
     value: {
+      name: 'dashboard',
+      params: { dashboardUuid: currentDashboardUuid },
       query: {},
     },
   },
 };
+
+const expectedNavigation = (query) => ({
+  name: 'dashboard',
+  params: { dashboardUuid: currentDashboardUuid },
+  query,
+});
 
 vi.mock('@/store/modules/ctwa', () => ({
   useCTWA: () => ({
@@ -56,6 +66,7 @@ vi.mock('vue-router', async (importOriginal) => {
 vi.mock('pinia', async (importOriginal) => ({
   ...(await importOriginal()),
   storeToRefs: () => ({
+    currentDashboard: currentDashboardRef,
     appliedDateRange: appliedDateRangeRef,
     selectedCampaign: selectedCampaignRef,
   }),
@@ -64,7 +75,15 @@ vi.mock('pinia', async (importOriginal) => ({
 const createWrapper = () =>
   mount(HeaderCTWA, {
     global: {
-      plugins: [createTestingPinia()],
+      plugins: [
+        createTestingPinia({
+          initialState: {
+            dashboards: {
+              currentDashboard: { uuid: currentDashboardUuid },
+            },
+          },
+        }),
+      ],
       stubs: {
         UnnnicInputDatePicker: true,
         CampaignFilter: true,
@@ -103,12 +122,21 @@ describe('HeaderCTWA', () => {
 
   describe('Router integration', () => {
     it('sets start_date and end_date query params on initial load', () => {
-      expect(mockRouter.replace).toHaveBeenCalledWith({
-        query: {
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expectedNavigation({
           start_date: '2024-01-01',
           end_date: '2024-01-07',
-        },
-      });
+        }),
+      );
+    });
+
+    it('keeps the current dashboard uuid when syncing query params', () => {
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: 'dashboard',
+          params: { dashboardUuid: currentDashboardUuid },
+        }),
+      );
     });
 
     it('adds campaign query param when a campaign is selected', async () => {
@@ -116,13 +144,13 @@ describe('HeaderCTWA', () => {
       selectedCampaignRef.value = 'campaign-uuid';
       await nextTick();
 
-      expect(mockRouter.replace).toHaveBeenCalledWith({
-        query: {
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expectedNavigation({
           start_date: '2024-01-01',
           end_date: '2024-01-07',
           campaign: 'campaign-uuid',
-        },
-      });
+        }),
+      );
     });
 
     it('removes campaign query param when selection is cleared', async () => {
@@ -138,12 +166,12 @@ describe('HeaderCTWA', () => {
       selectedCampaignRef.value = '';
       await nextTick();
 
-      expect(mockRouter.replace).toHaveBeenCalledWith({
-        query: {
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expectedNavigation({
           start_date: '2024-01-01',
           end_date: '2024-01-07',
-        },
-      });
+        }),
+      );
     });
 
     it('updates date query params when date range changes', async () => {
@@ -153,13 +181,13 @@ describe('HeaderCTWA', () => {
       appliedDateRangeRef.value = { start: '2024-02-01', end: '2024-02-28' };
       await nextTick();
 
-      expect(mockRouter.replace).toHaveBeenCalledWith({
-        query: {
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expectedNavigation({
           other: 'value',
           start_date: '2024-02-01',
           end_date: '2024-02-28',
-        },
-      });
+        }),
+      );
     });
 
     it('preserves existing query params when updating filters', async () => {
@@ -178,13 +206,13 @@ describe('HeaderCTWA', () => {
       });
       await nextTick();
 
-      expect(mockRouter.replace).toHaveBeenCalledWith({
-        query: {
+      expect(mockRouter.replace).toHaveBeenCalledWith(
+        expectedNavigation({
           tab: 'overview',
           start_date: '2024-03-01',
           end_date: '2024-03-31',
-        },
-      });
+        }),
+      );
     });
   });
 });

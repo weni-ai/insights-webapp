@@ -467,6 +467,14 @@
       }
     }
   },
+  "ctwa_dashboard": {
+    "filters": {
+      "campaign": {
+        "placeholder": "All campaigns"
+      }
+    },
+    "title": "Click to WhatsApp"
+  },
   "table_dynamic_by_filter": {
     "status": "Status",
     "chats_in_period": "Chats in this period"

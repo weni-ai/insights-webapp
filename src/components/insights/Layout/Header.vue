@@ -78,6 +78,10 @@ export default {
       },
     }),
 
+    isCTWADashboard() {
+      return this.currentDashboard?.name === 'ctwa_dashboard.title';
+    },
+
     isHumanServiceDashboard() {
       return this.currentDashboard?.name === 'human_service_dashboard.title';
     },
@@ -95,6 +99,10 @@ export default {
     },
 
     dashboardHeaderType() {
+      if (this.isCTWADashboard) {
+        return 'ctwa';
+      }
+
       if (this.isConversationalDashboard) {
         return 'conversational';
       }

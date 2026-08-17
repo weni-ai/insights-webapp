@@ -62,6 +62,25 @@ export default {
     };
   },
 
+  async getMetaCampaigns(queryParams = {}) {
+    const { project } = useConfig();
+    const params = createRequestQuery(queryParams);
+
+    const response = await http.get(
+      `/projects/${project.uuid}/sources/meta/campaign/`,
+      { params },
+    );
+
+    return {
+      next: response.next ?? null,
+      previous: response.previous ?? null,
+      results: (response.results || []).map((source) => ({
+        uuid: source.uuid,
+        name: source.name,
+      })),
+    };
+  },
+
   async getProjectManagers() {
     const { project } = useConfig();
     const url = `/projects/${project.uuid}/filters/project_managers/`;

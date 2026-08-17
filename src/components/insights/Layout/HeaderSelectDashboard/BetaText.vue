@@ -15,16 +15,20 @@
 <style lang="scss" scoped>
 .beta_text_container {
   display: flex;
-  padding: 0 $unnnic-space-1;
+  height: 30px;
+  padding: 0 $unnnic-space-3;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: $unnnic-space-1;
+  flex-shrink: 0;
 
-  border-radius: $unnnic-radius-1;
-  background: $unnnic-color-teal-1;
+  border-radius: $unnnic-radius-full;
+  background: $unnnic-color-bg-accent-plain;
 }
+
 .beta_text {
-  color: $unnnic-color-teal-8;
+  color: $unnnic-color-fg-emphasized;
   font: $unnnic-font-caption-1;
+  white-space: nowrap;
 }
 </style>

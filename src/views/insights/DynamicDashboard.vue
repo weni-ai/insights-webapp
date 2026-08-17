@@ -128,9 +128,7 @@ watch(
         widgetsStore.updateCurrentWidgetEditing(null);
       }
 
-      if (newCurrentDashboardUuid !== 'ctwa_dashboard.title') {
-        getCurrentDashboardWidgets();
-      }
+      getCurrentDashboardWidgets();
     }
   },
   { immediate: true },

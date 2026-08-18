@@ -468,6 +468,20 @@
     }
   },
   "ctwa_dashboard": {
+    "cards": {
+      "attributed_revenue": {
+        "description": "Valoarea medie a comenzii {avg}",
+        "title": "Venit atribuit"
+      },
+      "ctwa_conversations": {
+        "description": "Inițiate din anunțuri în această perioadă",
+        "title": "Conversații CTWA"
+      },
+      "organic_conversations": {
+        "description": "Bază de comparație (fără anunț)",
+        "title": "Conversații organice"
+      }
+    },
     "filters": {
       "campaign": {
         "placeholder": "Toate campaniile"

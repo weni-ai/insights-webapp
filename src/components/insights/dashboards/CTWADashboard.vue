@@ -1,11 +1,24 @@
 <template>
-  <div>
-    <h1>CTWA Dashboard</h1>
-  </div>
+  <section class="ctwa-dashboard">
+    <LazyWidget>
+      <MetricCards />
+    </LazyWidget>
+  </section>
 </template>
 
 <script setup lang="ts">
+import MetricCards from '@/components/insights/ctwa/MetricCards.vue';
+import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
+
 defineOptions({
   name: 'CTWADashboard',
 });
 </script>
+
+<style lang="scss" scoped>
+.ctwa-dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: $unnnic-space-6;
+}
+</style>

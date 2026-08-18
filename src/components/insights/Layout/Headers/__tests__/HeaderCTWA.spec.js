@@ -38,6 +38,8 @@ const expectedNavigation = (query) => ({
   query,
 });
 
+const mockLoadDashboardData = vi.fn();
+
 vi.mock('@/store/modules/ctwa', () => ({
   useCTWA: () => ({
     get appliedDateRange() {
@@ -52,6 +54,7 @@ vi.mock('@/store/modules/ctwa', () => ({
     set selectedCampaign(value) {
       selectedCampaignRef.value = value;
     },
+    loadDashboardData: mockLoadDashboardData,
   }),
 }));
 
@@ -114,6 +117,12 @@ describe('HeaderCTWA', () => {
       expect(wrapper.find('[data-testid="ctwa-refresh-button"]').exists()).toBe(
         true,
       );
+    });
+
+    it('calls loadDashboardData when refresh is clicked', async () => {
+      await wrapper.findComponent({ name: 'UnnnicButton' }).vm.$emit('click');
+
+      expect(mockLoadDashboardData).toHaveBeenCalledTimes(1);
     });
   });
 

@@ -126,7 +126,6 @@ const getBarBorderRadius = (index: number, total: number) => {
       &__content {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         gap: $unnnic-space-2;
         width: 100%;
       }

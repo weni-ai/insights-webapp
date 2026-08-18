@@ -63,4 +63,41 @@ describe('Projects Service', () => {
       expect(sources).toEqual([]);
     });
   });
+
+  describe('getMetaCampaigns', () => {
+    it('should call the API with the campaign source URL and search param', async () => {
+      const mockResponse = {
+        results: [{ uuid: 'campaign-1', name: 'Campaign 1' }],
+        next: null,
+        previous: null,
+      };
+      http.get.mockResolvedValueOnce(mockResponse);
+
+      const campaigns = await SourceService.getMetaCampaigns({
+        search: 'Campaign',
+      });
+
+      expect(http.get).toHaveBeenCalledWith(
+        '/projects/mock-project-uuid/sources/meta/campaign/',
+        { params: { search: 'Campaign' } },
+      );
+      expect(campaigns).toEqual({
+        next: null,
+        previous: null,
+        results: [{ uuid: 'campaign-1', name: 'Campaign 1' }],
+      });
+    });
+
+    it('should handle empty results', async () => {
+      http.get.mockResolvedValueOnce({});
+
+      const campaigns = await SourceService.getMetaCampaigns();
+
+      expect(campaigns).toEqual({
+        next: null,
+        previous: null,
+        results: [],
+      });
+    });
+  });
 });

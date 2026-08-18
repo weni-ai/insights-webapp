@@ -111,7 +111,7 @@ export default {
     },
 
     isRenderBetaText() {
-      return false;
+      return this.currentDashboard.config?.type === 'ctwa';
     },
     enabledShowDashboards() {
       return this.dashboards;

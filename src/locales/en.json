@@ -166,8 +166,13 @@
       "custom_section_description": "Add situations this project should also count as Handled by AI. {count} of {max}.",
       "custom_section_title": "Your criteria",
       "errors": {
-        "invalid_title": "The criterion is invalid",
-        "technical": "The criterion couldn't be validated due to a technical issue"
+        "ambiguous_description": "Rewrite the criterion to make it clearer",
+        "ambiguous_title": "This criterion is ambiguous",
+        "duplicate_description": "Edit the criterion to cover a different situation, or remove the other one first",
+        "duplicate_title": "You've already added a similar criterion",
+        "invalid_description": "Rewrite the criterion and validate it again",
+        "invalid_title": "This criterion is invalid",
+        "technical": "This criterion couldn't be validated due to a technical issue"
       },
       "form": {
         "create_title": "Add criterion",
@@ -175,14 +180,14 @@
         "field_placeholder": "Criterion",
         "results_title": "Validation results",
         "save": "Save",
-        "success_description": "Once saved, this criterion applies from the next daily evaluation. Conversations already classified won't change.",
+        "success_description": "Once saved, this criterion will apply on the next daily evaluation. Previously classified conversations won't change.",
         "success_title": "No issues found",
         "tooltip_fix_issue": "Fix the issue found in validation to save",
         "tooltip_validate_first": "Validate this criterion before saving",
         "validate": "Validate",
         "validating": "Validating criterion..."
       },
-      "list_description": "Define what counts as an Handled by AI conversation in this project. These criteria decide which conversations are marked Handled by AI on your dashboard.",
+      "list_description": "Define what counts as a Handled by AI conversation in this project. These criteria determine which conversations will be marked as Handled by AI on your dashboard.",
       "list_title": "Handled by AI criteria",
       "menu_option": "Edit Handled by AI criteria",
       "remove_modal": {
@@ -461,6 +466,35 @@
         "previous_month": "Previous month"
       }
     }
+  },
+  "ctwa_dashboard": {
+    "cards": {
+      "attributed_revenue": {
+        "description": "Avg. order value {avg}",
+        "title": "Attributed revenue"
+      },
+      "ctwa_conversations": {
+        "description": "Started from ads in the period",
+        "title": "CTWA conversations"
+      },
+      "organic_conversations": {
+        "description": "Comparison baseline (non-ad)",
+        "title": "Organic conversations"
+      }
+    },
+    "filters": {
+      "campaign": {
+        "placeholder": "All campaigns"
+      }
+    },
+    "sales_funnel": {
+      "converted": "Converted",
+      "qualified": "Qualified",
+      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product, among other intent signals.",
+      "started": "Conversations started",
+      "title": "Sales funnel"
+    },
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -1087,7 +1121,7 @@
   },
   "operational_alerts": {
     "alerts": {
-      "save_error": "Operational alerts couldn't be saved due to a technical issue",
+      "save_error": "Couldn't save operational alerts due to a technical issue",
       "save_success": "Operational alerts saved successfully"
     },
     "card_alert": "{count} chats exceeded {value} {unit}",
@@ -1098,13 +1132,13 @@
     "first_response_info": "The first-response timeout alert will remain active until the representative sends the first message.",
     "form": {
       "email_notification_label": "Email notification (optional)",
-      "email_notification_tooltip": "This alert is always displayed in the Live Desk dashboard when a chat reaches the defined threshold.\n\nYou can also configure email notifications for selected moderators and choose when they should be sent - for example, when one or more chats reach the defined threshold.",
+      "email_notification_tooltip": "This alert is always displayed on the Live Desk dashboard when a chat reaches the defined limit.\n\nYou can also configure email notifications with triggers for selected moderators. For example, send a notification when one or more chats reach the defined limit.",
       "recipients_helper": "Only moderators can receive alerts",
       "send_email_to_label": "Send email to",
       "send_email_to_placeholder": "Select the moderators",
       "threshold_labels": {
-        "conversation_duration": "Maximum duration time",
-        "first_response_time": "Maximum time to first response",
+        "conversation_duration": "Maximum chat duration",
+        "first_response_time": "Maximum time to 1st response",
         "waiting_time": "Maximum wait time"
       },
       "threshold_placeholders": {
@@ -1112,6 +1146,7 @@
         "first_response_time": "Example: 2",
         "waiting_time": "Example: 10"
       },
+      "threshold_placeholder": "Example: 10",
       "unit_label": "Unit",
       "units": {
         "hours": "Hours",
@@ -1127,9 +1162,9 @@
       "option_label": "Operational alerts"
     },
     "sections": {
-      "conversation_duration": "Alert in the Live Desk dashboard when a chat's duration exceeds the defined threshold",
-      "first_response_time": "Alert in the Live Desk dashboard when a chat's first response time exceeds the defined threshold",
-      "waiting_time": "Alert in the Live Desk dashboard when a chat's wait time exceeds the defined threshold"
+      "conversation_duration": "Alert on the Live Desk dashboard when a chat's duration exceeds the defined limit",
+      "first_response_time": "Alert on the Live Desk dashboard when a chat's 1st response time exceeds the defined limit",
+      "waiting_time": "Alert on the Live Desk dashboard when a chat's wait time exceeds the defined limit"
     },
     "table_tooltip": {
       "conversation_duration": "This chat has exceeded the {value}-{unit} time limit.",

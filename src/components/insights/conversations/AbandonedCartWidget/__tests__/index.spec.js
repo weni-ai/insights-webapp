@@ -30,6 +30,13 @@ vi.mock('@/services/api/resources/conversational/widgets', () => ({
   },
 }));
 
+vi.mock('@weni/unnnic-system/tokens/colors', () => ({
+  colorBlue2: '#e6f4ff',
+  colorBlue4: '#b3dcff',
+  colorBlue6: '#79bcfb',
+  colorBlue8: '#3993f4',
+}));
+
 const mockApiResponse = [
   { id: 'sent-messages', value: 100 },
   { id: 'delivered-messages', value: 80 },
@@ -52,6 +59,13 @@ const i18n = createI18n({
             'Error loading data. Please refresh the dashboard or contact support.',
           unavailable_period:
             'Meta only provides the data from the last 90 days for this widget. Make sure the selected date range is within this period to view the information.',
+          chart: {
+            sent: 'Sent',
+            delivered: 'Delivered',
+            read: 'Read',
+            read_help: 'Read help tooltip',
+            clicks: 'Clicks',
+          },
         },
         customize_your_dashboard: {
           remove_widget: 'Remove widget',
@@ -95,10 +109,10 @@ describe('AbandonedCartWidget', () => {
               '<div data-testid="abandoned-cart-widget-disclaimer" :data-type="type">{{ description }}</div>',
             props: ['type', 'description'],
           },
-          Chart: {
-            name: 'AbandonedCartWidgetChart',
+          SteppedBarChart: {
+            name: 'SteppedBarChart',
             template: '<div data-testid="abandoned-cart-widget-chart-stub" />',
-            props: ['data'],
+            props: ['items'],
           },
           InfoCard: {
             name: 'AbandonedCartWidgetInfoCard',
@@ -163,17 +177,34 @@ describe('AbandonedCartWidget', () => {
 
     it('passes mapped data to child components', async () => {
       await flushPromises();
-      const chart = wrapper.findComponent({ name: 'AbandonedCartWidgetChart' });
+      const chart = wrapper.findComponent({ name: 'SteppedBarChart' });
       const infoCard = wrapper.findComponent({
         name: 'AbandonedCartWidgetInfoCard',
       });
 
-      expect(chart.props('data')).toEqual({
-        sent: 100,
-        delivered: 80,
-        read: 60,
-        clicks: 40,
-      });
+      expect(chart.props('items')).toEqual([
+        expect.objectContaining({
+          id: 'sent',
+          label: 'Sent',
+          value: 100,
+        }),
+        expect.objectContaining({
+          id: 'delivered',
+          label: 'Delivered',
+          value: 80,
+        }),
+        expect.objectContaining({
+          id: 'read',
+          label: 'Read',
+          value: 60,
+          tooltip: 'Read help tooltip',
+        }),
+        expect.objectContaining({
+          id: 'clicks',
+          label: 'Clicks',
+          value: 40,
+        }),
+      ]);
       expect(infoCard.props('data')).toEqual({
         currency: '$',
         recoveryRevenue: 5000,

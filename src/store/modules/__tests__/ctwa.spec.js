@@ -4,6 +4,7 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 import { createApp } from 'vue';
 
 import { useCTWA } from '../ctwa';
+import CTWADataService from '@/services/api/resources/ctwa/data';
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({
@@ -12,6 +13,14 @@ vi.mock('@/utils/time', () => ({
     dmFormat: '01/01 - 07/01',
   })),
 }));
+
+vi.mock('@/services/api/resources/ctwa/data');
+
+const mockDashboardData = {
+  attributed_revenue: { value: 1030000, avg: 359 },
+  ctwa_conversations: 19400,
+  organic_conversations: 22800,
+};
 
 describe('useCTWA store', () => {
   let store;
@@ -84,6 +93,22 @@ describe('useCTWA store', () => {
         end: '2024-01-07',
       });
     });
+
+    it('initializes dashboard data as empty', () => {
+      expect(store.dashboardData).toEqual({
+        attributed_revenue: { value: null, avg: null },
+        ctwa_conversations: null,
+        organic_conversations: null,
+      });
+    });
+
+    it('initializes loadingDashboardData as false', () => {
+      expect(store.loadingDashboardData).toBe(false);
+    });
+
+    it('initializes hasLoadedDashboardData as false', () => {
+      expect(store.hasLoadedDashboardData).toBe(false);
+    });
   });
 
   describe('appliedFilters', () => {
@@ -102,6 +127,50 @@ describe('useCTWA store', () => {
         end_date: '2024-01-07',
         campaign: 'campaign-uuid',
       });
+    });
+  });
+
+  describe('loadDashboardData', () => {
+    it('loads dashboard data successfully', async () => {
+      CTWADataService.getDashboardData.mockResolvedValue(mockDashboardData);
+
+      await store.loadDashboardData();
+
+      expect(CTWADataService.getDashboardData).toHaveBeenCalled();
+      expect(store.dashboardData).toEqual(mockDashboardData);
+      expect(store.hasLoadedDashboardData).toBe(true);
+    });
+
+    it('sets loading state during data fetch', async () => {
+      CTWADataService.getDashboardData.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            expect(store.loadingDashboardData).toBe(true);
+            setTimeout(() => resolve(mockDashboardData), 10);
+          }),
+      );
+
+      await store.loadDashboardData();
+      expect(store.loadingDashboardData).toBe(false);
+    });
+
+    it('handles errors gracefully', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      CTWADataService.getDashboardData.mockRejectedValue(
+        new Error('API Error'),
+      );
+
+      await store.loadDashboardData();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error loading CTWA dashboard data:',
+        expect.any(Error),
+      );
+      expect(store.loadingDashboardData).toBe(false);
+      expect(store.hasLoadedDashboardData).toBe(true);
+      consoleErrorSpy.mockRestore();
     });
   });
 });

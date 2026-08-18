@@ -468,6 +468,20 @@
     }
   },
   "ctwa_dashboard": {
+    "cards": {
+      "attributed_revenue": {
+        "description": "Valor médio do pedido {avg}",
+        "title": "Receita atribuída"
+      },
+      "ctwa_conversations": {
+        "description": "Iniciadas por anúncios no período",
+        "title": "Conversas CTWA"
+      },
+      "organic_conversations": {
+        "description": "Linha de base de comparação (não anúncio)",
+        "title": "Conversas orgânicas"
+      }
+    },
     "filters": {
       "campaign": {
         "placeholder": "Todas as campanhas"

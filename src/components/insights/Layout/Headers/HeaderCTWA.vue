@@ -41,11 +41,12 @@ const dashboardsStore = useDashboards();
 const ctwaStore = useCTWA();
 const { currentDashboard } = storeToRefs(dashboardsStore);
 const { appliedDateRange, selectedCampaign } = storeToRefs(ctwaStore);
+const { loadDashboardData } = ctwaStore;
 
 const maxDate = getTodayDate().start;
 
 const handleRefresh = () => {
-  console.log('TODO: implement CTWA dashboard refresh');
+  loadDashboardData();
 };
 
 watch(

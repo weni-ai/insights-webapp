@@ -109,7 +109,8 @@ const getBarBorderRadius = (index: number, total: number) => {
     height: 252px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: $unnnic-space-5;
     align-self: stretch;
 
     &--border-left {
@@ -125,7 +126,6 @@ const getBarBorderRadius = (index: number, total: number) => {
       &__content {
         display: flex;
         align-items: center;
-        justify-content: space-between;
         gap: $unnnic-space-2;
         width: 100%;
       }

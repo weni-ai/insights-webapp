@@ -2,8 +2,11 @@
   <header class="insights-layout-header">
     <UnnnicPageHeader
       v-if="currentDashboard && !isExpansiveMode"
-      hideDivider
-      class="insights-page-header"
+      :hideDivider="!showDivider"
+      :class="[
+        'insights-page-header',
+        { 'insights-page-header--show-divider': showDivider },
+      ]"
       data-testid="insights-layout-header"
     >
       <template #infos>
@@ -88,6 +91,10 @@ export default {
 
     isHumanSupportDashboard() {
       return this.currentDashboard?.name === 'human_support_dashboard.title';
+    },
+
+    showDivider() {
+      return this.isCTWADashboard;
     },
 
     isConversationalDashboard() {
@@ -209,6 +216,10 @@ $dropdownFixedWidth: 314px;
   :deep(.insights-page-header) {
     grid-template-columns: $dropdownFixedWidth 1fr;
     padding-bottom: 0;
+  }
+
+  :deep(.insights-page-header--show-divider) {
+    padding-bottom: $unnnic-space-6;
   }
   &__actions {
     display: flex;

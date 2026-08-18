@@ -64,7 +64,7 @@ export default {
       return this.dashboardDefault?.uuid === this.dashboard.uuid;
     },
     isRenderBetaText() {
-      return false;
+      return this.dashboard.config?.type === 'ctwa';
     },
   },
 

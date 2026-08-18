@@ -21,10 +21,16 @@ export default {
       params: queryParams,
     });
 
-    // TODO: Remove this logic after the API is key in the dashboard
     const handleConfigDashboard = (name, config) => {
       const isConversational = name === 'conversations_dashboard.title';
       const isHumanSupport = name === 'human_support_dashboard.title';
+      const isCTWA = name === 'ctwa_dashboard.title';
+
+      if (isCTWA && !config) {
+        return {
+          type: 'ctwa',
+        };
+      }
 
       if (isConversational && !config) {
         return {

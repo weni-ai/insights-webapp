@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import { describe, it, expect } from 'vitest';
+import { beforeEach, describe, it, expect } from 'vitest';
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
 import i18n from '@/utils/plugins/i18n';
 import { createTestingPinia } from '@pinia/testing';

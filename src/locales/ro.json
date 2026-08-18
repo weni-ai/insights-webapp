@@ -467,6 +467,14 @@
       }
     }
   },
+  "ctwa_dashboard": {
+    "filters": {
+      "campaign": {
+        "placeholder": "Toate campaniile"
+      }
+    },
+    "title": "Clic pentru WhatsApp"
+  },
   "table_dynamic_by_filter": {
     "status": "Stare",
     "chats_in_period": "Chaturi în această perioadă"

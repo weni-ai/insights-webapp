@@ -12,6 +12,9 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
 
 const asyncComponents = {
+  ctwa: defineAsyncComponent(
+    () => import('@/components/insights/dashboards/CTWADashboard.vue'),
+  ),
   custom_dashboard: defineAsyncComponent(
     () => import('@/components/insights/dashboards/DashboardCustom.vue'),
   ),
@@ -44,13 +47,16 @@ const dashboardType = computed(() => {
   const config = currentDashboard?.value?.config;
 
   let type:
+    | 'ctwa'
     | 'custom'
     | 'expansive'
     | 'metaTemplateMessage'
     | 'conversational'
     | 'human_support';
 
-  if (config?.type === 'conversational') {
+  if (config?.type === 'ctwa') {
+    type = 'ctwa';
+  } else if (config?.type === 'conversational') {
     type = 'conversational';
   } else if (config?.is_whatsapp_integration) {
     type = 'metaTemplateMessage';
@@ -71,6 +77,7 @@ const dashboardType = computed(() => {
     metaTemplateMessage: 'meta_template_message',
     conversational: 'conversational',
     human_support: 'human_support',
+    ctwa: 'ctwa',
   };
 
   return dashboardTypes[type];
@@ -120,6 +127,7 @@ watch(
         resetAppliedFilters();
         widgetsStore.updateCurrentWidgetEditing(null);
       }
+
       getCurrentDashboardWidgets();
     }
   },

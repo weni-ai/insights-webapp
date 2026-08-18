@@ -60,6 +60,14 @@ describe('DynamicDashboard.vue', () => {
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.dashboardType).toBe('meta_template_message');
     });
+
+    it('should return correct dashboard type for ctwa dashboard', async () => {
+      dashboardsStore.currentDashboard = {
+        config: { type: 'ctwa' },
+      };
+      await wrapper.vm.$nextTick();
+      expect(wrapper.vm.dashboardType).toBe('ctwa');
+    });
   });
 
   describe('Store Interactions', () => {

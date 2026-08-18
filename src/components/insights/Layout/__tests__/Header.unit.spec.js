@@ -221,6 +221,40 @@ describe('Header', () => {
     });
   });
 
+  describe('showDivider', () => {
+    const cases = [
+      ['ctwa_dashboard.title', true],
+      ['human_service_dashboard.title', false],
+      ['human_support_dashboard.title', false],
+      ['conversations_dashboard.title', false],
+      ['unknown', false],
+    ];
+
+    cases.forEach(([name, expected]) => {
+      it(`${expected ? 'shows' : 'hides'} the divider for ${name}`, async () => {
+        await router.push({
+          name: 'dashboard',
+          params: { dashboardUuid: '123' },
+        });
+        wrapper = createWrapper({
+          dashboards: {
+            currentDashboard: { name, uuid: '123' },
+            dashboards: [{ name, uuid: '123' }],
+          },
+        });
+        await wrapper.vm.$nextTick();
+
+        const pageHeader = wrapper.find(
+          '[data-testid="insights-layout-header"]',
+        );
+        expect(wrapper.vm.showDivider).toBe(expected);
+        expect(pageHeader.classes('insights-page-header--show-divider')).toBe(
+          expected,
+        );
+      });
+    });
+  });
+
   describe('Component structure', () => {
     it('passes dashboardHeaderType to DynamicHeader', async () => {
       await router.push({

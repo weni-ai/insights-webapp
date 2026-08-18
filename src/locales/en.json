@@ -487,6 +487,13 @@
         "placeholder": "All campaigns"
       }
     },
+    "sales_funnel": {
+      "converted": "Converted",
+      "qualified": "Qualified",
+      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product, among other intent signals.",
+      "started": "Conversations started",
+      "title": "Sales funnel"
+    },
     "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {

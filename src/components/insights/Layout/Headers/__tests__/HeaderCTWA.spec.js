@@ -38,7 +38,7 @@ const expectedNavigation = (query) => ({
   query,
 });
 
-const mockLoadDashboardData = vi.fn();
+const mockLoadAllData = vi.fn();
 
 vi.mock('@/store/modules/ctwa', () => ({
   useCTWA: () => ({
@@ -54,7 +54,7 @@ vi.mock('@/store/modules/ctwa', () => ({
     set selectedCampaign(value) {
       selectedCampaignRef.value = value;
     },
-    loadDashboardData: mockLoadDashboardData,
+    loadAllData: mockLoadAllData,
   }),
 }));
 
@@ -119,10 +119,10 @@ describe('HeaderCTWA', () => {
       );
     });
 
-    it('calls loadDashboardData when refresh is clicked', async () => {
+    it('calls loadAllData when refresh is clicked', async () => {
       await wrapper.findComponent({ name: 'UnnnicButton' }).vm.$emit('click');
 
-      expect(mockLoadDashboardData).toHaveBeenCalledTimes(1);
+      expect(mockLoadAllData).toHaveBeenCalledTimes(1);
     });
   });
 

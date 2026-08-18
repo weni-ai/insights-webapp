@@ -108,9 +108,6 @@ describe('HeaderCTWA', () => {
       expect(
         wrapper.findComponent({ name: 'UnnnicInputDatePicker' }).exists(),
       ).toBe(true);
-      expect(wrapper.findComponent({ name: 'CampaignFilter' }).exists()).toBe(
-        true,
-      );
     });
 
     it('renders refresh button', () => {
@@ -148,7 +145,6 @@ describe('HeaderCTWA', () => {
         expectedNavigation({
           start_date: '2024-01-01',
           end_date: '2024-01-07',
-          campaign: 'campaign-uuid',
         }),
       );
     });
@@ -157,7 +153,6 @@ describe('HeaderCTWA', () => {
       mockRouter.currentRoute.value.query = {
         start_date: '2024-01-01',
         end_date: '2024-01-07',
-        campaign: 'campaign-uuid',
       };
       selectedCampaignRef.value = 'campaign-uuid';
       await nextTick();

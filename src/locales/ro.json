@@ -487,6 +487,13 @@
         "placeholder": "Toate campaniile"
       }
     },
+    "sales_funnel": {
+      "converted": "Convertite",
+      "qualified": "Calificate",
+      "qualified_help": "Contacte în care agentul a identificat intenția de cumpărare. Acest lucru poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs, printre alte semnale de intenție.",
+      "started": "Conversații începute",
+      "title": "Pâlnie de vânzări"
+    },
     "title": "Clic pentru WhatsApp"
   },
   "table_dynamic_by_filter": {

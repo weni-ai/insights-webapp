@@ -5,6 +5,7 @@ import { createApp } from 'vue';
 
 import { useCTWA } from '../ctwa';
 import CTWADataService from '@/services/api/resources/ctwa/data';
+import CTWAConversionsService from '@/services/api/resources/ctwa/conversions';
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({
@@ -15,11 +16,18 @@ vi.mock('@/utils/time', () => ({
 }));
 
 vi.mock('@/services/api/resources/ctwa/data');
+vi.mock('@/services/api/resources/ctwa/conversions');
 
 const mockDashboardData = {
   attributed_revenue: { value: 1030000, avg: 359 },
   ctwa_conversations: 19400,
   organic_conversations: 22800,
+};
+
+const mockConversionsData = {
+  conversations_started: { total: 19400, percentage: 100 },
+  conversations_qualified: { total: 7180, percentage: 37.4 },
+  conversations_converted: { total: 2880, percentage: 14.8 },
 };
 
 describe('useCTWA store', () => {
@@ -109,6 +117,22 @@ describe('useCTWA store', () => {
     it('initializes hasLoadedDashboardData as false', () => {
       expect(store.hasLoadedDashboardData).toBe(false);
     });
+
+    it('initializes conversions data as empty', () => {
+      expect(store.conversionsData).toEqual({
+        conversations_started: { total: null, percentage: null },
+        conversations_qualified: { total: null, percentage: null },
+        conversations_converted: { total: null, percentage: null },
+      });
+    });
+
+    it('initializes loadingConversionsData as false', () => {
+      expect(store.loadingConversionsData).toBe(false);
+    });
+
+    it('initializes hasLoadedConversionsData as false', () => {
+      expect(store.hasLoadedConversionsData).toBe(false);
+    });
   });
 
   describe('appliedFilters', () => {
@@ -171,6 +195,90 @@ describe('useCTWA store', () => {
       expect(store.loadingDashboardData).toBe(false);
       expect(store.hasLoadedDashboardData).toBe(true);
       consoleErrorSpy.mockRestore();
+    });
+  });
+
+  describe('loadConversionsData', () => {
+    it('loads conversions data successfully', async () => {
+      CTWAConversionsService.getConversionsData.mockResolvedValue(
+        mockConversionsData,
+      );
+
+      await store.loadConversionsData();
+
+      expect(CTWAConversionsService.getConversionsData).toHaveBeenCalled();
+      expect(store.conversionsData).toEqual(mockConversionsData);
+      expect(store.hasLoadedConversionsData).toBe(true);
+    });
+
+    it('sets loading state during data fetch', async () => {
+      CTWAConversionsService.getConversionsData.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            expect(store.loadingConversionsData).toBe(true);
+            setTimeout(() => resolve(mockConversionsData), 10);
+          }),
+      );
+
+      await store.loadConversionsData();
+      expect(store.loadingConversionsData).toBe(false);
+    });
+
+    it('handles errors gracefully', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      CTWAConversionsService.getConversionsData.mockRejectedValue(
+        new Error('API Error'),
+      );
+
+      await store.loadConversionsData();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error loading CTWA conversions data:',
+        expect.any(Error),
+      );
+      expect(store.loadingConversionsData).toBe(false);
+      expect(store.hasLoadedConversionsData).toBe(true);
+      consoleErrorSpy.mockRestore();
+    });
+  });
+
+  describe('loadAllData', () => {
+    it('does not load slices that have never been requested', () => {
+      store.loadAllData();
+
+      expect(CTWADataService.getDashboardData).not.toHaveBeenCalled();
+      expect(CTWAConversionsService.getConversionsData).not.toHaveBeenCalled();
+    });
+
+    it('reloads only slices that have already been loaded', async () => {
+      CTWADataService.getDashboardData.mockResolvedValue(mockDashboardData);
+      CTWAConversionsService.getConversionsData.mockResolvedValue(
+        mockConversionsData,
+      );
+
+      await store.loadDashboardData();
+      vi.clearAllMocks();
+
+      store.loadAllData();
+
+      expect(CTWADataService.getDashboardData).toHaveBeenCalledTimes(1);
+      expect(CTWAConversionsService.getConversionsData).not.toHaveBeenCalled();
+    });
+
+    it('reloads conversions when that slice has been loaded', async () => {
+      CTWAConversionsService.getConversionsData.mockResolvedValue(
+        mockConversionsData,
+      );
+
+      await store.loadConversionsData();
+      vi.clearAllMocks();
+
+      store.loadAllData();
+
+      expect(CTWAConversionsService.getConversionsData).toHaveBeenCalledTimes(1);
+      expect(CTWADataService.getDashboardData).not.toHaveBeenCalled();
     });
   });
 });

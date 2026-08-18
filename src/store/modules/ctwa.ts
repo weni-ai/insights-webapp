@@ -6,6 +6,9 @@ import { useRouter } from 'vue-router';
 import CTWADataService, {
   type CTWADashboardData,
 } from '@/services/api/resources/ctwa/data';
+import CTWAConversionsService, {
+  type CTWAConversionsData,
+} from '@/services/api/resources/ctwa/conversions';
 import { getLastNDays } from '@/utils/time';
 
 export interface DateRange {
@@ -17,6 +20,12 @@ const emptyDashboardData = (): CTWADashboardData => ({
   attributed_revenue: { value: null, avg: null },
   ctwa_conversations: null,
   organic_conversations: null,
+});
+
+const emptyConversionsData = (): CTWAConversionsData => ({
+  conversations_started: { total: null, percentage: null },
+  conversations_qualified: { total: null, percentage: null },
+  conversations_converted: { total: null, percentage: null },
 });
 
 const getQueryString = (value: unknown): string =>
@@ -43,6 +52,10 @@ export const useCTWA = defineStore('ctwa', () => {
   const loadingDashboardData = ref(false);
   const hasLoadedDashboardData = ref(false);
 
+  const conversionsData = ref<CTWAConversionsData>(emptyConversionsData());
+  const loadingConversionsData = ref(false);
+  const hasLoadedConversionsData = ref(false);
+
   const appliedFilters = computed(() => ({
     start_date: appliedDateRange.value.start,
     end_date: appliedDateRange.value.end,
@@ -61,6 +74,23 @@ export const useCTWA = defineStore('ctwa', () => {
     }
   };
 
+  const loadConversionsData = async () => {
+    hasLoadedConversionsData.value = true;
+    try {
+      loadingConversionsData.value = true;
+      conversionsData.value = await CTWAConversionsService.getConversionsData();
+    } catch (error) {
+      console.error('Error loading CTWA conversions data:', error);
+    } finally {
+      loadingConversionsData.value = false;
+    }
+  };
+
+  const loadAllData = () => {
+    if (hasLoadedDashboardData.value) loadDashboardData();
+    if (hasLoadedConversionsData.value) loadConversionsData();
+  };
+
   return {
     appliedDateRange,
     selectedCampaign,
@@ -68,6 +98,11 @@ export const useCTWA = defineStore('ctwa', () => {
     dashboardData,
     loadingDashboardData,
     hasLoadedDashboardData,
+    conversionsData,
+    loadingConversionsData,
+    hasLoadedConversionsData,
     loadDashboardData,
+    loadConversionsData,
+    loadAllData,
   };
 });

@@ -3,11 +3,15 @@
     <LazyWidget>
       <MetricCards />
     </LazyWidget>
+    <LazyWidget>
+      <SalesFunnel />
+    </LazyWidget>
   </section>
 </template>
 
 <script setup lang="ts">
 import MetricCards from '@/components/insights/ctwa/MetricCards.vue';
+import SalesFunnel from '@/components/insights/ctwa/SalesFunnel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 defineOptions({

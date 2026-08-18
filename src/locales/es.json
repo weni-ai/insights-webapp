@@ -487,6 +487,13 @@
         "placeholder": "Todas las campañas"
       }
     },
+    "sales_funnel": {
+      "converted": "Convertidas",
+      "qualified": "Calificadas",
+      "qualified_help": "Contactos en los que el agente identificó intención de compra. Esto puede incluir acciones como agregar un producto al carrito o preguntar sobre un producto, entre otras señales de intención.",
+      "started": "Conversaciones iniciadas",
+      "title": "Embudo de ventas"
+    },
     "title": "Haz clic para WhatsApp"
   },
   "table_dynamic_by_filter": {

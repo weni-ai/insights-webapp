@@ -15,21 +15,18 @@
   </button>
 </template>
 
-<script>
-export default {
-  name: 'GalleryOption',
+<script setup lang="ts">
+defineOptions({ name: 'GalleryOption' });
 
-  props: {
-    title: {
-      type: String,
-      default: '',
-    },
-    description: {
-      type: String,
-      default: '',
-    },
-  },
-};
+interface GalleryOptionProps {
+  title?: string;
+  description?: string;
+}
+
+withDefaults(defineProps<GalleryOptionProps>(), {
+  title: '',
+  description: '',
+});
 </script>
 
 <style lang="scss" scoped>

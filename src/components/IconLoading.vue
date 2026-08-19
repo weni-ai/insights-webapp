@@ -5,10 +5,8 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'IconLoading',
-};
+<script setup lang="ts">
+defineOptions({ name: 'IconLoading' });
 </script>
 
 <style lang="scss" scoped>

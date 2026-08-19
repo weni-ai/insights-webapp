@@ -40,14 +40,13 @@
   </section>
 </template>
 
-<script>
-import BaseChart from './BaseChart.vue';
-import SkeletonBarChart from './loadings/SkeletonBarChart.vue';
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useElementSize } from '@vueuse/core';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-import { useElementSize } from '@vueuse/core';
-import { ref } from 'vue';
-
+import BaseChart from './BaseChart.vue';
+import SkeletonBarChart from './loadings/SkeletonBarChart.vue';
 import { deepMerge } from '@/utils/object';
 import {
   colorBgTealStrong,
@@ -56,70 +55,59 @@ import {
   colorFgInverted,
 } from '@weni/unnnic-system/tokens/colors';
 
-export default {
-  name: 'BarChart',
+defineOptions({ name: 'BarChart' });
 
-  components: { BaseChart, SkeletonBarChart },
+interface BarChartProps {
+  title?: string;
+  seeMore?: boolean;
+  chartData: Record<string, unknown>;
+  isLoading?: boolean;
+}
 
-  props: {
-    title: {
-      type: String,
-      default: '',
+const props = withDefaults(defineProps<BarChartProps>(), {
+  title: '',
+  seeMore: false,
+  isLoading: false,
+});
+
+defineEmits<{
+  seeMore: [];
+}>();
+
+const barChart = ref<HTMLElement | null>(null);
+const { width: chartWidth, height: chartHeight } = useElementSize(barChart);
+
+const mergedData = computed(() => {
+  return deepMerge(
+    {
+      datasets: [{ borderSkipped: false, minBarLength: 35 }],
     },
-    seeMore: Boolean,
-    chartData: {
-      type: Object,
-      required: true,
-    },
-    isLoading: Boolean,
-  },
-  emits: ['seeMore'],
+    props.chartData,
+  );
+});
 
-  setup() {
-    const barChart = ref(null);
-    const { width, height } = useElementSize(barChart);
-
-    return {
-      barChart,
-      chartWidth: width,
-      chartHeight: height,
-    };
-  },
-
-  computed: {
-    mergedData() {
-      return deepMerge(
-        {
-          datasets: [{ borderSkipped: false, minBarLength: 35 }],
+const chartOptions = computed(() => {
+  return {
+    backgroundColor: colorBgTealStrong,
+    hoverBackgroundColor: colorBgTealPlain,
+    plugins: {
+      tooltip: false,
+      datalabels: {
+        color: function (context: { active: boolean }) {
+          return context.active ? colorTeal12 : colorFgInverted;
         },
-        this.chartData,
-      );
-    },
-    chartOptions() {
-      return {
-        backgroundColor: colorBgTealStrong,
-        hoverBackgroundColor: colorBgTealPlain,
-        plugins: {
-          tooltip: false,
-          datalabels: {
-            color: function (context) {
-              return context.active ? colorTeal12 : colorFgInverted;
-            },
-            anchor: 'end',
-            align: 'start',
-            font: {
-              size: '16',
-              weight: '700',
-            },
-          },
+        anchor: 'end',
+        align: 'start',
+        font: {
+          size: '16',
+          weight: '700',
         },
-      };
+      },
     },
-    chartPlugins() {
-      return [ChartDataLabels];
-    },
-  },
-};
+  };
+});
+
+const chartPlugins = computed(() => [ChartDataLabels]);
 </script>
 
 <style lang="scss" scoped>

@@ -12,10 +12,8 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'CardTitleError',
-};
+<script setup lang="ts">
+defineOptions({ name: 'CardTitleError' });
 </script>
 
 <style lang="scss" scoped>

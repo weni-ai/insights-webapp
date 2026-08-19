@@ -68,10 +68,8 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'SkeletonConfigWidgetDynamyc',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SkeletonConfigWidgetDynamyc' });
 </script>
 
 <style lang="scss" scoped>

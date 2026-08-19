@@ -40,145 +40,133 @@
   </section>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useElementSize } from '@vueuse/core';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Tooltip } from 'chart.js';
+
 import BaseChart from './BaseChart.vue';
 import SkeletonLineChart from './loadings/SkeletonLineChart.vue';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
 import i18n from '@/utils/plugins/i18n';
-import { useElementSize } from '@vueuse/core';
-import { ref } from 'vue';
-
 import { deepMerge } from '@/utils/object';
-import { Tooltip } from 'chart.js';
 import {
   colorBgTealStrong,
   colorGray12,
 } from '@weni/unnnic-system/tokens/colors';
 
-export default {
-  name: 'LineChart',
+defineOptions({ name: 'LineChart' });
 
-  components: { BaseChart, SkeletonLineChart },
+interface LineChartProps {
+  title?: string;
+  seeMore?: boolean;
+  chartData: Record<string, unknown>;
+  isLoading?: boolean;
+}
 
-  props: {
-    title: {
-      type: String,
-      default: '',
-    },
-    seeMore: Boolean,
-    chartData: {
-      type: Object,
-      required: true,
-    },
-    isLoading: Boolean,
-  },
+const props = withDefaults(defineProps<LineChartProps>(), {
+  title: '',
+  seeMore: false,
+  isLoading: false,
+});
 
-  emits: ['seeMore'],
+defineEmits<{
+  seeMore: [];
+}>();
 
-  setup() {
-    const lineChart = ref(null);
-    const { width, height } = useElementSize(lineChart);
+const lineChart = ref<HTMLElement | null>(null);
+const { width: chartWidth, height: chartHeight } = useElementSize(lineChart);
 
-    return {
-      lineChart,
-      chartWidth: width,
-      chartHeight: height,
-    };
-  },
-
-  computed: {
-    mergedData() {
-      const configData = {
-        fill: true,
-        borderColor: colorBgTealStrong,
-        pointRadius: 0,
-        hoverRadius: 3,
-        pointStyle: 'circle',
-        backgroundColor: function (context) {
-          const chart = context.chart;
-          const { ctx, chartArea } = chart;
-          if (!chartArea) {
-            return null;
-          }
-          const gradient = ctx.createLinearGradient(
-            0,
-            chartArea.top,
-            0,
-            chartArea.bottom,
-          );
-
-          gradient.addColorStop(0, colorBgTealStrong);
-          gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-          return gradient;
-        },
-      };
-
-      return deepMerge(
-        {
-          datasets: [{ ...configData }],
-        },
-        this.chartData,
+const mergedData = computed(() => {
+  const configData = {
+    fill: true,
+    borderColor: colorBgTealStrong,
+    pointRadius: 0,
+    hoverRadius: 3,
+    pointStyle: 'circle',
+    backgroundColor: function (context: any) {
+      const chart = context.chart;
+      const { ctx, chartArea } = chart;
+      if (!chartArea) {
+        return null;
+      }
+      const gradient = ctx.createLinearGradient(
+        0,
+        chartArea.top,
+        0,
+        chartArea.bottom,
       );
+
+      gradient.addColorStop(0, colorBgTealStrong);
+      gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+      return gradient;
     },
-    chartOptions() {
-      return {
-        backgroundColor: colorBgTealStrong,
-        hoverBackgroundColor: colorBgTealStrong,
-        pointStyle: false,
-        layout: {
-          padding: 10,
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            suggestedMax: 20,
-            suggestedMin: 0,
-            display: true,
-          },
-          x: {
-            grid: {
-              display: true,
-            },
-          },
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        plugins: {
-          tooltip: {
-            enabled: true,
-            backgroundColor: colorGray12,
-            displayColors: false,
-            font: {
-              size: '16',
-              weight: '700',
-            },
-            callbacks: {
-              title: function (tooltipItems) {
-                return `${i18n.global.t('charts.hours')}: ${tooltipItems[0].label}`;
-              },
-              label: function (tooltipItem) {
-                const originalValue = tooltipItem.raw;
-                return `${i18n.global.t('charts.attendances')}: ${originalValue}`;
-              },
-            },
-          },
-          doubleDataLabel: {
-            display: false,
-          },
-          datalabels: {
-            display: false,
-          },
-        },
-      };
+  };
+
+  return deepMerge(
+    {
+      datasets: [{ ...configData }],
     },
-    chartPlugins() {
-      return [ChartDataLabels, Tooltip];
+    props.chartData,
+  );
+});
+
+const chartOptions = computed(() => {
+  return {
+    backgroundColor: colorBgTealStrong,
+    hoverBackgroundColor: colorBgTealStrong,
+    pointStyle: false,
+    layout: {
+      padding: 10,
     },
-  },
-};
+    scales: {
+      y: {
+        beginAtZero: true,
+        suggestedMax: 20,
+        suggestedMin: 0,
+        display: true,
+      },
+      x: {
+        grid: {
+          display: true,
+        },
+      },
+    },
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
+    plugins: {
+      tooltip: {
+        enabled: true,
+        backgroundColor: colorGray12,
+        displayColors: false,
+        font: {
+          size: '16',
+          weight: '700',
+        },
+        callbacks: {
+          title: function (tooltipItems: any[]) {
+            return `${i18n.global.t('charts.hours')}: ${tooltipItems[0].label}`;
+          },
+          label: function (tooltipItem: any) {
+            const originalValue = tooltipItem.raw;
+            return `${i18n.global.t('charts.attendances')}: ${originalValue}`;
+          },
+        },
+      },
+      doubleDataLabel: {
+        display: false,
+      },
+      datalabels: {
+        display: false,
+      },
+    },
+  };
+});
+
+const chartPlugins = computed(() => [ChartDataLabels, Tooltip]);
 </script>
 
 <style lang="scss" scoped>

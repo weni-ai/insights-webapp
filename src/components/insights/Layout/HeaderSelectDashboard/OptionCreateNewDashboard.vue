@@ -11,10 +11,8 @@
   </UnnnicDropdownItem>
 </template>
 
-<script>
-export default {
-  name: 'OptionCreateNewDashboard',
-};
+<script setup lang="ts">
+defineOptions({ name: 'OptionCreateNewDashboard' });
 </script>
 
 <style lang="scss" scoped>

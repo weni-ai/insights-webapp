@@ -18,10 +18,8 @@
   </article>
 </template>
 
-<script>
-export default {
-  name: 'SugestionCard',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SugestionCard' });
 </script>
 
 <style scoped lang="scss">

@@ -13,8 +13,6 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'SkeletonConfigContentRecurrence',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SkeletonConfigContentRecurrence' });
 </script>

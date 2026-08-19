@@ -13,8 +13,6 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'SkeletonConfigContentVtexConversions',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SkeletonConfigContentVtexConversions' });
 </script>

@@ -93,13 +93,13 @@ describe('InsightModalFooter.vue', () => {
 
   it('handles placeholder text area correctly', async () => {
     const wrapper = mountComponent({ isBtnYesActive: true });
-    expect(wrapper.vm.handlePlaceholderTextArea()).toContain(
+    expect(wrapper.find('textarea').attributes('placeholder')).toContain(
       wrapper.vm.$t(
         'insights_header.generate_insight.input.placeholder_positive',
       ),
     );
-    await wrapper.setProps({ isBtnYesActive: false });
-    expect(wrapper.vm.handlePlaceholderTextArea()).toContain(
+    await wrapper.setProps({ isBtnYesActive: false, isBtnNoActive: true });
+    expect(wrapper.find('textarea').attributes('placeholder')).toContain(
       wrapper.vm.$t(
         'insights_header.generate_insight.input.placeholder_negative',
       ),
@@ -173,60 +173,43 @@ describe('InsightModalFooter.vue', () => {
     });
   });
 
-  it('scrollToEnd calls scrollIntoView when scrollTarget exists', () => {
+  it('scrollToEnd calls scrollIntoView when scrollTarget exists', async () => {
     const wrapper = mountComponent({
-      isFeedbackSent: true,
+      isFeedbackSent: false,
     });
 
-    const scrollTargetElement = wrapper.find({ ref: 'scrollTarget' });
+    await wrapper.setProps({ isFeedbackSent: true });
+    await wrapper.vm.$nextTick();
 
-    const scrollIntoViewMock = vi.fn();
-    Object.defineProperty(scrollTargetElement.element, 'scrollIntoView', {
-      value: scrollIntoViewMock,
-      writable: true,
-    });
-
-    wrapper.vm.scrollToEnd();
-
-    expect(scrollIntoViewMock).toHaveBeenCalledWith({
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({
       behavior: 'smooth',
     });
   });
 
   it('does not call scrollIntoView when scrollTarget does not exist', async () => {
+    Element.prototype.scrollIntoView.mockClear();
     const wrapper = mountComponent({
       isFeedbackSent: false,
     });
 
-    const scrollIntoViewMock = vi.fn();
-
     await wrapper.vm.$nextTick();
 
-    wrapper.vm.scrollToEnd();
-
-    expect(scrollIntoViewMock).not.toHaveBeenCalled();
+    expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
   });
 
   it('calls the appropriate method when isFeedbackSent changes to true', async () => {
+    Element.prototype.scrollIntoView.mockClear();
     const wrapper = mountComponent({
       isFeedbackSent: false,
     });
 
-    const scrollTargetElement = wrapper.find({ ref: 'scrollTarget' });
-
-    expect(scrollTargetElement.exists()).toBe(false);
-
-    const scrollToEndMock = vi.spyOn(wrapper.vm, 'scrollToEnd');
+    expect(wrapper.find({ ref: 'scrollTarget' }).exists()).toBe(false);
 
     await wrapper.setProps({ isFeedbackSent: true });
-
     await wrapper.vm.$nextTick();
 
     expect(wrapper.find({ ref: 'scrollTarget' }).exists()).toBe(true);
-
-    expect(scrollToEndMock).toHaveBeenCalled();
-
-    expect(scrollToEndMock).toHaveBeenCalledTimes(1);
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalled();
   });
 
   it('should emit update-feedback-text on change feedbackText', async () => {

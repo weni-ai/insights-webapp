@@ -30,100 +30,91 @@
   </UnnnicDialog>
 </template>
 
-<script>
-import { mapActions } from 'pinia';
-
-import { useWidgets } from '@/store/modules/widgets';
-
-import { clearDeepValues } from '@/utils/object';
-
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { UnnnicCallAlert } from '@weni/unnnic-system';
 
-export default {
-  name: 'ModalResetWidget',
+import { useWidgets } from '@/store/modules/widgets';
+import { clearDeepValues } from '@/utils/object';
 
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
+defineOptions({ name: 'ModalResetWidget' });
+
+interface ModalResetWidgetProps {
+  modelValue: boolean;
+  widget?: Record<string, any>;
+}
+
+const props = withDefaults(defineProps<ModalResetWidgetProps>(), {
+  widget: () => ({}),
+});
+
+const emit = defineEmits<{
+  'update:model-value': [value: boolean];
+  'finish-reset': [];
+}>();
+
+const { t } = useI18n();
+const widgetsStore = useWidgets();
+const { updateWidget } = widgetsStore;
+
+const isLoading = ref(false);
+
+const updateModelValue = (value: boolean) => {
+  emit('update:model-value', value);
+};
+
+const callSuccessAlert = () => {
+  UnnnicCallAlert({
+    props: {
+      text: t('widgets.success_reset'),
+      type: 'success',
     },
-    widget: {
-      type: Object,
-      default: () => ({}),
+    seconds: 5,
+  });
+};
+
+const callErrorAlert = () => {
+  UnnnicCallAlert({
+    props: {
+      text: t('widgets.error_reset'),
+      type: 'error',
     },
-  },
+    seconds: 5,
+  });
+};
 
-  emits: ['update:model-value', 'finish-reset'],
+const resetWidget = async () => {
+  isLoading.value = true;
 
-  data() {
-    return {
-      isLoading: false,
-    };
-  },
-
-  methods: {
-    ...mapActions(useWidgets, ['updateWidget']),
-
-    updateModelValue(value) {
-      this.$emit('update:model-value', value);
-    },
-
-    async resetWidget() {
-      this.isLoading = true;
-
-      try {
-        if (
-          [
-            'vtex_order',
-            'graph_funnel',
-            'recurrence',
-            'vtex_conversions',
-          ].includes(this.widget.type)
-        ) {
-          await this.updateWidget({
-            ...this.widget,
-            config: {},
-            type: 'empty_column',
-            name: '',
-          });
-        } else {
-          await this.updateWidget({
-            ...this.widget,
-            config: { ...clearDeepValues(this.widget.config), currency: false },
-            name: '',
-          });
-        }
-
-        this.callSuccessAlert();
-      } catch (error) {
-        this.callErrorAlert();
-        console.error(error);
-      } finally {
-        this.$emit('finish-reset');
-        this.isLoading = false;
-      }
-    },
-
-    callSuccessAlert() {
-      UnnnicCallAlert({
-        props: {
-          text: this.$t('widgets.success_reset'),
-          type: 'success',
-        },
-        seconds: 5,
+  try {
+    if (
+      ['vtex_order', 'graph_funnel', 'recurrence', 'vtex_conversions'].includes(
+        props.widget.type,
+      )
+    ) {
+      await updateWidget({
+        ...props.widget,
+        config: {},
+        type: 'empty_column',
+        name: '',
       });
-    },
-
-    callErrorAlert() {
-      UnnnicCallAlert({
-        props: {
-          text: this.$t('widgets.error_reset'),
-          type: 'error',
-        },
-        seconds: 5,
+    } else {
+      await updateWidget({
+        ...props.widget,
+        config: { ...clearDeepValues(props.widget.config), currency: false },
+        name: '',
       });
-    },
-  },
+    }
+
+    callSuccessAlert();
+  } catch (error) {
+    callErrorAlert();
+    console.error(error);
+  } finally {
+    emit('finish-reset');
+    isLoading.value = false;
+  }
 };
 </script>
 

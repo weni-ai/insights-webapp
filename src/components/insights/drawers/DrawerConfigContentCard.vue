@@ -27,128 +27,113 @@
   />
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
-import { useWidgets } from '@/store/modules/widgets';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
+import { useWidgets } from '@/store/modules/widgets';
 import FormExecutions from './DrawerForms/Card/FormExecutions.vue';
 import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
 import FormDataCrossing from './DrawerForms/Card/FormDataCrossing/index.vue';
 import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
-
 import { checkDeepEmptyValues } from '@/utils/object';
 
-export default {
-  name: 'DrawerConfigContentCard',
+defineOptions({ name: 'DrawerConfigContentCard' });
 
-  components: {
-    SelectEmojiButton,
-  },
+interface DrawerConfigContentCardProps {
+  type?: string;
+}
 
-  props: {
-    type: {
-      type: String,
-      default: '',
-      validate(value) {
-        return ['executions', 'flow_result', 'data_crossing'].includes(value);
-      },
+const props = withDefaults(defineProps<DrawerConfigContentCardProps>(), {
+  type: '',
+});
+
+const emit = defineEmits<{
+  'update-disable-primary-button': [value: boolean];
+  'reset-widget': [];
+}>();
+
+const widgetsStore = useWidgets();
+const { currentWidgetEditing } = storeToRefs(widgetsStore);
+
+const initialConfigStringfy = ref('');
+const config = ref<Record<string, any> | null>(null);
+const isCurrentFormValid = ref(false);
+
+const widgetConfig = computed(() => currentWidgetEditing.value.config);
+
+const currentFormComponent = computed(() => {
+  const componentMap: Record<string, unknown> = {
+    executions: FormExecutions,
+    flow_result: FormFlowResult,
+    data_crossing: FormDataCrossing,
+  };
+
+  return componentMap[props.type] || null;
+});
+
+const currentFormEvents = computed(() => {
+  const defaultEvents = {
+    'update:is-valid-form': (isValid: boolean) => {
+      isCurrentFormValid.value = !!isValid;
     },
-  },
+  };
 
-  emits: ['update-disable-primary-button', 'reset-widget'],
+  const mappingEvents: Record<string, Record<string, unknown>> = {};
 
-  data() {
-    return {
-      initialConfigStringfy: '',
-      config: null,
-      isCurrentFormValid: false,
-    };
-  },
+  return { ...defaultEvents, ...mappingEvents[props.type] };
+});
 
-  computed: {
-    ...mapState(useWidgets, ['currentWidgetEditing']),
+const isAllFieldsValid = computed(
+  () => config.value?.name && isCurrentFormValid.value,
+);
 
-    widgetConfig() {
-      return this.currentWidgetEditing.config;
-    },
+const disableResetWidgetButton = computed(() =>
+  checkDeepEmptyValues(widgetConfig.value),
+);
 
-    currentFormComponent() {
-      const componentMap = {
-        executions: FormExecutions,
-        flow_result: FormFlowResult,
-        data_crossing: FormDataCrossing,
-      };
-
-      return componentMap[this.type] || null;
-    },
-
-    currentFormEvents() {
-      const defaultEvents = {
-        'update:is-valid-form': (isValid) =>
-          (this.isCurrentFormValid = !!isValid),
-      };
-
-      const mappingEvents = {};
-
-      return { ...defaultEvents, ...mappingEvents[this.type] };
-    },
-
-    isAllFieldsValid() {
-      return this.config?.name && this.isCurrentFormValid;
-    },
-
-    disableResetWidgetButton() {
-      return checkDeepEmptyValues(this.widgetConfig);
-    },
-  },
-
-  watch: {
-    config: {
-      deep: true,
-      handler(newConfig) {
-        this.updateCurrentWidgetEditingConfig({
-          ...this.widgetConfig,
-          ...newConfig,
-        });
-      },
-    },
-
-    widgetConfig: {
-      deep: true,
-      handler() {
-        this.updatePrimaryButtonState();
-      },
-    },
-
-    isAllFieldsValid() {
-      this.updatePrimaryButtonState();
-    },
-  },
-
-  created() {
-    this.config = {
-      ...this.widgetConfig,
-      type: this.type,
-      friendly_id: this.widgetConfig.friendly_id || '',
-    };
-    this.initializeConfigString();
-  },
-
-  methods: {
-    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
-
-    initializeConfigString() {
-      if (this.config && !this.initialConfigStringfy) {
-        this.initialConfigStringfy = JSON.stringify(this.widgetConfig);
-      }
-    },
-    updatePrimaryButtonState() {
-      const disablePrimaryButton =
-        this.initialConfigStringfy === JSON.stringify(this.widgetConfig) ||
-        !this.isAllFieldsValid;
-
-      this.$emit('update-disable-primary-button', disablePrimaryButton);
-    },
-  },
+const initializeConfigString = () => {
+  if (config.value && !initialConfigStringfy.value) {
+    initialConfigStringfy.value = JSON.stringify(widgetConfig.value);
+  }
 };
+
+const updatePrimaryButtonState = () => {
+  const disablePrimaryButton =
+    initialConfigStringfy.value === JSON.stringify(widgetConfig.value) ||
+    !isAllFieldsValid.value;
+
+  emit('update-disable-primary-button', disablePrimaryButton);
+};
+
+watch(
+  config,
+  (newConfig) => {
+    widgetsStore.updateCurrentWidgetEditingConfig({
+      ...widgetConfig.value,
+      ...newConfig,
+    });
+  },
+  { deep: true },
+);
+
+watch(widgetConfig, updatePrimaryButtonState, { deep: true });
+watch(isAllFieldsValid, updatePrimaryButtonState);
+
+config.value = {
+  ...widgetConfig.value,
+  type: props.type,
+  friendly_id: widgetConfig.value.friendly_id || '',
+};
+initializeConfigString();
+
+defineExpose({
+  config,
+  isCurrentFormValid,
+  widgetConfig,
+  currentFormComponent,
+  isAllFieldsValid,
+  disableResetWidgetButton,
+  updatePrimaryButtonState,
+});
 </script>

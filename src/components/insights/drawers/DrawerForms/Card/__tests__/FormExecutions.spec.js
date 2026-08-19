@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
+import { useWidgets } from '@/store/modules/widgets';
 import FormExecutions from '@/components/insights/drawers/DrawerForms/Card/FormExecutions.vue';
 
 const widgetConfigMock = {
@@ -85,24 +86,21 @@ describe('FormExecutions', () => {
     });
 
     it('should compute isValidForm as false when flow uuid is empty', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: '',
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: '',
         },
-      });
+      };
+      await wrapper.vm.$nextTick();
       expect(wrapper.vm.isValidForm).toBeFalsy();
     });
 
     it('should compute isValidForm as false when config is null', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: null,
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: null,
         },
-      });
+      };
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.isValidForm).toBeFalsy();
     });
@@ -110,13 +108,12 @@ describe('FormExecutions', () => {
 
   describe('Watchers', () => {
     it('should emit update:is-valid-form when isValidForm changes', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: '',
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: '',
         },
-      });
+      };
+      await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted('update:is-valid-form')).toBeTruthy();
       expect(wrapper.emitted('update:is-valid-form')).toContainEqual([false]);
@@ -124,17 +121,16 @@ describe('FormExecutions', () => {
 
     it('should call updateCurrentWidgetEditingConfig when config changes', async () => {
       const updateSpy = vi.spyOn(
-        wrapper.vm,
+        useWidgets(),
         'updateCurrentWidgetEditingConfig',
       );
 
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'new-uuid',
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'new-uuid',
         },
-      });
+      };
+      await wrapper.vm.$nextTick();
 
       expect(updateSpy).toHaveBeenCalledWith({
         flow: {
@@ -149,13 +145,12 @@ describe('FormExecutions', () => {
       const selectFlow = wrapper.findComponent({ name: 'SelectFlow' });
       expect(selectFlow.props('modelValue')).toBe('test-uuid');
 
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'new-uuid',
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'new-uuid',
         },
-      });
+      };
+      await wrapper.vm.$nextTick();
 
       expect(selectFlow.props('modelValue')).toBe('new-uuid');
     });
@@ -164,25 +159,22 @@ describe('FormExecutions', () => {
       expect(wrapper.emitted('update:is-valid-form')).toBeTruthy();
       expect(wrapper.emitted('update:is-valid-form')[0]).toEqual([false]);
 
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'new-uuid',
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'new-uuid',
         },
-      });
+      };
+      await wrapper.vm.$nextTick();
 
       expect(wrapper.emitted('update:is-valid-form')[1]).toEqual([true]);
     });
 
     it('should compute isValidForm as false when flow uuid is undefined', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: undefined,
-          },
+      wrapper.vm.config = {
+        flow: {
+          uuid: undefined,
         },
-      });
+      };
       expect(wrapper.vm.isValidForm).toBeFalsy();
     });
   });
@@ -207,17 +199,17 @@ describe('FormExecutions', () => {
       const customWrapper = createWrapper(mockStore);
 
       const spyAction = vi.spyOn(
-        customWrapper.vm,
+        useWidgets(),
         'updateCurrentWidgetEditingConfig',
       );
 
-      await customWrapper.setData({
-        config: {
-          flow: {
-            uuid: 'new-uuid',
-          },
+      customWrapper.vm.config = {
+        flow: {
+          uuid: 'new-uuid',
         },
-      });
+      };
+
+      await customWrapper.vm.$nextTick();
 
       expect(spyAction).toHaveBeenCalled();
       expect(spyAction).toHaveBeenCalledWith({

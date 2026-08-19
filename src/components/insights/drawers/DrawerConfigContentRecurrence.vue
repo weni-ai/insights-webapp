@@ -29,94 +29,91 @@
   </section>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import { useWidgets } from '@/store/modules/widgets';
 
-export default {
-  name: 'DrawerConfigContentRecurrence',
+defineOptions({ name: 'DrawerConfigContentRecurrence' });
 
-  components: {
-    SelectFlow,
-    SelectFlowResult,
+const emit = defineEmits<{
+  'update:is-valid-form': [value: boolean];
+  'reset-widget': [];
+  'update-disable-primary-button': [value: boolean];
+}>();
+
+const widgetsStore = useWidgets();
+const { currentWidgetEditing } = storeToRefs(widgetsStore);
+
+const config = ref<Record<string, any> | null>(null);
+
+const widgetConfig = computed(() => currentWidgetEditing.value.config);
+
+const isValidForm = computed(() => {
+  const currentConfig = config.value;
+  return (
+    currentConfig?.flow.uuid &&
+    currentConfig?.flow.result &&
+    !!currentConfig?.name.trim()
+  );
+});
+
+const isDisableResetWidget = computed(() => false);
+
+watch(
+  config,
+  (newConfig) => {
+    widgetsStore.updateCurrentWidgetEditingConfig({
+      ...widgetConfig.value,
+      ...newConfig,
+    });
+
+    if (newConfig?.operation === 'recurrence') config.value.currency = false;
   },
+  { deep: true },
+);
 
-  emits: [
-    'update:is-valid-form',
-    'reset-widget',
-    'update-disable-primary-button',
-  ],
-
-  data() {
-    return {
-      config: null,
-    };
+watch(
+  () => config.value?.flow?.uuid,
+  (newFlowUuid, oldFlowUuid) => {
+    if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
+      config.value.flow.result = '';
+    }
   },
+);
 
-  computed: {
-    ...mapState(useWidgets, ['currentWidgetEditing']),
-    widgetConfig() {
-      return this.currentWidgetEditing.config;
-    },
-    isValidForm() {
-      const { config } = this;
-      return config?.flow.uuid && config?.flow.result && !!config?.name.trim();
-    },
-    isDisableResetWidget() {
-      return false;
-    },
+watch(
+  isValidForm,
+  (newIsValidForm) => {
+    emit('update-disable-primary-button', !newIsValidForm);
   },
+  { immediate: true },
+);
 
-  watch: {
-    config: {
-      deep: true,
-      handler(newConfig) {
-        this.updateCurrentWidgetEditingConfig({
-          ...this.widgetConfig,
-          ...newConfig,
-        });
-
-        if (newConfig?.operation === 'recurrence') this.config.currency = false;
-      },
-    },
-
-    'config.flow.uuid'(newFlowUuid, oldFlowUuid) {
-      if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
-        this.config.flow.result = '';
-      }
-    },
-
-    isValidForm: {
-      immediate: true,
-      handler(newIsValidForm) {
-        this.$emit('update-disable-primary-button', !newIsValidForm);
-      },
-    },
+const initialWidgetConfig = widgetConfig.value;
+config.value = {
+  name: currentWidgetEditing.value.name || '',
+  flow: {
+    uuid: initialWidgetConfig.flow?.uuid || '',
+    result: initialWidgetConfig.flow?.result || '',
   },
-
-  created() {
-    const { widgetConfig } = this;
-    this.config = {
-      name: this.currentWidgetEditing.name || '',
-      flow: {
-        uuid: widgetConfig.flow?.uuid || '',
-        result: widgetConfig.flow?.result || '',
-      },
-      operation: widgetConfig.operation || '',
-      currency: widgetConfig.currency || false,
-    };
-  },
-
-  methods: {
-    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
-    resetWidget() {
-      this.$emit('reset-widget');
-    },
-  },
+  operation: initialWidgetConfig.operation || '',
+  currency: initialWidgetConfig.currency || false,
 };
+
+const resetWidget = () => {
+  emit('reset-widget');
+};
+
+defineExpose({
+  config,
+  isValidForm,
+  isDisableResetWidget,
+  resetWidget,
+});
 </script>
 
 <style lang="scss" scoped>

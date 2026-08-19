@@ -6,6 +6,7 @@ import { createApp } from 'vue';
 import { useCTWA } from '../ctwa';
 import CTWADataService from '@/services/api/resources/ctwa/data';
 import CTWAConversionsService from '@/services/api/resources/ctwa/conversions';
+import CTWAPerformanceByCampaignService from '@/services/api/resources/ctwa/performanceByCampaign';
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({
@@ -17,6 +18,7 @@ vi.mock('@/utils/time', () => ({
 
 vi.mock('@/services/api/resources/ctwa/data');
 vi.mock('@/services/api/resources/ctwa/conversions');
+vi.mock('@/services/api/resources/ctwa/performanceByCampaign');
 
 const mockDashboardData = {
   attributed_revenue: { value: 1030000, avg: 359 },
@@ -28,6 +30,19 @@ const mockConversionsData = {
   conversations_started: { total: 19400, percentage: 100 },
   conversations_qualified: { total: 7180, percentage: 37.4 },
   conversations_converted: { total: 2880, percentage: 14.8 },
+};
+
+const mockCampaignPerformanceData = {
+  count: 2,
+  results: [
+    {
+      campaign: 'Contractor Bulk Pricing',
+      conversations: 3200,
+      qualified: 1450,
+      conversions: 520,
+      revenue: 509600,
+    },
+  ],
 };
 
 describe('useCTWA store', () => {
@@ -132,6 +147,20 @@ describe('useCTWA store', () => {
 
     it('initializes hasLoadedConversionsData as false', () => {
       expect(store.hasLoadedConversionsData).toBe(false);
+    });
+
+    it('initializes campaign performance data as empty', () => {
+      expect(store.campaignPerformanceResults).toEqual([]);
+      expect(store.campaignPerformanceCount).toBe(0);
+      expect(store.campaignPerformanceOffset).toBe(0);
+    });
+
+    it('initializes loadingCampaignPerformance as false', () => {
+      expect(store.loadingCampaignPerformance).toBe(false);
+    });
+
+    it('initializes hasLoadedCampaignPerformance as false', () => {
+      expect(store.hasLoadedCampaignPerformance).toBe(false);
     });
   });
 
@@ -244,12 +273,86 @@ describe('useCTWA store', () => {
     });
   });
 
+  describe('loadCampaignPerformanceData', () => {
+    it('loads campaign performance data successfully', async () => {
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockResolvedValue(
+        mockCampaignPerformanceData,
+      );
+
+      await store.loadCampaignPerformanceData(0);
+
+      expect(
+        CTWAPerformanceByCampaignService.getPerformanceByCampaign,
+      ).toHaveBeenCalledWith({
+        limit: 10,
+        offset: 0,
+      });
+      expect(store.campaignPerformanceResults).toEqual(
+        mockCampaignPerformanceData.results,
+      );
+      expect(store.campaignPerformanceCount).toBe(2);
+      expect(store.campaignPerformanceOffset).toBe(0);
+      expect(store.hasLoadedCampaignPerformance).toBe(true);
+    });
+
+    it('stores the requested offset', async () => {
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockResolvedValue(
+        mockCampaignPerformanceData,
+      );
+
+      await store.loadCampaignPerformanceData(10);
+
+      expect(
+        CTWAPerformanceByCampaignService.getPerformanceByCampaign,
+      ).toHaveBeenCalledWith({
+        limit: 10,
+        offset: 10,
+      });
+      expect(store.campaignPerformanceOffset).toBe(10);
+    });
+
+    it('sets loading state during data fetch', async () => {
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            expect(store.loadingCampaignPerformance).toBe(true);
+            setTimeout(() => resolve(mockCampaignPerformanceData), 10);
+          }),
+      );
+
+      await store.loadCampaignPerformanceData();
+      expect(store.loadingCampaignPerformance).toBe(false);
+    });
+
+    it('handles errors gracefully', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockRejectedValue(
+        new Error('API Error'),
+      );
+
+      await store.loadCampaignPerformanceData();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error loading CTWA campaign performance data:',
+        expect.any(Error),
+      );
+      expect(store.loadingCampaignPerformance).toBe(false);
+      expect(store.hasLoadedCampaignPerformance).toBe(true);
+      consoleErrorSpy.mockRestore();
+    });
+  });
+
   describe('loadAllData', () => {
     it('does not load slices that have never been requested', () => {
       store.loadAllData();
 
       expect(CTWADataService.getDashboardData).not.toHaveBeenCalled();
       expect(CTWAConversionsService.getConversionsData).not.toHaveBeenCalled();
+      expect(
+        CTWAPerformanceByCampaignService.getPerformanceByCampaign,
+      ).not.toHaveBeenCalled();
     });
 
     it('reloads only slices that have already been loaded', async () => {
@@ -279,6 +382,24 @@ describe('useCTWA store', () => {
 
       expect(CTWAConversionsService.getConversionsData).toHaveBeenCalledTimes(1);
       expect(CTWADataService.getDashboardData).not.toHaveBeenCalled();
+    });
+
+    it('reloads campaign performance at the current offset', async () => {
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockResolvedValue(
+        mockCampaignPerformanceData,
+      );
+
+      await store.loadCampaignPerformanceData(10);
+      vi.clearAllMocks();
+
+      store.loadAllData();
+
+      expect(
+        CTWAPerformanceByCampaignService.getPerformanceByCampaign,
+      ).toHaveBeenCalledWith({
+        limit: 10,
+        offset: 10,
+      });
     });
   });
 });

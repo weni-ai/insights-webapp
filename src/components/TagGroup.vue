@@ -9,7 +9,7 @@
       <UnnnicTag
         v-for="(tag, i) in tags"
         :key="tag.uuid"
-        :ref="tag.uuid"
+        :ref="(el) => setTagRef(tag.uuid, el)"
         :clickable="selectable"
         :text="tag.name"
         :data-testid="`tag__${tag.uuid}`"
@@ -32,136 +32,138 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'TagGroup',
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
 
-  props: {
-    hasCloseIcon: {
-      type: Boolean,
-      default: false,
-    },
-    selectable: {
-      type: Boolean,
-      default: false,
-    },
-    flex: {
-      type: Boolean,
-      default: true,
-    },
-    scheme: {
-      type: String,
-      default: '',
-    },
-    tags: {
-      type: Array,
-      default: () => [],
-    },
-    value: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  emits: ['input', 'close'],
+defineOptions({ name: 'TagGroup' });
 
-  data: () => ({
-    schemes: [
-      'aux-purple',
-      'aux-orange',
-      'aux-pink',
-      'brand-weni-dark',
-      'weni-600',
-      'aux-lemon',
-      'aux-blue',
-      'neutral-dark',
-      'neutral-cloudy',
-    ],
-    remainingTags: 0,
-  }),
+interface Tag {
+  uuid: string;
+  name: string;
+}
 
-  computed: {
-    selected: {
-      get() {
-        return this.value;
-      },
-      set(tags) {
-        this.$emit('input', tags);
-      },
-    },
-    tagNames() {
-      return this.tags.map((tag) => tag.name);
-    },
-  },
+interface TagGroupProps {
+  hasCloseIcon?: boolean;
+  selectable?: boolean;
+  flex?: boolean;
+  scheme?: string;
+  tags?: Tag[];
+  value?: Tag[];
+}
 
-  mounted() {
-    if (this.flex) {
-      return;
+const props = withDefaults(defineProps<TagGroupProps>(), {
+  hasCloseIcon: false,
+  selectable: false,
+  flex: true,
+  scheme: '',
+  tags: () => [],
+  value: () => [],
+});
+
+const emit = defineEmits<{
+  input: [tags: Tag[]];
+  close: [];
+}>();
+
+const schemes = [
+  'aux-purple',
+  'aux-orange',
+  'aux-pink',
+  'brand-weni-dark',
+  'weni-600',
+  'aux-lemon',
+  'aux-blue',
+  'neutral-dark',
+  'neutral-cloudy',
+];
+
+const remainingTags = ref(0);
+const container = ref<HTMLElement | null>(null);
+const remainingTagsRef = ref<HTMLElement | null>(null);
+const tagRefs: Record<string, any> = {};
+
+const setTagRef = (uuid: string, el: any) => {
+  if (el) tagRefs[uuid] = el;
+  else delete tagRefs[uuid];
+};
+
+const getTagElement = (uuid: string) => {
+  const instance = tagRefs[uuid];
+  return instance?.[0]?.$el ?? instance?.$el;
+};
+
+const selected = computed({
+  get: () => props.value,
+  set: (tags) => emit('input', tags),
+});
+
+const tagNames = computed(() => props.tags.map((tag) => tag.name));
+
+const isSelectedTag = (tag: Tag) =>
+  selected.value.find((mappedTag) => mappedTag.uuid === tag.uuid);
+
+const showCloseIcon = (tag: Tag) =>
+  props.hasCloseIcon || (props.selectable && isSelectedTag(tag));
+
+const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+  entries.forEach((entry) => {
+    let remainingTagsPos: string | number = '';
+
+    if (entry.isIntersecting) {
+      remainingTags.value -= 1;
+      remainingTagsPos =
+        (entry.target as HTMLElement).offsetLeft +
+        entry.boundingClientRect.width;
+    } else {
+      remainingTags.value += 1;
+
+      const refName = entry.target.getAttribute('data-ref-name');
+      const tagIndex = props.tags.findIndex((tag) => tag.uuid === refName);
+
+      if (tagIndex > 0) {
+        const lastChildUuid = props.tags[tagIndex - 1].uuid;
+        const lastElement = getTagElement(lastChildUuid);
+
+        if (lastElement) {
+          const lastElementBoundingRect = lastElement.getBoundingClientRect();
+          remainingTagsPos =
+            lastElement.offsetLeft + lastElementBoundingRect.width;
+        }
+      }
     }
 
-    this.remainingTags = this.tags.length - 1;
+    function addPx(string: string | number) {
+      return `${string}px`;
+    }
 
-    const observer = new IntersectionObserver(this.handleIntersection);
-    this.tags.forEach((child) => {
-      const tagElement = this.$refs[child.uuid]?.[0].$el;
-      tagElement.setAttribute('data-ref-name', child.uuid);
+    if (remainingTagsRef.value && container.value) {
+      const remainingTagsPaddingLeft = Number.parseFloat(
+        getComputedStyle(remainingTagsRef.value).paddingLeft,
+      );
+      container.value.style.paddingRight = addPx(
+        remainingTagsRef.value.offsetWidth + remainingTagsPaddingLeft,
+      );
 
-      observer.observe(tagElement);
-    });
-  },
-
-  methods: {
-    isSelectedTag(tag) {
-      return this.selected.find((mappedTag) => mappedTag.uuid === tag.uuid);
-    },
-    showCloseIcon(tag) {
-      return this.hasCloseIcon || (this.selectable && this.isSelectedTag(tag));
-    },
-    handleIntersection(entries) {
-      entries.forEach((entry) => {
-        const { remainingTagsRef, container } = this.$refs;
-        let remainingTagsPos = '';
-
-        if (entry.isIntersecting) {
-          this.remainingTags -= 1;
-          remainingTagsPos =
-            entry.target.offsetLeft + entry.boundingClientRect.width;
-        } else {
-          this.remainingTags += 1;
-
-          const refName = entry.target.getAttribute('data-ref-name');
-          const tagIndex = this.tags.findIndex((tag) => tag.uuid === refName);
-
-          if (tagIndex > 0) {
-            const lastChildUuid = this.tags[tagIndex - 1].uuid;
-            const lastElement = this.$refs[lastChildUuid]?.[0]?.$el;
-
-            if (lastElement) {
-              const lastElementBoundingRect =
-                lastElement.getBoundingClientRect();
-              remainingTagsPos =
-                lastElement.offsetLeft + lastElementBoundingRect.width;
-            }
-          }
-        }
-
-        function addPx(string) {
-          return `${string}px`;
-        }
-
-        if (remainingTagsRef) {
-          const remainingTagsPaddingLeft = parseFloat(
-            getComputedStyle(remainingTagsRef).paddingLeft,
-          );
-          container.style.paddingRight = addPx(
-            remainingTagsRef.offsetWidth + remainingTagsPaddingLeft,
-          );
-
-          remainingTagsRef.style.left = addPx(remainingTagsPos);
-        }
-      });
-    },
-  },
+      remainingTagsRef.value.style.left = addPx(remainingTagsPos);
+    }
+  });
 };
+
+onMounted(() => {
+  if (props.flex) {
+    return;
+  }
+
+  remainingTags.value = props.tags.length - 1;
+
+  const observer = new IntersectionObserver(handleIntersection);
+  props.tags.forEach((child) => {
+    const tagElement = getTagElement(child.uuid);
+    tagElement.setAttribute('data-ref-name', child.uuid);
+
+    observer.observe(tagElement);
+  });
+});
 </script>
 
 <style lang="scss" scoped>

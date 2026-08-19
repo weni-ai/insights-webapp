@@ -6,11 +6,15 @@
     <LazyWidget>
       <SalesFunnel />
     </LazyWidget>
+    <LazyWidget>
+      <PerformanceByCampaign />
+    </LazyWidget>
   </section>
 </template>
 
 <script setup lang="ts">
 import MetricCards from '@/components/insights/ctwa/MetricCards.vue';
+import PerformanceByCampaign from '@/components/insights/ctwa/PerformanceByCampaign.vue';
 import SalesFunnel from '@/components/insights/ctwa/SalesFunnel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 

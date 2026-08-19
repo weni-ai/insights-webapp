@@ -487,6 +487,14 @@
         "placeholder": "Todas as campanhas"
       }
     },
+    "performance_by_campaign": {
+      "campaign": "Campanha",
+      "conversations": "Conversas",
+      "conversions": "Conversões",
+      "qualified": "Qualificadas",
+      "revenue": "Receita",
+      "title": "Desempenho por campanha"
+    },
     "sales_funnel": {
       "converted": "Convertidas",
       "qualified": "Qualificadas",

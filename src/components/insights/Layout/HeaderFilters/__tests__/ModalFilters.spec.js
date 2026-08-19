@@ -106,12 +106,11 @@ describe('ModalFilters', () => {
 
   describe('DynamicFilter rendering and interaction', () => {
     it('renders DynamicFilter components for each filter in currentDashboardFilters', async () => {
-      await wrapper.setData({
-        filtersInternal: {
-          filter1: 'value1',
-          filter2: 'value2',
-        },
-      });
+      wrapper.vm.filtersInternal = {
+        filter1: 'value1',
+        filter2: 'value2',
+      };
+      await wrapper.vm.$nextTick();
 
       const dynamicFilters = wrapper.findAllComponents(
         '[data-testid="dynamic-filter"]',
@@ -122,36 +121,27 @@ describe('ModalFilters', () => {
     });
 
     it('calls updateFilter if DynamicFilter is updated', async () => {
-      await wrapper.setData({
-        filtersInternal: {
-          filter1: 'value1',
-        },
-      });
-      const updateFilterSpy = vi
-        .spyOn(wrapper.vm, 'updateFilter')
-        .mockImplementation(() => {});
+      wrapper.vm.filtersInternal = {
+        filter1: 'value1',
+      };
+      await wrapper.vm.$nextTick();
 
       const dynamicFilter = wrapper.findComponent(
         '[data-testid="dynamic-filter"]',
       );
       await dynamicFilter.vm.$emit('update:model-value', 'newValue');
 
-      expect(updateFilterSpy).toHaveBeenCalledWith('filter1', 'newValue');
+      expect(wrapper.vm.filtersInternal.filter1).toBe('newValue');
     });
   });
 
   describe('State updates and syncing', () => {
     it('calls syncFiltersInternal when appliedFilters changes', async () => {
       const dashboardsStore = useDashboards();
-      vi.clearAllMocks();
-      const syncFiltersInternalSpy = vi.spyOn(
-        wrapper.vm,
-        'syncFiltersInternal',
-      );
       dashboardsStore.appliedFilters = { date_range: '2023-01-01' };
       await wrapper.vm.$nextTick();
 
-      expect(syncFiltersInternalSpy).toHaveBeenCalledTimes(1);
+      expect(wrapper.vm.filtersInternal).toEqual({ date_range: '2023-01-01' });
     });
 
     it('clearFilters resets filtersInternal', async () => {
@@ -162,12 +152,11 @@ describe('ModalFilters', () => {
 
   describe('Methods', () => {
     beforeEach(async () => {
-      await wrapper.setData({
-        filtersInternal: {
-          filter1: 'value1',
-          filter2: 'value2',
-        },
-      });
+      wrapper.vm.filtersInternal = {
+        filter1: 'value1',
+        filter2: 'value2',
+      };
+      await wrapper.vm.$nextTick();
     });
 
     describe('getDynamicFiltersDependsOnValues', () => {
@@ -254,29 +243,25 @@ describe('ModalFilters', () => {
     describe('setFilters', () => {
       it('calls setAppliedFilters if filtersInternal has keys', () => {
         const setAppliedFiltersSpy = vi
-          .spyOn(wrapper.vm, 'setAppliedFilters')
+          .spyOn(useDashboards(), 'setAppliedFilters')
           .mockImplementation(() => {});
-        const closeSpy = vi.spyOn(wrapper.vm, 'close');
-
         wrapper.vm.setFilters();
 
         expect(setAppliedFiltersSpy).toHaveBeenCalledWith(
           wrapper.vm.filtersInternal,
         );
-        expect(closeSpy).toHaveBeenCalled();
+        expect(wrapper.emitted('close')).toBeTruthy();
       });
 
       it('calls resetAppliedFilters if filtersInternal is empty', () => {
         wrapper.vm.filtersInternal = {};
         const resetAppliedFiltersSpy = vi
-          .spyOn(wrapper.vm, 'resetAppliedFilters')
+          .spyOn(useDashboards(), 'resetAppliedFilters')
           .mockImplementation(() => {});
-        const closeSpy = vi.spyOn(wrapper.vm, 'close');
-
         wrapper.vm.setFilters();
 
         expect(resetAppliedFiltersSpy).toHaveBeenCalled();
-        expect(closeSpy).toHaveBeenCalled();
+        expect(wrapper.emitted('close')).toBeTruthy();
       });
     });
   });
@@ -378,8 +363,10 @@ describe('ModalFilters', () => {
       };
 
       // Mock the store action to prevent actual execution
-      const setAppliedFiltersSpy = vi.fn();
-      wrapper.vm.setAppliedFilters = setAppliedFiltersSpy;
+      const setAppliedFiltersSpy = vi.spyOn(
+        useDashboards(),
+        'setAppliedFilters',
+      );
 
       // Execute
       await wrapper.vm.setFilters();

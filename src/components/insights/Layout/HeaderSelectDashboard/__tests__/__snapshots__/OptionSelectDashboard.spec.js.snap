@@ -2,7 +2,7 @@
 
 exports[`OptionSelectDashboard > Should match the snapshot 1`] = `
 <a
-  class="unnnic-dropdown-item unnnic--clickable option-select-dashboard"
+  class="unnnic-dropdown-item unnnic--clickable option-select-dashboard option-select-dashboard--active"
   data-testid="option-select-dashboard"
   data-v-000aa0c0=""
 >
@@ -15,11 +15,11 @@ exports[`OptionSelectDashboard > Should match the snapshot 1`] = `
     <!--v-if-->
   </section>
   <unnnic-icon-stub
-    class="option-select-dashboard__star-icon"
+    class="option-select-dashboard__star-icon option-select-dashboard__star-icon--selected"
     clickable="true"
     data-testid="star-icon"
     data-v-000aa0c0=""
-    filled="false"
+    filled="true"
     icon="star_rate"
     scheme="neutral-clean"
     size="md"

@@ -45,7 +45,7 @@ interface PaginatedCampaigns {
   results: Campaign[];
 }
 
-const CAMPAIGN_FILTER_PAGE_SIZE = 20;
+const CAMPAIGN_FILTER_PAGE_SIZE = 10;
 
 interface Props {
   modelValue: string;

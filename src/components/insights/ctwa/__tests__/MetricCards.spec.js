@@ -19,6 +19,7 @@ vi.mock('@/utils/numbers', () => ({
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
 }));
 
 const i18n = createI18n({
@@ -94,6 +95,16 @@ describe('MetricCards', () => {
       vi.clearAllMocks();
 
       store.appliedDateRange = { start: '2024-02-01', end: '2024-02-28' };
+      await nextTick();
+
+      expect(store.loadDashboardData).toHaveBeenCalledTimes(1);
+    });
+
+    it('reloads dashboard data when the campaign filter changes', async () => {
+      const store = useCTWA();
+      vi.clearAllMocks();
+
+      store.selectedCampaign = 'campaign-uuid';
       await nextTick();
 
       expect(store.loadDashboardData).toHaveBeenCalledTimes(1);

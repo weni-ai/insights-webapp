@@ -25,6 +25,7 @@ export interface CTWADashboardData {
 interface QueryParams {
   start_date?: string;
   end_date?: string;
+  campaign?: string;
 }
 
 export default {
@@ -32,13 +33,12 @@ export default {
     queryParams: QueryParams = {},
   ): Promise<CTWADashboardData> {
     const { project } = useConfig();
-    const { appliedDateRange } = useCTWA();
+    const { appliedFilters } = useCTWA();
 
     const params = createRequestQuery(queryParams);
 
     const formattedParams = {
-      start_date: appliedDateRange.start,
-      end_date: appliedDateRange.end,
+      ...appliedFilters,
       ...params,
     };
 

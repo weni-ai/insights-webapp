@@ -14,6 +14,11 @@ vi.mock('@/utils/time', () => ({
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
   })),
+  getTodayDate: vi.fn(() => ({
+    start: '2024-01-01',
+    end: '2024-01-07',
+    dmFormat: '01/01 - 07/01',
+  })),
 }));
 
 vi.mock('@/services/api/resources/ctwa/data');
@@ -400,6 +405,22 @@ describe('useCTWA store', () => {
         limit: 10,
         offset: 10,
       });
+    });
+
+    it('does not reload campaign performance when a campaign is selected', async () => {
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockResolvedValue(
+        mockCampaignPerformanceData,
+      );
+
+      await store.loadCampaignPerformanceData(0);
+      store.selectedCampaign = 'campaign-uuid';
+      vi.clearAllMocks();
+
+      store.loadAllData();
+
+      expect(
+        CTWAPerformanceByCampaignService.getPerformanceByCampaign,
+      ).not.toHaveBeenCalled();
     });
   });
 });

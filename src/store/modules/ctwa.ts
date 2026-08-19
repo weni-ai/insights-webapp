@@ -121,7 +121,7 @@ export const useCTWA = defineStore('ctwa', () => {
   const loadAllData = () => {
     if (hasLoadedDashboardData.value) loadDashboardData();
     if (hasLoadedConversionsData.value) loadConversionsData();
-    if (hasLoadedCampaignPerformance.value) {
+    if (hasLoadedCampaignPerformance.value && !selectedCampaign.value) {
       loadCampaignPerformanceData(campaignPerformanceOffset.value);
     }
   };

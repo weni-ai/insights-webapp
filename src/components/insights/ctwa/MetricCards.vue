@@ -64,13 +64,13 @@ const cardDefinitions: CardData[] = [
 const { t } = useI18n();
 const { projectCurrency } = storeToRefs(useConfig());
 const ctwaStore = useCTWA();
-const { appliedDateRange, dashboardData, loadingDashboardData } =
+const { appliedFilters, dashboardData, loadingDashboardData } =
   storeToRefs(ctwaStore);
 const { loadDashboardData } = ctwaStore;
 
 useLazyData({
   load: loadDashboardData,
-  watchSources: [appliedDateRange],
+  watchSources: [appliedFilters],
 });
 
 const isLoadingCards = computed(() => loadingDashboardData.value);

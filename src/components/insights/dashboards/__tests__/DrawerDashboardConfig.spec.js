@@ -448,7 +448,7 @@ describe('DrawerDashboardConfig', () => {
   });
 
   describe('Component Lifecycle', () => {
-    it('should call handleDashboardFields on mount when dashboard is provided', () => {
+    it('should call handleDashboardFields on mount when dashboard is provided', async () => {
       const mockDashboard = {
         uuid: 'test-uuid',
         name: 'Test Dashboard',
@@ -456,14 +456,10 @@ describe('DrawerDashboardConfig', () => {
       };
 
       const wrapper = createWrapper({ dashboard: mockDashboard });
-      const handleDashboardFieldsSpy = vi.spyOn(
-        wrapper.vm,
-        'handleDashboardFields',
-      );
+      await wrapper.vm.$nextTick();
 
-      wrapper.vm.handleDashboardFields();
-
-      expect(handleDashboardFieldsSpy).toHaveBeenCalled();
+      expect(wrapper.vm.dashboardForm.name).toBe('Test Dashboard');
+      expect(wrapper.vm.dashboardForm.currency).toBe('USD');
     });
   });
 

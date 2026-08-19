@@ -73,8 +73,7 @@ export default {
     );
 
     return {
-      next: response.next ?? null,
-      previous: response.previous ?? null,
+      count: response.count ?? null,
       results: (response.results || []).map((source) => ({
         uuid: source.uuid,
         name: source.name,

@@ -46,7 +46,7 @@ describe('SelectEmojiButton', () => {
           UnnnicEmojiPicker: {
             name: 'UnnnicEmojiPicker',
             template:
-              '<div class="unnnic-emoji-picker" :data-position="position" :data-locale="locale"></div>',
+              '<div class="unnnic-emoji-picker" data-testid="unnnic-emoji-picker" :data-position="position" :data-locale="locale"></div>',
             props: ['returnName', 'position', 'locale'],
             emits: ['emoji-selected', 'close'],
           },
@@ -79,7 +79,7 @@ describe('SelectEmojiButton', () => {
     });
 
     it('should have correct component name', () => {
-      expect(wrapper.vm.$options.name).toBe('SelectEmojiButton');
+      expect(wrapper.vm.$.type.name).toBe('SelectEmojiButton');
     });
   });
 
@@ -97,19 +97,13 @@ describe('SelectEmojiButton', () => {
       wrapper = createWrapper({ pickerPosition: 'bottom' });
       expect(wrapper.props('pickerPosition')).toBe('bottom');
     });
-
-    it('should validate pickerPosition prop', () => {
-      const validator = wrapper.vm.$options.props.pickerPosition.validator;
-      expect(validator('top')).toBe(true);
-      expect(validator('bottom')).toBe(true);
-      expect(validator('left')).toBe(false);
-      expect(validator('right')).toBe(false);
-    });
   });
 
   describe('Initial State', () => {
     it('should initialize with emoji picker closed', () => {
-      expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
+      expect(wrapper.find('[data-testid="unnnic-emoji-picker"]').exists()).toBe(
+        false,
+      );
     });
 
     it('should not show selected emoji section when no value', () => {
@@ -149,136 +143,103 @@ describe('SelectEmojiButton', () => {
 
   describe('Computed Properties', () => {
     it('should return empty string when no modelValue', () => {
-      expect(wrapper.vm.selectedEmoji).toBe('');
+      expect(
+        wrapper
+          .find('[data-testid="select-emoji-button-selected-emoji"]')
+          .exists(),
+      ).toBe(false);
     });
 
     it('should return correct emoji native when modelValue exists', () => {
       wrapper = createWrapper({ modelValue: 'smile' });
-      expect(wrapper.vm.selectedEmoji).toBe('😀');
+      expect(
+        wrapper
+          .find('[data-testid="select-emoji-button-selected-emoji"]')
+          .text(),
+      ).toBe('😀');
     });
 
     it('should return empty string for invalid emoji key', () => {
       wrapper = createWrapper({ modelValue: 'invalid_emoji' });
-      expect(wrapper.vm.selectedEmoji).toBe('');
+      expect(
+        wrapper
+          .find('[data-testid="select-emoji-button-selected-emoji"]')
+          .text(),
+      ).toBe('');
     });
 
     it('should handle different emoji types', () => {
       wrapper = createWrapper({ modelValue: 'heart' });
-      expect(wrapper.vm.selectedEmoji).toBe('❤️');
+      expect(
+        wrapper
+          .find('[data-testid="select-emoji-button-selected-emoji"]')
+          .text(),
+      ).toBe('❤️');
     });
   });
 
   describe('Methods', () => {
-    describe('openEmojiPicker', () => {
-      it('should set isEmojiPickerOpen to true', () => {
-        wrapper.vm.openEmojiPicker();
-        expect(wrapper.vm.isEmojiPickerOpen).toBe(true);
-      });
+    it('should clear emoji when one is selected', async () => {
+      wrapper = createWrapper({ modelValue: 'smile' });
+      await wrapper
+        .find('[data-testid="select-emoji-button"]')
+        .trigger('click');
+      expect(wrapper.emitted('update:model-value')).toBeTruthy();
+      expect(wrapper.emitted('update:model-value')[0][0]).toBe('');
     });
 
-    describe('closeEmojiPicker', () => {
-      it('should set isEmojiPickerOpen to false', () => {
-        wrapper.vm.isEmojiPickerOpen = true;
-        wrapper.vm.closeEmojiPicker();
-        expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
-      });
+    it('should toggle picker when no emoji is selected', async () => {
+      await wrapper
+        .find('[data-testid="select-emoji-button"]')
+        .trigger('click');
+      expect(wrapper.find('[data-testid="unnnic-emoji-picker"]').exists()).toBe(
+        true,
+      );
     });
 
-    describe('toggleEmojiPicker', () => {
-      it('should open picker when closed', () => {
-        wrapper.vm.isEmojiPickerOpen = false;
-        wrapper.vm.toggleEmojiPicker();
-        expect(wrapper.vm.isEmojiPickerOpen).toBe(true);
-      });
-
-      it('should close picker when open', () => {
-        wrapper.vm.isEmojiPickerOpen = true;
-        wrapper.vm.toggleEmojiPicker();
-        expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
-      });
+    it('should emit update:model-value when picker selects emoji', async () => {
+      await wrapper
+        .find('[data-testid="select-emoji-button"]')
+        .trigger('click');
+      await wrapper
+        .findComponent('[data-testid="unnnic-emoji-picker"]')
+        .vm.$emit('emoji-selected', 'smile');
+      expect(wrapper.emitted('update:model-value')[0][0]).toBe('smile');
+      expect(wrapper.find('[data-testid="unnnic-emoji-picker"]').exists()).toBe(
+        false,
+      );
     });
 
-    describe('handleEmoji', () => {
-      it('should clear emoji when one is selected', async () => {
-        wrapper = createWrapper({ modelValue: 'smile' });
-
-        await wrapper.vm.handleEmoji();
-
-        expect(wrapper.emitted('update:model-value')).toBeTruthy();
-        expect(wrapper.emitted('update:model-value')[0][0]).toBe('');
-      });
-
-      it('should toggle picker when no emoji is selected', () => {
-        const toggleSpy = vi.spyOn(wrapper.vm, 'toggleEmojiPicker');
-
-        wrapper.vm.handleEmoji();
-
-        expect(toggleSpy).toHaveBeenCalled();
-      });
-    });
-
-    describe('handleInput', () => {
-      it('should emit update:model-value with event data', async () => {
-        await wrapper.vm.handleInput('smile');
-
-        expect(wrapper.emitted('update:model-value')).toBeTruthy();
-        expect(wrapper.emitted('update:model-value')[0][0]).toBe('smile');
-      });
-
-      it('should close emoji picker after input', async () => {
-        wrapper.vm.isEmojiPickerOpen = true;
-
-        await wrapper.vm.handleInput('smile');
-
-        expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
-      });
+    it('should handle emoji picker close event', async () => {
+      await wrapper
+        .find('[data-testid="select-emoji-button"]')
+        .trigger('click');
+      expect(wrapper.find('[data-testid="unnnic-emoji-picker"]').exists()).toBe(
+        true,
+      );
+      await wrapper
+        .findComponent('[data-testid="unnnic-emoji-picker"]')
+        .vm.$emit('close');
+      expect(wrapper.find('[data-testid="unnnic-emoji-picker"]').exists()).toBe(
+        false,
+      );
     });
   });
 
   describe('Events', () => {
     it('should handle button click', async () => {
-      const handleEmojiSpy = vi.spyOn(wrapper.vm, 'handleEmoji');
-
       await wrapper
         .find('[data-testid="select-emoji-button"]')
         .trigger('click');
 
-      expect(handleEmojiSpy).toHaveBeenCalled();
-    });
-
-    it('should handle emoji picker emoji-selected event', async () => {
-      const handleInputSpy = vi.spyOn(wrapper.vm, 'handleInput');
-
-      await wrapper.vm.handleInput('thumbsup');
-
-      expect(handleInputSpy).toHaveBeenCalledWith('thumbsup');
-      expect(wrapper.emitted('update:model-value')).toBeTruthy();
-      expect(wrapper.emitted('update:model-value')[0][0]).toBe('thumbsup');
-      expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
-    });
-
-    it('should handle emoji picker close event', async () => {
-      const closeEmojiPickerSpy = vi.spyOn(wrapper.vm, 'closeEmojiPicker');
-      wrapper.vm.isEmojiPickerOpen = true;
-
-      await wrapper.vm.closeEmojiPicker();
-
-      expect(closeEmojiPickerSpy).toHaveBeenCalled();
-      expect(wrapper.vm.isEmojiPickerOpen).toBe(false);
+      expect(wrapper.find('[data-testid="unnnic-emoji-picker"]').exists()).toBe(
+        true,
+      );
     });
   });
 
   describe('Emoji Picker Visibility', () => {
-    it('should show emoji picker when isEmojiPickerOpen is true', async () => {
-      wrapper.vm.isMounted = true;
-      wrapper.vm.isEmojiPickerOpen = true;
-
-      expect(wrapper.vm.isEmojiPickerOpen && wrapper.vm.isMounted).toBe(true);
-    });
-
-    it('should hide emoji picker when isEmojiPickerOpen is false', () => {
-      wrapper.vm.isEmojiPickerOpen = false;
-
+    it('should hide emoji picker when closed', () => {
       const emojiPicker = wrapper.find('[data-testid="unnnic-emoji-picker"]');
       expect(emojiPicker.exists()).toBe(false);
     });

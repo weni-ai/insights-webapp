@@ -8,6 +8,9 @@ describe('SelectFlow.vue', () => {
   let wrapper;
   let selectFlowLabel;
 
+  const getSelect = (instance = wrapper) =>
+    instance.findComponent({ name: 'UnnnicSelect' });
+
   const createWrapper = (props) => {
     const store = createTestingPinia({
       initialState: {
@@ -41,11 +44,12 @@ describe('SelectFlow.vue', () => {
   });
 
   it('should contain project flows in flowsOptions', () => {
-    expect(wrapper.vm.flowsOptions).toContainEqual({
+    const options = getSelect().props('options');
+    expect(options).toContainEqual({
       value: 'flow1',
       label: 'Flow 1',
     });
-    expect(wrapper.vm.flowsOptions).toContainEqual({
+    expect(options).toContainEqual({
       value: 'flow2',
       label: 'Flow 2',
     });
@@ -53,29 +57,29 @@ describe('SelectFlow.vue', () => {
 
   it('should set flow to string value when modelValue is a string', async () => {
     wrapper = createWrapper({ modelValue: 'flow1' });
-    expect(wrapper.vm.flow).toBe('flow1');
+    expect(getSelect().props('modelValue')).toBe('flow1');
   });
 
   it('should extract value from modelValue object', async () => {
     const modelValue = { value: 'flow2', label: 'Flow 2' };
     wrapper = createWrapper({ modelValue });
-    expect(wrapper.vm.flow).toBe('flow2');
+    expect(getSelect().props('modelValue')).toBe('flow2');
   });
 
   it('should extract value from modelValue array', async () => {
     const modelValue = [{ value: 'flow1', label: 'Flow 1' }];
     wrapper = createWrapper({ modelValue });
-    expect(wrapper.vm.flow).toBe('flow1');
+    expect(getSelect().props('modelValue')).toBe('flow1');
   });
 
   it('should clear selected flow if modelValue is empty', () => {
     wrapper = createWrapper({ modelValue: '' });
-    expect(wrapper.vm.flow).toBe('');
+    expect(getSelect().props('modelValue')).toBe('');
   });
 
   it('should update flow correctly when user selects an option', async () => {
     wrapper = createWrapper({ modelValue: '' });
-    await wrapper.setData({ flow: 'flow2' });
+    await getSelect().vm.$emit('update:model-value', 'flow2');
     await wrapper.vm.$nextTick();
 
     const emitted = wrapper.emitted()['update:model-value'];

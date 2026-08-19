@@ -19,63 +19,56 @@
   </section>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
+
 import Markdown from '@/components/Markdown.vue';
 
-export default {
-  name: 'HeaderGenerateInsightText',
+defineOptions({ name: 'HeaderGenerateInsightText' });
 
-  components: {
-    Markdown,
-  },
+interface HeaderGenerateInsightTextProps {
+  text?: string;
+}
 
-  props: {
-    text: {
-      type: String,
-      default: '',
-    },
-  },
-  emits: ['typingComplete'],
+const props = withDefaults(defineProps<HeaderGenerateInsightTextProps>(), {
+  text: '',
+});
 
-  data() {
-    return {
-      isTyping: false,
-      animatedText: '',
-    };
-  },
-  computed: {
-    displayedText() {
-      const { animatedText, text } = this;
-      return text.length && !this.isTyping ? text : animatedText;
-    },
-  },
+const emit = defineEmits<{
+  typingComplete: [];
+}>();
 
-  watch: {
-    text(newText) {
-      this.typeWriter(newText, 1);
-    },
-  },
+const isTyping = ref(false);
+const animatedText = ref('');
 
-  beforeUnmount() {
-    // If it is closed while typing, in the next iteration the text will be shown in full, which is why we emit this event for this case
-    if (this.isTyping) this.$emit('typingComplete');
-  },
+const displayedText = computed(() => {
+  const { text } = props;
+  return text.length && !isTyping.value ? text : animatedText.value;
+});
 
-  methods: {
-    async typeWriter(text, speed) {
-      this.isTyping = true;
-      this.animatedText = '';
+const typeWriter = async (text: string, speed: number) => {
+  isTyping.value = true;
+  animatedText.value = '';
 
-      for (let i = 0; i < text.length; i++) {
-        this.animatedText += text.charAt(i);
-        await new Promise((resolve) => setTimeout(resolve, speed));
-      }
+  for (let i = 0; i < text.length; i++) {
+    animatedText.value += text.charAt(i);
+    await new Promise((resolve) => setTimeout(resolve, speed));
+  }
 
-      this.isTyping = false;
-      this.$emit('typingComplete');
-    },
-  },
+  isTyping.value = false;
+  emit('typingComplete');
 };
+
+watch(
+  () => props.text,
+  (newText) => {
+    typeWriter(newText, 1);
+  },
+);
+
+onBeforeUnmount(() => {
+  if (isTyping.value) emit('typingComplete');
+});
 </script>
 
 <style scoped lang="scss">

@@ -32,72 +32,66 @@
   </button>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onMounted, ref } from 'vue';
 import { emojis } from '@emoji-mart/data';
 
-export default {
-  name: 'SelectEmojiButton',
-  props: {
-    modelValue: {
-      type: String,
-      default: '',
-    },
-    pickerPosition: {
-      type: String,
-      default: 'top',
-      validator: (position) => ['top', 'bottom'].includes(position),
-    },
-  },
+defineOptions({ name: 'SelectEmojiButton' });
 
-  emits: ['update:model-value'],
+interface SelectEmojiButtonProps {
+  modelValue?: string;
+  pickerPosition?: string;
+}
 
-  data() {
-    return {
-      isEmojiPickerOpen: false,
-      isMounted: false,
-    };
-  },
+const props = withDefaults(defineProps<SelectEmojiButtonProps>(), {
+  modelValue: '',
+  pickerPosition: 'top',
+});
 
-  computed: {
-    selectedEmoji() {
-      if (!this.modelValue) return '';
-      const emoji = emojis[this.modelValue]?.skins?.[0]?.native || '';
-      return emoji;
-    },
-  },
+const emit = defineEmits<{
+  'update:model-value': [value: string];
+}>();
 
-  mounted() {
-    this.isMounted = true;
-  },
-  methods: {
-    openEmojiPicker() {
-      if (this.isMounted) {
-        this.isEmojiPickerOpen = true;
-      }
-    },
-    closeEmojiPicker() {
-      this.isEmojiPickerOpen = false;
-    },
-    handleEmoji() {
-      if (this.selectedEmoji) {
-        this.$emit('update:model-value', '');
-      } else {
-        this.toggleEmojiPicker();
-      }
-    },
-    toggleEmojiPicker() {
-      if (this.isMounted) {
-        this.isEmojiPickerOpen
-          ? this.closeEmojiPicker()
-          : this.openEmojiPicker();
-      }
-    },
-    handleInput(event) {
-      this.$emit('update:model-value', event);
-      this.closeEmojiPicker();
-    },
-  },
+const isEmojiPickerOpen = ref(false);
+const isMounted = ref(false);
+
+const selectedEmoji = computed(() => {
+  if (!props.modelValue) return '';
+  return (emojis as any)[props.modelValue]?.skins?.[0]?.native || '';
+});
+
+const openEmojiPicker = () => {
+  if (isMounted.value) {
+    isEmojiPickerOpen.value = true;
+  }
 };
+
+const closeEmojiPicker = () => {
+  isEmojiPickerOpen.value = false;
+};
+
+const toggleEmojiPicker = () => {
+  if (isMounted.value) {
+    isEmojiPickerOpen.value ? closeEmojiPicker() : openEmojiPicker();
+  }
+};
+
+const handleEmoji = () => {
+  if (selectedEmoji.value) {
+    emit('update:model-value', '');
+  } else {
+    toggleEmojiPicker();
+  }
+};
+
+const handleInput = (event: string) => {
+  emit('update:model-value', event);
+  closeEmojiPicker();
+};
+
+onMounted(() => {
+  isMounted.value = true;
+});
 </script>
 
 <style lang="scss" scoped>

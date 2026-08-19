@@ -4,6 +4,7 @@ import { createTestingPinia } from '@pinia/testing';
 import ModalResetWidget from '../ModalResetWidget.vue';
 import { useWidgets } from '@/store/modules/widgets';
 import { UnnnicCallAlert } from '@weni/unnnic-system';
+import i18n from '@/utils/plugins/i18n';
 
 vi.mock('@weni/unnnic-system', async (importOriginal) => {
   const actual = await importOriginal();
@@ -19,6 +20,14 @@ describe('ModalResetWidget', () => {
     type: 'test_widget',
     config: {},
     name: 'Test Widget',
+  };
+
+  const clickReset = async (instance = wrapper) => {
+    const buttons = instance.findAllComponents({ name: 'UnnnicButton' });
+    const resetButton = buttons.find(
+      (button) => button.props('type') === 'primary',
+    );
+    await resetButton.trigger('click');
   };
 
   beforeEach(() => {
@@ -43,7 +52,11 @@ describe('ModalResetWidget', () => {
   });
 
   it('emits update:model-value when modal is closed', async () => {
-    await wrapper.vm.updateModelValue(false);
+    const buttons = wrapper.findAllComponents({ name: 'UnnnicButton' });
+    const cancelButton = buttons.find(
+      (button) => button.props('type') === 'tertiary',
+    );
+    await cancelButton.trigger('click');
     expect(wrapper.emitted('update:model-value')).toBeTruthy();
     expect(wrapper.emitted('update:model-value')[0]).toEqual([false]);
   });
@@ -53,7 +66,7 @@ describe('ModalResetWidget', () => {
     const specialWidget = { ...mockWidget, type: 'vtex_order' };
     await wrapper.setProps({ widget: specialWidget });
 
-    await wrapper.vm.resetWidget();
+    await clickReset();
 
     expect(widgetsStore.updateWidget).toHaveBeenCalledWith({
       ...specialWidget,
@@ -65,7 +78,7 @@ describe('ModalResetWidget', () => {
 
   it('resets widget with cleared config for other widget types', async () => {
     const widgetsStore = useWidgets();
-    await wrapper.vm.resetWidget();
+    await clickReset();
 
     expect(widgetsStore.updateWidget).toHaveBeenCalledWith({
       ...mockWidget,
@@ -75,10 +88,10 @@ describe('ModalResetWidget', () => {
   });
 
   it('shows success alert after successful reset', async () => {
-    await wrapper.vm.resetWidget();
+    await clickReset();
     expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
-        text: wrapper.vm.$t('widgets.success_reset'),
+        text: i18n.global.t('widgets.success_reset'),
         type: 'success',
       },
       seconds: 5,
@@ -89,11 +102,11 @@ describe('ModalResetWidget', () => {
     const widgetsStore = useWidgets();
     widgetsStore.updateWidget.mockRejectedValueOnce(new Error('Reset failed'));
 
-    await wrapper.vm.resetWidget();
+    await clickReset();
 
     expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
-        text: wrapper.vm.$t('widgets.error_reset'),
+        text: i18n.global.t('widgets.error_reset'),
         type: 'error',
       },
       seconds: 5,
@@ -101,17 +114,37 @@ describe('ModalResetWidget', () => {
   });
 
   it('emits finish-reset after reset attempt', async () => {
-    await wrapper.vm.resetWidget();
+    await clickReset();
     expect(wrapper.emitted('finish-reset')).toBeTruthy();
   });
 
   it('sets loading state during reset operation', async () => {
-    expect(wrapper.vm.isLoading).toBe(false);
+    const widgetsStore = useWidgets();
+    let resolveReset;
+    widgetsStore.updateWidget.mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolveReset = resolve;
+        }),
+    );
 
-    const resetPromise = wrapper.vm.resetWidget();
-    expect(wrapper.vm.isLoading).toBe(true);
+    const clickPromise = clickReset();
+    await wrapper.vm.$nextTick();
 
-    await resetPromise;
-    expect(wrapper.vm.isLoading).toBe(false);
+    const primaryButton = wrapper
+      .findAllComponents({ name: 'UnnnicButton' })
+      .find((button) => button.props('type') === 'primary');
+    expect(primaryButton.props('loading')).toBe(true);
+
+    resolveReset();
+    await clickPromise;
+    await wrapper.vm.$nextTick();
+
+    expect(
+      wrapper
+        .findAllComponents({ name: 'UnnnicButton' })
+        .find((button) => button.props('type') === 'primary')
+        .props('loading'),
+    ).toBe(false);
   });
 });

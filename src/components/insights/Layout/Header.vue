@@ -44,170 +44,173 @@
   </header>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { computed, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
-import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
 
-export default {
-  name: 'InsightsLayoutHeader',
+defineOptions({ name: 'InsightsLayoutHeader' });
 
-  components: {
-    HeaderSelectDashboard,
-    DynamicHeader,
-  },
-  computed: {
-    ...mapState(useDashboards, [
-      'dashboards',
-      'currentDashboard',
-      'dashboardDefault',
-      'currentDashboardFilters',
-      'appliedFilters',
-      'exportData',
-    ]),
-    ...mapState(useHumanSupport, ['activeTab']),
-    ...mapState(useWidgets, {
-      isExpansiveMode: (store) => {
-        const currentExpansiveWidget = store.currentExpansiveWidget;
-        return (
-          currentExpansiveWidget &&
-          Object.keys(currentExpansiveWidget).length > 0
-        );
-      },
-    }),
+const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 
-    isCTWADashboard() {
-      return this.currentDashboard?.name === 'ctwa_dashboard.title';
+const dashboardsStore = useDashboards();
+const widgetsStore = useWidgets();
+
+const { dashboards, currentDashboard, dashboardDefault } =
+  storeToRefs(dashboardsStore);
+const { currentExpansiveWidget } = storeToRefs(widgetsStore);
+
+const isExpansiveMode = computed(() => {
+  const widget = currentExpansiveWidget.value;
+  return !!(widget && Object.keys(widget).length > 0);
+});
+
+const isCTWADashboard = computed(
+  () => currentDashboard.value?.name === 'ctwa_dashboard.title',
+);
+
+const isHumanServiceDashboard = computed(
+  () => currentDashboard.value?.name === 'human_service_dashboard.title',
+);
+
+const isHumanSupportDashboard = computed(
+  () => currentDashboard.value?.name === 'human_support_dashboard.title',
+);
+
+const showDivider = computed(() => isCTWADashboard.value);
+
+const isConversationalDashboard = computed(
+  () => currentDashboard.value?.name === 'conversations_dashboard.title',
+);
+
+const isMetaTemplateDashboard = computed(
+  () => currentDashboard.value?.config?.is_whatsapp_integration,
+);
+
+const dashboardHeaderType = computed(() => {
+  if (isCTWADashboard.value) {
+    return 'ctwa';
+  }
+
+  if (isConversationalDashboard.value) {
+    return 'conversational';
+  }
+
+  if (isHumanSupportDashboard.value) {
+    return 'human_support';
+  }
+
+  if (isMetaTemplateDashboard.value) {
+    return 'metaTemplateMessage';
+  }
+
+  if (isHumanServiceDashboard.value) {
+    return 'human_service';
+  }
+
+  return 'custom';
+});
+
+const breadcrumbs = computed(() => {
+  const dashboard = currentDashboard.value;
+  const { dashboardUuid } = route.params;
+
+  const crumbs: Record<string, any>[] = [
+    {
+      path: dashboard.uuid,
+      routeName: 'dashboard',
+      name: `Analytics ${t(dashboard.name || '')}`,
     },
+  ];
 
-    isHumanServiceDashboard() {
-      return this.currentDashboard?.name === 'human_service_dashboard.title';
-    },
+  if (route.name === 'report') {
+    crumbs[1] = {
+      path: route.path,
+      routePath: 'report',
+      name: `${t('report')} ${t(dashboard.name || '')}`,
+    };
+  }
 
-    isHumanSupportDashboard() {
-      return this.currentDashboard?.name === 'human_support_dashboard.title';
-    },
+  return dashboardUuid === dashboard.uuid ? crumbs : [];
+});
 
-    showDivider() {
-      return this.isCTWADashboard;
-    },
-
-    isConversationalDashboard() {
-      return this.currentDashboard?.name === 'conversations_dashboard.title';
-    },
-
-    isMetaTemplateDashboard() {
-      return this.currentDashboard?.config?.is_whatsapp_integration;
-    },
-
-    dashboardHeaderType() {
-      if (this.isCTWADashboard) {
-        return 'ctwa';
-      }
-
-      if (this.isConversationalDashboard) {
-        return 'conversational';
-      }
-
-      if (this.isHumanSupportDashboard) {
-        return 'human_support';
-      }
-
-      if (this.isMetaTemplateDashboard) {
-        return 'metaTemplateMessage';
-      }
-
-      if (this.isHumanServiceDashboard) {
-        return 'human_service';
-      }
-
-      return 'custom';
-    },
-
-    breadcrumbs() {
-      const { currentDashboard } = this;
-      const { dashboardUuid } = this.$route.params;
-
-      const crumbs = [
-        {
-          path: currentDashboard.uuid,
-          routeName: 'dashboard',
-          name: `Analytics ${this.$t(currentDashboard.name || '')}`,
-        },
-      ];
-
-      if (this.$route.name === 'report') {
-        crumbs[1] = {
-          path: this.$route.path,
-          routePath: 'report',
-          name: `${this.$t('report')} ${this.$t(currentDashboard.name || '')}`,
-        };
-      }
-
-      return dashboardUuid === currentDashboard.uuid ? crumbs : [];
-    },
-  },
-
-  watch: {
-    currentDashboard(_newCurrentDashboard, oldCurrentDashboard) {
-      if (oldCurrentDashboard?.uuid) {
-        this.navigateToDashboard(this.currentDashboard.uuid);
-      }
-    },
-    $route(newRoute, oldRoute) {
-      const { dashboardUuid: newUuid } = newRoute.params;
-      const { dashboardUuid: oldUuid } = oldRoute.params;
-
-      if (newUuid !== oldUuid) {
-        this.routeUpdateCurrentDashboard();
-      }
-    },
-  },
-
-  mounted() {
-    this.routeUpdateCurrentDashboard();
-  },
-
-  methods: {
-    ...mapActions(useWidgets, {
-      setCurrentExpansiveWidget: 'setCurrentExpansiveWidgetData',
-    }),
-    ...mapActions(useDashboards, ['setCurrentDashboard']),
-
-    navigateToDashboard(uuid) {
-      this.$router.replace({
-        name: 'dashboard',
-        params: { dashboardUuid: uuid },
-      });
-    },
-
-    goToDefaultDashboard() {
-      const { uuid } = this.dashboardDefault;
-      this.navigateToDashboard(uuid);
-    },
-
-    routeUpdateCurrentDashboard() {
-      const { dashboardUuid } = this.$route.params;
-
-      const dashboardRelativeToPath = this.dashboards.find(
-        ({ uuid }) => dashboardUuid === uuid,
-      );
-
-      if (!dashboardRelativeToPath) {
-        this.goToDefaultDashboard();
-      }
-
-      this.setCurrentDashboard(
-        dashboardRelativeToPath || this.dashboardDefault,
-      );
-    },
-  },
+const navigateToDashboard = (uuid: string) => {
+  if (!uuid) return;
+  router.replace({
+    name: 'dashboard',
+    params: { dashboardUuid: uuid },
+  });
 };
+
+const goToDefaultDashboard = () => {
+  const { uuid } = dashboardDefault.value;
+  navigateToDashboard(uuid);
+};
+
+const routeUpdateCurrentDashboard = () => {
+  const { dashboardUuid } = route.params;
+
+  const dashboardRelativeToPath = dashboards.value.find(
+    ({ uuid }) => dashboardUuid === uuid,
+  );
+
+  if (!dashboardRelativeToPath) {
+    goToDefaultDashboard();
+  }
+
+  dashboardsStore.setCurrentDashboard(
+    dashboardRelativeToPath || dashboardDefault.value,
+  );
+};
+
+const setCurrentExpansiveWidget = (...args: any[]) =>
+  widgetsStore.setCurrentExpansiveWidgetData(...args);
+
+watch(currentDashboard, (_newCurrentDashboard, oldCurrentDashboard) => {
+  if (oldCurrentDashboard?.uuid) {
+    navigateToDashboard(currentDashboard.value.uuid);
+  }
+});
+
+watch(
+  () => route.params.dashboardUuid,
+  (newUuid, oldUuid) => {
+    if (newUuid !== oldUuid) {
+      routeUpdateCurrentDashboard();
+    }
+  },
+);
+
+onMounted(() => {
+  routeUpdateCurrentDashboard();
+});
+
+defineExpose({
+  isExpansiveMode,
+  isCTWADashboard,
+  isHumanServiceDashboard,
+  isHumanSupportDashboard,
+  showDivider,
+  isConversationalDashboard,
+  isMetaTemplateDashboard,
+  dashboardHeaderType,
+  breadcrumbs,
+  navigateToDashboard,
+  goToDefaultDashboard,
+  routeUpdateCurrentDashboard,
+  setCurrentExpansiveWidget,
+  setCurrentDashboard: (...args: any[]) =>
+    dashboardsStore.setCurrentDashboard(...args),
+});
 </script>
 
 <style lang="scss" scoped>

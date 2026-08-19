@@ -1,4 +1,4 @@
-import { describe, it, beforeEach, expect, vi } from 'vitest';
+import { describe, it, beforeEach, expect } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 
@@ -23,10 +23,6 @@ const FlowResultContactListModal = {
   emits: ['close'],
 };
 
-vi.mock('@/components/insights/widgets/DynamicWidget.vue', () => ({
-  default: DynamicWidget,
-}));
-
 describe('ReportView', () => {
   let wrapper;
   let store;
@@ -42,9 +38,11 @@ describe('ReportView', () => {
       global: {
         plugins: [store],
         components: {
-          DynamicWidget,
           IconLoading,
           FlowResultContactListModal,
+        },
+        stubs: {
+          DynamicWidget,
         },
       },
     });

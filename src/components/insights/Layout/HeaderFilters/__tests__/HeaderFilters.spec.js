@@ -20,7 +20,23 @@ vi.mock('@/utils/time', async (importOriginal) => {
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: [{ path: '/dashboard' }, { path: '/another-route' }],
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: { template: '<div />' },
+    },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: { template: '<div />' },
+    },
+    {
+      path: '/another-route',
+      name: 'another-route',
+      component: { template: '<div />' },
+    },
+  ],
 });
 
 const store = createTestingPinia({
@@ -68,7 +84,7 @@ describe('HeaderFilters', () => {
   });
 
   it('should update applied filters when the filter value changes', async () => {
-    const setAppliedFiltersSpy = vi.spyOn(wrapper.vm, 'setAppliedFilters');
+    const setAppliedFiltersSpy = vi.spyOn(useDashboards(), 'setAppliedFilters');
     const dynamicFilter = wrapper.findComponent(
       '[data-testid="dynamic-filter"]',
     );
@@ -83,7 +99,7 @@ describe('HeaderFilters', () => {
   });
 
   it('should update applied filters when the filter value changes', async () => {
-    const setAppliedFiltersSpy = vi.spyOn(wrapper.vm, 'setAppliedFilters');
+    const setAppliedFiltersSpy = vi.spyOn(useDashboards(), 'setAppliedFilters');
     const dynamicFilter = wrapper.findComponent(
       '[data-testid="dynamic-filter"]',
     );
@@ -110,13 +126,14 @@ describe('HeaderFilters', () => {
   });
 
   it('should call retainRouteQueries when path changes', async () => {
-    const retainRouteQueriesSpy = vi.spyOn(wrapper.vm, 'retainRouteQueries');
+    const replaceSpy = vi.spyOn(router, 'replace');
 
+    await router.push({ path: '/dashboard', query: { foo: 'bar' } });
+    await wrapper.vm.$nextTick();
     await router.push({ path: '/another-route' });
-
     await wrapper.vm.$nextTick();
 
-    expect(retainRouteQueriesSpy).toHaveBeenCalled();
+    expect(replaceSpy).toHaveBeenCalled();
   });
 
   describe('With many filters', () => {
@@ -157,7 +174,7 @@ describe('HeaderFilters', () => {
 
     it('should call resetAppliedFilters when clear filters button is clicked', async () => {
       const resetAppliedFiltersSpy = vi.spyOn(
-        wrapper.vm,
+        useDashboards(),
         'resetAppliedFilters',
       );
 
@@ -166,7 +183,8 @@ describe('HeaderFilters', () => {
     });
 
     it('should close the modal when the modal close event is emitted', async () => {
-      await wrapper.setData({ filterModalOpened: true });
+      wrapper.vm.filterModalOpened = true;
+      await wrapper.vm.$nextTick();
       const modal = wrapper.findComponent('[data-testid="modal-filters"]');
       await modal.vm.$emit('close');
       expect(wrapper.vm.filterModalOpened).toBe(false);

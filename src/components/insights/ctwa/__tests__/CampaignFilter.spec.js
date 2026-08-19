@@ -230,6 +230,11 @@ describe('CampaignFilter', () => {
       await nextTick();
       await nextTick();
 
+      const finishInfiniteScroll = vi.spyOn(
+        wrapper.vm.selectRef,
+        'finishInfiniteScroll',
+      );
+
       Projects.getMetaCampaigns.mockResolvedValueOnce({
         results: [{ uuid: 'uuid-3', name: 'Campaign 3' }],
         count: 3,
@@ -246,6 +251,7 @@ describe('CampaignFilter', () => {
         { value: 'uuid-2', label: 'Campaign 2' },
         { value: 'uuid-3', label: 'Campaign 3' },
       ]);
+      expect(finishInfiniteScroll).toHaveBeenCalledTimes(1);
     });
 
     it('keeps the search term when loading the next page', async () => {
@@ -290,6 +296,93 @@ describe('CampaignFilter', () => {
       await wrapper.vm.loadMoreData();
 
       expect(Projects.getMetaCampaigns).not.toHaveBeenCalled();
+    });
+
+    it('does not call finishInfiniteScroll when there are no more pages', async () => {
+      Projects.getMetaCampaigns.mockResolvedValue({
+        results: [
+          { uuid: 'uuid-1', name: 'Campaign 1' },
+          { uuid: 'uuid-2', name: 'Campaign 2' },
+        ],
+        count: 2,
+      });
+      wrapper = createWrapper();
+      await nextTick();
+      await nextTick();
+
+      const finishInfiniteScroll = vi.spyOn(
+        wrapper.vm.selectRef,
+        'finishInfiniteScroll',
+      );
+
+      await wrapper.vm.loadMoreData();
+
+      expect(finishInfiniteScroll).not.toHaveBeenCalled();
+    });
+
+    it('ignores a scroll-end retriggered by finishInfiniteScroll', async () => {
+      Projects.getMetaCampaigns.mockResolvedValue({
+        results: [
+          { uuid: 'uuid-1', name: 'Campaign 1' },
+          { uuid: 'uuid-2', name: 'Campaign 2' },
+        ],
+        count: 40,
+      });
+      wrapper = createWrapper();
+      await nextTick();
+      await nextTick();
+
+      vi.spyOn(wrapper.vm.selectRef, 'finishInfiniteScroll').mockImplementation(
+        () => {
+          wrapper.vm.loadMoreData();
+        },
+      );
+
+      Projects.getMetaCampaigns.mockClear();
+      Projects.getMetaCampaigns.mockResolvedValue({
+        results: [{ uuid: 'uuid-3', name: 'Campaign 3' }],
+        count: 40,
+      });
+
+      await wrapper.vm.loadMoreData();
+
+      expect(Projects.getMetaCampaigns).toHaveBeenCalledTimes(1);
+      expect(Projects.getMetaCampaigns).toHaveBeenCalledWith({
+        limit: PAGE_SIZE,
+        offset: PAGE_SIZE,
+      });
+    });
+
+    it('loads the following page after the reset lock is released', async () => {
+      Projects.getMetaCampaigns.mockResolvedValue({
+        results: [
+          { uuid: 'uuid-1', name: 'Campaign 1' },
+          { uuid: 'uuid-2', name: 'Campaign 2' },
+        ],
+        count: 40,
+      });
+      wrapper = createWrapper();
+      await nextTick();
+      await nextTick();
+
+      Projects.getMetaCampaigns.mockResolvedValue({
+        results: [{ uuid: 'uuid-3', name: 'Campaign 3' }],
+        count: 40,
+      });
+      await wrapper.vm.loadMoreData();
+
+      Projects.getMetaCampaigns.mockClear();
+      Projects.getMetaCampaigns.mockResolvedValue({
+        results: [{ uuid: 'uuid-4', name: 'Campaign 4' }],
+        count: 40,
+      });
+
+      await wrapper.vm.loadMoreData();
+
+      expect(Projects.getMetaCampaigns).toHaveBeenCalledWith({
+        limit: PAGE_SIZE,
+        offset: PAGE_SIZE * 2,
+      });
     });
   });
 });

@@ -18,10 +18,18 @@
     @update:search="handleSearchUpdate"
     @scroll-end="loadMoreData"
   />
+  {{ canLoadMore() }}
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  useTemplateRef,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Projects from '@/services/api/resources/projects';
@@ -45,7 +53,7 @@ interface PaginatedCampaigns {
   results: Campaign[];
 }
 
-const CAMPAIGN_FILTER_PAGE_SIZE = 10;
+const CAMPAIGN_FILTER_PAGE_SIZE = 2;
 
 interface Props {
   modelValue: string;
@@ -70,6 +78,7 @@ const lastFetchedCount = ref(0);
 const appliedSearch = ref('');
 const isLoading = ref(false);
 const isLoadingMore = ref(false);
+const isAwaitingUserScroll = ref(false);
 const searchValue = ref('');
 const searchDebounceTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 const isSelecting = ref(false);
@@ -101,8 +110,9 @@ const hasMorePages = () => {
   return lastFetchedCount.value === CAMPAIGN_FILTER_PAGE_SIZE;
 };
 
-const canLoadMore = () =>
-  hasMorePages() && !isLoading.value && !isLoadingMore.value;
+const canLoadMore = () => {
+  return hasMorePages() && !isLoadingMore.value && !isAwaitingUserScroll.value;
+};
 
 const buildQueryParams = (offset: number, search?: string) => ({
   limit: CAMPAIGN_FILTER_PAGE_SIZE,
@@ -168,24 +178,12 @@ const resetPagination = () => {
   lastFetchedCount.value = 0;
 };
 
-const updatePaginationState = (response: PaginatedCampaigns | Campaign[]) => {
-  if (Array.isArray(response)) {
-    totalCount.value = null;
-    lastFetchedCount.value = response.length;
-    return;
-  }
-
+const updatePaginationState = (response: PaginatedCampaigns) => {
   totalCount.value = typeof response.count === 'number' ? response.count : null;
   lastFetchedCount.value = response.results?.length ?? 0;
 };
 
-const processApiResponse = (response: PaginatedCampaigns | Campaign[]) => {
-  if (Array.isArray(response)) {
-    campaigns.value = response;
-    updatePaginationState(response);
-    return;
-  }
-
+const processApiResponse = (response: PaginatedCampaigns) => {
   if (response?.results && Array.isArray(response.results)) {
     campaigns.value = response.results;
     updatePaginationState(response);
@@ -200,6 +198,7 @@ const loadData = async (search?: string) => {
   appliedSearch.value = search || '';
   currentOffset.value = 0;
   isLoading.value = true;
+  isAwaitingUserScroll.value = false;
 
   try {
     const response = await Projects.getMetaCampaigns(
@@ -216,7 +215,7 @@ const loadData = async (search?: string) => {
 };
 
 const loadMoreData = async () => {
-  if (!canLoadMore()) return;
+  if (!canLoadMore() || isLoading.value) return;
 
   isLoadingMore.value = true;
 
@@ -234,8 +233,11 @@ const loadMoreData = async () => {
   } catch (error) {
     console.error('Error loading more campaigns', error);
   } finally {
+    isAwaitingUserScroll.value = true;
     isLoadingMore.value = false;
     selectRef.value?.finishInfiniteScroll();
+    await nextTick();
+    isAwaitingUserScroll.value = false;
   }
 };
 

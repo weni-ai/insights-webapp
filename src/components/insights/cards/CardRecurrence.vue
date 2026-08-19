@@ -80,71 +80,63 @@
   </CardBase>
 </template>
 
-<script>
-import { mapState } from 'pinia';
+<script setup lang="ts">
+import { computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
-export default {
-  name: 'CardRecurrence',
+defineOptions({ name: 'CardRecurrence' });
 
-  components: { CardBase, IconLoading },
+interface RecurrenceItem {
+  label: string;
+  value: number;
+}
 
-  props: {
-    isLoading: Boolean,
-    data: {
-      type: Array,
-      required: true,
-    },
-    widget: {
-      type: Object,
-      required: true,
-    },
-    seeMore: {
-      type: Boolean,
-      default: false,
-    },
-  },
+interface CardRecurrenceProps {
+  isLoading?: boolean;
+  data: RecurrenceItem[];
+  widget: Record<string, unknown>;
+  seeMore?: boolean;
+}
 
-  emits: ['open-config', 'request-data', 'seeMore', 'clickData'],
+const props = withDefaults(defineProps<CardRecurrenceProps>(), {
+  isLoading: false,
+  seeMore: false,
+});
 
-  computed: {
-    ...mapState(useDashboards, ['appliedFilters']),
-    isError() {
-      return this.data?.length === 0;
-    },
-    rowData() {
-      return Array(5)
-        .fill(null)
-        .map((_, index) => this.data[index] || null);
-    },
-  },
+const emit = defineEmits<{
+  'open-config': [];
+  'request-data': [];
+  seeMore: [];
+  clickData: [payload: { label: string; data: number }];
+}>();
 
-  watch: {
-    appliedFilters: {
-      deep: true,
-      handler() {
-        this.emitRequestData();
-      },
-    },
-  },
+const dashboardsStore = useDashboards();
+const { appliedFilters } = storeToRefs(dashboardsStore);
 
-  created() {
-    this.emitRequestData();
-  },
+const isError = computed(() => props.data?.length === 0);
 
-  methods: {
-    emitClickData(data) {
-      this.$emit('clickData', { label: data.label, data: data.value });
-    },
-    emitRequestData() {
-      this.$emit('request-data');
-    },
-  },
+const rowData = computed(() =>
+  Array(5)
+    .fill(null)
+    .map((_, index) => props.data[index] || null),
+);
+
+const emitClickData = (data: RecurrenceItem) => {
+  emit('clickData', { label: data.label, data: data.value });
 };
+
+const emitRequestData = () => {
+  emit('request-data');
+};
+
+watch(appliedFilters, emitRequestData, { deep: true });
+
+emitRequestData();
 </script>
 
 <style lang="scss" scoped>

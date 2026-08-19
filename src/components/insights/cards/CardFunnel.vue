@@ -45,59 +45,48 @@
   </CardBase>
 </template>
 
-<script>
-import { mapState } from 'pinia';
+<script setup lang="ts">
+import { watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
 
-export default {
-  name: 'CardFunnel',
+defineOptions({ name: 'CardFunnel' });
 
-  components: { CardBase, FunnelChart },
+interface CardFunnelProps {
+  isLoading?: boolean;
+  hasError?: boolean;
+  configured?: boolean;
+  configurable?: boolean;
+  widget: Record<string, unknown>;
+  chartData: unknown[];
+}
 
-  props: {
-    isLoading: Boolean,
-    hasError: Boolean,
-    configured: Boolean,
-    configurable: Boolean,
-    widget: {
-      type: Object,
-      required: true,
-    },
-    chartData: {
-      type: Array,
-      required: true,
-    },
-  },
+withDefaults(defineProps<CardFunnelProps>(), {
+  isLoading: false,
+  hasError: false,
+  configured: false,
+  configurable: false,
+});
 
-  emits: ['open-config', 'request-data'],
+const emit = defineEmits<{
+  'open-config': [];
+  'request-data': [];
+}>();
 
-  computed: {
-    ...mapState(useDashboards, ['appliedFilters']),
-  },
+const dashboardsStore = useDashboards();
+const { appliedFilters } = storeToRefs(dashboardsStore);
 
-  watch: {
-    appliedFilters: {
-      deep: true,
-      handler() {
-        this.emitRequestData();
-      },
-    },
-  },
-
-  created() {
-    this.emitRequestData();
-  },
-
-  methods: {
-    emitRequestData() {
-      this.$emit('request-data');
-    },
-  },
+const emitRequestData = () => {
+  emit('request-data');
 };
+
+watch(appliedFilters, emitRequestData, { deep: true });
+
+emitRequestData();
 </script>
 
 <style lang="scss" scoped>

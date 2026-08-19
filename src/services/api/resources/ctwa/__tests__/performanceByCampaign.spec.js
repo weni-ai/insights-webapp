@@ -53,7 +53,7 @@ describe('CTWA performance by campaign API', () => {
     });
 
     expect(http.get).toHaveBeenCalledWith(
-      '/projects/test-project-uuid/ctwa/peformance_by_campaign/',
+      '/projects/test-project-uuid/ctwa/performance_by_campaign/',
       {
         params: {
           start_date: '2026-01-01',

@@ -60,7 +60,7 @@ export default {
     };
 
     const response = (await http.get(
-      `/projects/${project.uuid}/ctwa/peformance_by_campaign/`,
+      `/projects/${project.uuid}/ctwa/performance_by_campaign/`,
       { params: formattedParams },
     )) as CampaignPerformanceApiResponse;
 

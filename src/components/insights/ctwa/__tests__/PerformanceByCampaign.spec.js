@@ -6,11 +6,12 @@ import { createTestingPinia } from '@pinia/testing';
 
 import PerformanceByCampaign from '../PerformanceByCampaign.vue';
 import { useCTWA } from '@/store/modules/ctwa';
+import { formatCurrency } from '@/utils/numbers';
 import en from '@/locales/en.json';
 
 vi.mock('@/utils/numbers', () => ({
   formatNumber: vi.fn((value) => String(value)),
-  formatCurrency: vi.fn((value) => `$${value}`),
+  formatCurrency: vi.fn((value, currency) => `${currency} ${value}`),
 }));
 
 vi.mock('@/utils/time', () => ({
@@ -40,7 +41,7 @@ const mockResults = [
 describe('PerformanceByCampaign', () => {
   let wrapper;
 
-  const createWrapper = (initialState = {}) => {
+  const createWrapper = (initialState = {}, configState = {}) => {
     const pinia = createTestingPinia({
       initialState: {
         ctwa: {
@@ -50,6 +51,9 @@ describe('PerformanceByCampaign', () => {
           loadingCampaignPerformance: false,
           appliedDateRange: { start: '2024-01-01', end: '2024-01-07' },
           ...initialState,
+        },
+        config: {
+          project: { uuid: '', ...configState },
         },
       },
     });
@@ -119,8 +123,17 @@ describe('PerformanceByCampaign', () => {
       conversations: '3200',
       qualified: '1450',
       conversions: '520',
-      revenue: '$509600',
+      revenue: 'BRL 509600',
     });
+    expect(formatCurrency).toHaveBeenCalledWith(509600, 'BRL');
+  });
+
+  it('formats revenue with the project currency', () => {
+    wrapper = createWrapper({}, { currency: 'USD' });
+    const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
+
+    expect(table.props('items')[0].revenue).toBe('USD 509600');
+    expect(formatCurrency).toHaveBeenCalledWith(509600, 'USD');
   });
 
   it('renders dashes when row values are null', () => {

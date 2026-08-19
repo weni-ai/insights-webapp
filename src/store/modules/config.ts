@@ -2,14 +2,24 @@ import { defineStore } from 'pinia';
 
 import { moduleStorage } from '@/utils/storage';
 
+interface Project {
+  uuid: string;
+  currency?: string;
+  [key: string]: unknown;
+}
+
 export const useConfig = defineStore('config', {
   state: () => ({
-    project: { uuid: '' },
+    project: { uuid: '' } as Project,
     enableCreateCustomDashboards: false,
     enableCsat: false,
     token: '',
     isActiveRoute: false,
   }),
+
+  getters: {
+    projectCurrency: (state) => state.project?.currency || 'BRL',
+  },
 
   actions: {
     setProject(project) {

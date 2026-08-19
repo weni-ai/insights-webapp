@@ -26,8 +26,9 @@ import { useI18n } from 'vue-i18n';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import { useLazyData } from '@/composables/useLazyData';
+import { useConfig } from '@/store/modules/config';
 import { useCTWA } from '@/store/modules/ctwa';
-import { formatNumber } from '@/utils/numbers';
+import { formatCurrency, formatNumber } from '@/utils/numbers';
 
 defineOptions({
   name: 'MetricCards',
@@ -61,6 +62,7 @@ const cardDefinitions: CardData[] = [
 ];
 
 const { t } = useI18n();
+const { projectCurrency } = storeToRefs(useConfig());
 const ctwaStore = useCTWA();
 const { appliedDateRange, dashboardData, loadingDashboardData } =
   storeToRefs(ctwaStore);
@@ -73,9 +75,13 @@ useLazyData({
 
 const isLoadingCards = computed(() => loadingDashboardData.value);
 
-// TODO: format currency
 const formatMetric = (value: number | null) =>
   value === null || value === undefined ? '-' : formatNumber(value);
+
+const formatMoney = (value: number | null) =>
+  value === null || value === undefined
+    ? '-'
+    : formatCurrency(value, projectCurrency.value);
 
 const getBorderRadius = (index: number, totalCards: number) => {
   if (index === 0) return 'left';
@@ -85,7 +91,7 @@ const getBorderRadius = (index: number, totalCards: number) => {
 
 const getCardValue = (id: CardId) => {
   if (id === 'attributed_revenue') {
-    return formatMetric(dashboardData.value.attributed_revenue.value);
+    return formatMoney(dashboardData.value.attributed_revenue.value);
   }
 
   return formatMetric(dashboardData.value[id]);
@@ -94,7 +100,7 @@ const getCardValue = (id: CardId) => {
 const getCardDescription = (id: CardId) => {
   if (id === 'attributed_revenue') {
     return t(`${cardsBaseKey}.attributed_revenue.description`, {
-      avg: formatMetric(dashboardData.value.attributed_revenue.avg),
+      avg: formatMoney(dashboardData.value.attributed_revenue.avg),
     });
   }
 

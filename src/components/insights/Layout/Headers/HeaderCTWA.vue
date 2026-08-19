@@ -6,7 +6,9 @@
       data-testid="ctwa-date-filter"
       :disableClear="true"
       position="right"
+      :minDate="minDate"
       :maxDate="maxDate"
+      hideOptions
       fillW
     />
     <CampaignFilter v-model="selectedCampaign" />
@@ -43,7 +45,7 @@ const { appliedDateRange, selectedCampaign } = storeToRefs(ctwaStore);
 const { loadAllData } = ctwaStore;
 
 const maxDate = getTodayDate().start;
-
+const minDate = '2026-08-19';
 const handleRefresh = () => {
   loadAllData();
 };

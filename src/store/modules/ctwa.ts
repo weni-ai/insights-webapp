@@ -12,7 +12,7 @@ import CTWAConversionsService, {
 import CTWAPerformanceByCampaignService, {
   type CampaignPerformanceRow,
 } from '@/services/api/resources/ctwa/performanceByCampaign';
-import { getLastNDays } from '@/utils/time';
+import { getLastNDays, getTodayDate } from '@/utils/time';
 
 export interface DateRange {
   start: string;
@@ -40,7 +40,7 @@ export const useCTWA = defineStore('ctwa', () => {
   const router = inject<Router>('router', useRouter());
   const query = router?.currentRoute?.value?.query || {};
 
-  const defaultDateRange = getLastNDays(7);
+  const defaultDateRange = getTodayDate();
   const queryStartDate = getQueryString(query.start_date);
   const queryEndDate = getQueryString(query.end_date);
 

@@ -6,6 +6,7 @@ import { createTestingPinia } from '@pinia/testing';
 
 import MetricCards from '../MetricCards.vue';
 import { useCTWA } from '@/store/modules/ctwa';
+import { formatCurrency } from '@/utils/numbers';
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
 import ptBr from '@/locales/pt_br.json';
@@ -13,6 +14,7 @@ import ro from '@/locales/ro.json';
 
 vi.mock('@/utils/numbers', () => ({
   formatNumber: vi.fn((value) => String(value)),
+  formatCurrency: vi.fn((value, currency) => `${currency} ${value}`),
 }));
 
 vi.mock('@/utils/time', () => ({
@@ -38,7 +40,7 @@ const mockDashboardData = {
 describe('MetricCards', () => {
   let wrapper;
 
-  const createWrapper = (initialState = {}) => {
+  const createWrapper = (initialState = {}, configState = {}) => {
     const pinia = createTestingPinia({
       initialState: {
         ctwa: {
@@ -46,6 +48,9 @@ describe('MetricCards', () => {
           loadingDashboardData: false,
           appliedDateRange: { start: '2024-01-01', end: '2024-01-07' },
           ...initialState,
+        },
+        config: {
+          project: { uuid: '', ...configState },
         },
       },
     });
@@ -113,8 +118,20 @@ describe('MetricCards', () => {
     it('displays formatted attributed revenue value', () => {
       const cards = wrapper.findAllComponents({ name: 'CardConversations' });
       expect(cards[0].props('title')).toBe('Attributed revenue');
-      expect(cards[0].props('value')).toBe('1030000');
-      expect(cards[0].props('description')).toBe('Avg. order value 359');
+      expect(cards[0].props('value')).toBe('BRL 1030000');
+      expect(cards[0].props('description')).toBe('Avg. order value BRL 359');
+      expect(formatCurrency).toHaveBeenCalledWith(1030000, 'BRL');
+      expect(formatCurrency).toHaveBeenCalledWith(359, 'BRL');
+    });
+
+    it('formats attributed revenue with the project currency', () => {
+      wrapper = createWrapper({}, { currency: 'USD' });
+      const cards = wrapper.findAllComponents({ name: 'CardConversations' });
+
+      expect(cards[0].props('value')).toBe('USD 1030000');
+      expect(cards[0].props('description')).toBe('Avg. order value USD 359');
+      expect(formatCurrency).toHaveBeenCalledWith(1030000, 'USD');
+      expect(formatCurrency).toHaveBeenCalledWith(359, 'USD');
     });
 
     it('displays formatted CTWA conversations value', () => {

@@ -40,6 +40,24 @@ describe('useConfig Store', () => {
     });
   });
 
+  describe('projectCurrency', () => {
+    it('should default to BRL when the project has no currency', () => {
+      expect(store.projectCurrency).toBe('BRL');
+    });
+
+    it('should return the project currency when it is set', () => {
+      store.setProject({ uuid: 'project-123', currency: 'USD' });
+
+      expect(store.projectCurrency).toBe('USD');
+    });
+
+    it('should fall back to BRL when the project currency is empty', () => {
+      store.setProject({ uuid: 'project-123', currency: '' });
+
+      expect(store.projectCurrency).toBe('BRL');
+    });
+  });
+
   describe('setToken', () => {
     it('should set the token and store it in moduleStorage', () => {
       store.setToken('my-secret-token');

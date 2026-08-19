@@ -32,6 +32,7 @@ import { useI18n } from 'vue-i18n';
 import { UnnnicDataTable } from '@weni/unnnic-system';
 
 import { useLazyData } from '@/composables/useLazyData';
+import { useConfig } from '@/store/modules/config';
 import { CAMPAIGN_PERFORMANCE_PAGE_SIZE, useCTWA } from '@/store/modules/ctwa';
 import { formatCurrency, formatNumber } from '@/utils/numbers';
 
@@ -43,6 +44,7 @@ const tableBaseKey = 'ctwa_dashboard.performance_by_campaign';
 const pageSize = CAMPAIGN_PERFORMANCE_PAGE_SIZE;
 
 const { t } = useI18n();
+const { projectCurrency } = storeToRefs(useConfig());
 const ctwaStore = useCTWA();
 const {
   appliedDateRange,
@@ -69,7 +71,9 @@ const formatMetric = (value: number | null) =>
   value === null || value === undefined ? '-' : formatNumber(value);
 
 const formatMoney = (value: number | null) =>
-  value === null || value === undefined ? '-' : formatCurrency(value);
+  value === null || value === undefined
+    ? '-'
+    : formatCurrency(value, projectCurrency.value);
 
 const headerKeys = [
   'campaign',

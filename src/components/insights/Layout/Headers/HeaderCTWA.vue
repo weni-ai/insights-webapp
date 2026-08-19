@@ -9,8 +9,7 @@
       :maxDate="maxDate"
       fillW
     />
-    <!-- This will be made available in the future. -->
-    <!-- <CampaignFilter v-model="selectedCampaign" /> -->
+    <CampaignFilter v-model="selectedCampaign" />
     <UnnnicButton
       data-testid="ctwa-refresh-button"
       class="header-ctwa__refresh"
@@ -27,7 +26,7 @@ import { watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 
-// import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
+import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
 import { useCTWA } from '@/store/modules/ctwa';
 import { useDashboards } from '@/store/modules/dashboards';
 import { getTodayDate } from '@/utils/time';
@@ -51,7 +50,7 @@ const handleRefresh = () => {
 
 watch(
   [appliedDateRange, selectedCampaign],
-  ([dateRange, _campaign]) => {
+  ([dateRange, campaign]) => {
     const dashboardUuid = currentDashboard.value?.uuid;
 
     if (!dashboardUuid) return;
@@ -63,12 +62,11 @@ watch(
       query.end_date = dateRange.end;
     }
 
-    // This will be made available in the future.
-    // if (campaign) {
-    //   query.campaign = campaign;
-    // } else {
-    //   delete query.campaign;
-    // }
+    if (campaign) {
+      query.campaign = campaign;
+    } else {
+      delete query.campaign;
+    }
 
     router.replace({
       name: 'dashboard',

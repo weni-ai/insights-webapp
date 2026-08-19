@@ -12,7 +12,7 @@
     :search="searchValue"
     clearable
     infiniteScroll
-    :infiniteScrollDistance="10"
+    :infiniteScrollDistance="20"
     :infiniteScrollCanLoadMore="canLoadMore"
     @update:model-value="handleChange"
     @update:search="handleSearchUpdate"

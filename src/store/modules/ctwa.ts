@@ -12,7 +12,7 @@ import CTWAConversionsService, {
 import CTWAPerformanceByCampaignService, {
   type CampaignPerformanceRow,
 } from '@/services/api/resources/ctwa/performanceByCampaign';
-import { getLastNDays, getTodayDate } from '@/utils/time';
+import { getTodayDate } from '@/utils/time';
 
 export interface DateRange {
   start: string;

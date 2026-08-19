@@ -75,76 +75,61 @@
   </CardBase>
 </template>
 
-<script>
-import { mapState } from 'pinia';
+<script setup lang="ts">
+import { computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
 import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
 
-import i18n from '@/utils/plugins/i18n';
+defineOptions({ name: 'CardVtexOrder' });
 
-export default {
-  name: 'CardVtexOrder',
+interface CardVtexOrderProps {
+  isLoading?: boolean;
+  data: Record<string, unknown>;
+  widget: Record<string, any>;
+}
 
-  components: { CardBase, IconLoading },
+const props = withDefaults(defineProps<CardVtexOrderProps>(), {
+  isLoading: false,
+});
 
-  props: {
-    isLoading: Boolean,
-    data: {
-      type: Object,
-      required: true,
-    },
-    widget: {
-      type: Object,
-      required: true,
-    },
-  },
+const emit = defineEmits<{
+  'open-config': [];
+  'request-data': [];
+}>();
 
-  emits: ['open-config', 'request-data'],
+const { t } = useI18n();
+const dashboardsStore = useDashboards();
+const { appliedFilters } = storeToRefs(dashboardsStore);
 
-  computed: {
-    ...mapState(useDashboards, ['appliedFilters']),
-    isError() {
-      const allEmpty = Object?.values(this.data || {}).every(
-        (str) => str === '',
-      );
-      return allEmpty;
-    },
+const isError = computed(() => {
+  const allEmpty = Object?.values(props.data || {}).every((str) => str === '');
+  return allEmpty;
+});
 
-    dataList() {
-      if (this.isError || !this.data) return [];
+const dataList = computed(() => {
+  if (isError.value || !props.data) return [];
 
-      const keyValues = Object.keys(this.data);
+  const keyValues = Object.keys(props.data);
 
-      return keyValues.map((key) => ({
-        label: i18n.global.t(`widgets.vtex_order.${key}`),
-        icon: this.widget?.config?.[key]?.icon || 'local_activity',
-        value: this.data[key] || '',
-      }));
-    },
-  },
+  return keyValues.map((key) => ({
+    label: t(`widgets.vtex_order.${key}`),
+    icon: props.widget?.config?.[key]?.icon || 'local_activity',
+    value: props.data[key] || '',
+  }));
+});
 
-  watch: {
-    appliedFilters: {
-      deep: true,
-      handler() {
-        this.emitRequestData();
-      },
-    },
-  },
-
-  created() {
-    this.emitRequestData();
-  },
-
-  methods: {
-    emitRequestData() {
-      this.$emit('request-data');
-    },
-  },
+const emitRequestData = () => {
+  emit('request-data');
 };
+
+watch(appliedFilters, emitRequestData, { deep: true });
+
+emitRequestData();
 </script>
 
 <style lang="scss" scoped>

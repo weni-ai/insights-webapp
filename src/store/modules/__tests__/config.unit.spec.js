@@ -2,7 +2,15 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useConfig } from '../config';
 
+import Projects from '@/services/api/resources/projects';
 import { moduleStorage } from '@/utils/storage';
+
+vi.mock('@/services/api/resources/projects', () => ({
+  default: {
+    getProjectInfo: vi.fn(),
+    verifyProjectCsat: vi.fn(),
+  },
+}));
 
 describe('useConfig Store', () => {
   let store;
@@ -38,6 +46,55 @@ describe('useConfig Store', () => {
 
       expect(store.token).toBe('my-secret-token');
       expect(moduleStorage.getItem('token')).toBe('my-secret-token');
+    });
+  });
+
+  describe('loadProjectInfo', () => {
+    it('should skip the request when token is missing', async () => {
+      store.setProject({ uuid: 'project-123' });
+
+      await store.loadProjectInfo();
+
+      expect(Projects.getProjectInfo).not.toHaveBeenCalled();
+    });
+
+    it('should skip the request when project uuid is missing', async () => {
+      store.setToken('my-secret-token');
+
+      await store.loadProjectInfo();
+
+      expect(Projects.getProjectInfo).not.toHaveBeenCalled();
+    });
+
+    it('should fetch project info and store the response', async () => {
+      store.setToken('my-secret-token');
+      store.setProject({ uuid: 'project-123' });
+      Projects.getProjectInfo.mockResolvedValueOnce({
+        uuid: 'project-123',
+        name: 'Test Project',
+      });
+
+      await store.loadProjectInfo();
+
+      expect(Projects.getProjectInfo).toHaveBeenCalled();
+      expect(store.project).toEqual({
+        uuid: 'project-123',
+        name: 'Test Project',
+      });
+    });
+
+    it('should keep the current uuid when the request fails', async () => {
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      store.setToken('my-secret-token');
+      store.setProject({ uuid: 'project-123' });
+      Projects.getProjectInfo.mockRejectedValueOnce(new Error('fail'));
+
+      await store.loadProjectInfo();
+
+      expect(store.project).toEqual({ uuid: 'project-123' });
+      consoleError.mockRestore();
     });
   });
 });

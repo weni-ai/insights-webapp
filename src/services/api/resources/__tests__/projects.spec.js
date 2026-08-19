@@ -2,8 +2,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import SourceService from '../projects';
 import http from '@/services/api/http';
+import weniHttp from '@/services/api/weniHttp';
 
 vi.mock('@/services/api/http', () => ({
+  default: { get: vi.fn() },
+}));
+
+vi.mock('@/services/api/weniHttp', () => ({
   default: { get: vi.fn() },
 }));
 
@@ -98,6 +103,23 @@ describe('Projects Service', () => {
         previous: null,
         results: [],
       });
+    });
+  });
+
+  describe('getProjectInfo', () => {
+    it('should call the Weni API with the project endpoint', async () => {
+      const mockResponse = {
+        uuid: 'mock-project-uuid',
+        name: 'Test Project',
+      };
+      weniHttp.get.mockResolvedValueOnce(mockResponse);
+
+      const project = await SourceService.getProjectInfo();
+
+      expect(weniHttp.get).toHaveBeenCalledWith(
+        '/organization/project/mock-project-uuid/',
+      );
+      expect(project).toEqual(mockResponse);
     });
   });
 });

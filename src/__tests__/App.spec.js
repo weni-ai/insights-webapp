@@ -30,6 +30,9 @@ vi.mock('@/services/api/resources/projects', () => ({
       Promise.resolve({ active: false }),
     ),
     getMarketingTemplateCost: vi.fn(() => Promise.resolve({ value: 0 })),
+    getProjectInfo: vi.fn(() =>
+      Promise.resolve({ uuid: 'query-project-uuid', name: 'Test Project' }),
+    ),
   },
 }));
 
@@ -272,6 +275,19 @@ describe('App', () => {
       createWrapper();
       expect(listenConnectSpy).toHaveBeenCalled();
     });
+
+    it('should load project info after token and uuid are set', async () => {
+      const loadProjectInfoSpy = vi.spyOn(configStore, 'loadProjectInfo');
+
+      await wrapper.vm.handlerTokenAndProjectUuid();
+      await wrapper.vm.loadProjectInfo();
+
+      expect(loadProjectInfoSpy).toHaveBeenCalled();
+      expect(configStore.project).toEqual({
+        uuid: 'query-project-uuid',
+        name: 'Test Project',
+      });
+    });
   });
 
   describe('Methods', () => {
@@ -293,10 +309,11 @@ describe('App', () => {
     });
 
     describe('handlerSetProject', () => {
-      it('should set project in moduleStorage and store', () => {
+      it('should set project in moduleStorage and store', async () => {
         const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const loadProjectInfoSpy = vi.spyOn(configStore, 'loadProjectInfo');
 
-        wrapper.vm.handlerSetProject('new-project-uuid');
+        await wrapper.vm.handlerSetProject('new-project-uuid');
 
         expect(localStorageMock.setItem).toHaveBeenCalledWith(
           'insights_projectUuid',
@@ -305,6 +322,7 @@ describe('App', () => {
         expect(setProjectSpy).toHaveBeenCalledWith({
           uuid: 'new-project-uuid',
         });
+        expect(loadProjectInfoSpy).toHaveBeenCalled();
       });
     });
 

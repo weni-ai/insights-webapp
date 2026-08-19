@@ -1,4 +1,5 @@
 import http from '@/services/api/http';
+import weniHttp from '@/services/api/weniHttp';
 import { useConfig } from '@/store/modules/config';
 import { createRequestQuery } from '@/utils/request';
 
@@ -109,5 +110,10 @@ export default {
       params: { project_uuid: project.uuid },
     });
     return response;
+  },
+
+  async getProjectInfo() {
+    const { project } = useConfig();
+    return weniHttp.get(`/organization/project/${project.uuid}/`);
   },
 };

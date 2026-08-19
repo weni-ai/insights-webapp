@@ -144,6 +144,7 @@ export default {
   async mounted() {
     try {
       await this.handlerTokenAndProjectUuid();
+      await this.loadProjectInfo();
 
       this.checkHasAbandonedCartRecoveryConfigured().then(() => {
         this.getAbandonedCartRecoveryCost();
@@ -165,7 +166,7 @@ export default {
       'getCurrentDashboardFilters',
       'setCurrentDashboardFilters',
     ]),
-    ...mapActions(useConfig, ['setToken', 'setProject']),
+    ...mapActions(useConfig, ['setToken', 'setProject', 'loadProjectInfo']),
     ...mapActions(useFeatureFlag, ['getFeatureFlags']),
     ...mapActions(useProject, [
       'setIsCommerce',
@@ -247,9 +248,10 @@ export default {
       moment.locale(language);
     },
 
-    handlerSetProject(projectUuid) {
+    async handlerSetProject(projectUuid) {
       moduleStorage.setItem('projectUuid', projectUuid);
       this.setProject({ uuid: projectUuid });
+      await this.loadProjectInfo();
     },
 
     handlerSetIsCommerce(isCommerce) {

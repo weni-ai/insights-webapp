@@ -487,6 +487,14 @@
         "placeholder": "Toate campaniile"
       }
     },
+    "performance_by_campaign": {
+      "campaign": "Campanie",
+      "conversations": "Conversații",
+      "conversions": "Conversii",
+      "qualified": "Calificate",
+      "revenue": "Venit",
+      "title": "Performanță pe campanie"
+    },
     "sales_funnel": {
       "converted": "Convertite",
       "qualified": "Calificate",

@@ -487,6 +487,14 @@
         "placeholder": "All campaigns"
       }
     },
+    "performance_by_campaign": {
+      "campaign": "Campaign",
+      "conversations": "Conversations",
+      "conversions": "Conversions",
+      "qualified": "Qualified",
+      "revenue": "Revenue",
+      "title": "Performance by campaign"
+    },
     "sales_funnel": {
       "converted": "Converted",
       "qualified": "Qualified",

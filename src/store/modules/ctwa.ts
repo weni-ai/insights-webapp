@@ -9,6 +9,9 @@ import CTWADataService, {
 import CTWAConversionsService, {
   type CTWAConversionsData,
 } from '@/services/api/resources/ctwa/conversions';
+import CTWAPerformanceByCampaignService, {
+  type CampaignPerformanceRow,
+} from '@/services/api/resources/ctwa/performanceByCampaign';
 import { getLastNDays } from '@/utils/time';
 
 export interface DateRange {
@@ -30,6 +33,8 @@ const emptyConversionsData = (): CTWAConversionsData => ({
 
 const getQueryString = (value: unknown): string =>
   typeof value === 'string' ? value : '';
+
+export const CAMPAIGN_PERFORMANCE_PAGE_SIZE = 10;
 
 export const useCTWA = defineStore('ctwa', () => {
   const router = inject<Router>('router', useRouter());
@@ -55,6 +60,12 @@ export const useCTWA = defineStore('ctwa', () => {
   const conversionsData = ref<CTWAConversionsData>(emptyConversionsData());
   const loadingConversionsData = ref(false);
   const hasLoadedConversionsData = ref(false);
+
+  const campaignPerformanceResults = ref<CampaignPerformanceRow[]>([]);
+  const campaignPerformanceCount = ref(0);
+  const campaignPerformanceOffset = ref(0);
+  const loadingCampaignPerformance = ref(false);
+  const hasLoadedCampaignPerformance = ref(false);
 
   const appliedFilters = computed(() => ({
     start_date: appliedDateRange.value.start,
@@ -86,9 +97,33 @@ export const useCTWA = defineStore('ctwa', () => {
     }
   };
 
+  const loadCampaignPerformanceData = async (
+    offset = campaignPerformanceOffset.value,
+  ) => {
+    hasLoadedCampaignPerformance.value = true;
+    try {
+      loadingCampaignPerformance.value = true;
+      const data =
+        await CTWAPerformanceByCampaignService.getPerformanceByCampaign({
+          limit: CAMPAIGN_PERFORMANCE_PAGE_SIZE,
+          offset,
+        });
+      campaignPerformanceResults.value = data.results;
+      campaignPerformanceCount.value = data.count;
+      campaignPerformanceOffset.value = offset;
+    } catch (error) {
+      console.error('Error loading CTWA campaign performance data:', error);
+    } finally {
+      loadingCampaignPerformance.value = false;
+    }
+  };
+
   const loadAllData = () => {
     if (hasLoadedDashboardData.value) loadDashboardData();
     if (hasLoadedConversionsData.value) loadConversionsData();
+    if (hasLoadedCampaignPerformance.value) {
+      loadCampaignPerformanceData(campaignPerformanceOffset.value);
+    }
   };
 
   return {
@@ -101,8 +136,14 @@ export const useCTWA = defineStore('ctwa', () => {
     conversionsData,
     loadingConversionsData,
     hasLoadedConversionsData,
+    campaignPerformanceResults,
+    campaignPerformanceCount,
+    campaignPerformanceOffset,
+    loadingCampaignPerformance,
+    hasLoadedCampaignPerformance,
     loadDashboardData,
     loadConversionsData,
+    loadCampaignPerformanceData,
     loadAllData,
   };
 });

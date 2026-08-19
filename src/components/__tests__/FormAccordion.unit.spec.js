@@ -56,12 +56,14 @@ describe('FormAccordion.vue', () => {
   describe('Computed Properties', () => {
     it('iconScheme should return "weni-600" if validConfig is true', () => {
       wrapper = createWrapper({ validConfig: true });
-      expect(wrapper.vm.iconScheme).toBe('weni-600');
+      const icon = wrapper.findComponent('[data-test-id="check_circle"]');
+      expect(icon.props('scheme')).toBe('weni-600');
     });
 
     it('iconScheme should return "neutral-soft" if validConfig is false', () => {
       wrapper = createWrapper({ validConfig: false });
-      expect(wrapper.vm.iconScheme).toBe('neutral-soft');
+      const icon = wrapper.findComponent('[data-test-id="check_circle"]');
+      expect(icon.props('scheme')).toBe('neutral-soft');
     });
   });
 

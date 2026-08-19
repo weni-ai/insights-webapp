@@ -16,62 +16,63 @@
   />
 </template>
 
-<script>
-import { useDashboards } from '@/store/modules/dashboards';
-
-import { mapState } from 'pinia';
-
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import moment from 'moment';
 
-export default {
-  name: 'FilterDate',
-  props: {
-    modelValue: {
-      type: Object,
-      default: () => {},
-    },
-    className: {
-      type: String,
-      default: '',
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ['update:modelValue'],
-  data() {
-    return {
-      selectedDates: { start: '', end: '' },
-    };
-  },
-  computed: {
-    ...mapState(useDashboards, ['currentDashboard']),
-    isHumanServiceDashboard() {
-      return this.currentDashboard?.name === 'human_support_dashboard.title';
-    },
-    isConversationalDashboard() {
-      return this.currentDashboard?.name === 'conversations_dashboard.title';
-    },
-    minDate() {
-      if (this.isHumanServiceDashboard) return undefined;
-      if (this.isConversationalDashboard) return undefined;
-      return moment().subtract(89, 'days').format('YYYY-MM-DD');
-    },
-    maxDate() {
-      if (this.isConversationalDashboard) {
-        return moment().subtract(1, 'days').format('YYYY-MM-DD');
-      }
-      return moment().format('YYYY-MM-DD');
-    },
-    periodBaseDate() {
-      if (this.isConversationalDashboard) {
-        return moment().subtract(1, 'day').format('YYYY-MM-DD');
-      }
-      return null;
-    },
-  },
-};
+import { useDashboards } from '@/store/modules/dashboards';
+
+defineOptions({ name: 'FilterDate' });
+
+interface FilterDateProps {
+  modelValue?: Record<string, unknown>;
+  className?: string;
+  disabled?: boolean;
+}
+
+withDefaults(defineProps<FilterDateProps>(), {
+  modelValue: () => ({}),
+  className: '',
+  disabled: false,
+});
+
+defineEmits<{
+  'update:modelValue': [value: unknown];
+}>();
+
+const dashboardsStore = useDashboards();
+const { currentDashboard } = storeToRefs(dashboardsStore);
+
+const selectedDates = ref({ start: '', end: '' });
+
+const isHumanServiceDashboard = computed(
+  () => currentDashboard.value?.name === 'human_support_dashboard.title',
+);
+
+const isConversationalDashboard = computed(
+  () => currentDashboard.value?.name === 'conversations_dashboard.title',
+);
+
+const minDate = computed(() => {
+  if (isHumanServiceDashboard.value) return undefined;
+  if (isConversationalDashboard.value) return undefined;
+  return moment().subtract(89, 'days').format('YYYY-MM-DD');
+});
+
+const maxDate = computed(() => {
+  if (isConversationalDashboard.value) {
+    return moment().subtract(1, 'days').format('YYYY-MM-DD');
+  }
+  return moment().format('YYYY-MM-DD');
+});
+
+const periodBaseDate = computed(() => {
+  if (isConversationalDashboard.value) {
+    return moment().subtract(1, 'day').format('YYYY-MM-DD');
+  }
+  return null;
+});
 </script>
 
 <style lang="scss" scoped>

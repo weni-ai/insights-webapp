@@ -1,4 +1,4 @@
-import { mount } from '@vue/test-utils';
+import { mount, flushPromises } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import HeaderGenerateInsightModal from '@/components/insights/Layout/HeaderGenerateInsights/HeaderGenerateInsightModal.vue';
@@ -8,11 +8,22 @@ import firebaseService from '@/services/api/resources/GPT';
 
 import { createTestingPinia } from '@pinia/testing';
 import { useGpt } from '@/store/modules/gpt';
+import { useWidgets } from '@/store/modules/widgets';
 
 vi.mock('@/services/api/resources/GPT');
 
 describe('HeaderGenerateInsightModal.vue', () => {
   let wrapper;
+
+  const footer = () =>
+    wrapper.findComponent('[data-testid="insight-modal-footer"]');
+  const insightText = () => wrapper.findComponent(HeaderGenerateInsightText);
+
+  const triggerGenerateInsight = async () => {
+    await wrapper.setProps({ show: false });
+    await wrapper.setProps({ show: true });
+    await flushPromises();
+  };
 
   beforeEach(() => {
     const store = createTestingPinia({
@@ -72,83 +83,99 @@ describe('HeaderGenerateInsightModal.vue', () => {
   });
 
   it('calls generateInsight when show prop changes to true', async () => {
-    const generateInsightSpy = vi.spyOn(wrapper.vm, 'generateInsight');
-    await wrapper.setProps({ show: false });
-    await wrapper.setProps({ show: true });
-    expect(generateInsightSpy).toHaveBeenCalled();
+    const gptStore = useGpt();
+    const spyGetInsights = vi.spyOn(gptStore, 'getInsights');
+    await triggerGenerateInsight();
+    expect(spyGetInsights).toHaveBeenCalled();
   });
 
   it('handles typing complete event', async () => {
-    await wrapper
-      .findComponent(HeaderGenerateInsightText)
-      .vm.$emit('typing-complete');
-    expect(wrapper.vm.isRenderFeedback).toBe(true);
+    await insightText().vm.$emit('typing-complete');
+    expect(footer().props('isRenderFooterFeedback')).toBe(true);
   });
 
   it('handles positive feedback', async () => {
-    await wrapper.vm.handlePositiveFeedback();
-    expect(wrapper.vm.isBtnYesActive).toBe(true);
-    expect(wrapper.vm.isBtnNoActive).toBe(false);
-    await wrapper.vm.$nextTick();
-    wrapper.vm.isBtnNoActive = true;
-    await wrapper.vm.handlePositiveFeedback();
-    expect(wrapper.vm.isBtnYesActive).toBe(false);
-    expect(wrapper.vm.isBtnNoActive).toBe(false);
+    await footer().vm.$emit('handle-positive-feedback');
+    expect(footer().props('isBtnYesActive')).toBe(true);
+    expect(footer().props('isBtnNoActive')).toBe(false);
+
+    await footer().vm.$emit('handle-negative-feedback');
+    await footer().vm.$emit('handle-positive-feedback');
+    expect(footer().props('isBtnYesActive')).toBe(true);
+    expect(footer().props('isBtnNoActive')).toBe(false);
   });
 
   it('handles negative feedback', async () => {
-    await wrapper.vm.handleNegativeFeedback();
-    expect(wrapper.vm.isBtnNoActive).toBe(true);
-    expect(wrapper.vm.isBtnYesActive).toBe(false);
-    await wrapper.vm.$nextTick();
-    wrapper.vm.isBtnYesActive = true;
-    wrapper.vm.isBtnNoActive = false;
-    await wrapper.vm.handleNegativeFeedback();
-    expect(wrapper.vm.isBtnNoActive).toBe(true);
-    expect(wrapper.vm.isBtnYesActive).toBe(false);
+    await footer().vm.$emit('handle-negative-feedback');
+    expect(footer().props('isBtnNoActive')).toBe(true);
+    expect(footer().props('isBtnYesActive')).toBe(false);
+
+    await footer().vm.$emit('handle-positive-feedback');
+    await footer().vm.$emit('handle-negative-feedback');
+    expect(footer().props('isBtnNoActive')).toBe(true);
+    expect(footer().props('isBtnYesActive')).toBe(false);
   });
 
   it('submits review successfully', async () => {
     firebaseService.createReview.mockResolvedValue();
-    wrapper.vm.isBtnYesActive = true;
-    wrapper.vm.feedbackText = 'Great insight!';
-    await wrapper.vm.submitReview();
+    await footer().vm.$emit('handle-positive-feedback');
+    await footer().vm.$emit('update-feedback-text', 'Great insight!');
+    await footer().vm.$emit('submit-review');
+    await flushPromises();
     expect(firebaseService.createReview).toHaveBeenCalledWith({
       helpful: true,
       comment: 'Great insight!',
       user: 'test@example.com',
     });
-    expect(wrapper.vm.isFeedbackSent).toBe(true);
+    expect(footer().props('isFeedbackSent')).toBe(true);
   });
 
-  it('handles dynamic param correctly', () => {
-    const widget = {
-      type: 'card',
-      name: 'TestWidget',
-      config: { data_type: 'sec' },
-      data: { value: 120 },
-    };
-    const result = wrapper.vm.handleDynamicParam(widget);
-    expect(result).toBe('TestWidget 2m');
+  it('handles dynamic param correctly', async () => {
+    const widgetsStore = useWidgets();
+    widgetsStore.currentDashboardWidgets = [
+      {
+        type: 'card',
+        name: 'TestWidget',
+        config: { data_type: 'sec' },
+        data: { value: 120 },
+      },
+    ];
+    const gptStore = useGpt();
+    const spyGetInsights = vi.spyOn(gptStore, 'getInsights');
+    await triggerGenerateInsight();
+    expect(spyGetInsights).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('TestWidget 2m'),
+      }),
+    );
   });
 
-  it('handles dynamic params data undefined correctly', () => {
-    const widget = {
-      type: 'card',
-      name: 'TestWidget',
-      config: { data_type: 'other' },
-      data: { value: null },
-    };
-    const result = wrapper.vm.handleDynamicParam(widget);
-    expect(result).toBe('0 TestWidget');
+  it('handles dynamic params data undefined correctly', async () => {
+    const widgetsStore = useWidgets();
+    widgetsStore.currentDashboardWidgets = [
+      {
+        type: 'card',
+        name: 'TestWidget',
+        config: { data_type: 'other' },
+        data: { value: null },
+      },
+    ];
+    const gptStore = useGpt();
+    const spyGetInsights = vi.spyOn(gptStore, 'getInsights');
+    await triggerGenerateInsight();
+    expect(spyGetInsights).toHaveBeenCalledWith(
+      expect.objectContaining({
+        prompt: expect.stringContaining('0 TestWidget'),
+      }),
+    );
   });
 
   it('generates insight correctly', async () => {
     const gptStore = useGpt();
     const spyGetInsights = vi.spyOn(gptStore, 'getInsights');
-    await wrapper.vm.generateInsight();
+    await triggerGenerateInsight();
     expect(spyGetInsights).toHaveBeenCalled();
-    expect(wrapper.vm.generatedInsight).toBe('Sample Insight');
+    expect(insightText().props('text')).toBe('Sample Insight');
   });
 
   it('handles generate insight error', async () => {
@@ -156,18 +183,19 @@ describe('HeaderGenerateInsightModal.vue', () => {
 
     vi.spyOn(gptStore, 'getInsights').mockRejectedValue(new Error('API Error'));
 
-    await wrapper.vm.generateInsight();
-    expect(wrapper.vm.generatedInsight).toBe(
+    await triggerGenerateInsight();
+    expect(insightText().props('text')).toBe(
       "Couldn't generate insights. Check your internet connection and try again later.",
     );
-    expect(wrapper.vm.generateInsightError).toBe(true);
+    await insightText().vm.$emit('typing-complete');
+    expect(footer().props('isRenderFooterFeedback')).toBe(false);
   });
 
-  it('cleans up observer on component unmount', () => {
-    const disconnectMock = vi.fn();
-    wrapper.vm.observer = { disconnect: disconnectMock };
+  it('cleans up observer on component unmount', async () => {
+    await flushPromises();
+    const disconnectSpy = vi.spyOn(MutationObserver.prototype, 'disconnect');
     wrapper.unmount();
-    expect(disconnectMock).toHaveBeenCalled();
+    expect(disconnectSpy).toHaveBeenCalled();
   });
 
   it('updates showGradient based on scroll position', async () => {
@@ -183,12 +211,12 @@ describe('HeaderGenerateInsightModal.vue', () => {
 
     await contentElement.trigger('scroll');
 
-    expect(wrapper.vm.showGradient).toBe(true);
+    expect(wrapper.find('.gradient-overlay').exists()).toBe(true);
 
     contentElement.element.scrollTop = 500;
     await contentElement.trigger('scroll');
 
-    expect(wrapper.vm.showGradient).toBe(false);
+    expect(wrapper.find('.gradient-overlay').exists()).toBe(false);
   });
 
   it('emits close when clicking outside with a mouse', async () => {
@@ -202,11 +230,15 @@ describe('HeaderGenerateInsightModal.vue', () => {
   });
 
   it('should handle feedback text on @update-feedback-text from InsightModalFooter', async () => {
-    const footer = wrapper.findComponent(
-      '[data-testid="insight-modal-footer"]',
-    );
+    firebaseService.createReview.mockResolvedValue();
     const text = 'test';
-    await footer.vm.$emit('update-feedback-text', text);
-    expect(wrapper.vm.feedbackText).toBe(text);
+    await footer().vm.$emit('update-feedback-text', text);
+    await footer().vm.$emit('submit-review');
+    await flushPromises();
+    expect(firebaseService.createReview).toHaveBeenCalledWith({
+      helpful: false,
+      comment: text,
+      user: 'test@example.com',
+    });
   });
 });

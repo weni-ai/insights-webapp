@@ -175,9 +175,7 @@ describe('DrawerConfigContentVtex', () => {
   });
 
   it('renders UnnnicInput and updates utmValue correctly', async () => {
-    const inputComponent = wrapper
-      .find('[data-testid="utm-input"]')
-      .findComponent('input');
+    const inputComponent = wrapper.findComponent('[data-testid="utm-input"]');
 
     expect(inputComponent.exists()).toBe(true);
 
@@ -186,7 +184,7 @@ describe('DrawerConfigContentVtex', () => {
     await inputComponent.vm.$emit('update:model-value', 'updated_utm_value');
 
     expect(wrapper.emitted('update:model-value')).toBeTruthy();
-    const emittedValue = wrapper.emitted('update:model-value')[1][0];
+    const emittedValue = wrapper.emitted('update:model-value')[0][0];
     expect(emittedValue.config.filter.utm).toBe('updated_utm_value');
   });
 });

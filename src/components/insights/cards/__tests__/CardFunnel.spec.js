@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { mount } from '@vue/test-utils';
 
 import { createPinia } from 'pinia';
@@ -95,21 +95,18 @@ describe('CardFunnel', () => {
 
   it('emits "request-data" on creation and when appliedFilters change', async () => {
     const dashboardStore = useDashboards();
-
-    const emitRequestDataSpy = vi.spyOn(CardFunnel.methods, 'emitRequestData');
-
-    createWraper({
+    const instance = createWraper({
       configured: true,
       chartData: [],
       widget: widgetMock,
     });
 
-    expect(emitRequestDataSpy).toHaveBeenCalledTimes(1);
+    expect(instance.emitted('request-data')).toHaveLength(1);
 
     await dashboardStore.setAppliedFilters({
       test: 'key',
     });
 
-    expect(emitRequestDataSpy).toHaveBeenCalledTimes(2);
+    expect(instance.emitted('request-data')).toHaveLength(2);
   });
 });

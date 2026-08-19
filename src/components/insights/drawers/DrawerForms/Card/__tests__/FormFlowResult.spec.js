@@ -108,16 +108,14 @@ describe('FormFlowResult', () => {
     it('emits update:is-valid-form when form validity changes', async () => {
       expect(wrapper.emitted('update:is-valid-form')?.[1][0]).toBe('');
 
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'test-uuid',
-            result: 'test-result',
-          },
-          operation: 'sum',
-          currency: false,
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'test-uuid',
+          result: 'test-result',
         },
-      });
+        operation: 'sum',
+        currency: false,
+      };
 
       await wrapper.vm.$nextTick();
       const emitted = wrapper.emitted('update:is-valid-form');
@@ -131,16 +129,14 @@ describe('FormFlowResult', () => {
     });
 
     it('computes isValidForm correctly when form is valid', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'test-uuid',
-            result: 'test-result',
-          },
-          operation: 'sum',
-          currency: false,
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'test-uuid',
+          result: 'test-result',
         },
-      });
+        operation: 'sum',
+        currency: false,
+      };
 
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.isValidForm).toBe('sum');
@@ -159,31 +155,28 @@ describe('FormFlowResult', () => {
       );
 
       const wrapperWithCustomStore = createWrapper(customStore);
-      await wrapperWithCustomStore.setData({
-        config: {
-          flow: {
-            uuid: 'new-uuid',
-            result: 'new-result',
-          },
-          operation: 'sum',
-          currency: true,
+      wrapperWithCustomStore.vm.config = {
+        flow: {
+          uuid: 'new-uuid',
+          result: 'new-result',
         },
-      });
+        operation: 'sum',
+        currency: true,
+      };
+      await wrapperWithCustomStore.vm.$nextTick();
 
       expect(updateAction).toHaveBeenCalled();
     });
 
     it('disables currency when operation is recurrence', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'test-uuid',
-            result: 'test-result',
-          },
-          operation: 'recurrence',
-          currency: true,
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'test-uuid',
+          result: 'test-result',
         },
-      });
+        operation: 'recurrence',
+        currency: true,
+      };
 
       await wrapper.vm.$nextTick();
       expect(wrapper.vm.config.currency).toBe(false);
@@ -249,16 +242,15 @@ describe('FormFlowResult', () => {
     });
 
     it('enables SelectFlowResult when flow uuid is selected', async () => {
-      await wrapper.setData({
-        config: {
-          flow: {
-            uuid: 'test-uuid',
-            result: '',
-          },
-          operation: '',
-          currency: false,
+      wrapper.vm.config = {
+        flow: {
+          uuid: 'test-uuid',
+          result: '',
         },
-      });
+        operation: '',
+        currency: false,
+      };
+      await wrapper.vm.$nextTick();
 
       const selectFlowResult = wrapper.findComponent(
         '[data-test-id="select-flow-result"]',
@@ -304,7 +296,8 @@ describe('FormFlowResult', () => {
         currency: true,
       };
 
-      await wrapperWithCustomStore.setData({ config: newConfig });
+      wrapperWithCustomStore.vm.config = newConfig;
+      await wrapperWithCustomStore.vm.$nextTick();
 
       expect(updateAction).toHaveBeenCalled();
     });

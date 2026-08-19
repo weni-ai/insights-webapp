@@ -16,62 +16,57 @@
   </section>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, onMounted, defineAsyncComponent } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useReports } from '@/store/modules/reports';
 import { useWidgets } from '@/store/modules/widgets';
 
 import IconLoading from '@/components/IconLoading.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
-import { defineAsyncComponent } from 'vue';
 
-export default {
-  name: 'ReportView',
+defineOptions({ name: 'ReportView' });
 
-  components: {
-    DynamicWidget: defineAsyncComponent(
-      /* istanbul ignore next */
-      () => import('@/components/insights/widgets/DynamicWidget.vue'),
-    ),
-    IconLoading,
-    FlowResultContactListModal,
-  },
+const DynamicWidget = defineAsyncComponent(
+  /* istanbul ignore next */
+  () => import('@/components/insights/widgets/DynamicWidget.vue'),
+);
 
-  data() {
-    return {
-      showFlowResultsContactListModal: false,
-      flowResultsContactListParams: null,
-    };
-  },
+const reportsStore = useReports();
+const widgetsStore = useWidgets();
+const { report, isLoadingReport } = storeToRefs(reportsStore);
 
-  computed: {
-    ...mapState(useReports, ['report', 'isLoadingReport']),
-  },
+const showFlowResultsContactListModal = ref(false);
+const flowResultsContactListParams = ref<Record<string, any> | null>(null);
 
-  created() {
-    this.resetReport();
-    this.resetCurrentDashboardWidgets();
-  },
-
-  mounted() {
-    this.getWidgetReport();
-  },
-
-  methods: {
-    ...mapActions(useWidgets, ['resetCurrentDashboardWidgets']),
-    ...mapActions(useReports, ['resetReport', 'getWidgetReport']),
-    openFlowResultContactList(data) {
-      this.flowResultsContactListParams = data;
-      this.showFlowResultsContactListModal = true;
-    },
-
-    closeFlowResultContactList() {
-      this.flowResultsContactListParams = {};
-      this.showFlowResultsContactListModal = false;
-    },
-  },
+const openFlowResultContactList = (data: Record<string, any>) => {
+  flowResultsContactListParams.value = data;
+  showFlowResultsContactListModal.value = true;
 };
+
+const closeFlowResultContactList = () => {
+  flowResultsContactListParams.value = {};
+  showFlowResultsContactListModal.value = false;
+};
+
+reportsStore.resetReport();
+widgetsStore.resetCurrentDashboardWidgets();
+
+onMounted(() => {
+  reportsStore.getWidgetReport();
+});
+
+defineExpose({
+  showFlowResultsContactListModal,
+  flowResultsContactListParams,
+  openFlowResultContactList,
+  closeFlowResultContactList,
+  resetReport: (...args: any[]) => reportsStore.resetReport(...args),
+  resetCurrentDashboardWidgets: (...args: any[]) =>
+    widgetsStore.resetCurrentDashboardWidgets(...args),
+  getWidgetReport: (...args: any[]) => reportsStore.getWidgetReport(...args),
+});
 </script>
 
 <style lang="scss" scoped>

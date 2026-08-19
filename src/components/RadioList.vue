@@ -38,8 +38,8 @@
   </ol>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+defineOptions({ name: 'RadioList' });
 
 interface Radio {
   value: string;
@@ -47,30 +47,22 @@ interface Radio {
   tooltip?: string;
 }
 
-export default defineComponent({
-  name: 'RadioList',
+interface RadioListProps {
+  radios: Radio[];
+  selectedRadio?: string;
+  label?: string;
+  wrap?: boolean;
+}
 
-  props: {
-    radios: {
-      type: Array as () => Radio[],
-      required: true,
-    },
-    selectedRadio: {
-      type: String,
-      default: '',
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    wrap: {
-      type: Boolean,
-      default: true,
-    },
-  },
-
-  emits: ['update:selected-radio'],
+withDefaults(defineProps<RadioListProps>(), {
+  selectedRadio: '',
+  label: '',
+  wrap: true,
 });
+
+defineEmits<{
+  'update:selected-radio': [value: string];
+}>();
 </script>
 
 <style lang="scss" scoped>

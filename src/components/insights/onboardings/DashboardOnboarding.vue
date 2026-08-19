@@ -7,59 +7,56 @@
   />
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { computed, nextTick, onMounted, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
 import { useOnboarding } from '@/store/modules/onboarding';
 import { useDashboards } from '@/store/modules/dashboards';
 
-export default {
-  name: 'DashboardOnboarding',
+defineOptions({ name: 'DashboardOnboarding' });
 
-  computed: {
-    ...mapState(useOnboarding, ['onboardingRefs']),
-    dashboardTourSteps() {
-      return [
-        {
-          title: this.$t('dashboard_onboarding.step.create_dashboard.title'),
-          description: this.$t(
-            'dashboard_onboarding.step.create_dashboard.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['select-dashboard'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-        },
-        {
-          title: this.$t('dashboard_onboarding.step.create_dashboard.title'),
-          description: this.$t(
-            'dashboard_onboarding.step.create_dashboard.description',
-          ),
-          attachedElement:
-            this.onboardingRefs['create-dashboard-button'] ||
-            this.onboardingRefs['insights-layout'],
-          popoverPosition: 'right',
-          beforeRender: this.beforeOpenDashboardList,
-        },
-      ];
-    },
+const { t } = useI18n();
+const onboardingStore = useOnboarding();
+const dashboardsStore = useDashboards();
+const { onboardingRefs } = storeToRefs(onboardingStore);
+const {
+  beforeOpenDashboardList,
+  setOnboardingRef,
+  setShowCreateDashboardOnboarding,
+} = onboardingStore;
+const { setShowDashboardConfig } = dashboardsStore;
+
+const dashboardOnboardingTour = ref(null);
+
+const dashboardTourSteps = computed(() => [
+  {
+    title: t('dashboard_onboarding.step.create_dashboard.title'),
+    description: t('dashboard_onboarding.step.create_dashboard.description'),
+    attachedElement:
+      onboardingRefs.value['select-dashboard'] ||
+      onboardingRefs.value['insights-layout'],
+    popoverPosition: 'right',
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.setOnboardingRef({
-        key: 'dashboard-onboarding-tour',
-        ref: this.$refs.dashboardOnboardingTour,
-      });
-      this.onboardingRefs['dashboard-onboarding-tour'].start();
+  {
+    title: t('dashboard_onboarding.step.create_dashboard.title'),
+    description: t('dashboard_onboarding.step.create_dashboard.description'),
+    attachedElement:
+      onboardingRefs.value['create-dashboard-button'] ||
+      onboardingRefs.value['insights-layout'],
+    popoverPosition: 'right',
+    beforeRender: beforeOpenDashboardList,
+  },
+]);
+
+onMounted(() => {
+  nextTick(() => {
+    setOnboardingRef({
+      key: 'dashboard-onboarding-tour',
+      ref: dashboardOnboardingTour.value,
     });
-  },
-  methods: {
-    ...mapActions(useOnboarding, [
-      'beforeOpenDashboardList',
-      'setOnboardingRef',
-      'setShowCreateDashboardOnboarding',
-    ]),
-    ...mapActions(useDashboards, ['setShowDashboardConfig']),
-  },
-};
+    onboardingRefs.value['dashboard-onboarding-tour'].start();
+  });
+});
 </script>

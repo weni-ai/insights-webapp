@@ -32,35 +32,45 @@ describe('ProgressBar', () => {
   });
 
   it('Should initialize progress at 0', () => {
-    expect(wrapper.vm.progress).toBe(0);
+    const progressBar = wrapper.findComponent('[data-test-id="progress-bar"]');
+    expect(progressBar.props('modelValue')).toBe(0);
   });
 
   it('Should start the progress bar after a delay of 2000ms', () => {
+    const setIntervalSpy = vi.spyOn(window, 'setInterval');
     vi.advanceTimersByTime(2000);
-    expect(wrapper.vm.progress).toBe(0);
-    expect(wrapper.vm.interval).not.toBeNull();
+    const progressBar = wrapper.findComponent('[data-test-id="progress-bar"]');
+    expect(progressBar.props('modelValue')).toBe(0);
+    expect(setIntervalSpy).toHaveBeenCalled();
   });
 
-  it('Should increment progress periodically based on timeInterval prop', () => {
+  it('Should increment progress periodically based on timeInterval prop', async () => {
     wrapper = createWrapper({ timeInterval: 100 });
 
     vi.advanceTimersByTime(2000);
     vi.advanceTimersByTime(100);
+    await wrapper.vm.$nextTick();
 
-    expect(wrapper.vm.progress).toBe(1);
+    expect(
+      wrapper
+        .findComponent('[data-test-id="progress-bar"]')
+        .props('modelValue'),
+    ).toBe(1);
 
     vi.advanceTimersByTime(300);
-    expect(wrapper.vm.progress).toBe(4);
+    await wrapper.vm.$nextTick();
+    expect(
+      wrapper
+        .findComponent('[data-test-id="progress-bar"]')
+        .props('modelValue'),
+    ).toBe(4);
   });
 
   it('Should emit "progress-complete" when progress reaches 100', async () => {
     vi.advanceTimersByTime(2000);
-    wrapper.vm.progress = 99;
-
-    vi.advanceTimersByTime(100);
+    vi.advanceTimersByTime(50 * 101);
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.vm.progress).toBe(100);
     expect(wrapper.emitted('progress-complete')).toBeTruthy();
   });
 
@@ -68,7 +78,7 @@ describe('ProgressBar', () => {
     const clearIntervalSpy = vi.spyOn(window, 'clearInterval');
 
     wrapper.unmount();
-    expect(clearIntervalSpy).toHaveBeenCalledWith(wrapper.vm.interval);
+    expect(clearIntervalSpy).toHaveBeenCalled();
   });
 
   it('Matches the snapshot', () => {

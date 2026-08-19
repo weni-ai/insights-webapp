@@ -13,8 +13,8 @@
     :modelValue="modelValue"
     :title="drawerProps?.title"
     :description="drawerProps?.description"
-    :primaryButtonText="$t('save')"
-    :secondaryButtonText="$t('cancel')"
+    :primaryButtonText="t('save')"
+    :secondaryButtonText="t('cancel')"
     :disabledPrimaryButton="disablePrimaryButton || isLoadingProjectFlows"
     :loadingPrimaryButton="isLoadingUpdateConfig"
     :withoutOverlay="showModalResetWidget"
@@ -47,8 +47,10 @@
   />
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 
 import { useProject } from '@/store/modules/project';
 import { useWidgets } from '@/store/modules/widgets';
@@ -69,419 +71,407 @@ import ModalResetWidget from '@/components/ModalResetWidget.vue';
 import unnnic from '@weni/unnnic-system';
 import { moduleStorage } from '@/utils/storage';
 
-export default {
-  name: 'DrawerConfigWidgetDynamic',
+defineOptions({ name: 'DrawerConfigWidgetDynamic' });
 
-  components: {
-    DrawerConfigContentVtexConversions,
-    SkeletonConfigContentVtexConversions,
-    DrawerConfigContentFunnel,
-    DrawerConfigContentCard,
-    SkeletonConfigContentCard,
-    SkeletonConfigContentFunnel,
-    DrawerConfigContentVtex,
-    SkeletonConfigContentVtex,
-    ModalResetWidget,
-  },
+const props = defineProps<{
+  modelValue?: boolean;
+  configType?: string;
+}>();
 
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false,
+const emit = defineEmits<{
+  (e: 'close', payload?: { handleTourNextStep: boolean }): void;
+  (e: 'back'): void;
+}>();
+
+const { t } = useI18n();
+
+const projectStore = useProject();
+const widgetsStore = useWidgets();
+const onboardingStore = useOnboarding();
+
+const { isLoadingFlows: isLoadingProjectFlows, flows: projectFlows } =
+  storeToRefs(projectStore);
+const { currentWidgetEditing: widget } = storeToRefs(widgetsStore);
+const { onboardingRefs, showConfigWidgetOnboarding } =
+  storeToRefs(onboardingStore);
+
+const config = ref<any>({});
+const disablePrimaryButton = ref(false);
+const isLoadingUpdateConfig = ref(false);
+const showModalResetWidget = ref(false);
+
+const drawerProps = computed(() => {
+  const configMap: Record<string, any> = {
+    graph_funnel: {
+      default: {
+        title: t('drawers.config_funnel.title'),
+        description: t('drawers.config_funnel.description'),
+      },
     },
-    configType: {
-      type: String,
-      default: '',
+    card: {
+      default: {
+        title: t('drawers.config_card.title'),
+      },
+      executions: {
+        title: t('drawers.config_gallery.options.executions.title'),
+        description: t('drawers.config_gallery.options.executions.description'),
+      },
+      flow_result: {
+        title: t('drawers.config_gallery.options.flow_result.title'),
+        description: t(
+          'drawers.config_gallery.options.flow_result.description',
+        ),
+      },
+      data_crossing: {
+        title: t('drawers.config_gallery.options.data_crossing.title'),
+        description: t(
+          'drawers.config_gallery.options.data_crossing.description',
+        ),
+      },
     },
-  },
+    empty_column: {
+      default: {
+        title: t('drawers.config_card.title'),
+      },
+      funnel: {
+        title: t('drawers.config_funnel.title'),
+        description: t('drawers.config_funnel.description'),
+      },
+      vtex: {
+        title: t('drawers.config_gallery.options.vtex.title'),
+        description: t('drawers.config_gallery.options.vtex.description'),
+      },
+      vtex_conversions: {
+        title: t('drawers.config_gallery.options.vtex_conversions.title'),
+        description: t(
+          'drawers.config_gallery.options.vtex_conversions.description',
+        ),
+      },
+      recurrence: {
+        title: t('drawers.config_gallery.options.recurrence.title'),
+        description: t('drawers.config_gallery.options.recurrence.description'),
+      },
+    },
+    recurrence: {
+      title: t('drawers.config_gallery.options.recurrence.title'),
+      description: t('drawers.config_gallery.options.recurrence.description'),
+    },
+    vtex_order: {
+      vtex: {
+        title: t('drawers.config_gallery.options.vtex.title'),
+        description: t('drawers.config_gallery.options.vtex.description'),
+      },
+    },
+    vtex_conversions: {
+      default: {
+        title: t('drawers.config_gallery.options.vtex_conversions.title'),
+        description: t(
+          'drawers.config_gallery.options.vtex_conversions.description',
+        ),
+      },
+    },
+  };
 
-  emits: ['close', 'back'],
+  return configMap[widget.value?.type]?.[props.configType || 'default'] || {};
+});
 
-  data() {
-    return {
-      config: {},
-      disablePrimaryButton: false,
-      isLoadingUpdateConfig: false,
-      showModalResetWidget: false,
+const content = computed(() => {
+  const currentType = [
+    'vtex',
+    'vtex_conversions',
+    'funnel',
+    'recurrence',
+  ].includes(props.configType || '')
+    ? props.configType
+    : widget.value?.type;
+
+  const componentMap: Record<string, any> = {
+    graph_funnel: {
+      loading: SkeletonConfigContentFunnel,
+      component: DrawerConfigContentFunnel,
+    },
+    card: {
+      loading: SkeletonConfigContentCard,
+      component: DrawerConfigContentCard,
+    },
+    funnel: {
+      loading: SkeletonConfigContentFunnel,
+      component: DrawerConfigContentFunnel,
+    },
+    vtex: {
+      loading: SkeletonConfigContentVtex,
+      component: DrawerConfigContentVtex,
+    },
+    vtex_conversions: {
+      loading: SkeletonConfigContentVtexConversions,
+      component: DrawerConfigContentVtexConversions,
+    },
+    recurrence: {
+      loading: SkeletonConfigContentRecurrence,
+      component: DrawerConfigContentRecurrence,
+    },
+  };
+
+  return componentMap[currentType as string] || {};
+});
+
+const contentProps = computed(() => {
+  const defaultProps: Record<string, any> = {
+    modelValue: widget.value,
+  };
+
+  const mappingProps: Record<string, any> = {
+    card: { type: props.configType },
+  };
+
+  return { ...defaultProps, ...mappingProps[widget.value?.type] };
+});
+
+const contentEvents = computed(() => {
+  const defaultEvents: Record<string, any> = {
+    'update:model-value': (cfg: any) => (config.value = cfg),
+    'update-disable-primary-button': (val: boolean) =>
+      (disablePrimaryButton.value = val),
+    'reset-widget': () => (showModalResetWidget.value = true),
+  };
+
+  const mappingEvents: Record<string, any> = {};
+
+  return { ...defaultEvents, ...mappingEvents[widget.value?.type] };
+});
+
+const createGraphFunnelWidget = computed(() => {
+  const metricsObj: Record<string, any> = {};
+  (config.value as any[]).forEach((metric: any, index: number) => {
+    metricsObj[`metric_${index + 1}`] = {
+      name: metric.name,
+      operation: 'count',
+      filter: { flow: metric.flow },
     };
-  },
-  computed: {
-    ...mapState(useProject, {
-      isLoadingProjectFlows: 'isLoadingFlows',
-      projectFlows: 'flows',
-    }),
-    ...mapState(useWidgets, { widget: 'currentWidgetEditing' }),
-    ...mapState(useOnboarding, [
-      'onboardingRefs',
-      'showConfigWidgetOnboarding',
-    ]),
-    drawerProps() {
-      const { $t } = this;
-      const configMap = {
-        graph_funnel: {
-          default: {
-            title: $t('drawers.config_funnel.title'),
-            description: $t('drawers.config_funnel.description'),
-          },
-        },
-        card: {
-          default: {
-            title: $t('drawers.config_card.title'),
-          },
-          executions: {
-            title: $t(`drawers.config_gallery.options.executions.title`),
-            description: $t(
-              `drawers.config_gallery.options.executions.description`,
-            ),
-          },
-          flow_result: {
-            title: $t(`drawers.config_gallery.options.flow_result.title`),
-            description: $t(
-              `drawers.config_gallery.options.flow_result.description`,
-            ),
-          },
-          data_crossing: {
-            title: $t(`drawers.config_gallery.options.data_crossing.title`),
-            description: $t(
-              `drawers.config_gallery.options.data_crossing.description`,
-            ),
-          },
-        },
-        empty_column: {
-          default: {
-            title: $t('drawers.config_card.title'),
-          },
-          funnel: {
-            title: $t('drawers.config_funnel.title'),
-            description: $t('drawers.config_funnel.description'),
-          },
-          vtex: {
-            title: $t(`drawers.config_gallery.options.vtex.title`),
-            description: $t(`drawers.config_gallery.options.vtex.description`),
-          },
-          vtex_conversions: {
-            title: $t(`drawers.config_gallery.options.vtex_conversions.title`),
-            description: $t(
-              `drawers.config_gallery.options.vtex_conversions.description`,
-            ),
-          },
-          recurrence: {
-            title: $t(`drawers.config_gallery.options.recurrence.title`),
-            description: $t(
-              `drawers.config_gallery.options.recurrence.description`,
-            ),
-          },
-        },
-        recurrence: {
-          title: $t(`drawers.config_gallery.options.recurrence.title`),
-          description: $t(
-            `drawers.config_gallery.options.recurrence.description`,
-          ),
-        },
-        vtex_order: {
-          vtex: {
-            title: $t(`drawers.config_gallery.options.vtex.title`),
-            description: $t(`drawers.config_gallery.options.vtex.description`),
-          },
-        },
-        vtex_conversions: {
-          default: {
-            title: $t(`drawers.config_gallery.options.vtex_conversions.title`),
-            description: $t(
-              `drawers.config_gallery.options.vtex_conversions.description`,
-            ),
-          },
-        },
-      };
+  });
 
-      return configMap[this.widget?.type][this.configType || 'default'] || {};
-    },
+  return {
+    name: t('widgets.graph_funnel.title'),
+    config: metricsObj,
+    type: 'graph_funnel',
+  };
+});
 
-    content() {
-      const currentType = [
-        'vtex',
-        'vtex_conversions',
-        'funnel',
-        'recurrence',
-      ].includes(this.configType)
-        ? this.configType
-        : this.widget?.type;
+const createCardWidget = computed(() => {
+  const w = widget.value;
+  const selectedFlowLabel = projectFlows.value.find(
+    (flow: any) => flow.value === w.config?.flow?.uuid,
+  )?.label;
+  const hasReportName =
+    props.configType === 'flow_result' && w.config?.operation === 'recurrence';
 
-      const componentMap = {
-        graph_funnel: {
-          loading: SkeletonConfigContentFunnel,
-          component: DrawerConfigContentFunnel,
-        },
-        card: {
-          loading: SkeletonConfigContentCard,
-          component: DrawerConfigContentCard,
-        },
-        funnel: {
-          loading: SkeletonConfigContentFunnel,
-          component: DrawerConfigContentFunnel,
-        },
-        vtex: {
-          loading: SkeletonConfigContentVtex,
-          component: DrawerConfigContentVtex,
-        },
-        vtex_conversions: {
-          loading: SkeletonConfigContentVtexConversions,
-          component: DrawerConfigContentVtexConversions,
-        },
-        recurrence: {
-          loading: SkeletonConfigContentRecurrence,
-          component: DrawerConfigContentRecurrence,
-        },
-      };
-
-      return componentMap[currentType] || {};
-    },
-
-    contentProps() {
-      const { widget } = this;
-
-      const defaultProps = {
-        modelValue: widget,
-      };
-
-      const mappingProps = {
-        card: { type: this.configType },
-      };
-
-      return { ...defaultProps, ...mappingProps[this.widget?.type] };
-    },
-
-    contentEvents() {
-      const defaultEvents = {
-        'update:model-value': (config) => (this.config = config),
-        'update-disable-primary-button': (boolean) =>
-          (this.disablePrimaryButton = boolean),
-        'reset-widget': () => (this.showModalResetWidget = true),
-      };
-
-      const mappingEvents = {};
-
-      return { ...defaultEvents, ...mappingEvents[this.widget?.type] };
-    },
-
-    treatedWidget() {
-      const { widget } = this;
-
-      const defaultConfigs = {
-        ...widget,
-        source: 'flowruns',
-      };
-
-      let newWidget = {};
-
-      switch (widget.type) {
-        case 'graph_funnel':
-          newWidget = this.createGraphFunnelWidget;
-          break;
-        case 'card':
-          newWidget = this.createCardWidget;
-          break;
-        case 'empty_column':
-          if (this.configType === 'recurrence')
-            newWidget = this.createRecurrenceWidget;
-          if (this.configType === 'vtex') newWidget = this.createVtexWidget;
-          if (this.configType === 'funnel')
-            newWidget = this.createGraphFunnelWidget;
-          if (this.configType === 'vtex_conversions')
-            newWidget = this.createVtexConversionsWidget;
-          break;
-        case 'recurrence':
-          newWidget = this.createRecurrenceWidget;
-          break;
-        case 'vtex_order':
-          newWidget = this.createVtexWidget;
-          break;
-        case 'vtex_conversions': {
-          newWidget = this.createVtexConversionsWidget;
-          break;
+  return {
+    name: w.config?.name,
+    ...(hasReportName
+      ? {
+          report_name: `${t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
         }
-      }
+      : {}),
+    config: w.config,
+  };
+});
 
-      return { ...defaultConfigs, ...newWidget };
+const createVtexWidget = computed(() => {
+  const { config: cfg, name } = config.value as any;
+
+  return {
+    name,
+    source: 'orders',
+    type: 'vtex_order',
+    config: cfg,
+  };
+});
+
+const createVtexConversionsWidget = computed(() => {
+  const { config: cfg, name } = config.value as any;
+
+  return {
+    name,
+    source: 'vtex_conversions',
+    type: 'vtex_conversions',
+    config: cfg,
+  };
+});
+
+const createRecurrenceWidget = computed(() => {
+  const w = widget.value;
+  const selectedFlowLabel = projectFlows.value.find(
+    (flow: any) => flow.value === w.config?.flow?.uuid,
+  )?.label;
+
+  return {
+    name: w.config?.name,
+    report_name: `${t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
+    config: {
+      filter: { flow: w.config.flow.uuid },
+      ...w.config,
+      operation: 'recurrence',
+      type: 'flow_result',
+      op_field: w.config.flow.result,
+      limit: 5,
     },
+    report: {
+      type: 'internal',
+    },
+    type: 'recurrence',
+  };
+});
 
-    createGraphFunnelWidget() {
-      let metricsObj = {};
-      this.config.forEach((metric, index) => {
-        metricsObj[`metric_${index + 1}`] = {
-          name: metric.name,
-          operation: 'count',
-          filter: { flow: metric.flow },
-        };
+const treatedWidget = computed(() => {
+  const w = widget.value;
+
+  const defaultConfigs = {
+    ...w,
+    source: 'flowruns',
+  };
+
+  let newWidget: any = {};
+
+  switch (w.type) {
+    case 'graph_funnel':
+      newWidget = createGraphFunnelWidget.value;
+      break;
+    case 'card':
+      newWidget = createCardWidget.value;
+      break;
+    case 'empty_column':
+      if (props.configType === 'recurrence')
+        newWidget = createRecurrenceWidget.value;
+      if (props.configType === 'vtex') newWidget = createVtexWidget.value;
+      if (props.configType === 'funnel')
+        newWidget = createGraphFunnelWidget.value;
+      if (props.configType === 'vtex_conversions')
+        newWidget = createVtexConversionsWidget.value;
+      break;
+    case 'recurrence':
+      newWidget = createRecurrenceWidget.value;
+      break;
+    case 'vtex_order':
+      newWidget = createVtexWidget.value;
+      break;
+    case 'vtex_conversions': {
+      newWidget = createVtexConversionsWidget.value;
+      break;
+    }
+  }
+
+  return { ...defaultConfigs, ...newWidget };
+});
+
+function internalClose() {
+  onboardingStore.callTourPreviousStep({
+    tour: 'widgets-onboarding-tour',
+    qtdSteps: ['card', 'empty_column'].includes(widget.value.type) ? 2 : 1,
+    timeout: 300,
+  });
+}
+
+async function updateWidgetConfig() {
+  isLoadingUpdateConfig.value = true;
+
+  try {
+    await widgetsStore.updateWidget(treatedWidget.value);
+
+    const isFunnel =
+      widget.value.type === 'graph_funnel' || props.configType === 'funnel';
+
+    const isRecurrence =
+      widget.value.type === 'recurrence' || props.configType === 'recurrence';
+
+    if (isFunnel) {
+      await widgetsStore.getWidgetGraphFunnelData({
+        uuid: widget.value.uuid,
+        widgetFunnelConfig: treatedWidget.value.config,
       });
-
-      return {
-        name: this.$t('widgets.graph_funnel.title'),
-        config: metricsObj,
-        type: 'graph_funnel',
-      };
-    },
-
-    createCardWidget() {
-      const { widget } = this;
-      const selectedFlowLabel = this.projectFlows.find(
-        (flow) => flow.value === widget.config?.flow?.uuid,
-      )?.label;
-      const hasReportName =
-        this.configType === 'flow_result' &&
-        widget.config?.operation === 'recurrence';
-
-      return {
-        name: widget.config?.name,
-        ...(hasReportName
-          ? {
-              report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
-            }
-          : {}),
-        config: widget.config,
-      };
-    },
-
-    createVtexWidget() {
-      const { config, name } = this.config;
-
-      return {
-        name,
-        source: 'orders',
-        type: 'vtex_order',
-        config,
-      };
-    },
-
-    createVtexConversionsWidget() {
-      const { config, name } = this.config;
-
-      return {
-        name,
-        source: 'vtex_conversions',
-        type: 'vtex_conversions',
-        config,
-      };
-    },
-
-    createRecurrenceWidget() {
-      const { widget } = this;
-      const selectedFlowLabel = this.projectFlows.find(
-        (flow) => flow.value === widget.config?.flow?.uuid,
-      )?.label;
-
-      return {
-        name: widget.config?.name,
-        report_name: `${this.$t('drawers.config_card.total_flow_executions')} ${selectedFlowLabel}`,
-        config: {
-          filter: { flow: widget.config.flow.uuid },
-          ...widget.config,
-          operation: 'recurrence',
-          type: 'flow_result',
-          op_field: widget.config.flow.result,
-          limit: 5,
-        },
-        report: {
-          type: 'internal',
-        },
-        type: 'recurrence',
-      };
-    },
-  },
-
-  watch: {
-    isLoadingUpdateConfig(newIsLoadingUpdateConfig) {
-      if (!newIsLoadingUpdateConfig) {
-        this.internalClose();
-      }
-    },
-  },
-
-  methods: {
-    ...mapActions(useWidgets, [
-      'updateWidget',
-      'getCurrentDashboardWidgetData',
-      'getWidgetGraphFunnelData',
-      'getWidgetRecurrenceData',
-      'getWidgetVtexOrderData',
-    ]),
-    ...mapActions(useOnboarding, [
-      'callTourNextStep',
-      'callTourPreviousStep',
-      'setShowCompleteOnboardingModal',
-    ]),
-
-    internalClose() {
-      this.callTourPreviousStep({
-        tour: 'widgets-onboarding-tour',
-        qtdSteps: ['card', 'empty_column'].includes(this.widget.type) ? 2 : 1,
-        timeout: 300,
+    } else if (props.configType === 'vtex') {
+      await widgetsStore.getWidgetVtexOrderData({
+        uuid: widget.value.uuid,
+        utm_source: treatedWidget.value.config.filter.utm,
       });
-    },
+    } else if (isRecurrence) {
+      await widgetsStore.getWidgetRecurrenceData({
+        uuid: widget.value.uuid,
+      });
+    } else {
+      await widgetsStore.getCurrentDashboardWidgetData(treatedWidget.value);
+    }
 
-    async updateWidgetConfig() {
-      this.isLoadingUpdateConfig = true;
-
-      try {
-        await this.updateWidget(this.treatedWidget);
-
-        const isFunnel =
-          this.widget.type === 'graph_funnel' || this.configType === 'funnel';
-
-        const isRecurrence =
-          this.widget.type === 'recurrence' || this.configType === 'recurrence';
-
-        if (isFunnel) {
-          await this.getWidgetGraphFunnelData({
-            uuid: this.widget.uuid,
-            widgetFunnelConfig: this.treatedWidget.config,
-          });
-        } else if (this.configType === 'vtex') {
-          await this.getWidgetVtexOrderData({
-            uuid: this.widget.uuid,
-            utm_source: this.treatedWidget.config.filter.utm,
-          });
-        } else if (isRecurrence) {
-          await this.getWidgetRecurrenceData({
-            uuid: this.widget.uuid,
-          });
-        } else {
-          await this.getCurrentDashboardWidgetData(this.treatedWidget);
-        }
-
-        if (this.showConfigWidgetOnboarding) {
-          const isLastTourStep =
-            this.onboardingRefs['widgets-onboarding-tour'].currentStep ===
-            this.onboardingRefs['widgets-onboarding-tour'].steps.length;
-          if (isLastTourStep) {
-            this.callTourNextStep('widgets-onboarding-tour');
-            this.setShowCompleteOnboardingModal(true);
-            moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
-          }
-        }
-        unnnic.unnnicCallAlert({
-          props: {
-            text: this.$t('drawers.metric_saved'),
-            type: 'success',
-          },
-          seconds: 5,
-        });
-      } catch (error) {
-        unnnic.unnnicCallAlert({
-          props: {
-            text: this.$t('save_error'),
-            type: 'error',
-          },
-          seconds: 5,
-        });
-      } finally {
-        this.$emit('close', { handleTourNextStep: true });
+    if (showConfigWidgetOnboarding.value) {
+      const isLastTourStep =
+        onboardingRefs.value['widgets-onboarding-tour'].currentStep ===
+        onboardingRefs.value['widgets-onboarding-tour'].steps.length;
+      if (isLastTourStep) {
+        onboardingStore.callTourNextStep('widgets-onboarding-tour');
+        onboardingStore.setShowCompleteOnboardingModal(true);
+        moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
       }
+    }
+    unnnic.unnnicCallAlert({
+      props: {
+        text: t('drawers.metric_saved'),
+        type: 'success',
+      },
+      seconds: 5,
+    });
+  } catch (error) {
+    unnnic.unnnicCallAlert({
+      props: {
+        text: t('save_error'),
+        type: 'error',
+      },
+      seconds: 5,
+    });
+  } finally {
+    emit('close', { handleTourNextStep: true });
+  }
 
-      this.isLoadingUpdateConfig = false;
-    },
-  },
-};
+  isLoadingUpdateConfig.value = false;
+}
+
+watch(isLoadingUpdateConfig, (newVal) => {
+  if (!newVal) {
+    internalClose();
+  }
+});
+
+defineExpose({
+  config,
+  disablePrimaryButton,
+  isLoadingUpdateConfig,
+  showModalResetWidget,
+  drawerProps,
+  content,
+  contentProps,
+  contentEvents,
+  treatedWidget,
+  createGraphFunnelWidget,
+  createCardWidget,
+  createVtexWidget,
+  createVtexConversionsWidget,
+  createRecurrenceWidget,
+  internalClose,
+  updateWidgetConfig,
+  callTourPreviousStep: (...args: any[]) =>
+    onboardingStore.callTourPreviousStep(...args),
+  callTourNextStep: (...args: any[]) =>
+    onboardingStore.callTourNextStep(...args),
+  setShowCompleteOnboardingModal: (...args: any[]) =>
+    onboardingStore.setShowCompleteOnboardingModal(...args),
+  updateWidget: (...args: any[]) => widgetsStore.updateWidget(...args),
+  getCurrentDashboardWidgetData: (...args: any[]) =>
+    widgetsStore.getCurrentDashboardWidgetData(...args),
+  getWidgetGraphFunnelData: (...args: any[]) =>
+    widgetsStore.getWidgetGraphFunnelData(...args),
+  getWidgetRecurrenceData: (...args: any[]) =>
+    widgetsStore.getWidgetRecurrenceData(...args),
+  getWidgetVtexOrderData: (...args: any[]) =>
+    widgetsStore.getWidgetVtexOrderData(...args),
+});
 </script>
 
 <style lang="scss" scoped>

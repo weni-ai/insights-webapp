@@ -88,67 +88,52 @@
   </div>
 </template>
 
-<script>
-import IconLoading from '@/components/IconLoading.vue';
+<script setup lang="ts">
+import { computed } from 'vue';
+import { emojis } from '@emoji-mart/data';
 
+import IconLoading from '@/components/IconLoading.vue';
 import CardBase from './CardBase.vue';
 import CardTitleError from './CardTitleError.vue';
 
-import { emojis } from '@emoji-mart/data';
+defineOptions({ name: 'CardDashboard' });
 
-export default {
-  name: 'CardDashboard',
+interface CardDashboardProps {
+  metric?: string | null;
+  description?: string;
+  friendlyId?: string;
+  clickable?: boolean;
+  configured?: boolean;
+  configurable?: boolean;
+  isLoading?: boolean;
+  id?: string;
+  hoverTooltip?: string;
+  tooltip?: string;
+}
 
-  components: {
-    CardBase,
-    IconLoading,
-    CardTitleError,
-  },
+const props = withDefaults(defineProps<CardDashboardProps>(), {
+  metric: '',
+  description: '',
+  friendlyId: '',
+  clickable: false,
+  configured: false,
+  configurable: false,
+  isLoading: false,
+  id: '',
+  hoverTooltip: '',
+  tooltip: '',
+});
 
-  props: {
-    metric: {
-      type: String,
-      default: '',
-    },
-    description: {
-      type: String,
-      default: '',
-    },
-    friendlyId: {
-      type: String,
-      default: '',
-    },
-    clickable: Boolean,
-    configured: Boolean,
-    configurable: Boolean,
-    isLoading: Boolean,
-    id: {
-      type: String,
-      default: '',
-    },
-    hoverTooltip: {
-      type: String,
-      default: '',
-    },
-    tooltip: {
-      type: String,
-      default: '',
-    },
-  },
+defineEmits<{
+  'open-config': [];
+}>();
 
-  emits: ['open-config'],
+const showMetricError = computed(() => props.metric === null);
 
-  computed: {
-    showMetricError() {
-      return this.metric === null;
-    },
-    friendlyEmoji() {
-      if (!this.friendlyId) return '';
-      const emoji = emojis[this.friendlyId]?.skins?.[0]?.native || '';
-      return emoji;
-    },
-  },
-};
+const friendlyEmoji = computed(() => {
+  if (!props.friendlyId) return '';
+  return (emojis as any)[props.friendlyId]?.skins?.[0]?.native || '';
+});
 </script>
 
 <style scoped lang="scss">

@@ -3,6 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { createTestingPinia } from '@pinia/testing';
 import { moduleStorage } from '@/utils/storage';
+import { useWidgets } from '@/store/modules/widgets';
+import { useOnboarding } from '@/store/modules/onboarding';
 
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 import DrawerConfigContentCard from '../DrawerConfigContentCard.vue';
@@ -275,7 +277,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
       it('should call tour previous step', async () => {
         wrapper = createWrapper();
 
-        const tourSpy = vi.spyOn(wrapper.vm, 'callTourPreviousStep');
+        const onboardingStore = useOnboarding();
+        const tourSpy = vi.spyOn(onboardingStore, 'callTourPreviousStep');
 
         await wrapper.vm.internalClose();
 
@@ -296,14 +299,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
           },
         );
 
-        // Mock the $refs using Object.defineProperty
-        const mockClose = vi.fn();
-        Object.defineProperty(wrapper.vm.$refs, 'unnnicDrawer', {
-          value: { close: mockClose },
-          writable: true,
-        });
-
-        const tourSpy = vi.spyOn(wrapper.vm, 'callTourPreviousStep');
+        const onboardingStore = useOnboarding();
+        const tourSpy = vi.spyOn(onboardingStore, 'callTourPreviousStep');
 
         await wrapper.vm.internalClose();
 
@@ -318,9 +315,10 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
     describe('updateWidgetConfig', () => {
       it('should update widget successfully for card type', async () => {
         wrapper = createWrapper();
-        const updateWidgetSpy = vi.spyOn(wrapper.vm, 'updateWidget');
+        const widgetsStore = useWidgets();
+        const updateWidgetSpy = vi.spyOn(widgetsStore, 'updateWidget');
         const getDataSpy = vi.spyOn(
-          wrapper.vm,
+          widgetsStore,
           'getCurrentDashboardWidgetData',
         );
 
@@ -333,7 +331,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
 
       it('should update widget successfully', async () => {
         wrapper = createWrapper({ configType: 'vtex' });
-        const updateWidgetSpy = vi.spyOn(wrapper.vm, 'updateWidget');
+        const widgetsStore = useWidgets();
+        const updateWidgetSpy = vi.spyOn(widgetsStore, 'updateWidget');
 
         await wrapper.vm.updateWidgetConfig();
 
@@ -342,9 +341,10 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
 
       it('should update widget successfully for recurrence type', async () => {
         wrapper = createWrapper({ configType: 'recurrence' });
-        const updateWidgetSpy = vi.spyOn(wrapper.vm, 'updateWidget');
+        const widgetsStore = useWidgets();
+        const updateWidgetSpy = vi.spyOn(widgetsStore, 'updateWidget');
         const getRecurrenceDataSpy = vi.spyOn(
-          wrapper.vm,
+          widgetsStore,
           'getWidgetRecurrenceData',
         );
 
@@ -370,9 +370,10 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
             },
           },
         );
-        const tourNextStepSpy = vi.spyOn(wrapper.vm, 'callTourNextStep');
+        const onboardingStore = useOnboarding();
+        const tourNextStepSpy = vi.spyOn(onboardingStore, 'callTourNextStep');
         const setModalSpy = vi.spyOn(
-          wrapper.vm,
+          onboardingStore,
           'setShowCompleteOnboardingModal',
         );
 
@@ -387,7 +388,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
 
       it('should handle error during update', async () => {
         wrapper = createWrapper();
-        const updateWidgetSpy = vi.spyOn(wrapper.vm, 'updateWidget');
+        const widgetsStore = useWidgets();
+        const updateWidgetSpy = vi.spyOn(widgetsStore, 'updateWidget');
         updateWidgetSpy.mockRejectedValue(new Error('Update failed'));
 
         await wrapper.vm.updateWidgetConfig();
@@ -400,7 +402,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
   describe('ModalResetWidget Integration', () => {
     it('should show ModalResetWidget when showModalResetWidget is true', async () => {
       wrapper = createWrapper();
-      await wrapper.setData({ showModalResetWidget: true });
+      wrapper.vm.showModalResetWidget = true;
+      await wrapper.vm.$nextTick();
 
       const modal = wrapper.findComponent(ModalResetWidget);
       expect(modal.exists()).toBe(true);
@@ -409,7 +412,8 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
 
     it('should handle finish-reset event from ModalResetWidget', async () => {
       wrapper = createWrapper();
-      await wrapper.setData({ showModalResetWidget: true });
+      wrapper.vm.showModalResetWidget = true;
+      await wrapper.vm.$nextTick();
 
       const modal = wrapper.findComponent(ModalResetWidget);
       await modal.vm.$emit('finish-reset');
@@ -424,20 +428,15 @@ describe('DrawerConfigWidgetDynamic.vue', () => {
   describe('Watchers', () => {
     it('should call internalClose when isLoadingUpdateConfig changes to false', async () => {
       wrapper = createWrapper();
+      const onboardingStore = useOnboarding();
+      const tourSpy = vi.spyOn(onboardingStore, 'callTourPreviousStep');
 
-      // Mock the $refs using Object.defineProperty
-      const mockClose = vi.fn();
-      Object.defineProperty(wrapper.vm.$refs, 'unnnicDrawer', {
-        value: { close: mockClose },
-        writable: true,
-      });
+      wrapper.vm.isLoadingUpdateConfig = true;
+      await wrapper.vm.$nextTick();
+      wrapper.vm.isLoadingUpdateConfig = false;
+      await wrapper.vm.$nextTick();
 
-      const internalCloseSpy = vi.spyOn(wrapper.vm, 'internalClose');
-
-      await wrapper.setData({ isLoadingUpdateConfig: true });
-      await wrapper.setData({ isLoadingUpdateConfig: false });
-
-      expect(internalCloseSpy).toHaveBeenCalled();
+      expect(tourSpy).toHaveBeenCalled();
     });
   });
 

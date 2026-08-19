@@ -28,113 +28,97 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'DrawerConfigContentVtex',
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
 
-  props: {
-    modelValue: {
-      type: Object,
-      required: true,
-    },
+defineOptions({ name: 'DrawerConfigContentVtex' });
+
+interface DrawerConfigContentVtexProps {
+  modelValue: Record<string, any>;
+}
+
+const props = defineProps<DrawerConfigContentVtexProps>();
+
+const emit = defineEmits<{
+  'update:model-value': [value: Record<string, any>];
+  'reset-widget': [];
+  'update-disable-primary-button': [value: boolean];
+}>();
+
+const widgetName = ref('');
+const utmValue = ref('');
+const validForm = ref(false);
+const defaultConfigVtex = {
+  orders: {
+    icon: 'local_activity',
   },
-
-  emits: [
-    'update:model-value',
-    'reset-widget',
-    'update-disable-primary-button',
-  ],
-
-  data() {
-    return {
-      widgetName: '',
-      utmValue: '',
-      validForm: false,
-      defaultConfigVtex: {
-        orders: {
-          icon: 'local_activity',
-        },
-        total_value: {
-          icon: 'currency_exchange',
-        },
-        average_ticket: {
-          icon: 'sell',
-        },
-      },
-    };
+  total_value: {
+    icon: 'currency_exchange',
   },
-
-  computed: {
-    isDisableResetWidget() {
-      const isEmptyWidget = this.modelValue?.type === 'empty_column';
-
-      return isEmptyWidget;
-    },
-  },
-
-  watch: {
-    validForm: {
-      immediate: true,
-      handler() {
-        this.emitValidForm();
-      },
-    },
-    widgetName: {
-      handler() {
-        this.updateValidForm();
-      },
-    },
-    utmValue: {
-      handler() {
-        this.updateValidForm();
-      },
-    },
-  },
-
-  mounted() {
-    this.widgetName =
-      this.modelValue.name === 'vtex_orders' ? '' : this.modelValue.name;
-    this.utmValue = this.modelValue.config?.filter?.utm || '';
-  },
-
-  methods: {
-    updateWidgetData() {
-      this.$emit('update:model-value', {
-        ...this.modelValue,
-        name: this.widgetName?.trim() || 'vtex_orders',
-        config: {
-          ...this.modelValue.config,
-          ...this.defaultConfigVtex,
-          filter: {
-            utm: this.utmValue,
-          },
-        },
-      });
-    },
-
-    updateUtm(utm) {
-      this.utmValue = utm;
-      this.updateWidgetData();
-    },
-
-    updateWidgetName(name) {
-      this.widgetName = name;
-      this.updateWidgetData();
-    },
-
-    resetWidget() {
-      this.$emit('reset-widget');
-    },
-
-    updateValidForm() {
-      this.validForm = !!this.utmValue.trim();
-    },
-
-    emitValidForm() {
-      this.$emit('update-disable-primary-button', !this.validForm);
-    },
+  average_ticket: {
+    icon: 'sell',
   },
 };
+
+const isDisableResetWidget = computed(() => {
+  const isEmptyWidget = props.modelValue?.type === 'empty_column';
+  return isEmptyWidget;
+});
+
+const updateWidgetData = () => {
+  emit('update:model-value', {
+    ...props.modelValue,
+    name: widgetName.value?.trim() || 'vtex_orders',
+    config: {
+      ...props.modelValue.config,
+      ...defaultConfigVtex,
+      filter: {
+        utm: utmValue.value,
+      },
+    },
+  });
+};
+
+const updateUtm = (utm: string) => {
+  utmValue.value = utm;
+  updateWidgetData();
+};
+
+const updateWidgetName = (name: string) => {
+  widgetName.value = name;
+  updateWidgetData();
+};
+
+const resetWidget = () => {
+  emit('reset-widget');
+};
+
+const updateValidForm = () => {
+  validForm.value = !!utmValue.value.trim();
+};
+
+const emitValidForm = () => {
+  emit('update-disable-primary-button', !validForm.value);
+};
+
+watch(validForm, emitValidForm, { immediate: true });
+watch(widgetName, updateValidForm);
+watch(utmValue, updateValidForm);
+
+widgetName.value =
+  props.modelValue.name === 'vtex_orders' ? '' : props.modelValue.name;
+utmValue.value = props.modelValue.config?.filter?.utm || '';
+
+defineExpose({
+  widgetName,
+  utmValue,
+  validForm,
+  isDisableResetWidget,
+  resetWidget,
+  updateUtm,
+  updateWidgetName,
+  updateWidgetData,
+});
 </script>
 
 <style lang="scss" scoped>

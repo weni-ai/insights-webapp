@@ -18,7 +18,7 @@ const PUBLIC_PATH = `${process.env.PUBLIC_PATH_URL}/`;
 const FEDERATION_NAME = 'insights';
 const IS_EXPOSED_MF = !!process.env.MODULE_FEDERATION_CONNECT_URL;
 
-const scssAdditionalData = `@import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`;
+const scssAdditionalData = `@use '@weni/unnnic-system/src/assets/scss/unnnic.scss' as *;`;
 
 /**
  * Dev: vue-style-loader chain so Vue SFC <style> blocks hot-reload.
@@ -116,12 +116,7 @@ module.exports = defineConfig({
             {
               test: /\.(js|ts)$/,
               include: [path.resolve(__dirname, 'src/store/modules')],
-              exclude: [
-                /node_modules/,
-                /\.spec\./,
-                /\.unit\./,
-                /__tests__/,
-              ],
+              exclude: [/node_modules/, /\.spec\./, /\.unit\./, /__tests__/],
               enforce: 'pre',
               use: [path.resolve(__dirname, 'build/pinia-hmr-loader.js')],
             },

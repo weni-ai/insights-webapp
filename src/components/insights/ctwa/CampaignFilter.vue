@@ -18,7 +18,6 @@
     @update:search="handleSearchUpdate"
     @scroll-end="loadMoreData"
   />
-  {{ canLoadMore() }}
 </template>
 
 <script setup lang="ts">
@@ -53,7 +52,7 @@ interface PaginatedCampaigns {
   results: Campaign[];
 }
 
-const CAMPAIGN_FILTER_PAGE_SIZE = 2;
+const CAMPAIGN_FILTER_PAGE_SIZE = 20;
 
 interface Props {
   modelValue: string;

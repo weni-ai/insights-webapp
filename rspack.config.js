@@ -18,7 +18,7 @@ const PUBLIC_PATH = `${process.env.PUBLIC_PATH_URL}/`;
 const FEDERATION_NAME = 'insights';
 const IS_EXPOSED_MF = !!process.env.MODULE_FEDERATION_CONNECT_URL;
 
-const scssAdditionalData = `@use '@weni/unnnic-system/src/assets/scss/unnnic.scss' as *;`;
+const scssAdditionalData = `import '@weni/unnnic-system/src/assets/scss/unnnic.scss';`;
 
 /**
  * Dev: vue-style-loader chain so Vue SFC <style> blocks hot-reload.

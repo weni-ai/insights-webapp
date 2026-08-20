@@ -15,7 +15,7 @@ module.exports = {
 
     // Plugin to prefix all CSS classes with the module name
     postcssPrefixwrap('.insights-webapp', {
-      prefixRootTags: true,
+      prefixRootTags: false,
     }),
   ],
 };

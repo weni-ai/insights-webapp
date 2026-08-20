@@ -114,9 +114,6 @@ const handlerOpenDropdown = (open?: boolean) => {
   }
 };
 
-const setShowDashboardConfig = (...args: any[]) =>
-  dashboardsStore.setShowDashboardConfig(...args);
-
 onMounted(() => {
   nextTick(() => {
     onboardingStore.setOnboardingRef({
@@ -133,11 +130,6 @@ defineExpose({
   enabledShowDashboards,
   handlerCreateDashboardClick,
   handlerOpenDropdown,
-  setShowDashboardConfig,
-  setOnboardingRef: (...args: any[]) =>
-    onboardingStore.setOnboardingRef(...args),
-  callTourNextStep: (...args: any[]) =>
-    onboardingStore.callTourNextStep(...args),
 });
 </script>
 

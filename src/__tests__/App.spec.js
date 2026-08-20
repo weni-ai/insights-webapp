@@ -11,6 +11,7 @@ import { useOnboarding } from '@/store/modules/onboarding';
 import { useProject } from '@/store/modules/project';
 import { useUser } from '@/store/modules/user';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import moment from 'moment';
 
 vi.mock('@/services/api', () => {
   return {
@@ -203,37 +204,11 @@ describe('App', () => {
     configStore.token = null;
   });
 
+  const getMessageHandler = () =>
+    mockAddEventListener.mock.calls.find(([event]) => event === 'message')?.[1];
+
   afterEach(() => {
     if (wrapper) wrapper.unmount();
-  });
-
-  describe('Computed Properties', () => {
-    it('should map dashboards store state correctly', () => {
-      dashboardsStore.dashboards = [{ id: 1, name: 'Test Dashboard' }];
-      dashboardsStore.isLoadingDashboards = true;
-      dashboardsStore.isLoadingCurrentDashboardFilters = true;
-      dashboardsStore.currentDashboard = { uuid: 'test-uuid' };
-
-      expect(wrapper.vm.dashboards).toEqual([
-        { id: 1, name: 'Test Dashboard' },
-      ]);
-      expect(wrapper.vm.isLoadingDashboards).toBe(true);
-      expect(wrapper.vm.isLoadingCurrentDashboardFilters).toBe(true);
-      expect(wrapper.vm.currentDashboard).toEqual({ uuid: 'test-uuid' });
-    });
-
-    it('should map config store state correctly', () => {
-      configStore.token = 'test-token';
-      expect(wrapper.vm.token).toBe('test-token');
-    });
-
-    it('should map onboarding store state correctly', () => {
-      onboardingStore.showCreateDashboardOnboarding = true;
-      onboardingStore.showCompleteOnboardingModal = true;
-
-      expect(wrapper.vm.showCreateDashboardTour).toBe(true);
-      expect(wrapper.vm.showCompleteOnboardingModal).toBe(true);
-    });
   });
 
   describe('Watchers', () => {
@@ -248,8 +223,8 @@ describe('App', () => {
       );
       const getFeatureFlagsSpy = vi.spyOn(featureFlagStore, 'getFeatureFlags');
 
-      const newUuid = 'new-uuid';
-      await wrapper.vm.handleCurrentDashboardUuidChange(newUuid);
+      dashboardsStore.currentDashboard = { uuid: 'new-uuid' };
+      await flushPromises();
 
       expect(setCurrentDashboardFiltersSpy).toHaveBeenCalledWith([]);
       expect(getCurrentDashboardFiltersSpy).toHaveBeenCalled();
@@ -257,6 +232,9 @@ describe('App', () => {
     });
 
     it('should not trigger actions when currentDashboard.uuid is null', async () => {
+      dashboardsStore.currentDashboard = { uuid: 'existing-uuid' };
+      await flushPromises();
+
       const setCurrentDashboardFiltersSpy = vi.spyOn(
         dashboardsStore,
         'setCurrentDashboardFilters',
@@ -267,7 +245,8 @@ describe('App', () => {
       );
       const getFeatureFlagsSpy = vi.spyOn(featureFlagStore, 'getFeatureFlags');
 
-      await wrapper.vm.handleCurrentDashboardUuidChange(null);
+      dashboardsStore.currentDashboard = { uuid: null };
+      await flushPromises();
 
       expect(setCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
       expect(getCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
@@ -289,28 +268,14 @@ describe('App', () => {
   });
 
   describe('Methods', () => {
-    describe('getFeatureFlags action mapping', () => {
-      it('should have getFeatureFlags method mapped from featureFlag store', () => {
-        expect(typeof wrapper.vm.getFeatureFlags).toBe('function');
-      });
-
-      it('should call featureFlag store getFeatureFlags when method is invoked', async () => {
-        const getFeatureFlagsSpy = vi.spyOn(
-          featureFlagStore,
-          'getFeatureFlags',
-        );
-
-        await wrapper.vm.getFeatureFlags();
-
-        expect(getFeatureFlagsSpy).toHaveBeenCalled();
-      });
-    });
-
     describe('handlerSetProject', () => {
       it('should set project in moduleStorage and store', () => {
         const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const handler = getMessageHandler();
 
-        wrapper.vm.handlerSetProject('new-project-uuid');
+        handler({
+          data: { event: 'setProject', projectUuid: 'new-project-uuid' },
+        });
 
         expect(localStorageMock.setItem).toHaveBeenCalledWith(
           'insights_projectUuid',
@@ -325,8 +290,9 @@ describe('App', () => {
     describe('handlerSetIsCommerce', () => {
       it('should set isCommerce in project store', () => {
         const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
+        const handler = getMessageHandler();
 
-        wrapper.vm.handlerSetIsCommerce(true);
+        handler({ data: { event: 'setIsCommerce', isCommerce: true } });
 
         expect(setIsCommerceSpy).toHaveBeenCalledWith(true);
       });
@@ -334,8 +300,6 @@ describe('App', () => {
 
     describe('listenConnect', () => {
       it('should post messages to parent window', () => {
-        wrapper.vm.listenConnect();
-
         expect(mockPostMessage).toHaveBeenCalledWith(
           { event: 'getLanguage' },
           '*',
@@ -347,8 +311,6 @@ describe('App', () => {
       });
 
       it('should add event listener for messages', () => {
-        wrapper.vm.listenConnect();
-
         expect(mockAddEventListener).toHaveBeenCalledWith(
           'message',
           expect.any(Function),
@@ -358,31 +320,43 @@ describe('App', () => {
 
     describe('getEventHandler', () => {
       it('should return correct handler for setLanguage event', () => {
-        const result = wrapper.vm.getEventHandler('setLanguage');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBe(wrapper.vm.handlerSetLanguage);
-        expect(result.dataKey).toBe('language');
+        handler({ data: { event: 'setLanguage', language: 'pt-br' } });
+
+        expect(moment.locale).toHaveBeenCalledWith('pt-br');
       });
 
       it('should return correct handler for setProject event', () => {
-        const result = wrapper.vm.getEventHandler('setProject');
+        const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBe(wrapper.vm.handlerSetProject);
-        expect(result.dataKey).toBe('projectUuid');
+        handler({
+          data: { event: 'setProject', projectUuid: 'handler-project' },
+        });
+
+        expect(setProjectSpy).toHaveBeenCalledWith({
+          uuid: 'handler-project',
+        });
       });
 
       it('should return correct handler for setIsCommerce event', () => {
-        const result = wrapper.vm.getEventHandler('setIsCommerce');
+        const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBe(wrapper.vm.handlerSetIsCommerce);
-        expect(result.dataKey).toBe('isCommerce');
+        handler({ data: { event: 'setIsCommerce', isCommerce: false } });
+
+        expect(setIsCommerceSpy).toHaveBeenCalledWith(false);
       });
 
       it('should return undefined for unknown event', () => {
-        const result = wrapper.vm.getEventHandler('unknownEvent');
+        const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBeUndefined();
-        expect(result.dataKey).toBeUndefined();
+        expect(() =>
+          handler({ data: { event: 'unknownEvent', projectUuid: 'x' } }),
+        ).not.toThrow();
+        expect(setProjectSpy).not.toHaveBeenCalled();
       });
     });
   });
@@ -481,9 +455,8 @@ describe('App', () => {
     });
 
     it('should handle not-now event by setting localStorage and hiding modal', async () => {
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.handleMcpNotNow();
+      const modal = wrapper.findComponent('[data-testid="mcp-news-modal"]');
+      await modal.vm.$emit('not-now');
       await wrapper.vm.$nextTick();
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
@@ -494,13 +467,14 @@ describe('App', () => {
         'insights_mcp_news_show_disclaimer',
         'true',
       );
-      expect(wrapper.vm.showMcpNewsModal).toBe(false);
+      expect(
+        wrapper.findComponent('[data-testid="mcp-news-modal"]').exists(),
+      ).toBe(false);
     });
 
     it('should handle view-guide event by setting localStorage and hiding modal', async () => {
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.handleMcpViewGuide();
+      const modal = wrapper.findComponent('[data-testid="mcp-news-modal"]');
+      await modal.vm.$emit('view-guide');
       await wrapper.vm.$nextTick();
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
@@ -511,7 +485,9 @@ describe('App', () => {
         'insights_mcp_news_show_disclaimer',
         'false',
       );
-      expect(wrapper.vm.showMcpNewsModal).toBe(false);
+      expect(
+        wrapper.findComponent('[data-testid="mcp-news-modal"]').exists(),
+      ).toBe(false);
     });
   });
 });

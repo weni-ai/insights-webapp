@@ -57,7 +57,5 @@ defineExpose({
   config,
   isValidForm,
   widgetConfig,
-  updateCurrentWidgetEditingConfig: (...args: unknown[]) =>
-    widgetsStore.updateCurrentWidgetEditingConfig(...(args as [any])),
 });
 </script>

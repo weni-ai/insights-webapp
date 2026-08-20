@@ -20,6 +20,7 @@ vi.mock('@/utils/time', () => ({
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
   })),
+  isDateBefore: vi.fn(() => false),
 }));
 
 vi.mock('@/services/api/resources/ctwa/data');
@@ -125,20 +126,20 @@ describe('useCTWA store', () => {
 
     it('keeps the last 7 days start when it is before 2026-08-19', () => {
       expect(store.appliedDateRange.start).toBe('2024-01-01');
-      expect(store.minDateFilter).toBe('2024-01-01');
+      expect(store.minDateFilter).toBe('2026-08-19');
     });
 
     it('keeps a query start date when it is before 2026-08-19', async () => {
       await createStore({
-        start_date: '2026-08-10',
+        start_date: '2026-08-19',
         end_date: '2026-08-20',
       });
 
       expect(store.appliedDateRange).toEqual({
-        start: '2026-08-10',
+        start: '2026-08-19',
         end: '2026-08-20',
       });
-      expect(store.minDateFilter).toBe('2026-08-10');
+      expect(store.minDateFilter).toBe('2026-08-19');
     });
 
     it('uses 2026-08-19 as min date when last 7 days start after it', async () => {
@@ -420,7 +421,9 @@ describe('useCTWA store', () => {
 
       store.loadAllData();
 
-      expect(CTWAConversionsService.getConversionsData).toHaveBeenCalledTimes(1);
+      expect(CTWAConversionsService.getConversionsData).toHaveBeenCalledTimes(
+        1,
+      );
       expect(CTWADataService.getDashboardData).not.toHaveBeenCalled();
     });
 

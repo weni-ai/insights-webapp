@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 
+import Projects from '@/services/api/resources/projects';
+
 import { moduleStorage } from '@/utils/storage';
 
 interface Project {
@@ -34,9 +36,6 @@ export const useConfig = defineStore('config', {
       this.isActiveRoute = isActive;
     },
     async checkEnableCsat() {
-      const { default: Projects } = await import(
-        '@/services/api/resources/projects'
-      );
       const enabled = await Projects.verifyProjectCsat();
       this.enableCsat = enabled;
     },
@@ -44,9 +43,6 @@ export const useConfig = defineStore('config', {
       if (!this.token || !this.project.uuid) return;
 
       try {
-        const { default: Projects } = await import(
-          '@/services/api/resources/projects'
-        );
         const data = await Projects.getProjectInfo();
         this.setProject({ uuid: this.project.uuid, ...(data || {}) });
       } catch (error) {

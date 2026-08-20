@@ -11,7 +11,7 @@
     enableSearch
     :search="searchValue"
     clearable
-    infiniteScroll
+    :infiniteScroll="true"
     :infiniteScrollDistance="10"
     :infiniteScrollCanLoadMore="canLoadMore"
     @update:model-value="handleChange"
@@ -21,7 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue';
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  useTemplateRef,
+} from 'vue';
 import { useI18n } from 'vue-i18n';
 
 import Projects from '@/services/api/resources/projects';
@@ -41,10 +48,11 @@ interface CampaignOption {
 }
 
 interface PaginatedCampaigns {
-  next?: string | null;
-  previous?: string | null;
+  count?: number | null;
   results: Campaign[];
 }
+
+const CAMPAIGN_FILTER_PAGE_SIZE = 20;
 
 interface Props {
   modelValue: string;
@@ -63,8 +71,13 @@ const selectRef = useTemplateRef<{ finishInfiniteScroll: () => void }>(
   'selectRef',
 );
 const campaigns = ref<Campaign[]>([]);
-const nextPageUrl = ref<string | null>(null);
+const currentOffset = ref(0);
+const totalCount = ref<number | null>(null);
+const lastFetchedCount = ref(0);
+const appliedSearch = ref('');
+const isLoading = ref(false);
 const isLoadingMore = ref(false);
+const isAwaitingUserScroll = ref(false);
 const searchValue = ref('');
 const searchDebounceTimer = ref<ReturnType<typeof setTimeout> | null>(null);
 const isSelecting = ref(false);
@@ -88,7 +101,23 @@ const options = computed<CampaignOption[]>(() => {
   return mapped;
 });
 
-const canLoadMore = () => !!nextPageUrl.value && !isLoadingMore.value;
+const hasMorePages = () => {
+  if (totalCount.value !== null) {
+    return campaigns.value.length < totalCount.value;
+  }
+
+  return lastFetchedCount.value === CAMPAIGN_FILTER_PAGE_SIZE;
+};
+
+const canLoadMore = () => {
+  return hasMorePages() && !isLoadingMore.value && !isAwaitingUserScroll.value;
+};
+
+const buildQueryParams = (offset: number, search?: string) => ({
+  limit: CAMPAIGN_FILTER_PAGE_SIZE,
+  offset,
+  ...(search ? { search } : {}),
+});
 
 const handleChange = (selectedValue: string) => {
   isSelecting.value = true;
@@ -115,17 +144,22 @@ const isSelectedLabel = (searchTerm: string): boolean =>
   !!searchTerm && options.value.some((option) => option.label === searchTerm);
 
 const handleSearchUpdate = (newSearchValue: string) => {
-  const trimmedSearch = newSearchValue?.trim() || '';
+  const nextSearch = newSearchValue ?? '';
+  const trimmedSearch = nextSearch.trim();
 
   if (trimmedSearch && isSelectedLabel(trimmedSearch)) {
-    searchValue.value = newSearchValue;
+    searchValue.value = nextSearch;
     return;
   }
 
   if (isSelecting.value) return;
 
+  if (searchValue.value === nextSearch) return;
+
   clearSearchTimer();
-  searchValue.value = newSearchValue;
+  searchValue.value = nextSearch;
+
+  if (trimmedSearch === appliedSearch.value) return;
 
   if (!trimmedSearch) {
     loadData();
@@ -137,55 +171,72 @@ const handleSearchUpdate = (newSearchValue: string) => {
   }, 500);
 };
 
-const processApiResponse = (response: PaginatedCampaigns | Campaign[]) => {
-  if (Array.isArray(response)) {
-    campaigns.value = response;
-    nextPageUrl.value = null;
-    return;
-  }
+const resetPagination = () => {
+  currentOffset.value = 0;
+  totalCount.value = null;
+  lastFetchedCount.value = 0;
+};
 
+const updatePaginationState = (response: PaginatedCampaigns) => {
+  totalCount.value = typeof response.count === 'number' ? response.count : null;
+  lastFetchedCount.value = response.results?.length ?? 0;
+};
+
+const processApiResponse = (response: PaginatedCampaigns) => {
   if (response?.results && Array.isArray(response.results)) {
     campaigns.value = response.results;
-    nextPageUrl.value = response.next || null;
+    updatePaginationState(response);
     return;
   }
 
   campaigns.value = [];
-  nextPageUrl.value = null;
+  resetPagination();
 };
 
 const loadData = async (search?: string) => {
+  appliedSearch.value = search || '';
+  currentOffset.value = 0;
+  isLoading.value = true;
+  isAwaitingUserScroll.value = false;
+
   try {
-    const response = await Projects.getMetaCampaigns(search ? { search } : {});
+    const response = await Projects.getMetaCampaigns(
+      buildQueryParams(0, appliedSearch.value),
+    );
     processApiResponse(response);
   } catch (error) {
     console.error('Error loading campaigns', error);
     campaigns.value = [];
-    nextPageUrl.value = null;
+    resetPagination();
+  } finally {
+    isLoading.value = false;
   }
 };
 
 const loadMoreData = async () => {
-  if (!canLoadMore()) {
-    selectRef.value?.finishInfiniteScroll();
-    return;
-  }
+  if (!canLoadMore() || isLoading.value) return;
+
+  isLoadingMore.value = true;
 
   try {
-    isLoadingMore.value = true;
-    const response = await Projects.getProjectSourcePaginated(
-      nextPageUrl.value,
+    const nextOffset = currentOffset.value + CAMPAIGN_FILTER_PAGE_SIZE;
+    const response = await Projects.getMetaCampaigns(
+      buildQueryParams(nextOffset, appliedSearch.value),
     );
 
     if (response?.results && Array.isArray(response.results)) {
       campaigns.value = [...campaigns.value, ...response.results];
-      nextPageUrl.value = response.next || null;
+      currentOffset.value = nextOffset;
+      updatePaginationState(response);
     }
   } catch (error) {
     console.error('Error loading more campaigns', error);
   } finally {
+    isAwaitingUserScroll.value = true;
     isLoadingMore.value = false;
     selectRef.value?.finishInfiniteScroll();
+    await nextTick();
+    isAwaitingUserScroll.value = false;
   }
 };
 

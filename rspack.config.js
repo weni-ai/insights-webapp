@@ -116,12 +116,7 @@ module.exports = defineConfig({
             {
               test: /\.(js|ts)$/,
               include: [path.resolve(__dirname, 'src/store/modules')],
-              exclude: [
-                /node_modules/,
-                /\.spec\./,
-                /\.unit\./,
-                /__tests__/,
-              ],
+              exclude: [/node_modules/, /\.spec\./, /\.unit\./, /__tests__/],
               enforce: 'pre',
               use: [path.resolve(__dirname, 'build/pinia-hmr-loader.js')],
             },

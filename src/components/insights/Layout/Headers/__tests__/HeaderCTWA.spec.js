@@ -55,6 +55,8 @@ vi.mock('@/store/modules/ctwa', () => ({
       selectedCampaignRef.value = value;
     },
     loadAllData: mockLoadAllData,
+    minDateFilter: '2026-08-19',
+    maxDateFilter: '2026-08-20',
   }),
 }));
 
@@ -154,6 +156,7 @@ describe('HeaderCTWA', () => {
         expectedNavigation({
           start_date: '2024-01-01',
           end_date: '2024-01-07',
+          campaign: 'campaign-uuid',
         }),
       );
     });

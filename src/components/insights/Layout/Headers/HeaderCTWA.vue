@@ -6,11 +6,12 @@
       data-testid="ctwa-date-filter"
       :disableClear="true"
       position="right"
-      :maxDate="maxDate"
+      :minDate="minDateFilter"
+      :maxDate="maxDateFilter"
+      hideOptions
       fillW
     />
-    <!-- This will be made available in the future. -->
-    <!-- <CampaignFilter v-model="selectedCampaign" /> -->
+    <CampaignFilter v-model="selectedCampaign" />
     <UnnnicButton
       data-testid="ctwa-refresh-button"
       class="header-ctwa__refresh"
@@ -27,10 +28,9 @@ import { watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 
-// import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
+import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
 import { useCTWA } from '@/store/modules/ctwa';
 import { useDashboards } from '@/store/modules/dashboards';
-import { getTodayDate } from '@/utils/time';
 
 defineOptions({
   name: 'HeaderCTWA',
@@ -41,17 +41,14 @@ const dashboardsStore = useDashboards();
 const ctwaStore = useCTWA();
 const { currentDashboard } = storeToRefs(dashboardsStore);
 const { appliedDateRange, selectedCampaign } = storeToRefs(ctwaStore);
-const { loadAllData } = ctwaStore;
-
-const maxDate = getTodayDate().start;
-
+const { loadAllData, minDateFilter, maxDateFilter } = ctwaStore;
 const handleRefresh = () => {
   loadAllData();
 };
 
 watch(
   [appliedDateRange, selectedCampaign],
-  ([dateRange, _campaign]) => {
+  ([dateRange, campaign]) => {
     const dashboardUuid = currentDashboard.value?.uuid;
 
     if (!dashboardUuid) return;
@@ -63,12 +60,11 @@ watch(
       query.end_date = dateRange.end;
     }
 
-    // This will be made available in the future.
-    // if (campaign) {
-    //   query.campaign = campaign;
-    // } else {
-    //   delete query.campaign;
-    // }
+    if (campaign) {
+      query.campaign = campaign;
+    } else {
+      delete query.campaign;
+    }
 
     router.replace({
       name: 'dashboard',

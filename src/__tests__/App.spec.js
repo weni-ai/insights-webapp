@@ -32,6 +32,9 @@ vi.mock('@/services/api/resources/projects', () => ({
       Promise.resolve({ active: false }),
     ),
     getMarketingTemplateCost: vi.fn(() => Promise.resolve({ value: 0 })),
+    getProjectInfo: vi.fn(() =>
+      Promise.resolve({ uuid: 'query-project-uuid', name: 'Test Project' }),
+    ),
   },
 }));
 
@@ -265,12 +268,51 @@ describe('App', () => {
         '*',
       );
     });
+
+    it('should load project info after token and uuid are set', async () => {
+      wrapper.unmount();
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      const isolatedConfigStore = useConfig(pinia);
+      const loadProjectInfoSpy = vi.spyOn(
+        isolatedConfigStore,
+        'loadProjectInfo',
+      );
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+
+      await flushPromises();
+
+      expect(loadProjectInfoSpy).toHaveBeenCalled();
+      expect(isolatedConfigStore.project).toEqual({
+        uuid: 'query-project-uuid',
+        name: 'Test Project',
+      });
+    });
   });
 
   describe('Methods', () => {
     describe('handlerSetProject', () => {
-      it('should set project in moduleStorage and store', () => {
+      it('should set project in moduleStorage and store', async () => {
         const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const loadProjectInfoSpy = vi.spyOn(configStore, 'loadProjectInfo');
+
+        await wrapper.vm.handlerSetProject('new-project-uuid');
         const handler = getMessageHandler();
 
         handler({
@@ -284,6 +326,7 @@ describe('App', () => {
         expect(setProjectSpy).toHaveBeenCalledWith({
           uuid: 'new-project-uuid',
         });
+        expect(loadProjectInfoSpy).toHaveBeenCalled();
       });
     });
 

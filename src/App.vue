@@ -116,6 +116,7 @@ const handlerSetLanguage = (language: string) => {
 const handlerSetProject = (projectUuid: string) => {
   moduleStorage.setItem('projectUuid', projectUuid);
   configStore.setProject({ uuid: projectUuid });
+  configStore.loadProjectInfo();
 };
 
 const handlerSetIsCommerce = (isCommerce: boolean) => {
@@ -209,8 +210,8 @@ const handlerTokenAndProjectUuid = async () => {
   initHotjar(sessionUserEmail);
 };
 
-const setShowCompleteOnboardingModal = (...args: any[]) =>
-  onboardingStore.setShowCompleteOnboardingModal(...args);
+const setShowCompleteOnboardingModal = (show: boolean) =>
+  onboardingStore.setShowCompleteOnboardingModal(show);
 
 watch(() => currentDashboard.value?.uuid, handleCurrentDashboardUuidChange);
 
@@ -254,6 +255,7 @@ listenConnect();
 onMounted(async () => {
   try {
     await handlerTokenAndProjectUuid();
+    await configStore.loadProjectInfo();
 
     projectStore.checkHasAbandonedCartRecoveryConfigured().then(() => {
       projectStore.getAbandonedCartRecoveryCost();

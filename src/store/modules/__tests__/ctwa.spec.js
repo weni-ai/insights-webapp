@@ -5,6 +5,7 @@ import { createApp } from 'vue';
 
 import { useCTWA } from '../ctwa';
 import CTWADataService from '@/services/api/resources/ctwa/data';
+import { getLastNDays } from '@/utils/time';
 import CTWAConversionsService from '@/services/api/resources/ctwa/conversions';
 import CTWAPerformanceByCampaignService from '@/services/api/resources/ctwa/performanceByCampaign';
 
@@ -14,6 +15,12 @@ vi.mock('@/utils/time', () => ({
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
   })),
+  getTodayDate: vi.fn(() => ({
+    start: '2024-01-01',
+    end: '2024-01-07',
+    dmFormat: '01/01 - 07/01',
+  })),
+  isDateBefore: vi.fn(() => false),
 }));
 
 vi.mock('@/services/api/resources/ctwa/data');
@@ -115,6 +122,40 @@ describe('useCTWA store', () => {
         start: '2024-01-01',
         end: '2024-01-07',
       });
+    });
+
+    it('keeps the last 7 days start when it is before 2026-08-19', () => {
+      expect(store.appliedDateRange.start).toBe('2024-01-01');
+      expect(store.minDateFilter).toBe('2026-08-19');
+    });
+
+    it('keeps a query start date when it is before 2026-08-19', async () => {
+      await createStore({
+        start_date: '2026-08-19',
+        end_date: '2026-08-20',
+      });
+
+      expect(store.appliedDateRange).toEqual({
+        start: '2026-08-19',
+        end: '2026-08-20',
+      });
+      expect(store.minDateFilter).toBe('2026-08-19');
+    });
+
+    it('uses 2026-08-19 as min date when last 7 days start after it', async () => {
+      getLastNDays.mockReturnValueOnce({
+        start: '2026-09-01',
+        end: '2026-09-07',
+        dmFormat: '01/09 - 07/09',
+      });
+
+      await createStore();
+
+      expect(store.appliedDateRange).toEqual({
+        start: '2026-09-01',
+        end: '2026-09-07',
+      });
+      expect(store.minDateFilter).toBe('2026-08-19');
     });
 
     it('initializes dashboard data as empty', () => {
@@ -380,7 +421,9 @@ describe('useCTWA store', () => {
 
       store.loadAllData();
 
-      expect(CTWAConversionsService.getConversionsData).toHaveBeenCalledTimes(1);
+      expect(CTWAConversionsService.getConversionsData).toHaveBeenCalledTimes(
+        1,
+      );
       expect(CTWADataService.getDashboardData).not.toHaveBeenCalled();
     });
 
@@ -400,6 +443,22 @@ describe('useCTWA store', () => {
         limit: 10,
         offset: 10,
       });
+    });
+
+    it('does not reload campaign performance when a campaign is selected', async () => {
+      CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockResolvedValue(
+        mockCampaignPerformanceData,
+      );
+
+      await store.loadCampaignPerformanceData(0);
+      store.selectedCampaign = 'campaign-uuid';
+      vi.clearAllMocks();
+
+      store.loadAllData();
+
+      expect(
+        CTWAPerformanceByCampaignService.getPerformanceByCampaign,
+      ).not.toHaveBeenCalled();
     });
   });
 });

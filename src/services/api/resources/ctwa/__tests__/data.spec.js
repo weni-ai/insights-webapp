@@ -35,9 +35,9 @@ describe('CTWA data API', () => {
 
     useConfig.mockReturnValue({ project: { uuid: 'test-project-uuid' } });
     useCTWA.mockReturnValue({
-      appliedDateRange: {
-        start: '2026-01-01',
-        end: '2026-01-31',
+      appliedFilters: {
+        start_date: '2026-01-01',
+        end_date: '2026-01-31',
       },
     });
     createRequestQuery.mockReturnValue({});
@@ -106,17 +106,32 @@ describe('CTWA data API', () => {
       {
         params: expect.objectContaining({
           start_date: '2026-02-01',
-          end_date: '2026-01-31',
         }),
       },
     );
   });
 
-  it('does not send campaign in the request params', async () => {
+  it('includes campaign when it is present in applied filters', async () => {
+    useCTWA.mockReturnValue({
+      appliedFilters: {
+        start_date: '2026-01-01',
+        end_date: '2026-01-31',
+        campaign: 'campaign-uuid',
+      },
+    });
+
     await ctwaData.getDashboardData();
 
-    const [, options] = http.get.mock.calls[0];
-    expect(options.params).not.toHaveProperty('campaign');
+    expect(http.get).toHaveBeenCalledWith(
+      '/projects/test-project-uuid/ctwa/data/',
+      {
+        params: {
+          start_date: '2026-01-01',
+          end_date: '2026-01-31',
+          campaign: 'campaign-uuid',
+        },
+      },
+    );
   });
 
   it('propagates API errors', async () => {

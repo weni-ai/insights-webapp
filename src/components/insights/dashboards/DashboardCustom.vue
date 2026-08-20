@@ -194,12 +194,6 @@ defineExpose({
   handlerWidgetOpenConfig,
   getWidgetStyle,
   getWidgetOnboardingId,
-  updateCurrentWidgetEditing: (...args: any[]) =>
-    widgetsStore.updateCurrentWidgetEditing(...args),
-  callTourNextStep: (...args: any[]) =>
-    onboardingStore.callTourNextStep(...args),
-  setShowConfigWidgetsOnboarding: (...args: any[]) =>
-    onboardingStore.setShowConfigWidgetsOnboarding(...args),
 });
 </script>
 

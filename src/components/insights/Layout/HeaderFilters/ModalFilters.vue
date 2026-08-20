@@ -212,10 +212,6 @@ defineExpose({
   syncFiltersInternal,
   handleSyncFilters,
   close,
-  setAppliedFilters: (...args: any[]) =>
-    dashboardsStore.setAppliedFilters(...args),
-  resetAppliedFilters: (...args: any[]) =>
-    dashboardsStore.resetAppliedFilters(...args),
 });
 </script>
 

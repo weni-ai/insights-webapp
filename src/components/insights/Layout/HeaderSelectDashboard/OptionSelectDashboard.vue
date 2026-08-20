@@ -124,10 +124,6 @@ defineExpose({
   setStarHovered,
   handleSetDefaultDashboard,
   callSetDashboardAlert,
-  setCurrentDashboard: (...args: any[]) =>
-    dashboardsStore.setCurrentDashboard(...args),
-  setDefaultDashboard: (...args: any[]) =>
-    dashboardsStore.setDefaultDashboard(...args),
 });
 </script>
 

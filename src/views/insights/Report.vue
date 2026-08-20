@@ -62,10 +62,6 @@ defineExpose({
   flowResultsContactListParams,
   openFlowResultContactList,
   closeFlowResultContactList,
-  resetReport: (...args: any[]) => reportsStore.resetReport(...args),
-  resetCurrentDashboardWidgets: (...args: any[]) =>
-    widgetsStore.resetCurrentDashboardWidgets(...args),
-  getWidgetReport: (...args: any[]) => reportsStore.getWidgetReport(...args),
 });
 </script>
 

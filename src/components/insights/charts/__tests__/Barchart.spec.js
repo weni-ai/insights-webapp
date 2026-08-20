@@ -32,7 +32,7 @@ describe('BarChart', () => {
 
   it('should render chart title', async () => {
     const title = wrapper.find('[data-testid="chart-title"]');
-    expect(title.text()).eq(wrapper.vm.title);
+    expect(title.text()).eq(wrapper.props('title'));
   });
 
   it('should render see more text and emit seeMore on click if seeMore prop is true', async () => {
@@ -59,7 +59,9 @@ describe('BarChart', () => {
   });
 
   it('should return the correct datalabel color based on context active state', async () => {
-    const { chartOptions } = wrapper.vm;
+    const chartOptions = wrapper
+      .findComponent('[data-testid="chart-bar"]')
+      .props('options');
 
     const activeContext = { active: true };
     const inactiveContext = { active: false };

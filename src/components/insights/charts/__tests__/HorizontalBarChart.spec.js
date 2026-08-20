@@ -41,9 +41,16 @@ describe('HorizontalBarChart', () => {
     await flushPromises();
   });
 
+  const getChart = () => wrapper.findComponent('[data-testid="chart-bar"]');
+  const getChartOptions = () => getChart().props('options');
+  const getPluginById = (id) =>
+    getChart()
+      .props('plugins')
+      .find((plugin) => plugin.id === id);
+
   it('should render chart title', async () => {
     const title = wrapper.find('[data-testid="chart-title"]');
-    expect(title.text()).eq(wrapper.vm.title);
+    expect(title.text()).eq(wrapper.props('title'));
   });
 
   it('should render see more text and emit seeMore on click if seeMore prop is true', async () => {
@@ -80,9 +87,7 @@ describe('HorizontalBarChart', () => {
       },
     });
 
-    const { chartOptions } = wrapper.vm;
-
-    const callback = chartOptions.scales.y.ticks.callback;
+    const callback = getChartOptions().scales.y.ticks.callback;
 
     expect(callback(null, 0)).toBe('Short label');
 
@@ -90,37 +95,35 @@ describe('HorizontalBarChart', () => {
   });
 
   it('should return false from tooltip label callback', async () => {
-    const { chartOptions } = wrapper.vm;
-
-    const tooltipCallback = chartOptions.plugins.tooltip.callbacks.label;
+    const tooltipCallback = getChartOptions().plugins.tooltip.callbacks.label;
 
     expect(tooltipCallback()).toBe(false);
   });
 
   it('should change cursor to pointer when hovering over a bar', async () => {
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
     const canvas = wrapper.find('[data-testid="chart-bar"]');
 
-    wrapper.vm.chartOptions.onHover({ native: { target: canvas.element } }, []);
+    getChartOptions().onHover({ native: { target: canvas.element } }, []);
 
     expect(canvas.element.style.cursor).toBe('default');
 
-    wrapper.vm.chartOptions.onHover({ native: { target: canvas.element } }, [
+    getChartOptions().onHover({ native: { target: canvas.element } }, [
       { datasetIndex: 0, index: 0 },
     ]);
     expect(canvas.element.style.cursor).toBe('pointer');
   });
 
   it('should emit clickData when clicking on a bar', async () => {
-    await wrapper.vm.$nextTick();
+    await flushPromises();
 
     const canvas = wrapper.find('canvas');
 
-    wrapper.vm.chartOptions.onClick({ native: { target: canvas.element } }, []);
+    getChartOptions().onClick({ native: { target: canvas.element } }, []);
     expect(wrapper.emitted('clickData')).toBeFalsy();
 
-    wrapper.vm.chartOptions.onClick({ native: { target: canvas.element } }, [
+    getChartOptions().onClick({ native: { target: canvas.element } }, [
       { datasetIndex: 0, index: 0 },
     ]);
 
@@ -144,7 +147,7 @@ describe('HorizontalBarChart', () => {
       ],
     };
 
-    const wrapper = mount(HorizontalBarChart, {
+    wrapper = mount(HorizontalBarChart, {
       props: { chartData, datalabelsSuffix: '%' },
     });
 
@@ -157,10 +160,12 @@ describe('HorizontalBarChart', () => {
       }),
     };
 
-    wrapper.vm.doubleDataLabel.afterDatasetsDraw(
+    getPluginById('doubleDataLabel').afterDatasetsDraw(
       mockChart,
       {},
-      { datalabelsSuffix: '%' },
+      {
+        datalabelsSuffix: '%',
+      },
     );
 
     expect(mockCtx.fillText).toHaveBeenCalledTimes(4);
@@ -182,7 +187,7 @@ describe('HorizontalBarChart', () => {
       ],
     };
 
-    const wrapper = mount(HorizontalBarChart, {
+    wrapper = mount(HorizontalBarChart, {
       props: { chartData },
     });
 
@@ -200,7 +205,7 @@ describe('HorizontalBarChart', () => {
       }),
     };
 
-    wrapper.vm.horizontalBackgroundColorPlugin.beforeDatasetsDraw(
+    getPluginById('horizontalBackgroundColorPlugin').beforeDatasetsDraw(
       mockChart,
       {},
       { backgroundColor: 'red' },

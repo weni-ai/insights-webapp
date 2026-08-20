@@ -9,8 +9,6 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'SkeletonLineChart',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SkeletonLineChart' });
 </script>

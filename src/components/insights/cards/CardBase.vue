@@ -4,10 +4,8 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'CardBase',
-};
+<script setup lang="ts">
+defineOptions({ name: 'CardBase' });
 </script>
 
 <style lang="scss" scoped>

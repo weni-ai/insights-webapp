@@ -40,15 +40,18 @@
   </FormAccordion>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed, reactive, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 
 import FormAccordion from '@/components/FormAccordion.vue';
 import SelectFlow from '@/components/SelectFlow.vue';
 import RadioList from '@/components/RadioList.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 
-interface SubWidget {
+defineOptions({ name: 'SubWidget' });
+
+interface SubWidgetConfig {
   result_type: string;
   operation: string;
   flow: {
@@ -58,109 +61,87 @@ interface SubWidget {
   };
 }
 
-export default defineComponent({
-  name: 'SubWidget',
+interface SubWidgetProps {
+  config: SubWidgetConfig;
+  title?: string;
+  active?: boolean;
+}
 
-  components: {
-    FormAccordion,
-    SelectFlow,
-    RadioList,
-    SelectFlowResult,
-  },
-
-  props: {
-    config: {
-      type: Object as () => SubWidget,
-      required: true,
-    },
-
-    title: {
-      type: String,
-      default: '',
-    },
-
-    active: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  emits: [
-    'update:active',
-    'update:model-value',
-    'update:config',
-    'is-valid-form',
-  ],
-
-  data() {
-    return {
-      configLocal: this.config,
-      result_types: [
-        {
-          value: 'executions',
-          label: this.$t('drawers.config_card.radios.executions'),
-        },
-        {
-          value: 'flow_result',
-          label: this.$t('drawers.config_card.radios.results'),
-        },
-      ],
-      operations: [
-        {
-          value: 'sum',
-          label: this.$t('drawers.config_card.radios.sum'),
-        },
-        {
-          value: 'avg',
-          label: this.$t('drawers.config_card.radios.avg'),
-        },
-        {
-          value: 'min',
-          label: this.$t('drawers.config_card.radios.min'),
-        },
-        {
-          value: 'max',
-          label: this.$t('drawers.config_card.radios.max'),
-        },
-      ],
-    };
-  },
-
-  computed: {
-    isValidConfig() {
-      const { configLocal } = this;
-      const mapValidations = {
-        executions: true,
-        flow_result: !!configLocal.flow.result && !!configLocal.operation,
-      };
-      return !!configLocal.flow.uuid && mapValidations[configLocal.result_type];
-    },
-  },
-
-  watch: {
-    configLocal: {
-      deep: true,
-      handler(newConfig) {
-        const treatedConfig = {
-          ...newConfig,
-          operation:
-            newConfig.result_type === 'executions'
-              ? 'count'
-              : newConfig.operation,
-        };
-
-        this.$emit('update:config', treatedConfig);
-      },
-    },
-
-    isValidConfig: {
-      immediate: true,
-      handler(newIsValid) {
-        this.$emit('is-valid-form', newIsValid);
-      },
-    },
-  },
+const props = withDefaults(defineProps<SubWidgetProps>(), {
+  title: '',
+  active: false,
 });
+
+const emit = defineEmits<{
+  'update:active': [value: boolean];
+  'update:model-value': [value: unknown];
+  'update:config': [config: SubWidgetConfig];
+  'is-valid-form': [isValid: boolean];
+}>();
+
+const { t } = useI18n();
+
+const configLocal = reactive(props.config);
+
+const result_types = [
+  {
+    value: 'executions',
+    label: t('drawers.config_card.radios.executions'),
+  },
+  {
+    value: 'flow_result',
+    label: t('drawers.config_card.radios.results'),
+  },
+];
+
+const operations = [
+  {
+    value: 'sum',
+    label: t('drawers.config_card.radios.sum'),
+  },
+  {
+    value: 'avg',
+    label: t('drawers.config_card.radios.avg'),
+  },
+  {
+    value: 'min',
+    label: t('drawers.config_card.radios.min'),
+  },
+  {
+    value: 'max',
+    label: t('drawers.config_card.radios.max'),
+  },
+];
+
+const isValidConfig = computed(() => {
+  const mapValidations: Record<string, boolean> = {
+    executions: true,
+    flow_result: !!configLocal.flow.result && !!configLocal.operation,
+  };
+  return !!configLocal.flow.uuid && mapValidations[configLocal.result_type];
+});
+
+watch(
+  configLocal,
+  (newConfig) => {
+    const treatedConfig = {
+      ...newConfig,
+      operation:
+        newConfig.result_type === 'executions' ? 'count' : newConfig.operation,
+    };
+
+    emit('update:config', treatedConfig);
+  },
+  { deep: true },
+);
+
+watch(
+  isValidConfig,
+  (newIsValid) => {
+    emit('is-valid-form', newIsValid);
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped>

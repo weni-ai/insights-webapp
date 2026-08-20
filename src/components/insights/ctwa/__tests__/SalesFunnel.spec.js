@@ -16,6 +16,7 @@ vi.mock('@/utils/numbers', () => ({
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
   getTodayDate: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
+  isDateBefore: vi.fn(() => false),
 }));
 
 vi.mock('@weni/unnnic-system/tokens/colors', () => ({
@@ -153,9 +154,9 @@ describe('SalesFunnel', () => {
       },
     });
 
-    const items = wrapper.findComponent({ name: 'SteppedBarChart' }).props(
-      'items',
-    );
+    const items = wrapper
+      .findComponent({ name: 'SteppedBarChart' })
+      .props('items');
 
     items.forEach((item) => {
       expect(item.displayValue).toBe('-');

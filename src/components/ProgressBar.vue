@@ -9,45 +9,44 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'ProgressBar',
-  props: {
-    title: {
-      type: String,
-      default: '',
-    },
-    timeInterval: {
-      type: Number,
-      default: 50,
-    },
-  },
-  emits: ['progress-complete'],
-  data() {
-    return {
-      progress: 0,
-      interval: null,
-    };
-  },
-  mounted() {
-    setTimeout(this.startProgressBar, 2000);
-  },
-  unmounted() {
-    clearInterval(this.interval);
-  },
-  methods: {
-    startProgressBar() {
-      this.progress = 0;
+<script setup lang="ts">
+import { onMounted, onUnmounted, ref } from 'vue';
 
-      this.interval = setInterval(this.updateProgress, this.timeInterval);
-    },
-    updateProgress() {
-      this.progress === 100
-        ? this.$emit('progress-complete')
-        : (this.progress += 1);
-    },
-  },
+defineOptions({ name: 'ProgressBar' });
+
+interface ProgressBarProps {
+  title?: string;
+  timeInterval?: number;
+}
+
+const props = withDefaults(defineProps<ProgressBarProps>(), {
+  title: '',
+  timeInterval: 50,
+});
+
+const emit = defineEmits<{
+  'progress-complete': [];
+}>();
+
+const progress = ref(0);
+let interval: ReturnType<typeof setInterval> | null = null;
+
+const updateProgress = () => {
+  progress.value === 100 ? emit('progress-complete') : (progress.value += 1);
 };
+
+const startProgressBar = () => {
+  progress.value = 0;
+  interval = setInterval(updateProgress, props.timeInterval);
+};
+
+onMounted(() => {
+  setTimeout(startProgressBar, 2000);
+});
+
+onUnmounted(() => {
+  clearInterval(interval);
+});
 </script>
 
 <style lang="scss" scoped>

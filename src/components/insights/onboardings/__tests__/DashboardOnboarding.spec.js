@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, flushPromises } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
 import { useOnboarding } from '@/store/modules/onboarding';
@@ -11,8 +11,10 @@ describe('DashboardOnboarding', () => {
   let wrapper;
   let spys;
 
+  const tour = () => wrapper.findComponent('[data-testid="tour"]');
+
   beforeEach(() => {
-    const store = createTestingPinia({
+    const pinia = createTestingPinia({
       initialState: {
         dashboards: { dashboards: [], currentDashboard: {} },
         onboarding: {
@@ -37,22 +39,6 @@ describe('DashboardOnboarding', () => {
         },
       },
     });
-    wrapper = mount(DashboardOnboarding, {
-      global: {
-        plugins: [store],
-        stubs: {
-          UnnnicTour: {
-            template:
-              '<section ref="dashboardOnboardingTour" data-testid="tour"  @close="setShowCreateDashboardOnboarding(false)" @end-tour="setShowDashboardConfig(true)"><slot></slot></section>',
-            methods: {
-              start: vi.fn(),
-              setShowDashboardConfig: vi.fn(),
-              setShowCreateDashboardOnboarding: vi.fn(),
-            },
-          },
-        },
-      },
-    });
 
     const onboardingStore = useOnboarding();
     const dashboardsStore = useDashboards();
@@ -69,17 +55,26 @@ describe('DashboardOnboarding', () => {
       ),
     };
 
-    vi.clearAllMocks();
+    wrapper = mount(DashboardOnboarding, {
+      global: {
+        plugins: [pinia],
+        stubs: {
+          UnnnicTour: {
+            props: ['steps'],
+            template: '<section data-testid="tour"><slot></slot></section>',
+          },
+        },
+      },
+    });
   });
 
   it('renders the component correctly', () => {
     expect(wrapper.exists()).toBe(true);
-    const tour = wrapper.find('[data-testid="tour"]');
-    expect(tour.exists()).toBe(true);
+    expect(tour().exists()).toBe(true);
   });
 
   it('computes the dashboardTourSteps correctly', () => {
-    const steps = wrapper.vm.dashboardTourSteps;
+    const steps = tour().props('steps');
     expect(steps).toHaveLength(2);
 
     expect(steps[0].title).toBe(
@@ -89,19 +84,17 @@ describe('DashboardOnboarding', () => {
   });
 
   it('calls setOnboardingRef on mounted', async () => {
-    await wrapper.vm.$nextTick();
+    await flushPromises();
     expect(spys.setOnboardingRef).toHaveBeenCalled();
   });
 
   it('calls setShowDashboardConfig when the tour ends', async () => {
-    const tour = wrapper.findComponent({ ref: 'dashboardOnboardingTour' });
-    await tour.vm.$emit('end-tour');
+    await tour().vm.$emit('end-tour');
     expect(spys.setShowDashboardConfig).toHaveBeenCalled();
   });
 
   it('calls setShowCreateDashboardOnboarding when the tour is closed', async () => {
-    const tour = wrapper.findComponent({ ref: 'dashboardOnboardingTour' });
-    await tour.vm.$emit('close');
+    await tour().vm.$emit('close');
 
     expect(spys.setShowCreateDashboardOnboarding).toHaveBeenCalled();
   });

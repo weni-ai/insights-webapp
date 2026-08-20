@@ -5,24 +5,22 @@
   />
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from 'vue';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 
-export default {
-  props: {
-    content: {
-      type: String,
-      default: '',
-    },
-  },
+defineOptions({ name: 'Markdown' });
 
-  computed: {
-    html() {
-      return DOMPurify.sanitize(marked.parse(this.content));
-    },
-  },
-};
+interface MarkdownProps {
+  content?: string;
+}
+
+const props = withDefaults(defineProps<MarkdownProps>(), {
+  content: '',
+});
+
+const html = computed(() => DOMPurify.sanitize(marked.parse(props.content)));
 </script>
 
 <style scoped>

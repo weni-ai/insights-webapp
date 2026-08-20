@@ -120,20 +120,15 @@ describe('TableGroup', () => {
     it('computes the correct pagination offset and limit', () => {
       expect(wrapper.vm.paginationConfig).toEqual({ limit: 5, offset: 0 });
 
-      wrapper.setData({ page: 1 });
+      wrapper.vm.page = 1;
       expect(wrapper.vm.paginationConfig).toEqual({ limit: 5, offset: 5 });
     });
 
     it('resets the page when route query changes', async () => {
-      await wrapper.setData({ page: 1 });
+      wrapper.vm.page = 1;
+      await wrapper.vm.$nextTick();
 
-      wrapper.vm.$options.watch['$route.query'].handler.call(
-        wrapper.vm,
-        {
-          slug: 'tab1',
-        },
-        { slug: 'tab2' },
-      );
+      wrapper.vm.handleRouteQuery({ slug: 'tab1' }, { slug: 'tab2' });
 
       expect(wrapper.vm.page).toBe(0);
     });

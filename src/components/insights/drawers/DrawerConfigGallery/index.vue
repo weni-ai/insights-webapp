@@ -4,8 +4,8 @@
     ref="unnnicDrawer"
     class="drawer-config-gallery"
     wide
-    :title="$t('drawers.config_gallery.title')"
-    :description="$t('drawers.config_gallery.description')"
+    :title="t('drawers.config_gallery.title')"
+    :description="t('drawers.config_gallery.description')"
     :modelValue="modelValue"
     closeIcon="close"
     @close="closeAllDrawers({ handlerNextStep: false })"
@@ -38,8 +38,10 @@
   />
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, watch, onBeforeMount } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 
 import { useProject } from '@/store/modules/project';
 import { useWidgets } from '@/store/modules/widgets';
@@ -51,155 +53,145 @@ import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
 import { clearDeepValues } from '@/utils/object.js';
 
-export default {
-  name: 'DrawerConfigGallery',
+defineOptions({ name: 'DrawerConfigGallery' });
 
-  components: {
-    GalleryOption,
-    DrawerConfigWidgetDynamic,
-  },
+const props = defineProps<{
+  modelValue?: boolean;
+}>();
 
-  props: {
-    modelValue: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
 
-  emits: ['close'],
+const { t } = useI18n();
 
-  data() {
-    return { showDrawerConfigWidget: false, drawerConfigType: '' };
-  },
+const projectStore = useProject();
+const widgetsStore = useWidgets();
+const onboardingStore = useOnboarding();
+const configStore = useConfig();
 
-  computed: {
-    ...mapState(useProject, {
-      isLoadedProjectFlows: 'isLoadedFlows',
-    }),
-    ...mapState(useWidgets, { widget: 'currentWidgetEditing' }),
-    ...mapState(useOnboarding, [
-      'onboardingRefs',
-      'showConfigWidgetOnboarding',
-    ]),
-    ...mapState(useConfig, ['project']),
+const { isLoadedFlows: isLoadedProjectFlows } = storeToRefs(projectStore);
+const { currentWidgetEditing: widget } = storeToRefs(widgetsStore);
+const { onboardingRefs, showConfigWidgetOnboarding } =
+  storeToRefs(onboardingStore);
+const { project } = storeToRefs(configStore);
 
-    widgetConfigType() {
-      if (this.widget.type === 'vtex_order') return 'vtex';
+const showDrawerConfigWidget = ref(false);
+const drawerConfigType = ref('');
 
-      return this.widget.config?.type;
-    },
+const widgetConfigType = computed(() => {
+  if (widget.value.type === 'vtex_order') return 'vtex';
+  return widget.value.config?.type;
+});
 
-    galleryOptions() {
-      const { $t } = this;
+const galleryOptions = computed(() => {
+  function createOptions(optionKeys: string[]) {
+    return optionKeys.map((option) => ({
+      title: t(`drawers.config_gallery.options.${option}.title`),
+      description: t(`drawers.config_gallery.options.${option}.description`),
+      value: option,
+    }));
+  }
 
-      function createOptions(optionKeys) {
-        return optionKeys.map((option) => ({
-          title: $t(`drawers.config_gallery.options.${option}.title`),
-          description: $t(
-            `drawers.config_gallery.options.${option}.description`,
-          ),
-          value: option,
-        }));
-      }
+  const empty_widget_options = [
+    'funnel',
+    'recurrence',
+    'vtex',
+    'vtex_conversions',
+  ];
 
-      const empty_widget_options = [
-        'funnel',
-        'recurrence',
-        'vtex',
-        'vtex_conversions',
-      ];
+  const optionsMap: Record<string, any[]> = {
+    card: createOptions(['executions', 'flow_result', 'data_crossing']),
+    empty_column: createOptions(empty_widget_options),
+  };
 
-      const optionsMap = {
-        card: createOptions(['executions', 'flow_result', 'data_crossing']),
-        empty_column: createOptions(empty_widget_options),
-      };
+  return optionsMap[widget.value?.type] || [];
+});
 
-      return optionsMap[this.widget?.type] || [];
-    },
-  },
+watch(
+  () => props.modelValue,
+  () => {
+    setDrawerConfigType(widgetConfigType.value);
 
-  watch: {
-    modelValue: {
-      immediate: true,
-      handler() {
-        this.setDrawerConfigType(this.widgetConfigType);
-
-        if (!this.galleryOptions.length) {
-          this.showDrawerConfigWidget = true;
-        }
-      },
-    },
-  },
-
-  async created() {
-    const isVtexWidget = ['vtex_order', 'vtex_conversions'].includes(
-      this.widget?.type,
-    );
-    if (!this.isLoadedProjectFlows && !isVtexWidget) {
-      await this.getProjectFlows();
+    if (!galleryOptions.value.length) {
+      showDrawerConfigWidget.value = true;
     }
   },
+  { immediate: true },
+);
 
-  methods: {
-    ...mapActions(useProject, ['getProjectFlows']),
-    ...mapActions(useOnboarding, [
-      'callTourNextStep',
-      'callTourPreviousStep',
-      'setOnboardingRef',
-    ]),
-    ...mapActions(useWidgets, ['updateCurrentWidgetEditing']),
+onBeforeMount(async () => {
+  const isVtexWidget = ['vtex_order', 'vtex_conversions'].includes(
+    widget.value?.type,
+  );
+  if (!isLoadedProjectFlows.value && !isVtexWidget) {
+    await projectStore.getProjectFlows();
+  }
+});
 
-    async closeAllDrawers({ handleTourNextStep } = {}) {
-      this.showDrawerConfigWidget = false;
-      this.drawerConfigType = '';
+function closeAllDrawers({ handleTourNextStep }: any = {}) {
+  showDrawerConfigWidget.value = false;
+  drawerConfigType.value = '';
 
-      if (handleTourNextStep) this.callTourNextStep('widgets-onboarding-tour');
-      else this.callTourPreviousStep({ tour: 'widgets-onboarding-tour' });
+  if (handleTourNextStep)
+    onboardingStore.callTourNextStep('widgets-onboarding-tour');
+  else
+    onboardingStore.callTourPreviousStep({ tour: 'widgets-onboarding-tour' });
 
-      this.$emit('close');
-    },
+  emit('close');
+}
 
-    setDrawerConfigType(configType) {
-      this.drawerConfigType = configType;
+function setDrawerConfigType(configType: string) {
+  drawerConfigType.value = configType;
 
-      if (configType) {
-        this.callTourNextStep('widgets-onboarding-tour');
-        this.handleShowDrawerConfigWidget();
-      }
+  if (configType) {
+    onboardingStore.callTourNextStep('widgets-onboarding-tour');
+    handleShowDrawerConfigWidget();
+  }
 
-      if (configType !== this.widgetConfigType) {
-        this.cleanCurrentWidget();
-      }
-    },
+  if (configType !== widgetConfigType.value) {
+    cleanCurrentWidget();
+  }
+}
 
-    handleShowDrawerConfigWidget() {
-      this.showDrawerConfigWidget = true;
-    },
+function handleShowDrawerConfigWidget() {
+  showDrawerConfigWidget.value = true;
+}
 
-    cleanCurrentWidget() {
-      const cleanWidget = {
-        ...this.widget,
-        name: '',
-        config: clearDeepValues(this.widget.config),
-      };
+function cleanCurrentWidget() {
+  const cleanWidget = {
+    ...widget.value,
+    name: '',
+    config: clearDeepValues(widget.value.config),
+  };
 
-      this.updateCurrentWidgetEditing(cleanWidget);
-    },
+  widgetsStore.updateCurrentWidgetEditing(cleanWidget);
+}
 
-    goToGallery() {
-      this.showDrawerConfigWidget = false;
-      this.drawerConfigType = '';
+function goToGallery() {
+  showDrawerConfigWidget.value = false;
+  drawerConfigType.value = '';
 
-      this.callTourPreviousStep({
-        tour: 'widgets-onboarding-tour',
-      });
+  onboardingStore.callTourPreviousStep({
+    tour: 'widgets-onboarding-tour',
+  });
 
-      if (!this.galleryOptions.length) {
-        this.$emit('close');
-      }
-    },
-  },
-};
+  if (!galleryOptions.value.length) {
+    emit('close');
+  }
+}
+
+defineExpose({
+  showDrawerConfigWidget,
+  drawerConfigType,
+  widgetConfigType,
+  galleryOptions,
+  closeAllDrawers,
+  setDrawerConfigType,
+  handleShowDrawerConfigWidget,
+  cleanCurrentWidget,
+  goToGallery,
+});
 </script>
 
 <style lang="scss" scoped>

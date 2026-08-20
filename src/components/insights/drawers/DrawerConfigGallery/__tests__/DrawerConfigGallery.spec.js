@@ -104,10 +104,8 @@ describe('DrawerConfigGallery.vue', () => {
   });
 
   it('renders DrawerConfigWidgetDynamic when showDrawerConfigWidget is true', async () => {
-    await wrapper.setData({
-      showDrawerConfigWidget: true,
-      drawerConfigType: 'funnel',
-    });
+    wrapper.vm.showDrawerConfigWidget = true;
+    wrapper.vm.drawerConfigType = 'funnel';
 
     await wrapper.vm.$nextTick();
 

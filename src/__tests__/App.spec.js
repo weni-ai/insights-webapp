@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
+import { createRouter, createMemoryHistory } from 'vue-router';
 
 import App from '@/App.vue';
 
@@ -99,6 +100,24 @@ describe('App', () => {
   const mockPostMessage = vi.fn();
   const mockAddEventListener = vi.fn();
 
+  const createTestRouter = () =>
+    createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<div />' } },
+        {
+          path: '/human-service',
+          name: 'humanServiceDashboard',
+          component: { template: '<div />' },
+        },
+        {
+          path: '/:dashboardUuid?',
+          name: 'dashboard',
+          component: { template: '<div />' },
+        },
+      ],
+    });
+
   const createWrapper = (options = {}) => {
     return mount(App, {
       global: {
@@ -107,19 +126,15 @@ describe('App', () => {
             createSpy: vi.fn,
             stubActions: false,
           }),
+          createTestRouter(),
         ],
         components: mockComponents,
-        mocks: {
-          $i18n: {
-            locale: 'en',
-          },
-          ...options.mocks,
-          $route: {
-            name: 'home',
-          },
-        },
         stubs: {
           RouterView: mockComponents.RouterView,
+          InsightsLayout: mockComponents.InsightsLayout,
+          IconLoading: mockComponents.IconLoading,
+          CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+          McpNewsModal: mockComponents.McpNewsModal,
         },
       },
       ...options,
@@ -234,13 +249,10 @@ describe('App', () => {
         dashboardsStore,
         'getCurrentDashboardFilters',
       );
-      const getFeatureFlagsSpy = vi.spyOn(wrapper.vm, 'getFeatureFlags');
+      const getFeatureFlagsSpy = vi.spyOn(featureFlagStore, 'getFeatureFlags');
 
       const newUuid = 'new-uuid';
-      await wrapper.vm.$options.watch['currentDashboard.uuid'].call(
-        wrapper.vm,
-        newUuid,
-      );
+      await wrapper.vm.handleCurrentDashboardUuidChange(newUuid);
 
       expect(setCurrentDashboardFiltersSpy).toHaveBeenCalledWith([]);
       expect(getCurrentDashboardFiltersSpy).toHaveBeenCalled();
@@ -256,12 +268,9 @@ describe('App', () => {
         dashboardsStore,
         'getCurrentDashboardFilters',
       );
-      const getFeatureFlagsSpy = vi.spyOn(wrapper.vm, 'getFeatureFlags');
+      const getFeatureFlagsSpy = vi.spyOn(featureFlagStore, 'getFeatureFlags');
 
-      await wrapper.vm.$options.watch['currentDashboard.uuid'].call(
-        wrapper.vm,
-        null,
-      );
+      await wrapper.vm.handleCurrentDashboardUuidChange(null);
 
       expect(setCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
       expect(getCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
@@ -271,9 +280,14 @@ describe('App', () => {
 
   describe('Lifecycle Methods', () => {
     it('should call listenConnect on created', () => {
-      const listenConnectSpy = vi.spyOn(App.methods, 'listenConnect');
-      createWrapper();
-      expect(listenConnectSpy).toHaveBeenCalled();
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { event: 'getLanguage' },
+        '*',
+      );
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { event: 'getIsCommerce' },
+        '*',
+      );
     });
 
     it('should load project info after token and uuid are set', async () => {

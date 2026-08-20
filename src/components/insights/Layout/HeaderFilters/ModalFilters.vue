@@ -49,8 +49,9 @@
   </UnnnicDialog>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import {
   UnnnicButton,
@@ -66,163 +67,156 @@ import { useSectors } from '@/store/modules/sectors';
 
 import DynamicFilter from './DynamicFilter.vue';
 
-export default {
-  name: 'ModalFilters',
+defineOptions({ name: 'ModalFilters' });
 
-  components: {
-    DynamicFilter,
-    UnnnicButton,
-    UnnnicDialog,
-    UnnnicDialogContent,
-    UnnnicDialogFooter,
-    UnnnicDialogHeader,
-    UnnnicDialogTitle,
-  },
+defineProps<{
+  showModal: boolean;
+}>();
 
-  props: {
-    showModal: {
-      type: Boolean,
-      required: true,
-    },
-  },
+const emit = defineEmits<{
+  close: [];
+}>();
 
-  emits: ['close'],
+const dashboardsStore = useDashboards();
+const sectorsStore = useSectors();
+const { currentDashboardFilters, appliedFilters } =
+  storeToRefs(dashboardsStore);
+const { sectors, getSectorByUuid } = storeToRefs(sectorsStore);
 
-  data() {
-    return {
-      filtersInternal: {},
-    };
-  },
+const filtersInternal = ref<Record<string, any>>({});
 
-  computed: {
-    ...mapState(useDashboards, ['currentDashboardFilters', 'appliedFilters']),
-    ...mapState(useSectors, ['sectors', 'getSectorByUuid']),
+const hasFiltersInternal = computed(
+  () => Object.keys(filtersInternal.value).length,
+);
 
-    hasFiltersInternal() {
-      return Object.keys(this.filtersInternal).length;
-    },
+const areStoreFiltersAndInternalEqual = computed(
+  () =>
+    JSON.stringify(appliedFilters.value) ===
+    JSON.stringify(filtersInternal.value),
+);
 
-    areStoreFiltersAndInternalEqual() {
-      return (
-        JSON.stringify(this.appliedFilters) ===
-        JSON.stringify(this.filtersInternal)
-      );
-    },
-  },
-
-  watch: {
-    appliedFilters() {
-      this.syncFiltersInternal();
-    },
-    sectors() {
-      this.handleSyncFilters();
-    },
-  },
-
-  created() {
-    this.syncFiltersInternal();
-  },
-
-  methods: {
-    ...mapActions(useDashboards, ['setAppliedFilters', 'resetAppliedFilters']),
-
-    handleOpenChange(isOpen) {
-      if (!isOpen) {
-        this.close();
-      }
-    },
-
-    getDynamicFiltersDependsOnValues(filter) {
-      if (!filter.depends_on?.search_param) return null;
-
-      const { search_param, filter: filterName } = filter.depends_on;
-
-      if (search_param === 'sector_id') {
-        return {
-          [search_param]: this.filtersInternal[filterName]?.[0]?.value,
-        };
-      } else {
-        return {
-          [search_param]: this.filtersInternal[filterName],
-        };
-      }
-    },
-    handleDisabledFilter(filter) {
-      if (['tags', 'queue'].includes(filter.name)) {
-        const disableTagsAndQueueFilter =
-          this.filtersInternal[filter.depends_on?.filter]?.length !== 1;
-
-        if (disableTagsAndQueueFilter) {
-          this.filtersInternal[filter.name] = undefined;
-        }
-
-        return disableTagsAndQueueFilter;
-      }
-
-      return (
-        filter.depends_on && !this.filtersInternal[filter.depends_on?.filter]
-      );
-    },
-    clearFilters() {
-      this.filtersInternal = {};
-    },
-    updateFilter(filterName, value) {
-      const hasNonNullValues =
-        typeof value === 'object' && value
-          ? Object.values(value).some((val) => val)
-          : value;
-
-      if (hasNonNullValues) {
-        this.filtersInternal[filterName] = value;
-      } else {
-        delete this.filtersInternal[filterName];
-      }
-    },
-    setFilters() {
-      const processedFilters = { ...this.filtersInternal };
-
-      if (processedFilters.sector && Array.isArray(processedFilters.sector)) {
-        processedFilters.sector = processedFilters.sector.map(
-          (item) => item.value,
-        );
-      }
-      if (Object.keys(processedFilters).length) {
-        this.setAppliedFilters(processedFilters);
-      } else {
-        this.resetAppliedFilters();
-      }
-      this.close();
-    },
-    syncFiltersInternal() {
-      if (!this.areStoreFiltersAndInternalEqual) {
-        this.handleSyncFilters();
-      }
-    },
-    handleSyncFilters() {
-      const processedFilters = { ...this.appliedFilters };
-
-      if (processedFilters.sector) {
-        const sectorValues = Array.isArray(processedFilters.sector)
-          ? processedFilters.sector
-          : [];
-
-        processedFilters.sector = sectorValues.map((value) => {
-          const trimmedValue = typeof value === 'string' ? value.trim() : value;
-          const sector = this.getSectorByUuid(trimmedValue);
-          return {
-            value: trimmedValue,
-            label: sector ? sector.name : null,
-          };
-        });
-      }
-
-      this.filtersInternal = processedFilters;
-    },
-    close() {
-      this.$emit('close');
-    },
-  },
+const handleOpenChange = (isOpen: boolean) => {
+  if (!isOpen) {
+    close();
+  }
 };
+
+const getDynamicFiltersDependsOnValues = (filter: Record<string, any>) => {
+  if (!filter.depends_on?.search_param) return null;
+
+  const { search_param, filter: filterName } = filter.depends_on;
+
+  if (search_param === 'sector_id') {
+    return {
+      [search_param]: filtersInternal.value[filterName]?.[0]?.value,
+    };
+  }
+  return {
+    [search_param]: filtersInternal.value[filterName],
+  };
+};
+
+const handleDisabledFilter = (filter: Record<string, any>) => {
+  if (['tags', 'queue'].includes(filter.name)) {
+    const disableTagsAndQueueFilter =
+      filtersInternal.value[filter.depends_on?.filter]?.length !== 1;
+
+    if (disableTagsAndQueueFilter) {
+      filtersInternal.value[filter.name] = undefined;
+    }
+
+    return disableTagsAndQueueFilter;
+  }
+
+  return filter.depends_on && !filtersInternal.value[filter.depends_on?.filter];
+};
+
+const clearFilters = () => {
+  filtersInternal.value = {};
+};
+
+const updateFilter = (filterName: string, value: any) => {
+  const hasNonNullValues =
+    typeof value === 'object' && value
+      ? Object.values(value).some((val) => val)
+      : value;
+
+  if (hasNonNullValues) {
+    filtersInternal.value[filterName] = value;
+  } else {
+    delete filtersInternal.value[filterName];
+  }
+};
+
+const setFilters = () => {
+  const processedFilters = { ...filtersInternal.value };
+
+  if (processedFilters.sector && Array.isArray(processedFilters.sector)) {
+    processedFilters.sector = processedFilters.sector.map(
+      (item: any) => item.value,
+    );
+  }
+  if (Object.keys(processedFilters).length) {
+    dashboardsStore.setAppliedFilters(processedFilters);
+  } else {
+    dashboardsStore.resetAppliedFilters();
+  }
+  close();
+};
+
+const handleSyncFilters = () => {
+  const processedFilters = { ...appliedFilters.value };
+
+  if (processedFilters.sector) {
+    const sectorValues = Array.isArray(processedFilters.sector)
+      ? processedFilters.sector
+      : [];
+
+    processedFilters.sector = sectorValues.map((value: any) => {
+      const trimmedValue = typeof value === 'string' ? value.trim() : value;
+      const sector = getSectorByUuid.value(trimmedValue);
+      return {
+        value: trimmedValue,
+        label: sector ? sector.name : null,
+      };
+    });
+  }
+
+  filtersInternal.value = processedFilters;
+};
+
+const syncFiltersInternal = () => {
+  if (!areStoreFiltersAndInternalEqual.value) {
+    handleSyncFilters();
+  }
+};
+
+const close = () => {
+  emit('close');
+};
+
+watch(appliedFilters, syncFiltersInternal);
+watch(sectors, handleSyncFilters);
+
+syncFiltersInternal();
+
+defineExpose({
+  filtersInternal,
+  hasFiltersInternal,
+  areStoreFiltersAndInternalEqual,
+  getDynamicFiltersDependsOnValues,
+  handleDisabledFilter,
+  clearFilters,
+  updateFilter,
+  setFilters,
+  syncFiltersInternal,
+  handleSyncFilters,
+  close,
+  setAppliedFilters: (...args: any[]) =>
+    dashboardsStore.setAppliedFilters(...args),
+  resetAppliedFilters: (...args: any[]) =>
+    dashboardsStore.resetAppliedFilters(...args),
+});
 </script>
 
 <style lang="scss" scoped>

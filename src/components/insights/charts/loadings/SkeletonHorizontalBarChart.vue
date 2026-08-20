@@ -20,27 +20,27 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'SkeletonHorizontalBarChart',
-};
-</script>
-
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
+
+defineOptions({ name: 'SkeletonHorizontalBarChart' });
+
+interface SkeletonHorizontalBarChartProps {
+  width: number;
+  height: number;
+}
 
 const BAR_HEIGHT = 48;
 
-const props = defineProps({
-  width: { type: Number, required: true },
-  height: { type: Number, required: true },
-});
+const props = defineProps<SkeletonHorizontalBarChartProps>();
 
 const generateRandomWidth = () => {
   return `${Math.random() * (props.width - 150) + 100}px`;
 };
 
-const totalBars = computed(() => parseInt(props.height / BAR_HEIGHT) || 14);
+const totalBars = computed(
+  () => Number.parseInt(String(props.height / BAR_HEIGHT)) || 14,
+);
 </script>
 
 <style lang="scss" scoped>

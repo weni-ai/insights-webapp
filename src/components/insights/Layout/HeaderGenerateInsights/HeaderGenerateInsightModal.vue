@@ -57,11 +57,20 @@
   </Transition>
 </template>
 
-<script>
-import { ref } from 'vue';
+<script setup lang="ts">
+import {
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+} from 'vue';
 import { onClickOutside } from '@vueuse/core';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
+import mitt from 'mitt';
 
-import { mapActions, mapState } from 'pinia';
 import { useGpt } from '@/store/modules/gpt';
 import { useWidgets } from '@/store/modules/widgets';
 import { useUser } from '@/store/modules/user';
@@ -70,214 +79,215 @@ import HeaderGenerateInsightText from './HeaderGenerateInsightText.vue';
 import InsightModalFooter from './InsightModalFooter.vue';
 
 import firebaseService from '@/services/api/resources/GPT';
-
-import mitt from 'mitt';
 import { formatSecondsToHumanString } from '@/utils/time';
+
+defineOptions({ name: 'HeaderGenerateInsightModal' });
+
+interface InsightWidget {
+  type?: string;
+  name?: string;
+  config?: { data_type?: string };
+  data?: { value?: number | string | null };
+}
+
+interface HeaderGenerateInsightModalProps {
+  show?: boolean;
+}
+
+const props = withDefaults(defineProps<HeaderGenerateInsightModalProps>(), {
+  show: false,
+});
+
+const emit = defineEmits<{
+  close: [];
+}>();
+
+const { t } = useI18n();
+const widgetsStore = useWidgets();
+const gptStore = useGpt();
+const { currentDashboardWidgets } = storeToRefs(widgetsStore);
+const { insights } = storeToRefs(gptStore);
 
 const emitter = mitt();
 
-export default {
-  name: 'HeaderGenerateInsightModal',
+const insightModal = ref<HTMLElement | null>(null);
+const content = ref<HTMLElement | null>(null);
+let observer: MutationObserver | null = null;
 
-  components: {
-    HeaderGenerateInsightText,
-    InsightModalFooter,
-  },
+onClickOutside(insightModal, (event) => {
+  if ((event as PointerEvent)?.pointerType === 'mouse') emit('close');
+});
 
-  props: {
-    show: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const generatedInsight = ref('');
+const generateInsightError = ref(false);
+const showGradient = ref(false);
+const isBtnYesActive = ref(false);
+const isBtnNoActive = ref(false);
+const feedbackText = ref('');
+const isFeedbackSent = ref(false);
+const isSubmitFeedbackLoading = ref(false);
+const isRenderFeedback = ref(false);
 
-  emits: ['close'],
+const isRenderFooterFeedback = computed(() => {
+  if (generateInsightError.value) return false;
+  return isRenderFeedback.value;
+});
 
-  setup(_, context) {
-    const insightModal = ref(null);
-
-    onClickOutside(insightModal, (event) => {
-      if (event?.pointerType === 'mouse') context.emit('close');
-    });
-
-    return {
-      insightModal,
-    };
-  },
-
-  data() {
-    return {
-      generatedInsight: '',
-      generateInsightError: false,
-      showGradient: false,
-      isBtnYesActive: false,
-      isBtnNoActive: false,
-      feedbackText: '',
-      isFeedbackSent: false,
-      scrollTarget: false,
-      isSubmitFeedbackLoading: false,
-      isRenderFeedback: false,
-      emitter,
-    };
-  },
-
-  computed: {
-    ...mapState(useWidgets, ['currentDashboardWidgets']),
-    ...mapState(useGpt, ['insights']),
-    isRenderFooterFeedback() {
-      if (this.generateInsightError) return false;
-      return this.isRenderFeedback;
-    },
-  },
-  watch: {
-    show(newShow) {
-      if (newShow && !this.generatedInsight) {
-        this.generateInsight();
-      }
-
-      if (newShow) {
-        this.$nextTick(() => {
-          this.checkScroll();
-        });
-      }
-    },
-  },
-
-  mounted() {
-    this.$nextTick(() => {
-      this.checkScroll();
-    });
-    window.addEventListener('resize', this.checkScroll);
-  },
-
-  beforeUnmount() {
-    window.removeEventListener('resize', this.checkScroll);
-    this.cleanupObserver();
-  },
-
-  methods: {
-    ...mapActions(useGpt, ['getInsights']),
-    handleTypingComplete() {
-      this.isRenderFeedback = true;
-    },
-    async submitReview() {
-      const userStore = useUser();
-      this.isSubmitFeedbackLoading = true;
-      try {
-        await firebaseService.createReview({
-          helpful: this.isBtnYesActive ? true : false,
-          comment: this.feedbackText || '',
-          user: userStore.email || '',
-        });
-
-        this.isFeedbackSent = true;
-      } finally {
-        this.isBtnNoActive = false;
-        this.isBtnYesActive = false;
-        this.isSubmitFeedbackLoading = false;
-      }
-    },
-    handleFeedbackText(value) {
-      this.feedbackText = value;
-    },
-    handlePositiveFeedback() {
-      if (this.isBtnNoActive) this.isBtnNoActive = false;
-      this.isBtnYesActive = !this.isBtnYesActive;
-    },
-    handleNegativeFeedback() {
-      if (this.isBtnYesActive) this.isBtnYesActive = false;
-      this.isBtnNoActive = !this.isBtnNoActive;
-    },
-    handleDynamicParam(widget) {
-      const { config, data } = widget;
-
-      if (isNaN(data?.value)) return '';
-
-      if (config.data_type === 'sec') {
-        return `${widget.name} ${formatSecondsToHumanString(Math.round(data?.value))}`;
-      }
-
-      return `${data?.value || 0} ${widget.name}`;
-    },
-    async generateInsight() {
-      try {
-        const cards = this.currentDashboardWidgets.filter(
-          (e) => e.type === 'card',
-        );
-
-        const dynamicParams = cards
-          .map((e) => this.handleDynamicParam(e))
-          .join(', ');
-
-        const prompt = `${this.$t('insights_header.generate_insight.prompt', {
-          values: dynamicParams,
-        })} ${this.$t('insights_header.generate_insight.prompt_language')}`;
-
-        await this.getInsights({ prompt });
-
-        const lastInsight = this.insights.slice(-1)[0];
-
-        this.generatedInsight = lastInsight?.received.value || '';
-        this.checkScroll();
-        if (this.generateInsightError) this.generateInsightError = false;
-      } catch (error) {
-        this.generatedInsight = this.$t(
-          'insights_header.generate_insight.error',
-        );
-        this.generateInsightError = true;
-        console.error('Erro to generate insight:', error);
-      }
-    },
-    checkScroll() {
-      this.$nextTick(() => {
-        const content = this.$refs.content;
-        if (!content) return;
-
-        const secondSection = content.querySelectorAll('section')[0];
-        if (!secondSection) return;
-
-        const updateScrollStatus = () => {
-          const scrollHeight = secondSection.scrollHeight;
-          const clientHeight = content.clientHeight;
-
-          this.showGradient = scrollHeight > clientHeight;
-        };
-
-        this.observer = new MutationObserver(() => {
-          updateScrollStatus();
-        });
-
-        this.observer.observe(secondSection, {
-          childList: true,
-          subtree: true,
-          characterData: true,
-        });
-
-        updateScrollStatus();
-
-        emitter.on('cleanup', () => {
-          this.cleanupObserver();
-        });
-      });
-    },
-    cleanupObserver() {
-      if (this.observer) {
-        this.observer.disconnect();
-      }
-    },
-    handleScroll() {
-      const content = this.$refs.content;
-      const scrollTop = content.scrollTop;
-      const scrollHeight = content.scrollHeight;
-      const clientHeight = content.clientHeight;
-      if (scrollTop + clientHeight >= scrollHeight - 1) {
-        this.showGradient = false;
-      } else {
-        this.showGradient = true;
-      }
-    },
-  },
+const handleTypingComplete = () => {
+  isRenderFeedback.value = true;
 };
+
+const submitReview = async () => {
+  const userStore = useUser();
+  isSubmitFeedbackLoading.value = true;
+  try {
+    await firebaseService.createReview({
+      helpful: isBtnYesActive.value,
+      comment: feedbackText.value || '',
+      user: userStore.email || '',
+    });
+
+    isFeedbackSent.value = true;
+  } finally {
+    isBtnNoActive.value = false;
+    isBtnYesActive.value = false;
+    isSubmitFeedbackLoading.value = false;
+  }
+};
+
+const handleFeedbackText = (value: string) => {
+  feedbackText.value = value;
+};
+
+const handlePositiveFeedback = () => {
+  if (isBtnNoActive.value) isBtnNoActive.value = false;
+  isBtnYesActive.value = !isBtnYesActive.value;
+};
+
+const handleNegativeFeedback = () => {
+  if (isBtnYesActive.value) isBtnYesActive.value = false;
+  isBtnNoActive.value = !isBtnNoActive.value;
+};
+
+const handleDynamicParam = (widget: InsightWidget) => {
+  const { config, data } = widget;
+
+  if (Number.isNaN(Number(data?.value))) return '';
+
+  if (config?.data_type === 'sec') {
+    return `${widget.name} ${formatSecondsToHumanString(Math.round(Number(data?.value)))}`;
+  }
+
+  return `${data?.value || 0} ${widget.name}`;
+};
+
+const generateInsight = async () => {
+  try {
+    const cards = currentDashboardWidgets.value.filter(
+      (e: InsightWidget) => e.type === 'card',
+    );
+
+    const dynamicParams = cards
+      .map((e: InsightWidget) => handleDynamicParam(e))
+      .join(', ');
+
+    const prompt = `${t('insights_header.generate_insight.prompt', {
+      values: dynamicParams,
+    })} ${t('insights_header.generate_insight.prompt_language')}`;
+
+    await gptStore.getInsights({ prompt });
+
+    const lastInsight = insights.value.slice(-1)[0];
+
+    generatedInsight.value = lastInsight?.received.value || '';
+    checkScroll();
+    if (generateInsightError.value) generateInsightError.value = false;
+  } catch (error) {
+    generatedInsight.value = t('insights_header.generate_insight.error');
+    generateInsightError.value = true;
+    console.error('Erro to generate insight:', error);
+  }
+};
+
+const cleanupObserver = () => {
+  if (observer) {
+    observer.disconnect();
+  }
+};
+
+const checkScroll = () => {
+  nextTick(() => {
+    const contentEl = content.value;
+    if (!contentEl) return;
+
+    const secondSection = contentEl.querySelectorAll('section')[0];
+    if (!secondSection) return;
+
+    const updateScrollStatus = () => {
+      const scrollHeight = secondSection.scrollHeight;
+      const clientHeight = contentEl.clientHeight;
+
+      showGradient.value = scrollHeight > clientHeight;
+    };
+
+    observer = new MutationObserver(() => {
+      updateScrollStatus();
+    });
+
+    observer.observe(secondSection, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    });
+
+    updateScrollStatus();
+
+    emitter.on('cleanup', () => {
+      cleanupObserver();
+    });
+  });
+};
+
+const handleScroll = () => {
+  const contentEl = content.value;
+  if (!contentEl) return;
+
+  const scrollTop = contentEl.scrollTop;
+  const scrollHeight = contentEl.scrollHeight;
+  const clientHeight = contentEl.clientHeight;
+  if (scrollTop + clientHeight >= scrollHeight - 1) {
+    showGradient.value = false;
+  } else {
+    showGradient.value = true;
+  }
+};
+
+watch(
+  () => props.show,
+  (newShow) => {
+    if (newShow && !generatedInsight.value) {
+      generateInsight();
+    }
+
+    if (newShow) {
+      nextTick(() => {
+        checkScroll();
+      });
+    }
+  },
+);
+
+onMounted(() => {
+  nextTick(() => {
+    checkScroll();
+  });
+  window.addEventListener('resize', checkScroll);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScroll);
+  cleanupObserver();
+});
 </script>
 
 <style scoped lang="scss">

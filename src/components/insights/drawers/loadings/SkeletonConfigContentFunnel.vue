@@ -13,8 +13,6 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'SkeletonConfigContentFunnel',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SkeletonConfigContentFunnel' });
 </script>

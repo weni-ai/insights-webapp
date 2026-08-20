@@ -14,42 +14,28 @@
   </button>
 </template>
 
-<script>
-import { mapState } from 'pinia';
+<script setup lang="ts">
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 
-import { useConfig } from '@/store/modules/config';
 import { useWidgets } from '@/store/modules/widgets';
 
 import HeaderGenerateInsightModal from './HeaderGenerateInsightModal.vue';
 
-export default {
-  name: 'HeaderGenerateInsightButton',
+defineOptions({ name: 'HeaderGenerateInsightButton' });
 
-  components: {
-    HeaderGenerateInsightModal,
-  },
+const widgetsStore = useWidgets();
+const { isLoadingCurrentDashboardWidgets: isDisableBtn } =
+  storeToRefs(widgetsStore);
 
-  data() {
-    return {
-      isGenerateInsightModalOpen: false,
-    };
-  },
+const isGenerateInsightModalOpen = ref(false);
 
-  computed: {
-    ...mapState(useConfig, ['token']),
-    ...mapState(useWidgets, {
-      isDisableBtn: 'isLoadingCurrentDashboardWidgets',
-    }),
-  },
+const openModal = () => {
+  isGenerateInsightModalOpen.value = true;
+};
 
-  methods: {
-    openModal() {
-      this.isGenerateInsightModalOpen = true;
-    },
-    closeModal() {
-      this.isGenerateInsightModalOpen = false;
-    },
-  },
+const closeModal = () => {
+  isGenerateInsightModalOpen.value = false;
 };
 </script>
 

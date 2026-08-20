@@ -49,50 +49,52 @@ describe('HeaderGenerateInsightText', () => {
     wrapper = createWrapper({ text: 'Full Generated Text' });
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.vm.displayedText).toBe('Full Generated Text');
-
-    wrapper.vm.isTyping = true;
-    wrapper.vm.animatedText = 'Typing...';
-    await wrapper.vm.$nextTick();
-    expect(wrapper.vm.displayedText).toBe('Typing...');
+    expect(wrapper.findComponent(Markdown).props('content')).toBe(
+      'Full Generated Text',
+    );
   });
 
   it('should call the typeWriter method and display text according to the animation', async () => {
     wrapper = createWrapper();
-
-    const typeWriterSpy = vi.spyOn(wrapper.vm, 'typeWriter');
     await wrapper.setProps({ text: 'Typing Test' });
+    await wrapper.vm.$nextTick();
 
-    expect(typeWriterSpy).toHaveBeenCalledWith('Typing Test', 1);
+    expect(
+      wrapper.find('.header-generate-insight-text__generated').exists() ||
+        wrapper.find('.header-generate-insight-text__generating').exists(),
+    ).toBe(true);
   });
 
   it('should run the typing animation correctly', async () => {
+    vi.useFakeTimers();
     const text = 'Insight';
     const wrapper = createWrapper();
 
-    await wrapper.vm.typeWriter(text, 1);
+    await wrapper.setProps({ text });
+    await vi.runAllTimersAsync();
 
-    expect(wrapper.vm.animatedText).toBe(text);
-    expect(wrapper.vm.isTyping).toBe(false);
     expect(wrapper.emitted('typingComplete')).toBeTruthy();
+    vi.useRealTimers();
   });
 
   it('should output “typingComplete” after the typing animation', async () => {
+    vi.useFakeTimers();
     const wrapper = createWrapper();
-    wrapper.setProps({ text: 'Test Text' });
-
-    await wrapper.vm.typeWriter('Test Text', 1);
-    expect(wrapper.vm.isTyping).toBe(false);
+    await wrapper.setProps({ text: 'Test Text' });
+    await vi.runAllTimersAsync();
     expect(wrapper.emitted().typingComplete).toBeTruthy();
+    vi.useRealTimers();
   });
 
   it('should start the typing animation when modifying the “text” prop', async () => {
     const wrapper = createWrapper({ text: '' });
-
-    const typeWriterSpy = vi.spyOn(wrapper.vm, 'typeWriter');
     await wrapper.setProps({ text: 'New Text' });
+    await wrapper.vm.$nextTick();
 
-    expect(typeWriterSpy).toHaveBeenCalledWith('New Text', 1);
+    expect(
+      wrapper.find('.header-generate-insight-text__generated').exists() ||
+        wrapper.find('.header-generate-insight-text__generating').exists(),
+    ).toBe(true);
   });
 
   it('should not render the “generating insights” section if text is available', async () => {

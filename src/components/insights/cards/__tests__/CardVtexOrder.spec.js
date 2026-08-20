@@ -120,18 +120,10 @@ describe('CardVtexOrder', () => {
   });
 
   it('computes dataList correctly with valid data', () => {
-    expect(wrapper.vm.dataList).toEqual([
-      {
-        label: wrapper.vm.$t('widgets.vtex_order.orders'),
-        icon: 'local_activity',
-        value: '150',
-      },
-      {
-        label: wrapper.vm.$t('widgets.vtex_order.total_value'),
-        icon: 'payments',
-        value: '$5000',
-      },
-    ]);
+    const orderItems = wrapper.findAll('.content__orders');
+    expect(orderItems).toHaveLength(2);
+    expect(wrapper.text()).toContain('150');
+    expect(wrapper.text()).toContain('$5000');
   });
 
   it('computes dataList as empty array when in error state', async () => {
@@ -139,17 +131,17 @@ describe('CardVtexOrder', () => {
       data: { orders: '', total_value: '' },
     });
 
-    expect(wrapper.vm.dataList).toEqual([]);
+    expect(wrapper.findAll('.content__orders')).toHaveLength(0);
   });
 
   it('computes isError correctly', async () => {
-    expect(wrapper.vm.isError).toBeFalsy();
+    expect(wrapper.classes()).not.toContain('card-vtex-order--not-data');
 
     await wrapper.setProps({
       data: { orders: '', total_value: '' },
     });
 
-    expect(wrapper.vm.isError).toBeTruthy();
+    expect(wrapper.classes()).toContain('card-vtex-order--not-data');
   });
 
   it('emits "request-data" on creation', () => {
@@ -194,18 +186,8 @@ describe('CardVtexOrder', () => {
       },
     });
 
-    expect(wrapper.vm.dataList).toEqual([
-      {
-        label: wrapper.vm.$t('widgets.vtex_order.orders'),
-        icon: 'local_activity',
-        value: '150',
-      },
-      {
-        label: wrapper.vm.$t('widgets.vtex_order.total_value'),
-        icon: 'payments',
-        value: '$5000',
-      },
-    ]);
+    expect(wrapper.html()).toContain('local_activity');
+    expect(wrapper.html()).toContain('payments');
   });
 
   it('computes dataList with empty string value when data value is null or undefined', async () => {
@@ -216,17 +198,8 @@ describe('CardVtexOrder', () => {
       },
     });
 
-    expect(wrapper.vm.dataList).toEqual([
-      {
-        label: wrapper.vm.$t('widgets.vtex_order.orders'),
-        icon: 'local_activity',
-        value: '',
-      },
-      {
-        label: wrapper.vm.$t('widgets.vtex_order.total_value'),
-        icon: 'payments',
-        value: '',
-      },
-    ]);
+    const values = wrapper.findAll('.content__orders__container-item-value');
+    expect(values[0].text()).toBe('');
+    expect(values[1].text()).toBe('');
   });
 });

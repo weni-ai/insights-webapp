@@ -5,8 +5,6 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'SkeletonConfigContentVtex',
-};
+<script setup lang="ts">
+defineOptions({ name: 'SkeletonConfigContentVtex' });
 </script>

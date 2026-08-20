@@ -40,7 +40,10 @@
   </section>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+
 import IconLoading from '@/components/IconLoading.vue';
 import {
   colorBgYellowPlain,
@@ -50,50 +53,56 @@ import {
   colorBgGreenPlain,
 } from '@weni/unnnic-system/tokens/colors';
 
-export default {
-  name: 'FunnelChart',
+defineOptions({ name: 'FunnelChart' });
 
-  components: { IconLoading },
+interface FunnelChartItem {
+  description?: string;
+  percentage?: string | number;
+  total?: number;
+}
 
-  props: {
-    isLoading: Boolean,
-    hasError: Boolean,
-    chartData: {
-      type: Array,
-      required: true,
-    },
-  },
+interface FunnelChartProps {
+  isLoading?: boolean;
+  hasError?: boolean;
+  chartData: FunnelChartItem[];
+}
 
-  emits: ['reload'],
+const props = withDefaults(defineProps<FunnelChartProps>(), {
+  isLoading: false,
+  hasError: false,
+});
 
-  computed: {
-    formattedChartData() {
-      const arrayColors = [
-        colorBgYellowPlain,
-        colorBgOrangePlain,
-        colorBgPurplePlain,
-        colorBgBluePlain,
-        colorBgGreenPlain,
-      ];
+defineEmits<{
+  reload: [];
+}>();
 
-      if (!Array.isArray(this.chartData)) return [];
+const { locale } = useI18n();
 
-      return this.chartData.map((item, index) => {
-        return {
-          description: item.description,
-          title: `${parseFloat(item.percentage).toLocaleString(
-            this.$i18n.locale || 'en-US',
-            {
-              minimumFractionDigits: 2,
-            },
-          )}%`,
-          value: `${item.total.toLocaleString(this.$i18n.locale || 'en-US')}`,
-          color: arrayColors[index],
-        };
-      });
-    },
-  },
-};
+const formattedChartData = computed(() => {
+  const arrayColors = [
+    colorBgYellowPlain,
+    colorBgOrangePlain,
+    colorBgPurplePlain,
+    colorBgBluePlain,
+    colorBgGreenPlain,
+  ];
+
+  if (!Array.isArray(props.chartData)) return [];
+
+  return props.chartData.map((item, index) => {
+    return {
+      description: item.description,
+      title: `${parseFloat(String(item.percentage)).toLocaleString(
+        locale.value || 'en-US',
+        {
+          minimumFractionDigits: 2,
+        },
+      )}%`,
+      value: `${Number(item.total).toLocaleString(locale.value || 'en-US')}`,
+      color: arrayColors[index],
+    };
+  });
+});
 </script>
 
 <style lang="scss" scoped>

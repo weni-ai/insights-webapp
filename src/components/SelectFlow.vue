@@ -17,82 +17,77 @@
     />
   </section>
 </template>
-<script>
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import { useProject } from '@/store/modules/project';
-import { mapState } from 'pinia';
 
-export default {
-  name: 'SelectFlow',
+defineOptions({ name: 'SelectFlow' });
 
-  props: {
-    modelValue: {
-      type: [Array, String, Object],
-      default: () => [],
-    },
-  },
+interface SelectFlowProps {
+  modelValue?: unknown[] | string | Record<string, unknown>;
+}
 
-  emits: ['update:model-value'],
+const props = withDefaults(defineProps<SelectFlowProps>(), {
+  modelValue: () => [],
+});
 
-  data() {
-    return {
-      flowsOptions: [],
-      flow: '',
-      searchText: '',
-    };
-  },
+const emit = defineEmits<{
+  'update:model-value': [value: string];
+}>();
 
-  computed: {
-    ...mapState(useProject, {
-      projectFlows: 'flows',
-    }),
-  },
+const projectStore = useProject();
+const { flows: projectFlows } = storeToRefs(projectStore);
 
-  watch: {
-    flow(newFlow) {
-      this.$emit('update:model-value', newFlow || '');
-    },
-    modelValue() {
-      this.treatModelValue();
-    },
-    projectFlows() {
-      this.flowsOptions = [...this.projectFlows];
-      this.treatModelValue();
-    },
-  },
+const flowsOptions = ref<unknown[]>([]);
+const flow = ref('');
+const searchText = ref('');
 
-  created() {
-    this.flowsOptions = [...this.projectFlows];
-    this.treatModelValue();
-  },
+const treatModelValue = () => {
+  const { modelValue } = props;
 
-  methods: {
-    treatModelValue() {
-      const { modelValue } = this;
+  if (!modelValue || (Array.isArray(modelValue) && !modelValue.length)) {
+    flow.value = '';
+    return;
+  }
 
-      if (!modelValue || (Array.isArray(modelValue) && !modelValue.length)) {
-        this.flow = '';
-        return;
-      }
+  if (typeof modelValue === 'string') {
+    flow.value = modelValue;
+    return;
+  }
 
-      if (typeof modelValue === 'string') {
-        this.flow = modelValue;
-        return;
-      }
+  if (Array.isArray(modelValue) && modelValue.length) {
+    flow.value = (modelValue[0] as { value?: string })?.value || '';
+    return;
+  }
 
-      if (Array.isArray(modelValue) && modelValue.length) {
-        this.flow = modelValue[0]?.value || '';
-        return;
-      }
+  if (typeof modelValue === 'object') {
+    flow.value = (modelValue as { value?: string }).value || '';
+    return;
+  }
 
-      if (typeof modelValue === 'object') {
-        this.flow = modelValue.value || '';
-        return;
-      }
-
-      this.flow = '';
-    },
-  },
+  flow.value = '';
 };
+
+watch(flow, (newFlow) => {
+  emit('update:model-value', newFlow || '');
+});
+
+watch(
+  () => props.modelValue,
+  () => {
+    treatModelValue();
+  },
+);
+
+watch(projectFlows, () => {
+  flowsOptions.value = [...projectFlows.value];
+  treatModelValue();
+});
+
+flowsOptions.value = [...projectFlows.value];
+treatModelValue();
 </script>
 
 <style lang="scss">

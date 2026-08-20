@@ -79,11 +79,17 @@ describe('SkeletonBarChart', () => {
     it('computes totalBars based on width and BAR_WIDTH constant', async () => {
       await wrapper.setProps({ width: 240 });
       const totalBars = Math.floor(wrapper.props().width / 48);
-      expect(wrapper.vm.totalBars).toBe(totalBars);
+      expect(wrapper.findAll('.skeleton-bar-container__bar')).toHaveLength(
+        totalBars,
+      );
     });
 
     it('generates a random height within the expected range for each bar', () => {
-      const generatedHeight = wrapper.vm.generateRandomHeight();
+      const bar = wrapper.find('.skeleton-bar-container__bar');
+      const skeleton = bar.findAllComponents({
+        name: 'UnnnicSkeletonLoading',
+      })[0];
+      const generatedHeight = skeleton.props('height');
       const minHeight = 100;
       expect(parseFloat(generatedHeight)).toBeGreaterThanOrEqual(minHeight);
       expect(parseFloat(generatedHeight)).toBeLessThanOrEqual(
@@ -95,13 +101,13 @@ describe('SkeletonBarChart', () => {
   describe('Edge Cases', () => {
     it('calculates totalBars correctly when width is less than BAR_WIDTH', async () => {
       await wrapper.setProps({ width: 48 });
-      expect(wrapper.vm.totalBars).toBe(1);
+      expect(wrapper.findAll('.skeleton-bar-container__bar')).toHaveLength(1);
     });
 
     it('calculates totalBars correctly when width is 0', async () => {
       await wrapper.setProps({ width: 0 });
 
-      expect(wrapper.vm.totalBars).toBe(36);
+      expect(wrapper.findAll('.skeleton-bar-container__bar')).toHaveLength(36);
     });
   });
 

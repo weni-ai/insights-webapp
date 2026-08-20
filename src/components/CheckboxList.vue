@@ -24,8 +24,8 @@
   </ol>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+defineOptions({ name: 'CheckboxList' });
 
 interface Checkbox {
   value: string;
@@ -34,30 +34,30 @@ interface Checkbox {
   selected: boolean;
 }
 
-export default defineComponent({
-  name: 'CheckboxList',
+interface CheckboxListProps {
+  checkboxes: Checkbox[];
+  label?: string;
+}
 
-  props: {
-    checkboxes: {
-      type: Array as () => Checkbox[],
-      required: true,
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-  },
-
-  emits: ['update:checkboxes'],
-
-  methods: {
-    updateCheckboxSelected({ selected, index }) {
-      const newCheckboxes = this.checkboxes;
-      newCheckboxes[index].selected = selected;
-      this.$emit('update:checkboxes', newCheckboxes);
-    },
-  },
+const props = withDefaults(defineProps<CheckboxListProps>(), {
+  label: '',
 });
+
+const emit = defineEmits<{
+  'update:checkboxes': [checkboxes: Checkbox[]];
+}>();
+
+const updateCheckboxSelected = ({
+  selected,
+  index,
+}: {
+  selected: boolean;
+  index: number;
+}) => {
+  const newCheckboxes = props.checkboxes;
+  newCheckboxes[index].selected = selected;
+  emit('update:checkboxes', newCheckboxes);
+};
 </script>
 
 <style lang="scss" scoped>

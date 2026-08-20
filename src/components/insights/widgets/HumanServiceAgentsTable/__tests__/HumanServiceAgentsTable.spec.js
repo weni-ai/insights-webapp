@@ -553,8 +553,8 @@ describe('HumanServiceAgentsTable', () => {
 
       expect(headers.length).toBe(6);
 
-      expect(headers[0].title).toBe('status');
-      expect(headers[1].title).toBe('agent');
+      expect(headers[0].title).toBe('Status');
+      expect(headers[1].title).toBe('Agent');
 
       expect(headers[1].size).toBe(1);
 
@@ -593,11 +593,11 @@ describe('HumanServiceAgentsTable', () => {
 
       const formattedHeaders = customOrderWrapper.vm.formattedHeaders;
 
-      expect(formattedHeaders[0].title).toBe('status');
-      expect(formattedHeaders[1].title).toBe('agent');
+      expect(formattedHeaders[0].title).toBe('Status');
+      expect(formattedHeaders[1].title).toBe('Agent');
 
-      expect(formattedHeaders[2].title).toBe('in_progress');
-      expect(formattedHeaders[3].title).toBe('closeds');
+      expect(formattedHeaders[2].title).toBe('In progress');
+      expect(formattedHeaders[3].title).toBe('Closed');
       expect(formattedHeaders[4].title).toBe('column2');
       expect(formattedHeaders[5].title).toBe('column1');
 
@@ -620,8 +620,10 @@ describe('HumanServiceAgentsTable', () => {
     });
 
     it('sorts by status in non-expansive mode', async () => {
-      await wrapper.setData({
-        sort: { header: 'status', order: 'desc', itemKey: 'status' },
+      Object.assign(wrapper.vm.sort, {
+        header: 'status',
+        order: 'desc',
+        itemKey: 'status',
       });
 
       await wrapper.vm.$nextTick();

@@ -49,95 +49,93 @@
   </UnnnicDialog>
 </template>
 
-<script>
-import { mapState } from 'pinia';
-import { useDashboards } from '@/store/modules/dashboards';
-
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 import { UnnnicCallAlert } from '@weni/unnnic-system';
 
+import { useDashboards } from '@/store/modules/dashboards';
 import Dashboards from '@/services/api/resources/dashboards';
 
-export default {
-  name: 'ModalDeleteDashboard',
+defineOptions({ name: 'ModalDeleteDashboard' });
 
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-    dashboard: {
-      type: Object,
-      required: true,
-    },
-  },
-  emits: ['close'],
-  data() {
-    return {
-      dashboardName: '',
-      loadingRequest: false,
-    };
-  },
-  computed: {
-    ...mapState(useDashboards, ['dashboards', 'dashboardDefault']),
+interface ModalDeleteDashboardProps {
+  modelValue: boolean;
+  dashboard: { name: string; uuid: string; is_default?: boolean };
+}
 
-    validDashboardName() {
-      return this.dashboardName === this.dashboard.name;
-    },
-  },
-  methods: {
-    handleOpenChange(isOpen) {
-      if (!isOpen) {
-        this.close();
+const props = defineProps<ModalDeleteDashboardProps>();
+
+const emit = defineEmits<{
+  close: [payload: { cascade: boolean }];
+}>();
+
+const { t } = useI18n();
+const router = useRouter();
+const dashboardsStore = useDashboards();
+const { dashboards, dashboardDefault } = storeToRefs(dashboardsStore);
+
+const dashboardName = ref('');
+const loadingRequest = ref(false);
+
+const validDashboardName = computed(
+  () => dashboardName.value === props.dashboard.name,
+);
+
+const handleOpenChange = (isOpen: boolean) => {
+  if (!isOpen) {
+    close();
+  }
+};
+
+const close = (cascade = false) => {
+  emit('close', { cascade });
+};
+
+const deleteDashboard = () => {
+  loadingRequest.value = true;
+
+  Dashboards.deleteDashboard(props.dashboard.uuid)
+    .then(() => {
+      const hasDeletedDefaultDashboard = props.dashboard.is_default;
+
+      dashboardsStore.dashboards = dashboards.value.filter(
+        (item: { uuid: string }) => item.uuid !== props.dashboard.uuid,
+      );
+
+      if (hasDeletedDefaultDashboard) {
+        dashboardDefault.value.is_default = true;
       }
-    },
-    close(cascade = false) {
-      this.$emit('close', { cascade });
-    },
-    deleteDashboard() {
-      this.loadingRequest = true;
 
-      Dashboards.deleteDashboard(this.dashboard.uuid)
-        .then(() => {
-          const dashboardsStore = useDashboards();
-          const hasDeletedDefaultDashboard = this.dashboard.is_default;
+      UnnnicCallAlert({
+        props: {
+          text: t('delete_dashboard.alert.success'),
+          type: 'success',
+        },
+        seconds: 5,
+      });
 
-          dashboardsStore.dashboards = this.dashboards.filter(
-            (item) => item.uuid !== this.dashboard.uuid,
-          );
-
-          if (hasDeletedDefaultDashboard) {
-            this.dashboardDefault.is_default = true;
-          }
-
-          UnnnicCallAlert({
-            props: {
-              text: this.$t('delete_dashboard.alert.success'),
-              type: 'success',
-            },
-            seconds: 5,
-          });
-
-          this.$router.push({
-            name: 'dashboard',
-            params: { dashboardUuid: this.dashboardDefault.uuid },
-          });
-        })
-        .catch((error) => {
-          UnnnicCallAlert({
-            props: {
-              text: this.$t('delete_dashboard.alert.error'),
-              type: 'error',
-            },
-            seconds: 5,
-          });
-          console.error(error);
-        })
-        .finally(() => {
-          this.loadingRequest = false;
-          this.close(true);
-        });
-    },
-  },
+      router?.push({
+        name: 'dashboard',
+        params: { dashboardUuid: dashboardDefault.value.uuid },
+      });
+    })
+    .catch((error) => {
+      UnnnicCallAlert({
+        props: {
+          text: t('delete_dashboard.alert.error'),
+          type: 'error',
+        },
+        seconds: 5,
+      });
+      console.error(error);
+    })
+    .finally(() => {
+      loadingRequest.value = false;
+      close(true);
+    });
 };
 </script>
 

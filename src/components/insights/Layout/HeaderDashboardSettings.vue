@@ -30,37 +30,36 @@
   />
 </template>
 
-<script>
-import { mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
-
 import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
 
-export default {
-  name: 'HeaderDashboardSettings',
-  components: {
-    DrawerDashboardConfig,
-  },
-  data() {
-    return {
-      openPopover: false,
-      showEditDashboard: false,
-    };
-  },
-  computed: {
-    ...mapState(useDashboards, ['currentDashboard']),
-    isDashboardEditable() {
-      const isHumanSupportDashboard =
-        this.currentDashboard.name === 'human_support_dashboard.title';
-      return this.currentDashboard.is_editable && !isHumanSupportDashboard;
-    },
-  },
-  methods: {
-    handleEditDashboard() {
-      this.showEditDashboard = true;
-      this.openPopover = false;
-    },
-  },
+defineOptions({ name: 'HeaderDashboardSettings' });
+
+const dashboardsStore = useDashboards();
+const { currentDashboard } = storeToRefs(dashboardsStore);
+
+const openPopover = ref(false);
+const showEditDashboard = ref(false);
+
+const isDashboardEditable = computed(() => {
+  const isHumanSupportDashboard =
+    currentDashboard.value.name === 'human_support_dashboard.title';
+  return currentDashboard.value.is_editable && !isHumanSupportDashboard;
+});
+
+const handleEditDashboard = () => {
+  showEditDashboard.value = true;
+  openPopover.value = false;
 };
+
+defineExpose({
+  openPopover,
+  showEditDashboard,
+  isDashboardEditable,
+  handleEditDashboard,
+});
 </script>

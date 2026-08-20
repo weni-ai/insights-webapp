@@ -2,73 +2,62 @@
   <SelectFlow v-model="config.flow.uuid" />
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useWidgets } from '@/store/modules/widgets';
-
 import SelectFlow from '@/components/SelectFlow.vue';
 
-export default {
-  name: 'FormExecutions',
+defineOptions({ name: 'FormExecutions' });
 
-  components: {
-    SelectFlow,
+const emit = defineEmits<{
+  'update:is-valid-form': [value: boolean];
+}>();
+
+const widgetsStore = useWidgets();
+const { currentWidgetEditing } = storeToRefs(widgetsStore);
+
+const config = ref<{ flow: { uuid: string | null } }>({
+  flow: {
+    uuid: null,
   },
+});
 
-  emits: ['update:is-valid-form'],
+const widgetConfig = computed(() => currentWidgetEditing.value.config);
 
-  data() {
-    return {
-      config: {
-        flow: {
-          uuid: null,
-        },
-      },
-    };
+const isValidForm = computed(() => !!config.value?.flow?.uuid);
+
+watch(
+  config,
+  (newConfig) => {
+    widgetsStore.updateCurrentWidgetEditingConfig({
+      ...widgetConfig.value,
+      ...newConfig,
+    });
   },
+  { deep: true },
+);
 
-  computed: {
-    ...mapState(useWidgets, ['currentWidgetEditing']),
-
-    widgetConfig() {
-      return this.currentWidgetEditing.config;
-    },
-
-    isValidForm() {
-      return !!this.config?.flow?.uuid;
-    },
+watch(
+  isValidForm,
+  (newIsValidForm) => {
+    emit('update:is-valid-form', newIsValidForm);
   },
+  { immediate: true },
+);
 
-  watch: {
-    config: {
-      deep: true,
-      handler(newConfig) {
-        this.updateCurrentWidgetEditingConfig({
-          ...this.widgetConfig,
-          ...newConfig,
-        });
-      },
-    },
-
-    isValidForm: {
-      immediate: true,
-      handler(newIsValidForm) {
-        this.$emit('update:is-valid-form', newIsValidForm);
-      },
-    },
-  },
-
-  created() {
-    this.config = {
-      flow: {
-        uuid: this.widgetConfig.flow?.uuid || '',
-      },
-    };
-  },
-
-  methods: {
-    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
+config.value = {
+  flow: {
+    uuid: widgetConfig.value.flow?.uuid || '',
   },
 };
+
+defineExpose({
+  config,
+  isValidForm,
+  widgetConfig,
+  updateCurrentWidgetEditingConfig: (...args: unknown[]) =>
+    widgetsStore.updateCurrentWidgetEditingConfig(...(args as [any])),
+});
 </script>

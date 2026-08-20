@@ -91,11 +91,7 @@ const {
   isLoadingCurrentDashboardFilters,
   currentDashboard,
 } = storeToRefs(dashboardsStore);
-const { token } = storeToRefs(configStore);
-const { showCompleteOnboardingModal, showCreateDashboardOnboarding } =
-  storeToRefs(onboardingStore);
-
-const showCreateDashboardTour = showCreateDashboardOnboarding;
+const { showCompleteOnboardingModal } = storeToRefs(onboardingStore);
 
 const insightsLayout = ref<any>(null);
 const showMcpNewsModal = ref(!moduleStorage.getItem('mcp_news_modal_seen'));
@@ -214,8 +210,8 @@ const handlerTokenAndProjectUuid = async () => {
   initHotjar(sessionUserEmail);
 };
 
-const setShowCompleteOnboardingModal = (...args: any[]) =>
-  onboardingStore.setShowCompleteOnboardingModal(...args);
+const setShowCompleteOnboardingModal = (show: boolean) =>
+  onboardingStore.setShowCompleteOnboardingModal(show);
 
 watch(() => currentDashboard.value?.uuid, handleCurrentDashboardUuidChange);
 
@@ -273,39 +269,6 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
-});
-
-defineExpose({
-  dashboards,
-  isLoadingDashboards,
-  isLoadingCurrentDashboardFilters,
-  currentDashboard,
-  token,
-  showCreateDashboardTour,
-  showCompleteOnboardingModal,
-  showMcpNewsModal,
-  sharedStore,
-  handleCurrentDashboardUuidChange,
-  handleMcpNotNow,
-  handleMcpViewGuide,
-  handleRedirectToHumanServiceDashboard,
-  handlerTokenAndProjectUuid,
-  handlerSetLanguage,
-  handlerSetProject,
-  handlerSetIsCommerce,
-  listenConnect,
-  getEventHandler,
-  getFeatureFlags: (...args: any[]) =>
-    featureFlagStore.getFeatureFlags(...args),
-  getDashboards: (...args: any[]) => dashboardsStore.getDashboards(...args),
-  getCurrentDashboardFilters: (...args: any[]) =>
-    dashboardsStore.getCurrentDashboardFilters(...args),
-  setCurrentDashboardFilters: (...args: any[]) =>
-    dashboardsStore.setCurrentDashboardFilters(...args),
-  setToken: (...args: any[]) => configStore.setToken(...args),
-  setProject: (...args: any[]) => configStore.setProject(...args),
-  setIsCommerce: (...args: any[]) => projectStore.setIsCommerce(...args),
-  setShowCompleteOnboardingModal,
 });
 </script>
 

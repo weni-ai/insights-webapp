@@ -196,20 +196,9 @@ onMounted(() => {
 
 defineExpose({
   isExpansiveMode,
-  isCTWADashboard,
-  isHumanServiceDashboard,
-  isHumanSupportDashboard,
   showDivider,
-  isConversationalDashboard,
-  isMetaTemplateDashboard,
   dashboardHeaderType,
   breadcrumbs,
-  navigateToDashboard,
-  goToDefaultDashboard,
-  routeUpdateCurrentDashboard,
-  setCurrentExpansiveWidget,
-  setCurrentDashboard: (...args: any[]) =>
-    dashboardsStore.setCurrentDashboard(...args),
 });
 </script>
 

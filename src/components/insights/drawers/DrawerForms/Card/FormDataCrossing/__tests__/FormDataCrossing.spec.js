@@ -349,7 +349,7 @@ describe('FormDataCrossing', () => {
 
   describe('Pinia Store Integration', () => {
     it('should use currentWidgetEditing from store', () => {
-      expect(wrapper.vm.currentWidgetEditing).toEqual({
+      expect(widgetsStore.currentWidgetEditing).toEqual({
         config: mockWidgetConfig,
       });
     });

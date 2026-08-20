@@ -6,8 +6,8 @@
       data-testid="ctwa-date-filter"
       :disableClear="true"
       position="right"
-      :minDate="minDate"
-      :maxDate="maxDate"
+      :minDate="minDateFilter"
+      :maxDate="maxDateFilter"
       hideOptions
       fillW
     />
@@ -31,7 +31,6 @@ import { useRouter } from 'vue-router';
 import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
 import { useCTWA } from '@/store/modules/ctwa';
 import { useDashboards } from '@/store/modules/dashboards';
-import { getTodayDate } from '@/utils/time';
 
 defineOptions({
   name: 'HeaderCTWA',
@@ -42,10 +41,7 @@ const dashboardsStore = useDashboards();
 const ctwaStore = useCTWA();
 const { currentDashboard } = storeToRefs(dashboardsStore);
 const { appliedDateRange, selectedCampaign } = storeToRefs(ctwaStore);
-const { loadAllData } = ctwaStore;
-
-const maxDate = getTodayDate().start;
-const minDate = '2026-08-19';
+const { loadAllData, minDateFilter, maxDateFilter } = ctwaStore;
 const handleRefresh = () => {
   loadAllData();
 };

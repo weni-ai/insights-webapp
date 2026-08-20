@@ -12,7 +12,7 @@ import CTWAConversionsService, {
 import CTWAPerformanceByCampaignService, {
   type CampaignPerformanceRow,
 } from '@/services/api/resources/ctwa/performanceByCampaign';
-import { getTodayDate } from '@/utils/time';
+import { getLastNDays, getTodayDate, isDateBefore } from '@/utils/time';
 
 export interface DateRange {
   start: string;
@@ -40,14 +40,22 @@ export const useCTWA = defineStore('ctwa', () => {
   const router = inject<Router>('router', useRouter());
   const query = router?.currentRoute?.value?.query || {};
 
-  const defaultDateRange = getTodayDate();
+  const CTWA_MIN_DATE = '2026-08-19';
+  const minDateFilter = CTWA_MIN_DATE;
+  const maxDateFilter = getTodayDate().start;
+  const defaultDateRange = getLastNDays(7);
+
   const queryStartDate = getQueryString(query.start_date);
   const queryEndDate = getQueryString(query.end_date);
 
   const hasQueryDateRange = Boolean(queryStartDate && queryEndDate);
 
   const appliedDateRange = ref<DateRange>({
-    start: hasQueryDateRange ? queryStartDate : defaultDateRange.start,
+    start: hasQueryDateRange
+      ? queryStartDate
+      : isDateBefore(defaultDateRange.start, CTWA_MIN_DATE)
+        ? CTWA_MIN_DATE
+        : defaultDateRange.start,
     end: hasQueryDateRange ? queryEndDate : defaultDateRange.end,
   });
 
@@ -128,6 +136,8 @@ export const useCTWA = defineStore('ctwa', () => {
 
   return {
     appliedDateRange,
+    minDateFilter,
+    maxDateFilter,
     selectedCampaign,
     appliedFilters,
     dashboardData,

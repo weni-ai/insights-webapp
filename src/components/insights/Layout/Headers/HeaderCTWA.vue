@@ -10,6 +10,7 @@
       :maxDate="maxDateFilter"
       hideOptions
       fillW
+      :inputFormat="$t('date_format')"
     />
     <CampaignFilter v-model="selectedCampaign" />
     <UnnnicButton

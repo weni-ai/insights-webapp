@@ -10,7 +10,7 @@ interface VerifyCTWAData {
 export default {
   async verifyCTWA(): Promise<VerifyCTWAData> {
     const { project } = useConfig();
-    const url = `/projects/${project.uuid}/ctwa/verify/`;
+    const url = `/projects/${project.uuid}/verify_ctwa/`;
     const response = await http.get(url);
     return response.data;
   },

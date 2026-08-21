@@ -21,7 +21,16 @@
       size="sm"
       data-testid="ctwa-performance-by-campaign-table"
       @update:page="handlePageChange"
-    />
+    >
+      <template #body-campaign="{ item }">
+        <p
+          class="ellipsis"
+          :title="item.campaign"
+        >
+          {{ item.campaign }}
+        </p>
+      </template>
+    </UnnnicDataTable>
   </section>
 </template>
 
@@ -88,6 +97,7 @@ const headers = computed(() =>
     title: t(`${tableBaseKey}.${itemKey}`),
     itemKey,
     isSortable: false,
+    size: itemKey === 'campaign' ? '1.5fr' : '0.5fr',
   })),
 );
 
@@ -107,6 +117,11 @@ const handlePageChange = (nextPage: number) => {
 </script>
 
 <style scoped lang="scss">
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .performance-by-campaign {
   border-radius: $unnnic-radius-2;
   border: 1px solid $unnnic-color-border-base;

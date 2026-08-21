@@ -16,14 +16,40 @@ describe('CTWA performance by campaign API', () => {
     count: 2,
     results: [
       {
-        campaign: 'Contractor Bulk Pricing',
+        label: {
+          id: 'campaign-1',
+          headline: 'Contractor Bulk Pricing',
+        },
         conversations: 3200,
         qualified: 1450,
         conversions: 520,
         revenue: 509600,
       },
       {
-        campaign: 'Pro Account Signup',
+        label: {
+          id: 'campaign-2',
+          headline: 'Pro Account Signup',
+        },
+        conversations: 2100,
+        qualified: 780,
+        conversions: 210,
+        revenue: 134400,
+      },
+    ],
+  };
+
+  const mockMappedResponse = {
+    count: 2,
+    results: [
+      {
+        campaign: 'campaign-1 - Contractor Bulk Pricing',
+        conversations: 3200,
+        qualified: 1450,
+        conversions: 520,
+        revenue: 509600,
+      },
+      {
+        campaign: 'campaign-2 - Pro Account Signup',
         conversations: 2100,
         qualified: 780,
         conversions: 210,
@@ -63,7 +89,7 @@ describe('CTWA performance by campaign API', () => {
         },
       },
     );
-    expect(result).toEqual(mockApiResponse);
+    expect(result).toEqual(mockMappedResponse);
   });
 
   it('does not send campaign in the request params', async () => {
@@ -89,16 +115,21 @@ describe('CTWA performance by campaign API', () => {
 
   it('falls back to results length when count is missing', async () => {
     http.get.mockResolvedValue({
-      results: [{ campaign: 'Black friday', conversations: 10 }],
+      results: [
+        {
+          label: { id: 'bf-1', headline: 'Black friday' },
+          conversations: 10,
+        },
+      ],
     });
 
     const result = await performanceByCampaign.getPerformanceByCampaign();
 
     expect(result.count).toBe(1);
-    expect(result.results[0].campaign).toBe('Black friday');
+    expect(result.results[0].campaign).toBe('bf-1 - Black friday');
   });
 
-  it('maps missing row fields to null', async () => {
+  it('maps missing numeric fields to null and missing label to a dash', async () => {
     http.get.mockResolvedValue({
       count: 1,
       results: [{}],
@@ -107,7 +138,7 @@ describe('CTWA performance by campaign API', () => {
     const result = await performanceByCampaign.getPerformanceByCampaign();
 
     expect(result.results[0]).toEqual({
-      campaign: null,
+      campaign: '-',
       conversations: null,
       qualified: null,
       conversions: null,

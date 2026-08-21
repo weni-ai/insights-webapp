@@ -85,7 +85,7 @@ const isSelecting = ref(false);
 const options = computed<CampaignOption[]>(() => {
   const mapped = campaigns.value.map((campaign) => ({
     value: campaign.uuid,
-    label: campaign.name,
+    label: `${campaign.name} (${campaign.uuid})`,
   }));
 
   if (
@@ -251,6 +251,6 @@ onBeforeUnmount(() => {
 
 <style lang="scss" scoped>
 .campaign-filter {
-  width: 304px;
+  width: 420px;
 }
 </style>

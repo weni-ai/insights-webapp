@@ -61,6 +61,7 @@ import { useOnboarding } from './store/modules/onboarding';
 import { useProject } from './store/modules/project';
 import { useUser } from './store/modules/user';
 import { useFeatureFlag } from './store/modules/featureFlag';
+import { useCTWA } from './store/modules/ctwa';
 
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
@@ -84,6 +85,7 @@ const onboardingStore = useOnboarding();
 const projectStore = useProject();
 const userStore = useUser();
 const featureFlagStore = useFeatureFlag();
+const ctwaStore = useCTWA();
 
 const {
   dashboards,
@@ -256,6 +258,8 @@ onMounted(async () => {
   try {
     await handlerTokenAndProjectUuid();
     await configStore.loadProjectInfo();
+
+    ctwaStore.verifyCTWA();
 
     projectStore.checkHasAbandonedCartRecoveryConfigured().then(() => {
       projectStore.getAbandonedCartRecoveryCost();

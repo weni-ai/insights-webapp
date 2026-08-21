@@ -193,15 +193,32 @@ describe('SteppedBarChart', () => {
       ).toContain('border-radius: 0 4px 4px 0');
     });
 
-    it('renders 0% height when the first value is 0', () => {
+    it('does not render bars when the first value is 0', () => {
       wrapper = createWrapper([
         { id: 'a', label: 'A', value: 0, backgroundColor: '#aaa' },
         { id: 'b', label: 'B', value: 10, backgroundColor: '#bbb' },
       ]);
 
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-a"]').attributes('style'),
-      ).toContain('height: 0%');
+        wrapper.find('[data-testid="stepped-bar-chart-bar-a"]').exists(),
+      ).toBe(false);
+      expect(
+        wrapper.find('[data-testid="stepped-bar-chart-bar-b"]').exists(),
+      ).toBe(false);
+    });
+
+    it('does not render a bar when an item value is 0', () => {
+      wrapper = createWrapper([
+        { id: 'a', label: 'A', value: 100, backgroundColor: '#aaa' },
+        { id: 'b', label: 'B', value: 0, backgroundColor: '#bbb' },
+      ]);
+
+      expect(
+        wrapper.find('[data-testid="stepped-bar-chart-bar-a"]').exists(),
+      ).toBe(true);
+      expect(
+        wrapper.find('[data-testid="stepped-bar-chart-bar-b"]').exists(),
+      ).toBe(false);
     });
   });
 });

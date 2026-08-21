@@ -13,6 +13,7 @@ import CTWAPerformanceByCampaignService, {
   type CampaignPerformanceRow,
 } from '@/services/api/resources/ctwa/performanceByCampaign';
 import { getLastNDays, getTodayDate, isDateBefore } from '@/utils/time';
+import CTWAVerifyService from '@/services/api/resources/ctwa/verify';
 
 export interface DateRange {
   start: string;
@@ -134,7 +135,13 @@ export const useCTWA = defineStore('ctwa', () => {
     }
   };
 
+  const verifyCTWA = async () => {
+    const data = await CTWAVerifyService.verifyCTWA();
+    return data;
+  };
+
   return {
+    verifyCTWA,
     appliedDateRange,
     minDateFilter,
     maxDateFilter,

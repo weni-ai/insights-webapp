@@ -145,6 +145,29 @@ describe('SalesFunnel', () => {
     expect(items[2].tooltip).toBeUndefined();
   });
 
+  it('shows 0% and 0 for the first metric when total is 0', () => {
+    wrapper = createWrapper({
+      conversionsData: {
+        conversations_started: { total: 0, percentage: 100 },
+        conversations_qualified: { total: 0, percentage: 0 },
+        conversations_converted: { total: 0, percentage: 0 },
+      },
+    });
+
+    const items = wrapper
+      .findComponent({ name: 'SteppedBarChart' })
+      .props('items');
+
+    expect(items[0]).toEqual(
+      expect.objectContaining({
+        id: 'started',
+        value: 0,
+        displayValue: '0%',
+        displaySecondary: '0',
+      }),
+    );
+  });
+
   it('renders dashes when stage values are null', () => {
     wrapper = createWrapper({
       conversionsData: {

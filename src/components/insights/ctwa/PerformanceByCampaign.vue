@@ -93,7 +93,7 @@ const headers = computed(() =>
 
 const rows = computed(() =>
   campaignPerformanceResults.value.map((item) => ({
-    campaign: item.campaign,
+    campaign: item.campaign ?? '-',
     conversations: formatMetric(item.conversations),
     qualified: formatMetric(item.qualified),
     conversions: formatMetric(item.conversions),

@@ -32,7 +32,7 @@ config.global.plugins = [i18n];
 
 const mockResults = [
   {
-    campaign: 'Contractor Bulk Pricing',
+    campaign: 'uuid-1 - Campaign 1',
     conversations: 3200,
     qualified: 1450,
     conversions: 520,
@@ -121,7 +121,7 @@ describe('PerformanceByCampaign', () => {
     const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
 
     expect(table.props('items')[0]).toEqual({
-      campaign: 'Contractor Bulk Pricing',
+      campaign: 'uuid-1 - Campaign 1',
       conversations: '3200',
       qualified: '1450',
       conversions: '520',

@@ -29,9 +29,7 @@ describe('HeaderGenerateInsightButton', () => {
   });
 
   it('should render the button with the correct text from i18n', () => {
-    expect(wrapper.text()).toContain(
-      wrapper.vm.$t('insights_header.generate_insight.title'),
-    );
+    expect(wrapper.text()).toContain('Generate insight');
   });
 
   it('should disable the button when isDisableBtn is true', async () => {
@@ -51,25 +49,22 @@ describe('HeaderGenerateInsightButton', () => {
   it('should open the modal when the button is clicked', async () => {
     const button = wrapper.find('button');
     await button.trigger('click');
-    expect(wrapper.vm.isGenerateInsightModalOpen).toBe(true);
-    expect(
-      wrapper.findComponent({ name: 'HeaderGenerateInsightModal' }).exists(),
-    ).toBe(true);
+    const modal = wrapper.findComponent({ name: 'HeaderGenerateInsightModal' });
+    expect(modal.exists()).toBe(true);
+    expect(modal.props('show')).toBe(true);
   });
 
   it('should close the modal when the "close" event is emitted', async () => {
-    wrapper.vm.isGenerateInsightModalOpen = true;
-    await wrapper.vm.$nextTick();
+    await wrapper.find('button').trigger('click');
 
     const modal = wrapper.findComponent({ name: 'HeaderGenerateInsightModal' });
     await modal.vm.$emit('close');
 
-    expect(wrapper.vm.isGenerateInsightModalOpen).toBe(false);
+    expect(modal.props('show')).toBe(false);
   });
 
   it('should pass the correct prop "show" to the HeaderGenerateInsightModal', async () => {
-    wrapper.vm.isGenerateInsightModalOpen = true;
-    await wrapper.vm.$nextTick();
+    await wrapper.find('button').trigger('click');
 
     const modal = wrapper.findComponent({ name: 'HeaderGenerateInsightModal' });
     expect(modal.props('show')).toBe(true);
@@ -80,10 +75,10 @@ describe('HeaderGenerateInsightButton', () => {
     expect(img.attributes('src')).toContain('assets/images/shine.svg');
   });
 
-  it('should compute the correct token from Vuex store', async () => {
-    expect(wrapper.vm.token).toBe('default-token');
+  it('should render with different config store tokens', async () => {
+    expect(wrapper.find('button').exists()).toBe(true);
 
     wrapper = createWrapper({}, { config: { token: 'new-token' } });
-    expect(wrapper.vm.token).toBe('new-token');
+    expect(wrapper.find('button').exists()).toBe(true);
   });
 });

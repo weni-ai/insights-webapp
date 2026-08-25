@@ -34,7 +34,7 @@ describe('LineChart', () => {
   describe('Component Rendering', () => {
     it('should render chart title', async () => {
       const title = wrapper.find('[data-testid="chart-title"]');
-      expect(title.text()).toBe(wrapper.vm.title);
+      expect(title.text()).toBe(wrapper.props('title'));
     });
 
     it('should render see more link when seeMore prop is true', async () => {
@@ -74,8 +74,10 @@ describe('LineChart', () => {
   });
 
   describe('Chart Configuration', () => {
+    const getChart = () => wrapper.findComponent('[data-testid="line-chart"]');
+
     it('should merge default chart configuration with provided data', () => {
-      const { mergedData } = wrapper.vm;
+      const mergedData = getChart().props('data');
       expect(mergedData.datasets[0]).toHaveProperty('borderColor', '#01A29B');
       expect(mergedData.datasets[0]).toHaveProperty('pointRadius', 0);
       expect(mergedData.datasets[0]).toHaveProperty('hoverRadius', 3);
@@ -84,7 +86,7 @@ describe('LineChart', () => {
     });
 
     it('should have correct chart options configuration', () => {
-      const { chartOptions } = wrapper.vm;
+      const chartOptions = getChart().props('options');
       expect(chartOptions.backgroundColor).toBe('#01A29B');
       expect(chartOptions.scales.y.beginAtZero).toBe(true);
       expect(chartOptions.interaction.intersect).toBe(false);
@@ -92,7 +94,7 @@ describe('LineChart', () => {
     });
 
     it('should configure tooltip properly', () => {
-      const { chartOptions } = wrapper.vm;
+      const chartOptions = getChart().props('options');
       const tooltipConfig = chartOptions.plugins.tooltip;
       expect(tooltipConfig.enabled).toBe(true);
       expect(tooltipConfig.backgroundColor).toBe('#1F1F1F'); // colorGray950
@@ -100,7 +102,7 @@ describe('LineChart', () => {
     });
 
     it('should format tooltip title and label correctly', () => {
-      const { chartOptions } = wrapper.vm;
+      const chartOptions = getChart().props('options');
       const tooltipCallbacks = chartOptions.plugins.tooltip.callbacks;
 
       const mockTooltipItems = [{ label: '12:00' }];
@@ -117,14 +119,19 @@ describe('LineChart', () => {
 
   describe('Chart Plugins', () => {
     it('should include required plugins', () => {
-      const { chartPlugins } = wrapper.vm;
+      const chartPlugins = wrapper
+        .findComponent('[data-testid="line-chart"]')
+        .props('plugins');
       expect(chartPlugins).toHaveLength(2);
     });
   });
 
   describe('Background Gradient', () => {
+    const getMergedData = () =>
+      wrapper.findComponent('[data-testid="line-chart"]').props('data');
+
     it('should return null when chartArea is not available', () => {
-      const { mergedData } = wrapper.vm;
+      const mergedData = getMergedData();
       const context = {
         chart: {
           ctx: {},
@@ -152,7 +159,7 @@ describe('LineChart', () => {
         },
       };
 
-      const { mergedData } = wrapper.vm;
+      const mergedData = getMergedData();
       mergedData.datasets[0].backgroundColor(context);
 
       expect(mockCreateLinearGradient).toHaveBeenCalledWith(0, 0, 0, 100);
@@ -160,9 +167,12 @@ describe('LineChart', () => {
   });
 
   describe('Element Size', () => {
-    it('should set up element size refs', () => {
-      expect(wrapper.vm.chartWidth).toBeDefined();
-      expect(wrapper.vm.chartHeight).toBeDefined();
+    it('should set up element size refs', async () => {
+      await wrapper.setProps({ isLoading: true });
+      const loading = wrapper.find('[data-testid="chart-loading"]');
+      expect(loading.exists()).toBe(true);
+      expect(loading.attributes('width')).toBeDefined();
+      expect(loading.attributes('height')).toBeDefined();
     });
   });
 });

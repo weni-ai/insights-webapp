@@ -9,23 +9,22 @@
   />
 </template>
 
-<script>
-export default {
-  name: 'FilterInputText',
-  props: {
-    modelValue: {
-      type: String,
-      default: '',
-    },
-    placeholder: {
-      type: String,
-      default: '',
-    },
-    iconPosition: {
-      type: String,
-      default: 'right',
-    },
-  },
-  emits: ['update:modelValue'],
-};
+<script setup lang="ts">
+defineOptions({ name: 'FilterInputText' });
+
+interface FilterInputTextProps {
+  modelValue?: string;
+  placeholder?: string;
+  iconPosition?: string;
+}
+
+withDefaults(defineProps<FilterInputTextProps>(), {
+  modelValue: '',
+  placeholder: '',
+  iconPosition: 'right',
+});
+
+defineEmits<{
+  'update:modelValue': [value: string];
+}>();
 </script>

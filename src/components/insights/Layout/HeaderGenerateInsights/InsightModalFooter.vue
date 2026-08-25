@@ -74,90 +74,89 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: 'InsightModalFooter',
-  props: {
-    generatedInsight: {
-      type: String,
-      required: true,
-    },
-    isFeedbackSent: {
-      type: Boolean,
-      required: true,
-    },
-    isRenderFooterFeedback: {
-      type: Boolean,
-      required: true,
-    },
-    isBtnYesActive: {
-      type: Boolean,
-      required: true,
-    },
-    isBtnNoActive: {
-      type: Boolean,
-      required: true,
-    },
-    isSubmitFeedbackLoading: {
-      type: Boolean,
-      required: true,
-    },
-  },
-  emits: [
-    'handle-negative-feedback',
-    'handle-positive-feedback',
-    'submit-review',
-    'update-feedback-text',
-  ],
-  data() {
-    return {
-      feedbackText: '',
-    };
-  },
-  watch: {
-    feedbackText(newValue) {
-      this.$emit('update-feedback-text', newValue);
-    },
-    isFeedbackSent() {
-      this.$nextTick(() => {
-        this.scrollToEnd();
-      });
-    },
-    isBtnYesActive() {
-      this.$nextTick(() => {
-        this.scrollToEnd();
-      });
-    },
-    isBtnNoActive() {
-      this.$nextTick(() => {
-        this.scrollToEnd();
-      });
-    },
-  },
-  methods: {
-    scrollToEnd() {
-      if (this.$refs.scrollTarget) {
-        this.$refs.scrollTarget.scrollIntoView({ behavior: 'smooth' });
-      }
-    },
-    handlePositiveFeedback() {
-      this.$emit('handle-positive-feedback');
-    },
-    handleNegativeFeedback() {
-      this.$emit('handle-negative-feedback');
-    },
-    handlePlaceholderTextArea() {
-      return this.isBtnYesActive
-        ? this.$t('insights_header.generate_insight.input.placeholder_positive')
-        : this.$t(
-            'insights_header.generate_insight.input.placeholder_negative',
-          );
-    },
-    submitReview() {
-      this.$emit('submit-review');
-    },
-  },
+<script setup lang="ts">
+import { nextTick, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+
+defineOptions({ name: 'InsightModalFooter' });
+
+interface InsightModalFooterProps {
+  generatedInsight: string;
+  isFeedbackSent: boolean;
+  isRenderFooterFeedback: boolean;
+  isBtnYesActive: boolean;
+  isBtnNoActive: boolean;
+  isSubmitFeedbackLoading: boolean;
+}
+
+const props = defineProps<InsightModalFooterProps>();
+
+const emit = defineEmits<{
+  'handle-negative-feedback': [];
+  'handle-positive-feedback': [];
+  'submit-review': [];
+  'update-feedback-text': [value: string];
+}>();
+
+const { t } = useI18n();
+
+const feedbackText = ref('');
+const scrollTarget = ref<HTMLElement | null>(null);
+
+const scrollToEnd = () => {
+  if (scrollTarget.value) {
+    scrollTarget.value.scrollIntoView({ behavior: 'smooth' });
+  }
 };
+
+const handlePositiveFeedback = () => {
+  emit('handle-positive-feedback');
+};
+
+const handleNegativeFeedback = () => {
+  emit('handle-negative-feedback');
+};
+
+const handlePlaceholderTextArea = () => {
+  return props.isBtnYesActive
+    ? t('insights_header.generate_insight.input.placeholder_positive')
+    : t('insights_header.generate_insight.input.placeholder_negative');
+};
+
+const submitReview = () => {
+  emit('submit-review');
+};
+
+watch(feedbackText, (newValue) => {
+  emit('update-feedback-text', newValue);
+});
+
+watch(
+  () => props.isFeedbackSent,
+  () => {
+    nextTick(() => {
+      scrollToEnd();
+    });
+  },
+);
+
+watch(
+  () => props.isBtnYesActive,
+  () => {
+    nextTick(() => {
+      scrollToEnd();
+    });
+  },
+);
+
+watch(
+  () => props.isBtnNoActive,
+  () => {
+    nextTick(() => {
+      scrollToEnd();
+    });
+  },
+);
 </script>
 
 <style scoped lang="scss">

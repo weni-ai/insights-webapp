@@ -1,4 +1,5 @@
 import http from '@/services/api/http';
+import weniHttp from '@/services/api/weniHttp';
 import { useConfig } from '@/store/modules/config';
 import { createRequestQuery } from '@/utils/request';
 
@@ -62,6 +63,24 @@ export default {
     };
   },
 
+  async getMetaCampaigns(queryParams = {}) {
+    const { project } = useConfig();
+    const params = createRequestQuery(queryParams);
+
+    const response = await http.get(
+      `/projects/${project.uuid}/sources/meta/campaign/`,
+      { params },
+    );
+
+    return {
+      count: response.count ?? null,
+      results: (response.results || []).map((source) => ({
+        uuid: source.uuid,
+        name: source.name,
+      })),
+    };
+  },
+
   async getProjectManagers() {
     const { project } = useConfig();
     const url = `/projects/${project.uuid}/filters/project_managers/`;
@@ -90,5 +109,10 @@ export default {
       params: { project_uuid: project.uuid },
     });
     return response;
+  },
+
+  async getProjectInfo() {
+    const { project } = useConfig();
+    return weniHttp.get(`/organization/project/${project.uuid}/`);
   },
 };

@@ -30,104 +30,101 @@
   </UnnnicDropdownItem>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
-import { useDashboards } from '@/store/modules/dashboards';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
+import { useDashboards } from '@/store/modules/dashboards';
 import Unnnic from '@weni/unnnic-system';
 import BetaText from './BetaText.vue';
 
-export default {
-  name: 'OptionSelectDashboard',
+defineOptions({ name: 'OptionSelectDashboard' });
 
-  components: {
-    BetaText,
+const props = withDefaults(
+  defineProps<{
+    dashboard?: Record<string, any>;
+  }>(),
+  {
+    dashboard: () => ({}),
   },
+);
 
-  props: {
-    dashboard: {
-      type: Object,
-      default: () => {},
-    },
-  },
+const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
+const dashboardsStore = useDashboards();
+const { currentDashboard, dashboardDefault } = storeToRefs(dashboardsStore);
 
-  data() {
-    return {
-      dashboardHovered: '',
-      starHovered: false,
-    };
-  },
+const starHovered = ref(false);
 
-  computed: {
-    ...mapState(useDashboards, ['currentDashboard', 'dashboardDefault']),
-    isDefaultDashboard() {
-      return this.dashboardDefault?.uuid === this.dashboard.uuid;
-    },
-    isRenderBetaText() {
-      return false;
-    },
-  },
+const isDefaultDashboard = computed(
+  () => dashboardDefault.value?.uuid === props.dashboard.uuid,
+);
 
-  methods: {
-    ...mapActions(useDashboards, [
-      'setCurrentDashboard',
-      'setDefaultDashboard',
-    ]),
+const isRenderBetaText = computed(
+  () => props.dashboard.config?.type === 'ctwa',
+);
 
-    handleSetCurrentDashboard(dashboard) {
-      const route = this.$route;
+const handleSetCurrentDashboard = (dashboard: Record<string, any>) => {
+  if (route?.name === 'report') {
+    router.push({
+      name: 'dashboard',
+      params: {
+        dashboardUuid: dashboard.uuid,
+      },
+    });
+    return;
+  }
 
-      if (route.name === 'report') {
-        this.$router.push({
-          name: 'dashboard',
-          params: {
-            dashboardUuid: dashboard.uuid,
-          },
-        });
-        return;
-      }
-
-      this.setCurrentDashboard(dashboard);
-    },
-
-    setStarHovered(boolean) {
-      this.starHovered = boolean;
-    },
-
-    async handleSetDefaultDashboard() {
-      const { dashboard } = this;
-      if (dashboard.uuid === this.dashboardDefault.uuid) return;
-
-      try {
-        await this.setDefaultDashboard(dashboard.uuid);
-        this.callSetDashboardAlert('success');
-      } catch (error) {
-        console.error(error);
-        this.callSetDashboardAlert('error');
-      }
-    },
-
-    callSetDashboardAlert(type) {
-      const { dashboard } = this;
-
-      if (!['success', 'error'].includes(type)) {
-        throw new Error(
-          'Error calling the alert when setting the default dashboard. This type does not exist.',
-        );
-      }
-
-      Unnnic.unnnicCallAlert({
-        props: {
-          text: this.$t(`insights_header.set_default_dashboard_${type}`, {
-            dashboard: dashboard.name,
-          }),
-          type,
-        },
-        seconds: 5,
-      });
-    },
-  },
+  dashboardsStore.setCurrentDashboard(dashboard);
 };
+
+const setStarHovered = (boolean: boolean) => {
+  starHovered.value = boolean;
+};
+
+const callSetDashboardAlert = (type: string) => {
+  if (!['success', 'error'].includes(type)) {
+    throw new Error(
+      'Error calling the alert when setting the default dashboard. This type does not exist.',
+    );
+  }
+
+  Unnnic.unnnicCallAlert({
+    props: {
+      text: t(`insights_header.set_default_dashboard_${type}`, {
+        dashboard: props.dashboard.name,
+      }),
+      type,
+    },
+    seconds: 5,
+  });
+};
+
+const handleSetDefaultDashboard = async () => {
+  const { dashboard } = props;
+  if (dashboard.uuid === dashboardDefault.value?.uuid) return;
+
+  try {
+    await dashboardsStore.setDefaultDashboard(dashboard.uuid);
+    callSetDashboardAlert('success');
+  } catch (error) {
+    console.error(error);
+    callSetDashboardAlert('error');
+  }
+};
+
+defineExpose({
+  starHovered,
+  isDefaultDashboard,
+  isRenderBetaText,
+  handleSetCurrentDashboard,
+  setStarHovered,
+  handleSetDefaultDashboard,
+  callSetDashboardAlert,
+});
 </script>
 
 <style lang="scss" scoped>

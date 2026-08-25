@@ -67,9 +67,9 @@
       class="abandoned-cart-widget__content"
       data-testid="abandoned-cart-widget-content"
     >
-      <Chart
+      <SteppedBarChart
         class="abandoned-cart-widget__content__chart"
-        :data="chartData"
+        :items="chartItems"
       />
       <InfoCard
         class="abandoned-cart-widget__content__info-card"
@@ -93,7 +93,7 @@ import { useI18n } from 'vue-i18n';
 
 import { useLazyData } from '@/composables/useLazyData';
 
-import Chart from './Chart.vue';
+import SteppedBarChart from '@/components/insights/charts/SteppedBarChart.vue';
 import InfoCard from './InfoCard.vue';
 import ModalRemoveWidget from '../CustomizableWidget/ModalRemoveWidget.vue';
 
@@ -101,6 +101,12 @@ import { useConversational } from '@/store/modules/conversational/conversational
 
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
 import { storeToRefs } from 'pinia';
+import {
+  colorBlue2,
+  colorBlue4,
+  colorBlue6,
+  colorBlue8,
+} from '@weni/unnnic-system/tokens/colors';
 
 defineOptions({
   name: 'AbandonedCartWidget',
@@ -180,14 +186,43 @@ const disclaimerDescription = computed(() => {
   return t('conversations_dashboard.abandoned_cart_recovery_widget.no_data');
 });
 
-const chartData = computed(() => {
-  return {
-    sent: widgetData.value.sent,
-    delivered: widgetData.value.delivered,
-    read: widgetData.value.read,
-    clicks: widgetData.value.clicks,
-  };
-});
+const chartItems = computed(() => [
+  {
+    id: 'sent',
+    label: t(
+      'conversations_dashboard.abandoned_cart_recovery_widget.chart.sent',
+    ),
+    value: widgetData.value.sent,
+    backgroundColor: colorBlue2,
+  },
+  {
+    id: 'delivered',
+    label: t(
+      'conversations_dashboard.abandoned_cart_recovery_widget.chart.delivered',
+    ),
+    value: widgetData.value.delivered,
+    backgroundColor: colorBlue4,
+  },
+  {
+    id: 'read',
+    label: t(
+      'conversations_dashboard.abandoned_cart_recovery_widget.chart.read',
+    ),
+    value: widgetData.value.read,
+    tooltip: t(
+      'conversations_dashboard.abandoned_cart_recovery_widget.chart.read_help',
+    ),
+    backgroundColor: colorBlue6,
+  },
+  {
+    id: 'clicks',
+    label: t(
+      'conversations_dashboard.abandoned_cart_recovery_widget.chart.clicks',
+    ),
+    value: widgetData.value.clicks,
+    backgroundColor: colorBlue8,
+  },
+]);
 
 const infoCardData = computed(() => {
   return {

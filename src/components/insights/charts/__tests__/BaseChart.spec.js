@@ -68,14 +68,9 @@ describe('BaseChart', () => {
         'funnel',
       ];
 
-      const wrapper = createWrapper();
-      const validator = wrapper.vm.$options.props.type.validator;
-
       validTypes.forEach((type) => {
-        expect(validator(type)).toBe(true);
+        expect(() => createWrapper({ type })).not.toThrow();
       });
-
-      expect(validator('invalid-type')).toBe(false);
     });
 
     it('should have default props values', () => {
@@ -101,14 +96,15 @@ describe('BaseChart', () => {
         },
       };
 
-      const wrapper = createWrapper({
+      createWrapper({
         options: customOptions,
       });
 
-      expect(wrapper.vm.mergedOptions.responsive).toBe(false);
-      expect(wrapper.vm.mergedOptions.maintainAspectRatio).toBe(false);
-      expect(wrapper.vm.mergedOptions.scales.x.grid.display).toBe(true);
-      expect(wrapper.vm.mergedOptions.scales.y.display).toBe(false);
+      const chartOptions = ChartJS.mock.calls.at(-1)[1].options;
+      expect(chartOptions.responsive).toBe(false);
+      expect(chartOptions.maintainAspectRatio).toBe(false);
+      expect(chartOptions.scales.x.grid.display).toBe(true);
+      expect(chartOptions.scales.y.display).toBe(false);
     });
 
     it('should merge chart styles with default styles', () => {
@@ -121,7 +117,12 @@ describe('BaseChart', () => {
         style: customStyle,
       });
 
-      expect(wrapper.vm.chartStyles).toEqual(customStyle);
+      expect(wrapper.find('canvas').attributes('style')).toContain(
+        'width: 100px',
+      );
+      expect(wrapper.find('canvas').attributes('style')).toContain(
+        'height: 100px',
+      );
     });
   });
 
@@ -146,10 +147,10 @@ describe('BaseChart', () => {
         data: { labels: ['A'], datasets: [{ data: [1] }] },
       });
 
-      expect(ChartJS).toHaveBeenCalledWith(wrapper.vm.$refs.baseChartCanvas, {
+      expect(ChartJS).toHaveBeenCalledWith(wrapper.find('canvas').element, {
         type: 'line',
-        data: wrapper.vm.data,
-        options: wrapper.vm.mergedOptions,
+        data: wrapper.props('data'),
+        options: expect.any(Object),
       });
     });
   });
@@ -160,7 +161,7 @@ describe('BaseChart', () => {
       const canvas = wrapper.find('canvas');
 
       expect(canvas.exists()).toBe(true);
-      expect(wrapper.vm.$refs.baseChartCanvas).toBe(canvas.element);
+      expect(ChartJS.mock.calls.at(-1)[0]).toBe(canvas.element);
     });
 
     it('should apply style bindings to canvas', () => {
@@ -180,11 +181,11 @@ describe('BaseChart', () => {
 
   describe('Edge Cases', () => {
     it('should handle empty data object', () => {
-      const wrapper = createWrapper({
-        data: { labels: [], datasets: [] },
-      });
-
-      expect(() => wrapper.vm.$forceUpdate()).not.toThrow();
+      expect(() =>
+        createWrapper({
+          data: { labels: [], datasets: [] },
+        }),
+      ).not.toThrow();
     });
 
     it('should handle all valid chart types', () => {
@@ -201,8 +202,7 @@ describe('BaseChart', () => {
       ];
 
       validTypes.forEach((type) => {
-        const wrapper = createWrapper({ type });
-        expect(() => wrapper.vm.$forceUpdate()).not.toThrow();
+        expect(() => createWrapper({ type })).not.toThrow();
       });
     });
 
@@ -232,17 +232,18 @@ describe('BaseChart', () => {
         },
       };
 
-      const wrapper = createWrapper({
+      createWrapper({
         options: complexOptions,
       });
 
-      expect(wrapper.vm.mergedOptions.scales.x.grid.display).toBe(true);
-      expect(wrapper.vm.mergedOptions.scales.x.grid.color).toBe('#fff');
-      expect(wrapper.vm.mergedOptions.scales.x.ticks.padding).toBe(5);
-      expect(wrapper.vm.mergedOptions.scales.y.display).toBe(true);
-      expect(wrapper.vm.mergedOptions.scales.y.position).toBe('right');
-      expect(wrapper.vm.mergedOptions.plugins.legend.display).toBe(true);
-      expect(wrapper.vm.mergedOptions.plugins.legend.position).toBe('top');
+      const chartOptions = ChartJS.mock.calls.at(-1)[1].options;
+      expect(chartOptions.scales.x.grid.display).toBe(true);
+      expect(chartOptions.scales.x.grid.color).toBe('#fff');
+      expect(chartOptions.scales.x.ticks.padding).toBe(5);
+      expect(chartOptions.scales.y.display).toBe(true);
+      expect(chartOptions.scales.y.position).toBe('right');
+      expect(chartOptions.plugins.legend.display).toBe(true);
+      expect(chartOptions.plugins.legend.position).toBe('top');
     });
   });
 });

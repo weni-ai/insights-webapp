@@ -112,7 +112,9 @@ describe('CardDashboard', () => {
     await wrapper.setProps({
       friendlyId: '',
     });
-    expect(wrapper.vm.friendlyEmoji).toBe('');
+    expect(
+      wrapper.find('[data-testid="card-dashboard-friendly-id"]').exists(),
+    ).toBe(false);
   });
 
   it('should return an empty string when friendlyId is not found in the emojis data', async () => {
@@ -120,7 +122,9 @@ describe('CardDashboard', () => {
       friendlyId: 'nonexistent_id',
     });
 
-    expect(wrapper.vm.friendlyEmoji).toBe('');
+    expect(
+      wrapper.find('[data-testid="card-dashboard-friendly-id"]').exists(),
+    ).toBe(false);
   });
 
   it('should return the correct emoji when friendlyId is valid and found in the emojis data', async () => {
@@ -128,7 +132,9 @@ describe('CardDashboard', () => {
       friendlyId: 'smile',
     });
 
-    expect(wrapper.vm.friendlyEmoji).toBe('😄');
+    expect(
+      wrapper.find('[data-testid="card-dashboard-friendly-id"]').text(),
+    ).toBe('😄');
   });
 
   it('should show the correct tooltip text if tooltip props has exists', async () => {

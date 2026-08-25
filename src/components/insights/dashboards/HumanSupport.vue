@@ -1,6 +1,5 @@
 <template>
   <section
-    v-if="isEnabled"
     class="dashboard-human-support"
     data-testid="dashboard-human-support"
   >
@@ -51,21 +50,13 @@
 <script setup lang="ts">
 import { UnnnicTab, UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
 import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 import {
   useHumanSupport,
   type ActiveTab,
 } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
-
-const { isFeatureFlagEnabled } = useFeatureFlag();
-
-const isEnabled = computed(() => {
-  return isFeatureFlagEnabled('insights-new-human-dashboard');
-});
 
 const humanSupportStore = useHumanSupport();
 const humanSupportMonitoringStore = useHumanSupportMonitoring();

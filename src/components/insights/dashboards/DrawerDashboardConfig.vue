@@ -4,11 +4,11 @@
     :style="{ display: showProgressBar ? 'none' : 'flex' }"
     :modelValue="modelValue"
     :withoutOverlay="showDeleteDashboardModal"
-    :title="dashboard ? $t('edit_dashboard.title') : $t('new_dashboard.title')"
-    :primaryButtonText="$t('save')"
+    :title="dashboard ? t('edit_dashboard.title') : t('new_dashboard.title')"
+    :primaryButtonText="t('save')"
     :disabledPrimaryButton="!isValidConfig"
     :loadingPrimaryButton="loadingRequest"
-    :secondaryButtonText="$t('cancel')"
+    :secondaryButtonText="t('cancel')"
     :disabledSecondaryButton="loadingRequest"
     wide
     @primary-button-click="dashboard ? updateDashboard() : createDashboard()"
@@ -21,18 +21,19 @@
         @submit.prevent
       >
         <section class="config-form__input">
-          <UnnnicLabel :label="$t('dashboard_name')" />
+          <UnnnicLabel :label="t('dashboard_name')" />
           <UnnnicInput
             v-model="dashboardForm.name"
-            :placeholder="$t('new_dashboard.dashboard_name_placeholder')"
+            :placeholder="t('new_dashboard.dashboard_name_placeholder')"
           />
         </section>
         <section class="config-form__input">
-          <UnnnicLabel :label="$t('currency')" />
+          <UnnnicLabel :label="t('currency')" />
           <UnnnicSelect
             v-model="dashboardForm.currency"
             :options="currencyOptions"
-            :placeholder="$t('select')"
+            :placeholder="t('select')"
+            optionsLines="8"
             itemLabel="label"
             itemValue="value"
           />
@@ -41,14 +42,14 @@
           v-if="dashboard?.is_deletable"
           class="config-form__delete-dashboard-button"
           type="tertiary"
-          :text="$t('edit_dashboard.delete_dashboard')"
+          :text="t('edit_dashboard.delete_dashboard')"
           @click="showDeleteDashboardModal = true"
         />
         <section
           v-if="!dashboard"
           class="config-form__layout"
         >
-          <UnnnicLabel :label="$t('select_layout')" />
+          <UnnnicLabel :label="t('select_layout')" />
           <LayoutSelector @layout-selected="handleLayoutSelected" />
         </section>
       </form>
@@ -56,7 +57,7 @@
   </UnnnicDrawer>
   <ProgressBar
     v-if="showProgressBar"
-    :title="$t('new_dashboard.creating_new_dashboard')"
+    :title="t('new_dashboard.creating_new_dashboard')"
     @progress-complete="handleCreateProgressComplete"
   />
   <ModalDeleteDashboard
@@ -67,8 +68,11 @@
   />
 </template>
 
-<script>
-import { mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, onMounted, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import unnnic from '@weni/unnnic-system';
 
 import ProgressBar from '@/components/ProgressBar.vue';
@@ -78,182 +82,198 @@ import LayoutSelector from '@/components/insights/dashboards/layout/LayoutSelect
 import { Dashboards } from '@/services/api';
 import { Dashboard } from '@/models';
 import { useDashboards } from '@/store/modules/dashboards';
-export default {
-  name: 'DrawerDashboardConfig',
-  components: { ProgressBar, ModalDeleteDashboard, LayoutSelector },
-  props: {
-    modelValue: {
-      type: Boolean,
-      required: true,
-    },
-    dashboard: {
-      type: [Object, undefined],
-      default: undefined,
-    },
-  },
-  emits: ['close', 'update:modelValue'],
-  data() {
-    return {
-      dashboardForm: {
-        name: '',
-        layout: 1,
-        currency: '',
-      },
-      currencyOptions: [
-        { label: this.$t('currency_options.BRL'), value: 'BRL' },
-        { label: this.$t('currency_options.USD'), value: 'USD' },
-        { label: this.$t('currency_options.EUR'), value: 'EUR' },
-        { label: this.$t('currency_options.ARS'), value: 'ARS' },
-      ],
-      loadingRequest: false,
-      createdDashboard: {},
-      showProgressBar: false,
+import { getCurrencyOptions } from '@/utils/currency';
 
-      showDeleteDashboardModal: false,
-    };
-  },
-  computed: {
-    ...mapState(useDashboards, ['dashboards']),
+defineOptions({ name: 'DrawerDashboardConfig' });
 
-    isValidConfig() {
-      const commonValidations = !!(
-        this.dashboardForm.name.trim() && this.dashboardForm.currency
+const props = defineProps<{
+  modelValue: boolean;
+  dashboard?: Record<string, any>;
+}>();
+
+const emit = defineEmits<{
+  (e: 'close'): void;
+  (e: 'update:modelValue', value: boolean): void;
+}>();
+
+const { t } = useI18n();
+const router = useRouter();
+
+const dashboardsStore = useDashboards();
+const { dashboards } = storeToRefs(dashboardsStore);
+
+const dashboardForm = reactive({
+  name: '',
+  layout: 1,
+  currency: '',
+});
+
+const loadingRequest = ref(false);
+const createdDashboard = ref<any>({});
+const showProgressBar = ref(false);
+const showDeleteDashboardModal = ref(false);
+
+const currencyOptions = computed(() => {
+  return getCurrencyOptions(t);
+});
+
+const isValidConfig = computed(() => {
+  const commonValidations = !!(
+    dashboardForm.name.trim() && dashboardForm.currency
+  );
+
+  if (!props.dashboard) {
+    return !!commonValidations;
+  }
+
+  return commonValidations;
+});
+
+onMounted(() => {
+  if (props.dashboard) {
+    handleDashboardFields();
+  }
+});
+
+function handleDashboardFields() {
+  const currencyOption = currencyOptions.value.find(
+    (currency: any) =>
+      currency.value === props.dashboard?.config?.currency_type,
+  );
+  dashboardForm.currency = currencyOption?.value || '';
+  dashboardForm.name = props.dashboard?.name || '';
+}
+
+function handleLayoutSelected(value: number) {
+  dashboardForm.layout = value;
+}
+
+function close() {
+  emit('close');
+}
+
+async function handleCreateProgressComplete() {
+  loadingRequest.value = false;
+  dashboards.value.push(createdDashboard.value);
+
+  dashboardsStore.currentDashboard = createdDashboard.value;
+
+  await router.push({
+    name: 'dashboard',
+    params: {
+      dashboardUuid: createdDashboard.value.uuid,
+    },
+  });
+  unnnic.unnnicCallAlert({
+    props: {
+      text: t('new_dashboard.alert.success'),
+      type: 'success',
+    },
+    seconds: 5,
+  });
+  close();
+}
+
+function createDashboard() {
+  loadingRequest.value = true;
+  Dashboards.createFlowsDashboard({
+    dashboardName: dashboardForm.name,
+    funnelAmount: dashboardForm.layout,
+    currencyType: dashboardForm.currency,
+  })
+    .then((response: any) => {
+      const { dashboard } = response;
+      createdDashboard.value = new (Dashboard as any)(
+        dashboard.uuid,
+        dashboard.name,
+        { columns: dashboard.grid[0], rows: dashboard.grid[1] },
+        dashboard.is_default,
+        dashboard.is_editable,
+        dashboard.is_deletable,
+        dashboard.config,
       );
-
-      if (!this.dashboard) {
-        return !!commonValidations;
-      }
-
-      return commonValidations;
-    },
-  },
-  mounted() {
-    if (this.dashboard) {
-      this.handleDashboardFields();
-    }
-  },
-  methods: {
-    handleDashboardFields() {
-      const currencyOption = this.currencyOptions.find(
-        (currency) => currency.value === this.dashboard.config?.currency_type,
-      );
-      this.dashboardForm.currency = currencyOption?.value || '';
-      this.dashboardForm.name = this.dashboard.name;
-    },
-    handleLayoutSelected(value) {
-      this.dashboardForm.layout = value;
-    },
-    close() {
-      this.$emit('close');
-    },
-    async handleCreateProgressComplete() {
-      const dashboardsStore = useDashboards();
-      this.loadingRequest = false;
-      this.dashboards.push(this.createdDashboard);
-
-      dashboardsStore.currentDashboard = this.createdDashboard;
-
-      await this.$router.push({
-        name: 'dashboard',
-        params: {
-          dashboardUuid: this.createdDashboard.uuid,
-        },
-      });
+      showProgressBar.value = true;
+    })
+    .catch((error: any) => {
       unnnic.unnnicCallAlert({
         props: {
-          text: this.$t('new_dashboard.alert.success'),
+          text: t('new_dashboard.alert.error'),
+          type: 'error',
+        },
+        seconds: 5,
+      });
+      console.error('createFlowsDashboard', error);
+      close();
+    });
+}
+
+function updateDashboard() {
+  loadingRequest.value = true;
+
+  Dashboards.updateFlowsDashboard({
+    dashboardUuid: props.dashboard!.uuid,
+    dashboardName: dashboardForm.name,
+    currencyType: dashboardForm.currency,
+  })
+    ?.then((response: any) => {
+      let updatedDashboard: any;
+      const updatedDashboards = dashboards.value.map((dash: any) => {
+        if (dash.uuid === props.dashboard!.uuid) {
+          updatedDashboard = {
+            ...dash,
+            name: response.name,
+            config: {
+              ...dash.config,
+              currency_type: response.config.currency_type,
+            },
+          };
+          return updatedDashboard;
+        }
+        return dash;
+      });
+
+      dashboardsStore.dashboards = updatedDashboards;
+      dashboardsStore.currentDashboard = updatedDashboard;
+
+      unnnic.unnnicCallAlert({
+        props: {
+          text: t('edit_dashboard.alert.success'),
           type: 'success',
         },
         seconds: 5,
       });
-      this.close();
-    },
-    createDashboard() {
-      this.loadingRequest = true;
-      Dashboards.createFlowsDashboard({
-        dashboardName: this.dashboardForm.name,
-        funnelAmount: this.dashboardForm.layout,
-        currencyType: this.dashboardForm.currency,
-      })
-        .then((response) => {
-          const { dashboard } = response;
-          this.createdDashboard = new Dashboard(
-            dashboard.uuid,
-            dashboard.name,
-            { columns: dashboard.grid[0], rows: dashboard.grid[1] },
-            dashboard.is_default,
-            dashboard.is_editable,
-            dashboard.is_deletable,
-            dashboard.config,
-          );
-          this.showProgressBar = true;
-        })
-        .catch((error) => {
-          unnnic.unnnicCallAlert({
-            props: {
-              text: this.$t('new_dashboard.alert.error'),
-              type: 'error',
-            },
-            seconds: 5,
-          });
-          console.error('createFlowsDashboard', error);
-          this.close();
-        });
-    },
-    updateDashboard() {
-      const dashboardsStore = useDashboards();
-      this.loadingRequest = true;
+    })
+    .catch((error: any) => {
+      unnnic.unnnicCallAlert({
+        props: {
+          text: t('edit_dashboard.alert.error'),
+          type: 'error',
+        },
+        seconds: 5,
+      });
+      console.error('updateFlowsDashboard', error);
+    })
+    .finally(() => {
+      loadingRequest.value = false;
+      close();
+    });
+}
 
-      Dashboards.updateFlowsDashboard({
-        dashboardUuid: this.dashboard.uuid,
-        dashboardName: this.dashboardForm.name,
-        currencyType: this.dashboardForm.currency,
-      })
-        ?.then((response) => {
-          let updatedDashboard;
-          const dashboards = this.dashboards.map((dash) => {
-            if (dash.uuid === this.dashboard.uuid) {
-              updatedDashboard = {
-                ...dash,
-                name: response.name,
-                config: {
-                  ...dash.config,
-                  currency_type: response.config.currency_type,
-                },
-              };
-              return updatedDashboard;
-            }
-            return dash;
-          });
-
-          dashboardsStore.dashboards = dashboards;
-          dashboardsStore.currentDashboard = updatedDashboard;
-
-          unnnic.unnnicCallAlert({
-            props: {
-              text: this.$t('edit_dashboard.alert.success'),
-              type: 'success',
-            },
-            seconds: 5,
-          });
-        })
-        .catch((error) => {
-          unnnic.unnnicCallAlert({
-            props: {
-              text: this.$t('edit_dashboard.alert.error'),
-              type: 'error',
-            },
-            seconds: 5,
-          });
-          console.error('updateFlowsDashboard', error);
-        })
-        .finally(() => {
-          this.loadingRequest = false;
-          this.close();
-        });
-    },
-  },
-};
+defineExpose({
+  dashboardForm,
+  isValidConfig,
+  currencyOptions,
+  showProgressBar,
+  showDeleteDashboardModal,
+  loadingRequest,
+  createdDashboard,
+  close,
+  createDashboard,
+  updateDashboard,
+  handleLayoutSelected,
+  handleDashboardFields,
+  handleCreateProgressComplete,
+});
 </script>
 
 <style lang="scss" scoped>

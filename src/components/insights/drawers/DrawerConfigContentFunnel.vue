@@ -37,7 +37,7 @@
   <UnnnicButton
     class="clear-fields-btn"
     :text="$t('drawers.clear_all_fields')"
-     type="secondary"
+    type="secondary"
     :disabled="isDisableClearFields"
     @click="clearAllFields"
   />
@@ -47,197 +47,188 @@
     type="tertiary"
     @click="resetWidget"
   />
-
 </template>
 
-<script>
-import { mapState } from 'pinia';
-import { useProject } from '@/store/modules/project';
+<script setup lang="ts">
+import { ref, computed, watch, nextTick } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
+import { useProject } from '@/store/modules/project';
 import FormAccordion from '@/components/FormAccordion.vue';
 import SelectFlow from '@/components/SelectFlow.vue';
 
-export default {
-  name: 'DrawerConfigContentFunnel',
+defineOptions({ name: 'DrawerConfigContentFunnel' });
 
-  components: {
-    FormAccordion,
-    SelectFlow,
+interface DrawerConfigContentFunnelProps {
+  modelValue?: Record<string, any>;
+}
+
+const props = withDefaults(defineProps<DrawerConfigContentFunnelProps>(), {
+  modelValue: () => ({}),
+});
+
+const emit = defineEmits<{
+  'update:model-value': [value: unknown];
+  'update-disable-primary-button': [value: boolean];
+  'reset-widget': [];
+}>();
+
+const { t } = useI18n();
+const projectStore = useProject();
+const { flows: projectFlows } = storeToRefs(projectStore);
+
+const initialMetricsStringfy = ref('');
+const metrics = ref([
+  {
+    title: t('drawers.config_funnel.first_metric'),
+    name: '',
+    flow: '',
+    active: true,
   },
-
-  props: {
-    modelValue: {
-      type: {},
-      default: () => {},
-    },
+  {
+    title: t('drawers.config_funnel.second_metric'),
+    name: '',
+    flow: '',
+    active: false,
   },
-
-  emits: [
-    'update:model-value',
-    'update-disable-primary-button',
-    'reset-widget',
-  ],
-
-  data() {
-    return {
-      initialMetricsStringfy: '',
-      metrics: [
-        {
-          title: this.$t('drawers.config_funnel.first_metric'),
-          name: '',
-          flow: '',
-          active: true,
-        },
-        {
-          title: this.$t('drawers.config_funnel.second_metric'),
-          name: '',
-          flow: '',
-          active: false,
-        },
-        {
-          title: this.$t('drawers.config_funnel.third_metric'),
-          name: '',
-          flow: '',
-          active: false,
-        },
-      ],
-      activeMetric: null,
-    };
+  {
+    title: t('drawers.config_funnel.third_metric'),
+    name: '',
+    flow: '',
+    active: false,
   },
+]);
+const activeMetric = ref<number | null>(null);
 
-  computed: {
-    ...mapState(useProject, {
-      projectFlows: 'flows',
-    }),
+const validMetricsLength = computed(
+  () => metrics.value.filter((metric) => metric.name && metric.flow).length,
+);
 
-    validMetricsLength() {
-      return this.metrics.filter((metric) => metric.name && metric.flow).length;
-    },
-    isValidMetrics() {
-      if (this.validMetricsLength < 3) {
-        return false;
-      }
-      const metricsToCompare = this.metrics.map((metric) => {
-        delete metric.active;
-        return metric;
-      });
+const isValidMetrics = computed(() => {
+  if (validMetricsLength.value < 3) {
+    return false;
+  }
+  const metricsToCompare = metrics.value.map((metric) => {
+    delete (metric as { active?: boolean }).active;
+    return metric;
+  });
 
-      if (metricsToCompare.some((metric) => !metric.flow)) {
-        return false;
-      }
+  if (metricsToCompare.some((metric) => !metric.flow)) {
+    return false;
+  }
 
-      if (this.initialMetricsStringfy === JSON.stringify(metricsToCompare)) {
-        return false;
-      }
-      return true;
-    },
-    isDisableClearFields() {
-      return this.metrics.some((metric) => metric.name === '' || metric.flow === '');
-    },
+  if (initialMetricsStringfy.value === JSON.stringify(metricsToCompare)) {
+    return false;
+  }
+  return true;
+});
+
+const isDisableClearFields = computed(() =>
+  metrics.value.some((metric) => metric.name === '' || metric.flow === ''),
+);
+
+watch(
+  metrics,
+  (newMetrics) => {
+    emit('update:model-value', newMetrics);
   },
+  { deep: true },
+);
 
-  watch: {
-    metrics: {
-      deep: true,
-      handler(newMetrics) {
-        this.$emit('update:model-value', newMetrics);
-      },
-    },
-
-    isValidMetrics: {
-      immediate: true,
-      handler() {
-        this.$emit('update-disable-primary-button', !this.isValidMetrics);
-      },
-    },
+watch(
+  isValidMetrics,
+  () => {
+    emit('update-disable-primary-button', !isValidMetrics.value);
   },
+  { immediate: true },
+);
 
-  mounted() {
-    this.handleWidgetFields();
+const addMetric = () => {
+  const newMetric = {
+    title:
+      metrics.value.length === 3
+        ? t('drawers.config_funnel.fourth_metric')
+        : t('drawers.config_funnel.fifth_metric'),
+    name: '',
+    flow: '',
+    active: false,
+  };
 
-    this.$nextTick().then(() => {
-      this.activeMetric = 0;
-    });
-  },
-
-  methods: {
-    clearFields(index) {
-      const isCreatedMetric = [3, 4].includes(index);
-      if (isCreatedMetric) {
-        return this.metrics.splice(index, 1);
-      }
-
-      this.metrics[index].name = '';
-      this.metrics[index].flow = '';
-    },
-    clearAllFields() {
-      const isCreatedMetric = this.metrics.length > 3;
-
-      if (isCreatedMetric) {
-        this.metrics.splice(3, this.metrics.length - 3);
-      }
-
-      this.metrics.forEach((metric) => {
-        metric.name = '';
-        metric.flow = '';
-      });
-    },
-
-    handleWidgetFields() {
-      Object.values(this.modelValue.config).forEach((metric, index) => {
-        const selectedFlow =
-          this.projectFlows.find(
-            (flow) => flow.value === metric.filter?.flow,
-          ) || {};
-
-        if (!this.metrics[index]) {
-          this.addMetric();
-        }
-
-        this.metrics[index] = {
-          ...this.metrics[index],
-          name: metric.name,
-          flow: selectedFlow?.value,
-        };
-      });
-      this.initialMetricsStringfy = JSON.stringify(
-        this.metrics.map((metric) => {
-          delete metric.active;
-          return metric;
-        }),
-      );
-    },
-
-    updateActiveMetric(index, isActive) {
-      this.metrics[index].active = isActive;
-      if (isActive) {
-        this.activeMetric = index;
-      }
-      if (this.activeMetric === index && !isActive) {
-        this.activeMetric = null;
-      }
-    },
-
-    addMetric() {
-      const newMetric = {
-        title:
-          this.metrics.length === 3
-            ? this.$t('drawers.config_funnel.fourth_metric')
-            : this.$t('drawers.config_funnel.fifth_metric'),
-        name: '',
-        flow: '',
-        active: false,
-      };
-
-      if (this.metrics.length < 5) {
-        this.metrics.push(newMetric);
-      }
-    },
-    resetWidget() {
-      this.$emit('reset-widget');
-    },
-  },
+  if (metrics.value.length < 5) {
+    metrics.value.push(newMetric);
+  }
 };
+
+const clearFields = (index: number) => {
+  const isCreatedMetric = [3, 4].includes(index);
+  if (isCreatedMetric) {
+    return metrics.value.splice(index, 1);
+  }
+
+  metrics.value[index].name = '';
+  metrics.value[index].flow = '';
+};
+
+const clearAllFields = () => {
+  const isCreatedMetric = metrics.value.length > 3;
+
+  if (isCreatedMetric) {
+    metrics.value.splice(3, metrics.value.length - 3);
+  }
+
+  metrics.value.forEach((metric) => {
+    metric.name = '';
+    metric.flow = '';
+  });
+};
+
+const handleWidgetFields = () => {
+  Object.values(props.modelValue.config || {}).forEach(
+    (metric: any, index: number) => {
+      const selectedFlow =
+        projectFlows.value.find(
+          (flow: any) => flow.value === metric.filter?.flow,
+        ) || {};
+
+      if (!metrics.value[index]) {
+        addMetric();
+      }
+
+      metrics.value[index] = {
+        ...metrics.value[index],
+        name: metric.name,
+        flow: selectedFlow?.value,
+      };
+    },
+  );
+  initialMetricsStringfy.value = JSON.stringify(
+    metrics.value.map((metric) => {
+      delete (metric as { active?: boolean }).active;
+      return metric;
+    }),
+  );
+};
+
+const updateActiveMetric = (index: number, isActive: boolean) => {
+  metrics.value[index].active = isActive;
+  if (isActive) {
+    activeMetric.value = index;
+  }
+  if (activeMetric.value === index && !isActive) {
+    activeMetric.value = null;
+  }
+};
+
+const resetWidget = () => {
+  emit('reset-widget');
+};
+
+handleWidgetFields();
+
+nextTick().then(() => {
+  activeMetric.value = 0;
+});
 </script>
 
 <style lang="scss" scoped>

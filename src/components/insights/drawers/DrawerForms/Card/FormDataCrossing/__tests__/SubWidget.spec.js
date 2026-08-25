@@ -39,7 +39,6 @@ describe('SubWidget.vue', () => {
 
   it('renders properly with default props', async () => {
     const wrapper = createWrapper();
-    console.log(wrapper.html());
     expect(wrapper.exists()).toBe(true);
     expect(wrapper.find('[data-testid="select-flow"]').exists()).toBe(true);
     expect(
@@ -72,16 +71,13 @@ describe('SubWidget.vue', () => {
 
   it('emits update:config when config changes', async () => {
     const wrapper = createWrapper();
-    const newConfig = {
-      ...defaultProps.config,
-      flow: {
-        ...defaultProps.config.flow,
-        uuid: 'test-uuid',
-      },
-    };
 
-    await wrapper.setData({ configLocal: newConfig });
+    await wrapper
+      .findComponent('[data-testid="select-flow"]')
+      .vm.$emit('update:model-value', 'test-uuid');
+
     expect(wrapper.emitted('update:config')).toBeTruthy();
+    expect(wrapper.emitted('update:config')[0][0].flow.uuid).toBe('test-uuid');
   });
 
   it('validates config correctly for executions type', async () => {
@@ -96,7 +92,7 @@ describe('SubWidget.vue', () => {
       },
     });
 
-    expect(wrapper.vm.isValidConfig).toBe(true);
+    expect(wrapper.emitted('is-valid-form')[0]).toEqual([true]);
   });
 
   it('validates config correctly for flow_result type', async () => {
@@ -113,7 +109,7 @@ describe('SubWidget.vue', () => {
       },
     });
 
-    expect(wrapper.vm.isValidConfig).toBe(true);
+    expect(wrapper.emitted('is-valid-form')[0]).toEqual([true]);
   });
 
   it('returns false validation when required fields are missing', async () => {
@@ -128,6 +124,6 @@ describe('SubWidget.vue', () => {
       },
     });
 
-    expect(wrapper.vm.isValidConfig).toBe(false);
+    expect(wrapper.emitted('is-valid-form')[0]).toEqual([false]);
   });
 });

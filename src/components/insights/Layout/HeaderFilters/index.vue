@@ -54,8 +54,11 @@
   </section>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
@@ -68,226 +71,227 @@ import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMe
 
 import { getLastNDays, getYesterdayDate } from '@/utils/time';
 
-export default {
-  name: 'InsightsLayoutHeaderFilters',
+defineOptions({ name: 'InsightsLayoutHeaderFilters' });
 
-  components: {
-    DynamicFilter,
-    ModalFilters,
-    SearchTemplateMessagesModal,
-    FilterHumanSupport,
-    FilterFavoriteTemplateMessage,
+withDefaults(
+  defineProps<{
+    forceDisabled?: boolean;
+  }>(),
+  {
+    forceDisabled: false,
   },
+);
 
-  props: {
-    forceDisabled: {
-      type: Boolean,
-      default: false,
-    },
-  },
+const { t } = useI18n();
+const route = useRoute();
+const router = useRouter();
 
-  data() {
-    return {
-      filterModalOpened: false,
-      searchTemplateMetaModal: false,
+const dashboardsStore = useDashboards();
+const metaTemplateStore = useMetaTemplateMessage();
+const { currentDashboard, currentDashboardFilters, appliedFilters } =
+  storeToRefs(dashboardsStore);
+const { emptyTemplates, showSearchTemplateMetaModal } =
+  storeToRefs(metaTemplateStore);
+
+const handlerShowSearchTemplateModal = (...args: any[]) =>
+  metaTemplateStore.handlerShowSearchTemplateModal(...args);
+
+const filterModalOpened = ref(false);
+
+const isHumanServiceDashboard = computed(
+  () => currentDashboard.value?.name === 'human_service_dashboard.title',
+);
+
+const isHumanSupportDashboard = computed(
+  () => currentDashboard.value?.name === 'human_support_dashboard.title',
+);
+
+const isConversationalDashboard = computed(
+  () => currentDashboard.value?.name === 'conversations_dashboard.title',
+);
+
+const isMetaTemplateDashboard = computed(
+  () => currentDashboard.value?.config?.is_whatsapp_integration,
+);
+
+const isRenderDynamicFilter = computed(
+  () =>
+    (!isMetaTemplateDashboard.value && !isHumanSupportDashboard.value) ||
+    (!emptyTemplates.value && !isHumanSupportDashboard.value),
+);
+
+const yesterdayFormatted = computed(() => getYesterdayDate().dmFormat);
+
+const hasManyFilters = computed(
+  () => currentDashboardFilters.value?.length > 1,
+);
+
+const appliedFiltersLength = computed(() => {
+  return appliedFilters.value ? Object.keys(appliedFilters.value).length : 0;
+});
+
+const titleButtonManyFilters = computed(() => {
+  return appliedFiltersLength.value
+    ? `${t('insights_header.filters')} (${appliedFiltersLength.value})`
+    : t('insights_header.filters');
+});
+
+const filter = computed(() => {
+  if (!currentDashboardFilters.value.length) return null;
+
+  const currentFilter = currentDashboardFilters.value[0];
+
+  if (currentFilter.type === 'date_range') {
+    const templateShortcuts = [
+      { key: 'last_7_days', id: 'last-7-days' },
+      { key: 'last_14_days', id: 'last-14-days' },
+      { key: 'last_30_days', id: 'last-30-days' },
+      { key: 'last_60_days', id: 'last-60-days' },
+      { key: 'last_90_days', id: 'last-90-days' },
+      { key: 'current_month', id: 'current-month' },
+      { key: 'previous_month', id: 'previous-month' },
+    ];
+
+    const shortCutOptions = templateShortcuts.map(({ key, id }) => ({
+      name: t(`template_messages_dashboard.filter.shortcut.${key}`),
+      id,
+    }));
+
+    let customFilter: Record<string, any> = {
+      ...currentFilter,
+      next: true,
+      shortCutOptions,
+      disableClear: true,
     };
-  },
 
-  computed: {
-    ...mapState(useDashboards, [
-      'currentDashboard',
-      'currentDashboardFilters',
-      'appliedFilters',
-    ]),
-    ...mapState(useMetaTemplateMessage, [
-      'emptyTemplates',
-      'showSearchTemplateMetaModal',
-    ]),
+    if (isConversationalDashboard.value) {
+      const dateParam = { date: yesterdayFormatted.value };
+      const conversationalShortcuts = [
+        { key: 'last_7_days_conversational', id: 'last-7-days' },
+        { key: 'last_14_days_conversational', id: 'last-14-days' },
+        { key: 'last_30_days_conversational', id: 'last-30-days' },
+        { key: 'last_12_months_conversational', id: 'last-12-months' },
+        { key: 'current_month_conversational', id: 'current-month' },
+        { key: 'previous_month_conversational', id: 'previous-month' },
+        { key: 'custom_conversational', id: 'custom' },
+      ];
 
-    isHumanServiceDashboard() {
-      return this.currentDashboard?.name === 'human_service_dashboard.title';
-    },
-
-    isHumanSupportDashboard() {
-      return this.currentDashboard?.name === 'human_support_dashboard.title';
-    },
-
-    isConversationalDashboard() {
-      return this.currentDashboard?.name === 'conversations_dashboard.title';
-    },
-
-    isRenderDynamicFilter() {
-      return (
-        (!this.isMetaTemplateDashboard && !this.isHumanSupportDashboard) ||
-        (!this.emptyTemplates && !this.isHumanSupportDashboard)
-      );
-    },
-
-    isMetaTemplateDashboard() {
-      return this.currentDashboard?.config?.is_whatsapp_integration;
-    },
-
-    yesterdayFormatted() {
-      return getYesterdayDate().dmFormat;
-    },
-
-    hasManyFilters() {
-      return this.currentDashboardFilters?.length > 1;
-    },
-    appliedFiltersLength() {
-      const { appliedFilters } = this;
-      return appliedFilters ? Object.keys(appliedFilters).length : 0;
-    },
-    titleButtonManyFilters() {
-      const { appliedFiltersLength } = this;
-      return appliedFiltersLength
-        ? `${this.$t('insights_header.filters')} (${appliedFiltersLength})`
-        : this.$t('insights_header.filters');
-    },
-    filter() {
-      if (!this.currentDashboardFilters.length) return null;
-
-      const filter = this.currentDashboardFilters[0];
-
-      if (filter.type === 'date_range') {
-        const templateShortcuts = [
-          { key: 'last_7_days', id: 'last-7-days' },
-          { key: 'last_14_days', id: 'last-14-days' },
-          { key: 'last_30_days', id: 'last-30-days' },
-          { key: 'last_60_days', id: 'last-60-days' },
-          { key: 'last_90_days', id: 'last-90-days' },
-          { key: 'current_month', id: 'current-month' },
-          { key: 'previous_month', id: 'previous-month' },
-        ];
-
-        const shortCutOptions = templateShortcuts.map(({ key, id }) => ({
-          name: this.$t(`template_messages_dashboard.filter.shortcut.${key}`),
+      customFilter.shortCutOptions = conversationalShortcuts.map(
+        ({ key, id }) => ({
+          name: t(`select_date.${key}`, dateParam),
           id,
-        }));
+        }),
+      );
+    }
 
-        let customFilter = {
-          ...filter,
-          next: true,
-          shortCutOptions,
-          disableClear: true,
-        };
+    return customFilter;
+  }
 
-        if (this.isConversationalDashboard) {
-          const dateParam = { date: this.yesterdayFormatted };
-          const conversationalShortcuts = [
-            { key: 'last_7_days_conversational', id: 'last-7-days' },
-            { key: 'last_14_days_conversational', id: 'last-14-days' },
-            { key: 'last_30_days_conversational', id: 'last-30-days' },
-            { key: 'last_12_months_conversational', id: 'last-12-months' },
-            { key: 'current_month_conversational', id: 'current-month' },
-            { key: 'previous_month_conversational', id: 'previous-month' },
-            { key: 'custom_conversational', id: 'custom' },
-          ];
+  return currentFilter;
+});
 
-          customFilter.shortCutOptions = conversationalShortcuts.map(
-            ({ key, id }) => ({
-              name: this.$t(`select_date.${key}`, dateParam),
-              id,
-            }),
-          );
-        }
-
-        return customFilter;
-      }
-
-      return filter;
-    },
-  },
-
-  watch: {
-    $route: {
-      immediate: true,
-      deep: true,
-      handler(newRoute, oldRoute) {
-        if (oldRoute && newRoute.path !== oldRoute.path) {
-          this.retainRouteQueries(newRoute, oldRoute);
-          return;
-        }
-        // comment to prevent override default filters
-        // this.setAppliedFilters(newRoute.query);
-      },
-    },
-    currentDashboardFilters: {
-      immediate: true,
-      handler(filters) {
-        if (filters.length === 1) {
-          const { date, ended_at } = this.$route.query;
-
-          const isHumanSupportDashboard =
-            this.currentDashboard?.name === 'human_support_dashboard.title';
-
-          if (isHumanSupportDashboard) return;
-
-          const { start, end } = this.isConversationalDashboard
-            ? getYesterdayDate()
-            : getLastNDays(7);
-
-          const defaultFilterValue = this.isMetaTemplateDashboard
-            ? { _start: start, _end: end }
-            : { __gte: start, __lte: end };
-
-          const currentFilters = {};
-
-          if (date) {
-            currentFilters.date = this.$route.query.date;
-          }
-          if (ended_at) {
-            currentFilters.ended_at = this.$route.query.ended_at;
-          }
-
-          const filterKey = this.isMetaTemplateDashboard ? 'date' : 'ended_at';
-
-          this.setAppliedFilters({
-            [filterKey]: currentFilters[filterKey] || defaultFilterValue,
-          });
-        } else {
-          this.setAppliedFilters(this.$route.query);
-        }
-      },
-    },
-  },
-
-  methods: {
-    ...mapActions(useDashboards, ['setAppliedFilters', 'resetAppliedFilters']),
-    ...mapActions(useMetaTemplateMessage, ['handlerShowSearchTemplateModal']),
-
-    updateFilter(value) {
-      const hasNonNullValues =
-        typeof value === 'object' && value
-          ? Object.values(value).some((val) => val)
-          : value;
-      this.setAppliedFilters({
-        [this.currentDashboardFilters[0].name]: hasNonNullValues
-          ? value
-          : undefined,
-      });
-    },
-
-    clearFilters() {
-      this.resetAppliedFilters();
-    },
-
-    retainRouteQueries(newRoute, oldRoute) {
-      const oldQueryKeys = Object.keys(oldRoute?.query);
-
-      if (oldQueryKeys.length) {
-        this.$router.replace({
-          name: newRoute.name,
-          query: oldRoute.query,
-        });
-      }
-    },
-
-    openFiltersModal() {
-      this.filterModalOpened = true;
-    },
-  },
+const updateFilter = (value: any) => {
+  const hasNonNullValues =
+    typeof value === 'object' && value
+      ? Object.values(value).some((val) => val)
+      : value;
+  dashboardsStore.setAppliedFilters({
+    [currentDashboardFilters.value[0].name]: hasNonNullValues
+      ? value
+      : undefined,
+  });
 };
+
+const clearFilters = () => {
+  dashboardsStore.resetAppliedFilters();
+};
+
+const retainRouteQueries = (newRoute: any, oldRoute: any) => {
+  const oldQueryKeys = Object.keys(oldRoute?.query || {});
+
+  if (oldQueryKeys.length) {
+    router.replace({
+      name: newRoute.name,
+      query: oldRoute.query,
+    });
+  }
+};
+
+const openFiltersModal = () => {
+  filterModalOpened.value = true;
+};
+
+watch(
+  () => ({
+    path: route.path,
+    name: route.name,
+    query: { ...route.query },
+  }),
+  (newRoute, oldRoute) => {
+    if (oldRoute && newRoute.path !== oldRoute.path) {
+      retainRouteQueries(newRoute, oldRoute);
+    }
+  },
+  { immediate: true },
+);
+
+watch(
+  currentDashboardFilters,
+  (filters) => {
+    if (filters.length === 1) {
+      const { date, ended_at } = route.query;
+
+      const isHumanSupport =
+        currentDashboard.value?.name === 'human_support_dashboard.title';
+
+      if (isHumanSupport) return;
+
+      const { start, end } = isConversationalDashboard.value
+        ? getYesterdayDate()
+        : getLastNDays(7);
+
+      const defaultFilterValue = isMetaTemplateDashboard.value
+        ? { _start: start, _end: end }
+        : { __gte: start, __lte: end };
+
+      const currentFilters: Record<string, any> = {};
+
+      if (date) {
+        currentFilters.date = route.query.date;
+      }
+      if (ended_at) {
+        currentFilters.ended_at = route.query.ended_at;
+      }
+
+      const filterKey = isMetaTemplateDashboard.value ? 'date' : 'ended_at';
+
+      dashboardsStore.setAppliedFilters({
+        [filterKey]: currentFilters[filterKey] || defaultFilterValue,
+      });
+    } else {
+      dashboardsStore.setAppliedFilters(route.query);
+    }
+  },
+  { immediate: true },
+);
+
+defineExpose({
+  filterModalOpened,
+  isHumanServiceDashboard,
+  isHumanSupportDashboard,
+  isConversationalDashboard,
+  isRenderDynamicFilter,
+  isMetaTemplateDashboard,
+  yesterdayFormatted,
+  hasManyFilters,
+  appliedFiltersLength,
+  titleButtonManyFilters,
+  filter,
+  updateFilter,
+  clearFilters,
+  retainRouteQueries,
+  openFiltersModal,
+});
 </script>
 
 <style lang="scss" scoped>

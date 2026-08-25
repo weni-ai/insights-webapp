@@ -118,7 +118,6 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { useProject } from '@/store/modules/project';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { useDashboards } from '@/store/modules/dashboards';
 import { WidgetType } from '@/models/types/WidgetTypes';
 import WidgetConversationalService, {
@@ -174,8 +173,6 @@ const sentimentFormStore = useSentimentAnalysisForm();
 const { initializeForm, clearEditingContext } = sentimentFormStore;
 
 const warningModalType = ref<'cancel' | 'return' | ''>('');
-
-const { isFeatureFlagEnabled } = useFeatureFlag();
 
 const { currentDashboard } = storeToRefs(useDashboards());
 
@@ -590,20 +587,11 @@ const handleTabChoice = (tabKey: 'native' | 'customized') => {
   }
 
   if (tabKey === 'customized') {
-    const isAbsoluteNumbersEnabled = isFeatureFlagEnabled(
-      'insightsAbsoluteNumbersWidget',
-    );
-
-    const widgets = [
+    return [
       handleWidgetTypeChoice('custom'),
       handleWidgetTypeChoice('crosstab'),
+      handleWidgetTypeChoice('absolute_numbers'),
     ];
-
-    if (isAbsoluteNumbersEnabled) {
-      widgets.push(handleWidgetTypeChoice('absolute_numbers'));
-    }
-
-    return widgets;
   }
 
   return [];

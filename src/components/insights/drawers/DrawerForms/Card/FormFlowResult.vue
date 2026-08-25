@@ -33,105 +33,102 @@
   </section>
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
-import { useWidgets } from '@/store/modules/widgets';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useI18n } from 'vue-i18n';
 
+import { useWidgets } from '@/store/modules/widgets';
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import RadioList from '@/components/RadioList.vue';
 
-export default {
-  name: 'FormFlowResult',
+defineOptions({ name: 'FormFlowResult' });
 
-  components: {
-    SelectFlow,
-    SelectFlowResult,
-    RadioList,
+const emit = defineEmits<{
+  'update:is-valid-form': [value: unknown];
+}>();
+
+const { t } = useI18n();
+const widgetsStore = useWidgets();
+const { currentWidgetEditing } = storeToRefs(widgetsStore);
+
+const config = ref<Record<string, any> | null>(null);
+
+const operations = [
+  {
+    value: 'sum',
+    label: t('drawers.config_card.radios.total'),
   },
-
-  emits: ['update:is-valid-form'],
-
-  data() {
-    return {
-      config: null,
-
-      operations: [
-        {
-          value: 'sum',
-          label: this.$t('drawers.config_card.radios.total'),
-        },
-        {
-          value: 'max',
-          label: this.$t('drawers.config_card.radios.highest_value'),
-        },
-        {
-          value: 'avg',
-          label: this.$t('drawers.config_card.radios.avg'),
-        },
-        {
-          value: 'min',
-          label: this.$t('drawers.config_card.radios.lowest_value'),
-        },
-      ],
-    };
+  {
+    value: 'max',
+    label: t('drawers.config_card.radios.highest_value'),
   },
-
-  computed: {
-    ...mapState(useWidgets, ['currentWidgetEditing']),
-
-    widgetConfig() {
-      return this.currentWidgetEditing.config;
-    },
-
-    isValidForm() {
-      const { config } = this;
-
-      return config?.flow.uuid && config?.flow.result && config?.operation;
-    },
+  {
+    value: 'avg',
+    label: t('drawers.config_card.radios.avg'),
   },
-
-  watch: {
-    config: {
-      deep: true,
-      handler(newConfig) {
-        this.updateCurrentWidgetEditingConfig({
-          ...this.widgetConfig,
-          ...newConfig,
-        });
-
-        if (newConfig?.operation === 'recurrence') this.config.currency = false;
-      },
-    },
-
-    'config.flow.uuid'(newFlowUuid, oldFlowUuid) {
-      if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
-        this.config.flow.result = '';
-      }
-    },
-
-    isValidForm: {
-      immediate: true,
-      handler(newIsValidForm) {
-        this.$emit('update:is-valid-form', newIsValidForm);
-      },
-    },
+  {
+    value: 'min',
+    label: t('drawers.config_card.radios.lowest_value'),
   },
+];
 
-  created() {
-    const { widgetConfig } = this;
-    this.config = {
-      flow: {
-        uuid: widgetConfig.flow?.uuid || '',
-        result: widgetConfig.flow?.result || '',
-      },
-      operation: widgetConfig.operation || '',
-      currency: widgetConfig.currency || false,
-    };
-  },
+const widgetConfig = computed(() => currentWidgetEditing.value.config);
 
-  methods: {
-    ...mapActions(useWidgets, ['updateCurrentWidgetEditingConfig']),
+const isValidForm = computed(() => {
+  const currentConfig = config.value;
+  return (
+    currentConfig?.flow.uuid &&
+    currentConfig?.flow.result &&
+    currentConfig?.operation
+  );
+});
+
+watch(
+  config,
+  (newConfig) => {
+    widgetsStore.updateCurrentWidgetEditingConfig({
+      ...widgetConfig.value,
+      ...newConfig,
+    });
+
+    if (newConfig?.operation === 'recurrence') config.value.currency = false;
   },
+  { deep: true },
+);
+
+watch(
+  () => config.value?.flow?.uuid,
+  (newFlowUuid, oldFlowUuid) => {
+    if (oldFlowUuid && newFlowUuid !== oldFlowUuid) {
+      config.value.flow.result = '';
+    }
+  },
+);
+
+watch(
+  isValidForm,
+  (newIsValidForm) => {
+    emit('update:is-valid-form', newIsValidForm);
+  },
+  { immediate: true },
+);
+
+const initialWidgetConfig = widgetConfig.value;
+config.value = {
+  flow: {
+    uuid: initialWidgetConfig.flow?.uuid || '',
+    result: initialWidgetConfig.flow?.result || '',
+  },
+  operation: initialWidgetConfig.operation || '',
+  currency: initialWidgetConfig.currency || false,
 };
+
+defineExpose({
+  config,
+  operations,
+  isValidForm,
+  widgetConfig,
+});
 </script>

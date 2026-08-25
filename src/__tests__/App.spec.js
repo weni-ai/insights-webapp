@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
 import { flushPromises, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
+import { createRouter, createMemoryHistory } from 'vue-router';
 
 import App from '@/App.vue';
 
@@ -10,6 +11,7 @@ import { useOnboarding } from '@/store/modules/onboarding';
 import { useProject } from '@/store/modules/project';
 import { useUser } from '@/store/modules/user';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+import moment from 'moment';
 
 vi.mock('@/services/api', () => {
   return {
@@ -30,6 +32,9 @@ vi.mock('@/services/api/resources/projects', () => ({
       Promise.resolve({ active: false }),
     ),
     getMarketingTemplateCost: vi.fn(() => Promise.resolve({ value: 0 })),
+    getProjectInfo: vi.fn(() =>
+      Promise.resolve({ uuid: 'query-project-uuid', name: 'Test Project' }),
+    ),
   },
 }));
 
@@ -96,6 +101,24 @@ describe('App', () => {
   const mockPostMessage = vi.fn();
   const mockAddEventListener = vi.fn();
 
+  const createTestRouter = () =>
+    createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<div />' } },
+        {
+          path: '/human-service',
+          name: 'humanServiceDashboard',
+          component: { template: '<div />' },
+        },
+        {
+          path: '/:dashboardUuid?',
+          name: 'dashboard',
+          component: { template: '<div />' },
+        },
+      ],
+    });
+
   const createWrapper = (options = {}) => {
     return mount(App, {
       global: {
@@ -104,19 +127,15 @@ describe('App', () => {
             createSpy: vi.fn,
             stubActions: false,
           }),
+          createTestRouter(),
         ],
         components: mockComponents,
-        mocks: {
-          $i18n: {
-            locale: 'en',
-          },
-          ...options.mocks,
-          $route: {
-            name: 'home',
-          },
-        },
         stubs: {
           RouterView: mockComponents.RouterView,
+          InsightsLayout: mockComponents.InsightsLayout,
+          IconLoading: mockComponents.IconLoading,
+          CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+          McpNewsModal: mockComponents.McpNewsModal,
         },
       },
       ...options,
@@ -188,37 +207,11 @@ describe('App', () => {
     configStore.token = null;
   });
 
+  const getMessageHandler = () =>
+    mockAddEventListener.mock.calls.find(([event]) => event === 'message')?.[1];
+
   afterEach(() => {
     if (wrapper) wrapper.unmount();
-  });
-
-  describe('Computed Properties', () => {
-    it('should map dashboards store state correctly', () => {
-      dashboardsStore.dashboards = [{ id: 1, name: 'Test Dashboard' }];
-      dashboardsStore.isLoadingDashboards = true;
-      dashboardsStore.isLoadingCurrentDashboardFilters = true;
-      dashboardsStore.currentDashboard = { uuid: 'test-uuid' };
-
-      expect(wrapper.vm.dashboards).toEqual([
-        { id: 1, name: 'Test Dashboard' },
-      ]);
-      expect(wrapper.vm.isLoadingDashboards).toBe(true);
-      expect(wrapper.vm.isLoadingCurrentDashboardFilters).toBe(true);
-      expect(wrapper.vm.currentDashboard).toEqual({ uuid: 'test-uuid' });
-    });
-
-    it('should map config store state correctly', () => {
-      configStore.token = 'test-token';
-      expect(wrapper.vm.token).toBe('test-token');
-    });
-
-    it('should map onboarding store state correctly', () => {
-      onboardingStore.showCreateDashboardOnboarding = true;
-      onboardingStore.showCompleteOnboardingModal = true;
-
-      expect(wrapper.vm.showCreateDashboardTour).toBe(true);
-      expect(wrapper.vm.showCompleteOnboardingModal).toBe(true);
-    });
   });
 
   describe('Watchers', () => {
@@ -231,13 +224,10 @@ describe('App', () => {
         dashboardsStore,
         'getCurrentDashboardFilters',
       );
-      const getFeatureFlagsSpy = vi.spyOn(wrapper.vm, 'getFeatureFlags');
+      const getFeatureFlagsSpy = vi.spyOn(featureFlagStore, 'getFeatureFlags');
 
-      const newUuid = 'new-uuid';
-      await wrapper.vm.$options.watch['currentDashboard.uuid'].call(
-        wrapper.vm,
-        newUuid,
-      );
+      dashboardsStore.currentDashboard = { uuid: 'new-uuid' };
+      await flushPromises();
 
       expect(setCurrentDashboardFiltersSpy).toHaveBeenCalledWith([]);
       expect(getCurrentDashboardFiltersSpy).toHaveBeenCalled();
@@ -245,6 +235,9 @@ describe('App', () => {
     });
 
     it('should not trigger actions when currentDashboard.uuid is null', async () => {
+      dashboardsStore.currentDashboard = { uuid: 'existing-uuid' };
+      await flushPromises();
+
       const setCurrentDashboardFiltersSpy = vi.spyOn(
         dashboardsStore,
         'setCurrentDashboardFilters',
@@ -253,12 +246,10 @@ describe('App', () => {
         dashboardsStore,
         'getCurrentDashboardFilters',
       );
-      const getFeatureFlagsSpy = vi.spyOn(wrapper.vm, 'getFeatureFlags');
+      const getFeatureFlagsSpy = vi.spyOn(featureFlagStore, 'getFeatureFlags');
 
-      await wrapper.vm.$options.watch['currentDashboard.uuid'].call(
-        wrapper.vm,
-        null,
-      );
+      dashboardsStore.currentDashboard = { uuid: null };
+      await flushPromises();
 
       expect(setCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
       expect(getCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
@@ -268,35 +259,65 @@ describe('App', () => {
 
   describe('Lifecycle Methods', () => {
     it('should call listenConnect on created', () => {
-      const listenConnectSpy = vi.spyOn(App.methods, 'listenConnect');
-      createWrapper();
-      expect(listenConnectSpy).toHaveBeenCalled();
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { event: 'getLanguage' },
+        '*',
+      );
+      expect(mockPostMessage).toHaveBeenCalledWith(
+        { event: 'getIsCommerce' },
+        '*',
+      );
+    });
+
+    it('should load project info after token and uuid are set', async () => {
+      wrapper.unmount();
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      const isolatedConfigStore = useConfig(pinia);
+      const loadProjectInfoSpy = vi.spyOn(
+        isolatedConfigStore,
+        'loadProjectInfo',
+      );
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+
+      await flushPromises();
+
+      expect(loadProjectInfoSpy).toHaveBeenCalled();
+      expect(isolatedConfigStore.project).toEqual({
+        uuid: 'query-project-uuid',
+        name: 'Test Project',
+      });
     });
   });
 
   describe('Methods', () => {
-    describe('getFeatureFlags action mapping', () => {
-      it('should have getFeatureFlags method mapped from featureFlag store', () => {
-        expect(typeof wrapper.vm.getFeatureFlags).toBe('function');
-      });
-
-      it('should call featureFlag store getFeatureFlags when method is invoked', async () => {
-        const getFeatureFlagsSpy = vi.spyOn(
-          featureFlagStore,
-          'getFeatureFlags',
-        );
-
-        await wrapper.vm.getFeatureFlags();
-
-        expect(getFeatureFlagsSpy).toHaveBeenCalled();
-      });
-    });
-
     describe('handlerSetProject', () => {
-      it('should set project in moduleStorage and store', () => {
+      it('should set project in moduleStorage and store', async () => {
         const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const loadProjectInfoSpy = vi.spyOn(configStore, 'loadProjectInfo');
 
-        wrapper.vm.handlerSetProject('new-project-uuid');
+        await wrapper.vm.handlerSetProject('new-project-uuid');
+        const handler = getMessageHandler();
+
+        handler({
+          data: { event: 'setProject', projectUuid: 'new-project-uuid' },
+        });
 
         expect(localStorageMock.setItem).toHaveBeenCalledWith(
           'insights_projectUuid',
@@ -305,14 +326,16 @@ describe('App', () => {
         expect(setProjectSpy).toHaveBeenCalledWith({
           uuid: 'new-project-uuid',
         });
+        expect(loadProjectInfoSpy).toHaveBeenCalled();
       });
     });
 
     describe('handlerSetIsCommerce', () => {
       it('should set isCommerce in project store', () => {
         const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
+        const handler = getMessageHandler();
 
-        wrapper.vm.handlerSetIsCommerce(true);
+        handler({ data: { event: 'setIsCommerce', isCommerce: true } });
 
         expect(setIsCommerceSpy).toHaveBeenCalledWith(true);
       });
@@ -320,8 +343,6 @@ describe('App', () => {
 
     describe('listenConnect', () => {
       it('should post messages to parent window', () => {
-        wrapper.vm.listenConnect();
-
         expect(mockPostMessage).toHaveBeenCalledWith(
           { event: 'getLanguage' },
           '*',
@@ -333,8 +354,6 @@ describe('App', () => {
       });
 
       it('should add event listener for messages', () => {
-        wrapper.vm.listenConnect();
-
         expect(mockAddEventListener).toHaveBeenCalledWith(
           'message',
           expect.any(Function),
@@ -344,31 +363,43 @@ describe('App', () => {
 
     describe('getEventHandler', () => {
       it('should return correct handler for setLanguage event', () => {
-        const result = wrapper.vm.getEventHandler('setLanguage');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBe(wrapper.vm.handlerSetLanguage);
-        expect(result.dataKey).toBe('language');
+        handler({ data: { event: 'setLanguage', language: 'pt-br' } });
+
+        expect(moment.locale).toHaveBeenCalledWith('pt-br');
       });
 
       it('should return correct handler for setProject event', () => {
-        const result = wrapper.vm.getEventHandler('setProject');
+        const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBe(wrapper.vm.handlerSetProject);
-        expect(result.dataKey).toBe('projectUuid');
+        handler({
+          data: { event: 'setProject', projectUuid: 'handler-project' },
+        });
+
+        expect(setProjectSpy).toHaveBeenCalledWith({
+          uuid: 'handler-project',
+        });
       });
 
       it('should return correct handler for setIsCommerce event', () => {
-        const result = wrapper.vm.getEventHandler('setIsCommerce');
+        const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBe(wrapper.vm.handlerSetIsCommerce);
-        expect(result.dataKey).toBe('isCommerce');
+        handler({ data: { event: 'setIsCommerce', isCommerce: false } });
+
+        expect(setIsCommerceSpy).toHaveBeenCalledWith(false);
       });
 
       it('should return undefined for unknown event', () => {
-        const result = wrapper.vm.getEventHandler('unknownEvent');
+        const setProjectSpy = vi.spyOn(configStore, 'setProject');
+        const handler = getMessageHandler();
 
-        expect(result.handler).toBeUndefined();
-        expect(result.dataKey).toBeUndefined();
+        expect(() =>
+          handler({ data: { event: 'unknownEvent', projectUuid: 'x' } }),
+        ).not.toThrow();
+        expect(setProjectSpy).not.toHaveBeenCalled();
       });
     });
   });
@@ -467,9 +498,8 @@ describe('App', () => {
     });
 
     it('should handle not-now event by setting localStorage and hiding modal', async () => {
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.handleMcpNotNow();
+      const modal = wrapper.findComponent('[data-testid="mcp-news-modal"]');
+      await modal.vm.$emit('not-now');
       await wrapper.vm.$nextTick();
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
@@ -480,13 +510,14 @@ describe('App', () => {
         'insights_mcp_news_show_disclaimer',
         'true',
       );
-      expect(wrapper.vm.showMcpNewsModal).toBe(false);
+      expect(
+        wrapper.findComponent('[data-testid="mcp-news-modal"]').exists(),
+      ).toBe(false);
     });
 
     it('should handle view-guide event by setting localStorage and hiding modal', async () => {
-      await wrapper.vm.$nextTick();
-
-      wrapper.vm.handleMcpViewGuide();
+      const modal = wrapper.findComponent('[data-testid="mcp-news-modal"]');
+      await modal.vm.$emit('view-guide');
       await wrapper.vm.$nextTick();
 
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
@@ -497,7 +528,9 @@ describe('App', () => {
         'insights_mcp_news_show_disclaimer',
         'false',
       );
-      expect(wrapper.vm.showMcpNewsModal).toBe(false);
+      expect(
+        wrapper.findComponent('[data-testid="mcp-news-modal"]').exists(),
+      ).toBe(false);
     });
   });
 });

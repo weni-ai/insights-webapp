@@ -6,6 +6,8 @@ import {
   subMonths,
   getHours,
   getMinutes,
+  isBefore,
+  parseISO,
 } from 'date-fns';
 import { es, enUS, ptBR } from 'date-fns/locale';
 
@@ -368,4 +370,14 @@ export function formatSecondsToTime(
   }
 
   return timeString.trim();
+}
+
+/**
+ * Checks if a date is before another date.
+ * @param date - The date to check.
+ * @param compareDate - The date to compare to.
+ * @returns True if the date is before the compare date, false otherwise.
+ */
+export function isDateBefore(date: string, compareDate: string): boolean {
+  return isBefore(parseISO(date), parseISO(compareDate));
 }

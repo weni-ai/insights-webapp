@@ -8,6 +8,7 @@ import { UnnnicCallAlert } from '@weni/unnnic-system';
 import ModalDeleteDashboard from '../ModalDeleteDashboard.vue';
 
 import Dashboards from '@/services/api/resources/dashboards';
+import i18n from '@/utils/plugins/i18n';
 
 vi.mock('@/services/api/resources/dashboards');
 
@@ -56,12 +57,18 @@ describe('ModalDeleteDashboard', () => {
     expect(modal.props('open')).toBe(true);
     expect(title.text()).toContain(mockDashboard.name);
     expect(input.exists()).toBe(true);
-    expect(wrapper.vm.validDashboardName).toBe(false);
+    expect(
+      wrapper
+        .findComponent('[data-testid="delete-dashboard-submit"]')
+        .props('disabled'),
+    ).toBe(true);
   });
 
   it('enables primary button only if dashboard name matches', async () => {
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
+    const deleteBtn = wrapper.findComponent(
+      '[data-testid="delete-dashboard-submit"]',
+    );
 
     expect(deleteBtn.props('disabled')).toBe(true);
 
@@ -72,7 +79,9 @@ describe('ModalDeleteDashboard', () => {
 
   it('calls deleteDashboard on primary button click', async () => {
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
+    const deleteBtn = wrapper.findComponent(
+      '[data-testid="delete-dashboard-submit"]',
+    );
 
     await input.setValue('Test Dashboard');
     await deleteBtn.trigger('click');
@@ -82,7 +91,9 @@ describe('ModalDeleteDashboard', () => {
 
   it('shows success alert and updates state on successful deletion', async () => {
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
+    const deleteBtn = wrapper.findComponent(
+      '[data-testid="delete-dashboard-submit"]',
+    );
 
     await input.setValue('Test Dashboard');
     await deleteBtn.trigger('click');
@@ -90,7 +101,7 @@ describe('ModalDeleteDashboard', () => {
 
     expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
-        text: wrapper.vm.$t('delete_dashboard.alert.success'),
+        text: i18n.global.t('delete_dashboard.alert.success'),
         type: 'success',
       },
       seconds: 5,
@@ -101,7 +112,9 @@ describe('ModalDeleteDashboard', () => {
     Dashboards.deleteDashboard.mockRejectedValueOnce(new Error('Failed'));
 
     const input = wrapper.findComponent('[data-testid="input-dashboard-name"]');
-    const deleteBtn = wrapper.findComponent('[data-testid="delete-dashboard-submit"]');
+    const deleteBtn = wrapper.findComponent(
+      '[data-testid="delete-dashboard-submit"]',
+    );
 
     await input.setValue('Test Dashboard');
     await deleteBtn.trigger('click');
@@ -111,7 +124,7 @@ describe('ModalDeleteDashboard', () => {
 
     expect(UnnnicCallAlert).toHaveBeenCalledWith({
       props: {
-        text: wrapper.vm.$t('delete_dashboard.alert.error'),
+        text: i18n.global.t('delete_dashboard.alert.error'),
         type: 'error',
       },
       seconds: 5,

@@ -25,7 +25,7 @@
     </section>
     <InsightsLayout
       v-else-if="dashboards.length"
-      ref="insights-layout"
+      ref="insightsLayout"
       data-testid="insights-layout"
     >
       <section
@@ -40,14 +40,28 @@
   </div>
 </template>
 
-<script>
-import { mapState, mapActions } from 'pinia';
+<script lang="ts">
+import { safeImport } from './utils/moduleFederation';
+
+const { useSharedStore } = await safeImport(
+  () => import('connect/sharedStore'),
+  'connect/sharedStore',
+);
+</script>
+
+<script setup lang="ts">
+import { ref, computed, watch, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from './store/modules/dashboards';
 import { useConfig } from './store/modules/config';
 import { useOnboarding } from './store/modules/onboarding';
 import { useProject } from './store/modules/project';
 import { useUser } from './store/modules/user';
+import { useFeatureFlag } from './store/modules/featureFlag';
+import { useCTWA } from './store/modules/ctwa';
 
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
@@ -59,234 +73,207 @@ import { parseJwt } from '@/utils/jwt';
 import moment from 'moment';
 import { moduleStorage } from '@/utils/storage';
 
-import { safeImport } from './utils/moduleFederation';
-import { useFeatureFlag } from './store/modules/featureFlag';
+defineOptions({ name: 'App' });
 
-const { useSharedStore } = await safeImport(
-  () => import('connect/sharedStore'),
-  'connect/sharedStore',
+const { locale } = useI18n();
+const route = useRoute();
+const router = useRouter();
+
+const dashboardsStore = useDashboards();
+const configStore = useConfig();
+const onboardingStore = useOnboarding();
+const projectStore = useProject();
+const userStore = useUser();
+const featureFlagStore = useFeatureFlag();
+const ctwaStore = useCTWA();
+
+const {
+  dashboards,
+  isLoadingDashboards,
+  isLoadingCurrentDashboardFilters,
+  currentDashboard,
+} = storeToRefs(dashboardsStore);
+const { showCompleteOnboardingModal } = storeToRefs(onboardingStore);
+
+const insightsLayout = ref<any>(null);
+const showMcpNewsModal = ref(!moduleStorage.getItem('mcp_news_modal_seen'));
+
+const sharedStore = computed(() => useSharedStore?.());
+
+const handleCurrentDashboardUuidChange = async (
+  newCurrentDashboardUuid?: string | null,
+) => {
+  if (newCurrentDashboardUuid) {
+    dashboardsStore.setCurrentDashboardFilters([]);
+    await dashboardsStore.getCurrentDashboardFilters();
+    await featureFlagStore.getFeatureFlags();
+  }
+};
+
+const handlerSetLanguage = (language: string) => {
+  locale.value = language;
+  moment.locale(language);
+};
+
+const handlerSetProject = (projectUuid: string) => {
+  moduleStorage.setItem('projectUuid', projectUuid);
+  configStore.setProject({ uuid: projectUuid });
+  configStore.loadProjectInfo();
+};
+
+const handlerSetIsCommerce = (isCommerce: boolean) => {
+  projectStore.setIsCommerce(isCommerce);
+};
+
+const getEventHandler = (eventName: string) => {
+  const handlerFunctionMapper: Record<string, (...args: any[]) => void> = {
+    setLanguage: handlerSetLanguage,
+    setProject: handlerSetProject,
+    setIsCommerce: handlerSetIsCommerce,
+  };
+
+  const handlerParamsMapper: Record<string, string> = {
+    setLanguage: 'language',
+    setProject: 'projectUuid',
+    setIsCommerce: 'isCommerce',
+  };
+
+  return {
+    handler: handlerFunctionMapper[eventName],
+    dataKey: handlerParamsMapper[eventName],
+  };
+};
+
+const listenConnect = () => {
+  window.parent.postMessage({ event: 'getLanguage' }, '*');
+  window.parent.postMessage({ event: 'getIsCommerce' }, '*');
+
+  window.addEventListener('message', (ev) => {
+    const message = ev.data;
+    const { handler, dataKey } = getEventHandler(message?.event);
+    if (handler) handler(message?.[dataKey]);
+  });
+};
+
+const handleRedirectToHumanServiceDashboard = () => {
+  const isHumanServiceDashboardRouter = route.name === 'humanServiceDashboard';
+
+  if (isHumanServiceDashboardRouter) {
+    const humanSeriveDashboard = dashboards.value.find(
+      (dash: any) => dash.config?.type === 'human_support',
+    );
+
+    if (humanSeriveDashboard) {
+      router.push(`/${humanSeriveDashboard.uuid}`);
+    }
+  }
+};
+
+const handleMcpNotNow = () => {
+  moduleStorage.setItem('mcp_news_modal_seen', true);
+  moduleStorage.setItem('mcp_news_show_disclaimer', true);
+  showMcpNewsModal.value = false;
+
+  if (insightsLayout.value) {
+    insightsLayout.value.showMcpDisclaimer = true;
+  }
+};
+
+const handleMcpViewGuide = () => {
+  moduleStorage.setItem('mcp_news_modal_seen', true);
+  moduleStorage.setItem('mcp_news_show_disclaimer', false);
+  showMcpNewsModal.value = false;
+
+  if (insightsLayout.value) {
+    insightsLayout.value.showMcpDisclaimer = false;
+  }
+};
+
+const handlerTokenAndProjectUuid = async () => {
+  const queryString = new URLSearchParams(window.location.search);
+
+  const projectUuid = queryString.get('projectUuid');
+
+  const authToken = moduleStorage.getItem('token');
+
+  const newProjectUuid = projectUuid || moduleStorage.getItem('projectUuid');
+
+  configStore.setToken(authToken);
+  configStore.setProject({
+    uuid: newProjectUuid,
+  });
+
+  const sessionUserEmail = parseJwt(authToken)?.email || null;
+
+  if (sessionUserEmail) {
+    userStore.setEmail(sessionUserEmail);
+  }
+
+  initHotjar(sessionUserEmail);
+};
+
+const setShowCompleteOnboardingModal = (show: boolean) =>
+  onboardingStore.setShowCompleteOnboardingModal(show);
+
+watch(() => currentDashboard.value?.uuid, handleCurrentDashboardUuidChange);
+
+watch(
+  () => sharedStore.value?.user?.language,
+  (newLanguage) => {
+    if (!newLanguage) return;
+    handlerSetLanguage(newLanguage);
+  },
+  { immediate: true },
 );
 
-export default {
-  components: {
-    InsightsLayout,
-    IconLoading,
-    CompleteOnboardingModal,
-    McpNewsModal,
+watch(
+  () => sharedStore.value?.current?.project,
+  (newProject) => {
+    if (!newProject) return;
+    handlerSetProject(newProject?.uuid);
+    projectStore.setIsCommerce(newProject?.type === 2);
   },
-  data() {
-    return {
-      showMcpNewsModal: !moduleStorage.getItem('mcp_news_modal_seen'),
-    };
+  { immediate: true, deep: true },
+);
+
+watch(
+  () => sharedStore.value?.activeFederatedModules?.insights,
+  (isActive) => {
+    if (isActive === undefined) return;
+    configStore.setIsActiveRoute(isActive);
   },
-  computed: {
-    ...mapState(useDashboards, [
-      'dashboards',
-      'isLoadingDashboards',
-      'isLoadingCurrentDashboardFilters',
-      'currentDashboard',
-    ]),
-    ...mapState(useConfig, ['token', 'enableCreateCustomDashboards']),
-    ...mapState(useOnboarding, {
-      showCreateDashboardTour: 'showCreateDashboardOnboarding',
-      showCompleteOnboardingModal: 'showCompleteOnboardingModal',
-    }),
-    sharedStore: () => useSharedStore?.(),
+  { immediate: true, deep: true },
+);
+
+watch(
+  () => route.name,
+  () => {
+    handleRedirectToHumanServiceDashboard();
   },
+);
 
-  watch: {
-    async 'currentDashboard.uuid'(newCurrentDashboardUuid) {
-      if (newCurrentDashboardUuid) {
-        this.setCurrentDashboardFilters([]);
-        await this.getCurrentDashboardFilters();
-        await this.getFeatureFlags();
-      }
-    },
-    'sharedStore.user.language': {
-      immediate: true,
-      handler(newLanguage) {
-        if (!newLanguage) return;
+listenConnect();
 
-        this.handlerSetLanguage(newLanguage);
-      },
-    },
-    'sharedStore.current.project': {
-      immediate: true,
-      deep: true,
-      handler(newProject) {
-        if (!newProject) return;
+onMounted(async () => {
+  try {
+    await handlerTokenAndProjectUuid();
+    await configStore.loadProjectInfo();
 
-        this.handlerSetProject(newProject?.uuid);
-        this.setIsCommerce(newProject?.type === 2);
-      },
-    },
-    'sharedStore.activeFederatedModules.insights': {
-      immediate: true,
-      deep: true,
-      handler(isActive) {
-        if (isActive === undefined) return;
+    ctwaStore.verifyCTWA();
 
-        this.setIsActiveRoute(isActive);
-      },
-    },
-    '$route.name': {
-      deep: true,
-      handler() {
-        this.handleRedirectToHumanServiceDashboard();
-      },
-    },
-  },
+    projectStore.checkHasAbandonedCartRecoveryConfigured().then(() => {
+      projectStore.getAbandonedCartRecoveryCost();
+    });
 
-  created() {
-    this.listenConnect();
-  },
-
-  async mounted() {
-    try {
-      await this.handlerTokenAndProjectUuid();
-
-      this.checkHasAbandonedCartRecoveryConfigured().then(() => {
-        this.getAbandonedCartRecoveryCost();
-      });
-
-      this.checkHasSectorsConfigured();
-      this.getDashboards().then(() => {
-        this.handleRedirectToHumanServiceDashboard();
-      });
-      this.verifyIsViewerPermission();
-    } catch (error) {
-      console.error(error);
-    }
-  },
-
-  methods: {
-    ...mapActions(useDashboards, [
-      'getDashboards',
-      'getCurrentDashboardFilters',
-      'setCurrentDashboardFilters',
-    ]),
-    ...mapActions(useConfig, ['setToken', 'setProject']),
-    ...mapActions(useFeatureFlag, ['getFeatureFlags']),
-    ...mapActions(useProject, [
-      'setIsCommerce',
-      'checkHasSectorsConfigured',
-      'checkHasTagsConfigured',
-      'checkHasAbandonedCartRecoveryConfigured',
-      'getAbandonedCartRecoveryCost',
-    ]),
-    ...mapActions(useUser, ['setEmail', 'verifyIsViewerPermission']),
-    ...mapActions(useOnboarding, [
-      'setOnboardingRef',
-      'setShowCreateDashboardOnboarding',
-      'setShowCompleteOnboardingModal',
-    ]),
-
-    handleMcpNotNow() {
-      moduleStorage.setItem('mcp_news_modal_seen', true);
-      moduleStorage.setItem('mcp_news_show_disclaimer', true);
-      this.showMcpNewsModal = false;
-
-      const layout = this.$refs['insights-layout'];
-      if (layout) {
-        layout.showMcpDisclaimer = true;
-      }
-    },
-
-    handleMcpViewGuide() {
-      moduleStorage.setItem('mcp_news_modal_seen', true);
-      moduleStorage.setItem('mcp_news_show_disclaimer', false);
-      this.showMcpNewsModal = false;
-
-      const layout = this.$refs['insights-layout'];
-      if (layout) {
-        layout.showMcpDisclaimer = false;
-      }
-    },
-
-    handleRedirectToHumanServiceDashboard() {
-      const isHumanServiceDashboardRouter =
-        this.$route.name === 'humanServiceDashboard';
-
-      if (isHumanServiceDashboardRouter) {
-        const humanSeriveDashboard = this.dashboards.find(
-          (dash) => dash.config?.type === 'human_support',
-        );
-
-        if (humanSeriveDashboard) {
-          this.$router.push(`/${humanSeriveDashboard.uuid}`);
-        }
-      }
-    },
-
-    async handlerTokenAndProjectUuid() {
-      const queryString = new URLSearchParams(window.location.search);
-
-      const projectUuid = queryString.get('projectUuid');
-
-      const authToken = moduleStorage.getItem('token');
-
-      const newProjectUuid =
-        projectUuid || moduleStorage.getItem('projectUuid');
-
-      this.setToken(authToken);
-      this.setProject({
-        uuid: newProjectUuid,
-      });
-
-      const sessionUserEmail = parseJwt(authToken)?.email || null;
-
-      if (sessionUserEmail) {
-        this.setEmail(sessionUserEmail);
-      }
-
-      initHotjar(sessionUserEmail);
-    },
-
-    handlerSetLanguage(language) {
-      this.$i18n.locale = language; // 'en', 'pt-br', 'es'
-      moment.locale(language);
-    },
-
-    handlerSetProject(projectUuid) {
-      moduleStorage.setItem('projectUuid', projectUuid);
-      this.setProject({ uuid: projectUuid });
-    },
-
-    handlerSetIsCommerce(isCommerce) {
-      this.setIsCommerce(isCommerce);
-    },
-
-    listenConnect() {
-      window.parent.postMessage({ event: 'getLanguage' }, '*');
-      window.parent.postMessage({ event: 'getIsCommerce' }, '*');
-
-      window.addEventListener('message', (ev) => {
-        const message = ev.data;
-        const { handler, dataKey } = this.getEventHandler(message?.event);
-        if (handler) handler(message?.[dataKey]);
-      });
-    },
-
-    getEventHandler(eventName) {
-      const handlerFunctionMapper = {
-        setLanguage: this.handlerSetLanguage,
-        setProject: this.handlerSetProject,
-        setIsCommerce: this.handlerSetIsCommerce,
-      };
-
-      const handlerParamsMapper = {
-        setLanguage: 'language',
-        setProject: 'projectUuid',
-        setIsCommerce: 'isCommerce',
-      };
-
-      return {
-        handler: handlerFunctionMapper[eventName],
-        dataKey: handlerParamsMapper[eventName],
-      };
-    },
-  },
-};
+    projectStore.checkHasSectorsConfigured();
+    dashboardsStore.getDashboards().then(() => {
+      handleRedirectToHumanServiceDashboard();
+    });
+    userStore.verifyIsViewerPermission();
+  } catch (error) {
+    console.error(error);
+  }
+});
 </script>
 
 <style lang="scss" scoped>

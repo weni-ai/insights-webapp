@@ -1,5 +1,8 @@
 <template>
-  <section class="insights-layout">
+  <section
+    ref="insightsLayoutRoot"
+    class="insights-layout"
+  >
     <McpDisclaimer
       v-if="showMcpDisclaimer"
       @dismiss="showMcpDisclaimer = false"
@@ -21,9 +24,9 @@
   </section>
 </template>
 
-<script>
-import { computed } from 'vue';
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, provide, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useOnboarding } from '@/store/modules/onboarding';
@@ -32,43 +35,37 @@ import InsightsLayoutHeader from '@/components/insights/Layout/Header.vue';
 import McpDisclaimer from '@/components/McpDisclaimer.vue';
 import { moduleStorage } from '@/utils/storage';
 
-export default {
-  name: 'InsightsLayout',
+defineOptions({ name: 'InsightsLayout' });
 
-  components: {
-    InsightsLayoutHeader,
-    McpDisclaimer,
-  },
+const dashboardsStore = useDashboards();
+const onboardingStore = useOnboarding();
+const { currentDashboardFilters } = storeToRefs(dashboardsStore);
 
-  provide() {
-    return {
-      insightsScrollContainer: computed(() => this.insightsMainEl),
-    };
-  },
+const insightsLayoutRoot = ref<HTMLElement | null>(null);
+const insightsContent = ref<HTMLElement | null>(null);
+const insightsMain = ref<HTMLElement | null>(null);
+const insightsMainEl = ref<HTMLElement | null>(null);
+const showMcpDisclaimer = ref(
+  moduleStorage.getItem('mcp_news_show_disclaimer') === true,
+);
 
-  data() {
-    return {
-      showMcpDisclaimer:
-        moduleStorage.getItem('mcp_news_show_disclaimer') === true,
-      insightsMainEl: null,
-    };
-  },
-  computed: {
-    ...mapState(useDashboards, ['currentDashboardFilters']),
-  },
+provide(
+  'insightsScrollContainer',
+  computed(() => insightsMainEl.value),
+);
 
-  mounted() {
-    this.insightsMainEl = this.$refs.insightsMain || null;
+onMounted(() => {
+  insightsMainEl.value = insightsMain.value || null;
 
-    this.setOnboardingRef({
-      key: 'insights-layout',
-      ref: this.$el,
-    });
-  },
-  methods: {
-    ...mapActions(useOnboarding, ['setOnboardingRef']),
-  },
-};
+  onboardingStore.setOnboardingRef({
+    key: 'insights-layout',
+    ref: insightsLayoutRoot.value,
+  });
+});
+
+defineExpose({
+  showMcpDisclaimer,
+});
 </script>
 
 <style lang="scss" scoped>

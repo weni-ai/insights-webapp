@@ -49,7 +49,6 @@ export function useMetricGoalsSocket() {
     metricGoalAlertsStore.applyUpdate(content);
 
     if (!wasAlreadyBreaching) {
-      showMetricGoalToast(content);
       triggerSilentRefresh();
     }
   };
@@ -58,6 +57,11 @@ export function useMetricGoalsSocket() {
     try {
       const payload = JSON.parse(event.data as string);
       const { type, content } = payload;
+
+      if (type === 'metric_goal.alert') {
+        showMetricGoalToast(content);
+        return;
+      }
 
       if (type === 'metric_goal.violated') {
         if (content.transition === 'new' || content.transition === 'update') {

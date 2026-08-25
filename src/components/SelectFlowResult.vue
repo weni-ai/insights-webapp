@@ -16,99 +16,96 @@
     />
   </section>
 </template>
-<script>
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+
 import { useProject } from '@/store/modules/project';
-import { mapState } from 'pinia';
 
-export default {
-  name: 'SelectFlowResult',
+defineOptions({ name: 'SelectFlowResult' });
 
-  props: {
-    modelValue: {
-      type: [Array, String, Object],
-      default: () => [],
-    },
+interface SelectFlowResultProps {
+  modelValue?: unknown[] | string | Record<string, unknown>;
+  flow: string;
+}
 
-    flow: {
-      type: String,
-      required: true,
-    },
-  },
+const props = withDefaults(defineProps<SelectFlowResultProps>(), {
+  modelValue: () => [],
+});
 
-  emits: ['update:model-value'],
+const emit = defineEmits<{
+  'update:model-value': [value: string];
+}>();
 
-  data() {
-    return {
-      flowResultsOptions: [],
-      flowResult: '',
-      searchText: '',
-    };
-  },
+const projectStore = useProject();
+const { flows: projectFlows } = storeToRefs(projectStore);
 
-  computed: {
-    ...mapState(useProject, {
-      projectFlows: 'flows',
-    }),
+const flowResultsOptions = ref<unknown[]>([]);
+const flowResult = ref('');
+const searchText = ref('');
 
-    flowResults() {
-      return (
-        this.projectFlows.find((flow) => flow.value === this.flow)?.results ||
-        []
-      );
-    },
-  },
+const flowResults = computed(
+  () =>
+    projectFlows.value.find(
+      (flow: { value: string; results?: unknown[] }) =>
+        flow.value === props.flow,
+    )?.results || [],
+);
 
-  watch: {
-    modelValue: 'treatModelValue',
-
-    flow: 'updateFlowResultsOptions',
-
-    flowResult(newResult) {
-      this.$emit('update:model-value', newResult || '');
-    },
-  },
-
-  created() {
-    this.updateFlowResultsOptions();
-    this.treatModelValue();
-  },
-
-  methods: {
-    handleSelect(value) {
-      this.flowResult = value;
-    },
-
-    treatModelValue() {
-      const { modelValue } = this;
-
-      if (!modelValue) {
-        this.flowResult = '';
-        return;
-      }
-
-      if (typeof modelValue === 'string') {
-        this.flowResult = modelValue;
-        return;
-      }
-
-      if (Array.isArray(modelValue) && modelValue.length) {
-        this.flowResult = modelValue[0]?.value || '';
-        return;
-      }
-
-      if (typeof modelValue === 'object') {
-        this.flowResult = modelValue.value || '';
-        return;
-      }
-
-      this.flowResult = '';
-    },
-
-    updateFlowResultsOptions() {
-      this.flowResultsOptions = [...this.flowResults];
-      this.flowResult = '';
-      this.searchText = '';
-    },
-  },
+const handleSelect = (value: string) => {
+  flowResult.value = value;
 };
+
+const treatModelValue = () => {
+  const { modelValue } = props;
+
+  if (!modelValue) {
+    flowResult.value = '';
+    return;
+  }
+
+  if (typeof modelValue === 'string') {
+    flowResult.value = modelValue;
+    return;
+  }
+
+  if (Array.isArray(modelValue) && modelValue.length) {
+    flowResult.value = (modelValue[0] as { value?: string })?.value || '';
+    return;
+  }
+
+  if (typeof modelValue === 'object') {
+    flowResult.value = (modelValue as { value?: string }).value || '';
+    return;
+  }
+
+  flowResult.value = '';
+};
+
+const updateFlowResultsOptions = () => {
+  flowResultsOptions.value = [...flowResults.value];
+  flowResult.value = '';
+  searchText.value = '';
+};
+
+watch(
+  () => props.modelValue,
+  () => {
+    treatModelValue();
+  },
+);
+
+watch(
+  () => props.flow,
+  () => {
+    updateFlowResultsOptions();
+  },
+);
+
+watch(flowResult, (newResult) => {
+  emit('update:model-value', newResult || '');
+});
+
+updateFlowResultsOptions();
+treatModelValue();
 </script>

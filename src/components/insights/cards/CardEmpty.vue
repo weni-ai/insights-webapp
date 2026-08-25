@@ -18,24 +18,23 @@
   </CardBase>
 </template>
 
-<script>
+<script setup lang="ts">
 import CardBase from './CardBase.vue';
 
-export default {
-  name: 'CardEmpty',
+defineOptions({ name: 'CardEmpty' });
 
-  components: { CardBase },
+interface CardEmptyProps {
+  widget: Record<string, unknown>;
+  isLoading?: boolean;
+}
 
-  props: {
-    widget: {
-      type: Object,
-      required: true,
-    },
-    isLoading: Boolean,
-  },
+withDefaults(defineProps<CardEmptyProps>(), {
+  isLoading: false,
+});
 
-  emits: ['open-config'],
-};
+defineEmits<{
+  'open-config': [];
+}>();
 </script>
 
 <style lang="scss" scoped>

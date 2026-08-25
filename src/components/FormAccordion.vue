@@ -25,37 +25,32 @@
   </UnnnicCollapse>
 </template>
 
-<script>
-export default {
-  name: 'FormAccordion',
+<script setup lang="ts">
+import { computed } from 'vue';
 
-  props: {
-    active: {
-      type: Boolean,
-      default: false,
-    },
-    title: {
-      type: String,
-      default: '',
-    },
-    validConfig: {
-      type: Boolean,
-      default: false,
-    },
-    highlighted: {
-      type: Boolean,
-      default: false,
-    },
-  },
+defineOptions({ name: 'FormAccordion' });
 
-  emits: ['update:active'],
+interface FormAccordionProps {
+  active?: boolean;
+  title?: string;
+  validConfig?: boolean;
+  highlighted?: boolean;
+}
 
-  computed: {
-    iconScheme() {
-      return this.validConfig ? 'weni-600' : 'neutral-soft';
-    },
-  },
-};
+const props = withDefaults(defineProps<FormAccordionProps>(), {
+  active: false,
+  title: '',
+  validConfig: false,
+  highlighted: false,
+});
+
+defineEmits<{
+  'update:active': [value: boolean];
+}>();
+
+const iconScheme = computed(() =>
+  props.validConfig ? 'weni-600' : 'neutral-soft',
+);
 </script>
 
 <style lang="scss" scoped>

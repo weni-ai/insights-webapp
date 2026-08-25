@@ -26,7 +26,7 @@
     <DrawerConfigGallery
       v-if="!!currentWidgetEditing"
       :modelValue="!!currentWidgetEditing"
-      @close="updateCurrentWidgetEditing(null)"
+      @close="widgetsStore.updateCurrentWidgetEditing(null)"
     />
     <FlowResultContactListModal
       v-if="showFlowResultsContactListModal"
@@ -37,9 +37,9 @@
   </section>
 </template>
 
-<script>
-import { defineAsyncComponent } from 'vue';
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { defineAsyncComponent, ref, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
@@ -50,154 +50,151 @@ import IconLoading from '@/components/IconLoading.vue';
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 import { moduleStorage } from '@/utils/storage';
 
-export default {
-  name: 'DashboardCustom',
+defineOptions({ name: 'DashboardCustom' });
 
-  components: {
-    DynamicWidget: defineAsyncComponent(
-      () => import('@/components/insights/widgets/DynamicWidget.vue'),
-    ),
-    DrawerConfigGallery,
-    IconLoading,
-    FlowResultContactListModal,
-  },
+const DynamicWidget = defineAsyncComponent(
+  () => import('@/components/insights/widgets/DynamicWidget.vue'),
+);
 
-  data() {
+const dashboardsStore = useDashboards();
+const widgetsStore = useWidgets();
+const onboardingStore = useOnboarding();
+
+const { currentDashboard } = storeToRefs(dashboardsStore);
+const {
+  currentDashboardWidgets,
+  currentWidgetEditing,
+  isLoadingCurrentDashboardWidgets,
+} = storeToRefs(widgetsStore);
+const { showConfigWidgetOnboarding } = storeToRefs(onboardingStore);
+
+const showDrawerConfigWidget = ref(false);
+const widgetConfigurating = ref<any>(null);
+const showOnboarding = ref({
+  card: false,
+  empty_widget: false,
+});
+const showFlowResultsContactListModal = ref(false);
+const flowResultsContactListParams = ref<any>(null);
+
+const isCustomDashboard = computed(() => {
+  return currentDashboard.value.is_deletable;
+});
+
+const dashboardGridStyle = computed(() => {
+  const { grid } = currentDashboard.value || {};
+  if (grid) {
     return {
-      showDrawerConfigWidget: false,
-      widgetConfigurating: null,
-      showOnboarding: {
-        card: false,
-        empty_widget: false,
-      },
-      showFlowResultsContactListModal: false,
-      flowResultsContactListParams: null,
+      gridTemplateColumns: `repeat(${grid.columns}, 1fr)`,
+      gridTemplateRows: `repeat(${grid.rows}, 1fr)`,
     };
+  }
+  return {};
+});
+
+watch(
+  currentDashboardWidgets,
+  (newCurrentDashboardWidgets) => {
+    if (
+      !!newCurrentDashboardWidgets &&
+      isCustomDashboard.value &&
+      !isLoadingCurrentDashboardWidgets.value
+    ) {
+      handlerWidgetsOnboarding();
+    }
   },
+  { immediate: true },
+);
 
-  computed: {
-    ...mapState(useDashboards, ['currentDashboard']),
-    ...mapState(useWidgets, [
-      'currentDashboardWidgets',
-      'currentWidgetEditing',
-      'isLoadingCurrentDashboardWidgets',
-    ]),
-    ...mapState(useOnboarding, ['showConfigWidgetOnboarding']),
+function openFlowResultContactList(data: any) {
+  flowResultsContactListParams.value = data;
+  showFlowResultsContactListModal.value = true;
+}
 
-    isCustomDashboard() {
-      return this.currentDashboard.is_deletable;
-    },
+function closeFlowResultContactList() {
+  flowResultsContactListParams.value = {};
+  showFlowResultsContactListModal.value = false;
+}
 
-    dashboardGridStyle() {
-      const { grid } = this.currentDashboard || {};
-      if (grid) {
-        return {
-          gridTemplateColumns: `repeat(${grid.columns}, 1fr)`,
-          gridTemplateRows: `repeat(${grid.rows}, 1fr)`,
-        };
-      }
-      return {};
-    },
-  },
+function handleWidgetFilledData() {
+  const hasCard = currentDashboardWidgets.value.filter(
+    (e: any) => e.type === 'card',
+  );
 
-  watch: {
-    currentDashboardWidgets: {
-      immediate: true,
-      handler(newCurrentDashboardWidgets) {
-        if (
-          !!newCurrentDashboardWidgets &&
-          this.isCustomDashboard &&
-          !this.isLoadingCurrentDashboardWidgets
-        ) {
-          this.handlerWidgetsOnboarding();
-        }
-      },
-    },
-  },
+  const existFunnel = currentDashboardWidgets.value.some(
+    (e: any) => e.type === 'graph_funnel',
+  );
+  const existVtex = currentDashboardWidgets.value.some(
+    (e: any) => e.type === 'vtex_order',
+  );
 
-  methods: {
-    ...mapActions(useWidgets, ['updateCurrentWidgetEditing']),
-    ...mapActions(useOnboarding, [
-      'callTourNextStep',
-      'setShowConfigWidgetsOnboarding',
-    ]),
+  showOnboarding.value = {
+    card:
+      hasCard.length > 0
+        ? !!hasCard.every((widget: any) => widget.name === '')
+        : false,
+    empty_widget:
+      !!currentDashboardWidgets.value.some(
+        (widget: any) => widget.type === 'empty_column',
+      ) &&
+      !existFunnel &&
+      !existVtex,
+  };
+}
 
-    openFlowResultContactList(data) {
-      this.flowResultsContactListParams = data;
-      this.showFlowResultsContactListModal = true;
-    },
+function handlerWidgetsOnboarding() {
+  const hasWidgetsOnboardingComplete =
+    moduleStorage.getItem('hasWidgetsOnboardingComplete') === true;
 
-    closeFlowResultContactList() {
-      this.flowResultsContactListParams = {};
-      this.showFlowResultsContactListModal = false;
-    },
+  if (!hasWidgetsOnboardingComplete) {
+    handleWidgetFilledData();
 
-    handleWidgetFilledData() {
-      const hasCard = this.currentDashboardWidgets.filter(
-        (e) => e.type === 'card',
-      );
+    if (!showOnboarding.value.card && !showOnboarding.value.empty_widget) {
+      moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
+    }
 
-      const existFunnel = this.currentDashboardWidgets.some(
-        (e) => e.type === 'graph_funnel',
-      );
-      const existVtex = this.currentDashboardWidgets.some(
-        (e) => e.type === 'vtex_order',
-      );
+    if (showOnboarding.value.card || showOnboarding.value.empty_widget) {
+      onboardingStore.setShowConfigWidgetsOnboarding(true);
+    }
+  }
+}
 
-      this.showOnboarding = {
-        card:
-          hasCard.length > 0
-            ? !!hasCard.every((widget) => widget.name === '')
-            : false,
-        empty_widget:
-          !!this.currentDashboardWidgets.some(
-            (widget) => widget.type === 'empty_column',
-          ) &&
-          !existFunnel &&
-          !existVtex,
-      };
-    },
+function handlerWidgetOpenConfig(widget: any) {
+  const isNewWidget = currentWidgetEditing.value?.uuid !== widget.uuid;
+  if (isNewWidget) {
+    widgetsStore.updateCurrentWidgetEditing(widget)?.then(() => {
+      onboardingStore.callTourNextStep('widgets-onboarding-tour');
+    });
+  }
+}
 
-    handlerWidgetsOnboarding() {
-      const hasWidgetsOnboardingComplete =
-        moduleStorage.getItem('hasWidgetsOnboardingComplete') === true;
+function getWidgetStyle(gridPosition: any) {
+  return {
+    gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
+    gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
+  };
+}
 
-      if (!hasWidgetsOnboardingComplete) {
-        this.handleWidgetFilledData();
+function getWidgetOnboardingId(widget: any) {
+  return widget.type === 'card' ? 'widget-card-metric' : 'widget-graph-empty';
+}
 
-        if (!this.showOnboarding.card && !this.showOnboarding.empty_widget) {
-          moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
-        }
-
-        if (this.showOnboarding.card || this.showOnboarding.empty_widget) {
-          this.setShowConfigWidgetsOnboarding(true);
-        }
-      }
-    },
-
-    handlerWidgetOpenConfig(widget) {
-      const isNewWidget = this.currentWidgetEditing?.uuid !== widget.uuid;
-      if (isNewWidget) {
-        this.updateCurrentWidgetEditing(widget)?.then(() => {
-          this.callTourNextStep('widgets-onboarding-tour');
-        });
-      }
-    },
-
-    getWidgetStyle(gridPosition) {
-      return {
-        gridColumn: `${gridPosition.column_start} / ${gridPosition.column_end + 1}`,
-        gridRow: `${gridPosition.row_start} / ${gridPosition.row_end + 1}`,
-      };
-    },
-
-    getWidgetOnboardingId(widget) {
-      return widget.type === 'card'
-        ? 'widget-card-metric'
-        : 'widget-graph-empty';
-    },
-  },
-};
+defineExpose({
+  showDrawerConfigWidget,
+  widgetConfigurating,
+  showOnboarding,
+  showFlowResultsContactListModal,
+  flowResultsContactListParams,
+  isCustomDashboard,
+  dashboardGridStyle,
+  openFlowResultContactList,
+  closeFlowResultContactList,
+  handleWidgetFilledData,
+  handlerWidgetsOnboarding,
+  handlerWidgetOpenConfig,
+  getWidgetStyle,
+  getWidgetOnboardingId,
+});
 </script>
 
 <style lang="scss" scoped>

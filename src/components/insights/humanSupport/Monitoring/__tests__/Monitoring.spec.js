@@ -35,6 +35,7 @@ vi.mock('@vueuse/core', () => ({
   useElementVisibility: vi.fn(() => ref(true)),
   useInfiniteScroll: vi.fn(),
   useMouseInElement: vi.fn(() => ({ isOutside: ref(false) })),
+  useIntersectionObserver: vi.fn(() => ({ stop: vi.fn() })),
 }));
 
 vi.mock('@/utils/storage', () => ({
@@ -95,6 +96,8 @@ describe('Monitoring', () => {
           TimeMetrics: true,
           ServicesOpenByHour: true,
           DetailedMonitoring: true,
+          CsatRatings: true,
+          VolumePerTagAndQueueWidget: true,
         },
       },
     });

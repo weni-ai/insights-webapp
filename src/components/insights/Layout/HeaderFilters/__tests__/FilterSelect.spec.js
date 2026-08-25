@@ -34,6 +34,9 @@ const createWrapper = (props = {}) => {
 describe('FilterSelect', () => {
   let wrapper;
 
+  const getSelectOptions = (instance = wrapper) =>
+    instance.findComponent({ name: 'UnnnicSelect' }).props('options');
+
   beforeEach(() => {
     vi.clearAllMocks();
     Projects.getProjectSource.mockResolvedValue(mockSourceData);
@@ -58,8 +61,9 @@ describe('FilterSelect', () => {
     });
   });
 
-  it('sets initial options with placeholder', () => {
-    expect(wrapper.vm.options).toEqual([
+  it('sets initial options with placeholder', async () => {
+    await wrapper.vm.$nextTick();
+    expect(getSelectOptions()).toEqual([
       {
         value: '',
         label: 'Select an option',
@@ -78,7 +82,7 @@ describe('FilterSelect', () => {
   it('fetches source data on mount when no dependsOn is provided', async () => {
     expect(Projects.getProjectSource).toHaveBeenCalledWith('test-source', {});
     await wrapper.vm.$nextTick();
-    expect(wrapper.vm.options).toHaveLength(3);
+    expect(getSelectOptions()).toHaveLength(3);
   });
 
   it('does not fetch source data on mount when dependsOn is provided', async () => {
@@ -114,14 +118,22 @@ describe('FilterSelect', () => {
     expect(wrapper.emitted('update:model-value')[0]).toEqual(['1']);
   });
 
-  it('clears options when clearOptions is called', () => {
-    wrapper.vm.clearOptions();
-    expect(wrapper.vm.options).toEqual([
-      {
-        value: '',
-        label: 'Select an option',
-      },
-    ]);
+  it('clears options when dependsOnValue changes and refetches', async () => {
+    const customWrapper = createWrapper({
+      dependsOn: { search_param: 'test' },
+      dependsOnValue: { param1: 'old' },
+    });
+    await customWrapper.vm.$nextTick();
+
+    await customWrapper.setProps({
+      dependsOnValue: { param1: 'value1', param2: 'value2' },
+    });
+    await customWrapper.vm.$nextTick();
+
+    expect(getSelectOptions(customWrapper)[0]).toEqual({
+      value: '',
+      label: 'Select an option',
+    });
   });
 
   it('watches dependsOnValue and fetches new data when all values are filled', async () => {
@@ -152,7 +164,7 @@ describe('FilterSelect', () => {
     });
 
     await customWrapper.vm.$nextTick();
-    expect(customWrapper.vm.options[1]).toEqual({
+    expect(getSelectOptions(customWrapper)[1]).toEqual({
       value: 'c1',
       label: 'Custom 1',
     });
@@ -163,7 +175,7 @@ describe('FilterSelect', () => {
     const customWrapper = createWrapper();
 
     await customWrapper.vm.$nextTick();
-    expect(customWrapper.vm.options).toEqual([
+    expect(getSelectOptions(customWrapper)).toEqual([
       {
         value: '',
         label: 'Select an option',
@@ -176,7 +188,7 @@ describe('FilterSelect', () => {
     const customWrapper = createWrapper();
 
     await customWrapper.vm.$nextTick();
-    expect(customWrapper.vm.options).toEqual([
+    expect(getSelectOptions(customWrapper)).toEqual([
       {
         value: '',
         label: 'Select an option',

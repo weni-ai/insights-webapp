@@ -60,99 +60,77 @@
   />
 </template>
 
-<script>
-import { mapActions, mapState } from 'pinia';
+<script setup lang="ts">
+import { ref, computed, nextTick, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useOnboarding } from '@/store/modules/onboarding';
-import { useFeatureFlag } from '@/store/modules/featureFlag';
 
 import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
 import BetaText from './BetaText.vue';
 
-export default {
-  name: 'HeaderSelectDashboard',
+defineOptions({ name: 'HeaderSelectDashboard' });
 
-  components: {
-    OptionSelectDashboard,
-    OptionCreateNewDashboard,
-    DrawerDashboardConfig,
-    BetaText,
-  },
+const { t } = useI18n();
+const dashboardsStore = useDashboards();
+const configStore = useConfig();
+const onboardingStore = useOnboarding();
 
-  data() {
-    return {
-      openDropdown: false,
-    };
-  },
+const { dashboards, currentDashboard, showDashboardConfig, dashboardDefault } =
+  storeToRefs(dashboardsStore);
+const { enableCreateCustomDashboards } = storeToRefs(configStore);
 
-  computed: {
-    ...mapState(useDashboards, [
-      'dashboards',
-      'currentDashboard',
-      'showDashboardConfig',
-      'dashboardDefault',
-    ]),
-    ...mapState(useConfig, ['enableCreateCustomDashboards']),
-    ...mapState(useOnboarding, {
-      showCreateDashboardTour: 'showCreateDashboardOnboarding',
-      onboardingRefs: 'onboardingRefs',
-    }),
+const openDropdown = ref(false);
 
-    dashboardTitle() {
-      const title =
-        this.currentDashboard.name ||
-        this.dashboardDefault.name ||
-        this.dashboards[0].name ||
-        '';
-      return this.$t(title);
-    },
+const dashboardTitle = computed(() => {
+  const title =
+    currentDashboard.value.name ||
+    dashboardDefault.value.name ||
+    dashboards.value[0].name ||
+    '';
+  return t(title);
+});
 
-    isRenderBetaText() {
-      return false;
-    },
-    enabledShowDashboards() {
-      if (this.isFeatureFlagEnabled('insights-new-human-dashboard')) {
-        return this.dashboards;
-      }
+const isRenderBetaText = computed(
+  () => currentDashboard.value.config?.type === 'ctwa',
+);
 
-      return this.dashboards.filter(
-        (dashboard) => dashboard?.config?.type !== 'human_support',
-      );
-    },
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.setOnboardingRef({
-        key: 'select-dashboard',
-        ref: document.querySelector('[data-onboarding-id="select-dashboard"]'),
-      });
-    });
-  },
-  methods: {
-    ...mapActions(useOnboarding, [
-      'setOnboardingRef',
-      'beforeOpenDashboardList',
-      'callTourNextStep',
-    ]),
-    ...mapActions(useDashboards, ['setShowDashboardConfig']),
-    ...mapActions(useFeatureFlag, ['isFeatureFlagEnabled']),
+const enabledShowDashboards = computed(() => dashboards.value);
 
-    handlerCreateDashboardClick() {
-      this.setShowDashboardConfig(true);
-      this.callTourNextStep('dashboard-onboarding-tour');
-    },
-    handlerOpenDropdown(open) {
-      this.openDropdown = open !== undefined ? open : !this.openDropdown;
-      if (this.openDropdown) {
-        this.callTourNextStep('dashboard-onboarding-tour');
-      }
-    },
-  },
+const handlerCreateDashboardClick = () => {
+  dashboardsStore.setShowDashboardConfig(true);
+  onboardingStore.callTourNextStep('dashboard-onboarding-tour');
 };
+
+const handlerOpenDropdown = (open?: boolean) => {
+  openDropdown.value = open !== undefined ? open : !openDropdown.value;
+  if (openDropdown.value) {
+    onboardingStore.callTourNextStep('dashboard-onboarding-tour');
+  }
+};
+
+onMounted(() => {
+  nextTick(() => {
+    onboardingStore.setOnboardingRef({
+      key: 'select-dashboard',
+      ref: document.querySelector('[data-onboarding-id="select-dashboard"]'),
+    });
+  });
+});
+
+defineExpose({
+  openDropdown,
+  dashboardTitle,
+  isRenderBetaText,
+  enabledShowDashboards,
+  handlerCreateDashboardClick,
+  handlerOpenDropdown,
+});
 </script>
 
 <style lang="scss" scoped>

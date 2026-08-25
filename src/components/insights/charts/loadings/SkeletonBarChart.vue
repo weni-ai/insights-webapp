@@ -17,28 +17,28 @@
   </section>
 </template>
 
-<script>
-export default {
-  name: 'SkeletonBarChart',
-};
-</script>
-
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
+
+defineOptions({ name: 'SkeletonBarChart' });
+
+interface SkeletonBarChartProps {
+  width: number;
+  height: number;
+}
 
 const BAR_WIDTH = 48;
 
-const props = defineProps({
-  width: { type: Number, required: true },
-  height: { type: Number, required: true },
-});
+const props = defineProps<SkeletonBarChartProps>();
 
 const generateRandomHeight = () => {
   const minHeight = 100;
   return `${Math.random() * (props.height - minHeight) + minHeight}px`;
 };
 
-const totalBars = computed(() => parseInt(props.width / BAR_WIDTH) || 36);
+const totalBars = computed(
+  () => Number.parseInt(String(props.width / BAR_WIDTH)) || 36,
+);
 </script>
 
 <style lang="scss" scoped>

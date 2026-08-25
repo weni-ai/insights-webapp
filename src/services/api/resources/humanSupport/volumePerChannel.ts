@@ -3,30 +3,26 @@ import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-interface QueryParams {
-  cursor?: string;
-  chip_name?: string;
-  limit?: number;
-}
-
-interface VolumePerQueueResult {
-  sector_name: string;
-  is_deleted?: boolean;
-  total_queues?: number;
-  queues: { queue_name: string; value: number; is_deleted?: boolean }[];
-}
-
-interface VolumePerQueueResponse {
+interface VolumePerChannelResponse {
   next: string | null;
   previous: string | null;
   count: number;
-  results: VolumePerQueueResult[];
+  results: {
+    channel_name: string;
+    value: number;
+  }[];
+}
+
+interface QueryParams {
+  cursor?: string;
+  limit?: number;
+  chip_name?: string;
 }
 
 export default {
-  async getVolumePerQueueMonitoring(
+  async getVolumePerChannelMonitoring(
     params: QueryParams,
-  ): Promise<VolumePerQueueResponse> {
+  ): Promise<VolumePerChannelResponse> {
     const { project } = useConfig();
     const { currentDashboard } = useDashboards();
     const { appliedFilters } = useHumanSupport();
@@ -44,18 +40,27 @@ export default {
       ...params,
     };
 
-    const response = (await http.get(
-      `/dashboards/${currentDashboard.uuid}/monitoring/queue_volume/`,
-      {
-        params: formattedParams,
-      },
-    )) as VolumePerQueueResponse;
-    return response;
-  },
+    // TODO: Remove this after the API is implemented
 
-  async getVolumePerQueueAnalysis(
+    return Promise.resolve({
+      next: null,
+      previous: null,
+      count: 2,
+      results: [
+        { channel_name: 'whatsapp', value: 10 },
+        { channel_name: 'facebook', value: 10 },
+      ],
+    });
+
+    // const response = (await http.get(
+    //   `/dashboards/${currentDashboard.uuid}/monitoring/channel_metrics/`,
+    //   { params: formattedParams },
+    // )) as VolumePerChannelResponse;
+    // return response;
+  },
+  async getVolumePerChannelAnalysis(
     params: QueryParams,
-  ): Promise<VolumePerQueueResponse> {
+  ): Promise<VolumePerChannelResponse> {
     const { project } = useConfig();
     const { currentDashboard } = useDashboards();
     const { appliedFilters, appliedDateRange } = useHumanSupport();
@@ -76,11 +81,9 @@ export default {
     };
 
     const response = (await http.get(
-      `/dashboards/${currentDashboard.uuid}/analysis/queue_volume/`,
-      {
-        params: formattedParams,
-      },
-    )) as VolumePerQueueResponse;
+      `/dashboards/${currentDashboard.uuid}/analysis/channel_metrics/`,
+      { params: formattedParams },
+    )) as VolumePerChannelResponse;
     return response;
   },
 };

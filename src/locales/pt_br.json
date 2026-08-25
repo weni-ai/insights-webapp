@@ -1402,6 +1402,22 @@
           "closed": "Nenhuma tag atribuída a chats finalizados no período selecionado"
         }
       }
+    },
+    "volume_per_channel": {
+      "title": "Volume por canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal com chats {status}} other {# canais com chats {status}}}",
+        "analysis": "{count, plural, one {# canal com chats finalizados} other {# canais com chats finalizados}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Nenhum chat em espera",
+          "ongoing": "Nenhum chat em andamento"
+        },
+        "analysis": {
+          "closed": "Nenhum chat finalizado no período selecionado"
+        }
+      }
     }
   },
   "on": "Ativa",

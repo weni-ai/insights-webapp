@@ -1095,6 +1095,7 @@
     "chats_open": "Include chaturile deschise în această perioadă",
     "chats_closed": "Include chaturile închise în această perioadă",
     "filters": {
+      "channel": "Canal",
       "sector": "Departament",
       "select_sector": "Selectează un departament",
       "representative": "Reprezentant",
@@ -1106,7 +1107,8 @@
       "all_sectors": "Toate departamentele",
       "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
-      "all_tags": "Toate etichetele"
+      "all_tags": "Toate etichetele",
+      "select_to_filter": "Selectează pentru a filtra"
     },
     "select_format": "Selectează formatul pentru exportul datelor",
     "warning_terms": "În timpul procesului de export, crearea unor exporturi noi va fi blocată pentru toate rolurile din proiect. Confirmă pentru a continua.",

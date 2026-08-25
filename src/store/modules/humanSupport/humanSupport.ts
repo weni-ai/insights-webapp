@@ -17,6 +17,7 @@ interface AppliedFilters {
   sectors: Filter[];
   queues: Filter[];
   tags: Filter[];
+  channels: Filter[];
 }
 
 interface AppliedDetailFilter {
@@ -67,6 +68,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
   const sectors = ref<Filter[]>([]);
   const queues = ref<Filter[]>([]);
   const tags = ref<Filter[]>([]);
+  const channels = ref<Filter[]>([]);
 
   const appliedDateRange = ref<DateRange>({
     start: currentDateRange.start,
@@ -77,6 +79,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     sectors: [],
     queues: [],
     tags: [],
+    channels: [],
   });
 
   const appliedDetailFilters = ref<AppliedDetailFilters>({
@@ -91,8 +94,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     const sectorsLength = appliedFilters.value.sectors.length > 0 ? 1 : 0;
     const queuesLength = appliedFilters.value.queues.length > 0 ? 1 : 0;
     const tagsLength = appliedFilters.value.tags.length > 0 ? 1 : 0;
+    const channelsLength = appliedFilters.value.channels.length > 0 ? 1 : 0;
 
-    const filtersLength = sectorsLength + queuesLength + tagsLength;
+    const filtersLength =
+      sectorsLength + queuesLength + tagsLength + channelsLength;
 
     return filtersLength;
   });
@@ -102,6 +107,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       sectors: [...sectors.value],
       queues: [...queues.value],
       tags: [...tags.value],
+      channels: [...channels.value],
     };
   };
 
@@ -129,6 +135,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       [sectors.value, appliedFilters.value.sectors],
       [queues.value, appliedFilters.value.queues],
       [tags.value, appliedFilters.value.tags],
+      [channels.value, appliedFilters.value.channels],
     ].every(([current, applied]) => areArraysEqual(current, applied));
   });
 
@@ -153,6 +160,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       sectors: [],
       queues: [],
       tags: [],
+      channels: [],
     };
   };
 
@@ -193,6 +201,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     sectors,
     queues,
     tags,
+    channels,
     appliedDateRange,
     appliedFilters,
     appliedDetailFilters,

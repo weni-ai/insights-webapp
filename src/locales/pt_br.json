@@ -1095,6 +1095,7 @@
     "chats_open": "Considerar chats abertos durante este período",
     "chats_closed": "Considerar chats encerrados durante este período",
     "filters": {
+      "channel": "Canal",
       "sector": "Setor",
       "select_sector": "Selecione o setor",
       "representative": "Atendente",
@@ -1106,7 +1107,8 @@
       "all_sectors": "Todos os setores",
       "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
-      "all_tags": "Todas as tags"
+      "all_tags": "Todas as tags",
+      "select_to_filter": "Selecionar para filtrar"
     },
     "select_format": "Selecione o formato para exportar os dados",
     "warning_terms": "Enquanto a exportação estiver em processamento, a geração de novas exportações ficará bloqueada para todos os perfis do projeto. Confirme para continuar.",

@@ -5,7 +5,7 @@ import { createApp } from 'vue';
 
 import { useCTWA } from '../ctwa';
 import CTWADataService from '@/services/api/resources/ctwa/data';
-import { getLastNDays } from '@/utils/time';
+import { getYesterdayNDays } from '@/utils/time';
 import CTWAConversionsService from '@/services/api/resources/ctwa/conversions';
 import CTWAPerformanceByCampaignService from '@/services/api/resources/ctwa/performanceByCampaign';
 
@@ -15,7 +15,12 @@ vi.mock('@/utils/time', () => ({
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
   })),
-  getTodayDate: vi.fn(() => ({
+  getYesterdayDate: vi.fn(() => ({
+    start: '2023-12-31',
+    end: '2023-12-31',
+    dmFormat: '31/12',
+  })),
+  getYesterdayNDays: vi.fn(() => ({
     start: '2024-01-01',
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
@@ -129,6 +134,10 @@ describe('useCTWA store', () => {
       expect(store.minDateFilter).toBe('2026-08-19');
     });
 
+    it('sets maxDateFilter as yesterday', () => {
+      expect(store.maxDateFilter).toBe('2023-12-31');
+    });
+
     it('keeps a query start date when it is before 2026-08-19', async () => {
       await createStore({
         start_date: '2026-08-19',
@@ -143,7 +152,7 @@ describe('useCTWA store', () => {
     });
 
     it('uses 2026-08-19 as min date when last 7 days start after it', async () => {
-      getLastNDays.mockReturnValueOnce({
+      getYesterdayNDays.mockReturnValueOnce({
         start: '2026-09-01',
         end: '2026-09-07',
         dmFormat: '01/09 - 07/09',

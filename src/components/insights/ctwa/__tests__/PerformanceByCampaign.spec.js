@@ -16,8 +16,9 @@ vi.mock('@/utils/numbers', () => ({
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
-  getTodayDate: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
+  getYesterdayDate: vi.fn(() => ({ start: '2024-01-06', end: '2024-01-06' })),
   isDateBefore: vi.fn(() => false),
+  getYesterdayNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
 }));
 
 const i18n = createI18n({

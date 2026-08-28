@@ -123,36 +123,6 @@ const handlerSetIsCommerce = (isCommerce: boolean) => {
   projectStore.setIsCommerce(isCommerce);
 };
 
-const getEventHandler = (eventName: string) => {
-  const handlerFunctionMapper: Record<string, (...args: any[]) => void> = {
-    setLanguage: handlerSetLanguage,
-    setProject: handlerSetProject,
-    setIsCommerce: handlerSetIsCommerce,
-  };
-
-  const handlerParamsMapper: Record<string, string> = {
-    setLanguage: 'language',
-    setProject: 'projectUuid',
-    setIsCommerce: 'isCommerce',
-  };
-
-  return {
-    handler: handlerFunctionMapper[eventName],
-    dataKey: handlerParamsMapper[eventName],
-  };
-};
-
-const listenConnect = () => {
-  window.parent.postMessage({ event: 'getLanguage' }, '*');
-  window.parent.postMessage({ event: 'getIsCommerce' }, '*');
-
-  window.addEventListener('message', (ev) => {
-    const message = ev.data;
-    const { handler, dataKey } = getEventHandler(message?.event);
-    if (handler) handler(message?.[dataKey]);
-  });
-};
-
 const handleRedirectToHumanServiceDashboard = () => {
   const isHumanServiceDashboardRouter = route.name === 'humanServiceDashboard';
 
@@ -229,7 +199,7 @@ watch(
   (newProject) => {
     if (!newProject) return;
     handlerSetProject(newProject?.uuid);
-    projectStore.setIsCommerce(newProject?.type === 2);
+    handlerSetIsCommerce(newProject?.type === 2);
   },
   { immediate: true, deep: true },
 );
@@ -249,8 +219,6 @@ watch(
     handleRedirectToHumanServiceDashboard();
   },
 );
-
-listenConnect();
 
 onMounted(async () => {
   try {

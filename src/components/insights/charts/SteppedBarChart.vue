@@ -48,6 +48,7 @@
         </p>
       </section>
       <section
+        v-if="shouldShowBar(item.value)"
         class="stepped-bar-chart__item__bar"
         :data-testid="`stepped-bar-chart-bar-${item.id}`"
         :style="{
@@ -91,6 +92,8 @@ const getBarHeight = (value: number) => {
 
   return `${(value / maxValue) * 60}%`;
 };
+
+const shouldShowBar = (value: number) => getBarHeight(value) !== '0%';
 
 const getBarBorderRadius = (index: number, total: number) => {
   if (index === 0) return '4px 4px 0 4px';

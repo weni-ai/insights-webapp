@@ -65,9 +65,6 @@ onMounted(() => {
 
 defineExpose({
   showMcpDisclaimer,
-  insightsMainEl,
-  insightsContent,
-  insightsMain,
 });
 </script>
 

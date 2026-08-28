@@ -291,11 +291,6 @@ defineExpose({
   clearFilters,
   retainRouteQueries,
   openFiltersModal,
-  setAppliedFilters: (...args: any[]) =>
-    dashboardsStore.setAppliedFilters(...args),
-  resetAppliedFilters: (...args: any[]) =>
-    dashboardsStore.resetAppliedFilters(...args),
-  handlerShowSearchTemplateModal,
 });
 </script>
 

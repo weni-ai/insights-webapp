@@ -19,23 +19,27 @@
       </template>
     </UnnnicPageHeader>
     <section
-      v-if="isExpansiveMode"
-      class="insights-layout-header__expansive"
-      data-testid="insights-layout-header-expansive"
+      v-else-if="isExpansiveMode"
+      data-testid="insights-layout-header"
     >
-      <p
-        class="insights-layout-header__expansive-title"
-        data-testid="insights-layout-header-expansive-title"
+      <section
+        class="insights-layout-header__expansive"
+        data-testid="insights-layout-header-expansive"
       >
-        {{ $t('human_service_dashboard.all_agents') }}
-      </p>
-      <UnnnicButton
-        iconCenter="close"
-        size="small"
-        type="tertiary"
-        class="insights-layout-header__expansive-close"
-        @click="setCurrentExpansiveWidget({})"
-      />
+        <p
+          class="insights-layout-header__expansive-title"
+          data-testid="insights-layout-header-expansive-title"
+        >
+          {{ $t('human_service_dashboard.all_agents') }}
+        </p>
+        <UnnnicButton
+          iconCenter="close"
+          size="small"
+          type="tertiary"
+          class="insights-layout-header__expansive-close"
+          @click="setCurrentExpansiveWidget({})"
+        />
+      </section>
     </section>
   </header>
 </template>
@@ -192,20 +196,9 @@ onMounted(() => {
 
 defineExpose({
   isExpansiveMode,
-  isCTWADashboard,
-  isHumanServiceDashboard,
-  isHumanSupportDashboard,
   showDivider,
-  isConversationalDashboard,
-  isMetaTemplateDashboard,
   dashboardHeaderType,
   breadcrumbs,
-  navigateToDashboard,
-  goToDefaultDashboard,
-  routeUpdateCurrentDashboard,
-  setCurrentExpansiveWidget,
-  setCurrentDashboard: (...args: any[]) =>
-    dashboardsStore.setCurrentDashboard(...args),
 });
 </script>
 

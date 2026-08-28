@@ -197,9 +197,6 @@ defineExpose({
   widgetConfig,
   formatations,
   isValidForm,
-  currentWidgetEditing,
-  updateCurrentWidgetEditingConfig: (...args: unknown[]) =>
-    widgetsStore.updateCurrentWidgetEditingConfig(...(args as [any])),
   updateSubwidget,
   updateActiveSubwidget,
   updateSubwigetValid,

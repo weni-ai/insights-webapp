@@ -456,21 +456,6 @@ defineExpose({
   createRecurrenceWidget,
   internalClose,
   updateWidgetConfig,
-  callTourPreviousStep: (...args: any[]) =>
-    onboardingStore.callTourPreviousStep(...args),
-  callTourNextStep: (...args: any[]) =>
-    onboardingStore.callTourNextStep(...args),
-  setShowCompleteOnboardingModal: (...args: any[]) =>
-    onboardingStore.setShowCompleteOnboardingModal(...args),
-  updateWidget: (...args: any[]) => widgetsStore.updateWidget(...args),
-  getCurrentDashboardWidgetData: (...args: any[]) =>
-    widgetsStore.getCurrentDashboardWidgetData(...args),
-  getWidgetGraphFunnelData: (...args: any[]) =>
-    widgetsStore.getWidgetGraphFunnelData(...args),
-  getWidgetRecurrenceData: (...args: any[]) =>
-    widgetsStore.getWidgetRecurrenceData(...args),
-  getWidgetVtexOrderData: (...args: any[]) =>
-    widgetsStore.getWidgetVtexOrderData(...args),
 });
 </script>
 

@@ -106,8 +106,8 @@ describe('CampaignFilter', () => {
       await nextTick();
 
       expect(wrapper.vm.options).toEqual([
-        { value: 'uuid-1', label: 'Campaign 1' },
-        { value: 'uuid-2', label: 'Campaign 2' },
+        { value: 'uuid-1', label: 'Campaign 1 (uuid-1)' },
+        { value: 'uuid-2', label: 'Campaign 2 (uuid-2)' },
       ]);
     });
 
@@ -123,7 +123,9 @@ describe('CampaignFilter', () => {
     });
 
     it('resets options when the request fails', async () => {
-      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const consoleError = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
       Projects.getMetaCampaigns.mockRejectedValueOnce(new Error('fail'));
       wrapper = createWrapper();
       await nextTick();
@@ -247,9 +249,9 @@ describe('CampaignFilter', () => {
         offset: PAGE_SIZE,
       });
       expect(wrapper.vm.options).toEqual([
-        { value: 'uuid-1', label: 'Campaign 1' },
-        { value: 'uuid-2', label: 'Campaign 2' },
-        { value: 'uuid-3', label: 'Campaign 3' },
+        { value: 'uuid-1', label: 'Campaign 1 (uuid-1)' },
+        { value: 'uuid-2', label: 'Campaign 2 (uuid-2)' },
+        { value: 'uuid-3', label: 'Campaign 3 (uuid-3)' },
       ]);
       expect(finishInfiniteScroll).toHaveBeenCalledTimes(1);
     });

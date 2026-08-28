@@ -69,42 +69,61 @@ const formatStagePercentage = (percentage: number | null) =>
     ? '-'
     : formatPercentage(percentage);
 
-const mapStage = (
-  id: string,
-  labelKey: string,
-  stage: ConversionStage,
-  backgroundColor: string,
-  tooltip?: string,
-): FunnelChartItem => ({
+type MapStageParams = {
+  id: string;
+  labelKey: string;
+  stage: ConversionStage;
+  backgroundColor: string;
+  tooltip?: string;
+  isFirst?: boolean;
+};
+
+const mapStage = ({
   id,
-  label: t(`${funnelBaseKey}.${labelKey}`),
-  value: stage.percentage ?? 0,
-  displayValue: formatStagePercentage(stage.percentage),
-  displaySecondary: formatStageTotal(stage.total),
+  labelKey,
+  stage,
   backgroundColor,
   tooltip,
-});
+  isFirst = false,
+}: MapStageParams): FunnelChartItem => {
+  const isEmptyFirstMetric = isFirst && stage.total === 0;
+
+  return {
+    id,
+    label: t(`${funnelBaseKey}.${labelKey}`),
+    value: isEmptyFirstMetric ? 0 : (stage.percentage ?? 0),
+    displayValue: isEmptyFirstMetric
+      ? formatPercentage(0)
+      : formatStagePercentage(stage.percentage),
+    displaySecondary: isEmptyFirstMetric
+      ? formatNumber(0)
+      : formatStageTotal(stage.total),
+    backgroundColor,
+    tooltip,
+  };
+};
 
 const chartItems = computed<FunnelChartItem[]>(() => [
-  mapStage(
-    'started',
-    'started',
-    conversionsData.value.conversations_started,
-    colorBlue3,
-  ),
-  mapStage(
-    'qualified',
-    'qualified',
-    conversionsData.value.conversations_qualified,
-    colorBlue6,
-    t(`${funnelBaseKey}.qualified_help`),
-  ),
-  mapStage(
-    'converted',
-    'converted',
-    conversionsData.value.conversations_converted,
-    colorBlue8,
-  ),
+  mapStage({
+    id: 'started',
+    labelKey: 'started',
+    stage: conversionsData.value.conversations_started,
+    backgroundColor: colorBlue3,
+    isFirst: true,
+  }),
+  mapStage({
+    id: 'qualified',
+    labelKey: 'qualified',
+    stage: conversionsData.value.conversations_qualified,
+    backgroundColor: colorBlue6,
+    tooltip: t(`${funnelBaseKey}.qualified_help`),
+  }),
+  mapStage({
+    id: 'converted',
+    labelKey: 'converted',
+    stage: conversionsData.value.conversations_converted,
+    backgroundColor: colorBlue8,
+  }),
 ]);
 </script>
 

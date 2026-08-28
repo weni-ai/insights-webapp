@@ -17,7 +17,10 @@ export interface CampaignPerformanceData {
 }
 
 interface CampaignPerformanceApiRow {
-  campaign?: string;
+  label?: {
+    id: string;
+    headline: string;
+  };
   conversations?: number;
   qualified?: number;
   conversions?: number;
@@ -36,13 +39,17 @@ interface QueryParams {
   offset?: number;
 }
 
-const mapRow = (row: CampaignPerformanceApiRow): CampaignPerformanceRow => ({
-  campaign: row.campaign ?? null,
-  conversations: row.conversations ?? null,
-  qualified: row.qualified ?? null,
-  conversions: row.conversions ?? null,
-  revenue: row.revenue ?? null,
-});
+const mapRow = (row: CampaignPerformanceApiRow): CampaignPerformanceRow => {
+  const rowLabel =
+    `${row.label?.id || ''} - ${row.label?.headline || ''}`.trim();
+  return {
+    campaign: rowLabel,
+    conversations: row.conversations ?? null,
+    qualified: row.qualified ?? null,
+    conversions: row.conversions ?? null,
+    revenue: row.revenue ?? null,
+  };
+};
 
 export default {
   async getPerformanceByCampaign(

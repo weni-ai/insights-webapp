@@ -16,8 +16,9 @@ vi.mock('@/utils/numbers', () => ({
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
-  getTodayDate: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
+  getYesterdayDate: vi.fn(() => ({ start: '2024-01-06', end: '2024-01-06' })),
   isDateBefore: vi.fn(() => false),
+  getYesterdayNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
 }));
 
 const i18n = createI18n({
@@ -32,7 +33,7 @@ config.global.plugins = [i18n];
 
 const mockResults = [
   {
-    campaign: 'Contractor Bulk Pricing',
+    campaign: 'uuid-1 - Campaign 1',
     conversations: 3200,
     qualified: 1450,
     conversions: 520,
@@ -121,7 +122,7 @@ describe('PerformanceByCampaign', () => {
     const table = wrapper.findComponent({ name: 'UnnnicDataTable' });
 
     expect(table.props('items')[0]).toEqual({
-      campaign: 'Contractor Bulk Pricing',
+      campaign: 'uuid-1 - Campaign 1',
       conversations: '3200',
       qualified: '1450',
       conversions: '520',

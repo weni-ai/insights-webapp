@@ -552,6 +552,44 @@
     "tags": {
       "label": "Tags",
       "placeholder": "Selecione uma tag"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Setores"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Setor"
+    },
+    "filters": {
+      "sector": "Setor",
+      "select_sector": "Selecione um setor",
+      "all_sectors": "Todos os setores"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Setor"
+      },
+      "in_awaiting": {
+        "sector": "Setor"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Setor"
+      },
+      "disabled_text": "Ative o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Fila e setor excluídos do projeto",
+      "tag_and_sector": "Tag e setor excluídos do projeto",
+      "sector": "Setor excluído do projeto",
+      "volume_per_queue": {
+        "setup_description": "Crie filas por setor para monitorar mais dados"
+      },
+      "volume_per_tag": {
+        "setup_description": "Adicione tags a setores para acompanhar mais dados"
+      }
     }
   },
   "key": "Chave",
@@ -905,7 +943,7 @@
     "CLP": "$ - Peso chileno",
     "CNY": "¥ - Yuan chinês",
     "COP": "$ - Peso colombiano",
-    "CZK": "Kč - Coroa tcheca",
+    "CZK": "Kč - Coroa checa",
     "DKK": "kr - Coroa dinamarquesa",
     "EUR": "€ - Euro",
     "GBP": "£ - Libra esterlina",
@@ -919,13 +957,13 @@
     "NOK": "kr - Coroa norueguesa",
     "PEN": "S/ - Sol peruano",
     "PHP": "₱ - Peso filipino",
-    "PLN": "zł - Zloty polonês",
+    "PLN": "zł - Złoty polonês",
     "RON": "lei - Leu romeno",
     "SEK": "kr - Coroa sueca",
     "SGD": "S$ - Dólar de Singapura",
     "THB": "฿ - Baht tailandês",
-    "TWD": "NT$ - Dólar taiwanês",
-    "USD": "$ - Dólar",
+    "TWD": "NT$ - Novo dólar taiwanês",
+    "USD": "$ - Dólar americano",
     "UYU": "$U - Peso uruguaio",
     "VND": "₫ - Dong vietnamita"
   },

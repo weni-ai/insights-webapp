@@ -552,6 +552,44 @@
     "tags": {
       "label": "Tags",
       "placeholder": "Selecciona la tag"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Departamentos"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Departamento"
+    },
+    "filters": {
+      "sector": "Departamento",
+      "select_sector": "Selecciona un departamento",
+      "all_sectors": "Todos los departamentos"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Departamento"
+      },
+      "in_awaiting": {
+        "sector": "Departamento"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Departamento"
+      },
+      "disabled_text": "Activa CSAT para monitorear calificaciones generales por departamento, cola y representante"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Cola y departamento eliminados del proyecto",
+      "tag_and_sector": "Tag y departamento eliminados del proyecto",
+      "sector": "Departamento eliminado del proyecto",
+      "volume_per_queue": {
+        "setup_description": "Crea colas por departamento para monitorear más datos"
+      },
+      "volume_per_tag": {
+        "setup_description": "Agrega tags a departamentos para hacer seguimiento de más datos"
+      }
     }
   },
   "key": "Clave",
@@ -919,12 +957,12 @@
     "NOK": "kr - Corona noruega",
     "PEN": "S/ - Sol peruano",
     "PHP": "₱ - Peso filipino",
-    "PLN": "zł - Zloty polaco",
+    "PLN": "zł - Esloti polaco",
     "RON": "lei - Leu rumano",
     "SEK": "kr - Corona sueca",
     "SGD": "S$ - Dólar de Singapur",
     "THB": "฿ - Baht tailandés",
-    "TWD": "NT$ - Dólar taiwanés",
+    "TWD": "NT$ - Nuevo dólar de Taiwán",
     "USD": "$ - Dólar estadounidense",
     "UYU": "$U - Peso uruguayo",
     "VND": "₫ - Dong vietnamita"

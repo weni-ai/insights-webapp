@@ -1402,6 +1402,22 @@
           "closed": "Nu există etichete atribuite la chaturile finalizate în perioada selectată"
         }
       }
+    },
+    "volume_per_channel": {
+      "title": "Volum per canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal cu chaturi {status}} few {# canale cu chaturi {status}} other {# de canale cu chaturi {status}}}",
+        "analysis": "{count, plural, one {# canal cu chaturi finalizate} few {# canale cu chaturi finalizate} other {# de canale cu chaturi finalizate}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Nu există chaturi în așteptare",
+          "ongoing": "Nu există chaturi în curs de desfășurare"
+        },
+        "analysis": {
+          "closed": "Nu există chaturi finalizate în perioada selectată"
+        }
+      }
     }
   },
   "on": "Activ",

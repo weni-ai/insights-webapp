@@ -23,8 +23,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import VolumeBarListWidget from './VolumeBarListWidget.vue';
-import type { VolumeBarListTabItem, WidgetContext } from './types';
+import VolumeBarListWidget from '../VolumeList/VolumeBarListWidget.vue';
+
+import type { VolumeBarListTabItem, WidgetContext } from '../VolumeList/types';
 
 import volumePerTagService from '@/services/api/resources/humanSupport/volumePerTag';
 

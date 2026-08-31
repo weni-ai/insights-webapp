@@ -3,30 +3,33 @@ import { useConfig } from '@/store/modules/config';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
-interface QueryParams {
-  cursor?: string;
-  chip_name?: string;
-  limit?: number;
-}
-
-interface VolumePerQueueResult {
-  sector_name: string;
-  is_deleted?: boolean;
-  total_queues?: number;
-  queues: { queue_name: string; value: number; is_deleted?: boolean }[];
-}
-
-interface VolumePerQueueResponse {
+interface VolumePerChannelResponse {
   next: string | null;
   previous: string | null;
   count: number;
-  results: VolumePerQueueResult[];
+  results: {
+    channel_name: string;
+    value: number;
+  }[];
 }
 
+interface QueryParams {
+  cursor?: string;
+  limit?: number;
+  chip_name?: string;
+}
+
+const formatResponseItem = (item: any) => {
+  return {
+    channel_name: item.channel_name,
+    value: item.rooms_volume,
+  };
+};
+
 export default {
-  async getVolumePerQueueMonitoring(
+  async getVolumePerChannelMonitoring(
     params: QueryParams,
-  ): Promise<VolumePerQueueResponse> {
+  ): Promise<VolumePerChannelResponse> {
     const { project } = useConfig();
     const { currentDashboard } = useDashboards();
     const { appliedFilters } = useHumanSupport();
@@ -45,17 +48,17 @@ export default {
     };
 
     const response = (await http.get(
-      `/dashboards/${currentDashboard.uuid}/monitoring/queue_volume/`,
-      {
-        params: formattedParams,
-      },
-    )) as VolumePerQueueResponse;
+      `/dashboards/${currentDashboard.uuid}/monitoring/channel_metrics/`,
+      { params: formattedParams },
+    )) as VolumePerChannelResponse;
+
+    response.results = response.results.map(formatResponseItem);
+
     return response;
   },
-
-  async getVolumePerQueueAnalysis(
+  async getVolumePerChannelAnalysis(
     params: QueryParams,
-  ): Promise<VolumePerQueueResponse> {
+  ): Promise<VolumePerChannelResponse> {
     const { project } = useConfig();
     const { currentDashboard } = useDashboards();
     const { appliedFilters, appliedDateRange } = useHumanSupport();
@@ -76,11 +79,12 @@ export default {
     };
 
     const response = (await http.get(
-      `/dashboards/${currentDashboard.uuid}/analysis/queue_volume/`,
-      {
-        params: formattedParams,
-      },
-    )) as VolumePerQueueResponse;
+      `/dashboards/${currentDashboard.uuid}/analysis/channel_metrics/`,
+      { params: formattedParams },
+    )) as VolumePerChannelResponse;
+
+    response.results = response.results.map(formatResponseItem);
+
     return response;
   },
 };

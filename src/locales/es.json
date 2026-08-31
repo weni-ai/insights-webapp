@@ -1319,6 +1319,9 @@
         "csat_rating": "CSAT"
       }
     },
+    "channels": {
+      "others": "Otros"
+    },
     "analyze": {
       "title": "Próximamente: Nueva vista de Analytics",
       "description": "Aquí puedes explorar datos históricos con filtros de tiempo para identificar patrones y tomar decisiones estratégicas. ¡Estamos preparando esta nueva funcionalidad para ti!",

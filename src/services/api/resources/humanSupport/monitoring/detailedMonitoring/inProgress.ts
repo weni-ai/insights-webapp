@@ -36,6 +36,7 @@ interface QueryParams {
   sectors?: string[];
   queues?: string[];
   tags?: string[];
+  channels?: string[];
   ordering?: string;
   limit?: number;
   offset?: number;
@@ -53,6 +54,7 @@ export default {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
+      channels: appliedFilters.channels.map((channel) => channel.value),
       ordering: queryParams.ordering ? queryParams.ordering : 'duration',
     };
 

@@ -1095,6 +1095,7 @@
     "chats_open": "Considerar chats abiertos durante este periodo",
     "chats_closed": "Considerar chats cerrados durante este periodo",
     "filters": {
+      "channel": "Canal",
       "sector": "Departamento",
       "select_sector": "Selecciona el departamento",
       "representative": "Representante",
@@ -1106,7 +1107,8 @@
       "all_sectors": "Todos los sectores",
       "all_representatives": "Todos los representantes",
       "all_queues": "Todas las colas",
-      "all_tags": "Todas las tags"
+      "all_tags": "Todas las tags",
+      "select_to_filter": "Seleccionar para filtrar"
     },
     "select_format": "Selecciona el formato en que se exportarán los datos",
     "warning_terms": "Mientras la exportación esté en curso, ninguno de los usuarios del proyecto podrá generar nuevas exportaciones. Confirma para continuar.",

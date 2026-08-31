@@ -40,6 +40,7 @@ describe('inProgress API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [{ value: 'channel1' }],
       },
       appliedDetailFilters: {
         contactInput: { value: '' },
@@ -60,6 +61,7 @@ describe('inProgress API', () => {
           sectors: ['sector1'],
           queues: ['queue1'],
           tags: ['tag1'],
+          channels: ['channel1'],
           ordering: 'duration',
         },
       },
@@ -93,6 +95,7 @@ describe('inProgress API', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       },
       appliedDetailFilters: {
         contactInput: { value: '5511999999999' },

@@ -30,6 +30,7 @@ describe('timeMetrics API', () => {
         sectors: [{ value: 'support' }, { value: 'sales' }],
         queues: [{ value: 'priority' }],
         tags: [{ value: 'urgent' }],
+        channels: [],
       },
     };
 
@@ -58,6 +59,7 @@ describe('timeMetrics API', () => {
             sectors: ['support', 'sales'],
             queues: ['priority'],
             tags: ['urgent'],
+            channels: [],
           },
         },
       );
@@ -107,6 +109,7 @@ describe('timeMetrics API', () => {
             sectors: ['support', 'sales'],
             queues: ['priority'],
             tags: ['urgent'],
+            channels: [],
             start_date: '2023-01-01',
             end_date: '2023-12-31',
           },
@@ -158,8 +161,8 @@ describe('timeMetrics API', () => {
       const filterScenarios = [
         {
           name: 'empty filters',
-          filters: { sectors: [], queues: [], tags: [] },
-          expected: { sectors: [], queues: [], tags: [] },
+          filters: { sectors: [], queues: [], tags: [], channels: [] },
+          expected: { sectors: [], queues: [], tags: [], channels: [] },
         },
         {
           name: 'single filter values',
@@ -167,8 +170,14 @@ describe('timeMetrics API', () => {
             sectors: [{ value: 'single' }],
             queues: [{ value: 'queue' }],
             tags: [{ value: 'tag' }],
+            channels: [],
           },
-          expected: { sectors: ['single'], queues: ['queue'], tags: ['tag'] },
+          expected: {
+            sectors: ['single'],
+            queues: ['queue'],
+            tags: ['tag'],
+            channels: [],
+          },
         },
         {
           name: 'multiple filter values',
@@ -176,11 +185,13 @@ describe('timeMetrics API', () => {
             sectors: [{ value: 'a' }, { value: 'b' }, { value: 'c' }],
             queues: [{ value: '1' }, { value: '2' }],
             tags: [{ value: 'x' }, { value: 'y' }, { value: 'z' }],
+            channels: [{ value: 'whatsapp' }],
           },
           expected: {
             sectors: ['a', 'b', 'c'],
             queues: ['1', '2'],
             tags: ['x', 'y', 'z'],
+            channels: ['whatsapp'],
           },
         },
       ];
@@ -248,6 +259,7 @@ describe('timeMetrics API', () => {
               sectors: ['override'],
               queues: ['priority'],
               tags: ['custom'],
+              channels: [],
             },
           },
         );
@@ -272,6 +284,7 @@ describe('timeMetrics API', () => {
               sectors: ['marketing'],
               queues: ['priority'],
               tags: ['urgent'],
+              channels: [],
               date_range: '7d',
               include_weekends: false,
               timezone: 'UTC',
@@ -302,6 +315,7 @@ describe('timeMetrics API', () => {
           sectors: [{ value: null }, { wrongKey: 'value' }],
           queues: [{ value: undefined }],
           tags: [],
+          channels: [],
         };
         useHumanSupport.mockReturnValue({
           appliedFilters: malformedFilters,
@@ -316,6 +330,7 @@ describe('timeMetrics API', () => {
               sectors: [null, undefined],
               queues: [undefined],
               tags: [],
+              channels: [],
             }),
           },
         );

@@ -27,6 +27,7 @@ describe('servicesOpenByHour API', () => {
       sectors: [{ value: 'sector1' }, { value: 'sector2' }],
       queues: [{ value: 'queue1' }],
       tags: [{ value: 'tag1' }, { value: 'tag2' }, { value: 'tag3' }],
+      channels: [],
     };
 
     mockHttpResponse = {
@@ -59,6 +60,7 @@ describe('servicesOpenByHour API', () => {
           sectors: ['sector1', 'sector2'],
           queues: ['queue1'],
           tags: ['tag1', 'tag2', 'tag3'],
+          channels: [],
           formatted: 'params',
         },
       },
@@ -70,6 +72,7 @@ describe('servicesOpenByHour API', () => {
           sectors: ['sector1', 'sector2'],
           queues: ['queue1'],
           tags: ['tag1', 'tag2', 'tag3'],
+          channels: [],
           formatted: 'params',
         },
       },
@@ -94,7 +97,7 @@ describe('servicesOpenByHour API', () => {
     });
 
     it('should handle empty applied filters', async () => {
-      const emptyFilters = { sectors: [], queues: [], tags: [] };
+      const emptyFilters = { sectors: [], queues: [], tags: [], channels: [] };
       useHumanSupport.mockReturnValue({
         appliedFilters: emptyFilters,
       });
@@ -109,6 +112,7 @@ describe('servicesOpenByHour API', () => {
             sectors: [],
             queues: [],
             tags: [],
+            channels: [],
             formatted: 'params',
           },
         },
@@ -146,6 +150,7 @@ describe('servicesOpenByHour API', () => {
         sectors: [{ value: null }, { value: undefined }, { value: 'valid' }],
         queues: [{ value: '' }],
         tags: [{ value: 'tag1' }],
+        channels: [],
       };
       useHumanSupport.mockReturnValue({
         appliedFilters: malformedFilters,
@@ -160,6 +165,7 @@ describe('servicesOpenByHour API', () => {
             sectors: [null, undefined, 'valid'],
             queues: [''],
             tags: ['tag1'],
+            channels: [],
           }),
         },
       );
@@ -180,6 +186,7 @@ describe('servicesOpenByHour API', () => {
               sectors: ['sector1', 'sector2'],
               queues: ['queue1'],
               tags: ['tag1', 'tag2', 'tag3'],
+          channels: [],
               date_from: '2023-01-01',
               date_to: '2023-12-31',
             },

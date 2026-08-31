@@ -66,7 +66,7 @@
             v-model="channels"
             :placeholder="$t('export_data.filters.select_to_filter')"
             source="channels"
-            keyValueField="name"
+            keyValueField="uuid"
             @on-options-active-change="handleOptionsActiveChange"
           />
         </section>

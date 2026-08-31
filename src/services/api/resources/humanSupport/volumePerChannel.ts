@@ -19,6 +19,13 @@ interface QueryParams {
   chip_name?: string;
 }
 
+const formatResponseItem = (item: any) => {
+  return {
+    channel_name: item.channel_name,
+    value: item.rooms_volume,
+  };
+};
+
 export default {
   async getVolumePerChannelMonitoring(
     params: QueryParams,
@@ -40,23 +47,14 @@ export default {
       ...params,
     };
 
-    // TODO: Remove this after the API is implemented
+    const response = (await http.get(
+      `/dashboards/${currentDashboard.uuid}/monitoring/channel_metrics/`,
+      { params: formattedParams },
+    )) as VolumePerChannelResponse;
 
-    return Promise.resolve({
-      next: null,
-      previous: null,
-      count: 2,
-      results: [
-        { channel_name: 'whatsapp', value: 10 },
-        { channel_name: 'facebook', value: 10 },
-      ],
-    });
+    response.results = response.results.map(formatResponseItem);
 
-    // const response = (await http.get(
-    //   `/dashboards/${currentDashboard.uuid}/monitoring/channel_metrics/`,
-    //   { params: formattedParams },
-    // )) as VolumePerChannelResponse;
-    // return response;
+    return response;
   },
   async getVolumePerChannelAnalysis(
     params: QueryParams,
@@ -84,6 +82,9 @@ export default {
       `/dashboards/${currentDashboard.uuid}/analysis/channel_metrics/`,
       { params: formattedParams },
     )) as VolumePerChannelResponse;
+
+    response.results = response.results.map(formatResponseItem);
+
     return response;
   },
 };

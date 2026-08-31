@@ -143,19 +143,28 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     const isSectorEmpty = sectors.value.length === 0;
     const isQueueEmpty = queues.value.length === 0;
     const isTagEmpty = tags.value.length === 0;
+    const isChannelEmpty = channels.value.length === 0;
 
     const isAppliedFiltersEmpty =
       appliedFilters.value.sectors.length === 0 &&
       appliedFilters.value.queues.length === 0 &&
-      appliedFilters.value.tags.length === 0;
+      appliedFilters.value.tags.length === 0 &&
+      appliedFilters.value.channels.length === 0;
 
-    if (isSectorEmpty && isQueueEmpty && isTagEmpty && isAppliedFiltersEmpty) {
+    if (
+      isSectorEmpty &&
+      isQueueEmpty &&
+      isTagEmpty &&
+      isChannelEmpty &&
+      isAppliedFiltersEmpty
+    ) {
       return;
     }
 
     sectors.value = [];
     queues.value = [];
     tags.value = [];
+    channels.value = [];
     appliedFilters.value = {
       sectors: [],
       queues: [],

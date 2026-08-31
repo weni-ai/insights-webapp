@@ -49,18 +49,5 @@ router.beforeEach((to, from, next) => {
   else next();
 });
 
-router.afterEach((router) => {
-  if (!isFederatedModule) {
-    window.parent.postMessage(
-      {
-        event: 'changePathname',
-        pathname: window.location.pathname,
-        query: router.query,
-      },
-      '*',
-    );
-  }
-});
-
 export { routes };
 export default router;

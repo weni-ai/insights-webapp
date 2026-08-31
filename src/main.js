@@ -8,7 +8,6 @@ import i18n from './utils/plugins/i18n';
 import './utils/plugins/Hotjar.js';
 import './utils/plugins/Firebase.js';
 
-import { getJwtToken } from './utils/jwt';
 import { moduleStorage } from './utils/storage';
 
 import * as Sentry from '@sentry/vue';
@@ -32,10 +31,6 @@ export default async function mountInsightsApp({
   initialRoute,
 } = {}) {
   let appRef = null;
-
-  if (!isFederatedModule) {
-    await getJwtToken();
-  }
 
   const app = createApp(App);
   const pinia = createPinia();

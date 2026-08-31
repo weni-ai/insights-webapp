@@ -35,6 +35,7 @@ export default {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
+      channels: appliedFilters.channels.map((channel) => channel.value),
     };
 
     const formattedParams = {
@@ -63,6 +64,7 @@ export default {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
+      channels: appliedFilters.channels.map((channel) => channel.value),
       start_date: appliedDateRange.start,
       end_date: appliedDateRange.end,
     };

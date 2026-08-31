@@ -93,8 +93,8 @@ const { currentDashboard, currentDashboardFilters, appliedFilters } =
 const { emptyTemplates, showSearchTemplateMetaModal } =
   storeToRefs(metaTemplateStore);
 
-const handlerShowSearchTemplateModal = (...args: any[]) =>
-  metaTemplateStore.handlerShowSearchTemplateModal(...args);
+const handlerShowSearchTemplateModal = (show: boolean) =>
+  metaTemplateStore.handlerShowSearchTemplateModal(show);
 
 const filterModalOpened = ref(false);
 
@@ -123,7 +123,8 @@ const isRenderDynamicFilter = computed(
 const yesterdayFormatted = computed(() => getYesterdayDate().dmFormat);
 
 const hasManyFilters = computed(
-  () => currentDashboardFilters.value?.length > 1,
+  () =>
+    currentDashboardFilters.value?.length > 1 && !isHumanSupportDashboard.value,
 );
 
 const appliedFiltersLength = computed(() => {

@@ -1095,6 +1095,7 @@
     "chats_open": "Include chats opened during this period",
     "chats_closed": "Include chats closed during this period",
     "filters": {
+      "channel": "Channel",
       "sector": "Department",
       "select_sector": "Select department",
       "representative": "Representative",
@@ -1106,7 +1107,8 @@
       "all_sectors": "All departments",
       "all_representatives": "All representatives",
       "all_queues": "All queues",
-      "all_tags": "All tags"
+      "all_tags": "All tags",
+      "select_to_filter": "Select to filter"
     },
     "select_format": "Select the format for exporting the data",
     "warning_terms": "While the export is in progress, creating new exports will be blocked for all project roles. Confirm to continue.",
@@ -1317,6 +1319,9 @@
         "csat_rating": "CSAT"
       }
     },
+    "channels": {
+      "others": "Others"
+    },
     "analyze": {
       "title": "Coming soon: New Analytics view",
       "description": "Here you can explore historical data with time filters to identify patterns and make strategic decisions. We're preparing this new feature for you!",
@@ -1398,6 +1403,22 @@
         },
         "analysis": {
           "closed": "No tags assigned to chats completed in the selected period"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volume per channel",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# channel with {status} chats} other {# channels with {status} chats}}",
+        "analysis": "{count, plural, one {# channel with completed chats} other {# channels with completed chats}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No chats waiting",
+          "ongoing": "No chats in progress"
+        },
+        "analysis": {
+          "closed": "No chats completed in the selected period"
         }
       }
     }

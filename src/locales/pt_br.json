@@ -1095,6 +1095,7 @@
     "chats_open": "Considerar chats abertos durante este período",
     "chats_closed": "Considerar chats encerrados durante este período",
     "filters": {
+      "channel": "Canal",
       "sector": "Setor",
       "select_sector": "Selecione o setor",
       "representative": "Atendente",
@@ -1106,7 +1107,8 @@
       "all_sectors": "Todos os setores",
       "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
-      "all_tags": "Todas as tags"
+      "all_tags": "Todas as tags",
+      "select_to_filter": "Selecionar para filtrar"
     },
     "select_format": "Selecione o formato para exportar os dados",
     "warning_terms": "Enquanto a exportação estiver em processamento, a geração de novas exportações ficará bloqueada para todos os perfis do projeto. Confirme para continuar.",
@@ -1317,6 +1319,9 @@
         "csat_rating": "CSAT"
       }
     },
+    "channels": {
+      "others": "Outros"
+    },
     "analyze": {
       "title": "Em breve: Nova Visão de Análise",
       "description": "Aqui você poderá explorar dados históricos com filtro de tempo para identificar padrões e tomar decisões mais estratégicas. Estamos preparando essa novidade para você!",
@@ -1398,6 +1403,22 @@
         },
         "analysis": {
           "closed": "Nenhuma tag atribuída a chats finalizados no período selecionado"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volume por canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal com chats {status}} other {# canais com chats {status}}}",
+        "analysis": "{count, plural, one {# canal com chats finalizados} other {# canais com chats finalizados}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Nenhum chat em espera",
+          "ongoing": "Nenhum chat em andamento"
+        },
+        "analysis": {
+          "closed": "Nenhum chat finalizado no período selecionado"
         }
       }
     }

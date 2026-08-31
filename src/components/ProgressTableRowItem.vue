@@ -38,7 +38,14 @@
         >
           <section class="label__infos">
             <section class="infos__title-container">
+              <component
+                v-if="labelComponent"
+                :is="labelComponent"
+                class="infos__title-component"
+                data-testid="progress-table-row-item-label-component"
+              />
               <p
+                v-else
                 :class="[
                   'infos__title',
                   { 'infos__title--muted': props.labelMuted },
@@ -104,10 +111,13 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue';
+
 import NativeProgress from './insights/charts/NativeProgress.vue';
 
 export interface BaseProgressTableRowItem {
   label: string;
+  labelComponent?: Component;
   subtitle?: string;
   value: number;
   description: string;
@@ -202,6 +212,11 @@ const handleExpand = () => {
           flex-direction: column;
         }
 
+        &-component {
+          display: flex;
+          align-items: center;
+        }
+
         &--muted {
           color: $unnnic-color-fg-muted;
         }
@@ -279,4 +294,3 @@ const handleExpand = () => {
   }
 }
 </style>
-style>

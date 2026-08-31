@@ -125,6 +125,28 @@ describe('ProgressTable', () => {
       });
     });
 
+    it('should pass labelComponent prop to ProgressItem components', async () => {
+      const LabelStub = {
+        name: 'LabelStub',
+        template: '<span>Channel icon</span>',
+      };
+
+      await wrapper.setProps({
+        progressItems: [
+          {
+            label: 'whatsapp',
+            value: 75,
+            description: '75',
+            labelComponent: LabelStub,
+          },
+        ],
+      });
+
+      expect(progressTableItems()[0].props().labelComponent.name).toBe(
+        'LabelStub',
+      );
+    });
+
     it('should handle subItemsDescription prop correctly', async () => {
       const testDescription = 'test items';
       await wrapper.setProps({ subItemsDescription: testDescription });

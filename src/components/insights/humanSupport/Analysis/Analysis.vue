@@ -14,6 +14,9 @@
       <VolumePerTagAndQueueWidget context="analysis" />
     </LazyWidget>
     <LazyWidget>
+      <VolumePerChannelWidget context="analysis" />
+    </LazyWidget>
+    <LazyWidget>
       <CsatRatings
         type="analysis"
         data-testid="analysis-csat-ratings"
@@ -33,6 +36,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedAnalysis from './DetailedAnalysis.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
+import VolumePerChannelWidget from '../CommonWidgets/VolumePerChannel/VolumePerChannel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 import { useProject } from '@/store/modules/project';

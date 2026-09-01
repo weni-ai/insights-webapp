@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import dotenv from 'dotenv';
 import { defineWeniConfig } from '@weni/rspack-config';
 import pkg from './package.json' with { type: 'json' };
@@ -14,6 +15,14 @@ export default defineWeniConfig({
   postcss: {
     prefix: '.insights-webapp',
   },
+  aliases: connectUrl
+    ? {}
+    : {
+        'connect/sharedStore': resolve(
+          import.meta.dirname,
+          'src/utils/hostSharedStore.js',
+        ),
+      },
   federation: {
     name: 'insights',
     exposes: connectUrl

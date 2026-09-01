@@ -552,6 +552,44 @@
     "tags": {
       "label": "Tags",
       "placeholder": "Select a tag"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Departments"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Department"
+    },
+    "filters": {
+      "sector": "Department",
+      "select_sector": "Select a department",
+      "all_sectors": "All departments"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Department"
+      },
+      "in_awaiting": {
+        "sector": "Department"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Department"
+      },
+      "disabled_text": "Enable CSAT to track overall ratings by department, queue, and representative"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Queue and department deleted from project",
+      "tag_and_sector": "Tag and department deleted from project",
+      "sector": "Department deleted from project",
+      "volume_per_queue": {
+        "setup_description": "Create queues by department to monitor more data"
+      },
+      "volume_per_tag": {
+        "setup_description": "Add tags to departments to track more data"
+      }
     }
   },
   "key": "Key",

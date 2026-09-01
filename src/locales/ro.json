@@ -552,6 +552,44 @@
     "tags": {
       "label": "Etichete",
       "placeholder": "Alege o etichetă"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Departamente"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Departament"
+    },
+    "filters": {
+      "sector": "Departament",
+      "select_sector": "Selectează un departament",
+      "all_sectors": "Toate departamentele"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Departament"
+      },
+      "in_awaiting": {
+        "sector": "Departament"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Departament"
+      },
+      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe departament, coadă și reprezentant"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Coada și departamentul au fost șterse din proiect",
+      "tag_and_sector": "Eticheta și departamentul au fost șterse din proiect",
+      "sector": "Departamentul a fost șters din proiect",
+      "volume_per_queue": {
+        "setup_description": "Creează cozi pe departamente pentru a monitoriza mai multe date"
+      },
+      "volume_per_tag": {
+        "setup_description": "Adaugă etichete la departamente pentru a urmări mai multe date"
+      }
     }
   },
   "key": "Cheie",
@@ -898,13 +936,13 @@
     }
   },
   "currency_options": {
-    "ARS": "$ - Peso argentinian",
+    "ARS": "$ - Pesos argentinian",
     "BRL": "R$ - Real brazilian",
     "CAD": "$ - Dolar canadian",
     "CHF": "CHF - Franc elvețian",
-    "CLP": "$ - Peso chilian",
+    "CLP": "$ - Pesos chilian",
     "CNY": "¥ - Yuan chinezesc",
-    "COP": "$ - Peso columbian",
+    "COP": "$ - Pesos columbian",
     "CZK": "Kč - Coroană cehă",
     "DKK": "kr - Coroană daneză",
     "EUR": "€ - Euro",
@@ -913,20 +951,20 @@
     "IDR": "Rp - Rupie indoneziană",
     "INR": "₹ - Rupie indiană",
     "JPY": "¥ - Yen japonez",
-    "KRW": "₩ - Won sud-coreean",
-    "MXN": "$ - Peso mexican",
+    "KRW": "₩ - Won coreean",
+    "MXN": "$ - Pesos mexican",
     "MYR": "RM - Ringgit malaezian",
     "NOK": "kr - Coroană norvegiană",
     "PEN": "S/ - Sol peruvian",
-    "PHP": "₱ - Peso filipinez",
+    "PHP": "₱ - Pesos filipinez",
     "PLN": "zł - Zlot polonez",
     "RON": "lei - Leu românesc",
     "SEK": "kr - Coroană suedeză",
-    "SGD": "S$ - Dolar Singapore",
+    "SGD": "S$ - Dolar singaporez",
     "THB": "฿ - Baht thailandez",
-    "TWD": "NT$ - Dolar taiwanez",
+    "TWD": "NT$ - Dolar din New Taiwan",
     "USD": "$ - Dolar american",
-    "UYU": "$U - Peso uruguayan",
+    "UYU": "$U - Pesos uruguayan",
     "VND": "₫ - Dong vietnamez"
   },
   "dashboard_onboarding": {

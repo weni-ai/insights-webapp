@@ -14,6 +14,7 @@ interface FinishedDataResult {
   response_time: number;
   duration: number;
   contact: string;
+  channel_name?: string;
   ticket_id: string;
   link: {
     url: string;

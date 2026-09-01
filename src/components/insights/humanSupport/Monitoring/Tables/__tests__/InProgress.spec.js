@@ -134,9 +134,10 @@ describe('InProgress', () => {
   describe('Headers', () => {
     it('generates correct headers with translations', () => {
       const headers = wrapper.vm.formattedHeaders;
-      expect(headers).toHaveLength(7);
+      expect(headers).toHaveLength(8);
       expect(headers[0].itemKey).toBe('duration');
       expect(headers[3].itemKey).toBe('agent');
+      expect(headers[6].itemKey).toBe('channel');
       expect(headers[3].title).toBe('Attendant');
       expect(headers.every((h) => h.isSortable)).toBe(true);
     });

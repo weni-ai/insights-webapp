@@ -14,7 +14,12 @@
       @click="handleExpand()"
     >
       <td
-        class="progress-table-row-item__label"
+        :class="[
+          'progress-table-row-item__label',
+          {
+            'progress-table-row-item__label--component': labelComponent,
+          },
+        ]"
         data-testid="progress-table-row-item-label"
       >
         <UnnnicIcon
@@ -39,8 +44,8 @@
           <section class="label__infos">
             <section class="infos__title-container">
               <component
-                v-if="labelComponent"
                 :is="labelComponent"
+                v-if="labelComponent"
                 class="infos__title-component"
                 data-testid="progress-table-row-item-label-component"
               />
@@ -180,6 +185,12 @@ const handleExpand = () => {
     align-items: center;
     gap: $unnnic-space-2;
 
+    &--component {
+      width: 48px;
+      min-width: 48px;
+      max-width: 48px;
+    }
+
     .label__icon {
       transform: rotate(-90deg);
       transition: transform 0.2s ease-in-out;
@@ -247,7 +258,6 @@ const handleExpand = () => {
 
   &__progress {
     width: 100%;
-
     padding: 0 $unnnic-space-4;
   }
 

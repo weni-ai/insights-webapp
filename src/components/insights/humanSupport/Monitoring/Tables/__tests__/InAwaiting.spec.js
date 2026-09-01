@@ -101,9 +101,9 @@ describe('InAwaiting', () => {
   describe('Headers', () => {
     it('generates correct headers with translations', () => {
       const headers = wrapper.vm.formattedHeaders;
-      expect(headers).toHaveLength(4);
+      expect(headers).toHaveLength(5);
       expect(headers[0].itemKey).toBe('awaiting_time');
-      expect(headers[3].itemKey).toBe('queue');
+      expect(headers[4].itemKey).toBe('channel');
       expect(headers.every((h) => h.isSortable)).toBe(true);
     });
   });

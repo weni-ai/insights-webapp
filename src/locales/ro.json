@@ -1251,7 +1251,8 @@
         "attendant": "Reprezentant",
         "sector": "Departament",
         "queue": "Coadă",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Stare",
@@ -1263,7 +1264,8 @@
         "awaiting_time": "Timp de așteptare",
         "contact": "Contact",
         "sector": "Departament",
-        "queue": "Coadă"
+        "queue": "Coadă",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Reprezentant",
@@ -1309,6 +1311,7 @@
         "agent": "Reprezentant",
         "sector": "Departament",
         "queue": "Coadă",
+        "channel": "Canal",
         "contact": "Contact",
         "ticket_id": "Protocol",
         "total_attendances": "Total chaturi de asistență",

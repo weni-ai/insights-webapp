@@ -25,6 +25,7 @@ interface InProgressDataResult {
   sector: string;
   queue: string;
   contact: string;
+  channel_name?: string;
   link: {
     url: string;
     type: string;

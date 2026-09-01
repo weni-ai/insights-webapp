@@ -79,6 +79,12 @@
     <template #body-agent="{ item }">
       {{ item.agent || item.agent_email }}
     </template>
+    <template #body-channel="{ item }">
+      <ChannelIcon
+        v-if="item.channel_name"
+        :channel="item.channel_name"
+      />
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -101,6 +107,7 @@ import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 
+import ChannelIcon from '@/components/insights/humanSupport/Common/ChannelIcons/ChannelIcon.vue';
 import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
 
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
@@ -267,6 +274,7 @@ const formattedHeaders = computed(() => {
     createHeader('agent', 'attendant'),
     createHeader('sector'),
     createHeader('queue'),
+    createHeader('channel'),
     createHeader('contact'),
   ];
 });

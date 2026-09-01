@@ -1319,6 +1319,9 @@
         "csat_rating": "CSAT"
       }
     },
+    "channels": {
+      "others": "Others"
+    },
     "analyze": {
       "title": "În curând: Noua interfață de Analiză",
       "description": "Aici poți explora date istorice cu filtre de timp pentru a identifica modele și a lua decizii strategice. Pregătim această nouă funcționalitate pentru tine!",

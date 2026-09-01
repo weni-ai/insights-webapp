@@ -7,13 +7,15 @@ import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import api from '@/services/api/resources/metrics';
 import { format, subDays } from 'date-fns';
 
-const useSharedStoreMock = vi.fn(() => ({
-  auth: { token: 'mock-token' },
-  current: { project: { uuid: 'mock-uuid' } },
+const { hostSharedStoreMock } = vi.hoisted(() => ({
+  hostSharedStoreMock: {
+    auth: { token: 'mock-token' },
+    current: { project: { uuid: 'mock-uuid' } },
+  },
 }));
 
-vi.mock('connect/sharedStore', () => ({
-  useSharedStore: useSharedStoreMock,
+vi.mock('@/utils/hostSharedStore', () => ({
+  hostSharedStore: hostSharedStoreMock,
 }));
 
 vi.mock('@/utils/time', async (importOriginal) => {
@@ -66,6 +68,8 @@ describe('DashboardCommerce', () => {
   const consoleSpy = vi.spyOn(console, 'error');
 
   beforeEach(async () => {
+    hostSharedStoreMock.auth.token = 'mock-token';
+    hostSharedStoreMock.current.project.uuid = 'mock-uuid';
     api.getMetrics.mockClear();
 
     wrapper = mount(DashboardCommerce, {
@@ -177,10 +181,8 @@ describe('DashboardCommerce', () => {
     it('does not fetch metrics when token is not present', async () => {
       api.getMetrics.mockClear();
 
-      useSharedStoreMock.mockResolvedValueOnce(() => ({
-        auth: { token: null },
-        current: { project: { uuid: null } },
-      }));
+      hostSharedStoreMock.auth.token = null;
+      hostSharedStoreMock.current.project.uuid = null;
 
       wrapper = mount(DashboardCommerce, {
         propsData: {},

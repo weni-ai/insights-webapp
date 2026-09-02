@@ -1238,10 +1238,8 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoring",
-    "monitoring_tooltip": "Track the support chat interactions of the day in real time. Identify bottlenecks and make quick decisions to optimize the operation.",
-    "analysis": "Analytics",
-    "analysis_tooltip": "Explore the performance of closed rooms over different time periods. Discover patterns, trends, and opportunities for improving your team.",
+    "live": "Live",
+    "historical_data": "Historical data",
     "support_status": {
       "title": "Status of support chats",
       "is_waiting": "Waiting",

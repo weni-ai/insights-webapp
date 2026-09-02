@@ -1238,10 +1238,8 @@
   },
   "human_support_dashboard": {
     "title": "Asistență umană",
-    "monitoring": "Monitorizare",
-    "monitoring_tooltip": "Monitorizează în timp real interacțiunile din chatul de asistență ale zilei. Identifică blocajele şi ia decizii rapide pentru a optimiza operațiunea.",
-    "analysis": "Analiză",
-    "analysis_tooltip": "Explorează performanța camerelor închise pe diferite perioade de timp. Descoperă tipare, tendințe și oportunități pentru a-ți îmbunătăți echipa.",
+    "live": "În direct",
+    "historical_data": "Date istorice",
     "support_status": {
       "title": "Starea chaturilor de asistență",
       "is_waiting": "În așteptare",

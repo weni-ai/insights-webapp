@@ -71,13 +71,11 @@ describe('HumanSupport.vue', () => {
     it('should have correct tabs configuration', () => {
       expect(wrapper.vm.tabs).toEqual({
         monitoring: {
-          name: 'monitoring',
-          tooltip: 'human_support_dashboard.monitoring_tooltip',
+          name: 'live',
           component: expect.any(Object),
         },
         analysis: {
-          name: 'analysis',
-          tooltip: 'human_support_dashboard.analysis_tooltip',
+          name: 'historical_data',
           component: expect.any(Object),
         },
       });
@@ -146,8 +144,8 @@ describe('HumanSupport.vue', () => {
   describe('Component Integration', () => {
     it('should have correct tab configuration structure', () => {
       expect(Object.keys(wrapper.vm.tabs)).toEqual(['monitoring', 'analysis']);
-      expect(wrapper.vm.tabs.monitoring.name).toBe('monitoring');
-      expect(wrapper.vm.tabs.analysis.name).toBe('analysis');
+      expect(wrapper.vm.tabs.monitoring.name).toBe('live');
+      expect(wrapper.vm.tabs.analysis.name).toBe('historical_data');
     });
 
     it('should render tab component correctly', () => {
@@ -212,60 +210,6 @@ describe('HumanSupport.vue', () => {
       wrapper.vm.handleChangeTab('monitoring');
       await nextTick();
       expect(wrapper.vm.activeTab).toBe('monitoring');
-    });
-  });
-
-  describe('Tooltip and Icon', () => {
-    it('should render tab head content with correct structure', () => {
-      const tabHeadContent = wrapper.findAll('.tab-head-content');
-      expect(tabHeadContent.length).toBe(2);
-    });
-
-    it('should render tab head content icon wrapper for each tab', () => {
-      const iconWrappers = wrapper.findAll('.tab-head-content-icon');
-      expect(iconWrappers.length).toBe(2);
-    });
-
-    it('should render icon for each tab', () => {
-      const icons = wrapper.findAll('[data-test-id="question_mark"]');
-      expect(icons.length).toBe(2);
-    });
-
-    it('should render tooltip container for each tab', () => {
-      const tooltips = wrapper.findAll('[data-testid="tooltip-trigger"]');
-      expect(tooltips.length).toBe(2);
-    });
-
-    it('should render tab head content for monitoring', () => {
-      const tabHeadContents = wrapper.findAll('.tab-head-content');
-      expect(tabHeadContents.length).toBeGreaterThanOrEqual(1);
-      expect(tabHeadContents[0].exists()).toBe(true);
-    });
-
-    it('should render tab head content for analysis', () => {
-      const tabHeadContents = wrapper.findAll('.tab-head-content');
-      expect(tabHeadContents.length).toBe(2);
-      expect(tabHeadContents[1].exists()).toBe(true);
-    });
-
-    it('should have correct tabs configuration with tooltip property', () => {
-      expect(wrapper.vm.tabs.monitoring.tooltip).toBe(
-        'human_support_dashboard.monitoring_tooltip',
-      );
-      expect(wrapper.vm.tabs.analysis.tooltip).toBe(
-        'human_support_dashboard.analysis_tooltip',
-      );
-    });
-
-    it('should include icon inside tooltip container', () => {
-      const tooltipContainers = wrapper.findAll(
-        '[data-test-id="tab-head-content-tooltip"]',
-      );
-
-      tooltipContainers.forEach((container) => {
-        const icon = container.find('[data-test-id="question_mark"]');
-        expect(icon.exists()).toBe(true);
-      });
     });
   });
 });

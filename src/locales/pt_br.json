@@ -474,11 +474,11 @@
         "title": "Receita atribuída"
       },
       "ctwa_conversations": {
-        "description": "Iniciadas por anúncios no período",
-        "title": "Conversas CTWA"
+        "description": "Iniciadas a partir de anúncios no período",
+        "title": "Conversas de Click to WhatsApp"
       },
       "organic_conversations": {
-        "description": "Linha de base de comparação (não anúncio)",
+        "description": "Base de comparação (sem anúncio)",
         "title": "Conversas orgânicas"
       }
     },
@@ -498,11 +498,11 @@
     "sales_funnel": {
       "converted": "Convertidas",
       "qualified": "Qualificadas",
-      "qualified_help": "Contatos em que o agente identificou intenção de compra. Isso pode incluir ações como adicionar um produto ao carrinho ou perguntar sobre um produto, entre outros sinais de intenção.",
+      "qualified_help": "Contatos em que o agente identificou intenção de compra. Isso pode incluir ações como adicionar um produto ao carrinho ou perguntar sobre um produto.",
       "started": "Conversas iniciadas",
       "title": "Funil de vendas"
     },
-    "title": "Clique para WhatsApp"
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -1478,5 +1478,13 @@
     "privacy_note": "Somente os dados aos quais você tem acesso estão disponíveis pelo MCP.",
     "not_now": "Agora não",
     "view_setup_guide": "Ver guia de configuração"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campanha",
+    "conversations": "Conversas",
+    "conversions": "Conversões",
+    "qualified": "Qualificadas",
+    "revenue": "Receita",
+    "title": "Desempenho por campanha"
   }
 }

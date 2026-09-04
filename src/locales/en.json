@@ -498,7 +498,7 @@
     "sales_funnel": {
       "converted": "Converted",
       "qualified": "Qualified",
-      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product, among other intent signals.",
+      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product.",
       "started": "Conversations started",
       "title": "Sales funnel"
     },
@@ -1478,5 +1478,13 @@
     "privacy_note": "Only data you can access is available through MCP.",
     "not_now": "Maybe later",
     "view_setup_guide": "View setup guide"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campaign",
+    "conversations": "Conversations",
+    "conversions": "Conversions",
+    "qualified": "Qualified",
+    "revenue": "Revenue",
+    "title": "Performance by campaign"
   }
 }

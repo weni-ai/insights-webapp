@@ -470,15 +470,15 @@
   "ctwa_dashboard": {
     "cards": {
       "attributed_revenue": {
-        "description": "Valoarea medie a comenzii {avg}",
+        "description": "Valoare medie a comenzii {avg}",
         "title": "Venit atribuit"
       },
       "ctwa_conversations": {
-        "description": "Inițiate din anunțuri în această perioadă",
+        "description": "Inițiate din reclame în perioada",
         "title": "Conversații CTWA"
       },
       "organic_conversations": {
-        "description": "Bază de comparație (fără anunț)",
+        "description": "Referință de comparație (non-anunț)",
         "title": "Conversații organice"
       }
     },
@@ -496,13 +496,13 @@
       "title": "Performanță pe campanie"
     },
     "sales_funnel": {
-      "converted": "Convertite",
-      "qualified": "Calificate",
-      "qualified_help": "Contacte în care agentul a identificat intenția de cumpărare. Acest lucru poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs, printre alte semnale de intenție.",
-      "started": "Conversații începute",
+      "converted": "Convertit",
+      "qualified": "Calificat",
+      "qualified_help": "Contacte pentru care agentul a identificat intenția de achiziție. Aceasta poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs.",
+      "started": "Conversații inițiate",
       "title": "Pâlnie de vânzări"
     },
-    "title": "Clic pentru WhatsApp"
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Stare",
@@ -1478,5 +1478,13 @@
     "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
     "not_now": "Poate mai târziu",
     "view_setup_guide": "Vezi ghidul de configurare"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campanie",
+    "conversations": "Conversații",
+    "conversions": "Conversii",
+    "qualified": "Calificate",
+    "revenue": "Venituri",
+    "title": "Performanță pe campanie"
   }
 }

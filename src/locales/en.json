@@ -1258,11 +1258,17 @@
     },
     "time_metrics": {
       "title": "Current time metrics",
-      "average_time_is_waiting": "Average wait time",
-      "average_time_first_response": "Average time to 1st response",
-      "average_response_time": "Average response time",
-      "average_time_chat": "Average chat duration",
+      "average_time_is_waiting": "AWT",
+      "average_time_first_response": "MFRT",
+      "average_response_time": "ART",
+      "average_time_chat": "AHT",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Average Wait Time",
+        "average_time_first_response": "Mean First Response Time",
+        "average_response_time": "Average Response Time",
+        "average_time_chat": "Avarege Handle Time"
+      },
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in queue before support chat start",
         "average_time_first_response": "Average time before the representative sends the first message after the room is assigned",

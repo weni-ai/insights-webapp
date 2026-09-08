@@ -16,6 +16,7 @@
     :fetchMethod="fetchMethod"
     :context="props.context"
     :showConfig="props.showConfig"
+    :hiddenTabs="props.context === 'analysis'"
     @click:setup="redirectToChatsConfig"
   />
 </template>
@@ -57,10 +58,7 @@ const props = withDefaults(defineProps<PerTagProps>(), {
 
 const tabs = (ctx: WidgetContext): VolumeBarListTabItem[] => {
   if (ctx === 'monitoring') {
-    return [
-      { name: t('in_progress'), key: 'ongoing' },
-      { name: t('finished'), key: 'closed' },
-    ];
+    return [{ name: t('in_progress'), key: 'ongoing' }];
   }
   return [{ name: t('finished'), key: 'closed' }];
 };

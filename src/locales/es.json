@@ -1240,6 +1240,10 @@
     "title": "Live desk",
     "live": "En vivo",
     "historical_data": "Datos históricos",
+    "news_disclaimer": {
+      "title": "¡Novedad en los dashboards!",
+      "description": "El dashboard <i>Monitoreo</i> ahora se llama <i>En vivo</i> y muestra datos en tiempo real sobre representantes y chats de soporte en espera o en curso. Para analizar chats de soporte ya finalizados, incluso los realizados hoy, accede a <i>Datos históricos</i>."
+    },
     "support_status": {
       "title": "Status de los chats de soporte",
       "is_waiting": "Esperando",

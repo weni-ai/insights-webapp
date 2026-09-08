@@ -1240,6 +1240,10 @@
     "title": "Live desk",
     "live": "Ao vivo",
     "historical_data": "Dados históricos",
+    "news_disclaimer": {
+      "title": "Novidade nos dashboards!",
+      "description": "O dashboard <i>Monitoramento</i> agora se chama <i>Ao vivo</i> e mostra dados em tempo real sobre atendentes e atendimentos em espera ou em andamento. Para analisar atendimentos já finalizados, inclusive os realizados hoje, acesse <i>Dados históricos</i>."
+    },
     "support_status": {
       "title": "Status dos atendimentos",
       "is_waiting": "Em espera",

@@ -1258,11 +1258,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
-      "average_time_is_waiting": "Média de espera",
-      "average_time_first_response": "Média para 1ª resposta",
-      "average_response_time": "Tempo médio de resposta",
-      "average_time_chat": "Duração média",
+      "average_time_is_waiting": "TME",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMA",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Tempo Médio de Espera",
+        "average_time_first_response": "Tempo Médio de Primera Resposta",
+        "average_response_time": "Tempo Médio de Resposta",
+        "average_time_chat": "Tempo Médio de Atendimento"
+      },
       "tooltips": {
         "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
         "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",

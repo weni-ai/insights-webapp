@@ -25,16 +25,7 @@
       <TimeMetrics data-testid="monitoring-time-metrics" />
     </LazyWidget>
     <LazyWidget>
-      <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
-    </LazyWidget>
-    <LazyWidget>
       <VolumePerTagAndQueueWidget context="monitoring" />
-    </LazyWidget>
-    <LazyWidget>
-      <CsatRatings
-        type="monitoring"
-        data-testid="monitoring-csat-ratings"
-      />
     </LazyWidget>
     <LazyWidget :forceVisible="forceLoadDetailed">
       <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
@@ -56,7 +47,6 @@ import { useMetricGoalsSocket } from '@/composables/useMetricGoalsSocket';
 
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
-import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
@@ -200,6 +190,6 @@ watch(autoRefresh, () => {
 .monitoring {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-space-8;
+  gap: $unnnic-space-6;
 }
 </style>

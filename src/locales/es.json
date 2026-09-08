@@ -1258,11 +1258,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tiempo actuales",
-      "average_time_is_waiting": "Espera promedio",
-      "average_time_first_response": "Promedio de 1ª respuesta",
-      "average_response_time": "Tiempo promedio de respuesta",
-      "average_time_chat": "Duración promedio",
+      "average_time_is_waiting": "TME",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMA",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Tiempo Medio de Espera",
+        "average_time_first_response": "Tiempo Medio de Primera Respuesta",
+        "average_response_time": "Tiempo Medio de Respuesta",
+        "average_time_chat": "Tiempo Medio de Atención"
+      },
       "tooltips": {
         "average_time_is_waiting": "Tiempo promedio que los contactos esperan en cola antes del inicio del chat de soporte",
         "average_time_first_response": "Tiempo promedio antes de que el representante envíe el primer mensaje tras la asignación de la sala",

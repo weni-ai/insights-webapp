@@ -93,8 +93,8 @@ const { currentDashboard, currentDashboardFilters, appliedFilters } =
 const { emptyTemplates, showSearchTemplateMetaModal } =
   storeToRefs(metaTemplateStore);
 
-const handlerShowSearchTemplateModal = (...args: any[]) =>
-  metaTemplateStore.handlerShowSearchTemplateModal(...args);
+const handlerShowSearchTemplateModal = (showModal: boolean) =>
+  metaTemplateStore.handlerShowSearchTemplateModal(showModal);
 
 const filterModalOpened = ref(false);
 
@@ -123,7 +123,8 @@ const isRenderDynamicFilter = computed(
 const yesterdayFormatted = computed(() => getYesterdayDate().dmFormat);
 
 const hasManyFilters = computed(
-  () => currentDashboardFilters.value?.length > 1,
+  () =>
+    currentDashboardFilters.value?.length > 1 && !isHumanSupportDashboard.value,
 );
 
 const appliedFiltersLength = computed(() => {
@@ -143,6 +144,7 @@ const filter = computed(() => {
 
   if (currentFilter.type === 'date_range') {
     const templateShortcuts = [
+      { key: 'today', id: 'today' },
       { key: 'last_7_days', id: 'last-7-days' },
       { key: 'last_14_days', id: 'last-14-days' },
       { key: 'last_30_days', id: 'last-30-days' },
@@ -167,6 +169,7 @@ const filter = computed(() => {
     if (isConversationalDashboard.value) {
       const dateParam = { date: yesterdayFormatted.value };
       const conversationalShortcuts = [
+        { key: 'today_conversational', id: 'today' },
         { key: 'last_7_days_conversational', id: 'last-7-days' },
         { key: 'last_14_days_conversational', id: 'last-14-days' },
         { key: 'last_30_days_conversational', id: 'last-30-days' },

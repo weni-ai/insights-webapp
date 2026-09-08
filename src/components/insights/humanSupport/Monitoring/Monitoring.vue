@@ -5,6 +5,16 @@
     data-testid="monitoring"
   >
     <UnnnicDisclaimer
+      enableHtml
+      :title="$t('human_support_dashboard.news_disclaimer.title')"
+    >
+      <template #description>
+        <div
+          v-html="$t('human_support_dashboard.news_disclaimer.description')"
+        />
+      </template>
+    </UnnnicDisclaimer>
+    <UnnnicDisclaimer
       v-if="!hasSectorsConfigured"
       :description="$t('human_support_dashboard.setup.disclaimer')"
     />

@@ -48,7 +48,6 @@ import { useMetricGoalsSocket } from '@/composables/useMetricGoalsSocket';
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
-import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 

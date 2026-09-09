@@ -38,4 +38,10 @@ export default defineWeniConfig({
       connect: connectUrl,
     },
   },
+  sharedDeps: {
+    'vue-router': {
+      singleton: true,
+      requiredVersion: pkg.dependencies['vue-router'],
+    },
+  },
 });

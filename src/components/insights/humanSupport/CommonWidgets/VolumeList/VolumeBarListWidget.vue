@@ -11,6 +11,7 @@
     :emptyDataText="emptyDataText"
     :setupTitle="props.setupTitle"
     :setupDescription="props.setupDescription"
+    :hiddenTabs="props.hiddenTabs"
     @tab-change="handleTabChange"
     @see-all="handleSeeAll"
     @click:setup="emit('click:setup')"
@@ -102,6 +103,7 @@ interface VolumeBarListWidgetProps {
       subtitleMuted?: boolean;
     },
   ) => Component | undefined;
+  hiddenTabs?: boolean;
 }
 
 const humanSupportStore = useHumanSupport();
@@ -121,6 +123,7 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   mock: () => [],
   mockItemsCount: 0,
   labelComponentResolver: undefined,
+  hiddenTabs: false,
 });
 
 const tabsList = computed(() => props.tabs(props.context));

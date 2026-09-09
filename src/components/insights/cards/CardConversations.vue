@@ -13,12 +13,20 @@
     @click="$emit('click')"
   >
     <section class="card-conversations__title">
-      <p
+      <UnnnicToolTip
         class="card-conversations__text"
-        data-testid="card-title"
+        :enabled="!!titleTooltip"
+        :text="titleTooltip"
+        side="top"
       >
-        {{ title }}
-      </p>
+        <p
+          class="card-conversations__text"
+          data-testid="card-title"
+        >
+          {{ title }}
+        </p>
+      </UnnnicToolTip>
+
       <UnnnicToolTip
         v-if="tooltipInfo"
         enabled
@@ -30,9 +38,8 @@
         <UnnnicIcon
           data-testid="card-conversations-info-icon"
           class="card-conversations__info-icon"
-          icon="info"
+          icon="help"
           size="sm"
-          filled
           scheme="fg-muted"
         />
       </UnnnicToolTip>
@@ -113,6 +120,7 @@
 interface Props {
   class?: string;
   title: string;
+  titleTooltip?: string;
   value: string;
   borderRadius?: 'full' | 'left' | 'right' | 'none';
   valueDescription?: string;
@@ -172,6 +180,7 @@ defineEmits<{
     display: flex;
     width: 100%;
     align-items: center;
+    justify-content: space-between;
     gap: $unnnic-space-4;
   }
 

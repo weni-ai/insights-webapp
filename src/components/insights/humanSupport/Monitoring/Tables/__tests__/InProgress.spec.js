@@ -13,6 +13,7 @@ vi.mock('date-fns', () => ({
 vi.mock('@/utils/time', () => ({
   formatSecondsToTime: vi.fn((seconds) => `${seconds}s`),
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
 
 const mockInfiniteScroll = {
@@ -209,6 +210,17 @@ describe('InProgress', () => {
       vi.clearAllMocks();
       const store = wrapper.vm.$pinia.state.value.humanSupport;
       store.appliedFilters = { test: 'value' };
+      await wrapper.vm.$nextTick();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('reloads data when attendant detail filter changes after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedDetailFilters = {
+        ...store.appliedDetailFilters,
+        agent: { value: 'agent@test.com', label: 'Agent' },
+      };
       await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
     });

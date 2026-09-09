@@ -5,6 +5,16 @@
     data-testid="monitoring"
   >
     <UnnnicDisclaimer
+      enableHtml
+      :title="$t('human_support_dashboard.news_disclaimer.title')"
+    >
+      <template #description>
+        <div
+          v-html="$t('human_support_dashboard.news_disclaimer.description')"
+        />
+      </template>
+    </UnnnicDisclaimer>
+    <UnnnicDisclaimer
       v-if="!hasSectorsConfigured"
       :description="$t('human_support_dashboard.setup.disclaimer')"
     />
@@ -15,19 +25,10 @@
       <TimeMetrics data-testid="monitoring-time-metrics" />
     </LazyWidget>
     <LazyWidget>
-      <ServicesOpenByHour data-testid="monitoring-services-open-by-hour" />
-    </LazyWidget>
-    <LazyWidget>
       <VolumePerTagAndQueueWidget context="monitoring" />
     </LazyWidget>
     <LazyWidget>
       <VolumePerChannelWidget context="monitoring" />
-    </LazyWidget>
-    <LazyWidget>
-      <CsatRatings
-        type="monitoring"
-        data-testid="monitoring-csat-ratings"
-      />
     </LazyWidget>
     <LazyWidget :forceVisible="forceLoadDetailed">
       <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
@@ -49,9 +50,7 @@ import { useMetricGoalsSocket } from '@/composables/useMetricGoalsSocket';
 
 import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
-import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
-import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 import VolumePerChannelWidget from '../CommonWidgets/VolumePerChannel/VolumePerChannel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
@@ -194,6 +193,6 @@ watch(autoRefresh, () => {
 .monitoring {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-space-8;
+  gap: $unnnic-space-6;
 }
 </style>

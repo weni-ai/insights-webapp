@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch, inject } from 'vue';
 import { useHumanSupportMonitoring } from './monitoring';
 import { useHumanSupportAnalysis } from './analysis';
-import { getLastNDays } from '@/utils/time';
+import { getTodayDate } from '@/utils/time';
 import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
 import i18n from '@/utils/plugins/i18n';
@@ -62,7 +62,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
           start: query.start_date,
           end: query.end_date,
         }
-      : getLastNDays(7);
+      : getTodayDate();
 
   const activeTab = ref<ActiveTab>('monitoring');
   const sectors = ref<Filter[]>([]);

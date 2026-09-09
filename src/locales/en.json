@@ -1240,10 +1240,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoring",
-    "monitoring_tooltip": "Track the support chat interactions of the day in real time. Identify bottlenecks and make quick decisions to optimize the operation.",
-    "analysis": "Analytics",
-    "analysis_tooltip": "Explore the performance of closed rooms over different time periods. Discover patterns, trends, and opportunities for improving your team.",
+    "live": "Live",
+    "historical_data": "Historical data",
+    "news_disclaimer": {
+      "title": "New on the dashboards!",
+      "description": "The <i>Monitoring</i> dashboard is now called <i>Live</i> and shows real-time data on representatives and on support chats that are waiting or in progress. To analyze completed support chats, including those from today, go to <i>Historical data</i>."
+    },
     "support_status": {
       "title": "Status of support chats",
       "is_waiting": "Waiting",
@@ -1258,11 +1260,17 @@
     },
     "time_metrics": {
       "title": "Current time metrics",
-      "average_time_is_waiting": "Average wait time",
-      "average_time_first_response": "Average time to 1st response",
-      "average_response_time": "Average response time",
-      "average_time_chat": "Average chat duration",
+      "average_time_is_waiting": "AWT",
+      "average_time_first_response": "MFRT",
+      "average_response_time": "ART",
+      "average_time_chat": "AHT",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Average Wait Time",
+        "average_time_first_response": "Mean First Response Time",
+        "average_response_time": "Average Response Time",
+        "average_time_chat": "Avarege Handle Time"
+      },
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in queue before support chat start",
         "average_time_first_response": "Average time before the representative sends the first message after the room is assigned",

@@ -42,6 +42,7 @@ interface QueryParams {
   limit?: number;
   offset?: number;
   contact?: string;
+  agent?: string;
 }
 
 export default {
@@ -66,6 +67,10 @@ export default {
       ...formattedAppliedFilters,
       ...params,
     };
+
+    if (appliedDetailFilters.agent?.value) {
+      formattedParams.agent = appliedDetailFilters.agent.value;
+    }
 
     if (appliedDetailFilters.contactInput?.value) {
       formattedParams.contact = appliedDetailFilters.contactInput.value;

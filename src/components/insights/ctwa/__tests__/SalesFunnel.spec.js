@@ -130,7 +130,7 @@ describe('SalesFunnel', () => {
         displayValue: '37.4%',
         displaySecondary: '7180',
         tooltip:
-          'Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product, among other intent signals.',
+          'Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product.',
       }),
     );
     expect(items[2]).toEqual(

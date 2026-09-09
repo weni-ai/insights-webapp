@@ -1,7 +1,7 @@
 <template>
   <div
     id="app"
-    :class="`app-insights-${!sharedStore ? 'dev' : 'prod'}`"
+    :class="`app-insights-${!hostSharedStore ? 'dev' : 'prod'}`"
   >
     <CompleteOnboardingModal
       data-testid="complete-onboarding-modal"
@@ -40,17 +40,8 @@
   </div>
 </template>
 
-<script lang="ts">
-import { safeImport } from './utils/moduleFederation';
-
-const { useSharedStore } = await safeImport(
-  () => import('connect/sharedStore'),
-  'connect/sharedStore',
-);
-</script>
-
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
@@ -62,6 +53,7 @@ import { useProject } from './store/modules/project';
 import { useUser } from './store/modules/user';
 import { useFeatureFlag } from './store/modules/featureFlag';
 import { useCTWA } from './store/modules/ctwa';
+import { hostSharedStore } from './utils/hostSharedStore';
 
 import InsightsLayout from '@/layouts/InsightsLayout.vue';
 import IconLoading from './components/IconLoading.vue';
@@ -98,8 +90,6 @@ const { showCompleteOnboardingModal } = storeToRefs(onboardingStore);
 const insightsLayout = ref<any>(null);
 const showMcpNewsModal = ref(!moduleStorage.getItem('mcp_news_modal_seen'));
 
-const sharedStore = computed(() => useSharedStore?.());
-
 const handleCurrentDashboardUuidChange = async (
   newCurrentDashboardUuid?: string | null,
 ) => {
@@ -116,6 +106,8 @@ const handlerSetLanguage = (language: string) => {
 };
 
 const handlerSetProject = (projectUuid: string) => {
+  if (!projectUuid) return;
+
   moduleStorage.setItem('projectUuid', projectUuid);
   configStore.setProject({ uuid: projectUuid });
   configStore.loadProjectInfo();
@@ -169,9 +161,11 @@ const handlerTokenAndProjectUuid = async () => {
   const newProjectUuid = projectUuid || moduleStorage.getItem('projectUuid');
 
   configStore.setToken(authToken);
-  configStore.setProject({
-    uuid: newProjectUuid,
-  });
+  if (newProjectUuid) {
+    configStore.setProject({
+      uuid: newProjectUuid,
+    });
+  }
 
   const sessionUserEmail = parseJwt(authToken)?.email || null;
 
@@ -188,7 +182,7 @@ const setShowCompleteOnboardingModal = (show: boolean) =>
 watch(() => currentDashboard.value?.uuid, handleCurrentDashboardUuidChange);
 
 watch(
-  () => sharedStore.value?.user?.language,
+  () => hostSharedStore?.user?.language,
   (newLanguage) => {
     if (!newLanguage) return;
     handlerSetLanguage(newLanguage);
@@ -197,22 +191,22 @@ watch(
 );
 
 watch(
-  () => sharedStore.value?.current?.project,
-  (newProject) => {
-    if (!newProject) return;
-    handlerSetProject(newProject?.uuid);
-    handlerSetIsCommerce(newProject?.type === 2);
+  () => hostSharedStore?.current?.project?.uuid,
+  (newProjectUuid) => {
+    if (!newProjectUuid) return;
+    handlerSetProject(newProjectUuid);
+    handlerSetIsCommerce(hostSharedStore?.current?.project?.type === 2);
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 );
 
 watch(
-  () => sharedStore.value?.activeFederatedModules?.insights,
+  () => hostSharedStore?.isActiveFederatedModules?.insights,
   (isActive) => {
     if (isActive === undefined) return;
     configStore.setIsActiveRoute(isActive);
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 );
 
 watch(

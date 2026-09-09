@@ -17,14 +17,8 @@ import '@weni/unnnic-system/dist/style.css';
 
 import './styles/global.scss';
 
-import { safeImport, isFederatedModule } from './utils/moduleFederation';
-
-const { useSharedStore } = await safeImport(
-  () => import('connect/sharedStore'),
-  'connect/sharedStore',
-);
-
-const sharedStore = useSharedStore?.();
+import { isFederatedModule } from './utils/moduleFederation';
+import { hostSharedStore } from './utils/hostSharedStore';
 
 export default async function mountInsightsApp({
   containerId = 'app',
@@ -68,7 +62,10 @@ export default async function mountInsightsApp({
   return { app: appRef, router };
 }
 
-if (sharedStore && isFederatedModule) {
-  moduleStorage.setItem('token', sharedStore.auth.token);
-  moduleStorage.setItem('projectUuid', sharedStore.current.project.uuid);
+if (hostSharedStore && isFederatedModule) {
+  const token = hostSharedStore.auth?.token;
+  const projectUuid = hostSharedStore.current?.project?.uuid;
+
+  if (token) moduleStorage.setItem('token', token);
+  if (projectUuid) moduleStorage.setItem('projectUuid', projectUuid);
 }

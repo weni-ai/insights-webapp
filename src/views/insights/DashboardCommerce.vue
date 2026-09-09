@@ -78,6 +78,7 @@ import IconLoading from '@/components/IconLoading.vue';
 
 import api from '@/services/api/resources/metrics';
 import { getLastNDays, getTodayDate } from '@/utils/time';
+import { hostSharedStore } from '@/utils/hostSharedStore';
 
 interface MetricData {
   id: string;
@@ -193,14 +194,10 @@ const handleMaxDate = () => {
 };
 
 onMounted(() => {
-  import('connect/sharedStore').then(({ useSharedStore }) => {
-    const sharedStore = useSharedStore();
+  auth.token = hostSharedStore?.auth?.token;
+  auth.projectUuid = hostSharedStore?.current?.project?.uuid;
 
-    auth.token = sharedStore.auth?.token;
-    auth.projectUuid = sharedStore.current?.project?.uuid;
-
-    fetchMetrics();
-  });
+  fetchMetrics();
 });
 </script>
 

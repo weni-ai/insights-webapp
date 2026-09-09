@@ -13,7 +13,7 @@ import { useUser } from '@/store/modules/user';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import moment from 'moment';
 
-const { sharedStoreState, useSharedStore } = vi.hoisted(() => {
+const { sharedStoreState } = vi.hoisted(() => {
   const sharedStoreState = {
     auth: {
       token: 'mock-token',
@@ -24,22 +24,16 @@ const { sharedStoreState, useSharedStore } = vi.hoisted(() => {
     current: {
       project: null,
     },
-    activeFederatedModules: {
+    isActiveFederatedModules: {
       insights: undefined,
     },
   };
 
-  const useSharedStore = vi.fn(() => sharedStoreState);
-
-  return { sharedStoreState, useSharedStore };
+  return { sharedStoreState };
 });
 
-vi.mock('@/utils/moduleFederation', () => ({
-  isFederatedModule: true,
-  safeImport: vi.fn(async () => ({
-    useSharedStore,
-  })),
-  safeAsyncComponent: vi.fn(),
+vi.mock('@/utils/hostSharedStore', () => ({
+  hostSharedStore: sharedStoreState,
 }));
 
 vi.mock('@/services/api', () => {
@@ -173,7 +167,7 @@ describe('App', () => {
 
     sharedStoreState.user = { language: null };
     sharedStoreState.current = { project: null };
-    sharedStoreState.activeFederatedModules = { insights: undefined };
+    sharedStoreState.isActiveFederatedModules = { insights: undefined };
 
     Object.defineProperty(window, 'localStorage', {
       value: localStorageMock,
@@ -360,9 +354,43 @@ describe('App', () => {
       expect(setIsCommerceSpy).toHaveBeenCalledWith(false);
     });
 
-    it('should set isActiveRoute when activeFederatedModules.insights changes', async () => {
+    it('should not set project when sharedStore project uuid is undefined', async () => {
       wrapper.unmount();
-      sharedStoreState.activeFederatedModules = { insights: true };
+      sharedStoreState.current = {
+        project: {
+          uuid: undefined,
+          type: 1,
+        },
+      };
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      configStore = useConfig(pinia);
+      const setProjectSpy = vi.spyOn(configStore, 'setProject');
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+      await flushPromises();
+
+      expect(setProjectSpy).not.toHaveBeenCalledWith({ uuid: undefined });
+    });
+
+    it('should set isActiveRoute when isActiveFederatedModules.insights changes', async () => {
+      wrapper.unmount();
+      sharedStoreState.isActiveFederatedModules = { insights: true };
 
       const pinia = createTestingPinia({
         createSpy: vi.fn,

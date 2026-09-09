@@ -26,7 +26,9 @@ export const useConfig = defineStore('config', {
   actions: {
     setProject(project) {
       this.project = project;
-      moduleStorage.setItem('projectUuid', project.uuid);
+      if (project?.uuid) {
+        moduleStorage.setItem('projectUuid', project.uuid);
+      }
     },
     setToken(token: string) {
       this.token = token;

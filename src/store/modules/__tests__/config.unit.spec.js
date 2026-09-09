@@ -38,6 +38,12 @@ describe('useConfig Store', () => {
       expect(store.project).toEqual(project);
       expect(moduleStorage.getItem('projectUuid')).toBe('project-123');
     });
+
+    it('should not persist uuid when it is missing', () => {
+      store.setProject({ name: 'No uuid' });
+
+      expect(moduleStorage.getItem('projectUuid')).toBe(null);
+    });
   });
 
   describe('projectCurrency', () => {

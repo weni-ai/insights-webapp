@@ -7,10 +7,13 @@ import { ref } from 'vue';
 import Monitoring from '../Monitoring.vue';
 
 const autoRefreshRef = ref(false);
+const forceLoadDetailedRef = ref(false);
 const mockHumanSupportMonitoringStore = {
   $id: 'humanSupportMonitoring',
   setRefreshDataMonitoring: vi.fn(),
+  loadTimeMetricsData: vi.fn(),
   autoRefresh: autoRefreshRef,
+  forceLoadDetailed: forceLoadDetailedRef,
 };
 const hasSectorsConfiguredRef = ref(true);
 const hasTagsConfiguredRef = ref(false);
@@ -51,7 +54,10 @@ vi.mock('pinia', async (importOriginal) => {
     ...actual,
     storeToRefs: (store) => {
       if (store?.$id === 'humanSupportMonitoring') {
-        return { autoRefresh: autoRefreshRef };
+        return {
+          autoRefresh: autoRefreshRef,
+          forceLoadDetailed: forceLoadDetailedRef,
+        };
       }
       if (store?.$id === 'project') {
         return {
@@ -94,10 +100,11 @@ describe('Monitoring', () => {
         stubs: {
           StatusCards: true,
           TimeMetrics: true,
-          ServicesOpenByHour: true,
           DetailedMonitoring: true,
           CsatRatings: true,
           VolumePerTagAndQueueWidget: true,
+          UnnnicDisclaimer: true,
+          LazyWidget: { template: '<div><slot /></div>' },
         },
       },
     });
@@ -139,7 +146,7 @@ describe('Monitoring', () => {
         true,
       );
       expect(
-        wrapper.findComponent({ name: 'ServicesOpenByHour' }).exists(),
+        wrapper.findComponent({ name: 'VolumePerTagAndQueueWidget' }).exists(),
       ).toBe(true);
       expect(
         wrapper.findComponent({ name: 'DetailedMonitoring' }).exists(),
@@ -149,9 +156,6 @@ describe('Monitoring', () => {
     it('should have correct data-testids for child components', () => {
       const statusCards = wrapper.findComponent({ name: 'StatusCards' });
       const timeMetrics = wrapper.findComponent({ name: 'TimeMetrics' });
-      const servicesOpenByHour = wrapper.findComponent({
-        name: 'ServicesOpenByHour',
-      });
       const detailedMonitoring = wrapper.findComponent({
         name: 'DetailedMonitoring',
       });
@@ -161,9 +165,6 @@ describe('Monitoring', () => {
       );
       expect(timeMetrics.attributes('data-testid')).toBe(
         'monitoring-time-metrics',
-      );
-      expect(servicesOpenByHour.attributes('data-testid')).toBe(
-        'monitoring-services-open-by-hour',
       );
       expect(detailedMonitoring.attributes('data-testid')).toBe(
         'monitoring-detailed-monitoring',

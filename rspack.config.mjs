@@ -38,14 +38,4 @@ export default defineWeniConfig({
       connect: connectUrl,
     },
   },
-  override: (config) => {
-    // Remove pinia from shared plugins
-    for (const plugin of config.plugins ?? []) {
-      const shared = plugin?._options?.shared;
-      if (shared && 'pinia' in shared) {
-        delete shared.pinia;
-      }
-    }
-    return config;
-  },
 });

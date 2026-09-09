@@ -82,7 +82,7 @@ const FILTER_CONFIG_MONITORING = {
   attendant: ['status', 'attendant'],
   pauses: ['attendant'],
   in_awaiting: ['contact_input'],
-  in_progress: ['contact_input'],
+  in_progress: ['attendant', 'contact_input'],
 };
 
 const FILTER_CONFIG_ANALYSIS = {

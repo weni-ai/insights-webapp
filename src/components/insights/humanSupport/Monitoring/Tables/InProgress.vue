@@ -321,6 +321,7 @@ watch(
   [
     currentSort,
     () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDetailFilters.agent,
     () => humanSupport.appliedDetailFilters.contactInput,
   ],
   () => {

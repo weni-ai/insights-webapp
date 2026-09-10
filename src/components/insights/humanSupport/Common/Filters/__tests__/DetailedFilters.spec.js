@@ -128,6 +128,15 @@ describe('DetailedFilters', () => {
       );
       expect(filterInput.exists()).toBe(true);
     });
+
+    it('should render attendant filter for in_progress type', () => {
+      wrapper = createWrapper({ type: 'in_progress', mode: 'monitoring' });
+
+      const attendantFilter = wrapper.find(
+        '[data-testid="detailed-filter-attendant"]',
+      );
+      expect(attendantFilter.exists()).toBe(true);
+    });
   });
 
   describe('Filter Configuration', () => {

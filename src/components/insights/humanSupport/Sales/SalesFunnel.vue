@@ -107,24 +107,6 @@ const graphData = computed(() => {
 <style lang="scss" scoped>
 :deep(.sales-funnel__graph) {
   .unnnic-chart-funnel-base-item {
-    position: relative;
-    z-index: 2;
-
-    &::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: -1px;
-      width: 100%;
-      height: 1px;
-      background-color: $unnnic-color-gray-2;
-      z-index: 1;
-    }
-
-    &:last-of-type::after {
-      display: none;
-    }
-
     .w-60 {
       display: v-bind(barDisplay);
     }

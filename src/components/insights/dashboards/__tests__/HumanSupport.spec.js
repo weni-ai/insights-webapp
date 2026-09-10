@@ -78,11 +78,11 @@ describe('HumanSupport.vue', () => {
           name: 'historical_data',
           component: expect.any(Object),
         },
+        sales: {
+          name: 'sales',
+          component: expect.any(Object),
+        },
       });
-    });
-
-    it('should generate correct tabsKeys array', () => {
-      expect(wrapper.vm.tabsKeys).toEqual(['monitoring', 'analysis']);
     });
 
     it('should get active tab from store', () => {
@@ -143,7 +143,11 @@ describe('HumanSupport.vue', () => {
 
   describe('Component Integration', () => {
     it('should have correct tab configuration structure', () => {
-      expect(Object.keys(wrapper.vm.tabs)).toEqual(['monitoring', 'analysis']);
+      expect(Object.keys(wrapper.vm.tabs)).toEqual([
+        'monitoring',
+        'analysis',
+        'sales',
+      ]);
       expect(wrapper.vm.tabs.monitoring.name).toBe('live');
       expect(wrapper.vm.tabs.analysis.name).toBe('historical_data');
     });

@@ -2,7 +2,7 @@
   <section class="insights-layout-header-filters">
     <FilterHumanSupport v-if="isHumanSupportDashboard" />
 
-    <template v-if="hasManyFilters">
+    <template v-if="hasManyFilters && !isHumanSupportDashboard">
       <UnnnicButton
         data-testid="many-filters-button"
         type="secondary"
@@ -34,6 +34,7 @@
       v-if="isMetaTemplateDashboard && !emptyTemplates"
     />
     <ModalFilters
+      v-if="!isHumanSupportDashboard"
       data-testid="modal-filters"
       :showModal="filterModalOpened"
       @close="filterModalOpened = false"
@@ -238,13 +239,10 @@ watch(
 watch(
   currentDashboardFilters,
   (filters) => {
+    if (isHumanSupportDashboard.value) return;
+
     if (filters.length === 1) {
       const { date, ended_at } = route.query;
-
-      const isHumanSupport =
-        currentDashboard.value?.name === 'human_support_dashboard.title';
-
-      if (isHumanSupport) return;
 
       const { start, end } = isConversationalDashboard.value
         ? getYesterdayDate()

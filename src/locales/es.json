@@ -1246,6 +1246,12 @@
         "average_order_value": "Ticket promedio",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} en el último período",
         "total_revenue": "Ingresos totales"
+      },
+      "sales_funnel": {
+        "no_data": "No se completaron chats",
+        "leads_captured": "Leads capturados",
+        "purchases_made": "Compras completadas",
+        "title": "Embudo de ventas"
       }
     },
     "news_disclaimer": {

@@ -1246,6 +1246,12 @@
         "average_order_value": "Valoarea medie a comenzii",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} în ultima perioadă",
         "total_revenue": "Venit total"
+      },
+      "sales_funnel": {
+        "no_data": "Nu s-au finalizat chaturi",
+        "leads_captured": "Lead-uri capturate",
+        "purchases_made": "Achiziții finalizate",
+        "title": "Canal de vânzări"
       }
     },
     "news_disclaimer": {

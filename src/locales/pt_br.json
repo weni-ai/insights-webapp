@@ -1240,7 +1240,14 @@
     "title": "Live desk",
     "live": "Ao vivo",
     "historical_data": "Dados históricos",
-    "sales": "Vendas",
+    "sales": {
+      "tab": "Vendas",
+      "order_data": {
+        "average_order_value": "Ticket médio",
+        "last_period_comparison": "{variation} vs. {lastPeriodValue} no último período",
+        "total_revenue": "Receita total"
+      }
+    },
     "news_disclaimer": {
       "title": "Novidade nos dashboards!",
       "description": "O dashboard <i>Monitoramento</i> agora se chama <i>Ao vivo</i> e mostra dados em tempo real sobre atendentes e atendimentos em espera ou em andamento. Para analisar atendimentos já finalizados, inclusive os realizados hoje, acesse <i>Dados históricos</i>."

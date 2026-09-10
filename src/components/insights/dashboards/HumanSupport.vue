@@ -66,7 +66,7 @@ const tabs = {
     component: Analysis,
   },
   sales: {
-    name: 'sales',
+    name: 'sales.tab',
     component: Sales,
   },
 };

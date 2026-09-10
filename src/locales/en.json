@@ -1240,7 +1240,14 @@
     "title": "Live desk",
     "live": "Live",
     "historical_data": "Historical data",
-    "sales": "Sales",
+    "sales": {
+      "tab": "Sales",
+      "order_data": {
+        "average_order_value": "Average order value",
+        "last_period_comparison": "{variation} vs. {lastPeriodValue} last period",
+        "total_revenue": "Total revenue"
+      }
+    },
     "news_disclaimer": {
       "title": "New on the dashboards!",
       "description": "The <i>Monitoring</i> dashboard is now called <i>Live</i> and shows real-time data on representatives and on support chats that are waiting or in progress. To analyze completed support chats, including those from today, go to <i>Historical data</i>."

@@ -25,7 +25,7 @@ defineOptions({
 .sales-view {
   display: flex;
   flex-direction: column;
-  gap: $unnnic-space-8;
+  gap: $unnnic-space-6;
 
   &__2-col {
     display: grid;

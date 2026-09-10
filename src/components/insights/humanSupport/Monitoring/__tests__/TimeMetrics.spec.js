@@ -15,6 +15,7 @@ const mockMonitoringStore = {
   $id: 'humanSupportMonitoring',
   loadTimeMetricsData: vi.fn(),
   setActiveDetailedTab: vi.fn(),
+  setForceLoadDetailed: vi.fn(),
   timeMetricsData: { value: { ...defaultTimeMetricsData } },
   loadingTimeMetricsData: { value: false },
 };
@@ -61,6 +62,7 @@ vi.mock('@/utils/time', () => ({
       .padStart(2, '0')}s`;
   }),
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
 
 vi.mock('pinia', async (importOriginal) => {
@@ -122,6 +124,7 @@ describe('TimeMetrics', () => {
     Object.assign(mockMonitoringStore, {
       loadTimeMetricsData: vi.fn(),
       setActiveDetailedTab: vi.fn(),
+      setForceLoadDetailed: vi.fn(),
       timeMetricsData: {
         value: {
           average_time_is_waiting: {
@@ -148,11 +151,8 @@ describe('TimeMetrics', () => {
       expect(section().exists()).toBe(true);
     });
 
-    it('should render title', () => {
-      expect(title().exists()).toBe(true);
-      expect(title().text()).toBe(
-        wrapper.vm.$t('human_support_dashboard.time_metrics.title'),
-      );
+    it('should not render a section title', () => {
+      expect(title().exists()).toBe(false);
     });
 
     it('should render cards container', () => {
@@ -173,10 +173,6 @@ describe('TimeMetrics', () => {
     });
 
     it('should have the expected DOM structure', () => {
-      expect(title().exists()).toBe(true);
-      expect(title().element.tagName).toBe('P');
-      expect(title().classes()).toContain('time-metrics__title');
-
       expect(cards().exists()).toBe(true);
       expect(cards().classes()).toContain('time-metrics__cards');
 
@@ -201,6 +197,8 @@ describe('TimeMetrics', () => {
           id: 'average_time_is_waiting',
           titleKey:
             'human_support_dashboard.time_metrics.average_time_is_waiting',
+          titleTooltipKey:
+            'human_support_dashboard.time_metrics.title_tooltips.average_time_is_waiting',
           tooltipKey:
             'human_support_dashboard.time_metrics.tooltips.average_time_is_waiting',
         },
@@ -208,12 +206,16 @@ describe('TimeMetrics', () => {
           id: 'average_time_first_response',
           titleKey:
             'human_support_dashboard.time_metrics.average_time_first_response',
+          titleTooltipKey:
+            'human_support_dashboard.time_metrics.title_tooltips.average_time_first_response',
           tooltipKey:
             'human_support_dashboard.time_metrics.tooltips.average_time_first_response',
         },
         {
           id: 'average_time_chat',
           titleKey: 'human_support_dashboard.time_metrics.average_time_chat',
+          titleTooltipKey:
+            'human_support_dashboard.time_metrics.title_tooltips.average_time_chat',
           tooltipKey:
             'human_support_dashboard.time_metrics.tooltips.average_time_chat',
         },
@@ -452,8 +454,11 @@ describe('TimeMetrics', () => {
         name: 'CardConversations',
       });
 
+      expect(cardComponents[0].props('borderRadius')).toBe('left');
+      expect(cardComponents[1].props('borderRadius')).toBe('none');
+      expect(cardComponents[2].props('borderRadius')).toBe('right');
+
       cardComponents.forEach((card) => {
-        expect(card.props('borderRadius')).toBe('full');
         expect(card.props('isLoading')).toBeDefined();
 
         expect(card.props('activeDescriptionGap')).toBe(true);

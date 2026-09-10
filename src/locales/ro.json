@@ -470,15 +470,15 @@
   "ctwa_dashboard": {
     "cards": {
       "attributed_revenue": {
-        "description": "Valoarea medie a comenzii {avg}",
+        "description": "Valoare medie a comenzii {avg}",
         "title": "Venit atribuit"
       },
       "ctwa_conversations": {
-        "description": "Inițiate din anunțuri în această perioadă",
+        "description": "Inițiate din reclame în perioada",
         "title": "Conversații CTWA"
       },
       "organic_conversations": {
-        "description": "Bază de comparație (fără anunț)",
+        "description": "Referință de comparație (non-anunț)",
         "title": "Conversații organice"
       }
     },
@@ -496,13 +496,13 @@
       "title": "Performanță pe campanie"
     },
     "sales_funnel": {
-      "converted": "Convertite",
-      "qualified": "Calificate",
-      "qualified_help": "Contacte în care agentul a identificat intenția de cumpărare. Acest lucru poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs, printre alte semnale de intenție.",
-      "started": "Conversații începute",
+      "converted": "Convertit",
+      "qualified": "Calificat",
+      "qualified_help": "Contacte pentru care agentul a identificat intenția de achiziție. Aceasta poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs.",
+      "started": "Conversații inițiate",
       "title": "Pâlnie de vânzări"
     },
-    "title": "Clic pentru WhatsApp"
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Stare",
@@ -1242,6 +1242,20 @@
     "title": "Asistență umană",
     "live": "În direct",
     "historical_data": "Date istorice",
+    "sales": {
+      "tab": "Vânzări",
+      "order_data": {
+        "average_order_value": "Valoarea medie a comenzii",
+        "last_period_comparison": "{variation} vs. {lastPeriodValue} în ultima perioadă",
+        "total_revenue": "Venit total"
+      },
+      "sales_funnel": {
+        "no_data": "Nu s-au finalizat chaturi",
+        "leads_captured": "Lead-uri capturate",
+        "purchases_made": "Achiziții finalizate",
+        "title": "Canal de vânzări"
+      }
+    },
     "news_disclaimer": {
       "title": "Noutate în dashboards!",
       "description": "Dashboardul <i>Monitorizare</i> se numește acum <i>În direct</i> și afișează date în timp real despre reprezentanți și chaturi de asistență în așteptare sau în curs. Pentru a analiza chaturile de asistență deja finalizate, inclusiv pe cele de astăzi, accesează <i>Date istorice</i>."
@@ -1510,5 +1524,13 @@
     "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
     "not_now": "Poate mai târziu",
     "view_setup_guide": "Vezi ghidul de configurare"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campanie",
+    "conversations": "Conversații",
+    "conversions": "Conversii",
+    "qualified": "Calificate",
+    "revenue": "Venituri",
+    "title": "Performanță pe campanie"
   }
 }

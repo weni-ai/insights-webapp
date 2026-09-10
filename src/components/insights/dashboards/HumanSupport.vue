@@ -5,7 +5,7 @@
   >
     <UnnnicTab
       data-testid="human-support-tab"
-      :tabs="tabsKeys"
+      :tabs="filteredTabs"
       :activeTab="activeTab"
       @change="handleChangeTab"
     >
@@ -37,17 +37,23 @@ import { UnnnicTab } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
 import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
+import Sales from '../humanSupport/Sales/Sales.vue';
 import {
   useHumanSupport,
   type ActiveTab,
 } from '@/store/modules/humanSupport/humanSupport';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+import { computed } from 'vue';
 
 const humanSupportStore = useHumanSupport();
 const humanSupportMonitoringStore = useHumanSupportMonitoring();
+const featureFlagStore = useFeatureFlag();
 
 const { activeTab } = storeToRefs(humanSupportStore);
 const { autoRefresh } = storeToRefs(humanSupportMonitoringStore);
+const { activeFeatures } = storeToRefs(featureFlagStore);
+
 const { setActiveTab } = humanSupportStore;
 
 const tabs = {
@@ -59,9 +65,21 @@ const tabs = {
     name: 'historical_data',
     component: Analysis,
   },
+  sales: {
+    name: 'sales.tab',
+    component: Sales,
+  },
 };
 
-const tabsKeys = Object.keys(tabs);
+const showSales = computed(() => {
+  return activeFeatures.value.includes('insightsLiveDeskSales');
+});
+
+const filteredTabs = computed(() => {
+  return Object.keys(tabs).filter((key) => {
+    return key !== 'sales' || showSales.value;
+  });
+});
 
 const handleChangeTab = (tab: ActiveTab) => {
   setActiveTab(tab);

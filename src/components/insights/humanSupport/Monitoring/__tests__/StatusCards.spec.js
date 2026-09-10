@@ -148,9 +148,8 @@ describe('ServiceStatus', () => {
       expect(section().exists()).toBe(true);
     });
 
-    it('should render title', () => {
-      expect(title().exists()).toBe(true);
-      expect(title().text()).toBe('Support Status');
+    it('should not render title', () => {
+      expect(title().exists()).toBe(false);
     });
 
     it('should render cards container', () => {
@@ -161,7 +160,7 @@ describe('ServiceStatus', () => {
       const cardComponents = wrapper.findAllComponents({
         name: 'CardConversations',
       });
-      expect(cardComponents).toHaveLength(3);
+      expect(cardComponents).toHaveLength(2);
     });
   });
 
@@ -178,7 +177,7 @@ describe('ServiceStatus', () => {
   describe('Card definitions', () => {
     it('should have correct card definitions structure', () => {
       const vm = wrapper.vm;
-      expect(vm.cardDefinitions).toHaveLength(3);
+      expect(vm.cardDefinitions).toHaveLength(2);
 
       const expectedCards = [
         {
@@ -192,12 +191,6 @@ describe('ServiceStatus', () => {
           titleKey: 'human_support_dashboard.support_status.is_in_progress',
           tooltipKey:
             'human_support_dashboard.support_status.tooltips.is_in_progress',
-        },
-        {
-          id: 'finished',
-          titleKey: 'human_support_dashboard.support_status.is_closed',
-          tooltipKey:
-            'human_support_dashboard.support_status.tooltips.is_closed',
         },
       ];
 
@@ -266,8 +259,7 @@ describe('ServiceStatus', () => {
       const vm = wrapper.vm;
 
       expect(vm.getTooltipSide(0)).toBe('top');
-      expect(vm.getTooltipSide(1)).toBe('top');
-      expect(vm.getTooltipSide(2)).toBe('left');
+      expect(vm.getTooltipSide(1)).toBe('left');
     });
   });
 
@@ -299,8 +291,10 @@ describe('ServiceStatus', () => {
         name: 'CardConversations',
       });
 
+      expect(cardComponents[0].props('borderRadius')).toBe('left');
+      expect(cardComponents[1].props('borderRadius')).toBe('right');
+
       cardComponents.forEach((card) => {
-        expect(card.props('borderRadius')).toBe('full');
         expect(card.props('isLoading')).toBeDefined();
 
         expect(card.props('activeDescriptionGap')).toBeFalsy();

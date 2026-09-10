@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { computed, ref, watch, inject } from 'vue';
 import { useHumanSupportMonitoring } from './monitoring';
 import { useHumanSupportAnalysis } from './analysis';
+import { useHumanSupportSales } from './sales';
 import { getTodayDate } from '@/utils/time';
 import type { Router } from 'vue-router';
 import { useRouter } from 'vue-router';
@@ -44,7 +45,7 @@ export interface DateRange {
   end: string;
 }
 
-export type ActiveTab = 'monitoring' | 'analysis';
+export type ActiveTab = 'monitoring' | 'analysis' | 'sales';
 
 export const useHumanSupport = defineStore('humanSupport', () => {
   const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -52,6 +53,9 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   const humanSupportAnalysis = useHumanSupportAnalysis();
   const { loadAllData: loadAllDataAnalysis } = humanSupportAnalysis;
+
+  const humanSupportSales = useHumanSupportSales();
+  const { loadAllData: loadAllDataSales } = humanSupportSales;
 
   const router = inject<Router>('router', useRouter());
   const query = router?.currentRoute?.value?.query || {};
@@ -186,10 +190,12 @@ export const useHumanSupport = defineStore('humanSupport', () => {
   watch(appliedFilters, () => {
     if (activeTab.value === 'monitoring') return loadAllDataMonitoring();
     if (activeTab.value === 'analysis') return loadAllDataAnalysis();
+    if (activeTab.value === 'sales') return loadAllDataSales();
   });
 
   watch(appliedDateRange, () => {
     if (activeTab.value === 'analysis') return loadAllDataAnalysis();
+    if (activeTab.value === 'sales') return loadAllDataSales();
   });
 
   watch(activeTab, () => {

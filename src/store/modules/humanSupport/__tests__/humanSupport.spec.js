@@ -14,7 +14,7 @@ vi.mock('../analysis', () => ({
 }));
 
 vi.mock('@/utils/time', () => ({
-  getLastNDays: vi.fn(() => ({
+  getTodayDate: vi.fn(() => ({
     start: '2024-01-01',
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
@@ -99,7 +99,7 @@ describe('useHumanSupport store', () => {
       });
     });
 
-    it('should initialize applied date range with last 7 days', () => {
+    it('should initialize applied date range with today', () => {
       expect(store.appliedDateRange).toEqual({
         start: '2024-01-01',
         end: '2024-01-07',

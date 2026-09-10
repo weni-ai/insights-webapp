@@ -474,11 +474,11 @@
         "title": "Ingresos atribuidos"
       },
       "ctwa_conversations": {
-        "description": "Iniciadas por anuncios en el período",
-        "title": "Conversaciones CTWA"
+        "description": "Iniciadas a partir de anuncios en el periodo",
+        "title": "Conversaciones de Clic a WhatsApp"
       },
       "organic_conversations": {
-        "description": "Línea de base de comparación (no anuncio)",
+        "description": "Referencia de comparación (sin anuncios)",
         "title": "Conversaciones orgánicas"
       }
     },
@@ -498,11 +498,11 @@
     "sales_funnel": {
       "converted": "Convertidas",
       "qualified": "Calificadas",
-      "qualified_help": "Contactos en los que el agente identificó intención de compra. Esto puede incluir acciones como agregar un producto al carrito o preguntar sobre un producto, entre otras señales de intención.",
+      "qualified_help": "Contactos en los que el agente identificó intención de compra. Esto puede incluir acciones como agregar un producto al carrito o preguntar por un producto.",
       "started": "Conversaciones iniciadas",
       "title": "Embudo de ventas"
     },
-    "title": "Haz clic para WhatsApp"
+    "title": "Clic a WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -1242,6 +1242,20 @@
     "title": "Live desk",
     "live": "En vivo",
     "historical_data": "Datos históricos",
+    "sales": {
+      "tab": "Ventas",
+      "order_data": {
+        "average_order_value": "Ticket promedio",
+        "last_period_comparison": "{variation} vs. {lastPeriodValue} en el último período",
+        "total_revenue": "Ingresos totales"
+      },
+      "sales_funnel": {
+        "no_data": "No se completaron chats",
+        "leads_captured": "Leads capturados",
+        "purchases_made": "Compras completadas",
+        "title": "Embudo de ventas"
+      }
+    },
     "news_disclaimer": {
       "title": "¡Novedad en los dashboards!",
       "description": "El dashboard <i>Monitoreo</i> ahora se llama <i>En vivo</i> y muestra datos en tiempo real sobre representantes y chats de soporte en espera o en curso. Para analizar chats de soporte ya finalizados, incluso los realizados hoy, accede a <i>Datos históricos</i>."
@@ -1510,5 +1524,13 @@
     "privacy_note": "Solo están disponibles en el MCP los datos a los que tienes acceso.",
     "not_now": "Ahora no",
     "view_setup_guide": "Ver guía de configuración"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campaña",
+    "conversations": "Conversaciones",
+    "conversions": "Conversiones",
+    "qualified": "Calificadas",
+    "revenue": "Ingresos",
+    "title": "Desempeño por campaña"
   }
 }

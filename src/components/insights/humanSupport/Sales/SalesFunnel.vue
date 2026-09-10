@@ -105,18 +105,6 @@ const graphData = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.sales-funnel__graph) {
-  .unnnic-chart-funnel-base-item {
-    .w-60 {
-      display: v-bind(barDisplay);
-    }
-
-    .w-50 {
-      display: v-bind(barDisplay);
-    }
-  }
-}
-
 .sales-funnel {
   border-radius: $unnnic-radius-2;
   border: 1px solid $unnnic-color-border-base;
@@ -141,6 +129,42 @@ const graphData = computed(() => {
   &__title {
     font: $unnnic-font-display-2;
     color: $unnnic-color-fg-emphasized;
+  }
+
+  &__graph {
+    flex: 1;
+    min-height: 0;
+
+    :deep(.unnnic-chart-funnel-base-item__card) {
+      position: relative;
+      z-index: 2;
+    }
+
+    :deep(.unnnic-chart-funnel-base-item:not(:last-child)) {
+      position: relative;
+
+      // gray line between bars
+      &::after {
+        z-index: 1;
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-bottom: 1px solid $unnnic-color-gray-2;
+      }
+    }
+
+    :deep(.unnnic-chart-funnel-base-item) {
+      .w-60 {
+        display: v-bind(barDisplay);
+      }
+
+      .w-50 {
+        display: v-bind(barDisplay);
+      }
+    }
   }
 }
 </style>

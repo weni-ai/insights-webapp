@@ -1240,6 +1240,7 @@
     "title": "Live desk",
     "live": "Live",
     "historical_data": "Historical data",
+    "sales": "Sales",
     "news_disclaimer": {
       "title": "New on the dashboards!",
       "description": "The <i>Monitoring</i> dashboard is now called <i>Live</i> and shows real-time data on representatives and on support chats that are waiting or in progress. To analyze completed support chats, including those from today, go to <i>Historical data</i>."

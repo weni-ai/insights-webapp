@@ -1,5 +1,5 @@
 <template>
-  <DateFilter v-if="isAnalysis" />
+  <DateFilter v-if="showDateFilter" />
   <FiltersDropdown />
 </template>
 
@@ -11,7 +11,7 @@ import { computed } from 'vue';
 
 const humanSupportStore = useHumanSupport();
 
-const isAnalysis = computed(() => {
-  return humanSupportStore.activeTab === 'analysis';
+const showDateFilter = computed(() => {
+  return ['analysis', 'sales'].includes(humanSupportStore.activeTab);
 });
 </script>

@@ -1240,6 +1240,7 @@
     "title": "Asistență umană",
     "live": "În direct",
     "historical_data": "Date istorice",
+    "sales": "Vânzări",
     "news_disclaimer": {
       "title": "Noutate în dashboards!",
       "description": "Dashboardul <i>Monitorizare</i> se numește acum <i>În direct</i> și afișează date în timp real despre reprezentanți și chaturi de asistență în așteptare sau în curs. Pentru a analiza chaturile de asistență deja finalizate, inclusiv pe cele de astăzi, accesează <i>Date istorice</i>."

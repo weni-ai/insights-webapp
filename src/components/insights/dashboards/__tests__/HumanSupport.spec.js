@@ -79,7 +79,7 @@ describe('HumanSupport.vue', () => {
           component: expect.any(Object),
         },
         sales: {
-          name: 'sales',
+          name: 'sales.tab',
           component: expect.any(Object),
         },
       });

@@ -1245,11 +1245,7 @@
       "order_data": {
         "average_order_value": "Ticket promedio",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} en el último período",
-        "total_revenue": "Ingresos totales",
-        "tooltips": {
-          "average_order_value": "Valor promedio de los pedidos finalizados en el periodo seleccionado",
-          "total_revenue": "Ingresos totales de los pedidos finalizados en el periodo seleccionado"
-        }
+        "total_revenue": "Ingresos totales"
       }
     },
     "news_disclaimer": {

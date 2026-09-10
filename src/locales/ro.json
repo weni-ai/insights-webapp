@@ -1245,11 +1245,7 @@
       "order_data": {
         "average_order_value": "Valoarea medie a comenzii",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} în ultima perioadă",
-        "total_revenue": "Venit total",
-        "tooltips": {
-          "average_order_value": "Valoarea medie a comenzilor finalizate în perioada selectată",
-          "total_revenue": "Venitul total din comenzile finalizate în perioada selectată"
-        }
+        "total_revenue": "Venit total"
       }
     },
     "news_disclaimer": {

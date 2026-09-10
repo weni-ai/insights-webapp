@@ -1245,11 +1245,7 @@
       "order_data": {
         "average_order_value": "Average order value",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} last period",
-        "total_revenue": "Total revenue",
-        "tooltips": {
-          "average_order_value": "Average value of orders completed in the selected period",
-          "total_revenue": "Total revenue from orders completed in the selected period"
-        }
+        "total_revenue": "Total revenue"
       }
     },
     "news_disclaimer": {

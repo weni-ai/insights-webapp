@@ -1245,11 +1245,7 @@
       "order_data": {
         "average_order_value": "Ticket médio",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} no último período",
-        "total_revenue": "Receita total",
-        "tooltips": {
-          "average_order_value": "Valor médio dos pedidos finalizados no período selecionado",
-          "total_revenue": "Receita total dos pedidos finalizados no período selecionado"
-        }
+        "total_revenue": "Receita total"
       }
     },
     "news_disclaimer": {

@@ -20,6 +20,7 @@ exports[`ExportFilterDate > Component structure > should match snapshot 1`] = `
     modelvalue="[object Object]"
     options="[object Object],[object Object]"
     placeholder="Select date"
+    shortcuts=""
   />
 </section>
 `;

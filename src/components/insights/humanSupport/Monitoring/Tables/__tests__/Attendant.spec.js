@@ -13,6 +13,7 @@ vi.mock('date-fns', () => ({
 vi.mock('@/utils/time', () => ({
   formatSecondsToTime: vi.fn((seconds) => `${seconds}s`),
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
 
 const mockInfiniteScroll = {
@@ -129,14 +130,14 @@ describe('Attendant', () => {
   describe('Headers', () => {
     it('generates correct headers with translations', () => {
       const headers = wrapper.vm.formattedHeaders;
-      expect(headers).toHaveLength(9);
+      expect(headers).toHaveLength(8);
       expect(headers[0].itemKey).toBe('status');
-      expect(headers[7].itemKey).toBe('time_in_service');
+      expect(headers[6].itemKey).toBe('time_in_service');
+      expect(headers[6].isSortable).toBe(false);
+      expect(headers[7].itemKey).toBe('action');
       expect(headers[7].isSortable).toBe(false);
-      expect(headers[8].itemKey).toBe('action');
-      expect(headers[8].isSortable).toBe(false);
-      expect(headers[8].align).toBe('center');
-      expect(headers.slice(0, 7).every((h) => h.isSortable)).toBe(true);
+      expect(headers[7].align).toBe('center');
+      expect(headers.slice(0, 6).every((h) => h.isSortable)).toBe(true);
     });
   });
 

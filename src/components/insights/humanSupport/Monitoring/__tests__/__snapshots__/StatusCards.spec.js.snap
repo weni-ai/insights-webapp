@@ -7,13 +7,6 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
   data-v-139ebc7e=""
 >
   <!--v-if-->
-  <p
-    class="service-status__title"
-    data-testid="service-status-title"
-    data-v-139ebc7e=""
-  >
-    Support Status
-  </p>
   <section
     class="service-status__cards"
     data-testid="service-status-cards"
@@ -22,7 +15,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
     
     <card-conversations-stub
       activedescriptiongap="false"
-      borderradius="full"
+      borderradius="left"
       class="service-status__card"
       data-v-139ebc7e=""
       enabletimeicon="false"
@@ -35,7 +28,7 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
     />
     <card-conversations-stub
       activedescriptiongap="false"
-      borderradius="full"
+      borderradius="right"
       class="service-status__card"
       data-v-139ebc7e=""
       enabletimeicon="false"
@@ -43,21 +36,8 @@ exports[`ServiceStatus > Component structure > should match snapshot 1`] = `
       isloading="false"
       title="In Progress"
       tooltipinfo="Conversations currently being handled"
-      tooltipside="top"
-      value="10"
-    />
-    <card-conversations-stub
-      activedescriptiongap="false"
-      borderradius="full"
-      class="service-status__card"
-      data-v-139ebc7e=""
-      enabletimeicon="false"
-      isclickable="false"
-      isloading="false"
-      title="Closed"
-      tooltipinfo="Conversations that have been closed"
       tooltipside="left"
-      value="65"
+      value="10"
     />
     
   </section>

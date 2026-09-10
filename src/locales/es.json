@@ -1238,10 +1238,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoreo",
-    "monitoring_tooltip": "Monitorea las interacciones de chats de soporte en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitoreo</b>!",
-    "analysis": "Analytics",
-    "analysis_tooltip": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
+    "live": "En vivo",
+    "historical_data": "Datos históricos",
+    "news_disclaimer": {
+      "title": "¡Novedad en los dashboards!",
+      "description": "El dashboard <i>Monitoreo</i> ahora se llama <i>En vivo</i> y muestra datos en tiempo real sobre representantes y chats de soporte en espera o en curso. Para analizar chats de soporte ya finalizados, incluso los realizados hoy, accede a <i>Datos históricos</i>."
+    },
     "support_status": {
       "title": "Status de los chats de soporte",
       "is_waiting": "Esperando",
@@ -1256,11 +1258,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tiempo actuales",
-      "average_time_is_waiting": "Espera promedio",
-      "average_time_first_response": "Promedio de 1ª respuesta",
-      "average_response_time": "Tiempo promedio de respuesta",
-      "average_time_chat": "Duración promedio",
+      "average_time_is_waiting": "TME",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMA",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Tiempo Medio de Espera",
+        "average_time_first_response": "Tiempo Medio de Primera Respuesta",
+        "average_response_time": "Tiempo Medio de Respuesta",
+        "average_time_chat": "Tiempo Medio de Atención"
+      },
       "tooltips": {
         "average_time_is_waiting": "Tiempo promedio que los contactos esperan en cola antes del inicio del chat de soporte",
         "average_time_first_response": "Tiempo promedio antes de que el representante envíe el primer mensaje tras la asignación de la sala",

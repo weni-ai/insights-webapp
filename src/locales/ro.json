@@ -1238,10 +1238,12 @@
   },
   "human_support_dashboard": {
     "title": "Asistență umană",
-    "monitoring": "Monitorizare",
-    "monitoring_tooltip": "Monitorizează în timp real interacțiunile din chatul de asistență ale zilei. Identifică blocajele şi ia decizii rapide pentru a optimiza operațiunea.",
-    "analysis": "Analiză",
-    "analysis_tooltip": "Explorează performanța camerelor închise pe diferite perioade de timp. Descoperă tipare, tendințe și oportunități pentru a-ți îmbunătăți echipa.",
+    "live": "În direct",
+    "historical_data": "Date istorice",
+    "news_disclaimer": {
+      "title": "Noutate în dashboards!",
+      "description": "Dashboardul <i>Monitorizare</i> se numește acum <i>În direct</i> și afișează date în timp real despre reprezentanți și chaturi de asistență în așteptare sau în curs. Pentru a analiza chaturile de asistență deja finalizate, inclusiv pe cele de astăzi, accesează <i>Date istorice</i>."
+    },
     "support_status": {
       "title": "Starea chaturilor de asistență",
       "is_waiting": "În așteptare",
@@ -1256,11 +1258,17 @@
     },
     "time_metrics": {
       "title": "Metrici oră curentă",
-      "average_time_is_waiting": "Timpul mediu de așteptare",
-      "average_time_first_response": "Medie până la 1º răspuns",
-      "average_response_time": "Timpul mediu de răspuns",
-      "average_time_chat": "Durata medie a conversației în chat",
+      "average_time_is_waiting": "TMA",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMC",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Timp Mediu de Așteptare",
+        "average_time_first_response": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "Timp Mediu de Răspuns",
+        "average_time_chat": "Timp Mediu de Conversație"
+      },
       "tooltips": {
         "average_time_is_waiting": "Timpul mediu de așteptare al contactelor în coadă înainte de începerea chatului de asistență",
         "average_time_first_response": "Timpul mediu înainte ca reprezentantul să trimită primul mesaj după ce camera este atribuită",

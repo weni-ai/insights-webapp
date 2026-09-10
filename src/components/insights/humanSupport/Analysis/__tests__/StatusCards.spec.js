@@ -7,6 +7,7 @@ import StatusCards from '../StatusCards.vue';
 vi.mock('@/utils/time', () => ({
   formatSecondsToTime: vi.fn((seconds) => `${seconds}s`),
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
 
 const i18n = createI18n({

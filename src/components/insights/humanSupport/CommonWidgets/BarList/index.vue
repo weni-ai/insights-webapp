@@ -4,6 +4,7 @@
     :tabs="props.tabs"
     :currentTab="props.currentTab"
     :hideHeader="showConfig"
+    :hiddenTabs="props.hiddenTabs"
     @tab-change="handleTabChange"
   >
     <section class="bar-list__content">
@@ -80,6 +81,7 @@ type BarListProps = CardWidgetContainerProps & {
   emptyDataText?: string;
   setupTitle?: string;
   setupDescription?: string;
+  hiddenTabs?: boolean;
 };
 
 const props = withDefaults(defineProps<BarListProps>(), {
@@ -93,6 +95,7 @@ const props = withDefaults(defineProps<BarListProps>(), {
   emptyDataText: '',
   setupTitle: '',
   setupDescription: '',
+  hiddenTabs: false,
 });
 
 const emit = defineEmits<{

@@ -1246,6 +1246,12 @@
         "average_order_value": "Average order value",
         "last_period_comparison": "{variation} vs. {lastPeriodValue} last period",
         "total_revenue": "Total revenue"
+      },
+      "sales_funnel": {
+        "no_data": "No chats were completed",
+        "leads_captured": "Leads captured",
+        "purchases_made": "Purchases made",
+        "title": "Sales funnel"
       }
     },
     "news_disclaimer": {

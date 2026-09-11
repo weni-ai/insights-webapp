@@ -3,6 +3,7 @@ import { createI18n } from 'vue-i18n';
 import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { mockRouter } from '@tests/utils/testHelpers.js';
 import { vi } from 'vitest';
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
 
 /**
  * Default stubs for Unnnic dialog primitives in unit tests.
@@ -56,8 +57,6 @@ const unnnicDialogStubs = {
 import pt_br from '@/locales/pt_br.json';
 import en from '@/locales/en.json';
 import es from '@/locales/es.json';
-
-import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
 
 vi.mock('firebase/app', () => ({
   initializeApp: vi.fn(() => ({

@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { flushPromises } from '@vue/test-utils';
 import { useHumanSupportAnalysis } from '../analysis';
 import ServiceStatusAnalysisService from '@/services/api/resources/humanSupport/analysis/serviceStatus';
 import ServicesOpenByHourAnalysisService from '@/services/api/resources/humanSupport/analysis/servicesOpenByHour';
@@ -121,6 +122,7 @@ describe('useHumanSupportAnalysis store', () => {
     });
 
     it('should set loading state during data fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       ServiceStatusAnalysisService.getServiceStatusAnalysisData.mockImplementation(
         () =>
           new Promise((resolve) => {
@@ -129,8 +131,11 @@ describe('useHumanSupportAnalysis store', () => {
           }),
       );
 
-      await store.loadServiceStatusData();
+      const loadPromise = store.loadServiceStatusData();
+      await vi.advanceTimersByTimeAsync(10);
+      await loadPromise;
       expect(store.loadingServiceStatusData).toBe(false);
+      vi.useRealTimers();
     });
 
     it('should handle errors gracefully', async () => {
@@ -167,6 +172,7 @@ describe('useHumanSupportAnalysis store', () => {
     });
 
     it('should set loading state during data fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       ServicesOpenByHourAnalysisService.getServicesOpenByHourAnalysisData.mockImplementation(
         () =>
           new Promise((resolve) => {
@@ -175,8 +181,11 @@ describe('useHumanSupportAnalysis store', () => {
           }),
       );
 
-      await store.loadHumanSupportByHourData();
+      const loadPromise = store.loadHumanSupportByHourData();
+      await vi.advanceTimersByTimeAsync(10);
+      await loadPromise;
       expect(store.loadingHumanSupportByHourData).toBe(false);
+      vi.useRealTimers();
     });
 
     it('should handle errors gracefully', async () => {
@@ -216,7 +225,7 @@ describe('useHumanSupportAnalysis store', () => {
 
       store.loadAllData();
 
-      await new Promise((resolve) => setTimeout(resolve, 20));
+      await flushPromises();
 
       expect(
         ServiceStatusAnalysisService.getServiceStatusAnalysisData,
@@ -231,7 +240,7 @@ describe('useHumanSupportAnalysis store', () => {
     it('should not load slices that were never visible/loaded', async () => {
       store.loadAllData();
 
-      await new Promise((resolve) => setTimeout(resolve, 20));
+      await flushPromises();
 
       expect(
         ServiceStatusAnalysisService.getServiceStatusAnalysisData,
@@ -258,6 +267,7 @@ describe('useHumanSupportAnalysis store', () => {
 
   describe('Loading State Coordination', () => {
     it('should handle concurrent loading states', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       ServiceStatusAnalysisService.getServiceStatusAnalysisData.mockImplementation(
         () =>
           new Promise((resolve) =>
@@ -272,18 +282,21 @@ describe('useHumanSupportAnalysis store', () => {
       );
 
       // Prime the slices so loadAllData reloads them.
-      await Promise.all([
+      const primePromise = Promise.all([
         store.loadServiceStatusData(),
         store.loadHumanSupportByHourData(),
       ]);
+      await vi.advanceTimersByTimeAsync(50);
+      await primePromise;
 
       store.loadAllData();
 
-      await new Promise((resolve) => setTimeout(resolve, 10));
+      await vi.advanceTimersByTimeAsync(10);
       expect(store.isLoadingAllData).toBe(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 60));
+      await vi.advanceTimersByTimeAsync(50);
       expect(store.isLoadingAllData).toBe(false);
+      vi.useRealTimers();
     });
   });
 });

@@ -123,9 +123,9 @@ describe('OperationalAlertsButton.vue', () => {
       .find('[data-testid="operational-alerts-option"]')
       .trigger('click');
     await vi.waitFor(() =>
-      expect(
-        wrapper.findComponent(OperationalAlertsDrawerStub).exists(),
-      ).toBe(true),
+      expect(wrapper.findComponent(OperationalAlertsDrawerStub).exists()).toBe(
+        true,
+      ),
     );
   });
 

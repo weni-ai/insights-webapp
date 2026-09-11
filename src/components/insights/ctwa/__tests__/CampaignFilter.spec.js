@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 import CampaignFilter from '../CampaignFilter.vue';
 import Projects from '@/services/api/resources/projects';
@@ -13,26 +12,6 @@ vi.mock('@/services/api/resources/projects', () => ({
 }));
 
 const PAGE_SIZE = 20;
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      ctwa_dashboard: {
-        filters: {
-          campaign: {
-            placeholder: 'All campaigns',
-          },
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockCampaignsResponse = {
   results: [

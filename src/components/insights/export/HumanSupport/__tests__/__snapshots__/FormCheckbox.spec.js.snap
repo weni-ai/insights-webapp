@@ -3,7 +3,7 @@
 exports[`HumanSupport FormCheckbox > Component structure > should match snapshot 1`] = `
 <export-checkboxs-stub
   data-testid="human-support-form-checkbox"
-  enabledmodels="[object Object]"
+  enabledmodels=""
   isloading="false"
   modelfields="[object Object]"
   modelfilters="[object Object],[object Object],[object Object],[object Object]"

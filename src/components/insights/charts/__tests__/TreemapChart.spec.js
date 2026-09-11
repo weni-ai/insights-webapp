@@ -1,40 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 import TreemapChart from '../TreemapChart.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      widgets: {
-        treemap: {
-          no_data: 'No data available',
-          no_data_description: 'No data description',
-        },
-      },
-      conversations_dashboard: {
-        conversations: 'conversations',
-      },
-    },
-    pt: {
-      widgets: {
-        treemap: {
-          no_data: 'Sem dados',
-          no_data_description: 'Sem descrição',
-        },
-      },
-      conversations_dashboard: {
-        conversations: 'conversas',
-      },
-    },
-  },
-});
-
-config.global.plugins = [i18n];
+import { i18n } from '../../../../../setupVitest.js';
 
 vi.mock('chart.js', () => {
   const Chart = vi.fn().mockImplementation(() => ({

@@ -1,19 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import ShortTab from '../ShortTab.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const defaultProps = {
   tabs: [
@@ -30,9 +18,6 @@ const emitModelUpdate = async (wrapper, value) => {
 
 const createWrapper = (props = {}) => {
   return mount(ShortTab, {
-    global: {
-      plugins: [UnnnicSystem],
-    },
     props: { ...defaultProps, ...props },
   });
 };

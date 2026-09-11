@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { flushPromises } from '@vue/test-utils';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import { useHumanSupport } from '../humanSupport';
 import { useHumanSupportMonitoring } from '../monitoring';
@@ -450,7 +451,7 @@ describe('useHumanSupport store', () => {
         tags: [],
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
       expect(mockLoadAllDataAnalysis).not.toHaveBeenCalled();
@@ -466,7 +467,7 @@ describe('useHumanSupport store', () => {
         tags: [],
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataAnalysis).toHaveBeenCalled();
       expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
@@ -478,7 +479,7 @@ describe('useHumanSupport store', () => {
       store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
       store.saveAppliedFilters();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
     });
@@ -489,7 +490,7 @@ describe('useHumanSupport store', () => {
       store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
       store.clearFilters();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
     });
@@ -505,7 +506,7 @@ describe('useHumanSupport store', () => {
         end: '2024-01-22',
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataAnalysis).toHaveBeenCalled();
     });
@@ -519,7 +520,7 @@ describe('useHumanSupport store', () => {
         end: '2024-01-22',
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
     });
@@ -533,7 +534,7 @@ describe('useHumanSupport store', () => {
         end: '2024-02-07',
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
       expect(mockLoadAllDataAnalysis).not.toHaveBeenCalled();

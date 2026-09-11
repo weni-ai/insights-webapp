@@ -1,17 +1,7 @@
-import {
-  describe,
-  it,
-  expect,
-  beforeAll,
-  beforeEach,
-  afterAll,
-  vi,
-} from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 import { ref } from 'vue';
 import ConversationalDynamicWidget from '../ConversationalDynamicWidget.vue';
-import i18n from '@/utils/plugins/i18n';
 
 const shouldUseMockRef = ref(false);
 const mockSetIsDrawerCustomizableOpen = vi.fn();
@@ -22,17 +12,6 @@ vi.mock('@/store/modules/conversational/conversational', () => ({
     setIsDrawerCustomizableOpen: mockSetIsDrawerCustomizableOpen,
   }),
 }));
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-  config.global.plugins.push(
-    createI18n({ legacy: false, locale: 'en', messages: { en: {} } }),
-  );
-});
-
-afterAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-});
 
 const createWrapper = (props = {}) =>
   shallowMount(ConversationalDynamicWidget, {

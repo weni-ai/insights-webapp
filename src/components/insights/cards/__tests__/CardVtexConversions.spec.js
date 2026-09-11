@@ -3,24 +3,19 @@ import { mount, config } from '@vue/test-utils';
 
 import VtexConversionsWidget from '../CardVtexConversions.vue';
 
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
+const i18n = createTestI18n({});
 
-config.global.plugins = [i18n];
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = () => {
   return mount(VtexConversionsWidget, {
-    global: { plugins: [UnnnicSystem] },
     props: { widget: { name: 'Widget' } },
   });
 };

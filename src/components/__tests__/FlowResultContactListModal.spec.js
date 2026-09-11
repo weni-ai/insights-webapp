@@ -1,20 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
-import en from '@/locales/en.json';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 
 import FlowResultContactListModal from '@/components/FlowResultContactListModal.vue';
 
@@ -51,7 +38,7 @@ describe('FlowResultContactListModal.vue', () => {
 
     wrapper = mount(FlowResultContactListModal, {
       global: {
-        plugins: [store, i18n],
+        plugins: [store],
       },
       props: {
         flowResultLabel: 'Test Label',
@@ -84,7 +71,7 @@ describe('FlowResultContactListModal.vue', () => {
     Widget.getFlowContactResults.mockRejectedValue(new Error('API Error'));
     wrapper = mount(FlowResultContactListModal, {
       global: {
-        plugins: [store, i18n],
+        plugins: [store],
       },
       props: {
         flowResultLabel: 'Test Label',

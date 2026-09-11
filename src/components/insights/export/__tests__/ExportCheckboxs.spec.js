@@ -2,7 +2,10 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
+
 import ExportCheckboxs from '../ExportCheckboxs.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const i18n = createI18n({
   legacy: false,
@@ -26,7 +29,7 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('ExportCheckboxs', () => {
   let wrapper;

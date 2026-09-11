@@ -4,20 +4,7 @@ import { createTestingPinia } from '@pinia/testing';
 import DynamicDashboard from '../DynamicDashboard.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@weni/unnnic-system';
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 config.global.mocks = {
   $t: (key) => key,
 };

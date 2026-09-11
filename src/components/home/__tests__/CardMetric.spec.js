@@ -1,21 +1,8 @@
 import { mount, config } from '@vue/test-utils';
 import { beforeEach, describe, expect, it } from 'vitest';
 import CardMetric from '@/components/home/CardMetric.vue';
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import { UnnnicToolTip } from '@weni/unnnic-system';
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 config.global.mocks = {
   $t: (key) => key,
 };

@@ -1,22 +1,8 @@
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 
 import HumanServiceAgentsTable from '../index.vue';
-
-import { createI18n } from 'vue-i18n';
-import en from '@/locales/en.json';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 
 global.window.parent = {
   postMessage: vi.fn(),
@@ -173,7 +159,7 @@ describe('HumanServiceAgentsTable', () => {
         isExpansive: false,
       },
       global: {
-        plugins: [i18n, UnnnicSystem, store],
+        plugins: [store],
         stubs: {
           AgentsTableHeader: true,
           UnnnicTableNext: true,
@@ -523,7 +509,7 @@ describe('HumanServiceAgentsTable', () => {
           isExpansive: true,
         },
         global: {
-          plugins: [i18n, UnnnicSystem, expansiveStore],
+          plugins: [expansiveStore],
           stubs: {
             UnnnicButton: {
               template:
@@ -578,7 +564,7 @@ describe('HumanServiceAgentsTable', () => {
           isExpansive: true,
         },
         global: {
-          plugins: [i18n, UnnnicSystem, customOrderStore],
+          plugins: [customOrderStore],
           stubs: {
             UnnnicButton: true,
             UnnnicTableNext: true,
@@ -663,7 +649,7 @@ describe('HumanServiceAgentsTable', () => {
           isExpansive: true,
         },
         global: {
-          plugins: [i18n, UnnnicSystem, expansiveStore],
+          plugins: [expansiveStore],
           stubs: {
             UnnnicButton: true,
             UnnnicTableNext: true,
@@ -718,7 +704,7 @@ describe('HumanServiceAgentsTable', () => {
           items: mockItems,
         },
         global: {
-          plugins: [store, i18n, UnnnicSystem],
+          plugins: [store],
         },
       });
 
@@ -747,7 +733,7 @@ describe('HumanServiceAgentsTable', () => {
           items: mockItems,
         },
         global: {
-          plugins: [store, i18n, UnnnicSystem],
+          plugins: [store],
         },
       });
 
@@ -774,7 +760,7 @@ describe('HumanServiceAgentsTable', () => {
           items: mockItems,
         },
         global: {
-          plugins: [store, i18n, UnnnicSystem],
+          plugins: [store],
         },
       });
 
@@ -800,7 +786,7 @@ describe('HumanServiceAgentsTable', () => {
           items: mockItems,
         },
         global: {
-          plugins: [store, i18n, UnnnicSystem],
+          plugins: [store],
         },
       });
 
@@ -827,7 +813,7 @@ describe('HumanServiceAgentsTable', () => {
           items: mockItems,
         },
         global: {
-          plugins: [store, i18n, UnnnicSystem],
+          plugins: [store],
         },
       });
 

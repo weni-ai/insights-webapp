@@ -2,35 +2,38 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import ModalTopic from '../ModalTopic.vue';
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    messages: {
-      en: {
-        conversations_dashboard: {
-          form_topic: {
-            remove_modal: {
-              title_remove_topic: 'Remove Topic',
-              title_remove_sub_topic: 'Remove Sub-topic',
-              description_remove_topic: 'Remove topic {topic}?',
-              description_remove_sub_topic: 'Remove sub-topic {sub_topic}?',
-              remove: 'Remove',
-              cancel: 'Cancel',
-            },
-            cancel_modal: {
-              title: 'Cancel Changes',
-              description_cancel: 'Are you sure you want to cancel?',
-              cancel: 'Yes, Cancel',
-              continue: 'Continue Editing',
-            },
+import ModalTopic from '../ModalTopic.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
+
+const i18n = createI18n({
+  legacy: false,
+  messages: {
+    en: {
+      conversations_dashboard: {
+        form_topic: {
+          remove_modal: {
+            title_remove_topic: 'Remove Topic',
+            title_remove_sub_topic: 'Remove Sub-topic',
+            description_remove_topic: 'Remove topic {topic}?',
+            description_remove_sub_topic: 'Remove sub-topic {sub_topic}?',
+            remove: 'Remove',
+            cancel: 'Cancel',
+          },
+          cancel_modal: {
+            title: 'Cancel Changes',
+            description_cancel: 'Are you sure you want to cancel?',
+            cancel: 'Yes, Cancel',
+            continue: 'Continue Editing',
           },
         },
       },
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const UnnnicDialogStub = {
   name: 'UnnnicDialog',

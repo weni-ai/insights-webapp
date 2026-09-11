@@ -1,18 +1,36 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
+import { isRef, ref } from 'vue';
 
 import MostTalkedAboutTopicsWidget from '../index.vue';
 
+const topicsDistributionCount = ref(5);
+const topicsDistribution = ref([]);
+const isLoadingTopicsDistribution = ref(false);
+const topicType = ref('HUMAN');
+const hasExistingTopics = ref(true);
+const shouldUseMock = ref(false);
+
 const mockTopicsStore = {
-  topicsDistributionCount: { value: 5 },
-  topicsDistribution: { value: [] },
-  isLoadingTopicsDistribution: { value: false },
-  topicType: { value: 'HUMAN' },
-  hasExistingTopics: { value: true },
+  topicsDistributionCount,
+  topicsDistribution,
+  isLoadingTopicsDistribution,
+  topicType,
+  hasExistingTopics,
   loadTopicsDistribution: vi.fn(),
   toggleAddTopicsDrawer: vi.fn(),
   setTopicType: vi.fn(),
+};
+
+const applyStoreOverrides = (store, overrides = {}) => {
+  Object.entries(overrides).forEach(([key, value]) => {
+    if (isRef(store[key])) {
+      store[key].value = value;
+      return;
+    }
+
+    store[key] = value;
+  });
 };
 
 const mockRoute = {
@@ -22,7 +40,7 @@ const mockRoute = {
 const mockConversationalStore = {
   refreshDataConversational: false,
   setIsLoadingConversationalData: vi.fn(),
-  shouldUseMock: { value: false },
+  shouldUseMock,
 };
 
 vi.mock('@/store/modules/conversational/topics', () => ({
@@ -49,34 +67,11 @@ vi.mock('pinia', async (importOriginal) => {
   };
 });
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        most_talked_about_topics: {
-          title: 'Most Talked About Topics',
-          edit_topics_and_subtopics: 'Edit Topics',
-          see_all: 'See All',
-          no_topics: 'No Topics',
-          no_topics_description: 'No topics description',
-          add_first_topic: 'Add First Topic',
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
-
 describe('MostTalkedAboutTopicsWidget', () => {
   let wrapper;
 
   const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockTopicsStore, storeOverrides);
+    applyStoreOverrides(mockTopicsStore, storeOverrides);
     return mount(MostTalkedAboutTopicsWidget, {
       global: {
         stubs: {
@@ -96,13 +91,11 @@ describe('MostTalkedAboutTopicsWidget', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.assign(mockTopicsStore, {
-      topicsDistributionCount: { value: 5 },
-      topicsDistribution: { value: [] },
-      isLoadingTopicsDistribution: { value: false },
-      topicType: { value: 'HUMAN' },
-      hasExistingTopics: { value: true },
-    });
+    topicsDistributionCount.value = 5;
+    topicsDistribution.value = [];
+    isLoadingTopicsDistribution.value = false;
+    topicType.value = 'HUMAN';
+    hasExistingTopics.value = true;
     wrapper = createWrapper();
   });
 
@@ -113,8 +106,8 @@ describe('MostTalkedAboutTopicsWidget', () => {
 
     it('should render with existing topics', () => {
       wrapper = createWrapper({
-        hasExistingTopics: { value: true },
-        isLoadingTopicsDistribution: { value: false },
+        hasExistingTopics: true,
+        isLoadingTopicsDistribution: false,
       });
 
       expect(section().exists()).toBe(true);
@@ -122,8 +115,8 @@ describe('MostTalkedAboutTopicsWidget', () => {
 
     it('should render when loading', () => {
       wrapper = createWrapper({
-        hasExistingTopics: { value: false },
-        isLoadingTopicsDistribution: { value: true },
+        hasExistingTopics: false,
+        isLoadingTopicsDistribution: true,
       });
 
       expect(section().exists()).toBe(true);
@@ -143,8 +136,8 @@ describe('MostTalkedAboutTopicsWidget', () => {
   describe('Data management', () => {
     it('should use empty array when topics count is zero', () => {
       wrapper = createWrapper({
-        hasExistingTopics: { value: true },
-        topicsDistributionCount: { value: 0 },
+        hasExistingTopics: true,
+        topicsDistributionCount: 0,
       });
 
       expect(wrapper.vm.treemapData).toEqual([]);
@@ -153,9 +146,9 @@ describe('MostTalkedAboutTopicsWidget', () => {
     it('should use store distribution when has existing topics', () => {
       const mockDistribution = [{ label: 'Topic', value: 100, percentage: 50 }];
       wrapper = createWrapper({
-        hasExistingTopics: { value: true },
-        topicsDistributionCount: { value: 1 },
-        topicsDistribution: { value: mockDistribution },
+        hasExistingTopics: true,
+        topicsDistributionCount: 1,
+        topicsDistribution: mockDistribution,
       });
 
       expect(wrapper.vm.treemapData).toEqual(mockDistribution);
@@ -174,9 +167,9 @@ describe('MostTalkedAboutTopicsWidget', () => {
       ];
 
       wrapper = createWrapper({
-        hasExistingTopics: { value: true },
-        topicsDistributionCount: { value: 3 },
-        topicsDistribution: { value: mockDistribution },
+        hasExistingTopics: true,
+        topicsDistributionCount: 3,
+        topicsDistribution: mockDistribution,
       });
 
       expect(wrapper.vm.treemapData).toEqual(expectedSorted);
@@ -190,9 +183,9 @@ describe('MostTalkedAboutTopicsWidget', () => {
       const originalOrder = [...mockDistribution];
 
       wrapper = createWrapper({
-        hasExistingTopics: { value: true },
-        topicsDistributionCount: { value: 2 },
-        topicsDistribution: { value: mockDistribution },
+        hasExistingTopics: true,
+        topicsDistributionCount: 2,
+        topicsDistribution: mockDistribution,
       });
 
       const sortedData = wrapper.vm.treemapData;
@@ -222,7 +215,7 @@ describe('MostTalkedAboutTopicsWidget', () => {
     });
 
     it('should not toggle drawer when loading', () => {
-      wrapper = createWrapper({ isLoadingTopicsDistribution: { value: true } });
+      wrapper = createWrapper({ isLoadingTopicsDistribution: true });
 
       wrapper.vm.handleSeeAllDrawer();
 
@@ -252,16 +245,16 @@ describe('MostTalkedAboutTopicsWidget', () => {
     it('should handle different store states', () => {
       const testCases = [
         {
-          hasExistingTopics: { value: true },
-          isLoadingTopicsDistribution: { value: false },
+          hasExistingTopics: true,
+          isLoadingTopicsDistribution: false,
         },
         {
-          hasExistingTopics: { value: false },
-          isLoadingTopicsDistribution: { value: false },
+          hasExistingTopics: false,
+          isLoadingTopicsDistribution: false,
         },
         {
-          hasExistingTopics: { value: false },
-          isLoadingTopicsDistribution: { value: true },
+          hasExistingTopics: false,
+          isLoadingTopicsDistribution: true,
         },
       ];
 
@@ -303,19 +296,17 @@ describe('MostTalkedAboutTopicsWidget', () => {
   describe('Mock mode (shouldUseMock = true)', () => {
     beforeEach(() => {
       vi.clearAllMocks();
-      mockConversationalStore.shouldUseMock = { value: true };
-      Object.assign(mockTopicsStore, {
-        topicsDistributionCount: { value: 0 },
-        topicsDistribution: { value: [] },
-        isLoadingTopicsDistribution: { value: false },
-        topicType: { value: 'HUMAN' },
-        hasExistingTopics: { value: false },
-      });
+      shouldUseMock.value = true;
+      topicsDistributionCount.value = 0;
+      topicsDistribution.value = [];
+      isLoadingTopicsDistribution.value = false;
+      topicType.value = 'HUMAN';
+      hasExistingTopics.value = false;
       wrapper = createWrapper();
     });
 
     afterEach(() => {
-      mockConversationalStore.shouldUseMock = { value: false };
+      shouldUseMock.value = false;
     });
 
     it('should use mock topics distribution as treemapData', () => {
@@ -333,16 +324,12 @@ describe('MostTalkedAboutTopicsWidget', () => {
     });
 
     it('should pass empty actions to BaseConversationWidget', () => {
-      const baseWidget = wrapper.find(
-        '[data-testid="topics-base-widget"]',
-      );
+      const baseWidget = wrapper.find('[data-testid="topics-base-widget"]');
       expect(baseWidget.attributes('actions')).toBe('');
     });
 
     it('should pass hiddenTabs as true to BaseConversationWidget', () => {
-      const baseWidget = wrapper.find(
-        '[data-testid="topics-base-widget"]',
-      );
+      const baseWidget = wrapper.find('[data-testid="topics-base-widget"]');
       expect(baseWidget.attributes('hiddentabs')).toBeTruthy();
     });
 
@@ -353,9 +340,9 @@ describe('MostTalkedAboutTopicsWidget', () => {
     });
 
     it('should show AddWidget overlay for hover effect', () => {
-      expect(
-        wrapper.find('[data-testid="topics-add-widget"]').exists(),
-      ).toBe(true);
+      expect(wrapper.find('[data-testid="topics-add-widget"]').exists()).toBe(
+        true,
+      );
     });
   });
 });

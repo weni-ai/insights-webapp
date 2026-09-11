@@ -1,11 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { createTestingPinia } from '@pinia/testing';
 import { ref } from 'vue';
 
 import ServiceStatus from '../StatusCards.vue';
 import { LazyVisibilityKey } from '@/composables/useLazyData';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const defaultServiceStatusData = {
   is_waiting: 25,
@@ -80,7 +83,7 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('ServiceStatus', () => {
   let wrapper;

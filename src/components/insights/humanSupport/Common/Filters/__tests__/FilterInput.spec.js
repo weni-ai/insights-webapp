@@ -1,12 +1,17 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount, config } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
 import FilterInput from '../FilterInput.vue';
 
-const i18n = createI18n({ legacy: false });
-config.global.plugins = [i18n];
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = (props = {}) => {
   return mount(FilterInput, {

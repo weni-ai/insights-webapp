@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import StatusCards from '../StatusCards.vue';
 
@@ -9,16 +8,6 @@ vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
   getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockServiceStatusData = {
   finished: 100,
@@ -170,28 +159,32 @@ describe('StatusCards', () => {
     });
 
     it('should handle card click event', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       const mockScrollIntoView = vi.fn();
       const mockElement = { scrollIntoView: mockScrollIntoView };
       vi.spyOn(document, 'querySelector').mockReturnValue(mockElement);
 
       const cards = wrapper.findAllComponents({ name: 'CardConversations' });
       await cards[0].vm.$emit('click');
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await vi.advanceTimersByTimeAsync(100);
 
       expect(mockScrollIntoView).toHaveBeenCalledWith({
         behavior: 'smooth',
         block: 'start',
       });
+      vi.useRealTimers();
     });
 
     it('should not throw error if scroll element is not found', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       vi.spyOn(document, 'querySelector').mockReturnValue(null);
 
       const cards = wrapper.findAllComponents({ name: 'CardConversations' });
       await cards[0].vm.$emit('click');
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await vi.advanceTimersByTimeAsync(100);
 
       expect(document.querySelector).toHaveBeenCalled();
+      vi.useRealTimers();
     });
   });
 });

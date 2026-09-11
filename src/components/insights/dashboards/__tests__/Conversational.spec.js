@@ -3,7 +3,6 @@ import { nextTick, ref, reactive } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import Conversational from '../Conversational.vue';
-import { createI18n } from 'vue-i18n';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useWidgets } from '@/store/modules/widgets';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
@@ -12,12 +11,6 @@ import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import { useAutoWidgets } from '@/store/modules/conversational/autoWidgets';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useProject } from '@/store/modules/project';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 vi.mock('@/store/modules/conversational/widgets');
 vi.mock('@/store/modules/widgets');

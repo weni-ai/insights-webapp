@@ -3,20 +3,23 @@ import { nextTick, ref } from 'vue';
 import { shallowMount, config } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import HeaderRefresh from '../HeaderRefresh.vue';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    messages: {
-      en: {
-        'insights_header.refresh': 'Refresh',
-      },
+const i18n = createI18n({
+  legacy: false,
+  messages: {
+    en: {
+      'insights_header.refresh': 'Refresh',
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 vi.mock('@/store/modules/humanSupport/monitoring');
 vi.mock('@/store/modules/conversational/conversational');

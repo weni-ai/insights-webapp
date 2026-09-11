@@ -1,18 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import { mount } from '@vue/test-utils';
 import ProgressWidget from '../ProgressWidget.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const defaultProps = {
   title: 'Test Progress Widget',
@@ -25,7 +13,6 @@ const defaultProps = {
 const createWrapper = (props = {}) => {
   return mount(ProgressWidget, {
     global: {
-      plugins: [UnnnicSystem],
       stubs: ['ProgressTable'],
       mocks: {
         $t: (key) => key,

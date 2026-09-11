@@ -1,19 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { mount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
 import DynamicGrid from '../DynamicGrid.vue';
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 config.global.mocks = {
   $t: (key) => key,
 };

@@ -1,16 +1,17 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
-import { config } from '@vue/test-utils';
+import { mount, config } from '@vue/test-utils';
 
 import BaseConversationWidget from '../BaseConversationWidget.vue';
 import i18n from '@/utils/plugins/i18n';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = (props = {}, options = {}) => {
   return mount(BaseConversationWidget, {
@@ -21,6 +22,18 @@ const createWrapper = (props = {}, options = {}) => {
     global: {
       stubs: {
         ShortTab: true,
+        // Keep dropdown content in the wrapper DOM (real UnnnicDropdown teleports/hides items)
+        UnnnicDropdown: {
+          name: 'UnnnicDropdown',
+          template:
+            '<div data-testid="actions-dropdown"><slot name="trigger" /><slot /></div>',
+        },
+        UnnnicDropdownItem: {
+          name: 'UnnnicDropdownItem',
+          emits: ['click'],
+          template:
+            '<div data-testid="action" @click="$emit(\'click\')"><slot /></div>',
+        },
       },
     },
     ...options,
@@ -180,21 +193,21 @@ describe('BaseConversationWidget', () => {
     });
 
     it('should render action icons with correct props', () => {
-      const icons = wrapper.findAll('[data-testid="action-icon"]');
+      const icons = wrapper.findAllComponents('[data-testid="action-icon"]');
 
-      expect(icons[0].attributes()).toMatchObject({
+      expect(icons[0].props()).toMatchObject({
         icon: 'edit',
         size: 'sm',
         scheme: 'weni-500',
       });
 
-      expect(icons[1].attributes()).toMatchObject({
+      expect(icons[1].props()).toMatchObject({
         icon: 'delete',
         size: 'sm',
         scheme: 'aux-red-500',
       });
 
-      expect(icons[2].attributes()).toMatchObject({
+      expect(icons[2].props()).toMatchObject({
         icon: 'copy',
         size: 'sm',
         scheme: 'neutral-dark',

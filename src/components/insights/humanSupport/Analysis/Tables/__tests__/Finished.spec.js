@@ -1,8 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
+import { ref } from 'vue';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { createTestingPinia } from '@pinia/testing';
 import Finished from '../Finished.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('date-fns', () => ({
   subDays: vi.fn((date) => date),
@@ -17,10 +21,10 @@ vi.mock('@/utils/time', () => ({
 }));
 
 const mockInfiniteScroll = {
-  isLoading: { value: false },
-  isLoadingMore: { value: false },
+  isLoading: ref(false),
+  isLoadingMore: ref(false),
   formattedItems: { value: [] },
-  hasMoreData: { value: false },
+  hasMoreData: ref(false),
   loadMoreData: vi.fn(),
   resetAndLoadData: vi.fn(),
   handleSort: vi.fn(),
@@ -66,7 +70,7 @@ const i18n = createI18n({
   },
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('Finished', () => {
   let wrapper;
@@ -96,12 +100,10 @@ describe('Finished', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.assign(mockInfiniteScroll, {
-      isLoading: { value: false },
-      isLoadingMore: { value: false },
-      formattedItems: { value: [] },
-      hasMoreData: { value: false },
-    });
+    mockInfiniteScroll.isLoading.value = false;
+    mockInfiniteScroll.isLoadingMore.value = false;
+    Object.assign(mockInfiniteScroll.formattedItems, { value: [] });
+    mockInfiniteScroll.hasMoreData.value = false;
     wrapper = createWrapper();
   });
 

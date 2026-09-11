@@ -1,16 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 
 import ProgressTable from '@/components/ProgressTable.vue';
 import ProgressItem from '@/components/ProgressTableRow.vue';
-import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 const mockProgressItems = [
   {

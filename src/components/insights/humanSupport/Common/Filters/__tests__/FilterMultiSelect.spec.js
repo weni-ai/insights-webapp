@@ -1,15 +1,20 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount, config } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
 import FilterMultiSelect from '../FilterMultiSelect.vue';
 import Projects from '@/services/api/resources/projects';
 
-vi.mock('@/services/api/resources/projects');
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
 
-const i18n = createI18n({ legacy: false });
-config.global.plugins = [i18n];
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin, mockRouter];
+
+vi.mock('@/services/api/resources/projects');
 
 const mockApiResponse = [
   { name: 'Custom Status 1' },

@@ -21,7 +21,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
         data-v-1d7c4579=""
       >
         
-        conversations_dashboard.customize_your_dashboard.modal_remove_widget.title {}
+        Remove widget
         
       </div>
       
@@ -36,7 +36,7 @@ exports[`ModalRemoveWidget > Component structure > should match snapshot 1`] = `
         data-testid="modal-remove-widget-description"
         data-v-1d7c4579=""
       >
-        conversations_dashboard.customize_your_dashboard.modal_remove_widget.description {}
+        Are you sure you want to remove the  widget?
       </p>
       
     </section>

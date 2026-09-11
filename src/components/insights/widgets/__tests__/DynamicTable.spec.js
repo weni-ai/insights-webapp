@@ -1,24 +1,21 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import { beforeEach, describe, it, vi, beforeAll, afterAll } from 'vitest';
+import { beforeEach, describe, it, vi } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
-import i18n from '@/utils/plugins/i18n';
 
 import DynamicTable from '../DynamicTable.vue';
 import TableHumanServiceAgents from '../HumanServiceAgentsTable/index.vue';
 import TableGroup from '@/components/insights/widgets/TableGroup.vue';
 
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
 
-afterAll(() => {
-  vi.restoreAllMocks();
-});
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 const router = createRouter({
   history: createWebHistory(),

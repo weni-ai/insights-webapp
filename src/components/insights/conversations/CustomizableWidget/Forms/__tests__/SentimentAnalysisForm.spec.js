@@ -1,21 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import Unnnic from '@weni/unnnic-system';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 import SentimentAnalysisForm from '../SentimentAnalysisForm.vue';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 
 import Projects from '@/services/api/resources/projects';
 import NexusApi from '@/services/api/resources/nexus';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 vi.stubEnv('CSAT_AGENT_UUID', 'csat-agent-uuid');
 vi.stubEnv('NPS_AGENT_UUID', 'nps-agent-uuid');
@@ -88,7 +81,13 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
         UnnnicCheckbox: Unnnic.unnnicCheckbox,
         UnnnicSelect: {
           template: '<div></div>',
-          props: ['modelValue', 'options', 'disabled', 'itemLabel', 'itemValue'],
+          props: [
+            'modelValue',
+            'options',
+            'disabled',
+            'itemLabel',
+            'itemValue',
+          ],
         },
         UnnnicButton: Unnnic.unnnicButton,
         UnnnicLabel: Unnnic.unnnicLabel,

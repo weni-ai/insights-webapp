@@ -43,18 +43,13 @@ ENV CHATS_API_URL=${CHATS_API_URL}
 ENV CHATS_WEBSOCKET_URL=${CHATS_WEBSOCKET_URL}
 ENV WENI_API_URL=${WENI_API_URL}
 
-RUN apk add --no-cache \
-    git \
-    build-base \
-    cairo-dev \
-    pango-dev \
-    jpeg-dev \
-    giflib-dev \
-    librsvg-dev
+# Production build only needs runtime deps; skip native canvas toolchain
+# (canvas is a test-only optional peer of chart.js / jsdom).
+RUN apk add --no-cache git
 
 COPY package.json package-lock.json ./
 
-RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm install
+RUN --mount=type=cache,target=/root/.npm NPM_CONFIG_CACHE=/root/.npm npm ci --omit=dev
 
 COPY . ./
 

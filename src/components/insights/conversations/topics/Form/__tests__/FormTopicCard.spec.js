@@ -2,27 +2,30 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
-import FormTopicCard from '../FormTopicCard.vue';
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        conversations_dashboard: {
-          form_topic: {
-            new_topic: 'New Topic',
-            new_sub_topic: 'New Sub-topic',
-            topic_name: 'Topic Name',
-            context: 'Context',
-            context_description: 'Provide context for this topic',
-          },
+import FormTopicCard from '../FormTopicCard.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      conversations_dashboard: {
+        form_topic: {
+          new_topic: 'New Topic',
+          new_sub_topic: 'New Sub-topic',
+          topic_name: 'Topic Name',
+          context: 'Context',
+          context_description: 'Provide context for this topic',
         },
       },
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const mockTopic = {
   name: 'Test Topic',

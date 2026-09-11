@@ -1,8 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
+import { ref } from 'vue';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { createTestingPinia } from '@pinia/testing';
 import Pauses from '../Pauses.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('date-fns', () => ({
   subDays: vi.fn((date) => date),
@@ -15,21 +19,21 @@ vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
 }));
 
-const mockInfiniteScroll = {
-  isLoading: { value: false },
-  isLoadingMore: { value: false },
-  formattedItems: {
-    value: [
-      {
-        agent: { name: 'Agent 1', is_deleted: false },
-        custom_status: [
-          { status_type: 'Break', break_time: 300 },
-          { status_type: 'Lunch', break_time: 600 },
-        ],
-      },
+const defaultFormattedItems = [
+  {
+    agent: { name: 'Agent 1', is_deleted: false },
+    custom_status: [
+      { status_type: 'Break', break_time: 300 },
+      { status_type: 'Lunch', break_time: 600 },
     ],
   },
-  hasMoreData: { value: false },
+];
+
+const mockInfiniteScroll = {
+  isLoading: ref(false),
+  isLoadingMore: ref(false),
+  formattedItems: { value: defaultFormattedItems },
+  hasMoreData: ref(false),
   loadMoreData: vi.fn(),
   resetAndLoadData: vi.fn(),
   handleSort: vi.fn(),
@@ -60,7 +64,7 @@ const i18n = createI18n({
   },
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('Pauses', () => {
   let wrapper;
@@ -92,17 +96,12 @@ describe('Pauses', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockInfiniteScroll.isLoading.value = false;
+    mockInfiniteScroll.isLoadingMore.value = false;
     Object.assign(mockInfiniteScroll.formattedItems, {
-      value: [
-        {
-          agent: { name: 'Agent 1', is_deleted: false },
-          custom_status: [
-            { status_type: 'Break', break_time: 300 },
-            { status_type: 'Lunch', break_time: 600 },
-          ],
-        },
-      ],
+      value: defaultFormattedItems.map((item) => ({ ...item })),
     });
+    mockInfiniteScroll.hasMoreData.value = false;
     wrapper = createWrapper();
   });
 

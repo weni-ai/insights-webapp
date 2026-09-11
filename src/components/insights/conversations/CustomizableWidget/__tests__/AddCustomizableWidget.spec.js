@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { shallowMount, config } from '@vue/test-utils';
 
 import AddCustomizableWidget from '../AddCustomizableWidget.vue';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = (props = {}) => {
   return shallowMount(AddCustomizableWidget, {

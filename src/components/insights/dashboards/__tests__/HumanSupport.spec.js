@@ -1,26 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { nextTick } from 'vue';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { setActivePinia, createPinia } from 'pinia';
-import { createI18n } from 'vue-i18n';
 import HumanSupport from '../HumanSupport.vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    messages: {
-      en: {
-        human_support_dashboard: {
-          monitoring: 'Monitoring',
-          analysis: 'Analysis',
-          monitoring_tooltip: 'Monitoring tooltip text',
-          analysis_tooltip: 'Analysis tooltip text',
-        },
-      },
-    },
-  }),
-];
 
 vi.mock('@/services/api/resources/projects', () => ({
   default: {

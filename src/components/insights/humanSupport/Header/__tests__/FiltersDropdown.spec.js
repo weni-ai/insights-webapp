@@ -2,36 +2,39 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, shallowMount } from '@vue/test-utils';
 import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
-import FiltersDropdown from '../FiltersDropdown.vue';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        export_data: {
-          filters: {
-            sector: 'Sector',
-            select_sector: 'Select sector',
-            all_sectors: 'All sectors',
-            queue: 'Queue',
-            select_queue: 'Select queue',
-            all_queues: 'All queues',
-            tag: 'Tag',
-            select_tag: 'Select tag',
-            all_tags: 'All tags',
-          },
-        },
-        insights_header: {
-          clear_filters: 'Clear',
-          filtrate: 'Apply',
-          filters: 'Filters',
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
+import FiltersDropdown from '../FiltersDropdown.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      export_data: {
+        filters: {
+          sector: 'Sector',
+          select_sector: 'Select sector',
+          all_sectors: 'All sectors',
+          queue: 'Queue',
+          select_queue: 'Select queue',
+          all_queues: 'All queues',
+          tag: 'Tag',
+          select_tag: 'Select tag',
+          all_tags: 'All tags',
         },
       },
+      insights_header: {
+        clear_filters: 'Clear',
+        filtrate: 'Apply',
+        filters: 'Filters',
+      },
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const appliedFiltersLengthRef = ref(0);
 const sectorsRef = ref([]);
@@ -221,12 +224,14 @@ describe('FiltersDropdown', () => {
     });
 
     it('sets options active with delay when false', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       wrapper.vm.isOptionsActive = true;
       wrapper.vm.handleOptionsActiveChange(false);
       expect(wrapper.vm.isOptionsActive).toBe(true);
 
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await vi.advanceTimersByTimeAsync(100);
       expect(wrapper.vm.isOptionsActive).toBe(false);
+      vi.useRealTimers();
     });
   });
 

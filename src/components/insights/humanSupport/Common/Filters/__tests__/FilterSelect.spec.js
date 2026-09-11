@@ -1,15 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
 import FilterSelect from '../FilterSelect.vue';
 import Projects from '@/services/api/resources/projects';
 
 vi.mock('@/services/api/resources/projects');
-
-const i18n = createI18n({ legacy: false });
-config.global.plugins = [i18n];
 
 const mockApiResponse = {
   results: [
@@ -352,9 +348,7 @@ describe('FilterSelect', () => {
     });
 
     it('should search for attendant filter by name', async () => {
-      Projects.getProjectSource = vi
-        .fn()
-        .mockResolvedValue(mockApiResponse);
+      Projects.getProjectSource = vi.fn().mockResolvedValue(mockApiResponse);
       wrapper = createWrapper();
       await nextTick();
 
@@ -368,9 +362,7 @@ describe('FilterSelect', () => {
     });
 
     it('should debounce search for attendant filter', async () => {
-      Projects.getProjectSource = vi
-        .fn()
-        .mockResolvedValue(mockApiResponse);
+      Projects.getProjectSource = vi.fn().mockResolvedValue(mockApiResponse);
       wrapper = createWrapper();
       await nextTick();
 

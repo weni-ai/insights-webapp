@@ -8,7 +8,7 @@
     "analyze": "rspack --analyze",
     "test": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest --coverage",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "npm run lint --fix"
   },
@@ -55,7 +55,6 @@
     "@vue/eslint-config-prettier": "^8.0.0",
     "@vue/test-utils": "^2.4.6",
     "@weni/eslint-config": "^1.0.3",
-    "canvas": "^2.10.0",
     "css-loader": "^7.1.4",
     "eslint": "^8.0.0",
     "eslint-config-prettier": "^9.1.0",

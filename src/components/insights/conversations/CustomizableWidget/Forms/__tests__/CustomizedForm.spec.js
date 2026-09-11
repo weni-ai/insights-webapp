@@ -1,25 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { nextTick } from 'vue';
-import { config, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
 
 import CustomizedForm from '../CustomizedForm.vue';
 import { useCustomizedWidgetForm } from '@/store/modules/conversational/customizedForm';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useProject } from '@/store/modules/project';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: { conversations_dashboard: { customize_your_dashboard: {} } },
-    },
-    fallbackWarn: false,
-    missingWarn: false,
-  }),
-];
 
 const factory = ({
   isNewDrawerCustomizable = false,

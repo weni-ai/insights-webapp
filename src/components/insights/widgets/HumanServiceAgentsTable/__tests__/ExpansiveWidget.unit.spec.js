@@ -1,27 +1,14 @@
 import { mount, flushPromises, config } from '@vue/test-utils';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
 import { ref } from 'vue';
-import en from '@/locales/en.json';
 
 import ExpansiveWidget from '../../ExpansiveWidget.vue';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import { useWidgets } from '@/store/modules/widgets';
 
 vi.mock('@vueuse/core', () => ({
   useElementVisibility: vi.fn(() => ref(true)),
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 
 vi.stubGlobal(
   'setInterval',
@@ -138,7 +125,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -161,7 +147,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -191,7 +176,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: customStore,
           },
@@ -222,7 +206,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: customStore,
           },
@@ -242,7 +225,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -275,7 +257,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -300,7 +281,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -332,7 +312,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -356,7 +335,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -381,7 +359,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },
@@ -417,7 +394,6 @@ describe('ExpansiveWidget', () => {
           widget: mockWidget,
         },
         global: {
-          plugins: [i18n, UnnnicSystem],
           provide: {
             store: store,
           },

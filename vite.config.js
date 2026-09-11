@@ -11,6 +11,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        api: 'modern',
         additionalData: `@use '@weni/unnnic-system/src/assets/scss/unnnic.scss' as *;`,
       },
     },
@@ -18,6 +19,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@tests': fileURLToPath(new URL('./tests', import.meta.url)),
       'connect/sharedStore':
         process.env.NODE_ENV === 'test'
           ? path.resolve(__dirname, 'tests/__mocks__/connect/sharedStore.js')

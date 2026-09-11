@@ -1,6 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { ref } from 'vue';
 import ConversationalCustom from '../ConversationalCustom.vue';
 
@@ -48,29 +47,6 @@ vi.mock('pinia', async (importOriginal) => ({
   ...(await importOriginal()),
   storeToRefs: (store) => store,
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        customize_your_dashboard: {
-          edit_csat_or_nps: 'Edit',
-          remove_widget: 'Remove',
-        },
-        widget_error: {
-          title: 'Error',
-          button: 'Retry',
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('ConversationalCustom', () => {
   let wrapper;
@@ -134,9 +110,9 @@ describe('ConversationalCustom', () => {
     });
 
     it('should load data on mount', () => {
-      expect(
-        mockCustomWidgetsStore.loadCustomWidgetData,
-      ).toHaveBeenCalledWith('test-uuid');
+      expect(mockCustomWidgetsStore.loadCustomWidgetData).toHaveBeenCalledWith(
+        'test-uuid',
+      );
     });
 
     it('should provide edit and delete actions', () => {

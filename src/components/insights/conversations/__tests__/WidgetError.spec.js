@@ -1,14 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import WidgetError from '../WidgetError.vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 describe('WidgetError', () => {
   let wrapper;

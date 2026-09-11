@@ -1,14 +1,23 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, shallowMount, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
+
+import { createTestI18n, mockRouter } from '@tests/utils/testHelpers.js';
+
+// Empty catalog for raw i18n key assertions; omit UnnnicSystemPlugin so stubs apply
+config.global.plugins = [createTestI18n({}), mockRouter];
+
+const { mockHasValidSalesFunnelAgent } = vi.hoisted(() => {
+  const vue = require('vue');
+  return { mockHasValidSalesFunnelAgent: vue.ref(false) };
+});
 
 vi.mock('@/services/api/resources/conversational/widgets', () => ({
   default: {
@@ -30,7 +39,7 @@ vi.mock('@/store/modules/project', () => ({
     getAgentsTeam: vi.fn(),
     agentsTeam: { manager: null, agents: [] },
     isLoadingAgentsTeam: false,
-    hasValidSalesFunnelAgent: ref(false),
+    hasValidSalesFunnelAgent: mockHasValidSalesFunnelAgent,
     hasAbandonedCartRecoveryEnabled: ref(true),
   }),
 }));
@@ -70,12 +79,6 @@ vi.mock('@/utils/plugins/i18n', () => ({
   },
 }));
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
-
 const createWrapper = (props = {}, storeOverrides = {}, options = {}) => {
   const pinia = createTestingPinia({
     initialState: {
@@ -109,13 +112,14 @@ const createWrapper = (props = {}, storeOverrides = {}, options = {}) => {
       plugins: [pinia],
       stubs: {
         UnnnicDrawer: {
+          name: 'UnnnicDrawer',
           template:
             '<div><slot name="content" /><slot name="header-close" /></div>',
           emits: ['close', 'primary-button-click', 'secondary-button-click'],
         },
         UnnnicTab: {
-          template:
-            '<div><slot v-for="tab in tabs" :name="`tab-panel-${tab}`" :key="tab" /></div>',
+          name: 'UnnnicTab',
+          template: '<div><slot :name="`tab-panel-${activeTab}`" /></div>',
           props: ['tabs', 'activeTab'],
         },
         ModalAttention: {
@@ -273,22 +277,43 @@ describe('CustomizableWidget', () => {
   });
 
   describe('Drawer content', () => {
+    beforeEach(async () => {
+      mockHasValidSalesFunnelAgent.value = true;
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValue({
+        available_widgets: ['SALES_FUNNEL', 'SEARCH_TERMS', 'ADDED_TO_CART'],
+      });
+      wrapper = createWrapper();
+      conversationalStore = useConversational();
+      await flushPromises();
+      await nextTick();
+    });
+
+    afterEach(() => {
+      mockHasValidSalesFunnelAgent.value = false;
+      WidgetConversationalService.getAvailableWidgets.mockResolvedValue({
+        available_widgets: [],
+      });
+    });
+
     it('should render drawer with correct initial props', () => {
       const drawerComponent = drawer();
       expect(drawerComponent.exists()).toBe(true);
       expect(drawerComponent.attributes('title')).toBe('Widgets');
     });
 
-    it('should render correct number of available widgets when no CSAT/NPS configured', () => {
+    it('should render correct number of available widgets when no CSAT/NPS configured', async () => {
+      await flushPromises();
       expect(drawerItems()).toHaveLength(8);
     });
 
     it('should set type when widget is selected', async () => {
+      await flushPromises();
       await drawerItems()[0].trigger('click');
       expect(conversationalStore.drawerWidgetType).toBe('csat');
     });
 
     it('should render ConfigCustomizableForm component when widget is selected', async () => {
+      await flushPromises();
       await drawerItems()[0].trigger('click');
       await nextTick();
       expect(configCustomizableForm().exists()).toBe(true);

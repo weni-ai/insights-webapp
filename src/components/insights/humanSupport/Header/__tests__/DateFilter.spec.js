@@ -1,24 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { nextTick, ref } from 'vue';
-import { createI18n } from 'vue-i18n';
 import DateFilter from '../DateFilter.vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        human_support: {
-          filters: {
-            date_range: 'Date Range',
-          },
-        },
-      },
-    },
-  }),
-];
 
 const appliedDateRangeRef = ref({ start: '2024-01-01', end: '2024-01-31' });
 

@@ -10,22 +10,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 
-import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
-
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
   default: {
@@ -93,7 +78,7 @@ describe('TemplateMessageMeta', () => {
   const createWrapper = (options = {}) => {
     return mount(TemplateMessageMeta, {
       global: {
-        plugins: [UnnnicSystem, pinia],
+        plugins: [pinia],
         mocks: {
           $t: (key) => key,
         },

@@ -3,9 +3,7 @@ import { createTestingPinia } from '@pinia/testing';
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 
 import { expect, vi } from 'vitest';
-import { createI18n } from 'vue-i18n';
 
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import FilterFavoriteTemplate from '../FilterFavoriteTemplateMessage.vue';
 
 vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
@@ -17,25 +15,13 @@ vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
   },
 }));
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
-
 describe('FilterFavoriteTemplate.vue', () => {
   let store;
   let wrapper;
 
   const createWrapper = () => {
     return mount(FilterFavoriteTemplate, {
-      global: { plugins: [store, UnnnicSystem] },
+      global: { plugins: [store] },
     });
   };
 
@@ -91,7 +77,10 @@ describe('FilterFavoriteTemplate.vue', () => {
       .findComponent('[data-testid="select-favorite-template"]')
       .vm.$emit('update:model-value', '1');
 
-    expect(dispatchSpy).toHaveBeenCalledWith({ value: '1', label: 'Favorite 1' });
+    expect(dispatchSpy).toHaveBeenCalledWith({
+      value: '1',
+      label: 'Favorite 1',
+    });
   });
 
   it('resets selectedFavorite when selectedTemplateUuid changes to non-favorite', async () => {

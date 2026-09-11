@@ -1,28 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import { nextTick, ref } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 import DrawerTopics from '../DrawerTopics.vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        conversations_dashboard: {
-          form_topic: {
-            title: 'Add Topics',
-            save: 'Save',
-            cancel: 'Cancel',
-            disclaimer: 'This is a disclaimer message for adding topics',
-          },
-        },
-      },
-    },
-  }),
-];
 
 const isAddTopicsDrawerOpenRef = ref(false);
 const isOpenModalRef = ref(false);

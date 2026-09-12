@@ -51,6 +51,7 @@ describe('finished analysis API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [],
       },
       appliedDateRange: {
         start: '2026-01-01',
@@ -79,6 +80,7 @@ describe('finished analysis API', () => {
           sectors: ['sector1'],
           queues: ['queue1'],
           tags: ['tag1'],
+          channels: [],
           agent: 'agent@example.com',
           contact: '5511999999999',
           ticket_id: 'TK-001',

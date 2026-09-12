@@ -26,7 +26,7 @@
           <UnnnicLabel :label="$t('export_data.filters.sector')" />
           <FilterMultiSelect
             v-model="sectors"
-            :placeholder="$t('export_data.filters.select_sector')"
+            :placeholder="$t('export_data.filters.select_to_filter')"
             source="sectors"
             keyValueField="uuid"
             @update:model-value="handleUpdateSectors"
@@ -38,7 +38,7 @@
           <UnnnicLabel :label="$t('export_data.filters.queue')" />
           <FilterMultiSelect
             v-model="queues"
-            :placeholder="$t('export_data.filters.select_queue')"
+            :placeholder="$t('export_data.filters.select_to_filter')"
             source="queues"
             keyValueField="uuid"
             :disabled="!hasSectorsSelected || isManySectorsSelected"
@@ -51,11 +51,22 @@
           <UnnnicLabel :label="$t('export_data.filters.tag')" />
           <FilterMultiSelect
             v-model="tags"
-            :placeholder="$t('export_data.filters.select_tag')"
+            :placeholder="$t('export_data.filters.select_to_filter')"
             source="tags"
             keyValueField="uuid"
             :disabled="!hasSectorsSelected || isManySectorsSelected"
             :dependsOnValue="dependsOnValueTags"
+            @on-options-active-change="handleOptionsActiveChange"
+          />
+        </section>
+
+        <section class="filters-dropdown__container">
+          <UnnnicLabel :label="$t('export_data.filters.channel')" />
+          <FilterMultiSelect
+            v-model="channels"
+            :placeholder="$t('export_data.filters.select_to_filter')"
+            source="channels"
+            keyValueField="name"
             @on-options-active-change="handleOptionsActiveChange"
           />
         </section>
@@ -103,6 +114,7 @@ const {
   sectors,
   queues,
   tags,
+  channels,
   hasAppliedFiltersNoChanges,
 } = storeToRefs(humanSupport);
 

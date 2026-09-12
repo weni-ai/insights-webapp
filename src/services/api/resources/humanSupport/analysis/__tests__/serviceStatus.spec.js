@@ -42,6 +42,7 @@ describe('serviceStatus analysis API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [],
       },
       appliedDateRange: {
         start: '2026-01-01',
@@ -65,6 +66,7 @@ describe('serviceStatus analysis API', () => {
           sectors: ['sector1'],
           queues: ['queue1'],
           tags: ['tag1'],
+          channels: [],
         },
       },
     );

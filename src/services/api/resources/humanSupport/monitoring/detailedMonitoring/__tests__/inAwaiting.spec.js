@@ -36,6 +36,7 @@ describe('inAwaiting API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [],
       },
       appliedDetailFilters: {
         contactInput: { value: '' },
@@ -56,6 +57,7 @@ describe('inAwaiting API', () => {
           sectors: ['sector1'],
           queues: ['queue1'],
           tags: ['tag1'],
+          channels: [],
           ordering: 'awaiting_time',
         },
       },
@@ -100,6 +102,7 @@ describe('inAwaiting API', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       },
       appliedDetailFilters: {
         contactInput: { value: '5511888888888' },

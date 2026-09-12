@@ -147,6 +147,14 @@ import { formatValue, formatToPercent } from '@/utils/numbers';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
+import { useFeatureFlag } from '@/store/modules/featureFlag';
+
+const featureFlagStore = useFeatureFlag();
+const { isFeatureFlagEnabled } = featureFlagStore;
+
+const isDisalbledSelectMetaTemplateApi = computed(() =>
+  isFeatureFlagEnabled('analyticsDisabledSelectMetaAPI'),
+);
 
 const dashboardsStore = useDashboards();
 const configStore = useConfig();
@@ -171,6 +179,7 @@ const initialLoading = ref(false);
 const viewTab = ref('home');
 
 const showDataSourceSelect = computed(() => {
+  if (isDisalbledSelectMetaTemplateApi.value) return false;
   return (
     viewTab.value === 'template' &&
     templatePreview.value.category === 'MARKETING'
@@ -386,7 +395,8 @@ const getButtonClicksData = async () => {
       date_start: appliedFilters.value?.date?._start,
       date_end: appliedFilters.value?.date?._end,
       product_type:
-        templatePreview.value.category === 'MARKETING'
+        templatePreview.value.category === 'MARKETING' &&
+        !isDisalbledSelectMetaTemplateApi.value
           ? selectedApiOptions.value
           : undefined,
     };

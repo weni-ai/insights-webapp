@@ -8,12 +8,6 @@
       v-if="showSetup"
       v-bind="widgetSetupProps"
     />
-    <p
-      class="time-metrics__title"
-      data-testid="time-metrics-title"
-    >
-      {{ $t('human_support_dashboard.time_metrics.title') }}
-    </p>
     <section
       class="time-metrics__cards"
       data-testid="time-metrics-cards"
@@ -25,10 +19,13 @@
         <CardConversations
           class="time-metrics__card"
           :title="$t(card.titleKey)"
+          :titleTooltip="
+            card.titleTooltipKey ? $t(card.titleTooltipKey) : undefined
+          "
           :value="getCardValue(card.id)"
           :description="getCardSubValue(card.id)"
           :tooltipInfo="$t(card.tooltipKey)"
-          borderRadius="full"
+          :borderRadius="getBorderRadius(index, cardDefinitions.length)"
           activeDescriptionGap
           enableTimeIcon
           :tooltipSide="getTooltipSide(index)"
@@ -85,7 +82,8 @@ type AlertScheme = 'red' | 'orange' | 'yellow';
 interface CardData {
   id: CardId;
   titleKey: string;
-  tooltipKey: string;
+  titleTooltipKey?: string;
+  tooltipKey?: string;
 }
 
 const project = useProject();
@@ -105,6 +103,8 @@ const cardDefinitions: CardData[] = [
   {
     id: 'average_time_is_waiting',
     titleKey: 'human_support_dashboard.time_metrics.average_time_is_waiting',
+    titleTooltipKey:
+      'human_support_dashboard.time_metrics.title_tooltips.average_time_is_waiting',
     tooltipKey:
       'human_support_dashboard.time_metrics.tooltips.average_time_is_waiting',
   },
@@ -112,12 +112,16 @@ const cardDefinitions: CardData[] = [
     id: 'average_time_first_response',
     titleKey:
       'human_support_dashboard.time_metrics.average_time_first_response',
+    titleTooltipKey:
+      'human_support_dashboard.time_metrics.title_tooltips.average_time_first_response',
     tooltipKey:
       'human_support_dashboard.time_metrics.tooltips.average_time_first_response',
   },
   {
     id: 'average_time_chat',
     titleKey: 'human_support_dashboard.time_metrics.average_time_chat',
+    titleTooltipKey:
+      'human_support_dashboard.time_metrics.title_tooltips.average_time_chat',
     tooltipKey:
       'human_support_dashboard.time_metrics.tooltips.average_time_chat',
   },
@@ -214,6 +218,12 @@ const getCardAlert = (id: CardId) => {
   };
 };
 
+const getBorderRadius = (index: number, totalCards: number) => {
+  if (index === 0) return 'left';
+  if (index === totalCards - 1) return 'right';
+  return 'none';
+};
+
 const getTooltipSide = (index: number) => {
   const lastIndex = cardDefinitions.length - 1;
 
@@ -279,7 +289,7 @@ $min-height: 134px;
 
   &__cards {
     display: flex;
-    gap: $unnnic-space-4;
+    flex: 1;
     min-height: $min-height;
   }
 }

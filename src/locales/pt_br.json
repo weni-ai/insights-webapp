@@ -1240,10 +1240,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoramento",
-    "monitoring_tooltip": "Acompanhe em tempo real os atendimentos do dia. Identifique gargalos e tome decisões rápidas para otimizar a operação.",
-    "analysis": "Análise",
-    "analysis_tooltip": "Explore o desempenho de salas encerradas em diferentes períodos de tempo. Descubra padrões, tendências e oportunidades de melhoria na sua equipe.",
+    "live": "Ao vivo",
+    "historical_data": "Dados históricos",
+    "news_disclaimer": {
+      "title": "Novidade nos dashboards!",
+      "description": "O dashboard <i>Monitoramento</i> agora se chama <i>Ao vivo</i> e mostra dados em tempo real sobre atendentes e atendimentos em espera ou em andamento. Para analisar atendimentos já finalizados, inclusive os realizados hoje, acesse <i>Dados históricos</i>."
+    },
     "support_status": {
       "title": "Status dos atendimentos",
       "is_waiting": "Em espera",
@@ -1258,11 +1260,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
-      "average_time_is_waiting": "Média de espera",
-      "average_time_first_response": "Média para 1ª resposta",
-      "average_response_time": "Tempo médio de resposta",
-      "average_time_chat": "Duração média",
+      "average_time_is_waiting": "TME",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMA",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Tempo Médio de Espera",
+        "average_time_first_response": "Tempo Médio de Primera Resposta",
+        "average_response_time": "Tempo Médio de Resposta",
+        "average_time_chat": "Tempo Médio de Atendimento"
+      },
       "tooltips": {
         "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
         "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",

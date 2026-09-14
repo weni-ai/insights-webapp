@@ -8,12 +8,6 @@
       v-if="showSetup"
       v-bind="widgetSetupProps"
     />
-    <p
-      class="service-status__title"
-      data-testid="service-status-title"
-    >
-      {{ $t('human_support_dashboard.support_status.title') }}
-    </p>
     <section
       class="service-status__cards"
       data-testid="service-status-cards"
@@ -27,7 +21,7 @@
           :title="$t(card.titleKey)"
           :value="getCardValue(card.id)"
           :tooltipInfo="$t(card.tooltipKey)"
-          borderRadius="full"
+          :borderRadius="getBorderRadius(index, cardDefinitions.length)"
           :tooltipSide="getTooltipSide(index)"
           :isLoading="isLoadingCards"
           :isClickable="['is_waiting', 'in_progress'].includes(card.id)"
@@ -90,11 +84,6 @@ const cardDefinitions: CardData[] = [
     tooltipKey:
       'human_support_dashboard.support_status.tooltips.is_in_progress',
   },
-  {
-    id: 'finished',
-    titleKey: 'human_support_dashboard.support_status.is_closed',
-    tooltipKey: 'human_support_dashboard.support_status.tooltips.is_closed',
-  },
 ];
 
 const humanSupportMonitoring = useHumanSupportMonitoring();
@@ -117,6 +106,12 @@ const widgetData = computed(() => {
 
 const getCardValue = (id: CardId) => {
   return widgetData.value[id]?.toString() || '-';
+};
+
+const getBorderRadius = (index: number, totalCards: number) => {
+  if (index === 0) return 'left';
+  if (index === totalCards - 1) return 'right';
+  return 'none';
 };
 
 const getTooltipSide = (index: number) => {
@@ -179,13 +174,9 @@ $min-height: 112px;
   flex-direction: column;
   gap: $unnnic-space-3;
 
-  &__title {
-    font: $unnnic-font-display-2;
-  }
-
   &__cards {
+    flex: 5;
     display: flex;
-    gap: $unnnic-space-4;
     min-height: $min-height;
   }
 }

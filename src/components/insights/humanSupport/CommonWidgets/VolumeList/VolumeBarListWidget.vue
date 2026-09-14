@@ -11,6 +11,7 @@
     :emptyDataText="emptyDataText"
     :setupTitle="props.setupTitle"
     :setupDescription="props.setupDescription"
+    :hiddenTabs="props.hiddenTabs"
     @tab-change="handleTabChange"
     @see-all="handleSeeAll"
     @click:setup="emit('click:setup')"
@@ -93,6 +94,7 @@ interface VolumeBarListWidgetProps {
   showConfig?: boolean;
   setupTitle?: string;
   setupDescription?: string;
+  hiddenTabs?: boolean;
   labelComponentResolver?: (
     _label: string,
     _context: {
@@ -118,6 +120,7 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   setupDescription: '',
   barColor: colorBgBlueStrong,
   barBackgroundColor: colorBgBluePlain,
+  hiddenTabs: false,
   mock: () => [],
   mockItemsCount: 0,
   labelComponentResolver: undefined,

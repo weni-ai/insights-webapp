@@ -18,6 +18,7 @@
     :fetchMethod="fetchMethod"
     :context="props.context"
     :showConfig="props.showConfig"
+    :hiddenTabs="props.context === 'analysis'"
     @click:setup="redirectToChatsConfig"
   />
 </template>
@@ -68,7 +69,6 @@ const tabs = (ctx: WidgetContext): VolumeBarListTabItem[] => {
     return [
       { name: t('awaiting'), key: 'waiting' },
       { name: t('in_progress'), key: 'ongoing' },
-      { name: t('finished'), key: 'closed' },
     ];
   }
   return [{ name: t('finished'), key: 'closed' }];

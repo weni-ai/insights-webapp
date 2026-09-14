@@ -19,7 +19,7 @@
     "@sentry/vue": "^9.19.0",
     "@vueuse/core": "^10.11.0",
     "@weni/rspack-config": "^0.1.1",
-    "@weni/unnnic-system": "^3.33.1",
+    "@weni/unnnic-system": "^3.34.2",
     "axios": "^1.7.2",
     "chart.js": "^4.4.2",
     "chartjs-chart-treemap": "^3.1.0",

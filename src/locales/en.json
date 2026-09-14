@@ -1267,7 +1267,7 @@
         "average_time_is_waiting": "Average Wait Time",
         "average_time_first_response": "Mean First Response Time",
         "average_response_time": "Average Response Time",
-        "average_time_chat": "Avarege Handle Time"
+        "average_time_chat": "Average Handle Time"
       },
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in queue before support chat start",

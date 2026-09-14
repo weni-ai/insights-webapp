@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { afterEach, beforeEach, describe, it, vi, afterAll } from 'vitest';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, config } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
 
@@ -9,6 +9,14 @@ import DynamicGraph from '../DynamicGraph.vue';
 import LineChart from '@/components/insights/charts/LineChart.vue';
 import HorizontalBarChart from '@/components/insights/charts/HorizontalBarChart.vue';
 import CardFunnel from '@/components/insights/cards/CardFunnel.vue';
+
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 afterAll(() => {
   vi.restoreAllMocks();

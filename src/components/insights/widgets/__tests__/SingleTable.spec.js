@@ -1,19 +1,6 @@
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import SingleTable from '../SingleTable.vue';
 import { beforeEach, describe } from 'vitest';
-import { createI18n } from 'vue-i18n';
-import en from '@/locales/en.json';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 
 const tableHeaders = [
   { content: 'Label' },

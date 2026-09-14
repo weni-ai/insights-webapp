@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 
 import ModalRemoveWidget from '../ModalRemoveWidget.vue';
@@ -29,32 +28,6 @@ vi.mock('@weni/unnnic-system', async (importOriginal) => {
     UnnnicCallAlert: vi.fn(),
   };
 });
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        customize_your_dashboard: {
-          modal_remove_widget: {
-            title: 'Remove {type} Widget',
-            description: 'Remove {type} widget description',
-            remove: 'Remove',
-            cancel: 'Cancel',
-            success_message: '{widget} removed',
-            remove_success: '{widget} removed successfully',
-            remove_error: 'Failed to remove {widget}. Please try again.',
-          },
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('ModalRemoveWidget', () => {
   let wrapper;
@@ -90,9 +63,6 @@ describe('ModalRemoveWidget', () => {
             template: '<button type="button"><slot /></button>',
             props: ['text', 'type', 'loading'],
           },
-        },
-        mocks: {
-          $t: (key, options) => `${key} ${JSON.stringify(options)}`,
         },
       },
     });
@@ -174,6 +144,7 @@ describe('ModalRemoveWidget', () => {
     });
 
     it('should handle loading state during removal', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       mockConversationalWidgets.deleteWidget.mockImplementationOnce(
         () => new Promise((resolve) => setTimeout(resolve, 100)),
       );
@@ -183,10 +154,12 @@ describe('ModalRemoveWidget', () => {
 
       expect(wrapper.vm.isLoading).toBe(true);
 
+      await vi.advanceTimersByTimeAsync(100);
       await removePromise;
       await nextTick();
 
       expect(wrapper.vm.isLoading).toBe(false);
+      vi.useRealTimers();
     });
 
     it('should handle removal errors gracefully', async () => {
@@ -265,7 +238,7 @@ describe('ModalRemoveWidget', () => {
       expect(UnnnicCallAlert).toHaveBeenCalledWith(
         expect.objectContaining({
           props: expect.objectContaining({
-            text: 'Failed to remove Most searched terms. Please try again.',
+            text: 'Failed to remove Most searched terms. Try again.',
             type: 'error',
           }),
         }),

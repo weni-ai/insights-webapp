@@ -1,21 +1,16 @@
-import { beforeAll, afterAll, describe, it } from 'vitest';
+import { describe, it } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
 import { createRouter, createWebHistory } from 'vue-router';
 import HeaderHumanSupport from '../HeaderHumanSupport.vue';
-import i18n from '@/utils/plugins/i18n';
 
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-  config.global.plugins.push(
-    createI18n({ legacy: false, locale: 'en', messages: { en: {} } }),
-  );
-});
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
 
-afterAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-});
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 const router = createRouter({
   history: createWebHistory(),

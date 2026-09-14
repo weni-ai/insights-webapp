@@ -1,21 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
-import i18n from '@/utils/plugins/i18n';
+import { shallowMount } from '@vue/test-utils';
 import Unnnic from '@weni/unnnic-system';
 import WelcomeOnboardingModal from '@/components/WelcomeOnboardingModal.vue';
 import { UnnnicModalDialog } from '@weni/unnnic-system';
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
-
-afterAll(() => {
-  if (!config.global.plugins.includes(i18n)) {
-    config.global.plugins.push(i18n);
-  }
-});
 
 const createWrapper = (props = {}) => {
   return shallowMount(WelcomeOnboardingModal, {

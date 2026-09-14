@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
-import { shallowMount } from '@vue/test-utils';
+import { config, shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 
 import HeaderFilters from '@/components/insights/Layout/HeaderFilters/index.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useDashboards } from '@/store/modules/dashboards';
+import { i18n } from '../../../../../../setupVitest.js';
+import { UnnnicSystemPlugin } from '@tests/utils/testHelpers.js';
+
+// Full locales; omit mockRouter — this spec mounts its own router
+config.global.plugins = [i18n, UnnnicSystemPlugin];
 
 vi.mock('@/utils/time', async (importOriginal) => {
   const original = await importOriginal();

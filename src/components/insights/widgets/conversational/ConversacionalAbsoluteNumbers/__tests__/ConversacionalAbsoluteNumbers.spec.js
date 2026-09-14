@@ -2,7 +2,6 @@
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { mount, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
 
 import ConversationalAbsoluteNumbers from '../index.vue';
@@ -44,9 +43,6 @@ vi.mock('@weni/unnnic-system', async (importOriginal) => {
   const actual = await importOriginal();
   return { ...actual, unnnicCallAlert: vi.fn() };
 });
-
-const makeI18n = () =>
-  createI18n({ legacy: false, locale: 'en', messages: { en: {} } });
 
 const mockChild = (uuid, name, currencyCode = '') => ({
   uuid,
@@ -100,7 +96,7 @@ function mountComponent(
   return mount(ConversationalAbsoluteNumbers, {
     props,
     global: {
-      plugins: [createPinia(), makeI18n()],
+      plugins: [createPinia()],
       mocks: { $t: (key) => key },
     },
   });
@@ -208,7 +204,7 @@ describe('ConversationalAbsoluteNumbers', () => {
     const wrapper = mount(ConversationalAbsoluteNumbers, {
       props: { uuid: 'widget-uuid-1' },
       global: {
-        plugins: [pinia, makeI18n()],
+        plugins: [pinia],
         mocks: { $t: (k) => k },
       },
     });
@@ -258,7 +254,7 @@ describe('ConversationalAbsoluteNumbers', () => {
     const wrapper = mount(ConversationalAbsoluteNumbers, {
       props: { uuid: 'widget-uuid-1' },
       global: {
-        plugins: [pinia, makeI18n()],
+        plugins: [pinia],
         mocks: { $t: (k) => k },
       },
     });

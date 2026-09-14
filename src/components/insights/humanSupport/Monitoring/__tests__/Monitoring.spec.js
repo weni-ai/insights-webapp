@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { ref } from 'vue';
 
@@ -63,18 +62,6 @@ vi.mock('pinia', async (importOriginal) => {
     },
   };
 });
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('Monitoring', () => {
   let wrapper;

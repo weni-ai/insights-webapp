@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
+import { UnnnicToolTip } from '@weni/unnnic-system';
 
 import InfoCard from '../InfoCard.vue';
 
@@ -16,31 +16,6 @@ vi.mock('pinia', async (importOriginal) => ({
   ...(await importOriginal()),
   storeToRefs: (store) => store,
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        abandoned_cart_recovery_widget: {
-          info_card: {
-            recovery_revenue: 'Recovered revenue',
-            total_sends: 'Total sends',
-            converted_sales: 'Converted sales',
-            conversion_rate: 'Conversion rate',
-            average_order_value: 'Average order value',
-            roas_tooltip: 'RoAS tooltip',
-          },
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('AbandonedCartWidgetInfoCard', () => {
   let wrapper;
@@ -127,11 +102,7 @@ describe('AbandonedCartWidgetInfoCard', () => {
     });
 
     it('renders RoAS tooltip', () => {
-      expect(
-        wrapper
-          .find('[data-testid="abandoned-cart-widget-info-card-roas-tooltip"]')
-          .exists(),
-      ).toBe(true);
+      expect(wrapper.findComponent(UnnnicToolTip).exists()).toBe(true);
     });
   });
 

@@ -1,10 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, flushPromises, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
 import { ref } from 'vue';
 
 import AbandonedCartWidget from '../index.vue';
 import WidgetConversationalService from '@/services/api/resources/conversational/widgets';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const mockAppliedFilters = ref({
   start_date: '2026-06-01',
@@ -77,7 +79,8 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+// Omit UnnnicSystemPlugin — mount stubs cover Unnnic primitives (Popover needs no context)
+config.global.plugins = [i18n, mockRouter];
 
 describe('AbandonedCartWidget', () => {
   let wrapper;
@@ -90,15 +93,19 @@ describe('AbandonedCartWidget', () => {
             template: '<div data-testid="abandoned-cart-widget-skeleton" />',
           },
           UnnnicPopover: {
+            name: 'UnnnicPopover',
             template: '<div><slot /></div>',
           },
           UnnnicPopoverTrigger: {
+            name: 'UnnnicPopoverTrigger',
             template: '<div><slot /></div>',
           },
           UnnnicPopoverContent: {
+            name: 'UnnnicPopoverContent',
             template: '<div><slot /></div>',
           },
           UnnnicPopoverOption: {
+            name: 'UnnnicPopoverOption',
             template:
               '<button data-testid="abandoned-cart-widget-remove-option" @click="$emit(\'click\')"><slot /></button>',
             props: ['label', 'icon', 'scheme'],

@@ -144,7 +144,7 @@ const cardDefinitions: CardData[] = [
   }),
   createCard('finished', undefined, {
     titleKey: `${baseTranslationKey}.support_status.is_closed`,
-    tooltipKey: `${baseTranslationKey}.support_status.title_tooltips.is_closed_by_date`,
+    tooltipKey: `${baseTranslationKey}.support_status.tooltips.is_closed_by_date`,
   }),
 ];
 

@@ -25,9 +25,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import VolumeBarListWidget from './VolumeBarListWidget.vue';
+import VolumeBarListWidget from '../VolumeList/VolumeBarListWidget.vue';
 
-import type { VolumeBarListTabItem, WidgetContext } from './types';
+import type { VolumeBarListTabItem, WidgetContext } from '../VolumeList/types';
 
 import volumePerQueueService from '@/services/api/resources/humanSupport/volumePerQueue';
 

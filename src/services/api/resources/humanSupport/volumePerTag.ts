@@ -7,7 +7,6 @@ interface QueryParams {
   cursor?: string;
   chip_name?: string;
   limit?: number;
-  channels?: string[];
 }
 
 interface VolumePerTagsResult {

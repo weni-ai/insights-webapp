@@ -71,12 +71,12 @@ interface VolumeBarListWidgetProps {
   titleKey: string;
   tabs: (_context: WidgetContext) => VolumeBarListTabItem[];
   defaultTab: string;
-  mock: Item[];
-  mockItemsCount: number;
+  mock?: Item[];
+  mockItemsCount?: number;
   barColor?: string;
   barBackgroundColor?: string;
-  itemKey: 'queues' | 'tags';
-  itemLabelKey: 'queue_name' | 'tag_name';
+  itemKey: 'queues' | 'tags' | 'channels';
+  itemLabelKey: 'queue_name' | 'tag_name' | 'channel_name';
   formatFooterText: (
     _context: WidgetContext,
     _currentTab: string,
@@ -109,6 +109,8 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   setupDescription: '',
   barColor: colorBgBlueStrong,
   barBackgroundColor: colorBgBluePlain,
+  mock: () => [],
+  mockItemsCount: 0,
 });
 
 const tabsList = computed(() => props.tabs(props.context));
@@ -119,12 +121,33 @@ const handleTabChange = (tab: string) => {
   currentTab.value = tab;
 };
 
-interface Item {
+interface NestedSubitem {
+  queue_name?: string;
+  tag_name?: string;
+  channel_name?: string;
+  value: number;
+  is_deleted?: boolean;
+}
+
+interface NestedSectorItem {
   sector_name: string;
   is_deleted?: boolean;
-  queues?: { queue_name: string; value: number; is_deleted?: boolean }[];
-  tags?: { tag_name: string; value: number; is_deleted?: boolean }[];
+  queues?: NestedSubitem[];
+  tags?: NestedSubitem[];
+  channels?: NestedSubitem[];
 }
+
+interface FlatVolumeItem {
+  queue_name?: string;
+  tag_name?: string;
+  channel_name?: string;
+  value: number;
+}
+
+type Item = NestedSectorItem | FlatVolumeItem;
+
+const isNestedSectorItem = (item: Item): item is NestedSectorItem =>
+  'sector_name' in item;
 
 const itemsNext = ref<string | null>(null);
 const itemsPrevious = ref<string | null>(null);
@@ -141,6 +164,8 @@ const getDeletedTooltip = (
   subitemDeleted: boolean,
   sectorDeleted: boolean,
 ): string | undefined => {
+  if (props.itemKey === 'channels') return undefined;
+
   const isQueue = props.itemKey === 'queues';
 
   if (subitemDeleted && sectorDeleted) {
@@ -159,36 +184,62 @@ const getDeletedTooltip = (
   return undefined;
 };
 
+const formatBarItem = ({
+  label,
+  value,
+  subtitle,
+  labelMuted,
+  subtitleMuted,
+  deletedTooltip,
+}: {
+  label: string;
+  value: number;
+  subtitle?: string;
+  labelMuted?: boolean;
+  subtitleMuted?: boolean;
+  deletedTooltip?: string;
+}): ProgressTableRowItem => ({
+  label,
+  subtitle,
+  value,
+  description: `${formatNumber(value)}`,
+  color: props.barColor,
+  backgroundColor: props.barBackgroundColor,
+  labelMuted,
+  subtitleMuted,
+  deletedTooltip,
+});
+
 const formattedItems = computed(() => {
   const { itemKey, itemLabelKey } = props;
 
   const toFormatItems = hasSectorsConfigured.value ? items.value : props.mock;
 
   const toOrderItems: ProgressTableRowItem[] = toFormatItems.flatMap((item) => {
+    if (!isNestedSectorItem(item)) {
+      return [
+        formatBarItem({
+          label: item[itemLabelKey] ?? '',
+          value: item.value,
+        }),
+      ];
+    }
+
     const subitems = item[itemKey] ?? [];
     const sectorDeleted = item.is_deleted === true;
-    return subitems.map(
-      (subitem: {
-        queue_name?: string;
-        tag_name?: string;
-        value: number;
-        is_deleted?: boolean;
-      }) => {
-        const subitemDeleted = subitem.is_deleted === true;
 
-        return {
-          label: subitem[itemLabelKey] ?? '',
-          subtitle: item.sector_name,
-          value: subitem.value,
-          description: `${formatNumber(subitem.value)}`,
-          color: props.barColor,
-          backgroundColor: props.barBackgroundColor,
-          labelMuted: subitemDeleted,
-          subtitleMuted: sectorDeleted,
-          deletedTooltip: getDeletedTooltip(subitemDeleted, sectorDeleted),
-        };
-      },
-    );
+    return subitems.map((subitem) => {
+      const subitemDeleted = subitem.is_deleted === true;
+
+      return formatBarItem({
+        label: subitem[itemLabelKey] ?? '',
+        subtitle: item.sector_name,
+        value: subitem.value,
+        labelMuted: subitemDeleted,
+        subtitleMuted: sectorDeleted,
+        deletedTooltip: getDeletedTooltip(subitemDeleted, sectorDeleted),
+      });
+    });
   });
 
   return orderBy(

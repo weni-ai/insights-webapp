@@ -21,6 +21,9 @@
       <VolumePerTagAndQueueWidget context="monitoring" />
     </LazyWidget>
     <LazyWidget>
+      <VolumePerChannelWidget context="monitoring" />
+    </LazyWidget>
+    <LazyWidget>
       <CsatRatings
         type="monitoring"
         data-testid="monitoring-csat-ratings"
@@ -50,6 +53,7 @@ import ServicesOpenByHour from './ServicesOpenByHour.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import CsatRatings from '../CommonWidgets/CsatRatings/CsatRatings.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
+import VolumePerChannelWidget from '../CommonWidgets/VolumePerChannel/VolumePerChannel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();

@@ -20,6 +20,7 @@ interface InAwaitingDataResult {
   contact: string;
   sector: string;
   queue: string;
+  channel_name?: string;
   link: {
     url: string;
     type: string;

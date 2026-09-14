@@ -1289,7 +1289,8 @@
         "attendant": "Representative",
         "sector": "Department",
         "queue": "Queue",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Channel"
       },
       "pauses": {
         "status": "Status",
@@ -1301,7 +1302,8 @@
         "awaiting_time": "Wait time",
         "contact": "Contact",
         "sector": "Department",
-        "queue": "Queue"
+        "queue": "Queue",
+        "channel": "Channel"
       },
       "attendant": {
         "agent": "Representative",
@@ -1347,6 +1349,7 @@
         "agent": "Representative",
         "sector": "Department",
         "queue": "Queue",
+        "channel": "Channel",
         "contact": "Contact",
         "ticket_id": "Protocol",
         "total_attendances": "Total support chats",

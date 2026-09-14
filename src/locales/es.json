@@ -1289,7 +1289,8 @@
         "attendant": "Representante",
         "sector": "Departamento",
         "queue": "Cola",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Status",
@@ -1301,7 +1302,8 @@
         "awaiting_time": "Espera",
         "contact": "Contacto",
         "sector": "Departamento",
-        "queue": "Cola"
+        "queue": "Cola",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Representante",
@@ -1347,6 +1349,7 @@
         "agent": "Representante",
         "sector": "Departamento",
         "queue": "Cola",
+        "channel": "Canal",
         "contact": "Contacto",
         "ticket_id": "Protocolo",
         "total_attendances": "Total de chats de soporte",

@@ -122,6 +122,7 @@ describe('inProgress API', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       },
       appliedDetailFilters: {
         agent: { value: 'agent@test.com' },

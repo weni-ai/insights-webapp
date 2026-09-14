@@ -8,6 +8,7 @@ vi.mock('date-fns', () => ({
   subDays: vi.fn((date) => date),
   format: vi.fn(() => '2024-01-15'),
   parseISO: vi.fn((str) => new Date(str)),
+  setDefaultOptions: vi.fn(),
 }));
 
 vi.mock('@/utils/time', () => ({

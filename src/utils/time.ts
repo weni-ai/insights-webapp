@@ -7,6 +7,7 @@ import {
   getHours,
   getMinutes,
   isBefore,
+  isValid,
   parseISO,
 } from 'date-fns';
 import { es, enUS, ptBR } from 'date-fns/locale';
@@ -380,4 +381,22 @@ export function formatSecondsToTime(
  */
 export function isDateBefore(date: string, compareDate: string): boolean {
   return isBefore(parseISO(date), parseISO(compareDate));
+}
+
+/**
+ * Formats a date using an i18n date_format pattern (date-fns tokens).
+ */
+export function formatWithI18nPattern(
+  date: Date | string,
+  pattern: string,
+): string {
+  const parsed = typeof date === 'string' ? parseISO(date) : date;
+  return format(parsed, pattern);
+}
+
+/**
+ * Checks if a value is a valid ISO 8601 date string.
+ */
+export function isIsoDateString(value: unknown): boolean {
+  return typeof value === 'string' && isValid(parseISO(value));
 }

@@ -8,6 +8,7 @@ vi.mock('date-fns', () => ({
   subDays: vi.fn((date) => date),
   format: vi.fn(() => '2024-01-15'),
   parseISO: vi.fn((str) => new Date(str)),
+  setDefaultOptions: vi.fn(),
 }));
 
 vi.mock('@/utils/time', () => ({
@@ -242,7 +243,11 @@ describe('Attendant', () => {
     it('carries agent_is_deleted when is_deleted is true', () => {
       const mockData = [
         {
-          agent: { name: 'John Doe', email: 'john@example.com', is_deleted: true },
+          agent: {
+            name: 'John Doe',
+            email: 'john@example.com',
+            is_deleted: true,
+          },
           average_first_response_time: 100,
           average_response_time: 200,
           average_duration: 300,

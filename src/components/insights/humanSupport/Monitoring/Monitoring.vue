@@ -27,6 +27,9 @@
     <LazyWidget>
       <VolumePerTagAndQueueWidget context="monitoring" />
     </LazyWidget>
+    <LazyWidget>
+      <VolumePerChannelWidget context="monitoring" />
+    </LazyWidget>
     <LazyWidget :forceVisible="forceLoadDetailed">
       <DetailedMonitoring data-testid="monitoring-detailed-monitoring" />
     </LazyWidget>
@@ -49,6 +52,7 @@ import StatusCards from './StatusCards.vue';
 import TimeMetrics from './TimeMetrics.vue';
 import DetailedMonitoring from './DetailedMonitoring.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
+import VolumePerChannelWidget from '../CommonWidgets/VolumePerChannel/VolumePerChannel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();

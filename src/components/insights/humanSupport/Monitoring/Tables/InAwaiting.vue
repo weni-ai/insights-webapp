@@ -36,6 +36,12 @@
         {{ item.awaiting_time }}
       </component>
     </template>
+    <template #body-channel="{ item }">
+      <ChannelIcon
+        v-if="item.channel_name"
+        :channel="item.channel_name"
+      />
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -57,6 +63,7 @@ import { storeToRefs } from 'pinia';
 import { openNewTabLink } from '@/utils/redirect';
 
 import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
+import ChannelIcon from '@/components/insights/humanSupport/Common/ChannelIcons/ChannelIcon.vue';
 
 type FormattedInAwaitingData = Omit<InAwaitingDataResult, 'awaiting_time'> & {
   awaiting_time: string;
@@ -160,6 +167,7 @@ const formattedHeaders = computed(() => {
     createHeader('contact'),
     createHeader('sector'),
     createHeader('queue'),
+    createHeader('channel'),
   ];
 });
 

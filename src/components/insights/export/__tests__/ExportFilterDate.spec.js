@@ -1,16 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import ExportFilterDate from '../ExportFilterDate.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-});
-
-config.global.plugins = [i18n];
 
 describe('ExportFilterDate', () => {
   let wrapper;
@@ -74,13 +65,13 @@ describe('ExportFilterDate', () => {
     });
 
     it('should use default values', () => {
-      wrapper = createWrapper({
-        modelValue: undefined,
-        label: undefined,
-        placeholder: undefined,
-        options: undefined,
-        minDate: undefined,
-        maxDate: undefined,
+      wrapper = mount(ExportFilterDate, {
+        global: {
+          stubs: {
+            FilterDate: true,
+            UnnnicLabel: true,
+          },
+        },
       });
 
       expect(wrapper.props('modelValue')).toEqual({ start: '', end: '' });

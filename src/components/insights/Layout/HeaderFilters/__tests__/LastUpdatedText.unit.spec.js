@@ -8,6 +8,7 @@ import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import LastUpdatedText from '../LastUpdatedText.vue';
 import * as timeUtils from '@/utils/time';
 import { useDashboards } from '@/store/modules/dashboards';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('@/utils/time', () => ({
   formatTimeStringWithDayNight: vi.fn().mockReturnValue('3:45 PM (PM)'),
@@ -30,7 +31,7 @@ const globalMocks = {
     key === 'insights_header.last_updated_at' ? 'Last updated at:' : key,
 };
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystem, mockRouter];
 config.global.mocks = globalMocks;
 
 describe('LastUpdatedText.vue', () => {
@@ -51,7 +52,7 @@ describe('LastUpdatedText.vue', () => {
 
     return mount(LastUpdatedText, {
       global: {
-        plugins: [store, UnnnicSystem, i18n],
+        plugins: [store],
         mocks: globalMocks,
       },
     });

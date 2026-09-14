@@ -1,9 +1,14 @@
-import { mount } from '@vue/test-utils';
+import { config, mount } from '@vue/test-utils';
 import { vi } from 'vitest';
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import TableGroup from '../TableGroup.vue';
+import { i18n } from '../../../../../setupVitest.js';
+import { UnnnicSystemPlugin } from '@tests/utils/testHelpers.js';
+
+// Use full locales but omit mockRouter — this spec mounts its own router
+config.global.plugins = [i18n, UnnnicSystemPlugin];
 
 const router = createRouter({
   history: createWebHistory(),

@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import SeeAllDrawer from '../SeeAllDrawer.vue';
 
@@ -24,26 +23,8 @@ vi.mock('@/utils/treemap', () => ({
 }));
 
 import { addColors } from '@/utils/treemap';
+
 const mockAddColors = addColors;
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        most_talked_about_topics: {
-          title: 'Most Talked About Topics',
-          subtopics: 'Subtopics',
-        },
-      },
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('SeeAllDrawer', () => {
   let wrapper;

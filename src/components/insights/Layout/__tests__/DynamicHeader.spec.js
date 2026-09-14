@@ -1,19 +1,6 @@
-import { beforeAll, afterAll, describe, it } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { describe, it } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 import DynamicHeader from '../DynamicHeader.vue';
-import i18n from '@/utils/plugins/i18n';
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-  config.global.plugins.push(
-    createI18n({ legacy: false, locale: 'en', messages: { en: {} } }),
-  );
-});
-
-afterAll(() => {
-  config.global.plugins = config.global.plugins.filter((p) => p !== i18n);
-});
 
 const createWrapper = (props = {}) =>
   shallowMount(DynamicHeader, {

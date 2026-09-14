@@ -1,16 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import ExportFooter from '../ExportFooter.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-});
-
-config.global.plugins = [i18n];
 
 describe('ExportFooter', () => {
   let wrapper;

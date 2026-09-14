@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, type Component } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
@@ -93,6 +93,15 @@ interface VolumeBarListWidgetProps {
   showConfig?: boolean;
   setupTitle?: string;
   setupDescription?: string;
+  labelComponentResolver?: (
+    _label: string,
+    _context: {
+      value: number;
+      subtitle?: string;
+      labelMuted?: boolean;
+      subtitleMuted?: boolean;
+    },
+  ) => Component | undefined;
 }
 
 const humanSupportStore = useHumanSupport();
@@ -111,6 +120,7 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   barBackgroundColor: colorBgBluePlain,
   mock: () => [],
   mockItemsCount: 0,
+  labelComponentResolver: undefined,
 });
 
 const tabsList = computed(() => props.tabs(props.context));
@@ -198,17 +208,27 @@ const formatBarItem = ({
   labelMuted?: boolean;
   subtitleMuted?: boolean;
   deletedTooltip?: string;
-}): ProgressTableRowItem => ({
-  label,
-  subtitle,
-  value,
-  description: `${formatNumber(value)}`,
-  color: props.barColor,
-  backgroundColor: props.barBackgroundColor,
-  labelMuted,
-  subtitleMuted,
-  deletedTooltip,
-});
+}): ProgressTableRowItem => {
+  const labelComponent = props.labelComponentResolver?.(label, {
+    value,
+    subtitle,
+    labelMuted,
+    subtitleMuted,
+  });
+
+  return {
+    label,
+    subtitle,
+    value,
+    description: `${formatNumber(value)}`,
+    color: props.barColor,
+    backgroundColor: props.barBackgroundColor,
+    labelMuted,
+    subtitleMuted,
+    deletedTooltip,
+    labelComponent,
+  };
+};
 
 const formattedItems = computed(() => {
   const { itemKey, itemLabelKey } = props;

@@ -13,12 +13,15 @@
     seeAllTitleKey="human_support_dashboard.volume_per_channel.title"
     :barColor="colorBgPinkStrong"
     :barBackgroundColor="colorBgPinkPlain"
+    :labelComponentResolver="resolveChannelLabelComponent"
   />
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue';
 import VolumeBarListWidget from '../VolumeList/VolumeBarListWidget.vue';
+
+import { getChannelLabelComponent } from '../../Common/ChannelIcons/channelIconMap';
 
 import VolumePerChannelService from '@/services/api/resources/humanSupport/volumePerChannel';
 
@@ -86,4 +89,7 @@ const fetchMethod = (ctx: WidgetContext): VolumeBarListFetchMethod => {
   }
   return VolumePerChannelService.getVolumePerChannelAnalysis;
 };
+
+const resolveChannelLabelComponent = (channelName: string) =>
+  getChannelLabelComponent(channelName);
 </script>

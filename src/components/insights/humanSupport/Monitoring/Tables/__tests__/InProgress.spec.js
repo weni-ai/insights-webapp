@@ -213,6 +213,17 @@ describe('InProgress', () => {
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
     });
 
+    it('reloads data when attendant detail filter changes after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedDetailFilters = {
+        ...store.appliedDetailFilters,
+        agent: { value: 'agent@test.com', label: 'Agent' },
+      };
+      await wrapper.vm.$nextTick();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
     it('prevents multiple simultaneous requests', async () => {
       vi.clearAllMocks();
 

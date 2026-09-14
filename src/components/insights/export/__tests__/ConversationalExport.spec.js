@@ -1,6 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { ref } from 'vue';
 
 import ConversationalExport from '../ConversationalExport.vue';
@@ -47,25 +46,6 @@ vi.mock('pinia', async (importOriginal) => {
     storeToRefs: (store) => store,
   };
 });
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      export_data: {
-        title: 'Export Data',
-        tooltip: 'Tooltip text',
-        save_btn: 'Save',
-        cancel_btn: 'Cancel',
-        feedback_title: 'Success',
-        feedback: 'Export successful',
-      },
-    },
-  },
-});
-
-config.global.plugins = [i18n];
 
 describe('ConversationalExport', () => {
   let wrapper;

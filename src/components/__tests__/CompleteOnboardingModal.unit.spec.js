@@ -1,19 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import CompleteOnboardingModal from '@/components/CompleteOnboardingModal.vue';
-import i18n from '@/utils/plugins/i18n';
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
-
-afterAll(() => {
-  if (!config.global.plugins.includes(i18n)) {
-    config.global.plugins.push(i18n);
-  }
-});
 
 describe('CompleteOnboardingModal', () => {
   let wrapper;

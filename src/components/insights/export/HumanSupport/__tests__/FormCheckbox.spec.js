@@ -1,20 +1,56 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { flushPromises, mount } from '@vue/test-utils';
+import { isRef, ref } from 'vue';
 
 import FormCheckbox from '../FormCheckbox.vue';
 
+const modelFields = ref({});
+const selectedFields = ref({});
+const enabledModels = ref([]);
+const sectors = ref([]);
+const queues = ref([]);
+const agents = ref([]);
+const tags = ref([]);
+
 const mockStore = {
-  model_fields: { value: {} },
-  selected_fields: { value: {} },
-  enabled_models: { value: [] },
-  sectors: { value: [] },
-  queues: { value: [] },
-  agents: { value: [] },
-  tags: { value: [] },
+  model_fields: modelFields,
+  selected_fields: selectedFields,
+  enabled_models: enabledModels,
+  sectors,
+  queues,
+  agents,
+  tags,
   setModelFields: vi.fn(),
   updateModelFieldSelection: vi.fn(),
   toggleModelEnabled: vi.fn(),
+};
+
+const resolveOverrideValue = (store, key, value) => {
+  if (
+    isRef(store[key]) &&
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === 1 &&
+    Object.prototype.hasOwnProperty.call(value, 'value')
+  ) {
+    return value.value;
+  }
+
+  return value;
+};
+
+const applyStoreOverrides = (store, overrides = {}) => {
+  Object.entries(overrides).forEach(([key, value]) => {
+    const resolved = resolveOverrideValue(store, key, value);
+
+    if (isRef(store[key])) {
+      store[key].value = resolved;
+      return;
+    }
+
+    store[key] = resolved;
+  });
 };
 
 vi.mock('@/store/modules/export/humanSupport/export', () => ({
@@ -38,19 +74,11 @@ vi.mock('pinia', async (importOriginal) => {
   };
 });
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-});
-
-config.global.plugins = [i18n];
-
 describe('HumanSupport FormCheckbox', () => {
   let wrapper;
 
   const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockStore, storeOverrides);
+    applyStoreOverrides(mockStore, storeOverrides);
 
     return mount(FormCheckbox, {
       global: {
@@ -64,15 +92,13 @@ describe('HumanSupport FormCheckbox', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    Object.assign(mockStore, {
-      model_fields: { value: {} },
-      selected_fields: { value: {} },
-      enabled_models: { value: [] },
-      sectors: { value: [] },
-      queues: { value: [] },
-      agents: { value: [] },
-      tags: { value: [] },
-    });
+    modelFields.value = {};
+    selectedFields.value = {};
+    enabledModels.value = [];
+    sectors.value = [];
+    queues.value = [];
+    agents.value = [];
+    tags.value = [];
 
     wrapper = createWrapper();
   });
@@ -88,7 +114,7 @@ describe('HumanSupport FormCheckbox', () => {
 
   describe('Lifecycle hooks', () => {
     it('should fetch model fields on mounted', async () => {
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
       expect(mockStore.setModelFields).toHaveBeenCalled();
     });
 
@@ -102,7 +128,7 @@ describe('HumanSupport FormCheckbox', () => {
       );
 
       wrapper = createWrapper();
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(consoleError).toHaveBeenCalled();
       consoleError.mockRestore();
@@ -112,10 +138,10 @@ describe('HumanSupport FormCheckbox', () => {
   describe('Computed properties', () => {
     it('should compute modelFilters with correct structure', () => {
       wrapper = createWrapper({
-        sectors: { value: [{ value: '1', label: 'Sector 1' }] },
-        queues: { value: [{ value: '2', label: 'Queue 1' }] },
-        agents: { value: [{ value: '3', label: 'Agent 1' }] },
-        tags: { value: [{ value: '4', label: 'Tag 1' }] },
+        sectors: [{ value: '1', label: 'Sector 1' }],
+        queues: [{ value: '2', label: 'Queue 1' }],
+        agents: [{ value: '3', label: 'Agent 1' }],
+        tags: [{ value: '4', label: 'Tag 1' }],
       });
 
       const filters = wrapper.vm.modelFilters;

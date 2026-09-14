@@ -1,22 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { config, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import i18n from '@/utils/plugins/i18n';
 import AgentsTableHeader from '../AgentsTableHeader.vue';
 import { useAgentsColumnsFilter } from '@/store/modules/agentsColumnsFilter';
 import { useWidgets } from '@/store/modules/widgets';
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
-
-afterAll(() => {
-  if (!config.global.plugins.includes(i18n)) {
-    config.global.plugins.push(i18n);
-  }
-});
 
 vi.mock('@/components/insights/Layout/HeaderFilters/FilterSelect.vue', () => ({
   default: {

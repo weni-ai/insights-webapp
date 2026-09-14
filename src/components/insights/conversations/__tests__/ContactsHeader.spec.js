@@ -1,11 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ref as vueRef, reactive } from 'vue';
-import { mount, config } from '@vue/test-utils';
+import { flushPromises, mount, config } from '@vue/test-utils';
 
 import ContactsHeader from '../ContactsHeader.vue';
 
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import Unnnic from '@weni/unnnic-system';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('@weni/unnnic-system', () => ({
   default: {
@@ -23,15 +26,19 @@ vi.mock('@/services/api/resources/conversational/contacts', () => ({
   },
 }));
 
-vi.mock('vue-router', () => ({
-  useRoute: () => ({
-    params: {},
-    query: {},
-  }),
-  useRouter: () => ({
-    push: vi.fn(),
-  }),
-}));
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useRoute: () => ({
+      params: {},
+      query: {},
+    }),
+    useRouter: () => ({
+      push: vi.fn(),
+    }),
+  };
+});
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: () => ({
@@ -108,12 +115,10 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = () => {
-  return mount(ContactsHeader, {
-    global: { plugins: [Unnnic] },
-  });
+  return mount(ContactsHeader);
 };
 
 describe('ContactsHeader.vue', () => {
@@ -583,7 +588,7 @@ describe('ContactsHeader.vue', () => {
       contactsApi.default.getConversationalContacts.mockClear();
 
       createWrapper();
-      await new Promise((r) => setTimeout(r, 50));
+      await flushPromises();
 
       expect(contactsApi.default.getConversationalContacts).toHaveBeenCalled();
     });

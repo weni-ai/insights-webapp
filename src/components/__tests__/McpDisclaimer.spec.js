@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { shallowMount } from '@vue/test-utils';
 
 import McpDisclaimer from '@/components/McpDisclaimer.vue';
 
@@ -12,14 +11,6 @@ vi.mock('@/utils/storage', () => ({
 }));
 
 import { moduleStorage } from '@/utils/storage';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-});
-
-config.global.plugins = [i18n];
 
 const unnnicStubs = {
   UnnnicDisclaimer: {

@@ -1,8 +1,11 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount, config } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { format, subDays } from 'date-fns';
 import HelperDataText from '../HelperDataText.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 let mockStore = { appliedFilters: {}, lastUpdatedAt: null };
 
@@ -26,7 +29,7 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = (filters = {}, lastUpdatedAt = null) => {
   mockStore.appliedFilters = filters;

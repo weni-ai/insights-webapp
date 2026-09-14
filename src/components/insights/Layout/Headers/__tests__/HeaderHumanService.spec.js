@@ -1,8 +1,16 @@
 import { describe, it, vi } from 'vitest';
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createWebHistory } from 'vue-router';
 import HeaderHumanService from '../HeaderHumanService.vue';
+
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 vi.mock('moment', async (importOriginal) => {
   const actual = await importOriginal();

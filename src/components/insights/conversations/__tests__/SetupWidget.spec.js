@@ -1,14 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { shallowMount } from '@vue/test-utils';
 
 import SetupWidget from '../SetupWidget.vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 const createWrapper = (props = {}) => {
   return shallowMount(SetupWidget, {

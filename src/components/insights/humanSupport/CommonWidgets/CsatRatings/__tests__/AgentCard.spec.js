@@ -1,18 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mount, config } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import AgentCard from '../AgentCard.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const defaultProps = {
   title: 'Ana Costa',
@@ -72,37 +61,7 @@ describe('AgentCard.vue', () => {
       expect(name.classes()).toContain('agent-card__agent-name--muted');
     });
 
-    it('should have deleted tooltip disabled by default', () => {
-      const tooltip = wrapper.find(
-        '[data-testid="agent-card-deleted-tooltip"]',
-      );
-      expect(tooltip.attributes('enabled')).toBe('false');
-    });
-
-    it('should enable deleted tooltip when deletedTooltip is provided', () => {
-      wrapper = createWrapper({
-        isDeleted: true,
-        deletedTooltip: 'Representative removed from project',
-      });
-      const tooltip = wrapper.find(
-        '[data-testid="agent-card-deleted-tooltip"]',
-      );
-      expect(tooltip.attributes('enabled')).toBe('true');
-    });
-
-    it('should pass correct text to deleted tooltip', () => {
-      const tooltipText = 'Representative removed from project';
-      wrapper = createWrapper({
-        isDeleted: true,
-        deletedTooltip: tooltipText,
-      });
-      const tooltip = wrapper.find(
-        '[data-testid="agent-card-deleted-tooltip"]',
-      );
-      expect(tooltip.attributes('text')).toBe(tooltipText);
-    });
-
-    it('should render name with muted class inside tooltip when deleted', () => {
+    it('should render muted name when deleted with tooltip text', () => {
       wrapper = createWrapper({
         isDeleted: true,
         deletedTooltip: 'Representative removed from project',

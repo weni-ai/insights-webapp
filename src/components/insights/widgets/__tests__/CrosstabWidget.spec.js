@@ -3,6 +3,7 @@ import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
 
 import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
 import CrosstabWidget from '../CrosstabWidget.vue';
 
 const mockCustomWidgetsStore = {
@@ -14,7 +15,7 @@ vi.mock('@/store/modules/conversational/customWidgets', () => ({
   useCustomWidgets: () => mockCustomWidgetsStore,
 }));
 
-import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const i18n = createI18n({
   legacy: false,
@@ -33,7 +34,7 @@ const i18n = createI18n({
   messageCompiler: icuMessageCompiler,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystem, mockRouter];
 
 const buildWidget = (results) => ({
   name: 'My crosstab',
@@ -49,7 +50,6 @@ const createWrapper = (widget) => {
   return mount(CrosstabWidget, {
     props: { widgetUuid: 'test-uuid' },
     global: {
-      plugins: [UnnnicSystem],
       stubs: {
         ProgressTable: true,
         SeeAllDrawer: true,
@@ -106,7 +106,6 @@ describe('CrosstabWidget.vue', () => {
       const wrapper = mount(CrosstabWidget, {
         props: { widgetUuid: 'test-uuid' },
         global: {
-          plugins: [UnnnicSystem],
           stubs: {
             ProgressTable: true,
             SeeAllDrawer: true,

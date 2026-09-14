@@ -7,11 +7,17 @@ import CTWADashboard from '../CTWADashboard.vue';
 import { useCTWA } from '@/store/modules/ctwa';
 
 vi.mock('@/components/insights/ctwa/MetricCards.vue', () => ({
-  default: { name: 'MetricCards', template: '<div data-testid="metric-cards" />' },
+  default: {
+    name: 'MetricCards',
+    template: '<div data-testid="metric-cards" />',
+  },
 }));
 
 vi.mock('@/components/insights/ctwa/SalesFunnel.vue', () => ({
-  default: { name: 'SalesFunnel', template: '<div data-testid="sales-funnel" />' },
+  default: {
+    name: 'SalesFunnel',
+    template: '<div data-testid="sales-funnel" />',
+  },
 }));
 
 vi.mock('@/components/insights/ctwa/PerformanceByCampaign.vue', () => ({
@@ -43,9 +49,9 @@ describe('CTWADashboard.vue', () => {
   it('shows the campaign performance table when no campaign is selected', () => {
     const wrapper = createWrapper();
 
-    expect(wrapper.find('[data-testid="performance-by-campaign"]').exists()).toBe(
-      true,
-    );
+    expect(
+      wrapper.find('[data-testid="performance-by-campaign"]').exists(),
+    ).toBe(true);
   });
 
   it('hides the campaign performance table when a campaign is selected', async () => {
@@ -55,8 +61,8 @@ describe('CTWADashboard.vue', () => {
     store.selectedCampaign = 'campaign-uuid';
     await nextTick();
 
-    expect(wrapper.find('[data-testid="performance-by-campaign"]').exists()).toBe(
-      false,
-    );
+    expect(
+      wrapper.find('[data-testid="performance-by-campaign"]').exists(),
+    ).toBe(false);
   });
 });

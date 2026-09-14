@@ -103,6 +103,7 @@ describe('useFeatureFlag store', () => {
     });
 
     it('should set loading state during fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       const store = useFeatureFlag();
 
       FeatureFlag.getAllFeatureFlags.mockImplementation(
@@ -115,8 +116,10 @@ describe('useFeatureFlag store', () => {
       const promise = store.getFeatureFlags();
       expect(store.isLoadingFeatureFlags).toBe(true);
 
+      await vi.advanceTimersByTimeAsync(100);
       await promise;
       expect(store.isLoadingFeatureFlags).toBe(false);
+      vi.useRealTimers();
     });
 
     it('should reset loading state even on error', async () => {

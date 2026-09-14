@@ -1,21 +1,57 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
-import { reactive } from 'vue';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+import { isRef, reactive, ref } from 'vue';
 
 import ConversationalAddedToCart from '../ConversationalAddedToCart.vue';
 
+const addedToCartWidgetData = ref(null);
+const isLoadingAddedToCartWidgetData = ref(false);
+const isAddedToCartWidgetDataError = ref(false);
+const shouldUseMock = ref(false);
+
 const mockWidgetsStore = {
-  addedToCartWidgetData: { value: null },
-  isLoadingAddedToCartWidgetData: { value: false },
-  isAddedToCartWidgetDataError: { value: false },
+  addedToCartWidgetData,
+  isLoadingAddedToCartWidgetData,
+  isAddedToCartWidgetDataError,
   loadAddedToCartWidgetData: vi.fn(() => Promise.resolve()),
 };
 
 const mockConversationalStore = {
   refreshDataConversational: false,
   setIsLoadingConversationalData: vi.fn(),
-  shouldUseMock: { value: false },
+  shouldUseMock,
+};
+
+const resolveOverrideValue = (store, key, value) => {
+  if (
+    isRef(store[key]) &&
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === 1 &&
+    Object.prototype.hasOwnProperty.call(value, 'value')
+  ) {
+    return value.value;
+  }
+
+  return value;
+};
+
+const applyStoreOverrides = (store, overrides = {}) => {
+  Object.entries(overrides).forEach(([key, value]) => {
+    const resolved = resolveOverrideValue(store, key, value);
+
+    if (isRef(store[key])) {
+      store[key].value = resolved;
+      return;
+    }
+
+    store[key] = resolved;
+  });
 };
 
 const mockRoute = reactive({ query: {} });
@@ -58,7 +94,7 @@ import {
   colorBgGreenPlain,
 } from '@weni/unnnic-system/tokens/colors';
 
-import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const i18n = createI18n({
   legacy: false,
@@ -83,7 +119,7 @@ const i18n = createI18n({
   messageCompiler: icuMessageCompiler,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const buildResults = (count) =>
   Array.from({ length: count }, (_, index) => ({
@@ -96,7 +132,7 @@ describe('ConversationalAddedToCart', () => {
   let wrapper;
 
   const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockWidgetsStore, storeOverrides);
+    applyStoreOverrides(mockWidgetsStore, storeOverrides);
     return mount(ConversationalAddedToCart, {
       global: {
         stubs: {
@@ -117,13 +153,11 @@ describe('ConversationalAddedToCart', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRoute.query = {};
-    Object.assign(mockWidgetsStore, {
-      addedToCartWidgetData: { value: null },
-      isLoadingAddedToCartWidgetData: { value: false },
-      isAddedToCartWidgetDataError: { value: false },
-    });
+    addedToCartWidgetData.value = null;
+    isLoadingAddedToCartWidgetData.value = false;
+    isAddedToCartWidgetDataError.value = false;
     mockConversationalStore.refreshDataConversational = false;
-    mockConversationalStore.shouldUseMock = { value: false };
+    shouldUseMock.value = false;
     wrapper = createWrapper();
   });
 
@@ -164,7 +198,7 @@ describe('ConversationalAddedToCart', () => {
 
     it('shows loading state', () => {
       wrapper = createWrapper({
-        isLoadingAddedToCartWidgetData: { value: true },
+        isLoadingAddedToCartWidgetData: true,
       });
       expect(wrapper.vm.isLoading).toBe(true);
     });
@@ -174,13 +208,11 @@ describe('ConversationalAddedToCart', () => {
     it('sorts results descending and slices to top 5', () => {
       wrapper = createWrapper({
         addedToCartWidgetData: {
-          value: {
-            results: [
-              { label: 'a', value: 1, full_value: 10 },
-              { label: 'b', value: 9, full_value: 90 },
-              ...buildResults(5),
-            ],
-          },
+          results: [
+            { label: 'a', value: 1, full_value: 10 },
+            { label: 'b', value: 9, full_value: 90 },
+            ...buildResults(5),
+          ],
         },
       });
       const items = wrapper.vm.progressItems;
@@ -192,7 +224,7 @@ describe('ConversationalAddedToCart', () => {
     it('builds description and applies green colors', () => {
       wrapper = createWrapper({
         addedToCartWidgetData: {
-          value: { results: [{ label: 'a', value: 58, full_value: 7250 }] },
+          results: [{ label: 'a', value: 58, full_value: 7250 }],
         },
       });
       const [item] = wrapper.vm.progressItems;
@@ -209,14 +241,14 @@ describe('ConversationalAddedToCart', () => {
     it('shows see all only when more than 5 results', () => {
       expect(wrapper.vm.showSeeAll).toBe(false);
       wrapper = createWrapper({
-        addedToCartWidgetData: { value: { results: buildResults(6) } },
+        addedToCartWidgetData: { results: buildResults(6) },
       });
       expect(wrapper.vm.showSeeAll).toBe(true);
     });
 
     it('opens see all drawer', async () => {
       wrapper = createWrapper({
-        addedToCartWidgetData: { value: { results: buildResults(6) } },
+        addedToCartWidgetData: { results: buildResults(6) },
       });
       const seeAll = wrapper.find(
         '[data-testid="conversational-added-to-cart-see-all"]',
@@ -240,7 +272,7 @@ describe('ConversationalAddedToCart', () => {
     });
 
     it('returns empty actions in mock mode', () => {
-      mockConversationalStore.shouldUseMock = { value: true };
+      shouldUseMock.value = true;
       wrapper = createWrapper();
       expect(wrapper.vm.actions).toEqual([]);
     });
@@ -249,7 +281,7 @@ describe('ConversationalAddedToCart', () => {
   describe('Error handling', () => {
     it('exposes error state', () => {
       wrapper = createWrapper({
-        isAddedToCartWidgetDataError: { value: true },
+        isAddedToCartWidgetDataError: true,
       });
       expect(wrapper.vm.isError).toBe(true);
     });

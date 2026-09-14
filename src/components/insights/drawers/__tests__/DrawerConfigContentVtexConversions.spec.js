@@ -1,12 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount, config, flushPromises } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 
 import { createTestingPinia } from '@pinia/testing';
 
 import VtexConversionsForm from '../DrawerConfigContentVtexConversions.vue';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
 
@@ -21,25 +19,13 @@ vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
   },
 }));
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
-
 describe('VtexConversionsForm.vue', () => {
   let store;
   let wrapper;
 
   const createWrapper = (props = {}) => {
     return mount(VtexConversionsForm, {
-      global: { plugins: [store, UnnnicSystem] },
+      global: { plugins: [store] },
       props: {
         modelValue: {
           type: 'vtex_conversions',

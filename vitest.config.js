@@ -7,6 +7,11 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
+      // threads pool is the vitest default; keep isolate:true because several
+      // specs still replace config.global.plugins with custom i18n messages.
+      // Turning isolate off would leak those mutations across files.
+      pool: 'threads',
+      isolate: true,
       exclude: [
         ...configDefaults.exclude,
         'e2e/*',

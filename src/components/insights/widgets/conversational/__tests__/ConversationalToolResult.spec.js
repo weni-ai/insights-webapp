@@ -1,6 +1,5 @@
 import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { ref } from 'vue';
 import ConversationalToolResult from '../ConversationalToolResult.vue';
 
@@ -57,30 +56,6 @@ vi.mock('pinia', async (importOriginal) => ({
   ...(await importOriginal()),
   storeToRefs: (store) => store,
 }));
-
-import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      conversations_dashboard: {
-        tool_result: 'Most used tools',
-        tool_result_count: '{count, plural, one {# tool} other {# tools}}',
-        auto_widget_no_data: 'No data available for the filtered period',
-        auto_widget_error:
-          "Data couldn't be loaded. Refresh the dashboard or contact support",
-      },
-      see_all: 'See all',
-    },
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-  messageCompiler: icuMessageCompiler,
-});
-
-config.global.plugins = [i18n];
 
 describe('ConversationalToolResult', () => {
   let wrapper;

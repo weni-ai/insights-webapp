@@ -1,25 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import FilterSelectDate from '@/components/insights/Layout/HeaderFilters/FilterSelectDate.vue';
-import { createI18n } from 'vue-i18n';
 import {
   getYesterdayDate,
   getLastNDays,
   getLastMonthRange,
 } from '@/utils/time';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 vi.mock('@/utils/time', () => ({
   getYesterdayDate: vi.fn(),
@@ -38,7 +25,7 @@ const createWrapper = (props = {}) => {
       ...props,
     },
     global: {
-      plugins: [pinia, i18n],
+      plugins: [pinia],
       stubs: {
         UnnnicSelect: {
           template:

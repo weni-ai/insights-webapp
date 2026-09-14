@@ -1,18 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import ServicesOpenByHour from '../ServicesOpenByHour.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockData = [
   { label: '08:00', value: 10 },

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
-import { flushPromises, mount } from '@vue/test-utils';
+import { flushPromises, mount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createMemoryHistory } from 'vue-router';
 
@@ -12,6 +12,37 @@ import { useProject } from '@/store/modules/project';
 import { useUser } from '@/store/modules/user';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
 import moment from 'moment';
+
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
+
+const { sharedStoreState } = vi.hoisted(() => {
+  const sharedStoreState = {
+    auth: {
+      token: 'mock-token',
+    },
+    user: {
+      language: null,
+    },
+    current: {
+      project: null,
+    },
+    isActiveFederatedModules: {
+      insights: undefined,
+    },
+  };
+
+  return { sharedStoreState };
+});
+
+vi.mock('@/utils/hostSharedStore', () => ({
+  hostSharedStore: sharedStoreState,
+}));
 
 vi.mock('@/services/api', () => {
   return {
@@ -98,9 +129,6 @@ describe('App', () => {
     get: vi.fn(),
   }));
 
-  const mockPostMessage = vi.fn();
-  const mockAddEventListener = vi.fn();
-
   const createTestRouter = () =>
     createRouter({
       history: createMemoryHistory(),
@@ -145,6 +173,10 @@ describe('App', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    sharedStoreState.user = { language: null };
+    sharedStoreState.current = { project: null };
+    sharedStoreState.isActiveFederatedModules = { insights: undefined };
+
     Object.defineProperty(window, 'localStorage', {
       value: localStorageMock,
       writable: true,
@@ -152,18 +184,6 @@ describe('App', () => {
 
     Object.defineProperty(global, 'URLSearchParams', {
       value: mockURLSearchParams,
-      writable: true,
-    });
-
-    Object.defineProperty(window, 'parent', {
-      value: {
-        postMessage: mockPostMessage,
-      },
-      writable: true,
-    });
-
-    Object.defineProperty(window, 'addEventListener', {
-      value: mockAddEventListener,
       writable: true,
     });
 
@@ -206,9 +226,6 @@ describe('App', () => {
     onboardingStore.showCompleteOnboardingModal = false;
     configStore.token = null;
   });
-
-  const getMessageHandler = () =>
-    mockAddEventListener.mock.calls.find(([event]) => event === 'message')?.[1];
 
   afterEach(() => {
     if (wrapper) wrapper.unmount();
@@ -255,20 +272,161 @@ describe('App', () => {
       expect(getCurrentDashboardFiltersSpy).not.toHaveBeenCalled();
       expect(getFeatureFlagsSpy).not.toHaveBeenCalled();
     });
+
+    it('should set language when sharedStore user language changes', async () => {
+      wrapper.unmount();
+      sharedStoreState.user = { language: 'pt-br' };
+      wrapper = createWrapper();
+      await flushPromises();
+
+      expect(moment.locale).toHaveBeenCalledWith('pt-br');
+    });
+
+    it('should set project and commerce when sharedStore project changes', async () => {
+      wrapper.unmount();
+      sharedStoreState.current = {
+        project: {
+          uuid: 'shared-project-uuid',
+          type: 2,
+        },
+      };
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      configStore = useConfig(pinia);
+      projectStore = useProject(pinia);
+
+      const setProjectSpy = vi.spyOn(configStore, 'setProject');
+      const loadProjectInfoSpy = vi.spyOn(configStore, 'loadProjectInfo');
+      const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+      await flushPromises();
+
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        'insights_projectUuid',
+        'shared-project-uuid',
+      );
+      expect(setProjectSpy).toHaveBeenCalledWith({
+        uuid: 'shared-project-uuid',
+      });
+      expect(loadProjectInfoSpy).toHaveBeenCalled();
+      expect(setIsCommerceSpy).toHaveBeenCalledWith(true);
+    });
+
+    it('should set isCommerce to false when project type is not commerce', async () => {
+      wrapper.unmount();
+      sharedStoreState.current = {
+        project: {
+          uuid: 'shared-project-uuid',
+          type: 1,
+        },
+      };
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      projectStore = useProject(pinia);
+      const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+      await flushPromises();
+
+      expect(setIsCommerceSpy).toHaveBeenCalledWith(false);
+    });
+
+    it('should not set project when sharedStore project uuid is undefined', async () => {
+      wrapper.unmount();
+      sharedStoreState.current = {
+        project: {
+          uuid: undefined,
+          type: 1,
+        },
+      };
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      configStore = useConfig(pinia);
+      const setProjectSpy = vi.spyOn(configStore, 'setProject');
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+      await flushPromises();
+
+      expect(setProjectSpy).not.toHaveBeenCalledWith({ uuid: undefined });
+    });
+
+    it('should set isActiveRoute when isActiveFederatedModules.insights changes', async () => {
+      wrapper.unmount();
+      sharedStoreState.isActiveFederatedModules = { insights: true };
+
+      const pinia = createTestingPinia({
+        createSpy: vi.fn,
+        stubActions: false,
+      });
+      configStore = useConfig(pinia);
+      const setIsActiveRouteSpy = vi.spyOn(configStore, 'setIsActiveRoute');
+
+      wrapper = mount(App, {
+        global: {
+          plugins: [pinia, createTestRouter()],
+          components: mockComponents,
+          stubs: {
+            RouterView: mockComponents.RouterView,
+            InsightsLayout: mockComponents.InsightsLayout,
+            IconLoading: mockComponents.IconLoading,
+            CompleteOnboardingModal: mockComponents.CompleteOnboardingModal,
+            McpNewsModal: mockComponents.McpNewsModal,
+          },
+        },
+      });
+      await flushPromises();
+
+      expect(setIsActiveRouteSpy).toHaveBeenCalledWith(true);
+    });
   });
 
   describe('Lifecycle Methods', () => {
-    it('should call listenConnect on created', () => {
-      expect(mockPostMessage).toHaveBeenCalledWith(
-        { event: 'getLanguage' },
-        '*',
-      );
-      expect(mockPostMessage).toHaveBeenCalledWith(
-        { event: 'getIsCommerce' },
-        '*',
-      );
-    });
-
     it('should load project info after token and uuid are set', async () => {
       wrapper.unmount();
 
@@ -302,104 +460,6 @@ describe('App', () => {
       expect(isolatedConfigStore.project).toEqual({
         uuid: 'query-project-uuid',
         name: 'Test Project',
-      });
-    });
-  });
-
-  describe('Methods', () => {
-    describe('handlerSetProject', () => {
-      it('should set project in moduleStorage and store', async () => {
-        const setProjectSpy = vi.spyOn(configStore, 'setProject');
-        const loadProjectInfoSpy = vi.spyOn(configStore, 'loadProjectInfo');
-
-        await wrapper.vm.handlerSetProject('new-project-uuid');
-        const handler = getMessageHandler();
-
-        handler({
-          data: { event: 'setProject', projectUuid: 'new-project-uuid' },
-        });
-
-        expect(localStorageMock.setItem).toHaveBeenCalledWith(
-          'insights_projectUuid',
-          'new-project-uuid',
-        );
-        expect(setProjectSpy).toHaveBeenCalledWith({
-          uuid: 'new-project-uuid',
-        });
-        expect(loadProjectInfoSpy).toHaveBeenCalled();
-      });
-    });
-
-    describe('handlerSetIsCommerce', () => {
-      it('should set isCommerce in project store', () => {
-        const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
-        const handler = getMessageHandler();
-
-        handler({ data: { event: 'setIsCommerce', isCommerce: true } });
-
-        expect(setIsCommerceSpy).toHaveBeenCalledWith(true);
-      });
-    });
-
-    describe('listenConnect', () => {
-      it('should post messages to parent window', () => {
-        expect(mockPostMessage).toHaveBeenCalledWith(
-          { event: 'getLanguage' },
-          '*',
-        );
-        expect(mockPostMessage).toHaveBeenCalledWith(
-          { event: 'getIsCommerce' },
-          '*',
-        );
-      });
-
-      it('should add event listener for messages', () => {
-        expect(mockAddEventListener).toHaveBeenCalledWith(
-          'message',
-          expect.any(Function),
-        );
-      });
-    });
-
-    describe('getEventHandler', () => {
-      it('should return correct handler for setLanguage event', () => {
-        const handler = getMessageHandler();
-
-        handler({ data: { event: 'setLanguage', language: 'pt-br' } });
-
-        expect(moment.locale).toHaveBeenCalledWith('pt-br');
-      });
-
-      it('should return correct handler for setProject event', () => {
-        const setProjectSpy = vi.spyOn(configStore, 'setProject');
-        const handler = getMessageHandler();
-
-        handler({
-          data: { event: 'setProject', projectUuid: 'handler-project' },
-        });
-
-        expect(setProjectSpy).toHaveBeenCalledWith({
-          uuid: 'handler-project',
-        });
-      });
-
-      it('should return correct handler for setIsCommerce event', () => {
-        const setIsCommerceSpy = vi.spyOn(projectStore, 'setIsCommerce');
-        const handler = getMessageHandler();
-
-        handler({ data: { event: 'setIsCommerce', isCommerce: false } });
-
-        expect(setIsCommerceSpy).toHaveBeenCalledWith(false);
-      });
-
-      it('should return undefined for unknown event', () => {
-        const setProjectSpy = vi.spyOn(configStore, 'setProject');
-        const handler = getMessageHandler();
-
-        expect(() =>
-          handler({ data: { event: 'unknownEvent', projectUuid: 'x' } }),
-        ).not.toThrow();
-        expect(setProjectSpy).not.toHaveBeenCalled();
       });
     });
   });

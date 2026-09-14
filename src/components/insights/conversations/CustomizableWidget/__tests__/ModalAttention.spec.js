@@ -1,14 +1,16 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount, config } from '@vue/test-utils';
 
 import ModalAttention from '../ModalAttention.vue';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin, mockRouter];
 
 describe('ModalAttention', () => {
   let wrapper;

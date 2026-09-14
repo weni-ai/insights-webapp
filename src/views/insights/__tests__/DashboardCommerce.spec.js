@@ -2,18 +2,27 @@ import { mount, config, flushPromises } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import DashboardCommerce from '@/views/insights/DashboardCommerce.vue';
 import CardMetric from '@/components/home/CardMetric.vue';
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import api from '@/services/api/resources/metrics';
 import { format, subDays } from 'date-fns';
 
-const useSharedStoreMock = vi.fn(() => ({
-  auth: { token: 'mock-token' },
-  current: { project: { uuid: 'mock-uuid' } },
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+  mockRouter,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin, mockRouter];
+
+const { hostSharedStoreMock } = vi.hoisted(() => ({
+  hostSharedStoreMock: {
+    auth: { token: 'mock-token' },
+    current: { project: { uuid: 'mock-uuid' } },
+  },
 }));
 
-vi.mock('connect/sharedStore', () => ({
-  useSharedStore: useSharedStoreMock,
+vi.mock('@/utils/hostSharedStore', () => ({
+  hostSharedStore: hostSharedStoreMock,
 }));
 
 vi.mock('@/utils/time', async (importOriginal) => {
@@ -46,17 +55,6 @@ vi.mock('@/services/api/resources/metrics', () => ({
   },
 }));
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 config.global.mocks = {
   $t: (key) => key,
 };
@@ -66,12 +64,13 @@ describe('DashboardCommerce', () => {
   const consoleSpy = vi.spyOn(console, 'error');
 
   beforeEach(async () => {
+    hostSharedStoreMock.auth.token = 'mock-token';
+    hostSharedStoreMock.current.project.uuid = 'mock-uuid';
     api.getMetrics.mockClear();
 
     wrapper = mount(DashboardCommerce, {
       propsData: {},
       global: {
-        plugins: [i18n, UnnnicSystem],
         components: {
           CardMetric,
         },
@@ -93,7 +92,6 @@ describe('DashboardCommerce', () => {
       wrapper = mount(DashboardCommerce, {
         propsData: {},
         global: {
-          plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
           },
@@ -152,7 +150,6 @@ describe('DashboardCommerce', () => {
       wrapper = mount(DashboardCommerce, {
         propsData: {},
         global: {
-          plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
           },
@@ -177,15 +174,12 @@ describe('DashboardCommerce', () => {
     it('does not fetch metrics when token is not present', async () => {
       api.getMetrics.mockClear();
 
-      useSharedStoreMock.mockResolvedValueOnce(() => ({
-        auth: { token: null },
-        current: { project: { uuid: null } },
-      }));
+      hostSharedStoreMock.auth.token = null;
+      hostSharedStoreMock.current.project.uuid = null;
 
       wrapper = mount(DashboardCommerce, {
         propsData: {},
         global: {
-          plugins: [i18n, UnnnicSystem],
           components: {
             CardMetric,
           },

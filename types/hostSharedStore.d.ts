@@ -6,7 +6,14 @@ declare module 'connect/sharedStore' {
     current: {
       project: {
         uuid: string;
+        type?: number;
       };
+    };
+    user?: {
+      language?: string;
+    };
+    isActiveFederatedModules?: {
+      insights?: boolean;
     };
   };
 }

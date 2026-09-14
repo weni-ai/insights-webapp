@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterAll } from 'vitest';
-import { shallowMount } from '@vue/test-utils';
+import { config, shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 
 import HeaderFilters from '@/components/insights/Layout/HeaderFilters/index.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useDashboards } from '@/store/modules/dashboards';
+import { i18n } from '../../../../../../setupVitest.js';
+import { UnnnicSystemPlugin } from '@tests/utils/testHelpers.js';
+
+// Full locales; omit mockRouter — this spec mounts its own router
+config.global.plugins = [i18n, UnnnicSystemPlugin];
 
 vi.mock('@/utils/time', async (importOriginal) => {
   const original = await importOriginal();
@@ -242,6 +247,57 @@ describe('HeaderFilters', () => {
       ];
 
       expect(filter.shortCutOptions).toEqual(expectedOptions);
+    });
+  });
+
+  describe('Human Support Dashboard', () => {
+    let dashboardsStore;
+
+    beforeEach(async () => {
+      dashboardsStore = useDashboards();
+      dashboardsStore.currentDashboard = {
+        name: 'human_support_dashboard.title',
+      };
+      dashboardsStore.currentDashboardFilters = [
+        { name: 'contact', type: 'input_text' },
+        { name: 'date', type: 'date_range' },
+        { name: 'sector', type: 'select' },
+        { name: 'queue', type: 'select' },
+        { name: 'agent', type: 'select' },
+        { name: 'tags', type: 'select' },
+        { name: 'channels', type: 'select' },
+      ];
+      wrapper = createWrapper({}, 'human_support_dashboard.title');
+      await wrapper.vm.$nextTick();
+    });
+
+    it('should render FilterHumanSupport instead of the generic filters UI', () => {
+      expect(
+        wrapper.findComponent({ name: 'FilterHumanSupport' }).exists(),
+      ).toBe(true);
+      expect(
+        wrapper.findComponent('[data-testid="many-filters-button"]').exists(),
+      ).toBe(false);
+      expect(
+        wrapper.findComponent('[data-testid="dynamic-filter"]').exists(),
+      ).toBe(false);
+      expect(
+        wrapper.findComponent('[data-testid="modal-filters"]').exists(),
+      ).toBe(false);
+    });
+
+    it('should not apply dashboard filters from the route', () => {
+      const setAppliedFiltersSpy = vi.spyOn(
+        useDashboards(),
+        'setAppliedFilters',
+      );
+
+      dashboardsStore.currentDashboardFilters = [
+        { name: 'contact', type: 'input_text' },
+        { name: 'sector', type: 'select' },
+      ];
+
+      expect(setAppliedFiltersSpy).not.toHaveBeenCalled();
     });
   });
 });

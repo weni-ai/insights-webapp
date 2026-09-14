@@ -25,6 +25,9 @@ exports[`ExportCheckboxs > Component structure > should match snapshot 1`] = `
         <unnnic-checkbox-stub
           data-testid="form-checkboxs-model-checkbox-user"
           data-v-b513ad74=""
+          disabled="false"
+          helper=""
+          label=""
           modelvalue="true"
           textright="User"
         />
@@ -38,12 +41,18 @@ exports[`ExportCheckboxs > Component structure > should match snapshot 1`] = `
         <unnnic-checkbox-stub
           data-testid="form-checkboxs-field-user-email"
           data-v-b513ad74=""
+          disabled="false"
+          helper=""
+          label=""
           modelvalue="true"
           textright="Email"
         />
         <unnnic-checkbox-stub
           data-testid="form-checkboxs-field-user-name"
           data-v-b513ad74=""
+          disabled="false"
+          helper=""
+          label=""
           modelvalue="false"
           textright="Name"
         />
@@ -64,6 +73,9 @@ exports[`ExportCheckboxs > Component structure > should match snapshot 1`] = `
         <unnnic-checkbox-stub
           data-testid="form-checkboxs-model-checkbox-contact"
           data-v-b513ad74=""
+          disabled="false"
+          helper=""
+          label=""
           modelvalue="false"
           textright="Contact"
         />

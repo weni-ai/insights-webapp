@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import FormExport from '../FormExport.vue';
 
@@ -24,36 +23,6 @@ vi.mock('pinia', async (importOriginal) => {
     storeToRefs: (store) => store,
   };
 });
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {
-      export_data: {
-        description: 'Export description',
-        select_data: {
-          label: 'Date',
-          shortcuts: {
-            last_7_days: 'Last 7 days',
-            last_14_days: 'Last 14 days',
-            last_30_days: 'Last 30 days',
-            last_60_days: 'Last 60 days',
-            last_90_days: 'Last 90 days',
-            current_month: 'Current month',
-            previous_month: 'Previous month',
-          },
-        },
-        select_period: { placeholder: 'Select' },
-        select_format: 'Format',
-        warning_terms: 'Warning',
-        accept_terms: 'Accept',
-      },
-    },
-  },
-});
-
-config.global.plugins = [i18n];
 
 describe('Conversational FormExport', () => {
   let wrapper;

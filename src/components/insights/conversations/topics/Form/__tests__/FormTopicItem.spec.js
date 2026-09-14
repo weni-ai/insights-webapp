@@ -3,7 +3,10 @@ import { config, shallowMount } from '@vue/test-utils';
 import { nextTick } from 'vue';
 import { createI18n } from 'vue-i18n';
 
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
+
 import FormTopicItem from '../FormTopicItem.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('@/composables/useDateTime', () => ({
   useDateTime: () => ({
@@ -14,24 +17,24 @@ vi.mock('@/composables/useDateTime', () => ({
   }),
 }));
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        conversations_dashboard: {
-          form_topic: {
-            sub_topics: 'Sub-topics',
-            sub_topics_added: '{sub_topics} sub-topics added',
-            add_sub_topic: 'Add Sub-topic',
-            added_topic: 'Added {time} - {date}',
-          },
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      conversations_dashboard: {
+        form_topic: {
+          sub_topics: 'Sub-topics',
+          sub_topics_added: '{sub_topics} sub-topics added',
+          add_sub_topic: 'Add Sub-topic',
+          added_topic: 'Added {time} - {date}',
         },
       },
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const mockTopic = {
   name: 'Test Topic',

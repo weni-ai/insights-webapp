@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { flushPromises, mount } from '@vue/test-utils';
+import { flushPromises, mount, config } from '@vue/test-utils';
 import { createRouter, createWebHistory } from 'vue-router';
 import { createI18n } from 'vue-i18n';
 
@@ -9,6 +9,14 @@ import { routes } from '@/router';
 import HeaderSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/index.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConfig } from '@/store/modules/config';
+
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 describe('HeaderSelectDashboard', () => {
   let wrapper;

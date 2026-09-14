@@ -74,6 +74,7 @@ describe('useHumanSupport store', () => {
       expect(store.sectors).toEqual([]);
       expect(store.queues).toEqual([]);
       expect(store.tags).toEqual([]);
+      expect(store.channels).toEqual([]);
     });
 
     it('should initialize active tab as monitoring', () => {
@@ -85,6 +86,7 @@ describe('useHumanSupport store', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       });
     });
 
@@ -149,6 +151,7 @@ describe('useHumanSupport store', () => {
         expect(store.sectors).toEqual([]);
         expect(store.queues).toEqual([]);
         expect(store.tags).toEqual([]);
+        expect(store.channels).toEqual([]);
       });
 
       it('should reset appliedFiltersLength to 0', () => {
@@ -168,6 +171,7 @@ describe('useHumanSupport store', () => {
           sectors: [],
           queues: [],
           tags: [],
+          channels: [],
         });
       });
     });
@@ -449,6 +453,7 @@ describe('useHumanSupport store', () => {
         sectors: [{ value: 'sector1', label: 'Sector 1' }],
         queues: [],
         tags: [],
+        channels: [],
       };
 
       await flushPromises();
@@ -465,6 +470,7 @@ describe('useHumanSupport store', () => {
         sectors: [{ value: 'sector1', label: 'Sector 1' }],
         queues: [],
         tags: [],
+        channels: [],
       };
 
       await flushPromises();

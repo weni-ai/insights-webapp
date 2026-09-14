@@ -17,6 +17,7 @@ interface QueryParams {
   sectors?: string[];
   queues?: string[];
   tags?: string[];
+  channels?: string[];
 }
 
 export default {
@@ -31,6 +32,7 @@ export default {
       sectors: appliedFilters.sectors.map((sector) => sector.value),
       queues: appliedFilters.queues.map((queue) => queue.value),
       tags: appliedFilters.tags.map((tag) => tag.value),
+      channels: appliedFilters.channels.map((channel) => channel.value),
     };
 
     const params = createRequestQuery(queryParams);

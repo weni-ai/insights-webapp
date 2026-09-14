@@ -5,6 +5,15 @@ import { createRequestQuery } from '@/utils/request';
 
 export default {
   async getProjectSource(slug, queryParams = {}, isPaginated = false) {
+    // TODO: Remove this after the API is implemented
+    if (slug === 'channels') {
+      console.log('getProjectSource channels');
+      return [
+        { name: 'Channel 1' },
+        { name: 'Channel 2' },
+        { name: 'Channel 3' },
+      ];
+    }
     const { project } = useConfig();
     if (!slug) {
       throw new Error('Please provide a valid id to request data of source.');

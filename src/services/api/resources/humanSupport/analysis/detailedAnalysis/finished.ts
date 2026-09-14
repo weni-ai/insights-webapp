@@ -41,6 +41,7 @@ interface QueryParams {
   ordering?: string;
   limit?: number;
   offset?: number;
+  channels?: string[];
 }
 
 export default {
@@ -64,6 +65,7 @@ export default {
       contact: appliedDetailFilters.contact.value,
       ticket_id: appliedDetailFilters.ticketId.value,
       ordering: queryParams.ordering ? queryParams.ordering : 'response_time',
+      channels: appliedFilters.channels.map((channel) => channel.value),
     };
 
     const params = createRequestQuery(queryParams);

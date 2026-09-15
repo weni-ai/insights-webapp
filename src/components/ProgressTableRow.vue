@@ -20,6 +20,12 @@
     @expand="emit('expand', $event)"
   >
     <template
+      v-if="$slots.description"
+      #description
+    >
+      <slot name="description" />
+    </template>
+    <template
       v-if="isExpandable && expanded"
       #sub-items
     >

@@ -1243,6 +1243,15 @@
     "live": "Live",
     "historical_data": "Historical data",
     "sales": {
+      "channel": {
+        "empty_data": "No sales in the selected period",
+        "footer_text": "{count, plural, one {# channel} other {# channels}}",
+        "tabs": {
+          "revenue": "Revenue",
+          "sale": "Sale"
+        },
+        "title": "Channel"
+      },
       "tab": "Sales",
       "order_data": {
         "average_order_value": "Average order value",

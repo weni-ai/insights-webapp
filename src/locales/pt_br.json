@@ -1243,6 +1243,15 @@
     "live": "Ao vivo",
     "historical_data": "Dados históricos",
     "sales": {
+      "channel": {
+        "empty_data": "Nenhuma venda no período selecionado",
+        "footer_text": "{count, plural, one {# canal} other {# canais}}",
+        "tabs": {
+          "revenue": "Receita",
+          "sale": "Venda"
+        },
+        "title": "Canal"
+      },
       "tab": "Vendas",
       "order_data": {
         "average_order_value": "Ticket médio",

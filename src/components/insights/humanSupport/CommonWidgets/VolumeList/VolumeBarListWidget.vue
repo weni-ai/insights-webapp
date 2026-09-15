@@ -15,7 +15,18 @@
     @tab-change="handleTabChange"
     @see-all="handleSeeAll"
     @click:setup="emit('click:setup')"
-  />
+  >
+    <template
+      v-if="$slots.description"
+      #description="slotProps"
+    >
+      <slot
+        name="description"
+        v-bind="slotProps"
+        :currentTab="currentTab"
+      />
+    </template>
+  </BarList>
   <SeeAllDrawer
     v-model="openSeeAllDrawer"
     :items="formattedItems"
@@ -23,7 +34,18 @@
     enableInfiniteScroll
     :infiniteScrollCanLoadMore="!isLoadingItems && itemsNext"
     @scroll-end="handleInfiniteScroll"
-  />
+  >
+    <template
+      v-if="$slots.description"
+      #description="slotProps"
+    >
+      <slot
+        name="description"
+        v-bind="slotProps"
+        :currentTab="currentTab"
+      />
+    </template>
+  </SeeAllDrawer>
 </template>
 
 <script setup lang="ts">
@@ -41,8 +63,14 @@ import SeeAllDrawer from './SeeAllDrawer.vue';
 
 import type { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue';
 
+type VolumeBarListFormattedItem = ProgressTableRowItem & {
+  percentage?: number;
+};
+
 import type {
+  VolumeBarListDescriptionSlotProps,
   VolumeBarListFetchMethod,
+  VolumeBarListItemDescription,
   VolumeBarListTabItem,
   WidgetContext,
 } from './types';
@@ -66,6 +94,10 @@ defineOptions({
 
 const emit = defineEmits<{
   'click:setup': [];
+}>();
+
+defineSlots<{
+  description?: (_props: VolumeBarListDescriptionSlotProps) => unknown;
 }>();
 
 interface VolumeBarListWidgetProps {
@@ -104,6 +136,10 @@ interface VolumeBarListWidgetProps {
     },
   ) => Component | undefined;
   hiddenTabs?: boolean;
+  formatItemDescription?: (
+    _item: VolumeBarListItemDescription,
+    _currentTab: string,
+  ) => string;
 }
 
 const humanSupportStore = useHumanSupport();
@@ -124,6 +160,7 @@ const props = withDefaults(defineProps<VolumeBarListWidgetProps>(), {
   mockItemsCount: 0,
   labelComponentResolver: undefined,
   hiddenTabs: false,
+  formatItemDescription: undefined,
 });
 
 const tabsList = computed(() => props.tabs(props.context));
@@ -139,6 +176,7 @@ interface NestedSubitem {
   tag_name?: string;
   channel_name?: string;
   value: number;
+  percentage?: number;
   is_deleted?: boolean;
 }
 
@@ -155,6 +193,7 @@ interface FlatVolumeItem {
   tag_name?: string;
   channel_name?: string;
   value: number;
+  percentage?: number;
 }
 
 type Item = NestedSectorItem | FlatVolumeItem;
@@ -200,6 +239,7 @@ const getDeletedTooltip = (
 const formatBarItem = ({
   label,
   value,
+  percentage,
   subtitle,
   labelMuted,
   subtitleMuted,
@@ -207,11 +247,12 @@ const formatBarItem = ({
 }: {
   label: string;
   value: number;
+  percentage?: number;
   subtitle?: string;
   labelMuted?: boolean;
   subtitleMuted?: boolean;
   deletedTooltip?: string;
-}): ProgressTableRowItem => {
+}): VolumeBarListFormattedItem => {
   const labelComponent = props.labelComponentResolver?.(label, {
     value,
     subtitle,
@@ -219,17 +260,25 @@ const formatBarItem = ({
     subtitleMuted,
   });
 
+  const description = props.formatItemDescription
+    ? props.formatItemDescription(
+        { label, value, percentage },
+        currentTab.value,
+      )
+    : `${formatNumber(value)}`;
+
   return {
     label,
     subtitle,
     value,
-    description: `${formatNumber(value)}`,
+    description,
     color: props.barColor,
     backgroundColor: props.barBackgroundColor,
     labelMuted,
     subtitleMuted,
     deletedTooltip,
     labelComponent,
+    percentage,
   };
 };
 
@@ -238,38 +287,42 @@ const formattedItems = computed(() => {
 
   const toFormatItems = hasSectorsConfigured.value ? items.value : props.mock;
 
-  const toOrderItems: ProgressTableRowItem[] = toFormatItems.flatMap((item) => {
-    if (!isNestedSectorItem(item)) {
-      return [
-        formatBarItem({
-          label: item[itemLabelKey] ?? '',
-          value: item.value,
-        }),
-      ];
-    }
+  const toOrderItems: VolumeBarListFormattedItem[] = toFormatItems.flatMap(
+    (item) => {
+      if (!isNestedSectorItem(item)) {
+        return [
+          formatBarItem({
+            label: item[itemLabelKey] ?? '',
+            value: item.value,
+            percentage: item.percentage,
+          }),
+        ];
+      }
 
-    const subitems = item[itemKey] ?? [];
-    const sectorDeleted = item.is_deleted === true;
+      const subitems = item[itemKey] ?? [];
+      const sectorDeleted = item.is_deleted === true;
 
-    return subitems.map((subitem) => {
-      const subitemDeleted = subitem.is_deleted === true;
+      return subitems.map((subitem) => {
+        const subitemDeleted = subitem.is_deleted === true;
 
-      return formatBarItem({
-        label: subitem[itemLabelKey] ?? '',
-        subtitle: item.sector_name,
-        value: subitem.value,
-        labelMuted: subitemDeleted,
-        subtitleMuted: sectorDeleted,
-        deletedTooltip: getDeletedTooltip(subitemDeleted, sectorDeleted),
+        return formatBarItem({
+          label: subitem[itemLabelKey] ?? '',
+          subtitle: item.sector_name,
+          value: subitem.value,
+          percentage: subitem.percentage,
+          labelMuted: subitemDeleted,
+          subtitleMuted: sectorDeleted,
+          deletedTooltip: getDeletedTooltip(subitemDeleted, sectorDeleted),
+        });
       });
-    });
-  });
+    },
+  );
 
   return orderBy(
     toOrderItems,
     ['value', 'label'],
     ['desc', 'asc'],
-  ) as ProgressTableRowItem[];
+  ) as VolumeBarListFormattedItem[];
 });
 
 const footerText = computed(() => {
@@ -319,6 +372,7 @@ const getItems = async ({
       cursor: itemsNext.value,
       limit,
       chip_name: currentTab.value,
+      offset: concat ? items.value.length : 0,
     });
 
     items.value = concat

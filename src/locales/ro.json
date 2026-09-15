@@ -1243,6 +1243,15 @@
     "live": "În direct",
     "historical_data": "Date istorice",
     "sales": {
+      "channel": {
+        "empty_data": "Nicio vânzare în perioada selectată",
+        "footer_text": "{count, plural, one {# canal} other {# canale}}",
+        "tabs": {
+          "revenue": "Venit",
+          "sale": "Vânzare"
+        },
+        "title": "Canal"
+      },
       "tab": "Vânzări",
       "order_data": {
         "average_order_value": "Valoarea medie a comenzii",

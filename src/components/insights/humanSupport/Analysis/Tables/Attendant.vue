@@ -20,6 +20,51 @@
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
+    <template #header-average_first_response_time>
+      <UnnnicToolTip
+        enabled
+        :text="
+          $t(`${baseTranslationKey}.average_first_response_time_title_tooltip`)
+        "
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.average_first_response_time`) }}</p>
+      </UnnnicToolTip>
+    </template>
+    <template #header-average_response_time>
+      <UnnnicToolTip
+        enabled
+        :text="$t(`${baseTranslationKey}.average_response_time_title_tooltip`)"
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.average_response_time`) }}</p>
+      </UnnnicToolTip>
+    </template>
+    <template #header-average_duration>
+      <UnnnicToolTip
+        enabled
+        :text="$t(`${baseTranslationKey}.average_duration_title_tooltip`)"
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.average_duration`) }}</p>
+      </UnnnicToolTip>
+    </template>
+    <template #header-time_in_service>
+      <section class="header-with-info">
+        <p>{{ $t(`${baseTranslationKey}.time_in_service`) }}</p>
+        <UnnnicToolTip
+          enabled
+          :text="$t(`${baseTranslationKey}.time_in_service_tooltip`)"
+          side="top"
+        >
+          <UnnnicIcon
+            icon="help"
+            size="sm"
+            scheme="fg-neutral"
+          />
+        </UnnnicToolTip>
+      </section>
+    </template>
     <template #body-agent="{ item }">
       <DynamicCellText
         :text="item.agent"
@@ -179,3 +224,12 @@ watch(
   { immediate: true },
 );
 </script>
+
+<style lang="scss" scoped>
+.header-with-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+</style>

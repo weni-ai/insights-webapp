@@ -20,6 +20,15 @@
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
+    <template #header-first_response_time>
+      <UnnnicToolTip
+        enabled
+        :text="$t(`${baseTranslationKey}.first_response_time_title_tooltip`)"
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.first_response_time`) }}</p>
+      </UnnnicToolTip>
+    </template>
     <template #body-agent="{ item }">
       <DynamicCellText
         v-if="item.agent"
@@ -235,7 +244,7 @@ const formattedHeaders = computed(() => {
     createHeader('queue'),
     createHeader('awaiting_time'),
     createHeader('first_response_time'),
-    createHeader('duration'),
+    createHeader('duration', 'handle_time'),
     createHeader('contact'),
     createHeader('channel'),
     createHeader('ticket_id'),

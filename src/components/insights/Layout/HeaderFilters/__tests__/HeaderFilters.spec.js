@@ -217,7 +217,7 @@ describe('HeaderFilters', () => {
       const { filter } = wrapper.vm;
       const expectedOptions = [
         {
-          name: 'select_date.today_conversational',
+          name: 'Today',
           id: 'today',
         },
         {

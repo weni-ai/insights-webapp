@@ -285,7 +285,7 @@ onMounted(() => {
 
   &__container {
     display: flex;
-    gap: $unnnic-space-6;
+    gap: $unnnic-space-4;
     flex: 1;
   }
 }

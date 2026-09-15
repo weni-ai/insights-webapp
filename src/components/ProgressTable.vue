@@ -96,7 +96,7 @@ const maxValue = computed(() => {
   border-collapse: collapse;
 
   &__body {
-    width: 100%;
+    display: contents;
   }
 }
 </style>

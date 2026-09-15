@@ -217,10 +217,6 @@ describe('HeaderFilters', () => {
       const { filter } = wrapper.vm;
       const expectedOptions = [
         {
-          name: 'Today',
-          id: 'today',
-        },
-        {
           name: 'Last 7 days (up to 08/02)',
           id: 'last-7-days',
         },

@@ -1,10 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { createTestingPinia } from '@pinia/testing';
 import { ref } from 'vue';
 
 import ServicesOpenByHour from '../ServicesOpenByHour.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const defaultMockData = [
   { label: '00:00', value: 15 },
@@ -77,7 +80,7 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('ServicesOpenByHour', () => {
   let wrapper;

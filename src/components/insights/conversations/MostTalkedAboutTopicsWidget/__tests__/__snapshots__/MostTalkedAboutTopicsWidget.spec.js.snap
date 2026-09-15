@@ -2,27 +2,27 @@
 
 exports[`MostTalkedAboutTopicsWidget > Component structure > should match snapshot 1`] = `
 <section
-  class="most-talked-about-topics most-talked-about-topics--mock-hover"
+  class="most-talked-about-topics"
   data-testid="most-talked-about-topics"
   data-v-56fece4b=""
 >
   <base-conversation-widget-stub
-    actions=""
+    actions="[object Object]"
     class="most-talked-about-topics__conversation-widget"
     data-testid="topics-base-widget"
     data-v-56fece4b=""
-    hiddentabs="[object Object]"
+    hiddentabs="false"
     isloading="false"
     isonlytab="false"
-    title="Most Talked About Topics"
+    title="Most common topics"
   />
   <add-widget-stub
-    actiontext="Add First Topic"
+    actiontext="Add your first topic"
     class="most-talked-about-topics__add-widget"
     data-testid="topics-add-widget"
     data-v-56fece4b=""
-    description="No topics description"
-    title="No Topics"
+    description="Add a topic to start analyzing conversations"
+    title="No topics yet"
   />
   <drawer-topics-stub
     data-testid="topics-drawer"

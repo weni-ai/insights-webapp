@@ -1,7 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import ConversationalCrosstab from '../ConversationalCrosstab.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const mockCustomWidgetsStore = {
   customWidgetDataErrorByUuid: { value: {} },
@@ -64,7 +67,7 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('ConversationalCrosstab', () => {
   let wrapper;

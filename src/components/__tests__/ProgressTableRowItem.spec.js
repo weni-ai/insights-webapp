@@ -115,6 +115,32 @@ describe('ProgressTableRowItem.vue', () => {
         'Custom Progress Text',
       );
     });
+
+    it('should render labelComponent when provided instead of text label', () => {
+      const LabelStub = {
+        name: 'LabelStub',
+        template: '<span data-testid="label-stub">Channel icon</span>',
+      };
+
+      const labelComponentWrapper = mount(ProgressTableRowItem, {
+        props: {
+          label: 'whatsapp',
+          value: 75,
+          description: '75',
+          labelComponent: LabelStub,
+        },
+      });
+
+      expect(labelComponentWrapper.find('.infos__title').exists()).toBe(false);
+      expect(
+        labelComponentWrapper.find(
+          '[data-testid="progress-table-row-item-label-component"]',
+        ).exists(),
+      ).toBe(true);
+      expect(
+        labelComponentWrapper.findComponent({ name: 'LabelStub' }).exists(),
+      ).toBe(true);
+    });
   });
 
   describe('NativeProgress Integration', () => {

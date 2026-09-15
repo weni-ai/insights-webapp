@@ -94,8 +94,8 @@ const { currentDashboard, currentDashboardFilters, appliedFilters } =
 const { emptyTemplates, showSearchTemplateMetaModal } =
   storeToRefs(metaTemplateStore);
 
-const handlerShowSearchTemplateModal = (showModal: boolean) =>
-  metaTemplateStore.handlerShowSearchTemplateModal(showModal);
+const handlerShowSearchTemplateModal = (show: boolean) =>
+  metaTemplateStore.handlerShowSearchTemplateModal(show);
 
 const filterModalOpened = ref(false);
 
@@ -115,11 +115,7 @@ const isMetaTemplateDashboard = computed(
   () => currentDashboard.value?.config?.is_whatsapp_integration,
 );
 
-const isRenderDynamicFilter = computed(
-  () =>
-    (!isMetaTemplateDashboard.value && !isHumanSupportDashboard.value) ||
-    (!emptyTemplates.value && !isHumanSupportDashboard.value),
-);
+const isRenderDynamicFilter = computed(() => !isHumanSupportDashboard.value);
 
 const yesterdayFormatted = computed(() => getYesterdayDate().dmFormat);
 

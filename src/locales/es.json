@@ -1133,6 +1133,7 @@
     "chats_open": "Considerar chats abiertos durante este periodo",
     "chats_closed": "Considerar chats cerrados durante este periodo",
     "filters": {
+      "channel": "Canal",
       "sector": "Departamento",
       "select_sector": "Selecciona el departamento",
       "representative": "Representante",
@@ -1144,7 +1145,8 @@
       "all_sectors": "Todos los sectores",
       "all_representatives": "Todos los representantes",
       "all_queues": "Todas las colas",
-      "all_tags": "Todas las tags"
+      "all_tags": "Todas las tags",
+      "select_to_filter": "Seleccionar para filtrar"
     },
     "select_format": "Selecciona el formato en que se exportarán los datos",
     "warning_terms": "Mientras la exportación esté en curso, ninguno de los usuarios del proyecto podrá generar nuevas exportaciones. Confirma para continuar.",
@@ -1296,7 +1298,8 @@
         "attendant": "Representante",
         "sector": "Departamento",
         "queue": "Cola",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Status",
@@ -1308,7 +1311,8 @@
         "awaiting_time": "Espera",
         "contact": "Contacto",
         "sector": "Departamento",
-        "queue": "Cola"
+        "queue": "Cola",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Representante",
@@ -1354,6 +1358,7 @@
         "agent": "Representante",
         "sector": "Departamento",
         "queue": "Cola",
+        "channel": "Canal",
         "contact": "Contacto",
         "ticket_id": "Protocolo",
         "total_attendances": "Total de chats de soporte",
@@ -1363,6 +1368,9 @@
         "time_in_service": "Tiempo en el chat de soporte",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Otros"
     },
     "analyze": {
       "title": "Próximamente: Nueva vista de Analytics",
@@ -1445,6 +1453,22 @@
         },
         "analysis": {
           "closed": "No hay tags asignadas a chats finalizados en el periodo seleccionado"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volumen por canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal con chats {status}} other {# canales con chats {status}}}",
+        "analysis": "{count, plural, one {# canal con chats finalizados} other {# canales con chats finalizados}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No hay chats esperando",
+          "ongoing": "No hay chats en curso"
+        },
+        "analysis": {
+          "closed": "No hay chats finalizados en el periodo seleccionado"
         }
       }
     }

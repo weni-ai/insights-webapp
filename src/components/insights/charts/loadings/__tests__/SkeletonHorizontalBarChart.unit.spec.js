@@ -1,20 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { mount, config } from '@vue/test-utils';
-
-import { createI18n } from 'vue-i18n';
-import en from '@/locales/en.json';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
+import { mount } from '@vue/test-utils';
 
 import SkeletonHorizontalBarChart from '../SkeletonHorizontalBarChart.vue';
 

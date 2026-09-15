@@ -1,18 +1,53 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+import { isRef, ref } from 'vue';
 
 import FormCheckbox from '../FormCheckbox.vue';
 
+const modelFields = ref({});
+const selectedFields = ref({});
+const enabledModels = ref([]);
+const customWidgets = ref([]);
+const crosstabWidgets = ref([]);
+
 const mockStore = {
-  model_fields: { value: {} },
-  selected_fields: { value: {} },
-  enabled_models: { value: [] },
-  custom_widgets: { value: [] },
-  crosstab_widgets: { value: [] },
+  model_fields: modelFields,
+  selected_fields: selectedFields,
+  enabled_models: enabledModels,
+  custom_widgets: customWidgets,
+  crosstab_widgets: crosstabWidgets,
   updateModelFieldSelection: vi.fn(),
   toggleModelEnabled: vi.fn(),
   initializeDefaultFields: vi.fn(),
+};
+
+const resolveOverrideValue = (store, key, value) => {
+  if (
+    isRef(store[key]) &&
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === 1 &&
+    Object.prototype.hasOwnProperty.call(value, 'value')
+  ) {
+    return value.value;
+  }
+
+  return value;
+};
+
+const applyStoreOverrides = (store, overrides = {}) => {
+  Object.entries(overrides).forEach(([key, value]) => {
+    const resolved = resolveOverrideValue(store, key, value);
+
+    if (isRef(store[key])) {
+      store[key].value = resolved;
+      return;
+    }
+
+    store[key] = resolved;
+  });
 };
 
 vi.mock('@/store/modules/export/conversational/export', () => ({
@@ -39,7 +74,7 @@ describe('Conversational FormCheckbox', () => {
   let wrapper;
 
   const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockStore, storeOverrides);
+    applyStoreOverrides(mockStore, storeOverrides);
 
     return mount(FormCheckbox, {
       global: {
@@ -53,13 +88,11 @@ describe('Conversational FormCheckbox', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    Object.assign(mockStore, {
-      model_fields: { value: {} },
-      selected_fields: { value: {} },
-      enabled_models: { value: [] },
-      custom_widgets: { value: [] },
-      crosstab_widgets: { value: [] },
-    });
+    modelFields.value = {};
+    selectedFields.value = {};
+    enabledModels.value = [];
+    customWidgets.value = [];
+    crosstabWidgets.value = [];
 
     wrapper = createWrapper();
   });
@@ -269,10 +302,8 @@ describe('Conversational FormCheckbox', () => {
 
     it('should translate enabled models', () => {
       wrapper = createWrapper({
-        custom_widgets: {
-          value: [{ uuid: '123-456', name: 'Widget A' }],
-        },
-        enabled_models: { value: ['123-456'] },
+        custom_widgets: [{ uuid: '123-456', name: 'Widget A' }],
+        enabled_models: ['123-456'],
       });
 
       expect(wrapper.vm.translatedEnabledModels).toEqual(['Widget A']);
@@ -280,10 +311,8 @@ describe('Conversational FormCheckbox', () => {
 
     it('should translate selected fields', () => {
       wrapper = createWrapper({
-        custom_widgets: {
-          value: [{ uuid: '123-456', name: 'Widget A' }],
-        },
-        selected_fields: { value: { '123-456': ['field1'] } },
+        custom_widgets: [{ uuid: '123-456', name: 'Widget A' }],
+        selected_fields: { '123-456': ['field1'] },
       });
 
       const translated = wrapper.vm.translatedSelectedFields;
@@ -293,10 +322,8 @@ describe('Conversational FormCheckbox', () => {
 
     it('should translate enabled models for crosstab widgets', () => {
       wrapper = createWrapper({
-        crosstab_widgets: {
-          value: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
-        },
-        enabled_models: { value: ['ct-111-222'] },
+        crosstab_widgets: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
+        enabled_models: ['ct-111-222'],
       });
 
       expect(wrapper.vm.translatedEnabledModels).toEqual(['Crosstab A']);
@@ -304,10 +331,8 @@ describe('Conversational FormCheckbox', () => {
 
     it('should translate selected fields for crosstab widgets', () => {
       wrapper = createWrapper({
-        crosstab_widgets: {
-          value: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
-        },
-        selected_fields: { value: { 'ct-111-222': ['field1'] } },
+        crosstab_widgets: [{ uuid: 'ct-111-222', name: 'Crosstab A' }],
+        selected_fields: { 'ct-111-222': ['field1'] },
       });
 
       const translated = wrapper.vm.translatedSelectedFields;
@@ -317,13 +342,9 @@ describe('Conversational FormCheckbox', () => {
 
     it('should merge allExportableWidgets from both custom and crosstab', () => {
       wrapper = createWrapper({
-        custom_widgets: {
-          value: [{ uuid: 'cw-1', name: 'Custom' }],
-        },
-        crosstab_widgets: {
-          value: [{ uuid: 'ct-1', name: 'Crosstab' }],
-        },
-        enabled_models: { value: ['cw-1', 'ct-1'] },
+        custom_widgets: [{ uuid: 'cw-1', name: 'Custom' }],
+        crosstab_widgets: [{ uuid: 'ct-1', name: 'Crosstab' }],
+        enabled_models: ['cw-1', 'ct-1'],
       });
 
       expect(wrapper.vm.translatedEnabledModels).toEqual([

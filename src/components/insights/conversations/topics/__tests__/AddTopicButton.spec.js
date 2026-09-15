@@ -1,14 +1,7 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { shallowMount } from '@vue/test-utils';
 
 import AddTopicButton from '../AddTopicButton.vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 const createWrapper = (props = {}) => {
   return shallowMount(AddTopicButton, {

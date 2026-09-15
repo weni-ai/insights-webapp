@@ -1,21 +1,57 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
-import { reactive } from 'vue';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
+import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+import { isRef, reactive, ref } from 'vue';
 
 import ConversationalSearchTerm from '../ConversationalSearchTerm.vue';
 
+const searchTermWidgetData = ref(null);
+const isLoadingSearchTermWidgetData = ref(false);
+const isSearchTermWidgetDataError = ref(false);
+const shouldUseMock = ref(false);
+
 const mockWidgetsStore = {
-  searchTermWidgetData: { value: null },
-  isLoadingSearchTermWidgetData: { value: false },
-  isSearchTermWidgetDataError: { value: false },
+  searchTermWidgetData,
+  isLoadingSearchTermWidgetData,
+  isSearchTermWidgetDataError,
   loadSearchTermWidgetData: vi.fn(() => Promise.resolve()),
 };
 
 const mockConversationalStore = {
   refreshDataConversational: false,
   setIsLoadingConversationalData: vi.fn(),
-  shouldUseMock: { value: false },
+  shouldUseMock,
+};
+
+const resolveOverrideValue = (store, key, value) => {
+  if (
+    isRef(store[key]) &&
+    value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value) &&
+    Object.keys(value).length === 1 &&
+    Object.prototype.hasOwnProperty.call(value, 'value')
+  ) {
+    return value.value;
+  }
+
+  return value;
+};
+
+const applyStoreOverrides = (store, overrides = {}) => {
+  Object.entries(overrides).forEach(([key, value]) => {
+    const resolved = resolveOverrideValue(store, key, value);
+
+    if (isRef(store[key])) {
+      store[key].value = resolved;
+      return;
+    }
+
+    store[key] = resolved;
+  });
 };
 
 const mockRoute = reactive({ query: {} });
@@ -58,7 +94,7 @@ import {
   colorBgYellowPlain,
 } from '@weni/unnnic-system/tokens/colors';
 
-import { icuMessageCompiler } from '@/utils/icuMessageCompiler';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const i18n = createI18n({
   legacy: false,
@@ -83,7 +119,7 @@ const i18n = createI18n({
   messageCompiler: icuMessageCompiler,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const buildResults = (count) =>
   Array.from({ length: count }, (_, index) => ({
@@ -96,7 +132,7 @@ describe('ConversationalSearchTerm', () => {
   let wrapper;
 
   const createWrapper = (storeOverrides = {}) => {
-    Object.assign(mockWidgetsStore, storeOverrides);
+    applyStoreOverrides(mockWidgetsStore, storeOverrides);
     return mount(ConversationalSearchTerm, {
       global: {
         stubs: {
@@ -117,13 +153,11 @@ describe('ConversationalSearchTerm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockRoute.query = {};
-    Object.assign(mockWidgetsStore, {
-      searchTermWidgetData: { value: null },
-      isLoadingSearchTermWidgetData: { value: false },
-      isSearchTermWidgetDataError: { value: false },
-    });
+    searchTermWidgetData.value = null;
+    isLoadingSearchTermWidgetData.value = false;
+    isSearchTermWidgetDataError.value = false;
     mockConversationalStore.refreshDataConversational = false;
-    mockConversationalStore.shouldUseMock = { value: false };
+    shouldUseMock.value = false;
     wrapper = createWrapper();
   });
 
@@ -164,7 +198,7 @@ describe('ConversationalSearchTerm', () => {
 
     it('shows loading state', () => {
       wrapper = createWrapper({
-        isLoadingSearchTermWidgetData: { value: true },
+        isLoadingSearchTermWidgetData: true,
       });
       expect(wrapper.vm.isLoading).toBe(true);
     });
@@ -209,14 +243,14 @@ describe('ConversationalSearchTerm', () => {
     it('shows see all only when more than 5 results', () => {
       expect(wrapper.vm.showSeeAll).toBe(false);
       wrapper = createWrapper({
-        searchTermWidgetData: { value: { results: buildResults(6) } },
+        searchTermWidgetData: { results: buildResults(6) },
       });
       expect(wrapper.vm.showSeeAll).toBe(true);
     });
 
     it('opens see all drawer', async () => {
       wrapper = createWrapper({
-        searchTermWidgetData: { value: { results: buildResults(6) } },
+        searchTermWidgetData: { results: buildResults(6) },
       });
       const seeAll = wrapper.find(
         '[data-testid="conversational-search-term-see-all"]',
@@ -240,7 +274,7 @@ describe('ConversationalSearchTerm', () => {
     });
 
     it('returns empty actions in mock mode', () => {
-      mockConversationalStore.shouldUseMock = { value: true };
+      shouldUseMock.value = true;
       wrapper = createWrapper();
       expect(wrapper.vm.actions).toEqual([]);
     });
@@ -249,7 +283,7 @@ describe('ConversationalSearchTerm', () => {
   describe('Error handling', () => {
     it('exposes error state', () => {
       wrapper = createWrapper({
-        isSearchTermWidgetDataError: { value: true },
+        isSearchTermWidgetDataError: true,
       });
       expect(wrapper.vm.isError).toBe(true);
     });

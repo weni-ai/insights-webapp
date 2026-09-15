@@ -1,8 +1,5 @@
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { describe, it, expect, afterEach, vi } from 'vitest';
-import { createI18n } from 'vue-i18n';
-import en from '@/locales/en.json';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 
 import AgentStatus from '../AgentStatus.vue';
 
@@ -23,16 +20,6 @@ vi.mock('@/services/api/resources/disconnectAgent', () => ({
 vi.mock('@/utils/env', () => ({
   default: vi.fn(() => 'http://localhost:3000'),
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 
 const UnnnicIconStub = {
   template:
@@ -56,7 +43,6 @@ const mountAgentStatus = (props = {}, overrides = {}) => {
   return mount(AgentStatus, {
     props,
     global: {
-      plugins: [i18n, UnnnicSystem],
       stubs: {
         UnnnicIcon: UnnnicIconStub,
         DisconnectAgent: DisconnectAgentStub,

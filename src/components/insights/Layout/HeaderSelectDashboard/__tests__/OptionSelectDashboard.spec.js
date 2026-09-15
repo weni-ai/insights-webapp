@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { config, mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 
 import { createRouter, createMemoryHistory } from 'vue-router';
@@ -7,6 +7,11 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 import OptionSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/OptionSelectDashboard.vue';
 import Unnnic from '@weni/unnnic-system';
 import { useDashboards } from '@/store/modules/dashboards';
+import { i18n } from '../../../../../../setupVitest.js';
+import { UnnnicSystemPlugin } from '@tests/utils/testHelpers.js';
+
+// Full locales; omit mockRouter — this spec mounts its own router
+config.global.plugins = [i18n, UnnnicSystemPlugin];
 
 const dashboard1 = { name: 'Dashboard 1', uuid: '1' };
 const dashboard2 = { name: 'Dashboard 2', uuid: '2' };
@@ -55,9 +60,6 @@ describe('OptionSelectDashboard', () => {
         stubs: {
           UnnnicDropdownItem: Unnnic.unnnicDropdownItem,
           UnnnicIcon: true,
-        },
-        mocks: {
-          $t: (msg) => msg,
         },
       },
     });

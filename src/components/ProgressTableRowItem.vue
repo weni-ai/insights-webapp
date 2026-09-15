@@ -165,16 +165,9 @@ const handleExpand = () => {
 
 <style scoped lang="scss">
 .progress-table-row-item {
-  display: table-row;
-
   &:not(:last-of-type) {
-    &::after {
-      content: '';
-      display: block;
-      width: 100%;
-      margin: $unnnic-space-1 0;
-      height: 1px;
-      background-color: $unnnic-color-gray-2;
+    .progress-table-row-item__main-row {
+      border-bottom: 1px solid $unnnic-color-gray-2;
     }
   }
 
@@ -272,6 +265,12 @@ const handleExpand = () => {
     padding-left: $unnnic-space-4;
     padding-right: $unnnic-space-4;
     vertical-align: middle;
+
+    :deep(.unnnic-tooltip),
+    :deep(.native-progress) {
+      display: block;
+      width: 100%;
+    }
   }
 
   &__description {
@@ -286,9 +285,11 @@ const handleExpand = () => {
     min-width: 55px;
 
     &--slotted {
+      width: 1%;
       overflow: visible;
       text-overflow: unset;
-      white-space: normal;
+      white-space: nowrap;
+      text-align: end;
     }
   }
 

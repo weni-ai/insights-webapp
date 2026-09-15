@@ -115,6 +115,8 @@ const formatItemDescription = (
 .sales-per-channel__description {
   display: flex;
   align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
   white-space: nowrap;
   gap: $unnnic-space-1;
   @include unnnic-font-emphasis;

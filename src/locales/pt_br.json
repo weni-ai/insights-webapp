@@ -1293,7 +1293,7 @@
         "handle_time": "Tempo de atendimento",
         "awaiting_time": "Espera",
         "first_response_time": "TPR",
-        "first_response_time_title_tooltip": "Tempo para 1ª resposta",
+        "first_response_time_title_tooltip": "Tempo Primeira Resposta",
         "pending_response_tooltip": "A última mensagem do chat foi enviada pelo contato",
         "attendant": "Atendente",
         "sector": "Setor",

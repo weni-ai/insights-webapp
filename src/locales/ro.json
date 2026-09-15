@@ -1293,7 +1293,7 @@
         "handle_time": "Timp de conversație",
         "awaiting_time": "Timp de așteptare",
         "first_response_time": "TPR",
-        "first_response_time_title_tooltip": "Timp până la primul răspuns",
+        "first_response_time_title_tooltip": "Timp Prim Răspuns",
         "pending_response_tooltip": "Ultimul mesaj din chat a fost trimis de contact",
         "attendant": "Reprezentant",
         "sector": "Departament",

@@ -41,7 +41,17 @@
         :deletedTooltip="item.deletedTooltip"
         :labelComponent="item.labelComponent"
         @expand="expandItem(item.label, $event)"
-      />
+      >
+        <template
+          v-if="$slots.description"
+          #description
+        >
+          <slot
+            name="description"
+            :item="item"
+          />
+        </template>
+      </ProgressItem>
     </tbody>
   </table>
 </template>

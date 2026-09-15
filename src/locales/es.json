@@ -1245,6 +1245,15 @@
     "live": "En vivo",
     "historical_data": "Datos históricos",
     "sales": {
+      "channel": {
+        "empty_data": "Ninguna venta en el período seleccionado",
+        "footer_text": "{count, plural, one {# canal} other {# canales}}",
+        "tabs": {
+          "revenue": "Ingresos",
+          "sale": "Venta"
+        },
+        "title": "Canal"
+      },
       "tab": "Ventas",
       "order_data": {
         "average_order_value": "Ticket promedio",

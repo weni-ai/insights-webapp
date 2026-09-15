@@ -1,8 +1,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
+import { ref } from 'vue';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { createTestingPinia } from '@pinia/testing';
 import Finished from '../Finished.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('date-fns', () => ({
   subDays: vi.fn((date) => date),
@@ -13,13 +17,14 @@ vi.mock('date-fns', () => ({
 vi.mock('@/utils/time', () => ({
   formatSecondsToTime: vi.fn((seconds) => `${seconds}s`),
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
 
 const mockInfiniteScroll = {
-  isLoading: { value: false },
-  isLoadingMore: { value: false },
+  isLoading: ref(false),
+  isLoadingMore: ref(false),
   formattedItems: { value: [] },
-  hasMoreData: { value: false },
+  hasMoreData: ref(false),
   loadMoreData: vi.fn(),
   resetAndLoadData: vi.fn(),
   handleSort: vi.fn(),
@@ -57,6 +62,7 @@ const i18n = createI18n({
             contact: 'Contact',
             ticket_id: 'Ticket',
             csat_rating: 'CSAT',
+            channel: 'Channel',
           },
         },
       },
@@ -64,7 +70,7 @@ const i18n = createI18n({
   },
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('Finished', () => {
   let wrapper;
@@ -94,12 +100,10 @@ describe('Finished', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.assign(mockInfiniteScroll, {
-      isLoading: { value: false },
-      isLoadingMore: { value: false },
-      formattedItems: { value: [] },
-      hasMoreData: { value: false },
-    });
+    mockInfiniteScroll.isLoading.value = false;
+    mockInfiniteScroll.isLoadingMore.value = false;
+    Object.assign(mockInfiniteScroll.formattedItems, { value: [] });
+    mockInfiniteScroll.hasMoreData.value = false;
     wrapper = createWrapper();
   });
 
@@ -122,11 +126,18 @@ describe('Finished', () => {
   describe('Headers', () => {
     it('generates correct headers with translations', () => {
       const headers = wrapper.vm.formattedHeaders;
-      expect(headers).toHaveLength(9);
+      expect(headers).toHaveLength(10);
 
       expect(headers[0].itemKey).toBe('agent');
-      expect(headers[7].itemKey).toBe('ticket_id');
-      expect(headers[8].itemKey).toBe('csat_rating');
+      expect(headers[1].itemKey).toBe('sector');
+      expect(headers[2].itemKey).toBe('queue');
+      expect(headers[3].itemKey).toBe('awaiting_time');
+      expect(headers[4].itemKey).toBe('first_response_time');
+      expect(headers[5].itemKey).toBe('duration');
+      expect(headers[6].itemKey).toBe('contact');
+      expect(headers[7].itemKey).toBe('channel');
+      expect(headers[8].itemKey).toBe('ticket_id');
+      expect(headers[9].itemKey).toBe('csat_rating');
 
       expect(headers.every((h) => h.isSortable)).toBe(true);
     });

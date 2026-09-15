@@ -18,6 +18,7 @@
     :fetchMethod="fetchMethod"
     :context="props.context"
     :showConfig="props.showConfig"
+    :hiddenTabs="props.context === 'analysis'"
     @click:setup="redirectToChatsConfig"
   />
 </template>
@@ -25,9 +26,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import VolumeBarListWidget from './VolumeBarListWidget.vue';
+import VolumeBarListWidget from '../VolumeList/VolumeBarListWidget.vue';
 
-import type { VolumeBarListTabItem, WidgetContext } from './types';
+import type { VolumeBarListTabItem, WidgetContext } from '../VolumeList/types';
 
 import volumePerQueueService from '@/services/api/resources/humanSupport/volumePerQueue';
 
@@ -68,7 +69,6 @@ const tabs = (ctx: WidgetContext): VolumeBarListTabItem[] => {
     return [
       { name: t('awaiting'), key: 'waiting' },
       { name: t('in_progress'), key: 'ongoing' },
-      { name: t('finished'), key: 'closed' },
     ];
   }
   return [{ name: t('finished'), key: 'closed' }];

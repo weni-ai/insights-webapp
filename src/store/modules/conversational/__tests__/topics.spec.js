@@ -557,6 +557,7 @@ describe('useConversationalTopics store', () => {
       });
 
       it('should handle loading state correctly', async () => {
+        vi.useFakeTimers({ shouldAdvanceTime: false });
         topicsService.getConversationalFormTopics.mockImplementation(
           () => new Promise((resolve) => setTimeout(() => resolve([]), 100)),
         );
@@ -564,8 +565,10 @@ describe('useConversationalTopics store', () => {
         const loadPromise = store.loadFormTopics();
         expect(store.isLoadingTopics).toBe(true);
 
+        await vi.advanceTimersByTimeAsync(100);
         await loadPromise;
         expect(store.isLoadingTopics).toBe(false);
+        vi.useRealTimers();
       });
 
       it('should handle errors gracefully', async () => {
@@ -610,6 +613,7 @@ describe('useConversationalTopics store', () => {
       });
 
       it('should handle loading state correctly', async () => {
+        vi.useFakeTimers({ shouldAdvanceTime: false });
         topicsService.getConversationalTopicsDistribution.mockImplementation(
           () =>
             new Promise((resolve) =>
@@ -620,8 +624,10 @@ describe('useConversationalTopics store', () => {
         const loadPromise = store.loadTopicsDistribution();
         expect(store.isLoadingTopicsDistribution).toBe(true);
 
+        await vi.advanceTimersByTimeAsync(100);
         await loadPromise;
         expect(store.isLoadingTopicsDistribution).toBe(false);
+        vi.useRealTimers();
       });
 
       it('should use current topic type in request', async () => {

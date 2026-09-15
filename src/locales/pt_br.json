@@ -474,11 +474,11 @@
         "title": "Receita atribuída"
       },
       "ctwa_conversations": {
-        "description": "Iniciadas por anúncios no período",
-        "title": "Conversas CTWA"
+        "description": "Iniciadas a partir de anúncios no período",
+        "title": "Conversas de Click to WhatsApp"
       },
       "organic_conversations": {
-        "description": "Linha de base de comparação (não anúncio)",
+        "description": "Base de comparação (sem anúncio)",
         "title": "Conversas orgânicas"
       }
     },
@@ -498,11 +498,11 @@
     "sales_funnel": {
       "converted": "Convertidas",
       "qualified": "Qualificadas",
-      "qualified_help": "Contatos em que o agente identificou intenção de compra. Isso pode incluir ações como adicionar um produto ao carrinho ou perguntar sobre um produto, entre outros sinais de intenção.",
+      "qualified_help": "Contatos em que o agente identificou intenção de compra. Isso pode incluir ações como adicionar um produto ao carrinho ou perguntar sobre um produto.",
       "started": "Conversas iniciadas",
       "title": "Funil de vendas"
     },
-    "title": "Clique para WhatsApp"
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -552,6 +552,44 @@
     "tags": {
       "label": "Tags",
       "placeholder": "Selecione uma tag"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Setores"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Setor"
+    },
+    "filters": {
+      "sector": "Setor",
+      "select_sector": "Selecione um setor",
+      "all_sectors": "Todos os setores"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Setor"
+      },
+      "in_awaiting": {
+        "sector": "Setor"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Setor"
+      },
+      "disabled_text": "Ative o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Fila e setor excluídos do projeto",
+      "tag_and_sector": "Tag e setor excluídos do projeto",
+      "sector": "Setor excluído do projeto",
+      "volume_per_queue": {
+        "setup_description": "Crie filas por setor para monitorar mais dados"
+      },
+      "volume_per_tag": {
+        "setup_description": "Adicione tags a setores para acompanhar mais dados"
+      }
     }
   },
   "key": "Chave",
@@ -905,7 +943,7 @@
     "CLP": "$ - Peso chileno",
     "CNY": "¥ - Yuan chinês",
     "COP": "$ - Peso colombiano",
-    "CZK": "Kč - Coroa tcheca",
+    "CZK": "Kč - Coroa checa",
     "DKK": "kr - Coroa dinamarquesa",
     "EUR": "€ - Euro",
     "GBP": "£ - Libra esterlina",
@@ -919,13 +957,13 @@
     "NOK": "kr - Coroa norueguesa",
     "PEN": "S/ - Sol peruano",
     "PHP": "₱ - Peso filipino",
-    "PLN": "zł - Zloty polonês",
+    "PLN": "zł - Złoty polonês",
     "RON": "lei - Leu romeno",
     "SEK": "kr - Coroa sueca",
     "SGD": "S$ - Dólar de Singapura",
     "THB": "฿ - Baht tailandês",
-    "TWD": "NT$ - Dólar taiwanês",
-    "USD": "$ - Dólar",
+    "TWD": "NT$ - Novo dólar taiwanês",
+    "USD": "$ - Dólar americano",
     "UYU": "$U - Peso uruguaio",
     "VND": "₫ - Dong vietnamita"
   },
@@ -1095,6 +1133,7 @@
     "chats_open": "Considerar chats abertos durante este período",
     "chats_closed": "Considerar chats encerrados durante este período",
     "filters": {
+      "channel": "Canal",
       "sector": "Setor",
       "select_sector": "Selecione o setor",
       "representative": "Atendente",
@@ -1106,7 +1145,8 @@
       "all_sectors": "Todos os setores",
       "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
-      "all_tags": "Todas as tags"
+      "all_tags": "Todas as tags",
+      "select_to_filter": "Selecionar para filtrar"
     },
     "select_format": "Selecione o formato para exportar os dados",
     "warning_terms": "Enquanto a exportação estiver em processamento, a geração de novas exportações ficará bloqueada para todos os perfis do projeto. Confirme para continuar.",
@@ -1200,10 +1240,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoramento",
-    "monitoring_tooltip": "Acompanhe em tempo real os atendimentos do dia. Identifique gargalos e tome decisões rápidas para otimizar a operação.",
-    "analysis": "Análise",
-    "analysis_tooltip": "Explore o desempenho de salas encerradas em diferentes períodos de tempo. Descubra padrões, tendências e oportunidades de melhoria na sua equipe.",
+    "live": "Ao vivo",
+    "historical_data": "Dados históricos",
+    "news_disclaimer": {
+      "title": "Novidade nos dashboards!",
+      "description": "O dashboard <i>Monitoramento</i> agora se chama <i>Ao vivo</i> e mostra dados em tempo real sobre atendentes e atendimentos em espera ou em andamento. Para analisar atendimentos já finalizados, inclusive os realizados hoje, acesse <i>Dados históricos</i>."
+    },
     "support_status": {
       "title": "Status dos atendimentos",
       "is_waiting": "Em espera",
@@ -1218,11 +1260,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
-      "average_time_is_waiting": "Média de espera",
-      "average_time_first_response": "Média para 1ª resposta",
-      "average_response_time": "Tempo médio de resposta",
-      "average_time_chat": "Duração média",
+      "average_time_is_waiting": "TME",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMA",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Tempo Médio de Espera",
+        "average_time_first_response": "Tempo Médio de Primera Resposta",
+        "average_response_time": "Tempo Médio de Resposta",
+        "average_time_chat": "Tempo Médio de Atendimento"
+      },
       "tooltips": {
         "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
         "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",
@@ -1249,7 +1297,8 @@
         "attendant": "Atendente",
         "sector": "Setor",
         "queue": "Fila",
-        "contact": "Contato"
+        "contact": "Contato",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Status",
@@ -1261,7 +1310,8 @@
         "awaiting_time": "Espera",
         "contact": "Contato",
         "sector": "Setor",
-        "queue": "Fila"
+        "queue": "Fila",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Atendente",
@@ -1307,6 +1357,7 @@
         "agent": "Atendente",
         "sector": "Setor",
         "queue": "Fila",
+        "channel": "Canal",
         "contact": "Contato",
         "ticket_id": "Protocolo",
         "total_attendances": "Total de atendimentos",
@@ -1316,6 +1367,9 @@
         "time_in_service": "Tempo em atendimento",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Outros"
     },
     "analyze": {
       "title": "Em breve: Nova Visão de Análise",
@@ -1400,6 +1454,22 @@
           "closed": "Nenhuma tag atribuída a chats finalizados no período selecionado"
         }
       }
+    },
+    "volume_per_channel": {
+      "title": "Volume por canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal com chats {status}} other {# canais com chats {status}}}",
+        "analysis": "{count, plural, one {# canal com chats finalizados} other {# canais com chats finalizados}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Nenhum chat em espera",
+          "ongoing": "Nenhum chat em andamento"
+        },
+        "analysis": {
+          "closed": "Nenhum chat finalizado no período selecionado"
+        }
+      }
     }
   },
   "on": "Ativa",
@@ -1440,5 +1510,13 @@
     "privacy_note": "Somente os dados aos quais você tem acesso estão disponíveis pelo MCP.",
     "not_now": "Agora não",
     "view_setup_guide": "Ver guia de configuração"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campanha",
+    "conversations": "Conversas",
+    "conversions": "Conversões",
+    "qualified": "Qualificadas",
+    "revenue": "Receita",
+    "title": "Desempenho por campanha"
   }
 }

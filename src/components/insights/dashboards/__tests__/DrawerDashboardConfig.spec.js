@@ -1,10 +1,18 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { mount } from '@vue/test-utils';
+import { mount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import DrawerDashboardConfig from '../DrawerDashboardConfig.vue';
 import { Dashboards } from '@/services/api';
 import { Dashboard } from '@/models';
+
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 vi.mock('@/services/api', () => ({
   Dashboards: {

@@ -1,11 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import { createTestingPinia } from '@pinia/testing';
 import { ref } from 'vue';
 
 import ServiceStatus from '../StatusCards.vue';
 import { LazyVisibilityKey } from '@/composables/useLazyData';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 const defaultServiceStatusData = {
   is_waiting: 25,
@@ -80,7 +83,7 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 describe('ServiceStatus', () => {
   let wrapper;
@@ -148,9 +151,8 @@ describe('ServiceStatus', () => {
       expect(section().exists()).toBe(true);
     });
 
-    it('should render title', () => {
-      expect(title().exists()).toBe(true);
-      expect(title().text()).toBe('Support Status');
+    it('should not render title', () => {
+      expect(title().exists()).toBe(false);
     });
 
     it('should render cards container', () => {
@@ -161,7 +163,7 @@ describe('ServiceStatus', () => {
       const cardComponents = wrapper.findAllComponents({
         name: 'CardConversations',
       });
-      expect(cardComponents).toHaveLength(3);
+      expect(cardComponents).toHaveLength(2);
     });
   });
 
@@ -178,7 +180,7 @@ describe('ServiceStatus', () => {
   describe('Card definitions', () => {
     it('should have correct card definitions structure', () => {
       const vm = wrapper.vm;
-      expect(vm.cardDefinitions).toHaveLength(3);
+      expect(vm.cardDefinitions).toHaveLength(2);
 
       const expectedCards = [
         {
@@ -192,12 +194,6 @@ describe('ServiceStatus', () => {
           titleKey: 'human_support_dashboard.support_status.is_in_progress',
           tooltipKey:
             'human_support_dashboard.support_status.tooltips.is_in_progress',
-        },
-        {
-          id: 'finished',
-          titleKey: 'human_support_dashboard.support_status.is_closed',
-          tooltipKey:
-            'human_support_dashboard.support_status.tooltips.is_closed',
         },
       ];
 
@@ -266,8 +262,7 @@ describe('ServiceStatus', () => {
       const vm = wrapper.vm;
 
       expect(vm.getTooltipSide(0)).toBe('top');
-      expect(vm.getTooltipSide(1)).toBe('top');
-      expect(vm.getTooltipSide(2)).toBe('left');
+      expect(vm.getTooltipSide(1)).toBe('left');
     });
   });
 
@@ -299,8 +294,10 @@ describe('ServiceStatus', () => {
         name: 'CardConversations',
       });
 
+      expect(cardComponents[0].props('borderRadius')).toBe('left');
+      expect(cardComponents[1].props('borderRadius')).toBe('right');
+
       cardComponents.forEach((card) => {
-        expect(card.props('borderRadius')).toBe('full');
         expect(card.props('isLoading')).toBeDefined();
 
         expect(card.props('activeDescriptionGap')).toBeFalsy();

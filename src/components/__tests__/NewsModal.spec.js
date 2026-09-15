@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import NewsModal from '../NewsModal.vue';
 
 vi.mock('@weni/unnnic-system', async (importOriginal) => {
@@ -51,16 +50,6 @@ const mockNews = [
     image: '/path/to/image3.gif',
   },
 ];
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-});
-
-config.global.plugins = [i18n];
 
 describe('NewsModal', () => {
   let wrapper;

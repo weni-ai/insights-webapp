@@ -498,7 +498,7 @@
     "sales_funnel": {
       "converted": "Converted",
       "qualified": "Qualified",
-      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product, among other intent signals.",
+      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product.",
       "started": "Conversations started",
       "title": "Sales funnel"
     },
@@ -552,6 +552,44 @@
     "tags": {
       "label": "Tags",
       "placeholder": "Select a tag"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Departments"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Department"
+    },
+    "filters": {
+      "sector": "Department",
+      "select_sector": "Select a department",
+      "all_sectors": "All departments"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Department"
+      },
+      "in_awaiting": {
+        "sector": "Department"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Department"
+      },
+      "disabled_text": "Enable CSAT to track overall ratings by department, queue, and representative"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Queue and department deleted from project",
+      "tag_and_sector": "Tag and department deleted from project",
+      "sector": "Department deleted from project",
+      "volume_per_queue": {
+        "setup_description": "Create queues by department to monitor more data"
+      },
+      "volume_per_tag": {
+        "setup_description": "Add tags to departments to track more data"
+      }
     }
   },
   "key": "Key",
@@ -1095,6 +1133,7 @@
     "chats_open": "Include chats opened during this period",
     "chats_closed": "Include chats closed during this period",
     "filters": {
+      "channel": "Channel",
       "sector": "Department",
       "select_sector": "Select department",
       "representative": "Representative",
@@ -1106,7 +1145,8 @@
       "all_sectors": "All departments",
       "all_representatives": "All representatives",
       "all_queues": "All queues",
-      "all_tags": "All tags"
+      "all_tags": "All tags",
+      "select_to_filter": "Select to filter"
     },
     "select_format": "Select the format for exporting the data",
     "warning_terms": "While the export is in progress, creating new exports will be blocked for all project roles. Confirm to continue.",
@@ -1200,10 +1240,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoring",
-    "monitoring_tooltip": "Track the support chat interactions of the day in real time. Identify bottlenecks and make quick decisions to optimize the operation.",
-    "analysis": "Analytics",
-    "analysis_tooltip": "Explore the performance of closed rooms over different time periods. Discover patterns, trends, and opportunities for improving your team.",
+    "live": "Live",
+    "historical_data": "Historical data",
+    "news_disclaimer": {
+      "title": "New on the dashboards!",
+      "description": "The <i>Monitoring</i> dashboard is now called <i>Live</i> and shows real-time data on representatives and on support chats that are waiting or in progress. To analyze completed support chats, including those from today, go to <i>Historical data</i>."
+    },
     "support_status": {
       "title": "Status of support chats",
       "is_waiting": "Waiting",
@@ -1218,11 +1260,17 @@
     },
     "time_metrics": {
       "title": "Current time metrics",
-      "average_time_is_waiting": "Average wait time",
-      "average_time_first_response": "Average time to 1st response",
-      "average_response_time": "Average response time",
-      "average_time_chat": "Average chat duration",
+      "average_time_is_waiting": "AWT",
+      "average_time_first_response": "MFRT",
+      "average_response_time": "ART",
+      "average_time_chat": "AHT",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Average Wait Time",
+        "average_time_first_response": "Mean First Response Time",
+        "average_response_time": "Average Response Time",
+        "average_time_chat": "Average Handle Time"
+      },
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in queue before support chat start",
         "average_time_first_response": "Average time before the representative sends the first message after the room is assigned",
@@ -1249,7 +1297,8 @@
         "attendant": "Representative",
         "sector": "Department",
         "queue": "Queue",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Channel"
       },
       "pauses": {
         "status": "Status",
@@ -1261,7 +1310,8 @@
         "awaiting_time": "Wait time",
         "contact": "Contact",
         "sector": "Department",
-        "queue": "Queue"
+        "queue": "Queue",
+        "channel": "Channel"
       },
       "attendant": {
         "agent": "Representative",
@@ -1307,6 +1357,7 @@
         "agent": "Representative",
         "sector": "Department",
         "queue": "Queue",
+        "channel": "Channel",
         "contact": "Contact",
         "ticket_id": "Protocol",
         "total_attendances": "Total support chats",
@@ -1316,6 +1367,9 @@
         "time_in_service": "Time in support chat",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Others"
     },
     "analyze": {
       "title": "Coming soon: New Analytics view",
@@ -1400,6 +1454,22 @@
           "closed": "No tags assigned to chats completed in the selected period"
         }
       }
+    },
+    "volume_per_channel": {
+      "title": "Volume per channel",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# channel with {status} chats} other {# channels with {status} chats}}",
+        "analysis": "{count, plural, one {# channel with completed chats} other {# channels with completed chats}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No chats waiting",
+          "ongoing": "No chats in progress"
+        },
+        "analysis": {
+          "closed": "No chats completed in the selected period"
+        }
+      }
     }
   },
   "on": "Active",
@@ -1440,5 +1510,13 @@
     "privacy_note": "Only data you can access is available through MCP.",
     "not_now": "Maybe later",
     "view_setup_guide": "View setup guide"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campaign",
+    "conversations": "Conversations",
+    "conversions": "Conversions",
+    "qualified": "Qualified",
+    "revenue": "Revenue",
+    "title": "Performance by campaign"
   }
 }

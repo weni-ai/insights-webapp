@@ -123,6 +123,7 @@ describe('useProject store', () => {
     });
 
     it('should set loading state during agents team fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       const store = useProject();
 
       NexusApi.getAgentsTeam.mockImplementation(
@@ -132,8 +133,10 @@ describe('useProject store', () => {
       const promise = store.getAgentsTeam();
       expect(store.isLoadingAgentsTeam).toBe(true);
 
+      await vi.advanceTimersByTimeAsync(100);
       await promise;
       expect(store.isLoadingAgentsTeam).toBe(false);
+      vi.useRealTimers();
     });
 
     it('should activate agent successfully', async () => {

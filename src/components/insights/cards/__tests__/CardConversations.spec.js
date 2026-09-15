@@ -1,23 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 
 import CardConversations from '../CardConversations.vue';
 
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import { UnnnicToolTip } from '@weni/unnnic-system';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const defaultProps = {
   title: 'Test Title',
@@ -26,7 +12,6 @@ const defaultProps = {
 
 const createWrapper = (props = {}) => {
   return mount(CardConversations, {
-    global: { plugins: [UnnnicSystem] },
     props: { ...defaultProps, ...props },
   });
 };

@@ -2,7 +2,7 @@
   <section class="insights-layout-header-filters">
     <FilterHumanSupport v-if="isHumanSupportDashboard" />
 
-    <template v-if="hasManyFilters">
+    <template v-if="hasManyFilters && !isHumanSupportDashboard">
       <UnnnicButton
         data-testid="many-filters-button"
         type="secondary"
@@ -34,6 +34,7 @@
       v-if="isMetaTemplateDashboard && !emptyTemplates"
     />
     <ModalFilters
+      v-if="!isHumanSupportDashboard"
       data-testid="modal-filters"
       :showModal="filterModalOpened"
       @close="filterModalOpened = false"
@@ -93,8 +94,8 @@ const { currentDashboard, currentDashboardFilters, appliedFilters } =
 const { emptyTemplates, showSearchTemplateMetaModal } =
   storeToRefs(metaTemplateStore);
 
-const handlerShowSearchTemplateModal = (...args: any[]) =>
-  metaTemplateStore.handlerShowSearchTemplateModal(...args);
+const handlerShowSearchTemplateModal = (show: boolean) =>
+  metaTemplateStore.handlerShowSearchTemplateModal(show);
 
 const filterModalOpened = ref(false);
 
@@ -114,16 +115,13 @@ const isMetaTemplateDashboard = computed(
   () => currentDashboard.value?.config?.is_whatsapp_integration,
 );
 
-const isRenderDynamicFilter = computed(
-  () =>
-    (!isMetaTemplateDashboard.value && !isHumanSupportDashboard.value) ||
-    (!emptyTemplates.value && !isHumanSupportDashboard.value),
-);
+const isRenderDynamicFilter = computed(() => !isHumanSupportDashboard.value);
 
 const yesterdayFormatted = computed(() => getYesterdayDate().dmFormat);
 
 const hasManyFilters = computed(
-  () => currentDashboardFilters.value?.length > 1,
+  () =>
+    currentDashboardFilters.value?.length > 1 && !isHumanSupportDashboard.value,
 );
 
 const appliedFiltersLength = computed(() => {
@@ -143,6 +141,7 @@ const filter = computed(() => {
 
   if (currentFilter.type === 'date_range') {
     const templateShortcuts = [
+      { key: 'today', id: 'today' },
       { key: 'last_7_days', id: 'last-7-days' },
       { key: 'last_14_days', id: 'last-14-days' },
       { key: 'last_30_days', id: 'last-30-days' },
@@ -167,6 +166,7 @@ const filter = computed(() => {
     if (isConversationalDashboard.value) {
       const dateParam = { date: yesterdayFormatted.value };
       const conversationalShortcuts = [
+        { key: 'today_conversational', id: 'today' },
         { key: 'last_7_days_conversational', id: 'last-7-days' },
         { key: 'last_14_days_conversational', id: 'last-14-days' },
         { key: 'last_30_days_conversational', id: 'last-30-days' },
@@ -238,13 +238,10 @@ watch(
 watch(
   currentDashboardFilters,
   (filters) => {
+    if (isHumanSupportDashboard.value) return;
+
     if (filters.length === 1) {
       const { date, ended_at } = route.query;
-
-      const isHumanSupport =
-        currentDashboard.value?.name === 'human_support_dashboard.title';
-
-      if (isHumanSupport) return;
 
       const { start, end } = isConversationalDashboard.value
         ? getYesterdayDate()

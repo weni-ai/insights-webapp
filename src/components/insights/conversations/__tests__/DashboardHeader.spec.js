@@ -1,12 +1,15 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { ref as vueRef, reactive } from 'vue';
-import { mount, config } from '@vue/test-utils';
+import { flushPromises, mount, config } from '@vue/test-utils';
 
 import DashboardHeader from '../DashboardHeader.vue';
 import { LazyVisibilityKey } from '@/composables/useLazyData';
 
 import { createI18n } from 'vue-i18n';
+
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 import Unnnic from '@weni/unnnic-system';
+import { mockRouter } from '@tests/utils/testHelpers.js';
 
 vi.mock('@weni/unnnic-system', () => ({
   default: {
@@ -25,15 +28,19 @@ vi.mock('@/services/api/resources/conversational/header', () => ({
   },
 }));
 
-vi.mock('vue-router', () => ({
-  useRoute: () => ({
-    params: {},
-    query: {},
-  }),
-  useRouter: () => ({
-    push: vi.fn(),
-  }),
-}));
+vi.mock('vue-router', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useRoute: () => ({
+      params: {},
+      query: {},
+    }),
+    useRouter: () => ({
+      push: vi.fn(),
+    }),
+  };
+});
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: () => ({
@@ -110,19 +117,16 @@ const i18n = createI18n({
   missingWarn: false,
 });
 
-config.global.plugins = [i18n];
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const createWrapper = () => {
-  return mount(DashboardHeader, {
-    global: { plugins: [Unnnic] },
-  });
+  return mount(DashboardHeader);
 };
 
 const createLazyWrapper = (hasBeenVisible) => {
   const hasBeenVisibleRef = vueRef(hasBeenVisible);
   const wrapper = mount(DashboardHeader, {
     global: {
-      plugins: [Unnnic],
       provide: {
         [LazyVisibilityKey]: {
           hasBeenVisible: hasBeenVisibleRef,
@@ -152,7 +156,7 @@ describe('DashboardHeader.vue', () => {
       conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
 
       createLazyWrapper(false);
-      await new Promise((r) => setTimeout(r, 0));
+      await flushPromises();
 
       expect(
         conversationalHeaderApi.default.getConversationalHeaderTotals,
@@ -171,7 +175,7 @@ describe('DashboardHeader.vue', () => {
       ).not.toHaveBeenCalled();
 
       hasBeenVisibleRef.value = true;
-      await new Promise((r) => setTimeout(r, 0));
+      await flushPromises();
 
       expect(
         conversationalHeaderApi.default.getConversationalHeaderTotals,
@@ -242,6 +246,7 @@ describe('DashboardHeader.vue', () => {
 
   describe('Initial Loading States', () => {
     it('should show loading state for all cards initially', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       const delayedMock = vi.fn().mockImplementation(
         () =>
           new Promise((resolve) =>
@@ -277,8 +282,9 @@ describe('DashboardHeader.vue', () => {
         expect(card.props('value')).toBe('-');
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await vi.advanceTimersByTimeAsync(100);
       await testWrapper.vm.$nextTick();
+      vi.useRealTimers();
     });
 
     it('should initialize cardsData with correct structure', async () => {
@@ -832,7 +838,7 @@ describe('DashboardHeader.vue', () => {
       conversationalHeaderApi.default.getConversationalHeaderTotals.mockClear();
 
       createWrapper();
-      await new Promise((r) => setTimeout(r, 50));
+      await flushPromises();
 
       expect(
         conversationalHeaderApi.default.getConversationalHeaderTotals,

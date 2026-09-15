@@ -1,12 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 import { createTestingPinia } from '@pinia/testing';
 
 import SalesFunnel from '../SalesFunnel.vue';
 import { useCTWA } from '@/store/modules/ctwa';
-import en from '@/locales/en.json';
 
 vi.mock('@/utils/numbers', () => ({
   formatNumber: vi.fn((value) => String(value)),
@@ -15,7 +13,8 @@ vi.mock('@/utils/numbers', () => ({
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
-  getTodayDate: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
+  getYesterdayDate: vi.fn(() => ({ start: '2024-01-06', end: '2024-01-06' })),
+  getYesterdayNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
   isDateBefore: vi.fn(() => false),
 }));
 
@@ -24,16 +23,6 @@ vi.mock('@weni/unnnic-system/tokens/colors', () => ({
   colorBlue6: '#79bcfb',
   colorBlue8: '#3993f4',
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockConversionsData = {
   conversations_started: { total: 19400, percentage: 100 },
@@ -129,7 +118,7 @@ describe('SalesFunnel', () => {
         displayValue: '37.4%',
         displaySecondary: '7180',
         tooltip:
-          'Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product, among other intent signals.',
+          'Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product.',
       }),
     );
     expect(items[2]).toEqual(

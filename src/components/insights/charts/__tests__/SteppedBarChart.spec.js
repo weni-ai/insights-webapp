@@ -1,18 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
+
+import { UnnnicToolTip } from '@weni/unnnic-system';
 
 import SteppedBarChart from '../SteppedBarChart.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const defaultItems = [
   {
@@ -71,7 +62,9 @@ describe('SteppedBarChart', () => {
     it('renders an item for each entry', () => {
       defaultItems.forEach((item) => {
         expect(
-          wrapper.find(`[data-testid="stepped-bar-chart-item-${item.id}"]`).exists(),
+          wrapper
+            .find(`[data-testid="stepped-bar-chart-item-${item.id}"]`)
+            .exists(),
         ).toBe(true);
       });
     });
@@ -81,7 +74,9 @@ describe('SteppedBarChart', () => {
         wrapper.find('[data-testid="stepped-bar-chart-label-sent"]').text(),
       ).toBe('Sent');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-label-delivered"]').text(),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-label-delivered"]')
+          .text(),
       ).toBe('Delivered');
       expect(
         wrapper.find('[data-testid="stepped-bar-chart-label-read"]').text(),
@@ -96,7 +91,9 @@ describe('SteppedBarChart', () => {
         wrapper.find('[data-testid="stepped-bar-chart-value-sent"]').text(),
       ).toBe('100');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-value-delivered"]').text(),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-value-delivered"]')
+          .text(),
       ).toBe('80');
     });
 
@@ -134,19 +131,22 @@ describe('SteppedBarChart', () => {
     });
 
     it('renders tooltip only when provided', () => {
+      expect(wrapper.findAllComponents(UnnnicToolTip)).toHaveLength(1);
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-tooltip-read"]').exists(),
+        wrapper.find('[data-testid="stepped-bar-chart-item-read"]').exists(),
       ).toBe(true);
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-tooltip-sent"]').exists(),
-      ).toBe(false);
+        wrapper.find('[data-testid="stepped-bar-chart-item-sent"]').exists(),
+      ).toBe(true);
     });
   });
 
   describe('Chart bars', () => {
     it('calculates bar heights relative to the first item', () => {
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-sent"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-sent"]')
+          .attributes('style'),
       ).toContain('height: 60%');
       expect(
         wrapper
@@ -154,16 +154,22 @@ describe('SteppedBarChart', () => {
           .attributes('style'),
       ).toContain('height: 48%');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-read"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-read"]')
+          .attributes('style'),
       ).toContain('height: 36%');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-clicks"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-clicks"]')
+          .attributes('style'),
       ).toContain('height: 24%');
     });
 
     it('applies first, middle and last border-radius', () => {
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-sent"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-sent"]')
+          .attributes('style'),
       ).toContain('border-radius: 4px 4px 0 4px');
       expect(
         wrapper
@@ -171,7 +177,9 @@ describe('SteppedBarChart', () => {
           .attributes('style'),
       ).toContain('border-radius: 0 4px 0 0');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-clicks"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-clicks"]')
+          .attributes('style'),
       ).toContain('border-radius: 0 4px 4px 0');
     });
 
@@ -183,13 +191,19 @@ describe('SteppedBarChart', () => {
       ]);
 
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-a"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-a"]')
+          .attributes('style'),
       ).toContain('border-radius: 4px 4px 0 4px');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-b"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-b"]')
+          .attributes('style'),
       ).toContain('border-radius: 0 4px 0 0');
       expect(
-        wrapper.find('[data-testid="stepped-bar-chart-bar-c"]').attributes('style'),
+        wrapper
+          .find('[data-testid="stepped-bar-chart-bar-c"]')
+          .attributes('style'),
       ).toContain('border-radius: 0 4px 4px 0');
     });
 

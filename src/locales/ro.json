@@ -470,15 +470,15 @@
   "ctwa_dashboard": {
     "cards": {
       "attributed_revenue": {
-        "description": "Valoarea medie a comenzii {avg}",
+        "description": "Valoare medie a comenzii {avg}",
         "title": "Venit atribuit"
       },
       "ctwa_conversations": {
-        "description": "Inițiate din anunțuri în această perioadă",
+        "description": "Inițiate din reclame în perioada",
         "title": "Conversații CTWA"
       },
       "organic_conversations": {
-        "description": "Bază de comparație (fără anunț)",
+        "description": "Referință de comparație (non-anunț)",
         "title": "Conversații organice"
       }
     },
@@ -496,13 +496,13 @@
       "title": "Performanță pe campanie"
     },
     "sales_funnel": {
-      "converted": "Convertite",
-      "qualified": "Calificate",
-      "qualified_help": "Contacte în care agentul a identificat intenția de cumpărare. Acest lucru poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs, printre alte semnale de intenție.",
-      "started": "Conversații începute",
+      "converted": "Convertit",
+      "qualified": "Calificat",
+      "qualified_help": "Contacte pentru care agentul a identificat intenția de achiziție. Aceasta poate include acțiuni precum adăugarea unui produs în coș sau întrebări despre un produs.",
+      "started": "Conversații inițiate",
       "title": "Pâlnie de vânzări"
     },
-    "title": "Clic pentru WhatsApp"
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Stare",
@@ -552,6 +552,44 @@
     "tags": {
       "label": "Etichete",
       "placeholder": "Alege o etichetă"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Departamente"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Departament"
+    },
+    "filters": {
+      "sector": "Departament",
+      "select_sector": "Selectează un departament",
+      "all_sectors": "Toate departamentele"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Departament"
+      },
+      "in_awaiting": {
+        "sector": "Departament"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Departament"
+      },
+      "disabled_text": "Activează CSAT pentru a monitoriza evaluările generale pe departament, coadă și reprezentant"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Coada și departamentul au fost șterse din proiect",
+      "tag_and_sector": "Eticheta și departamentul au fost șterse din proiect",
+      "sector": "Departamentul a fost șters din proiect",
+      "volume_per_queue": {
+        "setup_description": "Creează cozi pe departamente pentru a monitoriza mai multe date"
+      },
+      "volume_per_tag": {
+        "setup_description": "Adaugă etichete la departamente pentru a urmări mai multe date"
+      }
     }
   },
   "key": "Cheie",
@@ -898,13 +936,13 @@
     }
   },
   "currency_options": {
-    "ARS": "$ - Peso argentinian",
+    "ARS": "$ - Pesos argentinian",
     "BRL": "R$ - Real brazilian",
     "CAD": "$ - Dolar canadian",
     "CHF": "CHF - Franc elvețian",
-    "CLP": "$ - Peso chilian",
+    "CLP": "$ - Pesos chilian",
     "CNY": "¥ - Yuan chinezesc",
-    "COP": "$ - Peso columbian",
+    "COP": "$ - Pesos columbian",
     "CZK": "Kč - Coroană cehă",
     "DKK": "kr - Coroană daneză",
     "EUR": "€ - Euro",
@@ -913,20 +951,20 @@
     "IDR": "Rp - Rupie indoneziană",
     "INR": "₹ - Rupie indiană",
     "JPY": "¥ - Yen japonez",
-    "KRW": "₩ - Won sud-coreean",
-    "MXN": "$ - Peso mexican",
+    "KRW": "₩ - Won coreean",
+    "MXN": "$ - Pesos mexican",
     "MYR": "RM - Ringgit malaezian",
     "NOK": "kr - Coroană norvegiană",
     "PEN": "S/ - Sol peruvian",
-    "PHP": "₱ - Peso filipinez",
+    "PHP": "₱ - Pesos filipinez",
     "PLN": "zł - Zlot polonez",
     "RON": "lei - Leu românesc",
     "SEK": "kr - Coroană suedeză",
-    "SGD": "S$ - Dolar Singapore",
+    "SGD": "S$ - Dolar singaporez",
     "THB": "฿ - Baht thailandez",
-    "TWD": "NT$ - Dolar taiwanez",
+    "TWD": "NT$ - Dolar din New Taiwan",
     "USD": "$ - Dolar american",
-    "UYU": "$U - Peso uruguayan",
+    "UYU": "$U - Pesos uruguayan",
     "VND": "₫ - Dong vietnamez"
   },
   "dashboard_onboarding": {
@@ -1095,6 +1133,7 @@
     "chats_open": "Include chaturile deschise în această perioadă",
     "chats_closed": "Include chaturile închise în această perioadă",
     "filters": {
+      "channel": "Canal",
       "sector": "Departament",
       "select_sector": "Selectează un departament",
       "representative": "Reprezentant",
@@ -1106,7 +1145,8 @@
       "all_sectors": "Toate departamentele",
       "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
-      "all_tags": "Toate etichetele"
+      "all_tags": "Toate etichetele",
+      "select_to_filter": "Selectează pentru a filtra"
     },
     "select_format": "Selectează formatul pentru exportul datelor",
     "warning_terms": "În timpul procesului de export, crearea unor exporturi noi va fi blocată pentru toate rolurile din proiect. Confirmă pentru a continua.",
@@ -1200,10 +1240,12 @@
   },
   "human_support_dashboard": {
     "title": "Asistență umană",
-    "monitoring": "Monitorizare",
-    "monitoring_tooltip": "Monitorizează în timp real interacțiunile din chatul de asistență ale zilei. Identifică blocajele şi ia decizii rapide pentru a optimiza operațiunea.",
-    "analysis": "Analiză",
-    "analysis_tooltip": "Explorează performanța camerelor închise pe diferite perioade de timp. Descoperă tipare, tendințe și oportunități pentru a-ți îmbunătăți echipa.",
+    "live": "În direct",
+    "historical_data": "Date istorice",
+    "news_disclaimer": {
+      "title": "Noutate în dashboards!",
+      "description": "Dashboardul <i>Monitorizare</i> se numește acum <i>În direct</i> și afișează date în timp real despre reprezentanți și chaturi de asistență în așteptare sau în curs. Pentru a analiza chaturile de asistență deja finalizate, inclusiv pe cele de astăzi, accesează <i>Date istorice</i>."
+    },
     "support_status": {
       "title": "Starea chaturilor de asistență",
       "is_waiting": "În așteptare",
@@ -1218,11 +1260,17 @@
     },
     "time_metrics": {
       "title": "Metrici oră curentă",
-      "average_time_is_waiting": "Timpul mediu de așteptare",
-      "average_time_first_response": "Medie până la 1º răspuns",
-      "average_response_time": "Timpul mediu de răspuns",
-      "average_time_chat": "Durata medie a conversației în chat",
+      "average_time_is_waiting": "TMA",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMC",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Timp Mediu de Așteptare",
+        "average_time_first_response": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "Timp Mediu de Răspuns",
+        "average_time_chat": "Timp Mediu de Conversație"
+      },
       "tooltips": {
         "average_time_is_waiting": "Timpul mediu de așteptare al contactelor în coadă înainte de începerea chatului de asistență",
         "average_time_first_response": "Timpul mediu înainte ca reprezentantul să trimită primul mesaj după ce camera este atribuită",
@@ -1249,7 +1297,8 @@
         "attendant": "Reprezentant",
         "sector": "Departament",
         "queue": "Coadă",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Stare",
@@ -1261,7 +1310,8 @@
         "awaiting_time": "Timp de așteptare",
         "contact": "Contact",
         "sector": "Departament",
-        "queue": "Coadă"
+        "queue": "Coadă",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Reprezentant",
@@ -1307,6 +1357,7 @@
         "agent": "Reprezentant",
         "sector": "Departament",
         "queue": "Coadă",
+        "channel": "Canal",
         "contact": "Contact",
         "ticket_id": "Protocol",
         "total_attendances": "Total chaturi de asistență",
@@ -1316,6 +1367,9 @@
         "time_in_service": "Timp în chatul de asistență",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Others"
     },
     "analyze": {
       "title": "În curând: Noua interfață de Analiză",
@@ -1400,6 +1454,22 @@
           "closed": "Nu există etichete atribuite la chaturile finalizate în perioada selectată"
         }
       }
+    },
+    "volume_per_channel": {
+      "title": "Volum per canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal cu chaturi {status}} few {# canale cu chaturi {status}} other {# de canale cu chaturi {status}}}",
+        "analysis": "{count, plural, one {# canal cu chaturi finalizate} few {# canale cu chaturi finalizate} other {# de canale cu chaturi finalizate}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Nu există chaturi în așteptare",
+          "ongoing": "Nu există chaturi în curs de desfășurare"
+        },
+        "analysis": {
+          "closed": "Nu există chaturi finalizate în perioada selectată"
+        }
+      }
     }
   },
   "on": "Activ",
@@ -1440,5 +1510,13 @@
     "privacy_note": "Doar datele la care ai acces sunt disponibile prin MCP.",
     "not_now": "Poate mai târziu",
     "view_setup_guide": "Vezi ghidul de configurare"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campanie",
+    "conversations": "Conversații",
+    "conversions": "Conversii",
+    "qualified": "Calificate",
+    "revenue": "Venituri",
+    "title": "Performanță pe campanie"
   }
 }

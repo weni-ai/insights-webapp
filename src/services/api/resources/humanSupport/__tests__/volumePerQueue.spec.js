@@ -40,6 +40,7 @@ describe('volumePerQueue API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [],
       },
       appliedDateRange: {
         start: '2026-01-01',
@@ -63,6 +64,7 @@ describe('volumePerQueue API', () => {
             sectors: ['sector1'],
             queues: ['queue1'],
             tags: ['tag1'],
+            channels: [],
             limit: 10,
           },
         },
@@ -85,6 +87,7 @@ describe('volumePerQueue API', () => {
             sectors: ['sector1'],
             queues: ['queue1'],
             tags: ['tag1'],
+            channels: [],
             start_date: '2026-01-01',
             end_date: '2026-01-31',
             cursor: 'next-page',

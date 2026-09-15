@@ -1,7 +1,7 @@
 import { nextTick } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { beforeEach, describe, it, vi, beforeAll, afterAll } from 'vitest';
-import { shallowMount, config, flushPromises } from '@vue/test-utils';
+import { shallowMount, flushPromises, config } from '@vue/test-utils';
 
 import { createTestingPinia } from '@pinia/testing';
 import i18n from '@/utils/plugins/i18n';
@@ -15,6 +15,14 @@ import { useWidgets } from '@/store/modules/widgets';
 import { useReports } from '@/store/modules/reports';
 import { useConfig } from '@/store/modules/config';
 
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
+
 vi.mock('@weni/unnnic-system', () => ({
   default: {
     unnnicCallAlert: vi.fn(),
@@ -22,10 +30,6 @@ vi.mock('@weni/unnnic-system', () => ({
 }));
 
 beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-
   vi.stubGlobal('setInterval', vi.fn());
   vi.stubGlobal('clearInterval', vi.fn());
 });

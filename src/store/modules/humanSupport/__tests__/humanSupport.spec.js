@@ -1,5 +1,6 @@
 import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { flushPromises } from '@vue/test-utils';
 import { createRouter, createMemoryHistory } from 'vue-router';
 import { useHumanSupport } from '../humanSupport';
 import { useHumanSupportMonitoring } from '../monitoring';
@@ -14,7 +15,7 @@ vi.mock('../analysis', () => ({
 }));
 
 vi.mock('@/utils/time', () => ({
-  getLastNDays: vi.fn(() => ({
+  getTodayDate: vi.fn(() => ({
     start: '2024-01-01',
     end: '2024-01-07',
     dmFormat: '01/01 - 07/01',
@@ -73,6 +74,7 @@ describe('useHumanSupport store', () => {
       expect(store.sectors).toEqual([]);
       expect(store.queues).toEqual([]);
       expect(store.tags).toEqual([]);
+      expect(store.channels).toEqual([]);
     });
 
     it('should initialize active tab as monitoring', () => {
@@ -84,6 +86,7 @@ describe('useHumanSupport store', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       });
     });
 
@@ -97,7 +100,7 @@ describe('useHumanSupport store', () => {
       });
     });
 
-    it('should initialize applied date range with last 7 days', () => {
+    it('should initialize applied date range with today', () => {
       expect(store.appliedDateRange).toEqual({
         start: '2024-01-01',
         end: '2024-01-07',
@@ -148,6 +151,7 @@ describe('useHumanSupport store', () => {
         expect(store.sectors).toEqual([]);
         expect(store.queues).toEqual([]);
         expect(store.tags).toEqual([]);
+        expect(store.channels).toEqual([]);
       });
 
       it('should reset appliedFiltersLength to 0', () => {
@@ -167,6 +171,7 @@ describe('useHumanSupport store', () => {
           sectors: [],
           queues: [],
           tags: [],
+          channels: [],
         });
       });
     });
@@ -448,9 +453,10 @@ describe('useHumanSupport store', () => {
         sectors: [{ value: 'sector1', label: 'Sector 1' }],
         queues: [],
         tags: [],
+        channels: [],
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
       expect(mockLoadAllDataAnalysis).not.toHaveBeenCalled();
@@ -464,9 +470,10 @@ describe('useHumanSupport store', () => {
         sectors: [{ value: 'sector1', label: 'Sector 1' }],
         queues: [],
         tags: [],
+        channels: [],
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataAnalysis).toHaveBeenCalled();
       expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
@@ -478,7 +485,7 @@ describe('useHumanSupport store', () => {
       store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
       store.saveAppliedFilters();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
     });
@@ -489,7 +496,7 @@ describe('useHumanSupport store', () => {
       store.sectors = [{ value: 'sector1', label: 'Sector 1' }];
       store.clearFilters();
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).toHaveBeenCalled();
     });
@@ -505,7 +512,7 @@ describe('useHumanSupport store', () => {
         end: '2024-01-22',
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataAnalysis).toHaveBeenCalled();
     });
@@ -519,7 +526,7 @@ describe('useHumanSupport store', () => {
         end: '2024-01-22',
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
     });
@@ -533,7 +540,7 @@ describe('useHumanSupport store', () => {
         end: '2024-02-07',
       };
 
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await flushPromises();
 
       expect(mockLoadAllDataMonitoring).not.toHaveBeenCalled();
       expect(mockLoadAllDataAnalysis).not.toHaveBeenCalled();

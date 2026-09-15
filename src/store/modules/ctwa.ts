@@ -12,7 +12,11 @@ import CTWAConversionsService, {
 import CTWAPerformanceByCampaignService, {
   type CampaignPerformanceRow,
 } from '@/services/api/resources/ctwa/performanceByCampaign';
-import { getLastNDays, getTodayDate, isDateBefore } from '@/utils/time';
+import {
+  getYesterdayNDays,
+  getYesterdayDate,
+  isDateBefore,
+} from '@/utils/time';
 import CTWAVerifyService from '@/services/api/resources/ctwa/verify';
 
 export interface DateRange {
@@ -43,8 +47,8 @@ export const useCTWA = defineStore('ctwa', () => {
 
   const CTWA_MIN_DATE = '2026-08-19';
   const minDateFilter = CTWA_MIN_DATE;
-  const maxDateFilter = getTodayDate().start;
-  const defaultDateRange = getLastNDays(7);
+  const maxDateFilter = getYesterdayDate().start;
+  const defaultDateRange = getYesterdayNDays(7);
 
   const queryStartDate = getQueryString(query.start_date);
   const queryEndDate = getQueryString(query.end_date);

@@ -16,21 +16,6 @@
       >
         <section class="tab-head-content">
           {{ $t(`human_support_dashboard.${tab.name}`) }}
-          <UnnnicToolTip
-            :text="$t(`human_support_dashboard.${tab.name}_tooltip`)"
-            side="right"
-            class="tab-head-content-tooltip"
-            data-test-id="tab-head-content-tooltip"
-            enabled
-          >
-            <section class="tab-head-content-icon">
-              <UnnnicIcon
-                data-test-id="question_mark"
-                icon="question_mark"
-                size="xs"
-              />
-            </section>
-          </UnnnicToolTip>
         </section>
       </template>
       <template
@@ -48,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicTab, UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
+import { UnnnicTab } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
 import Analysis from '../humanSupport/Analysis/Analysis.vue';
 import Monitoring from '../humanSupport/Monitoring/Monitoring.vue';
@@ -67,13 +52,11 @@ const { setActiveTab } = humanSupportStore;
 
 const tabs = {
   monitoring: {
-    name: 'monitoring',
-    tooltip: 'human_support_dashboard.monitoring_tooltip',
+    name: 'live',
     component: Monitoring,
   },
   analysis: {
-    name: 'analysis',
-    tooltip: 'human_support_dashboard.analysis_tooltip',
+    name: 'historical_data',
     component: Analysis,
   },
 };

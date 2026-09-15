@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 
 import Analysis from '../Analysis.vue';
 
@@ -10,18 +9,6 @@ vi.mock('@/utils/storage', () => ({
     setItem: vi.fn(),
   },
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('Analysis', () => {
   let wrapper;

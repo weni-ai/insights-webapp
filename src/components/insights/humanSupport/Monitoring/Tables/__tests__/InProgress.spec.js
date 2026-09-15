@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
+import { ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 import { createTestingPinia } from '@pinia/testing';
 import InProgress from '../InProgress.vue';
@@ -13,13 +14,14 @@ vi.mock('date-fns', () => ({
 vi.mock('@/utils/time', () => ({
   formatSecondsToTime: vi.fn((seconds) => `${seconds}s`),
   getLastNDays: vi.fn(() => ({ start: '2024-01-08', end: '2024-01-15' })),
+  getTodayDate: vi.fn(() => ({ start: '2024-01-15', end: '2024-01-15' })),
 }));
 
 const mockInfiniteScroll = {
-  isLoading: { value: false },
-  isLoadingMore: { value: false },
+  isLoading: ref(false),
+  isLoadingMore: ref(false),
   formattedItems: { value: [] },
-  hasMoreData: { value: false },
+  hasMoreData: ref(false),
   loadMoreData: vi.fn(),
   resetAndLoadData: vi.fn(),
   handleSort: vi.fn(),
@@ -101,12 +103,10 @@ describe('InProgress', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    Object.assign(mockInfiniteScroll, {
-      isLoading: { value: false },
-      isLoadingMore: { value: false },
-      formattedItems: { value: [] },
-      hasMoreData: { value: false },
-    });
+    mockInfiniteScroll.isLoading.value = false;
+    mockInfiniteScroll.isLoadingMore.value = false;
+    Object.assign(mockInfiniteScroll.formattedItems, { value: [] });
+    mockInfiniteScroll.hasMoreData.value = false;
     wrapper = createWrapper();
   });
 
@@ -134,9 +134,10 @@ describe('InProgress', () => {
   describe('Headers', () => {
     it('generates correct headers with translations', () => {
       const headers = wrapper.vm.formattedHeaders;
-      expect(headers).toHaveLength(7);
+      expect(headers).toHaveLength(8);
       expect(headers[0].itemKey).toBe('duration');
       expect(headers[3].itemKey).toBe('agent');
+      expect(headers[6].itemKey).toBe('channel');
       expect(headers[3].title).toBe('Attendant');
       expect(headers.every((h) => h.isSortable)).toBe(true);
     });
@@ -208,6 +209,17 @@ describe('InProgress', () => {
       vi.clearAllMocks();
       const store = wrapper.vm.$pinia.state.value.humanSupport;
       store.appliedFilters = { test: 'value' };
+      await wrapper.vm.$nextTick();
+      expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
+    });
+
+    it('reloads data when attendant detail filter changes after mount', async () => {
+      vi.clearAllMocks();
+      const store = wrapper.vm.$pinia.state.value.humanSupport;
+      store.appliedDetailFilters = {
+        ...store.appliedDetailFilters,
+        agent: { value: 'agent@test.com', label: 'Agent' },
+      };
       await wrapper.vm.$nextTick();
       expect(mockInfiniteScroll.resetAndLoadData).toHaveBeenCalled();
     });

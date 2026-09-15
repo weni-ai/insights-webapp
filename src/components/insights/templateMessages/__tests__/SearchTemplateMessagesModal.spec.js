@@ -3,23 +3,9 @@ import { mount, config, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 import SearchTemplateMessagesModal from '../SearchTemplateMessagesModal.vue';
 
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 vi.mock('@/services/api/resources/template/metaTemplateMessage', () => ({
   default: {
@@ -47,7 +33,7 @@ describe('SearchTemplateMessagesModal.vue', () => {
   const createWrapper = () => {
     return mount(SearchTemplateMessagesModal, {
       global: {
-        plugins: [store, UnnnicSystem],
+        plugins: [store],
       },
       props: {
         modelValue: true,

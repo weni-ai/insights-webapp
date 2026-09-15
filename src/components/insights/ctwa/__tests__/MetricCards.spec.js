@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 import { createTestingPinia } from '@pinia/testing';
 
 import MetricCards from '../MetricCards.vue';
@@ -19,19 +18,10 @@ vi.mock('@/utils/numbers', () => ({
 
 vi.mock('@/utils/time', () => ({
   getLastNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
-  getTodayDate: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
+  getYesterdayDate: vi.fn(() => ({ start: '2024-01-06', end: '2024-01-06' })),
   isDateBefore: vi.fn(() => false),
+  getYesterdayNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockDashboardData = {
   attributed_revenue: { value: 1030000, avg: 359 },

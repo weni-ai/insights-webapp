@@ -16,6 +16,7 @@
     :fetchMethod="fetchMethod"
     :context="props.context"
     :showConfig="props.showConfig"
+    :hiddenTabs="props.context === 'analysis'"
     @click:setup="redirectToChatsConfig"
   />
 </template>
@@ -23,8 +24,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import VolumeBarListWidget from './VolumeBarListWidget.vue';
-import type { VolumeBarListTabItem, WidgetContext } from './types';
+import VolumeBarListWidget from '../VolumeList/VolumeBarListWidget.vue';
+
+import type { VolumeBarListTabItem, WidgetContext } from '../VolumeList/types';
 
 import volumePerTagService from '@/services/api/resources/humanSupport/volumePerTag';
 
@@ -57,10 +59,7 @@ const props = withDefaults(defineProps<PerTagProps>(), {
 
 const tabs = (ctx: WidgetContext): VolumeBarListTabItem[] => {
   if (ctx === 'monitoring') {
-    return [
-      { name: t('in_progress'), key: 'ongoing' },
-      { name: t('finished'), key: 'closed' },
-    ];
+    return [{ name: t('in_progress'), key: 'ongoing' }];
   }
   return [{ name: t('finished'), key: 'closed' }];
 };

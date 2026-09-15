@@ -11,14 +11,20 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
     data-v-81b4e24b=""
   >
     
+    
+    
+    
+    
     <div
-      class="unnnic-tooltip-stub export-data-tooltip"
-      data-testid="export-data-tooltip"
-      data-v-81b4e24b=""
-      enabled="false"
-      side="left"
-      text="Tooltip text"
+      class="unnnic-tooltip-trigger unnnic-tooltip export-data-tooltip"
+      data-grace-area-trigger=""
+      data-state="closed"
+      data-testid="tooltip-trigger"
+      data-v-03fa3548=""
+      data-v-61269528=""
     >
+      
+      
       
       <div
         class="unnnic-dialog-trigger-stub"
@@ -31,7 +37,7 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
           data-v-81b4e24b=""
           loading="false"
           size="large"
-          text="Export Data"
+          text="Export data"
           type="submit"
         >
           
@@ -40,7 +46,15 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
         
       </div>
       
+      
+      
     </div>
+    <!--teleport start-->
+    <!--teleport end-->
+    
+    
+    
+    
     <div
       class="unnnic-dialog-content-stub finish-onboarding-modal human-support-export-dialog finish-onboarding-modal human-support-export-dialog"
       data-testid="modal-dialog"
@@ -57,7 +71,7 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
           data-v-81b4e24b=""
         >
           
-          Export Data
+          Export data
           
         </div>
         
@@ -95,7 +109,7 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
           class="unnnic-button-stub"
           data-v-81b4e24b=""
           loading="false"
-          text="Save"
+          text="Export data"
           type="submit"
         >
           
@@ -128,7 +142,7 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
           data-v-81b4e24b=""
         >
           
-          Success
+          Exporting
           
         </div>
         
@@ -142,7 +156,7 @@ exports[`HumanSupportExport > Component structure > should match snapshot 1`] = 
           data-testid="export-data-feedback-text"
           data-v-81b4e24b=""
         >
-          Export successful
+          You'll receive the file by email shortly. Remember to check your spam folder.
         </p>
       </div>
       

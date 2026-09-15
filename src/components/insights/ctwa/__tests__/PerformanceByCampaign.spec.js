@@ -1,13 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 import { nextTick } from 'vue';
-import { createI18n } from 'vue-i18n';
 import { createTestingPinia } from '@pinia/testing';
 
 import PerformanceByCampaign from '../PerformanceByCampaign.vue';
 import { useCTWA } from '@/store/modules/ctwa';
 import { formatCurrency } from '@/utils/numbers';
-import en from '@/locales/en.json';
 
 vi.mock('@/utils/numbers', () => ({
   formatNumber: vi.fn((value) => String(value)),
@@ -20,16 +18,6 @@ vi.mock('@/utils/time', () => ({
   isDateBefore: vi.fn(() => false),
   getYesterdayNDays: vi.fn(() => ({ start: '2024-01-01', end: '2024-01-07' })),
 }));
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 const mockResults = [
   {

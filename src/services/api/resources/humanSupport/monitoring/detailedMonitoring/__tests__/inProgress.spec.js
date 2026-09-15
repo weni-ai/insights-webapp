@@ -40,6 +40,7 @@ describe('inProgress API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [{ value: 'channel1' }],
       },
       appliedDetailFilters: {
         agent: { value: '' },
@@ -61,6 +62,7 @@ describe('inProgress API', () => {
           sectors: ['sector1'],
           queues: ['queue1'],
           tags: ['tag1'],
+          channels: ['channel1'],
           ordering: 'duration',
         },
       },
@@ -94,6 +96,7 @@ describe('inProgress API', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       },
       appliedDetailFilters: {
         agent: { value: '' },
@@ -119,6 +122,7 @@ describe('inProgress API', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       },
       appliedDetailFilters: {
         agent: { value: 'agent@test.com' },

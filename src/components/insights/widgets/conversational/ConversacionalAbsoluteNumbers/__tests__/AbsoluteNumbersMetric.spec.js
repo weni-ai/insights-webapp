@@ -273,8 +273,8 @@ describe('AbsoluteNumbersMetric', () => {
     createWrapper();
     await nextTick();
 
-    expect(
-      WidgetService.getAbsoluteNumbersChildrenValue,
-    ).toHaveBeenCalledTimes(2);
+    expect(WidgetService.getAbsoluteNumbersChildrenValue).toHaveBeenCalledTimes(
+      2,
+    );
   });
 });

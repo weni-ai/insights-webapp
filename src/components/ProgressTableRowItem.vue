@@ -14,7 +14,12 @@
       @click="handleExpand()"
     >
       <td
-        class="progress-table-row-item__label"
+        :class="[
+          'progress-table-row-item__label',
+          {
+            'progress-table-row-item__label--component': labelComponent,
+          },
+        ]"
         data-testid="progress-table-row-item-label"
       >
         <UnnnicIcon
@@ -38,7 +43,14 @@
         >
           <section class="label__infos">
             <section class="infos__title-container">
+              <component
+                :is="labelComponent"
+                v-if="labelComponent"
+                class="infos__title-component"
+                data-testid="progress-table-row-item-label-component"
+              />
               <p
+                v-else
                 :class="[
                   'infos__title',
                   { 'infos__title--muted': props.labelMuted },
@@ -104,10 +116,13 @@
 </template>
 
 <script setup lang="ts">
+import type { Component } from 'vue';
+
 import NativeProgress from './insights/charts/NativeProgress.vue';
 
 export interface BaseProgressTableRowItem {
   label: string;
+  labelComponent?: Component;
   subtitle?: string;
   value: number;
   description: string;
@@ -170,6 +185,12 @@ const handleExpand = () => {
     align-items: center;
     gap: $unnnic-space-2;
 
+    &--component {
+      width: 48px;
+      min-width: 48px;
+      max-width: 48px;
+    }
+
     .label__icon {
       transform: rotate(-90deg);
       transition: transform 0.2s ease-in-out;
@@ -202,6 +223,11 @@ const handleExpand = () => {
           flex-direction: column;
         }
 
+        &-component {
+          display: flex;
+          align-items: center;
+        }
+
         &--muted {
           color: $unnnic-color-fg-muted;
         }
@@ -232,7 +258,6 @@ const handleExpand = () => {
 
   &__progress {
     width: 100%;
-
     padding: 0 $unnnic-space-4;
   }
 
@@ -279,4 +304,3 @@ const handleExpand = () => {
   }
 }
 </style>
-style>

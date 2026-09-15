@@ -1,20 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { shallowMount, config } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 import SkeletonBarChart from '@/components/insights/charts/loadings/SkeletonBarChart.vue';
-import i18n from '@/utils/plugins/i18n';
 import Unnnic from '@weni/unnnic-system';
-
-beforeAll(() => {
-  config.global.plugins = config.global.plugins.filter(
-    (plugin) => plugin !== i18n,
-  );
-});
-
-afterAll(() => {
-  if (!config.global.plugins.includes(i18n)) {
-    config.global.plugins.push(i18n);
-  }
-});
 
 describe('SkeletonBarChart', () => {
   let wrapper;

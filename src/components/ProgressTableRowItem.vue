@@ -91,10 +91,18 @@
         />
       </td>
       <td
-        class="progress-table-row-item__description"
+        :class="[
+          'progress-table-row-item__description',
+          {
+            'progress-table-row-item__description--slotted':
+              !!$slots.description,
+          },
+        ]"
         data-testid="progress-table-row-item-description"
       >
-        {{ description }}
+        <slot name="description">
+          {{ description }}
+        </slot>
       </td>
     </tr>
 
@@ -177,13 +185,12 @@ const handleExpand = () => {
   &__main-row {
     & > * {
       padding: $unnnic-space-4 0;
+      vertical-align: middle;
     }
   }
 
   &__label {
-    display: flex;
-    align-items: center;
-    gap: $unnnic-space-2;
+    vertical-align: middle;
 
     &--component {
       width: 48px;
@@ -192,6 +199,9 @@ const handleExpand = () => {
     }
 
     .label__icon {
+      display: inline-flex;
+      margin-right: $unnnic-space-2;
+      vertical-align: middle;
       transform: rotate(-90deg);
       transition: transform 0.2s ease-in-out;
 
@@ -201,7 +211,8 @@ const handleExpand = () => {
     }
 
     :deep(.unnnic-tooltip) {
-      display: flex;
+      display: inline-flex;
+      vertical-align: middle;
     }
 
     .label__infos {
@@ -258,7 +269,9 @@ const handleExpand = () => {
 
   &__progress {
     width: 100%;
-    padding: 0 $unnnic-space-4;
+    padding-left: $unnnic-space-4;
+    padding-right: $unnnic-space-4;
+    vertical-align: middle;
   }
 
   &__description {
@@ -267,9 +280,16 @@ const handleExpand = () => {
     text-overflow: ellipsis;
 
     text-align: end;
+    vertical-align: middle;
     color: $unnnic-color-gray-10;
     font: $unnnic-font-display-3;
     min-width: 55px;
+
+    &--slotted {
+      overflow: visible;
+      text-overflow: unset;
+      white-space: normal;
+    }
   }
 
   &__sub-items-row {

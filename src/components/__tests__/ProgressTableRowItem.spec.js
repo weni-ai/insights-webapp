@@ -71,21 +71,24 @@ describe('ProgressTableRowItem.vue', () => {
       });
     });
 
-    it('should apply correct CSS classes', () => {
-      expectElementClass(
-        wrapper,
-        'progress-table-row-item',
-        'progress-table-row-item',
-      );
-      expectElementClass(
-        wrapper,
-        'progress-table-row-item-label',
-        'progress-table-row-item__label',
-      );
+    it('should render description slot content when provided', () => {
+      wrapper = mount(ProgressTableRowItem, {
+        props: { ...defaultProps },
+        slots: {
+          description: '<section data-testid="custom-description">Custom</section>',
+        },
+      });
+
+      expectElementExists(wrapper, 'custom-description');
       expectElementClass(
         wrapper,
         'progress-table-row-item-description',
-        'progress-table-row-item__description',
+        'progress-table-row-item__description--slotted',
+      );
+      expectElementText(
+        wrapper,
+        'progress-table-row-item-description',
+        'Custom',
       );
     });
   });

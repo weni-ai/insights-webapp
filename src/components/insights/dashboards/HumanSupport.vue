@@ -96,7 +96,7 @@ const handleChangeTab = (tab: ActiveTab) => {
   gap: $unnnic-space-8;
 
   :deep(.tab-header) {
-    margin-bottom: $unnnic-space-8;
+    margin-bottom: $unnnic-space-6;
   }
 
   .tab-head-content {

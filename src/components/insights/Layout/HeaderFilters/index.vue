@@ -115,11 +115,7 @@ const isMetaTemplateDashboard = computed(
   () => currentDashboard.value?.config?.is_whatsapp_integration,
 );
 
-const isRenderDynamicFilter = computed(
-  () =>
-    (!isMetaTemplateDashboard.value && !isHumanSupportDashboard.value) ||
-    (!emptyTemplates.value && !isHumanSupportDashboard.value),
-);
+const isRenderDynamicFilter = computed(() => !isHumanSupportDashboard.value);
 
 const yesterdayFormatted = computed(() => getYesterdayDate().dmFormat);
 

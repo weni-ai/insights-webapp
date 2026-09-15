@@ -129,7 +129,13 @@ describe('Finished', () => {
       expect(headers).toHaveLength(10);
 
       expect(headers[0].itemKey).toBe('agent');
-      expect(headers[3].itemKey).toBe('channel');
+      expect(headers[1].itemKey).toBe('sector');
+      expect(headers[2].itemKey).toBe('queue');
+      expect(headers[3].itemKey).toBe('awaiting_time');
+      expect(headers[4].itemKey).toBe('first_response_time');
+      expect(headers[5].itemKey).toBe('duration');
+      expect(headers[6].itemKey).toBe('contact');
+      expect(headers[7].itemKey).toBe('channel');
       expect(headers[8].itemKey).toBe('ticket_id');
       expect(headers[9].itemKey).toBe('csat_rating');
 

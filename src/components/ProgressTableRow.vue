@@ -16,6 +16,7 @@
     :labelMuted="labelMuted"
     :subtitleMuted="subtitleMuted"
     :deletedTooltip="deletedTooltip"
+    :labelComponent="labelComponent"
     @expand="emit('expand', $event)"
   >
     <template

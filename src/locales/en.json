@@ -1133,6 +1133,7 @@
     "chats_open": "Include chats opened during this period",
     "chats_closed": "Include chats closed during this period",
     "filters": {
+      "channel": "Channel",
       "sector": "Department",
       "select_sector": "Select department",
       "representative": "Representative",
@@ -1144,7 +1145,8 @@
       "all_sectors": "All departments",
       "all_representatives": "All representatives",
       "all_queues": "All queues",
-      "all_tags": "All tags"
+      "all_tags": "All tags",
+      "select_to_filter": "Select to filter"
     },
     "select_format": "Select the format for exporting the data",
     "warning_terms": "While the export is in progress, creating new exports will be blocked for all project roles. Confirm to continue.",
@@ -1281,7 +1283,7 @@
         "average_time_is_waiting": "Average Wait Time",
         "average_time_first_response": "Mean First Response Time",
         "average_response_time": "Average Response Time",
-        "average_time_chat": "Avarege Handle Time"
+        "average_time_chat": "Average Handle Time"
       },
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in queue before support chat start",
@@ -1309,7 +1311,8 @@
         "attendant": "Representative",
         "sector": "Department",
         "queue": "Queue",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Channel"
       },
       "pauses": {
         "status": "Status",
@@ -1321,7 +1324,8 @@
         "awaiting_time": "Wait time",
         "contact": "Contact",
         "sector": "Department",
-        "queue": "Queue"
+        "queue": "Queue",
+        "channel": "Channel"
       },
       "attendant": {
         "agent": "Representative",
@@ -1367,6 +1371,7 @@
         "agent": "Representative",
         "sector": "Department",
         "queue": "Queue",
+        "channel": "Channel",
         "contact": "Contact",
         "ticket_id": "Protocol",
         "total_attendances": "Total support chats",
@@ -1376,6 +1381,9 @@
         "time_in_service": "Time in support chat",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Others"
     },
     "analyze": {
       "title": "Coming soon: New Analytics view",
@@ -1458,6 +1466,22 @@
         },
         "analysis": {
           "closed": "No tags assigned to chats completed in the selected period"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volume per channel",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# channel with {status} chats} other {# channels with {status} chats}}",
+        "analysis": "{count, plural, one {# channel with completed chats} other {# channels with completed chats}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No chats waiting",
+          "ongoing": "No chats in progress"
+        },
+        "analysis": {
+          "closed": "No chats completed in the selected period"
         }
       }
     }

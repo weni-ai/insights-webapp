@@ -1,20 +1,7 @@
 import { mount, config } from '@vue/test-utils';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import DropdownFilter from '@/components/home/DropdownFilter.vue';
-import { createI18n } from 'vue-i18n';
-import UnnnicSystem from '@/utils/plugins/UnnnicSystem';
 
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: {
-    en: {},
-  },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n, UnnnicSystem];
 config.global.mocks = {
   $t: (key) => key,
 };

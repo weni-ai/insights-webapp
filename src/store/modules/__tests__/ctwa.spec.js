@@ -245,6 +245,7 @@ describe('useCTWA store', () => {
     });
 
     it('sets loading state during data fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       CTWADataService.getDashboardData.mockImplementation(
         () =>
           new Promise((resolve) => {
@@ -253,8 +254,11 @@ describe('useCTWA store', () => {
           }),
       );
 
-      await store.loadDashboardData();
+      const loadPromise = store.loadDashboardData();
+      await vi.advanceTimersByTimeAsync(10);
+      await loadPromise;
       expect(store.loadingDashboardData).toBe(false);
+      vi.useRealTimers();
     });
 
     it('handles errors gracefully', async () => {
@@ -291,6 +295,7 @@ describe('useCTWA store', () => {
     });
 
     it('sets loading state during data fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       CTWAConversionsService.getConversionsData.mockImplementation(
         () =>
           new Promise((resolve) => {
@@ -299,8 +304,11 @@ describe('useCTWA store', () => {
           }),
       );
 
-      await store.loadConversionsData();
+      const loadPromise = store.loadConversionsData();
+      await vi.advanceTimersByTimeAsync(10);
+      await loadPromise;
       expect(store.loadingConversionsData).toBe(false);
+      vi.useRealTimers();
     });
 
     it('handles errors gracefully', async () => {
@@ -362,6 +370,7 @@ describe('useCTWA store', () => {
     });
 
     it('sets loading state during data fetch', async () => {
+      vi.useFakeTimers({ shouldAdvanceTime: false });
       CTWAPerformanceByCampaignService.getPerformanceByCampaign.mockImplementation(
         () =>
           new Promise((resolve) => {
@@ -370,8 +379,11 @@ describe('useCTWA store', () => {
           }),
       );
 
-      await store.loadCampaignPerformanceData();
+      const loadPromise = store.loadCampaignPerformanceData();
+      await vi.advanceTimersByTimeAsync(10);
+      await loadPromise;
       expect(store.loadingCampaignPerformance).toBe(false);
+      vi.useRealTimers();
     });
 
     it('handles errors gracefully', async () => {

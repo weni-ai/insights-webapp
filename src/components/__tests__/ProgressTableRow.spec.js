@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { config, mount } from '@vue/test-utils';
 
 import ProgressTableRow from '../ProgressTableRow.vue';
@@ -37,7 +37,6 @@ const expandableProps = {
 const createWrapper = (props = {}) => {
   return mount(ProgressTableRow, {
     props: { ...defaultProps, ...props },
-    global: {},
   });
 };
 

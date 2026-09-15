@@ -7,8 +7,10 @@ exports[`WidgetError > Component structure > should match snapshot 1`] = `
   data-v-ad848305=""
 >
   <unnnic-icon-stub
+    clickable="false"
     data-testid="widget-error-icon"
     data-v-ad848305=""
+    filled="false"
     icon="warning"
     scheme="feedback-red"
     size="md"
@@ -24,6 +26,15 @@ exports[`WidgetError > Component structure > should match snapshot 1`] = `
   <unnnic-button-stub
     data-testid="widget-error-button"
     data-v-ad848305=""
+    disabled="false"
+    float="false"
+    iconcenter=""
+    iconleft=""
+    iconright=""
+    iconsfilled="false"
+    loading="false"
+    pressed="false"
+    size="large"
     text="Retry"
     type="warning"
   />

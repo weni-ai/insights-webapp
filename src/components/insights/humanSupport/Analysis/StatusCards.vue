@@ -40,6 +40,9 @@
       >
         <CardConversations
           :title="$t(card.titleKey)"
+          :titleTooltip="
+            card.titleTooltipKey ? $t(card.titleTooltipKey) : undefined
+          "
           :value="getCardValue(card.id)"
           :tooltipInfo="$t(card.tooltipKey)"
           :borderRadius="getBorderRadius(index, cardDefinitions.length)"
@@ -85,6 +88,7 @@ interface CardData {
   id: CardId;
   titleKey: string;
   tooltipKey: string;
+  titleTooltipKey?: string;
 }
 
 const project = useProject();
@@ -126,10 +130,18 @@ const createCard = (
 };
 
 const cardDefinitions: CardData[] = [
-  createCard('average_time_is_waiting'),
-  createCard('average_time_first_response'),
-  createCard('average_response_time'),
-  createCard('average_time_chat'),
+  createCard('average_time_is_waiting', undefined, {
+    titleTooltipKey: `${baseTranslationKey}.time_metrics.title_tooltips.average_time_is_waiting`,
+  }),
+  createCard('average_time_first_response', undefined, {
+    titleTooltipKey: `${baseTranslationKey}.time_metrics.title_tooltips.average_time_first_response`,
+  }),
+  createCard('average_response_time', undefined, {
+    titleTooltipKey: `${baseTranslationKey}.time_metrics.title_tooltips.average_response_time`,
+  }),
+  createCard('average_time_chat', undefined, {
+    titleTooltipKey: `${baseTranslationKey}.time_metrics.title_tooltips.average_time_chat`,
+  }),
   createCard('finished', undefined, {
     titleKey: `${baseTranslationKey}.support_status.is_closed`,
     tooltipKey: `${baseTranslationKey}.support_status.tooltips.is_closed_by_date`,

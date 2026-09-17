@@ -457,6 +457,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Hoje",
         "last_7_days": "Últimos 7 dias",
         "last_14_days": "Últimos 14 dias",
         "last_30_days": "Últimos 30 dias",
@@ -649,6 +650,7 @@
   "alert_added": "{name} adicionado",
   "alert_edited": "{name} editado",
   "select_date": {
+    "today": "Hoje",
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})",
@@ -1324,9 +1326,10 @@
         "pauses": "Pausas personalizadas"
       },
       "in_progress": {
-        "duration": "Duração",
+        "handle_time": "Tempo de atendimento",
         "awaiting_time": "Espera",
-        "first_response_time": "1ª resposta",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Tempo Primeira Resposta",
         "pending_response_tooltip": "A última mensagem do chat foi enviada pelo contato",
         "attendant": "Atendente",
         "sector": "Setor",
@@ -1352,10 +1355,14 @@
         "status": "Status",
         "ongoing": "Em andamento",
         "finished": "Finalizado",
-        "average_first_response_time": "Média para 1ª resposta",
-        "average_response_time": "Tempo médio de resposta",
-        "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Tempo Médio de Primera Resposta",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Tempo Médio de Resposta",
+        "average_duration": "TMA",
+        "average_duration_title_tooltip": "Tempo Médio de Atendimento",
+        "time_in_service": "Em atendimento",
+        "time_in_service_tooltip": "Tempo online com atendimento em andamento",
         "action": "Ação"
       },
       "agents_count": {
@@ -1384,9 +1391,10 @@
     },
     "columns": {
       "common": {
-        "duration": "Duração",
+        "handle_time": "Tempo de atendimento",
         "awaiting_time": "Espera",
-        "first_response_time": "1ª resposta",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Tempo de Primeira Resposta",
         "response_time": "Tempo de resposta",
         "agent": "Atendente",
         "sector": "Setor",
@@ -1394,11 +1402,15 @@
         "channel": "Canal",
         "contact": "Contato",
         "ticket_id": "Protocolo",
-        "total_attendances": "Total de atendimentos",
-        "average_first_response_time": "Média para 1ª resposta",
-        "average_response_time": "Tempo médio de resposta",
-        "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento",
+        "total_attendances": "Finalizado",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Tempo Médio de Primera Resposta",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Tempo Médio de Resposta",
+        "average_duration": "TMA",
+        "average_duration_title_tooltip": "Tempo Médio de Atendimento",
+        "time_in_service": "Em atendimento",
+        "time_in_service_tooltip": "Tempo online com atendimento em andamento",
         "csat_rating": "CSAT"
       }
     },

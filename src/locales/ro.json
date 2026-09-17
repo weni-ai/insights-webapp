@@ -457,6 +457,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Astăzi",
         "last_7_days": "Ultimele 7 zile",
         "last_14_days": "Ultimele 14 zile",
         "last_30_days": "Ultimele 30 zile",
@@ -649,6 +650,7 @@
   "alert_added": "{name} adăugat",
   "alert_edited": "{name} editat",
   "select_date": {
+    "today": "Astăzi",
     "yesterday": "Ieri ({date})",
     "last_days": "Ultimele {value} zile ({date})",
     "previous_month": "Luna precedentă ({date})",
@@ -1324,9 +1326,10 @@
         "pauses": "Pauze personalizate"
       },
       "in_progress": {
-        "duration": "Durată",
+        "handle_time": "Timp de conversație",
         "awaiting_time": "Timp de așteptare",
-        "first_response_time": "1º răspuns",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Timp Prim Răspuns",
         "pending_response_tooltip": "Ultimul mesaj din chat a fost trimis de contact",
         "attendant": "Reprezentant",
         "sector": "Departament",
@@ -1352,10 +1355,14 @@
         "status": "Stare",
         "ongoing": "În curs",
         "finished": "Finalizat",
-        "average_first_response_time": "Medie până la 1º răspuns",
-        "average_response_time": "Timpul mediu de răspuns",
-        "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Timp Mediu de Răspuns",
+        "average_duration": "TMC",
+        "average_duration_title_tooltip": "Timp Mediu de Conversație",
+        "time_in_service": "În serviciu",
+        "time_in_service_tooltip": "Timp online cu asistență în curs",
         "action": "Acțiune"
       },
       "agents_count": {
@@ -1384,9 +1391,10 @@
     },
     "columns": {
       "common": {
-        "duration": "Durată",
+        "handle_time": "Timp de conversație",
         "awaiting_time": "Timp de așteptare",
-        "first_response_time": "1º răspuns",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Timp de Prim Răspuns",
         "response_time": "Timp de răspuns",
         "agent": "Reprezentant",
         "sector": "Departament",
@@ -1394,11 +1402,15 @@
         "channel": "Canal",
         "contact": "Contact",
         "ticket_id": "Protocol",
-        "total_attendances": "Total chaturi de asistență",
-        "average_first_response_time": "Medie până la 1º răspuns",
-        "average_response_time": "Timpul mediu de răspuns",
-        "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență",
+        "total_attendances": "Finalizat",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Timp Mediu de Răspuns",
+        "average_duration": "TMC",
+        "average_duration_title_tooltip": "Timp Mediu de Conversație",
+        "time_in_service": "În serviciu",
+        "time_in_service_tooltip": "Timp online cu asistență în curs",
         "csat_rating": "CSAT"
       }
     },

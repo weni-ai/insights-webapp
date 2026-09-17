@@ -20,6 +20,15 @@
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
+    <template #header-first_response_time>
+      <UnnnicToolTip
+        enabled
+        :text="$t(`${baseTranslationKey}.first_response_time_title_tooltip`)"
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.first_response_time`) }}</p>
+      </UnnnicToolTip>
+    </template>
     <template #body-first_response_time="{ item }">
       <component
         :is="item.firstResponseRowAlert ? TableRowAlert : 'span'"
@@ -268,7 +277,7 @@ const formattedHeaders = computed(() => {
   });
 
   return [
-    createHeader('duration'),
+    createHeader('duration', 'handle_time'),
     createHeader('awaiting_time'),
     createHeader('first_response_time'),
     createHeader('agent', 'attendant'),

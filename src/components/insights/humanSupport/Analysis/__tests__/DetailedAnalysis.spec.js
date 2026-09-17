@@ -20,7 +20,10 @@ describe('DetailedAnalysis', () => {
       global: {
         plugins: [store],
         stubs: {
-          UnnnicTab: true,
+          UnnnicTabs: true,
+          UnnnicTabsList: true,
+          UnnnicTabsTrigger: true,
+          UnnnicTabsContent: true,
           DetailedFilters: true,
           Finished: true,
           Attendant: true,
@@ -46,7 +49,7 @@ describe('DetailedAnalysis', () => {
       expect(title.exists()).toBe(true);
     });
 
-    it('should render UnnnicTab component', () => {
+    it('should render UnnnicTabs component', () => {
       const tab = wrapper.find('[data-testid="human-support-tab"]');
       expect(tab.exists()).toBe(true);
     });

@@ -403,7 +403,8 @@
         "SERVICE": "Servicio",
         "MARKETING": "Marketing",
         "UTILITY": "Utilidad",
-        "AUTHENTICATION": "Autenticación"
+        "AUTHENTICATION": "Autenticación",
+        "PAYMENT_REQUEST": "Solicitud de pago"
       }
     },
     "active_contacts": {

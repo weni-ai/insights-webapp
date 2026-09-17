@@ -403,8 +403,7 @@
         "SERVICE": "Service",
         "MARKETING": "Marketing",
         "UTILITY": "Utilitate",
-        "AUTHENTICATION": "Autentificare",
-        "PAYMENT_REQUEST": "Solicitare de plată"
+        "AUTHENTICATION": "Autentificare"
       }
     },
     "active_contacts": {
@@ -449,7 +448,8 @@
         "URL": "Link",
         "COPY_CODE": "Copiază și lipește",
         "FLOW": "Flux",
-        "QUICK_REPLY": "Răspuns rapid"
+        "QUICK_REPLY": "Răspuns rapid",
+        "PAYMENT_REQUEST": "Solicitare de plată"
       }
     },
     "template": {

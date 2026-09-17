@@ -403,8 +403,7 @@
         "SERVICE": "Service",
         "MARKETING": "Marketing",
         "UTILITY": "Utility",
-        "AUTHENTICATION": "Authentication",
-        "PAYMENT_REQUEST": "Payment request"
+        "AUTHENTICATION": "Authentication"
       }
     },
     "active_contacts": {
@@ -449,7 +448,8 @@
         "URL": "Link",
         "COPY_CODE": "Copy and paste",
         "FLOW": "Flow",
-        "QUICK_REPLY": "Quick response"
+        "QUICK_REPLY": "Quick response",
+        "PAYMENT_REQUEST": "Payment request"
       }
     },
     "template": {

@@ -1260,6 +1260,18 @@
         "last_period_comparison": "{variation} vs. {lastPeriodValue} en el último período",
         "total_revenue": "Ingresos totales"
       },
+      "performance_by_representative": {
+        "average_order_value": "Ticket promedio",
+        "average_order_value_title_tooltip": "Ticket promedio",
+        "conversations": "Conversaciones",
+        "conversions": "Conversión",
+        "representative": "Representante",
+        "revenue": "Ingresos",
+        "sales": "Ventas",
+        "title": "Performance por representante",
+        "trend": "Tendencia",
+        "trend_tooltip": "Variación porcentual de los ingresos del representante en relación con el período anterior equivalente. Tendencia (%) = (Ingresos del período actual − Ingresos del período anterior) ÷ Ingresos del período anterior × 100"
+      },
       "sales_funnel": {
         "no_data": "No se completaron chats",
         "leads_captured": "Leads capturados",

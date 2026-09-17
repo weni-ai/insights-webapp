@@ -1260,6 +1260,18 @@
         "last_period_comparison": "{variation} vs. {lastPeriodValue} în ultima perioadă",
         "total_revenue": "Venit total"
       },
+      "performance_by_representative": {
+        "average_order_value": "Valoare medie",
+        "average_order_value_title_tooltip": "Valoarea medie a comenzii",
+        "conversations": "Conversații",
+        "conversions": "Conversie",
+        "representative": "Reprezentant",
+        "revenue": "Venit",
+        "sales": "Vânzări",
+        "title": "Performanță per reprezentant",
+        "trend": "Tendință",
+        "trend_tooltip": "Variația procentuală a venitului reprezentantului față de perioada anterioară echivalentă. Tendință (%) = (Venitul perioadei curente − Venitul perioadei anterioare) ÷ Venitul perioadei anterioare × 100"
+      },
       "sales_funnel": {
         "no_data": "Nu s-au finalizat chaturi",
         "leads_captured": "Lead-uri capturate",

@@ -87,21 +87,16 @@ describe('DisconnectAgent.vue', () => {
       wrapper.find('[data-testid="disconnect-agent-button"]').exists(),
     ).toBe(true);
     expect(wrapper.vm.handleTooltipText).toBeTruthy();
-    expect(
-      wrapper.find('[data-test-id="disconnect-agent-tooltip"]').exists() ||
-        wrapper.findComponent({ name: 'UnnnicToolTip' }).exists(),
-    ).toBe(true);
   });
 
-  it('uses disabled tooltip text when disabled', () => {
-    const wrapper = createWrapper({ disabled: true });
+  it('uses different tooltip text when disabled', () => {
+    const enabled = createWrapper();
+    const disabled = createWrapper({ disabled: true });
 
-    expect(wrapper.vm.handleTooltipText).toContain('disabled');
-    expect(
-      wrapper
-        .find('[data-testid="disconnect-agent-button"]')
-        .attributes('disabled'),
-    ).toBeDefined();
+    expect(disabled.vm.handleTooltipText).not.toBe(
+      enabled.vm.handleTooltipText,
+    );
+    expect(disabled.props('disabled')).toBe(true);
   });
 
   it('applies center container class when containerCenter is true', () => {

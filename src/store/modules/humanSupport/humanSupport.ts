@@ -19,6 +19,7 @@ interface AppliedFilters {
   queues: Filter[];
   tags: Filter[];
   channels: Filter[];
+  agents: Filter[];
 }
 
 interface AppliedDetailFilter {
@@ -73,6 +74,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
   const queues = ref<Filter[]>([]);
   const tags = ref<Filter[]>([]);
   const channels = ref<Filter[]>([]);
+  const agents = ref<Filter[]>([]);
 
   const appliedDateRange = ref<DateRange>({
     start: currentDateRange.start,
@@ -84,6 +86,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     queues: [],
     tags: [],
     channels: [],
+    agents: [],
   });
 
   const appliedDetailFilters = ref<AppliedDetailFilters>({
@@ -99,9 +102,10 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     const queuesLength = appliedFilters.value.queues.length > 0 ? 1 : 0;
     const tagsLength = appliedFilters.value.tags.length > 0 ? 1 : 0;
     const channelsLength = appliedFilters.value.channels.length > 0 ? 1 : 0;
+    const agentsLength = appliedFilters.value.agents.length > 0 ? 1 : 0;
 
     const filtersLength =
-      sectorsLength + queuesLength + tagsLength + channelsLength;
+      sectorsLength + queuesLength + tagsLength + channelsLength + agentsLength;
 
     return filtersLength;
   });
@@ -112,6 +116,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       queues: [...queues.value],
       tags: [...tags.value],
       channels: [...channels.value],
+      agents: [...agents.value],
     };
   };
 
@@ -140,6 +145,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       [queues.value, appliedFilters.value.queues],
       [tags.value, appliedFilters.value.tags],
       [channels.value, appliedFilters.value.channels],
+      [agents.value, appliedFilters.value.agents],
     ].every(([current, applied]) => areArraysEqual(current, applied));
   });
 
@@ -148,7 +154,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     const isQueueEmpty = queues.value.length === 0;
     const isTagEmpty = tags.value.length === 0;
     const isChannelEmpty = channels.value.length === 0;
-
+    const isAgentEmpty = agents.value.length === 0;
     const isAppliedFiltersEmpty =
       appliedFilters.value.sectors.length === 0 &&
       appliedFilters.value.queues.length === 0 &&
@@ -160,6 +166,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
       isQueueEmpty &&
       isTagEmpty &&
       isChannelEmpty &&
+      isAgentEmpty &&
       isAppliedFiltersEmpty
     ) {
       return;
@@ -169,11 +176,13 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     queues.value = [];
     tags.value = [];
     channels.value = [];
+    agents.value = [];
     appliedFilters.value = {
       sectors: [],
       queues: [],
       tags: [],
       channels: [],
+      agents: [],
     };
   };
 
@@ -217,6 +226,7 @@ export const useHumanSupport = defineStore('humanSupport', () => {
     queues,
     tags,
     channels,
+    agents,
     appliedDateRange,
     appliedFilters,
     appliedDetailFilters,

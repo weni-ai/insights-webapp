@@ -71,6 +71,17 @@
           />
         </section>
 
+        <section class="filters-dropdown__container">
+          <UnnnicLabel :label="$t('export_data.filters.representative')" />
+          <FilterMultiSelect
+            v-model="agents"
+            :placeholder="$t('export_data.filters.select_to_filter')"
+            source="agents"
+            keyValueField="email"
+            @on-options-active-change="handleOptionsActiveChange"
+          />
+        </section>
+
         <section class="filters-dropdown__footer">
           <UnnnicButton
             class="filters-dropdown__footer-button"
@@ -115,6 +126,7 @@ const {
   queues,
   tags,
   channels,
+  agents,
   hasAppliedFiltersNoChanges,
 } = storeToRefs(humanSupport);
 

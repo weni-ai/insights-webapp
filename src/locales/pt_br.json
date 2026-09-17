@@ -1262,6 +1262,7 @@
       },
       "performance_by_representative": {
         "average_order_value": "Ticket médio",
+        "average_order_value_title_tooltip": "Ticket médio",
         "conversations": "Conversas",
         "conversions": "Conversão",
         "representative": "Atendente",

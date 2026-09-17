@@ -1262,6 +1262,7 @@
       },
       "performance_by_representative": {
         "average_order_value": "Ticket promedio",
+        "average_order_value_title_tooltip": "Ticket promedio",
         "conversations": "Conversaciones",
         "conversions": "Conversión",
         "representative": "Representante",

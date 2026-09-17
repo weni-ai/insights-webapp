@@ -88,6 +88,7 @@ const UnnnicDataTableStub = {
   ],
   template: `
     <div data-testid="performance-table-data">
+      <slot name="header-average_order_value" />
       <slot name="header-trend" />
       <slot
         v-for="item in items"
@@ -272,19 +273,37 @@ describe('PerformanceTable', () => {
     );
   });
 
+  it('renders the AOV header tooltip', () => {
+    const tooltip = wrapper
+      .findAllComponents(UnnnicToolTip)
+      .find(
+        (item) => item.props('text') === 'Average order value',
+      );
+
+    expect(tooltip?.exists()).toBe(true);
+    expect(tooltip?.props('side')).toBe('top');
+    expect(tooltip?.text()).toContain('AOV');
+  });
+
   it('renders the trend header tooltip', () => {
     const helpIcon = wrapper
       .findAllComponents({ name: 'UnnnicIcon' })
       .find((icon) => icon.props('icon') === 'help');
-    const tooltip = wrapper.findComponent(UnnnicToolTip);
+    const tooltip = wrapper
+      .findAllComponents(UnnnicToolTip)
+      .find((item) =>
+        item.props('text')?.includes(
+          "Percentage change in the representative's revenue",
+        ),
+      );
 
     expect(wrapper.find('.performance-table__trend-header').exists()).toBe(
       true,
     );
     expect(helpIcon?.exists()).toBe(true);
     expect(helpIcon?.props('size')).toBe('sm');
-    expect(tooltip.exists()).toBe(true);
-    expect(tooltip.props('text')).toContain(
+    expect(tooltip?.exists()).toBe(true);
+    expect(tooltip?.props('text')).toContain(
       "Percentage change in the representative's revenue",
     );
   });

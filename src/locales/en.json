@@ -1262,6 +1262,7 @@
       },
       "performance_by_representative": {
         "average_order_value": "AOV",
+        "average_order_value_title_tooltip": "Average Order Value",
         "conversations": "Conversations",
         "conversions": "Conversion",
         "representative": "Representative",

@@ -448,7 +448,8 @@
         "URL": "Link",
         "COPY_CODE": "Copiar e colar",
         "FLOW": "Fluxo",
-        "QUICK_REPLY": "Resposta rápida"
+        "QUICK_REPLY": "Resposta rápida",
+        "PAYMENT_REQUEST": "Solicitação de pagamento"
       }
     },
     "template": {

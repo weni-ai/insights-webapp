@@ -1258,6 +1258,17 @@
         "last_period_comparison": "{variation} vs. {lastPeriodValue} last period",
         "total_revenue": "Total revenue"
       },
+      "performance_by_representative": {
+        "average_order_value": "AOV",
+        "conversations": "Conversations",
+        "conversions": "Conversion",
+        "representative": "Representative",
+        "revenue": "Revenue",
+        "sales": "Sales",
+        "title": "Performance by representative",
+        "trend": "Trend",
+        "trend_tooltip": "Percentage change in the representative's revenue compared to the equivalent previous period. Trend (%) = (Current period revenue − Previous period revenue) ÷ Previous period revenue × 100"
+      },
       "sales_funnel": {
         "no_data": "No chats were completed",
         "leads_captured": "Leads captured",

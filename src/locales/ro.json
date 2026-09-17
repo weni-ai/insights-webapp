@@ -1265,6 +1265,7 @@
       },
       "performance_by_representative": {
         "average_order_value": "Valoare medie",
+        "average_order_value_title_tooltip": "Valoarea medie a comenzii",
         "conversations": "Conversații",
         "conversions": "Conversie",
         "representative": "Reprezentant",

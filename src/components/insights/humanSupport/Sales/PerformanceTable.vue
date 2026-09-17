@@ -27,6 +27,16 @@
       @update:sort="handleSort"
       @load-more="loadMore"
     >
+      <template #header-average_order_value>
+        <UnnnicToolTip
+          :enabled="locale === 'en'"
+          :text="$t(`${baseTranslationKey}.average_order_value_title_tooltip`)"
+          side="top"
+          data-testid="performance-table-aov-tooltip"
+        >
+          <p>{{ $t(`${baseTranslationKey}.average_order_value`) }}</p>
+        </UnnnicToolTip>
+      </template>
       <template #header-trend>
         <section class="performance-table__trend-header">
           <span>{{ $t(`${baseTranslationKey}.trend`) }}</span>
@@ -106,7 +116,7 @@ type PerformanceTableItem = {
 const baseTranslationKey =
   'human_support_dashboard.sales.performance_by_representative';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const { projectCurrency } = storeToRefs(useConfig());
 const humanSupport = useHumanSupport();
 const { appliedDateRange, appliedFilters } = storeToRefs(humanSupport);

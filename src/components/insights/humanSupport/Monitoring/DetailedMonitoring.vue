@@ -147,7 +147,7 @@ const filterType = computed(() => {
   display: flex;
   padding: $unnnic-space-6;
   flex-direction: column;
-  gap: $unnnic-space-6;
+  gap: $unnnic-space-4;
 
   border-radius: $unnnic-radius-2;
   border: 1px solid $unnnic-color-gray-2;
@@ -162,7 +162,7 @@ const filterType = computed(() => {
     flex-direction: column;
   }
   &__tabs-content {
-    margin-top: $unnnic-space-8;
+    margin-top: $unnnic-space-2;
   }
 }
 

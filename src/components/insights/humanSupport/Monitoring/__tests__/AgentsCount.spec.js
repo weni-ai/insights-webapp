@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
@@ -84,7 +84,16 @@ const createWrapper = () =>
     },
   });
 
+async function flushPromises() {
+  await Promise.resolve();
+  await Promise.resolve();
+  await nextTick();
+  await nextTick();
+}
+
 describe('AgentsCount.vue', () => {
+  let wrapper;
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
@@ -105,9 +114,16 @@ describe('AgentsCount.vue', () => {
     });
   });
 
+  afterEach(async () => {
+    wrapper?.unmount();
+    wrapper = null;
+    vi.useRealTimers();
+    await flushPromises();
+  });
+
   describe('initial load', () => {
     it('should load counts on mount', async () => {
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await nextTick();
       await Promise.resolve();
 
@@ -131,7 +147,7 @@ describe('AgentsCount.vue', () => {
           }),
       );
 
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await nextTick();
 
       expect(wrapper.findAll('.skeleton-stub').length).toBe(3);
@@ -144,7 +160,7 @@ describe('AgentsCount.vue', () => {
     });
 
     it('should render tags after loading', async () => {
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
 
       const tags = wrapper.findAll('.tag-stub');
@@ -155,7 +171,7 @@ describe('AgentsCount.vue', () => {
       const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
       getAgentsCountByStatus.mockRejectedValue(new Error('network'));
 
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
 
       expect(wrapper.vm.isLoadingCounts).toBe(false);
@@ -170,7 +186,7 @@ describe('AgentsCount.vue', () => {
         status: { value: ['online', 'lunch', 'offline'] },
       };
 
-      createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
 
       expect(getAgentsCountByStatus).toHaveBeenCalledWith({
@@ -182,7 +198,7 @@ describe('AgentsCount.vue', () => {
 
   describe('getActiveTags via status watcher', () => {
     it('should keep all tags when status filter is empty', async () => {
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
 
       expect(wrapper.vm.activeTags).toEqual([
@@ -194,7 +210,7 @@ describe('AgentsCount.vue', () => {
 
     it('should update active tags when status filter changes', async () => {
       vi.useFakeTimers();
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
 
       appliedDetailFiltersRef.value = {
@@ -206,12 +222,11 @@ describe('AgentsCount.vue', () => {
 
       expect(wrapper.vm.activeTags).toEqual(['online', 'custom_breaks']);
       expect(getAgentsCountByStatus).toHaveBeenCalled();
-      vi.useRealTimers();
     });
 
     it('should include offline when selected', async () => {
       vi.useFakeTimers();
-      const wrapper = createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
 
       appliedDetailFiltersRef.value = {
@@ -222,13 +237,12 @@ describe('AgentsCount.vue', () => {
       await flushPromises();
 
       expect(wrapper.vm.activeTags).toEqual(['offline']);
-      vi.useRealTimers();
     });
   });
 
   describe('filters and refresh watchers', () => {
     it('should reload when appliedFilters change', async () => {
-      createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
       getAgentsCountByStatus.mockClear();
 
@@ -242,7 +256,7 @@ describe('AgentsCount.vue', () => {
     });
 
     it('should reload when refreshDataMonitoring changes', async () => {
-      createWrapper();
+      wrapper = createWrapper();
       await flushPromises();
       getAgentsCountByStatus.mockClear();
 
@@ -253,10 +267,3 @@ describe('AgentsCount.vue', () => {
     });
   });
 });
-
-async function flushPromises() {
-  await Promise.resolve();
-  await Promise.resolve();
-  await nextTick();
-  await nextTick();
-}

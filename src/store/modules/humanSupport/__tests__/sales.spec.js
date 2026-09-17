@@ -2,8 +2,10 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useHumanSupportSales } from '../sales';
 import SalesDataService from '@/services/api/resources/humanSupport/sales/salesData';
+import PurchasesMadeService from '@/services/api/resources/humanSupport/sales/purchasesMade';
 
 vi.mock('@/services/api/resources/humanSupport/sales/salesData');
+vi.mock('@/services/api/resources/humanSupport/sales/purchasesMade');
 
 const mockSalesData = {
   average_order_value: 284,
@@ -11,6 +13,17 @@ const mockSalesData = {
     value: 428450,
     last_period_value: 362480,
     variation: 18.2,
+  },
+};
+
+const mockPurchasesMadeData = {
+  leads_captured: {
+    value: 45000,
+    percentage: 100,
+  },
+  purchases_made: {
+    value: 4250,
+    percentage: 9.44,
   },
 };
 
@@ -36,8 +49,22 @@ describe('useHumanSupportSales store', () => {
       });
     });
 
-    it('should initialize loadingSalesData as false', () => {
+    it('should initialize purchasesMadeData correctly', () => {
+      expect(store.purchasesMadeData).toEqual({
+        leads_captured: {
+          value: null,
+          percentage: null,
+        },
+        purchases_made: {
+          value: null,
+          percentage: null,
+        },
+      });
+    });
+
+    it('should initialize loading flags as false', () => {
       expect(store.loadingSalesData).toBe(false);
+      expect(store.loadingPurchasesMadeData).toBe(false);
     });
   });
 
@@ -48,6 +75,11 @@ describe('useHumanSupportSales store', () => {
 
     it('should return true when loading sales data', () => {
       store.loadingSalesData = true;
+      expect(store.isLoadingAllData).toBe(true);
+    });
+
+    it('should return true when loading purchases made data', () => {
+      store.loadingPurchasesMadeData = true;
       expect(store.isLoadingAllData).toBe(true);
     });
   });
@@ -92,11 +124,61 @@ describe('useHumanSupportSales store', () => {
     });
   });
 
-  describe('Action: loadAllData', () => {
-    it('should reload sales data once it has been loaded', async () => {
-      SalesDataService.getSalesData.mockResolvedValue(mockSalesData);
+  describe('Action: loadPurchasesMadeData', () => {
+    it('should load purchases made data successfully', async () => {
+      PurchasesMadeService.getPurchasesMadeData.mockResolvedValue(
+        mockPurchasesMadeData,
+      );
 
-      await store.loadSalesData();
+      await store.loadPurchasesMadeData();
+
+      expect(PurchasesMadeService.getPurchasesMadeData).toHaveBeenCalled();
+      expect(store.purchasesMadeData).toEqual(mockPurchasesMadeData);
+    });
+
+    it('should set loading state during data fetch', async () => {
+      PurchasesMadeService.getPurchasesMadeData.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            expect(store.loadingPurchasesMadeData).toBe(true);
+            setTimeout(() => resolve(mockPurchasesMadeData), 10);
+          }),
+      );
+
+      await store.loadPurchasesMadeData();
+      expect(store.loadingPurchasesMadeData).toBe(false);
+    });
+
+    it('should handle errors gracefully', async () => {
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+      PurchasesMadeService.getPurchasesMadeData.mockRejectedValue(
+        new Error('API Error'),
+      );
+
+      await store.loadPurchasesMadeData();
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Error loading purchases made data:',
+        expect.any(Error),
+      );
+      expect(store.loadingPurchasesMadeData).toBe(false);
+      consoleErrorSpy.mockRestore();
+    });
+  });
+
+  describe('Action: loadAllData', () => {
+    it('should reload both data slices once they have been loaded', async () => {
+      SalesDataService.getSalesData.mockResolvedValue(mockSalesData);
+      PurchasesMadeService.getPurchasesMadeData.mockResolvedValue(
+        mockPurchasesMadeData,
+      );
+
+      await Promise.all([
+        store.loadSalesData(),
+        store.loadPurchasesMadeData(),
+      ]);
       vi.clearAllMocks();
 
       store.loadAllData();
@@ -104,15 +186,18 @@ describe('useHumanSupportSales store', () => {
       await new Promise((resolve) => setTimeout(resolve, 20));
 
       expect(SalesDataService.getSalesData).toHaveBeenCalled();
+      expect(PurchasesMadeService.getPurchasesMadeData).toHaveBeenCalled();
       expect(store.salesData).toEqual(mockSalesData);
+      expect(store.purchasesMadeData).toEqual(mockPurchasesMadeData);
     });
 
-    it('should not load data that was never visible/loaded', async () => {
+    it('should not load slices that were never visible/loaded', async () => {
       store.loadAllData();
 
       await new Promise((resolve) => setTimeout(resolve, 20));
 
       expect(SalesDataService.getSalesData).not.toHaveBeenCalled();
+      expect(PurchasesMadeService.getPurchasesMadeData).not.toHaveBeenCalled();
     });
   });
 });

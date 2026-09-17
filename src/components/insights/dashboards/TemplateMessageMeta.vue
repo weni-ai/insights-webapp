@@ -426,7 +426,8 @@ const getMessagesAnalytics = async () => {
       start_date: appliedFilters.value?.date?._start,
       end_date: appliedFilters.value?.date?._end,
       product_type:
-        templatePreview.value.category === 'MARKETING'
+        templatePreview.value.category === 'MARKETING' &&
+        !isDisalbledSelectMetaTemplateApi.value
           ? selectedApiOptions.value
           : undefined,
     };

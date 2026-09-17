@@ -38,11 +38,16 @@ vi.mock('@/composables/useInfiniteScrollTable', () => ({
   useInfiniteScrollTable: vi.fn(() => mockInfiniteScroll),
 }));
 
-vi.mock('@/services/api/resources/humanSupport/sales/perRepresentative', () => ({
-  default: {
-    getPerRepresentative: vi.fn().mockResolvedValue({ results: [], count: 0 }),
-  },
-}));
+vi.mock(
+  '@/services/api/resources/humanSupport/sales/perRepresentative',
+  () => ({
+    default: {
+      getPerRepresentative: vi
+        .fn()
+        .mockResolvedValue({ results: [], count: 0 }),
+    },
+  }),
+);
 
 const increaseItem = {
   representative: 'Emma Wilson',
@@ -253,9 +258,9 @@ describe('PerformanceTable', () => {
 
     expect(trendIcon.exists()).toBe(true);
     expect(trendIcon.props('scheme')).toBe('fg-success');
-    expect(wrapper.find('[data-testid="performance-table-trend-cell"]').text()).toContain(
-      '+12.4%',
-    );
+    expect(
+      wrapper.find('[data-testid="performance-table-trend-cell"]').text(),
+    ).toContain('+12.4%');
   });
 
   it('renders decrease trend with signed value and down icon', () => {
@@ -268,17 +273,15 @@ describe('PerformanceTable', () => {
 
     expect(trendIcon.exists()).toBe(true);
     expect(trendIcon.props('scheme')).toBe('fg-warning');
-    expect(wrapper.find('[data-testid="performance-table-trend-cell"]').text()).toContain(
-      '-2.3%',
-    );
+    expect(
+      wrapper.find('[data-testid="performance-table-trend-cell"]').text(),
+    ).toContain('-2.3%');
   });
 
   it('renders the AOV header tooltip', () => {
     const tooltip = wrapper
       .findAllComponents(UnnnicToolTip)
-      .find(
-        (item) => item.props('text') === 'Average order value',
-      );
+      .find((item) => item.props('text') === 'Average order value');
 
     expect(tooltip?.exists()).toBe(true);
     expect(tooltip?.props('side')).toBe('top');
@@ -292,9 +295,9 @@ describe('PerformanceTable', () => {
     const tooltip = wrapper
       .findAllComponents(UnnnicToolTip)
       .find((item) =>
-        item.props('text')?.includes(
-          "Percentage change in the representative's revenue",
-        ),
+        item
+          .props('text')
+          ?.includes("Percentage change in the representative's revenue"),
       );
 
     expect(wrapper.find('.performance-table__trend-header').exists()).toBe(

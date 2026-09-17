@@ -7,6 +7,9 @@
       <LazyWidget>
         <SalesFunnel data-testid="sales-funnel" />
       </LazyWidget>
+      <LazyWidget>
+        <SalesPerChannel data-testid="sales-per-channel" />
+      </LazyWidget>
     </section>
   </section>
 </template>
@@ -15,6 +18,7 @@
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 import OrderDataCards from './OrderDataCards.vue';
 import SalesFunnel from './SalesFunnel.vue';
+import SalesPerChannel from './SalesPerChannel.vue';
 
 defineOptions({
   name: 'SalesView',

@@ -138,11 +138,11 @@ const agentsResponse = {
 };
 
 const ratingsResponse = {
-  '5': { value: 40, full_value: 4 },
-  '4': { value: 30, full_value: 3 },
-  '3': { value: 20, full_value: 2 },
-  '2': { value: 5, full_value: 1 },
-  '1': { value: 5, full_value: 1 },
+  5: { value: 40, full_value: 4 },
+  4: { value: 30, full_value: 3 },
+  3: { value: 20, full_value: 2 },
+  2: { value: 5, full_value: 1 },
+  1: { value: 5, full_value: 1 },
 };
 
 const createWrapper = (props = {}, { hasBeenVisible = true } = {}) => {
@@ -163,12 +163,7 @@ const createWrapper = (props = {}, { hasBeenVisible = true } = {}) => {
       stubs: {
         BlurSetupWidget: {
           name: 'BlurSetupWidget',
-          props: [
-            'title',
-            'description',
-            'actionButtonProps',
-            'actionClick',
-          ],
+          props: ['title', 'description', 'actionButtonProps', 'actionClick'],
           template:
             '<div class="blur-setup-stub" @click="actionClick && actionClick()" />',
         },

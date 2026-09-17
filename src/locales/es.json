@@ -457,6 +457,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Hoy",
         "last_7_days": "Últimos 7 días",
         "last_14_days": "Últimos 14 días",
         "last_30_days": "Últimos 30 días",
@@ -649,6 +650,7 @@
   "alert_added": "{name} agregado",
   "alert_edited": "{name} editado",
   "select_date": {
+    "today": "Hoy",
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
     "previous_month": "Mes anterior ({date})",

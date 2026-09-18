@@ -449,7 +449,9 @@
         "COPY_CODE": "Copiar e colar",
         "FLOW": "Fluxo",
         "QUICK_REPLY": "Resposta rápida",
-        "PAYMENT_REQUEST": "Solicitação de pagamento"
+        "PAYMENT_REQUEST": "Solicitação de pagamento",
+        "CATALOG": "Catálogo",
+        "ORDER_DETAILS": "Detalhes do pedido"
       }
     },
     "template": {

@@ -40,9 +40,10 @@
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
-import moment from 'moment';
+import { format, parseISO } from 'date-fns';
 
 import TagGroup from '@/components/TagGroup.vue';
+import { formatWithI18nPattern, isIsoDateString } from '@/utils/time';
 
 defineOptions({ name: 'TableGroup' });
 
@@ -122,7 +123,7 @@ const activeTable = computed(() => {
       return '-';
     }
 
-    const isDateValid = (date: any) => moment(date, moment.ISO_8601).isValid();
+    const isDateValid = (date: any) => isIsoDateString(date);
 
     if (Array.isArray(value)) {
       return {
@@ -136,8 +137,8 @@ const activeTable = computed(() => {
     }
 
     if (isDateValid(value)) {
-      const formattedDate = moment(value).format(t('date_format'));
-      const formattedTime = moment(value).format('HH:mm');
+      const formattedDate = formatWithI18nPattern(value, t('date_format'));
+      const formattedTime = format(parseISO(value), 'HH:mm');
       return `${formattedTime} | ${formattedDate}`;
     }
 

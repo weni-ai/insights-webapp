@@ -637,7 +637,7 @@
   "clear_fields": "Limpiar campos",
   "today": "Hoy",
   "now": "Ahora",
-  "date_format": "DD/MM/YYYY",
+  "date_format": "dd/MM/yyyy",
   "search": "Buscar",
   "category": "Categoría",
   "language": "Idioma",

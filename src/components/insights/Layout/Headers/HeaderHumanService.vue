@@ -22,7 +22,7 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRoute } from 'vue-router';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import HeaderTagLive from '../HeaderTagLive.vue';
 import InsightsLayoutHeaderFilters from '../HeaderFilters/index.vue';
@@ -43,7 +43,7 @@ const showTagLive = computed(() => {
   );
 
   const { query } = route;
-  const today = moment().format('YYYY-MM-DD');
+  const today = format(new Date(), 'yyyy-MM-dd');
 
   const filteringDateValues = Object.values(
     appliedFilters.value[dateFilter?.name] || {},

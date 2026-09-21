@@ -10,6 +10,8 @@ import {
   formatTimeWithDayNight,
   formatTimeStringWithDayNight,
   formatDateAndTimeLocalized,
+  formatWithI18nPattern,
+  isIsoDateString,
 } from '@/utils/time';
 
 import { format, subDays, startOfMonth, endOfMonth, subMonths } from 'date-fns';
@@ -464,6 +466,37 @@ describe('Date Utilities', () => {
 
       expect(newYearResult.time).toBe('00:00');
       expect(newYearResult.date).toMatch(/\d{1,2}\/\d{1,2}\/\d{4}/);
+    });
+  });
+
+  describe('formatWithI18nPattern', () => {
+    it('formats ISO date string with i18n pattern', () => {
+      const result = formatWithI18nPattern(
+        '2024-01-01T15:30:00-03:00',
+        'dd/MM/yyyy',
+      );
+      expect(result).toBe('01/01/2024');
+    });
+
+    it('formats Date object with i18n pattern', () => {
+      const result = formatWithI18nPattern(
+        new Date(2024, 0, 15),
+        'MM/dd/yyyy',
+      );
+      expect(result).toBe('01/15/2024');
+    });
+  });
+
+  describe('isIsoDateString', () => {
+    it('returns true for valid ISO date strings', () => {
+      expect(isIsoDateString('2024-01-01T15:30:00-03:00')).toBe(true);
+      expect(isIsoDateString('2024-02-05T12:00:00Z')).toBe(true);
+    });
+
+    it('returns false for invalid or non-string values', () => {
+      expect(isIsoDateString('not-a-date')).toBe(false);
+      expect(isIsoDateString(null)).toBe(false);
+      expect(isIsoDateString(123)).toBe(false);
     });
   });
 });

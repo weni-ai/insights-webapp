@@ -32,7 +32,7 @@ import { ref, watch, onMounted } from 'vue';
 import i18n from '@/utils/plugins/i18n';
 
 import Widget from '@/services/api/resources/widgets';
-import moment from 'moment';
+import { format, parseISO } from 'date-fns';
 import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 const props = defineProps({
@@ -69,15 +69,18 @@ const dataCount = ref(0);
 const loading = ref(false);
 const rows = ref([]);
 
+const formatStartDate = (start) => {
+  const date = parseISO(start);
+  return `${format(date, 'P')}  ${format(date, 'HH:mm:ss')}`;
+};
+
 const formatRow = (data) => {
   return {
     ...data,
     content: [
       data.contact.name,
       data.urn,
-      data.start
-        ? `${moment(data.start).format('L')}  ${moment(data.start).format('HH:mm:ss')}`
-        : '-',
+      data.start ? formatStartDate(data.start) : '-',
     ],
   };
 };

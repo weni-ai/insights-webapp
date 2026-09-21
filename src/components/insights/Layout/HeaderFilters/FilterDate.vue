@@ -12,6 +12,7 @@
     :disabled="disabled"
     disableClear
     :options="shortcuts"
+    useDateFns
     @select-date="selectedDates = $event"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -20,7 +21,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
-import moment from 'moment';
+import { format, subDays } from 'date-fns';
 
 import { useDashboards } from '@/store/modules/dashboards';
 
@@ -60,19 +61,19 @@ const isConversationalDashboard = computed(
 const minDate = computed(() => {
   if (isHumanServiceDashboard.value) return undefined;
   if (isConversationalDashboard.value) return undefined;
-  return moment().subtract(89, 'days').format('YYYY-MM-DD');
+  return format(subDays(new Date(), 89), 'yyyy-MM-dd');
 });
 
 const maxDate = computed(() => {
   if (isConversationalDashboard.value) {
-    return moment().subtract(1, 'days').format('YYYY-MM-DD');
+    return format(subDays(new Date(), 1), 'yyyy-MM-dd');
   }
-  return moment().format('YYYY-MM-DD');
+  return format(new Date(), 'yyyy-MM-dd');
 });
 
 const periodBaseDate = computed(() => {
   if (isConversationalDashboard.value) {
-    return moment().subtract(1, 'day').format('YYYY-MM-DD');
+    return format(subDays(new Date(), 1), 'yyyy-MM-dd');
   }
   return null;
 });

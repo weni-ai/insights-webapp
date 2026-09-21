@@ -1,5 +1,5 @@
-import { describe, it, vi } from 'vitest';
 import { shallowMount, config } from '@vue/test-utils';
+import { describe, it, vi, beforeEach, afterEach } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createWebHistory } from 'vue-router';
 import HeaderHumanService from '../HeaderHumanService.vue';
@@ -55,6 +55,15 @@ const createWrapper = (storeState = {}) =>
 
 describe('HeaderHumanService', () => {
   let wrapper;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-15'));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   describe('Component rendering', () => {
     it('renders LastUpdatedText always', () => {

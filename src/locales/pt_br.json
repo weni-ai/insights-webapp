@@ -448,7 +448,10 @@
         "URL": "Link",
         "COPY_CODE": "Copiar e colar",
         "FLOW": "Fluxo",
-        "QUICK_REPLY": "Resposta rápida"
+        "QUICK_REPLY": "Resposta rápida",
+        "PAYMENT_REQUEST": "Solicitação de pagamento",
+        "CATALOG": "Catálogo",
+        "ORDER_DETAILS": "Detalhes do pedido"
       }
     },
     "template": {
@@ -457,6 +460,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Hoje",
         "last_7_days": "Últimos 7 dias",
         "last_14_days": "Últimos 14 dias",
         "last_30_days": "Últimos 30 dias",
@@ -649,6 +653,7 @@
   "alert_added": "{name} adicionado",
   "alert_edited": "{name} editado",
   "select_date": {
+    "today": "Hoje",
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})",

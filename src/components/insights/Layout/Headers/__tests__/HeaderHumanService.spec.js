@@ -1,5 +1,5 @@
-import { shallowMount, config } from '@vue/test-utils';
 import { describe, it, vi, beforeEach, afterEach } from 'vitest';
+import { shallowMount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createWebHistory } from 'vue-router';
 import HeaderHumanService from '../HeaderHumanService.vue';
@@ -11,16 +11,6 @@ import {
 
 // Empty catalog so assertions that expect raw i18n keys keep working
 config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
-
-vi.mock('moment', async (importOriginal) => {
-  const actual = await importOriginal();
-  const momentInstance = () => ({ format: () => '2024-01-15' });
-  momentInstance.locale = actual.default.locale;
-  return {
-    ...actual,
-    default: momentInstance,
-  };
-});
 
 const router = createRouter({
   history: createWebHistory(),

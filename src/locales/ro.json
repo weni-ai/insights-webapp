@@ -448,7 +448,10 @@
         "URL": "Link",
         "COPY_CODE": "Copiază și lipește",
         "FLOW": "Flux",
-        "QUICK_REPLY": "Răspuns rapid"
+        "QUICK_REPLY": "Răspuns rapid",
+        "PAYMENT_REQUEST": "Solicitare de plată",
+        "CATALOG": "Catalog",
+        "ORDER_DETAILS": "Detalii comandă"
       }
     },
     "template": {
@@ -457,6 +460,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Astăzi",
         "last_7_days": "Ultimele 7 zile",
         "last_14_days": "Ultimele 14 zile",
         "last_30_days": "Ultimele 30 zile",
@@ -649,6 +653,7 @@
   "alert_added": "{name} adăugat",
   "alert_edited": "{name} editat",
   "select_date": {
+    "today": "Astăzi",
     "yesterday": "Ieri ({date})",
     "last_days": "Ultimele {value} zile ({date})",
     "previous_month": "Luna precedentă ({date})",

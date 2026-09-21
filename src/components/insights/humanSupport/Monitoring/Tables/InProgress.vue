@@ -20,6 +20,15 @@
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
+    <template #header-first_response_time>
+      <UnnnicToolTip
+        enabled
+        :text="$t(`${baseTranslationKey}.first_response_time_title_tooltip`)"
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.first_response_time`) }}</p>
+      </UnnnicToolTip>
+    </template>
     <template #body-first_response_time="{ item }">
       <component
         :is="item.firstResponseRowAlert ? TableRowAlert : 'span'"
@@ -79,6 +88,12 @@
     <template #body-agent="{ item }">
       {{ item.agent || item.agent_email }}
     </template>
+    <template #body-channel="{ item }">
+      <ChannelIcon
+        v-if="item.channel_name"
+        :channel="item.channel_name"
+      />
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -101,6 +116,7 @@ import { useFeatureFlag } from '@/store/modules/featureFlag';
 import { InProgressDataResult } from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 import service from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/inProgress';
 
+import ChannelIcon from '@/components/insights/humanSupport/Common/ChannelIcons/ChannelIcon.vue';
 import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
 
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
@@ -261,12 +277,13 @@ const formattedHeaders = computed(() => {
   });
 
   return [
-    createHeader('duration'),
+    createHeader('duration', 'handle_time'),
     createHeader('awaiting_time'),
     createHeader('first_response_time'),
     createHeader('agent', 'attendant'),
     createHeader('sector'),
     createHeader('queue'),
+    createHeader('channel'),
     createHeader('contact'),
   ];
 });
@@ -321,6 +338,7 @@ watch(
   [
     currentSort,
     () => humanSupport.appliedFilters,
+    () => humanSupport.appliedDetailFilters.agent,
     () => humanSupport.appliedDetailFilters.contactInput,
   ],
   () => {

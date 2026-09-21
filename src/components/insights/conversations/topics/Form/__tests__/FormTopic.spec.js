@@ -3,23 +3,26 @@ import { config, shallowMount } from '@vue/test-utils';
 import { nextTick, ref } from 'vue';
 import { createI18n } from 'vue-i18n';
 
-import FormTopic from '../FormTopic.vue';
+import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
 
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-    locale: 'en',
-    messages: {
-      en: {
-        conversations_dashboard: {
-          form_topic: {
-            add_topic: 'Add Topic',
-          },
+import FormTopic from '../FormTopic.vue';
+import { mockRouter } from '@tests/utils/testHelpers.js';
+
+const i18n = createI18n({
+  legacy: false,
+  locale: 'en',
+  messages: {
+    en: {
+      conversations_dashboard: {
+        form_topic: {
+          add_topic: 'Add Topic',
         },
       },
     },
-  }),
-];
+  },
+});
+
+config.global.plugins = [i18n, UnnnicSystemPlugin, mockRouter];
 
 const mockTopics = [
   {

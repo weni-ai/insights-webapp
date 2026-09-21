@@ -1,16 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, shallowMount } from '@vue/test-utils';
+import { shallowMount } from '@vue/test-utils';
 
 import ProgressTable from '@/components/ProgressTable.vue';
 import ProgressItem from '@/components/ProgressTableRow.vue';
-import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 const mockProgressItems = [
   {
@@ -123,6 +116,28 @@ describe('ProgressTable', () => {
         expect(props.isExpandable).toBe(!!expectedItem.subItems);
         expect(props.subItems).toEqual(expectedItem.subItems || undefined);
       });
+    });
+
+    it('should pass labelComponent prop to ProgressItem components', async () => {
+      const LabelStub = {
+        name: 'LabelStub',
+        template: '<span>Channel icon</span>',
+      };
+
+      await wrapper.setProps({
+        progressItems: [
+          {
+            label: 'whatsapp',
+            value: 75,
+            description: '75',
+            labelComponent: LabelStub,
+          },
+        ],
+      });
+
+      expect(progressTableItems()[0].props().labelComponent.name).toBe(
+        'LabelStub',
+      );
     });
 
     it('should handle subItemsDescription prop correctly', async () => {

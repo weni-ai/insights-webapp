@@ -1,18 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { config, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import DetailedAnalysis from '../DetailedAnalysis.vue';
-
-const i18n = createI18n({
-  legacy: false,
-  locale: 'en',
-  messages: { en: {} },
-  fallbackWarn: false,
-  missingWarn: false,
-});
-
-config.global.plugins = [i18n];
 
 describe('DetailedAnalysis', () => {
   let wrapper;
@@ -31,7 +20,10 @@ describe('DetailedAnalysis', () => {
       global: {
         plugins: [store],
         stubs: {
-          UnnnicTab: true,
+          UnnnicTabs: true,
+          UnnnicTabsList: true,
+          UnnnicTabsTrigger: true,
+          UnnnicTabsContent: true,
           DetailedFilters: true,
           Finished: true,
           Attendant: true,
@@ -57,7 +49,7 @@ describe('DetailedAnalysis', () => {
       expect(title.exists()).toBe(true);
     });
 
-    it('should render UnnnicTab component', () => {
+    it('should render UnnnicTabs component', () => {
       const tab = wrapper.find('[data-testid="human-support-tab"]');
       expect(tab.exists()).toBe(true);
     });

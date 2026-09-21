@@ -20,6 +20,15 @@
     @item-click:middle="redirectItemNewTab"
     @load-more="loadMore"
   >
+    <template #header-first_response_time>
+      <UnnnicToolTip
+        enabled
+        :text="$t(`${baseTranslationKey}.first_response_time_title_tooltip`)"
+        side="top"
+      >
+        <p>{{ $t(`${baseTranslationKey}.first_response_time`) }}</p>
+      </UnnnicToolTip>
+    </template>
     <template #body-agent="{ item }">
       <DynamicCellText
         v-if="item.agent"
@@ -106,6 +115,12 @@
       </p>
       <p v-else>{{ formatCsatNote(item.csat_rating) }}</p>
     </template>
+    <template #body-channel="{ item }">
+      <ChannelIcon
+        v-if="item.channel_name"
+        :channel="item.channel_name"
+      />
+    </template>
   </UnnnicDataTable>
 </template>
 
@@ -123,6 +138,7 @@ import { useLazyData } from '@/composables/useLazyData';
 import { analysisDetailedAnalysisFinishedMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
 import DynamicCellText from '../../Common/DynamicCellText.vue';
+import ChannelIcon from '@/components/insights/humanSupport/Common/ChannelIcons/ChannelIcon.vue';
 
 type FormattedFinishedData = Omit<
   FinishedDataResult,
@@ -228,8 +244,9 @@ const formattedHeaders = computed(() => {
     createHeader('queue'),
     createHeader('awaiting_time'),
     createHeader('first_response_time'),
-    createHeader('duration'),
+    createHeader('duration', 'handle_time'),
     createHeader('contact'),
+    createHeader('channel'),
     createHeader('ticket_id'),
     createHeader('csat_rating'),
   ];

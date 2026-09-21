@@ -448,7 +448,10 @@
         "URL": "Link",
         "COPY_CODE": "Copiar y pegar",
         "FLOW": "Flujo",
-        "QUICK_REPLY": "Respuesta rápida"
+        "QUICK_REPLY": "Respuesta rápida",
+        "PAYMENT_REQUEST": "Solicitud de pago",
+        "CATALOG": "Catálogo",
+        "ORDER_DETAILS": "Detalles del pedido"
       }
     },
     "template": {
@@ -457,6 +460,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Hoy",
         "last_7_days": "Últimos 7 días",
         "last_14_days": "Últimos 14 días",
         "last_30_days": "Últimos 30 días",
@@ -649,6 +653,7 @@
   "alert_added": "{name} agregado",
   "alert_edited": "{name} editado",
   "select_date": {
+    "today": "Hoy",
     "yesterday": "Ayer ({date})",
     "last_days": "Últimos {value} días ({date})",
     "previous_month": "Mes anterior ({date})",
@@ -1133,6 +1138,7 @@
     "chats_open": "Considerar chats abiertos durante este periodo",
     "chats_closed": "Considerar chats cerrados durante este periodo",
     "filters": {
+      "channel": "Canal",
       "sector": "Departamento",
       "select_sector": "Selecciona el departamento",
       "representative": "Representante",
@@ -1144,7 +1150,8 @@
       "all_sectors": "Todos los sectores",
       "all_representatives": "Todos los representantes",
       "all_queues": "Todas las colas",
-      "all_tags": "Todas las tags"
+      "all_tags": "Todas las tags",
+      "select_to_filter": "Seleccionar para filtrar"
     },
     "select_format": "Selecciona el formato en que se exportarán los datos",
     "warning_terms": "Mientras la exportación esté en curso, ninguno de los usuarios del proyecto podrá generar nuevas exportaciones. Confirma para continuar.",
@@ -1238,10 +1245,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoreo",
-    "monitoring_tooltip": "Monitorea las interacciones de chats de soporte en tiempo real, identifica cuellos de botella y toma decisiones rápidas para optimizar la operación. Descubre la nueva vista <b>Monitoreo</b>!",
-    "analysis": "Analytics",
-    "analysis_tooltip": "Explora las interacciones cerradas para descubrir patrones y tendencias. Identifica oportunidades de mejora y aumenta el rendimiento de tu equipo. Descubre la nueva vista <b>Análisis</b>!",
+    "live": "En vivo",
+    "historical_data": "Datos históricos",
+    "news_disclaimer": {
+      "title": "¡Novedad en los dashboards!",
+      "description": "El dashboard <i>Monitoreo</i> ahora se llama <i>En vivo</i> y muestra datos en tiempo real sobre representantes y chats de soporte en espera o en curso. Para analizar chats de soporte ya finalizados, incluso los realizados hoy, accede a <i>Datos históricos</i>."
+    },
     "support_status": {
       "title": "Status de los chats de soporte",
       "is_waiting": "Esperando",
@@ -1256,11 +1265,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tiempo actuales",
-      "average_time_is_waiting": "Espera promedio",
-      "average_time_first_response": "Promedio de 1ª respuesta",
-      "average_response_time": "Tiempo promedio de respuesta",
-      "average_time_chat": "Duración promedio",
+      "average_time_is_waiting": "TME",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMA",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Tiempo Medio de Espera",
+        "average_time_first_response": "Tiempo Medio de Primera Respuesta",
+        "average_response_time": "Tiempo Medio de Respuesta",
+        "average_time_chat": "Tiempo Medio de Atención"
+      },
       "tooltips": {
         "average_time_is_waiting": "Tiempo promedio que los contactos esperan en cola antes del inicio del chat de soporte",
         "average_time_first_response": "Tiempo promedio antes de que el representante envíe el primer mensaje tras la asignación de la sala",
@@ -1280,14 +1295,16 @@
         "pauses": "Pausas personalizadas"
       },
       "in_progress": {
-        "duration": "Duración",
+        "handle_time": "Tiempo de atención",
         "awaiting_time": "Espera",
-        "first_response_time": "1ª respuesta",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Tiempo Primera Respuesta",
         "pending_response_tooltip": "El último mensaje del chat lo envió el contacto",
         "attendant": "Representante",
         "sector": "Departamento",
         "queue": "Cola",
-        "contact": "Contacto"
+        "contact": "Contacto",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Status",
@@ -1299,17 +1316,22 @@
         "awaiting_time": "Espera",
         "contact": "Contacto",
         "sector": "Departamento",
-        "queue": "Cola"
+        "queue": "Cola",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Representante",
         "status": "Status",
         "ongoing": "En curso",
         "finished": "Finalizados",
-        "average_first_response_time": "Promedio de 1ª respuesta",
-        "average_response_time": "Tiempo promedio de respuesta",
-        "average_duration": "Duración promedio",
-        "time_in_service": "Tiempo en el chat de soporte",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Tiempo Medio de Primera Respuesta",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Tiempo Medio de Respuesta",
+        "average_duration": "TMA",
+        "average_duration_title_tooltip": "Tiempo Medio de Atención",
+        "time_in_service": "En servicio",
+        "time_in_service_tooltip": "Tiempo online con soporte en curso",
         "action": "Acción"
       },
       "agents_count": {
@@ -1338,22 +1360,31 @@
     },
     "columns": {
       "common": {
-        "duration": "Duración",
+        "handle_time": "Tiempo de atención",
         "awaiting_time": "Espera",
-        "first_response_time": "1ª respuesta",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Tiempo de Primera Respuesta",
         "response_time": "Tiempo de respuesta",
         "agent": "Representante",
         "sector": "Departamento",
         "queue": "Cola",
+        "channel": "Canal",
         "contact": "Contacto",
         "ticket_id": "Protocolo",
-        "total_attendances": "Total de chats de soporte",
-        "average_first_response_time": "Promedio de 1ª respuesta",
-        "average_response_time": "Tiempo promedio de respuesta",
-        "average_duration": "Duración promedio",
-        "time_in_service": "Tiempo en el chat de soporte",
+        "total_attendances": "Finalizados",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Tiempo Medio de Primera Respuesta",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Tiempo Medio de Respuesta",
+        "average_duration": "TMA",
+        "average_duration_title_tooltip": "Tiempo Medio de Atención",
+        "time_in_service": "En servicio",
+        "time_in_service_tooltip": "Tiempo online con soporte en curso",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Otros"
     },
     "analyze": {
       "title": "Próximamente: Nueva vista de Analytics",
@@ -1436,6 +1467,22 @@
         },
         "analysis": {
           "closed": "No hay tags asignadas a chats finalizados en el periodo seleccionado"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volumen por canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal con chats {status}} other {# canales con chats {status}}}",
+        "analysis": "{count, plural, one {# canal con chats finalizados} other {# canales con chats finalizados}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No hay chats esperando",
+          "ongoing": "No hay chats en curso"
+        },
+        "analysis": {
+          "closed": "No hay chats finalizados en el periodo seleccionado"
         }
       }
     }

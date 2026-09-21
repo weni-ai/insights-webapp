@@ -448,7 +448,10 @@
         "URL": "Link",
         "COPY_CODE": "Copy and paste",
         "FLOW": "Flow",
-        "QUICK_REPLY": "Quick response"
+        "QUICK_REPLY": "Quick response",
+        "PAYMENT_REQUEST": "Payment request",
+        "CATALOG": "Catalog",
+        "ORDER_DETAILS": "Order details"
       }
     },
     "template": {
@@ -457,6 +460,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Today",
         "last_7_days": "Last 7 days",
         "last_14_days": "Last 14 days",
         "last_30_days": "Last 30 days",
@@ -649,6 +653,7 @@
   "alert_added": "{name} added",
   "alert_edited": "{name} edited",
   "select_date": {
+    "today": "Today",
     "yesterday": "Yesterday ({date})",
     "last_days": "Last {value} days ({date})",
     "previous_month": "Previous month ({date})",
@@ -1133,6 +1138,7 @@
     "chats_open": "Include chats opened during this period",
     "chats_closed": "Include chats closed during this period",
     "filters": {
+      "channel": "Channel",
       "sector": "Department",
       "select_sector": "Select department",
       "representative": "Representative",
@@ -1144,7 +1150,8 @@
       "all_sectors": "All departments",
       "all_representatives": "All representatives",
       "all_queues": "All queues",
-      "all_tags": "All tags"
+      "all_tags": "All tags",
+      "select_to_filter": "Select to filter"
     },
     "select_format": "Select the format for exporting the data",
     "warning_terms": "While the export is in progress, creating new exports will be blocked for all project roles. Confirm to continue.",
@@ -1238,10 +1245,12 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoring",
-    "monitoring_tooltip": "Track the support chat interactions of the day in real time. Identify bottlenecks and make quick decisions to optimize the operation.",
-    "analysis": "Analytics",
-    "analysis_tooltip": "Explore the performance of closed rooms over different time periods. Discover patterns, trends, and opportunities for improving your team.",
+    "live": "Live",
+    "historical_data": "Historical data",
+    "news_disclaimer": {
+      "title": "New on the dashboards!",
+      "description": "The <i>Monitoring</i> dashboard is now called <i>Live</i> and shows real-time data on representatives and on support chats that are waiting or in progress. To analyze completed support chats, including those from today, go to <i>Historical data</i>."
+    },
     "support_status": {
       "title": "Status of support chats",
       "is_waiting": "Waiting",
@@ -1256,11 +1265,17 @@
     },
     "time_metrics": {
       "title": "Current time metrics",
-      "average_time_is_waiting": "Average wait time",
-      "average_time_first_response": "Average time to 1st response",
-      "average_response_time": "Average response time",
-      "average_time_chat": "Average chat duration",
+      "average_time_is_waiting": "AWT",
+      "average_time_first_response": "MFRT",
+      "average_response_time": "ART",
+      "average_time_chat": "AHT",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Average Wait Time",
+        "average_time_first_response": "Mean First Response Time",
+        "average_response_time": "Average Response Time",
+        "average_time_chat": "Average Handle Time"
+      },
       "tooltips": {
         "average_time_is_waiting": "Average time contacts wait in queue before support chat start",
         "average_time_first_response": "Average time before the representative sends the first message after the room is assigned",
@@ -1280,14 +1295,16 @@
         "pauses": "Custom breaks"
       },
       "in_progress": {
-        "duration": "Duration",
+        "handle_time": "Handle time",
         "awaiting_time": "Wait time",
-        "first_response_time": "Time to 1st response",
+        "first_response_time": "FRT",
+        "first_response_time_title_tooltip": "Time First Response",
         "pending_response_tooltip": "The last message in the chat was sent by the contact",
         "attendant": "Representative",
         "sector": "Department",
         "queue": "Queue",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Channel"
       },
       "pauses": {
         "status": "Status",
@@ -1299,17 +1316,22 @@
         "awaiting_time": "Wait time",
         "contact": "Contact",
         "sector": "Department",
-        "queue": "Queue"
+        "queue": "Queue",
+        "channel": "Channel"
       },
       "attendant": {
         "agent": "Representative",
         "status": "Status",
         "ongoing": "In progress",
         "finished": "Completed",
-        "average_first_response_time": "Average time to 1st response",
-        "average_response_time": "Average response time",
-        "average_duration": "Average duration",
-        "time_in_service": "Time in support chat",
+        "average_first_response_time": "MFRT",
+        "average_first_response_time_title_tooltip": "Mean First Response Time",
+        "average_response_time": "ART",
+        "average_response_time_title_tooltip": "Average Response Time",
+        "average_duration": "AHT",
+        "average_duration_title_tooltip": "Average Handle Time",
+        "time_in_service": "In service",
+        "time_in_service_tooltip": "Online time with ongoing support",
         "action": "Action"
       },
       "agents_count": {
@@ -1338,22 +1360,31 @@
     },
     "columns": {
       "common": {
-        "duration": "Duration",
+        "handle_time": "Handle time",
         "awaiting_time": "Wait time",
-        "first_response_time": "Time to 1st response",
+        "first_response_time": "FRT",
+        "first_response_time_title_tooltip": "First Response Time",
         "response_time": "Response time",
         "agent": "Representative",
         "sector": "Department",
         "queue": "Queue",
+        "channel": "Channel",
         "contact": "Contact",
         "ticket_id": "Protocol",
-        "total_attendances": "Total support chats",
-        "average_first_response_time": "Average time to 1st response",
-        "average_response_time": "Average response time",
-        "average_duration": "Average duration",
-        "time_in_service": "Time in support chat",
+        "total_attendances": "Completed",
+        "average_first_response_time": "MFRT",
+        "average_first_response_time_title_tooltip": "Mean First Response Time",
+        "average_response_time": "ART",
+        "average_response_time_title_tooltip": "Average Response Time",
+        "average_duration": "AHT",
+        "average_duration_title_tooltip": "Average Handle Time",
+        "time_in_service": "In service",
+        "time_in_service_tooltip": "Online time with ongoing support",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Others"
     },
     "analyze": {
       "title": "Coming soon: New Analytics view",
@@ -1436,6 +1467,22 @@
         },
         "analysis": {
           "closed": "No tags assigned to chats completed in the selected period"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volume per channel",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# channel with {status} chats} other {# channels with {status} chats}}",
+        "analysis": "{count, plural, one {# channel with completed chats} other {# channels with completed chats}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No chats waiting",
+          "ongoing": "No chats in progress"
+        },
+        "analysis": {
+          "closed": "No chats completed in the selected period"
         }
       }
     }

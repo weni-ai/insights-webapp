@@ -39,6 +39,7 @@
         :labelMuted="item.labelMuted"
         :subtitleMuted="item.subtitleMuted"
         :deletedTooltip="item.deletedTooltip"
+        :labelComponent="item.labelComponent"
         @expand="expandItem(item.label, $event)"
       />
     </tbody>

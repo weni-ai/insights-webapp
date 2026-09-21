@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi, afterEach } from 'vitest';
-import { flushPromises, mount } from '@vue/test-utils';
+import { flushPromises, mount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createMemoryHistory } from 'vue-router';
 
@@ -11,6 +11,14 @@ import { useOnboarding } from '@/store/modules/onboarding';
 import { useProject } from '@/store/modules/project';
 import { useUser } from '@/store/modules/user';
 import { useFeatureFlag } from '@/store/modules/featureFlag';
+
+import {
+  createTestI18n,
+  UnnnicSystemPlugin,
+} from '@tests/utils/testHelpers.js';
+
+// Empty catalog so assertions that expect raw i18n keys keep working
+config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
 const { sharedStoreState } = vi.hoisted(() => {
   const sharedStoreState = {

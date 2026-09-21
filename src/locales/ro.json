@@ -448,7 +448,10 @@
         "URL": "Link",
         "COPY_CODE": "Copiază și lipește",
         "FLOW": "Flux",
-        "QUICK_REPLY": "Răspuns rapid"
+        "QUICK_REPLY": "Răspuns rapid",
+        "PAYMENT_REQUEST": "Solicitare de plată",
+        "CATALOG": "Catalog",
+        "ORDER_DETAILS": "Detalii comandă"
       }
     },
     "template": {
@@ -457,6 +460,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Astăzi",
         "last_7_days": "Ultimele 7 zile",
         "last_14_days": "Ultimele 14 zile",
         "last_30_days": "Ultimele 30 zile",
@@ -649,6 +653,7 @@
   "alert_added": "{name} adăugat",
   "alert_edited": "{name} editat",
   "select_date": {
+    "today": "Astăzi",
     "yesterday": "Ieri ({date})",
     "last_days": "Ultimele {value} zile ({date})",
     "previous_month": "Luna precedentă ({date})",
@@ -1133,6 +1138,7 @@
     "chats_open": "Include chaturile deschise în această perioadă",
     "chats_closed": "Include chaturile închise în această perioadă",
     "filters": {
+      "channel": "Canal",
       "sector": "Departament",
       "select_sector": "Selectează un departament",
       "representative": "Reprezentant",
@@ -1144,7 +1150,8 @@
       "all_sectors": "Toate departamentele",
       "all_representatives": "Toți reprezentanții",
       "all_queues": "Toate cozile",
-      "all_tags": "Toate etichetele"
+      "all_tags": "Toate etichetele",
+      "select_to_filter": "Selectează pentru a filtra"
     },
     "select_format": "Selectează formatul pentru exportul datelor",
     "warning_terms": "În timpul procesului de export, crearea unor exporturi noi va fi blocată pentru toate rolurile din proiect. Confirmă pentru a continua.",
@@ -1238,10 +1245,12 @@
   },
   "human_support_dashboard": {
     "title": "Asistență umană",
-    "monitoring": "Monitorizare",
-    "monitoring_tooltip": "Monitorizează în timp real interacțiunile din chatul de asistență ale zilei. Identifică blocajele şi ia decizii rapide pentru a optimiza operațiunea.",
-    "analysis": "Analiză",
-    "analysis_tooltip": "Explorează performanța camerelor închise pe diferite perioade de timp. Descoperă tipare, tendințe și oportunități pentru a-ți îmbunătăți echipa.",
+    "live": "În direct",
+    "historical_data": "Date istorice",
+    "news_disclaimer": {
+      "title": "Noutate în dashboards!",
+      "description": "Dashboardul <i>Monitorizare</i> se numește acum <i>În direct</i> și afișează date în timp real despre reprezentanți și chaturi de asistență în așteptare sau în curs. Pentru a analiza chaturile de asistență deja finalizate, inclusiv pe cele de astăzi, accesează <i>Date istorice</i>."
+    },
     "support_status": {
       "title": "Starea chaturilor de asistență",
       "is_waiting": "În așteptare",
@@ -1256,11 +1265,17 @@
     },
     "time_metrics": {
       "title": "Metrici oră curentă",
-      "average_time_is_waiting": "Timpul mediu de așteptare",
-      "average_time_first_response": "Medie până la 1º răspuns",
-      "average_response_time": "Timpul mediu de răspuns",
-      "average_time_chat": "Durata medie a conversației în chat",
+      "average_time_is_waiting": "TMA",
+      "average_time_first_response": "TMPR",
+      "average_response_time": "TMR",
+      "average_time_chat": "TMC",
       "max": "Maximum",
+      "title_tooltips": {
+        "average_time_is_waiting": "Timp Mediu de Așteptare",
+        "average_time_first_response": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "Timp Mediu de Răspuns",
+        "average_time_chat": "Timp Mediu de Conversație"
+      },
       "tooltips": {
         "average_time_is_waiting": "Timpul mediu de așteptare al contactelor în coadă înainte de începerea chatului de asistență",
         "average_time_first_response": "Timpul mediu înainte ca reprezentantul să trimită primul mesaj după ce camera este atribuită",
@@ -1280,14 +1295,16 @@
         "pauses": "Pauze personalizate"
       },
       "in_progress": {
-        "duration": "Durată",
+        "handle_time": "Timp de conversație",
         "awaiting_time": "Timp de așteptare",
-        "first_response_time": "1º răspuns",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Timp Prim Răspuns",
         "pending_response_tooltip": "Ultimul mesaj din chat a fost trimis de contact",
         "attendant": "Reprezentant",
         "sector": "Departament",
         "queue": "Coadă",
-        "contact": "Contact"
+        "contact": "Contact",
+        "channel": "Canal"
       },
       "pauses": {
         "status": "Stare",
@@ -1299,17 +1316,22 @@
         "awaiting_time": "Timp de așteptare",
         "contact": "Contact",
         "sector": "Departament",
-        "queue": "Coadă"
+        "queue": "Coadă",
+        "channel": "Canal"
       },
       "attendant": {
         "agent": "Reprezentant",
         "status": "Stare",
         "ongoing": "În curs",
         "finished": "Finalizat",
-        "average_first_response_time": "Medie până la 1º răspuns",
-        "average_response_time": "Timpul mediu de răspuns",
-        "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Timp Mediu de Răspuns",
+        "average_duration": "TMC",
+        "average_duration_title_tooltip": "Timp Mediu de Conversație",
+        "time_in_service": "În serviciu",
+        "time_in_service_tooltip": "Timp online cu asistență în curs",
         "action": "Acțiune"
       },
       "agents_count": {
@@ -1338,22 +1360,31 @@
     },
     "columns": {
       "common": {
-        "duration": "Durată",
+        "handle_time": "Timp de conversație",
         "awaiting_time": "Timp de așteptare",
-        "first_response_time": "1º răspuns",
+        "first_response_time": "TPR",
+        "first_response_time_title_tooltip": "Timp de Prim Răspuns",
         "response_time": "Timp de răspuns",
         "agent": "Reprezentant",
         "sector": "Departament",
         "queue": "Coadă",
+        "channel": "Canal",
         "contact": "Contact",
         "ticket_id": "Protocol",
-        "total_attendances": "Total chaturi de asistență",
-        "average_first_response_time": "Medie până la 1º răspuns",
-        "average_response_time": "Timpul mediu de răspuns",
-        "average_duration": "Durata medie",
-        "time_in_service": "Timp în chatul de asistență",
+        "total_attendances": "Finalizat",
+        "average_first_response_time": "TMPR",
+        "average_first_response_time_title_tooltip": "Timp Mediu de Prim Răspuns",
+        "average_response_time": "TMR",
+        "average_response_time_title_tooltip": "Timp Mediu de Răspuns",
+        "average_duration": "TMC",
+        "average_duration_title_tooltip": "Timp Mediu de Conversație",
+        "time_in_service": "În serviciu",
+        "time_in_service_tooltip": "Timp online cu asistență în curs",
         "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Others"
     },
     "analyze": {
       "title": "În curând: Noua interfață de Analiză",
@@ -1436,6 +1467,22 @@
         },
         "analysis": {
           "closed": "Nu există etichete atribuite la chaturile finalizate în perioada selectată"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volum per canal",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# canal cu chaturi {status}} few {# canale cu chaturi {status}} other {# de canale cu chaturi {status}}}",
+        "analysis": "{count, plural, one {# canal cu chaturi finalizate} few {# canale cu chaturi finalizate} other {# de canale cu chaturi finalizate}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "Nu există chaturi în așteptare",
+          "ongoing": "Nu există chaturi în curs de desfășurare"
+        },
+        "analysis": {
+          "closed": "Nu există chaturi finalizate în perioada selectată"
         }
       }
     }

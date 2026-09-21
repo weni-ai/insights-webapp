@@ -40,8 +40,10 @@ describe('inProgress API', () => {
         sectors: [{ value: 'sector1' }],
         queues: [{ value: 'queue1' }],
         tags: [{ value: 'tag1' }],
+        channels: [{ value: 'channel1' }],
       },
       appliedDetailFilters: {
+        agent: { value: '' },
         contactInput: { value: '' },
       },
     });
@@ -60,6 +62,7 @@ describe('inProgress API', () => {
           sectors: ['sector1'],
           queues: ['queue1'],
           tags: ['tag1'],
+          channels: ['channel1'],
           ordering: 'duration',
         },
       },
@@ -93,8 +96,10 @@ describe('inProgress API', () => {
         sectors: [],
         queues: [],
         tags: [],
+        channels: [],
       },
       appliedDetailFilters: {
+        agent: { value: '' },
         contactInput: { value: '5511999999999' },
       },
     });
@@ -106,6 +111,32 @@ describe('inProgress API', () => {
       {
         params: expect.objectContaining({
           contact: '5511999999999',
+        }),
+      },
+    );
+  });
+
+  it('includes agent filter from applied detail filters', async () => {
+    useHumanSupport.mockReturnValue({
+      appliedFilters: {
+        sectors: [],
+        queues: [],
+        tags: [],
+        channels: [],
+      },
+      appliedDetailFilters: {
+        agent: { value: 'agent@test.com' },
+        contactInput: { value: '' },
+      },
+    });
+
+    await inProgress.getDetailedMonitoringInProgress();
+
+    expect(http.get).toHaveBeenCalledWith(
+      '/metrics/human-support/detailed-monitoring/on-going/',
+      {
+        params: expect.objectContaining({
+          agent: 'agent@test.com',
         }),
       },
     );

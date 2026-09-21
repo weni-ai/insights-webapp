@@ -31,40 +31,42 @@
       class="detailed-monitoring__tabs"
       data-testid="detailed-analysis-tabs"
     >
-      <UnnnicTab
+      <UnnnicTabs
         data-testid="human-support-tab"
-        :tabs="tabsKeys"
-        :activeTab="activeDetailedTab"
-        @change="changeActiveTabName"
+        :modelValue="activeDetailedTab"
+        @update:model-value="changeActiveTabName"
       >
-        <template
-          v-for="[key, tab] in Object.entries(tabs)"
-          #[`tab-head-${key}`]
-          :key="`tab-head-${key}`"
+        <UnnnicTabsList>
+          <UnnnicTabsTrigger
+            v-for="[key, tab] in Object.entries(tabs)"
+            :key="key"
+            :value="key"
+          >
+            {{
+              $t(
+                `human_support_dashboard.analyze.detailed_analysis.tabs.${tab.name}`,
+              )
+            }}
+          </UnnnicTabsTrigger>
+        </UnnnicTabsList>
+        <UnnnicTabsContent
+          v-for="key in tabsKeys"
+          :key="key"
+          :value="key"
         >
-          {{
-            $t(
-              `human_support_dashboard.analyze.detailed_analysis.tabs.${tab.name}`,
-            )
-          }}
-        </template>
-        <template
-          v-for="key in Object.keys(tabs)"
-          #[`tab-panel-${key}`]
-          :key="`tab-panel-${key}`"
-        >
-          <component
-            :is="tabs[key].component"
-            :data-testid="`tab-panel-${key}`"
-          />
-        </template>
-      </UnnnicTab>
+          <section class="detailed-monitoring__tabs-content">
+            <component
+              :is="tabs[key].component"
+              :data-testid="`tab-panel-${key}`"
+            />
+          </section>
+        </UnnnicTabsContent>
+      </UnnnicTabs>
     </section>
   </section>
 </template>
 
 <script setup lang="ts">
-import { UnnnicTab } from '@weni/unnnic-system';
 import { storeToRefs } from 'pinia';
 import { computed, useTemplateRef } from 'vue';
 import DetailedFilters from '../Common/Filters/DetailedFilters.vue';
@@ -132,7 +134,7 @@ const filterType = computed(() => {
   display: flex;
   padding: $unnnic-space-6;
   flex-direction: column;
-  gap: $unnnic-space-6;
+  gap: $unnnic-space-4;
 
   border-radius: $unnnic-radius-2;
   border: 1px solid $unnnic-color-gray-2;
@@ -145,6 +147,10 @@ const filterType = computed(() => {
   &__filters {
     display: flex;
     flex-direction: column;
+  }
+
+  &__tabs-content {
+    margin-top: $unnnic-space-2;
   }
 }
 

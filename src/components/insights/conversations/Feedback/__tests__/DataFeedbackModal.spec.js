@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { config, shallowMount, mount } from '@vue/test-utils';
-import { createI18n } from 'vue-i18n';
+import { shallowMount, mount } from '@vue/test-utils';
 
 import DataFeedbackModal from '../DataFeedbackModal.vue';
 
@@ -23,12 +22,6 @@ vi.mock('@/store/modules/dashboards', () => ({
 }));
 
 import feedbackApi from '@/services/api/resources/conversational/feedback';
-
-config.global.plugins = [
-  createI18n({
-    legacy: false,
-  }),
-];
 
 const unnnicStubs = {
   UnnnicDialog: {

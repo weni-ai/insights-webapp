@@ -1,14 +1,10 @@
 import { describe, expect, it, vi } from 'vitest';
-import { config, mount } from '@vue/test-utils';
+import { mount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import { createI18n } from 'vue-i18n';
 import { nextTick } from 'vue';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 
 import DetailedFilters from '../DetailedFilters.vue';
-
-const i18n = createI18n({ legacy: false });
-config.global.plugins = [i18n];
 
 const createWrapper = (props = {}, storeOverrides = {}) => {
   const store = createTestingPinia({
@@ -27,6 +23,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
 
   return mount(DetailedFilters, {
     props: {
+      mode: 'analysis',
       type: 'attendant',
       ...props,
     },
@@ -127,6 +124,15 @@ describe('DetailedFilters', () => {
         '[data-testid="detailed-filter-contact_input"]',
       );
       expect(filterInput.exists()).toBe(true);
+    });
+
+    it('should render attendant filter for in_progress type', () => {
+      wrapper = createWrapper({ type: 'in_progress', mode: 'monitoring' });
+
+      const attendantFilter = wrapper.find(
+        '[data-testid="detailed-filter-attendant"]',
+      );
+      expect(attendantFilter.exists()).toBe(true);
     });
   });
 

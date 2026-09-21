@@ -12,6 +12,7 @@
     :disabled="disabled"
     disableClear
     useDateFns
+    :options="shortcuts"
     @select-date="selectedDates = $event"
     @update:model-value="$emit('update:modelValue', $event)"
   />
@@ -30,12 +31,14 @@ interface FilterDateProps {
   modelValue?: Record<string, unknown>;
   className?: string;
   disabled?: boolean;
+  shortcuts?: { name: string; id: string }[];
 }
 
 withDefaults(defineProps<FilterDateProps>(), {
   modelValue: () => ({}),
   className: '',
   disabled: false,
+  shortcuts: () => [],
 });
 
 defineEmits<{

@@ -11,6 +11,7 @@
     :periodBaseDate="periodBaseDate"
     :disabled="disabled"
     disableClear
+    useDateFns
     @select-date="selectedDates = $event"
     @update:model-value="$emit('update:modelValue', $event)"
   />

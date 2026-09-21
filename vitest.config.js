@@ -7,6 +7,15 @@ export default mergeConfig(
   defineConfig({
     test: {
       environment: 'jsdom',
+      // @weni/unnnic-system ships ESM that side-effect imports .css next to
+      // each icon. Vitest externalizes node_modules, so Node tries to load
+      // those files and throws ERR_UNKNOWN_FILE_EXTENSION. Inlining lets Vite
+      // stub the CSS imports.
+      server: {
+        deps: {
+          inline: ['@weni/unnnic-system'],
+        },
+      },
       // threads pool is the vitest default; keep isolate:true because several
       // specs still replace config.global.plugins with custom i18n messages.
       // Turning isolate off would leak those mutations across files.

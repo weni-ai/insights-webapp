@@ -1,9 +1,35 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { mount, config } from '@vue/test-utils';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { mount, config, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
+import { defineComponent, h } from 'vue';
+
 import DynamicDashboard from '../DynamicDashboard.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useWidgets } from '@/store/modules/widgets';
+
+const AsyncStub = defineComponent({
+  name: 'AsyncDashboardStub',
+  setup(_, { slots }) {
+    return () => h('div', { class: 'async-dashboard-stub' }, slots.default?.());
+  },
+});
+
+vi.mock('vue', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    defineAsyncComponent: (loader) => {
+      // Keep the dynamic import promise from rejecting after teardown by
+      // settling it immediately, while rendering a sync stub in tests.
+      if (typeof loader === 'function') {
+        Promise.resolve()
+          .then(() => loader())
+          .catch(() => undefined);
+      }
+      return AsyncStub;
+    },
+  };
+});
 
 config.global.mocks = {
   $t: (key) => key,
@@ -14,7 +40,7 @@ describe('DynamicDashboard.vue', () => {
   let dashboardsStore;
   let widgetsStore;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wrapper = mount(DynamicDashboard, {
       global: {
         plugins: [
@@ -27,6 +53,13 @@ describe('DynamicDashboard.vue', () => {
 
     dashboardsStore = useDashboards();
     widgetsStore = useWidgets();
+    await flushPromises();
+  });
+
+  afterEach(async () => {
+    wrapper?.unmount();
+    wrapper = null;
+    await flushPromises();
   });
 
   describe('Computed Properties', () => {

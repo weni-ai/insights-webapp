@@ -136,4 +136,107 @@ describe('Projects Service', () => {
       expect(project).toEqual(mockResponse);
     });
   });
+
+  describe('getProjectSource pagination branches', () => {
+    it('returns paginated shape when isPaginated and next/previous exist', async () => {
+      http.get.mockResolvedValueOnce({
+        next: 'next-url',
+        previous: null,
+        results: [{ uuid: '1', name: 'Source 1', extra: 'x' }],
+      });
+
+      const result = await SourceService.getProjectSource('slug', {}, true);
+
+      expect(result).toEqual({
+        next: 'next-url',
+        previous: null,
+        results: [{ uuid: '1', name: 'Source 1', extra: 'x' }],
+      });
+    });
+
+    it('returns array response as-is when API returns an array', async () => {
+      const arrayResponse = [{ uuid: '1', name: 'A' }];
+      http.get.mockResolvedValueOnce(arrayResponse);
+
+      await expect(SourceService.getProjectSource('slug')).resolves.toEqual(
+        arrayResponse,
+      );
+    });
+  });
+
+  describe('getProjectSourcePaginated', () => {
+    it('throws when url is missing', async () => {
+      await expect(SourceService.getProjectSourcePaginated()).rejects.toThrow(
+        'Please provide a valid URL for paginated request.',
+      );
+    });
+
+    it('maps paginated results from url', async () => {
+      http.get.mockResolvedValueOnce({
+        next: null,
+        previous: 'prev',
+        results: [{ uuid: '2', name: 'Source 2', extra: true }],
+      });
+
+      const result = await SourceService.getProjectSourcePaginated(
+        '/projects/x/sources/y/search/?page=2',
+      );
+
+      expect(http.get).toHaveBeenCalledWith(
+        '/projects/x/sources/y/search/?page=2',
+      );
+      expect(result).toEqual({
+        next: null,
+        previous: 'prev',
+        results: [{ uuid: '2', name: 'Source 2', extra: true }],
+      });
+    });
+  });
+
+  describe('remaining project endpoints', () => {
+    it('getProjectManagers calls filters endpoint', async () => {
+      http.get.mockResolvedValueOnce([{ email: 'a@b.com' }]);
+
+      const result = await SourceService.getProjectManagers();
+
+      expect(http.get).toHaveBeenCalledWith(
+        '/projects/mock-project-uuid/filters/project_managers/',
+      );
+      expect(result).toEqual([{ email: 'a@b.com' }]);
+    });
+
+    it('verifyProjectCsat calls verify_csat endpoint', async () => {
+      http.get.mockResolvedValueOnce({ enabled: true });
+
+      const result = await SourceService.verifyProjectCsat();
+
+      expect(http.get).toHaveBeenCalledWith(
+        '/projects/mock-project-uuid/verify_csat/',
+      );
+      expect(result).toEqual({ enabled: true });
+    });
+
+    it('verifyProjectAbandonedCartRecovery calls commerce status', async () => {
+      http.get.mockResolvedValueOnce({ status: 'ok' });
+
+      const result = await SourceService.verifyProjectAbandonedCartRecovery();
+
+      expect(http.get).toHaveBeenCalledWith(
+        '/commerce/abandoned-cart/status/',
+        { params: { project_uuid: 'mock-project-uuid' } },
+      );
+      expect(result).toEqual({ status: 'ok' });
+    });
+
+    it('getMarketingTemplateCost calls marketing pricing', async () => {
+      http.get.mockResolvedValueOnce({ cost: 1.5 });
+
+      const result = await SourceService.getMarketingTemplateCost();
+
+      expect(http.get).toHaveBeenCalledWith('/commerce/marketing-pricing/', {
+        params: { project_uuid: 'mock-project-uuid' },
+      });
+      expect(result).toEqual({ cost: 1.5 });
+    });
+  });
 });

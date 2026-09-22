@@ -37,7 +37,17 @@
 
       <template v-else>
         <div class="bar-list__table-container">
-          <ProgressTable :progressItems="props.items" />
+          <ProgressTable :progressItems="props.items">
+            <template
+              v-if="$slots.description"
+              #description="slotProps"
+            >
+              <slot
+                name="description"
+                v-bind="slotProps"
+              />
+            </template>
+          </ProgressTable>
         </div>
         <section
           v-if="!isLoading"

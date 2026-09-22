@@ -41,7 +41,17 @@
         :deletedTooltip="item.deletedTooltip"
         :labelComponent="item.labelComponent"
         @expand="expandItem(item.label, $event)"
-      />
+      >
+        <template
+          v-if="$slots.description"
+          #description
+        >
+          <slot
+            name="description"
+            :item="item"
+          />
+        </template>
+      </ProgressItem>
     </tbody>
   </table>
 </template>
@@ -86,7 +96,7 @@ const maxValue = computed(() => {
   border-collapse: collapse;
 
   &__body {
-    width: 100%;
+    display: contents;
   }
 }
 </style>

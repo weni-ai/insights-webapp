@@ -91,10 +91,18 @@
         />
       </td>
       <td
-        class="progress-table-row-item__description"
+        :class="[
+          'progress-table-row-item__description',
+          {
+            'progress-table-row-item__description--slotted':
+              !!$slots.description,
+          },
+        ]"
         data-testid="progress-table-row-item-description"
       >
-        {{ description }}
+        <slot name="description">
+          {{ description }}
+        </slot>
       </td>
     </tr>
 
@@ -157,16 +165,9 @@ const handleExpand = () => {
 
 <style scoped lang="scss">
 .progress-table-row-item {
-  display: table-row;
-
   &:not(:last-of-type) {
-    &::after {
-      content: '';
-      display: block;
-      width: 100%;
-      margin: $unnnic-space-1 0;
-      height: 1px;
-      background-color: $unnnic-color-gray-2;
+    .progress-table-row-item__main-row {
+      border-bottom: 1px solid $unnnic-color-gray-2;
     }
   }
 
@@ -177,13 +178,12 @@ const handleExpand = () => {
   &__main-row {
     & > * {
       padding: $unnnic-space-4 0;
+      vertical-align: middle;
     }
   }
 
   &__label {
-    display: flex;
-    align-items: center;
-    gap: $unnnic-space-2;
+    vertical-align: middle;
 
     &--component {
       width: 48px;
@@ -192,6 +192,9 @@ const handleExpand = () => {
     }
 
     .label__icon {
+      display: inline-flex;
+      margin-right: $unnnic-space-2;
+      vertical-align: middle;
       transform: rotate(-90deg);
       transition: transform 0.2s ease-in-out;
 
@@ -201,7 +204,8 @@ const handleExpand = () => {
     }
 
     :deep(.unnnic-tooltip) {
-      display: flex;
+      display: inline-flex;
+      vertical-align: middle;
     }
 
     .label__infos {
@@ -258,7 +262,15 @@ const handleExpand = () => {
 
   &__progress {
     width: 100%;
-    padding: 0 $unnnic-space-4;
+    padding-left: $unnnic-space-4;
+    padding-right: $unnnic-space-4;
+    vertical-align: middle;
+
+    :deep(.unnnic-tooltip),
+    :deep(.native-progress) {
+      display: block;
+      width: 100%;
+    }
   }
 
   &__description {
@@ -267,9 +279,18 @@ const handleExpand = () => {
     text-overflow: ellipsis;
 
     text-align: end;
+    vertical-align: middle;
     color: $unnnic-color-gray-10;
     font: $unnnic-font-display-3;
     min-width: 55px;
+
+    &--slotted {
+      width: 1%;
+      overflow: visible;
+      text-overflow: unset;
+      white-space: nowrap;
+      text-align: end;
+    }
   }
 
   &__sub-items-row {

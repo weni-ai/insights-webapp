@@ -209,6 +209,15 @@ export const useHumanSupport = defineStore('humanSupport', () => {
 
   watch(activeTab, () => {
     clearAppliedDetailFilters();
+
+    if (activeTab.value === 'sales') {
+      tags.value = [];
+      appliedFilters.value.tags = [];
+    }
+    if (['monitoring', 'analysis'].includes(activeTab.value)) {
+      agents.value = [];
+      appliedFilters.value.agents = [];
+    }
   });
 
   const widgetSetupProps = computed(() => ({

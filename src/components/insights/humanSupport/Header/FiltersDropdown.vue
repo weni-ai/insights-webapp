@@ -47,7 +47,10 @@
           />
         </section>
 
-        <section class="filters-dropdown__container">
+        <section
+          v-if="activeTab !== 'sales'"
+          class="filters-dropdown__container"
+        >
           <UnnnicLabel :label="$t('export_data.filters.tag')" />
           <FilterMultiSelect
             v-model="tags"
@@ -71,7 +74,10 @@
           />
         </section>
 
-        <section class="filters-dropdown__container">
+        <section
+          v-if="activeTab === 'sales'"
+          class="filters-dropdown__container"
+        >
           <UnnnicLabel :label="$t('export_data.filters.representative')" />
           <FilterMultiSelect
             v-model="agents"
@@ -120,7 +126,9 @@ const { hasSectorsConfigured } = storeToRefs(projectStore);
 
 const humanSupport = useHumanSupport();
 const { clearFilters, saveAppliedFilters } = humanSupport;
+
 const {
+  activeTab,
   appliedFiltersLength,
   sectors,
   queues,

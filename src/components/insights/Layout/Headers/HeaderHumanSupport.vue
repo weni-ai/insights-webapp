@@ -12,7 +12,7 @@
     data-testid="insights-layout-header-filters"
   />
 
-  <HumanSupportExport />
+  <HumanSupportExport v-if="!isSales" />
 
   <OperationalAlertsButton v-if="showOperationalAlerts" />
 </template>
@@ -48,6 +48,8 @@ const { currentDashboardFilters } = storeToRefs(dashboardsStore);
 const { isFeatureFlagEnabled } = useFeatureFlag();
 
 const isMonitoring = computed(() => activeTab.value === 'monitoring');
+
+const isSales = computed(() => activeTab.value === 'sales');
 
 const hasFilters = computed(() => !!currentDashboardFilters.value.length);
 

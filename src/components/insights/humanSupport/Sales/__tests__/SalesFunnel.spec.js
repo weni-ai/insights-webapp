@@ -124,9 +124,9 @@ describe('SalesFunnel.vue', () => {
       '[data-testid="sales-funnel-no-data-disclaimer"]',
     );
     expect(disclaimer.exists()).toBe(true);
-    expect(disclaimer.props('type')).toBe('neutral');
+    expect(disclaimer.props('type')).toBe('informational');
     expect(disclaimer.props('description')).toBe(
-      'No data available for the filtered period',
+      'human_support_dashboard.sales.sales_funnel.no_data',
     );
   });
 

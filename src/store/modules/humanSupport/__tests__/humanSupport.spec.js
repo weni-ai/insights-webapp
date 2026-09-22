@@ -83,6 +83,7 @@ describe('useHumanSupport store', () => {
 
     it('should initialize applied filters with empty arrays', () => {
       expect(store.appliedFilters).toEqual({
+        agents: [],
         sectors: [],
         queues: [],
         tags: [],
@@ -168,6 +169,7 @@ describe('useHumanSupport store', () => {
         store.clearFilters();
 
         expect(store.appliedFilters).toEqual({
+          agents: [],
           sectors: [],
           queues: [],
           tags: [],

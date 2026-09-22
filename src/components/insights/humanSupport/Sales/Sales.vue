@@ -11,6 +11,9 @@
         <SalesPerChannel data-testid="sales-per-channel" />
       </LazyWidget>
     </section>
+    <LazyWidget>
+      <PerformanceTable data-testid="performance-table" />
+    </LazyWidget>
   </section>
 </template>
 
@@ -19,6 +22,7 @@ import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 import OrderDataCards from './OrderDataCards.vue';
 import SalesFunnel from './SalesFunnel.vue';
 import SalesPerChannel from './SalesPerChannel.vue';
+import PerformanceTable from './PerformanceTable.vue';
 
 defineOptions({
   name: 'SalesView',

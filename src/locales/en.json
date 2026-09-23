@@ -641,7 +641,7 @@
   "clear_fields": "Clear fields",
   "today": "Today",
   "now": "Now",
-  "date_format": "MM/DD/YYYY",
+  "date_format": "MM/dd/yyyy",
   "search": "Search",
   "category": "Category",
   "language": "Language",

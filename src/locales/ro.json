@@ -641,7 +641,7 @@
   "clear_fields": "Golește câmpurile",
   "today": "Astăzi",
   "now": "Acum",
-  "date_format": "LL/ZZ/AAAA",
+  "date_format": "dd/MM/yyyy",
   "search": "Căutare",
   "category": "Categorie",
   "language": "Limbă",

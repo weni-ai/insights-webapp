@@ -139,7 +139,7 @@ import MetaTemplateMessageService from '@/services/api/resources/template/metaTe
 
 import weniLoading from '@/assets/images/weni-loading.svg';
 
-import moment from 'moment';
+import { formatWithI18nPattern } from '@/utils/time';
 
 import Unnnic from '@weni/unnnic-system';
 
@@ -454,7 +454,10 @@ const formattedMessagesAnalyticsData = computed(() => {
   return Object.keys(keyMapper).map((key) => {
     const data =
       messagesAnalyticsData.value.data_points?.map((dataPoint) => ({
-        label: moment(dataPoint.date).format(i18n.global.t('date_format')),
+        label: formatWithI18nPattern(
+          dataPoint.date,
+          i18n.global.t('date_format'),
+        ),
         value: dataPoint[key],
       })) || [];
 

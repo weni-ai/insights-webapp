@@ -62,7 +62,15 @@ import McpNewsModal from './components/McpNewsModal.vue';
 
 import initHotjar from '@/utils/plugins/Hotjar';
 import { parseJwt } from '@/utils/jwt';
-import moment from 'moment';
+
+import { setDefaultOptions } from 'date-fns';
+import {
+  ptBR as dateFnsPtBR,
+  enUS as dateFnsEnUS,
+  es as dateFnsEs,
+  ro as dateFnsRo,
+} from 'date-fns/locale';
+
 import { moduleStorage } from '@/utils/storage';
 
 defineOptions({ name: 'App' });
@@ -101,8 +109,18 @@ const handleCurrentDashboardUuidChange = async (
 };
 
 const handlerSetLanguage = (language: string) => {
+  const dateFnsLocale = {
+    'pt-br': dateFnsPtBR,
+    'pt-BR': dateFnsPtBR,
+    en: dateFnsEnUS,
+    'en-US': dateFnsEnUS,
+    es: dateFnsEs,
+    ro: dateFnsRo,
+  };
+
   locale.value = language;
-  moment.locale(language);
+
+  setDefaultOptions({ locale: dateFnsLocale[language] || dateFnsEnUS });
 };
 
 const handlerSetProject = (projectUuid: string) => {

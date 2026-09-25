@@ -16,10 +16,6 @@ export default defineWeniConfig({
     prefix: '.insights-webapp',
   },
   aliases: {
-    '@weni/unnnic-system/theme.css': resolve(
-      import.meta.dirname,
-      'node_modules/@weni/unnnic-system/dist/assets/scss/tailwind.css',
-    ),
     ...(connectUrl
       ? {}
       : {

@@ -20,10 +20,6 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
       '@tests': fileURLToPath(new URL('./tests', import.meta.url)),
-      '@weni/unnnic-system/theme.css': path.resolve(
-        __dirname,
-        'node_modules/@weni/unnnic-system/dist/assets/scss/tailwind.css',
-      ),
       'connect/sharedStore':
         process.env.NODE_ENV === 'test'
           ? path.resolve(__dirname, 'tests/__mocks__/connect/sharedStore.js')

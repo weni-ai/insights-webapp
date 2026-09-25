@@ -1295,7 +1295,7 @@
         "pauses": "Pauze personalizate"
       },
       "in_progress": {
-        "handle_time": "Timp de conversație",
+        "handle_time": "Durată asistență",
         "awaiting_time": "Timp de așteptare",
         "first_response_time": "TPR",
         "first_response_time_title_tooltip": "Timp Prim Răspuns",
@@ -1330,8 +1330,8 @@
         "average_response_time_title_tooltip": "Timp Mediu de Răspuns",
         "average_duration": "TMC",
         "average_duration_title_tooltip": "Timp Mediu de Conversație",
-        "time_in_service": "În serviciu",
-        "time_in_service_tooltip": "Timp online cu asistență în curs",
+        "time_in_service": "Chat de asistență în curs",
+        "time_in_service_tooltip": "Timp online într-un chat de asistență în curs",
         "action": "Acțiune"
       },
       "agents_count": {
@@ -1360,7 +1360,7 @@
     },
     "columns": {
       "common": {
-        "handle_time": "Timp de conversație",
+        "handle_time": "Durată asistență",
         "awaiting_time": "Timp de așteptare",
         "first_response_time": "TPR",
         "first_response_time_title_tooltip": "Timp de Prim Răspuns",
@@ -1378,8 +1378,8 @@
         "average_response_time_title_tooltip": "Timp Mediu de Răspuns",
         "average_duration": "TMC",
         "average_duration_title_tooltip": "Timp Mediu de Conversație",
-        "time_in_service": "În serviciu",
-        "time_in_service_tooltip": "Timp online cu asistență în curs",
+        "time_in_service": "Chat de asistență în curs",
+        "time_in_service_tooltip": "Timp online într-un chat de asistență în curs",
         "csat_rating": "CSAT"
       }
     },

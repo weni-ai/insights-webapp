@@ -7,9 +7,7 @@
   </section>
 </template>
 
-import { UnnnicIcon } from '@weni/unnnic-system'; import { UnnnicIcon } from
-'@weni/unnnic-system';
-
+import { UnnnicIcon } from '@weni/unnnic-system';
 <script setup lang="ts"></script>
 
 <style lang="scss" scoped>

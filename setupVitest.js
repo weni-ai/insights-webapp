@@ -53,6 +53,50 @@ const unnnicDialogStubs = {
   },
 };
 
+const unnnicPopoverSlotStub = (name) => ({
+  name,
+  props: ['asChild', 'as', 'open', 'side', 'align', 'size'],
+  template: '<div><slot /></div>',
+});
+
+/**
+ * PopoverTrigger's Unnnic export has `__name: 'PopoverTrigger'` (no Unnnic* name),
+ * so `stubs: { UnnnicPopoverTrigger }` does not match. Stub both names so tests
+ * that wrap UnnnicPopover do not hit reka-ui's PopoverRootContext error.
+ */
+const unnnicPopoverStubs = {
+  UnnnicPopoverTrigger: unnnicPopoverSlotStub('UnnnicPopoverTrigger'),
+  PopoverTrigger: unnnicPopoverSlotStub('UnnnicPopoverTrigger'),
+  UnnnicPopoverContent: unnnicPopoverSlotStub('UnnnicPopoverContent'),
+  PopoverContent: unnnicPopoverSlotStub('UnnnicPopoverContent'),
+};
+
+const unnnicTooltipStub = {
+  name: 'UnnnicToolTip',
+  inheritAttrs: true,
+  props: {
+    text: { type: String, default: '' },
+    enabled: { type: Boolean, default: false },
+    side: { type: String, default: 'right' },
+    maxWidth: { type: String, default: '' },
+    enableHtml: { type: Boolean, default: false },
+    forceOpen: { type: Boolean, default: false },
+    showClose: { type: Boolean, default: false },
+    contentProps: { type: Object, default: undefined },
+  },
+  template:
+    '<div class="unnnic-tooltip-stub" :enabled="String(!!enabled)" :text="text" :side="side"><slot /></div>',
+};
+
+/**
+ * Unnnic 3.35.4 tooltip is named `UnnnicTooltip` and no longer falls props/attrs
+ * through to the DOM. Stub both names so `data-testid` and `props()` keep working.
+ */
+const unnnicTooltipStubs = {
+  UnnnicTooltip: unnnicTooltipStub,
+  UnnnicToolTip: unnnicTooltipStub,
+};
+
 // Import all locale messages
 import pt_br from '@/locales/pt_br.json';
 import en from '@/locales/en.json';
@@ -157,5 +201,7 @@ const lazyWidgetStub = {
 config.global.stubs = {
   ...(config.global.stubs || {}),
   ...unnnicDialogStubs,
+  ...unnnicPopoverStubs,
+  ...unnnicTooltipStubs,
   ...lazyWidgetStub,
 };

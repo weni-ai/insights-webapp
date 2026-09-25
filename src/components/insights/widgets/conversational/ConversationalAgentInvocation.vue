@@ -76,7 +76,11 @@
 import { computed, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicDisclaimer,
+  UnnnicSkeletonLoading,
+} from '@weni/unnnic-system';
 
 import { useLazyData } from '@/composables/useLazyData';
 

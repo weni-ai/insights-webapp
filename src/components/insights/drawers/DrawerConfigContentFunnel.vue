@@ -57,6 +57,7 @@ import { useI18n } from 'vue-i18n';
 import { useProject } from '@/store/modules/project';
 import FormAccordion from '@/components/FormAccordion.vue';
 import SelectFlow from '@/components/SelectFlow.vue';
+import { UnnnicButton, UnnnicInput, UnnnicLabel } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DrawerConfigContentFunnel' });
 

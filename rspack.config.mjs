@@ -15,14 +15,16 @@ export default defineWeniConfig({
   postcss: {
     prefix: '.insights-webapp',
   },
-  aliases: connectUrl
-    ? {}
-    : {
-        'connect/sharedStore': resolve(
-          import.meta.dirname,
-          'src/utils/hostSharedStore.js',
-        ),
-      },
+  aliases: {
+    ...(connectUrl
+      ? {}
+      : {
+          'connect/sharedStore': resolve(
+            import.meta.dirname,
+            'src/utils/hostSharedStore.js',
+          ),
+        }),
+  },
   federation: {
     name: 'insights',
     exposes: connectUrl

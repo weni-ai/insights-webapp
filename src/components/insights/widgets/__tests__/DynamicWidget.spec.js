@@ -23,11 +23,13 @@ import {
 // Empty catalog so assertions that expect raw i18n keys keep working
 config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
-vi.mock('@weni/unnnic-system', () => ({
-  default: {
-    unnnicCallAlert: vi.fn(),
-  },
-}));
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
 
 beforeAll(() => {
   vi.stubGlobal('setInterval', vi.fn());
@@ -455,7 +457,7 @@ describe('DynamicWidget', () => {
       );
 
       const Unnnic = await import('@weni/unnnic-system');
-      const alertSpy = vi.spyOn(Unnnic.default, 'unnnicCallAlert');
+      const alertSpy = vi.spyOn(Unnnic, 'UnnnicCallAlert');
 
       await wrapper.vm.requestWidgetData({ offset: 0, limit: 10 });
 

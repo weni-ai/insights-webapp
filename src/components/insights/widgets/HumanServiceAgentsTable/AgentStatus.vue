@@ -28,6 +28,7 @@
 import { computed } from 'vue';
 
 import DisconnectAgent from '@/components/DisconnectAgent.vue';
+import { UnnnicIcon } from '@weni/unnnic-system';
 
 const props = defineProps({
   status: {

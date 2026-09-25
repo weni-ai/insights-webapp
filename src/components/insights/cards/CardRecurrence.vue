@@ -88,6 +88,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
+import { UnnnicButton, UnnnicProgressBar } from '@weni/unnnic-system';
 
 defineOptions({ name: 'CardRecurrence' });
 

@@ -66,7 +66,15 @@
 import { computed, ref } from 'vue';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicCallAlert,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+} from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import DashboardsService from '@/services/api/resources/dashboards';
 import { useDashboards } from '@/store/modules/dashboards';

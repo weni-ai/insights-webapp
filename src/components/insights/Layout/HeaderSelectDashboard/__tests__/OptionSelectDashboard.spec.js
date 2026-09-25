@@ -5,10 +5,18 @@ import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createMemoryHistory } from 'vue-router';
 
 import OptionSelectDashboard from '@/components/insights/Layout/HeaderSelectDashboard/OptionSelectDashboard.vue';
-import Unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert, UnnnicDropdownItem } from '@weni/unnnic-system';
 import { useDashboards } from '@/store/modules/dashboards';
 import { i18n } from '../../../../../../setupVitest.js';
 import { UnnnicSystemPlugin } from '@tests/utils/testHelpers.js';
+
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
 
 // Full locales; omit mockRouter — this spec mounts its own router
 config.global.plugins = [i18n, UnnnicSystemPlugin];
@@ -58,7 +66,7 @@ describe('OptionSelectDashboard', () => {
       global: {
         plugins: [store, testRouter],
         stubs: {
-          UnnnicDropdownItem: Unnnic.unnnicDropdownItem,
+          UnnnicDropdownItem,
           UnnnicIcon: true,
         },
       },
@@ -161,9 +169,7 @@ describe('OptionSelectDashboard', () => {
 
     it('Should show a success alert if the default dashboard is set', async () => {
       await wrapper.setProps({ dashboard: dashboard2 });
-      const spyUnnnicAlert = vi
-        .spyOn(Unnnic, 'unnnicCallAlert')
-        .mockImplementation(() => {});
+      UnnnicCallAlert.mockClear();
       const createAlertMsg = (type) =>
         type === 'error'
           ? 'Error setting the Dashboard 2 dashboard as your homepage'
@@ -174,7 +180,7 @@ describe('OptionSelectDashboard', () => {
       );
       await starIcon.trigger('click');
       await wrapper.vm.$nextTick();
-      expect(spyUnnnicAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: createAlertMsg('error'),
           type: 'error',
@@ -187,7 +193,7 @@ describe('OptionSelectDashboard', () => {
       );
       await starIcon.trigger('click');
       await wrapper.vm.$nextTick();
-      expect(spyUnnnicAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: createAlertMsg('success'),
           type: 'success',

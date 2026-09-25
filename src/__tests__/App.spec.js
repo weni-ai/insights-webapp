@@ -3,6 +3,8 @@ import { flushPromises, mount, config } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { createRouter, createMemoryHistory } from 'vue-router';
 
+import { ptBR } from 'date-fns/locale';
+
 import App from '@/App.vue';
 
 import { useDashboards } from '@/store/modules/dashboards';
@@ -20,7 +22,9 @@ import {
 // Empty catalog so assertions that expect raw i18n keys keep working
 config.global.plugins = [createTestI18n({}), UnnnicSystemPlugin];
 
-const { sharedStoreState } = vi.hoisted(() => {
+const { sharedStoreState, setDefaultOptions } = vi.hoisted(() => {
+  const setDefaultOptions = vi.fn();
+
   const sharedStoreState = {
     auth: {
       token: 'mock-token',
@@ -36,7 +40,16 @@ const { sharedStoreState } = vi.hoisted(() => {
     },
   };
 
-  return { sharedStoreState };
+  return { sharedStoreState, setDefaultOptions };
+});
+
+vi.mock('date-fns', async (importOriginal) => {
+  const actual = await importOriginal();
+
+  return {
+    ...actual,
+    setDefaultOptions,
+  };
 });
 
 vi.mock('@/utils/hostSharedStore', () => ({
@@ -266,15 +279,14 @@ describe('App', () => {
       expect(getFeatureFlagsSpy).not.toHaveBeenCalled();
     });
 
-    // TODO: fix this test
-    // it('should set language when sharedStore user language changes', async () => {
-    //   wrapper.unmount();
-    //   sharedStoreState.user = { language: 'pt-br' };
-    //   wrapper = createWrapper();
-    //   await flushPromises();
+    it('should set language when sharedStore user language changes', async () => {
+      wrapper.unmount();
+      sharedStoreState.user = { language: 'pt-br' };
+      wrapper = createWrapper();
+      await flushPromises();
 
-    //   expect(moment.locale).toHaveBeenCalledWith('pt-br');
-    // });
+      expect(setDefaultOptions).toHaveBeenCalledWith({ locale: ptBR });
+    });
 
     it('should set project and commerce when sharedStore project changes', async () => {
       wrapper.unmount();

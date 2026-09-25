@@ -25,6 +25,12 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import {
+  UnnnicSegmentedControl,
+  UnnnicSegmentedControlList,
+  UnnnicSegmentedControlTrigger,
+} from '@weni/unnnic-system';
+
 interface Tab {
   name: string;
   key: string;

@@ -35,6 +35,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { emojis } from '@emoji-mart/data';
+import { UnnnicEmojiPicker, UnnnicIcon } from '@weni/unnnic-system';
 
 defineOptions({ name: 'SelectEmojiButton' });
 

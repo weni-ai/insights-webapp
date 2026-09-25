@@ -122,6 +122,11 @@ import TableRowAlert from '../OperationalAlerts/TableRowAlert.vue';
 import { monitoringDetailedMonitoringInProgressMock } from '../mocks';
 import { openNewTabLink } from '@/utils/redirect';
 import { formatSecondsToTime } from '@/utils/time';
+import {
+  UnnnicDataTable,
+  UnnnicIcon,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 
 type TableInProgressItem = InProgressDataResult & {
   rowAlerts: RowAlert[];

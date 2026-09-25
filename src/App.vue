@@ -72,6 +72,7 @@ import {
 } from 'date-fns/locale';
 
 import { moduleStorage } from '@/utils/storage';
+import { UnnnicIconLoading } from '@weni/unnnic-system';
 
 defineOptions({ name: 'App' });
 
@@ -110,6 +111,7 @@ const handleCurrentDashboardUuidChange = async (
 
 const handlerSetLanguage = (language: string) => {
   const dateFnsLocale = {
+    'pt-br': dateFnsPtBR,
     'pt-BR': dateFnsPtBR,
     en: dateFnsEnUS,
     'en-US': dateFnsEnUS,

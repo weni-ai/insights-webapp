@@ -52,6 +52,7 @@ import GalleryOption from './GalleryOption.vue';
 import DrawerConfigWidgetDynamic from '../DrawerConfigWidgetDynamic.vue';
 
 import { clearDeepValues } from '@/utils/object.js';
+import { UnnnicDrawer } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DrawerConfigGallery' });
 

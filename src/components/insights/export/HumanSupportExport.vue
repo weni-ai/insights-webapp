@@ -95,6 +95,17 @@ import { useElementVisibility } from '@vueuse/core';
 import { useHumanSupportExport } from '@/store/modules/export/humanSupport/export';
 import { useProject } from '@/store/modules/project';
 import FormExport from './HumanSupport/FormExport.vue';
+import {
+  UnnnicButton,
+  UnnnicDialog,
+  UnnnicDialogClose,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+  UnnnicDialogTrigger,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 
 const { t } = useI18n();
 const projectStore = useProject();

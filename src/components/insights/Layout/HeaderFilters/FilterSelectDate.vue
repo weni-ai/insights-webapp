@@ -19,6 +19,7 @@ import {
 } from '@/utils/time';
 
 import i18n from '@/utils/plugins/i18n';
+import { UnnnicSelect } from '@weni/unnnic-system';
 
 const props = defineProps({
   modelValue: {

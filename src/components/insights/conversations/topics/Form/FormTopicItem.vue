@@ -126,6 +126,7 @@ import AddTopicButton from '../AddTopicButton.vue';
 import ModalTopic from '../ModalTopic.vue';
 import FormTopicCard from './FormTopicCard.vue';
 import { useDateTime } from '@/composables/useDateTime';
+import { UnnnicIcon } from '@weni/unnnic-system';
 
 interface Props {
   topic: Topic;

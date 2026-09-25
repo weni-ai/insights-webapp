@@ -64,6 +64,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 
 import AgentStatus from './AgentStatus.vue';
 import AgentsTableHeader from './AgentsTableHeader.vue';
+import { UnnnicButton, UnnnicDataTable } from '@weni/unnnic-system';
 
 defineOptions({ name: 'HumanServiceAgentsTable' });
 

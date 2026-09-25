@@ -77,6 +77,7 @@ import { useCustomizedWidgetForm } from '@/store/modules/conversational/customiz
 import { useProject } from '@/store/modules/project';
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { UnnnicInput, UnnnicLabel, UnnnicSelect } from '@weni/unnnic-system';
 
 const customWidgets = useCustomWidgets();
 const { setCustomFormKey, setCustomFormWidgetName } = customWidgets;

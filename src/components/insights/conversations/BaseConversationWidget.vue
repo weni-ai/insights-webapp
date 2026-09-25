@@ -84,6 +84,12 @@
 import { computed } from 'vue';
 import ShortTab from '@/components/ShortTab.vue';
 import i18n from '@/utils/plugins/i18n';
+import {
+  UnnnicDropdown,
+  UnnnicDropdownItem,
+  UnnnicIcon,
+  UnnnicSkeletonLoading,
+} from '@weni/unnnic-system';
 
 export type Tab = 'artificial-intelligence' | 'human-support';
 

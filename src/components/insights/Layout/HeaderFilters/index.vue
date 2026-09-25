@@ -71,6 +71,7 @@ import FilterFavoriteTemplateMessage from './FilterFavoriteTemplateMessage.vue';
 import SearchTemplateMessagesModal from '../../templateMessages/SearchTemplateMessagesModal.vue';
 
 import { getLastNDays, getYesterdayDate } from '@/utils/time';
+import { UnnnicButton } from '@weni/unnnic-system';
 
 defineOptions({ name: 'InsightsLayoutHeaderFilters' });
 

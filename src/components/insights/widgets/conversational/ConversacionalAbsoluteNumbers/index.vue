@@ -96,6 +96,7 @@ import i18n from '@/utils/plugins/i18n';
 import WidgetService, {
   AbsoluteNumbersChildrenItem,
 } from '@/services/api/resources/conversational/widgets';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'ConversationalAbsoluteNumbers',

@@ -2,10 +2,12 @@ import { setActivePinia, createPinia } from 'pinia';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useConversationalTopics } from '../topics';
 import topicsService from '@/services/api/resources/conversational/topics';
-import unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
 vi.mock('@/services/api/resources/conversational/topics');
-vi.mock('@weni/unnnic-system');
+vi.mock('@weni/unnnic-system', () => ({
+  UnnnicCallAlert: vi.fn(),
+}));
 vi.mock('@/utils/plugins/i18n', () => ({
   default: {
     global: {
@@ -646,8 +648,7 @@ describe('useConversationalTopics store', () => {
 
     describe('saveAllNewTopics', () => {
       beforeEach(() => {
-        const mockAlert = vi.fn();
-        unnnic.unnnicCallAlert = mockAlert;
+        UnnnicCallAlert.mockClear();
       });
 
       it('should save all new topics successfully', async () => {
@@ -860,8 +861,7 @@ describe('useConversationalTopics store', () => {
 
     describe('removeTopicOrSubtopic', () => {
       beforeEach(() => {
-        const mockAlert = vi.fn();
-        unnnic.unnnicCallAlert = mockAlert;
+        UnnnicCallAlert.mockClear();
       });
 
       it('should remove new main topic without API call', async () => {

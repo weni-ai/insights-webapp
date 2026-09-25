@@ -1,8 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { checkIsEmptyValuesAndNewTopics, defaultAlert } from '../topics';
-import unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 
-vi.mock('@weni/unnnic-system');
+vi.mock('@weni/unnnic-system', () => ({
+  UnnnicCallAlert: vi.fn(),
+}));
 
 describe('topics utils', () => {
   describe('checkIsEmptyValuesAndNewTopics', () => {
@@ -92,12 +94,9 @@ describe('topics utils', () => {
     });
 
     it('should call unnnic alert with correct parameters', () => {
-      const mockAlert = vi.fn();
-      unnnic.unnnicCallAlert = mockAlert;
-
       defaultAlert('success', 'Test message', 10);
 
-      expect(mockAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: 'Test message',
           type: 'success',
@@ -107,12 +106,9 @@ describe('topics utils', () => {
     });
 
     it('should use default seconds when not provided', () => {
-      const mockAlert = vi.fn();
-      unnnic.unnnicCallAlert = mockAlert;
-
       defaultAlert('error', 'Error message');
 
-      expect(mockAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: 'Error message',
           type: 'error',
@@ -122,12 +118,9 @@ describe('topics utils', () => {
     });
 
     it('should handle different alert types', () => {
-      const mockAlert = vi.fn();
-      unnnic.unnnicCallAlert = mockAlert;
-
       defaultAlert('error', 'Error message', 3);
 
-      expect(mockAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: 'Error message',
           type: 'error',
@@ -137,12 +130,9 @@ describe('topics utils', () => {
     });
 
     it('should handle empty text', () => {
-      const mockAlert = vi.fn();
-      unnnic.unnnicCallAlert = mockAlert;
-
       defaultAlert('success', '', 2);
 
-      expect(mockAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: '',
           type: 'success',

@@ -60,6 +60,7 @@
 import { computed, ref } from 'vue';
 import type { ProgressTableRowItem } from './ProgressTableRowItem.vue';
 import ProgressItem from './ProgressTableRow.vue';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 const props = defineProps<{
   isLoading?: boolean;

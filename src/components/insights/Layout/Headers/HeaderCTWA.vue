@@ -32,6 +32,7 @@ import { useRouter } from 'vue-router';
 import CampaignFilter from '@/components/insights/ctwa/CampaignFilter.vue';
 import { useCTWA } from '@/store/modules/ctwa';
 import { useDashboards } from '@/store/modules/dashboards';
+import { UnnnicButton, UnnnicInputDatePicker } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'HeaderCTWA',

@@ -22,7 +22,7 @@ import DynamicCard from './DynamicCard.vue';
 import DynamicGraph from './DynamicGraph.vue';
 import DynamicTable from './DynamicTable.vue';
 
-import Unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 import i18n from '@/utils/plugins/i18n';
 
 const props = defineProps({
@@ -100,7 +100,7 @@ const requestWidgetData = async ({ offset, limit, next, silence } = {}) => {
       try {
         await reportsStore.getWidgetReportData({ offset, limit, next });
       } catch (error) {
-        Unnnic.unnnicCallAlert({
+        UnnnicCallAlert({
           props: {
             text: i18n.global.t('get_data_error'),
             type: 'error',

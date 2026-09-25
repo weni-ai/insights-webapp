@@ -64,6 +64,7 @@
 
 <script setup lang="ts">
 import { formatNumber } from '@/utils/numbers';
+import { UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'SteppedBarChart',

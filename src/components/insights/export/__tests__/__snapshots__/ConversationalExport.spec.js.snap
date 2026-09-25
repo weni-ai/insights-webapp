@@ -11,20 +11,14 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
     data-v-b7434839=""
   >
     
-    
-    
-    
-    
     <div
-      class="unnnic-tooltip-trigger unnnic-tooltip export-data-tooltip"
-      data-grace-area-trigger=""
-      data-state="closed"
-      data-testid="tooltip-trigger"
-      data-v-03fa3548=""
-      data-v-61269528=""
+      class="unnnic-tooltip-stub export-data-tooltip"
+      data-testid="export-data-tooltip"
+      data-v-b7434839=""
+      enabled="false"
+      side="left"
+      text="An export is in progress. You'll be able to create a new report for this project when this export is complete."
     >
-      
-      
       
       <div
         class="unnnic-dialog-trigger-stub"
@@ -46,15 +40,7 @@ exports[`ConversationalExport > Component structure > should match snapshot 1`] 
         
       </div>
       
-      
-      
     </div>
-    <!--teleport start-->
-    <!--teleport end-->
-    
-    
-    
-    
     <div
       class="unnnic-dialog-content-stub finish-onboarding-modal conversational-export-dialog finish-onboarding-modal conversational-export-dialog"
       data-testid="modal-dialog"

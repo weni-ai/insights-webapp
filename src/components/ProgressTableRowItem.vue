@@ -91,10 +91,18 @@
         />
       </td>
       <td
-        class="progress-table-row-item__description"
+        :class="[
+          'progress-table-row-item__description',
+          {
+            'progress-table-row-item__description--slotted':
+              !!$slots.description,
+          },
+        ]"
         data-testid="progress-table-row-item-description"
       >
-        {{ description }}
+        <slot name="description">
+          {{ description }}
+        </slot>
       </td>
     </tr>
 
@@ -271,6 +279,14 @@ const handleExpand = () => {
     color: $unnnic-color-gray-10;
     font: $unnnic-font-display-3;
     min-width: 55px;
+
+    &--slotted {
+      width: 1%;
+      overflow: visible;
+      text-overflow: unset;
+      white-space: nowrap;
+      text-align: end;
+    }
   }
 
   &__sub-items-row {

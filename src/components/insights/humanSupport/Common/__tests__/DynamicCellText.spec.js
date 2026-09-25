@@ -55,8 +55,10 @@ describe('DynamicCellText.vue', () => {
   });
 
   describe('Tooltip', () => {
+    const tooltip = () => wrapper.findComponent({ name: 'UnnnicToolTip' });
+
     it('should have tooltip disabled by default', () => {
-      expect(wrapper.attributes('enabled')).toBe('false');
+      expect(tooltip().props('enabled')).toBe(false);
     });
 
     it('should enable tooltip when isDeleted is true', () => {
@@ -64,7 +66,7 @@ describe('DynamicCellText.vue', () => {
         isDeleted: true,
         tooltipText: 'Representative removed from project',
       });
-      expect(wrapper.attributes('enabled')).toBe('true');
+      expect(tooltip().props('enabled')).toBe(true);
     });
 
     it('should pass correct tooltip text', () => {
@@ -73,7 +75,7 @@ describe('DynamicCellText.vue', () => {
         isDeleted: true,
         tooltipText,
       });
-      expect(wrapper.attributes('text')).toBe(tooltipText);
+      expect(tooltip().props('text')).toBe(tooltipText);
     });
   });
 });

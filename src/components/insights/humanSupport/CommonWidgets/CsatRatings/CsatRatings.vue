@@ -146,6 +146,7 @@ import {
   colorBgPurplePlain,
   colorBgPurpleStrong,
 } from '@weni/unnnic-system/tokens/colors';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'CsatRatings',

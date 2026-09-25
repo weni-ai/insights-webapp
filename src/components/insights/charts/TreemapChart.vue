@@ -56,6 +56,7 @@ import { formatPercentage } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
 import { useI18n } from 'vue-i18n';
 import { colorFgBase } from '@weni/unnnic-system/tokens/colors';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 ChartJS.defaults.font.family = 'Inter, sans-serif';
 ChartJS.register(TreemapController, TreemapElement, LinearScale, Tooltip);

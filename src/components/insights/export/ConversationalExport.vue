@@ -95,6 +95,17 @@ import { useElementVisibility } from '@vueuse/core';
 import { useConversationalExport } from '@/store/modules/export/conversational/export';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import FormExport from './Conversational/FormExport.vue';
+import {
+  UnnnicButton,
+  UnnnicDialog,
+  UnnnicDialogClose,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+  UnnnicDialogTrigger,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 
 const { t } = useI18n();
 const conversationalStore = useConversational();

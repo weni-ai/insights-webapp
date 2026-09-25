@@ -32,6 +32,7 @@ import {
 import { useI18n } from 'vue-i18n';
 
 import Projects from '@/services/api/resources/projects';
+import { UnnnicSelect } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'CampaignFilter',

@@ -25,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicCheckbox, UnnnicLabel } from '@weni/unnnic-system';
+
 defineOptions({ name: 'CheckboxList' });
 
 interface Checkbox {

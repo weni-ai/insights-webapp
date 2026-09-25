@@ -30,6 +30,7 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
+import { UnnnicButton, UnnnicInput } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DrawerConfigContentVtex' });
 

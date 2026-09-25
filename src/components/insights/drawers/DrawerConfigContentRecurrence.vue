@@ -36,6 +36,7 @@ import { storeToRefs } from 'pinia';
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import { useWidgets } from '@/store/modules/widgets';
+import { UnnnicButton, UnnnicInput, UnnnicLabel } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DrawerConfigContentRecurrence' });
 

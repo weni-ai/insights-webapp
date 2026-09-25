@@ -10,6 +10,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicInput } from '@weni/unnnic-system';
+
 defineOptions({ name: 'FilterInputText' });
 
 interface FilterInputTextProps {

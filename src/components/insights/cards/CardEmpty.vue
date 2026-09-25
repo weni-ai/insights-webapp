@@ -20,6 +20,7 @@
 
 <script setup lang="ts">
 import CardBase from './CardBase.vue';
+import { UnnnicButton } from '@weni/unnnic-system';
 
 defineOptions({ name: 'CardEmpty' });
 

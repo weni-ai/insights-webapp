@@ -50,6 +50,7 @@
 <script setup lang="ts">
 import { formatValue } from '@/utils/numbers';
 import i18n from '@/utils/plugins/i18n';
+import { UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 
 defineProps({
   leftColumn: {

@@ -117,6 +117,12 @@
 </template>
 
 <script setup lang="ts">
+import {
+  UnnnicIcon,
+  UnnnicSkeletonLoading,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
+
 interface Props {
   class?: string;
   title: string;

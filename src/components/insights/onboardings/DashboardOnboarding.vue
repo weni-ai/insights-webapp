@@ -14,6 +14,7 @@ import { useI18n } from 'vue-i18n';
 
 import { useOnboarding } from '@/store/modules/onboarding';
 import { useDashboards } from '@/store/modules/dashboards';
+import { UnnnicTour } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DashboardOnboarding' });
 

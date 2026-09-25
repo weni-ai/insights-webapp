@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
-import Unnnic from '@weni/unnnic-system';
 import { nextTick } from 'vue';
 
 import SentimentAnalysisForm from '../SentimentAnalysisForm.vue';
@@ -78,7 +77,7 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
     global: {
       plugins: [store],
       stubs: {
-        UnnnicCheckbox: Unnnic.unnnicCheckbox,
+        UnnnicCheckbox: true,
         UnnnicSelect: {
           template: '<div></div>',
           props: [
@@ -89,8 +88,8 @@ const createWrapper = (props = {}, storeOverrides = {}) => {
             'itemValue',
           ],
         },
-        UnnnicButton: Unnnic.unnnicButton,
-        UnnnicLabel: Unnnic.unnnicLabel,
+        UnnnicButton: true,
+        UnnnicLabel: true,
         SelectFlow: true,
         SelectFlowResult: true,
       },

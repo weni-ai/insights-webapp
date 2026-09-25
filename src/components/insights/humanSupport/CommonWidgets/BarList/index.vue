@@ -65,6 +65,11 @@ import type { CardWidgetContainerProps } from '../../../widgets/layout/CardWidge
 import ProgressTable from '@/components/ProgressTable.vue';
 import type { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue';
 import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
+import {
+  UnnnicButton,
+  UnnnicDisclaimer,
+  UnnnicSkeletonLoading,
+} from '@weni/unnnic-system';
 
 defineOptions({
   name: 'BarList',

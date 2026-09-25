@@ -119,6 +119,7 @@
 import type { Component } from 'vue';
 
 import NativeProgress from './insights/charts/NativeProgress.vue';
+import { UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 
 export interface BaseProgressTableRowItem {
   label: string;

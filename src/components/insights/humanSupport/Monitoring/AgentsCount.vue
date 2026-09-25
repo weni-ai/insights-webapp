@@ -32,6 +32,7 @@ import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitori
 import attendantService from '@/services/api/resources/humanSupport/monitoring/detailedMonitoring/attendant';
 
 import { storeToRefs } from 'pinia';
+import { UnnnicSkeletonLoading, UnnnicTag } from '@weni/unnnic-system';
 
 const humanSupportStore = useHumanSupport();
 const { appliedFilters, appliedDetailFilters } = storeToRefs(humanSupportStore);

@@ -15,14 +15,20 @@ export default defineWeniConfig({
   postcss: {
     prefix: '.insights-webapp',
   },
-  aliases: connectUrl
-    ? {}
-    : {
-        'connect/sharedStore': resolve(
-          import.meta.dirname,
-          'src/utils/hostSharedStore.js',
-        ),
-      },
+  aliases: {
+    '@weni/unnnic-system/theme.css': resolve(
+      import.meta.dirname,
+      'node_modules/@weni/unnnic-system/dist/assets/scss/tailwind.css',
+    ),
+    ...(connectUrl
+      ? {}
+      : {
+          'connect/sharedStore': resolve(
+            import.meta.dirname,
+            'src/utils/hostSharedStore.js',
+          ),
+        }),
+  },
   federation: {
     name: 'insights',
     exposes: connectUrl

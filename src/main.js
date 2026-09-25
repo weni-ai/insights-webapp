@@ -13,6 +13,7 @@ import { moduleStorage } from './utils/storage';
 import * as Sentry from '@sentry/vue';
 import env from './utils/env';
 
+import '@weni/unnnic-system/theme.css';
 import './styles/global.scss';
 
 import { isFederatedModule } from './utils/moduleFederation';

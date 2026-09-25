@@ -141,7 +141,7 @@ import weniLoading from '@/assets/images/weni-loading.svg';
 
 import { formatWithI18nPattern } from '@/utils/time';
 
-import Unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert, UnnnicIcon, UnnnicSelect } from '@weni/unnnic-system';
 
 import { formatValue, formatToPercent } from '@/utils/numbers';
 import { useDashboards } from '@/store/modules/dashboards';
@@ -503,7 +503,7 @@ watch(selectedTemplateUuid, (newUuid, oldUuid) => {
 
 const favoriteTemplate = async () => {
   if (favoritesTemplates.value.length === 5) {
-    Unnnic.unnnicCallAlert({
+    UnnnicCallAlert({
       props: {
         text: i18n.global.t(
           'template_messages_dashboard.favorite_limit_reached',

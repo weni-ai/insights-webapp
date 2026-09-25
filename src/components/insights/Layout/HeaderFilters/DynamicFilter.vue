@@ -24,6 +24,7 @@ import FilterSelectDate from './FilterSelectDate.vue';
 import FilterMultiSelect from './FilterMultiSelect.vue';
 
 import { findMatchingDate } from '@/utils/time';
+import { UnnnicLabel } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DynamicFilter' });
 

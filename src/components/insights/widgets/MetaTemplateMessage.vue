@@ -118,6 +118,7 @@ export default {
 import { computed } from 'vue';
 import QualityTemplateMessageFlag from '../templateMessages/QualityTemplateMessageFlag.vue';
 import weniLoading from '@/assets/images/weni-loading.svg';
+import { UnnnicButton, UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 
 const props = defineProps({
   template: {

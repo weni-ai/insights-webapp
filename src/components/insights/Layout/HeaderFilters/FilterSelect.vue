@@ -14,6 +14,7 @@ import { onMounted, ref, watch } from 'vue';
 
 import Projects from '@/services/api/resources/projects';
 import { compareEquals } from '@/utils/array';
+import { UnnnicSelect } from '@weni/unnnic-system';
 
 defineOptions({ name: 'FilterSelect' });
 

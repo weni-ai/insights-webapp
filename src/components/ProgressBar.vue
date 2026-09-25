@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue';
+import { UnnnicProgressBar } from '@weni/unnnic-system';
 
 defineOptions({ name: 'ProgressBar' });
 

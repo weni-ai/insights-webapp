@@ -79,6 +79,7 @@ import IconLoading from '@/components/IconLoading.vue';
 import api from '@/services/api/resources/metrics';
 import { getLastNDays, getTodayDate } from '@/utils/time';
 import { hostSharedStore } from '@/utils/hostSharedStore';
+import { UnnnicIcon, UnnnicInputDatePicker } from '@weni/unnnic-system';
 
 interface MetricData {
   id: string;

@@ -29,6 +29,7 @@ import ConversationalExport from '../../export/ConversationalExport.vue';
 import ResolutionCriteriaSettings from '../../conversations/ResolutionCriteria/ResolutionCriteriaSettings.vue';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConversational } from '@/store/modules/conversational/conversational';
+import { UnnnicInput } from '@weni/unnnic-system';
 
 const { t } = useI18n();
 const dashboardsStore = useDashboards();

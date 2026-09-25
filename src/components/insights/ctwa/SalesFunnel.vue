@@ -41,6 +41,7 @@ import { useLazyData } from '@/composables/useLazyData';
 import { useCTWA } from '@/store/modules/ctwa';
 import { formatNumber, formatPercentage } from '@/utils/numbers';
 import type { ConversionStage } from '@/services/api/resources/ctwa/conversions';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'SalesFunnel',

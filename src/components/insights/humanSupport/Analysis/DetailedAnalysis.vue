@@ -82,6 +82,12 @@ import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
 import { useMouseInElement } from '@vueuse/core';
+import {
+  UnnnicTabs,
+  UnnnicTabsContent,
+  UnnnicTabsList,
+  UnnnicTabsTrigger,
+} from '@weni/unnnic-system';
 
 const projectStore = useProject();
 const { hasSectorsConfigured } = storeToRefs(projectStore);

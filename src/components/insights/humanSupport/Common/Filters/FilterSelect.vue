@@ -36,6 +36,7 @@ import {
   useTemplateRef,
 } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { UnnnicSelect } from '@weni/unnnic-system';
 
 type FilterType = 'attendant' | 'contact' | 'ticket_id';
 type SourceType = 'agents' | 'contacts' | 'ticket_id';

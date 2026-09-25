@@ -125,7 +125,11 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicDataTable } from '@weni/unnnic-system';
+import {
+  UnnnicDataTable,
+  UnnnicIcon,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 import { computed, ref, watch } from 'vue';
 import { FinishedDataResult } from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';
 import service from '@/services/api/resources/humanSupport/analysis/detailedAnalysis/finished';

@@ -17,6 +17,8 @@
 <script setup lang="ts">
 import ProgressTable from '@/components/ProgressTable.vue';
 import { ProgressTableRowItem } from '@/components/ProgressTableRowItem.vue';
+import { UnnnicDrawer } from '@weni/unnnic-system';
+
 defineOptions({
   name: 'SeeAllDrawer',
 });

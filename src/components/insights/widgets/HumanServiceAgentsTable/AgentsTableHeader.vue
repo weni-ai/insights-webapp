@@ -71,6 +71,12 @@ import { useWidgets } from '@/store/modules/widgets';
 
 import FilterSelect from '@/components/insights/Layout/HeaderFilters/FilterSelect.vue';
 import i18n from '@/utils/plugins/i18n';
+import {
+  UnnnicButton,
+  UnnnicInputDatePicker,
+  UnnnicLabel,
+  UnnnicMultiSelect,
+} from '@weni/unnnic-system';
 
 const props = defineProps({
   headers: {

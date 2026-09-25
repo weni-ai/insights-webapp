@@ -25,6 +25,7 @@ import ProgressTable from '@/components/ProgressTable.vue';
 import { addColors } from '@/utils/treemap';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import type { topicDistributionMetric } from '@/services/api/resources/conversational/topics';
+import { UnnnicDrawer } from '@weni/unnnic-system';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 

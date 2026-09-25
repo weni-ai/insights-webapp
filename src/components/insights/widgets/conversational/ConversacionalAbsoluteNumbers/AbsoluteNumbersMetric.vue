@@ -53,6 +53,7 @@ import { useConversational } from '@/store/modules/conversational/conversational
 import { formatCurrency, formatNumber } from '@/utils/numbers';
 
 import i18n from '@/utils/plugins/i18n';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 interface Props {
   metric: AbsoluteNumbersChildrenItem;

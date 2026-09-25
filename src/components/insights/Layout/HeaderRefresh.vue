@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { onUnmounted, computed, ref, watch } from 'vue';
 import { useTimeoutFn } from '@vueuse/core';
-import { UnnnicButton } from '@weni/unnnic-system';
+import { UnnnicButton, UnnnicToolTip } from '@weni/unnnic-system';
 import { useHumanSupportMonitoring } from '@/store/modules/humanSupport/monitoring';
 import { storeToRefs } from 'pinia';
 import { useConversational } from '@/store/modules/conversational/conversational';

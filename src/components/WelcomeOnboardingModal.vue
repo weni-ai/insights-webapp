@@ -33,6 +33,7 @@
 
 <script setup>
 import { moduleStorage } from '@/utils/storage';
+import { UnnnicModalDialog } from '@weni/unnnic-system';
 
 const props = defineProps({
   showModal: {

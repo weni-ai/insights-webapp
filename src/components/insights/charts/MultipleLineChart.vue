@@ -72,6 +72,7 @@ import {
   colorFgMuted,
   colorGray12,
 } from '@weni/unnnic-system/tokens/colors';
+import { UnnnicIcon } from '@weni/unnnic-system';
 
 const colorsMapper = {
   'bg-purple-strong': colorBgPurpleStrong,

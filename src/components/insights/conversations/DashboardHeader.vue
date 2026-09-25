@@ -30,7 +30,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
-import Unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import { useWidgetFormatting } from '@/composables/useWidgetFormatting';
 import { useLazyData } from '@/composables/useLazyData';
@@ -162,7 +162,7 @@ const handleTooltipSide = (cardId: string) => {
 };
 
 const showErrorToast = () => {
-  Unnnic.unnnicCallAlert({
+  UnnnicCallAlert({
     props: {
       text: t('widgets.graph_funnel.error.title'),
       type: 'error',

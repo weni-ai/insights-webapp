@@ -36,6 +36,7 @@ import BlurSetupWidget from '@/components/insights/Layout/BlurSetupWidget.vue';
 
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'VolumePerTagAndQueueWidget',

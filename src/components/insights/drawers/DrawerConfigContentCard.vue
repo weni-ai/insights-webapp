@@ -37,6 +37,7 @@ import FormFlowResult from './DrawerForms/Card/FormFlowResult.vue';
 import FormDataCrossing from './DrawerForms/Card/FormDataCrossing/index.vue';
 import SelectEmojiButton from '@/components/SelectEmojiButton.vue';
 import { checkDeepEmptyValues } from '@/utils/object';
+import { UnnnicButton, UnnnicInput, UnnnicLabel } from '@weni/unnnic-system';
 
 defineOptions({ name: 'DrawerConfigContentCard' });
 

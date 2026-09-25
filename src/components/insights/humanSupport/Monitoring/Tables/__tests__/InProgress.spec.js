@@ -372,6 +372,12 @@ describe('InProgress', () => {
               template:
                 '<div data-testid="in-progress-pending-response-tooltip"><slot /></div>',
             },
+            UnnnicTooltip: {
+              name: 'UnnnicToolTip',
+              props: ['text', 'enabled', 'side'],
+              template:
+                '<div data-testid="in-progress-pending-response-tooltip"><slot /></div>',
+            },
             UnnnicIcon: {
               name: 'UnnnicIcon',
               props: ['icon', 'size'],

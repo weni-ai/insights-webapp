@@ -81,6 +81,12 @@ import {
 } from '@/store/modules/humanSupport/monitoring';
 import { useProject } from '@/store/modules/project';
 import { useHumanSupport } from '@/store/modules/humanSupport/humanSupport';
+import {
+  UnnnicTabs,
+  UnnnicTabsContent,
+  UnnnicTabsList,
+  UnnnicTabsTrigger,
+} from '@weni/unnnic-system';
 
 const project = useProject();
 const { hasSectorsConfigured } = storeToRefs(project);

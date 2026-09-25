@@ -122,6 +122,14 @@ import FilterSelect from '../Layout/HeaderFilters/FilterSelect.vue';
 import QualityTemplateMessageFlag from './QualityTemplateMessageFlag.vue';
 
 import MetaTemplateMessageService from '@/services/api/resources/template/metaTemplateMessage';
+import {
+  UnnnicButton,
+  UnnnicDataTable,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+} from '@weni/unnnic-system';
 
 const dashboardsStore = useDashboards();
 const configStore = useConfig();

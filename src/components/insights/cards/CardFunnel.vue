@@ -53,6 +53,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import FunnelChart from '../charts/FunnelChart.vue';
+import { UnnnicButton, UnnnicIcon } from '@weni/unnnic-system';
 
 defineOptions({ name: 'CardFunnel' });
 

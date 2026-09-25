@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicButton } from '@weni/unnnic-system';
+
 const emit = defineEmits<{
   (e: 'add-topic'): void;
 }>();

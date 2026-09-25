@@ -95,6 +95,7 @@ import { emojis } from '@emoji-mart/data';
 import IconLoading from '@/components/IconLoading.vue';
 import CardBase from './CardBase.vue';
 import CardTitleError from './CardTitleError.vue';
+import { UnnnicButton, UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 
 defineOptions({ name: 'CardDashboard' });
 

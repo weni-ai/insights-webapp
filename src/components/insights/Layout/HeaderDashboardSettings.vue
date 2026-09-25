@@ -36,6 +36,13 @@ import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import DrawerDashboardConfig from '../dashboards/DrawerDashboardConfig.vue';
+import {
+  UnnnicButton,
+  UnnnicPopover,
+  UnnnicPopoverContent,
+  UnnnicPopoverOption,
+  UnnnicPopoverTrigger,
+} from '@weni/unnnic-system';
 
 defineOptions({ name: 'HeaderDashboardSettings' });
 

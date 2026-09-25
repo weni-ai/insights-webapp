@@ -70,7 +70,18 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicCallAlert,
+  UnnnicDialog,
+  UnnnicDialogClose,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+  UnnnicDialogTrigger,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 import { useI18n } from 'vue-i18n';
 import disconnectAgentApi from '@/services/api/resources/disconnectAgent';
 

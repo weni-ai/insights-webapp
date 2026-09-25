@@ -134,6 +134,7 @@ import { storeToRefs } from 'pinia';
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { format, subDays, addDays, isValid, parseISO, isAfter } from 'date-fns';
+import { UnnnicLabel, UnnnicRadio } from '@weni/unnnic-system';
 
 const humanSupportExport = useHumanSupportExport();
 const {

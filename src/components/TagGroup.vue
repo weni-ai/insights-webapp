@@ -34,6 +34,7 @@
 
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
+import { UnnnicTag } from '@weni/unnnic-system';
 
 defineOptions({ name: 'TagGroup' });
 

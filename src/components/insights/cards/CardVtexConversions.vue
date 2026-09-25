@@ -98,6 +98,11 @@ import {
   colorOrange4,
   colorRed10,
 } from '@weni/unnnic-system/tokens/colors';
+import {
+  UnnnicButton,
+  UnnnicChartFunnel,
+  UnnnicIconLoading,
+} from '@weni/unnnic-system';
 
 const props = defineProps({
   widget: {

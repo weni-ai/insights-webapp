@@ -107,6 +107,15 @@ import {
   colorBlue6,
   colorBlue8,
 } from '@weni/unnnic-system/tokens/colors';
+import {
+  UnnnicButton,
+  UnnnicDisclaimer,
+  UnnnicPopover,
+  UnnnicPopoverContent,
+  UnnnicPopoverOption,
+  UnnnicPopoverTrigger,
+  UnnnicSkeletonLoading,
+} from '@weni/unnnic-system';
 
 defineOptions({
   name: 'AbandonedCartWidget',

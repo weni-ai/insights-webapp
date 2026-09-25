@@ -52,6 +52,7 @@ import {
   colorBgBluePlain,
   colorBgGreenPlain,
 } from '@weni/unnnic-system/tokens/colors';
+import { UnnnicButton, UnnnicChartFunnel } from '@weni/unnnic-system';
 
 defineOptions({ name: 'FunnelChart' });
 

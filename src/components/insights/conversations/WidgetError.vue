@@ -34,6 +34,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicButton, UnnnicIcon } from '@weni/unnnic-system';
+
 defineProps<{
   title: string;
   description?: string;

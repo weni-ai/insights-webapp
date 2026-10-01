@@ -6,7 +6,7 @@ Sync Impact Report:
   I. Reviewed Changes on a Protected Main Branch
   II. Security and Secrets
   III. Observability
-  IV. Versioned Contracts and Changelog
+  IV. Versioned Contracts (with project exception: no changelog)
   V. Specification Traceability
   VI. No Silent Divergence
   VII. Conventional, Atomic Commits
@@ -32,7 +32,8 @@ Sync Impact Report:
   and Quality Gates; Governance
 - Removed sections: template placeholder sections ([SECTION_2_NAME],
   [SECTION_3_NAME])
-- Project exceptions recorded: XII (PascalCase Vue SFC files and component
+- Project exceptions recorded: IV (no changelog; release history lives in
+  SemVer tags and merged PRs); XII (PascalCase Vue SFC files and component
   folders; camelCase `useX` composables)
 - Templates requiring updates:
   ⚠ .specify/templates/spec-template.md — lacks the mandatory
@@ -141,7 +142,7 @@ events, breadcrumbs, and replays MUST NOT include auth tokens or personal data.
 **Rationale:** structured, privacy-safe telemetry is what makes incidents
 diagnosable without creating new data-exposure risks.
 
-### IV. Versioned Contracts and Changelog
+### IV. Versioned Contracts
 
 Any change to a public interface MUST be versioned following SemVer. Changes
 MUST be backward compatible or ship with an announced deprecation path. Silent
@@ -162,15 +163,14 @@ compatible with the host versions in production. Release tags MUST follow
 SemVer (`X.Y.Z`, `X.Y.Z-staging`, `X.Y.Z-develop`), and a breaking change to
 an expose MUST bump MAJOR and be coordinated with the host.
 
-Public libraries MUST maintain a changelog following Keep a Changelog format,
-with every user-facing change under the appropriate category (Added, Changed,
-Deprecated, Removed, Fixed, Security) and version bumps following SemVer. This
-repository is a deployable application, not a published package; this
-requirement applies as soon as it publishes one.
+**Project exception (no changelog):** this repository does not maintain a
+changelog. The base Changelog Maintenance article targets public libraries,
+and `insights-webapp` is a deployable application, not a published package.
+Release history is tracked through SemVer release tags and the pull requests
+merged into `main`.
 
 **Rationale:** consumers depend on stable contracts; explicit versioning and
-deprecation give them a predictable path to adapt without outages. A
-changelog communicates impact to consumers and serves as release documentation.
+deprecation give them a predictable path to adapt without outages.
 
 ### V. Specification Traceability
 
@@ -234,8 +234,8 @@ Allowed types are `feat`, `fix`, `docs`, `refactor`, `test`, and `chore`. The
 description MUST be imperative, specific, and no longer than 50 characters.
 Commits MUST be atomic: one logical change per commit.
 
-**Rationale:** conventional commits enable automated changelog generation and
-semantic versioning. Atomic commits simplify bisecting, reverting, and
+**Rationale:** conventional commits make the history scannable by type and
+support semantic versioning of releases. Atomic commits simplify bisecting, reverting, and
 reviewing.
 
 ### VIII. Linting and Formatting

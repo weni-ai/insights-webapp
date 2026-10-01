@@ -73,7 +73,14 @@ import { ref, computed, onMounted, reactive } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import unnnic from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicCallAlert,
+  UnnnicDrawer,
+  UnnnicInput,
+  UnnnicLabel,
+  UnnnicSelect,
+} from '@weni/unnnic-system';
 
 import ProgressBar from '@/components/ProgressBar.vue';
 import ModalDeleteDashboard from './ModalDeleteDashboard.vue';
@@ -164,7 +171,7 @@ async function handleCreateProgressComplete() {
       dashboardUuid: createdDashboard.value.uuid,
     },
   });
-  unnnic.unnnicCallAlert({
+  UnnnicCallAlert({
     props: {
       text: t('new_dashboard.alert.success'),
       type: 'success',
@@ -195,7 +202,7 @@ function createDashboard() {
       showProgressBar.value = true;
     })
     .catch((error: any) => {
-      unnnic.unnnicCallAlert({
+      UnnnicCallAlert({
         props: {
           text: t('new_dashboard.alert.error'),
           type: 'error',
@@ -235,7 +242,7 @@ function updateDashboard() {
       dashboardsStore.dashboards = updatedDashboards;
       dashboardsStore.currentDashboard = updatedDashboard;
 
-      unnnic.unnnicCallAlert({
+      UnnnicCallAlert({
         props: {
           text: t('edit_dashboard.alert.success'),
           type: 'success',
@@ -244,7 +251,7 @@ function updateDashboard() {
       });
     })
     .catch((error: any) => {
-      unnnic.unnnicCallAlert({
+      UnnnicCallAlert({
         props: {
           text: t('edit_dashboard.alert.error'),
           type: 'error',

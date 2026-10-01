@@ -6,6 +6,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicIconLoading } from '@weni/unnnic-system';
+
 defineOptions({ name: 'IconLoading' });
 </script>
 

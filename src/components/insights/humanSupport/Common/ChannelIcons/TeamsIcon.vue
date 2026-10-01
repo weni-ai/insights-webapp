@@ -9,6 +9,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
+
 defineOptions({
   name: 'TeamsIcon',
 });

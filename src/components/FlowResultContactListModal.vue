@@ -33,7 +33,14 @@ import i18n from '@/utils/plugins/i18n';
 
 import Widget from '@/services/api/resources/widgets';
 import { format, parseISO } from 'date-fns';
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import {
+  UnnnicCallAlert,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+  UnnnicTableNext,
+} from '@weni/unnnic-system';
 
 const props = defineProps({
   flowResultLabel: {

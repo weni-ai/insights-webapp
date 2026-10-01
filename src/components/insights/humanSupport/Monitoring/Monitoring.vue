@@ -54,6 +54,7 @@ import DetailedMonitoring from './DetailedMonitoring.vue';
 import VolumePerTagAndQueueWidget from '../CommonWidgets/VolumePerTagAndQueue/index.vue';
 import VolumePerChannelWidget from '../CommonWidgets/VolumePerChannel/VolumePerChannel.vue';
 import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
+import { UnnnicDisclaimer } from '@weni/unnnic-system';
 
 const { isFeatureFlagEnabled } = useFeatureFlag();
 

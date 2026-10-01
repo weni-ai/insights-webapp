@@ -68,7 +68,7 @@ import SkeletonConfigContentRecurrence from './loadings/SkeletonConfigContentRec
 import DrawerConfigContentRecurrence from './DrawerConfigContentRecurrence.vue';
 import ModalResetWidget from '@/components/ModalResetWidget.vue';
 
-import unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert, UnnnicDrawer } from '@weni/unnnic-system';
 import { moduleStorage } from '@/utils/storage';
 
 defineOptions({ name: 'DrawerConfigWidgetDynamic' });
@@ -411,7 +411,7 @@ async function updateWidgetConfig() {
         moduleStorage.setItem('hasWidgetsOnboardingComplete', true);
       }
     }
-    unnnic.unnnicCallAlert({
+    UnnnicCallAlert({
       props: {
         text: t('drawers.metric_saved'),
         type: 'success',
@@ -419,7 +419,7 @@ async function updateWidgetConfig() {
       seconds: 5,
     });
   } catch (error) {
-    unnnic.unnnicCallAlert({
+    UnnnicCallAlert({
       props: {
         text: t('save_error'),
         type: 'error',

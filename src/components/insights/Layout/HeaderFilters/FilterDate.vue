@@ -24,6 +24,7 @@ import { storeToRefs } from 'pinia';
 import { format, subDays } from 'date-fns';
 
 import { useDashboards } from '@/store/modules/dashboards';
+import { UnnnicInputDatePicker } from '@weni/unnnic-system';
 
 defineOptions({ name: 'FilterDate' });
 

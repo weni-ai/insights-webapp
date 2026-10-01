@@ -42,6 +42,7 @@ import { useWidgets } from '@/store/modules/widgets';
 import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import RadioList from '@/components/RadioList.vue';
+import { UnnnicCheckbox, UnnnicLabel } from '@weni/unnnic-system';
 
 defineOptions({ name: 'FormFlowResult' });
 

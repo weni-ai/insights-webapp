@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicDropdownItem, UnnnicIcon } from '@weni/unnnic-system';
+
 defineOptions({ name: 'OptionCreateNewDashboard' });
 </script>
 

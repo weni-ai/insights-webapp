@@ -33,7 +33,7 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
+import { UnnnicDisclaimer, UnnnicDrawer } from '@weni/unnnic-system';
 import { computed, onMounted } from 'vue';
 import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import FormTopic from './Form/FormTopic.vue';

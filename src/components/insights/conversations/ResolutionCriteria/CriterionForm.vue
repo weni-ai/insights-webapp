@@ -127,7 +127,12 @@
 import { computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicDisclaimer,
+  UnnnicIconLoading,
+  UnnnicTextArea,
+} from '@weni/unnnic-system';
 
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
 

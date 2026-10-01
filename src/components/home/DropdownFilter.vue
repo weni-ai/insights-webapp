@@ -39,6 +39,11 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { vOnClickOutside } from '@vueuse/components';
+import {
+  UnnnicDropdown,
+  UnnnicDropdownItem,
+  UnnnicIcon,
+} from '@weni/unnnic-system';
 
 interface DropdownItem {
   name: string;

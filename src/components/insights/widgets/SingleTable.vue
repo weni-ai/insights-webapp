@@ -31,6 +31,7 @@ export default {
 <script setup>
 import i18n from '@/utils/plugins/i18n';
 import { computed } from 'vue';
+import { UnnnicTableNext } from '@weni/unnnic-system';
 
 const props = defineProps({
   title: { type: String, default: '' },

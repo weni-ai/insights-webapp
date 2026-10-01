@@ -60,6 +60,7 @@ import { useConversationalTopics } from '@/store/modules/conversational/topics';
 import AddTopicButton from '../AddTopicButton.vue';
 import FormTopicItem from './FormTopicItem.vue';
 import { storeToRefs } from 'pinia';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 const topicsConversationalStore = useConversationalTopics();
 

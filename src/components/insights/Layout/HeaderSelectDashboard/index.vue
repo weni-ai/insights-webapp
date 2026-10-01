@@ -73,6 +73,7 @@ import OptionSelectDashboard from './OptionSelectDashboard.vue';
 import OptionCreateNewDashboard from './OptionCreateNewDashboard.vue';
 import DrawerDashboardConfig from '@/components/insights/dashboards/DrawerDashboardConfig.vue';
 import BetaText from './BetaText.vue';
+import { UnnnicDropdown, UnnnicIcon } from '@weni/unnnic-system';
 
 defineOptions({ name: 'HeaderSelectDashboard' });
 

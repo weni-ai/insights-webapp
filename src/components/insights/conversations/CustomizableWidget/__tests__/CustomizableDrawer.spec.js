@@ -3,6 +3,25 @@ import { config, shallowMount, flushPromises } from '@vue/test-utils';
 import { createTestingPinia } from '@pinia/testing';
 import { nextTick, ref } from 'vue';
 
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicDrawer: {
+      name: 'UnnnicDrawer',
+      inheritAttrs: true,
+      emits: ['close', 'primary-button-click', 'secondary-button-click'],
+      template:
+        '<div v-bind="$attrs"><slot name="content" /><slot name="header-close" /></div>',
+    },
+    UnnnicTab: {
+      name: 'UnnnicTab',
+      props: ['tabs', 'activeTab'],
+      template: '<div><slot :name="`tab-panel-${activeTab}`" /></div>',
+    },
+  };
+});
+
 import CustomizableDrawer from '../CustomizableDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useConversationalWidgets } from '@/store/modules/conversational/widgets';

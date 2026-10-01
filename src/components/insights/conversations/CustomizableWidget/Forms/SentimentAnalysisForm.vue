@@ -114,6 +114,12 @@ import SelectFlow from '@/components/SelectFlow.vue';
 import SelectFlowResult from '@/components/SelectFlowResult.vue';
 import { useSentimentAnalysisForm } from '@/store/modules/conversational/sentimentForm';
 import { storeToRefs } from 'pinia';
+import {
+  UnnnicButton,
+  UnnnicCheckbox,
+  UnnnicLabel,
+  UnnnicSelect,
+} from '@weni/unnnic-system';
 
 const props = defineProps<{
   type: 'csat' | 'nps';

@@ -68,6 +68,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import { UnnnicCheckbox, UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 // Types
 interface ModelField {

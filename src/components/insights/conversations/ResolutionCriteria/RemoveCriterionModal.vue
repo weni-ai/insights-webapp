@@ -56,6 +56,14 @@
 import { storeToRefs } from 'pinia';
 
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
+import {
+  UnnnicButton,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+} from '@weni/unnnic-system';
 
 const store = useResolutionCriteria();
 const { isRemoveModalOpen, isRemoving } = storeToRefs(store);

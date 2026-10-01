@@ -69,6 +69,7 @@ import {
   colorBgOrangeStrong,
   colorBgBaseSoft,
 } from '@weni/unnnic-system/tokens/colors';
+import { UnnnicButton, UnnnicDisclaimer } from '@weni/unnnic-system';
 
 const customWidgetsStore = useCustomWidgets();
 

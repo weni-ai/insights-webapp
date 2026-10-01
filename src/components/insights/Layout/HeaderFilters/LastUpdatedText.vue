@@ -33,7 +33,11 @@ import { formatTimeStringWithDayNight } from '@/utils/time';
 
 import i18n from '@/utils/plugins/i18n';
 
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicCallAlert,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 
 const dashboardsStore = useDashboards();
 const lastUpdatedAt = computed(() => dashboardsStore.lastUpdatedAt);

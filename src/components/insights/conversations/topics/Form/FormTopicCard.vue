@@ -107,6 +107,12 @@
 
 <script setup lang="ts">
 import { Topic } from '@/store/modules/conversational/topics';
+import {
+  UnnnicButton,
+  UnnnicIcon,
+  UnnnicInput,
+  UnnnicTextArea,
+} from '@weni/unnnic-system';
 
 defineProps<{
   showSubTopics: boolean;

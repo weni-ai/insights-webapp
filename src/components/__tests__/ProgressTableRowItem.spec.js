@@ -50,6 +50,12 @@ describe('ProgressTableRowItem.vue', () => {
   const progressTableRowItemIcon = () =>
     wrapper.find('[data-testid="progress-table-row-item-icon"]');
 
+  const progressTableRowItemIconComponent = () =>
+    wrapper.findComponent({ name: 'UnnnicIcon' });
+
+  const progressTableRowItemDeletedTooltip = () =>
+    wrapper.findComponent({ name: 'UnnnicToolTip' });
+
   const progressTableRowItemSubItemsRow = () =>
     wrapper.find('[data-testid="progress-table-row-item-sub-items-row"]');
 
@@ -86,6 +92,28 @@ describe('ProgressTableRowItem.vue', () => {
         wrapper,
         'progress-table-row-item-description',
         'progress-table-row-item__description',
+      );
+    });
+
+    it('should render description slot content when provided', () => {
+      wrapper = mount(ProgressTableRowItem, {
+        props: { ...defaultProps },
+        slots: {
+          description:
+            '<section data-testid="custom-description">Custom</section>',
+        },
+      });
+
+      expectElementExists(wrapper, 'custom-description');
+      expectElementClass(
+        wrapper,
+        'progress-table-row-item-description',
+        'progress-table-row-item__description--slotted',
+      );
+      expectElementText(
+        wrapper,
+        'progress-table-row-item-description',
+        'Custom',
       );
     });
   });
@@ -133,9 +161,9 @@ describe('ProgressTableRowItem.vue', () => {
 
       expect(labelComponentWrapper.find('.infos__title').exists()).toBe(false);
       expect(
-        labelComponentWrapper.find(
-          '[data-testid="progress-table-row-item-label-component"]',
-        ).exists(),
+        labelComponentWrapper
+          .find('[data-testid="progress-table-row-item-label-component"]')
+          .exists(),
       ).toBe(true);
       expect(
         labelComponentWrapper.findComponent({ name: 'LabelStub' }).exists(),
@@ -358,7 +386,7 @@ describe('ProgressTableRowItem.vue', () => {
     describe('Icon Behavior', () => {
       it('should render expand icon when isExpandable is true', () => {
         expect(progressTableRowItemIcon().exists()).toBe(true);
-        expect(progressTableRowItemIcon().attributes('icon')).toBe(
+        expect(progressTableRowItemIconComponent().props('icon')).toBe(
           'keyboard_arrow_down',
         );
       });
@@ -386,8 +414,8 @@ describe('ProgressTableRowItem.vue', () => {
       });
 
       it('should have correct icon properties', () => {
-        expect(progressTableRowItemIcon().attributes('size')).toBe('md');
-        expect(progressTableRowItemIcon().attributes('scheme')).toBe(
+        expect(progressTableRowItemIconComponent().props('size')).toBe('md');
+        expect(progressTableRowItemIconComponent().props('scheme')).toBe(
           'neutral-cloudy',
         );
       });
@@ -524,29 +552,27 @@ describe('ProgressTableRowItem.vue', () => {
 
     describe('deletedTooltip', () => {
       it('should have deleted tooltip disabled by default', () => {
-        const tooltip = wrapper.find(
-          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        expect(progressTableRowItemDeletedTooltip().exists()).toBe(true);
+        expect(progressTableRowItemDeletedTooltip().props('enabled')).toBe(
+          false,
         );
-        expect(tooltip.attributes('enabled')).toBe('false');
       });
 
       it('should enable deleted tooltip when deletedTooltip is provided', async () => {
         await wrapper.setProps({
           deletedTooltip: 'Queue removed from project',
         });
-        const tooltip = wrapper.find(
-          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        expect(progressTableRowItemDeletedTooltip().props('enabled')).toBe(
+          true,
         );
-        expect(tooltip.attributes('enabled')).toBe('true');
       });
 
       it('should pass correct text to deleted tooltip', async () => {
         const tooltipText = 'Queue and sector removed from project';
         await wrapper.setProps({ deletedTooltip: tooltipText });
-        const tooltip = wrapper.find(
-          '[data-testid="progress-table-row-item-deleted-tooltip"]',
+        expect(progressTableRowItemDeletedTooltip().props('text')).toBe(
+          tooltipText,
         );
-        expect(tooltip.attributes('text')).toBe(tooltipText);
       });
 
       it('should still render label and subtitle inside tooltip', async () => {
@@ -576,13 +602,10 @@ describe('ProgressTableRowItem.vue', () => {
 
         const title = wrapper.find('.infos__title');
         const subtitle = wrapper.find('.infos__subtitle');
-        const tooltip = wrapper.find(
-          '[data-testid="progress-table-row-item-deleted-tooltip"]',
-        );
 
         expect(title.classes()).toContain('infos__title--muted');
         expect(subtitle.classes()).toContain('infos__subtitle--muted');
-        expect(tooltip.exists()).toBe(true);
+        expect(progressTableRowItemDeletedTooltip().exists()).toBe(true);
       });
 
       it('should handle only label muted (queue deleted, sector active)', async () => {

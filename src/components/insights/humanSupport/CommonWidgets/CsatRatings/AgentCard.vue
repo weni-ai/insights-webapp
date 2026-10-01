@@ -46,6 +46,11 @@
 
 <script setup lang="ts">
 import { formatNumber } from '@/utils/numbers';
+import {
+  UnnnicChatsUserAvatar,
+  UnnnicIcon,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
 
 defineOptions({
   name: 'AgentCard',

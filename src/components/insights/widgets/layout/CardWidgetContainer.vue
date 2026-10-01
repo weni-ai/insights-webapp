@@ -67,6 +67,12 @@
 
 <script setup lang="ts">
 import ShortTab from '@/components/ShortTab.vue';
+import {
+  UnnnicDropdown,
+  UnnnicDropdownItem,
+  UnnnicIcon,
+  UnnnicSkeletonLoading,
+} from '@weni/unnnic-system';
 
 type CardWidgetContainerAction = {
   icon: string;

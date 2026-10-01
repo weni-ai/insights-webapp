@@ -20,6 +20,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 
 import { useMetaTemplateMessage } from '@/store/modules/templates/metaTemplateMessage';
 import { useDashboards } from '@/store/modules/dashboards';
+import { UnnnicSelect } from '@weni/unnnic-system';
 
 const metaTemplateMessageStore = useMetaTemplateMessage();
 const dashboardsStore = useDashboards();

@@ -144,6 +144,14 @@ import {
   type Criterion,
 } from '@/services/api/resources/conversational/resolutionCriteria';
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
+import {
+  UnnnicButton,
+  UnnnicIconLoading,
+  UnnnicPopover,
+  UnnnicPopoverContent,
+  UnnnicPopoverOption,
+  UnnnicPopoverTrigger,
+} from '@weni/unnnic-system';
 
 const store = useResolutionCriteria();
 const { baseCriteria, customCriteria, isLoadingList, customCriteriaCount } =

@@ -37,7 +37,11 @@ import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import { useDashboards } from '@/store/modules/dashboards';
-import Unnnic from '@weni/unnnic-system';
+import {
+  UnnnicCallAlert,
+  UnnnicDropdownItem,
+  UnnnicIcon,
+} from '@weni/unnnic-system';
 import BetaText from './BetaText.vue';
 
 defineOptions({ name: 'OptionSelectDashboard' });
@@ -92,7 +96,7 @@ const callSetDashboardAlert = (type: string) => {
     );
   }
 
-  Unnnic.unnnicCallAlert({
+  UnnnicCallAlert({
     props: {
       text: t(`insights_header.set_default_dashboard_${type}`, {
         dashboard: props.dashboard.name,

@@ -55,6 +55,7 @@ import { useWidgets } from '@/store/modules/widgets';
 
 import HeaderSelectDashboard from './HeaderSelectDashboard/index.vue';
 import DynamicHeader from './DynamicHeader.vue';
+import { UnnnicButton, UnnnicPageHeader } from '@weni/unnnic-system';
 
 defineOptions({ name: 'InsightsLayoutHeader' });
 

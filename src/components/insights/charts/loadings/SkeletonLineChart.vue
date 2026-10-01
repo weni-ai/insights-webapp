@@ -10,5 +10,7 @@
 </template>
 
 <script setup lang="ts">
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
+
 defineOptions({ name: 'SkeletonLineChart' });
 </script>

@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
-import Unnnic from '@weni/unnnic-system';
 import WelcomeOnboardingModal from '@/components/WelcomeOnboardingModal.vue';
 import { UnnnicModalDialog } from '@weni/unnnic-system';
 
@@ -9,9 +8,6 @@ const createWrapper = (props = {}) => {
     props: {
       showModal: true,
       ...props,
-    },
-    global: {
-      plugins: [Unnnic],
     },
   });
 };

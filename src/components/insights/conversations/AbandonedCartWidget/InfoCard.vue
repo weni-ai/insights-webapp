@@ -121,6 +121,7 @@ import { useProject } from '@/store/modules/project';
 
 import { formatNumber, formatPercentage } from '@/utils/numbers';
 import { storeToRefs } from 'pinia';
+import { UnnnicIcon, UnnnicToolTip } from '@weni/unnnic-system';
 
 const projectStore = useProject();
 const { abandonedCartRecoveryCost } = storeToRefs(projectStore);

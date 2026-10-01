@@ -17,6 +17,7 @@
 <script setup lang="ts">
 import { ref, computed, onBeforeUnmount } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { UnnnicInput } from '@weni/unnnic-system';
 
 type FilterType = 'contact';
 

@@ -81,7 +81,18 @@
 </template>
 
 <script setup lang="ts">
-import { UnnnicToastManager } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicDisclaimer,
+  UnnnicDrawerClose,
+  UnnnicDrawerContent,
+  UnnnicDrawerFooter,
+  UnnnicDrawerHeader,
+  UnnnicDrawerNext,
+  UnnnicDrawerTitle,
+  UnnnicSwitch,
+  UnnnicToastManager,
+} from '@weni/unnnic-system';
 import { reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';

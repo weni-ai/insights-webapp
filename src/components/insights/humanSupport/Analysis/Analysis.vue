@@ -41,6 +41,7 @@ import LazyWidget from '@/components/insights/Layout/LazyWidget.vue';
 
 import { useProject } from '@/store/modules/project';
 import { useHumanSupportAnalysis } from '@/store/modules/humanSupport/analysis';
+import { UnnnicDisclaimer } from '@weni/unnnic-system';
 
 defineOptions({
   name: 'AnalysisView',

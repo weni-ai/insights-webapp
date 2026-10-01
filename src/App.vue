@@ -72,6 +72,7 @@ import {
 } from 'date-fns/locale';
 
 import { moduleStorage } from '@/utils/storage';
+import { UnnnicIconLoading } from '@weni/unnnic-system';
 
 defineOptions({ name: 'App' });
 

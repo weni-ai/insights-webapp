@@ -116,6 +116,7 @@
 import { storeToRefs } from 'pinia';
 import { useCustomWidgets } from '@/store/modules/conversational/customWidgets';
 import { onUnmounted } from 'vue';
+import { UnnnicDisclaimer, UnnnicInput } from '@weni/unnnic-system';
 
 const customWidgets = useCustomWidgets();
 const { crosstabForm } = storeToRefs(customWidgets);

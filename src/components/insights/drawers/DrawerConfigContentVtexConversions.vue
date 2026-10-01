@@ -129,6 +129,12 @@ import MetaTemplateMessageService from '@/services/api/resources/template/metaTe
 
 import { removeDuplicatedItems } from '@/utils/array';
 import i18n from '@/utils/plugins/i18n';
+import {
+  UnnnicButton,
+  UnnnicInput,
+  UnnnicLabel,
+  UnnnicSelect,
+} from '@weni/unnnic-system';
 
 const configStore = useConfig();
 

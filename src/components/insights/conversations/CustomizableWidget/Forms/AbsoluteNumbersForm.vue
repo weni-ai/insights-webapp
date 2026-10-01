@@ -189,6 +189,13 @@ import type { absoluteNumbersFormChildren } from '@/store/modules/conversational
 
 import { getCurrencyOptions } from '@/utils/currency';
 import i18n from '@/utils/plugins/i18n';
+import {
+  UnnnicButton,
+  UnnnicCheckbox,
+  UnnnicIcon,
+  UnnnicInput,
+  UnnnicSelect,
+} from '@weni/unnnic-system';
 
 defineOptions({ name: 'AbsoluteNumbersForm' });
 

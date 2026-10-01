@@ -54,7 +54,17 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicCallAlert,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+  UnnnicInput,
+  UnnnicLabel,
+} from '@weni/unnnic-system';
 
 import { useDashboards } from '@/store/modules/dashboards';
 import Dashboards from '@/services/api/resources/dashboards';

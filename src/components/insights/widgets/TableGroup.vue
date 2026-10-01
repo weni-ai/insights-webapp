@@ -44,6 +44,7 @@ import { format, parseISO } from 'date-fns';
 
 import TagGroup from '@/components/TagGroup.vue';
 import { formatWithI18nPattern, isIsoDateString } from '@/utils/time';
+import { UnnnicTab, UnnnicTableNext } from '@weni/unnnic-system';
 
 defineOptions({ name: 'TableGroup' });
 

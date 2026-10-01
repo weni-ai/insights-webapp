@@ -21,6 +21,7 @@ import { computed, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { useProject } from '@/store/modules/project';
+import { UnnnicLabel, UnnnicSelect } from '@weni/unnnic-system';
 
 defineOptions({ name: 'SelectFlowResult' });
 

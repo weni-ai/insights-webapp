@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { shallowMount } from '@vue/test-utils';
 import SkeletonBarChart from '@/components/insights/charts/loadings/SkeletonBarChart.vue';
-import Unnnic from '@weni/unnnic-system';
 
 describe('SkeletonBarChart', () => {
   let wrapper;
@@ -15,7 +14,7 @@ describe('SkeletonBarChart', () => {
       },
       global: {
         stubs: {
-          UnnnicSkeletonLoading: Unnnic.unnnicSkeletonLoading,
+          UnnnicSkeletonLoading: true,
         },
       },
     });

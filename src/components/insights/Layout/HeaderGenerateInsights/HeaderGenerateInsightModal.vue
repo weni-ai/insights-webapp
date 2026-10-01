@@ -80,6 +80,7 @@ import InsightModalFooter from './InsightModalFooter.vue';
 
 import firebaseService from '@/services/api/resources/GPT';
 import { formatSecondsToHumanString } from '@/utils/time';
+import { UnnnicIcon } from '@weni/unnnic-system';
 
 defineOptions({ name: 'HeaderGenerateInsightModal' });
 

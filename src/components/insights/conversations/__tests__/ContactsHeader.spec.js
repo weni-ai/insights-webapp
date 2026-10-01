@@ -7,14 +7,16 @@ import ContactsHeader from '../ContactsHeader.vue';
 import { createI18n } from 'vue-i18n';
 
 import UnnnicSystemPlugin from '@/utils/plugins/UnnnicSystem.js';
-import Unnnic from '@weni/unnnic-system';
+import { UnnnicCallAlert } from '@weni/unnnic-system';
 import { mockRouter } from '@tests/utils/testHelpers.js';
 
-vi.mock('@weni/unnnic-system', () => ({
-  default: {
-    unnnicCallAlert: vi.fn(),
-  },
-}));
+vi.mock('@weni/unnnic-system', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    UnnnicCallAlert: vi.fn(),
+  };
+});
 
 vi.mock('@/services/api/resources/conversational/contacts', () => ({
   default: {
@@ -372,7 +374,7 @@ describe('ContactsHeader.vue', () => {
         expect.any(Error),
       );
 
-      expect(Unnnic.unnnicCallAlert).toHaveBeenCalledWith({
+      expect(UnnnicCallAlert).toHaveBeenCalledWith({
         props: {
           text: 'Error loading data',
           type: 'error',
@@ -487,7 +489,7 @@ describe('ContactsHeader.vue', () => {
       const consoleSpy = vi
         .spyOn(console, 'error')
         .mockImplementation(() => {});
-      Unnnic.unnnicCallAlert.mockClear();
+      UnnnicCallAlert.mockClear();
       mockSetEndpointError.mockClear();
 
       const contactsApi = await import(
@@ -520,7 +522,7 @@ describe('ContactsHeader.vue', () => {
       await Promise.all([first, second]);
 
       expect(abortedSignal.aborted).toBe(true);
-      expect(Unnnic.unnnicCallAlert).not.toHaveBeenCalled();
+      expect(UnnnicCallAlert).not.toHaveBeenCalled();
       expect(mockSetEndpointError).not.toHaveBeenCalledWith('contacts', true);
 
       consoleSpy.mockRestore();
@@ -664,7 +666,7 @@ describe('ContactsHeader.vue', () => {
       expect(typeof vm.showErrorToast).toBe('function');
 
       vm.showErrorToast();
-      expect(Unnnic.unnnicCallAlert).toHaveBeenCalled();
+      expect(UnnnicCallAlert).toHaveBeenCalled();
     });
   });
 

@@ -84,6 +84,7 @@ import { useDashboards } from '@/store/modules/dashboards';
 
 import CardBase from './CardBase.vue';
 import IconLoading from '@/components/IconLoading.vue';
+import { UnnnicAvatarIcon, UnnnicButton } from '@weni/unnnic-system';
 
 defineOptions({ name: 'CardVtexOrder' });
 

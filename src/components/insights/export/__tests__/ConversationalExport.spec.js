@@ -59,9 +59,6 @@ describe('ConversationalExport', () => {
             template:
               '<button type="button" class="unnnic-button-stub" v-bind="$attrs"><slot /></button>',
           },
-          UnnnicToolTip: {
-            template: '<div class="unnnic-tooltip-stub"><slot /></div>',
-          },
           FormExport: true,
         },
       },

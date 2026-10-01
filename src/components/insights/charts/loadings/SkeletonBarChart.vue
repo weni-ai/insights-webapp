@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { UnnnicSkeletonLoading } from '@weni/unnnic-system';
 
 defineOptions({ name: 'SkeletonBarChart' });
 

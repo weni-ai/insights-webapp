@@ -27,6 +27,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import { UnnnicCollapse, UnnnicIcon } from '@weni/unnnic-system';
 
 defineOptions({ name: 'FormAccordion' });
 

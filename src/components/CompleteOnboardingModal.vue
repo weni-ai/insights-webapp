@@ -22,6 +22,8 @@
 </template>
 
 <script setup>
+import { UnnnicModalDialog } from '@weni/unnnic-system';
+
 const props = defineProps({
   showModal: {
     type: Boolean,

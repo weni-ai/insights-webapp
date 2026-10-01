@@ -39,6 +39,13 @@
 </template>
 
 <script setup lang="ts">
+import {
+  UnnnicIcon,
+  UnnnicLabel,
+  UnnnicRadio,
+  UnnnicToolTip,
+} from '@weni/unnnic-system';
+
 defineOptions({ name: 'RadioList' });
 
 interface Radio {

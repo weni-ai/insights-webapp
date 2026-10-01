@@ -73,6 +73,7 @@ import type { Tab } from '../BaseConversationWidget.vue';
 import { useRoute } from 'vue-router';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { getMockTopicsDistribution } from '@/services/api/resources/conversational/mocks';
+import { UnnnicButton } from '@weni/unnnic-system';
 
 const conversationalTopicsStore = useConversationalTopics();
 const conversationalStore = useConversational();

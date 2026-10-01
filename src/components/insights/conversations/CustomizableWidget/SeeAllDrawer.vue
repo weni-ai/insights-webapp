@@ -34,6 +34,7 @@ import {
   colorBgOrangeStrong,
   colorBgBaseSoft,
 } from '@weni/unnnic-system/tokens/colors';
+import { UnnnicDrawer } from '@weni/unnnic-system';
 
 const { formatPercentage, formatNumber } = useWidgetFormatting();
 

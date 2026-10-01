@@ -33,7 +33,15 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useI18n } from 'vue-i18n';
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicCallAlert,
+  UnnnicDialog,
+  UnnnicDialogContent,
+  UnnnicDialogFooter,
+  UnnnicDialogHeader,
+  UnnnicDialogTitle,
+} from '@weni/unnnic-system';
 
 import { useWidgets } from '@/store/modules/widgets';
 import { clearDeepValues } from '@/utils/object';

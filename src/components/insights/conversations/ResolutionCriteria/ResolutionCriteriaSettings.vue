@@ -33,6 +33,13 @@ import { storeToRefs } from 'pinia';
 import ResolutionCriteriaDrawer from './ResolutionCriteriaDrawer.vue';
 import { useConversational } from '@/store/modules/conversational/conversational';
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
+import {
+  UnnnicButton,
+  UnnnicPopover,
+  UnnnicPopoverContent,
+  UnnnicPopoverOption,
+  UnnnicPopoverTrigger,
+} from '@weni/unnnic-system';
 
 const openPopover = ref(false);
 

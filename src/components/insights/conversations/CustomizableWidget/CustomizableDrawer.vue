@@ -124,7 +124,7 @@ import WidgetConversationalService, {
   AvailableWidget,
 } from '@/services/api/resources/conversational/widgets';
 import DashboardsService from '@/services/api/resources/dashboards';
-import { UnnnicCallAlert } from '@weni/unnnic-system';
+import { UnnnicCallAlert, UnnnicDrawer, UnnnicTab } from '@weni/unnnic-system';
 
 const {
   resetNewWidget,

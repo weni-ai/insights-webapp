@@ -19,6 +19,7 @@
 
 <script setup lang="ts">
 import FilterDate from '@/components/insights/Layout/HeaderFilters/FilterDate.vue';
+import { UnnnicLabel } from '@weni/unnnic-system';
 
 interface DateRange {
   start: string;

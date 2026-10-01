@@ -112,7 +112,11 @@ import { computed } from 'vue';
 import BaseConversationWidget, {
   Tab,
 } from '@/components/insights/conversations/BaseConversationWidget.vue';
-import { UnnnicDisclaimer } from '@weni/unnnic-system';
+import {
+  UnnnicButton,
+  UnnnicDisclaimer,
+  UnnnicSkeletonLoading,
+} from '@weni/unnnic-system';
 
 import CardConversations from '@/components/insights/cards/CardConversations.vue';
 import ProgressTable from '@/components/ProgressTable.vue';

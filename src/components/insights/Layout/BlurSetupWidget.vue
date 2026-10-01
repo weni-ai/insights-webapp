@@ -19,6 +19,8 @@
 </template>
 <script setup lang="ts">
 import i18n from '@/utils/plugins/i18n';
+import { UnnnicButton } from '@weni/unnnic-system';
+
 interface SetupWidgetProps {
   title: string;
   description?: string;

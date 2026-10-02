@@ -9,7 +9,17 @@
     @close="emit('update:modelValue', false)"
   >
     <template #content>
-      <ProgressTable :progressItems="props.items" />
+      <ProgressTable :progressItems="props.items">
+        <template
+          v-if="$slots.description"
+          #description="slotProps"
+        >
+          <slot
+            name="description"
+            v-bind="slotProps"
+          />
+        </template>
+      </ProgressTable>
     </template>
   </UnnnicDrawer>
 </template>

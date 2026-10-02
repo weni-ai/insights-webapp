@@ -115,6 +115,7 @@ const graphData = computed(() => {
   justify-content: space-between;
   gap: $unnnic-space-8;
   min-height: 450px;
+  height: 100%;
 
   &--empty {
     justify-content: unset;

@@ -10,7 +10,8 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "npm run lint --fix"
+    "format": "npm run lint --fix",
+    "prepare": "git config core.hooksPath .githooks || true"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
@@ -60,7 +61,9 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-vue": "^9.22.0",
+    "js-yaml": "^4.1.0",
     "jsdom": "^24.1.1",
+    "micromatch": "^4.0.5",
     "postcss": "^8.5.6",
     "postcss-loader": "^8.2.0",
     "postcss-prefixwrap": "^1.57.0",

@@ -1085,8 +1085,8 @@
       "is_wating": "Está esperando",
       "protocol": "Protocolo",
       "urn": "URN del contacto",
-      "full_transfer_history": "Historial completo de transferencias",
       "transfer_history": "Historial de transferencias",
+      "full_transfer_history": "Historial completo de transferencias",
       "service_chat": "Chat de soporte",
       "custom_fields": "Campos personalizados",
       "contact": "Contacto",
@@ -1245,11 +1245,11 @@
   },
   "human_support_dashboard": {
     "title": "Live desk",
-    "live": "En vivo",
+    "live": "En tiempo real",
     "historical_data": "Datos históricos",
     "news_disclaimer": {
       "title": "¡Novedad en los dashboards!",
-      "description": "El dashboard <i>Monitoreo</i> ahora se llama <i>En vivo</i> y muestra datos en tiempo real sobre representantes y chats de soporte en espera o en curso. Para analizar chats de soporte ya finalizados, incluso los realizados hoy, accede a <i>Datos históricos</i>."
+      "description": "El dashboard <i>Monitoreo</i> ahora se llama <i>En tiempo real</i> y muestra datos en tiempo real sobre representantes y chats de soporte en espera o en curso. Para analizar chats de soporte ya finalizados, incluso los realizados hoy, accede a <i>Datos históricos</i>."
     },
     "support_status": {
       "title": "Status de los chats de soporte",
@@ -1265,16 +1265,16 @@
     },
     "time_metrics": {
       "title": "Métricas de tiempo actuales",
-      "average_time_is_waiting": "TME",
-      "average_time_first_response": "TMPR",
-      "average_response_time": "TMR",
-      "average_time_chat": "TMA",
+      "average_time_is_waiting": "TPE",
+      "average_time_first_response": "TPPR",
+      "average_response_time": "TPR",
+      "average_time_chat": "TPS",
       "max": "Máximo",
       "title_tooltips": {
-        "average_time_is_waiting": "Tiempo Medio de Espera",
-        "average_time_first_response": "Tiempo Medio de Primera Respuesta",
-        "average_response_time": "Tiempo Medio de Respuesta",
-        "average_time_chat": "Tiempo Medio de Atención"
+        "average_time_is_waiting": "Tiempo promedio de espera",
+        "average_time_first_response": "Tiempo promedio de primera respuesta",
+        "average_response_time": "Tiempo promedio de respuesta",
+        "average_time_chat": "Tiempo promedio de soporte"
       },
       "tooltips": {
         "average_time_is_waiting": "Tiempo promedio que los contactos esperan en cola antes del inicio del chat de soporte",

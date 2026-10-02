@@ -17,5 +17,7 @@ interface ChannelIconProps {
 
 const props = defineProps<ChannelIconProps>();
 
-const channelComponent = computed(() => getChannelLabelComponent(props.channel));
+const channelComponent = computed(() =>
+  getChannelLabelComponent(props.channel),
+);
 </script>

@@ -1263,6 +1263,18 @@
         "last_period_comparison": "{variation} vs. {lastPeriodValue} no último período",
         "total_revenue": "Receita total"
       },
+      "performance_by_representative": {
+        "average_order_value": "Ticket médio",
+        "average_order_value_title_tooltip": "Ticket médio",
+        "conversations": "Conversas",
+        "conversions": "Conversão",
+        "representative": "Atendente",
+        "revenue": "Receita",
+        "sales": "Vendas",
+        "title": "Performance por atendente",
+        "trend": "Tendência",
+        "trend_tooltip": "Variação percentual da receita do atendente em relação ao período anterior equivalente. Tendência (%) = (Receita do período atual − Receita do período anterior) ÷ Receita do período anterior × 100"
+      },
       "sales_funnel": {
         "no_data": "Nenhum chat foi finalizado",
         "leads_captured": "Leads capturados",

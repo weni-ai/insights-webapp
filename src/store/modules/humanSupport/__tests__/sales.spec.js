@@ -175,10 +175,7 @@ describe('useHumanSupportSales store', () => {
         mockPurchasesMadeData,
       );
 
-      await Promise.all([
-        store.loadSalesData(),
-        store.loadPurchasesMadeData(),
-      ]);
+      await Promise.all([store.loadSalesData(), store.loadPurchasesMadeData()]);
       vi.clearAllMocks();
 
       store.loadAllData();

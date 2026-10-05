@@ -112,6 +112,7 @@ const loadingRequest = ref(false);
 const createdDashboard = ref<any>({});
 const showProgressBar = ref(false);
 const showDeleteDashboardModal = ref(false);
+const isHandlingProgressComplete = ref(false);
 
 const currencyOptions = computed(() => {
   return getCurrencyOptions(t);
@@ -153,25 +154,38 @@ function close() {
 }
 
 async function handleCreateProgressComplete() {
-  loadingRequest.value = false;
-  dashboards.value.push(createdDashboard.value);
+  if (isHandlingProgressComplete.value) return;
+  isHandlingProgressComplete.value = true;
 
-  dashboardsStore.currentDashboard = createdDashboard.value;
+  try {
+    const alreadyExists = dashboards.value.some(
+      (dashboard) => dashboard.uuid === createdDashboard.value.uuid,
+    );
 
-  await router.push({
-    name: 'dashboard',
-    params: {
-      dashboardUuid: createdDashboard.value.uuid,
-    },
-  });
-  unnnic.unnnicCallAlert({
-    props: {
-      text: t('new_dashboard.alert.success'),
-      type: 'success',
-    },
-    seconds: 5,
-  });
-  close();
+    if (!alreadyExists) {
+      dashboards.value.push(createdDashboard.value);
+    }
+
+    dashboardsStore.currentDashboard = createdDashboard.value;
+
+    await router.push({
+      name: 'dashboard',
+      params: {
+        dashboardUuid: createdDashboard.value.uuid,
+      },
+    });
+
+    unnnic.unnnicCallAlert({
+      props: {
+        text: t('new_dashboard.alert.success'),
+        type: 'success',
+      },
+      seconds: 5,
+    });
+  } finally {
+    loadingRequest.value = false;
+    close();
+  }
 }
 
 function createDashboard() {

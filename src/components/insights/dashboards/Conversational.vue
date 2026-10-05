@@ -232,12 +232,13 @@ const waitForDashboardWidgets = () =>
 
 const initializeConfiguration = async () => {
   const topicsPromise = topicsStore.loadFormTopics();
+  const shouldShowMockPromise = conversational.loadShouldShowMock();
   project.getAgentsTeam();
 
   await waitForDashboardWidgets();
   setDynamicWidgets();
 
-  await topicsPromise;
+  await Promise.all([topicsPromise, shouldShowMockPromise]);
   conversational.setConfigurationLoaded(true);
 
   if (conversational.shouldUseMock) {
@@ -303,6 +304,7 @@ onUnmounted(() => {
   autoWidgets.resetAutoWidgets();
   conversational.setConfigurationLoaded(false);
   conversational.setHasEndpointData(false);
+  conversational.setIsMockEnabled(false);
 });
 </script>
 

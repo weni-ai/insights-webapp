@@ -106,6 +106,8 @@ describe('Conversational.vue', () => {
       setConfigurationLoaded: vi.fn(),
       setHasEndpointData: vi.fn(),
       setEndpointError: vi.fn(),
+      setIsMockEnabled: vi.fn(),
+      loadShouldShowMock: vi.fn().mockResolvedValue(),
     });
     useConversational.mockReturnValue(conversationalStore);
 
@@ -722,6 +724,17 @@ describe('Conversational.vue', () => {
 
       const types = wrapper.vm.orderedDynamicWidgets.map((w) => w.type);
       expect(types).not.toContain('added_to_cart');
+    });
+  });
+
+  describe('should-show-mock lifecycle', () => {
+    it('should load should-show-mock on mount', () => {
+      expect(conversationalStore.loadShouldShowMock).toHaveBeenCalled();
+    });
+
+    it('should reset isMockEnabled on unmount', () => {
+      wrapper.unmount();
+      expect(conversationalStore.setIsMockEnabled).toHaveBeenCalledWith(false);
     });
   });
 });

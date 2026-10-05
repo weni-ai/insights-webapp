@@ -49,7 +49,10 @@ import { createTestingPinia } from '@pinia/testing';
 import ResolutionCriteriaSettings from '../ResolutionCriteriaSettings.vue';
 import { useResolutionCriteria } from '@/store/modules/conversational/resolutionCriteria';
 
-const createWrapper = ({ hasEndpointData = true } = {}) =>
+const createWrapper = ({
+  hasEndpointData = true,
+  isMockEnabled = false,
+} = {}) =>
   shallowMount(ResolutionCriteriaSettings, {
     global: {
       plugins: [
@@ -58,6 +61,7 @@ const createWrapper = ({ hasEndpointData = true } = {}) =>
           initialState: {
             conversational: {
               isConfigurationLoaded: true,
+              isMockEnabled,
               hasEndpointData,
               endpointErrors: {
                 topics: false,
@@ -107,7 +111,10 @@ describe('ResolutionCriteriaSettings', () => {
   });
 
   it('does not render when mock data is used', () => {
-    const wrapper = createWrapper({ hasEndpointData: false });
+    const wrapper = createWrapper({
+      hasEndpointData: false,
+      isMockEnabled: true,
+    });
     expect(
       wrapper.find('[data-testid="resolution-criteria-popover"]').exists(),
     ).toBe(false);

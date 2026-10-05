@@ -71,6 +71,7 @@ describe('useConversational store', () => {
         dynamicWidgets: false,
       });
       expect(store.hasEndpointData).toBe(false);
+      expect(store.isMockEnabled).toBe(false);
       expect(store.endpointErrors).toEqual({
         topics: false,
         header: false,
@@ -224,6 +225,19 @@ describe('useConversational store', () => {
     });
   });
 
+  describe('setIsMockEnabled action', () => {
+    it('should set isMockEnabled to true', () => {
+      store.setIsMockEnabled(true);
+      expect(store.isMockEnabled).toBe(true);
+    });
+
+    it('should set isMockEnabled to false', () => {
+      store.setIsMockEnabled(true);
+      store.setIsMockEnabled(false);
+      expect(store.isMockEnabled).toBe(false);
+    });
+  });
+
   describe('setEndpointError action', () => {
     const keys = ['topics', 'header', 'widgets', 'contacts'];
 
@@ -276,96 +290,108 @@ describe('useConversational store', () => {
   });
 
   describe('shouldUseMock getter', () => {
-    it('should return false when configuration is not loaded', () => {
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return true when configuration is loaded and no data exists', () => {
+    it('should return false by default when mock is disabled', () => {
       store.setConfigurationLoaded(true);
       mockDependentStores();
-      expect(store.shouldUseMock).toBe(true);
-    });
-
-    it('should return false when endpoint has data', () => {
-      store.setConfigurationLoaded(true);
-      store.setHasEndpointData(true);
-      mockDependentStores();
       expect(store.shouldUseMock).toBe(false);
     });
 
-    it('should return false when topics exist', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ hasExistingTopics: true });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return false when CSAT is configured', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ isCsatConfigured: true });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return false when NPS is configured', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ isNpsConfigured: true });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return false when Sales Funnel is configured', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ isSalesFunnelConfigured: true });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return false when custom widgets exist', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ getRealCustomWidgets: [{ uuid: 'w1' }] });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return false when agent invocation data exists', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ hasAgentInvocationData: true });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    it('should return false when tool result data exists', () => {
-      store.setConfigurationLoaded(true);
-      mockDependentStores({ hasToolResultData: true });
-      expect(store.shouldUseMock).toBe(false);
-    });
-
-    describe('when any endpoint has errors', () => {
+    describe('when mock is enabled', () => {
       beforeEach(() => {
+        store.setIsMockEnabled(true);
+      });
+
+      it('should return false when configuration is not loaded', () => {
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return true when configuration is loaded and no data exists', () => {
         store.setConfigurationLoaded(true);
         mockDependentStores();
-      });
-
-      it('should return false when topics endpoint has error', () => {
-        store.setEndpointError('topics', true);
-        expect(store.shouldUseMock).toBe(false);
-      });
-
-      it('should return false when header endpoint has error', () => {
-        store.setEndpointError('header', true);
-        expect(store.shouldUseMock).toBe(false);
-      });
-
-      it('should return false when widgets endpoint has error', () => {
-        store.setEndpointError('widgets', true);
-        expect(store.shouldUseMock).toBe(false);
-      });
-
-      it('should return false when multiple endpoints have errors', () => {
-        store.setEndpointError('topics', true);
-        store.setEndpointError('header', true);
-        expect(store.shouldUseMock).toBe(false);
-      });
-
-      it('should return true after all endpoint errors are cleared and no config exists', () => {
-        store.setEndpointError('topics', true);
-        store.setEndpointError('topics', false);
         expect(store.shouldUseMock).toBe(true);
+      });
+
+      it('should return false when endpoint has data', () => {
+        store.setConfigurationLoaded(true);
+        store.setHasEndpointData(true);
+        mockDependentStores();
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when topics exist', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ hasExistingTopics: true });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when CSAT is configured', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ isCsatConfigured: true });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when NPS is configured', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ isNpsConfigured: true });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when Sales Funnel is configured', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ isSalesFunnelConfigured: true });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when custom widgets exist', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ getRealCustomWidgets: [{ uuid: 'w1' }] });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when agent invocation data exists', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ hasAgentInvocationData: true });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      it('should return false when tool result data exists', () => {
+        store.setConfigurationLoaded(true);
+        mockDependentStores({ hasToolResultData: true });
+        expect(store.shouldUseMock).toBe(false);
+      });
+
+      describe('when any endpoint has errors', () => {
+        beforeEach(() => {
+          store.setConfigurationLoaded(true);
+          mockDependentStores();
+        });
+
+        it('should return false when topics endpoint has error', () => {
+          store.setEndpointError('topics', true);
+          expect(store.shouldUseMock).toBe(false);
+        });
+
+        it('should return false when header endpoint has error', () => {
+          store.setEndpointError('header', true);
+          expect(store.shouldUseMock).toBe(false);
+        });
+
+        it('should return false when widgets endpoint has error', () => {
+          store.setEndpointError('widgets', true);
+          expect(store.shouldUseMock).toBe(false);
+        });
+
+        it('should return false when multiple endpoints have errors', () => {
+          store.setEndpointError('topics', true);
+          store.setEndpointError('header', true);
+          expect(store.shouldUseMock).toBe(false);
+        });
+
+        it('should return true after all endpoint errors are cleared and no config exists', () => {
+          store.setEndpointError('topics', true);
+          store.setEndpointError('topics', false);
+          expect(store.shouldUseMock).toBe(true);
+        });
       });
     });
   });

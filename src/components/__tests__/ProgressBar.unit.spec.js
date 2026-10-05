@@ -71,7 +71,20 @@ describe('ProgressBar', () => {
     vi.advanceTimersByTime(50 * 101);
     await wrapper.vm.$nextTick();
 
-    expect(wrapper.emitted('progress-complete')).toBeTruthy();
+    expect(wrapper.emitted('progress-complete')).toHaveLength(1);
+  });
+
+  it('Should emit "progress-complete" only once even after timers continue', async () => {
+    vi.advanceTimersByTime(2000);
+    vi.advanceTimersByTime(50 * 101);
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.emitted('progress-complete')).toHaveLength(1);
+
+    vi.advanceTimersByTime(50 * 50);
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.emitted('progress-complete')).toHaveLength(1);
   });
 
   it('Should stop interval on component unmount', () => {

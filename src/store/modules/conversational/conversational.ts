@@ -24,6 +24,7 @@ interface ConversationalState {
   refreshDataConversational: boolean;
   isConfigurationLoaded: boolean;
   hasEndpointData: boolean;
+  isMockEnabled: boolean;
   isloadingConversationalData: {
     header: boolean;
     contactsHeader: boolean;
@@ -41,6 +42,7 @@ export const useConversational = defineStore('conversational', {
     refreshDataConversational: false,
     isConfigurationLoaded: false,
     hasEndpointData: false,
+    isMockEnabled: false,
     isloadingConversationalData: {
       header: false,
       contactsHeader: false,
@@ -87,6 +89,9 @@ export const useConversational = defineStore('conversational', {
     setEndpointError(key: EndpointErrorKey, value: boolean) {
       this.endpointErrors[key] = value;
     },
+    setIsMockEnabled(value: boolean) {
+      this.isMockEnabled = value;
+    },
   },
   getters: {
     appliedFilters: () => {
@@ -120,6 +125,7 @@ export const useConversational = defineStore('conversational', {
       Object.values(state.endpointErrors).some(Boolean),
 
     shouldUseMock: (state) => {
+      if (!state.isMockEnabled) return false;
       if (!state.isConfigurationLoaded) return false;
 
       const hasErrors = Object.values(state.endpointErrors).some(Boolean);

@@ -32,7 +32,13 @@ const progress = ref(0);
 let interval: ReturnType<typeof setInterval> | null = null;
 
 const updateProgress = () => {
-  progress.value === 100 ? emit('progress-complete') : (progress.value += 1);
+  if (progress.value >= 100) {
+    clearInterval(interval);
+    interval = null;
+    emit('progress-complete');
+    return;
+  }
+  progress.value += 1;
 };
 
 const startProgressBar = () => {

@@ -26,36 +26,36 @@
     "others": "Altele",
     "unclassified": "Neclasificate",
     "info": {
-      "description": "As of {date}, conversational data includes closed windows up to 23h59m59s of the start day, considering the timezone configured in the project. Conversations from the current day are still being processed and will be displayed after the period is closed.",
-      "mock_description": "These numbers are for demonstration purposes only. Once the first widget is configured, real data will be displayed here."
+      "description": "Începând cu {date}, datele conversaționale includ ferestre încheiate până la 23h59m59s din ziua de început, având în vedere fusul orar configurat în proiect. Conversațiile din ziua curentă sunt încă în procesare și vor fi afișate după încheierea perioadei.",
+      "mock_description": "Aceste numere au doar scop demonstrativ. Odată ce primul widget este configurat, datele reale vor fi afișate aici."
     },
     "mock": {
-      "custom_widget_title": "Order status",
-      "crosstab_widget_title": "Satisfaction by conversation category",
+      "custom_widget_title": "Starea comenzii",
+      "crosstab_widget_title": "Satisfacție pe categorie de conversație",
       "topics": {
-        "delayed_delivery": "Delayed delivery",
-        "defective_product": "Defective product",
-        "price_questions": "Price questions",
-        "cancellation": "Cancellation",
-        "unclassified": "Unclassified",
-        "others": "Others"
+        "delayed_delivery": "Livrare întârziată",
+        "defective_product": "Produs defect",
+        "price_questions": "Întrebări despre preț",
+        "cancellation": "Anulare",
+        "unclassified": "Neclasificat",
+        "others": "Altele"
       },
       "custom_labels": {
-        "delivered": "Delivered",
-        "awaiting_payment": "Awaiting payment",
-        "in_preparation": "In preparation",
-        "payment_confirmed": "Payment confirmed",
-        "in_transit": "In transit",
-        "returned": "Returned"
+        "delivered": "Livrat",
+        "awaiting_payment": "În așteptarea plății",
+        "in_preparation": "În pregătire",
+        "payment_confirmed": "Plată confirmată",
+        "in_transit": "În tranzit",
+        "returned": "Returnat"
       },
       "crosstab_labels": {
-        "order_status": "Order status",
-        "product_inquiries": "Product inquiries",
-        "payments": "Payments",
-        "technical_support": "Technical support",
-        "shipping_info": "Shipping info",
-        "satisfied": "Satisfied",
-        "dissatisfied": "Dissatisfied"
+        "order_status": "Starea comenzii",
+        "product_inquiries": "Întrebări despre produs",
+        "payments": "Plăți",
+        "technical_support": "Suport tehnic",
+        "shipping_info": "Informații despre livrare",
+        "satisfied": "Mulțumit",
+        "dissatisfied": "Nemulțumit"
       }
     },
     "header": {
@@ -65,7 +65,7 @@
       "unengaged": "Neimplicat",
       "transferred": "Transferat la Live Desk",
       "tooltips": {
-        "total": "Total of conversations closed in the period. A conversation is counted from the first message of the contact until 23h59m59s of the start day. Messages sent after this time start a new conversation on the following day.",
+        "total": "Totalul conversațiilor încheiate în perioada selectată. O conversație este numărată din primul mesaj al contactului până la 23h59m59s din ziua de început. Mesajele trimise după acest moment încep o nouă conversație în ziua următoare.",
         "resolved": "Când agentul demonstrează competență și oferă un serviciu util",
         "unresolved": "Când chatul de asistență nu a fost eficient (saluturi, în afara domeniului, erori ale agentului)",
         "unengaged": "Conversație fără implicare utilă. Aceasta include doar saluturi sau emoticoane, ori cazuri închise fără interacțiune relevantă.",
@@ -137,7 +137,7 @@
     "sales_funnel": "Canal de vânzări şi date",
     "custom": "Diagramă cu bare orizontale",
     "crosstab": "Tabel încrucișat",
-    "absolute_numbers": "Absolute numbers",
+    "absolute_numbers": "Numere absolute",
     "abandoned_cart_recovery": "Recuperare coș abandonat",
     "added_to_cart": "Produsele cele mai adăugate în coș",
     "search_term": "Termenii cei mai căutați",
@@ -327,54 +327,54 @@
           "disclaimer": "<b>Cheie:</b> Un identificator unic folosit pentru a monitoriza un eveniment specific în fluxul de date.<br/><b>Numele câmpului:</b> Numele câmpului pentru valoarea pe care vrei să o afișezi. Dacă este lăsat necompletat, sistemul va folosi o valoare implicită.",
           "first_data_label": "Setează <b>primul</b> punct de date pe care vrei să-l monitorizezi:",
           "second_data_label": "Setează <b>al doilea</b> punct de date pe care vrei să-l monitorizezi:",
-          "reference_field_label": "Define the reference field to be used to link the events:"
+          "reference_field_label": "Definește câmpul de referință care va fi folosit pentru a lega evenimentele:"
         }
       },
       "absolute_numbers": {
         "drawer": {
-          "description": "Set a name for the widget:",
-          "add_child": "Add metric",
+          "description": "Definește numele widgetului:",
+          "add_child": "Adaugă metrică",
           "metric_name": {
-            "label": "Metric name",
-            "placeholder": "Enter the metric name here"
+            "label": "Nume metrică",
+            "placeholder": "Introdu numele metricii aici"
           },
           "select_agent": {
-            "label": "Select an agent",
-            "placeholder": "Select or search"
+            "label": "Selectează un agent",
+            "placeholder": "Selectează sau caută"
           },
           "key": {
-            "label": "Key",
-            "placeholder": "Enter the selected agent key here",
-            "hint": " A unique identifier used to track a specific event in the data flow."
+            "label": "Cheie",
+            "placeholder": "Introdu cheia agentului aici",
+            "hint": "Un identificator unic folosit pentru a monitoriza un eveniment specific în fluxul de date."
           },
           "value_field_name": {
             "label": "Event metadata (opțional)",
-            "placeholder": "Enter the event metadata here",
-            "hint": "Metadata's field name for performing operations. If left blank, the system will use the default field (value)."
+            "placeholder": "Introdu metadatele evenimentului aici",
+            "hint": "Numele câmpului din metadatele evenimentului, folosit pentru a efectua operații. Dacă este lăsat necompletat, sistemul va folosi câmpul implicit (value)."
           },
           "currency": {
-            "switch": "Value with currency"
+            "switch": "Valoare cu monedă"
           },
           "operation": {
-            "label": "Operation",
-            "placeholder": "Select or search",
+            "label": "Operație",
+            "placeholder": "Selectează sau caută",
             "options": {
-              "sum": "Sum",
-              "average": "Average",
-              "highest": "Highest",
-              "lowest": "Lowest",
+              "sum": "Sumă",
+              "average": "Medie",
+              "highest": "Maxim",
+              "lowest": "Minim",
               "total": "Total"
             }
           }
         },
         "remove_modal": {
-          "description": "Are you sure you want to delete the {widget_name} widget?",
-          "info": "The {widget_name} widget will be deleted with all added metrics."
+          "description": "Sigur vrei să ștergi widgetul {widget_name}?",
+          "info": "Widgetul {widget_name} va fi șters împreună cu toate metricile adăugate."
         },
         "remove_child_modal": {
-          "title": "Remove metric",
-          "description": "Are you sure you want to delete the {metric_name}?",
-          "info": "The {widget_name} widget will not be deleted. Only the {metric_name}."
+          "title": "Șterge metrica",
+          "description": "Sigur vrei să ștergi {metric_name}?",
+          "info": "Widgetul {widget_name} nu va fi șters. Doar {metric_name}."
         }
       }
     },
@@ -400,7 +400,7 @@
         "qtd": "Total"
       },
       "row": {
-        "SERVICE": "Service",
+        "SERVICE": "Serviciu",
         "MARKETING": "Marketing",
         "UTILITY": "Utilitate",
         "AUTHENTICATION": "Autentificare"
@@ -615,10 +615,10 @@
   "awaiting": "În așteptare",
   "in-service": "Chat de asistență în desfășurare",
   "status": "Stare",
-  "metric": "Metric",
-  "edit_metric": "Edit metric",
-  "remove_metric": "Remove metric",
-  "edit_widget": "Edit widget",
+  "metric": "Metrică",
+  "edit_metric": "Editează metrica",
+  "remove_metric": "Șterge metrica",
+  "edit_widget": "Editează widgetul",
   "metrics": "Metrici",
   "flow": "Flux",
   "flows": "Fluxuri",
@@ -649,7 +649,7 @@
   "rejected": "Respinse",
   "active": "Activ",
   "disabled": "Dezactivat",
-  "enable": "Enable",
+  "enable": "Activează",
   "alert_added": "{name} adăugat",
   "alert_edited": "{name} editat",
   "select_date": {
@@ -657,13 +657,13 @@
     "yesterday": "Ieri ({date})",
     "last_days": "Ultimele {value} zile ({date})",
     "previous_month": "Luna precedentă ({date})",
-    "last_7_days_conversational": "Last 7 days (up to {date})",
-    "last_14_days_conversational": "Last 14 days (up to {date})",
-    "last_30_days_conversational": "Last 30 days (up to {date})",
-    "last_12_months_conversational": "Last 12 months (up to {date})",
-    "current_month_conversational": "Current month (up to {date})",
-    "previous_month_conversational": "Previous month",
-    "custom_conversational": "Custom"
+    "last_7_days_conversational": "Ultimele 7 zile (până la {date})",
+    "last_14_days_conversational": "Ultimele 14 zile (până la {date})",
+    "last_30_days_conversational": "Ultimele 30 de zile (până la {date})",
+    "last_12_months_conversational": "Ultimele 12 luni (până la {date})",
+    "current_month_conversational": "Luna curentă (până la {date})",
+    "previous_month_conversational": "Luna anterioară",
+    "custom_conversational": "Personalizat"
   },
   "data_period": {
     "label": "Perioadă",
@@ -844,8 +844,8 @@
         "recurrence": "Recurență",
         "multiply": "Multiplică",
         "sum": "Sumă",
-        "min": "Minimum",
-        "max": "Maximum",
+        "min": "Minim",
+        "max": "Maxim",
         "difference": "Diferență",
         "percentage": "Procent"
       },
@@ -1124,7 +1124,7 @@
     },
     "select_data": {
       "label": "Selectează intervalul de date pentru a prelua datele (maximum 92 de zile între data de început și data de încheiere)",
-      "placeholder": "LL/ZZ/AAAA",
+      "placeholder": "ZZ/LL/AAAA",
       "shortcuts": {
         "last_7_days": "Ultimele 7 zile",
         "last_14_days": "Ultimele 14 zile",
@@ -1269,7 +1269,7 @@
       "average_time_first_response": "TMPR",
       "average_response_time": "TMR",
       "average_time_chat": "TMC",
-      "max": "Maximum",
+      "max": "Maxim",
       "title_tooltips": {
         "average_time_is_waiting": "Timp Mediu de Așteptare",
         "average_time_first_response": "Timp Mediu de Prim Răspuns",
@@ -1384,7 +1384,7 @@
       }
     },
     "channels": {
-      "others": "Others"
+      "others": "Altele"
     },
     "analyze": {
       "title": "În curând: Noua interfață de Analiză",
@@ -1397,8 +1397,8 @@
           "pauses": "Pauze personalizate"
         },
         "not_handled": {
-          "title": "Not handled",
-          "description": "Conversation ended while still in queue"
+          "title": "Nepreluat",
+          "description": "Conversația s-a încheiat în timp ce era încă în coada de așteptare"
         },
         "duration": {
           "automatic_closed_tooltip": "Încheiat automat din cauza lipsei de interacțiune din partea contactului."
@@ -1488,7 +1488,7 @@
     }
   },
   "on": "Activ",
-  "off": "Inactive",
+  "off": "Inactiv",
   "paused": "Pus în pauză",
   "data_feedback": {
     "title": "Împărtășește-ți experiența folosind dashboard-ul IA conversațional",
@@ -1511,7 +1511,7 @@
     "toast_postponed": "Feedbackul a fost salvat pentru mai târziu. Poți răspunde altă dată.",
     "toast_postponed_respond": "Răspunde acum"
   },
-  "without_results": "No results found",
+  "without_results": "Niciun rezultat găsit",
   "mcp_news": {
     "modal_title": "Analytics este acum disponibilă în instrumentele IA!",
     "modal_description": "MCP conectează în siguranță datele Analytics la instrumente IA precum ChatGPT, Claude, Cursor \u0002și altele, pentru a explora informații folosind limbaj natural.",

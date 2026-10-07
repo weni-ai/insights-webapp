@@ -85,6 +85,10 @@ const { dashboards, currentDashboard, showDashboardConfig, dashboardDefault } =
   storeToRefs(dashboardsStore);
 const { enableCreateCustomDashboards } = storeToRefs(configStore);
 
+const setShowDashboardConfig = (value: boolean) => {
+  dashboardsStore.setShowDashboardConfig(value);
+};
+
 const openDropdown = ref(false);
 
 const dashboardTitle = computed(() => {
@@ -103,7 +107,7 @@ const isRenderBetaText = computed(
 const enabledShowDashboards = computed(() => dashboards.value);
 
 const handlerCreateDashboardClick = () => {
-  dashboardsStore.setShowDashboardConfig(true);
+  setShowDashboardConfig(true);
   onboardingStore.callTourNextStep('dashboard-onboarding-tour');
 };
 

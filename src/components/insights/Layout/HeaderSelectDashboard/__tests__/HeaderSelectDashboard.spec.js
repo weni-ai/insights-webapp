@@ -88,6 +88,10 @@ describe('HeaderSelectDashboard', () => {
 
   beforeEach(async () => {
     router.push('/');
+    const dashboardsStore = useDashboards();
+    dashboardsStore.setShowDashboardConfig = (payload) =>
+      (dashboardsStore.showDashboardConfig = payload);
+    dashboardsStore.showDashboardConfig = false;
     wrapper = createWrapper({});
     await flushPromises();
   });
@@ -185,9 +189,6 @@ describe('HeaderSelectDashboard', () => {
 
     it('Should open the DrawerDashboardConfig when the "Create New Dashboard" option is clicked', async () => {
       const dashboardsStore = useDashboards();
-      dashboardsStore.setShowDashboardConfig = (payload) =>
-        (dashboardsStore.showDashboardConfig = payload);
-
       const drawerDashboardConfigBeforeClick = wrapper.findComponent(
         '[data-testid=drawer-dashboard-config]',
       );
@@ -202,6 +203,19 @@ describe('HeaderSelectDashboard', () => {
         '[data-testid=drawer-dashboard-config]',
       );
       expect(drawerDashboardConfigAfterClick.exists()).toBe(true);
+    });
+
+    it('Should close the drawer when DrawerDashboardConfig emits close', async () => {
+      const dashboardsStore = useDashboards();
+      dashboardsStore.showDashboardConfig = true;
+      await wrapper.vm.$nextTick();
+
+      const drawer = wrapper.findComponent(
+        '[data-testid=drawer-dashboard-config]',
+      );
+      await drawer.vm.$emit('close');
+
+      expect(dashboardsStore.showDashboardConfig).toBe(false);
     });
   });
 

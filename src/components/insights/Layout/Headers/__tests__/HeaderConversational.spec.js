@@ -97,7 +97,7 @@ describe('HeaderConversational', () => {
                 },
                 conversational: {
                   isConfigurationLoaded: true,
-                  shouldUseMock: true,
+                  isMockEnabled: true,
                   ...storeState.conversational,
                 },
               },

@@ -5,6 +5,8 @@ import { createRouter, createMemoryHistory } from 'vue-router';
 import DrawerDashboardConfig from '../DrawerDashboardConfig.vue';
 import { Dashboards } from '@/services/api';
 import { Dashboard } from '@/models';
+import { useDashboards } from '@/store/modules/dashboards';
+import unnnic from '@weni/unnnic-system';
 
 import {
   createTestI18n,
@@ -90,7 +92,7 @@ const createWrapper = (props = {}, piniaOptions = {}) => {
     ...props,
   };
 
-  return mount(DrawerDashboardConfig, {
+  const wrapper = mount(DrawerDashboardConfig, {
     props: defaultProps,
     global: {
       plugins: [pinia, router],
@@ -158,6 +160,9 @@ const createWrapper = (props = {}, piniaOptions = {}) => {
       },
     },
   });
+
+  wrapper.router = router;
+  return wrapper;
 };
 
 describe('DrawerDashboardConfig', () => {
@@ -331,6 +336,48 @@ describe('DrawerDashboardConfig', () => {
       await wrapper.find('[data-testid="primary-button"]').trigger('click');
 
       expect(createDashboardSpy).toHaveBeenCalled();
+    });
+
+    it('should not duplicate dashboard or alert when progress complete is called twice', async () => {
+      const wrapper = createWrapper();
+      const dashboardsStore = useDashboards();
+      const alertSpy = vi
+        .spyOn(unnnic, 'unnnicCallAlert')
+        .mockImplementation(() => {});
+
+      wrapper.vm.createdDashboard = {
+        uuid: 'new-uuid',
+        name: 'New Dashboard',
+      };
+
+      await Promise.all([
+        wrapper.vm.handleCreateProgressComplete(),
+        wrapper.vm.handleCreateProgressComplete(),
+      ]);
+
+      expect(dashboardsStore.dashboards).toHaveLength(1);
+      expect(dashboardsStore.dashboards[0].uuid).toBe('new-uuid');
+      expect(alertSpy).toHaveBeenCalledTimes(1);
+      expect(wrapper.emitted('close')).toHaveLength(1);
+    });
+
+    it('should close even when router.push fails', async () => {
+      const wrapper = createWrapper();
+      vi.spyOn(wrapper.router, 'push').mockRejectedValue(
+        new Error('navigation failed'),
+      );
+
+      wrapper.vm.createdDashboard = {
+        uuid: 'new-uuid',
+        name: 'New Dashboard',
+      };
+
+      await expect(wrapper.vm.handleCreateProgressComplete()).rejects.toThrow(
+        'navigation failed',
+      );
+
+      expect(wrapper.emitted('close')).toHaveLength(1);
+      expect(wrapper.vm.loadingRequest).toBe(false);
     });
   });
 

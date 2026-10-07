@@ -133,7 +133,7 @@ describe('channel icon components', () => {
     it('renders the translated others label', () => {
       const wrapper = mountIcon(OthersIcon);
 
-      expect(wrapper.find('.others-icon').text()).toBe('Others');
+      expect(wrapper.find('.others-icon').text()).toBe('Other');
     });
   });
 });

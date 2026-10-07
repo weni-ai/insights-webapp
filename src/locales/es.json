@@ -1085,8 +1085,8 @@
       "is_wating": "Está esperando",
       "protocol": "Protocolo",
       "urn": "URN del contacto",
-      "full_transfer_history": "Historial completo de transferencias",
       "transfer_history": "Historial de transferencias",
+      "full_transfer_history": "Historial completo de transferencias",
       "service_chat": "Chat de soporte",
       "custom_fields": "Campos personalizados",
       "contact": "Contacto",
@@ -1478,7 +1478,7 @@
       },
       "empty_data": {
         "monitoring": {
-          "waiting": "No hay chats esperando",
+          "waiting": "No hay chats en espera",
           "ongoing": "No hay chats en curso"
         },
         "analysis": {

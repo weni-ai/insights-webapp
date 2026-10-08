@@ -1,11 +1,11 @@
 {
   "human_service_dashboard": {
-    "title": "Live desk",
+    "title": "Live Desk",
     "peaks_in_human_service": "Chats abertos por hora",
     "closed": "Encerrados",
     "in_progress": "Em andamento",
     "response_time": "Tempo de resposta",
-    "waiting_time": "Tempo de espera",
+    "waiting_time": "Espera",
     "awaiting_service": "Aguardando atendimento",
     "interaction_time": "Tempo de interação",
     "all_agents": "Todos os agentes",
@@ -22,7 +22,7 @@
     "title": "Conversacional",
     "conversations": "conversas",
     "artificial_intelligence": "IA",
-    "human_support": "Live desk",
+    "human_support": "Live Desk",
     "others": "Outros",
     "unclassified": "Sem classificação",
     "info": {
@@ -63,7 +63,7 @@
       "resolved": "Atendido por IA",
       "unresolved": "Não atendido por IA",
       "unengaged": "Não engajadas",
-      "transferred": "Transferidas para live desk",
+      "transferred": "Transferidas para Live Desk",
       "tooltips": {
         "total": "Total de conversas encerradas no período. Uma conversa é contabilizada desde a primeira mensagem do contato até as 23h59m59s do mesmo dia. Mensagens enviadas após este horário iniciam uma nova janela de conversa no dia seguinte.",
         "resolved": "Quando o agente demonstra competência e fornece um serviço útil",
@@ -139,16 +139,16 @@
     "crosstab": "Tabela cruzada",
     "absolute_numbers": "Números absolutos",
     "abandoned_cart_recovery": "Recuperação de carrinho abandonado",
-    "added_to_cart": "Most added products to cart",
-    "search_term": "Most searched terms",
+    "added_to_cart": "Produtos mais adicionados ao carrinho",
+    "search_term": "Termos mais buscados",
     "agent_invocation": "Agentes mais usados",
-    "agent_invocation_description": "Follow the ranking of the most used agents",
-    "agent_invocation_count": "{count} agentes",
+    "agent_invocation_description": "Acompanhe o ranking dos agentes mais usados",
+    "agent_invocation_count": "{count, plural, one {# agente} other {# agentes}}",
     "tool_result": "Ferramentas mais usadas",
-    "tool_result_description": "Follow the ranking of the most used tools",
-    "tool_result_count": "{count} ferramentas",
-    "search_term_count": "{count} products",
-    "added_to_cart_count": "{count} products",
+    "tool_result_description": "Acompanhe o ranking das ferramentas mais usadas",
+    "tool_result_count": "{count, plural, one {# ferramenta} other {# ferramentas}}",
+    "search_term_count": "{count, plural, one {# produto} other {# produtos}}",
+    "added_to_cart_count": "{count, plural, one {# produto} other {# produtos}}",
     "auto_widget_no_data": "Nenhum dado disponível para o período filtrado",
     "auto_widget_error": "Não foi possível carregar os dados. Atualize o dashboard ou entre em contato com o suporte",
     "no_data_available": "Nenhum dado disponível para o período selecionado",
@@ -158,13 +158,63 @@
       "crosstab_validation_title": "Problema de configuração",
       "crosstab_validation_description": "A chave ou o valor não foram encontrados no banco de dados."
     },
+    "resolution_criteria": {
+      "add_criterion": "Adicionar critério",
+      "base_section_description": "Aplicados a todos os projetos para manter o Atendido por IA consistente. Não podem ser editados ou removidos.",
+      "base_section_title": "Critérios base",
+      "custom_empty": "Nenhum critério adicionado",
+      "custom_section_description": "Adicione situações que este projeto também deve contar como Atendido por IA. {count} de {max}.",
+      "custom_section_title": "Seus critérios",
+      "errors": {
+        "ambiguous_description": "Rewrite the criterion to make it clearer",
+        "ambiguous_title": "This criterion is ambiguous",
+        "duplicate_description": "Edit the criterion to cover a different situation, or remove the other one first",
+        "duplicate_title": "You've already added a similar criterion",
+        "invalid_description": "Rewrite the criterion and validate it again",
+        "invalid_title": "This criterion is invalid",
+        "technical": "This criterion couldn't be validated due to a technical issue"
+      },
+      "form": {
+        "create_title": "Adicionar critério",
+        "edit_title": "Editar critério",
+        "field_placeholder": "Critério",
+        "results_title": "Resultados da validação",
+        "save": "Salvar",
+        "success_description": "Once saved, this criterion will apply on the next daily evaluation. Previously classified conversations won't change.",
+        "success_title": "Nenhum problema encontrado",
+        "tooltip_fix_issue": "Corrija o problema encontrado na validação para salvar",
+        "tooltip_validate_first": "Valide este critério antes de salvar",
+        "validate": "Validar",
+        "validating": "Validando critério..."
+      },
+      "list_description": "Define what counts as a Handled by AI conversation in this project. These criteria determine which conversations will be marked as Handled by AI on your dashboard.",
+      "list_title": "Critérios de Atendido por IA",
+      "menu_option": "Editar critérios de Atendido por IA",
+      "remove_modal": {
+        "cancel": "Cancelar",
+        "confirm": "Excluir",
+        "description": "Essa ação não pode ser desfeita. Tem certeza de que deseja excluir este critério?",
+        "title": "Excluir critério"
+      },
+      "row_menu": {
+        "delete": "Excluir critério",
+        "edit": "Editar critério"
+      },
+      "toast": {
+        "added": "Critério adicionado com sucesso",
+        "delete_error": "Não foi possível excluir o critério devido a um problema técnico",
+        "deleted": "Critério excluído com sucesso",
+        "load_error": "Não foi possível carregar os critérios devido a um problema técnico",
+        "updated": "Critério atualizado com sucesso"
+      }
+    },
     "reviews": "avaliações",
     "csat_widget": {
-      "very_satisfied": "Muito satisfeito",
-      "satisfied": "Satisfeito",
-      "neutral": "Neutro",
-      "dissatisfied": "Insatisfeito",
-      "very_dissatisfied": "Muito insatisfeito"
+      "very_satisfied": "🤩 Muito satisfeito",
+      "satisfied": "😁 Satisfeito",
+      "neutral": "😐 Neutro",
+      "dissatisfied": "☹️ Insatisfeito",
+      "very_dissatisfied": "😡 Muito insatisfeito"
     },
     "nps_widget": {
       "promoters": "Promotores (9 ou 10)",
@@ -194,14 +244,14 @@
     },
     "abandoned_cart_recovery_widget": {
       "title": "Recuperação de carrinho abandonado",
-      "no_data": "Nenhum dado disponível para o período filtrado.",
-      "error": "Erro ao carregar os dados. Atualize o dashboard ou entre em contato com o suporte.",
-      "unavailable_period": "Meta only provides the data from the last 90 days for this widget. Make sure the selected date range is within this period to view the information.",
+      "no_data": "Nenhum dado disponível para o período selecionado",
+      "error": "Erro ao carregar os dados. Atualize o dashboard ou entre em contato com o Suporte.",
+      "unavailable_period": "Os dados deste widget são fornecidos pela Meta apenas para os últimos 90 dias. Selecione um intervalo de datas dentro desse período para visualizar as informações.",
       "chart": {
         "sent": "Enviados",
         "delivered": "Entregues",
         "read": "Lidos",
-        "read_help": "Mensagens que foram abertas e lidas pelo destinatário. Essa métrica depende das configurações de privacidade individuais do destinatário e pode não ser rastreada se os recibos de leitura estiverem desativados.",
+        "read_help": "Mensagens abertas pelo destinatário. Essa métrica depende das configurações de privacidade do destinatário e pode não ser monitorada se as confirmações de leitura estiverem desativadas.",
         "clicks": "Cliques"
       },
       "info_card": {
@@ -210,7 +260,7 @@
         "converted_sales": "Vendas convertidas",
         "conversion_rate": "Taxa de conversão",
         "average_order_value": "Valor médio do pedido",
-        "roas_tooltip": "O retorno sobre o investimento em anúncios mede quanto de receita você gera para cada $xxx gasto em mensagens. Por que é tão alto? > A recuperação automatizada é altamente eficiente porque o custo de uma mensagem é mínimo em comparação com o valor médio do pedido da sua loja."
+        "roas_tooltip": "O Retorno sobre investimento em publicidade (ROAS) mede quanta receita você gera para cada valor gasto em mensagens. Esse valor tende a ser alto porque o custo das mensagens é baixo em relação ao valor médio dos pedidos."
       }
     },
     "customize_your_dashboard": {
@@ -223,10 +273,10 @@
       "config_csat_or_nps_description": "Defina qual {type} você deseja acompanhar",
       "sales_funnel_description": "Acompanhe suas vendas: total de pedidos, ticket médio, valor total e funil de conversão.",
       "absolute_numbers_description": "Destaca uma única métrica-chave, exibindo o valor exato para visualização rápida e direta",
-      "abandoned_cart_recovery_description": "Acompanhe métricas de recuperação de carrinho abandonado: receita recuperada, vendas convertidas, taxa de conversão, avarege order value, etc.",
-      "search_term_description": "Follow the ranking of the most searched terms.",
-      "added_to_cart_description": "Follow the ranking of the most added products to cart.",
-      "human_support": "Live desk",
+      "abandoned_cart_recovery_description": "Monitore o desempenho da recuperação de carrinhos abandonados por meio de métricas como receita recuperada, vendas convertidas, taxa de conversão e valor médio dos pedidos.",
+      "search_term_description": "Acompanhe o ranking dos termos mais pesquisados.",
+      "added_to_cart_description": "Acompanhe o ranking dos produtos mais adicionados ao carrinho.",
+      "human_support": "Live Desk",
       "ai_support": "IA",
       "activate_agent": "Ativar agente",
       "select_agent": "Selecione um agente",
@@ -255,8 +305,8 @@
         "remove": "Remover",
         "cancel": "Cancelar",
         "success_message": "{widget} removido",
-        "remove_success": "{widget} removed successfully",
-        "remove_error": "Failed to remove {widget}. Please try again."
+        "remove_success": "{widget} removido com sucesso",
+        "remove_error": "Não foi possível remover {widget}. Tente novamente."
       },
       "tabs": {
         "sentiment_analysis": "Análise de sentimento",
@@ -274,7 +324,7 @@
         "description": "Combine e compare duas dimensões de dados para identificar insights.",
         "drawer": {
           "description": "Defina o nome do widget:",
-          "disclaimer": "<b>Chave:</b> identificador único utilizado para rastrear um evento específico no fluxo de dados.<br><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema utilizará um valor padrão.",
+          "disclaimer": "<b>Chave:</b> identificador único usado para rastrear um evento específico no fluxo de dados.<br/><b>Nome do campo:</b> nome do campo do valor que você deseja exibir. Se deixado em branco, o sistema usará um valor padrão.",
           "first_data_label": "Defina o <b>primeiro</b> dado que você deseja rastrear:",
           "second_data_label": "Defina o <b>segundo</b> dado que você deseja rastrear:",
           "reference_field_label": "Defina o campo de referência a ser usado para vincular os eventos:"
@@ -298,7 +348,7 @@
             "hint": "Um identificador único utilizado para rastrear um evento específico no fluxo de dados."
           },
           "value_field_name": {
-            "label": "Metadados do evento (@.lower:optional)",
+            "label": "Metadados do evento (opcional)",
             "placeholder": "Digite os metadados do evento aqui",
             "hint": "Nome do campo dos metadados do evento para realizar operações. Se deixado em branco, o sistema usará o campo padrão (value)."
           },
@@ -337,7 +387,7 @@
   "template_messages_dashboard": {
     "title": "Mensagens template Meta",
     "favorites": "Favoritos",
-    "select_favorite": "Selecione o template favorito",
+    "select_favorite": "Template favorito",
     "add_to_favorites": "Adicionar aos favoritos",
     "empty_templates": "Nenhum dado ainda. Assim que houver atividade, ela será exibida aqui.",
     "favorite_limit_reached": "Limite de favoritos atingido. Remova um favorito e tente novamente.",
@@ -398,7 +448,10 @@
         "URL": "Link",
         "COPY_CODE": "Copiar e colar",
         "FLOW": "Fluxo",
-        "QUICK_REPLY": "Resposta rápida"
+        "QUICK_REPLY": "Resposta rápida",
+        "PAYMENT_REQUEST": "Payment request",
+        "CATALOG": "Catalog",
+        "ORDER_DETAILS": "Order details"
       }
     },
     "template": {
@@ -407,6 +460,7 @@
     },
     "filter": {
       "shortcut": {
+        "today": "Today",
         "last_7_days": "Últimos 7 dias",
         "last_14_days": "Últimos 14 dias",
         "last_30_days": "Últimos 30 dias",
@@ -416,6 +470,43 @@
         "previous_month": "Mês anterior"
       }
     }
+  },
+  "ctwa_dashboard": {
+    "cards": {
+      "attributed_revenue": {
+        "description": "Avg. order value {avg}",
+        "title": "Attributed revenue"
+      },
+      "ctwa_conversations": {
+        "description": "Started from ads in the period",
+        "title": "CTWA conversations"
+      },
+      "organic_conversations": {
+        "description": "Comparison baseline (non-ad)",
+        "title": "Organic conversations"
+      }
+    },
+    "filters": {
+      "campaign": {
+        "placeholder": "All campaigns"
+      }
+    },
+    "performance_by_campaign": {
+      "campaign": "Campaign",
+      "conversations": "Conversations",
+      "conversions": "Conversions",
+      "qualified": "Qualified",
+      "revenue": "Revenue",
+      "title": "Performance by campaign"
+    },
+    "sales_funnel": {
+      "converted": "Converted",
+      "qualified": "Qualified",
+      "qualified_help": "Contacts where the agent identified purchase intent. This may include actions such as adding a product to the cart or asking about a product.",
+      "started": "Conversations started",
+      "title": "Sales funnel"
+    },
+    "title": "Click to WhatsApp"
   },
   "table_dynamic_by_filter": {
     "status": "Status",
@@ -465,6 +556,44 @@
     "tags": {
       "label": "Tags",
       "placeholder": "Selecione uma tag"
+    },
+    "export_data": {
+      "model_labels": {
+        "sectors": "Departments"
+      }
+    },
+    "field_labels": {
+      "queue__sector__name": "Department"
+    },
+    "filters": {
+      "sector": "Department",
+      "select_sector": "Select a department",
+      "all_sectors": "All departments"
+    },
+    "detailed_monitoring": {
+      "in_progress": {
+        "sector": "Department"
+      },
+      "in_awaiting": {
+        "sector": "Department"
+      }
+    },
+    "columns": {
+      "common": {
+        "sector": "Department"
+      },
+      "disabled_text": "Enable CSAT to track overall ratings by department, queue, and representative"
+    },
+    "deleted_tooltips": {
+      "queue_and_sector": "Queue and department deleted from project",
+      "tag_and_sector": "Tag and department deleted from project",
+      "sector": "Department deleted from project",
+      "volume_per_queue": {
+        "setup_description": "Create queues by department to monitor more data"
+      },
+      "volume_per_tag": {
+        "setup_description": "Add tags to departments to track more data"
+      }
     }
   },
   "key": "Chave",
@@ -473,12 +602,13 @@
   "filter-by": "Período:",
   "see_more": "Ver mais",
   "see_all": "Ver todos",
-  "lines_count": "{count} linhas",
+  "lines_count": "{count, plural, one {# linha} other {# linhas}}",
   "reload": "Recarregar",
   "agent": "Agente",
   "online_agents": "Atendentes online",
   "chats_per_agents": "Chats por atendente",
   "closeds": "Encerrados",
+  "close": "Fechar",
   "finished": "Finalizado",
   "in_progress": "Em andamento",
   "waiting": "Em espera",
@@ -511,7 +641,7 @@
   "clear_fields": "Limpar campos",
   "today": "Hoje",
   "now": "Agora",
-  "date_format": "DD/MM/YYYY",
+  "date_format": "MM/dd/yyyy",
   "search": "Buscar",
   "category": "Categoria",
   "language": "Idioma",
@@ -523,6 +653,7 @@
   "alert_added": "{name} adicionado",
   "alert_edited": "{name} editado",
   "select_date": {
+    "today": "Today",
     "yesterday": "Ontem ({date})",
     "last_days": "Últimos {value} dias ({date})",
     "previous_month": "Mês anterior ({date})",
@@ -561,17 +692,17 @@
     "info_reset": "Ao redefinir, os dados configurados serão perdidos.",
     "success_reset": "O widget foi redefinido com sucesso",
     "error_reset": "Não foi possível redefinir o widget. Tente novamente.",
-    "metric_error": "Erro ao buscar @.lower:metric",
+    "metric_error": "Erro ao obter métrica",
     "card": {
-      "error_description": "Configure novamente o @.lower:flow de origem para obter dados válidos",
+      "error_description": "Redefina o fluxo de origem para obter dados válidos",
       "metric_empty": "Configurar",
-      "metric_set": "Definir @.lower:metric"
+      "metric_set": "Definir métrica"
     },
     "graph_funnel": {
       "title": "Funil",
-      "not_configured_description": "Selecione os @.lower:flows que deseja mapear para montar a visualização em funil do seu projeto",
-      "select_flows": "@:select @.lower:flows",
-      "flow_executions": "Execuções do @.lower:flow",
+      "not_configured_description": "Selecione os fluxos que deseja mapear para montar a visualização em funil do seu projeto",
+      "select_flows": "Selecionar fluxos",
+      "flow_executions": "Execuções de fluxo",
       "error": {
         "title": "Ocorreu um problema ao carregar os dados",
         "description": "Tente carregar novamente"
@@ -617,7 +748,7 @@
     }
   },
   "drawers": {
-    "metric_saved": "@:metric salva com sucesso",
+    "metric_saved": "Métrica salva com sucesso",
     "reset_widget": "Redefinir widget",
     "clear_all_fields": "Limpar todos os campos",
     "config_gallery": {
@@ -626,11 +757,11 @@
       "options": {
         "executions": {
           "title": "Execuções",
-          "description": "Visualize o total de execuções de um @.lower:flow"
+          "description": "Visualize o total de execuções de um fluxo"
         },
         "flow_result": {
-          "title": "Resultado do @.lower:flow",
-          "description": "Retorna um resultado de @.lower:flow e permite operações básicas"
+          "title": "Resultado do fluxo",
+          "description": "Retorna um resultado de fluxo e permite operações básicas"
         },
         "data_crossing": {
           "title": "Cruzamento de dados",
@@ -687,15 +818,15 @@
       }
     },
     "config_card": {
-      "title": "Definir @.lower:metric para o card",
+      "title": "Definir métrica para o card",
       "name_card": {
         "label": "Dê um nome para o card",
-        "placeholder": "@:ex @.lower:flows do projeto"
+        "placeholder": "Ex.: fluxos do projeto"
       },
-      "select_origin_flow": "@:select @.lower:flow de origem",
+      "select_origin_flow": "Selecionar fluxo de origem",
       "result_type": "Tipo de resultado",
       "flow_result": {
-        "label": "Resultado do @.lower:flow",
+        "label": "Resultado do fluxo",
         "placeholder": "Busque ou selecione um resultado"
       },
       "operation": "Operação",
@@ -718,20 +849,20 @@
         "difference": "Diferença",
         "percentage": "Porcentagem"
       },
-      "total_flow_executions": "Total de execuções do @.lower:flow",
+      "total_flow_executions": "Total de execuções do fluxo",
       "first_value": "Primeiro valor",
       "second_value": "Segundo valor"
     },
     "config_funnel": {
-      "title": "Definir @.lower:metrics do gráfico",
-      "description": "Selecione pelo menos três @.lower:flows para obter a visualização em gráfico de funil",
-      "add_metric": "@:add @.lower:metric",
-      "first_metric": "Primeira @.lower:metric",
-      "second_metric": "Segunda @.lower:metric",
-      "third_metric": "Terceira @.lower:metric",
-      "fourth_metric": "Quarta @.lower:metric",
-      "fifth_metric": "Quinta @.lower:metric",
-      "select_flow": "@:select @.lower:flow"
+      "title": "Definir métricas do gráfico",
+      "description": "Selecione pelo menos três fluxos para obter a visualização em gráfico de funil",
+      "add_metric": "Adicionar métrica",
+      "first_metric": "Primeira métrica",
+      "second_metric": "Segunda métrica",
+      "third_metric": "Terceira métrica",
+      "fourth_metric": "Quarta métrica",
+      "fifth_metric": "Quinta métrica",
+      "select_flow": "Selecionar fluxo"
     },
     "config_recurrence": {
       "name_metric": "Nome da métrica"
@@ -739,10 +870,10 @@
   },
   "metric_accordion": {
     "name_metric": {
-      "label": "Nomear @.lower:metric",
-      "placeholder": "@:ex @.lower:flows do projeto"
+      "label": "Informe um nome para a métrica",
+      "placeholder": "Exemplo: Fluxos do projeto"
     },
-    "select_origin_flow": "@:select @.lower:flow de origem"
+    "select_origin_flow": "Selecionar fluxo de origem"
   },
   "insights_header": {
     "auto_refresh": "Atualização automática: {status}",
@@ -810,10 +941,36 @@
     }
   },
   "currency_options": {
+    "ARS": "$ - Peso argentino",
     "BRL": "R$ - Real",
-    "USD": "$ - Dólar",
+    "CAD": "$ - Dólar canadense",
+    "CHF": "CHF - Franco suíço",
+    "CLP": "$ - Peso chileno",
+    "CNY": "¥ - Yuan chinês",
+    "COP": "$ - Peso colombiano",
+    "CZK": "Kč - Coroa tcheca",
+    "DKK": "kr - Coroa dinamarquesa",
     "EUR": "€ - Euro",
-    "ARS": "$ - Peso"
+    "GBP": "£ - Libra esterlina",
+    "HKD": "HK$ - Dólar de Hong Kong",
+    "IDR": "Rp - Rupia indonésia",
+    "INR": "₹ - Rupia indiana",
+    "JPY": "¥ - Iene japonês",
+    "KRW": "₩ - Won sul-coreano",
+    "MXN": "$ - Peso mexicano",
+    "MYR": "RM - Ringgit malaio",
+    "NOK": "kr - Coroa norueguesa",
+    "PEN": "S/ - Sol peruano",
+    "PHP": "₱ - Peso filipino",
+    "PLN": "zł - Zloty polonês",
+    "RON": "lei - Leu romeno",
+    "SEK": "kr - Coroa sueca",
+    "SGD": "S$ - Dólar de Singapura",
+    "THB": "฿ - Baht tailandês",
+    "TWD": "NT$ - Dólar taiwanês",
+    "USD": "$ - Dólar",
+    "UYU": "$U - Peso uruguaio",
+    "VND": "₫ - Dong vietnamita"
   },
   "dashboard_onboarding": {
     "step": {
@@ -909,8 +1066,8 @@
       "resolutions": "Resoluções de conversas",
       "tool_result": "Ferramentas mais usadas",
       "agent_invocation": "Agentes mais usados",
-      "search_terms": "Most searched terms",
-      "added_to_cart": "Most added products to cart",
+      "search_terms": "Termos mais buscados",
+      "added_to_cart": "Produtos mais adicionados ao carrinho",
       "topics": "Assuntos",
       "csat": "CSAT",
       "nps": "NPS",
@@ -940,7 +1097,7 @@
       "phone": "Telefone",
       "status": "Status",
       "ai": "IA",
-      "human": "Atendimento humano",
+      "human": "Live Desk",
       "user__first_name": "Nome do atendente",
       "user__last_name": "Sobrenome do atendente",
       "user__email": "Email",
@@ -951,7 +1108,7 @@
       "queue__sector__name": "Setor",
       "created_on": "Data de início",
       "duration": "Duração",
-      "awaiting_time": "Tempo de espera",
+      "awaiting_time": "Espera",
       "first_response_time": "Tempo para 1ª resposta",
       "agent__email": "Email",
       "agent__first_name": "Nome",
@@ -963,7 +1120,7 @@
       "metric__first_response_time": "Tempo para primeira resposta",
       "metric__message_response_time": "Tempo médio de resposta",
       "metric__interaction_time": "Duração",
-      "metric__waiting_time": "Tempo em espera"
+      "metric__waiting_time": "Espera"
     },
     "select_data": {
       "label": "Selecione o período para buscar dados (máximo de 92 dias entre a data de início e a data de término)",
@@ -981,18 +1138,20 @@
     "chats_open": "Considerar chats abertos durante este período",
     "chats_closed": "Considerar chats encerrados durante este período",
     "filters": {
+      "channel": "Channel",
       "sector": "Setor",
       "select_sector": "Selecione o setor",
-      "agent": "Agente",
-      "select_agent": "Selecione o agente",
+      "representative": "Atendente",
+      "select_representative": "Selecione o atendente",
       "queue": "Fila",
       "select_queue": "Selecione a fila",
       "tag": "Tag",
       "select_tag": "Selecione a tag",
       "all_sectors": "Todos os setores",
-      "all_agents": "Todos os agentes",
+      "all_representatives": "Todos os atendentes",
       "all_queues": "Todas as filas",
-      "all_tags": "Todas as tags"
+      "all_tags": "Todas as tags",
+      "select_to_filter": "Select to filter"
     },
     "select_format": "Selecione o formato para exportar os dados",
     "warning_terms": "Enquanto a exportação estiver em processamento, a geração de novas exportações ficará bloqueada para todos os perfis do projeto. Confirme para continuar.",
@@ -1013,12 +1172,85 @@
     "error_message": "Erro ao desconectar o agente {agent}",
     "tooltip_disabled": "Este atendente não pode ser desconectado porque ele não está online"
   },
+  "operational_alerts": {
+    "alerts": {
+      "save_error": "Couldn't save operational alerts due to a technical issue",
+      "save_success": "Alertas operacionais salvos com sucesso"
+    },
+    "card_alert": "{count} chats ultrapassaram {value} {unit}",
+    "drawer": {
+      "description": "Configure alertas para identificar chats que ultrapassam os limites de tempo definidos para uma operação:",
+      "title": "Alertas operacionais"
+    },
+    "first_response_info": "O alerta de tempo limite da primeira resposta permanecerá ativo até que o representante envie a primeira mensagem.",
+    "form": {
+      "email_notification_label": "Notificação por e-mail (opcional)",
+      "email_notification_tooltip": "This alert is always displayed on the Live Desk dashboard when a chat reaches the defined limit.\n\nYou can also configure email notifications with triggers for selected moderators. For example, send a notification when one or more chats reach the defined limit.",
+      "recipients_helper": "Apenas moderadores podem receber alertas",
+      "send_email_to_label": "Enviar e-mail para",
+      "send_email_to_placeholder": "Selecionar moderadores",
+      "threshold_labels": {
+        "conversation_duration": "Maximum chat duration",
+        "first_response_time": "Maximum time to 1st response",
+        "waiting_time": "Tempo máximo de espera"
+      },
+      "threshold_placeholders": {
+        "conversation_duration": "Exemplo: 30",
+        "first_response_time": "Exemplo: 2",
+        "waiting_time": "Exemplo: 10"
+      },
+      "threshold_placeholder": "Example: 10",
+      "unit_label": "Unidade",
+      "units": {
+        "hours": "Horas",
+        "minutes": "Minutos",
+        "seconds": "Segundos"
+      },
+      "when_helper": "Número de chats com alertas ativos",
+      "when_label": "Quando",
+      "when_placeholder": "Exemplo: 5"
+    },
+    "popover": {
+      "new_tag": "Novo",
+      "option_label": "Alertas operacionais"
+    },
+    "sections": {
+      "conversation_duration": "Alert on the Live Desk dashboard when a chat's duration exceeds the defined limit",
+      "first_response_time": "Alert on the Live Desk dashboard when a chat's 1st response time exceeds the defined limit",
+      "waiting_time": "Alert on the Live Desk dashboard when a chat's wait time exceeds the defined limit"
+    },
+    "table_tooltip": {
+      "conversation_duration": "Este chat excedeu o limite de tempo de {value}-{unit}.",
+      "first_response_time": "Este chat excedeu o limite de tempo de {value}-{unit} para a primeira resposta.",
+      "generic": "Este chat excedeu o limite de tempo configurado.",
+      "waiting_time": "Este chat excedeu o limite de {value}-{unit} de tempo de espera."
+    },
+    "toast": {
+      "conversation_duration": "{count} chats excederam o tempo máximo de duração",
+      "first_response_time": "{count} chats excederam o tempo máximo para a primeira resposta",
+      "title": "Live Desk: atenção imediata necessária",
+      "view_details": "Ver detalhes",
+      "waiting_time": "{count} chats excederam o tempo máximo de espera"
+    },
+    "unit_word_singular": {
+      "h": "hora",
+      "m": "minuto",
+      "s": "segundo"
+    },
+    "unit_words": {
+      "h": "horas",
+      "m": "minutos",
+      "s": "segundos"
+    }
+  },
   "human_support_dashboard": {
     "title": "Live desk",
-    "monitoring": "Monitoramento",
-    "monitoring_tooltip": "Acompanhe em tempo real os atendimentos do dia. Identifique gargalos e tome decisões rápidas para otimizar a operação.",
-    "analysis": "Análise",
-    "analysis_tooltip": "Explore o desempenho de salas encerradas em diferentes períodos de tempo. Descubra padrões, tendências e oportunidades de melhoria na sua equipe.",
+    "live": "Live",
+    "historical_data": "Historical data",
+    "news_disclaimer": {
+      "title": "New on dashboards!",
+      "description": "The <i>Monitoring</i> dashboard is now called <i>Live</i> and shows real-time data about representatives and support chats that are waiting or in progress. To analyze completed support chats, including those from today, go to <i>Historical data</i>."
+    },
     "support_status": {
       "title": "Status dos atendimentos",
       "is_waiting": "Em espera",
@@ -1033,11 +1265,17 @@
     },
     "time_metrics": {
       "title": "Métricas de tempo agora",
-      "average_time_is_waiting": "Tempo médio de espera",
-      "average_time_first_response": "Tempo médio para 1ª resposta",
-      "average_response_time": "Tempo médio de resposta",
-      "average_time_chat": "Duração média da conversa",
+      "average_time_is_waiting": "AWT",
+      "average_time_first_response": "AFRT",
+      "average_response_time": "ART",
+      "average_time_chat": "AST",
       "max": "Máximo",
+      "title_tooltips": {
+        "average_time_is_waiting": "Average Wait Time",
+        "average_time_first_response": "Average First Response Time",
+        "average_response_time": "Average Response Time",
+        "average_time_chat": "Average Support Time"
+      },
       "tooltips": {
         "average_time_is_waiting": "Média de tempo que os contatos esperam na fila até o atendimento começar",
         "average_time_first_response": "Média de tempo até a primeira mensagem do atendente após a sala ser atribuída",
@@ -1057,14 +1295,16 @@
         "pauses": "Pausas personalizadas"
       },
       "in_progress": {
-        "duration": "Duração",
-        "awaiting_time": "Tempo de espera",
-        "first_response_time": "Tempo para 1ª resposta",
-        "pending_response_tooltip": "The last message in the chat was sent by the contact",
+        "handle_time": "Handle time",
+        "awaiting_time": "Espera",
+        "first_response_time": "FRT",
+        "first_response_time_title_tooltip": "Time First Response",
+        "pending_response_tooltip": "A última mensagem do chat foi enviada pelo contato",
         "attendant": "Atendente",
         "sector": "Setor",
         "queue": "Fila",
-        "contact": "Contato"
+        "contact": "Contato",
+        "channel": "Channel"
       },
       "pauses": {
         "status": "Status",
@@ -1073,26 +1313,31 @@
         "closed": "Fechados"
       },
       "in_awaiting": {
-        "awaiting_time": "Tempo de espera",
+        "awaiting_time": "Espera",
         "contact": "Contato",
         "sector": "Setor",
-        "queue": "Fila"
+        "queue": "Fila",
+        "channel": "Channel"
       },
       "attendant": {
         "agent": "Atendente",
         "status": "Status",
         "ongoing": "Em andamento",
         "finished": "Finalizado",
-        "average_first_response_time": "Tempo médio para 1ª resposta",
-        "average_response_time": "Tempo médio de resposta",
-        "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento",
+        "average_first_response_time": "MFRT",
+        "average_first_response_time_title_tooltip": "Mean First Response Time",
+        "average_response_time": "ART",
+        "average_response_time_title_tooltip": "Average Response Time",
+        "average_duration": "AHT",
+        "average_duration_title_tooltip": "Average Handle Time",
+        "time_in_service": "In service",
+        "time_in_service_tooltip": "Online time with ongoing support",
         "action": "Ação"
       },
       "agents_count": {
-        "online": "{count} online",
-        "custom_breaks": "{count} em pausa",
-        "offline": "{count} offline"
+        "online": "{count, plural, one {{count} online} other {{count} online}}",
+        "custom_breaks": "{count, plural, one {{count} em pausa} other {{count} em pausa}}",
+        "offline": "{count, plural, one {{count} offline} other {{count} offline}}"
       }
     },
     "filters": {
@@ -1115,21 +1360,31 @@
     },
     "columns": {
       "common": {
-        "duration": "Duração",
-        "awaiting_time": "Tempo de espera",
-        "first_response_time": "Tempo para 1ª resposta",
+        "handle_time": "Handle time",
+        "awaiting_time": "Espera",
+        "first_response_time": "FRT",
+        "first_response_time_title_tooltip": "First Response Time",
         "response_time": "Tempo de resposta",
         "agent": "Atendente",
         "sector": "Setor",
         "queue": "Fila",
+        "channel": "Channel",
         "contact": "Contato",
         "ticket_id": "Protocolo",
-        "total_attendances": "Total de atendimentos",
-        "average_first_response_time": "Tempo médio para 1ª resposta",
-        "average_response_time": "Tempo médio de resposta",
-        "average_duration": "Duração média",
-        "time_in_service": "Tempo em atendimento"
+        "total_attendances": "Completed",
+        "average_first_response_time": "MFRT",
+        "average_first_response_time_title_tooltip": "Mean First Response Time",
+        "average_response_time": "ART",
+        "average_response_time_title_tooltip": "Average Response Time",
+        "average_duration": "AHT",
+        "average_duration_title_tooltip": "Average Handle Time",
+        "time_in_service": "In service",
+        "time_in_service_tooltip": "Online time with ongoing support",
+        "csat_rating": "CSAT"
       }
+    },
+    "channels": {
+      "others": "Other"
     },
     "analyze": {
       "title": "Em breve: Nova Visão de Análise",
@@ -1146,7 +1401,7 @@
           "description": "A conversa foi finalizada enquanto ainda estava na fila"
         },
         "duration": {
-          "automatic_closed_tooltip": "Automatically ended due to lack of interaction from the contact."
+          "automatic_closed_tooltip": "Encerrado automaticamente por falta de interação do contato"
         }
       }
     },
@@ -1156,19 +1411,20 @@
       "agents_ratings_general_tooltip": "Esta pontuação reflete o desempenho geral do projeto. Se filtros forem aplicados a este dashboard, a pontuação se ajustará automaticamente para exibir a média geral dos itens filtrados.",
       "agents_ratings_subtitle": "{rooms} atendimentos • {reviews} avaliações",
       "review_rating": {
-        "very_satisfied": "Muito satisfeito",
-        "satisfied": "Satisfeito",
-        "neutral": "Neutro",
-        "dissatisfied": "Insatisfeito",
-        "very_dissatisfied": "Muito insatisfeito"
+        "very_satisfied": "🤩 Muito satisfeito",
+        "satisfied": "😁 Satisfeito",
+        "neutral": "😐 Neutro",
+        "dissatisfied": "☹️ Insatisfeito",
+        "very_dissatisfied": "😡 Muito insatisfeito",
+        "not_answered": "Sem resposta"
       },
-      "disabled_text": "Habilite o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
+      "disabled_text": "Ative o CSAT para acompanhar avaliações gerais, por setores, filas e atendentes"
     },
     "setup": {
       "title": "Nenhum setor criado",
       "description": "Crie um setor para este projeto e comece a monitorizar os dados do seu time de suporte em tempo real.",
       "action_text": "Criar setor",
-      "disclaimer": "Estes números são apenas para fins de demonstração. Assim que seu projeto tiver um setor configurado e começar a receber conversas, seus dados reais serão exibidos aqui."
+      "disclaimer": "Esses números são apenas para fins de demonstração. Assim que seu projeto tiver um setor configurado e começar a receber conversas, seus dados reais serão exibidos aqui."
     },
     "common": {
       "no_response": "Sem resposta"
@@ -1183,8 +1439,8 @@
     },
     "volume_per_queue": {
       "title": "Volume por fila",
-      "monitoring_count": "{count} fila com chats {status} | {count} filas com chats {status}",
-      "analysis_count": "{count} fila com chats finalizados | {count} filas com chats finalizados",
+      "monitoring_count": "{count, plural, one {# fila com chats {status}} other {# filas com chats {status}}}",
+      "analysis_count": "{count, plural, one {# fila com chats finalizados} other {# filas com chats finalizados}}",
       "setup_description": "Crie filas por setor para monitorar mais dados",
       "empty_data": {
         "monitoring": {
@@ -1201,8 +1457,8 @@
       "title": "Volume por tag",
       "setup_description": "Adicione tags a setores para monitorar mais dados",
       "count": {
-        "ongoing": "{count} tag em uso | {count} tags em uso",
-        "closed": "{count} tag atribuída | {count} tags atribuídas"
+        "ongoing": "{count, plural, one {# tag em uso} other {# tags em uso}}",
+        "closed": "{count, plural, one {# tag atribuída} other {# tags atribuídas}}"
       },
       "empty_data": {
         "monitoring": {
@@ -1211,6 +1467,22 @@
         },
         "analysis": {
           "closed": "Nenhuma tag atribuída a chats finalizados no período selecionado"
+        }
+      }
+    },
+    "volume_per_channel": {
+      "title": "Volume per channel",
+      "footer_text": {
+        "monitoring": "{count, plural, one {# channel with {status} chats} other {# channels with {status} chats}}",
+        "analysis": "{count, plural, one {# channel with completed chats} other {# channels with completed chats}}"
+      },
+      "empty_data": {
+        "monitoring": {
+          "waiting": "No chats waiting",
+          "ongoing": "No chats in progress"
+        },
+        "analysis": {
+          "closed": "No chats completed in the selected period"
         }
       }
     }
@@ -1253,5 +1525,13 @@
     "privacy_note": "Somente os dados aos quais você tem acesso estão disponíveis pelo MCP.",
     "not_now": "Agora não",
     "view_setup_guide": "Ver guia de configuração"
+  },
+  "performance_by_campaign": {
+    "campaign": "Campaign",
+    "conversations": "Conversations",
+    "conversions": "Conversions",
+    "qualified": "Qualified",
+    "revenue": "Revenue",
+    "title": "Performance by campaign"
   }
 }

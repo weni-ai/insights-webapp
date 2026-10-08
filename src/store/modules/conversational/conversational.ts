@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 
+import conversationalMockApi from '@/services/api/resources/conversational/mock';
 import { useDashboards } from '@/store/modules/dashboards';
 import { useConversationalTopics } from './topics';
 import { useConversationalWidgets } from './widgets';
@@ -91,6 +92,15 @@ export const useConversational = defineStore('conversational', {
     },
     setIsMockEnabled(value: boolean) {
       this.isMockEnabled = value;
+    },
+    async loadShouldShowMock() {
+      try {
+        const shouldShowMock = await conversationalMockApi.getShouldShowMock();
+        this.setIsMockEnabled(shouldShowMock);
+      } catch (error) {
+        console.error('Error loading should-show-mock', error);
+        this.setIsMockEnabled(false);
+      }
     },
   },
   getters: {

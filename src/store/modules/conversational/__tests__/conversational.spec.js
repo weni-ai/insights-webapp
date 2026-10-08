@@ -6,6 +6,7 @@ import { useConversationalTopics } from '../topics';
 import { useConversationalWidgets } from '../widgets';
 import { useCustomWidgets } from '../customWidgets';
 import { useAutoWidgets } from '../autoWidgets';
+import conversationalMockApi from '@/services/api/resources/conversational/mock';
 
 vi.mock('@/store/modules/dashboards', () => ({
   useDashboards: vi.fn(),
@@ -25,6 +26,12 @@ vi.mock('../customWidgets', () => ({
 
 vi.mock('../autoWidgets', () => ({
   useAutoWidgets: vi.fn(),
+}));
+
+vi.mock('@/services/api/resources/conversational/mock', () => ({
+  default: {
+    getShouldShowMock: vi.fn(),
+  },
 }));
 
 const mockDependentStores = ({
@@ -393,6 +400,42 @@ describe('useConversational store', () => {
           expect(store.shouldUseMock).toBe(true);
         });
       });
+    });
+  });
+
+  describe('loadShouldShowMock action', () => {
+    it('should set isMockEnabled to true when the endpoint returns true', async () => {
+      conversationalMockApi.getShouldShowMock.mockResolvedValue(true);
+
+      await store.loadShouldShowMock();
+
+      expect(conversationalMockApi.getShouldShowMock).toHaveBeenCalled();
+      expect(store.isMockEnabled).toBe(true);
+    });
+
+    it('should set isMockEnabled to false when the endpoint returns false', async () => {
+      store.setIsMockEnabled(true);
+      conversationalMockApi.getShouldShowMock.mockResolvedValue(false);
+
+      await store.loadShouldShowMock();
+
+      expect(store.isMockEnabled).toBe(false);
+    });
+
+    it('should set isMockEnabled to false when the endpoint fails', async () => {
+      store.setIsMockEnabled(true);
+      conversationalMockApi.getShouldShowMock.mockRejectedValue(
+        new Error('Network Error'),
+      );
+      const consoleErrorSpy = vi
+        .spyOn(console, 'error')
+        .mockImplementation(() => {});
+
+      await store.loadShouldShowMock();
+
+      expect(store.isMockEnabled).toBe(false);
+      expect(consoleErrorSpy).toHaveBeenCalled();
+      consoleErrorSpy.mockRestore();
     });
   });
 });

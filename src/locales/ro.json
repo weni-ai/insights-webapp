@@ -451,7 +451,7 @@
         "QUICK_REPLY": "Răspuns rapid",
         "PAYMENT_REQUEST": "Solicitare de plată",
         "CATALOG": "Catalog",
-        "ORDER_DETAILS": "Detalii comandă"
+        "ORDER_DETAILS": "Informații privind comanda"
       }
     },
     "template": {
